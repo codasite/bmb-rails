@@ -98,6 +98,23 @@ class Wp_Bracket_Builder_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-admin.js', array( 'jquery' ), $this->version, false );
 
+		wp_enqueue_script( 'wpbb-admin-panel-react', plugin_dir_url( dirname( __FILE__ ) ) . 'includes/react-bracket-builder/build/index.js', array( 'wp-element' ), $this->version, true );
+
+		wp_localize_script(
+      'wpbb-admin-panel-react',
+      'wpbb_ajax_obj', 
+      array(
+        'nonce' => wp_create_nonce('wpbb-nonce'),
+				'page' => 'settings',
+      )
+    );
+
+	}
+	public function bracket_builder_init_menu() {
+		add_menu_page( __( 'Bracket Builder', 'bracketbuilder'), __( 'Bracket Builder', 'bracketbuilder'), 'manage_options', 'bracketbuilder', array($this, 'bracket_builder_admin_page'), 'dashicons-admin-post', '2.1' );
+	}
+	public function bracket_builder_admin_page() {
+    require_once plugin_dir_path( __FILE__ ) . 'templates/admin-panel.php';
 	}
 
 }
