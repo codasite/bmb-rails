@@ -36,7 +36,7 @@ class Wp_Bracket_Builder_Activator {
 		$prefix = $wp_prefix . $plugin_prefix;
 
 		self::create_sports_table($prefix);
-		// self::create_teams_table($prefix);
+		self::create_teams_table($prefix);
 	}
 
 	private static function create_sports_table(string $prefix) {
@@ -75,7 +75,7 @@ class Wp_Bracket_Builder_Activator {
 			name varchar(255) NOT NULL,
 			sport_id mediumint(9) NOT NULL,
 			PRIMARY KEY (id),
-			-- FOREIGN KEY (sport_id) REFERENCES {$prefix}sports(id),
+			FOREIGN KEY (sport_id) REFERENCES {$prefix}sports(id)
 		) $charset_collate;";
 
 		// import dbDelta
