@@ -59,8 +59,7 @@ class Wp_Bracket_Builder_Tournament {
 		string $name, 
 		Wp_Bracket_Builder_Sport $sport, 
 		array $rounds,
-		int $wildcard_teams = 0
-		) {
+		int $wildcard_teams = 0) {
 		$this->name = $name;
 		$this->sport = $sport;
 		$this->wildcard_teams = $wildcard_teams;
@@ -114,8 +113,26 @@ class Wp_Bracket_Builder_Prediction {
 	 */
 	private $round;
 
-	public function __construct(Wp_Bracket_Builder_Team $team, Wp_Bracket_Builder_Round $round) {
+	/**
+	 * @var int
+	 */
+	private $left;
+
+	/**
+	 * @var int
+	 */
+	private $right;
+
+	/**
+	 * @var int
+	 */
+	private $in_order;
+
+	public function __construct(Wp_Bracket_Builder_Team $team, Wp_Bracket_Builder_Round $round, int $left, int $right, int $in_order) {
 		$this->team = $team;
 		$this->round = $round;
+		$this->left = $left;
+		$this->right = $right;
+		$this->in_order = $in_order;
 	}
 }
