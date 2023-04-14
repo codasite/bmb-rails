@@ -16,7 +16,7 @@ class Wp_Bracket_Builder_Sport {
 	 */
 	public $teams;
 
-	public function __construct(int $id = null, string $name, array $teams = []) {
+	public function __construct(string $name, int $id = null, array $teams = []) {
 		$this->id = $id;
 		$this->name = $name;
 		$this->teams = $teams;
@@ -38,15 +38,9 @@ class Wp_Bracket_Builder_Team {
 	 */
 	public $name;
 
-	/**
-	 * @var Wp_Bracket_Builder_Sport
-	 */
-	public $sport;
-
-	public function __construct(int $id = null, string $name, Wp_Bracket_Builder_Sport $sport = null) {
+	public function __construct(string $name, int $id = null) {
 		$this->id = $id;
 		$this->name = $name;
-		$this->sport = $sport;
 	}
 }
 
@@ -103,7 +97,7 @@ class Wp_Bracket_Builder_Round {
 	public $name;
 
 
-	public function __construct(int $id = null, string $name) {
+	public function __construct(string $name, int $id = null) {
 		$this->id = $id;
 		$this->name = $name;
 	}

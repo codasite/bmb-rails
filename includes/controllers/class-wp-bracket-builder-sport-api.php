@@ -1,4 +1,5 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-sport-repo.php';
 
 class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 
@@ -20,10 +21,8 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 */
-	public function __construct(Wp_Bracket_Builder_Sport_Repository $sport_repo = null) {
-		if (!$sport_repo) {
-			$this->$sport_repo = new Wp_Bracket_Builder_Sport_Repository();
-		}
+	public function __construct(Wp_Bracket_Builder_Sport_Repository_Interface $sport_repo = null) {
+		$this->sport_repo = $sport_repo != null ? $sport_repo : new Wp_Bracket_Builder_Sport_Repository();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'sports';
 	}
@@ -105,8 +104,8 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items($request) {
-		$data = array();
-		return new WP_REST_Response($data, 200);
+		$sports = $this->sport_repo->get_all();
+		return new WP_REST_Response($sports, 200);
 	}
 
 	/**

@@ -4,13 +4,36 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-doma
 interface Wp_Bracket_Builder_Sport_Repository_Interface {
 	public function add(Wp_Bracket_Builder_Sport $sport);
 	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Sport;
-	public function all(): array;
+	public function get_all(): array;
 	public function delete(int $id);
 	public function update(Wp_Bracket_Builder_Sport $sport);
 }
 
 class Wp_Bracket_Builder_Sport_Repository_Mock implements Wp_Bracket_Builder_Sport_Repository_Interface {
-	private $sports = [];
+	private $sports;
+
+	public function __construct() {
+		$this->sports = [
+			new Wp_Bracket_Builder_Sport('Football', 1, [
+				new Wp_Bracket_Builder_Team('Broncos'),
+				new Wp_Bracket_Builder_Team('Chiefs'),
+				new Wp_Bracket_Builder_Team('Raiders'),
+				new Wp_Bracket_Builder_Team('Chargers'),
+			]),
+			new Wp_Bracket_Builder_Sport('Basketball', 2, [
+				new Wp_Bracket_Builder_Team('Nuggets'),
+				new Wp_Bracket_Builder_Team('Rockets'),
+				new Wp_Bracket_Builder_Team('Lakers'),
+				new Wp_Bracket_Builder_Team('Clippers'),
+			]),
+			new Wp_Bracket_Builder_Sport('Baseball', 3, [
+				new Wp_Bracket_Builder_Team('Rockies'),
+				new Wp_Bracket_Builder_Team('Astros'),
+				new Wp_Bracket_Builder_Team('Dodgers'),
+				new Wp_Bracket_Builder_Team('Angels'),
+			]),
+		];
+	}
 
 	public function add(Wp_Bracket_Builder_Sport $sport) {
 		$this->sports[] = $sport;
@@ -30,7 +53,7 @@ class Wp_Bracket_Builder_Sport_Repository_Mock implements Wp_Bracket_Builder_Spo
 		return $sport;
 	}
 
-	public function all(): array {
+	public function get_all(): array {
 		return $this->sports;
 	}
 
@@ -88,7 +111,7 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 		return null;
 	}
 
-	public function all(): array {
+	public function get_all(): array {
 		$table_name = $this->table_name();
 		$sports = $this->wpdb->get_results(
 			"SELECT * FROM {$table_name}"
