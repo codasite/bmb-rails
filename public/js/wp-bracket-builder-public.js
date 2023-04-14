@@ -1,5 +1,6 @@
-(function( $ ) {
+(function ($) {
 	'use strict';
+	console.log('hi from public js');
 
 	/**
 	 * All of the code for your public-facing JavaScript source
@@ -29,4 +30,4 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
-})( jQuery );
+})(jQuery);

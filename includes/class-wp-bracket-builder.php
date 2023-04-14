@@ -122,6 +122,11 @@ class Wp_Bracket_Builder {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-bracket-builder-public.php';
 
+		/**
+		 * The sports api controller class
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/controllers/class-wp-bracket-builder-sport-api.php';
+
 		$this->loader = new Wp_Bracket_Builder_Loader();
 
 	}
@@ -153,11 +158,14 @@ class Wp_Bracket_Builder {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Wp_Bracket_Builder_Admin( $this->get_plugin_name(), $this->get_version() );
+		$sports_api = new Wp_Bracket_Builder_Sport_Api();
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'bracket_builder_init_menu' );
+
+		$this->loader->add_action( 'rest_api_init', $sports_api, 'register_routes' );
 	}
 
 	/**
