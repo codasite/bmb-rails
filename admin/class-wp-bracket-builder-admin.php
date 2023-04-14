@@ -117,4 +117,8 @@ class Wp_Bracket_Builder_Admin {
     require_once plugin_dir_path( __FILE__ ) . 'templates/admin-panel.php';
 	}
 
+	public function add_capabilities() {
+		$role = get_role( 'administrator' );
+		$role->add_cap( 'manage_bracket_builder' );
+	}
 }

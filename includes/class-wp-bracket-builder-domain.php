@@ -2,33 +2,49 @@
 
 class Wp_Bracket_Builder_Sport {
 	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
 	 * @var string
 	 */
-	private $name;
+	public $name;
 
 	/**
 	 * @var Wp_Bracket_Builder_Team[]
 	 */
-	private $teams;
+	public $teams;
 
-	public function __construct(string $name, array $teams) {
+	public function __construct(int $id = null, string $name, array $teams = []) {
+		$this->id = $id;
 		$this->name = $name;
 		$this->teams = $teams;
+	}
+
+	public function name(): string {
+		return $this->name;
 	}
 }
 
 class Wp_Bracket_Builder_Team {
 	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
 	 * @var string
 	 */
-	private $name;
-	
+	public $name;
+
 	/**
 	 * @var Wp_Bracket_Builder_Sport
 	 */
-	private $sport;
+	public $sport;
 
-	public function __construct(string $name, Wp_Bracket_Builder_Sport $sport) {
+	public function __construct(int $id = null, string $name, Wp_Bracket_Builder_Sport $sport = null) {
+		$this->id = $id;
 		$this->name = $name;
 		$this->sport = $sport;
 	}
@@ -36,30 +52,38 @@ class Wp_Bracket_Builder_Team {
 
 class Wp_Bracket_Builder_Tournament {
 	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
 	 * @var string
 	 */
-	private $name;
+	public $name;
 
 	/**
 	 * @var Wp_Bracket_Builder_Sport
 	 */
-	private $sport;
-	
+	public $sport;
+
 	/**
 	 * @var int
 	 */
-	private $wildcard_teams;
+	public $wildcard_teams;
 
 	/**
 	 * @var Wp_Bracket_Builder_Round[]
 	 */
-	private $rounds;
+	public $rounds;
 
 	public function __construct(
-		string $name, 
-		Wp_Bracket_Builder_Sport $sport, 
-		array $rounds,
-		int $wildcard_teams = 0) {
+		int $id = null,
+		string $name,
+		Wp_Bracket_Builder_Sport $sport = null,
+		array $rounds = [],
+		int $wildcard_teams = 0
+	) {
+		$this->id = $id;
 		$this->name = $name;
 		$this->sport = $sport;
 		$this->wildcard_teams = $wildcard_teams;
@@ -68,35 +92,46 @@ class Wp_Bracket_Builder_Tournament {
 }
 
 class Wp_Bracket_Builder_Round {
+	/**
+	 * @var int
+	 */
+	public $id;
 
 	/**
 	 * @var string
 	 */
-	private $name;
+	public $name;
 
 
-	public function __construct(string $name) {
+	public function __construct(int $id = null, string $name) {
+		$this->id = $id;
 		$this->name = $name;
 	}
 }
 
 class Wp_Bracket_Builder_Bracket {
 	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
 	 * @var Wp_Bracket_Builder_Tournament
 	 */
-	private $tournament;
+	public $tournament;
 
 	/**
 	 * @var int
 	 */
-	private $customer_id;
+	public $customer_id;
 
 	/**
 	 * @var Wp_Bracket_Builder_Prediction[]
 	 */
-	private $predictions;
+	public $predictions;
 
-	public function __construct(int $customer_id, Wp_Bracket_Builder_Tournament $tournament, array $predictions) {
+	public function __construct(int $id = null, int $customer_id = null, Wp_Bracket_Builder_Tournament $tournament = null, array $predictions = []) {
+		$this->id = $id;
 		$this->customer_id = $customer_id;
 		$this->tournament = $tournament;
 	}
@@ -104,31 +139,37 @@ class Wp_Bracket_Builder_Bracket {
 
 class Wp_Bracket_Builder_Prediction {
 	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
 	 * @var Wp_Bracket_Builder_Team
 	 */
-	private $team;
+	public $team;
 
 	/**
 	 * @var Wp_Bracket_Builder_Round
 	 */
-	private $round;
+	public $round;
 
 	/**
 	 * @var int
 	 */
-	private $left;
+	public $left;
 
 	/**
 	 * @var int
 	 */
-	private $right;
+	public $right;
 
 	/**
 	 * @var int
 	 */
-	private $in_order;
+	public $in_order;
 
-	public function __construct(Wp_Bracket_Builder_Team $team, Wp_Bracket_Builder_Round $round, int $left, int $right, int $in_order) {
+	public function __construct(int $id = null, Wp_Bracket_Builder_Team $team = null, Wp_Bracket_Builder_Round $round = null, int $left = null, int $right = null, int $in_order = null) {
+		$this->id = $id;
 		$this->team = $team;
 		$this->round = $round;
 		$this->left = $left;

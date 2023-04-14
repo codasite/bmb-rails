@@ -32,7 +32,7 @@ class Wp_Bracket_Builder_Activator {
 	public static function activate() {
 		global $wpdb;
 		$wp_prefix = $wpdb->prefix;
-		$plugin_prefix = 'wpbb_';
+		$plugin_prefix = 'bracket_builder_';
 		$prefix = $wp_prefix . $plugin_prefix;
 
 		self::create_sports_table($prefix);

@@ -67,7 +67,7 @@ class Wp_Bracket_Builder {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'WP_BRACKET_BUILDER_VERSION' ) ) {
+		if (defined('WP_BRACKET_BUILDER_VERSION')) {
 			$this->version = WP_BRACKET_BUILDER_VERSION;
 		} else {
 			$this->version = '1.0.0';
@@ -78,7 +78,6 @@ class Wp_Bracket_Builder {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
-
 	}
 
 	/**
@@ -103,32 +102,36 @@ class Wp_Bracket_Builder {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-bracket-builder-loader.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-wp-bracket-builder-i18n.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-wp-bracket-builder-admin.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wp-bracket-builder-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-wp-bracket-builder-public.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public.php';
 
 		/**
 		 * The sports api controller class
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/controllers/class-wp-bracket-builder-sport-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-sport-api.php';
+
+		/**
+		 * The sports repository class
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-sport-repo.php';
 
 		$this->loader = new Wp_Bracket_Builder_Loader();
-
 	}
 
 	/**
@@ -144,8 +147,7 @@ class Wp_Bracket_Builder {
 
 		$plugin_i18n = new Wp_Bracket_Builder_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
-
+		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
 
 	/**
@@ -157,15 +159,19 @@ class Wp_Bracket_Builder {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Wp_Bracket_Builder_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Wp_Bracket_Builder_Admin($this->get_plugin_name(), $this->get_version());
+		$sport_repo = new Wp_Bracket_Builder_Sport_Repository_Mock();
+		// $sports_api = new Wp_Bracket_Builder_Sport_Api($sport_repo=$sport_repo);
 		$sports_api = new Wp_Bracket_Builder_Sport_Api();
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'bracket_builder_init_menu' );
+		$this->loader->add_action('admin_menu', $plugin_admin, 'bracket_builder_init_menu');
+		$this->loader->add_action('init', $plugin_admin, 'add_capabilities');
 
-		$this->loader->add_action( 'rest_api_init', $sports_api, 'register_routes' );
+
+		$this->loader->add_action('rest_api_init', $sports_api, 'register_routes');
 	}
 
 	/**
@@ -177,11 +183,10 @@ class Wp_Bracket_Builder {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Wp_Bracket_Builder_Public( $this->get_plugin_name(), $this->get_version() );
+		$plugin_public = new Wp_Bracket_Builder_Public($this->get_plugin_name(), $this->get_version());
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
-
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
+		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 	}
 
 	/**
@@ -223,5 +228,4 @@ class Wp_Bracket_Builder {
 	public function get_version() {
 		return $this->version;
 	}
-
 }
