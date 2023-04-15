@@ -207,6 +207,12 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function delete_item($request) {
+		// get id from request
+		$id = $request->get_param('item_id');
+		$deleted = $this->sport_repo->delete($id);
+		if ($deleted) {
+			return new WP_REST_Response(null, 204);
+		}
 		return new WP_Error('cant-delete', __('message', 'text-domain'), array('status' => 500));
 	}
 
