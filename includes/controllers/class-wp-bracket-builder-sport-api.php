@@ -170,7 +170,10 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item($request) {
-		return new WP_Error('cant-update', __('message', 'text-domain'), array('status' => 500));
+		$sport = Wp_Bracket_Builder_Sport::from_array($request->get_params());
+		$updated = $this->sport_repo->update($sport);
+		return new WP_REST_Response($updated, 200);
+		// return new WP_Error('cant-update', __('message', 'text-domain'), array('status' => 500));
 	}
 
 	/**

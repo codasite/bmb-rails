@@ -78,7 +78,7 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 	}
 
 	public function add(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport {
-		$table_name = $this->table_name();
+		$table_name = $this->sport_table();
 		$this->wpdb->insert(
 			$table_name,
 			[
@@ -95,7 +95,8 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 	}
 
 	private function insert_teams(Wp_Bracket_Builder_Sport $sport): void {
-		$insert_sql = "INSERT INTO {$this->wpdb->prefix}bracket_builder_teams (name, sport_id) VALUES ";
+		$table_name = $this->team_table();
+		$insert_sql = "INSERT INTO {$table_name} (name, sport_id) VALUES ";
 		$team_values = [];
 		foreach ($sport->teams as $team) {
 			$team_values[] = $this->wpdb->prepare('(%s, %d)', $team->name, $sport->id);
@@ -106,7 +107,7 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 
 	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Sport {
 		$sport = null;
-		$table_name = $this->table_name();
+		$table_name = $this->sport_table();
 
 		if ($id) {
 			$sport = $this->wpdb->get_row(
@@ -126,25 +127,31 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 
 		if ($sport) {
 			# get teams
-			$teams = $this->wpdb->get_results(
-				$this->wpdb->prepare(
-					"SELECT * FROM {$this->wpdb->prefix}bracket_builder_teams WHERE sport_id = %d",
-					$sport->id
-				),
-				ARRAY_A
-			);
-			$teams_array = [];
-			foreach ($teams as $team) {
-				$teams_array[] = Wp_Bracket_Builder_Team::from_array($team);
-			}
+			$teams_array = $this->get_teams($sport->id);
 			return new Wp_Bracket_Builder_Sport($sport->name, $sport->id, $teams_array);
 		}
 
 		return null;
 	}
 
+	private function get_teams(int $sport_id): array {
+		$table_name = $this->team_table();
+		$teams = $this->wpdb->get_results(
+			$this->wpdb->prepare(
+				"SELECT * FROM {table_name} WHERE sport_id = %d",
+				$sport_id
+			),
+			ARRAY_A
+		);
+		$teams_array = [];
+		foreach ($teams as $team) {
+			$teams_array[] = Wp_Bracket_Builder_Team::from_array($team);
+		}
+		return $teams_array;
+	}
+
 	public function get_all(): array {
-		$table_name = $this->table_name();
+		$table_name = $this->sport_table();
 		$sports = $this->wpdb->get_results(
 			"SELECT * FROM {$table_name}",
 			ARRAY_A
@@ -160,7 +167,7 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 	}
 
 	public function delete(int $id): bool {
-		$table_name = $this->table_name();
+		$table_name = $this->sport_table();
 		$this->wpdb->delete(
 			$table_name,
 			[
@@ -171,20 +178,27 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 	}
 
 	public function update(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport {
-		$table_name = $this->table_name();
-		$this->wpdb->update(
-			$table_name,
-			[
-				'name' => $sport->name,
-			],
-			[
-				'id' => $sport->id,
-			]
-		);
+		$table_name = $this->sport_table();
+		$old_sport = $this->get($sport->id);
+		$update_array = [];
+		if ($old_sport->name !== $sport->name) {
+			$update_array['name'] = $sport->name;
+		}
+		// if update array is not empty, update
+		if (!empty($update_array)) {
+			$this->wpdb->update(
+				$table_name,
+				$update_array,
+				['id' => $sport->id,]
+			);
+		}
 		return $sport;
 	}
 
-	private function table_name(): string {
+	private function sport_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_sports';
+	}
+	private function team_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_teams';
 	}
 }

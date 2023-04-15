@@ -37,6 +37,15 @@ class Wp_Bracket_Builder_Sport {
 
 		return $sport;
 	}
+	public function equals(Wp_Bracket_Builder_Sport $sport): bool {
+		if ($this->id !== $sport->id) {
+			return false;
+		}
+		if ($this->name !== $sport->name) {
+			return false;
+		}
+		return Wp_Bracket_Builder_Team::array_equals($this->teams, $sport->teams);
+	}
 }
 
 class Wp_Bracket_Builder_Team {
@@ -63,6 +72,34 @@ class Wp_Bracket_Builder_Team {
 		}
 
 		return $team;
+	}
+	public function equals(Wp_Bracket_Builder_Team $team): bool {
+		if ($this->id !== $team->id) {
+			return false;
+		}
+		if ($this->name !== $team->name) {
+			return false;
+		}
+		return true;
+	}
+	public static function array_equals(array $teams1, array $teams2): bool {
+		if (count($teams1) !== count($teams2)) {
+			return false;
+		}
+		// create an associative array mapping team objcets to their ids
+		$teams2 = array_reduce($teams2, function ($acc, $team) {
+			$acc[$team->id] = $team;
+			return $acc;
+		}, []);
+		foreach ($teams1 as $team) {
+			if (!isset($teams2[$team->id])) {
+				return false;
+			}
+			if (!$team->equals($teams2[$team->id])) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
 

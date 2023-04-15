@@ -1,0 +1,12 @@
+{
+    "name": "wstrategies/wp-bracket-builder",
+    "authors": [
+        {
+            "name": "Barry Molina",
+            "email": "barry@wstrategies.co"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^10"
+    }
+}
