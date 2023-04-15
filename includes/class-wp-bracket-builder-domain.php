@@ -16,7 +16,7 @@ class Wp_Bracket_Builder_Sport {
 	 */
 	public $teams;
 
-	public function __construct(string $name, int $id = null, array $teams = []) {
+	public function __construct(string $name, int $id = null, array $teams = null) {
 		$this->id = $id;
 		$this->name = $name;
 		$this->teams = $teams;
@@ -26,7 +26,7 @@ class Wp_Bracket_Builder_Sport {
 		$sport = new Wp_Bracket_Builder_Sport($data['name']);
 
 		if (isset($data['id'])) {
-			$sport->id = $data['id'];
+			$sport->id = (int) $data['id'];
 		}
 
 		if (isset($data['teams'])) {
@@ -68,7 +68,7 @@ class Wp_Bracket_Builder_Team {
 		$team = new Wp_Bracket_Builder_Team($data['name']);
 
 		if (isset($data['id'])) {
-			$team->id = $data['id'];
+			$team->id = (int)$data['id'];
 		}
 
 		return $team;

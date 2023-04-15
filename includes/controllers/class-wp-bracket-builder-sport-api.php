@@ -51,9 +51,9 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 			),
 			'schema' => array($this, 'get_public_item_schema'),
 		));
-		register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)', array(
+		register_rest_route($namespace, '/' . $base . '/(?P<item_id>[\d]+)', array(
 			'args' => array(
-				'id' => array(
+				'item_id' => array(
 					'description' => __('Unique identifier for the object.'),
 					'type'        => 'integer',
 				),
@@ -127,7 +127,10 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_item($request) {
-		return array();
+		// get id from request
+		$id = $request->get_param('item_id');
+		$sport = $this->sport_repo->get($id);
+		return new WP_REST_Response($sport, 200);
 	}
 
 	/**
@@ -170,10 +173,20 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item($request) {
-		$sport = Wp_Bracket_Builder_Sport::from_array($request->get_params());
+		// if id does not match item_id, return error
+		if ($request->get_param('id') != $request->get_param('item_id')) {
+			return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
+		}
+		// get the update id 
+		$update_id = $request->get_param('item_id');
+		// create an array copy of the request params
+		$sport_params = $request->get_params();
+		// remove the item_id from the array
+		unset($sport_params['item_id']);
+
+		$sport = Wp_Bracket_Builder_Sport::from_array($sport_params);
 		$updated = $this->sport_repo->update($sport);
 		return new WP_REST_Response($updated, 200);
-		// return new WP_Error('cant-update', __('message', 'text-domain'), array('status' => 500));
 	}
 
 	/**
