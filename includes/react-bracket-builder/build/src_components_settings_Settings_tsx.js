@@ -16,6 +16,19 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+class Sport {
+  constructor(id, name, teams) {
+    this.id = id;
+    this.name = name;
+    this.teams = teams;
+  }
+}
+class Team {
+  constructor(id, name) {
+    this.id = id;
+    this.name = name;
+  }
+}
 const Settings = () => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "mt-4"
@@ -24,6 +37,44 @@ const Settings = () => {
     className: "mt-6"
   }, "Save"));
 };
+const fetchSports = () => {
+  // @ts-ignore
+  const sports = wpbb_ajax_obj.sports;
+  console.log(sports);
+};
+class BracketBuilderApi {
+  constructor() {
+    // @ts-ignore
+    this.url = wpbb_ajax_obj.rest_url;
+  }
+  static getInstance() {
+    if (!BracketBuilderApi._instance) {
+      // @ts-ignore
+      BracketBuilderApi._instance = new BracketBuilderApi();
+    }
+    return BracketBuilderApi._instance;
+  }
+  async performRequest(path, method, body) {
+    const response = await fetch(`${this.url}${path}`, {
+      method,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+    return response.json();
+  }
+}
+class SportsApi extends BracketBuilderApi {
+  path = 'sports';
+  async getSports() {
+    return await this.performRequest(this.path, 'GET', {});
+  }
+}
+// SportsApi.getInstance().getSports().then((sports) => {
+// 	console.log(sports)
+// })
+
 /* harmony default export */ __webpack_exports__["default"] = (Settings);
 
 /***/ })

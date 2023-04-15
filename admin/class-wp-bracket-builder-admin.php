@@ -106,6 +106,8 @@ class Wp_Bracket_Builder_Admin {
 			array(
 				'nonce' => wp_create_nonce('wpbb-nonce'),
 				'page' => 'settings',
+				'ajax_url' => admin_url('admin-ajax.php'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 			)
 		);
 	}
