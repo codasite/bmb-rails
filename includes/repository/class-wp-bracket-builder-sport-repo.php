@@ -86,13 +86,22 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 			]
 		);
 		$sport->id = $this->wpdb->insert_id;
-		// if ($sport->teams) {
-		// 	$team_repo = new Wp_Bracket_Builder_Team_Repository();
-		// 	foreach ($sport->teams as $team) {
-		// 		$team_repo->add($team, $sport->id);
-		// 	}
-		// }
+		if ($sport->teams) {
+			$this->insert_teams($sport);
+		}
+		# refresh from db
+		$sport = $this->get($sport->id);
 		return $sport;
+	}
+
+	private function insert_teams(Wp_Bracket_Builder_Sport $sport): void {
+		$insert_sql = "INSERT INTO {$this->wpdb->prefix}bracket_builder_teams (name, sport_id) VALUES ";
+		$team_values = [];
+		foreach ($sport->teams as $team) {
+			$team_values[] = $this->wpdb->prepare('(%s, %d)', $team->name, $sport->id);
+		}
+		$insert_sql .= implode(',', $team_values);
+		$this->wpdb->query($insert_sql);
 	}
 
 	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Sport {
@@ -116,7 +125,19 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 		}
 
 		if ($sport) {
-			return new Wp_Bracket_Builder_Sport($sport->id, $sport->name);
+			# get teams
+			$teams = $this->wpdb->get_results(
+				$this->wpdb->prepare(
+					"SELECT * FROM {$this->wpdb->prefix}bracket_builder_teams WHERE sport_id = %d",
+					$sport->id
+				),
+				ARRAY_A
+			);
+			$teams_array = [];
+			foreach ($teams as $team) {
+				$teams_array[] = Wp_Bracket_Builder_Team::from_array($team);
+			}
+			return new Wp_Bracket_Builder_Sport($sport->name, $sport->id, $teams_array);
 		}
 
 		return null;

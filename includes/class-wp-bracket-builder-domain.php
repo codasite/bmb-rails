@@ -30,7 +30,9 @@ class Wp_Bracket_Builder_Sport {
 		}
 
 		if (isset($data['teams'])) {
-			$sport->teams = $data['teams'];
+			$sport->teams = array_map(function ($team) {
+				return Wp_Bracket_Builder_Team::from_array($team);
+			}, $data['teams']);
 		}
 
 		return $sport;
@@ -51,6 +53,16 @@ class Wp_Bracket_Builder_Team {
 	public function __construct(string $name, int $id = null) {
 		$this->id = $id;
 		$this->name = $name;
+	}
+
+	public static function from_array(array $data): Wp_Bracket_Builder_Team {
+		$team = new Wp_Bracket_Builder_Team($data['name']);
+
+		if (isset($data['id'])) {
+			$team->id = $data['id'];
+		}
+
+		return $team;
 	}
 }
 
