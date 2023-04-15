@@ -40,13 +40,13 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array($this, 'get_items'),
-				'permission_callback' => array($this, 'get_items_permissions_check'),
+				'permission_callback' => array($this, 'customer_permission_check'),
 				'args'                => array(),
 			),
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array($this, 'create_item'),
-				'permission_callback' => array($this, 'create_item_permissions_check'),
+				'permission_callback' => array($this, 'admin_permission_check'),
 				'args'                => $this->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE),
 			),
 			'schema' => array($this, 'get_public_item_schema'),
@@ -61,7 +61,7 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array($this, 'get_item'),
-				'permission_callback' => array($this, 'get_item_permissions_check'),
+				'permission_callback' => array($this, 'customer_permission_check'),
 				'args'                => array(
 					'context' => $this->get_context_param(array('default' => 'view')),
 				),
@@ -69,13 +69,13 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => array($this, 'update_item'),
-				'permission_callback' => array($this, 'update_item_permissions_check'),
+				'permission_callback' => array($this, 'admin_permission_check'),
 				'args'                => $this->get_endpoint_args_for_item_schema(WP_REST_Server::EDITABLE),
 			),
 			array(
 				'methods'             => WP_REST_Server::DELETABLE,
 				'callback'            => array($this, 'delete_item'),
-				'permission_callback' => array($this, 'delete_item_permissions_check'),
+				'permission_callback' => array($this, 'admin_permission_check'),
 				'args'                => array(
 					'force' => array(
 						'default'     => false,
@@ -88,17 +88,6 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to read sports.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|bool
-	 */
-	public function get_items_permissions_check($request) {
-		return true;
-		// return current_user_can('manage_bracket_builder');
-	}
-
-	/**
 	 * Retrieves a collection of sports.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -107,17 +96,6 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	public function get_items($request) {
 		$sports = $this->sport_repo->get_all();
 		return new WP_REST_Response($sports, 200);
-	}
-
-	/**
-	 * Check if a given request has access to read a sport.
-	 * 
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|bool
-	 */
-	public function get_item_permissions_check($request) {
-		$data = array();
-		return new WP_REST_Response($data, 200);
 	}
 
 	/**
@@ -134,16 +112,6 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to create a sport.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|bool
-	 */
-	public function create_item_permissions_check($request) {
-		return true;
-	}
-
-	/**
 	 * Creates a single sport.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -154,16 +122,6 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 		$saved = $this->sport_repo->add($sport);
 		return new WP_REST_Response($saved, 200);
 		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
-	}
-
-	/**
-	 * Check if a given request has access to update a sport.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|bool
-	 */
-	public function update_item_permissions_check($request) {
-		return true;
 	}
 
 	/**
@@ -190,17 +148,6 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	}
 
 	/**
-	 * Check if a given request has access to delete a sport.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|bool
-	 */
-
-	public function delete_item_permissions_check($request) {
-		return true;
-	}
-
-	/**
 	 * Deletes a single sport.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
@@ -217,23 +164,22 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	}
 
 	/**
-	 * Prepares the item for create or update operation.
+	 * Check if a given request has admin access to this plugin
 	 *
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_Error|object $prepared_item
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|bool
 	 */
-	protected function prepare_item_for_database($request) {
-		return array();
+	public function admin_permission_check($request) {
+		return true;
 	}
 
 	/**
-	 * Prepares the item for the REST response.
+	 * Check if a given request has customer access to this plugin. Anyone can view the data.
 	 *
-	 * @param object          $item    WordPress representation of the item.
-	 * @param WP_REST_Request $request Request object.
-	 * @return WP_REST_Response $response
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|bool
 	 */
-	public function prepare_item_for_response($item, $request) {
-		return array();
+	public function customer_permission_check($request) {
+		return true;
 	}
 }
