@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-sport-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-domain.php';
 
 class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 
@@ -146,7 +147,10 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item($request) {
-		return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
+		$sport = Wp_Bracket_Builder_Sport::from_array($request->get_params());
+		$saved = $this->sport_repo->add($sport);
+		return new WP_REST_Response($saved, 200);
+		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
 	}
 
 	/**

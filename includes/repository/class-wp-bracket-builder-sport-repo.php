@@ -2,11 +2,11 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-domain.php';
 
 interface Wp_Bracket_Builder_Sport_Repository_Interface {
-	public function add(Wp_Bracket_Builder_Sport $sport);
+	public function add(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport;
 	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Sport;
 	public function get_all(): array;
-	public function delete(int $id);
-	public function update(Wp_Bracket_Builder_Sport $sport);
+	public function delete(int $id): bool;
+	public function update(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport;
 }
 
 class Wp_Bracket_Builder_Sport_Repository_Mock implements Wp_Bracket_Builder_Sport_Repository_Interface {
@@ -35,8 +35,9 @@ class Wp_Bracket_Builder_Sport_Repository_Mock implements Wp_Bracket_Builder_Spo
 		];
 	}
 
-	public function add(Wp_Bracket_Builder_Sport $sport) {
+	public function add(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport {
 		$this->sports[] = $sport;
+		return $sport;
 	}
 
 	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Sport {
@@ -57,12 +58,14 @@ class Wp_Bracket_Builder_Sport_Repository_Mock implements Wp_Bracket_Builder_Spo
 		return $this->sports;
 	}
 
-	public function delete(int $id) {
+	public function delete(int $id): bool {
 		unset($this->sports[$id]);
+		return true;
 	}
 
-	public function update(Wp_Bracket_Builder_Sport $sport) {
+	public function update(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport {
 		$this->sports[$sport->id] = $sport;
+		return $sport;
 	}
 }
 
@@ -74,7 +77,7 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 		$this->wpdb = $wpdb;
 	}
 
-	public function add(Wp_Bracket_Builder_Sport $sport) {
+	public function add(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport {
 		$table_name = $this->table_name();
 		$this->wpdb->insert(
 			$table_name,
@@ -82,6 +85,14 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 				'name' => $sport->name,
 			]
 		);
+		$sport->id = $this->wpdb->insert_id;
+		// if ($sport->teams) {
+		// 	$team_repo = new Wp_Bracket_Builder_Team_Repository();
+		// 	foreach ($sport->teams as $team) {
+		// 		$team_repo->add($team, $sport->id);
+		// 	}
+		// }
+		return $sport;
 	}
 
 	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Sport {
@@ -114,19 +125,20 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 	public function get_all(): array {
 		$table_name = $this->table_name();
 		$sports = $this->wpdb->get_results(
-			"SELECT * FROM {$table_name}"
+			"SELECT * FROM {$table_name}",
+			ARRAY_A
 		);
 
 		$sports_array = [];
 
 		foreach ($sports as $sport) {
-			$sports_array[] = new Wp_Bracket_Builder_Sport($sport->id, $sport->name);
+			$sports_array[] = Wp_Bracket_Builder_Sport::from_array($sport);
 		}
 
 		return $sports_array;
 	}
 
-	public function delete(int $id) {
+	public function delete(int $id): bool {
 		$table_name = $this->table_name();
 		$this->wpdb->delete(
 			$table_name,
@@ -134,19 +146,21 @@ class Wp_Bracket_Builder_Sport_Repository implements Wp_Bracket_Builder_Sport_Re
 				'id' => $id,
 			]
 		);
+		return true;
 	}
 
-	public function update(Wp_Bracket_Builder_Sport $sport) {
+	public function update(Wp_Bracket_Builder_Sport $sport): Wp_Bracket_Builder_Sport {
 		$table_name = $this->table_name();
 		$this->wpdb->update(
 			$table_name,
 			[
-				'name' => $sport->name(),
+				'name' => $sport->name,
 			],
 			[
 				'id' => $sport->id,
 			]
 		);
+		return $sport;
 	}
 
 	private function table_name(): string {

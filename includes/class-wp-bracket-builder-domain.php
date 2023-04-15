@@ -22,8 +22,18 @@ class Wp_Bracket_Builder_Sport {
 		$this->teams = $teams;
 	}
 
-	public function name(): string {
-		return $this->name;
+	public static function from_array(array $data): Wp_Bracket_Builder_Sport {
+		$sport = new Wp_Bracket_Builder_Sport($data['name']);
+
+		if (isset($data['id'])) {
+			$sport->id = $data['id'];
+		}
+
+		if (isset($data['teams'])) {
+			$sport->teams = $data['teams'];
+		}
+
+		return $sport;
 	}
 }
 
