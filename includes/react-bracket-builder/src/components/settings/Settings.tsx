@@ -3,8 +3,7 @@ import React from 'react';
 const Settings = () => {
 	return (
 		<div>
-			<h2 className='app-title'>Job Place App</h2>
-			<hr />
+			<h1 className='mt-4'>Bracket Builder Settings</h1>
 		</div>
 	);
 }

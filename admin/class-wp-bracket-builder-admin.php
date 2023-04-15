@@ -47,11 +47,10 @@ class Wp_Bracket_Builder_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -73,8 +72,7 @@ class Wp_Bracket_Builder_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-bracket-builder-admin.css', array(), $this->version, 'all' );
-
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-admin.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -96,29 +94,28 @@ class Wp_Bracket_Builder_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/wp-bracket-builder-admin.js', array('jquery'), $this->version, false);
 
-		wp_enqueue_script( 'wpbb-admin-panel-react', plugin_dir_url( dirname( __FILE__ ) ) . 'includes/react-bracket-builder/build/index.js', array( 'wp-element' ), $this->version, true );
+		wp_enqueue_script('wpbb-admin-panel-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
 		wp_localize_script(
-      'wpbb-admin-panel-react',
-      'wpbb_ajax_obj', 
-      array(
-        'nonce' => wp_create_nonce('wpbb-nonce'),
+			'wpbb-admin-panel-react',
+			'wpbb_ajax_obj',
+			array(
+				'nonce' => wp_create_nonce('wpbb-nonce'),
 				'page' => 'settings',
-      )
-    );
-
+			)
+		);
 	}
 	public function bracket_builder_init_menu() {
-		add_menu_page( __( 'Bracket Builder', 'bracketbuilder'), __( 'Bracket Builder', 'bracketbuilder'), 'manage_options', 'bracketbuilder', array($this, 'bracket_builder_admin_page'), 'dashicons-admin-post', '2.1' );
+		add_menu_page(__('Bracket Builder', 'bracketbuilder'), __('Bracket Builder', 'bracketbuilder'), 'manage_options', 'bracketbuilder', array($this, 'bracket_builder_admin_page'), 'dashicons-admin-post', '2.1');
 	}
 	public function bracket_builder_admin_page() {
-    require_once plugin_dir_path( __FILE__ ) . 'templates/admin-panel.php';
+		require_once plugin_dir_path(__FILE__) . 'templates/admin-panel.php';
 	}
 
 	public function add_capabilities() {
-		$role = get_role( 'administrator' );
-		$role->add_cap( 'manage_bracket_builder' );
+		$role = get_role('administrator');
+		$role->add_cap('manage_bracket_builder');
 	}
 }

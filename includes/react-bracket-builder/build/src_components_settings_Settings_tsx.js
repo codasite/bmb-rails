@@ -15,9 +15,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Settings = () => {
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
-    className: "app-title"
-  }, "Job Place App"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null));
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
+    className: "mt-4"
+  }, "Bracket Builder Settings"));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Settings);
 

@@ -33,7 +33,6 @@ class Wp_Bracket_Builder_Sport_Api extends WP_REST_Controller {
 	 * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
 	 */
 	public function register_routes() {
-		$version = '1';
 		$namespace = $this->namespace;
 		$base = $this->rest_base;
 		register_rest_route($namespace, '/' . $base, array(
