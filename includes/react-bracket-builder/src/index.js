@@ -4,7 +4,7 @@ import { render } from '@wordpress/element';
 /**
  * Import the stylesheet for the plugin.
  */
-import './style/main.scss';
+// import './style/main.scss';
 
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./components/settings/Settings'))

@@ -72,7 +72,9 @@ class Wp_Bracket_Builder_Admin {
 		 * class.
 		 */
 
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-admin.css', array(), $this->version, 'all');
+		// wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-admin.css', array(), $this->version, 'all');
+		wp_enqueue_style('bootstrap-styles', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/vendors-node_modules_bootstrap_dist_css_bootstrap_min_css.css', array(), $this->version, 'all');
+		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), $this->version, 'all');
 	}
 
 	/**

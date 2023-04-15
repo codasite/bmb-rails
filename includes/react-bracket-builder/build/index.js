@@ -27,18 +27,6 @@ const App = props => {
 
 /***/ }),
 
-/***/ "./src/style/main.scss":
-/*!*****************************!*\
-  !*** ./src/style/main.scss ***!
-  \*****************************/
-/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
-
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
-
-/***/ }),
-
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
@@ -340,7 +328,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _App__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App */ "./src/App.tsx");
-/* harmony import */ var _style_main_scss__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./style/main.scss */ "./src/style/main.scss");
 
 
 
@@ -348,10 +335,10 @@ __webpack_require__.r(__webpack_exports__);
 /**
  * Import the stylesheet for the plugin.
  */
-
+// import './style/main.scss';
 
 // Dynamically render components to avoid loading unused modules
-const Settings = React.lazy(() => __webpack_require__.e(/*! import() */ "src_components_settings_Settings_tsx").then(__webpack_require__.bind(__webpack_require__, /*! ./components/settings/Settings */ "./src/components/settings/Settings.tsx")));
+const Settings = React.lazy(() => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-bootstrap_esm_Button_js"), __webpack_require__.e("src_components_settings_Settings_tsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./components/settings/Settings */ "./src/components/settings/Settings.tsx")));
 const page = wpbb_ajax_obj.page;
 if (page === 'settings') {
   // Render the App component into the DOM

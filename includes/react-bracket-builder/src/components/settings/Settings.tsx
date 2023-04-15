@@ -1,9 +1,12 @@
 import React from 'react';
+import Button from 'react-bootstrap/Button';
+
 
 const Settings = () => {
 	return (
 		<div>
-			<h1 className='mt-4'>Bracket Builder Settings</h1>
+			<h2 className='mt-4'>Bracket Builder Settings</h2>
+			<Button variant='primary' className='mt-6'>Save</Button>
 		</div>
 	);
 }
