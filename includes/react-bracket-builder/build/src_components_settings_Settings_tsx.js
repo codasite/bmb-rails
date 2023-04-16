@@ -55,7 +55,8 @@ const BracketCol = props => {
       display: 'flex',
       border: '1px solid black',
       flexGrow: '1',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      justifyContent: 'center'
     }
   }, props.children);
 };
@@ -66,12 +67,14 @@ const MatchBox = _ref => {
   } = _ref;
   const node1 = props.node1;
   const node2 = props.node2;
+  // const height: number = props.height
   // This component renders the lines connecting two nodes representing a "game"
   // These should be evenly spaced in the column and grow according to the number of other matches in the round
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
-      flexGrow: grow,
-      border: '1px solid black'
+      height: props.height,
+      border: '1px solid black',
+      marginBottom: props.marginBottom
     }
   });
 };
@@ -103,21 +106,35 @@ const RoundComponent = props => {
   const round = props.round;
   const direction = props.direction;
   const numDirections = props.numDirections;
-  console.log(numDirections);
+  const matchHeight = props.matchHeight;
+  console.log(matchHeight);
 
   // For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
   // For example, a round with depth 1 has 2 nodes and a round at depth 3 can have up to 8 nodes
   // The number of matches in a round is the number of nodes / 2
   // However, each round component only renders the match in a given direction. So for a bracket with 2 directions, 
   // the number of matches is split in half
+
+  // const buildMatches = () => {
+  // 	const numMatches = 2 ** round.depth / 2 / numDirections
+  // 	// return an array of MatchBoxes separated by Spacers
+  // 	const matches = [<Spacer />]
+  // 	for (let i = 0; i < numMatches; i++) {
+  // 		matches.push(<MatchBox />)
+  // 		matches.push(<Spacer />)
+  // 	}
+  // 	return matches
+  // }
   const buildMatches = () => {
     const numMatches = 2 ** round.depth / 2 / numDirections;
-    // return an array of MatchBoxes separated by Spacers
-    const matches = [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, null)];
-    for (let i = 0; i < numMatches; i++) {
-      matches.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, null));
-      matches.push((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, null));
-    }
+    const matches = Array.from(Array(numMatches).keys()).map(i => {
+      // const node1 = round.nodes[i * 2]
+      // const node2 = round.nodes[i * 2 + 1]
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
+        height: matchHeight,
+        marginBottom: i + 1 < numMatches ? matchHeight : 0
+      });
+    });
     return matches;
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketCol, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -127,8 +144,20 @@ const RoundComponent = props => {
   }, round.depth, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), round.name), buildMatches());
 };
 const Bracket = () => {
-  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([new Round(1, 'Round 4', 1, []), new Round(2, 'Round 3', 2, []), new Round(3, 'Round 2', 3, []), new Round(4, 'Round 1', 4, [])]);
+  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([
+  // new Round(1, 'Round 3', 1, []),
+  // new Round(2, 'Round 2', 2, []),
+  // new Round(3, 'Round 1', 3, []),
 
+  // new Round(0, 'Round 4', 1, []),
+  // new Round(2, 'Round 3', 2, []),
+  // new Round(3, 'Round 2', 3, []),
+  // new Round(4, 'Round 1', 4, []),
+
+  new Round(1, 'Round 6', 1, []), new Round(2, 'Round 5', 2, []), new Round(3, 'Round 4', 3, []), new Round(4, 'Round 3', 4, []), new Round(5, 'Round 2', 5, []), new Round(6, 'Round 1', 6, [])]);
+  const bracketHeight = 600;
+  // The number of rounds sets the initial height of each match
+  const firstRoundMatchHeight = bracketHeight / rounds.length;
   /**
    * Build rounds in two directions, left to right and right to left
    */
@@ -137,24 +166,25 @@ const Bracket = () => {
     // Rendering from left to right, sort by depth descending
     const reversed = rounds.slice(1).reverse();
     const numDirections = 2;
-    return [...rounds.slice(1).reverse().map(round => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
+    return [...rounds.slice(1).reverse().map((round, idx) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
       round: round,
       direction: Direction.TopLeft,
-      numDirections: numDirections
+      numDirections: numDirections,
+      matchHeight: 2 ** idx * firstRoundMatchHeight / 2
     })),
     // handle final round differently
     (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(FinalRound, {
       round: rounds[0]
-    }), ...rounds.slice(1).map(round => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
+    }), ...rounds.slice(1).map((round, idx, arr) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
       round: round,
       direction: Direction.TopRight,
-      numDirections: numDirections
+      numDirections: numDirections,
+      matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight / 2
     }))];
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
-      height: '600px',
-      width: '100%',
+      height: bracketHeight,
       display: 'flex'
     }
   }, buildRounds2(rounds));
