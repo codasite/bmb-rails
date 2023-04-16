@@ -16,15 +16,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Col.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Row.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
 
 
 
 
+
+// Direction enum
+var Direction = /*#__PURE__*/function (Direction) {
+  Direction[Direction["TopLeft"] = 0] = "TopLeft";
+  Direction[Direction["TopRight"] = 1] = "TopRight";
+  Direction[Direction["BottomLeft"] = 2] = "BottomLeft";
+  Direction[Direction["BottomRight"] = 3] = "BottomRight";
+  return Direction;
+}(Direction || {});
 class Node {
   constructor(id, name, left, right, depth, parent_id) {
     this.id = id;
@@ -43,36 +49,92 @@ class Round {
     this.nodes = nodes;
   }
 }
-const RoundComponent = props => {
-  const round = props.round;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"], {
+const BracketCol = props => {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
-      height: '100%',
+      display: 'flex',
+      border: '1px solid black',
+      flexGrow: '1',
+      flexDirection: 'column'
+    }
+  }, props.children);
+};
+const MatchBox = _ref => {
+  let {
+    grow = '1',
+    ...props
+  } = _ref;
+  const node1 = props.node1;
+  const node2 = props.node2;
+  // This component renders the lines connecting two nodes representing a "game"
+  // These should be evenly spaced in the column and grow according to the number of other matches in the round
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      flexGrow: grow,
       border: '1px solid black'
     }
-  }, round.depth);
+  });
+};
+const Spacer = _ref2 => {
+  let {
+    grow = '1'
+  } = _ref2;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      flexGrow: grow
+    }
+  });
+};
+const FinalRound = props => {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, props);
+};
+const RoundComponent = props => {
+  const round = props.round;
+  const direction = props.direction;
+
+  // For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
+  // For example, a round with depth 1 has 2 nodes and a round at depth 3 can have up to 8 nodes
+  // The number of matches in a round is the number of nodes / 2
+
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketCol, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      position: 'absolute'
+    }
+  }, round.depth, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), round.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, null), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
+    grow: "2"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, null));
 };
 const Bracket = () => {
-  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([new Round(1, 'Round 1', 0, []), new Round(2, 'Round 2', 1, []), new Round(3, 'Round 3', 2, []), new Round(4, 'Round 4', 3, [])]);
-  const buildRounds = rounds => {
+  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([
+  // new Round(1, 'Round 4', 1, []),
+  new Round(2, 'Round 3', 1, []), new Round(3, 'Round 2', 2, []), new Round(4, 'Round 1', 3, [])]);
+
+  /**
+   * Build rounds in two directions, left to right and right to left
+   */
+  const buildRounds2 = rounds => {
     // Assume rounds are sorted by depth
     // Rendering from left to right, sort by depth descending
     const reversed = rounds.slice(1).reverse();
-    return [...reversed.map(round => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
-      round: round
-    })), ...rounds.map(round => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
-      round: round
+    return [...rounds.slice(1).reverse().map(round => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
+      round: round,
+      direction: Direction.TopLeft
+    })),
+    // handle final round differently
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(FinalRound, {
+      round: rounds[0]
+    }), ...rounds.slice(1).map(round => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
+      round: round,
+      direction: Direction.TopRight
     }))];
   };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
-      height: '600px'
+      height: '600px',
+      width: '100%',
+      display: 'flex'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    style: {
-      height: '100%'
-    }
-  }, buildRounds(rounds)));
+  }, buildRounds2(rounds));
 };
 const BracketModal = props => {
   const {
@@ -80,7 +142,7 @@ const BracketModal = props => {
     handleCancel,
     handleSave
   } = props;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"], {
     show: show,
     onHide: handleCancel,
     size: "xl",
@@ -89,19 +151,19 @@ const BracketModal = props => {
       zIndex: '99999999',
       position: 'relative'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Header, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Header, {
     closeButton: true,
     style: {
       borderBottom: '0'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Title, null, "Create Bracket")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Footer, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Title, null, "Create Bracket")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Body, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, null)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Footer, {
     style: {
       borderTop: '0'
     }
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
     variant: "secondary",
     onClick: handleCancel
-  }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
     variant: "primary",
     onClick: handleSave
   }, "Save Changes")));

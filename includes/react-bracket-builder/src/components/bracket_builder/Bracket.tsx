@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 
+// Direction enum
+enum Direction {
+	TopLeft = 0,
+	TopRight = 1,
+	BottomLeft = 2,
+	BottomRight = 3,
+}
+
 class Node {
 	id: number;
 	name: string;
@@ -20,8 +28,6 @@ class Node {
 	}
 }
 
-
-
 class Round {
 	id: number;
 	name: string;
@@ -35,41 +41,87 @@ class Round {
 	}
 }
 
+const BracketCol = (props) => {
+	return (
+		<div style={{ display: 'flex', border: '1px solid black', flexGrow: '1', flexDirection: 'column' }}>
+			{props.children}
+		</div>
+	)
+}
+
+const MatchBox = ({ grow = '1', ...props }) => {
+	const node1: Node = props.node1
+	const node2: Node = props.node2
+	// This component renders the lines connecting two nodes representing a "game"
+	// These should be evenly spaced in the column and grow according to the number of other matches in the round
+	return (
+		<div style={{ flexGrow: grow, border: '1px solid black' }}>
+
+		</div>
+	)
+
+}
+
+const Spacer = ({ grow = '1' }) => {
+	return (
+		<div style={{ flexGrow: grow }} />
+	)
+}
+
+const FinalRound = (props) => {
+	return <RoundComponent {...props} />
+
+}
 
 const RoundComponent = (props) => {
 	const round: Round = props.round;
+	const direction: Direction = props.direction;
+
+	// For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
+	// For example, a round with depth 1 has 2 nodes and a round at depth 3 can have up to 8 nodes
+	// The number of matches in a round is the number of nodes / 2
 
 	return (
-		<Col style={{ height: '100%', border: '1px solid black' }}>
-			{round.depth}
-		</Col>
+		<BracketCol>
+			<div style={{ position: 'absolute' }}>
+				{round.depth}<br />
+				{round.name}
+			</div>
+			<Spacer />
+			<MatchBox grow='2' />
+			<Spacer />
+		</BracketCol>
 	)
 }
 
 export const Bracket = () => {
 	const [rounds, setRounds] = useState([
-		new Round(1, 'Round 1', 0, []),
-		new Round(2, 'Round 2', 1, []),
-		new Round(3, 'Round 3', 2, []),
-		new Round(4, 'Round 4', 3, []),
+		// new Round(1, 'Round 4', 1, []),
+		new Round(2, 'Round 3', 1, []),
+		new Round(3, 'Round 2', 2, []),
+		new Round(4, 'Round 1', 3, []),
 	]);
 
-	const buildRounds = (rounds: Round[]) => {
+	/**
+	 * Build rounds in two directions, left to right and right to left
+	 */
+	const buildRounds2 = (rounds: Round[]) => {
 		// Assume rounds are sorted by depth
 		// Rendering from left to right, sort by depth descending
 		const reversed = rounds.slice(1).reverse()
+
 		return [
-			...reversed.map(round => <RoundComponent round={round} />),
-			...rounds.map(round => <RoundComponent round={round} />)
+			...rounds.slice(1).reverse().map(round => <RoundComponent round={round} direction={Direction.TopLeft} />),
+			// handle final round differently
+			<FinalRound round={rounds[0]} />,
+			...rounds.slice(1).map(round => <RoundComponent round={round} direction={Direction.TopRight} />)
 		]
 	}
 
 	return (
-		<Container style={{ height: '600px' }}>
-			<Row style={{ height: '100%' }}>
-				{buildRounds(rounds)}
-			</Row>
-		</Container>
+		<div style={{ height: '600px', width: '100%', display: 'flex' }}>
+			{buildRounds2(rounds)}
+		</div>
 	)
 }
 
