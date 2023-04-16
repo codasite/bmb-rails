@@ -69,17 +69,42 @@ const Spacer = ({ grow = '1' }) => {
 }
 
 const FinalRound = (props) => {
-	return <RoundComponent {...props} />
+	const round: Round = props.round;
+	return (
+		<BracketCol>
+			<div style={{ position: 'absolute' }}>
+				{round.depth}<br />
+				{round.name}
+			</div>
+			<Spacer grow='2' />
+			<MatchBox grow='1' />
+			<Spacer grow='2' />
+		</BracketCol>
+	)
 
 }
 
 const RoundComponent = (props) => {
 	const round: Round = props.round;
 	const direction: Direction = props.direction;
+	const numDirections: number = props.numDirections
+	console.log(numDirections)
 
 	// For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
 	// For example, a round with depth 1 has 2 nodes and a round at depth 3 can have up to 8 nodes
 	// The number of matches in a round is the number of nodes / 2
+	// However, each round component only renders the match in a given direction. So for a bracket with 2 directions, 
+	// the number of matches is split in half
+	const buildMatches = () => {
+		const numMatches = 2 ** round.depth / 2 / numDirections
+		// return an array of MatchBoxes separated by Spacers
+		const matches = [<Spacer />]
+		for (let i = 0; i < numMatches; i++) {
+			matches.push(<MatchBox />)
+			matches.push(<Spacer />)
+		}
+		return matches
+	}
 
 	return (
 		<BracketCol>
@@ -87,19 +112,20 @@ const RoundComponent = (props) => {
 				{round.depth}<br />
 				{round.name}
 			</div>
-			<Spacer />
-			<MatchBox grow='2' />
-			<Spacer />
+			{buildMatches()}
+			{/* <Spacer />
+			<MatchBox grow='1' />
+			<Spacer /> */}
 		</BracketCol>
 	)
 }
 
 export const Bracket = () => {
 	const [rounds, setRounds] = useState([
-		// new Round(1, 'Round 4', 1, []),
-		new Round(2, 'Round 3', 1, []),
-		new Round(3, 'Round 2', 2, []),
-		new Round(4, 'Round 1', 3, []),
+		new Round(1, 'Round 4', 1, []),
+		new Round(2, 'Round 3', 2, []),
+		new Round(3, 'Round 2', 3, []),
+		new Round(4, 'Round 1', 4, []),
 	]);
 
 	/**
@@ -109,12 +135,13 @@ export const Bracket = () => {
 		// Assume rounds are sorted by depth
 		// Rendering from left to right, sort by depth descending
 		const reversed = rounds.slice(1).reverse()
+		const numDirections = 2
 
 		return [
-			...rounds.slice(1).reverse().map(round => <RoundComponent round={round} direction={Direction.TopLeft} />),
+			...rounds.slice(1).reverse().map(round => <RoundComponent round={round} direction={Direction.TopLeft} numDirections={numDirections} />),
 			// handle final round differently
 			<FinalRound round={rounds[0]} />,
-			...rounds.slice(1).map(round => <RoundComponent round={round} direction={Direction.TopRight} />)
+			...rounds.slice(1).map(round => <RoundComponent round={round} direction={Direction.TopRight} numDirections={numDirections} />)
 		]
 	}
 
