@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import { BracketModal, Bracket } from '../bracket_builder/Bracket';
 
 class Sport {
 	id: number;
@@ -24,35 +25,46 @@ class Team {
 
 
 const Settings = () => {
+	const [showBracketModal, setShowBracketModal] = useState(false)
+
+	const handleCloseBracketModal = () => setShowBracketModal(false);
+	const handleSaveBracketModal = () => setShowBracketModal(false);
+	const handleShowBracketModal = () => setShowBracketModal(true);
 	return (
 		<div>
-			<h2 className='mt-4'>Bracket Builder Settings</h2>
-			<Button variant='primary' className='mt-6'>Save</Button>
+			<h3 className='mt-4'>Bracket Builder Settings</h3>
+
+			<Button variant='primary' className='mt-6' onClick={handleShowBracketModal}>Save</Button>
+			<BracketModal show={showBracketModal} handleCancel={handleCloseBracketModal} handleSave={handleSaveBracketModal} />
+			<Bracket />
 		</div>
 	);
-}
-
-const fetchSports = () => {
-	// @ts-ignore
-	const sports = wpbb_ajax_obj.sports
-	console.log(sports)
 }
 
 
 class BracketBuilderApi {
 	url: string;
-	static _instance: BracketBuilderApi;
+	// static _sportsApi: SportsApi;
+	// static _bracketApi: BracketApi;
 	constructor() {
 		// @ts-ignore
 		this.url = wpbb_ajax_obj.rest_url;
 	}
-	static getInstance() {
-		if (!BracketBuilderApi._instance) {
-			// @ts-ignore
-			BracketBuilderApi._instance = new BracketBuilderApi();
-		}
-		return BracketBuilderApi._instance;
-	}
+	// static getBracketApi() {
+	// 	if (!BracketBuilderApi._bracketApi) {
+	// 		// @ts-ignore
+	// 		BracketBuilderApi._bracketApi = new BracketApi();
+	// 	}
+	// 	return BracketBuilderApi._bracketApi;
+	// }
+
+	// static getSportsApi() {
+	// 	if (!BracketBuilderApi._sportsApi) {
+	// 		// @ts-ignore
+	// 		BracketBuilderApi._sportsApi = new SportsApi();
+	// 	}
+	// 	return BracketBuilderApi._sportsApi;
+	// }
 	async performRequest(path: string, method: string, body: any) {
 		const response = await fetch(`${this.url}${path}`, {
 			method,
@@ -65,15 +77,31 @@ class BracketBuilderApi {
 	}
 }
 
-class SportsApi extends BracketBuilderApi {
-	path: string = 'sports';
-	async getSports() {
+class BracketApi extends BracketBuilderApi {
+	path: string = 'brackets';
+	async getBrackets() {
 		return await this.performRequest(this.path, 'GET', {});
 	}
 }
+
+// class SportsApi extends BracketBuilderApi {
+// 	path: string = 'sports';
+// 	async getSports() {
+// 		return await this.performRequest(this.path, 'GET', {});
+// 	}
+// }
 // SportsApi.getInstance().getSports().then((sports) => {
 // 	console.log(sports)
 // })
+const fetchBrackets = async () => {
+	// @ts-ignore
+	const res = await fetch(`${wpbb_ajax_obj.rest_url}brackets`);
+	const brackets = await res.json();
+	console.log(brackets)
+}
+fetchBrackets();
+
+
 
 
 export default Settings; 

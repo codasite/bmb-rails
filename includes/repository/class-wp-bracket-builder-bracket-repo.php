@@ -9,66 +9,6 @@ interface Wp_Bracket_Builder_Bracket_Repository_Interface {
 	public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
 }
 
-class Wp_Bracket_Builder_Bracket_Repository_Mock implements Wp_Bracket_Builder_Bracket_Repository_Interface {
-	private $brackets;
-
-	public function __construct() {
-		$this->brackets = [
-			new Wp_Bracket_Builder_Bracket('Football', 1, [
-				new Wp_Bracket_Builder_Team('Broncos'),
-				new Wp_Bracket_Builder_Team('Chiefs'),
-				new Wp_Bracket_Builder_Team('Raiders'),
-				new Wp_Bracket_Builder_Team('Chargers'),
-			]),
-			new Wp_Bracket_Builder_Bracket('Basketball', 2, [
-				new Wp_Bracket_Builder_Team('Nuggets'),
-				new Wp_Bracket_Builder_Team('Rockets'),
-				new Wp_Bracket_Builder_Team('Lakers'),
-				new Wp_Bracket_Builder_Team('Clippers'),
-			]),
-			new Wp_Bracket_Builder_Bracket('Baseball', 3, [
-				new Wp_Bracket_Builder_Team('Rockies'),
-				new Wp_Bracket_Builder_Team('Astros'),
-				new Wp_Bracket_Builder_Team('Dodgers'),
-				new Wp_Bracket_Builder_Team('Angels'),
-			]),
-		];
-	}
-
-	public function add(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket {
-		$this->brackets[] = $bracket;
-		return $bracket;
-	}
-
-	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Bracket {
-		$bracket = null;
-		if ($id) {
-			$bracket = $this->brackets[$id];
-		} else if ($name) {
-			foreach ($this->brackets as $bracket) {
-				if ($bracket->name === $name) {
-					return $bracket;
-				}
-			}
-		}
-		return $bracket;
-	}
-
-	public function get_all(): array {
-		return $this->brackets;
-	}
-
-	public function delete(int $id): bool {
-		unset($this->brackets[$id]);
-		return true;
-	}
-
-	public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket {
-		$this->brackets[$bracket->id] = $bracket;
-		return $bracket;
-	}
-}
-
 class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracket_Repository_Interface {
 	private $wpdb;
 
@@ -86,9 +26,9 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			]
 		);
 		$bracket->id = $this->wpdb->insert_id;
-		if ($bracket->teams) {
-			$this->insert_teams_for_bracket($bracket->id, $bracket->teams);
-		}
+		// if ($bracket->teams) {
+		// 	$this->insert_teams_for_bracket($bracket->id, $bracket->teams);
+		// }
 		# refresh from db
 		$bracket = $this->get($bracket->id);
 		return $bracket;
@@ -118,8 +58,8 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 
 		if ($bracket_arr) {
 			# get teams
-			$teams_arr = $this->get_teams_for_bracket($bracket_arr['id']);
-			$bracket_arr['teams'] = $teams_arr;
+			// $teams_arr = $this->get_teams_for_bracket($bracket_arr['id']);
+			// $bracket_arr['teams'] = $teams_arr;
 			return Wp_Bracket_Builder_Bracket::from_array($bracket_arr);
 		}
 
@@ -180,84 +120,84 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 				['id' => $bracket->id,]
 			);
 		}
-		$this->update_teams_for_bracket($old_bracket, $bracket);
+		// $this->update_teams_for_bracket($old_bracket, $bracket);
 		// refresh from db
 		$bracket = $this->get($bracket->id);
 		return $bracket;
 	}
-	private function update_teams_for_bracket(Wp_Bracket_Builder_Bracket $old_bracket, Wp_Bracket_Builder_Bracket $bracket): void {
-		$table_name = $this->team_table();
-		$old_teams = $old_bracket->teams;
-		$new_teams = $bracket->teams;
-		if ($new_teams === null) {
-			// do nothing if teams are null
-			return;
-		}
-		if (empty($old_teams) && !empty($new_teams)) {
-			// if old teams are null, insert new teams
-			$this->insert_teams_for_bracket($bracket->id, $new_teams);
-			return;
-		}
-		if ($new_teams === []) {
-			// if new teams are empty but not null, delete old teams
-			$this->delete_teams_for_bracket($old_bracket->id);
-			return;
-		}
-		// insert, delete, or update teams as necessary
-		$old_team_map = [];
-		$new_team_map = [];
-		$teams_to_insert = [];
+	// private function update_teams_for_bracket(Wp_Bracket_Builder_Bracket $old_bracket, Wp_Bracket_Builder_Bracket $bracket): void {
+	// 	$table_name = $this->team_table();
+	// 	$old_teams = $old_bracket->teams;
+	// 	$new_teams = $bracket->teams;
+	// 	if ($new_teams === null) {
+	// 		// do nothing if teams are null
+	// 		return;
+	// 	}
+	// 	if (empty($old_teams) && !empty($new_teams)) {
+	// 		// if old teams are null, insert new teams
+	// 		$this->insert_teams_for_bracket($bracket->id, $new_teams);
+	// 		return;
+	// 	}
+	// 	if ($new_teams === []) {
+	// 		// if new teams are empty but not null, delete old teams
+	// 		$this->delete_teams_for_bracket($old_bracket->id);
+	// 		return;
+	// 	}
+	// 	// insert, delete, or update teams as necessary
+	// 	$old_team_map = [];
+	// 	$new_team_map = [];
+	// 	$teams_to_insert = [];
 
-		foreach ($old_teams as $team) {
-			// old teams are guaranteed to have ids
-			$old_team_map[$team->id] = $team;
-		}
-		foreach ($new_teams as $team) {
-			// new teams may not have ids, if they don't, they need to be inserted
-			if ($team->id) {
-				$new_team_map[$team->id] = $team;
-			} else {
-				$teams_to_insert[] = $team;
-			}
-		}
+	// 	foreach ($old_teams as $team) {
+	// 		// old teams are guaranteed to have ids
+	// 		$old_team_map[$team->id] = $team;
+	// 	}
+	// 	foreach ($new_teams as $team) {
+	// 		// new teams may not have ids, if they don't, they need to be inserted
+	// 		if ($team->id) {
+	// 			$new_team_map[$team->id] = $team;
+	// 		} else {
+	// 			$teams_to_insert[] = $team;
+	// 		}
+	// 	}
 
-		$old_ids = array_keys($old_team_map);
-		$new_ids = array_keys($new_team_map);
-
-
-		// mark teams that need to be deleted, inserted, or updated
-		$ids_to_delete = array_diff($old_ids, $new_ids);
-		$ids_to_insert = array_diff($new_ids, $old_ids);
-		$exisiting_ids = array_intersect($old_ids, $new_ids);
+	// 	$old_ids = array_keys($old_team_map);
+	// 	$new_ids = array_keys($new_team_map);
 
 
-		// delete teams
-		if (!empty($ids_to_delete)) {
-			$this->delete_teams_by_id($ids_to_delete);
-		}
-		// insert teams
-		if (!empty($ids_to_insert) || !empty($teams_to_insert)) {
-			// append new teams with ids to teams to insert
-			foreach ($ids_to_insert as $id) {
-				$teams_to_insert[] = $new_team_map[$id];
-			}
-			$this->insert_teams_for_bracket($bracket->id, $teams_to_insert);
-		}
+	// 	// mark teams that need to be deleted, inserted, or updated
+	// 	$ids_to_delete = array_diff($old_ids, $new_ids);
+	// 	$ids_to_insert = array_diff($new_ids, $old_ids);
+	// 	$exisiting_ids = array_intersect($old_ids, $new_ids);
 
-		// determine which teams need to be updated
-		$teams_to_update = [];
-		foreach ($exisiting_ids as $id) {
-			$old_team = $old_team_map[$id];
-			$new_team = $new_team_map[$id];
-			if (!$old_team->equals($new_team)) {
-				$teams_to_update[] = $new_team;
-			}
-		}
-		// update teams
-		if (!empty($teams_to_update)) {
-			$this->update_teams($teams_to_update);
-		}
-	}
+
+	// 	// delete teams
+	// 	if (!empty($ids_to_delete)) {
+	// 		$this->delete_teams_by_id($ids_to_delete);
+	// 	}
+	// 	// insert teams
+	// 	if (!empty($ids_to_insert) || !empty($teams_to_insert)) {
+	// 		// append new teams with ids to teams to insert
+	// 		foreach ($ids_to_insert as $id) {
+	// 			$teams_to_insert[] = $new_team_map[$id];
+	// 		}
+	// 		$this->insert_teams_for_bracket($bracket->id, $teams_to_insert);
+	// 	}
+
+	// 	// determine which teams need to be updated
+	// 	$teams_to_update = [];
+	// 	foreach ($exisiting_ids as $id) {
+	// 		$old_team = $old_team_map[$id];
+	// 		$new_team = $new_team_map[$id];
+	// 		if (!$old_team->equals($new_team)) {
+	// 			$teams_to_update[] = $new_team;
+	// 		}
+	// 	}
+	// 	// update teams
+	// 	if (!empty($teams_to_update)) {
+	// 		$this->update_teams($teams_to_update);
+	// 	}
+	// }
 
 	private function insert_teams_for_bracket(int $bracket_id, array $teams): void {
 		$table_name = $this->team_table();

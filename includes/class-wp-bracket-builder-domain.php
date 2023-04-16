@@ -162,33 +162,33 @@ class Wp_Bracket_Builder_Round {
 	}
 }
 
-class Wp_Bracket_Builder_Bracket {
-	/**
-	 * @var int
-	 */
-	public $id;
+// class Wp_Bracket_Builder_Bracket {
+// 	/**
+// 	 * @var int
+// 	 */
+// 	public $id;
 
-	/**
-	 * @var Wp_Bracket_Builder_Tournament
-	 */
-	public $tournament;
+// 	/**
+// 	 * @var Wp_Bracket_Builder_Tournament
+// 	 */
+// 	public $tournament;
 
-	/**
-	 * @var int
-	 */
-	public $customer_id;
+// 	/**
+// 	 * @var int
+// 	 */
+// 	public $customer_id;
 
-	/**
-	 * @var Wp_Bracket_Builder_Prediction[]
-	 */
-	public $predictions;
+// 	/**
+// 	 * @var Wp_Bracket_Builder_Prediction[]
+// 	 */
+// 	public $predictions;
 
-	public function __construct(int $id = null, int $customer_id = null, Wp_Bracket_Builder_Tournament $tournament = null, array $predictions = []) {
-		$this->id = $id;
-		$this->customer_id = $customer_id;
-		$this->tournament = $tournament;
-	}
-}
+// 	public function __construct(int $id = null, int $customer_id = null, Wp_Bracket_Builder_Tournament $tournament = null, array $predictions = []) {
+// 		$this->id = $id;
+// 		$this->customer_id = $customer_id;
+// 		$this->tournament = $tournament;
+// 	}
+// }
 
 class Wp_Bracket_Builder_Prediction {
 	/**
