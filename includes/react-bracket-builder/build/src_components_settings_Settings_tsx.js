@@ -53,7 +53,6 @@ const BracketCol = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       display: 'flex',
-      border: '1px solid black',
       flexGrow: '1',
       flexDirection: 'column',
       justifyContent: 'center'
@@ -72,9 +71,7 @@ const MatchBox = _ref => {
   // These should be evenly spaced in the column and grow according to the number of other matches in the round
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
-      height: props.height,
-      border: '1px solid black',
-      marginBottom: props.marginBottom
+      ...props.style
     }
   });
 };
@@ -127,19 +124,31 @@ const RoundComponent = props => {
   // }
   const buildMatches = () => {
     const numMatches = 2 ** round.depth / 2 / numDirections;
+    const borderStyle = '1px solid black';
+    const borderRight = direction === Direction.TopLeft || direction === Direction.BottomLeft ? borderStyle : 'none';
+    const borderLeft = direction === Direction.TopRight || direction === Direction.BottomRight ? borderStyle : 'none';
     const matches = Array.from(Array(numMatches).keys()).map(i => {
       // const node1 = round.nodes[i * 2]
       // const node2 = round.nodes[i * 2 + 1]
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
-        height: matchHeight,
-        marginBottom: i + 1 < numMatches ? matchHeight : 0
-      });
+      return (
+        // <MatchBox height={matchHeight} marginBottom={i + 1 < numMatches ? matchHeight : 0} />
+        (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
+          style: {
+            height: matchHeight,
+            marginBottom: i + 1 < numMatches ? matchHeight : 0,
+            border: '1px solid black',
+            borderLeft: borderLeft,
+            borderRight: borderRight
+          }
+        })
+      );
     });
     return matches;
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketCol, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
-      position: 'absolute'
+      position: 'absolute',
+      top: '0'
     }
   }, round.depth, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null), round.name), buildMatches());
 };
@@ -157,7 +166,9 @@ const Bracket = () => {
   new Round(1, 'Round 6', 1, []), new Round(2, 'Round 5', 2, []), new Round(3, 'Round 4', 3, []), new Round(4, 'Round 3', 4, []), new Round(5, 'Round 2', 5, []), new Round(6, 'Round 1', 6, [])]);
   const bracketHeight = 600;
   // The number of rounds sets the initial height of each match
-  const firstRoundMatchHeight = bracketHeight / rounds.length;
+  // const firstRoundMatchHeight = bracketHeight / rounds.length / 2;
+  const firstRoundMatchHeight = bracketHeight / 2 ** (rounds.length - 2) / 2;
+  console.log(firstRoundMatchHeight);
   /**
    * Build rounds in two directions, left to right and right to left
    */
@@ -170,7 +181,7 @@ const Bracket = () => {
       round: round,
       direction: Direction.TopLeft,
       numDirections: numDirections,
-      matchHeight: 2 ** idx * firstRoundMatchHeight / 2
+      matchHeight: 2 ** idx * firstRoundMatchHeight
     })),
     // handle final round differently
     (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(FinalRound, {
@@ -179,7 +190,7 @@ const Bracket = () => {
       round: round,
       direction: Direction.TopRight,
       numDirections: numDirections,
-      matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight / 2
+      matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
     }))];
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

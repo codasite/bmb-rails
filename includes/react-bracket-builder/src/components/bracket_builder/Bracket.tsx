@@ -43,7 +43,7 @@ class Round {
 
 const BracketCol = (props) => {
 	return (
-		<div style={{ display: 'flex', border: '1px solid black', flexGrow: '1', flexDirection: 'column', justifyContent: 'center' }}>
+		<div style={{ display: 'flex', flexGrow: '1', flexDirection: 'column', justifyContent: 'center' }}>
 			{props.children}
 		</div>
 	)
@@ -56,7 +56,7 @@ const MatchBox = ({ grow = '1', ...props }) => {
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
-		<div style={{ height: props.height, border: '1px solid black', marginBottom: props.marginBottom }}>
+		<div style={{ ...props.style }}>
 
 		</div>
 	)
@@ -111,11 +111,15 @@ const RoundComponent = (props) => {
 	// }
 	const buildMatches = () => {
 		const numMatches = 2 ** round.depth / 2 / numDirections
+		const borderStyle = '1px solid black'
+		const borderRight = direction === Direction.TopLeft || direction === Direction.BottomLeft ? borderStyle : 'none'
+		const borderLeft = direction === Direction.TopRight || direction === Direction.BottomRight ? borderStyle : 'none'
 		const matches = Array.from(Array(numMatches).keys()).map((i) => {
 			// const node1 = round.nodes[i * 2]
 			// const node2 = round.nodes[i * 2 + 1]
 			return (
-				<MatchBox height={matchHeight} marginBottom={i + 1 < numMatches ? matchHeight : 0} />
+				// <MatchBox height={matchHeight} marginBottom={i + 1 < numMatches ? matchHeight : 0} />
+				<MatchBox style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0), border: '1px solid black', borderLeft: borderLeft, borderRight: borderRight }} />
 			)
 		})
 		return matches
@@ -125,7 +129,7 @@ const RoundComponent = (props) => {
 
 	return (
 		<BracketCol>
-			<div style={{ position: 'absolute' }}>
+			<div style={{ position: 'absolute', top: '0' }}>
 				{round.depth}<br />
 				{round.name}
 			</div>
@@ -158,7 +162,9 @@ export const Bracket = () => {
 	]);
 	const bracketHeight = 600;
 	// The number of rounds sets the initial height of each match
-	const firstRoundMatchHeight = bracketHeight / rounds.length;
+	// const firstRoundMatchHeight = bracketHeight / rounds.length / 2;
+	const firstRoundMatchHeight = bracketHeight / 2 ** (rounds.length - 2) / 2;
+	console.log(firstRoundMatchHeight)
 	/**
 	 * Build rounds in two directions, left to right and right to left
 	 */
@@ -169,10 +175,10 @@ export const Bracket = () => {
 		const numDirections = 2
 
 		return [
-			...rounds.slice(1).reverse().map((round, idx) => <RoundComponent round={round} direction={Direction.TopLeft} numDirections={numDirections} matchHeight={2 ** idx * firstRoundMatchHeight / 2} />),
+			...rounds.slice(1).reverse().map((round, idx) => <RoundComponent round={round} direction={Direction.TopLeft} numDirections={numDirections} matchHeight={2 ** idx * firstRoundMatchHeight} />),
 			// handle final round differently
 			<FinalRound round={rounds[0]} />,
-			...rounds.slice(1).map((round, idx, arr) => <RoundComponent round={round} direction={Direction.TopRight} numDirections={numDirections} matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight / 2} />)
+			...rounds.slice(1).map((round, idx, arr) => <RoundComponent round={round} direction={Direction.TopRight} numDirections={numDirections} matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight} />)
 		]
 	}
 
