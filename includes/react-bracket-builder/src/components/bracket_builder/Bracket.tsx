@@ -49,7 +49,7 @@ const BracketCol = (props) => {
 	)
 }
 
-const MatchBox = ({ grow = '1', ...props }) => {
+const MatchBox = ({ ...props }) => {
 	const node1: Node = props.node1
 	const node2: Node = props.node2
 	// const height: number = props.height
@@ -72,15 +72,18 @@ const Spacer = ({ grow = '1' }) => {
 const FinalRound = (props) => {
 	const round: Round = props.round;
 	return (
-		<BracketCol>
-			<div style={{ position: 'absolute' }}>
-				{round.depth}<br />
+		<div style={{ display: "flex", flexDirection: 'column', flexGrow: '1' }}>
+			<div className='mb-2 text-center'>
+				{/* {round.depth}<br /> */}
 				{round.name}
 			</div>
-			<Spacer grow='2' />
-			<MatchBox grow='1' />
-			<Spacer grow='2' />
-		</BracketCol>
+			<BracketCol>
+				<Spacer grow='2' />
+				<MatchBox style={{ flexGrow: '1', borderTop: '1px solid black', borderBottom: '1px solid black' }} />
+				<Spacer grow='2' />
+			</BracketCol>
+		</div>
+
 	)
 
 }
@@ -112,14 +115,16 @@ const RoundComponent = (props) => {
 	const buildMatches = () => {
 		const numMatches = 2 ** round.depth / 2 / numDirections
 		const borderStyle = '1px solid black'
+		const radius = 3
 		const borderRight = direction === Direction.TopLeft || direction === Direction.BottomLeft ? borderStyle : 'none'
+		const borderRadius = direction === Direction.TopLeft || direction === Direction.BottomLeft ? `0 ${radius}px ${radius}px 0` : `${radius}px 0 0 ${radius}px`
 		const borderLeft = direction === Direction.TopRight || direction === Direction.BottomRight ? borderStyle : 'none'
 		const matches = Array.from(Array(numMatches).keys()).map((i) => {
 			// const node1 = round.nodes[i * 2]
 			// const node2 = round.nodes[i * 2 + 1]
 			return (
 				// <MatchBox height={matchHeight} marginBottom={i + 1 < numMatches ? matchHeight : 0} />
-				<MatchBox style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0), border: '1px solid black', borderLeft: borderLeft, borderRight: borderRight }} />
+				<MatchBox style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0), border: '1px solid black', borderLeft: borderLeft, borderRight: borderRight, borderRadius: borderRadius }} />
 			)
 		})
 		return matches
@@ -128,16 +133,19 @@ const RoundComponent = (props) => {
 
 
 	return (
-		<BracketCol>
-			<div style={{ position: 'absolute', top: '0' }}>
-				{round.depth}<br />
+		<div style={{ display: "flex", flexDirection: 'column', flexGrow: '1' }}>
+			<div className='mb-2 text-center'>
+				{/* {round.depth}<br /> */}
 				{round.name}
 			</div>
-			{buildMatches()}
-			{/* <Spacer />
+			<BracketCol>
+				{buildMatches()}
+				{/* <Spacer />
 			<MatchBox grow='1' />
 			<Spacer /> */}
-		</BracketCol>
+			</BracketCol>
+		</div>
+
 	)
 }
 
@@ -160,10 +168,10 @@ export const Bracket = () => {
 		new Round(5, 'Round 2', 5, []),
 		new Round(6, 'Round 1', 6, []),
 	]);
-	const bracketHeight = 600;
+	const targetHeight = 600;
 	// The number of rounds sets the initial height of each match
-	// const firstRoundMatchHeight = bracketHeight / rounds.length / 2;
-	const firstRoundMatchHeight = bracketHeight / 2 ** (rounds.length - 2) / 2;
+	// const firstRoundMatchHeight = targetHeight / rounds.length / 2;
+	const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
 	console.log(firstRoundMatchHeight)
 	/**
 	 * Build rounds in two directions, left to right and right to left
@@ -183,7 +191,7 @@ export const Bracket = () => {
 	}
 
 	return (
-		<div style={{ height: bracketHeight, display: 'flex' }}>
+		<div style={{ display: 'flex' }}>
 			{buildRounds2(rounds)}
 		</div>
 	)
@@ -201,7 +209,7 @@ export const BracketModal = (props) => {
 			<Modal.Header closeButton style={{ borderBottom: '0' }}>
 				<Modal.Title>Create Bracket</Modal.Title>
 			</Modal.Header >
-			<Modal.Body><Bracket /></Modal.Body>
+			<Modal.Body className='pt-0'><Bracket /></Modal.Body>
 			<Modal.Footer style={{ borderTop: '0' }}>
 				<Button variant="secondary" onClick={handleCancel}>
 					Close
