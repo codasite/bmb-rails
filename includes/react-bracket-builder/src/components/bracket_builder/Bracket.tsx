@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 
 // Direction enum
 enum Direction {
@@ -94,7 +95,6 @@ const RoundComponent = (props) => {
 	const numDirections: number = props.numDirections;
 	const matchHeight: number = props.matchHeight;
 
-	console.log(matchHeight)
 
 	// For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
 	// For example, a round with depth 1 has 2 nodes and a round at depth 3 can have up to 8 nodes
@@ -149,30 +149,75 @@ const RoundComponent = (props) => {
 	)
 }
 
-export const Bracket = () => {
-	const [rounds, setRounds] = useState([
+const NumRoundsSelector = (props) => {
+	const {
+		numRounds,
+		setNumRounds
+	} = props
 
-		// new Round(1, 'Round 3', 1, []),
-		// new Round(2, 'Round 2', 2, []),
-		// new Round(3, 'Round 1', 3, []),
+	const minRounds = 1;
+	const maxRounds = 6;
 
-		// new Round(0, 'Round 4', 1, []),
-		// new Round(2, 'Round 3', 2, []),
-		// new Round(3, 'Round 2', 3, []),
-		// new Round(4, 'Round 1', 4, []),
+	const options = Array.from(Array(maxRounds - minRounds + 1).keys()).map((i) => {
+		return (
+			<option value={i + minRounds}>{i + minRounds}</option>
+		)
+	})
 
-		new Round(1, 'Round 6', 1, []),
-		new Round(2, 'Round 5', 2, []),
-		new Round(3, 'Round 4', 3, []),
-		new Round(4, 'Round 3', 4, []),
-		new Round(5, 'Round 2', 5, []),
-		new Round(6, 'Round 1', 6, []),
-	]);
+	const handleChange = (event) => {
+		const num = event.target.value
+		console.log(num)
+		setNumRounds(parseInt(num))
+	}
+
+	return (
+		<form style={{ display: 'flex', alignItems: 'flex-end', paddingLeft: '10px', flex: '1', justifyContent: 'center' }}>
+			<label style={{ marginRight: '10px' }}>
+				Number of Rounds:
+			</label>
+			<select value={numRounds} onChange={handleChange}>
+				{options}
+			</select>
+		</form>
+	)
+}
+
+
+
+export const Bracket = (props) => {
+	// const [rounds, setRounds] = useState([
+
+	// 	// new Round(1, 'Round 3', 1, []),
+	// 	// new Round(2, 'Round 2', 2, []),
+	// 	// new Round(3, 'Round 1', 3, []),
+
+	// 	// new Round(0, 'Round 4', 1, []),
+	// 	// new Round(2, 'Round 3', 2, []),
+	// 	// new Round(3, 'Round 2', 3, []),
+	// 	// new Round(4, 'Round 1', 4, []),
+
+	// 	new Round(1, 'Round 6', 1, []),
+	// 	new Round(2, 'Round 5', 2, []),
+	// 	new Round(3, 'Round 4', 3, []),
+	// 	new Round(4, 'Round 3', 4, []),
+	// 	new Round(5, 'Round 2', 5, []),
+	// 	new Round(6, 'Round 1', 6, []),
+	// ]);
+	const { numRounds } = props
+	console.log('numRounds', numRounds)
+
+	const rounds = Array.from(Array(numRounds).keys()).map((i) => {
+		return new Round(i + 1, `Round ${i + 1}`, i + 1, [])
+	})
+	console.log('rounds', rounds)
+
+
 	const targetHeight = 600;
+
 	// The number of rounds sets the initial height of each match
 	// const firstRoundMatchHeight = targetHeight / rounds.length / 2;
 	const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
-	console.log(firstRoundMatchHeight)
+
 	/**
 	 * Build rounds in two directions, left to right and right to left
 	 */
@@ -203,13 +248,15 @@ export const BracketModal = (props) => {
 		handleCancel,
 		handleSave,
 	} = props;
+	const [numRounds, setNumRounds] = useState(4);
 
 	return (
 		<Modal show={show} onHide={handleCancel} size='xl' centered={true} style={{ zIndex: '99999999', position: 'relative' }}>
 			<Modal.Header closeButton style={{ borderBottom: '0' }}>
 				<Modal.Title>Create Bracket</Modal.Title>
+				<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
 			</Modal.Header >
-			<Modal.Body className='pt-0'><Bracket /></Modal.Body>
+			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} /></Modal.Body>
 			<Modal.Footer style={{ borderTop: '0' }}>
 				<Button variant="secondary" onClick={handleCancel}>
 					Close
