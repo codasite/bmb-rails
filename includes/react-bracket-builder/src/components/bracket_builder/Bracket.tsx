@@ -42,23 +42,13 @@ class Round {
 	}
 }
 
-const BracketCol = (props) => {
-	return (
-		<div style={{ display: 'flex', flexGrow: '1', flexDirection: 'column', justifyContent: 'center' }}>
-			{props.children}
-		</div>
-	)
-}
-
 const MatchBox = ({ ...props }) => {
 	const node1: Node = props.node1
 	const node2: Node = props.node2
-	// const height: number = props.height
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
-		<div style={{ ...props.style }}>
-
+		<div className={props.className} style={{ ...props.style }}>
 		</div>
 	)
 
@@ -73,21 +63,22 @@ const Spacer = ({ grow = '1' }) => {
 const FinalRound = (props) => {
 	const round: Round = props.round;
 	return (
-		<div style={{ display: "flex", flexDirection: 'column', flexGrow: '1' }}>
-			<div className='mb-2 text-center'>
+		<div className='round'>
+			<div className='round__header'>
 				{/* {round.depth}<br /> */}
 				{round.name}
 			</div>
-			<BracketCol>
+			<div className='round__body'>
 				<Spacer grow='2' />
-				<MatchBox style={{ flexGrow: '1', borderTop: '1px solid black', borderBottom: '1px solid black' }} />
+				<MatchBox className='final-match' />
 				<Spacer grow='2' />
-			</BracketCol>
+			</div>
 		</div>
 
 	)
 
 }
+
 
 const RoundComponent = (props) => {
 	const round: Round = props.round;
@@ -102,50 +93,26 @@ const RoundComponent = (props) => {
 	// However, each round component only renders the match in a given direction. So for a bracket with 2 directions, 
 	// the number of matches is split in half
 
-	// const buildMatches = () => {
-	// 	const numMatches = 2 ** round.depth / 2 / numDirections
-	// 	// return an array of MatchBoxes separated by Spacers
-	// 	const matches = [<Spacer />]
-	// 	for (let i = 0; i < numMatches; i++) {
-	// 		matches.push(<MatchBox />)
-	// 		matches.push(<Spacer />)
-	// 	}
-	// 	return matches
-	// }
 	const buildMatches = () => {
 		const numMatches = 2 ** round.depth / 2 / numDirections
-		const borderStyle = '1px solid black'
-		const radius = 3
-		const borderRight = direction === Direction.TopLeft || direction === Direction.BottomLeft ? borderStyle : 'none'
-		const borderRadius = direction === Direction.TopLeft || direction === Direction.BottomLeft ? `0 ${radius}px ${radius}px 0` : `${radius}px 0 0 ${radius}px`
-		const borderLeft = direction === Direction.TopRight || direction === Direction.BottomRight ? borderStyle : 'none'
+		const className = direction === Direction.TopLeft || direction === Direction.BottomLeft ? 'match-box-left' : 'match-box-right'
 		const matches = Array.from(Array(numMatches).keys()).map((i) => {
-			// const node1 = round.nodes[i * 2]
-			// const node2 = round.nodes[i * 2 + 1]
 			return (
-				// <MatchBox height={matchHeight} marginBottom={i + 1 < numMatches ? matchHeight : 0} />
-				<MatchBox style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0), border: '1px solid black', borderLeft: borderLeft, borderRight: borderRight, borderRadius: borderRadius }} />
+				<MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
 			)
 		})
 		return matches
 
 	}
-
-
 	return (
-		<div style={{ display: "flex", flexDirection: 'column', flexGrow: '1' }}>
-			<div className='mb-2 text-center'>
-				{/* {round.depth}<br /> */}
+		<div className='round'>
+			<div className='round__header'>
 				{round.name}
 			</div>
-			<BracketCol>
+			<div className='round__body'>
 				{buildMatches()}
-				{/* <Spacer />
-			<MatchBox grow='1' />
-			<Spacer /> */}
-			</BracketCol>
+			</div>
 		</div>
-
 	)
 }
 
@@ -171,8 +138,8 @@ const NumRoundsSelector = (props) => {
 	}
 
 	return (
-		<form style={{ display: 'flex', alignItems: 'flex-end', paddingLeft: '10px', flex: '1', justifyContent: 'center' }}>
-			<label style={{ marginRight: '10px' }}>
+		<form className='options-form'>
+			<label>
 				Number of Rounds:
 			</label>
 			<select value={numRounds} onChange={handleChange}>
@@ -181,8 +148,6 @@ const NumRoundsSelector = (props) => {
 		</form>
 	)
 }
-
-
 
 export const Bracket = (props) => {
 	// const [rounds, setRounds] = useState([
@@ -251,13 +216,13 @@ export const BracketModal = (props) => {
 	const [numRounds, setNumRounds] = useState(4);
 
 	return (
-		<Modal show={show} onHide={handleCancel} size='xl' centered={true} style={{ zIndex: '99999999', position: 'relative' }}>
-			<Modal.Header closeButton style={{ borderBottom: '0' }}>
+		<Modal className='bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>
+			<Modal.Header className='bracket-modal__header' closeButton>
 				<Modal.Title>Create Bracket</Modal.Title>
 				<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
 			</Modal.Header >
 			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} /></Modal.Body>
-			<Modal.Footer style={{ borderTop: '0' }}>
+			<Modal.Footer className='bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleCancel}>
 					Close
 				</Button>
