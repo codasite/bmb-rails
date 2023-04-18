@@ -1,26 +1,26 @@
-.bracket-modal {
+.wpbb-bracket-modal {
 	z-index: 99999999;
 
-	.bracket-modal__header {
+	.wpbb-bracket-modal__header {
 		border-bottom: 0;
 	}
 
-	.bracket-modal__footer {
+	.wpbb-bracket-modal__footer {
 		border-top: 0;
 	}
 }
 
-.round {
+.wpbb-round {
 	display: flex;
 	flex-direction: column;
 	flex-grow: 1;
 
-	.round__header {
+	.wpbb-round__header {
 		margin-bottom: 10px;
 		text-align: center;
 	}
 
-	.round__body {
+	.wpbb-round__body {
 		display: flex;
 		flex-grow: 1;
 		flex-direction: column;
@@ -35,24 +35,24 @@ $match-box-border: 1px solid black;
 	border-bottom: $match-box-border;
 }
 
-.match-box-left {
+.wpbb-match-box-left {
 	@include match-box();
 	border-right: $match-box-border;
 	border-radius: 0 5px 5px 0;
 }
 
-.match-box-right {
+.wpbb-match-box-right {
 	@include match-box();
 	border-left: $match-box-border;
 	border-radius: 5px 0 0 5px;
 }
 
-.final-match {
+.wpbb-final-match {
 	@include match-box();
 	flex-grow: 1;
 }
 
-.options-form {
+.wpbb-options-form {
 	display: flex;
 	align-items: flex-end;
 	padding-left: 10px;
@@ -62,4 +62,8 @@ $match-box-border: 1px solid black;
 	label {
 		margin-right: 10px;
 	}
+}
+
+.wpbb-bracket {
+	display: flex;
 }

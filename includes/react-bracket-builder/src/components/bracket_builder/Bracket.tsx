@@ -63,14 +63,14 @@ const Spacer = ({ grow = '1' }) => {
 const FinalRound = (props) => {
 	const round: Round = props.round;
 	return (
-		<div className='round'>
-			<div className='round__header'>
+		<div className='wpbb-round'>
+			<div className='wpbb-round__header'>
 				{/* {round.depth}<br /> */}
 				{round.name}
 			</div>
-			<div className='round__body'>
+			<div className='wpbb-round__body'>
 				<Spacer grow='2' />
-				<MatchBox className='final-match' />
+				<MatchBox className='wpbb-final-match' />
 				<Spacer grow='2' />
 			</div>
 		</div>
@@ -95,7 +95,7 @@ const RoundComponent = (props) => {
 
 	const buildMatches = () => {
 		const numMatches = 2 ** round.depth / 2 / numDirections
-		const className = direction === Direction.TopLeft || direction === Direction.BottomLeft ? 'match-box-left' : 'match-box-right'
+		const className = direction === Direction.TopLeft || direction === Direction.BottomLeft ? 'wpbb-match-box-left' : 'wpbb-match-box-right'
 		const matches = Array.from(Array(numMatches).keys()).map((i) => {
 			return (
 				<MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
@@ -105,11 +105,11 @@ const RoundComponent = (props) => {
 
 	}
 	return (
-		<div className='round'>
-			<div className='round__header'>
+		<div className='wpbb-round'>
+			<div className='wpbb-round__header'>
 				{round.name}
 			</div>
-			<div className='round__body'>
+			<div className='wpbb-round__body'>
 				{buildMatches()}
 			</div>
 		</div>
@@ -138,7 +138,7 @@ const NumRoundsSelector = (props) => {
 	}
 
 	return (
-		<form className='options-form'>
+		<form className='wpbb-options-form'>
 			<label>
 				Number of Rounds:
 			</label>
@@ -150,32 +150,11 @@ const NumRoundsSelector = (props) => {
 }
 
 export const Bracket = (props) => {
-	// const [rounds, setRounds] = useState([
-
-	// 	// new Round(1, 'Round 3', 1, []),
-	// 	// new Round(2, 'Round 2', 2, []),
-	// 	// new Round(3, 'Round 1', 3, []),
-
-	// 	// new Round(0, 'Round 4', 1, []),
-	// 	// new Round(2, 'Round 3', 2, []),
-	// 	// new Round(3, 'Round 2', 3, []),
-	// 	// new Round(4, 'Round 1', 4, []),
-
-	// 	new Round(1, 'Round 6', 1, []),
-	// 	new Round(2, 'Round 5', 2, []),
-	// 	new Round(3, 'Round 4', 3, []),
-	// 	new Round(4, 'Round 3', 4, []),
-	// 	new Round(5, 'Round 2', 5, []),
-	// 	new Round(6, 'Round 1', 6, []),
-	// ]);
 	const { numRounds } = props
-	console.log('numRounds', numRounds)
 
 	const rounds = Array.from(Array(numRounds).keys()).map((i) => {
 		return new Round(i + 1, `Round ${i + 1}`, i + 1, [])
 	})
-	console.log('rounds', rounds)
-
 
 	const targetHeight = 600;
 
@@ -201,7 +180,7 @@ export const Bracket = (props) => {
 	}
 
 	return (
-		<div style={{ display: 'flex' }}>
+		<div className='wpbb-bracket'>
 			{buildRounds2(rounds)}
 		</div>
 	)
@@ -216,13 +195,13 @@ export const BracketModal = (props) => {
 	const [numRounds, setNumRounds] = useState(4);
 
 	return (
-		<Modal className='bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>
-			<Modal.Header className='bracket-modal__header' closeButton>
+		<Modal className='wpbb-bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>
+			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
 				<Modal.Title>Create Bracket</Modal.Title>
 				<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
 			</Modal.Header >
 			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} /></Modal.Body>
-			<Modal.Footer className='bracket-modal__footer'>
+			<Modal.Footer className='wpbb-bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleCancel}>
 					Close
 				</Button>

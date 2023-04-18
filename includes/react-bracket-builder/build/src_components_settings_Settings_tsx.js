@@ -76,15 +76,15 @@ const Spacer = _ref2 => {
 const FinalRound = props => {
   const round = props.round;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "round"
+    className: "wpbb-round"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "round__header"
+    className: "wpbb-round__header"
   }, round.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "round__body"
+    className: "wpbb-round__body"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
     grow: "2"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
-    className: "final-match"
+    className: "wpbb-final-match"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
     grow: "2"
   })));
@@ -103,7 +103,7 @@ const RoundComponent = props => {
 
   const buildMatches = () => {
     const numMatches = 2 ** round.depth / 2 / numDirections;
-    const className = direction === Direction.TopLeft || direction === Direction.BottomLeft ? 'match-box-left' : 'match-box-right';
+    const className = direction === Direction.TopLeft || direction === Direction.BottomLeft ? 'wpbb-match-box-left' : 'wpbb-match-box-right';
     const matches = Array.from(Array(numMatches).keys()).map(i => {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
         className: className,
@@ -116,11 +116,11 @@ const RoundComponent = props => {
     return matches;
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "round"
+    className: "wpbb-round"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "round__header"
+    className: "wpbb-round__header"
   }, round.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "round__body"
+    className: "wpbb-round__body"
   }, buildMatches()));
 };
 const NumRoundsSelector = props => {
@@ -141,39 +141,19 @@ const NumRoundsSelector = props => {
     setNumRounds(parseInt(num));
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
-    className: "options-form"
+    className: "wpbb-options-form"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Number of Rounds:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     value: numRounds,
     onChange: handleChange
   }, options));
 };
 const Bracket = props => {
-  // const [rounds, setRounds] = useState([
-
-  // 	// new Round(1, 'Round 3', 1, []),
-  // 	// new Round(2, 'Round 2', 2, []),
-  // 	// new Round(3, 'Round 1', 3, []),
-
-  // 	// new Round(0, 'Round 4', 1, []),
-  // 	// new Round(2, 'Round 3', 2, []),
-  // 	// new Round(3, 'Round 2', 3, []),
-  // 	// new Round(4, 'Round 1', 4, []),
-
-  // 	new Round(1, 'Round 6', 1, []),
-  // 	new Round(2, 'Round 5', 2, []),
-  // 	new Round(3, 'Round 4', 3, []),
-  // 	new Round(4, 'Round 3', 4, []),
-  // 	new Round(5, 'Round 2', 5, []),
-  // 	new Round(6, 'Round 1', 6, []),
-  // ]);
   const {
     numRounds
   } = props;
-  console.log('numRounds', numRounds);
   const rounds = Array.from(Array(numRounds).keys()).map(i => {
     return new Round(i + 1, `Round ${i + 1}`, i + 1, []);
   });
-  console.log('rounds', rounds);
   const targetHeight = 600;
 
   // The number of rounds sets the initial height of each match
@@ -205,9 +185,7 @@ const Bracket = props => {
     }))];
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      display: 'flex'
-    }
+    className: "wpbb-bracket"
   }, buildRounds2(rounds));
 };
 const BracketModal = props => {
@@ -218,13 +196,13 @@ const BracketModal = props => {
   } = props;
   const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(4);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    className: "bracket-modal",
+    className: "wpbb-bracket-modal",
     show: show,
     onHide: handleCancel,
     size: "xl",
     centered: true
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Header, {
-    className: "bracket-modal__header",
+    className: "wpbb-bracket-modal__header",
     closeButton: true
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Title, null, "Create Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumRoundsSelector, {
     numRounds: numRounds,
@@ -234,7 +212,7 @@ const BracketModal = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
     numRounds: numRounds
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Footer, {
-    className: "bracket-modal__footer"
+    className: "wpbb-bracket-modal__footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
     variant: "secondary",
     onClick: handleCancel
