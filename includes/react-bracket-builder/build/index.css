@@ -30,6 +30,9 @@
   margin-bottom: 10px;
   text-align: center;
 }
+.wpbb-round .wpbb-round__header input {
+  text-align: center;
+}
 .wpbb-round .wpbb-round__body {
   display: flex;
   flex-grow: 1;

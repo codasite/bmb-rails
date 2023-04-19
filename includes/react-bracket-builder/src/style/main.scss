@@ -18,6 +18,11 @@
 	.wpbb-round__header {
 		margin-bottom: 10px;
 		text-align: center;
+
+		input {
+			text-align: center;
+			// margin: 0 10px;
+		}
 	}
 
 	.wpbb-round__body {

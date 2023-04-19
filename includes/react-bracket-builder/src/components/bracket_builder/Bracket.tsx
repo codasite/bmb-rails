@@ -60,23 +60,29 @@ const Spacer = ({ grow = '1' }) => {
 	)
 }
 
+const RoundHeader = (props) => {
+	const round: Round = props.round;
+	return (
+		<div className='wpbb-round__header'>
+			{/* {round.depth}<br /> */}
+			{/* {round.name} */}
+			<Form.Control type='text' value={round.name} />
+		</div>
+	)
+}
+
 const FinalRound = (props) => {
 	const round: Round = props.round;
 	return (
 		<div className='wpbb-round'>
-			<div className='wpbb-round__header'>
-				{/* {round.depth}<br /> */}
-				{round.name}
-			</div>
+			<RoundHeader round={round} />
 			<div className='wpbb-round__body'>
 				<Spacer grow='2' />
 				<MatchBox className='wpbb-final-match' />
 				<Spacer grow='2' />
 			</div>
 		</div>
-
 	)
-
 }
 
 
@@ -106,9 +112,7 @@ const RoundComponent = (props) => {
 	}
 	return (
 		<div className='wpbb-round'>
-			<div className='wpbb-round__header'>
-				{round.name}
-			</div>
+			<RoundHeader round={round} />
 			<div className='wpbb-round__body'>
 				{buildMatches()}
 			</div>
@@ -153,7 +157,7 @@ export const Bracket = (props) => {
 	const { numRounds } = props
 
 	const rounds = Array.from(Array(numRounds).keys()).map((i) => {
-		return new Round(i + 1, `Round ${i + 1}`, i + 1, [])
+		return new Round(i + 1, `Round ${numRounds - i}`, i + 1, [])
 	})
 
 	const targetHeight = 600;
