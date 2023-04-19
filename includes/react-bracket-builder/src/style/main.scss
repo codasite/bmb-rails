@@ -35,16 +35,18 @@ $match-box-border: 1px solid black;
 	border-bottom: $match-box-border;
 }
 
+$bracket-radius: 3px;
+
 .wpbb-match-box-left {
 	@include match-box();
 	border-right: $match-box-border;
-	border-radius: 0 5px 5px 0;
+	border-radius: 0 $bracket-radius $bracket-radius 0;
 }
 
 .wpbb-match-box-right {
 	@include match-box();
 	border-left: $match-box-border;
-	border-radius: 5px 0 0 5px;
+	border-radius: $bracket-radius 0 0 $bracket-radius;
 }
 
 .wpbb-final-match {
