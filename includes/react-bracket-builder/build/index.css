@@ -32,6 +32,8 @@
 }
 .wpbb-round .wpbb-round__header input {
   text-align: center;
+  margin: 0 auto;
+  width: 90%;
 }
 .wpbb-round .wpbb-round__body {
   display: flex;
