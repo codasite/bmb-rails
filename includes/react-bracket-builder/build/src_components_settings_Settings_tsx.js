@@ -77,20 +77,43 @@ const Spacer = _ref2 => {
   });
 };
 const RoundHeader = props => {
+  const [editRoundName, setEditRoundName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [nameBuffer, setNameBuffer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('');
   const round = props.round;
+  const updateRoundName = props.updateRoundName;
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    setNameBuffer(props.round.name);
+  }, [props.round.name]);
+  const doneEditing = () => {
+    setEditRoundName(false);
+    props.updateRoundName(props.round.id, nameBuffer);
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round__header"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Control, {
+  }, editRoundName ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Control, {
     type: "text",
-    value: round.name
-  }));
+    value: nameBuffer,
+    autoFocus: true,
+    onFocus: e => e.target.select(),
+    onBlur: () => doneEditing(),
+    onChange: e => setNameBuffer(e.target.value),
+    onKeyUp: e => {
+      if (e.key === 'Enter') {
+        doneEditing();
+      }
+    }
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    onClick: () => setEditRoundName(true)
+  }, round.name));
 };
 const FinalRound = props => {
   const round = props.round;
+  const updateRoundName = props.updateRoundName;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundHeader, {
-    round: round
+    round: round,
+    updateRoundName: updateRoundName
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round__body"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
@@ -106,6 +129,7 @@ const RoundComponent = props => {
   const direction = props.direction;
   const numDirections = props.numDirections;
   const matchHeight = props.matchHeight;
+  const updateRoundName = props.updateRoundName;
 
   // For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
   // For example, a round with depth 1 has 2 nodes and a round at depth 3 can have up to 8 nodes
@@ -130,7 +154,8 @@ const RoundComponent = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundHeader, {
-    round: round
+    round: round,
+    updateRoundName: updateRoundName
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round__body"
   }, buildMatches()));
@@ -163,9 +188,21 @@ const Bracket = props => {
   const {
     numRounds
   } = props;
-  const rounds = Array.from(Array(numRounds).keys()).map(i => {
-    return new Round(i + 1, `Round ${numRounds - i}`, i + 1, []);
-  });
+  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([new Round(0, 'Finals', 0, [])]);
+  const updateRoundName = (roundId, name) => {
+    const newRounds = rounds.map(round => {
+      if (round.id === roundId) {
+        round.name = name;
+      }
+      return round;
+    });
+    setRounds(newRounds);
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    setRounds(Array.from(Array(numRounds).keys()).map(i => {
+      return new Round(i + 1, `Round ${numRounds - i}`, i + 1, []);
+    }));
+  }, [numRounds]);
   const targetHeight = 600;
 
   // The number of rounds sets the initial height of each match
@@ -184,16 +221,19 @@ const Bracket = props => {
       round: round,
       direction: Direction.TopLeft,
       numDirections: numDirections,
-      matchHeight: 2 ** idx * firstRoundMatchHeight
+      matchHeight: 2 ** idx * firstRoundMatchHeight,
+      updateRoundName: updateRoundName
     })),
     // handle final round differently
     (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(FinalRound, {
-      round: rounds[0]
+      round: rounds[0],
+      updateRoundName: updateRoundName
     }), ...rounds.slice(1).map((round, idx, arr) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
       round: round,
       direction: Direction.TopRight,
       numDirections: numDirections,
-      matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
+      matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight,
+      updateRoundName: updateRoundName
     }))];
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

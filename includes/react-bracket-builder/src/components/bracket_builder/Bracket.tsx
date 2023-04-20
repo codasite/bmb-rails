@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
@@ -61,21 +61,49 @@ const Spacer = ({ grow = '1' }) => {
 }
 
 const RoundHeader = (props) => {
+	const [editRoundName, setEditRoundName] = useState(false);
+	const [nameBuffer, setNameBuffer] = useState('');
 	const round: Round = props.round;
+	const updateRoundName = props.updateRoundName;
+
+	useEffect(() => {
+		setNameBuffer(props.round.name)
+	}, [props.round.name])
+
+	const doneEditing = () => {
+		setEditRoundName(false)
+		props.updateRoundName(props.round.id, nameBuffer)
+	}
+
 	return (
 		<div className='wpbb-round__header'>
 			{/* {round.depth}<br /> */}
 			{/* {round.name} */}
-			<Form.Control type='text' value={round.name} />
+			{editRoundName ? <Form.Control type='text'
+				value={nameBuffer}
+				autoFocus
+				onFocus={(e) => e.target.select()}
+				onBlur={() => doneEditing()}
+				onChange={(e) => setNameBuffer(e.target.value)}
+				onKeyUp={(e) => {
+					if (e.key === 'Enter') {
+						doneEditing()
+					}
+				}}
+			/>
+				:
+				<span onClick={() => setEditRoundName(true)}>{round.name}</span>
+			}
 		</div>
 	)
 }
 
 const FinalRound = (props) => {
 	const round: Round = props.round;
+	const updateRoundName = props.updateRoundName;
 	return (
 		<div className='wpbb-round'>
-			<RoundHeader round={round} />
+			<RoundHeader round={round} updateRoundName={updateRoundName} />
 			<div className='wpbb-round__body'>
 				<Spacer grow='2' />
 				<MatchBox className='wpbb-final-match' />
@@ -91,6 +119,7 @@ const RoundComponent = (props) => {
 	const direction: Direction = props.direction;
 	const numDirections: number = props.numDirections;
 	const matchHeight: number = props.matchHeight;
+	const updateRoundName = props.updateRoundName;
 
 
 	// For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
@@ -112,7 +141,7 @@ const RoundComponent = (props) => {
 	}
 	return (
 		<div className='wpbb-round'>
-			<RoundHeader round={round} />
+			<RoundHeader round={round} updateRoundName={updateRoundName} />
 			<div className='wpbb-round__body'>
 				{buildMatches()}
 			</div>
@@ -155,10 +184,23 @@ const NumRoundsSelector = (props) => {
 
 export const Bracket = (props) => {
 	const { numRounds } = props
+	const [rounds, setRounds] = useState([new Round(0, 'Finals', 0, [])])
 
-	const rounds = Array.from(Array(numRounds).keys()).map((i) => {
-		return new Round(i + 1, `Round ${numRounds - i}`, i + 1, [])
-	})
+	const updateRoundName = (roundId: number, name: string) => {
+		const newRounds = rounds.map((round) => {
+			if (round.id === roundId) {
+				round.name = name
+			}
+			return round
+		})
+		setRounds(newRounds)
+	}
+
+	useEffect(() => {
+		setRounds(Array.from(Array(numRounds).keys()).map((i) => {
+			return new Round(i + 1, `Round ${numRounds - i}`, i + 1, [])
+		}))
+	}, [numRounds])
 
 	const targetHeight = 600;
 
@@ -176,10 +218,24 @@ export const Bracket = (props) => {
 		const numDirections = 2
 
 		return [
-			...rounds.slice(1).reverse().map((round, idx) => <RoundComponent round={round} direction={Direction.TopLeft} numDirections={numDirections} matchHeight={2 ** idx * firstRoundMatchHeight} />),
+			...rounds.slice(1).reverse().map((round, idx) =>
+				<RoundComponent
+					round={round} direction={Direction.TopLeft}
+					numDirections={numDirections}
+					matchHeight={2 ** idx * firstRoundMatchHeight}
+					updateRoundName={updateRoundName}
+				/>
+			),
 			// handle final round differently
-			<FinalRound round={rounds[0]} />,
-			...rounds.slice(1).map((round, idx, arr) => <RoundComponent round={round} direction={Direction.TopRight} numDirections={numDirections} matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight} />)
+			<FinalRound round={rounds[0]} updateRoundName={updateRoundName} />,
+			...rounds.slice(1).map((round, idx, arr) =>
+				<RoundComponent round={round}
+					direction={Direction.TopRight}
+					numDirections={numDirections}
+					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					updateRoundName={updateRoundName}
+				/>
+			)
 		]
 	}
 

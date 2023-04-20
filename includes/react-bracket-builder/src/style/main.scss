@@ -13,16 +13,25 @@
 .wpbb-round {
 	display: flex;
 	flex-direction: column;
-	flex-grow: 1;
+	flex: 1 1 0;
 
 	.wpbb-round__header {
 		margin-bottom: 10px;
 		text-align: center;
+		height: 34px;
+		line-height: 30px;
 
 		input {
 			text-align: center;
 			margin: 0 auto;
 			width: 90%;
+		}
+
+		span {
+			// margin: auto 0;
+			display: inline-block;
+			vertical-align: middle;
+			line-height: normal;
 		}
 	}
 
