@@ -54,6 +54,7 @@ const TeamSlot = (props) => {
 
 const MatchBox = ({ ...props }) => {
 	const node1: Node = props.node1
+
 	const node2: Node = props.node2
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round

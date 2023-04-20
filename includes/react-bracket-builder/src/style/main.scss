@@ -73,20 +73,28 @@ $bracket-radius: 3px;
 	@extend .wpbb-match-box-left;
 }
 
-.wpbb-match-box-left-outer::after {
+@mixin match-box-outer() {
 	content: '';
 	position: absolute;
 	display: block;
-	top: 0;
-	left: 0;
-	width: 0;
-	height: 0;
-	border-top: 15px solid red;
-	border-bottom: 15px solid red;
+	bottom: -5px;
+	top: -5px;
+	width: 50%;
+	border: 5px solid white;
+}
+
+.wpbb-match-box-left-outer::after {
+	@include match-box-outer();
+	left: 0
 }
 
 .wpbb-match-box-right-outer {
 	@extend .wpbb-match-box-right;
+}
+
+.wpbb-match-box-right-outer::after {
+	@include match-box-outer();
+	right: 0
 }
 
 .wpbb-final-match {
@@ -115,6 +123,7 @@ $bracket-radius: 3px;
 	background-color: white;
 	padding: 0 10px;
 	border-radius: $bracket-radius;
+	z-index: 1;
 
 }
 
