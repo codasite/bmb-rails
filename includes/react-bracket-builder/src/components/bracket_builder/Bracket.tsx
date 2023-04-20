@@ -33,13 +33,23 @@ class Round {
 	id: number;
 	name: string;
 	depth: number;
+	round: number;
 	nodes: Node[];
-	constructor(id: number, name: string, depth: number, nodes: Node[]) {
+	constructor(id: number, name: string, depth: number, round: number, nodes: Node[]) {
 		this.id = id;
 		this.name = name;
 		this.depth = depth;
+		this.round = round;
 		this.nodes = nodes;
 	}
+}
+
+const TeamSlot = (props) => {
+	return (
+		<div className={props.className}>
+			<span className='wpbb-team-name'>Michigan State</span>
+		</div>
+	)
 }
 
 const MatchBox = ({ ...props }) => {
@@ -49,6 +59,8 @@ const MatchBox = ({ ...props }) => {
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={props.className} style={{ ...props.style }}>
+			<TeamSlot className='wpbb-team1' />
+			<TeamSlot className='wpbb-team2' />
 		</div>
 	)
 
@@ -130,7 +142,20 @@ const RoundComponent = (props) => {
 
 	const buildMatches = () => {
 		const numMatches = 2 ** round.depth / 2 / numDirections
-		const className = direction === Direction.TopLeft || direction === Direction.BottomLeft ? 'wpbb-match-box-left' : 'wpbb-match-box-right'
+
+		let className: string;
+		if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
+			// Left side of the bracket
+			className = 'wpbb-match-box-left'
+		} else {
+			// Right side of the bracket
+			className = 'wpbb-match-box-right'
+		}
+		if (round.round === 1) {
+			// First round
+			className += '-outer'
+		}
+
 		const matches = Array.from(Array(numMatches).keys()).map((i) => {
 			return (
 				<MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
@@ -182,9 +207,42 @@ const NumRoundsSelector = (props) => {
 	)
 }
 
+const NumWildcardsSelector = (props) => {
+	const {
+		numWildcards,
+		setNumWildcards
+	} = props
+
+	const minWildcards = 0;
+	const maxWildcards = 6;
+
+	const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map((i) => {
+		return (
+			<option value={i + minWildcards}>{i + minWildcards}</option>
+		)
+	})
+
+	const handleChange = (event) => {
+		const num = event.target.value
+		console.log(num)
+		setNumWildcards(parseInt(num))
+	}
+
+	return (
+		<form className='wpbb-options-form'>
+			<label>
+				Number of Wildcards:
+			</label>
+			<select value={numWildcards} onChange={handleChange}>
+				{options}
+			</select>
+		</form>
+	)
+}
+
 export const Bracket = (props) => {
 	const { numRounds } = props
-	const [rounds, setRounds] = useState([new Round(0, 'Finals', 0, [])])
+	const [rounds, setRounds] = useState([new Round(0, 'Finals', 0, 0, [])])
 
 	const updateRoundName = (roundId: number, name: string) => {
 		const newRounds = rounds.map((round) => {
@@ -198,7 +256,7 @@ export const Bracket = (props) => {
 
 	useEffect(() => {
 		setRounds(Array.from(Array(numRounds).keys()).map((i) => {
-			return new Round(i + 1, `Round ${numRounds - i}`, i + 1, [])
+			return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, [])
 		}))
 	}, [numRounds])
 

@@ -10,6 +10,10 @@
 	}
 }
 
+.wpbb-bracket {
+	display: flex;
+}
+
 .wpbb-round {
 	display: flex;
 	flex-direction: column;
@@ -48,6 +52,7 @@ $match-box-border: 1px solid black;
 @mixin match-box() {
 	border-top: $match-box-border;
 	border-bottom: $match-box-border;
+	position: relative;
 }
 
 $bracket-radius: 3px;
@@ -62,6 +67,26 @@ $bracket-radius: 3px;
 	@include match-box();
 	border-left: $match-box-border;
 	border-radius: $bracket-radius 0 0 $bracket-radius;
+}
+
+.wpbb-match-box-left-outer {
+	@extend .wpbb-match-box-left;
+}
+
+.wpbb-match-box-left-outer::after {
+	content: '';
+	position: absolute;
+	display: block;
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 0;
+	border-top: 15px solid red;
+	border-bottom: 15px solid red;
+}
+
+.wpbb-match-box-right-outer {
+	@extend .wpbb-match-box-right;
 }
 
 .wpbb-final-match {
@@ -81,6 +106,29 @@ $bracket-radius: 3px;
 	}
 }
 
-.wpbb-bracket {
-	display: flex;
+@mixin team() {
+	position: absolute;
+	height: 30px;
+	border: 1px solid black;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: white;
+	padding: 0 10px;
+	border-radius: $bracket-radius;
+
+}
+
+.wpbb-team1 {
+	@include team();
+	top: -15px;
+}
+
+.wpbb-team2 {
+	@include team();
+	bottom: -15px;
+}
+
+.wpbb-team-name {
+	white-space: nowrap;
+	font-size: small;
 }

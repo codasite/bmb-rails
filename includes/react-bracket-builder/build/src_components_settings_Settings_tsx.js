@@ -44,13 +44,21 @@ class Node {
   }
 }
 class Round {
-  constructor(id, name, depth, nodes) {
+  constructor(id, name, depth, round, nodes) {
     this.id = id;
     this.name = name;
     this.depth = depth;
+    this.round = round;
     this.nodes = nodes;
   }
 }
+const TeamSlot = props => {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: props.className
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "wpbb-team-name"
+  }, "Michigan State"));
+};
 const MatchBox = _ref => {
   let {
     ...props
@@ -64,7 +72,11 @@ const MatchBox = _ref => {
     style: {
       ...props.style
     }
-  });
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
+    className: "wpbb-team1"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
+    className: "wpbb-team2"
+  }));
 };
 const Spacer = _ref2 => {
   let {
@@ -139,7 +151,18 @@ const RoundComponent = props => {
 
   const buildMatches = () => {
     const numMatches = 2 ** round.depth / 2 / numDirections;
-    const className = direction === Direction.TopLeft || direction === Direction.BottomLeft ? 'wpbb-match-box-left' : 'wpbb-match-box-right';
+    let className;
+    if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
+      // Left side of the bracket
+      className = 'wpbb-match-box-left';
+    } else {
+      // Right side of the bracket
+      className = 'wpbb-match-box-right';
+    }
+    if (round.round === 1) {
+      // First round
+      className += '-outer';
+    }
     const matches = Array.from(Array(numMatches).keys()).map(i => {
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
         className: className,
@@ -184,11 +207,35 @@ const NumRoundsSelector = props => {
     onChange: handleChange
   }, options));
 };
+const NumWildcardsSelector = props => {
+  const {
+    numWildcards,
+    setNumWildcards
+  } = props;
+  const minWildcards = 0;
+  const maxWildcards = 6;
+  const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map(i => {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+      value: i + minWildcards
+    }, i + minWildcards);
+  });
+  const handleChange = event => {
+    const num = event.target.value;
+    console.log(num);
+    setNumWildcards(parseInt(num));
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
+    className: "wpbb-options-form"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Number of Wildcards:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    value: numWildcards,
+    onChange: handleChange
+  }, options));
+};
 const Bracket = props => {
   const {
     numRounds
   } = props;
-  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([new Round(0, 'Finals', 0, [])]);
+  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([new Round(0, 'Finals', 0, 0, [])]);
   const updateRoundName = (roundId, name) => {
     const newRounds = rounds.map(round => {
       if (round.id === roundId) {
@@ -200,7 +247,7 @@ const Bracket = props => {
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setRounds(Array.from(Array(numRounds).keys()).map(i => {
-      return new Round(i + 1, `Round ${numRounds - i}`, i + 1, []);
+      return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, []);
     }));
   }, [numRounds]);
   const targetHeight = 600;

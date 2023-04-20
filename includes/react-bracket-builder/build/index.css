@@ -21,6 +21,10 @@
   border-top: 0;
 }
 
+.wpbb-bracket {
+  display: flex;
+}
+
 .wpbb-round {
   display: flex;
   flex-direction: column;
@@ -49,23 +53,38 @@
   justify-content: center;
 }
 
-.wpbb-match-box-left {
+.wpbb-match-box-left, .wpbb-match-box-left-outer {
   border-top: 1px solid black;
   border-bottom: 1px solid black;
+  position: relative;
   border-right: 1px solid black;
   border-radius: 0 3px 3px 0;
 }
 
-.wpbb-match-box-right {
+.wpbb-match-box-right, .wpbb-match-box-right-outer {
   border-top: 1px solid black;
   border-bottom: 1px solid black;
+  position: relative;
   border-left: 1px solid black;
   border-radius: 3px 0 0 3px;
+}
+
+.wpbb-match-box-left-outer::after {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-top: 15px solid red;
+  border-bottom: 15px solid red;
 }
 
 .wpbb-final-match {
   border-top: 1px solid black;
   border-bottom: 1px solid black;
+  position: relative;
   flex-grow: 1;
 }
 
@@ -80,8 +99,33 @@
   margin-right: 10px;
 }
 
-.wpbb-bracket {
-  display: flex;
+.wpbb-team1 {
+  position: absolute;
+  height: 30px;
+  border: 1px solid black;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 0 10px;
+  border-radius: 3px;
+  top: -15px;
+}
+
+.wpbb-team2 {
+  position: absolute;
+  height: 30px;
+  border: 1px solid black;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  padding: 0 10px;
+  border-radius: 3px;
+  bottom: -15px;
+}
+
+.wpbb-team-name {
+  white-space: nowrap;
+  font-size: small;
 }
 
 /*# sourceMappingURL=index.css.map*/
