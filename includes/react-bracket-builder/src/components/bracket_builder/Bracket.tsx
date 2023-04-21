@@ -145,8 +145,14 @@ const RoundComponent = (props) => {
 
 	const buildMatches = () => {
 		// const numMatches = 2 ** round.depth / 2 / numDirections
+		// Get the number of matches in a single direction (left or right)
 		const numMatches = round.numMatches / numDirections
+		// Get the difference between the specified number of matches and how many there could possibly be
+		// This is to account for wildcard rounds where there are less than the maximum number of matches
+		const maxMatches = 2 ** round.depth / 2 / numDirections
 		console.log('numMatches', numMatches)
+		console.log('maxMatches', maxMatches)
+		console.log('subtract', maxMatches - numMatches)
 		// console.log('round numMatches', roundNumMatches)
 
 		let className: string;
@@ -230,7 +236,9 @@ const NumWildcardsSelector = (props) => {
 	// 	)
 	// })
 	// Number of wildcards must be an even number or 0
-	const options = Array.from(Array(maxWildcards / 2).keys()).map((i) => {
+	const options = Array.from(Array(maxWildcards / 2 + 1).keys()).map((i) => {
+		console.log('i', i)
+		console.log('i * 2', i * 2)
 		return (
 			<option value={i * 2}>{i * 2}</option>
 		)
@@ -240,7 +248,7 @@ const NumWildcardsSelector = (props) => {
 
 	const handleChange = (event) => {
 		const num = event.target.value
-		console.log(num)
+		console.log('num', num)
 		setNumWildcards(parseInt(num))
 	}
 
@@ -274,10 +282,11 @@ export const Bracket = (props) => {
 		setRounds(Array.from(Array(numRounds).keys()).map((i) => {
 			// The number of matches in a round is equal to 2^depth unless it's the first round
 			// and there are wildcards. In that case, the number of matches equals the number of wildcards
-			const numMatches = i === 0 && numWildcards > 0 ? numWildcards : 2 ** i
+			const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i
+			console.log('bracket numMatches', numMatches)
 			return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, numMatches, [])
 		}))
-	}, [numRounds])
+	}, [numRounds, numWildcards])
 
 	const targetHeight = 800;
 
@@ -332,7 +341,7 @@ export const BracketModal = (props) => {
 	const [numWildcards, setNumWildcards] = useState(0);
 	// The max number of wildcards is 2 less than the possible number of matches in the first round
 	// (2^numRounds - 2)
-	const maxWildcards = 2 ** (numRounds - 1);
+	const maxWildcards = 2 ** (numRounds - 1) - 2;
 	console.log(maxWildcards)
 
 	return (
