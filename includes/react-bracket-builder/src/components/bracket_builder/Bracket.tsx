@@ -219,14 +219,24 @@ const NumWildcardsSelector = (props) => {
 		setNumWildcards,
 		maxWildcards,
 	} = props
+	console.log('maxWildcards', maxWildcards)
 
 	const minWildcards = 0;
 
-	const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map((i) => {
+	// const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map((i) => {
+	// 	return (
+	// 		// Number of wildcards must be an even number
+	// 		<option value={i + minWildcards}>{i + minWildcards}</option>
+	// 	)
+	// })
+	// Number of wildcards must be an even number or 0
+	const options = Array.from(Array(maxWildcards / 2).keys()).map((i) => {
 		return (
-			<option value={i + minWildcards}>{i + minWildcards}</option>
+			<option value={i * 2}>{i * 2}</option>
 		)
 	})
+
+
 
 	const handleChange = (event) => {
 		const num = event.target.value
@@ -320,6 +330,10 @@ export const BracketModal = (props) => {
 	} = props;
 	const [numRounds, setNumRounds] = useState(4);
 	const [numWildcards, setNumWildcards] = useState(0);
+	// The max number of wildcards is 2 less than the possible number of matches in the first round
+	// (2^numRounds - 2)
+	const maxWildcards = 2 ** (numRounds - 1);
+	console.log(maxWildcards)
 
 	return (
 		<Modal className='wpbb-bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>
@@ -327,7 +341,7 @@ export const BracketModal = (props) => {
 				<Modal.Title>Create Bracket</Modal.Title>
 				<form className='wpbb-options-form'>
 					<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
-					<NumWildcardsSelector numWildcards={numWildcards} setNumWildcards={setNumWildcards} maxWildcards={numRounds - 1} />
+					<NumWildcardsSelector numWildcards={numWildcards} setNumWildcards={setNumWildcards} maxWildcards={maxWildcards} />
 				</form>
 			</Modal.Header >
 			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} numWildcards={numWildcards} /></Modal.Body>

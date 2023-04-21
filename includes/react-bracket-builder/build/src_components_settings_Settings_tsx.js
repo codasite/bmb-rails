@@ -218,11 +218,20 @@ const NumWildcardsSelector = props => {
     setNumWildcards,
     maxWildcards
   } = props;
+  console.log('maxWildcards', maxWildcards);
   const minWildcards = 0;
-  const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map(i => {
+
+  // const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map((i) => {
+  // 	return (
+  // 		// Number of wildcards must be an even number
+  // 		<option value={i + minWildcards}>{i + minWildcards}</option>
+  // 	)
+  // })
+  // Number of wildcards must be an even number or 0
+  const options = Array.from(Array(maxWildcards / 2).keys()).map(i => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: i + minWildcards
-    }, i + minWildcards);
+      value: i * 2
+    }, i * 2);
   });
   const handleChange = event => {
     const num = event.target.value;
@@ -303,6 +312,10 @@ const BracketModal = props => {
   } = props;
   const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(4);
   const [numWildcards, setNumWildcards] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  // The max number of wildcards is 2 less than the possible number of matches in the first round
+  // (2^numRounds - 2)
+  const maxWildcards = 2 ** (numRounds - 1);
+  console.log(maxWildcards);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
@@ -320,7 +333,7 @@ const BracketModal = props => {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumWildcardsSelector, {
     numWildcards: numWildcards,
     setNumWildcards: setNumWildcards,
-    maxWildcards: numRounds - 1
+    maxWildcards: maxWildcards
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Body, {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
