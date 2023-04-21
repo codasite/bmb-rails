@@ -107,7 +107,11 @@
   flex: 1;
   justify-content: center;
 }
-.wpbb-options-form label {
+
+.wpbb-option-group {
+  margin-right: 20px;
+}
+.wpbb-option-group label {
   margin-right: 10px;
 }
 

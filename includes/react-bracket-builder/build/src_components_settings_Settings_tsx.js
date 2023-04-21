@@ -200,8 +200,8 @@ const NumRoundsSelector = props => {
     console.log(num);
     setNumRounds(parseInt(num));
   };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
-    className: "wpbb-options-form"
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "wpbb-option-group"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Number of Rounds:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     value: numRounds,
     onChange: handleChange
@@ -210,10 +210,10 @@ const NumRoundsSelector = props => {
 const NumWildcardsSelector = props => {
   const {
     numWildcards,
-    setNumWildcards
+    setNumWildcards,
+    maxWildcards
   } = props;
   const minWildcards = 0;
-  const maxWildcards = 6;
   const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map(i => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
       value: i + minWildcards
@@ -224,9 +224,9 @@ const NumWildcardsSelector = props => {
     console.log(num);
     setNumWildcards(parseInt(num));
   };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
-    className: "wpbb-options-form"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Number of Wildcards:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "wpbb-option-group"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Wildcard Games:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     value: numWildcards,
     onChange: handleChange
   }, options));
@@ -235,7 +235,7 @@ const Bracket = props => {
   const {
     numRounds
   } = props;
-  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([new Round(0, 'Finals', 0, 0, [])]);
+  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const updateRoundName = (roundId, name) => {
     const newRounds = rounds.map(round => {
       if (round.id === roundId) {
@@ -285,7 +285,7 @@ const Bracket = props => {
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-bracket"
-  }, buildRounds2(rounds));
+  }, rounds.length > 0 && buildRounds2(rounds));
 };
 const BracketModal = props => {
   const {
@@ -294,6 +294,7 @@ const BracketModal = props => {
     handleSave
   } = props;
   const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(4);
+  const [numWildcards, setNumWildcards] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
@@ -303,10 +304,16 @@ const BracketModal = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Header, {
     className: "wpbb-bracket-modal__header",
     closeButton: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Title, null, "Create Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumRoundsSelector, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Title, null, "Create Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
+    className: "wpbb-options-form"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumRoundsSelector, {
     numRounds: numRounds,
     setNumRounds: setNumRounds
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Body, {
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumWildcardsSelector, {
+    numWildcards: numWildcards,
+    setNumWildcards: setNumWildcards,
+    maxWildcards: numRounds - 1
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Body, {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
     numRounds: numRounds

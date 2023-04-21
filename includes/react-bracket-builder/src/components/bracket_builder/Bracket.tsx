@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 
@@ -197,25 +197,25 @@ const NumRoundsSelector = (props) => {
 	}
 
 	return (
-		<form className='wpbb-options-form'>
+		<div className='wpbb-option-group'>
 			<label>
 				Number of Rounds:
 			</label>
 			<select value={numRounds} onChange={handleChange}>
 				{options}
 			</select>
-		</form>
+		</div>
 	)
 }
 
 const NumWildcardsSelector = (props) => {
 	const {
 		numWildcards,
-		setNumWildcards
+		setNumWildcards,
+		maxWildcards,
 	} = props
 
 	const minWildcards = 0;
-	const maxWildcards = 6;
 
 	const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map((i) => {
 		return (
@@ -230,20 +230,20 @@ const NumWildcardsSelector = (props) => {
 	}
 
 	return (
-		<form className='wpbb-options-form'>
+		<div className='wpbb-option-group'>
 			<label>
-				Number of Wildcards:
+				Wildcard Games:
 			</label>
 			<select value={numWildcards} onChange={handleChange}>
 				{options}
 			</select>
-		</form>
+		</div>
 	)
 }
 
 export const Bracket = (props) => {
 	const { numRounds } = props
-	const [rounds, setRounds] = useState([new Round(0, 'Finals', 0, 0, [])])
+	const [rounds, setRounds] = useState<Round[]>([])
 
 	const updateRoundName = (roundId: number, name: string) => {
 		const newRounds = rounds.map((round) => {
@@ -300,7 +300,7 @@ export const Bracket = (props) => {
 
 	return (
 		<div className='wpbb-bracket'>
-			{buildRounds2(rounds)}
+			{rounds.length > 0 && buildRounds2(rounds)}
 		</div>
 	)
 }
@@ -312,12 +312,16 @@ export const BracketModal = (props) => {
 		handleSave,
 	} = props;
 	const [numRounds, setNumRounds] = useState(4);
+	const [numWildcards, setNumWildcards] = useState(0);
 
 	return (
 		<Modal className='wpbb-bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
 				<Modal.Title>Create Bracket</Modal.Title>
-				<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
+				<form className='wpbb-options-form'>
+					<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
+					<NumWildcardsSelector numWildcards={numWildcards} setNumWildcards={setNumWildcards} maxWildcards={numRounds - 1} />
+				</form>
 			</Modal.Header >
 			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} /></Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
