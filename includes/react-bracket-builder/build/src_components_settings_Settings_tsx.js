@@ -66,12 +66,29 @@ const MatchBox = _ref => {
   } = _ref;
   const node1 = props.node1;
   const node2 = props.node2;
+  const direction = props.direction;
+  const outer = props.outer;
+  const height = props.height;
+  const spacing = props.spacing;
+  let className;
+  if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
+    // Left side of the bracket
+    className = 'wpbb-match-box-left';
+  } else {
+    // Right side of the bracket
+    className = 'wpbb-match-box-right';
+  }
+  if (outer) {
+    // First round
+    className += '-outer';
+  }
   // This component renders the lines connecting two nodes representing a "game"
   // These should be evenly spaced in the column and grow according to the number of other matches in the round
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: props.className,
+    className: className,
     style: {
-      ...props.style
+      height: height + 'px',
+      marginBottom: spacing + 'px'
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team1"
@@ -157,32 +174,28 @@ const RoundComponent = props => {
     // Get the difference between the specified number of matches and how many there could possibly be
     // This is to account for wildcard rounds where there are less than the maximum number of matches
     const maxMatches = 2 ** round.depth / 2 / numDirections;
+    const emptyMatches = maxMatches - numMatches;
     console.log('numMatches', numMatches);
     console.log('maxMatches', maxMatches);
-    console.log('subtract', maxMatches - numMatches);
+    console.log('emptyMatches', emptyMatches);
+
     // console.log('round numMatches', roundNumMatches)
 
-    let className;
-    if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
-      // Left side of the bracket
-      className = 'wpbb-match-box-left';
-    } else {
-      // Right side of the bracket
-      className = 'wpbb-match-box-right';
-    }
-    if (round.roundNum === 1) {
-      // First round
-      className += '-outer';
-    }
+    // Whether there are any matches below this round
+    // Used to determine whether to truncate the match box border so that it does not extend past the team slot
+    const outerRound = round.roundNum === 1;
     const matches = Array.from(Array(numMatches).keys()).map(i => {
-      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
-        className: className,
-        style: {
+      return (
+        // <MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
+        (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
+          direction: direction,
+          outer: outerRound,
           height: matchHeight,
-          marginBottom: i + 1 < numMatches ? matchHeight : 0
-        }
-      });
+          spacing: i + 1 < numMatches ? matchHeight : 0 // Do not add spacing to the last match in the round column
+        })
+      );
     });
+
     return matches;
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

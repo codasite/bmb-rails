@@ -56,12 +56,30 @@ const TeamSlot = (props) => {
 
 const MatchBox = ({ ...props }) => {
 	const node1: Node = props.node1
-
 	const node2: Node = props.node2
+
+	const direction: Direction = props.direction
+	const outer: boolean = props.outer
+	const height: number = props.height
+	const spacing: number = props.spacing
+
+	let className: string;
+
+	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
+		// Left side of the bracket
+		className = 'wpbb-match-box-left'
+	} else {
+		// Right side of the bracket
+		className = 'wpbb-match-box-right'
+	}
+	if (outer) {
+		// First round
+		className += '-outer'
+	}
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
-		<div className={props.className} style={{ ...props.style }}>
+		<div className={className} style={{ height: height + 'px', marginBottom: spacing + 'px' }}>
 			<TeamSlot className='wpbb-team1' />
 			<TeamSlot className='wpbb-team2' />
 		</div>
@@ -150,27 +168,27 @@ const RoundComponent = (props) => {
 		// Get the difference between the specified number of matches and how many there could possibly be
 		// This is to account for wildcard rounds where there are less than the maximum number of matches
 		const maxMatches = 2 ** round.depth / 2 / numDirections
+		const emptyMatches = maxMatches - numMatches
 		console.log('numMatches', numMatches)
 		console.log('maxMatches', maxMatches)
-		console.log('subtract', maxMatches - numMatches)
+		console.log('emptyMatches', emptyMatches)
+
 		// console.log('round numMatches', roundNumMatches)
 
-		let className: string;
-		if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
-			// Left side of the bracket
-			className = 'wpbb-match-box-left'
-		} else {
-			// Right side of the bracket
-			className = 'wpbb-match-box-right'
-		}
-		if (round.roundNum === 1) {
-			// First round
-			className += '-outer'
-		}
+		// Whether there are any matches below this round
+		// Used to determine whether to truncate the match box border so that it does not extend past the team slot
+		const outerRound = round.roundNum === 1
 
 		const matches = Array.from(Array(numMatches).keys()).map((i) => {
 			return (
-				<MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
+				// <MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
+				<MatchBox
+					direction={direction}
+					outer={outerRound}
+					height={matchHeight}
+					spacing={i + 1 < numMatches ? matchHeight : 0} // Do not add spacing to the last match in the round column
+				/>
+
 			)
 		})
 		return matches
