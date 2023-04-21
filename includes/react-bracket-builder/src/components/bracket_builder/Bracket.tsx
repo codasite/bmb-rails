@@ -33,13 +33,15 @@ class Round {
 	id: number;
 	name: string;
 	depth: number;
-	round: number;
+	roundNum: number;
+	numMatches: number;
 	nodes: Node[];
-	constructor(id: number, name: string, depth: number, round: number, nodes: Node[]) {
+	constructor(id: number, name: string, depth: number, roundNum: number, numMatches: number, nodes: Node[]) {
 		this.id = id;
 		this.name = name;
 		this.depth = depth;
-		this.round = round;
+		this.roundNum = roundNum;
+		this.numMatches = numMatches;
 		this.nodes = nodes;
 	}
 }
@@ -142,7 +144,10 @@ const RoundComponent = (props) => {
 	// the number of matches is split in half
 
 	const buildMatches = () => {
-		const numMatches = 2 ** round.depth / 2 / numDirections
+		// const numMatches = 2 ** round.depth / 2 / numDirections
+		const numMatches = round.numMatches / numDirections
+		console.log('numMatches', numMatches)
+		// console.log('round numMatches', roundNumMatches)
 
 		let className: string;
 		if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
@@ -152,7 +157,7 @@ const RoundComponent = (props) => {
 			// Right side of the bracket
 			className = 'wpbb-match-box-right'
 		}
-		if (round.round === 1) {
+		if (round.roundNum === 1) {
 			// First round
 			className += '-outer'
 		}
@@ -242,7 +247,7 @@ const NumWildcardsSelector = (props) => {
 }
 
 export const Bracket = (props) => {
-	const { numRounds } = props
+	const { numRounds, numWildcards } = props
 	const [rounds, setRounds] = useState<Round[]>([])
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -257,7 +262,10 @@ export const Bracket = (props) => {
 
 	useEffect(() => {
 		setRounds(Array.from(Array(numRounds).keys()).map((i) => {
-			return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, [])
+			// The number of matches in a round is equal to 2^depth unless it's the first round
+			// and there are wildcards. In that case, the number of matches equals the number of wildcards
+			const numMatches = i === 0 && numWildcards > 0 ? numWildcards : 2 ** i
+			return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, numMatches, [])
 		}))
 	}, [numRounds])
 
@@ -273,7 +281,6 @@ export const Bracket = (props) => {
 	const buildRounds2 = (rounds: Round[]) => {
 		// Assume rounds are sorted by depth
 		// Rendering from left to right, sort by depth descending
-		const reversed = rounds.slice(1).reverse()
 		const numDirections = 2
 
 		return [
@@ -323,7 +330,7 @@ export const BracketModal = (props) => {
 					<NumWildcardsSelector numWildcards={numWildcards} setNumWildcards={setNumWildcards} maxWildcards={numRounds - 1} />
 				</form>
 			</Modal.Header >
-			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} /></Modal.Body>
+			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} numWildcards={numWildcards} /></Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleCancel}>
 					Close

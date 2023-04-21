@@ -44,11 +44,12 @@ class Node {
   }
 }
 class Round {
-  constructor(id, name, depth, round, nodes) {
+  constructor(id, name, depth, roundNum, numMatches, nodes) {
     this.id = id;
     this.name = name;
     this.depth = depth;
-    this.round = round;
+    this.roundNum = roundNum;
+    this.numMatches = numMatches;
     this.nodes = nodes;
   }
 }
@@ -150,7 +151,11 @@ const RoundComponent = props => {
   // the number of matches is split in half
 
   const buildMatches = () => {
-    const numMatches = 2 ** round.depth / 2 / numDirections;
+    // const numMatches = 2 ** round.depth / 2 / numDirections
+    const numMatches = round.numMatches / numDirections;
+    console.log('numMatches', numMatches);
+    // console.log('round numMatches', roundNumMatches)
+
     let className;
     if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
       // Left side of the bracket
@@ -159,7 +164,7 @@ const RoundComponent = props => {
       // Right side of the bracket
       className = 'wpbb-match-box-right';
     }
-    if (round.round === 1) {
+    if (round.roundNum === 1) {
       // First round
       className += '-outer';
     }
@@ -233,7 +238,8 @@ const NumWildcardsSelector = props => {
 };
 const Bracket = props => {
   const {
-    numRounds
+    numRounds,
+    numWildcards
   } = props;
   const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const updateRoundName = (roundId, name) => {
@@ -247,7 +253,10 @@ const Bracket = props => {
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setRounds(Array.from(Array(numRounds).keys()).map(i => {
-      return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, []);
+      // The number of matches in a round is equal to 2^depth unless it's the first round
+      // and there are wildcards. In that case, the number of matches equals the number of wildcards
+      const numMatches = i === 0 && numWildcards > 0 ? numWildcards : 2 ** i;
+      return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, numMatches, []);
     }));
   }, [numRounds]);
   const targetHeight = 800;
@@ -262,7 +271,6 @@ const Bracket = props => {
   const buildRounds2 = rounds => {
     // Assume rounds are sorted by depth
     // Rendering from left to right, sort by depth descending
-    const reversed = rounds.slice(1).reverse();
     const numDirections = 2;
     return [...rounds.slice(1).reverse().map((round, idx) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
       round: round,
@@ -316,7 +324,8 @@ const BracketModal = props => {
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Body, {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
-    numRounds: numRounds
+    numRounds: numRounds,
+    numWildcards: numWildcards
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
