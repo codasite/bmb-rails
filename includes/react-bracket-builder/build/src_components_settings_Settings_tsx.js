@@ -66,10 +66,12 @@ const MatchBox = _ref => {
   } = _ref;
   const node1 = props.node1;
   const node2 = props.node2;
+  const empty = props.empty;
   const direction = props.direction;
   const outer = props.outer;
   const height = props.height;
   const spacing = props.spacing;
+  console.log('empty: ' + empty);
   let className;
   if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
     // Left side of the bracket
@@ -84,7 +86,11 @@ const MatchBox = _ref => {
   }
   // This component renders the lines connecting two nodes representing a "game"
   // These should be evenly spaced in the column and grow according to the number of other matches in the round
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, empty ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    style: {
+      height: height + spacing
+    }
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: className,
     style: {
       height: height + 'px',
@@ -94,7 +100,7 @@ const MatchBox = _ref => {
     className: "wpbb-team1"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team2"
-  }));
+  })));
 };
 const Spacer = _ref2 => {
   let {
@@ -184,14 +190,15 @@ const RoundComponent = props => {
     // Whether there are any matches below this round
     // Used to determine whether to truncate the match box border so that it does not extend past the team slot
     const outerRound = round.roundNum === 1;
-    const matches = Array.from(Array(numMatches).keys()).map(i => {
+    const matches = Array.from(Array(maxMatches).keys()).map(i => {
       return (
         // <MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
         (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
+          empty: i < emptyMatches,
           direction: direction,
           outer: outerRound,
           height: matchHeight,
-          spacing: i + 1 < numMatches ? matchHeight : 0 // Do not add spacing to the last match in the round column
+          spacing: i + 1 < maxMatches ? matchHeight : 0 // Do not add spacing to the last match in the round column
         })
       );
     });

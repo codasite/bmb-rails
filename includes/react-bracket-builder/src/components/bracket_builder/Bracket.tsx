@@ -58,10 +58,13 @@ const MatchBox = ({ ...props }) => {
 	const node1: Node = props.node1
 	const node2: Node = props.node2
 
+	const empty: boolean = props.empty
 	const direction: Direction = props.direction
 	const outer: boolean = props.outer
 	const height: number = props.height
 	const spacing: number = props.spacing
+
+	console.log('empty: ' + empty)
 
 	let className: string;
 
@@ -79,12 +82,17 @@ const MatchBox = ({ ...props }) => {
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
-		<div className={className} style={{ height: height + 'px', marginBottom: spacing + 'px' }}>
-			<TeamSlot className='wpbb-team1' />
-			<TeamSlot className='wpbb-team2' />
-		</div>
+		<>
+			{empty ?
+				<div style={{ height: height + spacing }} />
+				:
+				<div className={className} style={{ height: height + 'px', marginBottom: spacing + 'px' }}>
+					<TeamSlot className='wpbb-team1' />
+					<TeamSlot className='wpbb-team2' />
+				</div>
+			}
+		</>
 	)
-
 }
 
 const Spacer = ({ grow = '1' }) => {
@@ -179,14 +187,15 @@ const RoundComponent = (props) => {
 		// Used to determine whether to truncate the match box border so that it does not extend past the team slot
 		const outerRound = round.roundNum === 1
 
-		const matches = Array.from(Array(numMatches).keys()).map((i) => {
+		const matches = Array.from(Array(maxMatches).keys()).map((i) => {
 			return (
 				// <MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
 				<MatchBox
+					empty={i < emptyMatches}
 					direction={direction}
 					outer={outerRound}
 					height={matchHeight}
-					spacing={i + 1 < numMatches ? matchHeight : 0} // Do not add spacing to the last match in the round column
+					spacing={i + 1 < maxMatches ? matchHeight : 0} // Do not add spacing to the last match in the round column
 				/>
 
 			)

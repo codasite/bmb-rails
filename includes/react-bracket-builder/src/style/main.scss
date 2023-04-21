@@ -56,6 +56,7 @@ $match-box-border: 1px solid black;
 	border-top: $match-box-border;
 	border-bottom: $match-box-border;
 	position: relative;
+	box-sizing: border-box;
 }
 
 $bracket-radius: 3px;

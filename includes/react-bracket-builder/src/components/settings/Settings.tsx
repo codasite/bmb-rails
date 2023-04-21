@@ -101,7 +101,4 @@ const fetchBrackets = async () => {
 }
 fetchBrackets();
 
-
-
-
 export default Settings; 
