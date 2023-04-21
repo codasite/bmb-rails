@@ -23,6 +23,7 @@
 
 .wpbb-bracket {
   display: flex;
+  font-size: x-small;
 }
 
 .wpbb-round {
@@ -35,6 +36,7 @@
   text-align: center;
   height: 34px;
   line-height: 30px;
+  font-size: medium;
 }
 .wpbb-round .wpbb-round__header input {
   text-align: center;
@@ -111,33 +113,32 @@
 
 .wpbb-team1 {
   position: absolute;
-  height: 30px;
+  height: 16px;
   border: 1px solid black;
   left: 50%;
   transform: translateX(-50%);
   background-color: white;
-  padding: 0 10px;
+  padding: 0 4px;
   border-radius: 3px;
   z-index: 1;
-  top: -15px;
+  top: -8px;
 }
 
 .wpbb-team2 {
   position: absolute;
-  height: 30px;
+  height: 16px;
   border: 1px solid black;
   left: 50%;
   transform: translateX(-50%);
   background-color: white;
-  padding: 0 10px;
+  padding: 0 4px;
   border-radius: 3px;
   z-index: 1;
-  bottom: -15px;
+  bottom: -8px;
 }
 
 .wpbb-team-name {
   white-space: nowrap;
-  font-size: small;
 }
 
 /*# sourceMappingURL=index.css.map*/

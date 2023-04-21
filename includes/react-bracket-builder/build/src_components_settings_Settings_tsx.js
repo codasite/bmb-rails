@@ -250,7 +250,7 @@ const Bracket = props => {
       return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, []);
     }));
   }, [numRounds]);
-  const targetHeight = 600;
+  const targetHeight = 800;
 
   // The number of rounds sets the initial height of each match
   // const firstRoundMatchHeight = targetHeight / rounds.length / 2;

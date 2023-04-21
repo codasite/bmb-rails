@@ -12,6 +12,8 @@
 
 .wpbb-bracket {
 	display: flex;
+	font-size: x-small;
+	// width: 900px;
 }
 
 .wpbb-round {
@@ -24,6 +26,7 @@
 		text-align: center;
 		height: 34px;
 		line-height: 30px;
+		font-size: medium;
 
 		input {
 			text-align: center;
@@ -116,28 +119,30 @@ $bracket-radius: 3px;
 
 @mixin team() {
 	position: absolute;
-	height: 30px;
+	height: 16px;
 	border: 1px solid black;
 	left: 50%;
 	transform: translateX(-50%);
 	background-color: white;
-	padding: 0 10px;
+	padding: 0 4px;
 	border-radius: $bracket-radius;
 	z-index: 1;
 
 }
 
+$team-offset: -8px;
+
 .wpbb-team1 {
 	@include team();
-	top: -15px;
+	top: $team-offset;
 }
 
 .wpbb-team2 {
 	@include team();
-	bottom: -15px;
+	bottom: $team-offset;
 }
 
 .wpbb-team-name {
 	white-space: nowrap;
-	font-size: small;
+	// font-size: small;
 }
