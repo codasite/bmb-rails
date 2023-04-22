@@ -71,7 +71,14 @@ const MatchBox = _ref => {
   const outer = props.outer;
   const height = props.height;
   const spacing = props.spacing;
-  console.log('empty: ' + empty);
+  if (empty) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "wpbb-match-box-empty",
+      style: {
+        height: height + spacing
+      }
+    });
+  }
   let className;
   if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
     // Left side of the bracket
@@ -86,21 +93,17 @@ const MatchBox = _ref => {
   }
   // This component renders the lines connecting two nodes representing a "game"
   // These should be evenly spaced in the column and grow according to the number of other matches in the round
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, empty ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      height: height + spacing
-    }
-  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: className,
     style: {
-      height: height + 'px',
-      marginBottom: spacing + 'px'
+      height: height,
+      marginBottom: spacing
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team1"
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team2"
-  })));
+  }));
 };
 const Spacer = _ref2 => {
   let {
@@ -247,20 +250,15 @@ const NumWildcardsSelector = props => {
   console.log('maxWildcards', maxWildcards);
   const minWildcards = 0;
 
-  // const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map((i) => {
-  // 	return (
-  // 		// Number of wildcards must be an even number
-  // 		<option value={i + minWildcards}>{i + minWildcards}</option>
-  // 	)
-  // })
   // Number of wildcards must be an even number or 0
-  const options = Array.from(Array(maxWildcards / 2 + 1).keys()).map(i => {
-    console.log('i', i);
-    console.log('i * 2', i * 2);
+  let options = [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: 0
+  }, "0")];
+  options = [...options, ...Array.from(Array(maxWildcards / 2).keys()).reverse().map(i => {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-      value: i * 2
-    }, i * 2);
-  });
+      value: (i + 1) * 2
+    }, (i + 1) * 2);
+  })];
   const handleChange = event => {
     const num = event.target.value;
     console.log('num', num);
@@ -297,7 +295,7 @@ const Bracket = props => {
       return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, numMatches, []);
     }));
   }, [numRounds, numWildcards]);
-  const targetHeight = 800;
+  const targetHeight = 700;
 
   // The number of rounds sets the initial height of each match
   // const firstRoundMatchHeight = targetHeight / rounds.length / 2;

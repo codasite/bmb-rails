@@ -64,7 +64,11 @@ const MatchBox = ({ ...props }) => {
 	const height: number = props.height
 	const spacing: number = props.spacing
 
-	console.log('empty: ' + empty)
+	if (empty) {
+		return (
+			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
+		)
+	}
 
 	let className: string;
 
@@ -82,16 +86,10 @@ const MatchBox = ({ ...props }) => {
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
-		<>
-			{empty ?
-				<div style={{ height: height + spacing }} />
-				:
-				<div className={className} style={{ height: height + 'px', marginBottom: spacing + 'px' }}>
-					<TeamSlot className='wpbb-team1' />
-					<TeamSlot className='wpbb-team2' />
-				</div>
-			}
-		</>
+		<div className={className} style={{ height: height, marginBottom: spacing }}>
+			<TeamSlot className='wpbb-team1' />
+			<TeamSlot className='wpbb-team2' />
+		</div>
 	)
 }
 
@@ -256,20 +254,15 @@ const NumWildcardsSelector = (props) => {
 
 	const minWildcards = 0;
 
-	// const options = Array.from(Array(maxWildcards - minWildcards + 1).keys()).map((i) => {
-	// 	return (
-	// 		// Number of wildcards must be an even number
-	// 		<option value={i + minWildcards}>{i + minWildcards}</option>
-	// 	)
-	// })
 	// Number of wildcards must be an even number or 0
-	const options = Array.from(Array(maxWildcards / 2 + 1).keys()).map((i) => {
-		console.log('i', i)
-		console.log('i * 2', i * 2)
+	let options = [
+		<option value={0}>0</option>
+	]
+	options = [...options, ...Array.from(Array(maxWildcards / 2).keys()).reverse().map((i) => {
 		return (
-			<option value={i * 2}>{i * 2}</option>
+			<option value={(i + 1) * 2}>{(i + 1) * 2}</option>
 		)
-	})
+	})]
 
 
 
@@ -315,7 +308,7 @@ export const Bracket = (props) => {
 		}))
 	}, [numRounds, numWildcards])
 
-	const targetHeight = 800;
+	const targetHeight = 700;
 
 	// The number of rounds sets the initial height of each match
 	// const firstRoundMatchHeight = targetHeight / rounds.length / 2;

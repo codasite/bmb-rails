@@ -1,3 +1,5 @@
+@use 'bracket';
+
 .wpbb-bracket-modal {
 	z-index: 99999999;
 
@@ -50,61 +52,6 @@
 	}
 }
 
-$match-box-border: 1px solid black;
-
-@mixin match-box() {
-	border-top: $match-box-border;
-	border-bottom: $match-box-border;
-	position: relative;
-	box-sizing: border-box;
-}
-
-$bracket-radius: 3px;
-
-.wpbb-match-box-left {
-	@include match-box();
-	border-right: $match-box-border;
-	border-radius: 0 $bracket-radius $bracket-radius 0;
-}
-
-.wpbb-match-box-right {
-	@include match-box();
-	border-left: $match-box-border;
-	border-radius: $bracket-radius 0 0 $bracket-radius;
-}
-
-.wpbb-match-box-left-outer {
-	@extend .wpbb-match-box-left;
-}
-
-@mixin match-box-outer() {
-	content: '';
-	position: absolute;
-	display: block;
-	bottom: -5px;
-	top: -5px;
-	width: 50%;
-	border: 5px solid white;
-}
-
-.wpbb-match-box-left-outer::after {
-	@include match-box-outer();
-	left: 0
-}
-
-.wpbb-match-box-right-outer {
-	@extend .wpbb-match-box-right;
-}
-
-.wpbb-match-box-right-outer::after {
-	@include match-box-outer();
-	right: 0
-}
-
-.wpbb-final-match {
-	@include match-box();
-	flex-grow: 1;
-}
 
 .wpbb-options-form {
 	display: flex;
@@ -121,6 +68,8 @@ $bracket-radius: 3px;
 		margin-right: 10px;
 	}
 }
+
+$bracket-radius: 3px;
 
 @mixin team() {
 	position: absolute;

@@ -11,6 +11,94 @@
 /*!********************************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[3]!./src/style/main.scss ***!
   \********************************************************************************************************************************************************************************************************************************************/
+.wpbb-match-box-left, .wpbb-match-box-left-outer-lower, .wpbb-match-box-left-outer-upper, .wpbb-match-box-left-outer {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  position: relative;
+  box-sizing: border-box;
+  border-right: 1px solid black;
+  border-radius: 0 3px 3px 0;
+}
+
+.wpbb-match-box-right, .wpbb-match-box-right-outer-lower, .wpbb-match-box-right-outer-upper, .wpbb-match-box-right-outer {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  position: relative;
+  box-sizing: border-box;
+  border-left: 1px solid black;
+  border-radius: 3px 0 0 3px;
+}
+
+.wpbb-match-box-left-outer::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  bottom: -5px;
+  top: -5px;
+  left: 0;
+}
+
+.wpbb-match-box-left-outer-upper::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  top: -5px;
+  left: 0;
+}
+
+.wpbb-match-box-left-outer-lower::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  bottom: -5px;
+  left: 0;
+}
+
+.wpbb-match-box-right-outer::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  bottom: -5px;
+  top: -5px;
+  right: 0;
+}
+
+.wpbb-match-box-right-outer-upper::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  top: -5px;
+  right: 0;
+}
+
+.wpbb-match-box-right-outer-lower::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  bottom: -5px;
+  right: 0;
+}
+
+.wpbb-final-match {
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  position: relative;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
 .wpbb-bracket-modal {
   z-index: 99999999;
 }
@@ -53,54 +141,6 @@
   flex-grow: 1;
   flex-direction: column;
   justify-content: center;
-}
-
-.wpbb-match-box-left, .wpbb-match-box-left-outer {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  position: relative;
-  box-sizing: border-box;
-  border-right: 1px solid black;
-  border-radius: 0 3px 3px 0;
-}
-
-.wpbb-match-box-right, .wpbb-match-box-right-outer {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  position: relative;
-  box-sizing: border-box;
-  border-left: 1px solid black;
-  border-radius: 3px 0 0 3px;
-}
-
-.wpbb-match-box-left-outer::after {
-  content: "";
-  position: absolute;
-  display: block;
-  bottom: -5px;
-  top: -5px;
-  width: 50%;
-  border: 5px solid white;
-  left: 0;
-}
-
-.wpbb-match-box-right-outer::after {
-  content: "";
-  position: absolute;
-  display: block;
-  bottom: -5px;
-  top: -5px;
-  width: 50%;
-  border: 5px solid white;
-  right: 0;
-}
-
-.wpbb-final-match {
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  position: relative;
-  box-sizing: border-box;
-  flex-grow: 1;
 }
 
 .wpbb-options-form {
