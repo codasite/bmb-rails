@@ -3,6 +3,13 @@ import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 
+enum WildcardPlacement {
+	Top = 0,
+	Bottom = 1,
+	Center = 2,
+	Split = 3,
+}
+
 // Direction enum
 enum Direction {
 	TopLeft = 0,
@@ -43,15 +50,27 @@ class Round {
 	name: string;
 	depth: number;
 	roundNum: number;
-	numMatches: number;
-	matches: MatchNode[];
-	constructor(id: number, name: string, depth: number, roundNum: number, numMatches: number) {
+	matches: (MatchNode | null)[];
+	constructor(id: number, name: string, depth: number, roundNum: number) {
 		this.id = id;
 		this.name = name;
 		this.depth = depth;
 		this.roundNum = roundNum;
-		this.numMatches = numMatches;
 		this.matches = [];
+	}
+}
+
+class WildcardRange {
+	min: number
+	max: number
+
+	constructor(min: number, max: number) {
+		this.min = min
+		this.max = max
+	}
+
+	toString(): string {
+		return `${this.min}-${this.max}`
 	}
 }
 
@@ -67,26 +86,50 @@ class MatchTree {
 		// The number of matches in a round is equal to 2^depth unless it's the first round
 		// and there are wildcards. In that case, the number of matches equals the number of wildcards
 		const rootMatch = new MatchNode(null, 0)
-		const finalRound = new Round(1, 'Round 1', 0, numRounds, 1)
+		const finalRound = new Round(1, 'Round 1', 0, numRounds)
 		finalRound.matches = [rootMatch]
 		const rounds = [finalRound]
 
 		for (let i = 1; i < numRounds; i++) {
-			console.log('build round ', i)
+
+			let ranges: WildcardRange[] = []
+
+			if (i === numRounds - 1 && numWildcards > 0) {
+				// const placement = WildcardPlacement.Top
+				const placement = WildcardPlacement.Bottom
+				const maxNodes = 2 ** i
+				console.log('max nodes', maxNodes)
+				const range1 = this.getWildcardRange(0, maxNodes / 2, numWildcards / 2, placement)
+				const range2 = this.getWildcardRange(maxNodes / 2, maxNodes, numWildcards / 2, placement)
+				ranges = [...range1, ...range2]
+				console.log('ranges', ranges)
+			}
+
+			const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i);
 			const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
-			const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i, numMatches);
-			const matches: MatchNode[] = []
 			const maxMatches = 2 ** i
+			const matches: (MatchNode | null)[] = []
 			for (let x = 0; x < maxMatches; x++) {
+				if (ranges.length > 0) {
+					// check to see if x is in the range of any of the wildcard ranges
+					const inRange = ranges.some(range => {
+						return x >= range.min && x < range.max
+					})
+					if (!inRange) {
+						matches[x] = null
+						continue
+					}
+				}
 				const parentIndex = Math.floor(x / 2)
 				const parent = rounds[i - 1].matches[parentIndex]
 				const match = new MatchNode(parent, i)
-				// If x is even, match is the left child of parent, otherwise right child
-				const leftChild = x % 2 === 0
-				if (leftChild) {
-					parent.left = match
-				} else {
-					parent.right = match
+				if (parent) {
+					// If x is even, match is the left child of parent, otherwise right child
+					if (x % 2 === 0) {
+						parent.left = match
+					} else {
+						parent.right = match
+					}
 				}
 				matches[x] = match
 			}
@@ -98,8 +141,58 @@ class MatchTree {
 		})
 		return rounds
 	}
-}
 
+	// return the list of ranges that define where empty nodes should be placed based on the wildcard placement pattern selected by the user
+	// getWildcardRange (maxNodes: number, emptyNodes: number, directions: number, placement: WildcardPlacement): WildcardRange[] {
+	// 	const nodesPerDirection = maxNodes / directions
+	// 	switch (placement) {
+	// 		case WildcardPlacement.Top:
+
+
+	// 		case WildcardPlacement.Bottom:
+	// 		case WildcardPlacement.Center:
+	// 		case WildcardPlacement.Split:
+	// }}
+
+	getWildcardRange(start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] {
+		switch (placement) {
+			case WildcardPlacement.Top:
+				return [new WildcardRange(start, start + count)]
+			case WildcardPlacement.Bottom:
+				return [new WildcardRange(end - count, end)]
+			case WildcardPlacement.Center:
+				const total = end - start
+				console.log('total', total)
+				console.log('count', count)
+				const offset = (total - count) / 2
+				console.log('offset', offset)
+				const min = Math.ceil(start + offset)
+				console.log('min', min)
+				const max = Math.ceil(end - offset)
+				console.log('max', max)
+				return [new WildcardRange(min, max)]
+
+			// // Split the range into 2 and call this function once for each half
+			// const start1 = start
+			// const end1 = end - start / 2
+			// const start2 = end1
+			// const end2 = end
+			// const range1 = this.getWildcardRange(start1, end1, count / 2, WildcardPlacement.Bottom)
+			// const range2 = this.getWildcardRange(start2, end2, count / 2, WildcardPlacement.Top)
+			// return [...range1, ...range2]
+			case WildcardPlacement.Split:
+				// Split the range into 2 and call this function once for each half
+				const start3 = start
+				const end3 = end - start / 2
+				const start4 = end3
+				const end4 = end
+				const range3 = this.getWildcardRange(start3, end3, count / 2, WildcardPlacement.Top)
+				const range4 = this.getWildcardRange(start4, end4, count / 2, WildcardPlacement.Bottom)
+				// return [...range3, ...range4]
+				return [new WildcardRange(1, 3)]
+		}
+	}
+}
 
 const TeamSlot = (props) => {
 	return (
@@ -122,22 +215,20 @@ const MatchBox = ({ ...props }) => {
 		)
 	}
 
-	let upperOuter: boolean
-	let lowerOuter: boolean
 
 	let className: string;
 
 	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
 		// Left side of the bracket
 		className = 'wpbb-match-box-left'
-		upperOuter = match.left === null
-		lowerOuter = match.right === null
 	} else {
 		// Right side of the bracket
 		className = 'wpbb-match-box-right'
-		upperOuter = match.right === null
-		lowerOuter = match.left === null
 	}
+
+	const upperOuter = match.left === null
+	const lowerOuter = match.right === null
+
 	if (upperOuter && lowerOuter) {
 		// First round
 		className += '-outer'
@@ -341,7 +432,7 @@ export const Bracket = (props) => {
 		// setRounds(buildRounds(numRounds, numWildcards))
 	}, [numRounds, numWildcards])
 
-	const targetHeight = 700;
+	const targetHeight = 800;
 
 	// The number of rounds sets the initial height of each match
 	// const firstRoundMatchHeight = targetHeight / rounds.length / 2;
