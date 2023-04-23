@@ -61,16 +61,43 @@ class MatchTree {
 
 	constructor(numRounds: number, numWildcards: number) {
 		this.rounds = this.buildRounds(numRounds, numWildcards)
-		this.root = this.buildMatch(null, 0)
+		// this.root = this.buildMatch(null, 0)
 	}
 
 	buildRounds(numRounds: number, numWildcards: number): Round[] {
 		// The number of matches in a round is equal to 2^depth unless it's the first round
 		// and there are wildcards. In that case, the number of matches equals the number of wildcards
-		return Array.from({ length: numRounds }, (_, i) => {
+		const rootMatch = new MatchNode(null, 0)
+		const finalRound = new Round(1, 'Round 1', 0, numRounds, 1)
+		finalRound.matches = [rootMatch]
+		const rounds = [finalRound]
+
+		for (let i = 1; i < numRounds; i++) {
+			console.log('build round ', i)
 			const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
-			return new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i, numMatches);
-		});
+			const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i, numMatches);
+			const matches: MatchNode[] = []
+			const maxMatches = 2 ** i
+			for (let x = 0; x < maxMatches; x++) {
+				const parentIndex = Math.floor(x / 2)
+				const parent = rounds[i - 1].matches[parentIndex]
+				const match = new MatchNode(parent, i)
+				// If x is even, match is the left child of parent, otherwise right child
+				const leftChild = x % 2 === 0
+				if (leftChild) {
+					parent.left = match
+				} else {
+					parent.right = match
+				}
+				matches[x] = match
+			}
+			round.matches = matches
+			rounds[i] = round
+		};
+		rounds.forEach(round => {
+			console.log(round.matches)
+		})
+		return rounds
 	}
 
 	buildMatch(parent: MatchNode | null, depth: number): MatchNode | null {
