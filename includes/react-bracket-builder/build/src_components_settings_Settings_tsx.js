@@ -67,9 +67,7 @@ class Round {
 class MatchTree {
   constructor(numRounds, numWildcards) {
     this.rounds = this.buildRounds(numRounds, numWildcards);
-    // this.root = this.buildMatch(null, 0)
   }
-
   buildRounds(numRounds, numWildcards) {
     // The number of matches in a round is equal to 2^depth unless it's the first round
     // and there are wildcards. In that case, the number of matches equals the number of wildcards
@@ -105,20 +103,6 @@ class MatchTree {
     });
     return rounds;
   }
-  buildMatch(parent, depth) {
-    if (depth >= this.rounds.length) {
-      return null;
-    }
-    const match = new MatchNode(parent, depth);
-
-    // Give the round at this depth a reference to the match node
-    // Matches are ordered left to right 
-    const round = this.rounds[depth];
-    round.matches.push(match);
-    match.left = this.buildMatch(match, depth + 1);
-    match.right = this.buildMatch(match, depth + 1);
-    return match;
-  }
 }
 const TeamSlot = props => {
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -131,15 +115,11 @@ const MatchBox = _ref => {
   let {
     ...props
   } = _ref;
-  const node1 = props.node1;
-  const node2 = props.node2;
-  const empty = props.empty;
+  const match = props.match;
   const direction = props.direction;
-  const upperOuter = props.upperOuter;
-  const lowerOuter = props.lowerOuter;
   const height = props.height;
   const spacing = props.spacing;
-  if (empty) {
+  if (match === null) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "wpbb-match-box-empty",
       style: {
@@ -147,13 +127,19 @@ const MatchBox = _ref => {
       }
     });
   }
+  let upperOuter;
+  let lowerOuter;
   let className;
   if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
     // Left side of the bracket
     className = 'wpbb-match-box-left';
+    upperOuter = match.left === null;
+    lowerOuter = match.right === null;
   } else {
     // Right side of the bracket
     className = 'wpbb-match-box-right';
+    upperOuter = match.right === null;
+    lowerOuter = match.left === null;
   }
   if (upperOuter && lowerOuter) {
     // First round
@@ -242,54 +228,23 @@ const FinalRound = props => {
     grow: "2"
   })));
 };
-const RoundComponent = props => {
+const MatchColumn = props => {
   const round = props.round;
+  const matches = props.matches;
   const direction = props.direction;
-  const numDirections = props.numDirections;
   const matchHeight = props.matchHeight;
   const updateRoundName = props.updateRoundName;
-
-  // For a given round and it's depth, we know that the number of nodes in this round will be 2^depth
-  // For example, a round with depth 1 has 2 nodes and a round at depth 3 can have up to 8 nodes
-  // The number of matches in a round is the number of nodes / 2
-  // However, each round component only renders the match in a given direction. So for a bracket with 2 directions, 
-  // the number of matches is split in half
-
   const buildMatches = () => {
-    // const numMatches = 2 ** round.depth / 2 / numDirections
-    // Get the number of matches in a single direction (left or right)
-    const numMatches = round.numMatches / numDirections;
-    // Get the difference between the specified number of matches and how many there could possibly be
-    // This is to account for wildcard rounds where there are less than the maximum number of matches
-    const maxMatches = 2 ** (round.depth + 1) / 2 / numDirections;
-    const emptyMatches = maxMatches - numMatches;
-
-    // console.log('round numMatches', roundNumMatches)
-
-    // Whether there are any matches below this round
-    // Used to determine whether to truncate the match box border so that it does not extend past the team slot
-    // const outerRound = round.roundNum === 1
-    let upperOuter = false;
-    let lowerOuter = false;
-    if (round.roundNum === 1) {
-      upperOuter = true;
-      lowerOuter = true;
-    }
-    const matches = Array.from(Array(maxMatches).keys()).map(i => {
-      return (
-        // <MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
-        (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
-          empty: i < emptyMatches,
-          direction: direction,
-          upperOuter: upperOuter,
-          lowerOuter: lowerOuter,
-          height: matchHeight,
-          spacing: i + 1 < maxMatches ? matchHeight : 0 // Do not add spacing to the last match in the round column
-        })
-      );
+    const matchBoxes = matches.map((match, i) => {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
+        match: match,
+        direction: direction,
+        height: matchHeight,
+        spacing: i + 1 < matches.length ? matchHeight : 0 // Do not add spacing to the last match in the round column
+      });
     });
 
-    return matches;
+    return matchBoxes;
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round"
@@ -384,24 +339,34 @@ const Bracket = props => {
     // Assume rounds are sorted by depth
     // Rendering from left to right, sort by depth descending
     const numDirections = 2;
-    return [...rounds.slice(1).reverse().map((round, idx) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
-      round: round,
-      direction: Direction.TopLeft,
-      numDirections: numDirections,
-      matchHeight: 2 ** idx * firstRoundMatchHeight,
-      updateRoundName: updateRoundName
-    })),
+    return [...rounds.slice(1).reverse().map((round, idx) => {
+      // Get the first half of matches for this column
+      const colMatches = round.matches.slice(0, round.matches.length / 2);
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchColumn, {
+        matches: colMatches,
+        round: round,
+        direction: Direction.TopLeft,
+        numDirections: numDirections,
+        matchHeight: 2 ** idx * firstRoundMatchHeight,
+        updateRoundName: updateRoundName
+      });
+    }),
     // handle final round differently
     (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(FinalRound, {
       round: rounds[0],
       updateRoundName: updateRoundName
-    }), ...rounds.slice(1).map((round, idx, arr) => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundComponent, {
-      round: round,
-      direction: Direction.TopRight,
-      numDirections: numDirections,
-      matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight,
-      updateRoundName: updateRoundName
-    }))];
+    }), ...rounds.slice(1).map((round, idx, arr) => {
+      // Get the second half of matches for this column
+      const colMatches = round.matches.slice(round.matches.length / 2);
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchColumn, {
+        round: round,
+        matches: colMatches,
+        direction: Direction.TopRight,
+        numDirections: numDirections,
+        matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight,
+        updateRoundName: updateRoundName
+      });
+    })];
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-bracket"
