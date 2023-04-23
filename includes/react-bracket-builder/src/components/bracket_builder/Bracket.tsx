@@ -11,21 +11,30 @@ enum Direction {
 	BottomRight = 3,
 }
 
-class Node {
-	id: number;
+class Team {
 	name: string;
-	left: number;
-	right: number;
-	in_order: number;
-	depth: number;
-	parent_id: number;
-	constructor(id: number, name: string, left: number, right: number, depth: number, parent_id: number) {
-		this.id = id;
+	// constructor(id: number, name: string) {
+	// 	this.id = id;
+	// 	this.name = name;
+	// }
+	constructor(name: string) {
 		this.name = name;
-		this.left = left;
-		this.right = right;
+	}
+}
+
+
+class MatchNode {
+	leftTeam: Team | null = null;
+	rightTeam: Team | null = null;
+	result: Team | null = null;
+	left: MatchNode | null = null;
+	right: MatchNode | null = null;
+	parent: MatchNode | null = null;
+	depth: number;
+
+	constructor(parent: MatchNode | null, depth: number,) {
 		this.depth = depth;
-		this.parent_id = parent_id;
+		this.parent = parent;
 	}
 }
 
@@ -35,16 +44,53 @@ class Round {
 	depth: number;
 	roundNum: number;
 	numMatches: number;
-	nodes: Node[];
-	constructor(id: number, name: string, depth: number, roundNum: number, numMatches: number, nodes: Node[]) {
+	matches: MatchNode[];
+	constructor(id: number, name: string, depth: number, roundNum: number, numMatches: number) {
 		this.id = id;
 		this.name = name;
 		this.depth = depth;
 		this.roundNum = roundNum;
 		this.numMatches = numMatches;
-		this.nodes = nodes;
+		this.matches = [];
 	}
 }
+
+class MatchTree {
+	root: MatchNode | null
+	rounds: Round[]
+
+	constructor(numRounds: number, numWildcards: number) {
+		this.rounds = this.buildRounds(numRounds, numWildcards)
+		this.root = this.buildMatch(null, 0)
+	}
+
+	buildRounds(numRounds: number, numWildcards: number): Round[] {
+		// The number of matches in a round is equal to 2^depth unless it's the first round
+		// and there are wildcards. In that case, the number of matches equals the number of wildcards
+		return Array.from({ length: numRounds }, (_, i) => {
+			const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
+			return new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i, numMatches);
+		});
+	}
+
+	buildMatch(parent: MatchNode | null, depth: number): MatchNode | null {
+		if (depth >= this.rounds.length) {
+			return null;
+		}
+
+		const match = new MatchNode(parent, depth)
+
+		// Give the round at this depth a reference to the match node
+		// Matches are ordered left to right 
+		const round = this.rounds[depth]
+		round.matches.push(match)
+
+		match.left = this.buildMatch(match, depth + 1)
+		match.right = this.buildMatch(match, depth + 1)
+		return match
+	}
+}
+
 
 const TeamSlot = (props) => {
 	return (
@@ -60,7 +106,8 @@ const MatchBox = ({ ...props }) => {
 
 	const empty: boolean = props.empty
 	const direction: Direction = props.direction
-	const outer: boolean = props.outer
+	const upperOuter: boolean = props.upperOuter
+	const lowerOuter: boolean = props.lowerOuter
 	const height: number = props.height
 	const spacing: number = props.spacing
 
@@ -79,10 +126,17 @@ const MatchBox = ({ ...props }) => {
 		// Right side of the bracket
 		className = 'wpbb-match-box-right'
 	}
-	if (outer) {
+	if (upperOuter && lowerOuter) {
 		// First round
 		className += '-outer'
+	} else if (upperOuter) {
+		// Upper bracket
+		className += '-outer-upper'
+	} else if (lowerOuter) {
+		// Lower bracket
+		className += '-outer-lower'
 	}
+
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
@@ -145,7 +199,10 @@ const FinalRound = (props) => {
 			<RoundHeader round={round} updateRoundName={updateRoundName} />
 			<div className='wpbb-round__body'>
 				<Spacer grow='2' />
-				<MatchBox className='wpbb-final-match' />
+				<div className='wpbb-final-match'>
+					<TeamSlot className='wpbb-team1' />
+					<TeamSlot className='wpbb-team2' />
+				</div>
 				<Spacer grow='2' />
 			</div>
 		</div>
@@ -173,17 +230,21 @@ const RoundComponent = (props) => {
 		const numMatches = round.numMatches / numDirections
 		// Get the difference between the specified number of matches and how many there could possibly be
 		// This is to account for wildcard rounds where there are less than the maximum number of matches
-		const maxMatches = 2 ** round.depth / 2 / numDirections
+		const maxMatches = 2 ** (round.depth + 1) / 2 / numDirections
 		const emptyMatches = maxMatches - numMatches
-		console.log('numMatches', numMatches)
-		console.log('maxMatches', maxMatches)
-		console.log('emptyMatches', emptyMatches)
 
 		// console.log('round numMatches', roundNumMatches)
 
 		// Whether there are any matches below this round
 		// Used to determine whether to truncate the match box border so that it does not extend past the team slot
-		const outerRound = round.roundNum === 1
+		// const outerRound = round.roundNum === 1
+		let upperOuter = false
+		let lowerOuter = false
+		if (round.roundNum === 1) {
+			upperOuter = true
+			lowerOuter = true
+		}
+
 
 		const matches = Array.from(Array(maxMatches).keys()).map((i) => {
 			return (
@@ -191,7 +252,8 @@ const RoundComponent = (props) => {
 				<MatchBox
 					empty={i < emptyMatches}
 					direction={direction}
-					outer={outerRound}
+					upperOuter={upperOuter}
+					lowerOuter={lowerOuter}
 					height={matchHeight}
 					spacing={i + 1 < maxMatches ? matchHeight : 0} // Do not add spacing to the last match in the round column
 				/>
@@ -228,7 +290,6 @@ const NumRoundsSelector = (props) => {
 
 	const handleChange = (event) => {
 		const num = event.target.value
-		console.log(num)
 		setNumRounds(parseInt(num))
 	}
 
@@ -250,7 +311,6 @@ const NumWildcardsSelector = (props) => {
 		setNumWildcards,
 		maxWildcards,
 	} = props
-	console.log('maxWildcards', maxWildcards)
 
 	const minWildcards = 0;
 
@@ -268,7 +328,6 @@ const NumWildcardsSelector = (props) => {
 
 	const handleChange = (event) => {
 		const num = event.target.value
-		console.log('num', num)
 		setNumWildcards(parseInt(num))
 	}
 
@@ -299,13 +358,9 @@ export const Bracket = (props) => {
 	}
 
 	useEffect(() => {
-		setRounds(Array.from(Array(numRounds).keys()).map((i) => {
-			// The number of matches in a round is equal to 2^depth unless it's the first round
-			// and there are wildcards. In that case, the number of matches equals the number of wildcards
-			const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i
-			console.log('bracket numMatches', numMatches)
-			return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, numMatches, [])
-		}))
+		const matchTree = new MatchTree(numRounds, numWildcards)
+		setRounds(matchTree.rounds)
+		// setRounds(buildRounds(numRounds, numWildcards))
 	}, [numRounds, numWildcards])
 
 	const targetHeight = 700;
@@ -362,7 +417,6 @@ export const BracketModal = (props) => {
 	// The max number of wildcards is 2 less than the possible number of matches in the first round
 	// (2^numRounds - 2)
 	const maxWildcards = 2 ** (numRounds - 1) - 2;
-	console.log(maxWildcards)
 
 	return (
 		<Modal className='wpbb-bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>

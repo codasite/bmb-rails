@@ -33,24 +33,65 @@ var Direction = /*#__PURE__*/function (Direction) {
   Direction[Direction["BottomRight"] = 3] = "BottomRight";
   return Direction;
 }(Direction || {});
-class Node {
-  constructor(id, name, left, right, depth, parent_id) {
-    this.id = id;
+class Team {
+  // constructor(id: number, name: string) {
+  // 	this.id = id;
+  // 	this.name = name;
+  // }
+  constructor(name) {
     this.name = name;
-    this.left = left;
-    this.right = right;
+  }
+}
+class MatchNode {
+  leftTeam = null;
+  rightTeam = null;
+  result = null;
+  left = null;
+  right = null;
+  parent = null;
+  constructor(parent, depth) {
     this.depth = depth;
-    this.parent_id = parent_id;
+    this.parent = parent;
   }
 }
 class Round {
-  constructor(id, name, depth, roundNum, numMatches, nodes) {
+  constructor(id, name, depth, roundNum, numMatches) {
     this.id = id;
     this.name = name;
     this.depth = depth;
     this.roundNum = roundNum;
     this.numMatches = numMatches;
-    this.nodes = nodes;
+    this.matches = [];
+  }
+}
+class MatchTree {
+  constructor(numRounds, numWildcards) {
+    this.rounds = this.buildRounds(numRounds, numWildcards);
+    this.root = this.buildMatch(null, 0);
+  }
+  buildRounds(numRounds, numWildcards) {
+    // The number of matches in a round is equal to 2^depth unless it's the first round
+    // and there are wildcards. In that case, the number of matches equals the number of wildcards
+    return Array.from({
+      length: numRounds
+    }, (_, i) => {
+      const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
+      return new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i, numMatches);
+    });
+  }
+  buildMatch(parent, depth) {
+    if (depth >= this.rounds.length) {
+      return null;
+    }
+    const match = new MatchNode(parent, depth);
+
+    // Give the round at this depth a reference to the match node
+    // Matches are ordered left to right 
+    const round = this.rounds[depth];
+    round.matches.push(match);
+    match.left = this.buildMatch(match, depth + 1);
+    match.right = this.buildMatch(match, depth + 1);
+    return match;
   }
 }
 const TeamSlot = props => {
@@ -68,7 +109,8 @@ const MatchBox = _ref => {
   const node2 = props.node2;
   const empty = props.empty;
   const direction = props.direction;
-  const outer = props.outer;
+  const upperOuter = props.upperOuter;
+  const lowerOuter = props.lowerOuter;
   const height = props.height;
   const spacing = props.spacing;
   if (empty) {
@@ -87,10 +129,17 @@ const MatchBox = _ref => {
     // Right side of the bracket
     className = 'wpbb-match-box-right';
   }
-  if (outer) {
+  if (upperOuter && lowerOuter) {
     // First round
     className += '-outer';
+  } else if (upperOuter) {
+    // Upper bracket
+    className += '-outer-upper';
+  } else if (lowerOuter) {
+    // Lower bracket
+    className += '-outer-lower';
   }
+
   // This component renders the lines connecting two nodes representing a "game"
   // These should be evenly spaced in the column and grow according to the number of other matches in the round
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -157,9 +206,13 @@ const FinalRound = props => {
     className: "wpbb-round__body"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
     grow: "2"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-final-match"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
+    className: "wpbb-team1"
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
+    className: "wpbb-team2"
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
     grow: "2"
   })));
 };
@@ -182,24 +235,28 @@ const RoundComponent = props => {
     const numMatches = round.numMatches / numDirections;
     // Get the difference between the specified number of matches and how many there could possibly be
     // This is to account for wildcard rounds where there are less than the maximum number of matches
-    const maxMatches = 2 ** round.depth / 2 / numDirections;
+    const maxMatches = 2 ** (round.depth + 1) / 2 / numDirections;
     const emptyMatches = maxMatches - numMatches;
-    console.log('numMatches', numMatches);
-    console.log('maxMatches', maxMatches);
-    console.log('emptyMatches', emptyMatches);
 
     // console.log('round numMatches', roundNumMatches)
 
     // Whether there are any matches below this round
     // Used to determine whether to truncate the match box border so that it does not extend past the team slot
-    const outerRound = round.roundNum === 1;
+    // const outerRound = round.roundNum === 1
+    let upperOuter = false;
+    let lowerOuter = false;
+    if (round.roundNum === 1) {
+      upperOuter = true;
+      lowerOuter = true;
+    }
     const matches = Array.from(Array(maxMatches).keys()).map(i => {
       return (
         // <MatchBox className={className} style={{ height: matchHeight, marginBottom: (i + 1 < numMatches ? matchHeight : 0) }} />
         (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
           empty: i < emptyMatches,
           direction: direction,
-          outer: outerRound,
+          upperOuter: upperOuter,
+          lowerOuter: lowerOuter,
           height: matchHeight,
           spacing: i + 1 < maxMatches ? matchHeight : 0 // Do not add spacing to the last match in the round column
         })
@@ -231,7 +288,6 @@ const NumRoundsSelector = props => {
   });
   const handleChange = event => {
     const num = event.target.value;
-    console.log(num);
     setNumRounds(parseInt(num));
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -247,7 +303,6 @@ const NumWildcardsSelector = props => {
     setNumWildcards,
     maxWildcards
   } = props;
-  console.log('maxWildcards', maxWildcards);
   const minWildcards = 0;
 
   // Number of wildcards must be an even number or 0
@@ -261,7 +316,6 @@ const NumWildcardsSelector = props => {
   })];
   const handleChange = event => {
     const num = event.target.value;
-    console.log('num', num);
     setNumWildcards(parseInt(num));
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -287,13 +341,9 @@ const Bracket = props => {
     setRounds(newRounds);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    setRounds(Array.from(Array(numRounds).keys()).map(i => {
-      // The number of matches in a round is equal to 2^depth unless it's the first round
-      // and there are wildcards. In that case, the number of matches equals the number of wildcards
-      const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
-      console.log('bracket numMatches', numMatches);
-      return new Round(i + 1, `Round ${numRounds - i}`, i + 1, numRounds - i, numMatches, []);
-    }));
+    const matchTree = new MatchTree(numRounds, numWildcards);
+    setRounds(matchTree.rounds);
+    // setRounds(buildRounds(numRounds, numWildcards))
   }, [numRounds, numWildcards]);
   const targetHeight = 700;
 
@@ -342,7 +392,6 @@ const BracketModal = props => {
   // The max number of wildcards is 2 less than the possible number of matches in the first round
   // (2^numRounds - 2)
   const maxWildcards = 2 ** (numRounds - 1) - 2;
-  console.log(maxWildcards);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
