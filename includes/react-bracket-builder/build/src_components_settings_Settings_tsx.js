@@ -78,27 +78,25 @@ class WildcardRange {
   }
 }
 class MatchTree {
-  constructor(numRounds, numWildcards) {
-    this.rounds = this.buildRounds(numRounds, numWildcards);
+  constructor(numRounds, numWildcards, wildcardsPlacement) {
+    this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement);
   }
-  buildRounds(numRounds, numWildcards) {
+  buildRounds(numRounds, numWildcards, wildcardPlacement) {
     // The number of matches in a round is equal to 2^depth unless it's the first round
     // and there are wildcards. In that case, the number of matches equals the number of wildcards
     const rootMatch = new MatchNode(null, 0);
-    const finalRound = new Round(1, 'Round 1', 0, numRounds);
+    const finalRound = new Round(1, `Round ${numRounds}`, 0, numRounds);
     finalRound.matches = [rootMatch];
     const rounds = [finalRound];
     for (let i = 1; i < numRounds; i++) {
       let ranges = [];
       if (i === numRounds - 1 && numWildcards > 0) {
         // const placement = WildcardPlacement.Top
-        const placement = WildcardPlacement.Bottom;
+        const placement = wildcardPlacement;
         const maxNodes = 2 ** i;
-        console.log('max nodes', maxNodes);
         const range1 = this.getWildcardRange(0, maxNodes / 2, numWildcards / 2, placement);
         const range2 = this.getWildcardRange(maxNodes / 2, maxNodes, numWildcards / 2, placement);
         ranges = [...range1, ...range2];
-        console.log('ranges', ranges);
       }
       const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i);
       const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
@@ -132,23 +130,8 @@ class MatchTree {
       rounds[i] = round;
     }
     ;
-    rounds.forEach(round => {
-      console.log(round.matches);
-    });
     return rounds;
   }
-
-  // return the list of ranges that define where empty nodes should be placed based on the wildcard placement pattern selected by the user
-  // getWildcardRange (maxNodes: number, emptyNodes: number, directions: number, placement: WildcardPlacement): WildcardRange[] {
-  // 	const nodesPerDirection = maxNodes / directions
-  // 	switch (placement) {
-  // 		case WildcardPlacement.Top:
-
-  // 		case WildcardPlacement.Bottom:
-  // 		case WildcardPlacement.Center:
-  // 		case WildcardPlacement.Split:
-  // }}
-
   getWildcardRange(start, end, count, placement) {
     switch (placement) {
       case WildcardPlacement.Top:
@@ -156,35 +139,10 @@ class MatchTree {
       case WildcardPlacement.Bottom:
         return [new WildcardRange(end - count, end)];
       case WildcardPlacement.Center:
-        const total = end - start;
-        console.log('total', total);
-        console.log('count', count);
-        const offset = (total - count) / 2;
-        console.log('offset', offset);
-        const min = Math.ceil(start + offset);
-        console.log('min', min);
-        const max = Math.ceil(end - offset);
-        console.log('max', max);
-        return [new WildcardRange(min, max)];
-
-      // // Split the range into 2 and call this function once for each half
-      // const start1 = start
-      // const end1 = end - start / 2
-      // const start2 = end1
-      // const end2 = end
-      // const range1 = this.getWildcardRange(start1, end1, count / 2, WildcardPlacement.Bottom)
-      // const range2 = this.getWildcardRange(start2, end2, count / 2, WildcardPlacement.Top)
-      // return [...range1, ...range2]
+        const offset = (end - start - count) / 2;
+        return [new WildcardRange(start + offset, end - offset)];
       case WildcardPlacement.Split:
-        // Split the range into 2 and call this function once for each half
-        const start3 = start;
-        const end3 = end - start / 2;
-        const start4 = end3;
-        const end4 = end;
-        const range3 = this.getWildcardRange(start3, end3, count / 2, WildcardPlacement.Top);
-        const range4 = this.getWildcardRange(start4, end4, count / 2, WildcardPlacement.Bottom);
-        // return [...range3, ...range4]
-        return [new WildcardRange(1, 3)];
+        return [new WildcardRange(start, start + count / 2), new WildcardRange(end - count / 2, end)];
     }
   }
 }
@@ -386,10 +344,36 @@ const NumWildcardsSelector = props => {
     onChange: handleChange
   }, options));
 };
+const WildcardPlacementSelector = props => {
+  const {
+    wildcardPlacement,
+    setWildcardPlacement
+  } = props;
+  const options = [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: WildcardPlacement.Bottom
+  }, "Bottom"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: WildcardPlacement.Top
+  }, "Top"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: WildcardPlacement.Split
+  }, "Split"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
+    value: WildcardPlacement.Center
+  }, "Centered")];
+  const handleChange = event => {
+    const num = event.target.value;
+    setWildcardPlacement(parseInt(num));
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "wpbb-option-group"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Wildcard Placement:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
+    value: wildcardPlacement,
+    onChange: handleChange
+  }, options));
+};
 const Bracket = props => {
   const {
     numRounds,
-    numWildcards
+    numWildcards,
+    wildcardPlacement
   } = props;
   const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const updateRoundName = (roundId, name) => {
@@ -402,10 +386,10 @@ const Bracket = props => {
     setRounds(newRounds);
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const matchTree = new MatchTree(numRounds, numWildcards);
+    const matchTree = new MatchTree(numRounds, numWildcards, wildcardPlacement);
     setRounds(matchTree.rounds);
     // setRounds(buildRounds(numRounds, numWildcards))
-  }, [numRounds, numWildcards]);
+  }, [numRounds, numWildcards, wildcardPlacement]);
   const targetHeight = 800;
 
   // The number of rounds sets the initial height of each match
@@ -460,6 +444,7 @@ const BracketModal = props => {
   } = props;
   const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(4);
   const [numWildcards, setNumWildcards] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
+  const [wildcardPlacement, setWildcardPlacement] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(WildcardPlacement.Bottom);
   // The max number of wildcards is 2 less than the possible number of matches in the first round
   // (2^numRounds - 2)
   const maxWildcards = 2 ** (numRounds - 1) - 2;
@@ -481,11 +466,15 @@ const BracketModal = props => {
     numWildcards: numWildcards,
     setNumWildcards: setNumWildcards,
     maxWildcards: maxWildcards
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(WildcardPlacementSelector, {
+    wildcardPlacement: wildcardPlacement,
+    setWildcardPlacement: setWildcardPlacement
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Body, {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
     numRounds: numRounds,
-    numWildcards: numWildcards
+    numWildcards: numWildcards,
+    wildcardPlacement: wildcardPlacement
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
