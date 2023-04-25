@@ -46,6 +46,9 @@ class Team {
   constructor(name) {
     this.name = name;
   }
+  clone() {
+    return new Team(this.name);
+  }
 }
 class MatchNode {
   leftTeam = null;
@@ -57,6 +60,20 @@ class MatchNode {
   constructor(parent, depth) {
     this.depth = depth;
     this.parent = parent;
+  }
+  clone() {
+    const match = this;
+    const clone = new MatchNode(null, match.depth);
+    clone.leftTeam = match.leftTeam ? match.leftTeam.clone() : null;
+    clone.rightTeam = match.rightTeam ? match.rightTeam.clone() : null;
+    if (match.result) {
+      if (match.result === match.leftTeam) {
+        clone.result = clone.leftTeam;
+      } else if (match.result === match.rightTeam) {
+        clone.result = clone.rightTeam;
+      }
+    }
+    return clone;
   }
 }
 class Round {
@@ -99,7 +116,6 @@ class MatchTree {
         ranges = [...range1, ...range2];
       }
       const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i);
-      const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
       const maxMatches = 2 ** i;
       const matches = [];
       for (let x = 0; x < maxMatches; x++) {
@@ -113,17 +129,11 @@ class MatchTree {
             continue;
           }
         }
-        const parentIndex = Math.floor(x / 2);
-        const parent = rounds[i - 1].matches[parentIndex];
+        // const parentIndex = Math.floor(x / 2)
+        // const parent = rounds[i - 1].matches[parentIndex]
+        const parent = this.getParent(x, i, rounds);
         const match = new MatchNode(parent, i);
-        if (parent) {
-          // If x is even, match is the left child of parent, otherwise right child
-          if (x % 2 === 0) {
-            parent.left = match;
-          } else {
-            parent.right = match;
-          }
-        }
+        this.assignMatchToParent(x, match, parent);
         matches[x] = match;
       }
       round.matches = matches;
@@ -145,13 +155,50 @@ class MatchTree {
         return [new WildcardRange(start, start + count / 2), new WildcardRange(end - count / 2, end)];
     }
   }
+  clone() {
+    const tree = this;
+    const newTree = new MatchTree(0, 0, WildcardPlacement.Center);
+    newTree.rounds = tree.rounds.map((round, i) => {
+      const newRound = new Round(round.id, round.name, round.depth, round.roundNum);
+      newRound.matches = round.matches.map((match, x) => {
+        if (match === null) {
+          return null;
+        }
+        const newMatch = match.clone();
+        const parent = this.getParent(x, i, newTree.rounds);
+        newMatch.parent = parent;
+        this.assignMatchToParent(x, newMatch, parent);
+        return newMatch;
+      });
+      return newRound;
+    });
+    return newTree;
+  }
+  getParent(matchIndex, roundIndex, rounds) {
+    if (roundIndex === 0) {
+      return null;
+    }
+    const parentIndex = Math.floor(matchIndex / 2);
+    return rounds[roundIndex - 1].matches[parentIndex];
+  }
+  assignMatchToParent(matchIndex, match, parent) {
+    if (parent === null) {
+      return;
+    }
+    if (matchIndex % 2 === 0) {
+      parent.left = match;
+    } else {
+      parent.right = match;
+    }
+  }
 }
 const TeamSlot = props => {
+  const team = props.team;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: props.className
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "wpbb-team-name"
-  }, "Michigan State"));
+  }, team ? team.name : ''));
 };
 const MatchBox = _ref => {
   let {
@@ -199,9 +246,11 @@ const MatchBox = _ref => {
       marginBottom: spacing
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
-    className: "wpbb-team1"
+    className: "wpbb-team1",
+    team: match.leftTeam
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
-    className: "wpbb-team2"
+    className: "wpbb-team2",
+    team: match.rightTeam
   }));
 };
 const Spacer = _ref2 => {
@@ -375,7 +424,9 @@ const Bracket = props => {
     numWildcards,
     wildcardPlacement
   } = props;
-  const [rounds, setRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
+  // const [rounds, setRounds] = useState<Round[]>([])
+  const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(new MatchTree(numRounds, numWildcards, wildcardPlacement));
+  const rounds = matchTree.rounds;
   const updateRoundName = (roundId, name) => {
     const newRounds = rounds.map(round => {
       if (round.id === roundId) {
@@ -383,11 +434,16 @@ const Bracket = props => {
       }
       return round;
     });
-    setRounds(newRounds);
+    // setRounds(newRounds)
+  };
+
+  const updateMatchTeam = (match, team) => {
+    const newRounds = rounds.map(round => {});
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const matchTree = new MatchTree(numRounds, numWildcards, wildcardPlacement);
-    setRounds(matchTree.rounds);
+    // setRounds(matchTree.rounds)
+    setMatchTree(matchTree);
     // setRounds(buildRounds(numRounds, numWildcards))
   }, [numRounds, numWildcards, wildcardPlacement]);
   const targetHeight = 800;

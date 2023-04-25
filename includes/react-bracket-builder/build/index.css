@@ -99,6 +99,26 @@
   flex-grow: 1;
 }
 
+.wpbb-final-match::before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  top: -5px;
+  right: 0;
+}
+
+.wpbb-final-match::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 50%;
+  border: 5px solid white;
+  bottom: -5px;
+  left: 0;
+}
+
 .wpbb-bracket-modal {
   z-index: 99999999;
 }
@@ -161,6 +181,7 @@
 .wpbb-team1 {
   position: absolute;
   height: 16px;
+  min-width: 100px;
   border: 1px solid black;
   left: 50%;
   transform: translateX(-50%);
@@ -174,6 +195,7 @@
 .wpbb-team2 {
   position: absolute;
   height: 16px;
+  min-width: 100px;
   border: 1px solid black;
   left: 50%;
   transform: translateX(-50%);

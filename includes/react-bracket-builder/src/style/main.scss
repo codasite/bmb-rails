@@ -74,6 +74,7 @@ $bracket-radius: 3px;
 @mixin team() {
 	position: absolute;
 	height: 16px;
+	min-width: 100px;
 	border: 1px solid black;
 	left: 50%;
 	transform: translateX(-50%);

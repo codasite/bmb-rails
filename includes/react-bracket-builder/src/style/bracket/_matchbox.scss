@@ -116,3 +116,15 @@ $bracket-radius: 3px;
 	@include match-box();
 	flex-grow: 1;
 }
+
+.wpbb-final-match::before {
+	@include match-box-outer-after();
+	top: -5px;
+	right: 0;
+}
+
+.wpbb-final-match::after {
+	@include match-box-outer-after();
+	bottom: -5px;
+	left: 0;
+}

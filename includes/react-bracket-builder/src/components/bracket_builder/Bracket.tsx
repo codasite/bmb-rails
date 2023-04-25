@@ -3,6 +3,8 @@ import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 
+type Nullable<T> = T | null;
+
 enum WildcardPlacement {
 	Top = 0,
 	Bottom = 1,
@@ -27,22 +29,45 @@ class Team {
 	constructor(name: string) {
 		this.name = name;
 	}
+
+	clone(): Team {
+		return new Team(this.name);
+	}
 }
 
 
 class MatchNode {
-	leftTeam: Team | null = null;
-	rightTeam: Team | null = null;
-	result: Team | null = null;
-	left: MatchNode | null = null;
-	right: MatchNode | null = null;
-	parent: MatchNode | null = null;
+	leftTeam: Nullable<Team> = null;
+	rightTeam: Nullable<Team> = null;
+	result: Nullable<Team> = null;
+	left: Nullable<MatchNode> = null;
+	right: Nullable<MatchNode> = null;
+	parent: Nullable<MatchNode> = null;
 	depth: number;
 
-	constructor(parent: MatchNode | null, depth: number,) {
+	constructor(parent: Nullable<MatchNode>, depth: number) {
 		this.depth = depth;
 		this.parent = parent;
 	}
+
+	clone(): MatchNode {
+		const match = this;
+		const clone = new MatchNode(null, match.depth);
+
+		clone.leftTeam = match.leftTeam ? match.leftTeam.clone() : null;
+		clone.rightTeam = match.rightTeam ? match.rightTeam.clone() : null;
+
+		if (match.result) {
+			if (match.result === match.leftTeam) {
+				clone.result = clone.leftTeam;
+			} else if (match.result === match.rightTeam) {
+				clone.result = clone.rightTeam;
+			}
+		}
+
+		return clone;
+	}
+
 }
 
 class Round {
@@ -50,7 +75,8 @@ class Round {
 	name: string;
 	depth: number;
 	roundNum: number;
-	matches: (MatchNode | null)[];
+	matches: Array<Nullable<MatchNode>>;
+
 	constructor(id: number, name: string, depth: number, roundNum: number) {
 		this.id = id;
 		this.name = name;
@@ -61,16 +87,10 @@ class Round {
 }
 
 class WildcardRange {
-	min: number
-	max: number
-
-	constructor(min: number, max: number) {
-		this.min = min
-		this.max = max
-	}
+	constructor(public min: number, public max: number) { }
 
 	toString(): string {
-		return `${this.min}-${this.max}`
+		return `${this.min}-${this.max}`;
 	}
 }
 
@@ -104,7 +124,6 @@ class MatchTree {
 			}
 
 			const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i);
-			const numMatches = i === numRounds - 1 && numWildcards > 0 ? numWildcards : 2 ** i;
 			const maxMatches = 2 ** i
 			const matches: (MatchNode | null)[] = []
 			for (let x = 0; x < maxMatches; x++) {
@@ -118,17 +137,11 @@ class MatchTree {
 						continue
 					}
 				}
-				const parentIndex = Math.floor(x / 2)
-				const parent = rounds[i - 1].matches[parentIndex]
+				// const parentIndex = Math.floor(x / 2)
+				// const parent = rounds[i - 1].matches[parentIndex]
+				const parent = this.getParent(x, i, rounds)
 				const match = new MatchNode(parent, i)
-				if (parent) {
-					// If x is even, match is the left child of parent, otherwise right child
-					if (x % 2 === 0) {
-						parent.left = match
-					} else {
-						parent.right = match
-					}
-				}
+				this.assignMatchToParent(x, match, parent)
 				matches[x] = match
 			}
 			round.matches = matches
@@ -136,6 +149,7 @@ class MatchTree {
 		};
 		return rounds
 	}
+
 
 	getWildcardRange(start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] {
 		switch (placement) {
@@ -150,12 +164,52 @@ class MatchTree {
 				return [new WildcardRange(start, start + count / 2), new WildcardRange(end - count / 2, end)]
 		}
 	}
+
+	clone(): MatchTree {
+		const tree = this
+		const newTree = new MatchTree(0, 0, WildcardPlacement.Center)
+		newTree.rounds = tree.rounds.map((round, i) => {
+			const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
+			newRound.matches = round.matches.map((match, x) => {
+				if (match === null) {
+					return null
+				}
+				const newMatch = match.clone()
+				const parent = this.getParent(x, i, newTree.rounds)
+				newMatch.parent = parent
+				this.assignMatchToParent(x, newMatch, parent)
+				return newMatch
+			})
+			return newRound
+		})
+		return newTree
+	}
+
+	getParent(matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null {
+		if (roundIndex === 0) {
+			return null
+		}
+		const parentIndex = Math.floor(matchIndex / 2)
+		return rounds[roundIndex - 1].matches[parentIndex]
+	}
+
+	assignMatchToParent(matchIndex: number, match: MatchNode, parent: MatchNode | null) {
+		if (parent === null) {
+			return
+		}
+		if (matchIndex % 2 === 0) {
+			parent.left = match
+		} else {
+			parent.right = match
+		}
+	}
 }
 
 const TeamSlot = (props) => {
+	const team: Team | null = props.team
 	return (
 		<div className={props.className}>
-			<span className='wpbb-team-name'>Michigan State</span>
+			<span className='wpbb-team-name'>{team ? team.name : ''}</span>
 		</div>
 	)
 }
@@ -202,8 +256,8 @@ const MatchBox = ({ ...props }) => {
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
-			<TeamSlot className='wpbb-team1' />
-			<TeamSlot className='wpbb-team2' />
+			<TeamSlot className='wpbb-team1' team={match.leftTeam} />
+			<TeamSlot className='wpbb-team2' team={match.rightTeam} />
 		</div>
 	)
 }
@@ -400,7 +454,9 @@ const WildcardPlacementSelector = (props) => {
 
 export const Bracket = (props) => {
 	const { numRounds, numWildcards, wildcardPlacement } = props
-	const [rounds, setRounds] = useState<Round[]>([])
+	// const [rounds, setRounds] = useState<Round[]>([])
+	const [matchTree, setMatchTree] = useState<MatchTree>(new MatchTree(numRounds, numWildcards, wildcardPlacement))
+	const rounds = matchTree.rounds
 
 	const updateRoundName = (roundId: number, name: string) => {
 		const newRounds = rounds.map((round) => {
@@ -409,12 +465,19 @@ export const Bracket = (props) => {
 			}
 			return round
 		})
-		setRounds(newRounds)
+		// setRounds(newRounds)
 	}
+
+	const updateMatchTeam = (match: MatchNode, team: Team) => {
+		const newRounds = rounds.map((round) => {
+		})
+	}
+
 
 	useEffect(() => {
 		const matchTree = new MatchTree(numRounds, numWildcards, wildcardPlacement)
-		setRounds(matchTree.rounds)
+		// setRounds(matchTree.rounds)
+		setMatchTree(matchTree)
 		// setRounds(buildRounds(numRounds, numWildcards))
 	}, [numRounds, numWildcards, wildcardPlacement])
 
