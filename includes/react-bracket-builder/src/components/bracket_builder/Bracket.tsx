@@ -97,9 +97,15 @@ class WildcardRange {
 class MatchTree {
 	root: MatchNode | null
 	rounds: Round[]
+	numRounds: number
+	numWildcards: number
+	wildcardsPlacement: WildcardPlacement
 
 	constructor(numRounds: number, numWildcards: number, wildcardsPlacement: WildcardPlacement) {
 		this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement)
+		this.numRounds = numRounds
+		this.numWildcards = numWildcards
+		this.wildcardsPlacement = wildcardsPlacement
 	}
 
 	buildRounds(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): Round[] {
@@ -115,7 +121,6 @@ class MatchTree {
 			let ranges: WildcardRange[] = []
 
 			if (i === numRounds - 1 && numWildcards > 0) {
-				// const placement = WildcardPlacement.Top
 				const placement = wildcardPlacement
 				const maxNodes = 2 ** i
 				const range1 = this.getWildcardRange(0, maxNodes / 2, numWildcards / 2, placement)
@@ -166,8 +171,9 @@ class MatchTree {
 	}
 
 	clone(): MatchTree {
+		console.log('cloning tree')
 		const tree = this
-		const newTree = new MatchTree(0, 0, WildcardPlacement.Center)
+		const newTree = new MatchTree(tree.numRounds, tree.numWildcards, tree.wildcardsPlacement)
 		// First, create the new rounds.
 		newTree.rounds = tree.rounds.map((round) => {
 			const newRound = new Round(round.id, round.name, round.depth, round.roundNum);
@@ -236,8 +242,10 @@ const TeamSlot = (props) => {
 	const updateTeam = props.updateTeam
 
 	const handleUpdateTeam = (e) => {
+		if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
+			updateTeam(textBuffer)
+		}
 		setEditing(false)
-		updateTeam(textBuffer)
 	}
 
 	return (
@@ -514,19 +522,9 @@ const WildcardPlacementSelector = (props) => {
 
 export const Bracket = (props) => {
 	const { numRounds, numWildcards, wildcardPlacement } = props
-	// const [rounds, setRounds] = useState<Round[]>([])
 	const [matchTree, setMatchTree] = useState<MatchTree>(new MatchTree(numRounds, numWildcards, wildcardPlacement))
 	const rounds = matchTree.rounds
 
-	// const updateRoundName = (roundId: number, name: string) => {
-	// 	const newRounds = rounds.map((round) => {
-	// 		if (round.id === roundId) {
-	// 			round.name = name
-	// 		}
-	// 		return round
-	// 	})
-	// 	// setRounds(newRounds)
-	// }
 	const updateRoundName = (roundId: number, name: string) => {
 		const newMatchTree = matchTree.clone();
 		const roundToUpdate = newMatchTree.rounds.find((round) => round.id === roundId);
@@ -535,8 +533,6 @@ export const Bracket = (props) => {
 			setMatchTree(newMatchTree);
 		}
 	};
-
-	// const updateTeam = ()
 
 	const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 		const newMatchTree = matchTree.clone();

@@ -97,6 +97,9 @@ class WildcardRange {
 class MatchTree {
   constructor(numRounds, numWildcards, wildcardsPlacement) {
     this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement);
+    this.numRounds = numRounds;
+    this.numWildcards = numWildcards;
+    this.wildcardsPlacement = wildcardsPlacement;
   }
   buildRounds(numRounds, numWildcards, wildcardPlacement) {
     // The number of matches in a round is equal to 2^depth unless it's the first round
@@ -108,7 +111,6 @@ class MatchTree {
     for (let i = 1; i < numRounds; i++) {
       let ranges = [];
       if (i === numRounds - 1 && numWildcards > 0) {
-        // const placement = WildcardPlacement.Top
         const placement = wildcardPlacement;
         const maxNodes = 2 ** i;
         const range1 = this.getWildcardRange(0, maxNodes / 2, numWildcards / 2, placement);
@@ -156,8 +158,9 @@ class MatchTree {
     }
   }
   clone() {
+    console.log('cloning tree');
     const tree = this;
-    const newTree = new MatchTree(0, 0, WildcardPlacement.Center);
+    const newTree = new MatchTree(tree.numRounds, tree.numWildcards, tree.wildcardsPlacement);
     // First, create the new rounds.
     newTree.rounds = tree.rounds.map(round => {
       const newRound = new Round(round.id, round.name, round.depth, round.roundNum);
@@ -223,8 +226,10 @@ const TeamSlot = props => {
   const team = props.team;
   const updateTeam = props.updateTeam;
   const handleUpdateTeam = e => {
+    if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
+      updateTeam(textBuffer);
+    }
     setEditing(false);
-    updateTeam(textBuffer);
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: props.className,
@@ -482,19 +487,8 @@ const Bracket = props => {
     numWildcards,
     wildcardPlacement
   } = props;
-  // const [rounds, setRounds] = useState<Round[]>([])
   const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(new MatchTree(numRounds, numWildcards, wildcardPlacement));
   const rounds = matchTree.rounds;
-
-  // const updateRoundName = (roundId: number, name: string) => {
-  // 	const newRounds = rounds.map((round) => {
-  // 		if (round.id === roundId) {
-  // 			round.name = name
-  // 		}
-  // 		return round
-  // 	})
-  // 	// setRounds(newRounds)
-  // }
   const updateRoundName = (roundId, name) => {
     const newMatchTree = matchTree.clone();
     const roundToUpdate = newMatchTree.rounds.find(round => round.id === roundId);
@@ -503,9 +497,6 @@ const Bracket = props => {
       setMatchTree(newMatchTree);
     }
   };
-
-  // const updateTeam = ()
-
   const updateTeam = (roundId, matchIndex, left, name) => {
     const newMatchTree = matchTree.clone();
     const roundToUpdate = newMatchTree.rounds.find(round => round.id === roundId);
