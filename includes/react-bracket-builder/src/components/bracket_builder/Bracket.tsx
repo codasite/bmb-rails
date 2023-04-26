@@ -27,7 +27,7 @@ class Team {
 	// 	this.name = name;
 	// }
 	constructor(name: string) {
-		this.name = name;
+		this.name = 'Packers';
 	}
 
 	clone(): Team {
@@ -168,22 +168,46 @@ class MatchTree {
 	clone(): MatchTree {
 		const tree = this
 		const newTree = new MatchTree(0, 0, WildcardPlacement.Center)
-		newTree.rounds = tree.rounds.map((round, i) => {
-			const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
-			newRound.matches = round.matches.map((match, x) => {
+		// First, create the new rounds.
+		newTree.rounds = tree.rounds.map((round) => {
+			const newRound = new Round(round.id, round.name, round.depth, round.roundNum);
+			return newRound;
+		});
+		// Then, iterate over the new rounds to create the matches and update their parent relationships.
+		newTree.rounds.forEach((round, roundIndex) => {
+			round.matches = tree.rounds[roundIndex].matches.map((match, matchIndex) => {
 				if (match === null) {
-					return null
+					return null;
 				}
-				const newMatch = match.clone()
-				const parent = this.getParent(x, i, newTree.rounds)
-				newMatch.parent = parent
-				this.assignMatchToParent(x, newMatch, parent)
-				return newMatch
-			})
-			return newRound
-		})
-		return newTree
+				const newMatch = match.clone();
+				const parent = this.getParent(matchIndex, roundIndex, newTree.rounds);
+				newMatch.parent = parent;
+				this.assignMatchToParent(matchIndex, newMatch, parent);
+				return newMatch;
+			});
+		});
+		return newTree;
 	}
+	// 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
+	// 		const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
+	// 		console.log('i', i)
+	// 		console.log('rounds', rounds)
+	// 		newRound.matches = round.matches.map((match, x, matches) => {
+	// 			if (match === null) {
+	// 				return null
+	// 			}
+	// 			const newMatch = match.clone()
+	// 			console.log('x', x)
+	// 			console.log('matches', matches)
+	// 			const parent = this.getParent(x, i, newTree.rounds)
+	// 			newMatch.parent = parent
+	// 			this.assignMatchToParent(x, newMatch, parent)
+	// 			return newMatch
+	// 		})
+	// 		return newRound
+	// 	})
+	// 	return newTree
+	// }
 
 	getParent(matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null {
 		if (roundIndex === 0) {
@@ -207,19 +231,32 @@ class MatchTree {
 
 const TeamSlot = (props) => {
 	const team: Team | null = props.team
+	const updateTeam = props.updateTeam
+
+	const handleUpdateTeam = (e) => {
+		e.stopPropagation()
+		updateTeam('hi')
+	}
+
 	return (
-		<div className={props.className}>
+		<div className={props.className} onClick={(e) => handleUpdateTeam(e)}>
 			<span className='wpbb-team-name'>{team ? team.name : ''}</span>
 		</div>
 	)
 }
 
-const MatchBox = ({ ...props }) => {
+const MatchBox = (props) => {
 	const match: MatchNode | null = props.match
 	const direction: Direction = props.direction
 	const height: number = props.height
 	const spacing: number = props.spacing
+	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+	const updateTeam = props.updateTeam
 
+	// const updateTeam = (name: string, left: boolean) => {
+	// 	console.log('updateTeam', name)
+	// 	// updateTeam(match.roundId, match.matchIndex, left, name)
+	// }
 
 	if (match === null) {
 		return (
@@ -256,8 +293,8 @@ const MatchBox = ({ ...props }) => {
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
-			<TeamSlot className='wpbb-team1' team={match.leftTeam} />
-			<TeamSlot className='wpbb-team2' team={match.rightTeam} />
+			<TeamSlot className='wpbb-team1' team={match.leftTeam} updateTeam={(name: string) => updateTeam(true, name)} />
+			<TeamSlot className='wpbb-team2' team={match.rightTeam} updateTeam={(name: string) => updateTeam(false, name)} />
 		</div>
 	)
 }
@@ -329,15 +366,19 @@ const MatchColumn = (props) => {
 	const direction: Direction = props.direction;
 	const matchHeight: number = props.matchHeight;
 	const updateRoundName = props.updateRoundName;
+	const updateTeam = props.updateTeam;
+	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
+			const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length
 			return (
 				<MatchBox
 					match={match}
 					direction={direction}
 					height={matchHeight}
 					spacing={i + 1 < matches.length ? matchHeight : 0} // Do not add spacing to the last match in the round column
+					updateTeam={(left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name)}
 				/>
 			)
 		})
@@ -458,19 +499,50 @@ export const Bracket = (props) => {
 	const [matchTree, setMatchTree] = useState<MatchTree>(new MatchTree(numRounds, numWildcards, wildcardPlacement))
 	const rounds = matchTree.rounds
 
+	// const updateRoundName = (roundId: number, name: string) => {
+	// 	const newRounds = rounds.map((round) => {
+	// 		if (round.id === roundId) {
+	// 			round.name = name
+	// 		}
+	// 		return round
+	// 	})
+	// 	// setRounds(newRounds)
+	// }
 	const updateRoundName = (roundId: number, name: string) => {
-		const newRounds = rounds.map((round) => {
-			if (round.id === roundId) {
-				round.name = name
-			}
-			return round
-		})
-		// setRounds(newRounds)
-	}
+		const newMatchTree = matchTree.clone();
+		const roundToUpdate = newMatchTree.rounds.find((round) => round.id === roundId);
+		if (roundToUpdate) {
+			roundToUpdate.name = name;
+			setMatchTree(newMatchTree);
+		}
+	};
 
-	const updateMatchTeam = (match: MatchNode, team: Team) => {
-		const newRounds = rounds.map((round) => {
-		})
+	// const updateTeam = ()
+
+	const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+		const newMatchTree = matchTree.clone();
+		const roundToUpdate = newMatchTree.rounds.find((round) => round.id === roundId);
+		if (roundToUpdate) {
+			const matchToUpdate = roundToUpdate.matches[matchIndex];
+			if (matchToUpdate) {
+				if (left) {
+					const team = matchToUpdate.leftTeam;
+					if (team) {
+						team.name = name;
+					} else {
+						matchToUpdate.leftTeam = new Team(name);
+					}
+				} else {
+					const team = matchToUpdate.rightTeam;
+					if (team) {
+						team.name = name;
+					} else {
+						matchToUpdate.rightTeam = new Team(name);
+					}
+				}
+			}
+			setMatchTree(newMatchTree);
+		}
 	}
 
 
@@ -506,6 +578,7 @@ export const Bracket = (props) => {
 					numDirections={numDirections}
 					matchHeight={2 ** idx * firstRoundMatchHeight}
 					updateRoundName={updateRoundName}
+					updateTeam={updateTeam}
 				/>
 			}),
 			// handle final round differently
@@ -520,6 +593,7 @@ export const Bracket = (props) => {
 					numDirections={numDirections}
 					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
 					updateRoundName={updateRoundName}
+					updateTeam={updateTeam}
 				/>
 			})
 		]

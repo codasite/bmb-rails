@@ -44,7 +44,7 @@ class Team {
   // 	this.name = name;
   // }
   constructor(name) {
-    this.name = name;
+    this.name = 'Packers';
   }
   clone() {
     return new Team(this.name);
@@ -158,22 +158,47 @@ class MatchTree {
   clone() {
     const tree = this;
     const newTree = new MatchTree(0, 0, WildcardPlacement.Center);
-    newTree.rounds = tree.rounds.map((round, i) => {
+    // First, create the new rounds.
+    newTree.rounds = tree.rounds.map(round => {
       const newRound = new Round(round.id, round.name, round.depth, round.roundNum);
-      newRound.matches = round.matches.map((match, x) => {
+      return newRound;
+    });
+    // Then, iterate over the new rounds to create the matches and update their parent relationships.
+    newTree.rounds.forEach((round, roundIndex) => {
+      round.matches = tree.rounds[roundIndex].matches.map((match, matchIndex) => {
         if (match === null) {
           return null;
         }
         const newMatch = match.clone();
-        const parent = this.getParent(x, i, newTree.rounds);
+        const parent = this.getParent(matchIndex, roundIndex, newTree.rounds);
         newMatch.parent = parent;
-        this.assignMatchToParent(x, newMatch, parent);
+        this.assignMatchToParent(matchIndex, newMatch, parent);
         return newMatch;
       });
-      return newRound;
     });
     return newTree;
   }
+  // 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
+  // 		const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
+  // 		console.log('i', i)
+  // 		console.log('rounds', rounds)
+  // 		newRound.matches = round.matches.map((match, x, matches) => {
+  // 			if (match === null) {
+  // 				return null
+  // 			}
+  // 			const newMatch = match.clone()
+  // 			console.log('x', x)
+  // 			console.log('matches', matches)
+  // 			const parent = this.getParent(x, i, newTree.rounds)
+  // 			newMatch.parent = parent
+  // 			this.assignMatchToParent(x, newMatch, parent)
+  // 			return newMatch
+  // 		})
+  // 		return newRound
+  // 	})
+  // 	return newTree
+  // }
+
   getParent(matchIndex, roundIndex, rounds) {
     if (roundIndex === 0) {
       return null;
@@ -194,20 +219,31 @@ class MatchTree {
 }
 const TeamSlot = props => {
   const team = props.team;
+  const updateTeam = props.updateTeam;
+  const handleUpdateTeam = e => {
+    e.stopPropagation();
+    updateTeam('hi');
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: props.className
+    className: props.className,
+    onClick: e => handleUpdateTeam(e)
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "wpbb-team-name"
   }, team ? team.name : ''));
 };
-const MatchBox = _ref => {
-  let {
-    ...props
-  } = _ref;
+const MatchBox = props => {
   const match = props.match;
   const direction = props.direction;
   const height = props.height;
   const spacing = props.spacing;
+  // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+  const updateTeam = props.updateTeam;
+
+  // const updateTeam = (name: string, left: boolean) => {
+  // 	console.log('updateTeam', name)
+  // 	// updateTeam(match.roundId, match.matchIndex, left, name)
+  // }
+
   if (match === null) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "wpbb-match-box-empty",
@@ -247,16 +283,18 @@ const MatchBox = _ref => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team1",
-    team: match.leftTeam
+    team: match.leftTeam,
+    updateTeam: name => updateTeam(true, name)
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team2",
-    team: match.rightTeam
+    team: match.rightTeam,
+    updateTeam: name => updateTeam(false, name)
   }));
 };
-const Spacer = _ref2 => {
+const Spacer = _ref => {
   let {
     grow = '1'
-  } = _ref2;
+  } = _ref;
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     style: {
       flexGrow: grow
@@ -321,16 +359,21 @@ const MatchColumn = props => {
   const direction = props.direction;
   const matchHeight = props.matchHeight;
   const updateRoundName = props.updateRoundName;
+  const updateTeam = props.updateTeam;
+  // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+
   const buildMatches = () => {
     const matchBoxes = matches.map((match, i) => {
+      const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length;
       return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchBox, {
         match: match,
         direction: direction,
         height: matchHeight,
         spacing: i + 1 < matches.length ? matchHeight : 0 // Do not add spacing to the last match in the round column
+        ,
+        updateTeam: (left, name) => updateTeam(round.id, matchIndex, left, name)
       });
     });
-
     return matchBoxes;
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -427,18 +470,51 @@ const Bracket = props => {
   // const [rounds, setRounds] = useState<Round[]>([])
   const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(new MatchTree(numRounds, numWildcards, wildcardPlacement));
   const rounds = matchTree.rounds;
+
+  // const updateRoundName = (roundId: number, name: string) => {
+  // 	const newRounds = rounds.map((round) => {
+  // 		if (round.id === roundId) {
+  // 			round.name = name
+  // 		}
+  // 		return round
+  // 	})
+  // 	// setRounds(newRounds)
+  // }
   const updateRoundName = (roundId, name) => {
-    const newRounds = rounds.map(round => {
-      if (round.id === roundId) {
-        round.name = name;
-      }
-      return round;
-    });
-    // setRounds(newRounds)
+    const newMatchTree = matchTree.clone();
+    const roundToUpdate = newMatchTree.rounds.find(round => round.id === roundId);
+    if (roundToUpdate) {
+      roundToUpdate.name = name;
+      setMatchTree(newMatchTree);
+    }
   };
 
-  const updateMatchTeam = (match, team) => {
-    const newRounds = rounds.map(round => {});
+  // const updateTeam = ()
+
+  const updateTeam = (roundId, matchIndex, left, name) => {
+    const newMatchTree = matchTree.clone();
+    const roundToUpdate = newMatchTree.rounds.find(round => round.id === roundId);
+    if (roundToUpdate) {
+      const matchToUpdate = roundToUpdate.matches[matchIndex];
+      if (matchToUpdate) {
+        if (left) {
+          const team = matchToUpdate.leftTeam;
+          if (team) {
+            team.name = name;
+          } else {
+            matchToUpdate.leftTeam = new Team(name);
+          }
+        } else {
+          const team = matchToUpdate.rightTeam;
+          if (team) {
+            team.name = name;
+          } else {
+            matchToUpdate.rightTeam = new Team(name);
+          }
+        }
+      }
+      setMatchTree(newMatchTree);
+    }
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     const matchTree = new MatchTree(numRounds, numWildcards, wildcardPlacement);
@@ -468,7 +544,8 @@ const Bracket = props => {
         direction: Direction.TopLeft,
         numDirections: numDirections,
         matchHeight: 2 ** idx * firstRoundMatchHeight,
-        updateRoundName: updateRoundName
+        updateRoundName: updateRoundName,
+        updateTeam: updateTeam
       });
     }),
     // handle final round differently
@@ -484,7 +561,8 @@ const Bracket = props => {
         direction: Direction.TopRight,
         numDirections: numDirections,
         matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight,
-        updateRoundName: updateRoundName
+        updateRoundName: updateRoundName,
+        updateTeam: updateTeam
       });
     })];
   };
