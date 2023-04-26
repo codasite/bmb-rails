@@ -70,19 +70,20 @@
 }
 
 $bracket-radius: 3px;
+$team-height: 16px;
 
 @mixin team() {
 	position: absolute;
-	height: 16px;
+	height: $team-height;
 	min-width: 100px;
 	border: 1px solid black;
 	left: 50%;
 	transform: translateX(-50%);
 	background-color: white;
-	padding: 0 4px;
+	// padding: 0 4px;
 	border-radius: $bracket-radius;
 	z-index: 1;
-
+	text-align: center;
 }
 
 $team-offset: -8px;
@@ -95,6 +96,18 @@ $team-offset: -8px;
 .wpbb-team2 {
 	@include team();
 	bottom: $team-offset;
+}
+
+.wpbb-team-name-input {
+	width: 100%;
+	border: none !important;
+	min-height: 0 !important;
+	height: $team-height - 1 !important;
+	text-align: center;
+}
+
+.wpbb-team-name-input:focus {
+	border-radius: $bracket-radius - 1;
 }
 
 .wpbb-team-name {

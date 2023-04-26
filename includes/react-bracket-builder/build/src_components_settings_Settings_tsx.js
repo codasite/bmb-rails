@@ -44,7 +44,7 @@ class Team {
   // 	this.name = name;
   // }
   constructor(name) {
-    this.name = 'Packers';
+    this.name = name;
   }
   clone() {
     return new Team(this.name);
@@ -218,16 +218,31 @@ class MatchTree {
   }
 }
 const TeamSlot = props => {
+  const [editing, setEditing] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [textBuffer, setTextBuffer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('');
   const team = props.team;
   const updateTeam = props.updateTeam;
   const handleUpdateTeam = e => {
-    e.stopPropagation();
-    updateTeam('hi');
+    setEditing(false);
+    updateTeam(textBuffer);
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: props.className,
-    onClick: e => handleUpdateTeam(e)
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    onClick: () => setEditing(true)
+  }, editing ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    className: "wpbb-team-name-input",
+    autoFocus: true,
+    onFocus: e => e.target.select(),
+    type: "text",
+    value: textBuffer,
+    onChange: e => setTextBuffer(e.target.value),
+    onBlur: handleUpdateTeam,
+    onKeyUp: e => {
+      if (e.key === 'Enter') {
+        handleUpdateTeam(e);
+      }
+    }
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "wpbb-team-name"
   }, team ? team.name : ''));
 };

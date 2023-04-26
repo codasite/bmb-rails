@@ -186,9 +186,9 @@
   left: 50%;
   transform: translateX(-50%);
   background-color: white;
-  padding: 0 4px;
   border-radius: 3px;
   z-index: 1;
+  text-align: center;
   top: -8px;
 }
 
@@ -200,10 +200,22 @@
   left: 50%;
   transform: translateX(-50%);
   background-color: white;
-  padding: 0 4px;
   border-radius: 3px;
   z-index: 1;
+  text-align: center;
   bottom: -8px;
+}
+
+.wpbb-team-name-input {
+  width: 100%;
+  border: none !important;
+  min-height: 0 !important;
+  height: 15px !important;
+  text-align: center;
+}
+
+.wpbb-team-name-input:focus {
+  border-radius: 2px;
 }
 
 .wpbb-team-name {

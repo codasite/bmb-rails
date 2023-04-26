@@ -27,7 +27,7 @@ class Team {
 	// 	this.name = name;
 	// }
 	constructor(name: string) {
-		this.name = 'Packers';
+		this.name = name;
 	}
 
 	clone(): Team {
@@ -230,17 +230,36 @@ class MatchTree {
 }
 
 const TeamSlot = (props) => {
+	const [editing, setEditing] = useState(false)
+	const [textBuffer, setTextBuffer] = useState('')
 	const team: Team | null = props.team
 	const updateTeam = props.updateTeam
 
 	const handleUpdateTeam = (e) => {
-		e.stopPropagation()
-		updateTeam('hi')
+		setEditing(false)
+		updateTeam(textBuffer)
 	}
 
 	return (
-		<div className={props.className} onClick={(e) => handleUpdateTeam(e)}>
-			<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+		<div className={props.className} onClick={() => setEditing(true)}>
+			{editing ?
+				<input
+					className='wpbb-team-name-input'
+					autoFocus
+					onFocus={(e) => e.target.select()}
+					type='text'
+					value={textBuffer}
+					onChange={(e) => setTextBuffer(e.target.value)}
+					onBlur={handleUpdateTeam}
+					onKeyUp={(e) => {
+						if (e.key === 'Enter') {
+							handleUpdateTeam(e)
+						}
+					}}
+				/>
+				:
+				<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+			}
 		</div>
 	)
 }
