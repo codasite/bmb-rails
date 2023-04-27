@@ -520,6 +520,45 @@ const WildcardPlacementSelector = (props) => {
 	)
 }
 
+const BracketTitle = (props) => {
+	const {
+		title,
+		setTitle,
+	} = props
+	const [editing, setEditing] = useState(false)
+	const [textBuffer, setTextBuffer] = useState(title)
+
+	const handleUpdateTitle = (event) => {
+		setTitle(textBuffer)
+		setEditing(false)
+	}
+
+	return (
+		<div className='wpbb-bracket-title' onClick={() => setEditing(true)}>
+			{editing ?
+				<input
+					className='wpbb-bracket-title-input'
+					autoFocus
+					onFocus={(e) => e.target.select()}
+					type='text'
+					value={textBuffer}
+					onChange={(e) => setTextBuffer(e.target.value)}
+					onBlur={handleUpdateTitle}
+					onKeyUp={(e) => {
+						if (e.key === 'Enter') {
+							handleUpdateTitle(e)
+						}
+					}}
+				/>
+				:
+				<span className='wpbb-bracket-title-name'>{title}</span>
+			}
+		</div>
+	)
+}
+
+
+
 export const Bracket = (props) => {
 	const { numRounds, numWildcards, wildcardPlacement } = props
 	const [matchTree, setMatchTree] = useState<MatchTree>(new MatchTree(numRounds, numWildcards, wildcardPlacement))
@@ -630,6 +669,7 @@ export const BracketModal = (props) => {
 	const [numRounds, setNumRounds] = useState(4);
 	const [numWildcards, setNumWildcards] = useState(0);
 	const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Bottom);
+	const [bracketName, setBracketName] = useState('New Bracket');
 	// The max number of wildcards is 2 less than the possible number of matches in the first round
 	// (2^numRounds - 2)
 	const maxWildcards = 2 ** (numRounds - 1) - 2;
@@ -637,7 +677,7 @@ export const BracketModal = (props) => {
 	return (
 		<Modal className='wpbb-bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
-				<Modal.Title>Create Bracket</Modal.Title>
+				<Modal.Title><BracketTitle title={bracketName} setTitle={setBracketName} /></Modal.Title>
 				<form className='wpbb-options-form'>
 					<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
 					<NumWildcardsSelector numWildcards={numWildcards} setNumWildcards={setNumWildcards} maxWildcards={maxWildcards} />

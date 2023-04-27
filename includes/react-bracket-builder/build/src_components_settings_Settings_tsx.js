@@ -481,6 +481,37 @@ const WildcardPlacementSelector = props => {
     onChange: handleChange
   }, options));
 };
+const BracketTitle = props => {
+  const {
+    title,
+    setTitle
+  } = props;
+  const [editing, setEditing] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [textBuffer, setTextBuffer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(title);
+  const handleUpdateTitle = event => {
+    setTitle(textBuffer);
+    setEditing(false);
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "wpbb-bracket-title",
+    onClick: () => setEditing(true)
+  }, editing ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    className: "wpbb-bracket-title-input",
+    autoFocus: true,
+    onFocus: e => e.target.select(),
+    type: "text",
+    value: textBuffer,
+    onChange: e => setTextBuffer(e.target.value),
+    onBlur: handleUpdateTitle,
+    onKeyUp: e => {
+      if (e.key === 'Enter') {
+        handleUpdateTitle(e);
+      }
+    }
+  }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "wpbb-bracket-title-name"
+  }, title));
+};
 const Bracket = props => {
   const {
     numRounds,
@@ -585,6 +616,7 @@ const BracketModal = props => {
   const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(4);
   const [numWildcards, setNumWildcards] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
   const [wildcardPlacement, setWildcardPlacement] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(WildcardPlacement.Bottom);
+  const [bracketName, setBracketName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('New Bracket');
   // The max number of wildcards is 2 less than the possible number of matches in the first round
   // (2^numRounds - 2)
   const maxWildcards = 2 ** (numRounds - 1) - 2;
@@ -597,7 +629,10 @@ const BracketModal = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Header, {
     className: "wpbb-bracket-modal__header",
     closeButton: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Title, null, "Create Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Title, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTitle, {
+    title: bracketName,
+    setTitle: setBracketName
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
     className: "wpbb-options-form"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumRoundsSelector, {
     numRounds: numRounds,
