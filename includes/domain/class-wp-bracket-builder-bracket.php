@@ -49,6 +49,61 @@ class Wp_Bracket_Builder_Bracket {
 	}
 }
 
+class Wp_Bracket_Builder_User_Bracket {
+	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
+	 * @var int
+	 */
+	public $customer_id;
+
+	/**
+	 * @var Wp_Bracket_Builder_Bracket
+	 */
+	public $bracket_id;
+
+
+	public function __construct(int $customer_id, int $bracket_id, int $id = null, array $rounds = []) {
+		$this->id = $id;
+		$this->customer_id = $customer_id;
+		$this->bracket_id = $bracket_id;
+		$this->rounds = $rounds;
+	}
+
+	public static function from_array(array $data): Wp_Bracket_Builder_User_Bracket {
+		$user_bracket = new Wp_Bracket_Builder_User_Bracket($data['customer_id'], $data['bracket_id']);
+
+		if (isset($data['id'])) {
+			$user_bracket->id = (int) $data['id'];
+		}
+
+		if (isset($data['rounds'])) {
+			$user_bracket->rounds = array_map(function ($round) {
+				return Wp_Bracket_Builder_Round::from_array($round);
+			}, $data['rounds']);
+		}
+
+		return $user_bracket;
+	}
+	public function equals(Wp_Bracket_Builder_User_Bracket $user_bracket): bool {
+		if ($this->id !== $user_bracket->id) {
+			return false;
+		}
+		if ($this->customer_id !== $user_bracket->customer_id) {
+			return false;
+		}
+		if ($this->bracket_id !== $user_bracket->bracket_id) {
+			return false;
+		}
+		return Wp_Bracket_Builder_Round::array_equals($this->rounds, $user_bracket->rounds);
+		return true;
+	}
+}
+
+
 class Wp_Bracket_Builder_Round {
 	/**
 	 * @var int
@@ -77,7 +132,7 @@ class Wp_Bracket_Builder_Round {
 		$this->matches = $matches;
 	}
 
-	public function from_array(array $data): Wp_Bracket_Builder_Round {
+	static public function from_array(array $data): Wp_Bracket_Builder_Round {
 		$round = new Wp_Bracket_Builder_Round($data['name'], $data['depth']);
 
 		if (isset($data['id'])) {
@@ -105,6 +160,18 @@ class Wp_Bracket_Builder_Round {
 		}
 		return Wp_Bracket_Builder_Match::array_equals($this->matches, $round->matches);
 	}
+
+	static function array_equals(array $rounds1, array $rounds2): bool {
+		if (count($rounds1) !== count($rounds2)) {
+			return false;
+		}
+		for ($i = 0; $i < count($rounds1); $i++) {
+			if (!$rounds1[$i]->equals($rounds2[$i])) {
+				return false;
+			}
+		}
+		return true;
+	}
 }
 
 class Wp_Bracket_Builder_Match {
@@ -119,36 +186,30 @@ class Wp_Bracket_Builder_Match {
 	public $index;
 
 	/**
-	 * @var string
+	 * @var Wp_Bracket_Builder_Team
 	 */
-	public $name;
+	public $team1;
 
 	/**
 	 * @var Wp_Bracket_Builder_Team
 	 */
-	public $leftTeam;
-
-	/**
-	 * @var Wp_Bracket_Builder_Team
-	 */
-	public $rightTeam;
+	public $team2;
 
 	/**
 	 * @var Wp_Bracket_Builder_Team
 	 */
 	public $result;
 
-	public function __construct(string $name, int $index, Wp_Bracket_Builder_Team $leftTeam, Wp_Bracket_Builder_Team $rightTeam, Wp_Bracket_Builder_Team $result = null, int $id = null) {
+	public function __construct(int $index, Wp_Bracket_Builder_Team $team1, Wp_Bracket_Builder_Team $team2, Wp_Bracket_Builder_Team $result = null, int $id = null) {
 		$this->id = $id;
 		$this->index = $index;
-		$this->name = $name;
-		$this->leftTeam = $leftTeam;
-		$this->rightTeam = $rightTeam;
+		$this->team1 = $team1;
+		$this->team2 = $team2;
 		$this->result = $result;
 	}
 
-	public function from_array(array $data): Wp_Bracket_Builder_Match {
-		$match = new Wp_Bracket_Builder_Match($data['name'], $data['index'], Wp_Bracket_Builder_Team::from_array($data['leftTeam']), Wp_Bracket_Builder_Team::from_array($data['rightTeam']));
+	static public function from_array(array $data): Wp_Bracket_Builder_Match {
+		$match = new Wp_Bracket_Builder_Match($data['name'], $data['index'], Wp_Bracket_Builder_Team::from_array($data['team1']), Wp_Bracket_Builder_Team::from_array($data['team2']));
 
 		if (isset($data['id'])) {
 			$match->id = (int) $data['id'];
@@ -168,16 +229,62 @@ class Wp_Bracket_Builder_Match {
 		if ($this->index !== $match->index) {
 			return false;
 		}
-		if ($this->name !== $match->name) {
+		if (!$this->team1->equals($match->team1)) {
 			return false;
 		}
-		if (!$this->leftTeam->equals($match->leftTeam)) {
-			return false;
-		}
-		if (!$this->rightTeam->equals($match->rightTeam)) {
+		if (!$this->team2->equals($match->team2)) {
 			return false;
 		}
 		if ($this->result !== null && $match->result !== null && !$this->result->equals($match->result)) {
+			return false;
+		}
+		return true;
+	}
+
+	static function array_equals(array $matches1, array $matches2): bool {
+		if (count($matches1) !== count($matches2)) {
+			return false;
+		}
+		for ($i = 0; $i < count($matches1); $i++) {
+			if (!$matches1[$i]->equals($matches2[$i])) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
+
+class Wp_Bracket_Builder_Team {
+	/**
+	 * @var int
+	 */
+	public $id;
+
+	/**
+	 * @var string
+	 */
+	public $name;
+
+	public function __construct(string $name, int $id = null) {
+		$this->id = $id;
+		$this->name = $name;
+	}
+
+	static public function from_array(array $data): Wp_Bracket_Builder_Team {
+		$team = new Wp_Bracket_Builder_Team($data['name']);
+
+		if (isset($data['id'])) {
+			$team->id = (int) $data['id'];
+		}
+
+		return $team;
+	}
+
+	public function equals(Wp_Bracket_Builder_Team $team): bool {
+		if ($this->id !== $team->id) {
+			return false;
+		}
+		if ($this->name !== $team->name) {
 			return false;
 		}
 		return true;
