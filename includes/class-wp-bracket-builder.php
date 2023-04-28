@@ -129,7 +129,7 @@ class Wp_Bracket_Builder {
 		/**
 		 * The sports repository class
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-sport-repo.php';
+		// require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-sport-repo.php';
 
 		/**
 		 * The bracket api controller class
@@ -165,10 +165,10 @@ class Wp_Bracket_Builder {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Wp_Bracket_Builder_Admin($this->get_plugin_name(), $this->get_version());
-		$sport_repo = new Wp_Bracket_Builder_Sport_Repository_Mock();
+		// $sport_repo = new Wp_Bracket_Builder_Sport_Repository_Mock();
 		// $sports_api = new Wp_Bracket_Builder_Sport_Api($sport_repo = $sport_repo);
-		$sports_api = new Wp_Bracket_Builder_Sport_Api();
-		$bracket_api = new Wp_Bracket_Builder_Bracket_Api();
+		// $sports_api = new Wp_Bracket_Builder_Sport_Api();
+		// $bracket_api = new Wp_Bracket_Builder_Bracket_Api();
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -178,7 +178,7 @@ class Wp_Bracket_Builder {
 
 
 		// $this->loader->add_action('rest_api_init', $sports_api, 'register_routes');
-		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
+		// $this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
 	}
 
 	/**

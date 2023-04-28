@@ -1,6 +1,7 @@
 <?php
 
-class Wp_Bracket_Builder_Bracket {
+
+class Wp_Bracket_Builder_Bracket_Base {
 	/**
 	 * @var int
 	 */
@@ -22,8 +23,8 @@ class Wp_Bracket_Builder_Bracket {
 		$this->rounds = $rounds;
 	}
 
-	public static function from_array(array $data): Wp_Bracket_Builder_Bracket {
-		$bracket = new Wp_Bracket_Builder_Bracket($data['name']);
+	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Base {
+		$bracket = new Wp_Bracket_Builder_Bracket_Base($data['name']);
 
 		if (isset($data['id'])) {
 			$bracket->id = (int) $data['id'];
@@ -37,7 +38,7 @@ class Wp_Bracket_Builder_Bracket {
 
 		return $bracket;
 	}
-	public function equals(Wp_Bracket_Builder_Bracket $bracket): bool {
+	public function equals(Wp_Bracket_Builder_Bracket_Base $bracket): bool {
 		if ($this->id !== $bracket->id) {
 			return false;
 		}
@@ -49,11 +50,10 @@ class Wp_Bracket_Builder_Bracket {
 	}
 }
 
-class Wp_Bracket_Builder_User_Bracket {
-	/**
-	 * @var int
-	 */
-	public $id;
+class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
+}
+
+class Wp_Bracket_Builder_User_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 
 	/**
 	 * @var int
@@ -61,20 +61,20 @@ class Wp_Bracket_Builder_User_Bracket {
 	public $customer_id;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket
+	 * @var int
 	 */
 	public $bracket_id;
 
-
-	public function __construct(int $customer_id, int $bracket_id, int $id = null, array $rounds = []) {
-		$this->id = $id;
+	public function __construct(int $customer_id, int $bracket_id, string $name = null, int $id = null, array $rounds = []) {
+		// call parent constructor
+		parent::__construct($name, $id, $rounds);
 		$this->customer_id = $customer_id;
 		$this->bracket_id = $bracket_id;
 		$this->rounds = $rounds;
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_User_Bracket {
-		$user_bracket = new Wp_Bracket_Builder_User_Bracket($data['customer_id'], $data['bracket_id']);
+		$user_bracket = new Wp_Bracket_Builder_User_Bracket($data['customer_id'], $data['bracket_id'], $data['name']);
 
 		if (isset($data['id'])) {
 			$user_bracket->id = (int) $data['id'];
@@ -87,19 +87,6 @@ class Wp_Bracket_Builder_User_Bracket {
 		}
 
 		return $user_bracket;
-	}
-	public function equals(Wp_Bracket_Builder_User_Bracket $user_bracket): bool {
-		if ($this->id !== $user_bracket->id) {
-			return false;
-		}
-		if ($this->customer_id !== $user_bracket->customer_id) {
-			return false;
-		}
-		if ($this->bracket_id !== $user_bracket->bracket_id) {
-			return false;
-		}
-		return Wp_Bracket_Builder_Round::array_equals($this->rounds, $user_bracket->rounds);
-		return true;
 	}
 }
 
