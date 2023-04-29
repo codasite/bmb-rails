@@ -280,11 +280,6 @@ class Wp_Bracket_Builder_Team {
 	public $id;
 
 	/**
-	 * @var int
-	 */
-	public $bracket_id;
-
-	/**
 	 * @var string
 	 */
 	public $name;
@@ -295,9 +290,8 @@ class Wp_Bracket_Builder_Team {
 	public $seed;
 
 
-	public function __construct(string $name, int $id = null, int $bracket_id = null, int $seed = null) {
+	public function __construct(string $name, int $id = null, int $seed = null) {
 		$this->id = $id;
-		$this->bracket_id = $bracket_id;
 		$this->name = $name;
 		$this->seed = $seed;
 	}

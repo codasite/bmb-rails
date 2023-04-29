@@ -88,7 +88,23 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			),
 			ARRAY_A
 		);
+		foreach ($matches as $index => $match) {
+			$matches[$index]['team1'] = $this->get_team_by_id($match['team1_id']);
+			$matches[$index]['team2'] = $this->get_team_by_id($match['team2_id']);
+		}
+		// print_r($matches);
 		return $matches;
+	}
+	private function get_team_by_id(int $team_id): array {
+		$table_name = $this->team_table();
+		$team = $this->wpdb->get_row(
+			$this->wpdb->prepare(
+				"SELECT * FROM {$table_name} WHERE id = %d",
+				$team_id
+			),
+			ARRAY_A
+		);
+		return $team;
 	}
 
 	public function get_all(): array {
@@ -245,19 +261,19 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 				]
 			);
 			$round->id = $this->wpdb->insert_id;
-			$this->insert_matches_for_round($round);
+			$this->insert_matches_for_round($bracket_id, $round);
 		}
 	}
 
-	private function insert_matches_for_round(Wp_Bracket_Builder_Round $round): void {
+	private function insert_matches_for_round(int $bracket_id, Wp_Bracket_Builder_Round $round): void {
 		$table_name = $this->match_table();
 		foreach ($round->matches as $match) {
 			// First, insert teams
 			if ($match->team1->id === null) {
-				$match->team1 = $this->insert_team($match->team1);
+				$match->team1 = $this->insert_team_for_bracket($bracket_id, $match->team1);
 			}
 			if ($match->team2->id === null) {
-				$match->team2 = $this->insert_team($match->team2);
+				$match->team2 = $this->insert_team_for_bracket($bracket_id, $match->team2);
 			}
 			$this->wpdb->insert(
 				$table_name,
@@ -279,12 +295,14 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		// $this->wpdb->query($insert_sql);
 	}
 
-	private function insert_team(Wp_Bracket_Builder_Team $team): Wp_Bracket_Builder_Team {
+	private function insert_team_for_bracket(int $bracket_id, Wp_Bracket_Builder_Team $team): Wp_Bracket_Builder_Team {
 		$table_name = $this->team_table();
 		$this->wpdb->insert(
 			$table_name,
 			[
 				'name' => $team->name,
+				'bracket_id' => $bracket_id,
+				'seed' => $team->seed,
 			]
 		);
 		$team->id = $this->wpdb->insert_id;

@@ -37,8 +37,8 @@ class Wp_Bracket_Builder_Activator {
 
 		self::delete_tables($prefix);
 
-		self::create_teams_table($prefix);
 		self::create_brackets_table($prefix);
+		self::create_teams_table($prefix);
 		self::create_rounds_table($prefix);
 		self::create_matches_table($prefix);
 		self::create_seeds_table($prefix);
@@ -170,8 +170,10 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
+			bracket_id mediumint(9) NOT NULL,
 			seed tinyint(4) NOT NULL,
-			PRIMARY KEY (id)
+			PRIMARY KEY (id),
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
