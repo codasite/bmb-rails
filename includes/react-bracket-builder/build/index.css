@@ -230,4 +230,36 @@
   height: 40px;
 }
 
+/* Add border-radius to the table */
+.wpbb-bracket-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.wpbb-bracket-table-action-col {
+  text-align: end;
+}
+
+.wpbb-bracket-table-active-check {
+  color: white;
+  font-size: x-large;
+}
+
+.wpbb-active-checkbox {
+  text-align: center;
+}
+
+.table td,
+.table th {
+  padding: 15px;
+  vertical-align: middle;
+  /* Adjust this value to your desired padding */
+}
+
+.table tr:hover {
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=index.css.map*/

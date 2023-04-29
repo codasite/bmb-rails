@@ -674,93 +674,127 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap/Button */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Table.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
 /* harmony import */ var _bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../bracket_builder/Bracket */ "./src/components/bracket_builder/Bracket.tsx");
 
 
 
 
-class BracketTemplate {
-  constructor(id, name, active) {
-    this.id = id;
-    this.name = name;
-    this.active = active;
+
+// class BracketTemplate {
+// 	id: number;
+// 	name: string;
+// 	active: boolean;
+
+// 	constructor(id: number, name: string, active: boolean) {
+// 		this.id = id;
+// 		this.name = name;
+// 		this.active = active;
+// 	}
+// }
+class BracketApi {
+  bracketPath = 'brackets';
+  constructor() {
+    // @ts-ignore
+    this.baseUrl = wpbb_ajax_obj.rest_url;
+  }
+  async getBrackets() {
+    return await this.performRequest(this.bracketPath, 'GET');
+  }
+  async performRequest(path, method) {
+    let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    const request = {
+      method,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    if (method !== 'GET') {
+      request['body'] = JSON.stringify(body);
+    }
+    const response = await fetch(`${this.baseUrl}${path}`, request);
+    return response.json();
   }
 }
+const bracketApi = new BracketApi();
+const BracketRow = _ref => {
+  let {
+    bracket
+  } = _ref;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, bracket.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
+    className: "text-center"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "checkbox",
+    checked: bracket.active
+    // disabled
+    // readOnly
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
+    className: "wpbb-bracket-table-action-col"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    variant: "primary",
+    className: "mx-2"
+  }, "Score"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    variant: "danger"
+  }, "Delete")));
+};
+const BracketTable = _ref2 => {
+  let {
+    brackets
+  } = _ref2;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    hover: true,
+    className: "table-dark wpbb-bracket-table"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+    scope: "col"
+  }, "Name"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+    scope: "col",
+    className: "text-center"
+  }, "Active"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+    scope: "col"
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketRow, {
+    key: bracket.id,
+    bracket: bracket
+  }))));
+};
+const BracketListItem = props => {
+  const bracket = props.bracket;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", null, bracket.name);
+};
+const BracketList = props => {
+  const brackets = props.brackets;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketListItem, {
+    key: bracket.id,
+    bracket: bracket
+  })));
+};
 const Settings = () => {
   const [showBracketModal, setShowBracketModal] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [brackets, setBrackets] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
   const handleCloseBracketModal = () => setShowBracketModal(false);
   const handleSaveBracketModal = () => setShowBracketModal(false);
   const handleShowBracketModal = () => setShowBracketModal(true);
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {});
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    bracketApi.getBrackets().then(brackets => {
+      console.log(brackets);
+      setBrackets(brackets);
+    });
+  }, []);
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
     className: "mt-4"
-  }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    variant: "primary",
+  }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTable, {
+    brackets: brackets
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    variant: "dark",
     className: "mt-6",
     onClick: handleShowBracketModal
-  }, "Save"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.BracketModal, {
+  }, "Create Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.BracketModal, {
     show: showBracketModal,
     handleCancel: handleCloseBracketModal,
     handleSave: handleSaveBracketModal
   }));
 };
-class BracketBuilderApi {
-  // static _sportsApi: SportsApi;
-  // static _bracketApi: BracketApi;
-  constructor() {
-    // @ts-ignore
-    this.url = wpbb_ajax_obj.rest_url;
-  }
-  // static getBracketApi() {
-  // 	if (!BracketBuilderApi._bracketApi) {
-  // 		// @ts-ignore
-  // 		BracketBuilderApi._bracketApi = new BracketApi();
-  // 	}
-  // 	return BracketBuilderApi._bracketApi;
-  // }
-
-  // static getSportsApi() {
-  // 	if (!BracketBuilderApi._sportsApi) {
-  // 		// @ts-ignore
-  // 		BracketBuilderApi._sportsApi = new SportsApi();
-  // 	}
-  // 	return BracketBuilderApi._sportsApi;
-  // }
-  async performRequest(path, method, body) {
-    const response = await fetch(`${this.url}${path}`, {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-    return response.json();
-  }
-}
-class BracketApi extends BracketBuilderApi {
-  path = 'brackets';
-  async getBrackets() {
-    return await this.performRequest(this.path, 'GET', {});
-  }
-}
-
-// class SportsApi extends BracketBuilderApi {
-// 	path: string = 'sports';
-// 	async getSports() {
-// 		return await this.performRequest(this.path, 'GET', {});
-// 	}
-// }
-// SportsApi.getInstance().getSports().then((sports) => {
-// 	console.log(sports)
-// })
-const fetchBrackets = async () => {
-  // @ts-ignore
-  const res = await fetch(`${wpbb_ajax_obj.rest_url}brackets`);
-  const brackets = await res.json();
-  console.log(brackets);
-};
-fetchBrackets();
 /* harmony default export */ __webpack_exports__["default"] = (Settings);
 
 /***/ })

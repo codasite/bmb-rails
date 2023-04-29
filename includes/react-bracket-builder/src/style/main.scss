@@ -128,3 +128,43 @@ $team-offset: -8px;
 	// position: absolute;
 	height: 40px;
 }
+
+$table-radius: 10px;
+
+/* Add border-radius to the table */
+.wpbb-bracket-table {
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: $table-radius;
+	overflow: hidden;
+}
+
+.wpbb-bracket-table-action-col {
+	text-align: end;
+}
+
+.wpbb-bracket-table-active-check {
+	color: white;
+	font-size: x-large;
+}
+
+.wpbb-active-checkbox {
+	text-align: center;
+
+}
+
+// .wpbb-table-inside {
+// 	padding: 10px;
+// }
+
+.table td,
+.table th {
+	padding: 15px;
+	vertical-align: middle;
+	/* Adjust this value to your desired padding */
+}
+
+.table tr:hover {
+	cursor: pointer;
+
+}
