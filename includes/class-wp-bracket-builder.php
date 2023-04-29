@@ -168,7 +168,7 @@ class Wp_Bracket_Builder {
 		// $sport_repo = new Wp_Bracket_Builder_Sport_Repository_Mock();
 		// $sports_api = new Wp_Bracket_Builder_Sport_Api($sport_repo = $sport_repo);
 		// $sports_api = new Wp_Bracket_Builder_Sport_Api();
-		// $bracket_api = new Wp_Bracket_Builder_Bracket_Api();
+		$bracket_api = new Wp_Bracket_Builder_Bracket_Api();
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -178,7 +178,7 @@ class Wp_Bracket_Builder {
 
 
 		// $this->loader->add_action('rest_api_init', $sports_api, 'register_routes');
-		// $this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
 	}
 
 	/**

@@ -23,21 +23,6 @@ class Wp_Bracket_Builder_Bracket_Base {
 		$this->rounds = $rounds;
 	}
 
-	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Base {
-		$bracket = new Wp_Bracket_Builder_Bracket_Base($data['name']);
-
-		if (isset($data['id'])) {
-			$bracket->id = (int) $data['id'];
-		}
-
-		if (isset($data['rounds'])) {
-			$bracket->rounds = array_map(function ($round) {
-				return Wp_Bracket_Builder_Round::from_array($round);
-			}, $data['rounds']);
-		}
-
-		return $bracket;
-	}
 	public function equals(Wp_Bracket_Builder_Bracket_Base $bracket): bool {
 		if ($this->id !== $bracket->id) {
 			return false;
@@ -51,6 +36,21 @@ class Wp_Bracket_Builder_Bracket_Base {
 }
 
 class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
+	public static function from_array(array $data): Wp_Bracket_Builder_Bracket {
+		$bracket = new Wp_Bracket_Builder_Bracket($data['name']);
+
+		if (isset($data['id'])) {
+			$bracket->id = (int) $data['id'];
+		}
+
+		if (isset($data['rounds'])) {
+			$bracket->rounds = array_map(function ($round) {
+				return Wp_Bracket_Builder_Round::from_array($round);
+			}, $data['rounds']);
+		}
+
+		return $bracket;
+	}
 }
 
 class Wp_Bracket_Builder_User_Bracket extends Wp_Bracket_Builder_Bracket_Base {
@@ -107,14 +107,15 @@ class Wp_Bracket_Builder_Round {
 	 */
 	public $matches;
 
-	/**
-	 * @var int
-	 */
-	public $depth;
+	// /**
+	//  * @var int
+	//  */
+	// public $depth;
 
-	public function __construct(string $name, int $depth, int $id = null, array $matches = []) {
+	// public function __construct(string $name, int $depth, int $id = null, array $matches = []) {
+	public function __construct(string $name,  int $id = null, array $matches = []) {
 		$this->id = $id;
-		$this->depth = $depth;
+		// $this->depth = $depth;
 		$this->name = $name;
 		$this->matches = $matches;
 	}
@@ -142,9 +143,9 @@ class Wp_Bracket_Builder_Round {
 		if ($this->name !== $round->name) {
 			return false;
 		}
-		if ($this->depth !== $round->depth) {
-			return false;
-		}
+		// if ($this->depth !== $round->depth) {
+		// 	return false;
+		// }
 		return Wp_Bracket_Builder_Match::array_equals($this->matches, $round->matches);
 	}
 
