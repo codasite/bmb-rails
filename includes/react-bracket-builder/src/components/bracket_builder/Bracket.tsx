@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
-
-type Nullable<T> = T | null;
+import { bracketApi } from '../../api/bracketApi';
+import { Nullable } from '../../types';
+import { BracketResponse } from '../../api/bracketApi';
 
 enum WildcardPlacement {
 	Top = 0,
@@ -37,8 +38,8 @@ class Team {
 
 
 class MatchNode {
-	leftTeam: Nullable<Team> = null;
-	rightTeam: Nullable<Team> = null;
+	team1: Nullable<Team> = null;
+	team2: Nullable<Team> = null;
 	result: Nullable<Team> = null;
 	left: Nullable<MatchNode> = null;
 	right: Nullable<MatchNode> = null;
@@ -54,14 +55,14 @@ class MatchNode {
 		const match = this;
 		const clone = new MatchNode(null, match.depth);
 
-		clone.leftTeam = match.leftTeam ? match.leftTeam.clone() : null;
-		clone.rightTeam = match.rightTeam ? match.rightTeam.clone() : null;
+		clone.team1 = match.team1 ? match.team1.clone() : null;
+		clone.team2 = match.team2 ? match.team2.clone() : null;
 
 		if (match.result) {
-			if (match.result === match.leftTeam) {
-				clone.result = clone.leftTeam;
-			} else if (match.result === match.rightTeam) {
-				clone.result = clone.rightTeam;
+			if (match.result === match.team1) {
+				clone.result = clone.team1;
+			} else if (match.result === match.team2) {
+				clone.result = clone.team2;
 			}
 		}
 
@@ -74,15 +75,13 @@ class Round {
 	id: number;
 	name: string;
 	depth: number;
-	roundNum: number;
 	matches: Array<Nullable<MatchNode>>;
 
-	constructor(id: number, name: string, depth: number, roundNum: number) {
+	constructor(id: number, name: string, depth: number,) {
 		this.id = id;
 		this.name = name;
 		this.depth = depth;
-		this.roundNum = roundNum;
-		this.matches = [];
+		// this.matches = [];
 	}
 }
 
@@ -97,22 +96,27 @@ class WildcardRange {
 class MatchTree {
 	root: MatchNode | null
 	rounds: Round[]
-	numRounds: number
-	numWildcards: number
-	wildcardsPlacement: WildcardPlacement
+	// numRounds: number
+	// numWildcards: number
+	// wildcardsPlacement: WildcardPlacement
 
-	constructor(numRounds: number, numWildcards: number, wildcardsPlacement: WildcardPlacement) {
-		this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement)
-		this.numRounds = numRounds
-		this.numWildcards = numWildcards
-		this.wildcardsPlacement = wildcardsPlacement
+	// constructor(numRounds: number, numWildcards: number, wildcardsPlacement: WildcardPlacement) {
+	// 	this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement)
+	// 	this.numRounds = numRounds
+	// 	this.numWildcards = numWildcards
+	// 	this.wildcardsPlacement = wildcardsPlacement
+	// }
+	static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTree {
+		const tree = new MatchTree()
+		tree.rounds = this.buildRounds(numRounds, numWildcards, wildcardPlacement)
+		return tree
 	}
 
-	buildRounds(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): Round[] {
+	static buildRounds(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): Round[] {
 		// The number of matches in a round is equal to 2^depth unless it's the first round
 		// and there are wildcards. In that case, the number of matches equals the number of wildcards
 		const rootMatch = new MatchNode(null, 0)
-		const finalRound = new Round(1, `Round ${numRounds}`, 0, numRounds)
+		const finalRound = new Round(1, `Round ${numRounds}`, 0)
 		finalRound.matches = [rootMatch]
 		const rounds = [finalRound]
 
@@ -128,7 +132,7 @@ class MatchTree {
 				ranges = [...range1, ...range2]
 			}
 
-			const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i);
+			const round = new Round(i + 1, `Round ${numRounds - i}`, i);
 			const maxMatches = 2 ** i
 			const matches: (MatchNode | null)[] = []
 			for (let x = 0; x < maxMatches; x++) {
@@ -156,7 +160,7 @@ class MatchTree {
 	}
 
 
-	getWildcardRange(start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] {
+	static getWildcardRange(start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] {
 		switch (placement) {
 			case WildcardPlacement.Top:
 				return [new WildcardRange(start, start + count)]
@@ -173,10 +177,10 @@ class MatchTree {
 	clone(): MatchTree {
 		console.log('cloning tree')
 		const tree = this
-		const newTree = new MatchTree(tree.numRounds, tree.numWildcards, tree.wildcardsPlacement)
+		const newTree = new MatchTree()
 		// First, create the new rounds.
 		newTree.rounds = tree.rounds.map((round) => {
-			const newRound = new Round(round.id, round.name, round.depth, round.roundNum);
+			const newRound = new Round(round.id, round.name, round.depth);
 			return newRound;
 		});
 		// Then, iterate over the new rounds to create the matches and update their parent relationships.
@@ -186,14 +190,41 @@ class MatchTree {
 					return null;
 				}
 				const newMatch = match.clone();
-				const parent = this.getParent(matchIndex, roundIndex, newTree.rounds);
+				const parent = MatchTree.getParent(matchIndex, roundIndex, newTree.rounds);
 				newMatch.parent = parent;
-				this.assignMatchToParent(matchIndex, newMatch, parent);
+				MatchTree.assignMatchToParent(matchIndex, newMatch, parent);
 				return newMatch;
 			});
 		});
 		return newTree;
 	}
+
+	static fromBracketResponse(bracket: BracketResponse): MatchTree {
+		const tree = new MatchTree()
+		tree.rounds = bracket.rounds.map((round) => {
+			const newRound = new Round(round.id, round.name, round.depth);
+			return newRound;
+		});
+		// Then, iterate over the new rounds to create the matches and update their parent relationships.
+		tree.rounds.forEach((round, roundIndex) => {
+			round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
+				if (match === null) {
+					return null;
+				}
+				const newMatch = new MatchNode(null, roundIndex);
+				newMatch.team1 = match.team1 ? new Team(match.team1.name) : null;
+				newMatch.team2 = match.team2 ? new Team(match.team2.name) : null;
+				newMatch.result = match.result ? new Team(match.result.name) : null;
+				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
+				newMatch.parent = parent;
+				this.assignMatchToParent(matchIndex, newMatch, parent);
+				return newMatch;
+			});
+		});
+		return tree;
+	}
+
+
 	// 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
 	// 		const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
 	// 		console.log('i', i)
@@ -215,7 +246,7 @@ class MatchTree {
 	// 	return newTree
 	// }
 
-	getParent(matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null {
+	static getParent(matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null {
 		if (roundIndex === 0) {
 			return null
 		}
@@ -223,7 +254,7 @@ class MatchTree {
 		return rounds[roundIndex - 1].matches[parentIndex]
 	}
 
-	assignMatchToParent(matchIndex: number, match: MatchNode, parent: MatchNode | null) {
+	static assignMatchToParent(matchIndex: number, match: MatchNode, parent: MatchNode | null) {
 		if (parent === null) {
 			return
 		}
@@ -320,8 +351,8 @@ const MatchBox = (props) => {
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
-			<TeamSlot className='wpbb-team1' team={match.leftTeam} updateTeam={(name: string) => updateTeam(true, name)} />
-			<TeamSlot className='wpbb-team2' team={match.rightTeam} updateTeam={(name: string) => updateTeam(false, name)} />
+			<TeamSlot className='wpbb-team1' team={match.team1} updateTeam={(name: string) => updateTeam(true, name)} />
+			<TeamSlot className='wpbb-team2' team={match.team2} updateTeam={(name: string) => updateTeam(false, name)} />
 		</div>
 	)
 }
@@ -558,10 +589,15 @@ const BracketTitle = (props) => {
 }
 
 
+interface BracketProps {
+	matchTree: MatchTree
+}
 
-export const Bracket = (props) => {
-	const { numRounds, numWildcards, wildcardPlacement } = props
-	const [matchTree, setMatchTree] = useState<MatchTree>(new MatchTree(numRounds, numWildcards, wildcardPlacement))
+const Bracket = (props: BracketProps) => {
+	// const { numRounds, numWildcards, wildcardPlacement } = props
+	// const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
+	const matchTree = props.matchTree
+
 	const rounds = matchTree.rounds
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -580,18 +616,18 @@ export const Bracket = (props) => {
 			const matchToUpdate = roundToUpdate.matches[matchIndex];
 			if (matchToUpdate) {
 				if (left) {
-					const team = matchToUpdate.leftTeam;
+					const team = matchToUpdate.team1;
 					if (team) {
 						team.name = name;
 					} else {
-						matchToUpdate.leftTeam = new Team(name);
+						matchToUpdate.team1 = new Team(name);
 					}
 				} else {
-					const team = matchToUpdate.rightTeam;
+					const team = matchToUpdate.team2;
 					if (team) {
 						team.name = name;
 					} else {
-						matchToUpdate.rightTeam = new Team(name);
+						matchToUpdate.team2 = new Team(name);
 					}
 				}
 			}
@@ -601,7 +637,7 @@ export const Bracket = (props) => {
 
 
 	useEffect(() => {
-		const matchTree = new MatchTree(numRounds, numWildcards, wildcardPlacement)
+		const matchTree = MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement)
 		// setRounds(matchTree.rounds)
 		setMatchTree(matchTree)
 		// setRounds(buildRounds(numRounds, numWildcards))
@@ -660,22 +696,54 @@ export const Bracket = (props) => {
 	)
 }
 
-export const BracketModal = (props) => {
+const ViewBracketModal = (props) => {
 	const {
 		show,
-		handleCancel,
+		handleClose,
+		bracketId
+	} = props;
+
+	useEffect(() => {
+		bracketApi.getBracket(bracketId)
+			.then((bracket) => {
+
+				console.log('bracket', bracket)
+			})
+	})
+
+	return (
+		<Modal className='wpbb-bracket-modal' show={show} onHide={handleClose} size='xl' centered={true}>
+			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
+				<Modal.Title>View Bracket {bracketId}</Modal.Title>
+			</Modal.Header >
+			<Modal.Body className='pt-0'><Bracket numRounds={4} numWildcards={0} wildcardPlacement={WildcardPlacement.Bottom} /></Modal.Body>
+			<Modal.Footer className='wpbb-bracket-modal__footer'>
+				<Button variant="secondary" onClick={handleClose}>
+					Close
+				</Button>
+			</Modal.Footer>
+		</Modal>
+	)
+}
+
+const NewBracketModal = (props) => {
+	const {
+		show,
+		handleClose,
 		handleSave,
+		bracketId
 	} = props;
 	const [numRounds, setNumRounds] = useState(4);
 	const [numWildcards, setNumWildcards] = useState(0);
 	const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Bottom);
 	const [bracketName, setBracketName] = useState('New Bracket');
+	const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
 	// The max number of wildcards is 2 less than the possible number of matches in the first round
 	// (2^numRounds - 2)
 	const maxWildcards = 2 ** (numRounds - 1) - 2;
 
 	return (
-		<Modal className='wpbb-bracket-modal' show={show} onHide={handleCancel} size='xl' centered={true}>
+		<Modal className='wpbb-bracket-modal' show={show} onHide={handleClose} size='xl' centered={true}>
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
 				<Modal.Title><BracketTitle title={bracketName} setTitle={setBracketName} /></Modal.Title>
 				<form className='wpbb-options-form'>
@@ -684,9 +752,9 @@ export const BracketModal = (props) => {
 					<WildcardPlacementSelector wildcardPlacement={wildcardPlacement} setWildcardPlacement={setWildcardPlacement} />
 				</form>
 			</Modal.Header >
-			<Modal.Body className='pt-0'><Bracket numRounds={numRounds} numWildcards={numWildcards} wildcardPlacement={wildcardPlacement} /></Modal.Body>
+			<Modal.Body className='pt-0'><Bracket matchTree={matchTree} /></Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
-				<Button variant="secondary" onClick={handleCancel}>
+				<Button variant="secondary" onClick={handleClose}>
 					Close
 				</Button>
 				<Button variant="primary" onClick={handleSave}>
@@ -695,4 +763,14 @@ export const BracketModal = (props) => {
 			</Modal.Footer>
 		</Modal>
 	)
+}
+
+export const BracketModal = (props) => {
+	const bracketId = props.bracketId;
+
+	if (bracketId) {
+		return <ViewBracketModal {...props} />
+	} else {
+		return <NewBracketModal {...props} />
+	}
 }

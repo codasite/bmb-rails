@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Table } from 'react-bootstrap';
 import { BracketModal, Bracket } from '../bracket_builder/Bracket';
+import { BracketResponse, bracketApi } from '../../api/bracketApi';
 
-// class BracketTemplate {
+// class BracketResponse {
 // 	id: number;
 // 	name: string;
 // 	active: boolean;
@@ -14,63 +15,29 @@ import { BracketModal, Bracket } from '../bracket_builder/Bracket';
 // 	}
 // }
 
-interface BracketTemplate {
-	id: number;
-	name: string;
-	active: boolean;
-}
-
-class BracketApi {
-	private baseUrl: string;
-	private bracketPath: string = 'brackets';
-
-	constructor() {
-		// @ts-ignore
-		this.baseUrl = wpbb_ajax_obj.rest_url;
-	}
-
-	async getBrackets(): Promise<BracketTemplate[]> {
-		return await this.performRequest(this.bracketPath, 'GET');
-	}
-
-	async performRequest(path: string, method: string, body: any = {}) {
-		const request = {
-			method,
-			headers: {
-				'Content-Type': 'application/json'
-			},
-		}
-		if (method !== 'GET') {
-			request['body'] = JSON.stringify(body);
-		}
-
-		const response = await fetch(`${this.baseUrl}${path}`, request);
-		return response.json();
-	}
-}
-
-const bracketApi = new BracketApi();
 
 interface BracketRowProps {
-	bracket: BracketTemplate;
+	bracket: BracketResponse;
+	handleViewBracket: (bracketId: number) => void;
 }
 
-const BracketRow: React.FC<BracketRowProps> = ({ bracket }) => {
+const BracketRow: React.FC<BracketRowProps> = (props) => {
+	const bracket: BracketResponse = props.bracket;
+	const handleViewBracket = props.handleViewBracket;
 	return (
-		<tr>
+		<tr onClick={() => handleViewBracket(bracket.id)}>
 			<td>{bracket.name}</td>
 			{/* <td>{bracket.active ? <span className='wpbb-bracket-table-active-check'>&#10003;</span> : ''}</td> */}
 			<td className='text-center'>
 				<input
 					type="checkbox"
 					checked={bracket.active}
-				// disabled
-				// readOnly
 				/>
 			</td>
 			<td className='wpbb-bracket-table-action-col'>
 				{/* <Button variant="light" >{bracket.active ? 'deactivate' : 'activate'}</Button> */}
-				<Button variant="primary" className='mx-2'>Score</Button>
+				<Button variant="primary" >Score</Button>
+				<Button variant="success" className='mx-2'>Copy</Button>
 				<Button variant="danger">Delete</Button>
 			</td>
 		</tr>
@@ -79,10 +46,18 @@ const BracketRow: React.FC<BracketRowProps> = ({ bracket }) => {
 
 
 interface BracketTableProps {
-	brackets: BracketTemplate[];
+	brackets: BracketResponse[];
+	handleShowBracketModal: (bracketId: number | null) => void;
 }
 
-const BracketTable: React.FC<BracketTableProps> = ({ brackets }) => {
+const BracketTable: React.FC<BracketTableProps> = (props) => {
+	const brackets: BracketResponse[] = props.brackets;
+	const handleShowBracketModal = props.handleShowBracketModal;
+
+	const handleViewBracket = (bracketId: number) => {
+		handleShowBracketModal(bracketId);
+	}
+
 	return (
 		<Table hover className='table-dark wpbb-bracket-table'>
 			<thead>
@@ -94,7 +69,7 @@ const BracketTable: React.FC<BracketTableProps> = ({ brackets }) => {
 			</thead>
 			<tbody>
 				{brackets.map((bracket) => (
-					<BracketRow key={bracket.id} bracket={bracket} />
+					<BracketRow key={bracket.id} bracket={bracket} handleViewBracket={handleViewBracket} />
 				))}
 			</tbody>
 		</Table>
@@ -102,7 +77,7 @@ const BracketTable: React.FC<BracketTableProps> = ({ brackets }) => {
 };
 
 const BracketListItem = (props) => {
-	const bracket: BracketTemplate = props.bracket;
+	const bracket: BracketResponse = props.bracket;
 	return (
 		<li>{bracket.name}</li>
 	)
@@ -110,7 +85,7 @@ const BracketListItem = (props) => {
 
 
 const BracketList = (props) => {
-	const brackets: BracketTemplate[] = props.brackets;
+	const brackets: BracketResponse[] = props.brackets;
 	return (
 		<ul>
 			{brackets.map((bracket) => <BracketListItem key={bracket.id} bracket={bracket} />)}
@@ -121,11 +96,19 @@ const BracketList = (props) => {
 
 const Settings = () => {
 	const [showBracketModal, setShowBracketModal] = useState(false)
-	const [brackets, setBrackets] = useState<BracketTemplate[]>([]);
+	const [brackets, setBrackets] = useState<BracketResponse[]>([]);
+	const [activeBracketId, setActiveBracketId] = useState<number | null>(null);
 
-	const handleCloseBracketModal = () => setShowBracketModal(false);
+	const handleCloseBracketModal = () => {
+		console.log('close')
+		setActiveBracketId(null);
+		setShowBracketModal(false);
+	}
 	const handleSaveBracketModal = () => setShowBracketModal(false);
-	const handleShowBracketModal = () => setShowBracketModal(true);
+	const handleShowBracketModal = (bracketId: number | null = null) => {
+		setActiveBracketId(bracketId);
+		setShowBracketModal(true);
+	};
 
 	useEffect(() => {
 		bracketApi.getBrackets().then((brackets) => {
@@ -136,11 +119,11 @@ const Settings = () => {
 
 	return (
 		<Container >
-			<h3 className='mt-4'>Bracket Builder Settings</h3>
+			<h2 className='mt-4 mb-4'>Bracket Builder Settings</h2>
 			{/* <BracketList brackets={brackets} /> */}
-			<BracketTable brackets={brackets} />
-			<Button variant='dark' className='mt-6' onClick={handleShowBracketModal}>Create Bracket</Button>
-			<BracketModal show={showBracketModal} handleCancel={handleCloseBracketModal} handleSave={handleSaveBracketModal} />
+			<BracketTable brackets={brackets} handleShowBracketModal={handleShowBracketModal} />
+			<Button variant='dark' className='mt-6' onClick={() => handleShowBracketModal()}>Add Bracket</Button>
+			<BracketModal show={showBracketModal} bracketId={activeBracketId} handleClose={handleCloseBracketModal} handleSave={handleSaveBracketModal} />
 		</Container>
 	);
 }

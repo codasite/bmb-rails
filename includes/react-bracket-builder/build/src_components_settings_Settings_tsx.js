@@ -1,6 +1,47 @@
 "use strict";
 (self["webpackChunkreact_bracket_builder"] = self["webpackChunkreact_bracket_builder"] || []).push([["src_components_settings_Settings_tsx"],{
 
+/***/ "./src/api/bracketApi.ts":
+/*!*******************************!*\
+  !*** ./src/api/bracketApi.ts ***!
+  \*******************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "bracketApi": function() { return /* binding */ bracketApi; }
+/* harmony export */ });
+class BracketApi {
+  bracketPath = 'brackets';
+  constructor() {
+    // @ts-ignore
+    this.baseUrl = wpbb_ajax_obj.rest_url;
+  }
+  async getBrackets() {
+    return await this.performRequest(this.bracketPath, 'GET');
+  }
+  async getBracket(id) {
+    return await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
+  }
+  async performRequest(path, method) {
+    let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    const request = {
+      method,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    if (method !== 'GET') {
+      request['body'] = JSON.stringify(body);
+    }
+    const response = await fetch(`${this.baseUrl}${path}`, request);
+    return response.json();
+  }
+}
+const bracketApi = new BracketApi();
+
+/***/ }),
+
 /***/ "./src/components/bracket_builder/Bracket.tsx":
 /*!****************************************************!*\
   !*** ./src/components/bracket_builder/Bracket.tsx ***!
@@ -9,16 +50,17 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Bracket": function() { return /* binding */ Bracket; },
 /* harmony export */   "BracketModal": function() { return /* binding */ BracketModal; }
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/bracketApi */ "./src/api/bracketApi.ts");
+
 
 
 
@@ -51,8 +93,8 @@ class Team {
   }
 }
 class MatchNode {
-  leftTeam = null;
-  rightTeam = null;
+  team1 = null;
+  team2 = null;
   result = null;
   left = null;
   right = null;
@@ -64,27 +106,27 @@ class MatchNode {
   clone() {
     const match = this;
     const clone = new MatchNode(null, match.depth);
-    clone.leftTeam = match.leftTeam ? match.leftTeam.clone() : null;
-    clone.rightTeam = match.rightTeam ? match.rightTeam.clone() : null;
+    clone.team1 = match.team1 ? match.team1.clone() : null;
+    clone.team2 = match.team2 ? match.team2.clone() : null;
     if (match.result) {
-      if (match.result === match.leftTeam) {
-        clone.result = clone.leftTeam;
-      } else if (match.result === match.rightTeam) {
-        clone.result = clone.rightTeam;
+      if (match.result === match.team1) {
+        clone.result = clone.team1;
+      } else if (match.result === match.team2) {
+        clone.result = clone.team2;
       }
     }
     return clone;
   }
 }
 class Round {
-  constructor(id, name, depth, roundNum) {
+  constructor(id, name, depth) {
     this.id = id;
     this.name = name;
     this.depth = depth;
-    this.roundNum = roundNum;
-    this.matches = [];
+    // this.matches = [];
   }
 }
+
 class WildcardRange {
   constructor(min, max) {
     this.min = min;
@@ -95,17 +137,26 @@ class WildcardRange {
   }
 }
 class MatchTree {
-  constructor(numRounds, numWildcards, wildcardsPlacement) {
-    this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement);
-    this.numRounds = numRounds;
-    this.numWildcards = numWildcards;
-    this.wildcardsPlacement = wildcardsPlacement;
+  // numRounds: number
+  // numWildcards: number
+  // wildcardsPlacement: WildcardPlacement
+
+  // constructor(numRounds: number, numWildcards: number, wildcardsPlacement: WildcardPlacement) {
+  // 	this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement)
+  // 	this.numRounds = numRounds
+  // 	this.numWildcards = numWildcards
+  // 	this.wildcardsPlacement = wildcardsPlacement
+  // }
+  static fromOptions(numRounds, numWildcards, wildcardPlacement) {
+    const tree = new MatchTree();
+    tree.rounds = this.buildRounds(numRounds, numWildcards, wildcardPlacement);
+    return tree;
   }
-  buildRounds(numRounds, numWildcards, wildcardPlacement) {
+  static buildRounds(numRounds, numWildcards, wildcardPlacement) {
     // The number of matches in a round is equal to 2^depth unless it's the first round
     // and there are wildcards. In that case, the number of matches equals the number of wildcards
     const rootMatch = new MatchNode(null, 0);
-    const finalRound = new Round(1, `Round ${numRounds}`, 0, numRounds);
+    const finalRound = new Round(1, `Round ${numRounds}`, 0);
     finalRound.matches = [rootMatch];
     const rounds = [finalRound];
     for (let i = 1; i < numRounds; i++) {
@@ -117,7 +168,7 @@ class MatchTree {
         const range2 = this.getWildcardRange(maxNodes / 2, maxNodes, numWildcards / 2, placement);
         ranges = [...range1, ...range2];
       }
-      const round = new Round(i + 1, `Round ${numRounds - i}`, i, numRounds - i);
+      const round = new Round(i + 1, `Round ${numRounds - i}`, i);
       const maxMatches = 2 ** i;
       const matches = [];
       for (let x = 0; x < maxMatches; x++) {
@@ -144,7 +195,7 @@ class MatchTree {
     ;
     return rounds;
   }
-  getWildcardRange(start, end, count, placement) {
+  static getWildcardRange(start, end, count, placement) {
     switch (placement) {
       case WildcardPlacement.Top:
         return [new WildcardRange(start, start + count)];
@@ -160,10 +211,10 @@ class MatchTree {
   clone() {
     console.log('cloning tree');
     const tree = this;
-    const newTree = new MatchTree(tree.numRounds, tree.numWildcards, tree.wildcardsPlacement);
+    const newTree = new MatchTree();
     // First, create the new rounds.
     newTree.rounds = tree.rounds.map(round => {
-      const newRound = new Round(round.id, round.name, round.depth, round.roundNum);
+      const newRound = new Round(round.id, round.name, round.depth);
       return newRound;
     });
     // Then, iterate over the new rounds to create the matches and update their parent relationships.
@@ -173,14 +224,39 @@ class MatchTree {
           return null;
         }
         const newMatch = match.clone();
-        const parent = this.getParent(matchIndex, roundIndex, newTree.rounds);
+        const parent = MatchTree.getParent(matchIndex, roundIndex, newTree.rounds);
         newMatch.parent = parent;
-        this.assignMatchToParent(matchIndex, newMatch, parent);
+        MatchTree.assignMatchToParent(matchIndex, newMatch, parent);
         return newMatch;
       });
     });
     return newTree;
   }
+  static fromBracketResponse(bracket) {
+    const tree = new MatchTree();
+    tree.rounds = bracket.rounds.map(round => {
+      const newRound = new Round(round.id, round.name, round.depth);
+      return newRound;
+    });
+    // Then, iterate over the new rounds to create the matches and update their parent relationships.
+    tree.rounds.forEach((round, roundIndex) => {
+      round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
+        if (match === null) {
+          return null;
+        }
+        const newMatch = new MatchNode(null, roundIndex);
+        newMatch.team1 = match.team1 ? new Team(match.team1.name) : null;
+        newMatch.team2 = match.team2 ? new Team(match.team2.name) : null;
+        newMatch.result = match.result ? new Team(match.result.name) : null;
+        const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
+        newMatch.parent = parent;
+        this.assignMatchToParent(matchIndex, newMatch, parent);
+        return newMatch;
+      });
+    });
+    return tree;
+  }
+
   // 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
   // 		const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
   // 		console.log('i', i)
@@ -202,14 +278,14 @@ class MatchTree {
   // 	return newTree
   // }
 
-  getParent(matchIndex, roundIndex, rounds) {
+  static getParent(matchIndex, roundIndex, rounds) {
     if (roundIndex === 0) {
       return null;
     }
     const parentIndex = Math.floor(matchIndex / 2);
     return rounds[roundIndex - 1].matches[parentIndex];
   }
-  assignMatchToParent(matchIndex, match, parent) {
+  static assignMatchToParent(matchIndex, match, parent) {
     if (parent === null) {
       return;
     }
@@ -303,11 +379,11 @@ const MatchBox = props => {
     }
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team1",
-    team: match.leftTeam,
+    team: match.team1,
     updateTeam: name => updateTeam(true, name)
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team2",
-    team: match.rightTeam,
+    team: match.team2,
     updateTeam: name => updateTeam(false, name)
   }));
 };
@@ -335,7 +411,7 @@ const RoundHeader = props => {
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round__header"
-  }, editRoundName ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_2__["default"].Control, {
+  }, editRoundName ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Control, {
     type: "text",
     value: nameBuffer,
     autoFocus: true,
@@ -513,12 +589,9 @@ const BracketTitle = props => {
   }, title));
 };
 const Bracket = props => {
-  const {
-    numRounds,
-    numWildcards,
-    wildcardPlacement
-  } = props;
-  const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(new MatchTree(numRounds, numWildcards, wildcardPlacement));
+  // const { numRounds, numWildcards, wildcardPlacement } = props
+  // const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
+  const matchTree = props.matchTree;
   const rounds = matchTree.rounds;
   const updateRoundName = (roundId, name) => {
     const newMatchTree = matchTree.clone();
@@ -535,18 +608,18 @@ const Bracket = props => {
       const matchToUpdate = roundToUpdate.matches[matchIndex];
       if (matchToUpdate) {
         if (left) {
-          const team = matchToUpdate.leftTeam;
+          const team = matchToUpdate.team1;
           if (team) {
             team.name = name;
           } else {
-            matchToUpdate.leftTeam = new Team(name);
+            matchToUpdate.team1 = new Team(name);
           }
         } else {
-          const team = matchToUpdate.rightTeam;
+          const team = matchToUpdate.team2;
           if (team) {
             team.name = name;
           } else {
-            matchToUpdate.rightTeam = new Team(name);
+            matchToUpdate.team2 = new Team(name);
           }
         }
       }
@@ -554,7 +627,7 @@ const Bracket = props => {
     }
   };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const matchTree = new MatchTree(numRounds, numWildcards, wildcardPlacement);
+    const matchTree = MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement);
     // setRounds(matchTree.rounds)
     setMatchTree(matchTree);
     // setRounds(buildRounds(numRounds, numWildcards))
@@ -607,29 +680,64 @@ const Bracket = props => {
     className: "wpbb-bracket"
   }, rounds.length > 0 && buildRounds2(rounds));
 };
-const BracketModal = props => {
+const ViewBracketModal = props => {
   const {
     show,
-    handleCancel,
-    handleSave
+    handleClose,
+    bracketId
+  } = props;
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__.bracketApi.getBracket(bracketId).then(bracket => {
+      console.log('bracket', bracket);
+    });
+  });
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    className: "wpbb-bracket-modal",
+    show: show,
+    onHide: handleClose,
+    size: "xl",
+    centered: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Header, {
+    className: "wpbb-bracket-modal__header",
+    closeButton: true
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Title, null, "View Bracket ", bracketId)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Body, {
+    className: "pt-0"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
+    numRounds: 4,
+    numWildcards: 0,
+    wildcardPlacement: WildcardPlacement.Bottom
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, {
+    className: "wpbb-bracket-modal__footer"
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    variant: "secondary",
+    onClick: handleClose
+  }, "Close")));
+};
+const NewBracketModal = props => {
+  const {
+    show,
+    handleClose,
+    handleSave,
+    bracketId
   } = props;
   const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(4);
   const [numWildcards, setNumWildcards] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
   const [wildcardPlacement, setWildcardPlacement] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(WildcardPlacement.Bottom);
   const [bracketName, setBracketName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('New Bracket');
+  const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement));
   // The max number of wildcards is 2 less than the possible number of matches in the first round
   // (2^numRounds - 2)
   const maxWildcards = 2 ** (numRounds - 1) - 2;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
-    onHide: handleCancel,
+    onHide: handleClose,
     size: "xl",
     centered: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Header, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Header, {
     className: "wpbb-bracket-modal__header",
     closeButton: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Title, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTitle, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Title, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTitle, {
     title: bracketName,
     setTitle: setBracketName
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
@@ -644,21 +752,27 @@ const BracketModal = props => {
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(WildcardPlacementSelector, {
     wildcardPlacement: wildcardPlacement,
     setWildcardPlacement: setWildcardPlacement
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Body, {
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Body, {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
-    numRounds: numRounds,
-    numWildcards: numWildcards,
-    wildcardPlacement: wildcardPlacement
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Footer, {
+    matchTree: matchTree
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     variant: "secondary",
-    onClick: handleCancel
-  }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    onClick: handleClose
+  }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     variant: "primary",
     onClick: handleSave
   }, "Save Changes")));
+};
+const BracketModal = props => {
+  const bracketId = props.bracketId;
+  if (bracketId) {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ViewBracketModal, props);
+  } else {
+    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NewBracketModal, props);
+  }
 };
 
 /***/ }),
@@ -674,16 +788,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Table.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Table.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
 /* harmony import */ var _bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../bracket_builder/Bracket */ "./src/components/bracket_builder/Bracket.tsx");
+/* harmony import */ var _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/bracketApi */ "./src/api/bracketApi.ts");
 
 
 
 
 
-// class BracketTemplate {
+
+// class BracketResponse {
 // 	id: number;
 // 	name: string;
 // 	active: boolean;
@@ -694,56 +810,34 @@ __webpack_require__.r(__webpack_exports__);
 // 		this.active = active;
 // 	}
 // }
-class BracketApi {
-  bracketPath = 'brackets';
-  constructor() {
-    // @ts-ignore
-    this.baseUrl = wpbb_ajax_obj.rest_url;
-  }
-  async getBrackets() {
-    return await this.performRequest(this.bracketPath, 'GET');
-  }
-  async performRequest(path, method) {
-    let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    const request = {
-      method,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    };
-    if (method !== 'GET') {
-      request['body'] = JSON.stringify(body);
-    }
-    const response = await fetch(`${this.baseUrl}${path}`, request);
-    return response.json();
-  }
-}
-const bracketApi = new BracketApi();
-const BracketRow = _ref => {
-  let {
-    bracket
-  } = _ref;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, bracket.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
+const BracketRow = props => {
+  const bracket = props.bracket;
+  const handleViewBracket = props.handleViewBracket;
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", {
+    onClick: () => handleViewBracket(bracket.id)
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, bracket.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
     className: "text-center"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "checkbox",
     checked: bracket.active
-    // disabled
-    // readOnly
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
     className: "wpbb-bracket-table-action-col"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    variant: "primary",
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    variant: "primary"
+  }, "Score"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    variant: "success",
     className: "mx-2"
-  }, "Score"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, "Copy"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
     variant: "danger"
   }, "Delete")));
 };
-const BracketTable = _ref2 => {
-  let {
-    brackets
-  } = _ref2;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+const BracketTable = props => {
+  const brackets = props.brackets;
+  const handleShowBracketModal = props.handleShowBracketModal;
+  const handleViewBracket = bracketId => {
+    handleShowBracketModal(bracketId);
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     hover: true,
     className: "table-dark wpbb-bracket-table"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
@@ -755,7 +849,8 @@ const BracketTable = _ref2 => {
     scope: "col"
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketRow, {
     key: bracket.id,
-    bracket: bracket
+    bracket: bracket,
+    handleViewBracket: handleViewBracket
   }))));
 };
 const BracketListItem = props => {
@@ -772,26 +867,37 @@ const BracketList = props => {
 const Settings = () => {
   const [showBracketModal, setShowBracketModal] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [brackets, setBrackets] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-  const handleCloseBracketModal = () => setShowBracketModal(false);
+  const [activeBracketId, setActiveBracketId] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const handleCloseBracketModal = () => {
+    console.log('close');
+    setActiveBracketId(null);
+    setShowBracketModal(false);
+  };
   const handleSaveBracketModal = () => setShowBracketModal(false);
-  const handleShowBracketModal = () => setShowBracketModal(true);
+  const handleShowBracketModal = function () {
+    let bracketId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+    setActiveBracketId(bracketId);
+    setShowBracketModal(true);
+  };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    bracketApi.getBrackets().then(brackets => {
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__.bracketApi.getBrackets().then(brackets => {
       console.log(brackets);
       setBrackets(brackets);
     });
   }, []);
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
-    className: "mt-4"
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "mt-4 mb-4"
   }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTable, {
-    brackets: brackets
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    brackets: brackets,
+    handleShowBracketModal: handleShowBracketModal
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
     variant: "dark",
     className: "mt-6",
-    onClick: handleShowBracketModal
-  }, "Create Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.BracketModal, {
+    onClick: () => handleShowBracketModal()
+  }, "Add Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.BracketModal, {
     show: showBracketModal,
-    handleCancel: handleCloseBracketModal,
+    bracketId: activeBracketId,
+    handleClose: handleCloseBracketModal,
     handleSave: handleSaveBracketModal
   }));
 };
