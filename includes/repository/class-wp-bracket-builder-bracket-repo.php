@@ -60,8 +60,6 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			# get rounds
 			$round_arr = $this->get_rounds_for_bracket($bracket_arr['id']);
 			$bracket_arr['rounds'] = $round_arr;
-			// $teams_arr = $this->get_teams_for_bracket($bracket_arr['id']);
-			// $bracket_arr['teams'] = $teams_arr;
 			return Wp_Bracket_Builder_Bracket::from_array($bracket_arr);
 		}
 
@@ -76,7 +74,21 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			),
 			ARRAY_A
 		);
+		foreach ($rounds as $index => $round) {
+			$rounds[$index]['matches'] = $this->get_matches_for_round($round['id']);
+		}
 		return $rounds;
+	}
+	private function get_matches_for_round(int $round_id): array {
+		$table_name = $this->match_table();
+		$matches = $this->wpdb->get_results(
+			$this->wpdb->prepare(
+				"SELECT * FROM {$table_name} WHERE round_id = %d ORDER BY round_index ASC",
+				$round_id
+			),
+			ARRAY_A
+		);
+		return $matches;
 	}
 
 	public function get_all(): array {
@@ -200,16 +212,103 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	// 	}
 	// }
 
+	// private function insert_rounds_for_bracket(int $bracket_id, array $rounds): void {
+	// 	$table_name = $this->round_table();
+	// 	$insert_sql = "INSERT INTO {$table_name} (name, bracket_id, depth) VALUES ";
+	// 	$round_values = [];
+	// 	foreach ($rounds as $round) {
+	// 		$round_values[] = $this->wpdb->prepare('(%s, %d, %d)', $round->name, $bracket_id, $round->depth);
+	// 	}
+	// 	$insert_sql .= implode(',', $round_values);
+	// 	$this->wpdb->query($insert_sql);
+	// 	// Get the newly inserted rounds
+	// 	print_r($rounds);
+	// 	$inserted = $this->get_rounds_for_bracket($bracket_id);
+	// 	// Add the ids to the rounds
+	// 	foreach ($inserted as $index=>$round) {
+	// 		$rounds[$index]->id = $round->id;
+	// 	}
+	// 	// $rounds = $this->get_rounds_for_bracket($bracket_id);
+	// 	// Insert matches for rounds
+	// 	// $this->insert_matches_for_rounds($rounds);
+	// }
+
 	private function insert_rounds_for_bracket(int $bracket_id, array $rounds): void {
 		$table_name = $this->round_table();
-		$insert_sql = "INSERT INTO {$table_name} (name, bracket_id, depth) VALUES ";
-		$round_values = [];
-		foreach ($rounds as $i => $round) {
-			$round_values[] = $this->wpdb->prepare('(%s, %d, %d)', $round->name, $bracket_id, $i);
+		foreach ($rounds as $round) {
+			$this->wpdb->insert(
+				$table_name,
+				[
+					'name' => $round->name,
+					'bracket_id' => $bracket_id,
+					'depth' => $round->depth,
+				]
+			);
+			$round->id = $this->wpdb->insert_id;
+			$this->insert_matches_for_round($round);
 		}
-		$insert_sql .= implode(',', $round_values);
-		$this->wpdb->query($insert_sql);
 	}
+
+	private function insert_matches_for_round(Wp_Bracket_Builder_Round $round): void {
+		$table_name = $this->match_table();
+		foreach ($round->matches as $match) {
+			// First, insert teams
+			if ($match->team1->id === null) {
+				$match->team1 = $this->insert_team($match->team1);
+			}
+			if ($match->team2->id === null) {
+				$match->team2 = $this->insert_team($match->team2);
+			}
+			$this->wpdb->insert(
+				$table_name,
+				[
+					'round_id' => $round->id,
+					'round_index' => $match->index,
+					'team1_id' => $match->team1->id,
+					'team2_id' => $match->team2->id,
+				]
+			);
+			$match->id = $this->wpdb->insert_id;
+		}
+		// $insert_sql = "INSERT INTO {$table_name} (round_id, round_index) VALUES ";
+		// $match_values = [];
+		// foreach ($round->matches as $match) {
+		// 	$match_values[] = $this->wpdb->prepare('(%d, %d)', $round->id, $match->index);
+		// }
+		// $insert_sql .= implode(',', $match_values);
+		// $this->wpdb->query($insert_sql);
+	}
+
+	private function insert_team(Wp_Bracket_Builder_Team $team): Wp_Bracket_Builder_Team {
+		$table_name = $this->team_table();
+		$this->wpdb->insert(
+			$table_name,
+			[
+				'name' => $team->name,
+			]
+		);
+		$team->id = $this->wpdb->insert_id;
+		return $team;
+	}
+
+	// Accepts an array of rounds mapped to their ids
+	// private function insert_matches_for_rounds(array $round_map): void {
+	// 	$table_name = $this->match_table();
+	// 	$insert_sql = "INSERT INTO {$table_name} (round_id, round_index) VALUES ";
+	// 	$match_values = [];
+	// 	foreach ($round_map as $round_id=>$round) {
+	// 		if (empty($round->matches)) {
+	// 			continue;
+	// 		}
+	// 		foreach ($round->matches as $match) {
+	// 			$match_values[] = $this->wpdb->prepare('(%d, %d)', $round->id, $match->index);
+	// 		}
+	// 	}
+	// 	$insert_sql .= implode(',', $match_values);
+	// 	echo $insert_sql;
+	// 	echo 'end';
+	// 	$this->wpdb->query($insert_sql);
+	// }
 
 	private function update_teams(array $teams): void {
 		// Conditional update for multiple rows. 
@@ -253,6 +352,9 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	}
 	private function round_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_rounds';
+	}
+	private function match_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_matches';
 	}
 	private function team_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_teams';

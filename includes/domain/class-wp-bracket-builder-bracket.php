@@ -44,9 +44,14 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 		}
 
 		if (isset($data['rounds'])) {
-			$bracket->rounds = array_map(function ($round) {
+			// $bracket->rounds = array_map(function ($round) {
+			// 	return Wp_Bracket_Builder_Round::from_array($round);
+			// }, $data['rounds']);
+			// The above with with index preserved
+			$bracket->rounds = array_map(function ($index, $round) {
+				$round['depth'] = $index;
 				return Wp_Bracket_Builder_Round::from_array($round);
-			}, $data['rounds']);
+			}, array_keys($data['rounds']), $data['rounds']);
 		}
 
 		return $bracket;
@@ -81,9 +86,21 @@ class Wp_Bracket_Builder_User_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 		}
 
 		if (isset($data['rounds'])) {
-			$user_bracket->rounds = array_map(function ($round) {
-				return Wp_Bracket_Builder_Round::from_array($round);
-			}, $data['rounds']);
+			echo 'rounds';
+			// $user_bracket->rounds = array_map(function ($round) {
+			// 	return Wp_Bracket_Builder_Round::from_array($round);
+			// }, $data['rounds'], array_keys($data['rounds']));
+			// The above, but with the index preserved
+			// $user_bracket->rounds = array_map(function ($index, $round) {
+			// 	return Wp_Bracket_Builder_Round::from_array($round);
+			// }, array_keys($data['rounds']), $data['rounds']);
+			// The above, but using foreach
+			$user_bracket->rounds = [];
+			foreach ($data['rounds'] as $index => $round) {
+				echo $index;
+				$round->depth = $index;
+				$user_bracket->rounds[$index] = Wp_Bracket_Builder_Round::from_array($round);
+			}
 		}
 
 		return $user_bracket;
@@ -107,15 +124,15 @@ class Wp_Bracket_Builder_Round {
 	 */
 	public $matches;
 
-	// /**
-	//  * @var int
-	//  */
-	// public $depth;
+	/**
+	 * @var int
+	 */
+	public $depth;
 
-	// public function __construct(string $name, int $depth, int $id = null, array $matches = []) {
-	public function __construct(string $name,  int $id = null, array $matches = []) {
+	public function __construct(string $name, int $depth, int $id = null, array $matches = []) {
+		// public function __construct(string $name,  int $id = null, array $matches = []) {
 		$this->id = $id;
-		// $this->depth = $depth;
+		$this->depth = $depth;
 		$this->name = $name;
 		$this->matches = $matches;
 	}
@@ -128,9 +145,14 @@ class Wp_Bracket_Builder_Round {
 		}
 
 		if (isset($data['matches'])) {
-			$round->matches = array_map(function ($match) {
+			// $round->matches = array_map(function ($match) {
+			// 	return Wp_Bracket_Builder_Match::from_array($match);
+			// }, $data['matches']);
+			// The above, but with the index preserved
+			$round->matches = array_map(function ($index, $match) {
+				$match['index'] = $index;
 				return Wp_Bracket_Builder_Match::from_array($match);
-			}, $data['matches']);
+			}, array_keys($data['matches']), $data['matches']);
 		}
 
 		return $round;
@@ -188,7 +210,7 @@ class Wp_Bracket_Builder_Match {
 	 */
 	public $result;
 
-	public function __construct(int $index, Wp_Bracket_Builder_Team $team1, Wp_Bracket_Builder_Team $team2, Wp_Bracket_Builder_Team $result = null, int $id = null) {
+	public function __construct(int $index, Wp_Bracket_Builder_Team $team1 = null, Wp_Bracket_Builder_Team $team2 = null, Wp_Bracket_Builder_Team $result = null, int $id = null) {
 		$this->id = $id;
 		$this->index = $index;
 		$this->team1 = $team1;
@@ -197,15 +219,24 @@ class Wp_Bracket_Builder_Match {
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Match {
-		$match = new Wp_Bracket_Builder_Match($data['name'], $data['index'], Wp_Bracket_Builder_Team::from_array($data['team1']), Wp_Bracket_Builder_Team::from_array($data['team2']));
+		// $match = new Wp_Bracket_Builder_Match($data['name'], $data['index'], Wp_Bracket_Builder_Team::from_array($data['team1']), Wp_Bracket_Builder_Team::from_array($data['team2']));
+		$match = new Wp_Bracket_Builder_Match($data['index']);
 
 		if (isset($data['id'])) {
 			$match->id = (int) $data['id'];
 		}
 
-		if (isset($data['result'])) {
-			$match->result = Wp_Bracket_Builder_Team::from_array($data['result']);
+		if (isset($data['team1'])) {
+			$match->team1 = Wp_Bracket_Builder_Team::from_array($data['team1']);
 		}
+
+		if (isset($data['team2'])) {
+			$match->team2 = Wp_Bracket_Builder_Team::from_array($data['team2']);
+		}
+
+		// if (isset($data['result'])) {
+		// 	$match->result = Wp_Bracket_Builder_Team::from_array($data['result']);
+		// }
 
 		return $match;
 	}
@@ -249,13 +280,26 @@ class Wp_Bracket_Builder_Team {
 	public $id;
 
 	/**
+	 * @var int
+	 */
+	public $bracket_id;
+
+	/**
 	 * @var string
 	 */
 	public $name;
 
-	public function __construct(string $name, int $id = null) {
+	/**
+	 * @var int
+	 */
+	public $seed;
+
+
+	public function __construct(string $name, int $id = null, int $bracket_id = null, int $seed = null) {
 		$this->id = $id;
+		$this->bracket_id = $bracket_id;
 		$this->name = $name;
+		$this->seed = $seed;
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Team {
@@ -263,6 +307,10 @@ class Wp_Bracket_Builder_Team {
 
 		if (isset($data['id'])) {
 			$team->id = (int) $data['id'];
+		}
+
+		if (isset($data['seed'])) {
+			$team->seed = (int) $data['seed'];
 		}
 
 		return $team;

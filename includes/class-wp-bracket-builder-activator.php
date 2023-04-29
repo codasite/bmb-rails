@@ -35,6 +35,8 @@ class Wp_Bracket_Builder_Activator {
 		$plugin_prefix = 'bracket_builder_';
 		$prefix = $wp_prefix . $plugin_prefix;
 
+		self::delete_tables($prefix);
+
 		self::create_teams_table($prefix);
 		self::create_brackets_table($prefix);
 		self::create_rounds_table($prefix);
@@ -43,6 +45,24 @@ class Wp_Bracket_Builder_Activator {
 		self::create_user_brackets_table($prefix);
 		self::create_match_results_table($prefix);
 		self::create_user_picks_table($prefix);
+	}
+
+	private static function delete_tables(string $prefix) {
+		global $wpdb;
+		$tables = [
+			$prefix . 'user_picks',
+			$prefix . 'seeds',
+			$prefix . 'match_results',
+			$prefix . 'user_brackets',
+			$prefix . 'matches',
+			$prefix . 'teams',
+			$prefix . 'rounds',
+			$prefix . 'brackets',
+		];
+
+		foreach ($tables as $table) {
+			$wpdb->query("DROP TABLE IF EXISTS $table");
+		}
 	}
 
 
@@ -81,7 +101,7 @@ class Wp_Bracket_Builder_Activator {
 			cust_id mediumint(9),
 			bracket_id mediumint(9) NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id)
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
@@ -104,7 +124,7 @@ class Wp_Bracket_Builder_Activator {
 			bracket_id mediumint(9) NOT NULL,
 			depth tinyint(4) NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id)
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
@@ -125,8 +145,12 @@ class Wp_Bracket_Builder_Activator {
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			round_id mediumint(9) NOT NULL,
 			round_index tinyint(4) NOT NULL,
+			team1_id mediumint(9),
+			team2_id mediumint(9),
 			PRIMARY KEY (id),
-			FOREIGN KEY (round_id) REFERENCES {$prefix}rounds(id)
+			FOREIGN KEY (round_id) REFERENCES {$prefix}rounds(id) ON DELETE CASCADE,
+			FOREIGN KEY (team1_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE,
+			FOREIGN KEY (team2_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
@@ -146,6 +170,7 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
+			seed tinyint(4) NOT NULL,
 			PRIMARY KEY (id)
 		) $charset_collate;";
 
@@ -169,9 +194,9 @@ class Wp_Bracket_Builder_Activator {
 			team_id mediumint(9) NOT NULL,
 			match_id mediumint(9) NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id),
-			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id),
-			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id)
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE,
+			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE,
+			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
@@ -193,8 +218,8 @@ class Wp_Bracket_Builder_Activator {
 			match_id mediumint(9) NOT NULL,
 			team_id mediumint(9) NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id),
-			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id)
+			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id) ON DELETE CASCADE,
+			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
@@ -218,9 +243,9 @@ class Wp_Bracket_Builder_Activator {
 			match_id mediumint(9) NOT NULL,
 			team_id mediumint(9) NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (user_bracket_id) REFERENCES {$prefix}user_brackets(id),
-			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id),
-			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id)
+			FOREIGN KEY (user_bracket_id) REFERENCES {$prefix}user_brackets(id) ON DELETE CASCADE,
+			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id) ON DELETE CASCADE,
+			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
