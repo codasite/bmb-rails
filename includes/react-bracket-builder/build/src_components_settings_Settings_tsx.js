@@ -592,8 +592,12 @@ const Bracket = props => {
   // const { numRounds, numWildcards, wildcardPlacement } = props
   // const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
   const matchTree = props.matchTree;
+  const setMatchTree = props.setMatchTree;
   const rounds = matchTree.rounds;
   const updateRoundName = (roundId, name) => {
+    if (setMatchTree === undefined) {
+      return;
+    }
     const newMatchTree = matchTree.clone();
     const roundToUpdate = newMatchTree.rounds.find(round => round.id === roundId);
     if (roundToUpdate) {
@@ -602,6 +606,9 @@ const Bracket = props => {
     }
   };
   const updateTeam = (roundId, matchIndex, left, name) => {
+    if (setMatchTree === undefined) {
+      return;
+    }
     const newMatchTree = matchTree.clone();
     const roundToUpdate = newMatchTree.rounds.find(round => round.id === roundId);
     if (roundToUpdate) {
@@ -626,12 +633,6 @@ const Bracket = props => {
       setMatchTree(newMatchTree);
     }
   };
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    const matchTree = MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement);
-    // setRounds(matchTree.rounds)
-    setMatchTree(matchTree);
-    // setRounds(buildRounds(numRounds, numWildcards))
-  }, [numRounds, numWildcards, wildcardPlacement]);
   const targetHeight = 800;
 
   // The number of rounds sets the initial height of each match
@@ -686,8 +687,10 @@ const ViewBracketModal = props => {
     handleClose,
     bracketId
   } = props;
+  const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__.bracketApi.getBracket(bracketId).then(bracket => {
+      setMatchTree(MatchTree.fromBracketResponse(bracket));
       console.log('bracket', bracket);
     });
   });
@@ -702,11 +705,9 @@ const ViewBracketModal = props => {
     closeButton: true
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Title, null, "View Bracket ", bracketId)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Body, {
     className: "pt-0"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
-    numRounds: 4,
-    numWildcards: 0,
-    wildcardPlacement: WildcardPlacement.Bottom
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, {
+  }, matchTree ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
+    matchTree: matchTree
+  }) : 'Loading...'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     variant: "secondary",
@@ -728,6 +729,9 @@ const NewBracketModal = props => {
   // The max number of wildcards is 2 less than the possible number of matches in the first round
   // (2^numRounds - 2)
   const maxWildcards = 2 ** (numRounds - 1) - 2;
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
+    setMatchTree(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement));
+  }, [numRounds, numWildcards, wildcardPlacement]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
     className: "wpbb-bracket-modal",
     show: show,

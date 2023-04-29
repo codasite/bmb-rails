@@ -590,17 +590,22 @@ const BracketTitle = (props) => {
 
 
 interface BracketProps {
-	matchTree: MatchTree
+	matchTree: MatchTree;
+	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
 const Bracket = (props: BracketProps) => {
 	// const { numRounds, numWildcards, wildcardPlacement } = props
 	// const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
 	const matchTree = props.matchTree
+	const setMatchTree = props.setMatchTree
 
 	const rounds = matchTree.rounds
 
 	const updateRoundName = (roundId: number, name: string) => {
+		if (setMatchTree === undefined) {
+			return
+		}
 		const newMatchTree = matchTree.clone();
 		const roundToUpdate = newMatchTree.rounds.find((round) => round.id === roundId);
 		if (roundToUpdate) {
@@ -610,6 +615,9 @@ const Bracket = (props: BracketProps) => {
 	};
 
 	const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+		if (setMatchTree === undefined) {
+			return
+		}
 		const newMatchTree = matchTree.clone();
 		const roundToUpdate = newMatchTree.rounds.find((round) => round.id === roundId);
 		if (roundToUpdate) {
@@ -634,14 +642,6 @@ const Bracket = (props: BracketProps) => {
 			setMatchTree(newMatchTree);
 		}
 	}
-
-
-	useEffect(() => {
-		const matchTree = MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement)
-		// setRounds(matchTree.rounds)
-		setMatchTree(matchTree)
-		// setRounds(buildRounds(numRounds, numWildcards))
-	}, [numRounds, numWildcards, wildcardPlacement])
 
 	const targetHeight = 800;
 
@@ -702,11 +702,12 @@ const ViewBracketModal = (props) => {
 		handleClose,
 		bracketId
 	} = props;
+	const [matchTree, setMatchTree] = useState<MatchTree | null>(null)
 
 	useEffect(() => {
 		bracketApi.getBracket(bracketId)
 			.then((bracket) => {
-
+				setMatchTree(MatchTree.fromBracketResponse(bracket))
 				console.log('bracket', bracket)
 			})
 	})
@@ -716,7 +717,9 @@ const ViewBracketModal = (props) => {
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
 				<Modal.Title>View Bracket {bracketId}</Modal.Title>
 			</Modal.Header >
-			<Modal.Body className='pt-0'><Bracket numRounds={4} numWildcards={0} wildcardPlacement={WildcardPlacement.Bottom} /></Modal.Body>
+			<Modal.Body className='pt-0'>
+				{matchTree ? <Bracket matchTree={matchTree} /> : 'Loading...'}
+			</Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleClose}>
 					Close
@@ -741,6 +744,11 @@ const NewBracketModal = (props) => {
 	// The max number of wildcards is 2 less than the possible number of matches in the first round
 	// (2^numRounds - 2)
 	const maxWildcards = 2 ** (numRounds - 1) - 2;
+
+	useEffect(() => {
+		setMatchTree(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
+	}, [numRounds, numWildcards, wildcardPlacement])
+
 
 	return (
 		<Modal className='wpbb-bracket-modal' show={show} onHide={handleClose} size='xl' centered={true}>
