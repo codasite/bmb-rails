@@ -680,17 +680,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-class Sport {
-  constructor(id, name, teams) {
+class BracketTemplate {
+  constructor(id, name, active) {
     this.id = id;
     this.name = name;
-    this.teams = teams;
-  }
-}
-class Team {
-  constructor(id, name) {
-    this.id = id;
-    this.name = name;
+    this.active = active;
   }
 }
 const Settings = () => {
@@ -698,6 +692,7 @@ const Settings = () => {
   const handleCloseBracketModal = () => setShowBracketModal(false);
   const handleSaveBracketModal = () => setShowBracketModal(false);
   const handleShowBracketModal = () => setShowBracketModal(true);
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {});
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
     className: "mt-4"
   }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap_Button__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -708,7 +703,7 @@ const Settings = () => {
     show: showBracketModal,
     handleCancel: handleCloseBracketModal,
     handleSave: handleSaveBracketModal
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.Bracket, null));
+  }));
 };
 class BracketBuilderApi {
   // static _sportsApi: SportsApi;

@@ -78,6 +78,7 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
+			active tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id)
 		) $charset_collate;";
 

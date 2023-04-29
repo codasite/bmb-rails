@@ -1,28 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import { BracketModal, Bracket } from '../bracket_builder/Bracket';
 
-class Sport {
+class BracketTemplate {
 	id: number;
 	name: string;
-	teams: Team[];
-	constructor(id: number, name: string, teams: Team[]) {
+	active: boolean;
+
+	constructor(id: number, name: string, active: boolean) {
 		this.id = id;
 		this.name = name;
-		this.teams = teams;
+		this.active = active;
 	}
 }
-
-class Team {
-	id: number;
-	name: string;
-	constructor(id: number, name: string) {
-		this.id = id;
-		this.name = name;
-	}
-}
-
-
 
 const Settings = () => {
 	const [showBracketModal, setShowBracketModal] = useState(false)
@@ -30,13 +20,17 @@ const Settings = () => {
 	const handleCloseBracketModal = () => setShowBracketModal(false);
 	const handleSaveBracketModal = () => setShowBracketModal(false);
 	const handleShowBracketModal = () => setShowBracketModal(true);
+
+	useEffect(() => {
+
+	})
+
 	return (
 		<div>
 			<h3 className='mt-4'>Bracket Builder Settings</h3>
 
 			<Button variant='primary' className='mt-6' onClick={handleShowBracketModal}>Save</Button>
 			<BracketModal show={showBracketModal} handleCancel={handleCloseBracketModal} handleSave={handleSaveBracketModal} />
-			<Bracket />
 		</div>
 	);
 }

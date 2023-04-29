@@ -23,6 +23,7 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			$table_name,
 			[
 				'name' => $bracket->name,
+				'active' => $bracket->active ? 1 : 0,
 			]
 		);
 		$bracket->id = $this->wpdb->insert_id;

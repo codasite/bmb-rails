@@ -36,8 +36,19 @@ class Wp_Bracket_Builder_Bracket_Base {
 }
 
 class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
+	/**
+	 * @var bool
+	 */
+	public $active;
+
+	public function __construct(string $name, bool $active = false, int $id = null, array $rounds = []) {
+		// call parent constructor
+		parent::__construct($name, $id, $rounds);
+		$this->active = $active;
+	}
+
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket {
-		$bracket = new Wp_Bracket_Builder_Bracket($data['name']);
+		$bracket = new Wp_Bracket_Builder_Bracket($data['name'], $data['active']);
 
 		if (isset($data['id'])) {
 			$bracket->id = (int) $data['id'];
@@ -69,6 +80,8 @@ class Wp_Bracket_Builder_User_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 	 * @var int
 	 */
 	public $bracket_id;
+
+
 
 	public function __construct(int $customer_id, int $bracket_id, string $name = null, int $id = null, array $rounds = []) {
 		// call parent constructor
