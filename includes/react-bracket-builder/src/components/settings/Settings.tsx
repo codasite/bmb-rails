@@ -67,6 +67,32 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 		})
 		console.log(e.target.checked)
 	}
+	const created = new Date(bracket.createdAt.date);
+
+	const timeAgo = (date: Date) => {
+		const now = new Date();
+
+		const diff = now.getTime() - date.getTime();
+		const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+		if (days > 0) {
+			return `${days} day${days > 1 ? 's' : ''} ago`;
+		}
+		const hours = Math.floor(diff / (1000 * 60 * 60));
+		if (hours > 0) {
+			return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+		}
+		const minutes = Math.floor(diff / (1000 * 60));
+		if (minutes > 0) {
+			return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+		}
+		const seconds = Math.floor(diff / (1000));
+		if (seconds > 0) {
+			return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+		}
+		return 'just now';
+	};
+
+	const creationTime = timeAgo(created);
 
 	return (
 		<>
@@ -79,6 +105,8 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 						onClick={handleActiveToggle}
 					/>
 				</td>
+				{/* <td className='text-center'>{bracket.userBracketCount}</td> */}
+				<td className='text-center'>{creationTime}</td>
 				<td className='wpbb-bracket-table-action-col'>
 					<Button variant="primary" >Score</Button>
 					<Button variant="success" className='mx-2' onClick={handleCopyBracket}>Copy</Button>
@@ -110,6 +138,7 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 				<tr>
 					<th scope="col">Name</th>
 					<th scope="col" className='text-center'>Published</th>
+					<th scope="col" className='text-center'>Created</th>
 					<th scope="col"></th>
 				</tr>
 			</thead>

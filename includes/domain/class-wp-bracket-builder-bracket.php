@@ -1,7 +1,5 @@
 <?php
 
-use function PHPUnit\Framework\isEmpty;
-
 class Wp_Bracket_Builder_Bracket_Base {
 	/**
 	 * @var int
@@ -57,22 +55,30 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 	 */
 	public $wildcard_placement;
 
-	// public function __construct(string $name, bool $active = false, int $id = null, array $rounds = []) {
-	// 	// call parent constructor
-	// 	parent::__construct($name, $id, $rounds);
-	// 	$this->active = $active;
-	// }
-	public function __construct(string $name, int $num_rounds, int $num_wildcards, int $wildcard_placement = null, bool $active = false, int $id = null, array $rounds = []) {
-		// call parent constructor
+	/**
+	 * @var DateTime
+	 */
+	public $created_at;
+
+	public function __construct(
+		string $name,
+		int $num_rounds,
+		int $num_wildcards,
+		int $wildcard_placement = null,
+		bool $active = false,
+		int $id = null,
+		DateTime $created_at = null,
+		array $rounds = []
+	) {
 		parent::__construct($name, $id, $rounds);
 		$this->active = $active;
 		$this->num_rounds = $num_rounds;
 		$this->num_wildcards = $num_wildcards;
 		$this->wildcard_placement = $wildcard_placement;
+		$this->created_at = $created_at;
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket {
-		// $bracket = new Wp_Bracket_Builder_Bracket($data['name'], $data['active']);
 		$bracket = new Wp_Bracket_Builder_Bracket(
 			$data['name'],
 			$data['num_rounds'],
@@ -85,15 +91,12 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 			$bracket->id = (int) $data['id'];
 		}
 
-		// if (isset($data['wildcard_placement'])) {
-		// 	$bracket->wildcard_placement = (int) $data['wildcard_placement'];
-		// }
+		if (isset($data['created_at'])) {
+			$bracket->created_at = new DateTime($data['created_at']);
+		}
+
 
 		if (isset($data['rounds'])) {
-			// $bracket->rounds = array_map(function ($round) {
-			// 	return Wp_Bracket_Builder_Round::from_array($round);
-			// }, $data['rounds']);
-			// The above with with index preserved
 			$bracket->rounds = array_map(function ($index, $round) {
 				$round['depth'] = $index;
 				return Wp_Bracket_Builder_Round::from_array($round);
@@ -266,7 +269,6 @@ class Wp_Bracket_Builder_Match {
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Match {
-		// $match = new Wp_Bracket_Builder_Match($data['name'], $data['index'], Wp_Bracket_Builder_Team::from_array($data['team1']), Wp_Bracket_Builder_Team::from_array($data['team2']));
 		$match = new Wp_Bracket_Builder_Match($data['index']);
 
 		if (isset($data['id'])) {
@@ -281,9 +283,9 @@ class Wp_Bracket_Builder_Match {
 			$match->team2 = Wp_Bracket_Builder_Team::from_array($data['team2']);
 		}
 
-		// if (isset($data['result'])) {
-		// 	$match->result = Wp_Bracket_Builder_Team::from_array($data['result']);
-		// }
+		if (isset($data['result'])) {
+			$match->result = Wp_Bracket_Builder_Team::from_array($data['result']);
+		}
 
 		return $match;
 	}

@@ -82,6 +82,7 @@ class Wp_Bracket_Builder_Activator {
 			num_rounds tinyint(4) NOT NULL,
 			num_wildcards tinyint(4) NOT NULL,
 			wildcard_placement tinyint(2),
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			PRIMARY KEY (id)
 		) $charset_collate;";
 

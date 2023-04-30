@@ -51,8 +51,15 @@ interface Bracket {
 	wildcardPlacement: WildcardPlacement;
 }
 
+interface phpDate {
+	date: string;
+	timezone_type: number;
+	timezone: string;
+}
+
 export interface BracketRes extends Bracket {
 	id: number;
+	createdAt: phpDate;
 	rounds: RoundRes[];
 }
 

@@ -1048,6 +1048,29 @@ const BracketRow = props => {
     });
     console.log(e.target.checked);
   };
+  const created = new Date(bracket.createdAt.date);
+  const timeAgo = date => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days > 0) {
+      return `${days} day${days > 1 ? 's' : ''} ago`;
+    }
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    if (hours > 0) {
+      return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    }
+    const minutes = Math.floor(diff / (1000 * 60));
+    if (minutes > 0) {
+      return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    }
+    const seconds = Math.floor(diff / 1000);
+    if (seconds > 0) {
+      return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+    }
+    return 'just now';
+  };
+  const creationTime = timeAgo(created);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("tr", {
     onClick: handleViewBracket
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", null, bracket.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
@@ -1057,6 +1080,8 @@ const BracketRow = props => {
     checked: active,
     onClick: handleActiveToggle
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
+    className: "text-center"
+  }, creationTime), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
     className: "wpbb-bracket-table-action-col"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "primary"
@@ -1084,6 +1109,9 @@ const BracketTable = props => {
     scope: "col",
     className: "text-center"
   }, "Published"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("th", {
+    scope: "col",
+    className: "text-center"
+  }, "Created"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("th", {
     scope: "col"
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(BracketRow, (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
     key: bracket.id,
