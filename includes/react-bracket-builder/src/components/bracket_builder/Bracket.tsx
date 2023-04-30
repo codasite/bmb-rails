@@ -262,11 +262,21 @@ class MatchTree {
 	}
 }
 
-const TeamSlot = (props) => {
+interface TeamSlotProps {
+	className: string;
+	team: Team | null;
+	updateTeam?: (name: string) => void;
+}
+
+const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
-	const team: Team | null = props.team
-	const updateTeam = props.updateTeam
+
+	const {
+		team,
+		updateTeam,
+	} = props
+
 
 	const handleUpdateTeam = (e) => {
 		if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
@@ -359,19 +369,39 @@ const Spacer = ({ grow = '1' }) => {
 	)
 }
 
-const RoundHeader = (props) => {
+interface RoundHeaderProps {
+	round: Round;
+	updateRoundName?: (roundId: number, name: string) => void;
+}
+
+const RoundHeader = (props: RoundHeaderProps) => {
 	const [editRoundName, setEditRoundName] = useState(false);
 	const [nameBuffer, setNameBuffer] = useState('');
-	const round: Round = props.round;
-	const updateRoundName = props.updateRoundName;
+	const {
+		round,
+		updateRoundName,
+	} = props
+
+	const canEdit = updateRoundName !== undefined
 
 	useEffect(() => {
 		setNameBuffer(props.round.name)
 	}, [props.round.name])
 
+	const startEditing = () => {
+		if (!canEdit) {
+			return
+		}
+		setEditRoundName(true)
+		setNameBuffer(round.name)
+	}
+
 	const doneEditing = () => {
+		if (!canEdit) {
+			return
+		}
 		setEditRoundName(false)
-		props.updateRoundName(props.round.id, nameBuffer)
+		updateRoundName(props.round.id, nameBuffer)
 	}
 
 	return (
@@ -389,7 +419,7 @@ const RoundHeader = (props) => {
 				}}
 			/>
 				:
-				<span onClick={() => setEditRoundName(true)}>{round.name}</span>
+				<span onClick={startEditing}>{round.name}</span>
 			}
 		</div>
 	)
@@ -413,15 +443,30 @@ const FinalRound = (props) => {
 	)
 }
 
+interface MatchColumnProps {
+	round: Round;
+	matches: Nullable<MatchNode>[];
+	direction: Direction;
+	numDirections: number;
+	matchHeight: number;
+	updateRoundName?: (roundId: number, name: string) => void;
+	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
+}
 
-const MatchColumn = (props) => {
-	const round: Round = props.round;
-	const matches: MatchNode[] = props.matches;
-	const direction: Direction = props.direction;
-	const matchHeight: number = props.matchHeight;
-	const updateRoundName = props.updateRoundName;
-	const updateTeam = props.updateTeam;
+const MatchColumn = (props: MatchColumnProps) => {
+	const {
+		round,
+		matches,
+		direction,
+		numDirections,
+		matchHeight,
+		updateRoundName,
+		updateTeam,
+	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
+
+
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
@@ -432,7 +477,7 @@ const MatchColumn = (props) => {
 					direction={direction}
 					height={matchHeight}
 					spacing={i + 1 < matches.length ? matchHeight : 0} // Do not add spacing to the last match in the round column
-					updateTeam={(left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name)}
+					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
 				/>
 			)
 		})
@@ -441,7 +486,7 @@ const MatchColumn = (props) => {
 	}
 	return (
 		<div className='wpbb-round'>
-			<RoundHeader round={round} updateRoundName={updateRoundName} />
+			<RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} />
 			<div className='wpbb-round__body'>
 				{buildMatches()}
 			</div>
@@ -600,13 +645,17 @@ interface BracketProps {
 const Bracket = (props: BracketProps) => {
 	// const { numRounds, numWildcards, wildcardPlacement } = props
 	// const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
-	const matchTree = props.matchTree
-	const setMatchTree = props.setMatchTree
+	const {
+		matchTree,
+		setMatchTree,
+	} = props
 
 	const rounds = matchTree.rounds
+	const canEdit = setMatchTree !== undefined
+
 
 	const updateRoundName = (roundId: number, name: string) => {
-		if (setMatchTree === undefined) {
+		if (!canEdit) {
 			return
 		}
 		const newMatchTree = matchTree.clone();
@@ -618,7 +667,7 @@ const Bracket = (props: BracketProps) => {
 	};
 
 	const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
-		if (setMatchTree === undefined) {
+		if (!canEdit) {
 			return
 		}
 		const newMatchTree = matchTree.clone();
@@ -670,8 +719,8 @@ const Bracket = (props: BracketProps) => {
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
 					matchHeight={2 ** idx * firstRoundMatchHeight}
-					updateRoundName={updateRoundName}
-					updateTeam={updateTeam}
+					updateRoundName={canEdit ? updateRoundName : undefined}
+					updateTeam={canEdit ? updateTeam : undefined}
 				/>
 			}),
 			// handle final round differently
@@ -685,8 +734,8 @@ const Bracket = (props: BracketProps) => {
 					direction={Direction.TopRight}
 					numDirections={numDirections}
 					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
-					updateRoundName={updateRoundName}
-					updateTeam={updateTeam}
+					updateRoundName={canEdit ? updateRoundName : undefined}
+					updateTeam={canEdit ? updateTeam : undefined}
 				/>
 			})
 		]
@@ -827,7 +876,7 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 					/>
 				</form>
 			</Modal.Header >
-			<Modal.Body className='pt-0'><Bracket matchTree={matchTree} /></Modal.Body>
+			<Modal.Body className='pt-0'><Bracket matchTree={matchTree} setMatchTree={setMatchTree} /></Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleClose}>
 					Close

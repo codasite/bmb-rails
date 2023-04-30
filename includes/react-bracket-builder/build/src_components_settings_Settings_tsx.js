@@ -358,8 +358,10 @@ class MatchTree {
 const TeamSlot = props => {
   const [editing, setEditing] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [textBuffer, setTextBuffer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('');
-  const team = props.team;
-  const updateTeam = props.updateTeam;
+  const {
+    team,
+    updateTeam
+  } = props;
   const handleUpdateTeam = e => {
     if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
       updateTeam(textBuffer);
@@ -459,14 +461,27 @@ const Spacer = _ref => {
 const RoundHeader = props => {
   const [editRoundName, setEditRoundName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [nameBuffer, setNameBuffer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('');
-  const round = props.round;
-  const updateRoundName = props.updateRoundName;
+  const {
+    round,
+    updateRoundName
+  } = props;
+  const canEdit = updateRoundName !== undefined;
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     setNameBuffer(props.round.name);
   }, [props.round.name]);
+  const startEditing = () => {
+    if (!canEdit) {
+      return;
+    }
+    setEditRoundName(true);
+    setNameBuffer(round.name);
+  };
   const doneEditing = () => {
+    if (!canEdit) {
+      return;
+    }
     setEditRoundName(false);
-    props.updateRoundName(props.round.id, nameBuffer);
+    updateRoundName(props.round.id, nameBuffer);
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round__header"
@@ -483,7 +498,7 @@ const RoundHeader = props => {
       }
     }
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    onClick: () => setEditRoundName(true)
+    onClick: startEditing
   }, round.name));
 };
 const FinalRound = props => {
@@ -509,14 +524,17 @@ const FinalRound = props => {
   })));
 };
 const MatchColumn = props => {
-  const round = props.round;
-  const matches = props.matches;
-  const direction = props.direction;
-  const matchHeight = props.matchHeight;
-  const updateRoundName = props.updateRoundName;
-  const updateTeam = props.updateTeam;
+  const {
+    round,
+    matches,
+    direction,
+    numDirections,
+    matchHeight,
+    updateRoundName,
+    updateTeam
+  } = props;
   // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
-
+  const canEdit = updateTeam !== undefined && updateRoundName !== undefined;
   const buildMatches = () => {
     const matchBoxes = matches.map((match, i) => {
       const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length;
@@ -526,7 +544,7 @@ const MatchColumn = props => {
         height: matchHeight,
         spacing: i + 1 < matches.length ? matchHeight : 0 // Do not add spacing to the last match in the round column
         ,
-        updateTeam: (left, name) => updateTeam(round.id, matchIndex, left, name)
+        updateTeam: canEdit ? (left, name) => updateTeam(round.id, matchIndex, left, name) : undefined
       });
     });
     return matchBoxes;
@@ -535,7 +553,7 @@ const MatchColumn = props => {
     className: "wpbb-round"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundHeader, {
     round: round,
-    updateRoundName: updateRoundName
+    updateRoundName: canEdit ? updateRoundName : undefined
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round__body"
   }, buildMatches()));
@@ -652,11 +670,14 @@ const BracketTitle = props => {
 const Bracket = props => {
   // const { numRounds, numWildcards, wildcardPlacement } = props
   // const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
-  const matchTree = props.matchTree;
-  const setMatchTree = props.setMatchTree;
+  const {
+    matchTree,
+    setMatchTree
+  } = props;
   const rounds = matchTree.rounds;
+  const canEdit = setMatchTree !== undefined;
   const updateRoundName = (roundId, name) => {
-    if (setMatchTree === undefined) {
+    if (!canEdit) {
       return;
     }
     const newMatchTree = matchTree.clone();
@@ -667,7 +688,7 @@ const Bracket = props => {
     }
   };
   const updateTeam = (roundId, matchIndex, left, name) => {
-    if (setMatchTree === undefined) {
+    if (!canEdit) {
       return;
     }
     const newMatchTree = matchTree.clone();
@@ -716,8 +737,8 @@ const Bracket = props => {
         direction: Direction.TopLeft,
         numDirections: numDirections,
         matchHeight: 2 ** idx * firstRoundMatchHeight,
-        updateRoundName: updateRoundName,
-        updateTeam: updateTeam
+        updateRoundName: canEdit ? updateRoundName : undefined,
+        updateTeam: canEdit ? updateTeam : undefined
       });
     }),
     // handle final round differently
@@ -733,8 +754,8 @@ const Bracket = props => {
         direction: Direction.TopRight,
         numDirections: numDirections,
         matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight,
-        updateRoundName: updateRoundName,
-        updateTeam: updateTeam
+        updateRoundName: canEdit ? updateRoundName : undefined,
+        updateTeam: canEdit ? updateTeam : undefined
       });
     })];
   };
@@ -857,7 +878,8 @@ const NewBracketModal = props => {
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
-    matchTree: matchTree
+    matchTree: matchTree,
+    setMatchTree: setMatchTree
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
