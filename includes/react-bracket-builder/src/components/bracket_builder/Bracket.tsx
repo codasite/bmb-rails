@@ -264,7 +264,7 @@ class MatchTree {
 
 interface TeamSlotProps {
 	className: string;
-	team: Team | null;
+	team?: Team | null;
 	updateTeam?: (name: string) => void;
 }
 
@@ -277,8 +277,20 @@ const TeamSlot = (props: TeamSlotProps) => {
 		updateTeam,
 	} = props
 
+	const canEdit = updateTeam !== undefined
 
-	const handleUpdateTeam = (e) => {
+	const startEditing = () => {
+		if (!canEdit) {
+			return
+		}
+		setEditing(true)
+		setTextBuffer(team ? team.name : '')
+	}
+
+	const doneEditing = (e) => {
+		if (!canEdit) {
+			return
+		}
 		if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
 			updateTeam(textBuffer)
 		}
@@ -286,7 +298,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 	}
 
 	return (
-		<div className={props.className} onClick={() => setEditing(true)}>
+		<div className={props.className} onClick={startEditing}>
 			{editing ?
 				<input
 					className='wpbb-team-name-input'
@@ -295,10 +307,10 @@ const TeamSlot = (props: TeamSlotProps) => {
 					type='text'
 					value={textBuffer}
 					onChange={(e) => setTextBuffer(e.target.value)}
-					onBlur={handleUpdateTeam}
+					onBlur={doneEditing}
 					onKeyUp={(e) => {
 						if (e.key === 'Enter') {
-							handleUpdateTeam(e)
+							doneEditing(e)
 						}
 					}}
 				/>
@@ -309,13 +321,22 @@ const TeamSlot = (props: TeamSlotProps) => {
 	)
 }
 
-const MatchBox = (props) => {
+interface MatchBoxProps {
+	match: MatchNode | null;
+	direction: Direction;
+	height: number;
+	spacing: number;
+	updateTeam?: (left: boolean, name: string) => void;
+}
+
+const MatchBox = (props: MatchBoxProps) => {
 	const match: MatchNode | null = props.match
 	const direction: Direction = props.direction
 	const height: number = props.height
 	const spacing: number = props.spacing
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const updateTeam = props.updateTeam
+	const canEdit = updateTeam !== undefined
 
 	// const updateTeam = (name: string, left: boolean) => {
 	// 	console.log('updateTeam', name)
@@ -357,8 +378,8 @@ const MatchBox = (props) => {
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
-			<TeamSlot className='wpbb-team1' team={match.team1} updateTeam={(name: string) => updateTeam(true, name)} />
-			<TeamSlot className='wpbb-team2' team={match.team2} updateTeam={(name: string) => updateTeam(false, name)} />
+			<TeamSlot className='wpbb-team1' team={match.team1} updateTeam={canEdit ? (name: string) => updateTeam(true, name) : undefined} />
+			<TeamSlot className='wpbb-team2' team={match.team2} updateTeam={canEdit ? (name: string) => updateTeam(false, name) : undefined} />
 		</div>
 	)
 }

@@ -362,7 +362,18 @@ const TeamSlot = props => {
     team,
     updateTeam
   } = props;
-  const handleUpdateTeam = e => {
+  const canEdit = updateTeam !== undefined;
+  const startEditing = () => {
+    if (!canEdit) {
+      return;
+    }
+    setEditing(true);
+    setTextBuffer(team ? team.name : '');
+  };
+  const doneEditing = e => {
+    if (!canEdit) {
+      return;
+    }
     if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
       updateTeam(textBuffer);
     }
@@ -370,7 +381,7 @@ const TeamSlot = props => {
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: props.className,
-    onClick: () => setEditing(true)
+    onClick: startEditing
   }, editing ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     className: "wpbb-team-name-input",
     autoFocus: true,
@@ -378,10 +389,10 @@ const TeamSlot = props => {
     type: "text",
     value: textBuffer,
     onChange: e => setTextBuffer(e.target.value),
-    onBlur: handleUpdateTeam,
+    onBlur: doneEditing,
     onKeyUp: e => {
       if (e.key === 'Enter') {
-        handleUpdateTeam(e);
+        doneEditing(e);
       }
     }
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -395,6 +406,7 @@ const MatchBox = props => {
   const spacing = props.spacing;
   // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
   const updateTeam = props.updateTeam;
+  const canEdit = updateTeam !== undefined;
 
   // const updateTeam = (name: string, left: boolean) => {
   // 	console.log('updateTeam', name)
@@ -441,11 +453,11 @@ const MatchBox = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team1",
     team: match.team1,
-    updateTeam: name => updateTeam(true, name)
+    updateTeam: canEdit ? name => updateTeam(true, name) : undefined
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team2",
     team: match.team2,
-    updateTeam: name => updateTeam(false, name)
+    updateTeam: canEdit ? name => updateTeam(false, name) : undefined
   }));
 };
 const Spacer = _ref => {
