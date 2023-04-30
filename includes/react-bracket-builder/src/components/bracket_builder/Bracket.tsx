@@ -205,19 +205,24 @@ class MatchTree {
 			const newRound = new Round(round.id, round.name, round.depth);
 			return newRound;
 		});
+		console.log('tree.rounds', tree.rounds)
 		// Then, iterate over the new rounds to create the matches and update their parent relationships.
 		tree.rounds.forEach((round, roundIndex) => {
 			round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
 				if (match === null) {
 					return null;
 				}
+				console.log('match', match)
 				const newMatch = new MatchNode(null, roundIndex);
 				newMatch.team1 = match.team1 ? new Team(match.team1.name) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name) : null;
 				newMatch.result = match.result ? new Team(match.result.name) : null;
 				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
-				newMatch.parent = parent;
-				this.assignMatchToParent(matchIndex, newMatch, parent);
+				console.log(parent)
+				if (parent) {
+					newMatch.parent = parent;
+					this.assignMatchToParent(matchIndex, newMatch, parent);
+				}
 				return newMatch;
 			});
 		});
@@ -710,7 +715,7 @@ const ViewBracketModal = (props) => {
 				setMatchTree(MatchTree.fromBracketResponse(bracket))
 				console.log('bracket', bracket)
 			})
-	})
+	}, [bracketId])
 
 	return (
 		<Modal className='wpbb-bracket-modal' show={show} onHide={handleClose} size='xl' centered={true}>

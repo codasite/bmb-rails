@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Table } from 'react-bootstrap';
-import { BracketModal, Bracket } from '../bracket_builder/Bracket';
+import { BracketModal } from '../bracket_builder/Bracket';
 import { BracketResponse, bracketApi } from '../../api/bracketApi';
 
 // class BracketResponse {
@@ -19,11 +19,18 @@ import { BracketResponse, bracketApi } from '../../api/bracketApi';
 interface BracketRowProps {
 	bracket: BracketResponse;
 	handleViewBracket: (bracketId: number) => void;
+	handleDeleteBracket: (bracketId: number) => void;
 }
 
 const BracketRow: React.FC<BracketRowProps> = (props) => {
 	const bracket: BracketResponse = props.bracket;
 	const handleViewBracket = props.handleViewBracket;
+	const handleDeleteBracket = (e) => {
+		e.stopPropagation();
+		props.handleDeleteBracket(bracket.id);
+	}
+
+
 	return (
 		<tr onClick={() => handleViewBracket(bracket.id)}>
 			<td>{bracket.name}</td>
@@ -38,7 +45,7 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 				{/* <Button variant="light" >{bracket.active ? 'deactivate' : 'activate'}</Button> */}
 				<Button variant="primary" >Score</Button>
 				<Button variant="success" className='mx-2'>Copy</Button>
-				<Button variant="danger">Delete</Button>
+				<Button variant="danger" onClick={handleDeleteBracket}>Delete</Button>
 			</td>
 		</tr>
 	);
@@ -48,6 +55,7 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 interface BracketTableProps {
 	brackets: BracketResponse[];
 	handleShowBracketModal: (bracketId: number | null) => void;
+	handleDeleteBracket: (bracketId: number) => void;
 }
 
 const BracketTable: React.FC<BracketTableProps> = (props) => {
@@ -57,6 +65,7 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 	const handleViewBracket = (bracketId: number) => {
 		handleShowBracketModal(bracketId);
 	}
+
 
 	return (
 		<Table hover className='table-dark wpbb-bracket-table'>
@@ -69,7 +78,12 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 			</thead>
 			<tbody>
 				{brackets.map((bracket) => (
-					<BracketRow key={bracket.id} bracket={bracket} handleViewBracket={handleViewBracket} />
+					<BracketRow
+						key={bracket.id}
+						bracket={bracket}
+						handleViewBracket={handleViewBracket}
+						handleDeleteBracket={props.handleDeleteBracket}
+					/>
 				))}
 			</tbody>
 		</Table>
@@ -109,6 +123,12 @@ const Settings = () => {
 		setActiveBracketId(bracketId);
 		setShowBracketModal(true);
 	};
+	const handleDeleteBracket = (bracketId: number) => {
+		bracketApi.deleteBracket(bracketId).then(() => {
+			setBrackets(brackets.filter((bracket) => bracket.id !== bracketId));
+		})
+	}
+
 
 	useEffect(() => {
 		bracketApi.getBrackets().then((brackets) => {
@@ -121,7 +141,11 @@ const Settings = () => {
 		<Container >
 			<h2 className='mt-4 mb-4'>Bracket Builder Settings</h2>
 			{/* <BracketList brackets={brackets} /> */}
-			<BracketTable brackets={brackets} handleShowBracketModal={handleShowBracketModal} />
+			<BracketTable
+				brackets={brackets}
+				handleShowBracketModal={handleShowBracketModal}
+				handleDeleteBracket={handleDeleteBracket}
+			/>
 			<Button variant='dark' className='mt-6' onClick={() => handleShowBracketModal()}>Add Bracket</Button>
 			<BracketModal show={showBracketModal} bracketId={activeBracketId} handleClose={handleCloseBracketModal} handleSave={handleSaveBracketModal} />
 		</Container>

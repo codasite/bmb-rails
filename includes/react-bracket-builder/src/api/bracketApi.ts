@@ -38,12 +38,28 @@ class BracketApi {
 	}
 
 	async getBrackets(): Promise<BracketResponse[]> {
-		return await this.performRequest(this.bracketPath, 'GET');
+		const res = await this.performRequest(this.bracketPath, 'GET');
+		if (res.status !== 200) {
+			throw new Error('Failed to get brackets');
+		}
+		return await res.json();
 	}
 
 	async getBracket(id: number): Promise<BracketResponse> {
-		return await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
+		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
+		if (res.status !== 200) {
+			throw new Error('Failed to get bracket');
+		}
+		return await res.json();
 	}
+
+	async deleteBracket(id: number): Promise<void> {
+		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'DELETE');
+		if (res.status !== 204) {
+			throw new Error('Failed to delete bracket');
+		}
+	}
+
 
 
 	async performRequest(path: string, method: string, body: any = {}) {
@@ -57,8 +73,7 @@ class BracketApi {
 			request['body'] = JSON.stringify(body);
 		}
 
-		const response = await fetch(`${this.baseUrl}${path}`, request);
-		return response.json();
+		return await fetch(`${this.baseUrl}${path}`, request);
 	}
 }
 

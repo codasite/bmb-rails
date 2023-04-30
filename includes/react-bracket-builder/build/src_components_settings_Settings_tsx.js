@@ -18,10 +18,24 @@ class BracketApi {
     this.baseUrl = wpbb_ajax_obj.rest_url;
   }
   async getBrackets() {
-    return await this.performRequest(this.bracketPath, 'GET');
+    const res = await this.performRequest(this.bracketPath, 'GET');
+    if (res.status !== 200) {
+      throw new Error('Failed to get brackets');
+    }
+    return await res.json();
   }
   async getBracket(id) {
-    return await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
+    const res = await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
+    if (res.status !== 200) {
+      throw new Error('Failed to get bracket');
+    }
+    return await res.json();
+  }
+  async deleteBracket(id) {
+    const res = await this.performRequest(`${this.bracketPath}/${id}`, 'DELETE');
+    if (res.status !== 204) {
+      throw new Error('Failed to delete bracket');
+    }
   }
   async performRequest(path, method) {
     let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -34,8 +48,7 @@ class BracketApi {
     if (method !== 'GET') {
       request['body'] = JSON.stringify(body);
     }
-    const response = await fetch(`${this.baseUrl}${path}`, request);
-    return response.json();
+    return await fetch(`${this.baseUrl}${path}`, request);
   }
 }
 const bracketApi = new BracketApi();
@@ -238,19 +251,24 @@ class MatchTree {
       const newRound = new Round(round.id, round.name, round.depth);
       return newRound;
     });
+    console.log('tree.rounds', tree.rounds);
     // Then, iterate over the new rounds to create the matches and update their parent relationships.
     tree.rounds.forEach((round, roundIndex) => {
       round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
         if (match === null) {
           return null;
         }
+        console.log('match', match);
         const newMatch = new MatchNode(null, roundIndex);
         newMatch.team1 = match.team1 ? new Team(match.team1.name) : null;
         newMatch.team2 = match.team2 ? new Team(match.team2.name) : null;
         newMatch.result = match.result ? new Team(match.result.name) : null;
         const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
-        newMatch.parent = parent;
-        this.assignMatchToParent(matchIndex, newMatch, parent);
+        console.log(parent);
+        if (parent) {
+          newMatch.parent = parent;
+          this.assignMatchToParent(matchIndex, newMatch, parent);
+        }
         return newMatch;
       });
     });
@@ -693,7 +711,7 @@ const ViewBracketModal = props => {
       setMatchTree(MatchTree.fromBracketResponse(bracket));
       console.log('bracket', bracket);
     });
-  });
+  }, [bracketId]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
@@ -817,6 +835,10 @@ __webpack_require__.r(__webpack_exports__);
 const BracketRow = props => {
   const bracket = props.bracket;
   const handleViewBracket = props.handleViewBracket;
+  const handleDeleteBracket = e => {
+    e.stopPropagation();
+    props.handleDeleteBracket(bracket.id);
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", {
     onClick: () => handleViewBracket(bracket.id)
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, bracket.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
@@ -832,7 +854,8 @@ const BracketRow = props => {
     variant: "success",
     className: "mx-2"
   }, "Copy"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    variant: "danger"
+    variant: "danger",
+    onClick: handleDeleteBracket
   }, "Delete")));
 };
 const BracketTable = props => {
@@ -854,7 +877,8 @@ const BracketTable = props => {
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketRow, {
     key: bracket.id,
     bracket: bracket,
-    handleViewBracket: handleViewBracket
+    handleViewBracket: handleViewBracket,
+    handleDeleteBracket: props.handleDeleteBracket
   }))));
 };
 const BracketListItem = props => {
@@ -883,6 +907,11 @@ const Settings = () => {
     setActiveBracketId(bracketId);
     setShowBracketModal(true);
   };
+  const handleDeleteBracket = bracketId => {
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__.bracketApi.deleteBracket(bracketId).then(() => {
+      setBrackets(brackets.filter(bracket => bracket.id !== bracketId));
+    });
+  };
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__.bracketApi.getBrackets().then(brackets => {
       console.log(brackets);
@@ -893,7 +922,8 @@ const Settings = () => {
     className: "mt-4 mb-4"
   }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTable, {
     brackets: brackets,
-    handleShowBracketModal: handleShowBracketModal
+    handleShowBracketModal: handleShowBracketModal,
+    handleDeleteBracket: handleDeleteBracket
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
     variant: "dark",
     className: "mt-6",
