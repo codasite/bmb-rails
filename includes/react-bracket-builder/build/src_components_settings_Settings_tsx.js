@@ -37,6 +37,17 @@ class BracketApi {
       throw new Error('Failed to delete bracket');
     }
   }
+  async setActive(id, active) {
+    const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
+    const res = await this.performRequest(path, 'POST');
+    console.log(res);
+    if (res.status !== 200) {
+      throw new Error('Failed to set active');
+    }
+    // return res.json();
+    const activated = await res.json();
+    return activated;
+  }
   async performRequest(path, method) {
     let body = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     const request = {
@@ -855,11 +866,20 @@ const DeleteModal = _ref => {
 };
 const BracketRow = props => {
   const [showDeleteModal, setShowDeleteModal] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [active, setActive] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(props.bracket.active);
   const bracket = props.bracket;
   const handleViewBracket = props.handleViewBracket;
   const handleShowDeleteDialog = e => {
     e.stopPropagation();
     setShowDeleteModal(true);
+  };
+  const handleActiveToggle = e => {
+    e.stopPropagation();
+    console.log('toggle');
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__.bracketApi.setActive(bracket.id, e.target.checked).then(isActive => {
+      setActive(isActive);
+    });
+    console.log(e.target.checked);
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", {
     onClick: () => handleViewBracket(bracket.id)
@@ -867,7 +887,8 @@ const BracketRow = props => {
     className: "text-center"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: "checkbox",
-    checked: bracket.active
+    checked: active,
+    onClick: handleActiveToggle
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
     className: "wpbb-bracket-table-action-col"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {

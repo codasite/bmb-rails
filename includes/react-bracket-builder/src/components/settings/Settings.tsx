@@ -53,26 +53,34 @@ interface BracketRowProps {
 
 const BracketRow: React.FC<BracketRowProps> = (props) => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [active, setActive] = useState<boolean>(props.bracket.active);
 	const bracket: BracketResponse = props.bracket;
 	const handleViewBracket = props.handleViewBracket;
 	const handleShowDeleteDialog = (e) => {
 		e.stopPropagation();
 		setShowDeleteModal(true);
 	}
+	const handleActiveToggle = (e) => {
+		e.stopPropagation();
+		console.log('toggle')
+		bracketApi.setActive(bracket.id, e.target.checked).then((isActive) => {
+			setActive(isActive);
+		})
+		console.log(e.target.checked)
+	}
 
 	return (
 		<>
 			<tr onClick={() => handleViewBracket(bracket.id)}>
 				<td>{bracket.name}</td>
-				{/* <td>{bracket.active ? <span className='wpbb-bracket-table-active-check'>&#10003;</span> : ''}</td> */}
 				<td className='text-center'>
 					<input
 						type="checkbox"
-						checked={bracket.active}
+						checked={active}
+						onClick={handleActiveToggle}
 					/>
 				</td>
 				<td className='wpbb-bracket-table-action-col'>
-					{/* <Button variant="light" >{bracket.active ? 'deactivate' : 'activate'}</Button> */}
 					<Button variant="primary" >Score</Button>
 					<Button variant="success" className='mx-2'>Copy</Button>
 					<Button variant="danger" onClick={handleShowDeleteDialog}>Delete</Button>
