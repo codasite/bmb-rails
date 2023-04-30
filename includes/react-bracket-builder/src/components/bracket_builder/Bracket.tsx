@@ -175,7 +175,6 @@ class MatchTree {
 	}
 
 	clone(): MatchTree {
-		console.log('cloning tree')
 		const tree = this
 		const newTree = new MatchTree()
 		// First, create the new rounds.
@@ -205,20 +204,17 @@ class MatchTree {
 			const newRound = new Round(round.id, round.name, round.depth);
 			return newRound;
 		});
-		console.log('tree.rounds', tree.rounds)
 		// Then, iterate over the new rounds to create the matches and update their parent relationships.
 		tree.rounds.forEach((round, roundIndex) => {
 			round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
 				if (match === null) {
 					return null;
 				}
-				console.log('match', match)
 				const newMatch = new MatchNode(null, roundIndex);
 				newMatch.team1 = match.team1 ? new Team(match.team1.name) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name) : null;
 				newMatch.result = match.result ? new Team(match.result.name) : null;
 				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
-				console.log(parent)
 				if (parent) {
 					newMatch.parent = parent;
 					this.assignMatchToParent(matchIndex, newMatch, parent);
@@ -701,6 +697,12 @@ const Bracket = (props: BracketProps) => {
 	)
 }
 
+export enum BracketModalMode {
+	New = 0,
+	View = 1,
+	Score = 2,
+}
+
 const ViewBracketModal = (props) => {
 	const {
 		show,
@@ -713,7 +715,6 @@ const ViewBracketModal = (props) => {
 		bracketApi.getBracket(bracketId)
 			.then((bracket) => {
 				setMatchTree(MatchTree.fromBracketResponse(bracket))
-				console.log('bracket', bracket)
 			})
 	}, [bracketId])
 
@@ -778,11 +779,26 @@ const NewBracketModal = (props) => {
 	)
 }
 
-export const BracketModal = (props) => {
+interface BracketModalProps {
+	show: boolean;
+	handleClose: () => void;
+	handleSave: () => void;
+	mode: BracketModalMode;
+	bracketId: Nullable<number>;
+}
+
+
+export const BracketModal = (props: BracketModalProps) => {
 	const bracketId = props.bracketId;
 
 	if (bracketId) {
-		return <ViewBracketModal {...props} />
+		if (props.mode === BracketModalMode.New) {
+			return <NewBracketModal {...props} />
+		} else if (props.mode === BracketModalMode.Score) {
+			return <ViewBracketModal {...props} />
+		} else {
+			return <ViewBracketModal {...props} />
+		}
 	} else {
 		return <NewBracketModal {...props} />
 	}

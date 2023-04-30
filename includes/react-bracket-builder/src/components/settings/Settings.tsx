@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Table, Modal } from 'react-bootstrap';
-import { BracketModal } from '../bracket_builder/Bracket';
+import { BracketModal, BracketModalMode } from '../bracket_builder/Bracket';
 import { BracketResponse, bracketApi } from '../../api/bracketApi';
 
 // class BracketResponse {
@@ -47,7 +47,8 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ show, onHide, onDelete }) => 
 
 interface BracketRowProps {
 	bracket: BracketResponse;
-	handleViewBracket: (bracketId: number) => void;
+	// handleViewBracket: (bracketId: number) => void;
+	handleShowBracketModal: (mode: BracketModalMode, bracketId: number | null) => void;
 	handleDeleteBracket: (bracketId: number) => void;
 }
 
@@ -55,11 +56,21 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [active, setActive] = useState<boolean>(props.bracket.active);
 	const bracket: BracketResponse = props.bracket;
-	const handleViewBracket = props.handleViewBracket;
+
+	const handleViewBracket = () => {
+		props.handleShowBracketModal(BracketModalMode.View, bracket.id);
+	}
+
+	const handleCopyBracket = (e) => {
+		e.stopPropagation();
+		props.handleShowBracketModal(BracketModalMode.New, bracket.id)
+	}
+
 	const handleShowDeleteDialog = (e) => {
 		e.stopPropagation();
 		setShowDeleteModal(true);
 	}
+
 	const handleActiveToggle = (e) => {
 		e.stopPropagation();
 		console.log('toggle')
@@ -71,7 +82,7 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 
 	return (
 		<>
-			<tr onClick={() => handleViewBracket(bracket.id)}>
+			<tr onClick={handleViewBracket}>
 				<td>{bracket.name}</td>
 				<td className='text-center'>
 					<input
@@ -82,7 +93,7 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 				</td>
 				<td className='wpbb-bracket-table-action-col'>
 					<Button variant="primary" >Score</Button>
-					<Button variant="success" className='mx-2'>Copy</Button>
+					<Button variant="success" className='mx-2' onClick={handleCopyBracket}>Copy</Button>
 					<Button variant="danger" onClick={handleShowDeleteDialog}>Delete</Button>
 				</td>
 			</tr>
@@ -98,18 +109,12 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 
 interface BracketTableProps {
 	brackets: BracketResponse[];
-	handleShowBracketModal: (bracketId: number | null) => void;
+	handleShowBracketModal: (mode: BracketModalMode, bracketId: number | null) => void;
 	handleDeleteBracket: (bracketId: number) => void;
 }
 
 const BracketTable: React.FC<BracketTableProps> = (props) => {
 	const brackets: BracketResponse[] = props.brackets;
-	const handleShowBracketModal = props.handleShowBracketModal;
-
-	const handleViewBracket = (bracketId: number) => {
-		handleShowBracketModal(bracketId);
-	}
-
 
 	return (
 		<Table hover className='table-dark wpbb-bracket-table'>
@@ -125,8 +130,9 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 					<BracketRow
 						key={bracket.id}
 						bracket={bracket}
-						handleViewBracket={handleViewBracket}
-						handleDeleteBracket={props.handleDeleteBracket}
+						// handleViewBracket={handleViewBracket}
+						// handleDeleteBracket={props.handleDeleteBracket}
+						{...props}
 					/>
 				))}
 			</tbody>
@@ -139,7 +145,9 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 const Settings = () => {
 	const [showBracketModal, setShowBracketModal] = useState(false)
 	const [brackets, setBrackets] = useState<BracketResponse[]>([]);
+	const [bracketModalMode, setBracketModalMode] = useState<BracketModalMode>(BracketModalMode.View);
 	const [activeBracketId, setActiveBracketId] = useState<number | null>(null);
+	console.log('settings')
 
 	const handleCloseBracketModal = () => {
 		console.log('close')
@@ -147,8 +155,10 @@ const Settings = () => {
 		setShowBracketModal(false);
 	}
 	const handleSaveBracketModal = () => setShowBracketModal(false);
-	const handleShowBracketModal = (bracketId: number | null = null) => {
+	const handleShowBracketModal = (mode: BracketModalMode, bracketId: number | null = null) => {
 		setActiveBracketId(bracketId);
+		setBracketModalMode(mode);
+		console.log('mode', mode)
 		setShowBracketModal(true);
 	};
 	const handleDeleteBracket = (bracketId: number) => {
@@ -175,13 +185,16 @@ const Settings = () => {
 				handleShowBracketModal={handleShowBracketModal}
 				handleDeleteBracket={handleDeleteBracket}
 			/>
-			<Button variant='dark' className='mt-6' onClick={() => handleShowBracketModal()}>New Bracket</Button>
-			<BracketModal show={showBracketModal} bracketId={activeBracketId} handleClose={handleCloseBracketModal} handleSave={handleSaveBracketModal} />
+			<Button variant='dark' className='mt-6' onClick={() => handleShowBracketModal(BracketModalMode.New)}>New Bracket</Button>
+			<BracketModal
+				show={showBracketModal}
+				mode={bracketModalMode}
+				bracketId={activeBracketId}
+				handleClose={handleCloseBracketModal}
+				handleSave={handleSaveBracketModal}
+			/>
 		</Container>
 	);
 }
-
-
-
 
 export default Settings; 

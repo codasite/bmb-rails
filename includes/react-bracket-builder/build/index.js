@@ -375,7 +375,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Dynamically render components to avoid loading unused modules
-const Settings = React.lazy(() => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-bootstrap_esm_Button_js-node_modules_react-bootstrap_esm_Container-7f04e4"), __webpack_require__.e("src_components_settings_Settings_tsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./components/settings/Settings */ "./src/components/settings/Settings.tsx")));
+const Settings = React.lazy(() => Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-bootstrap_esm_Button_js-node_modules_react-bootstrap_esm_Container-5c9967"), __webpack_require__.e("src_components_settings_Settings_tsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./components/settings/Settings */ "./src/components/settings/Settings.tsx")));
 const page = wpbb_ajax_obj.page;
 if (page === 'settings') {
   // Render the App component into the DOM

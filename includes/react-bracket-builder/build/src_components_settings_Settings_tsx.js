@@ -72,7 +72,8 @@ const bracketApi = new BracketApi();
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "BracketModal": function() { return /* binding */ BracketModal; }
+/* harmony export */   "BracketModal": function() { return /* binding */ BracketModal; },
+/* harmony export */   "BracketModalMode": function() { return /* binding */ BracketModalMode; }
 /* harmony export */ });
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
@@ -231,7 +232,6 @@ class MatchTree {
     }
   }
   clone() {
-    console.log('cloning tree');
     const tree = this;
     const newTree = new MatchTree();
     // First, create the new rounds.
@@ -260,20 +260,17 @@ class MatchTree {
       const newRound = new Round(round.id, round.name, round.depth);
       return newRound;
     });
-    console.log('tree.rounds', tree.rounds);
     // Then, iterate over the new rounds to create the matches and update their parent relationships.
     tree.rounds.forEach((round, roundIndex) => {
       round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
         if (match === null) {
           return null;
         }
-        console.log('match', match);
         const newMatch = new MatchNode(null, roundIndex);
         newMatch.team1 = match.team1 ? new Team(match.team1.name) : null;
         newMatch.team2 = match.team2 ? new Team(match.team2.name) : null;
         newMatch.result = match.result ? new Team(match.result.name) : null;
         const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
-        console.log(parent);
         if (parent) {
           newMatch.parent = parent;
           this.assignMatchToParent(matchIndex, newMatch, parent);
@@ -708,6 +705,12 @@ const Bracket = props => {
     className: "wpbb-bracket"
   }, rounds.length > 0 && buildRounds2(rounds));
 };
+let BracketModalMode = /*#__PURE__*/function (BracketModalMode) {
+  BracketModalMode[BracketModalMode["New"] = 0] = "New";
+  BracketModalMode[BracketModalMode["View"] = 1] = "View";
+  BracketModalMode[BracketModalMode["Score"] = 2] = "Score";
+  return BracketModalMode;
+}({});
 const ViewBracketModal = props => {
   const {
     show,
@@ -718,7 +721,6 @@ const ViewBracketModal = props => {
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__.bracketApi.getBracket(bracketId).then(bracket => {
       setMatchTree(MatchTree.fromBracketResponse(bracket));
-      console.log('bracket', bracket);
     });
   }, [bracketId]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -800,7 +802,13 @@ const NewBracketModal = props => {
 const BracketModal = props => {
   const bracketId = props.bracketId;
   if (bracketId) {
-    return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ViewBracketModal, props);
+    if (props.mode === BracketModalMode.New) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NewBracketModal, props);
+    } else if (props.mode === BracketModalMode.Score) {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ViewBracketModal, props);
+    } else {
+      return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(ViewBracketModal, props);
+    }
   } else {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NewBracketModal, props);
   }
@@ -815,16 +823,18 @@ const BracketModal = props => {
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
-/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Table.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
-/* harmony import */ var _bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../bracket_builder/Bracket */ "./src/components/bracket_builder/Bracket.tsx");
-/* harmony import */ var _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/bracketApi */ "./src/api/bracketApi.ts");
+/* harmony import */ var _babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/extends */ "./node_modules/@babel/runtime/helpers/esm/extends.js");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Table.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Container.js");
+/* harmony import */ var _bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../bracket_builder/Bracket */ "./src/components/bracket_builder/Bracket.tsx");
+/* harmony import */ var _api_bracketApi__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../api/bracketApi */ "./src/api/bracketApi.ts");
+
 
 
 
@@ -848,25 +858,31 @@ const DeleteModal = _ref => {
     onHide,
     onDelete
   } = _ref;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     show: show,
     onHide: onHide,
     centered: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Header, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Header, {
     closeButton: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Title, null, "Delete Bracket")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Body, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "Are you sure you want to delete this bracket? This will delete all associated user brackets and cannot be undone.")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Title, null, "Delete Bracket")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("p", null, "Are you sure you want to delete this bracket? This will delete all associated user brackets and cannot be undone.")), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Footer, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "secondary",
     onClick: onHide
-  }, "Cancel"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, "Cancel"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "danger",
     onClick: onDelete
   }, "Delete")));
 };
 const BracketRow = props => {
-  const [showDeleteModal, setShowDeleteModal] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const [active, setActive] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(props.bracket.active);
+  const [showDeleteModal, setShowDeleteModal] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const [active, setActive] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(props.bracket.active);
   const bracket = props.bracket;
-  const handleViewBracket = props.handleViewBracket;
+  const handleViewBracket = () => {
+    props.handleShowBracketModal(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_3__.BracketModalMode.View, bracket.id);
+  };
+  const handleCopyBracket = e => {
+    e.stopPropagation();
+    props.handleShowBracketModal(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_3__.BracketModalMode.New, bracket.id);
+  };
   const handleShowDeleteDialog = e => {
     e.stopPropagation();
     setShowDeleteModal(true);
@@ -874,30 +890,31 @@ const BracketRow = props => {
   const handleActiveToggle = e => {
     e.stopPropagation();
     console.log('toggle');
-    _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__.bracketApi.setActive(bracket.id, e.target.checked).then(isActive => {
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_4__.bracketApi.setActive(bracket.id, e.target.checked).then(isActive => {
       setActive(isActive);
     });
     console.log(e.target.checked);
   };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", {
-    onClick: () => handleViewBracket(bracket.id)
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, bracket.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.Fragment, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("tr", {
+    onClick: handleViewBracket
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", null, bracket.name), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
     className: "text-center"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("input", {
     type: "checkbox",
     checked: active,
     onClick: handleActiveToggle
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", {
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
     className: "wpbb-bracket-table-action-col"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "primary"
-  }, "Score"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, "Score"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "success",
-    className: "mx-2"
-  }, "Copy"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    className: "mx-2",
+    onClick: handleCopyBracket
+  }, "Copy"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "danger",
     onClick: handleShowDeleteDialog
-  }, "Delete"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(DeleteModal, {
+  }, "Delete"))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(DeleteModal, {
     show: showDeleteModal,
     onHide: () => setShowDeleteModal(false),
     onDelete: () => props.handleDeleteBracket(bracket.id)
@@ -905,68 +922,69 @@ const BracketRow = props => {
 };
 const BracketTable = props => {
   const brackets = props.brackets;
-  const handleShowBracketModal = props.handleShowBracketModal;
-  const handleViewBracket = bracketId => {
-    handleShowBracketModal(bracketId);
-  };
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"], {
     hover: true,
     className: "table-dark wpbb-bracket-table"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("thead", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("tr", null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("th", {
     scope: "col"
-  }, "Name"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+  }, "Name"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("th", {
     scope: "col",
     className: "text-center"
-  }, "Published"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+  }, "Published"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("th", {
     scope: "col"
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketRow, {
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(BracketRow, (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
     key: bracket.id,
-    bracket: bracket,
-    handleViewBracket: handleViewBracket,
-    handleDeleteBracket: props.handleDeleteBracket
-  }))));
+    bracket: bracket
+    // handleViewBracket={handleViewBracket}
+    // handleDeleteBracket={props.handleDeleteBracket}
+  }, props)))));
 };
 const Settings = () => {
-  const [showBracketModal, setShowBracketModal] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
-  const [brackets, setBrackets] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)([]);
-  const [activeBracketId, setActiveBracketId] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const [showBracketModal, setShowBracketModal] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const [brackets, setBrackets] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
+  const [bracketModalMode, setBracketModalMode] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_3__.BracketModalMode.View);
+  const [activeBracketId, setActiveBracketId] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null);
+  console.log('settings');
   const handleCloseBracketModal = () => {
     console.log('close');
     setActiveBracketId(null);
     setShowBracketModal(false);
   };
   const handleSaveBracketModal = () => setShowBracketModal(false);
-  const handleShowBracketModal = function () {
-    let bracketId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+  const handleShowBracketModal = function (mode) {
+    let bracketId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     setActiveBracketId(bracketId);
+    setBracketModalMode(mode);
+    console.log('mode', mode);
     setShowBracketModal(true);
   };
   const handleDeleteBracket = bracketId => {
-    _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__.bracketApi.deleteBracket(bracketId).then(() => {
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_4__.bracketApi.deleteBracket(bracketId).then(() => {
       setBrackets(brackets.filter(bracket => bracket.id !== bracketId));
     });
   };
   // const handleCopyBracket = (bracketId: number) => {
   // 	bracketApi.(bracketId).then((bracket) => {
 
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    _api_bracketApi__WEBPACK_IMPORTED_MODULE_3__.bracketApi.getBrackets().then(brackets => {
+  (0,react__WEBPACK_IMPORTED_MODULE_2__.useEffect)(() => {
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_4__.bracketApi.getBrackets().then(brackets => {
       console.log(brackets);
       setBrackets(brackets);
     });
   }, []);
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_7__["default"], null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["default"], null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("h2", {
     className: "mt-4 mb-4"
-  }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTable, {
+  }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(BracketTable, {
     brackets: brackets,
     handleShowBracketModal: handleShowBracketModal,
     handleDeleteBracket: handleDeleteBracket
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "dark",
     className: "mt-6",
-    onClick: () => handleShowBracketModal()
-  }, "New Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.BracketModal, {
+    onClick: () => handleShowBracketModal(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_3__.BracketModalMode.New)
+  }, "New Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_3__.BracketModal, {
     show: showBracketModal,
+    mode: bracketModalMode,
     bracketId: activeBracketId,
     handleClose: handleCloseBracketModal,
     handleSave: handleSaveBracketModal
