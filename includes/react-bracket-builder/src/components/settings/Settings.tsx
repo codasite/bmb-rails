@@ -116,7 +116,7 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 			<thead>
 				<tr>
 					<th scope="col">Name</th>
-					<th scope="col" className='text-center'>Active</th>
+					<th scope="col" className='text-center'>Published</th>
 					<th scope="col"></th>
 				</tr>
 			</thead>
@@ -175,7 +175,7 @@ const Settings = () => {
 				handleShowBracketModal={handleShowBracketModal}
 				handleDeleteBracket={handleDeleteBracket}
 			/>
-			<Button variant='dark' className='mt-6' onClick={() => handleShowBracketModal()}>Add Bracket</Button>
+			<Button variant='dark' className='mt-6' onClick={() => handleShowBracketModal()}>New Bracket</Button>
 			<BracketModal show={showBracketModal} bracketId={activeBracketId} handleClose={handleCloseBracketModal} handleSave={handleSaveBracketModal} />
 		</Container>
 	);

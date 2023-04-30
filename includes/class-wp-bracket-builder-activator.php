@@ -79,6 +79,9 @@ class Wp_Bracket_Builder_Activator {
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
 			active tinyint(1) NOT NULL DEFAULT 0,
+			num_rounds tinyint(4) NOT NULL,
+			num_wildcards tinyint(4) NOT NULL,
+			wildcard_placement tinyint(2),
 			PRIMARY KEY (id)
 		) $charset_collate;";
 

@@ -24,6 +24,9 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			[
 				'name' => $bracket->name,
 				'active' => $bracket->active ? 1 : 0,
+				'num_rounds' => $bracket->num_rounds,
+				'num_wildcards' => $bracket->num_wildcards,
+				'wildcard_placement' => $bracket->wildcard_placement,
 			]
 		);
 		$bracket->id = $this->wpdb->insert_id;

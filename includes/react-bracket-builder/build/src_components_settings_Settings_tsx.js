@@ -40,11 +40,9 @@ class BracketApi {
   async setActive(id, active) {
     const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
     const res = await this.performRequest(path, 'POST');
-    console.log(res);
     if (res.status !== 200) {
       throw new Error('Failed to set active');
     }
-    // return res.json();
     const activated = await res.json();
     return activated;
   }
@@ -919,7 +917,7 @@ const BracketTable = props => {
   }, "Name"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
     scope: "col",
     className: "text-center"
-  }, "Active"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
+  }, "Published"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", {
     scope: "col"
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketRow, {
     key: bracket.id,
@@ -967,7 +965,7 @@ const Settings = () => {
     variant: "dark",
     className: "mt-6",
     onClick: () => handleShowBracketModal()
-  }, "Add Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.BracketModal, {
+  }, "New Bracket"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_2__.BracketModal, {
     show: showBracketModal,
     bracketId: activeBracketId,
     handleClose: handleCloseBracketModal,

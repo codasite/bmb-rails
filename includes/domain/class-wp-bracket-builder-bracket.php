@@ -41,18 +41,52 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 	 */
 	public $active;
 
-	public function __construct(string $name, bool $active = false, int $id = null, array $rounds = []) {
+	/**
+	 * @var int
+	 */
+	public $num_rounds;
+
+	/**
+	 * @var int
+	 */
+	public $num_wildcards;
+
+	/**
+	 * @var int
+	 */
+	public $wildcard_placement;
+
+	// public function __construct(string $name, bool $active = false, int $id = null, array $rounds = []) {
+	// 	// call parent constructor
+	// 	parent::__construct($name, $id, $rounds);
+	// 	$this->active = $active;
+	// }
+	public function __construct(string $name, int $num_rounds, int $num_wildcards, int $wildcard_placement = null, bool $active = false, int $id = null, array $rounds = []) {
 		// call parent constructor
 		parent::__construct($name, $id, $rounds);
 		$this->active = $active;
+		$this->num_rounds = $num_rounds;
+		$this->num_wildcards = $num_wildcards;
+		$this->wildcard_placement = $wildcard_placement;
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket {
-		$bracket = new Wp_Bracket_Builder_Bracket($data['name'], $data['active']);
+		// $bracket = new Wp_Bracket_Builder_Bracket($data['name'], $data['active']);
+		$bracket = new Wp_Bracket_Builder_Bracket(
+			$data['name'],
+			$data['num_rounds'],
+			$data['num_wildcards'],
+			$data['wildcard_placement'],
+			$data['active'],
+		);
 
 		if (isset($data['id'])) {
 			$bracket->id = (int) $data['id'];
 		}
+
+		// if (isset($data['wildcard_placement'])) {
+		// 	$bracket->wildcard_placement = (int) $data['wildcard_placement'];
+		// }
 
 		if (isset($data['rounds'])) {
 			// $bracket->rounds = array_map(function ($round) {

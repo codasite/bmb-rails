@@ -63,11 +63,9 @@ class BracketApi {
 	async setActive(id: number, active: boolean): Promise<boolean> {
 		const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`
 		const res = await this.performRequest(path, 'POST');
-		console.log(res)
 		if (res.status !== 200) {
 			throw new Error('Failed to set active');
 		}
-		// return res.json();
 		const activated = await res.json();
 		return activated;
 	}

@@ -141,7 +141,6 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 */
 	public function create_item($request) {
 		$bracket = Wp_Bracket_Builder_Bracket::from_array($request->get_params());
-		// print type of bracket
 
 		$saved = $this->bracket_repo->add($bracket);
 		return new WP_REST_Response($saved, 200);
@@ -198,7 +197,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 		$id = $request->get_param('id');
 		$activated = $this->bracket_repo->set_active($id, true);
 		if ($activated) {
-			return new WP_REST_Response(true, 200200);
+			return new WP_REST_Response(true, 200);
 		}
 		return new WP_Error('cant-activate', __('message', 'text-domain'), array('status' => 500));
 	}
