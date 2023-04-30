@@ -85,10 +85,10 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 		if (minutes > 0) {
 			return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
 		}
-		const seconds = Math.floor(diff / (1000));
-		if (seconds > 0) {
-			return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
-		}
+		// const seconds = Math.floor(diff / (1000));
+		// if (seconds > 0) {
+		// 	return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+		// }
 		return 'just now';
 	};
 
@@ -107,6 +107,7 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 				</td>
 				{/* <td className='text-center'>{bracket.userBracketCount}</td> */}
 				<td className='text-center'>{creationTime}</td>
+				<td className='text-center'>{bracket.numSubmissions}</td>
 				<td className='wpbb-bracket-table-action-col'>
 					<Button variant="primary" >Score</Button>
 					<Button variant="success" className='mx-2' onClick={handleCopyBracket}>Copy</Button>
@@ -139,6 +140,7 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 					<th scope="col">Name</th>
 					<th scope="col" className='text-center'>Published</th>
 					<th scope="col" className='text-center'>Created</th>
+					<th scope="col" className='text-center'>Submissions</th>
 					<th scope="col"></th>
 				</tr>
 			</thead>
@@ -195,7 +197,7 @@ const Settings = () => {
 
 	return (
 		<Container >
-			<h2 className='mt-4 mb-4'>Bracket Builder Settings</h2>
+			<h2 className='mt-4 mb-4'>Bracket Builder</h2>
 			{/* <BracketList brackets={brackets} /> */}
 			<BracketTable
 				brackets={brackets}

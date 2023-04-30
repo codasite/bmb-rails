@@ -60,6 +60,11 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 	 */
 	public $created_at;
 
+	/**
+	 * @var int
+	 */
+	public $num_submissions;
+
 	public function __construct(
 		string $name,
 		int $num_rounds,
@@ -93,6 +98,10 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 
 		if (isset($data['created_at'])) {
 			$bracket->created_at = new DateTime($data['created_at']);
+		}
+
+		if (isset($data['num_submissions'])) {
+			$bracket->num_submissions = (int) $data['num_submissions'];
 		}
 
 

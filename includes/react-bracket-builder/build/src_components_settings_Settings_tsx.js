@@ -1064,10 +1064,10 @@ const BracketRow = props => {
     if (minutes > 0) {
       return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
     }
-    const seconds = Math.floor(diff / 1000);
-    if (seconds > 0) {
-      return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
-    }
+    // const seconds = Math.floor(diff / (1000));
+    // if (seconds > 0) {
+    // 	return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+    // }
     return 'just now';
   };
   const creationTime = timeAgo(created);
@@ -1082,6 +1082,8 @@ const BracketRow = props => {
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
     className: "text-center"
   }, creationTime), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
+    className: "text-center"
+  }, bracket.numSubmissions), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("td", {
     className: "wpbb-bracket-table-action-col"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "primary"
@@ -1112,6 +1114,9 @@ const BracketTable = props => {
     scope: "col",
     className: "text-center"
   }, "Created"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("th", {
+    scope: "col",
+    className: "text-center"
+  }, "Submissions"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("th", {
     scope: "col"
   }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("tbody", null, brackets.map(bracket => (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(BracketRow, (0,_babel_runtime_helpers_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({
     key: bracket.id,
@@ -1155,7 +1160,7 @@ const Settings = () => {
   }, []);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_8__["default"], null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)("h2", {
     className: "mt-4 mb-4"
-  }, "Bracket Builder Settings"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(BracketTable, {
+  }, "Bracket Builder"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.createElement)(BracketTable, {
     brackets: brackets,
     handleShowBracketModal: handleShowBracketModal,
     handleDeleteBracket: handleDeleteBracket

@@ -60,6 +60,7 @@ interface phpDate {
 export interface BracketRes extends Bracket {
 	id: number;
 	createdAt: phpDate;
+	numSubmissions: number;
 	rounds: RoundRes[];
 }
 

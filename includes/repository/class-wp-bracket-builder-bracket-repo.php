@@ -201,7 +201,10 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	public function get_all(): array {
 		$table_name = $this->bracket_table();
 		$brackets = $this->wpdb->get_results(
-			"SELECT * FROM {$table_name}",
+			"SELECT id, name, active, num_rounds, num_wildcards, wildcard_placement, created_at,
+				(SELECT COUNT(*) FROM {$this->user_bracket_table()} WHERE bracket_id = {$table_name}.id) as num_submissions
+			 FROM {$table_name}
+			 ORDER BY created_at DESC",
 			ARRAY_A
 		);
 
@@ -242,6 +245,9 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 
 	private function bracket_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_brackets';
+	}
+	private function user_bracket_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_user_brackets';
 	}
 	private function round_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_rounds';
