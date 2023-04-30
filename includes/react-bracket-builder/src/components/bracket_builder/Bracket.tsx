@@ -268,6 +268,27 @@ class MatchTree {
 		}
 	}
 
+	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
+		const match = this.rounds[depth].matches[matchIndex]
+		if (!match) {
+			return
+		}
+		const team = left ? match.team1 : match.team2
+		if (!team) {
+			return
+		}
+		match.result = team
+		const parent = match.parent
+		if (!parent) {
+			return
+		}
+		if (match === parent.left) {
+			parent.team1 = team
+		} else if (match === parent.right) {
+			parent.team2 = team
+		}
+	}
+
 	// 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
 	// 		const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
 	// 		console.log('i', i)
@@ -313,6 +334,7 @@ interface TeamSlotProps {
 	className: string;
 	team?: Team | null;
 	updateTeam?: (name: string) => void;
+	pickTeam?: () => void;
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
@@ -322,12 +344,12 @@ const TeamSlot = (props: TeamSlotProps) => {
 	const {
 		team,
 		updateTeam,
+		pickTeam
 	} = props
 
-	const canEdit = updateTeam !== undefined
 
 	const startEditing = () => {
-		if (!canEdit) {
+		if (!updateTeam) {
 			return
 		}
 		setEditing(true)
@@ -335,7 +357,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 	}
 
 	const doneEditing = (e) => {
-		if (!canEdit) {
+		if (!updateTeam) {
 			return
 		}
 		if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
@@ -344,8 +366,16 @@ const TeamSlot = (props: TeamSlotProps) => {
 		setEditing(false)
 	}
 
+	const handleClick = (e) => {
+		if (updateTeam) {
+			startEditing()
+		} else if (pickTeam) {
+			pickTeam()
+		}
+	}
+
 	return (
-		<div className={props.className} onClick={startEditing}>
+		<div className={props.className} onClick={handleClick}>
 			{editing ?
 				<input
 					className='wpbb-team-name-input'
@@ -374,16 +404,24 @@ interface MatchBoxProps {
 	height: number;
 	spacing: number;
 	updateTeam?: (left: boolean, name: string) => void;
+	pickTeam?: (left: boolean) => void;
 }
 
 const MatchBox = (props: MatchBoxProps) => {
-	const match: MatchNode | null = props.match
-	const direction: Direction = props.direction
-	const height: number = props.height
-	const spacing: number = props.spacing
-	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
-	const updateTeam = props.updateTeam
-	const canEdit = updateTeam !== undefined
+	// const match: MatchNode | null = props.match
+	// const direction: Direction = props.direction
+	// const height: number = props.height
+	// const spacing: number = props.spacing
+	// // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+	// const updateTeam = props.updateTeam
+	const {
+		match,
+		direction,
+		height,
+		spacing,
+		updateTeam,
+		pickTeam,
+	} = props
 
 	// const updateTeam = (name: string, left: boolean) => {
 	// 	console.log('updateTeam', name)
@@ -425,8 +463,18 @@ const MatchBox = (props: MatchBoxProps) => {
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
-			<TeamSlot className='wpbb-team1' team={match.team1} updateTeam={canEdit ? (name: string) => updateTeam(true, name) : undefined} />
-			<TeamSlot className='wpbb-team2' team={match.team2} updateTeam={canEdit ? (name: string) => updateTeam(false, name) : undefined} />
+			<TeamSlot
+				className='wpbb-team1'
+				team={match.team1}
+				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
+				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
+			/>
+			<TeamSlot
+				className='wpbb-team2'
+				team={match.team2}
+				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
+				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
+			/>
 		</div>
 	)
 }
@@ -519,6 +567,7 @@ interface MatchColumnProps {
 	matchHeight: number;
 	updateRoundName?: (roundId: number, name: string) => void;
 	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
+	pickTeam?: (matchIndes: number, left: boolean) => void;
 }
 
 const MatchColumn = (props: MatchColumnProps) => {
@@ -530,11 +579,10 @@ const MatchColumn = (props: MatchColumnProps) => {
 		matchHeight,
 		updateRoundName,
 		updateTeam,
+		pickTeam,
 	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
-
-
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
@@ -546,6 +594,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 					height={matchHeight}
 					spacing={i + 1 < matches.length ? matchHeight : 0} // Do not add spacing to the last match in the round column
 					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
+					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
 				/>
 			)
 		})
@@ -712,7 +761,9 @@ const BracketTitle = (props) => {
 
 interface BracketProps {
 	matchTree: MatchTree;
-	setMatchTree?: (matchTree: MatchTree) => void;
+	canEdit?: boolean;
+	canPick?: boolean;
+	setMatchTree: (matchTree: MatchTree) => void;
 }
 
 const Bracket = (props: BracketProps) => {
@@ -721,10 +772,12 @@ const Bracket = (props: BracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
+		canEdit,
+		canPick,
 	} = props
 
 	const rounds = matchTree.rounds
-	const canEdit = setMatchTree !== undefined
+	// const canEdit = setMatchTree !== undefined
 
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -768,6 +821,13 @@ const Bracket = (props: BracketProps) => {
 		}
 	}
 
+	const pickTeam = (depth: number, matchIndex: number, left: boolean) => {
+		console.log('pickTeam', depth, matchIndex, left)
+		const newMatchTree = matchTree.clone()
+		newMatchTree.advanceTeam(depth, matchIndex, left)
+		setMatchTree(newMatchTree)
+	}
+
 	const targetHeight = 800;
 
 	// The number of rounds sets the initial height of each match
@@ -794,6 +854,9 @@ const Bracket = (props: BracketProps) => {
 					matchHeight={2 ** idx * firstRoundMatchHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
+					pickTeam={canPick ?
+						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
+						: undefined}
 				/>
 			}),
 			// handle final round differently
@@ -809,6 +872,9 @@ const Bracket = (props: BracketProps) => {
 					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
+					pickTeam={canPick ?
+						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
+						: undefined}
 				/>
 			})
 		]
@@ -850,7 +916,7 @@ const ViewBracketModal = (props) => {
 				<Modal.Title>{bracket?.name}</Modal.Title>
 			</Modal.Header >
 			<Modal.Body className='pt-0'>
-				{matchTree ? <Bracket matchTree={matchTree} /> : 'Loading...'}
+				{matchTree ? <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
 			</Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleClose}>
@@ -958,7 +1024,7 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 					/>
 				</form>
 			</Modal.Header >
-			<Modal.Body className='pt-0'><Bracket matchTree={matchTree} setMatchTree={setMatchTree} /></Modal.Body>
+			<Modal.Body className='pt-0'><Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit /></Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleClose}>
 					Close

@@ -365,6 +365,26 @@ class MatchTree {
       wildcardPlacement: wildcardPlacement
     };
   }
+  advanceTeam = (depth, matchIndex, left) => {
+    const match = this.rounds[depth].matches[matchIndex];
+    if (!match) {
+      return;
+    }
+    const team = left ? match.team1 : match.team2;
+    if (!team) {
+      return;
+    }
+    match.result = team;
+    const parent = match.parent;
+    if (!parent) {
+      return;
+    }
+    if (match === parent.left) {
+      parent.team1 = team;
+    } else if (match === parent.right) {
+      parent.team2 = team;
+    }
+  };
 
   // 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
   // 		const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
@@ -410,18 +430,18 @@ const TeamSlot = props => {
   const [textBuffer, setTextBuffer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('');
   const {
     team,
-    updateTeam
+    updateTeam,
+    pickTeam
   } = props;
-  const canEdit = updateTeam !== undefined;
   const startEditing = () => {
-    if (!canEdit) {
+    if (!updateTeam) {
       return;
     }
     setEditing(true);
     setTextBuffer(team ? team.name : '');
   };
   const doneEditing = e => {
-    if (!canEdit) {
+    if (!updateTeam) {
       return;
     }
     if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
@@ -429,9 +449,16 @@ const TeamSlot = props => {
     }
     setEditing(false);
   };
+  const handleClick = e => {
+    if (updateTeam) {
+      startEditing();
+    } else if (pickTeam) {
+      pickTeam();
+    }
+  };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: props.className,
-    onClick: startEditing
+    onClick: handleClick
   }, editing ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     className: "wpbb-team-name-input",
     autoFocus: true,
@@ -450,13 +477,20 @@ const TeamSlot = props => {
   }, team ? team.name : ''));
 };
 const MatchBox = props => {
-  const match = props.match;
-  const direction = props.direction;
-  const height = props.height;
-  const spacing = props.spacing;
-  // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
-  const updateTeam = props.updateTeam;
-  const canEdit = updateTeam !== undefined;
+  // const match: MatchNode | null = props.match
+  // const direction: Direction = props.direction
+  // const height: number = props.height
+  // const spacing: number = props.spacing
+  // // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+  // const updateTeam = props.updateTeam
+  const {
+    match,
+    direction,
+    height,
+    spacing,
+    updateTeam,
+    pickTeam
+  } = props;
 
   // const updateTeam = (name: string, left: boolean) => {
   // 	console.log('updateTeam', name)
@@ -503,11 +537,13 @@ const MatchBox = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team1",
     team: match.team1,
-    updateTeam: canEdit ? name => updateTeam(true, name) : undefined
+    updateTeam: updateTeam ? name => updateTeam(true, name) : undefined,
+    pickTeam: pickTeam ? () => pickTeam(true) : undefined
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team2",
     team: match.team2,
-    updateTeam: canEdit ? name => updateTeam(false, name) : undefined
+    updateTeam: updateTeam ? name => updateTeam(false, name) : undefined,
+    pickTeam: pickTeam ? () => pickTeam(false) : undefined
   }));
 };
 const Spacer = _ref => {
@@ -593,7 +629,8 @@ const MatchColumn = props => {
     numDirections,
     matchHeight,
     updateRoundName,
-    updateTeam
+    updateTeam,
+    pickTeam
   } = props;
   // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
   const canEdit = updateTeam !== undefined && updateRoundName !== undefined;
@@ -606,7 +643,8 @@ const MatchColumn = props => {
         height: matchHeight,
         spacing: i + 1 < matches.length ? matchHeight : 0 // Do not add spacing to the last match in the round column
         ,
-        updateTeam: canEdit ? (left, name) => updateTeam(round.id, matchIndex, left, name) : undefined
+        updateTeam: canEdit ? (left, name) => updateTeam(round.id, matchIndex, left, name) : undefined,
+        pickTeam: pickTeam ? left => pickTeam(matchIndex, left) : undefined
       });
     });
     return matchBoxes;
@@ -738,10 +776,13 @@ const Bracket = props => {
   // const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
   const {
     matchTree,
-    setMatchTree
+    setMatchTree,
+    canEdit,
+    canPick
   } = props;
   const rounds = matchTree.rounds;
-  const canEdit = setMatchTree !== undefined;
+  // const canEdit = setMatchTree !== undefined
+
   const updateRoundName = (roundId, name) => {
     if (!canEdit) {
       return;
@@ -781,6 +822,12 @@ const Bracket = props => {
       setMatchTree(newMatchTree);
     }
   };
+  const pickTeam = (depth, matchIndex, left) => {
+    console.log('pickTeam', depth, matchIndex, left);
+    const newMatchTree = matchTree.clone();
+    newMatchTree.advanceTeam(depth, matchIndex, left);
+    setMatchTree(newMatchTree);
+  };
   const targetHeight = 800;
 
   // The number of rounds sets the initial height of each match
@@ -804,7 +851,8 @@ const Bracket = props => {
         numDirections: numDirections,
         matchHeight: 2 ** idx * firstRoundMatchHeight,
         updateRoundName: canEdit ? updateRoundName : undefined,
-        updateTeam: canEdit ? updateTeam : undefined
+        updateTeam: canEdit ? updateTeam : undefined,
+        pickTeam: canPick ? (matchIndex, left) => pickTeam(round.depth, matchIndex, left) : undefined
       });
     }),
     // handle final round differently
@@ -821,7 +869,8 @@ const Bracket = props => {
         numDirections: numDirections,
         matchHeight: 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight,
         updateRoundName: canEdit ? updateRoundName : undefined,
-        updateTeam: canEdit ? updateTeam : undefined
+        updateTeam: canEdit ? updateTeam : undefined,
+        pickTeam: canPick ? (matchIndex, left) => pickTeam(round.depth, matchIndex, left) : undefined
       });
     })];
   };
@@ -861,7 +910,9 @@ const ViewBracketModal = props => {
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Title, null, bracket?.name)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, {
     className: "pt-0"
   }, matchTree ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
-    matchTree: matchTree
+    matchTree: matchTree,
+    setMatchTree: setMatchTree,
+    canPick: true
   }) : 'Loading...'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
@@ -953,7 +1004,8 @@ const NewBracketModal = props => {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
     matchTree: matchTree,
-    setMatchTree: setMatchTree
+    setMatchTree: setMatchTree,
+    canEdit: true
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
