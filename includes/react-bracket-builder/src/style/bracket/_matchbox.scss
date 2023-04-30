@@ -1,4 +1,4 @@
-$match-box-border: 1px solid black;
+$match-box-border: 2px solid #3c434a;
 
 @mixin match-box() {
 	border-top: $match-box-border;

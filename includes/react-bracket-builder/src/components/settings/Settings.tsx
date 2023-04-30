@@ -85,10 +85,10 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 		if (minutes > 0) {
 			return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
 		}
-		// const seconds = Math.floor(diff / (1000));
-		// if (seconds > 0) {
-		// 	return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
-		// }
+		const seconds = Math.floor(diff / (1000));
+		if (seconds > 0) {
+			return `${seconds} second${seconds > 1 ? 's' : ''} ago`;
+		}
 		return 'just now';
 	};
 
