@@ -1,5 +1,6 @@
 <?php
 
+use function PHPUnit\Framework\isEmpty;
 
 class Wp_Bracket_Builder_Bracket_Base {
 	/**
@@ -192,11 +193,10 @@ class Wp_Bracket_Builder_Round {
 		}
 
 		if (isset($data['matches'])) {
-			// $round->matches = array_map(function ($match) {
-			// 	return Wp_Bracket_Builder_Match::from_array($match);
-			// }, $data['matches']);
-			// The above, but with the index preserved
 			$round->matches = array_map(function ($index, $match) {
+				if (empty($match)) {
+					return null;
+				}
 				$match['index'] = $index;
 				return Wp_Bracket_Builder_Match::from_array($match);
 			}, array_keys($data['matches']), $data['matches']);

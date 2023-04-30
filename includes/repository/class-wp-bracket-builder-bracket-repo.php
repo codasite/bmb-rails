@@ -57,20 +57,35 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	private function insert_matches_for_round(int $bracket_id, Wp_Bracket_Builder_Round $round): void {
 		$table_name = $this->match_table();
 		foreach ($round->matches as $match) {
+			// Skip if match is null
+			if ($match === null) {
+				continue;
+			}
 			// First, insert teams
-			if ($match->team1->id === null) {
-				$match->team1 = $this->insert_team_for_bracket($bracket_id, $match->team1);
+			$team1_id = null;
+			$team2_id = null;
+
+			if ($match->team1 !== null) {
+				if ($match->team1->id === null) {
+					$match->team1 = $this->insert_team_for_bracket($bracket_id, $match->team1);
+				}
+				$team1_id = $match->team1->id;
 			}
-			if ($match->team2->id === null) {
-				$match->team2 = $this->insert_team_for_bracket($bracket_id, $match->team2);
+
+			if ($match->team2 !== null) {
+				if ($match->team2->id === null) {
+					$match->team2 = $this->insert_team_for_bracket($bracket_id, $match->team2);
+				}
+				$team2_id = $match->team2->id;
 			}
+
 			$this->wpdb->insert(
 				$table_name,
 				[
 					'round_id' => $round->id,
 					'round_index' => $match->index,
-					'team1_id' => $match->team1->id,
-					'team2_id' => $match->team2->id,
+					'team1_id' => $team1_id,
+					'team2_id' => $team2_id,
 				]
 			);
 			$match->id = $this->wpdb->insert_id;
@@ -133,12 +148,14 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			ARRAY_A
 		);
 		foreach ($rounds as $index => $round) {
-			$rounds[$index]['matches'] = $this->get_matches_for_round($round['id']);
+			// Max matches is 2^(round_index)
+			$max_matches = pow(2, $round['depth']);
+			$rounds[$index]['matches'] = $this->get_matches_for_round($round['id'], $max_matches);
 		}
 		return $rounds;
 	}
 
-	private function get_matches_for_round(int $round_id): array {
+	private function get_matches_for_round(int $round_id, int $max_matches): array {
 		$table_name = $this->match_table();
 		$matches = $this->wpdb->get_results(
 			$this->wpdb->prepare(
@@ -148,11 +165,25 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			ARRAY_A
 		);
 		foreach ($matches as $index => $match) {
-			$matches[$index]['team1'] = $this->get_team_by_id($match['team1_id']);
-			$matches[$index]['team2'] = $this->get_team_by_id($match['team2_id']);
+			$matches[$index]['team1'] = $match['team1_id'] === null ? null : $this->get_team_by_id($match['team1_id']);
+			$matches[$index]['team2'] = $match['team2_id'] === null ? null : $this->get_team_by_id($match['team2_id']);
 		}
-		// print_r($matches);
+		// If the length of the matches array is less than the max matches, pad it with nulls
+		if (count($matches) < $max_matches) {
+			$matches = $this->pad_matches($matches, $max_matches, $round_id);
+		}
+
 		return $matches;
+	}
+
+	// Not all rounds will have the max number of matches, so we need to pad the array with nulls
+	// This is to account for brackets with wildcard rounds 
+	private function pad_matches(array $matches, int $max_matches, int $round_id): array {
+		$padded = array_pad([], $max_matches, null);
+		foreach ($matches as $match) {
+			$padded[$match['round_index']] = $match;
+		}
+		return $padded;
 	}
 
 	private function get_team_by_id(int $team_id): array {
