@@ -22,7 +22,6 @@ class BracketApi {
     if (res.status !== 200) {
       throw new Error('Failed to get brackets');
     }
-    // return await res.json();
     return camelCaseKeys(await res.json());
   }
   async getBracket(id) {
@@ -30,11 +29,18 @@ class BracketApi {
     if (res.status !== 200) {
       throw new Error('Failed to get bracket');
     }
-    // return await res.json();
+    return camelCaseKeys(await res.json());
+  }
+  async createBracket(bracket) {
+    const res = await this.performRequest(this.bracketPath, 'POST', bracket);
+    if (res.status !== 201) {
+      throw new Error('Failed to create bracket');
+    }
     return camelCaseKeys(await res.json());
   }
   async deleteBracket(id) {
     const res = await this.performRequest(`${this.bracketPath}/${id}`, 'DELETE');
+    console.log(res);
     if (res.status !== 204) {
       throw new Error('Failed to delete bracket');
     }
@@ -42,7 +48,7 @@ class BracketApi {
   async setActive(id, active) {
     const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
     const res = await this.performRequest(path, 'POST');
-    if (res.status !== 200) {
+    if (res.status !== 201) {
       throw new Error('Failed to set active');
     }
     const activated = await res.json();
@@ -139,6 +145,7 @@ var Direction = /*#__PURE__*/function (Direction) {
   return Direction;
 }(Direction || {});
 class Team {
+  seed = null;
   // constructor(id: number, name: string) {
   // 	this.id = id;
   // 	this.name = name;
@@ -148,6 +155,12 @@ class Team {
   }
   clone() {
     return new Team(this.name);
+  }
+  toRequest() {
+    return {
+      name: this.name,
+      seed: this.seed
+    };
   }
 }
 class MatchNode {
@@ -175,6 +188,15 @@ class MatchNode {
     }
     return clone;
   }
+  toRequest(index) {
+    const match = this;
+    return {
+      index: index,
+      team1: match.team1 ? match.team1.toRequest() : null,
+      team2: match.team2 ? match.team2.toRequest() : null,
+      result: match.result ? match.result.toRequest() : null
+    };
+  }
 }
 class Round {
   constructor(id, name, depth) {
@@ -183,8 +205,22 @@ class Round {
     this.depth = depth;
     // this.matches = [];
   }
-}
 
+  toRequest() {
+    const round = this;
+    const matches = round.matches.map((match, i) => {
+      if (match === null) {
+        return null;
+      }
+      return match.toRequest(i);
+    });
+    return {
+      name: round.name,
+      depth: round.depth,
+      matches: matches
+    };
+  }
+}
 class WildcardRange {
   constructor(min, max) {
     this.min = min;
@@ -314,6 +350,20 @@ class MatchTree {
       });
     });
     return tree;
+  }
+  toRequest(name, active, numRounds, numWildcards, wildcardPlacement) {
+    const tree = this;
+    const rounds = tree.rounds.map(round => {
+      return round.toRequest();
+    });
+    return {
+      rounds: rounds,
+      name: name,
+      active: active,
+      numRounds: numRounds,
+      numWildcards: numWildcards,
+      wildcardPlacement: wildcardPlacement
+    };
   }
 
   // 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
@@ -862,6 +912,15 @@ const NewBracketModal = props => {
   const rebuildMatchTree = (updatedNumRounds, updatedNumWildcards, updatedWildcardPlacement) => {
     setMatchTree(MatchTree.fromOptions(updatedNumRounds, updatedNumWildcards, updatedWildcardPlacement));
   };
+  const handleSaveBracket = () => {
+    const req = matchTree.toRequest(bracketName, true, numRounds, numWildcards, wildcardPlacement);
+    console.log('req: ', req);
+    _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__.bracketApi.createBracket(req).then(newBracket => {
+      console.log('new: ', newBracket);
+      // handleSave()
+    });
+  };
+
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
@@ -899,7 +958,7 @@ const NewBracketModal = props => {
     onClick: handleClose
   }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "primary",
-    onClick: handleSave
+    onClick: handleSaveBracket
   }, "Save Changes")));
 };
 const BracketModal = props => {

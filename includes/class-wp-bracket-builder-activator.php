@@ -175,7 +175,7 @@ class Wp_Bracket_Builder_Activator {
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
 			bracket_id mediumint(9) NOT NULL,
-			seed tinyint(4) NOT NULL,
+			seed tinyint(4),
 			PRIMARY KEY (id),
 			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE
 		) $charset_collate;";

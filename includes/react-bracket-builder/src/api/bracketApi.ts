@@ -1,36 +1,65 @@
 import { Nullable } from "../types";
 import { WildcardPlacement } from '../enum';
 
-export interface BracketResponse {
+interface Team {
+	name: string;
+	seed: Nullable<number>;
+}
+
+export interface TeamRes extends Team {
 	id: number;
+}
+
+export interface TeamReq extends Team { }
+
+interface Match {
+	index: number;
+}
+
+export interface MatchRes extends Match {
+	id: number;
+	team1: Nullable<TeamRes>;
+	team2: Nullable<TeamRes>;
+	result: Nullable<TeamRes>;
+}
+
+export interface MatchReq extends Match {
+	team1: Nullable<TeamReq>;
+	team2: Nullable<TeamReq>;
+	result: Nullable<TeamReq>;
+}
+
+interface Round {
+	name: string;
+	depth: number;
+}
+
+export interface RoundRes extends Round {
+	id: number;
+	matches: Nullable<MatchRes>[];
+}
+
+export interface RoundReq extends Round {
+	matches: Nullable<MatchReq>[];
+}
+
+interface Bracket {
 	name: string;
 	active: boolean;
 	numRounds: number;
 	numWildcards: number;
 	wildcardPlacement: WildcardPlacement;
-	rounds: RoundResponse[];
 }
 
-export interface RoundResponse {
+export interface BracketRes extends Bracket {
 	id: number;
-	name: string;
-	depth: number;
-	matches: MatchResponse[];
+	rounds: RoundRes[];
 }
 
-export interface MatchResponse {
-	id: number;
-	index: number;
-	team1: Nullable<TeamResponse>;
-	team2: Nullable<TeamResponse>;
-	result: Nullable<TeamResponse>;
+export interface BracketReq extends Bracket {
+	rounds: RoundReq[];
 }
 
-export interface TeamResponse {
-	id: number;
-	name: string;
-	seed: Nullable<number>;
-}
 
 class BracketApi {
 	private baseUrl: string;
@@ -41,26 +70,33 @@ class BracketApi {
 		this.baseUrl = wpbb_ajax_obj.rest_url;
 	}
 
-	async getBrackets(): Promise<BracketResponse[]> {
+	async getBrackets(): Promise<BracketRes[]> {
 		const res = await this.performRequest(this.bracketPath, 'GET');
 		if (res.status !== 200) {
 			throw new Error('Failed to get brackets');
 		}
-		// return await res.json();
 		return camelCaseKeys(await res.json());
 	}
 
-	async getBracket(id: number): Promise<BracketResponse> {
+	async getBracket(id: number): Promise<BracketRes> {
 		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
 		if (res.status !== 200) {
 			throw new Error('Failed to get bracket');
 		}
-		// return await res.json();
+		return camelCaseKeys(await res.json());
+	}
+
+	async createBracket(bracket: BracketReq): Promise<BracketRes> {
+		const res = await this.performRequest(this.bracketPath, 'POST', bracket);
+		if (res.status !== 201) {
+			throw new Error('Failed to create bracket');
+		}
 		return camelCaseKeys(await res.json());
 	}
 
 	async deleteBracket(id: number): Promise<void> {
 		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'DELETE');
+		console.log(res)
 		if (res.status !== 204) {
 			throw new Error('Failed to delete bracket');
 		}
@@ -69,7 +105,7 @@ class BracketApi {
 	async setActive(id: number, active: boolean): Promise<boolean> {
 		const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`
 		const res = await this.performRequest(path, 'POST');
-		if (res.status !== 200) {
+		if (res.status !== 201) {
 			throw new Error('Failed to set active');
 		}
 		const activated = await res.json();

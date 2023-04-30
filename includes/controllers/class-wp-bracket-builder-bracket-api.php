@@ -143,7 +143,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 		$bracket = Wp_Bracket_Builder_Bracket::from_array($request->get_params());
 
 		$saved = $this->bracket_repo->add($bracket);
-		return new WP_REST_Response($saved, 200);
+		return new WP_REST_Response($saved, 201);
 		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
 	}
 

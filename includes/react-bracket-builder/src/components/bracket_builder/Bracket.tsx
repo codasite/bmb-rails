@@ -4,7 +4,7 @@ import { Modal } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { bracketApi } from '../../api/bracketApi';
 import { Nullable } from '../../types';
-import { BracketResponse } from '../../api/bracketApi';
+import { BracketRes, BracketReq, RoundReq, MatchReq, TeamReq } from '../../api/bracketApi';
 import { WildcardPlacement } from '../../enum';
 
 
@@ -18,6 +18,7 @@ enum Direction {
 
 class Team {
 	name: string;
+	seed: Nullable<number> = null;
 	// constructor(id: number, name: string) {
 	// 	this.id = id;
 	// 	this.name = name;
@@ -28,6 +29,13 @@ class Team {
 
 	clone(): Team {
 		return new Team(this.name);
+	}
+
+	toRequest(): TeamReq {
+		return {
+			name: this.name,
+			seed: this.seed,
+		}
 	}
 }
 
@@ -64,6 +72,16 @@ class MatchNode {
 		return clone;
 	}
 
+	toRequest(index: number): MatchReq {
+		const match = this;
+		return {
+			index: index,
+			team1: match.team1 ? match.team1.toRequest() : null,
+			team2: match.team2 ? match.team2.toRequest() : null,
+			result: match.result ? match.result.toRequest() : null,
+		}
+	}
+
 }
 
 class Round {
@@ -77,6 +95,21 @@ class Round {
 		this.name = name;
 		this.depth = depth;
 		// this.matches = [];
+	}
+
+	toRequest(): RoundReq {
+		const round = this;
+		const matches = round.matches.map((match, i) => {
+			if (match === null) {
+				return null;
+			}
+			return match.toRequest(i);
+		});
+		return {
+			name: round.name,
+			depth: round.depth,
+			matches: matches,
+		}
 	}
 }
 
@@ -193,7 +226,7 @@ class MatchTree {
 		return newTree;
 	}
 
-	static fromBracketResponse(bracket: BracketResponse): MatchTree {
+	static fromBracketResponse(bracket: BracketRes): MatchTree {
 		const tree = new MatchTree()
 		tree.rounds = bracket.rounds.map((round) => {
 			const newRound = new Round(round.id, round.name, round.depth);
@@ -220,6 +253,20 @@ class MatchTree {
 		return tree;
 	}
 
+	toRequest(name: string, active: boolean, numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): BracketReq {
+		const tree = this;
+		const rounds = tree.rounds.map((round) => {
+			return round.toRequest();
+		});
+		return {
+			rounds: rounds,
+			name: name,
+			active: active,
+			numRounds: numRounds,
+			numWildcards: numWildcards,
+			wildcardPlacement: wildcardPlacement,
+		}
+	}
 
 	// 	newTree.rounds = tree.rounds.map((round, i, rounds) => {
 	// 		const newRound = new Round(round.id, round.name, round.depth, round.roundNum)
@@ -875,6 +922,15 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 		setMatchTree(MatchTree.fromOptions(updatedNumRounds, updatedNumWildcards, updatedWildcardPlacement));
 	};
 
+	const handleSaveBracket = () => {
+		const req = matchTree.toRequest(bracketName, true, numRounds, numWildcards, wildcardPlacement)
+		console.log('req: ', req)
+		bracketApi.createBracket(req)
+			.then((newBracket) => {
+				console.log('new: ', newBracket)
+				// handleSave()
+			})
+	}
 
 	return (
 		<Modal className='wpbb-bracket-modal' show={show} onHide={handleClose} size='xl' centered={true}>
@@ -902,7 +958,7 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 				<Button variant="secondary" onClick={handleClose}>
 					Close
 				</Button>
-				<Button variant="primary" onClick={handleSave}>
+				<Button variant="primary" onClick={handleSaveBracket}>
 					Save Changes
 				</Button>
 			</Modal.Footer>
