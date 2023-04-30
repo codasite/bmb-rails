@@ -147,10 +147,8 @@ const Settings = () => {
 	const [brackets, setBrackets] = useState<BracketResponse[]>([]);
 	const [bracketModalMode, setBracketModalMode] = useState<BracketModalMode>(BracketModalMode.View);
 	const [activeBracketId, setActiveBracketId] = useState<number | null>(null);
-	console.log('settings')
 
 	const handleCloseBracketModal = () => {
-		console.log('close')
 		setActiveBracketId(null);
 		setShowBracketModal(false);
 	}
@@ -158,7 +156,6 @@ const Settings = () => {
 	const handleShowBracketModal = (mode: BracketModalMode, bracketId: number | null = null) => {
 		setActiveBracketId(bracketId);
 		setBracketModalMode(mode);
-		console.log('mode', mode)
 		setShowBracketModal(true);
 	};
 	const handleDeleteBracket = (bracketId: number) => {

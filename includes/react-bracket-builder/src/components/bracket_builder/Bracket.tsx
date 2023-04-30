@@ -5,13 +5,8 @@ import { Form } from 'react-bootstrap';
 import { bracketApi } from '../../api/bracketApi';
 import { Nullable } from '../../types';
 import { BracketResponse } from '../../api/bracketApi';
+import { WildcardPlacement } from '../../enum';
 
-enum WildcardPlacement {
-	Top = 0,
-	Bottom = 1,
-	Center = 2,
-	Split = 3,
-}
 
 // Direction enum
 enum Direction {
@@ -522,10 +517,17 @@ const NumWildcardsSelector = (props) => {
 	)
 }
 
-const WildcardPlacementSelector = (props) => {
+interface WildcardPlacementSelectorProps {
+	wildcardPlacement: WildcardPlacement;
+	setWildcardPlacement: (wildcardPlacement: WildcardPlacement) => void;
+	disabled: boolean;
+}
+
+const WildcardPlacementSelector = (props: WildcardPlacementSelectorProps) => {
 	const {
 		wildcardPlacement,
 		setWildcardPlacement,
+		disabled,
 	} = props
 
 	const options = [
@@ -545,7 +547,7 @@ const WildcardPlacementSelector = (props) => {
 			<label>
 				Wildcard Placement:
 			</label>
-			<select value={wildcardPlacement} onChange={handleChange}>
+			<select value={wildcardPlacement} onChange={handleChange} disabled={disabled}>
 				{options}
 			</select>
 		</div>
@@ -735,25 +737,73 @@ const ViewBracketModal = (props) => {
 	)
 }
 
-const NewBracketModal = (props) => {
+interface NewBracketModalProps {
+	show: boolean;
+	handleClose: () => void;
+	handleSave: () => void;
+	bracketId: Nullable<number>;
+}
+
+const NewBracketModal = (props: NewBracketModalProps) => {
+	const defaultNumRounds = 4;
+	const defaultNumWildcards = 0;
+	const defaultWildcardPlacement = WildcardPlacement.Bottom;
+	const defaultBracketName = 'New Bracket';
 	const {
 		show,
 		handleClose,
 		handleSave,
 		bracketId
 	} = props;
-	const [numRounds, setNumRounds] = useState(4);
-	const [numWildcards, setNumWildcards] = useState(0);
-	const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Bottom);
-	const [bracketName, setBracketName] = useState('New Bracket');
-	const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
+	const [numRounds, setNumRounds] = useState(defaultNumRounds);
+	const [numWildcards, setNumWildcards] = useState(defaultNumWildcards);
+	const [wildcardPlacement, setWildcardPlacement] = useState(defaultWildcardPlacement);
+	const [bracketName, setBracketName] = useState(defaultBracketName);
+	const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(defaultNumRounds, defaultNumWildcards, defaultWildcardPlacement));
 	// The max number of wildcards is 2 less than the possible number of matches in the first round
-	// (2^numRounds - 2)
 	const maxWildcards = 2 ** (numRounds - 1) - 2;
 
 	useEffect(() => {
-		setMatchTree(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
-	}, [numRounds, numWildcards, wildcardPlacement])
+		console.log('bracketId', bracketId)
+		if (bracketId) {
+			bracketApi.getBracket(bracketId)
+				.then((bracket) => {
+					setNumRounds(bracket.numRounds)
+					setNumWildcards(bracket.numWildcards)
+					if (bracket.wildcardPlacement) {
+						setWildcardPlacement(bracket.wildcardPlacement)
+					}
+					setBracketName(`${bracket.name} (Copy)`)
+					setMatchTree(MatchTree.fromBracketResponse(bracket))
+				})
+		}
+		else {
+			rebuildMatchTree(defaultNumRounds, defaultNumWildcards, defaultWildcardPlacement);
+		}
+	}, [bracketId])
+
+	const updateNumRounds = (num: number) => {
+		setNumRounds(num);
+		rebuildMatchTree(num, numWildcards, wildcardPlacement);
+	};
+
+	const updateNumWildcards = (num: number) => {
+		setNumWildcards(num);
+		rebuildMatchTree(numRounds, num, wildcardPlacement);
+	};
+
+	const updateWildcardPlacement = (placement: WildcardPlacement) => {
+		setWildcardPlacement(placement);
+		rebuildMatchTree(numRounds, numWildcards, placement);
+	};
+
+	const rebuildMatchTree = (
+		updatedNumRounds: number,
+		updatedNumWildcards: number,
+		updatedWildcardPlacement: WildcardPlacement
+	) => {
+		setMatchTree(MatchTree.fromOptions(updatedNumRounds, updatedNumWildcards, updatedWildcardPlacement));
+	};
 
 
 	return (
@@ -761,9 +811,20 @@ const NewBracketModal = (props) => {
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
 				<Modal.Title><BracketTitle title={bracketName} setTitle={setBracketName} /></Modal.Title>
 				<form className='wpbb-options-form'>
-					<NumRoundsSelector numRounds={numRounds} setNumRounds={setNumRounds} />
-					<NumWildcardsSelector numWildcards={numWildcards} setNumWildcards={setNumWildcards} maxWildcards={maxWildcards} />
-					<WildcardPlacementSelector wildcardPlacement={wildcardPlacement} setWildcardPlacement={setWildcardPlacement} />
+					<NumRoundsSelector
+						numRounds={numRounds}
+						setNumRounds={updateNumRounds}
+					/>
+					<NumWildcardsSelector
+						numWildcards={numWildcards}
+						setNumWildcards={updateNumWildcards}
+						maxWildcards={maxWildcards}
+					/>
+					<WildcardPlacementSelector
+						wildcardPlacement={wildcardPlacement}
+						setWildcardPlacement={updateWildcardPlacement}
+						disabled={numWildcards > 0 ? false : true}
+					/>
 				</form>
 			</Modal.Header >
 			<Modal.Body className='pt-0'><Bracket matchTree={matchTree} /></Modal.Body>

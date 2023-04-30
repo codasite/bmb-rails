@@ -22,14 +22,16 @@ class BracketApi {
     if (res.status !== 200) {
       throw new Error('Failed to get brackets');
     }
-    return await res.json();
+    // return await res.json();
+    return camelCaseKeys(await res.json());
   }
   async getBracket(id) {
     const res = await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
     if (res.status !== 200) {
       throw new Error('Failed to get bracket');
     }
-    return await res.json();
+    // return await res.json();
+    return camelCaseKeys(await res.json());
   }
   async deleteBracket(id) {
     const res = await this.performRequest(`${this.bracketPath}/${id}`, 'DELETE');
@@ -55,10 +57,46 @@ class BracketApi {
       }
     };
     if (method !== 'GET') {
-      request['body'] = JSON.stringify(body);
+      request['body'] = JSON.stringify(snakeCaseKeys(body));
     }
     return await fetch(`${this.baseUrl}${path}`, request);
   }
+}
+
+// Utility function to convert snake_case to camelCase
+function toCamelCase(str) {
+  return str.replace(/([-_][a-z])/g, group => group.toUpperCase().replace('-', '').replace('_', ''));
+}
+
+// Recursive function to convert object keys to camelCase
+function camelCaseKeys(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(value => camelCaseKeys(value));
+  } else if (typeof obj === 'object' && obj !== null) {
+    return Object.entries(obj).reduce((accumulator, _ref) => {
+      let [key, value] = _ref;
+      accumulator[toCamelCase(key)] = camelCaseKeys(value);
+      return accumulator;
+    }, {});
+  }
+  return obj;
+}
+function camelCaseToSnakeCase(str) {
+  return str.replace(/[A-Z]/g, match => `_${match.toLowerCase()}`);
+}
+
+// Recursive function to convert object keys to snake_case
+function snakeCaseKeys(obj) {
+  if (Array.isArray(obj)) {
+    return obj.map(value => snakeCaseKeys(value));
+  } else if (typeof obj === 'object' && obj !== null) {
+    return Object.entries(obj).reduce((accumulator, _ref2) => {
+      let [key, value] = _ref2;
+      accumulator[camelCaseToSnakeCase(key)] = snakeCaseKeys(value);
+      return accumulator;
+    }, {});
+  }
+  return obj;
 }
 const bracketApi = new BracketApi();
 
@@ -79,23 +117,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
-/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Button.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Modal.js");
+/* harmony import */ var react_bootstrap__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-bootstrap */ "./node_modules/react-bootstrap/esm/Form.js");
 /* harmony import */ var _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/bracketApi */ "./src/api/bracketApi.ts");
+/* harmony import */ var _enum__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../enum */ "./src/enum.ts");
 
 
 
 
 
 
-var WildcardPlacement = /*#__PURE__*/function (WildcardPlacement) {
-  WildcardPlacement[WildcardPlacement["Top"] = 0] = "Top";
-  WildcardPlacement[WildcardPlacement["Bottom"] = 1] = "Bottom";
-  WildcardPlacement[WildcardPlacement["Center"] = 2] = "Center";
-  WildcardPlacement[WildcardPlacement["Split"] = 3] = "Split";
-  return WildcardPlacement;
-}(WildcardPlacement || {}); // Direction enum
+
+
+// Direction enum
 var Direction = /*#__PURE__*/function (Direction) {
   Direction[Direction["TopLeft"] = 0] = "TopLeft";
   Direction[Direction["TopRight"] = 1] = "TopRight";
@@ -220,14 +255,14 @@ class MatchTree {
   }
   static getWildcardRange(start, end, count, placement) {
     switch (placement) {
-      case WildcardPlacement.Top:
+      case _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Top:
         return [new WildcardRange(start, start + count)];
-      case WildcardPlacement.Bottom:
+      case _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Bottom:
         return [new WildcardRange(end - count, end)];
-      case WildcardPlacement.Center:
+      case _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Center:
         const offset = (end - start - count) / 2;
         return [new WildcardRange(start + offset, end - offset)];
-      case WildcardPlacement.Split:
+      case _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Split:
         return [new WildcardRange(start, start + count / 2), new WildcardRange(end - count / 2, end)];
     }
   }
@@ -435,7 +470,7 @@ const RoundHeader = props => {
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-round__header"
-  }, editRoundName ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_3__["default"].Control, {
+  }, editRoundName ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Control, {
     type: "text",
     value: nameBuffer,
     autoFocus: true,
@@ -559,16 +594,17 @@ const NumWildcardsSelector = props => {
 const WildcardPlacementSelector = props => {
   const {
     wildcardPlacement,
-    setWildcardPlacement
+    setWildcardPlacement,
+    disabled
   } = props;
   const options = [(0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    value: WildcardPlacement.Bottom
+    value: _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Bottom
   }, "Bottom"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    value: WildcardPlacement.Top
+    value: _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Top
   }, "Top"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    value: WildcardPlacement.Split
+    value: _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Split
   }, "Split"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("option", {
-    value: WildcardPlacement.Center
+    value: _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Center
   }, "Centered")];
   const handleChange = event => {
     const num = event.target.value;
@@ -578,7 +614,8 @@ const WildcardPlacementSelector = props => {
     className: "wpbb-option-group"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", null, "Wildcard Placement:"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("select", {
     value: wildcardPlacement,
-    onChange: handleChange
+    onChange: handleChange,
+    disabled: disabled
   }, options));
 };
 const BracketTitle = props => {
@@ -723,78 +760,110 @@ const ViewBracketModal = props => {
       setMatchTree(MatchTree.fromBracketResponse(bracket));
     });
   }, [bracketId]);
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
     onHide: handleClose,
     size: "xl",
     centered: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Header, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Header, {
     className: "wpbb-bracket-modal__header",
     closeButton: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Title, null, "View Bracket ", bracketId)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Body, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Title, null, "View Bracket ", bracketId)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, {
     className: "pt-0"
   }, matchTree ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
     matchTree: matchTree
-  }) : 'Loading...'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, {
+  }) : 'Loading...'), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "secondary",
     onClick: handleClose
   }, "Close")));
 };
 const NewBracketModal = props => {
+  const defaultNumRounds = 4;
+  const defaultNumWildcards = 0;
+  const defaultWildcardPlacement = _enum__WEBPACK_IMPORTED_MODULE_3__.WildcardPlacement.Bottom;
+  const defaultBracketName = 'New Bracket';
   const {
     show,
     handleClose,
     handleSave,
     bracketId
   } = props;
-  const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(4);
-  const [numWildcards, setNumWildcards] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(0);
-  const [wildcardPlacement, setWildcardPlacement] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(WildcardPlacement.Bottom);
-  const [bracketName, setBracketName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)('New Bracket');
-  const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement));
+  const [numRounds, setNumRounds] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(defaultNumRounds);
+  const [numWildcards, setNumWildcards] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(defaultNumWildcards);
+  const [wildcardPlacement, setWildcardPlacement] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(defaultWildcardPlacement);
+  const [bracketName, setBracketName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(defaultBracketName);
+  const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(MatchTree.fromOptions(defaultNumRounds, defaultNumWildcards, defaultWildcardPlacement));
   // The max number of wildcards is 2 less than the possible number of matches in the first round
-  // (2^numRounds - 2)
   const maxWildcards = 2 ** (numRounds - 1) - 2;
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
-    setMatchTree(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement));
-  }, [numRounds, numWildcards, wildcardPlacement]);
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    console.log('bracketId', bracketId);
+    if (bracketId) {
+      _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__.bracketApi.getBracket(bracketId).then(bracket => {
+        setNumRounds(bracket.numRounds);
+        setNumWildcards(bracket.numWildcards);
+        if (bracket.wildcardPlacement) {
+          setWildcardPlacement(bracket.wildcardPlacement);
+        }
+        setBracketName(`${bracket.name} (Copy)`);
+        setMatchTree(MatchTree.fromBracketResponse(bracket));
+      });
+    } else {
+      rebuildMatchTree(defaultNumRounds, defaultNumWildcards, defaultWildcardPlacement);
+    }
+  }, [bracketId]);
+  const updateNumRounds = num => {
+    setNumRounds(num);
+    rebuildMatchTree(num, numWildcards, wildcardPlacement);
+  };
+  const updateNumWildcards = num => {
+    setNumWildcards(num);
+    rebuildMatchTree(numRounds, num, wildcardPlacement);
+  };
+  const updateWildcardPlacement = placement => {
+    setWildcardPlacement(placement);
+    rebuildMatchTree(numRounds, numWildcards, placement);
+  };
+  const rebuildMatchTree = (updatedNumRounds, updatedNumWildcards, updatedWildcardPlacement) => {
+    setMatchTree(MatchTree.fromOptions(updatedNumRounds, updatedNumWildcards, updatedWildcardPlacement));
+  };
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
     onHide: handleClose,
     size: "xl",
     centered: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Header, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Header, {
     className: "wpbb-bracket-modal__header",
     closeButton: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Title, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTitle, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Title, null, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(BracketTitle, {
     title: bracketName,
     setTitle: setBracketName
   })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
     className: "wpbb-options-form"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumRoundsSelector, {
     numRounds: numRounds,
-    setNumRounds: setNumRounds
+    setNumRounds: updateNumRounds
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(NumWildcardsSelector, {
     numWildcards: numWildcards,
-    setNumWildcards: setNumWildcards,
+    setNumWildcards: updateNumWildcards,
     maxWildcards: maxWildcards
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(WildcardPlacementSelector, {
     wildcardPlacement: wildcardPlacement,
-    setWildcardPlacement: setWildcardPlacement
-  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Body, {
+    setWildcardPlacement: updateWildcardPlacement,
+    disabled: numWildcards > 0 ? false : true
+  }))), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, {
     className: "pt-0"
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
     matchTree: matchTree
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_4__["default"].Footer, {
+  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Footer, {
     className: "wpbb-bracket-modal__footer"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "secondary",
     onClick: handleClose
-  }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "primary",
     onClick: handleSave
   }, "Save Changes")));
@@ -944,9 +1013,7 @@ const Settings = () => {
   const [brackets, setBrackets] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)([]);
   const [bracketModalMode, setBracketModalMode] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(_bracket_builder_Bracket__WEBPACK_IMPORTED_MODULE_3__.BracketModalMode.View);
   const [activeBracketId, setActiveBracketId] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null);
-  console.log('settings');
   const handleCloseBracketModal = () => {
-    console.log('close');
     setActiveBracketId(null);
     setShowBracketModal(false);
   };
@@ -955,7 +1022,6 @@ const Settings = () => {
     let bracketId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     setActiveBracketId(bracketId);
     setBracketModalMode(mode);
-    console.log('mode', mode);
     setShowBracketModal(true);
   };
   const handleDeleteBracket = bracketId => {
@@ -991,6 +1057,26 @@ const Settings = () => {
   }));
 };
 /* harmony default export */ __webpack_exports__["default"] = (Settings);
+
+/***/ }),
+
+/***/ "./src/enum.ts":
+/*!*********************!*\
+  !*** ./src/enum.ts ***!
+  \*********************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "WildcardPlacement": function() { return /* binding */ WildcardPlacement; }
+/* harmony export */ });
+let WildcardPlacement = /*#__PURE__*/function (WildcardPlacement) {
+  WildcardPlacement[WildcardPlacement["Top"] = 0] = "Top";
+  WildcardPlacement[WildcardPlacement["Bottom"] = 1] = "Bottom";
+  WildcardPlacement[WildcardPlacement["Center"] = 2] = "Center";
+  WildcardPlacement[WildcardPlacement["Split"] = 3] = "Split";
+  return WildcardPlacement;
+}({});
 
 /***/ })
 

@@ -1,9 +1,13 @@
 import { Nullable } from "../types";
+import { WildcardPlacement } from '../enum';
 
 export interface BracketResponse {
 	id: number;
 	name: string;
 	active: boolean;
+	numRounds: number;
+	numWildcards: number;
+	wildcardPlacement: WildcardPlacement;
 	rounds: RoundResponse[];
 }
 
@@ -42,7 +46,8 @@ class BracketApi {
 		if (res.status !== 200) {
 			throw new Error('Failed to get brackets');
 		}
-		return await res.json();
+		// return await res.json();
+		return camelCaseKeys(await res.json());
 	}
 
 	async getBracket(id: number): Promise<BracketResponse> {
@@ -50,7 +55,8 @@ class BracketApi {
 		if (res.status !== 200) {
 			throw new Error('Failed to get bracket');
 		}
-		return await res.json();
+		// return await res.json();
+		return camelCaseKeys(await res.json());
 	}
 
 	async deleteBracket(id: number): Promise<void> {
@@ -71,7 +77,6 @@ class BracketApi {
 	}
 
 
-
 	async performRequest(path: string, method: string, body: any = {}) {
 		const request = {
 			method,
@@ -80,11 +85,49 @@ class BracketApi {
 			},
 		}
 		if (method !== 'GET') {
-			request['body'] = JSON.stringify(body);
+			request['body'] = JSON.stringify(snakeCaseKeys(body));
 		}
 
 		return await fetch(`${this.baseUrl}${path}`, request);
 	}
+
+}
+
+// Utility function to convert snake_case to camelCase
+function toCamelCase(str: string): string {
+	return str.replace(/([-_][a-z])/g, (group) =>
+		group.toUpperCase().replace('-', '').replace('_', '')
+	);
+}
+
+// Recursive function to convert object keys to camelCase
+function camelCaseKeys(obj: any): any {
+	if (Array.isArray(obj)) {
+		return obj.map((value) => camelCaseKeys(value));
+	} else if (typeof obj === 'object' && obj !== null) {
+		return Object.entries(obj).reduce((accumulator: any, [key, value]) => {
+			accumulator[toCamelCase(key)] = camelCaseKeys(value);
+			return accumulator;
+		}, {});
+	}
+	return obj;
+}
+
+function camelCaseToSnakeCase(str: string): string {
+	return str.replace(/[A-Z]/g, (match) => `_${match.toLowerCase()}`);
+}
+
+// Recursive function to convert object keys to snake_case
+function snakeCaseKeys(obj: any): any {
+	if (Array.isArray(obj)) {
+		return obj.map((value) => snakeCaseKeys(value));
+	} else if (typeof obj === 'object' && obj !== null) {
+		return Object.entries(obj).reduce((accumulator: any, [key, value]) => {
+			accumulator[camelCaseToSnakeCase(key)] = snakeCaseKeys(value);
+			return accumulator;
+		}, {});
+	}
+	return obj;
 }
 
 export const bracketApi = new BracketApi();
