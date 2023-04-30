@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Table, Modal } from 'react-bootstrap';
 import { BracketModal, BracketModalMode } from '../bracket_builder/Bracket';
-import { BracketResponse, bracketApi } from '../../api/bracketApi';
-
-// class BracketResponse {
-// 	id: number;
-// 	name: string;
-// 	active: boolean;
-
-// 	constructor(id: number, name: string, active: boolean) {
-// 		this.id = id;
-// 		this.name = name;
-// 		this.active = active;
-// 	}
-// }
+import { BracketRes, bracketApi } from '../../api/bracketApi';
 
 interface DeleteModalProps {
 	show: boolean;
@@ -46,7 +34,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ show, onHide, onDelete }) => 
 
 
 interface BracketRowProps {
-	bracket: BracketResponse;
+	bracket: BracketRes;
 	// handleViewBracket: (bracketId: number) => void;
 	handleShowBracketModal: (mode: BracketModalMode, bracketId: number | null) => void;
 	handleDeleteBracket: (bracketId: number) => void;
@@ -55,7 +43,7 @@ interface BracketRowProps {
 const BracketRow: React.FC<BracketRowProps> = (props) => {
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [active, setActive] = useState<boolean>(props.bracket.active);
-	const bracket: BracketResponse = props.bracket;
+	const bracket: BracketRes = props.bracket;
 
 	const handleViewBracket = () => {
 		props.handleShowBracketModal(BracketModalMode.View, bracket.id);
@@ -108,13 +96,13 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 
 
 interface BracketTableProps {
-	brackets: BracketResponse[];
+	brackets: BracketRes[];
 	handleShowBracketModal: (mode: BracketModalMode, bracketId: number | null) => void;
 	handleDeleteBracket: (bracketId: number) => void;
 }
 
 const BracketTable: React.FC<BracketTableProps> = (props) => {
-	const brackets: BracketResponse[] = props.brackets;
+	const brackets: BracketRes[] = props.brackets;
 
 	return (
 		<Table hover className='table-dark wpbb-bracket-table'>
@@ -144,7 +132,7 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 
 const Settings = () => {
 	const [showBracketModal, setShowBracketModal] = useState(false)
-	const [brackets, setBrackets] = useState<BracketResponse[]>([]);
+	const [brackets, setBrackets] = useState<BracketRes[]>([]);
 	const [bracketModalMode, setBracketModalMode] = useState<BracketModalMode>(BracketModalMode.View);
 	const [activeBracketId, setActiveBracketId] = useState<number | null>(null);
 
@@ -152,7 +140,10 @@ const Settings = () => {
 		setActiveBracketId(null);
 		setShowBracketModal(false);
 	}
-	const handleSaveBracketModal = () => setShowBracketModal(false);
+	const handleSaveBracketModal = (newBracket: BracketRes) => {
+		setBrackets([...brackets, newBracket])
+		handleCloseBracketModal();
+	}
 	const handleShowBracketModal = (mode: BracketModalMode, bracketId: number | null = null) => {
 		setActiveBracketId(bracketId);
 		setBracketModalMode(mode);

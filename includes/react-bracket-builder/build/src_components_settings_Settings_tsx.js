@@ -48,7 +48,7 @@ class BracketApi {
   async setActive(id, active) {
     const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
     const res = await this.performRequest(path, 'POST');
-    if (res.status !== 201) {
+    if (res.status !== 200) {
       throw new Error('Failed to set active');
     }
     const activated = await res.json();
@@ -705,13 +705,17 @@ const BracketTitle = props => {
   } = props;
   const [editing, setEditing] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   const [textBuffer, setTextBuffer] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(title);
-  const handleUpdateTitle = event => {
+  const startEditing = () => {
+    setEditing(true);
+    setTextBuffer(title);
+  };
+  const doneEditing = event => {
     setTitle(textBuffer);
     setEditing(false);
   };
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "wpbb-bracket-title",
-    onClick: () => setEditing(true)
+    onClick: startEditing
   }, editing ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     className: "wpbb-bracket-title-input",
     autoFocus: true,
@@ -719,10 +723,10 @@ const BracketTitle = props => {
     type: "text",
     value: textBuffer,
     onChange: e => setTextBuffer(e.target.value),
-    onBlur: handleUpdateTitle,
+    onBlur: doneEditing,
     onKeyUp: e => {
       if (e.key === 'Enter') {
-        handleUpdateTitle(e);
+        doneEditing(e);
       }
     }
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
@@ -838,21 +842,23 @@ const ViewBracketModal = props => {
     bracketId
   } = props;
   const [matchTree, setMatchTree] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
+  const [bracket, setBracket] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(() => {
     _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__.bracketApi.getBracket(bracketId).then(bracket => {
+      setBracket(bracket);
       setMatchTree(MatchTree.fromBracketResponse(bracket));
     });
   }, [bracketId]);
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     className: "wpbb-bracket-modal",
-    show: show,
+    show: show && bracket,
     onHide: handleClose,
     size: "xl",
     centered: true
   }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Header, {
     className: "wpbb-bracket-modal__header",
     closeButton: true
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Title, null, "View Bracket ", bracketId)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, {
+  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Title, null, bracket?.name)), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"].Body, {
     className: "pt-0"
   }, matchTree ? (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Bracket, {
     matchTree: matchTree
@@ -914,13 +920,10 @@ const NewBracketModal = props => {
   };
   const handleSaveBracket = () => {
     const req = matchTree.toRequest(bracketName, true, numRounds, numWildcards, wildcardPlacement);
-    console.log('req: ', req);
     _api_bracketApi__WEBPACK_IMPORTED_MODULE_2__.bracketApi.createBracket(req).then(newBracket => {
-      console.log('new: ', newBracket);
-      // handleSave()
+      handleSave(newBracket);
     });
   };
-
   return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_5__["default"], {
     className: "wpbb-bracket-modal",
     show: show,
@@ -959,7 +962,7 @@ const NewBracketModal = props => {
   }, "Close"), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_bootstrap__WEBPACK_IMPORTED_MODULE_6__["default"], {
     variant: "primary",
     onClick: handleSaveBracket
-  }, "Save Changes")));
+  }, "Save")));
 };
 const BracketModal = props => {
   const bracketId = props.bracketId;
@@ -1002,18 +1005,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-// class BracketResponse {
-// 	id: number;
-// 	name: string;
-// 	active: boolean;
-
-// 	constructor(id: number, name: string, active: boolean) {
-// 		this.id = id;
-// 		this.name = name;
-// 		this.active = active;
-// 	}
-// }
 const DeleteModal = _ref => {
   let {
     show,
@@ -1110,7 +1101,10 @@ const Settings = () => {
     setActiveBracketId(null);
     setShowBracketModal(false);
   };
-  const handleSaveBracketModal = () => setShowBracketModal(false);
+  const handleSaveBracketModal = newBracket => {
+    setBrackets([...brackets, newBracket]);
+    handleCloseBracketModal();
+  };
   const handleShowBracketModal = function (mode) {
     let bracketId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     setActiveBracketId(bracketId);

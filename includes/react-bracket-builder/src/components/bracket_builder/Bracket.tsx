@@ -675,13 +675,18 @@ const BracketTitle = (props) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState(title)
 
-	const handleUpdateTitle = (event) => {
+	const startEditing = () => {
+		setEditing(true)
+		setTextBuffer(title)
+	}
+
+	const doneEditing = (event) => {
 		setTitle(textBuffer)
 		setEditing(false)
 	}
 
 	return (
-		<div className='wpbb-bracket-title' onClick={() => setEditing(true)}>
+		<div className='wpbb-bracket-title' onClick={startEditing}>
 			{editing ?
 				<input
 					className='wpbb-bracket-title-input'
@@ -690,10 +695,10 @@ const BracketTitle = (props) => {
 					type='text'
 					value={textBuffer}
 					onChange={(e) => setTextBuffer(e.target.value)}
-					onBlur={handleUpdateTitle}
+					onBlur={doneEditing}
 					onKeyUp={(e) => {
 						if (e.key === 'Enter') {
-							handleUpdateTitle(e)
+							doneEditing(e)
 						}
 					}}
 				/>
@@ -829,18 +834,20 @@ const ViewBracketModal = (props) => {
 		bracketId
 	} = props;
 	const [matchTree, setMatchTree] = useState<MatchTree | null>(null)
+	const [bracket, setBracket] = useState<BracketRes | null>(null)
 
 	useEffect(() => {
 		bracketApi.getBracket(bracketId)
 			.then((bracket) => {
+				setBracket(bracket)
 				setMatchTree(MatchTree.fromBracketResponse(bracket))
 			})
 	}, [bracketId])
 
 	return (
-		<Modal className='wpbb-bracket-modal' show={show} onHide={handleClose} size='xl' centered={true}>
+		<Modal className='wpbb-bracket-modal' show={show && bracket} onHide={handleClose} size='xl' centered={true}>
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
-				<Modal.Title>View Bracket {bracketId}</Modal.Title>
+				<Modal.Title>{bracket?.name}</Modal.Title>
 			</Modal.Header >
 			<Modal.Body className='pt-0'>
 				{matchTree ? <Bracket matchTree={matchTree} /> : 'Loading...'}
@@ -857,7 +864,7 @@ const ViewBracketModal = (props) => {
 interface NewBracketModalProps {
 	show: boolean;
 	handleClose: () => void;
-	handleSave: () => void;
+	handleSave: (bracket: BracketRes) => void;
 	bracketId: Nullable<number>;
 }
 
@@ -924,11 +931,9 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 
 	const handleSaveBracket = () => {
 		const req = matchTree.toRequest(bracketName, true, numRounds, numWildcards, wildcardPlacement)
-		console.log('req: ', req)
 		bracketApi.createBracket(req)
 			.then((newBracket) => {
-				console.log('new: ', newBracket)
-				// handleSave()
+				handleSave(newBracket)
 			})
 	}
 
@@ -959,7 +964,7 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 					Close
 				</Button>
 				<Button variant="primary" onClick={handleSaveBracket}>
-					Save Changes
+					Save
 				</Button>
 			</Modal.Footer>
 		</Modal>
@@ -969,7 +974,7 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 interface BracketModalProps {
 	show: boolean;
 	handleClose: () => void;
-	handleSave: () => void;
+	handleSave: (bracket: BracketRes) => void;
 	mode: BracketModalMode;
 	bracketId: Nullable<number>;
 }
