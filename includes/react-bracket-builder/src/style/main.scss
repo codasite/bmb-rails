@@ -1,15 +1,19 @@
 @use 'bracket';
 
 .wpbb-bracket-modal {
+	// .modal-dialog {
 	z-index: 99999999;
 
-	.wpbb-bracket-modal__header {
-		border-bottom: 0;
-	}
+	// .wpbb-bracket-modal__header {
+}
 
-	.wpbb-bracket-modal__footer {
-		border-top: 0;
-	}
+.modal-header {
+	border-bottom: 0;
+}
+
+// .wpbb-bracket-modal__footer {
+.modal-footer {
+	border-top: 0;
 }
 
 .wpbb-bracket {

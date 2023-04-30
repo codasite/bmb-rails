@@ -122,10 +122,12 @@
 .wpbb-bracket-modal {
   z-index: 99999999;
 }
-.wpbb-bracket-modal .wpbb-bracket-modal__header {
+
+.modal-header {
   border-bottom: 0;
 }
-.wpbb-bracket-modal .wpbb-bracket-modal__footer {
+
+.modal-footer {
   border-top: 0;
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Button, Table } from 'react-bootstrap';
+import { Container, Button, Table, Modal } from 'react-bootstrap';
 import { BracketModal } from '../bracket_builder/Bracket';
 import { BracketResponse, bracketApi } from '../../api/bracketApi';
 
@@ -15,6 +15,35 @@ import { BracketResponse, bracketApi } from '../../api/bracketApi';
 // 	}
 // }
 
+interface DeleteModalProps {
+	show: boolean;
+	onHide: () => void;
+	onDelete: () => void;
+}
+
+const DeleteModal: React.FC<DeleteModalProps> = ({ show, onHide, onDelete }) => {
+	return (
+		<Modal show={show} onHide={onHide} centered={true}>
+			<Modal.Header closeButton>
+				<Modal.Title>Delete Bracket</Modal.Title>
+			</Modal.Header>
+			<Modal.Body>
+				<p>
+					Are you sure you want to delete this bracket? This will delete all associated user brackets and cannot be undone.
+				</p>
+			</Modal.Body>
+			<Modal.Footer>
+				<Button variant="secondary" onClick={onHide}>
+					Cancel
+				</Button>
+				<Button variant="danger" onClick={onDelete}>
+					Delete
+				</Button>
+			</Modal.Footer>
+		</Modal>
+	);
+};
+
 
 interface BracketRowProps {
 	bracket: BracketResponse;
@@ -23,31 +52,38 @@ interface BracketRowProps {
 }
 
 const BracketRow: React.FC<BracketRowProps> = (props) => {
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const bracket: BracketResponse = props.bracket;
 	const handleViewBracket = props.handleViewBracket;
-	const handleDeleteBracket = (e) => {
+	const handleShowDeleteDialog = (e) => {
 		e.stopPropagation();
-		props.handleDeleteBracket(bracket.id);
+		setShowDeleteModal(true);
 	}
 
-
 	return (
-		<tr onClick={() => handleViewBracket(bracket.id)}>
-			<td>{bracket.name}</td>
-			{/* <td>{bracket.active ? <span className='wpbb-bracket-table-active-check'>&#10003;</span> : ''}</td> */}
-			<td className='text-center'>
-				<input
-					type="checkbox"
-					checked={bracket.active}
-				/>
-			</td>
-			<td className='wpbb-bracket-table-action-col'>
-				{/* <Button variant="light" >{bracket.active ? 'deactivate' : 'activate'}</Button> */}
-				<Button variant="primary" >Score</Button>
-				<Button variant="success" className='mx-2'>Copy</Button>
-				<Button variant="danger" onClick={handleDeleteBracket}>Delete</Button>
-			</td>
-		</tr>
+		<>
+			<tr onClick={() => handleViewBracket(bracket.id)}>
+				<td>{bracket.name}</td>
+				{/* <td>{bracket.active ? <span className='wpbb-bracket-table-active-check'>&#10003;</span> : ''}</td> */}
+				<td className='text-center'>
+					<input
+						type="checkbox"
+						checked={bracket.active}
+					/>
+				</td>
+				<td className='wpbb-bracket-table-action-col'>
+					{/* <Button variant="light" >{bracket.active ? 'deactivate' : 'activate'}</Button> */}
+					<Button variant="primary" >Score</Button>
+					<Button variant="success" className='mx-2'>Copy</Button>
+					<Button variant="danger" onClick={handleShowDeleteDialog}>Delete</Button>
+				</td>
+			</tr>
+			<DeleteModal
+				show={showDeleteModal}
+				onHide={() => setShowDeleteModal(false)}
+				onDelete={() => props.handleDeleteBracket(bracket.id)}
+			/>
+		</>
 	);
 };
 
@@ -90,22 +126,6 @@ const BracketTable: React.FC<BracketTableProps> = (props) => {
 	);
 };
 
-const BracketListItem = (props) => {
-	const bracket: BracketResponse = props.bracket;
-	return (
-		<li>{bracket.name}</li>
-	)
-}
-
-
-const BracketList = (props) => {
-	const brackets: BracketResponse[] = props.brackets;
-	return (
-		<ul>
-			{brackets.map((bracket) => <BracketListItem key={bracket.id} bracket={bracket} />)}
-		</ul>
-	)
-}
 
 
 const Settings = () => {
@@ -128,7 +148,8 @@ const Settings = () => {
 			setBrackets(brackets.filter((bracket) => bracket.id !== bracketId));
 		})
 	}
-
+	// const handleCopyBracket = (bracketId: number) => {
+	// 	bracketApi.(bracketId).then((bracket) => {
 
 	useEffect(() => {
 		bracketApi.getBrackets().then((brackets) => {
