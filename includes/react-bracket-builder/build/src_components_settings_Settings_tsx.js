@@ -140,8 +140,9 @@ __webpack_require__.r(__webpack_exports__);
 var Direction = /*#__PURE__*/function (Direction) {
   Direction[Direction["TopLeft"] = 0] = "TopLeft";
   Direction[Direction["TopRight"] = 1] = "TopRight";
-  Direction[Direction["BottomLeft"] = 2] = "BottomLeft";
-  Direction[Direction["BottomRight"] = 3] = "BottomRight";
+  Direction[Direction["Center"] = 2] = "Center";
+  Direction[Direction["BottomLeft"] = 3] = "BottomLeft";
+  Direction[Direction["BottomRight"] = 4] = "BottomRight";
   return Direction;
 }(Direction || {});
 class Team {
@@ -366,15 +367,19 @@ class MatchTree {
     };
   }
   advanceTeam = (depth, matchIndex, left) => {
+    console.log('advanceTeam', depth, matchIndex, left);
     const match = this.rounds[depth].matches[matchIndex];
     if (!match) {
+      console.log('no match');
       return;
     }
     const team = left ? match.team1 : match.team2;
     if (!team) {
+      console.log('no team');
       return;
     }
     match.result = team;
+    console.log('match', match);
     const parent = match.parent;
     if (!parent) {
       return;
@@ -477,12 +482,6 @@ const TeamSlot = props => {
   }, team ? team.name : ''));
 };
 const MatchBox = props => {
-  // const match: MatchNode | null = props.match
-  // const direction: Direction = props.direction
-  // const height: number = props.height
-  // const spacing: number = props.spacing
-  // // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
-  // const updateTeam = props.updateTeam
   const {
     match,
     direction,
@@ -491,12 +490,6 @@ const MatchBox = props => {
     updateTeam,
     pickTeam
   } = props;
-
-  // const updateTeam = (name: string, left: boolean) => {
-  // 	console.log('updateTeam', name)
-  // 	// updateTeam(match.roundId, match.matchIndex, left, name)
-  // }
-
   if (match === null) {
     return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "wpbb-match-box-empty",
@@ -509,9 +502,11 @@ const MatchBox = props => {
   if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
     // Left side of the bracket
     className = 'wpbb-match-box-left';
-  } else {
+  } else if (direction === Direction.TopRight || direction === Direction.BottomRight) {
     // Right side of the bracket
     className = 'wpbb-match-box-right';
+  } else {
+    className = 'wpbb-match-box-center';
   }
   const upperOuter = match.left === null;
   const lowerOuter = match.right === null;
@@ -539,22 +534,15 @@ const MatchBox = props => {
     team: match.team1,
     updateTeam: updateTeam ? name => updateTeam(true, name) : undefined,
     pickTeam: pickTeam ? () => pickTeam(true) : undefined
+  }), direction === Direction.Center && (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
+    className: "wpbb-champion-team",
+    team: match.result
   }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
     className: "wpbb-team2",
     team: match.team2,
     updateTeam: updateTeam ? name => updateTeam(false, name) : undefined,
     pickTeam: pickTeam ? () => pickTeam(false) : undefined
   }));
-};
-const Spacer = _ref => {
-  let {
-    grow = '1'
-  } = _ref;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    style: {
-      flexGrow: grow
-    }
-  });
 };
 const RoundHeader = props => {
   const [editRoundName, setEditRoundName] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
@@ -598,28 +586,6 @@ const RoundHeader = props => {
   }) : (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     onClick: startEditing
   }, round.name));
-};
-const FinalRound = props => {
-  const round = props.round;
-  const updateRoundName = props.updateRoundName;
-  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "wpbb-round"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(RoundHeader, {
-    round: round,
-    updateRoundName: updateRoundName
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "wpbb-round__body"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
-    grow: "2"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "wpbb-final-match"
-  }, (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
-    className: "wpbb-team1"
-  }), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(TeamSlot, {
-    className: "wpbb-team2"
-  })), (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(Spacer, {
-    grow: "2"
-  })));
 };
 const MatchColumn = props => {
   const {
@@ -825,13 +791,13 @@ const Bracket = props => {
   const pickTeam = (depth, matchIndex, left) => {
     console.log('pickTeam', depth, matchIndex, left);
     const newMatchTree = matchTree.clone();
+    console.log('newMatchTree', newMatchTree.rounds);
     newMatchTree.advanceTeam(depth, matchIndex, left);
     setMatchTree(newMatchTree);
   };
   const targetHeight = 800;
 
   // The number of rounds sets the initial height of each match
-  // const firstRoundMatchHeight = targetHeight / rounds.length / 2;
   const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
 
   /**
@@ -856,9 +822,15 @@ const Bracket = props => {
       });
     }),
     // handle final round differently
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(FinalRound, {
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.createElement)(MatchColumn, {
+      matches: rounds[0].matches,
       round: rounds[0],
-      updateRoundName: updateRoundName
+      direction: Direction.Center,
+      numDirections: numDirections,
+      matchHeight: targetHeight / 4,
+      updateRoundName: canEdit ? updateRoundName : undefined,
+      updateTeam: canEdit ? updateTeam : undefined,
+      pickTeam: canPick ? (_, left) => pickTeam(0, 0, left) : undefined
     }), ...rounds.slice(1).map((round, idx, arr) => {
       // Get the second half of matches for this column
       const colMatches = round.matches.slice(round.matches.length / 2);

@@ -112,18 +112,19 @@ $bracket-radius: 3px;
 	right: 0
 }
 
-.wpbb-final-match {
+// .wpbb-final-match {
+.wpbb-match-box-center {
 	@include match-box();
-	flex-grow: 1;
+	// flex-grow: 1;
 }
 
-.wpbb-final-match::before {
+.wpbb-match-box-center::before {
 	@include match-box-outer-after();
 	top: -5px;
 	right: 0;
 }
 
-.wpbb-final-match::after {
+.wpbb-match-box-center::after {
 	@include match-box-outer-after();
 	bottom: -5px;
 	left: 0;

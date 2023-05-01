@@ -12,8 +12,9 @@ import { WildcardPlacement } from '../../enum';
 enum Direction {
 	TopLeft = 0,
 	TopRight = 1,
-	BottomLeft = 2,
-	BottomRight = 3,
+	Center = 2,
+	BottomLeft = 3,
+	BottomRight = 4,
 }
 
 class Team {
@@ -269,15 +270,19 @@ class MatchTree {
 	}
 
 	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
+		console.log('advanceTeam', depth, matchIndex, left)
 		const match = this.rounds[depth].matches[matchIndex]
 		if (!match) {
+			console.log('no match')
 			return
 		}
 		const team = left ? match.team1 : match.team2
 		if (!team) {
+			console.log('no team')
 			return
 		}
 		match.result = team
+		console.log('match', match)
 		const parent = match.parent
 		if (!parent) {
 			return
@@ -408,12 +413,6 @@ interface MatchBoxProps {
 }
 
 const MatchBox = (props: MatchBoxProps) => {
-	// const match: MatchNode | null = props.match
-	// const direction: Direction = props.direction
-	// const height: number = props.height
-	// const spacing: number = props.spacing
-	// // const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
-	// const updateTeam = props.updateTeam
 	const {
 		match,
 		direction,
@@ -423,26 +422,22 @@ const MatchBox = (props: MatchBoxProps) => {
 		pickTeam,
 	} = props
 
-	// const updateTeam = (name: string, left: boolean) => {
-	// 	console.log('updateTeam', name)
-	// 	// updateTeam(match.roundId, match.matchIndex, left, name)
-	// }
-
 	if (match === null) {
 		return (
 			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
 		)
 	}
 
-
 	let className: string;
 
 	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
 		// Left side of the bracket
 		className = 'wpbb-match-box-left'
-	} else {
+	} else if (direction === Direction.TopRight || direction === Direction.BottomRight) {
 		// Right side of the bracket
 		className = 'wpbb-match-box-right'
+	} else {
+		className = 'wpbb-match-box-center'
 	}
 
 	const upperOuter = match.left === null
@@ -469,6 +464,7 @@ const MatchBox = (props: MatchBoxProps) => {
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
 			/>
+			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
 				className='wpbb-team2'
 				team={match.team2}
@@ -476,12 +472,6 @@ const MatchBox = (props: MatchBoxProps) => {
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
 			/>
 		</div>
-	)
-}
-
-const Spacer = ({ grow = '1' }) => {
-	return (
-		<div style={{ flexGrow: grow }} />
 	)
 }
 
@@ -541,24 +531,6 @@ const RoundHeader = (props: RoundHeaderProps) => {
 	)
 }
 
-const FinalRound = (props) => {
-	const round: Round = props.round;
-	const updateRoundName = props.updateRoundName;
-	return (
-		<div className='wpbb-round'>
-			<RoundHeader round={round} updateRoundName={updateRoundName} />
-			<div className='wpbb-round__body'>
-				<Spacer grow='2' />
-				<div className='wpbb-final-match'>
-					<TeamSlot className='wpbb-team1' />
-					<TeamSlot className='wpbb-team2' />
-				</div>
-				<Spacer grow='2' />
-			</div>
-		</div>
-	)
-}
-
 interface MatchColumnProps {
 	round: Round;
 	matches: Nullable<MatchNode>[];
@@ -567,7 +539,7 @@ interface MatchColumnProps {
 	matchHeight: number;
 	updateRoundName?: (roundId: number, name: string) => void;
 	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
-	pickTeam?: (matchIndes: number, left: boolean) => void;
+	pickTeam?: (matchIndex: number, left: boolean) => void;
 }
 
 const MatchColumn = (props: MatchColumnProps) => {
@@ -824,6 +796,7 @@ const Bracket = (props: BracketProps) => {
 	const pickTeam = (depth: number, matchIndex: number, left: boolean) => {
 		console.log('pickTeam', depth, matchIndex, left)
 		const newMatchTree = matchTree.clone()
+		console.log('newMatchTree', newMatchTree.rounds)
 		newMatchTree.advanceTeam(depth, matchIndex, left)
 		setMatchTree(newMatchTree)
 	}
@@ -831,7 +804,6 @@ const Bracket = (props: BracketProps) => {
 	const targetHeight = 800;
 
 	// The number of rounds sets the initial height of each match
-	// const firstRoundMatchHeight = targetHeight / rounds.length / 2;
 	const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
 
 	/**
@@ -860,7 +832,18 @@ const Bracket = (props: BracketProps) => {
 				/>
 			}),
 			// handle final round differently
-			<FinalRound round={rounds[0]} updateRoundName={updateRoundName} />,
+			<MatchColumn
+				matches={rounds[0].matches}
+				round={rounds[0]}
+				direction={Direction.Center}
+				numDirections={numDirections}
+				matchHeight={targetHeight / 4}
+				updateRoundName={canEdit ? updateRoundName : undefined}
+				updateTeam={canEdit ? updateTeam : undefined}
+				pickTeam={canPick ?
+					(_, left: boolean) => pickTeam(0, 0, left)
+					: undefined}
+			/>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)

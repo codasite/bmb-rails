@@ -108,6 +108,12 @@ $team-offset: -8px;
 	bottom: $team-offset;
 }
 
+.wpbb-champion-team {
+	@include team();
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
 .wpbb-team1:hover,
 .wpbb-team2:hover {
 	cursor: pointer;
