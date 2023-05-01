@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
@@ -6,6 +6,8 @@ import { bracketApi } from '../../api/bracketApi';
 import { Nullable } from '../../types';
 import { BracketRes, BracketReq, RoundReq, MatchReq, TeamReq } from '../../api/bracketApi';
 import { WildcardPlacement } from '../../enum';
+// import html2canvas
+import html2canvas from 'html2canvas';
 
 
 // Direction enum
@@ -806,6 +808,8 @@ const Bracket = (props: BracketProps) => {
 	// The number of rounds sets the initial height of each match
 	const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
 
+	const bracketRef = useRef(null)
+
 	/**
 	 * Build rounds in two directions, left to right and right to left
 	 */
@@ -863,10 +867,38 @@ const Bracket = (props: BracketProps) => {
 		]
 	}
 
+	const screenshot = () => {
+		const bracket = bracketRef.current
+		if (!bracket) {
+			return
+		}
+		// use html2canvas to get a screenshot of the bracket
+		html2canvas(bracket, {
+			// scrollX: 0,
+			// scrollY: -window.scrollY,
+			// windowWidth: document.documentElement.clientWidth,
+			// windowHeight: document.documentElement.clientHeight,
+		}).then((canvas) => {
+			// create a new image element and set the src to the canvas data url
+			const img = new Image()
+			img.src = canvas.toDataURL()
+			// create a new window and append the image to it
+			const win = window.open()
+			if (!win) {
+				return
+			}
+			win.document.write('<img src="' + img.src + '" />')
+		})
+	}
+
+
 	return (
-		<div className='wpbb-bracket'>
-			{rounds.length > 0 && buildRounds2(rounds)}
-		</div>
+		<>
+			<div className='wpbb-bracket' ref={bracketRef}>
+				{rounds.length > 0 && buildRounds2(rounds)}
+			</div>
+			<Button variant='primary' onClick={screenshot}>ref</Button>
+		</>
 	)
 }
 
