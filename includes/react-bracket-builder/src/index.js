@@ -8,11 +8,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './style/main.scss';
 
 // Dynamically render components to avoid loading unused modules
-const Settings = React.lazy(() => import('./components/settings/Settings'))
+const Settings = React.lazy(() => import('./settings/components/Settings'))
 
 const page = wpbb_ajax_obj.page
 
 if (page === 'settings') {
 	// Render the App component into the DOM
 	render(<App><Settings /></App>, document.getElementById('wpbb-admin-panel'));
+}
+const builderDiv = document.getElementById('wpbb-bracket-builder')
+if (builderDiv) {
+	// console.log('builderDiv', builderDiv)
+	// Render the App component into the DOM
+	render(<App />, builderDiv);
 }

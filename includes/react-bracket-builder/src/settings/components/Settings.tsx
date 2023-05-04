@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Table, Modal } from 'react-bootstrap';
-import { BracketModal, BracketModalMode } from '../bracket_builder/Bracket';
-import { BracketRes, bracketApi } from '../../api/bracketApi';
+import { BracketModal, BracketModalMode } from '../../settings/components/Modals';
+import { bracketApi } from '../../api/bracketApi';
+import { BracketRes } from '../../api/types/bracket';
 
 interface DeleteModalProps {
 	show: boolean;
