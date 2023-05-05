@@ -22,8 +22,11 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 */
-	public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $bracket_repo = null) {
-		$this->bracket_repo = $bracket_repo != null ? $bracket_repo : new Wp_Bracket_Builder_Bracket_Repository();
+	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $bracket_repo = null) {
+	public function __construct() {
+		// echo $bracket_repo;
+		// $this->bracket_repo = $bracket_repo != null ? $bracket_repo : new Wp_Bracket_Builder_Bracket_Repository();
+		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'brackets';
 	}

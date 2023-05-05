@@ -178,9 +178,9 @@ class Wp_Bracket_Builder {
 
 
 		// $this->loader->add_action('rest_api_init', $sports_api, 'register_routes');
-		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
+		// $this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
 
-		$this->loader->add_action('init', $plugin_admin, 'bracket_post_type');
+		$this->loader->add_action('init', $this, 'bracket_cpt');
 	}
 
 	/**
@@ -238,5 +238,28 @@ class Wp_Bracket_Builder {
 	 */
 	public function get_version() {
 		return $this->version;
+	}
+
+	public function bracket_cpt() {
+		$bracket_api = new Wp_Bracket_Builder_Bracket_Api();
+
+		register_post_type(
+			'bracket',
+			array(
+				'labels' => array(
+					'name' => __('Brackets'),
+					'singular_name' => __('Bracket'),
+				),
+				'description' => 'Bracket templates for the WP Bracket Builder plugin',
+				'public' => true,
+				'has_archive' => true,
+				'supports' => array('title', 'editor', 'thumbnail'),
+				'show_ui' => true,
+				'show_in_rest' => true,
+				'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
+				'taxonomies' => array('category'),
+			)
+		);
 	}
 }
