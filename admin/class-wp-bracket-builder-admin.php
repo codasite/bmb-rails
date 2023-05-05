@@ -122,4 +122,24 @@ class Wp_Bracket_Builder_Admin {
 		$role = get_role('administrator');
 		$role->add_cap('manage_bracket_builder');
 	}
+
+	public function bracket_post_type() {
+		register_post_type(
+			'wpbb_bracket_post',
+			array(
+				'labels' => array(
+					'name' => __('Brackets'),
+					'singular_name' => __('Bracket'),
+				),
+				'description' => 'Bracket templates for the WP Bracket Builder plugin',
+				'public' => true,
+				'has_archive' => true,
+				'supports' => array('title', 'editor', 'thumbnail'),
+				'show_ui' => true,
+				'show_in_rest' => true,
+				// 'rest_controller_class' => 'WP_REST_Posts_Controller',
+				'taxonomies' => array('category'),
+			)
+		);
+	}
 }

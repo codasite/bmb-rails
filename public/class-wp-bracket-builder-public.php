@@ -135,7 +135,6 @@ class Wp_Bracket_Builder_Public {
 	 * @return void
 	 */
 	public function add_shortcodes() {
-		echo 'running';
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']);
 	}
 }
