@@ -1,4 +1,6 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -47,11 +49,10 @@ class Wp_Bracket_Builder_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -73,8 +74,8 @@ class Wp_Bracket_Builder_Public {
 		 * class.
 		 */
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all' );
-
+		// wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
+		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), $this->version, 'all');
 	}
 
 	/**
@@ -96,8 +97,53 @@ class Wp_Bracket_Builder_Public {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-public.js', array( 'jquery' ), $this->version, false );
+		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-public.js', array( 'jquery' ), $this->version, false );
 
+		$post = get_post();
+		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
+		$bracket = $bracket_repo->get(post: $post);
+
+		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
+
+		wp_localize_script(
+			'wpbb-bracket-builder-react',
+			'wpbb_ajax_obj',
+			array(
+				'nonce' => wp_create_nonce('wpbb-nonce'),
+				'page' => 'user-bracket',
+				'ajax_url' => admin_url('admin-ajax.php'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+				'post' => $post,
+				'bracket' => $bracket,
+				// Get bracket url from query params
+				// 'bracket_url' => $_GET['bracket_url'],
+				// For testing:
+				//'bracket_url' => 'https://w0.peakpx.com/wallpaper/86/891/HD-wallpaper-smiley-face-cg-smiley-colors-black-yellow-graffiti-abstract-3d-face.jpg',
+			)
+		);
 	}
 
+	/**
+	 * Render bracket builder
+	 *
+	 * @return void
+	 */
+	public function render_bracket_builder() {
+		ob_start();
+?>
+		<div id="wpbb-bracket-builder">
+		</div>
+<?php
+		return ob_get_clean();
+	}
+
+
+	/**
+	 * Add shortcode to render events
+	 *
+	 * @return void
+	 */
+	public function add_shortcodes() {
+		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']);
+	}
 }
