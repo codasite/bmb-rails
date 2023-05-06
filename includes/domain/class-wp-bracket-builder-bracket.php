@@ -36,6 +36,12 @@ class Wp_Bracket_Builder_Bracket_Base {
 
 class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 	/**
+	 * @var int
+	 * 
+	 */
+	public $cpt_id;
+
+	/**
 	 * @var bool
 	 */
 	public $active;
@@ -110,6 +116,10 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 				$round['depth'] = $index;
 				return Wp_Bracket_Builder_Round::from_array($round);
 			}, array_keys($data['rounds']), $data['rounds']);
+		}
+
+		if (isset($data['cpt_id'])) {
+			$bracket->cpt_id = (int) $data['cpt_id'];
 		}
 
 		return $bracket;

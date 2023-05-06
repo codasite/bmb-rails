@@ -177,8 +177,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('init', $plugin_admin, 'add_capabilities');
 
 
-		// $this->loader->add_action('rest_api_init', $sports_api, 'register_routes');
-		// $this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
 
 		$this->loader->add_action('init', $this, 'bracket_cpt');
 	}
@@ -253,10 +252,10 @@ class Wp_Bracket_Builder {
 				'description' => 'Bracket templates for the WP Bracket Builder plugin',
 				'public' => true,
 				'has_archive' => true,
-				'supports' => array('title', 'editor', 'thumbnail'),
+				// 'supports' => array('title', 'editor', 'thumbnail'),
 				'show_ui' => true,
 				'show_in_rest' => true,
-				'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('category'),
 			)

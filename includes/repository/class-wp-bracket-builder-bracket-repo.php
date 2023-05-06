@@ -3,7 +3,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 
 interface Wp_Bracket_Builder_Bracket_Repository_Interface {
 	public function add(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
-	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Bracket;
+	public function get(int $id): Wp_Bracket_Builder_Bracket;
 	public function get_all(): array;
 	public function delete(int $id): bool;
 	// public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
@@ -18,24 +18,37 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket {
+
+		$cpt_id = $this->insert_cpt($bracket);
+
 		$table_name = $this->bracket_table();
 		$this->wpdb->insert(
 			$table_name,
 			[
-				'name' => $bracket->name,
-				'active' => $bracket->active ? 1 : 0,
+				// 'name' => $bracket->name,
+				'cpt_id' => $cpt_id,
+				// 'active' => $bracket->active ? 1 : 0,
 				'num_rounds' => $bracket->num_rounds,
 				'num_wildcards' => $bracket->num_wildcards,
 				'wildcard_placement' => $bracket->wildcard_placement,
 			]
 		);
-		$bracket->id = $this->wpdb->insert_id;
+		$bracket_id = $this->wpdb->insert_id;
 		if ($bracket->rounds) {
-			$this->insert_rounds_for_bracket($bracket->id, $bracket->rounds);
+			$this->insert_rounds_for_bracket($bracket_id, $bracket->rounds);
 		}
 		# refresh from db
-		$bracket = $this->get($bracket->id);
+		$bracket = $this->get($bracket_id);
 		return $bracket;
+	}
+
+	private function insert_cpt(Wp_Bracket_Builder_Bracket $bracket): int {
+		$post_id = wp_insert_post([
+			'post_title' => $bracket->name,
+			'post_type' => 'bracket',
+			'post_status' => $bracket->active ? 'publish' : 'draft',
+		]);
+		return $post_id;
 	}
 
 	private function insert_rounds_for_bracket(int $bracket_id, array $rounds): void {
@@ -106,27 +119,31 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		return $team;
 	}
 
-	public function get(int $id = null, string $name = null): Wp_Bracket_Builder_Bracket {
+	public function get(int $id): Wp_Bracket_Builder_Bracket {
 		$bracket_arr = null;
-		$table_name = $this->bracket_table();
+		$bracket_table = $this->bracket_table();
+		$cpt_table = $this->cpt_table();
+		$bracket_fields = $this->bracket_fields();
 
-		if ($id) {
-			$bracket_arr = $this->wpdb->get_row(
-				$this->wpdb->prepare(
-					"SELECT * FROM {$table_name} WHERE id = %d",
-					$id
-				),
-				ARRAY_A
-			);
-		} elseif ($name) {
-			$bracket_arr = $this->wpdb->get_row(
-				$this->wpdb->prepare(
-					"SELECT * FROM {$table_name} WHERE name = %s",
-					$name
-				),
-				ARRAY_A
-			);
-		}
+		// $bracket_arr = $this->wpdb->get_row(
+		// 	$this->wpdb->prepare(
+		// 		"SELECT * FROM {$table_name} WHERE id = %d",
+		// 		$id
+		// 	),
+		// 	ARRAY_A
+		// );
+		$bracket_arr = $this->wpdb->get_row(
+			$this->wpdb->prepare(
+				// "SELECT {$bracket_table}.id, cpt_id, num_rounds, num_wildcards, wildcard_placement, 
+				// post_title as name, post_date_gmt as created_at
+				"SELECT {$bracket_fields}
+			 FROM {$bracket_table}
+			 LEFT JOIN {$cpt_table} ON {$bracket_table}.cpt_id = {$cpt_table}.ID
+			 WHERE {$bracket_table}.id = %d",
+				$id
+			),
+			ARRAY_A
+		);
 
 		if ($bracket_arr) {
 			# get rounds
@@ -199,11 +216,17 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	}
 
 	public function get_all(): array {
-		$table_name = $this->bracket_table();
+		$bracket_table = $this->bracket_table();
+		$cpt_table = $this->cpt_table();
+		$bracket_fields = $this->bracket_fields();
 		$brackets = $this->wpdb->get_results(
-			"SELECT id, name, active, num_rounds, num_wildcards, wildcard_placement, created_at,
-				(SELECT COUNT(*) FROM {$this->user_bracket_table()} WHERE bracket_id = {$table_name}.id) as num_submissions
-			 FROM {$table_name}
+			// "SELECT id, cpt_id, num_rounds, num_wildcards, wildcard_placement, created_at,
+			// "SELECT {$bracket_table}.id, cpt_id, num_rounds, num_wildcards, wildcard_placement, 
+			// 	post_title as name, post_date_gmt as created_at,
+			"SELECT {$bracket_fields},
+				(SELECT COUNT(*) FROM {$this->user_bracket_table()} WHERE bracket_id = {$bracket_table}.id) as num_submissions
+			 FROM {$bracket_table}
+			 LEFT JOIN {$cpt_table} ON {$bracket_table}.cpt_id = {$cpt_table}.ID
 			 ORDER BY created_at DESC",
 			ARRAY_A
 		);
@@ -218,33 +241,62 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	}
 
 	public function delete(int $id): bool {
-		$table_name = $this->bracket_table();
-		$this->wpdb->delete(
-			$table_name,
-			[
-				'id' => $id,
-			]
-		);
+		// $table_name = $this->bracket_table();
+		// $this->wpdb->delete(
+		// 	$table_name,
+		// 	[
+		// 		'id' => $id,
+		// 	]
+		// );
+		// Get the associated cpt id
+		$bracket = $this->get($id);
+		$cpt_id = $bracket->cpt_id;
+		wp_delete_post($cpt_id);
+
 		return true;
 	}
 
 	public function set_active(int $id, bool $active): bool {
-		$table_name = $this->bracket_table();
-		$this->wpdb->update(
-			$table_name,
-			[
-				'active' => $active ? 1 : 0,
-			],
-			[
-				'id' => $id,
-			]
-		);
+		// Get the associated cpt id
+		$bracket = $this->get($id);
+		$cpt_id = $bracket->cpt_id;
+		// Update the cpt status
+		wp_update_post([
+			'ID' => $cpt_id,
+			'post_status' => $active ? 'publish' : 'draft',
+		]);
+		// $table_name = $this->bracket_table();
+		// $this->wpdb->update(
+		// 	$table_name,
+		// 	[
+		// 		'active' => $active ? 1 : 0,
+		// 	],
+		// 	[
+		// 		'id' => $id,
+		// 	]
+		// );
 		return true;
 	}
 
+	private function bracket_fields(): string {
+		$bracket_table = $this->bracket_table();
+		return implode(', ', [
+			"$bracket_table.id",
+			'post_title as name',
+			'cpt_id',
+			'num_rounds',
+			'num_wildcards',
+			'wildcard_placement',
+			'post_date_gmt as created_at',
+			"IF(post_status = 'publish', 1, 0) as active",
+		]);
+	}
 
 	private function bracket_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_brackets';
+	}
+	private function cpt_table(): string {
+		return $this->wpdb->prefix . 'posts';
 	}
 	private function user_bracket_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_user_brackets';

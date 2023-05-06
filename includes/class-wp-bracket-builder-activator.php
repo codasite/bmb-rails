@@ -77,13 +77,17 @@ class Wp_Bracket_Builder_Activator {
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			name varchar(255) NOT NULL,
-			active tinyint(1) NOT NULL DEFAULT 0,
+			cpt_id bigint(20) UNSIGNED NOT NULL,
+			-- name varchar(255) NOT NULL,
+			-- active tinyint(1) NOT NULL DEFAULT 0,
 			num_rounds tinyint(4) NOT NULL,
 			num_wildcards tinyint(4) NOT NULL,
 			wildcard_placement tinyint(2),
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			PRIMARY KEY (id)
+			-- created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			PRIMARY KEY (id),
+			UNIQUE KEY (cpt_id),
+			FOREIGN KEY (cpt_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+
 		) $charset_collate;";
 
 		// import dbDelta
