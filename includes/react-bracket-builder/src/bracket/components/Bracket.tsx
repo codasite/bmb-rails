@@ -406,7 +406,8 @@ export const Bracket = (props: BracketProps) => {
 		// const bracketHTML = bracketEl.outerHTML
 		// console.log(bracketHTML)
 		const userBracket = matchTree.toUserRequest('barry bracket', 999);
-		console.log(userBracket)
+		const json = JSON.stringify(userBracket);
+		console.log(json)
 
 		// const bracketHTML = getElementChildrenAndStyles(bracketEl)
 		// use html2canvas to get a screenshot of the bracket

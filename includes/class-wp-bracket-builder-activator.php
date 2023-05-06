@@ -42,7 +42,7 @@ class Wp_Bracket_Builder_Activator {
 		self::create_rounds_table($prefix);
 		self::create_matches_table($prefix);
 		self::create_seeds_table($prefix);
-		self::create_user_brackets_table($prefix);
+		self::create_bracket_picks_table($prefix);
 		self::create_match_results_table($prefix);
 		self::create_user_picks_table($prefix);
 	}
@@ -53,7 +53,7 @@ class Wp_Bracket_Builder_Activator {
 			$prefix . 'user_picks',
 			$prefix . 'seeds',
 			$prefix . 'match_results',
-			$prefix . 'user_brackets',
+			$prefix . 'bracket_picks',
 			$prefix . 'matches',
 			$prefix . 'teams',
 			$prefix . 'rounds',
@@ -95,13 +95,13 @@ class Wp_Bracket_Builder_Activator {
 		dbDelta($sql);
 	}
 
-	private static function create_user_brackets_table(string $prefix) {
+	private static function create_bracket_picks_table(string $prefix) {
 		/**
 		 * Create the brackets table
 		 */
 
 		global $wpdb;
-		$table_name = $prefix . 'user_brackets';
+		$table_name = $prefix . 'bracket_picks';
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
@@ -250,11 +250,11 @@ class Wp_Bracket_Builder_Activator {
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			user_bracket_id mediumint(9) NOT NULL,
+			bracket_pick_id mediumint(9) NOT NULL,
 			match_id mediumint(9) NOT NULL,
 			team_id mediumint(9) NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (user_bracket_id) REFERENCES {$prefix}user_brackets(id) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_pick_id) REFERENCES {$prefix}bracket_picks(id) ON DELETE CASCADE,
 			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id) ON DELETE CASCADE,
 			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
 		) $charset_collate;";

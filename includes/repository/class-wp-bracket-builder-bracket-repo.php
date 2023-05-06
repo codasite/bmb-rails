@@ -248,7 +248,7 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			// "SELECT {$bracket_table}.id, cpt_id, num_rounds, num_wildcards, wildcard_placement, 
 			// 	post_title as name, post_date_gmt as created_at,
 			"SELECT {$bracket_fields},
-				(SELECT COUNT(*) FROM {$this->user_bracket_table()} WHERE bracket_id = {$bracket_table}.id) as num_submissions
+				(SELECT COUNT(*) FROM {$this->bracket_pick_table()} WHERE bracket_id = {$bracket_table}.id) as num_submissions
 			 FROM {$bracket_table}
 			 LEFT JOIN {$cpt_table} ON {$bracket_table}.cpt_id = {$cpt_table}.ID
 			 ORDER BY created_at DESC",
@@ -322,8 +322,8 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	private function cpt_table(): string {
 		return $this->wpdb->prefix . 'posts';
 	}
-	private function user_bracket_table(): string {
-		return $this->wpdb->prefix . 'bracket_builder_user_brackets';
+	private function bracket_pick_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_bracket_picks';
 	}
 	private function round_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_rounds';

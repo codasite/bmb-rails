@@ -9,7 +9,7 @@ import './style/main.scss';
 
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./settings/components/Settings'))
-const UserBracket = React.lazy(() => import('./user_bracket/components/UserBracket'))
+const UserBracket = React.lazy(() => import('./bracket_pick/components/UserBracket'))
 
 const page = wpbb_ajax_obj.page
 
