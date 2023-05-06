@@ -341,7 +341,7 @@ export const Bracket = (props: BracketProps) => {
 	// The number of rounds sets the initial height of each match
 	const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
 
-	const bracketRef = useRef(null)
+	const bracketRef = useRef<HTMLDivElement>(null)
 
 	/**
 	 * Build rounds in two directions, left to right and right to left
@@ -401,27 +401,30 @@ export const Bracket = (props: BracketProps) => {
 	}
 
 	const screenshot = () => {
-		const bracket = bracketRef.current
-		if (!bracket) {
+		const bracketEl: HTMLDivElement | null = bracketRef.current
+		if (!bracketEl) {
 			return
 		}
+		// const bracketHTML = getElementChildrenAndStyles(bracketEl)
+		const bracketHTML = bracketEl.outerHTML
+		console.log(bracketHTML)
 		// use html2canvas to get a screenshot of the bracket
-		html2canvas(bracket, {
-			// scrollX: 0,
-			// scrollY: -window.scrollY,
-			// windowWidth: document.documentElement.clientWidth,
-			// windowHeight: document.documentElement.clientHeight,
-		}).then((canvas) => {
-			// create a new image element and set the src to the canvas data url
-			const img = new Image()
-			img.src = canvas.toDataURL()
-			// create a new window and append the image to it
-			const win = window.open()
-			if (!win) {
-				return
-			}
-			win.document.write('<img src="' + img.src + '" />')
-		})
+		// html2canvas(bracket, {
+		// 	// scrollX: 0,
+		// 	// scrollY: -window.scrollY,
+		// 	// windowWidth: document.documentElement.clientWidth,
+		// 	// windowHeight: document.documentElement.clientHeight,
+		// }).then((canvas) => {
+		// 	// create a new image element and set the src to the canvas data url
+		// 	const img = new Image()
+		// 	img.src = canvas.toDataURL()
+		// 	// create a new window and append the image to it
+		// 	const win = window.open()
+		// 	if (!win) {
+		// 		return
+		// 	}
+		// 	win.document.write('<img src="' + img.src + '" />')
+		// })
 	}
 
 
@@ -435,3 +438,50 @@ export const Bracket = (props: BracketProps) => {
 	)
 }
 
+
+function getElementChildrenAndStyles(element: HTMLElement): string {
+	const html = element.outerHTML;
+
+	const elements = Array.from(element.querySelectorAll('*'));
+
+	const rulesUsed: CSSStyleRule[] = [];
+
+	const sheets = document.styleSheets;
+	for (const sheet of Array.from(sheets)) {
+		let cssRules: CSSRuleList | null = null;
+		try {
+			cssRules = sheet.cssRules;
+		} catch (error) {
+			console.warn('Failed to access cssRules for stylesheet:', sheet, error);
+			continue;
+		}
+
+		if (!cssRules) {
+			continue;
+		}
+
+		for (const rule of Array.from(cssRules)) {
+			// Type guard to narrow down the type of the rule to CSSStyleRule
+			if (rule instanceof CSSStyleRule) {
+				const selectorText = rule.selectorText;
+				const matchedElts = Array.from(document.querySelectorAll(selectorText));
+				for (const elt of elements) {
+					if (matchedElts.includes(elt)) {
+						rulesUsed.push(rule);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	const style = rulesUsed
+		.map((cssRule) => {
+			return `${cssRule.selectorText} { ${cssRule.style.cssText.toLowerCase()} }`;
+		})
+		.join('\n')
+		.replace(/(\{|;)\s+/g, '$1\n  ')
+		.replace(/\A\s+}/, '}');
+
+	return `<style>\n${style}\n</style>\n\n${html}`;
+}

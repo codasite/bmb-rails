@@ -21,14 +21,24 @@ const UserBracket = (props) => {
 		bracketRes
 	} = props;
 
-	console.log('in UserBracket')
-	console.log('bracket', bracketRes)
+	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
+
+	useEffect(() => {
+		if (bracketId) {
+			bracketApi.getBracket(bracketId).then((res) => {
+				setMatchTree(MatchTree.fromBracketResponse(res));
+			});
+		} else if (bracketRes) {
+			setMatchTree(MatchTree.fromBracketResponse(bracketRes));
+		}
+	}, [bracketId, bracketRes]);
 
 	return (
 		<div>
-			HI!!!
+			{matchTree ? <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
 		</div>
 	)
 }
+
 
 export default UserBracket;
