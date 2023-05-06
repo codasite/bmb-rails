@@ -7,9 +7,28 @@ import { Bracket } from '../../bracket/components/Bracket';
 import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
 import { BracketRes } from '../../api/types/bracket';
 
-// const UserBracketProps = {
+
+interface UserBracketProps {
+	bracketId?: number;
+	bracketRes?: BracketRes;
+}
 
 
-// export const UserBracket = (props) => {
 
-// }
+const UserBracket = (props) => {
+	const {
+		bracketId,
+		bracketRes
+	} = props;
+
+	console.log('in UserBracket')
+	console.log('bracket', bracketRes)
+
+	return (
+		<div>
+			HI!!!
+		</div>
+	)
+}
+
+export default UserBracket;

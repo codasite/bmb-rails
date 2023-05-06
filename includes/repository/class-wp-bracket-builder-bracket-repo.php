@@ -119,31 +119,16 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		return $team;
 	}
 
-	public function get(int $id): Wp_Bracket_Builder_Bracket {
+	public function get(int $id = null, int $post_id = null, WP_Post $post = null): Wp_Bracket_Builder_Bracket {
 		$bracket_arr = null;
-		$bracket_table = $this->bracket_table();
-		$cpt_table = $this->cpt_table();
-		$bracket_fields = $this->bracket_fields();
 
-		// $bracket_arr = $this->wpdb->get_row(
-		// 	$this->wpdb->prepare(
-		// 		"SELECT * FROM {$table_name} WHERE id = %d",
-		// 		$id
-		// 	),
-		// 	ARRAY_A
-		// );
-		$bracket_arr = $this->wpdb->get_row(
-			$this->wpdb->prepare(
-				// "SELECT {$bracket_table}.id, cpt_id, num_rounds, num_wildcards, wildcard_placement, 
-				// post_title as name, post_date_gmt as created_at
-				"SELECT {$bracket_fields}
-			 FROM {$bracket_table}
-			 LEFT JOIN {$cpt_table} ON {$bracket_table}.cpt_id = {$cpt_table}.ID
-			 WHERE {$bracket_table}.id = %d",
-				$id
-			),
-			ARRAY_A
-		);
+		if ($id) {
+			$bracket_arr = $this->get_bracket_array_by_id($id);
+		} else if ($post_id) {
+			$bracket_arr = $this->get_bracket_array_by_post_id($post_id);
+		} else if ($post) {
+			$bracket_arr = $this->get_bracket_array_by_post_id($post->ID);
+		}
 
 		if ($bracket_arr) {
 			# get rounds
@@ -154,6 +139,45 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 
 		return null;
 	}
+
+	private function get_bracket_array_by_id(int $id): array {
+		$bracket_table = $this->bracket_table();
+		$cpt_table = $this->cpt_table();
+		$bracket_fields = $this->bracket_fields();
+
+		$bracket_arr = $this->wpdb->get_row(
+			$this->wpdb->prepare(
+				"SELECT {$bracket_fields}
+					FROM {$bracket_table}
+					LEFT JOIN {$cpt_table} ON {$bracket_table}.cpt_id = {$cpt_table}.ID
+					WHERE {$bracket_table}.id = %d AND {$cpt_table}.post_type = 'bracket'",
+				$id
+			),
+			ARRAY_A
+		);
+
+		return $bracket_arr;
+	}
+
+	private function get_bracket_array_by_post_id(int $post_id): array {
+		$bracket_table = $this->bracket_table();
+		$cpt_table = $this->cpt_table();
+		$bracket_fields = $this->bracket_fields();
+
+		$bracket_arr = $this->wpdb->get_row(
+			$this->wpdb->prepare(
+				"SELECT {$bracket_fields}
+					FROM {$bracket_table}
+					LEFT JOIN {$cpt_table} ON {$bracket_table}.cpt_id = {$cpt_table}.ID
+					WHERE {$cpt_table}.ID = %d",
+				$post_id
+			),
+			ARRAY_A
+		);
+
+		return $bracket_arr;
+	}
+
 
 	private function get_rounds_for_bracket(int $bracket_id): array {
 		$table_name = $this->round_table();

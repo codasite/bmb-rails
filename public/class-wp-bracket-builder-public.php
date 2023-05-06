@@ -1,4 +1,6 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -96,6 +98,10 @@ class Wp_Bracket_Builder_Public {
 
 		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-public.js', array( 'jquery' ), $this->version, false );
 
+		$post = get_post();
+		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
+		$bracket = $bracket_repo->get(post: $post);
+
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
 		wp_localize_script(
@@ -106,6 +112,8 @@ class Wp_Bracket_Builder_Public {
 				'page' => 'user-bracket',
 				'ajax_url' => admin_url('admin-ajax.php'),
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+				'post' => $post,
+				'bracket' => $bracket,
 				// Get bracket url from query params
 				// 'bracket_url' => $_GET['bracket_url'],
 				// For testing:
