@@ -329,9 +329,7 @@ export const Bracket = (props: BracketProps) => {
 	}
 
 	const pickTeam = (depth: number, matchIndex: number, left: boolean) => {
-		console.log('pickTeam', depth, matchIndex, left)
 		const newMatchTree = matchTree.clone()
-		console.log('newMatchTree', newMatchTree.rounds)
 		newMatchTree.advanceTeam(depth, matchIndex, left)
 		setMatchTree(newMatchTree)
 	}
@@ -405,9 +403,12 @@ export const Bracket = (props: BracketProps) => {
 		if (!bracketEl) {
 			return
 		}
+		// const bracketHTML = bracketEl.outerHTML
+		// console.log(bracketHTML)
+		const userBracket = matchTree.toUserRequest('barry bracket', 999);
+		console.log(userBracket)
+
 		// const bracketHTML = getElementChildrenAndStyles(bracketEl)
-		const bracketHTML = bracketEl.outerHTML
-		console.log(bracketHTML)
 		// use html2canvas to get a screenshot of the bracket
 		// html2canvas(bracket, {
 		// 	// scrollX: 0,
