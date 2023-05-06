@@ -1,0 +1,44 @@
+import React, { useState, useEffect } from 'react';
+import { Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import { bracketApi } from '../../api/bracketApi';
+import { Nullable } from '../../utils/types';
+import { Bracket } from '../../bracket/components/Bracket';
+import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
+import { BracketRes } from '../../api/types/bracket';
+
+
+interface UserBracketProps {
+	bracketId?: number;
+	bracketRes?: BracketRes;
+}
+
+
+
+const UserBracket = (props) => {
+	const {
+		bracketId,
+		bracketRes
+	} = props;
+
+	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
+
+	useEffect(() => {
+		if (bracketId) {
+			bracketApi.getBracket(bracketId).then((res) => {
+				setMatchTree(MatchTree.fromBracketResponse(res));
+			});
+		} else if (bracketRes) {
+			setMatchTree(MatchTree.fromBracketResponse(bracketRes));
+		}
+	}, [bracketId, bracketRes]);
+
+	return (
+		<div>
+			{matchTree ? <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
+		</div>
+	)
+}
+
+
+export default UserBracket;

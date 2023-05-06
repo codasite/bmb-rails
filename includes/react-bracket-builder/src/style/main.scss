@@ -1,0 +1,191 @@
+@use 'bracket';
+
+.wpbb-bracket-modal {
+	// .modal-dialog {
+	z-index: 99999999;
+
+	// .wpbb-bracket-modal__header {
+}
+
+.modal-header {
+	border-bottom: 0;
+}
+
+// .wpbb-bracket-modal__footer {
+.modal-footer {
+	border-top: 0;
+}
+
+.wpbb-bracket {
+	display: flex;
+	font-size: x-small;
+	// width: 900px;
+}
+
+.wpbb-round {
+	display: flex;
+	flex-direction: column;
+	flex: 1 1 0;
+
+	.wpbb-round__header {
+		margin-bottom: 20px;
+		text-align: center;
+		height: 34px;
+		line-height: 30px;
+		font-size: medium;
+
+		input {
+			text-align: center;
+			margin: 0 auto;
+			width: 90%;
+		}
+
+		span {
+			// margin: auto 0;
+			display: inline-block;
+			vertical-align: middle;
+			line-height: normal;
+		}
+	}
+
+	.wpbb-round__body {
+		display: flex;
+		flex-grow: 1;
+		flex-direction: column;
+		justify-content: center;
+	}
+}
+
+
+.wpbb-options-form {
+	display: flex;
+	align-items: flex-end;
+	padding-left: 10px;
+	flex: 1;
+	justify-content: center;
+}
+
+.wpbb-option-group {
+	margin-right: 20px;
+
+	label {
+		margin-right: 10px;
+	}
+}
+
+$bracket-radius: 3px;
+$team-height: 16px;
+$team-background: #3c434a;
+$team-color: white;
+
+@mixin team() {
+	position: absolute;
+	height: $team-height;
+	min-width: 100px;
+	// border: 1px solid black;
+	left: 50%;
+	transform: translateX(-50%);
+	// background-color: white;
+	background-color: $team-background;
+	// add some shadow to the team
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+	color: $team-color;
+	// padding: 0 4px;
+	border-radius: $bracket-radius;
+	z-index: 1;
+	text-align: center;
+}
+
+$team-offset: -8px;
+
+.wpbb-team1 {
+	@include team();
+	top: $team-offset;
+}
+
+.wpbb-team2 {
+	@include team();
+	bottom: $team-offset;
+}
+
+.wpbb-champion-team {
+	@include team();
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.wpbb-team1:hover,
+.wpbb-team2:hover {
+	cursor: pointer;
+}
+
+.wpbb-team-name-input {
+	width: 100%;
+	border: none !important;
+	min-height: 0 !important;
+	height: $team-height - 1 !important;
+	text-align: center;
+}
+
+.wpbb-team-name-input:focus {
+	border-radius: $bracket-radius - 1;
+}
+
+.wpbb-team-name {
+	white-space: nowrap;
+	// font-size: small;
+}
+
+// .wpbb-bracket-title {
+// 	// position: relative;
+// }
+
+.wpbb-bracket-title-name {
+	height: 40px;
+}
+
+
+.wpbb-bracket-title-input {
+	// position: absolute;
+	height: 40px;
+}
+
+$table-radius: 10px;
+
+/* Add border-radius to the table */
+.wpbb-bracket-table {
+	border-collapse: separate;
+	border-spacing: 0;
+	border-radius: $table-radius;
+	overflow: hidden;
+}
+
+.wpbb-bracket-table-action-col {
+	text-align: end;
+}
+
+.wpbb-bracket-table-active-check {
+	color: white;
+	font-size: x-large;
+}
+
+.wpbb-active-checkbox {
+	text-align: center;
+
+}
+
+// .wpbb-table-inside {
+// 	padding: 10px;
+// }
+
+.table td,
+.table th {
+	padding: 15px;
+	vertical-align: middle;
+	/* Adjust this value to your desired padding */
+}
+
+.table tr:hover {
+	cursor: pointer;
+
+}
