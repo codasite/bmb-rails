@@ -145,7 +145,7 @@ class Wp_Bracket_Builder_User_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 		parent::__construct($name, $id, $rounds);
 		$this->customer_id = $customer_id;
 		$this->bracket_id = $bracket_id;
-		$this->rounds = $rounds;
+		// $this->rounds = $rounds;
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_User_Bracket {

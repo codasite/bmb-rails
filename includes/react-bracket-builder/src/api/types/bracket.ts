@@ -2,7 +2,6 @@ import { Nullable } from '../../utils/types';
 
 interface Team {
 	name: string;
-	seed: Nullable<number>;
 }
 
 export interface TeamRes extends Team {
@@ -65,4 +64,18 @@ export interface BracketRes extends Bracket {
 
 export interface BracketReq extends Bracket {
 	rounds: RoundReq[];
+}
+
+export interface UserMatchReq {
+	result: Nullable<number>;
+}
+
+export interface UserRoundReq {
+	matches: Nullable<UserMatchReq>[];
+}
+
+export interface UserBracketReq {
+	bracketId: number;
+	name: string;
+	rounds: UserRoundReq[];
 }
