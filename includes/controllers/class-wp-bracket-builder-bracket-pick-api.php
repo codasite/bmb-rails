@@ -7,7 +7,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	/**
 	 * @var Wp_Bracket_Builder_Bracket_Pick_Repository_Interface
 	 */
-	private $bracket_repo;
+	private $pick_repo;
 
 	/**
 	 * @var string
@@ -22,11 +22,11 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 */
-	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $bracket_repo = null) {
+	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $pick_repo = null) {
 	public function __construct() {
-		// echo $bracket_repo;
-		// $this->bracket_repo = $bracket_repo != null ? $bracket_repo : new Wp_Bracket_Builder_Bracket_Repository();
-		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Pick_Repository();
+		// echo $pick_repo;
+		// $this->pick_repo = $pick_repo != null ? $pick_repo : new Wp_Bracket_Builder_Bracket_Repository();
+		$this->pick_repo = new Wp_Bracket_Builder_Bracket_Pick_Repository();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'bracket-picks';
 	}
@@ -119,7 +119,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items($request) {
-		$brackets = $this->bracket_repo->get_all();
+		$brackets = $this->pick_repo->get_all();
 		return new WP_REST_Response($brackets, 200);
 	}
 
@@ -132,7 +132,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	public function get_item($request) {
 		// get id from request
 		$id = $request->get_param('item_id');
-		$bracket = $this->bracket_repo->get($id);
+		$bracket = $this->pick_repo->get($id);
 		return new WP_REST_Response($bracket, 200);
 	}
 
@@ -143,9 +143,9 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item($request) {
-		$bracket = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
+		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
 
-		$saved = $this->bracket_repo->add($bracket);
+		$saved = $this->pick_repo->add($pick);
 		return new WP_REST_Response($saved, 201);
 		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
 	}
@@ -169,7 +169,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	// 	unset($bracket_params['item_id']);
 
 	// 	$bracket = Wp_Bracket_Builder_Bracket_Pick::from_array($bracket_params);
-	// 	$updated = $this->bracket_repo->update($bracket);
+	// 	$updated = $this->pick_repo->update($bracket);
 	// 	return new WP_REST_Response($updated, 200);
 	// }
 
@@ -182,7 +182,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	// public function delete_item($request) {
 	// 	// get id from request
 	// 	$id = $request->get_param('item_id');
-	// 	$deleted = $this->bracket_repo->delete($id);
+	// 	$deleted = $this->pick_repo->delete($id);
 	// 	if ($deleted) {
 	// 		return new WP_REST_Response(null, 204);
 	// 	}

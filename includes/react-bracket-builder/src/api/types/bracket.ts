@@ -66,6 +66,10 @@ export interface BracketReq extends Bracket {
 	rounds: RoundReq[];
 }
 
+export interface UserTeamReq {
+	id: number;
+}
+
 export interface UserMatchReq {
 	result: Nullable<number>;
 }
