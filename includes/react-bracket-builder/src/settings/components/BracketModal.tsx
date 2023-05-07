@@ -11,6 +11,7 @@ export enum BracketModalMode {
 	New = 0,
 	View = 1,
 	Score = 2,
+	Submissions = 3
 }
 
 const NumRoundsSelector = (props) => {
@@ -221,7 +222,6 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 	const maxWildcards = 2 ** (numRounds - 1) - 2;
 
 	useEffect(() => {
-		console.log('bracketId', bracketId)
 		if (bracketId) {
 			bracketApi.getBracket(bracketId)
 				.then((bracket) => {
@@ -302,6 +302,28 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 			</Modal.Footer>
 		</Modal>
 	)
+}
+
+interface BracketSubmissionsModalProps {
+	show: boolean;
+	handleClose: () => void;
+	bracketId: number;
+}
+
+
+
+const BracketSubmissionsModal = (props: BracketModalProps) => {
+	const {
+		show,
+		handleClose,
+		bracketId
+	} = props;
+
+	useEffect(() => {
+		bracketApi.getSubmissions(bracketId).then((submissions) => {
+			console.log(submissions)
+		})
+	})
 }
 
 interface BracketModalProps {

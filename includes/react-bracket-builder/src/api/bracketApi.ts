@@ -5,6 +5,7 @@ import { BracketReq, BracketRes } from './types/bracket';
 class BracketApi {
 	private baseUrl: string;
 	private bracketPath: string = 'brackets';
+	private submissionPath: string = 'bracket-picks';
 
 	constructor() {
 		// @ts-ignore
@@ -23,6 +24,15 @@ class BracketApi {
 		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
 		if (res.status !== 200) {
 			throw new Error('Failed to get bracket');
+		}
+		return camelCaseKeys(await res.json());
+	}
+
+	async getSubmissions(id?: number | null): Promise<BracketRes[]> {
+		const params = id ? { bracketId: id } : {};
+		const res = await this.performRequest(`${this.submissionPath}`, 'GET', params);
+		if (res.status !== 200) {
+			throw new Error('Failed to get submissions');
 		}
 		return camelCaseKeys(await res.json());
 	}
@@ -55,6 +65,7 @@ class BracketApi {
 
 
 	async performRequest(path: string, method: string, body: any = {}) {
+		const snakeBody = snakeCaseKeys(body);
 		const request = {
 			method,
 			headers: {
@@ -62,8 +73,12 @@ class BracketApi {
 			},
 		}
 		if (method !== 'GET') {
-			request['body'] = JSON.stringify(snakeCaseKeys(body));
+			request['body'] = JSON.stringify(snakeBody);
+		} else if (Object.keys(body).length > 0) {
+			// pass params as query string
+			path += '?' + Object.entries(snakeBody).map(([key, value]) => `${key}=${value}`).join('&');
 		}
+		console.log(path)
 
 		return await fetch(`${this.baseUrl}${path}`, request);
 	}

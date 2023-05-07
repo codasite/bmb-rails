@@ -129,16 +129,18 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 		return $results;
 	}
 
-	public function get_all(): array {
-		// $table_name = $this->bracket_pick_table();
-		// $sql = "SELECT * FROM $table_name";
-		// $results = $this->wpdb->get_results($sql);
-		// $brackets = [];
-		// foreach ($results as $result) {
-		// 	$brackets[] = $this->map_row_to_bracket($result);
-		// }
-		// return $brackets;
-		return [];
+	public function get_all($bracket_id = null): array {
+		$table_name = $this->bracket_pick_table();
+		$sql = "SELECT * FROM $table_name";
+		if ($bracket_id) {
+			$sql .= " WHERE bracket_id = $bracket_id";
+		}
+		$results = $this->wpdb->get_results($sql, ARRAY_A);
+		$brackets = [];
+		foreach ($results as $result) {
+			$brackets[] = Wp_Bracket_Builder_Bracket_Pick::from_array($result);
+		}
+		return $brackets;
 	}
 
 	private function bracket_table(): string {

@@ -43,7 +43,17 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array($this, 'get_items'),
 				'permission_callback' => array($this, 'customer_permission_check'),
-				'args'                => array(),
+				'args'                => array(
+					'bracket_id' => array(
+						'description' => 'The ID of the bracket.',
+						'type'        => 'integer',
+						'required'    => false, // Set to true if the parameter is required
+						'sanitize_callback' => 'absint', // Sanitize the input as an absolute integer value
+						'validate_callback' => function ($param, $request, $key) {
+							return is_numeric($param); // Validate that the input is a numeric value
+						},
+					),
+				),
 			),
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -87,29 +97,6 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 				),
 			),
 		));
-		register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/activate', array(
-			'methods' => 'POST',
-			'callback' => array($this, 'activate_bracket'),
-			'permission_callback' => array($this, 'admin_permission_check'),
-			'args' => array(
-				'id' => array(
-					'description' => __('Unique identifier for the object.'),
-					'type'        => 'integer',
-				),
-			),
-		));
-
-		register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/deactivate', array(
-			'methods' => 'POST',
-			'callback' => array($this, 'deactivate_bracket'),
-			'permission_callback' => array($this, 'admin_permission_check'),
-			'args' => array(
-				'id' => array(
-					'description' => __('Unique identifier for the object.'),
-					'type'        => 'integer',
-				),
-			),
-		));
 	}
 
 	/**
@@ -119,7 +106,9 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items($request) {
-		$brackets = $this->pick_repo->get_all();
+		$bracket_id = $request->get_param('bracket_id');
+
+		$brackets = $this->pick_repo->get_all($bracket_id);
 		return new WP_REST_Response($brackets, 200);
 	}
 
