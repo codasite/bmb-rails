@@ -8,6 +8,7 @@ import {
 	UserBracketReq,
 	UserMatchReq,
 	UserRoundReq,
+	UserTeamReq,
 } from '../../api/types/bracket';
 
 export enum WildcardPlacement {
@@ -34,6 +35,10 @@ export class Team {
 		return {
 			name: this.name,
 		}
+	}
+
+	toUserRequest(): Nullable<UserTeamReq> {
+		return this.id === null ? null : { id: this.id };
 	}
 }
 
@@ -82,7 +87,7 @@ export class MatchNode {
 
 	toUserRequest(): UserMatchReq {
 		return {
-			result: this.result ? this.result.id : null,
+			result: this.result ? this.result.toUserRequest() : null,
 		}
 	}
 }

@@ -55,7 +55,7 @@ class Wp_Bracket_Builder_Round {
 	 */
 	public $depth;
 
-	public function __construct(string $name, int $depth, int $id = null, array $matches = []) {
+	public function __construct(int $depth, string $name = null, int $id = null, array $matches = []) {
 		// public function __construct(string $name,  int $id = null, array $matches = []) {
 		$this->id = $id;
 		$this->depth = $depth;
@@ -64,7 +64,11 @@ class Wp_Bracket_Builder_Round {
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Round {
-		$round = new Wp_Bracket_Builder_Round($data['name'], $data['depth']);
+		$round = new Wp_Bracket_Builder_Round($data['depth']);
+
+		if (isset($data['name'])) {
+			$round->name = $data['name'];
+		}
 
 		if (isset($data['id'])) {
 			$round->id = (int) $data['id'];
@@ -214,14 +218,18 @@ class Wp_Bracket_Builder_Team {
 	public $seed;
 
 
-	public function __construct(string $name, int $id = null, int $seed = null) {
+	public function __construct(string $name = null, int $id = null, int $seed = null) {
 		$this->id = $id;
 		$this->name = $name;
 		$this->seed = $seed;
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Team {
-		$team = new Wp_Bracket_Builder_Team($data['name']);
+		$team = new Wp_Bracket_Builder_Team();
+
+		if (isset($data['name'])) {
+			$team->name = $data['name'];
+		}
 
 		if (isset($data['id'])) {
 			$team->id = (int) $data['id'];
