@@ -39,4 +39,41 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 
 		return $bracket_pick;
 	}
+
+	public function fill_in_results(array $match_pick_map): void {
+		$team_map = $this->get_team_map();
+		$rounds = $this->rounds;
+
+		foreach ($rounds as $i => $round) {
+			foreach ($round->matches as $j => $match) {
+				$match_id = $match->id;
+				if (isset($match_pick_map[$match_id])) {
+					$team_id = $match_pick_map[$match_id];
+					$result = $team_map[$team_id];
+					$match->result = $result;
+					$parent = $this->get_match_parent($i, $j);
+					if ($parent) {
+						$left_child = $j % 2 === 0;
+						if ($left_child) {
+							$parent->team1 = $result;
+						} else {
+							$parent->team2 = $result;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+class Wp_Bracket_Builder_Match_Pick {
+	public $match_id;
+	public $pick_id;
+	public $winner_id;
+
+	public function __construct(int $match_id, int $pick_id, int $winner_id) {
+		$this->match_id = $match_id;
+		$this->pick_id = $pick_id;
+		$this->winner_id = $winner_id;
+	}
 }

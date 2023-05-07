@@ -13,18 +13,19 @@ interface Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
 
 class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
 	private $wpdb;
+	private Wp_Bracket_Builder_Bracket_Repository_Interface $bracket_repo;
 
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
+		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
 		// print_r($pick);
 		$bracket_id = $pick->bracket_id;
 
-		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
-		$bracket = $bracket_repo->get($bracket_id);
+		$bracket = $this->bracket_repo->get($bracket_id);
 		if (!$bracket) {
 			return null;
 		}
@@ -101,21 +102,32 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 		if (!$result) {
 			return null;
 		}
-		return Wp_Bracket_Builder_Bracket_Pick::from_array($result);
+		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($result);
+		$bracket = $this->bracket_repo->get($result['bracket_id']);
+
+		$pick->rounds = $bracket->rounds;
+		$match_pick_map = $this->get_match_pick_map($pick->id);
+
+		$pick->fill_in_results($match_pick_map);
+
+		return $pick;
 	}
 
-	// private function map_row_to_pick($row): Wp_Bracket_Builder_Bracket_Pick {
-	// 	$bracket_id = $row->bracket_id;
-	// 	$name = $row->name;
-	// 	$cust_id = $row->cust_id;
-	// 	$id = $row->id;
+	private function get_match_pick_map(int $pick_id): array {
+		$match_picks = $this->get_match_picks($pick_id);
+		$match_pick_map = [];
+		foreach ($match_picks as $match_pick) {
+			$match_pick_map[$match_pick['match_id']] = $match_pick['team_id'];
+		}
+		return $match_pick_map;
+	}
 
-	// 	$bracket = $this->get_bracket($bracket_id);
-
-	// 	$pick = new Wp_Bracket_Builder_Bracket_Pick($cust_id, $bracket_id, $name, $id, $bracket->rounds);
-
-	// 	return $pick;
-	// }
+	private function get_match_picks(int $pick_id): array {
+		$table_name = $this->match_pick_table();
+		$sql = "SELECT * FROM $table_name WHERE bracket_pick_id = $pick_id";
+		$results = $this->wpdb->get_results($sql, ARRAY_A);
+		return $results;
+	}
 
 	public function get_all(): array {
 		// $table_name = $this->bracket_pick_table();

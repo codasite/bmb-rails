@@ -32,6 +32,34 @@ class Wp_Bracket_Builder_Bracket_Base {
 		return Wp_Bracket_Builder_Round::array_equals($this->rounds, $bracket->rounds);
 		return true;
 	}
+
+	public function get_team_map(): array {
+		// return an array of team ids to teams
+		$team_map = [];
+		foreach ($this->rounds as $round) {
+			foreach ($round->matches as $match) {
+				$team_map[$match->team1->id] = $match->team1;
+				$team_map[$match->team2->id] = $match->team2;
+			}
+		}
+		return $team_map;
+	}
+
+	public function get_match_parent(int $round_idx, int $match_idx): ?Wp_Bracket_Builder_Match {
+		// return the match that is the parent of the given match
+		// return null if the match is not found
+		if ($round_idx >= count($this->rounds)) {
+			return null;
+		}
+		if ($match_idx >= count($this->rounds[$round_idx]->matches)) {
+			return null;
+		}
+		if ($round_idx === 0) {
+			return null;
+		}
+		$parent_match_idx = (int) floor($match_idx / 2);
+		return $this->rounds[$round_idx - 1]->matches[$parent_match_idx];
+	}
 }
 
 class Wp_Bracket_Builder_Round {
