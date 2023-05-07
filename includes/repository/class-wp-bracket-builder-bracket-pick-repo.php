@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-repo.php';
 
 interface Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
 	public function add(Wp_Bracket_Builder_Bracket_Pick $bracket): ?Wp_Bracket_Builder_Bracket_Pick;
@@ -19,10 +20,18 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
+		// print_r($pick);
 		$bracket_id = $pick->bracket_id;
+
+		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
+		$bracket = $bracket_repo->get($bracket_id);
+		if (!$bracket) {
+			return null;
+		}
+		// print_r($bracket);
+
 		$name = $pick->name;
 		$cust_id = $pick->customer_id;
-
 		$table_name = $this->bracket_pick_table();
 
 		$this->wpdb->insert(
@@ -34,11 +43,55 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 			]
 		);
 
-		$pick_id = $this->wpdb->insert_id;
-		$pick = $this->get($pick_id);
-
+		$pick->id = $this->wpdb->insert_id;
+		$this->insert_match_picks($pick, $bracket);
+		$pick = $this->get($pick->id);
 
 		return $pick;
+	}
+
+	private function insert_match_picks(Wp_Bracket_Builder_Bracket_Pick $pick, Wp_Bracket_Builder_Bracket $bracket): void {
+		$pick_id = $pick->id;
+
+		if (!$pick_id) {
+			echo 'pick id is null';
+			return;
+		}
+		foreach ($pick->rounds as $i => $round) {
+			if (!$round->matches) {
+				echo 'round matches is null';
+				continue;
+			}
+			foreach ($round->matches as $j => $match) {
+				if (!$match->result) {
+					echo 'match result is null';
+					continue;
+				}
+				$match_id = $bracket->rounds[$i]->matches[$j]->id;
+				$team_id = $match->result->id;
+				if (!$match_id || !$team_id) {
+					echo 'match id or team id is null';
+					continue;
+				}
+				echo "inserting match pick: $pick_id, $match_id, $team_id";
+				$this->insert_match_pick($pick_id, $match_id, $team_id);
+			}
+		}
+	}
+
+	private function insert_match_pick(int $bracket_pick_id, int $match_id, int $team_id): int {
+		$table_name = $this->match_pick_table();
+
+		$this->wpdb->insert(
+			$table_name,
+			[
+				'bracket_pick_id' => $bracket_pick_id,
+				'match_id' => $match_id,
+				'team_id' => $team_id,
+			]
+		);
+
+		return $this->wpdb->insert_id;
 	}
 
 	public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick {
@@ -84,6 +137,9 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 	}
 	private function bracket_pick_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_bracket_picks';
+	}
+	private function match_pick_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_match_picks';
 	}
 	private function round_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_rounds';
