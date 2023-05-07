@@ -41,16 +41,14 @@ class Wp_Bracket_Builder_Activator {
 		self::create_teams_table($prefix);
 		self::create_rounds_table($prefix);
 		self::create_matches_table($prefix);
-		self::create_seeds_table($prefix);
 		self::create_bracket_picks_table($prefix);
-		self::create_match_results_table($prefix);
-		self::create_user_picks_table($prefix);
+		self::create_match_picks_table($prefix);
 	}
 
 	private static function delete_tables(string $prefix) {
 		global $wpdb;
 		$tables = [
-			$prefix . 'user_picks',
+			$prefix . 'match_picks',
 			$prefix . 'seeds',
 			$prefix . 'match_results',
 			$prefix . 'bracket_picks',
@@ -239,13 +237,13 @@ class Wp_Bracket_Builder_Activator {
 	}
 
 
-	private static function create_user_picks_table(string $prefix) {
+	private static function create_match_picks_table(string $prefix) {
 		/**
 		 * Create the predictions table
 		 */
 
 		global $wpdb;
-		$table_name = $prefix . 'user_picks';
+		$table_name = $prefix . 'match_picks';
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (

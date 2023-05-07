@@ -24,10 +24,7 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Pick {
-		print_r($data);
 		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($data['customer_id'], $data['bracket_id'], $data['name']);
-		echo 'bracket_pick:';
-		print_r($bracket_pick);
 
 		if (isset($data['id'])) {
 			$bracket_pick->id = (int) $data['id'];

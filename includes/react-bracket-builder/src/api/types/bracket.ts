@@ -71,7 +71,7 @@ export interface UserTeamReq {
 }
 
 export interface UserMatchReq {
-	result: Nullable<number>;
+	result: Nullable<UserTeamReq>;
 }
 
 export interface UserRoundReq {
