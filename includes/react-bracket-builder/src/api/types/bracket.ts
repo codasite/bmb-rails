@@ -83,3 +83,12 @@ export interface UserBracketReq {
 	name: string;
 	rounds: UserRoundReq[];
 }
+
+export interface SubmissionRes {
+	id: number;
+	// createdAt: phpDate;
+	bracketId: number;
+	customerId: number;
+	name: string;
+	rounds: RoundRes[];
+}
