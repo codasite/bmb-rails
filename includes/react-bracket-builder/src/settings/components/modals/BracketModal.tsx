@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
-import { bracketApi } from '../../api/bracketApi';
-import { Nullable } from '../../utils/types';
-import { Bracket } from '../../bracket/components/Bracket';
-import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
-import { BracketRes } from '../../api/types/bracket';
+import { bracketApi } from '../../../api/bracketApi';
+import { Nullable } from '../../../utils/types';
+import { Bracket } from '../../../bracket/components/Bracket';
+import { MatchTree, WildcardPlacement } from '../../../bracket/models/MatchTree';
+import { BracketRes } from '../../../api/types/bracket';
+import { BracketSubmissionsModal } from './BracketSubmissionsModal';
+
 
 export enum BracketModalMode {
 	New = 0,
@@ -161,7 +163,13 @@ const BracketTitle = (props) => {
 	)
 }
 
-const ViewBracketModal = (props) => {
+interface ViewBracketModalProps {
+	show: boolean;
+	handleClose: () => void;
+	bracketId: number;
+}
+
+const ViewBracketModal = (props: ViewBracketModalProps) => {
 	const {
 		show,
 		handleClose,
@@ -174,12 +182,12 @@ const ViewBracketModal = (props) => {
 		bracketApi.getBracket(bracketId)
 			.then((bracket) => {
 				setBracket(bracket)
-				setMatchTree(MatchTree.fromBracketResponse(bracket))
+				setMatchTree(MatchTree.fromRounds(bracket.rounds))
 			})
 	}, [bracketId])
 
 	return (
-		<Modal className='wpbb-bracket-modal' show={show && bracket} onHide={handleClose} size='xl' centered={true}>
+		<Modal className='wpbb-bracket-modal' show={show && bracket !== null} onHide={handleClose} size='xl' centered={true}>
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
 				<Modal.Title>{bracket?.name}</Modal.Title>
 			</Modal.Header >
@@ -231,7 +239,7 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 						setWildcardPlacement(bracket.wildcardPlacement)
 					}
 					setBracketName(`${bracket.name} (Copy)`)
-					setMatchTree(MatchTree.fromBracketResponse(bracket))
+					setMatchTree(MatchTree.fromRounds(bracket.rounds))
 				})
 		}
 		else {
@@ -304,27 +312,6 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 	)
 }
 
-interface BracketSubmissionsModalProps {
-	show: boolean;
-	handleClose: () => void;
-	bracketId: number;
-}
-
-
-
-const BracketSubmissionsModal = (props: BracketModalProps) => {
-	const {
-		show,
-		handleClose,
-		bracketId
-	} = props;
-
-	useEffect(() => {
-		bracketApi.getSubmissions(bracketId).then((submissions) => {
-			console.log(submissions)
-		})
-	})
-}
 
 interface BracketModalProps {
 	show: boolean;
@@ -338,13 +325,15 @@ interface BracketModalProps {
 export const BracketModal = (props: BracketModalProps) => {
 	const bracketId = props.bracketId;
 
-	if (bracketId) {
+	if (bracketId !== null) {
 		if (props.mode === BracketModalMode.New) {
 			return <NewBracketModal {...props} />
 		} else if (props.mode === BracketModalMode.Score) {
-			return <ViewBracketModal {...props} />
+			return <ViewBracketModal {...props} bracketId={bracketId} />
+		} else if (props.mode === BracketModalMode.Submissions) {
+			return <BracketSubmissionsModal {...props} bracketId={bracketId} />
 		} else {
-			return <ViewBracketModal {...props} />
+			return <ViewBracketModal {...props} bracketId={bracketId} />
 		}
 	} else {
 		return <NewBracketModal {...props} />

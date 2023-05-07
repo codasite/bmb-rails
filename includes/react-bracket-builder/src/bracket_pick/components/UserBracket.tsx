@@ -26,10 +26,10 @@ const UserBracket = (props) => {
 	useEffect(() => {
 		if (bracketId) {
 			bracketApi.getBracket(bracketId).then((res) => {
-				setMatchTree(MatchTree.fromBracketResponse(res));
+				setMatchTree(MatchTree.fromRounds(res.rounds));
 			});
 		} else if (bracketRes) {
-			setMatchTree(MatchTree.fromBracketResponse(bracketRes));
+			setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
 		}
 	}, [bracketId, bracketRes]);
 
