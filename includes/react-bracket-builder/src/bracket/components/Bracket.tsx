@@ -270,7 +270,7 @@ interface BracketProps {
 	matchTree: MatchTree;
 	canEdit?: boolean;
 	canPick?: boolean;
-	setMatchTree: (matchTree: MatchTree) => void;
+	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
 export const Bracket = (props: BracketProps) => {
@@ -279,12 +279,11 @@ export const Bracket = (props: BracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
-		canEdit,
-		canPick,
 	} = props
 
 	const rounds = matchTree.rounds
-	// const canEdit = setMatchTree !== undefined
+	const canEdit = setMatchTree !== undefined && props.canEdit
+	const canPick = setMatchTree !== undefined && props.canPick
 
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -329,6 +328,9 @@ export const Bracket = (props: BracketProps) => {
 	}
 
 	const pickTeam = (depth: number, matchIndex: number, left: boolean) => {
+		if (!canPick) {
+			return
+		}
 		const newMatchTree = matchTree.clone()
 		newMatchTree.advanceTeam(depth, matchIndex, left)
 		setMatchTree(newMatchTree)

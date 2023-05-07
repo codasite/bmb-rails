@@ -1,4 +1,4 @@
-import { BracketReq, BracketRes } from './types/bracket';
+import { BracketReq, BracketRes, SubmissionRes } from './types/bracket';
 
 
 
@@ -28,11 +28,19 @@ class BracketApi {
 		return camelCaseKeys(await res.json());
 	}
 
-	async getSubmissions(id?: number | null): Promise<BracketRes[]> {
+	async getSubmissions(id?: number | null): Promise<SubmissionRes[]> {
 		const params = id ? { bracketId: id } : {};
 		const res = await this.performRequest(`${this.submissionPath}`, 'GET', params);
 		if (res.status !== 200) {
 			throw new Error('Failed to get submissions');
+		}
+		return camelCaseKeys(await res.json());
+	}
+
+	async getSubmission(id: number): Promise<SubmissionRes> {
+		const res = await this.performRequest(`${this.submissionPath}/${id}`, 'GET');
+		if (res.status !== 200) {
+			throw new Error('Failed to get submission');
 		}
 		return camelCaseKeys(await res.json());
 	}

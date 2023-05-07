@@ -9,6 +9,7 @@ import {
 	UserMatchReq,
 	UserRoundReq,
 	UserTeamReq,
+	RoundRes,
 } from '../../api/types/bracket';
 
 export enum WildcardPlacement {
@@ -247,15 +248,15 @@ export class MatchTree {
 		return newTree;
 	}
 
-	static fromBracketResponse(bracket: BracketRes): MatchTree {
+	static fromRounds(rounds: RoundRes[]): MatchTree {
 		const tree = new MatchTree()
-		tree.rounds = bracket.rounds.map((round) => {
+		tree.rounds = rounds.map((round) => {
 			const newRound = new Round(round.id, round.name, round.depth);
 			return newRound;
 		});
 		// Then, iterate over the new rounds to create the matches and update their parent relationships.
 		tree.rounds.forEach((round, roundIndex) => {
-			round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
+			round.matches = rounds[roundIndex].matches.map((match, matchIndex) => {
 				if (match === null) {
 					return null;
 				}

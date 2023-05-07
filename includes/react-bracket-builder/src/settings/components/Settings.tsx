@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Table, Modal } from 'react-bootstrap';
-import { BracketModal, BracketModalMode } from './BracketModal';
+import { BracketModal, BracketModalMode } from './modals/BracketModal';
 import { bracketApi } from '../../api/bracketApi';
 import { BracketRes } from '../../api/types/bracket';
 
