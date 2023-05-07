@@ -106,20 +106,20 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 		$bracket = $this->bracket_repo->get($result['bracket_id']);
 
 		$pick->rounds = $bracket->rounds;
-		$match_pick_map = $this->get_match_pick_map($pick->id);
+		$match_results_map = $this->get_match_results_map($pick->id);
 
-		$pick->fill_in_results($match_pick_map);
+		$pick->fill_in_results($match_results_map);
 
 		return $pick;
 	}
 
-	private function get_match_pick_map(int $pick_id): array {
+	private function get_match_results_map(int $pick_id): array {
 		$match_picks = $this->get_match_picks($pick_id);
-		$match_pick_map = [];
+		$match_results_map = [];
 		foreach ($match_picks as $match_pick) {
-			$match_pick_map[$match_pick['match_id']] = $match_pick['team_id'];
+			$match_results_map[$match_pick['match_id']] = $match_pick['team_id'];
 		}
-		return $match_pick_map;
+		return $match_results_map;
 	}
 
 	private function get_match_picks(int $pick_id): array {
