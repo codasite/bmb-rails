@@ -3,7 +3,31 @@ import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../utils/types';
 import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
+import LineTo, { SteppedLineTo, Line } from 'react-lineto';
 // import html2canvas
+
+const teamHeight = 20
+const defaultMatchGap = 20
+const depth4MatchGap = 10
+const depth5MatchGap = 4
+
+const getMatchGap = (depth: number) => {
+	let gap = teamHeight
+	if (depth === 4) {
+		gap += depth4MatchGap
+	} else if (depth === 5) {
+		gap += depth5MatchGap
+	} else {
+		gap += defaultMatchGap
+	}
+	return gap
+}
+
+const getTeamClassName = (roundIndex, matchIndex, left) => {
+	const className = `wpbb-team${left ? '1' : '2'} wpbb-team-${roundIndex}-${matchIndex}-${left ? 'left' : 'right'}`
+	return className
+}
+
 
 
 // Direction enum
@@ -17,20 +41,27 @@ enum Direction {
 
 
 interface TeamSlotProps {
-	className: string;
+	className?: string;
 	team?: Team | null;
 	updateTeam?: (name: string) => void;
 	pickTeam?: () => void;
+	roundIndex?: number;
+	matchIndex?: number;
+	left?: boolean;
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
+	const className = props.className ? props.className : getTeamClassName(props.roundIndex, props.matchIndex, props.left)
 
 	const {
 		team,
 		updateTeam,
-		pickTeam
+		pickTeam,
+		roundIndex,
+		matchIndex,
+		left,
 	} = props
 
 
@@ -61,7 +92,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 	}
 
 	return (
-		<div className={props.className} onClick={handleClick}>
+		<div className={className} onClick={handleClick}>
 			{editing ?
 				<input
 					className='wpbb-team-name-input'
@@ -78,7 +109,8 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+				// <span className='wpbb-team-name'>{team ? team.name : ''}</span>
+				<span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
 			}
 		</div>
 	)
@@ -91,6 +123,8 @@ interface MatchBoxProps {
 	spacing: number;
 	updateTeam?: (left: boolean, name: string) => void;
 	pickTeam?: (left: boolean) => void;
+	roundIndex: number;
+	matchIndex: number;
 }
 
 const MatchBox = (props: MatchBoxProps) => {
@@ -108,7 +142,6 @@ const MatchBox = (props: MatchBoxProps) => {
 			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
 		)
 	}
-
 	let className: string;
 
 	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
@@ -135,46 +168,29 @@ const MatchBox = (props: MatchBoxProps) => {
 		className += '-outer-lower'
 	}
 
-	// This component renders the lines connecting two nodes representing a "game"
-	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
 			<TeamSlot
-				className='wpbb-team1'
+				// className='wpbb-team1'
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
+				roundIndex={props.roundIndex}
+				matchIndex={props.matchIndex}
+				left={true}
 			/>
 			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
-				className='wpbb-team2'
+				// className='wpbb-team2'
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
+				roundIndex={props.roundIndex}
+				matchIndex={props.matchIndex}
+				left={false}
 			/>
 		</div>
 	)
-}
-
-interface MatchPairProps {
-	match1: MatchNode | null;
-	match2: MatchNode | null;
-	direction: Direction;
-	height: number;
-	spacing: number;
-}
-
-const MatchPair = (props: MatchPairProps) => {
-	const {
-		match1,
-		match2,
-		direction,
-		height,
-		spacing,
-	} = props
-
-
-
 }
 
 interface RoundHeaderProps {
@@ -257,7 +273,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
-	const matchHeight = 30
+	const matchHeight = getMatchGap(round.depth)
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
@@ -267,9 +283,11 @@ const MatchColumn = (props: MatchColumnProps) => {
 					match={match}
 					direction={direction}
 					height={matchHeight}
-					spacing={i + 1 < matches.length ? targetHeight - 10 : 0} // Do not add spacing to the last match in the round column
+					spacing={i + 1 < matches.length ? targetHeight - matchHeight : 0} // Do not add spacing to the last match in the round column
 					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
 					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
+					roundIndex={round.depth}
+					matchIndex={matchIndex}
 				/>
 			)
 		})
@@ -357,10 +375,16 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		setMatchTree(newMatchTree)
 	}
 
-	const targetHeight = 800;
+	const targetHeight = 806;
+	console.log('round length', rounds.length)
 
 	// The number of rounds sets the initial height of each match
-	const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
+	// const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 1);
+	const numDirections = 2
+	const maxMatchesPerRound = 2 ** (rounds.length - 1)
+	const maxMatchesPerColumn = maxMatchesPerRound / numDirections
+	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
+	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
 
 	const bracketRef = useRef<HTMLDivElement>(null)
 
@@ -376,12 +400,14 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			...rounds.slice(1).reverse().map((round, idx) => {
 				// Get the first half of matches for this column
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
+				const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
 
 				return <MatchColumn
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
-					targetHeight={2 ** idx * firstRoundMatchHeight}
+					// targetHeight={2 ** idx * firstRoundMatchHeight}
+					targetHeight={targetHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -405,12 +431,15 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
+				// The target height decreases by half for each consecutive round in the second half of the bracket
+				const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
 
 				return <MatchColumn round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
-					targetHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					// targetHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					targetHeight={targetHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -452,11 +481,36 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		// })
 	}
 
+	const team1 = getTeamClassName(4, 0, true);
+	console.log('team1', team1)
+	const team2 = getTeamClassName(3, 0, true);
+	console.log('team2', team2)
+	const team3 = getTeamClassName(4, 0, false);
+	const style = {
+		delay: true,
+		borderColor: '#FFFFFF',
+		borderStyle: 'solid',
+		borderWidth: 1,
+	};
 
 	return (
 		<>
 			<div className='wpbb-bracket wpbb-paired' ref={bracketRef}>
 				{rounds.length > 0 && buildRounds2(rounds)}
+				<SteppedLineTo
+					from={team1} to={team2}
+					fromAnchor='right'
+					toAnchor='left'
+					orientation='h'
+					{...style}
+				/>
+				<SteppedLineTo
+					from={team3} to={team2}
+					fromAnchor='right'
+					toAnchor='left'
+					orientation='h'
+					{...style}
+				/>
 			</div>
 			<Button variant='primary' onClick={screenshot}>ref</Button>
 		</>
