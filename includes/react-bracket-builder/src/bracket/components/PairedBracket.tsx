@@ -450,6 +450,84 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		]
 	}
 
+	// Helper function to create a SteppedLineTo JSX Element
+	const createSteppedLine = (
+		team1: string,
+		team2: string,
+		leftSide: boolean,
+		fromAnchor: string,
+		toAnchor: string,
+		style: object
+	): JSX.Element => (
+		<SteppedLineTo
+			from={leftSide ? team1 : team2}
+			to={leftSide ? team2 : team1}
+			fromAnchor={fromAnchor}
+			toAnchor={toAnchor}
+			orientation='h'
+			{...style}
+		/>
+	);
+
+	// Function to handle the match side and draw the lines
+	const handleMatchSide = (
+		match: MatchNode,
+		roundIdx: number,
+		matchIdx: number,
+		side: keyof MatchNode,
+		team: string,
+		leftSide: boolean,
+		fromAnchor: string,
+		toAnchor: string,
+		style: object
+	): JSX.Element[] => {
+		if (match[side]) {
+			const team1 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
+			const team2 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
+
+			return [
+				createSteppedLine(team1, team, leftSide, fromAnchor, toAnchor, style),
+				createSteppedLine(team2, team, leftSide, fromAnchor, toAnchor, style),
+			];
+		}
+
+		return [];
+	};
+
+	// Main function
+	const renderLines = (rounds: Round[]): JSX.Element[] => {
+		let lines: JSX.Element[] = [];
+		const fromAnchor = 'right';
+		const toAnchor = 'left';
+		const style = {
+			delay: true,
+			borderColor: '#FFFFFF',
+			borderStyle: 'solid',
+			borderWidth: 1,
+		};
+
+		rounds.forEach((round, roundIdx) => {
+			round.matches.forEach((match, matchIdx) => {
+				if (!match) {
+					return;
+				}
+
+				const team1 = getTeamClassName(roundIdx, matchIdx, true)
+				const team2 = getTeamClassName(roundIdx, matchIdx, false)
+				const leftSide = matchIdx < round.matches.length / 2;
+
+				lines = [
+					...lines,
+					...handleMatchSide(match, roundIdx, matchIdx, 'left', team1, leftSide, fromAnchor, toAnchor, style),
+					...handleMatchSide(match, roundIdx, matchIdx, 'right', team2, leftSide, fromAnchor, toAnchor, style),
+				];
+			});
+		});
+
+		return lines;
+	};
+
+
 	const screenshot = () => {
 		const bracketEl: HTMLDivElement | null = bracketRef.current
 		if (!bracketEl) {
@@ -497,20 +575,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		<>
 			<div className='wpbb-bracket wpbb-paired' ref={bracketRef}>
 				{rounds.length > 0 && buildRounds2(rounds)}
-				<SteppedLineTo
-					from={team1} to={team2}
-					fromAnchor='right'
-					toAnchor='left'
-					orientation='h'
-					{...style}
-				/>
-				<SteppedLineTo
-					from={team3} to={team2}
-					fromAnchor='right'
-					toAnchor='left'
-					orientation='h'
-					{...style}
-				/>
+				{renderLines(rounds)}
 			</div>
 			<Button variant='primary' onClick={screenshot}>ref</Button>
 		</>
