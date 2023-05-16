@@ -1,6 +1,7 @@
 import App from "./App";
 import { render } from '@wordpress/element';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Gallery from './preview/components/Gallery';
 import Preview from './preview/components/Preview';
 
 /**
@@ -26,74 +27,50 @@ if (builderDiv && bracket) {
 
 const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
 if (previewDiv) {
-	console.log("Preview");
 
-	// Need to find the product image element in the document, and replace it
-	// with the bracket preview.
+	const logoImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
+	const logoPosition = [50, 100];
+	const logoSize = [32,32];
 
-	// The product image element is dynamically updated via the 
-	// woocommerce/assets/js/frontend/add-to-cart-variation.min.js script when
-	// the user selects a new product variation. This behaviour is not
-	// customizable as far as I can tell.
+	// Get the gallery container
+	var woo_variation_gallery_container = document.querySelector('.woo-variation-gallery-container');
 
-	// To solve the issue, I find the product image in the dom, replace it with the
-	// bracket preview, and listen for changes in that dom element, and update accordingly.
-
-	// Find the product image element
-	var imageNode = document.querySelector('.wp-post-image');
-	// Update image node so it is hidden
-	imageNode.setAttribute('style', 'display: none;');
-
-	function getPreviewImage(src) {
-		return src;
-		var fire = 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Large_bonfire.jpg/640px-Large_bonfire.jpg'
-		return fire;
-	}
-
-	// Append a new element to the parent of the image node
-	var previewNode = document.createElement('img');
-	previewNode.setAttribute('id', 'wpbb-bracket-preview');
-	//previewNode.setAttribute('src', );
-
-	imageNode.parentElement.appendChild(previewNode);
-
-
-
-	var mutations = [imageNode];
-
-	// Create an observer instance linked to the callback function
-	var observer = new MutationObserver(function (mutations) {
-		mutations.forEach(function (mutation) {
-
-			// If the image src has changed, update the bracket preview
-			var src = getPreviewImage(mutation.target.src);
-
-			// Example usage
-			const backgroundImageUrl = src;
-			const logoImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
-			const logoPosition = [50, 100];
-			const logoSize = [32,32];
-  
-			overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, previewNode);
-  
-			if (src) {
-				previewNode.setAttribute('src', src);
-			}
-		});
+	// Get the urls of variation images
+	var variation_images = document.querySelectorAll('.wp-post-image');
+	var image_urls = [];
+	variation_images.forEach((image) => {
+		image_urls.push(image.getAttribute('src'));
 	});
 
-	// Configuration options for the observer (e.g., observe childList, attributes, etc.)
-	var config = { childList: true, attributes: true, subtree: true };
+	// Hide children of the gallery container (dont remove because we need to get the
+	// new image urls when the user selects a new variation)
+	// while (woo_variation_gallery_container.firstChild) {
+	// 	woo_variation_gallery_container.removeChild(woo_variation_gallery_container.firstChild);
+	// }
+	woo_variation_gallery_container.style.display = 'none';
 
-	// Start observing the target node and its descendants for mutations
-	observer.observe(imageNode, config);
+	// Get new urls
+	var new_image_urls = [];
+	image_urls.forEach((image_url) => {
+		// Create a new image element
+		overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, new_image_urls);
+	});
 
-	render(<App><Preview /></App>)
+	var node = document.querySelector("#product-40");
+	var div = document.createElement("div");
+	div.setAttribute("id", "wpbb-bracket-preview");
+	// make div the first child of node
+	node.insertBefore(div, node.firstChild);
+
+	// render(<App><Gallery imageUrls={image_urls} /></App>, div);
+	render(<App><Preview imageUrls={image_urls} /></App>, div);
 }
 
 
 
-function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, outputImageElement) {
+
+function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, urls) {
+	console.log('overlaying logo');
 	// Create a new cross-origin image element for the background image
 	const backgroundImage = new Image();
 	backgroundImage.crossOrigin = "anonymous";
@@ -135,21 +112,19 @@ function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, o
 		const outputImageUrl = canvas.toDataURL();
   
 		// Create a new image element to display the output image
-		const outputImage = new Image();
+		const outputImageElement = document.createElement('img');
 		outputImageElement.setAttribute('src', outputImageUrl);
+		urls.push(outputImageUrl);
 	  })
 	  .catch((error) => {
 		console.error('An error occurred:', error);
 	  });
   }
   
+
   function loadImage(imageElement) {
 	return new Promise((resolve, reject) => {
 	  imageElement.addEventListener('load', () => resolve(), false);
 	  imageElement.addEventListener('error', (error) => reject(error), false);
 	});
-  }
-
-  function isPlaceholderImage(src) {
-	return 'placeholder' in src;
   }
