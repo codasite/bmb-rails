@@ -179,7 +179,7 @@ const MatchBox = (props: MatchBoxProps) => {
 				matchIndex={props.matchIndex}
 				left={true}
 			/>
-			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
+			{/* {direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />} */}
 			<TeamSlot
 				// className='wpbb-team2'
 				team={match.team2}
@@ -277,7 +277,11 @@ const MatchColumn = (props: MatchColumnProps) => {
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
-			const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length
+			const matchIndex =
+				direction === Direction.TopLeft ||
+					direction === Direction.BottomLeft ||
+					direction === Direction.Center
+					? i : i + matches.length
 			return (
 				<MatchBox
 					match={match}
@@ -296,7 +300,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 	}
 	return (
 		<div className='wpbb-round'>
-			<RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} />
+			{/* <RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} /> */}
 			<div className='wpbb-round__body'>
 				{buildMatches()}
 			</div>
@@ -460,7 +464,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		style: object
 	): JSX.Element => (
 		<SteppedLineTo
-			from={leftSide ? team1 : team2}
+			from={leftSide ? team1 : team2} // Lines must be drawn from left to right to render properly
 			to={leftSide ? team2 : team1}
 			fromAnchor={fromAnchor}
 			toAnchor={toAnchor}
@@ -470,6 +474,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	);
 
 	// Function to handle the match side and draw the lines
+	// This function takes in the match details, team details, anchor details and style, 
+	// and returns an array of JSX elements for the lines to be drawn for a match
 	const handleMatchSide = (
 		match: MatchNode,
 		roundIdx: number,
@@ -514,12 +520,14 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 				const team1 = getTeamClassName(roundIdx, matchIdx, true)
 				const team2 = getTeamClassName(roundIdx, matchIdx, false)
-				const leftSide = matchIdx < round.matches.length / 2;
+				const team1LeftSide = matchIdx < round.matches.length / 2;
+				// The second team in the first match of the first round is on the opposite side
+				const team2LeftSide = roundIdx === 0 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
 
 				lines = [
 					...lines,
-					...handleMatchSide(match, roundIdx, matchIdx, 'left', team1, leftSide, fromAnchor, toAnchor, style),
-					...handleMatchSide(match, roundIdx, matchIdx, 'right', team2, leftSide, fromAnchor, toAnchor, style),
+					...handleMatchSide(match, roundIdx, matchIdx, 'left', team1, team1LeftSide, fromAnchor, toAnchor, style),
+					...handleMatchSide(match, roundIdx, matchIdx, 'right', team2, team2LeftSide, fromAnchor, toAnchor, style),
 				];
 			});
 		});
@@ -577,7 +585,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
 			</div>
-			<Button variant='primary' onClick={screenshot}>ref</Button>
+			{/* <Button variant='primary' onClick={screenshot}>ref</Button> */}
 		</>
 	)
 }

@@ -131,6 +131,7 @@ $darkblue: #010433;
 	// .wpbb-final-match {
 	.wpbb-match-box-center {
 		@include match-box();
+		transform: translate(0, -90%);
 		// flex-grow: 1;
 	}
 
