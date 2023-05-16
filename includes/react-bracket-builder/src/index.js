@@ -2,7 +2,6 @@ import App from "./App";
 import { render } from '@wordpress/element';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Gallery from './preview/components/Gallery';
-import Preview from './preview/components/Preview';
 
 /**
  * Import the stylesheet for the plugin.
@@ -26,51 +25,47 @@ if (builderDiv && bracket) {
 }
 
 const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
+const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
+
+const logoImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
+const logoPosition = [50, 100];
+const logoSize = [32,32];
+
+// Given the variation_gallery_mapping, get urls for images with bracket overlays.
+const variation_gallary_mapping_with_overlay = {};
+const image_urls = [];
+Object.keys(variation_gallery_mapping).forEach((variation_id) => {
+	const variation_image_urls = variation_gallery_mapping[variation_id];
+	//var urls = [];
+	variation_image_urls.forEach((image_url) => {
+		// Overlay the bracket (url is appended to the array inside overlayLogo function))
+		overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, image_urls);
+	});
+});
+
+
 if (previewDiv) {
 
-	const logoImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
-	const logoPosition = [50, 100];
-	const logoSize = [32,32];
-
-	// Get the gallery container
+	// Remove (or hide) default gallery container
 	var woo_variation_gallery_container = document.querySelector('.woo-variation-gallery-container');
+	woo_variation_gallery_container.remove();
+	//woo_variation_gallery_container.style.display = 'none';
 
-	// Get the urls of variation images
-	var variation_images = document.querySelectorAll('.wp-post-image');
-	var image_urls = [];
-	variation_images.forEach((image) => {
-		image_urls.push(image.getAttribute('src'));
-	});
 
-	// Hide children of the gallery container (dont remove because we need to get the
-	// new image urls when the user selects a new variation)
-	// while (woo_variation_gallery_container.firstChild) {
-	// 	woo_variation_gallery_container.removeChild(woo_variation_gallery_container.firstChild);
-	// }
-	woo_variation_gallery_container.style.display = 'none';
 
-	// Get new urls
-	var new_image_urls = [];
-	image_urls.forEach((image_url) => {
-		// Create a new image element
-		overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, new_image_urls);
-	});
-
+	// Render gallery
 	var node = document.querySelector("#product-40");
 	var div = document.createElement("div");
 	div.setAttribute("id", "wpbb-bracket-preview");
 	// make div the first child of node
 	node.insertBefore(div, node.firstChild);
 
-	// render(<App><Gallery imageUrls={image_urls} /></App>, div);
-	render(<App><Preview imageUrls={image_urls} /></App>, div);
+	render(<App><Gallery imageUrls={image_urls} /></App>, div);
 }
 
 
 
-
 function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, urls) {
-	console.log('overlaying logo');
 	// Create a new cross-origin image element for the background image
 	const backgroundImage = new Image();
 	backgroundImage.crossOrigin = "anonymous";
