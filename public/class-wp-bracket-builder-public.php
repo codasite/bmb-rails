@@ -103,6 +103,10 @@ class Wp_Bracket_Builder_Public {
 		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
 		$bracket = $bracket_repo->get(post: $post);
 
+		$product = wc_get_product($post->ID);
+		$variation_gallery_mapping = get_product_variation_galleries($product);
+
+
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
 		wp_localize_script(
@@ -115,6 +119,7 @@ class Wp_Bracket_Builder_Public {
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 				'post' => $post,
 				'bracket' => $bracket,
+				'variation_gallery_mapping' => $variation_gallery_mapping,
 				// Get bracket url from query params
 				// 'bracket_url' => $_GET['bracket_url'],
 				// For testing:
@@ -146,4 +151,59 @@ class Wp_Bracket_Builder_Public {
 	public function add_shortcodes() {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']);
 	}
+}
+
+
+/**
+ * Get the image ids for each variation
+ *
+ * @param WC_Product $product
+ * @return array
+ */
+function get_product_variation_galleries($product) {
+	// TODO: Add error handling
+
+	// Check if the product is variable
+	if ($product->is_type('variable')) {
+		// Initialize an empty mapping array
+		$variation_gallery_mapping = array();
+
+		// Get the product variations
+		$variations = $product->get_available_variations();
+
+		foreach ($variations as $variation) {
+			// There are various nested protected values throughout the variation object,
+			// so we need to go through this malarky to get the image ids.
+			$variation_id = $variation['variation_id'];
+			$variation_obj = wc_get_product($variation_id);
+			$variation_data = $variation_obj->get_data();
+			$variation_image_id = $variation_data['image_id']; // combine with variation_gallery_images_ids
+			$variation_meta_data = $variation_data['meta_data'];
+			$variation_current_data = $variation_meta_data[0]->get_data();
+			$variation_gallery_image_ids = $variation_current_data['value'];
+
+			// Merge image_id with gallery_image_ids (if not already in there)
+			$variation_gallery_image_ids_copy = array();
+			foreach ($variation_gallery_image_ids as $variation_gallery_image_id) {
+				array_push($variation_gallery_image_ids_copy, $variation_gallery_image_id);
+			}
+
+			if (!in_array($variation_image_id, $variation_gallery_image_ids_copy)) {
+				$variation_gallery_image_ids_copy = array_merge(array($variation_image_id),$variation_gallery_image_ids_copy);
+			}
+
+			// Get the variation gallery image urls
+			$variation_gallery_image_urls = array();
+
+			foreach ($variation_gallery_image_ids_copy as $imageId) {
+				$imageSrc = wp_get_attachment_image_src($imageId, 'full');
+				$imageUrl = $imageSrc[0];
+				$variation_gallery_image_urls[] = $imageUrl;
+			}
+
+			// Map variation_ids to gallery image urls
+			$variation_gallery_mapping[$variation_id] = $variation_gallery_image_urls;
+		}
+	}
+	return $variation_gallery_mapping;
 }
