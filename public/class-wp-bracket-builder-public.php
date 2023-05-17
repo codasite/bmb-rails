@@ -104,6 +104,7 @@ class Wp_Bracket_Builder_Public {
 		$bracket = $bracket_repo->get(post: $post);
 
 		$product = wc_get_product($post->ID);
+		echo $product;
 		$variation_gallery_mapping = get_product_variation_galleries($product);
 
 

@@ -27,22 +27,6 @@ if (builderDiv && bracket) {
 const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
 const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
 
-const logoImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
-const logoPosition = [50, 100];
-const logoSize = [32,32];
-
-// Given the variation_gallery_mapping, get urls for images with bracket overlays.
-const variation_gallary_mapping_with_overlay = {};
-const image_urls = [];
-Object.keys(variation_gallery_mapping).forEach((variation_id) => {
-	const variation_image_urls = variation_gallery_mapping[variation_id];
-	//var urls = [];
-	variation_image_urls.forEach((image_url) => {
-		// Overlay the bracket (url is appended to the array inside overlayLogo function))
-		overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, image_urls);
-	});
-});
-
 
 if (previewDiv) {
 
@@ -60,66 +44,7 @@ if (previewDiv) {
 	// make div the first child of node
 	node.insertBefore(div, node.firstChild);
 
-	render(<App><Gallery imageUrls={image_urls} /></App>, div);
+	render(<App><Gallery gallery_mapping={variation_gallery_mapping} /></App>, div);
 }
 
 
-
-function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, urls) {
-	// Create a new cross-origin image element for the background image
-	const backgroundImage = new Image();
-	backgroundImage.crossOrigin = "anonymous";
-  
-	// Set the source URL for the background image
-	backgroundImage.src = backgroundImageUrl;
-  
-	// Create a new cross-origin image element for the logo image
-	const logoImage = new Image();
-	logoImage.crossOrigin = "anonymous";
-  
-	// Set the source URL for the logo image
-	logoImage.src = logoImageUrl;
-  
-	// Wait for both images to load
-	Promise.all([loadImage(backgroundImage), loadImage(logoImage)])
-	  .then(() => {
-		// Create a canvas element
-		const canvas = document.createElement('canvas');
-		const context = canvas.getContext('2d');
-  
-		// Set canvas dimensions to match the background image
-		canvas.width = backgroundImage.width;
-		canvas.height = backgroundImage.height;
-  
-		// Draw the background image on the canvas
-		context.drawImage(backgroundImage, 0, 0);
-  
-		// Calculate the position to place the logo on the canvas
-		const [x, y] = logoPosition;
-  
-		// Calculate the desired width and height of the logo
-		const [logoWidth, logoHeight] = logoSize;
-  
-		// Draw the logo image on the canvas at the specified position and size
-		context.drawImage(logoImage, x, y, logoWidth, logoHeight);
-  
-		// Convert the canvas image to a data URL
-		const outputImageUrl = canvas.toDataURL();
-  
-		// Create a new image element to display the output image
-		const outputImageElement = document.createElement('img');
-		outputImageElement.setAttribute('src', outputImageUrl);
-		urls.push(outputImageUrl);
-	  })
-	  .catch((error) => {
-		console.error('An error occurred:', error);
-	  });
-  }
-  
-
-  function loadImage(imageElement) {
-	return new Promise((resolve, reject) => {
-	  imageElement.addEventListener('load', () => resolve(), false);
-	  imageElement.addEventListener('error', (error) => reject(error), false);
-	});
-  }
