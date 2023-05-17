@@ -26,6 +26,8 @@ if (builderDiv && bracket) {
 
 const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
 const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
+const default_color = wpbb_ajax_obj.default_color;
+console.log(variation_gallery_mapping);
 
 
 if (previewDiv) {
@@ -44,7 +46,7 @@ if (previewDiv) {
 	// make div the first child of node
 	node.insertBefore(div, node.firstChild);
 
-	render(<App><Gallery gallery_mapping={variation_gallery_mapping} /></App>, div);
+	render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_color}/></App>, div);
 }
 
 
