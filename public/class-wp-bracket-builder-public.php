@@ -104,7 +104,8 @@ class Wp_Bracket_Builder_Public {
 		$bracket = $bracket_repo->get(post: $post);
 
 		$product = wc_get_product($post->ID);
-		echo $product;
+		$defaults = $product->get_default_attributes();
+		$default_color = $defaults['color'];
 		$variation_gallery_mapping = get_product_variation_galleries($product);
 
 
@@ -121,6 +122,7 @@ class Wp_Bracket_Builder_Public {
 				'post' => $post,
 				'bracket' => $bracket,
 				'variation_gallery_mapping' => $variation_gallery_mapping,
+				'default_color' => $default_color,
 				// Get bracket url from query params
 				// 'bracket_url' => $_GET['bracket_url'],
 				// For testing:
@@ -177,7 +179,10 @@ function get_product_variation_galleries($product) {
 			// so we need to go through this malarky to get the image ids.
 			$variation_id = $variation['variation_id'];
 			$variation_obj = wc_get_product($variation_id);
+
 			$variation_data = $variation_obj->get_data();
+			$variation_attributes = $variation_data['attributes'];
+			$variation_color = $variation_attributes['color'];
 			$variation_image_id = $variation_data['image_id']; // combine with variation_gallery_images_ids
 			$variation_meta_data = $variation_data['meta_data'];
 			$variation_current_data = $variation_meta_data[0]->get_data();
@@ -203,8 +208,31 @@ function get_product_variation_galleries($product) {
 			}
 
 			// Map variation_ids to gallery image urls
-			$variation_gallery_mapping[$variation_id] = $variation_gallery_image_urls;
+			$variation_gallery_mapping[$variation_color] = $variation_gallery_image_urls;
 		}
 	}
 	return $variation_gallery_mapping;
 }
+
+// function get_default_variation_id($product) {
+// 	// TODO: Error handling and not default check
+
+
+// 	// Check if the product is variable
+// 	if ($product->is_type('variable')) {
+// 		// Get the product variations
+// 		$variations = $product->get_available_variations();
+
+// 		foreach ($variations as $variation) {
+// 			$variation_id = $variation['variation_id'];
+// 			$variation_obj = wc_get_product($variation_id);
+// 			$variation_data = $variation_obj->get_data();
+// 			$variation_attributes = $variation_data['attributes'];
+// 			$variation_color = $variation_attributes['color'];
+// 			if ($variation_color == $default_color) {
+// 				echo 'variation_id: ' . $variation_id . '<br>';
+// 				return $variation_id;
+// 			}
+// 		}
+// 	}
+// }

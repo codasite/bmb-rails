@@ -38,37 +38,47 @@ const logoPosition = [50, 100];
 const logoSize = [32,32];
 
 
-
-const Gallery = ({ gallery_mapping }) => {
+const Gallery = ({ gallery_mapping, default_color}) => {
+  console.log("Gallery");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [imageUrls, setImageUrls] = useState([]);
-  const [currentVariationId, setCurrentVariationId] = useState(null);
+  const [currentColor, setCurrentColor] = useState(default_color);
 
   useEffect(() => {
+    // Get the images with bracket overlays
+    console.log("get the images with bracket overlays");
 
     const addUrlToImageUrls = (url) => {
       setImageUrls(prevImageUrls => [...prevImageUrls, url]);
     }
     
     // Given the variation_gallery_mapping, get urls for images with bracket overlays.
-    var variation = gallery_mapping[currentVariationId];
-    Object.keys(gallery_mapping).forEach((variation_id) => {
-      const variation_image_urls = gallery_mapping[variation_id];
-      //var urls = [];
-      variation_image_urls.forEach((image_url) => {
-        // Overlay the bracket (url is appended to the array inside overlayLogo function))
-        overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, addUrlToImageUrls);
+    const variation_image_urls = gallery_mapping[currentColor];
+    variation_image_urls.forEach((image_url) => {
+      // Overlay the bracket (url is appended to the array inside overlayLogo function))
+      overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, addUrlToImageUrls);
+    });
+  }, [currentColor]);
+
+  useEffect(() => {
+    // attach an event listener to the select element
+    const selectElement = document.querySelector('select#color');
+    const optionElements = selectElement.querySelectorAll('option');
+
+    optionElements.forEach((optionElement) => {
+      optionElement.addEventListener('click', (event) => {
+        console.log(optionElement.value);
       });
     });
-  }, [currentVariationId]);
+  }, []);
 
   
   const handlePrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageUrls.length - 1 : prevIndex - 1));
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageUrls?.length - 1 : prevIndex - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === imageUrls.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) => (prevIndex === imageUrls?.length - 1 ? 0 : prevIndex + 1));
   };
 
   const galleryStyle = {
@@ -77,7 +87,6 @@ const Gallery = ({ gallery_mapping }) => {
     // justifyContent: 'center',
     position: 'relative',
   };
-
 
 
   return (
@@ -131,7 +140,7 @@ function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, c
 		canvas.height = backgroundImage.height;
   
 		// Draw the background image on the canvas
-		context.drawImage(backgroundImage, 0, 0);
+		context?.drawImage(backgroundImage, 0, 0);
   
 		// Calculate the position to place the logo on the canvas
 		const [x, y] = logoPosition;
@@ -140,7 +149,7 @@ function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, c
 		const [logoWidth, logoHeight] = logoSize;
   
 		// Draw the logo image on the canvas at the specified position and size
-		context.drawImage(logoImage, x, y, logoWidth, logoHeight);
+		context?.drawImage(logoImage, x, y, logoWidth, logoHeight);
   
 		// Convert the canvas image to a data URL
 		const outputImageUrl = canvas.toDataURL();
