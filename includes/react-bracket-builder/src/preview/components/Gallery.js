@@ -47,6 +47,7 @@ const Gallery = ({ gallery_mapping, default_color}) => {
   useEffect(() => {
     // Get the images with bracket overlays
     console.log("get the images with bracket overlays");
+    setImageUrls([]);
 
     const addUrlToImageUrls = (url) => {
       setImageUrls(prevImageUrls => [...prevImageUrls, url]);
@@ -65,10 +66,14 @@ const Gallery = ({ gallery_mapping, default_color}) => {
     const selectElement = document.querySelector('select#color');
     const optionElements = selectElement.querySelectorAll('option');
 
-    optionElements.forEach((optionElement) => {
-      optionElement.addEventListener('click', (event) => {
-        console.log(optionElement.value);
-      });
+    selectElement.addEventListener('click', (event) => {
+      if (event.target.value) {
+        setCurrentColor(event.target.value);
+        set
+      };
+      console.log('bruh');
+      console.log(event.target.value);
+      console.log('dodododo');
     });
   }, []);
 
