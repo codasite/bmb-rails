@@ -1,5 +1,184 @@
 import React, { useState, useEffect } from 'react';
 
+// TODO: use bracket image url
+const bracketImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
+
+// This will need to be updated for production to ensure proper
+// sizing of the bracket overlay on the garment.
+const bracketSize = [32,32];
+
+const Gallery = ({ gallery_mapping, default_color}) => {
+
+  // Index of current image to display in the gallery
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  // URLs of images to display in the gallery. This is updated
+  // when currentColor is updated. 
+  const [imageUrls, setImageUrls] = useState([]);
+
+  // Color of current variation selection  
+  const [currentColor, setCurrentColor] = useState(default_color);
+
+
+
+  // The product page is using the default woocommerce variation selector. We need to
+  // listen to this selector in order to know when to update the gallery, so
+  // attach a listener to the select element. Runs only once, when the component
+  // is first rendered.
+  useEffect(() => {
+    // attach an event listener to the select element
+    const selectElement = document.querySelector('select#color');
+    const optionElements = selectElement.querySelectorAll('option');
+
+    selectElement.addEventListener('click', (event) => {
+      if (event.target.value) {
+        setCurrentColor(event.target.value);
+      };
+    });
+  }, []);
+
+
+
+  // Update imageUrls.
+  // Runs every time the currentColor is updated.
+  useEffect(() => {
+    setImageUrls([]);
+
+    // Callback to append url to imageUrls. This is passed as the last arugment
+    // to overlayBracket function.
+    const appendUrl = (url) => {
+      setImageUrls(prevImageUrls => [...prevImageUrls, url]);
+    }
+    
+    // Get URLs of images rendered with bracket overlay.
+    const variation_image_urls = gallery_mapping[currentColor];
+    variation_image_urls.forEach((image_url) => {
+      // Overlay the bracket on the image, and append the url to imageUrls.
+      if (image_url) { // null check
+
+        // Only overlay the bracket on the back of the shirt.
+        if (image_url.toLowerCase().includes('back')) {
+          overlayBracket(image_url, bracketImageUrl, bracketSize, appendUrl);
+        } else {
+          appendUrl(image_url);
+        }
+      }
+    });
+  }, [currentColor]);
+
+
+
+  // Controls to navigate the gallery
+  const handlePrevious = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageUrls?.length - 1 : prevIndex - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === imageUrls?.length - 1 ? 0 : prevIndex + 1));
+  };
+
+
+  // The outer two div classNames are copied from the original WooCommerce product page to
+  // ensure that the gallery is styled correctly.
+  return (
+      <div className="woocommerce-product-gallery woocommerce-product-gallery--without-images woocommerce-product-gallery--columns-4 images">
+        <div className="woocommerce-product-gallery__wrapper" style={galleryStyle} >
+          <button style={arrowLeftStyle} onClick={handlePrevious}>
+            &lt;
+          </button>
+          <img className="wp-post-image" style={imageStyle} src={imageUrls[currentIndex]} alt={`Image ${currentIndex + 1}`} />
+          <button style={arrowRightStyle} onClick={handleNext}>
+            &gt;
+          </button>
+        </div>
+      </div>
+  );
+};
+
+
+// This is the big function that overlays the bracket on the image.
+function overlayBracket(backgroundImageUrl, bracketImageUrl, bracketSize, callback) {
+
+	// Create a new image element for the background image
+  // The background image comes from the product so no worries
+  // about cross-origin properties.
+	const backgroundImage = new Image();
+	//backgroundImage.crossOrigin = "anonymous";  
+  
+	// Set the source URL for the background image
+	backgroundImage.src = backgroundImageUrl;
+  
+	// Create a new image element for the bracket image
+  // Because the bracket image is hosted on a different domain (while I'm developing),
+  // must set the crossOrigin attribute to anonymous. This will likely be unecessary in
+  // production.
+	const bracketImage = new Image();
+	bracketImage.crossOrigin = "anonymous";
+  
+	// Set the source URL for the logo image
+	bracketImage.src = bracketImageUrl;
+  
+	// Wait for both images to load
+	Promise.all([loadImage(backgroundImage), loadImage(bracketImage)])
+	  .then(() => {
+
+      // Determine x and y offsets that will center the bracket from
+      // background image and logo dimensions.
+      const [bracketWidth, bracketHeight] = bracketSize;
+      const bracketPosition = [
+        (backgroundImage.width - bracketWidth) / 2,
+        (backgroundImage.height - bracketHeight) / 2,
+      ];
+
+		// Create a canvas element
+		const canvas = document.createElement('canvas');
+		const context = canvas.getContext('2d');
+
+    // Set canvas dimensions to match the background image
+		canvas.width = backgroundImage.width;
+		canvas.height = backgroundImage.height;
+  
+		// Draw the background image on the canvas
+		context?.drawImage(backgroundImage, 0, 0);
+  
+		// Calculate the position to place the logo on the canvas
+		//const [x, y] = logoPosition;
+    const [x,y] = bracketPosition;
+    
+		// Draw the logo image on the canvas at the specified position and size
+		context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);
+  
+		// Convert the canvas image to a data URL
+		const outputImageUrl = canvas.toDataURL();
+  
+		// Create a new image element to display the output image
+		const outputImageElement = document.createElement('img');
+		outputImageElement.setAttribute('src', outputImageUrl);
+    callback(outputImageUrl);
+	  })
+	  .catch((error) => {
+		console.error('An error occurred:', error);
+	  });
+  }
+  
+
+  function loadImage(imageElement) {
+	return new Promise((resolve, reject) => {
+	  imageElement.addEventListener('load', () => resolve(), false);
+	  imageElement.addEventListener('error', (error) => reject(error), false);
+	});
+  }
+
+
+export default Gallery;
+
+
+
+// Gallery styles
+const galleryStyle = {
+  position: 'relative',
+};
+
 const arrowLeftStyle = {
   position: 'absolute',
   top: '50%',
@@ -32,173 +211,4 @@ const imageStyle = {
   maxWidth: '100%',
   height: 'auto',
 };
-
-const logoImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
-const logoPosition = [100, 200];
-const logoSize = [32,32];
-
-
-const Gallery = ({ gallery_mapping, default_color}) => {
-  console.log("Gallery");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [imageUrls, setImageUrls] = useState([]);
-  const [currentColor, setCurrentColor] = useState(default_color);
-
-  useEffect(() => {
-    // Get the images with bracket overlays
-    setImageUrls([]);
-
-    const addUrlToImageUrls = (url) => {
-      setImageUrls(prevImageUrls => [...prevImageUrls, url]);
-    }
-    
-    // Given the variation_gallery_mapping, get urls for images with bracket overlays.
-    const variation_image_urls = gallery_mapping[currentColor];
-    variation_image_urls.forEach((image_url) => {
-      // Overlay the bracket (url is appended to the array inside overlayLogo function))
-      if (image_url) {
-        if (image_url.includes('back')) {
-          overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, addUrlToImageUrls);
-        } else {
-          addUrlToImageUrls(image_url);
-        }
-      }
-    });
-  }, [currentColor]);
-
-  useEffect(() => {
-    // attach an event listener to the select element
-    const selectElement = document.querySelector('select#color');
-    const optionElements = selectElement.querySelectorAll('option');
-
-    selectElement.addEventListener('click', (event) => {
-      if (event.target.value) {
-        setCurrentColor(event.target.value);
-      };
-    });
-  }, []);
-
-  
-  const handlePrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageUrls?.length - 1 : prevIndex - 1));
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === imageUrls?.length - 1 ? 0 : prevIndex + 1));
-  };
-
-  const galleryStyle = {
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    position: 'relative',
-  };
-
-
-  return (
-      <div className="woocommerce-product-gallery woocommerce-product-gallery--without-images woocommerce-product-gallery--columns-4 images">
-        <div className="woocommerce-product-gallery__wrapper" style={galleryStyle} >
-          <button style={arrowLeftStyle} onClick={handlePrevious}>
-            &lt;
-          </button>
-          <img className="wp-post-image" style={imageStyle} src={imageUrls[currentIndex]} alt={`Image ${currentIndex + 1}`} />
-          <button style={arrowRightStyle} onClick={handleNext}>
-            &gt;
-          </button>
-        </div>
-      </div>
-  );
-};
-
-
-
-
-
-
-
-
-
-
-function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, callback) {
-
-  // Overlay the bracket only if "back" is in the backgroundImageUrl, for example:
-  // white_tshirt_back.png
-  // Overwise, just use the original photo.
-  console.log(backgroundImageUrl);
-  //console.log(backgroundImageUrl.includes("back"));
-  console.log(backgroundImageUrl);
-
-  // if (backgroundImageUrl.includes("back")) {
-  //   console.log(backgroundImageUrl);
-  //   callback(backgroundImageUrl);
-  // };
-
-	// Create a new cross-origin image element for the background image
-	const backgroundImage = new Image();
-	backgroundImage.crossOrigin = "anonymous";
-  
-	// Set the source URL for the background image
-	backgroundImage.src = backgroundImageUrl;
-  
-	// Create a new cross-origin image element for the logo image
-	const logoImage = new Image();
-	logoImage.crossOrigin = "anonymous";
-  
-	// Set the source URL for the logo image
-	logoImage.src = logoImageUrl;
-  
-	// Wait for both images to load
-	Promise.all([loadImage(backgroundImage), loadImage(logoImage)])
-	  .then(() => {
-		// Create a canvas element
-		const canvas = document.createElement('canvas');
-		const context = canvas.getContext('2d');
-  
-		// Set canvas dimensions to match the background image
-		canvas.width = backgroundImage.width;
-		canvas.height = backgroundImage.height;
-  
-		// Draw the background image on the canvas
-		context?.drawImage(backgroundImage, 0, 0);
-  
-		// Calculate the position to place the logo on the canvas
-		const [x, y] = logoPosition;
-  
-		// Calculate the desired width and height of the logo
-		const [logoWidth, logoHeight] = logoSize;
-  
-		// Draw the logo image on the canvas at the specified position and size
-		context?.drawImage(logoImage, x, y, logoWidth, logoHeight);
-  
-		// Convert the canvas image to a data URL
-		const outputImageUrl = canvas.toDataURL();
-  
-		// Create a new image element to display the output image
-		const outputImageElement = document.createElement('img');
-		outputImageElement.setAttribute('src', outputImageUrl);
-    callback(outputImageUrl);
-		//urls.push(outputImageUrl);
-	  })
-	  .catch((error) => {
-		console.error('An error occurred:', error);
-	  });
-  }
-  
-
-  function loadImage(imageElement) {
-	return new Promise((resolve, reject) => {
-	  imageElement.addEventListener('load', () => resolve(), false);
-	  imageElement.addEventListener('error', (error) => reject(error), false);
-	});
-  }
-
-
-
-
-
-
-export default Gallery;
-
-
-
 

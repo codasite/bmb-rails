@@ -104,9 +104,10 @@ class Wp_Bracket_Builder_Public {
 		$bracket = $bracket_repo->get(post: $post);
 
 		$product = wc_get_product($post->ID);
+
+		// Only get product details on product pages.
 		if ($product) {
-			$defaults = $product->get_default_attributes();
-			$default_color = $defaults['color'];
+			$default_color = get_default_product_color($product);
 			$variation_gallery_mapping = get_product_variation_galleries($product);
 		}
 
@@ -123,8 +124,9 @@ class Wp_Bracket_Builder_Public {
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 				'post' => $post,
 				'bracket' => $bracket,
-				'variation_gallery_mapping' => $variation_gallery_mapping,
-				'default_color' => $default_color,
+				'variation_gallery_mapping' => $variation_gallery_mapping, // used for preview page
+				'default_product_color' => $default_color, // used for preview page
+				'product_id' => $product->get_id(), // used for preview page
 				// Get bracket url from query params
 				// 'bracket_url' => $_GET['bracket_url'],
 				// For testing:
@@ -177,44 +179,111 @@ function get_product_variation_galleries($product) {
 		$variations = $product->get_available_variations();
 
 		foreach ($variations as $variation) {
-			// There are various nested protected values throughout the variation object,
-			// so we need to go through this malarky to get the image ids.
-			$variation_id = $variation['variation_id'];
-			$variation_obj = wc_get_product($variation_id);
+			// Get the variation image ids
+			$variation_image_ids = get_variation_image_ids($variation);
 
-			$variation_data = $variation_obj->get_data();
-			$variation_attributes = $variation_data['attributes'];
-			$variation_color = $variation_attributes['color'];
-			$variation_image_id = $variation_data['image_id']; // combine with variation_gallery_images_ids
-			$variation_meta_data = $variation_data['meta_data'];
-			$variation_current_data = $variation_meta_data[0]->get_data();
-			$variation_gallery_image_ids = $variation_current_data['value'];
+			// Get the variation image urls
+			$variation_gallery_image_urls = get_image_urls($variation_image_ids);
 
-			// Merge image_id with gallery_image_ids (if not already in there)
-			$variation_gallery_image_ids_copy = array();
-			foreach ($variation_gallery_image_ids as $variation_gallery_image_id) {
-				array_push($variation_gallery_image_ids_copy, $variation_gallery_image_id);
-			}
 
-			if (!in_array($variation_image_id, $variation_gallery_image_ids_copy)) {
-				$variation_gallery_image_ids_copy = array_merge(array($variation_image_id),$variation_gallery_image_ids_copy);
-			}
+			// Get the default variation color (should be set in admin panel)
+			$variation_color = get_variation_color($variation);
 
-			// Get the variation gallery image urls
-			$variation_gallery_image_urls = array();
-
-			foreach ($variation_gallery_image_ids_copy as $imageId) {
-				$imageSrc = wp_get_attachment_image_src($imageId, 'full');
-				$imageUrl = $imageSrc[0];
-				$variation_gallery_image_urls[] = $imageUrl;
-			}
-
-			// Map variation_ids to gallery image urls
+			// Map variation_colors to gallery image urls
+			// Note: I map from colors, not ids, because the color is what is
+			// used for the select element, in the form, on the product page.
 			$variation_gallery_mapping[$variation_color] = $variation_gallery_image_urls;
 		}
 	}
 	return $variation_gallery_mapping;
 }
+
+/**
+ * Get the default product color. This should be set in the admin panel.
+ */
+function get_default_product_color($product) {
+	$defaults = $product->get_default_attributes();
+	$default_color = $defaults['color'];
+	return $default_color;
+}
+
+function get_variation_color($variation) {
+	$variation_id = $variation['variation_id'];
+	$variation_obj = wc_get_product($variation_id);
+
+	$variation_data = $variation_obj->get_data();
+	$variation_attributes = $variation_data['attributes'];
+	$variation_color = $variation_attributes['color'];
+	
+	return $variation_color;
+}
+
+function get_image_urls($image_ids) {
+	$image_urls = array();
+
+	foreach ($image_ids as $imageId) {
+		$imageSrc = wp_get_attachment_image_src($imageId, 'full');
+		$imageUrl = $imageSrc[0];
+		$image_urls[] = $imageUrl;
+	}
+
+	return $image_urls;
+}
+
+
+/**
+ * Merge variation_image_id (default image) with gallery_image_ids
+ * if variation_image_id is not already in gallery_image_ids
+ *
+ * @param int $variation_image_id
+ * @param array $variation_gallery_image_ids
+ * @return array
+ */
+function get_variation_image_ids($variation) {
+	// There are various nested, protected values throughout the variation object,
+	// so we need to go through this malarky to get the image ids.
+	$variation_id = $variation['variation_id'];
+	$variation_obj = wc_get_product($variation_id);
+
+	$variation_data = $variation_obj->get_data();
+	$variation_attributes = $variation_data['attributes'];
+	$variation_color = $variation_attributes['color'];
+	$variation_image_id = $variation_data['image_id']; // combine with variation_gallery_images_ids
+	$variation_meta_data = $variation_data['meta_data'];
+	$variation_current_data = $variation_meta_data[0]->get_data();
+	$variation_gallery_image_ids = $variation_current_data['value'];
+
+	// Merge variation_image_id (default image) with gallery_image_ids
+	// if variation_image_id is not already in gallery_image_ids
+	$merged_variation_gallery_image_ids = merge_gallery_images($variation_image_id, $variation_gallery_image_ids);
+
+	return $merged_variation_gallery_image_ids;
+}
+
+
+/**
+ * Merge the unmerged image id with the gallery image ids if it's not already in there.
+ *
+ * @param int $unmerged_image_id
+ * @param array $gallery_images
+ * @return array
+ */
+function merge_gallery_images($unmerged_image_id, $gallery_image_ids) {
+	// Copy the gallery images array
+	$gallery_image_ids_copy = array();
+
+	foreach ($gallery_image_ids as $gallery_image_id) {
+		array_push($gallery_image_ids_copy, $gallery_image_id);
+	}
+
+	// Merge the unmergeed image id with the gallery images if it's not already in there
+	if (!in_array($unmerged_image_id, $gallery_image_ids_copy)) {
+		$gallery_image_ids_copy = array_merge(array($unmerged_image_id),$gallery_image_ids_copy);
+	}
+	return $gallery_image_ids_copy;
+}
+
+
 
 // function get_default_variation_id($product) {
 // 	// TODO: Error handling and not default check
