@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, InputGroup } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../utils/types';
 import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
 import LineTo, { SteppedLineTo, Line } from 'react-lineto';
+//@ts-ignore
+import { ReactComponent as BracketLogo } from '../../assets/logo.svg';
 // import html2canvas
 
 const teamHeight = 20
@@ -109,8 +111,9 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				// <span className='wpbb-team-name'>{team ? team.name : ''}</span>
-				<span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
+				<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+				// <span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
+				// <span className='wpbb-team-name'>Team</span>
 			}
 		</div>
 	)
@@ -303,7 +306,13 @@ const MatchColumn = (props: MatchColumnProps) => {
 	let items = buildMatches()
 	if (finalRound) {
 		items = [
-			<TeamSlot className='wpbb-champion-team' team={round.matches[0]?.result} />,
+			<div className='wpbb-final-round-col' style={{ height: '520px' }}>
+				<div className='wpbb-winner'>
+					<span className='wpbb-winner-text'>WINNER</span>
+					<TeamSlot className='wpbb-winner-team' team={round.matches[0]?.result} />
+				</div>
+				<BracketLogo />
+			</div>,
 			...items,
 		]
 	}
@@ -312,7 +321,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 	return (
 		<div className='wpbb-round'>
 			{/* <RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} /> */}
-			<div className='wpbb-round__body'>
+			<div className={'wpbb-round__body'}>
 				{items}
 			</div>
 		</div>
@@ -551,7 +560,13 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						toAnchor='top'
 						{...style}
 					/>,
-
+					<LineTo
+						from='wpbb-winner-team'
+						to={team1}
+						fromAnchor='bottom'
+						toAnchor='top'
+						{...style}
+					/>,
 					];
 				}
 			});
