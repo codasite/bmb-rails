@@ -1,132 +1,132 @@
-$match-box-border: 2px solid #3c434a;
-// $match-box-border: none;
+// $match-box-border: 2px solid #3c434a;
+// // $match-box-border: none;
 
-@mixin match-box() {
-	border-top: $match-box-border;
-	border-bottom: $match-box-border;
-	position: relative;
-	box-sizing: border-box;
-}
+// @mixin match-box() {
+// 	border-top: $match-box-border;
+// 	border-bottom: $match-box-border;
+// 	position: relative;
+// 	box-sizing: border-box;
+// }
 
-$bracket-radius: 3px;
+// $bracket-radius: 3px;
 
-// A match box placed on the left side of the page
-// Only show the right border
-.wpbb-match-box-left {
-	@include match-box();
-	border-right: $match-box-border;
-	border-radius: 0 $bracket-radius $bracket-radius 0;
-}
+// // A match box placed on the left side of the page
+// // Only show the right border
+// .wpbb-match-box-left {
+// 	@include match-box();
+// 	border-right: $match-box-border;
+// 	border-radius: 0 $bracket-radius $bracket-radius 0;
+// }
 
-// A match box placed on the right side of the page
-// Only show the left border
-.wpbb-match-box-right {
-	@include match-box();
-	border-left: $match-box-border;
-	border-radius: $bracket-radius 0 0 $bracket-radius;
-}
+// // A match box placed on the right side of the page
+// // Only show the left border
+// .wpbb-match-box-right {
+// 	@include match-box();
+// 	border-left: $match-box-border;
+// 	border-radius: $bracket-radius 0 0 $bracket-radius;
+// }
 
-// Hide half the border on an outer match box
-// to prevent trailing borders
-@mixin match-box-outer-after() {
-	content: '';
-	position: absolute;
-	display: block;
-	// bottom: -5px;
-	// top: -5px;
-	width: 50%;
-	border: 5px solid white;
-}
+// // Hide half the border on an outer match box
+// // to prevent trailing borders
+// @mixin match-box-outer-after() {
+// 	content: '';
+// 	position: absolute;
+// 	display: block;
+// 	// bottom: -5px;
+// 	// top: -5px;
+// 	width: 50%;
+// 	border: 5px solid white;
+// }
 
-// An outer matchbox on the left side of the page
-.wpbb-match-box-left-outer {
-	@extend .wpbb-match-box-left;
-}
+// // An outer matchbox on the left side of the page
+// .wpbb-match-box-left-outer {
+// 	@extend .wpbb-match-box-left;
+// }
 
-// Hide the trailing border on left outer match boxes
-.wpbb-match-box-left-outer::after {
-	@include match-box-outer-after();
-	bottom: -5px;
-	top: -5px;
-	left: 0
-}
+// // Hide the trailing border on left outer match boxes
+// .wpbb-match-box-left-outer::after {
+// 	@include match-box-outer-after();
+// 	bottom: -5px;
+// 	top: -5px;
+// 	left: 0
+// }
 
-// A left outer match box where the top node has no children
-.wpbb-match-box-left-outer-upper {
-	@extend .wpbb-match-box-left;
-}
+// // A left outer match box where the top node has no children
+// .wpbb-match-box-left-outer-upper {
+// 	@extend .wpbb-match-box-left;
+// }
 
 
-// Hide the trailing border on the uppoer portion of left outer match boxes
-.wpbb-match-box-left-outer-upper::after {
-	@include match-box-outer-after();
-	top: -5px;
-	left: 0
-}
+// // Hide the trailing border on the uppoer portion of left outer match boxes
+// .wpbb-match-box-left-outer-upper::after {
+// 	@include match-box-outer-after();
+// 	top: -5px;
+// 	left: 0
+// }
 
-// A left outer match box where the bottom node has no children
-.wpbb-match-box-left-outer-lower {
-	@extend .wpbb-match-box-left;
-}
+// // A left outer match box where the bottom node has no children
+// .wpbb-match-box-left-outer-lower {
+// 	@extend .wpbb-match-box-left;
+// }
 
-// Hide the trailing border on the lower portion of left outer match boxes
-.wpbb-match-box-left-outer-lower::after {
-	@include match-box-outer-after();
-	bottom: -5px;
-	left: 0
-}
+// // Hide the trailing border on the lower portion of left outer match boxes
+// .wpbb-match-box-left-outer-lower::after {
+// 	@include match-box-outer-after();
+// 	bottom: -5px;
+// 	left: 0
+// }
 
-// An outer matchbox on the right side of the page
-.wpbb-match-box-right-outer {
-	@extend .wpbb-match-box-right;
-}
+// // An outer matchbox on the right side of the page
+// .wpbb-match-box-right-outer {
+// 	@extend .wpbb-match-box-right;
+// }
 
-// Hide the trailing border on right outer match boxes
-.wpbb-match-box-right-outer::after {
-	@include match-box-outer-after();
-	bottom: -5px;
-	top: -5px;
-	right: 0
-}
+// // Hide the trailing border on right outer match boxes
+// .wpbb-match-box-right-outer::after {
+// 	@include match-box-outer-after();
+// 	bottom: -5px;
+// 	top: -5px;
+// 	right: 0
+// }
 
-// A right outer matchbox where the top node has no children
-.wpbb-match-box-right-outer-upper {
-	@extend .wpbb-match-box-right;
-}
+// // A right outer matchbox where the top node has no children
+// .wpbb-match-box-right-outer-upper {
+// 	@extend .wpbb-match-box-right;
+// }
 
-// Hide the trailing border on the upper portion of right outer match boxes
-.wpbb-match-box-right-outer-upper::after {
-	@include match-box-outer-after();
-	top: -5px;
-	right: 0
-}
+// // Hide the trailing border on the upper portion of right outer match boxes
+// .wpbb-match-box-right-outer-upper::after {
+// 	@include match-box-outer-after();
+// 	top: -5px;
+// 	right: 0
+// }
 
-// A right outer matchbox where the bottom node has no children
-.wpbb-match-box-right-outer-lower {
-	@extend .wpbb-match-box-right;
-}
+// // A right outer matchbox where the bottom node has no children
+// .wpbb-match-box-right-outer-lower {
+// 	@extend .wpbb-match-box-right;
+// }
 
-// Hide the trailing border on the lower portion of right outer match boxes
-.wpbb-match-box-right-outer-lower::after {
-	@include match-box-outer-after();
-	bottom: -5px;
-	right: 0
-}
+// // Hide the trailing border on the lower portion of right outer match boxes
+// .wpbb-match-box-right-outer-lower::after {
+// 	@include match-box-outer-after();
+// 	bottom: -5px;
+// 	right: 0
+// }
 
-// .wpbb-final-match {
-.wpbb-match-box-center {
-	@include match-box();
-	// flex-grow: 1;
-}
+// // .wpbb-final-match {
+// .wpbb-match-box-center {
+// 	@include match-box();
+// 	// flex-grow: 1;
+// }
 
-.wpbb-match-box-center::before {
-	@include match-box-outer-after();
-	top: -5px;
-	right: 0;
-}
+// .wpbb-match-box-center::before {
+// 	@include match-box-outer-after();
+// 	top: -5px;
+// 	right: 0;
+// }
 
-.wpbb-match-box-center::after {
-	@include match-box-outer-after();
-	bottom: -5px;
-	left: 0;
-}
+// .wpbb-match-box-center::after {
+// 	@include match-box-outer-after();
+// 	bottom: -5px;
+// 	left: 0;
+// }
