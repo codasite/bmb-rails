@@ -299,9 +299,6 @@ const MatchColumn = (props: MatchColumnProps) => {
 		})
 		return matchBoxes
 	}
-	if (round.depth === 0) {
-		console.log('final round', round)
-	}
 	const finalRound = round.depth === 0
 	let items = buildMatches()
 	if (finalRound) {
@@ -337,12 +334,29 @@ interface PairedBracketProps {
 }
 
 export const PairedBracket = (props: PairedBracketProps) => {
-	// const { numRounds, numWildcards, wildcardPlacement } = props
-	// const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
 	const {
 		matchTree,
 		setMatchTree,
 	} = props
+
+	const [dimensions, setDimensions] = useState({
+		height: window.innerHeight,
+		width: window.innerWidth,
+	})
+
+	useEffect(() => {
+		const handleResize = () => {
+			setDimensions({
+				height: window.innerHeight,
+				width: window.innerWidth,
+			})
+
+		}
+		window.addEventListener('resize', handleResize)
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
 
 	const rounds = matchTree.rounds
 	const canEdit = setMatchTree !== undefined && props.canEdit
@@ -609,9 +623,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	}
 
 	const team1 = getTeamClassName(4, 0, true);
-	console.log('team1', team1)
 	const team2 = getTeamClassName(3, 0, true);
-	console.log('team2', team2)
 	const team3 = getTeamClassName(4, 0, false);
 	const style = {
 		delay: true,
