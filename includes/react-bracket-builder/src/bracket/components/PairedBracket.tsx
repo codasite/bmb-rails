@@ -50,12 +50,12 @@ interface TeamSlotProps {
 	roundIndex?: number;
 	matchIndex?: number;
 	left?: boolean;
+	winner?: boolean;
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
-	const className = props.className ? props.className : getTeamClassName(props.roundIndex, props.matchIndex, props.left)
 
 	const {
 		team,
@@ -64,8 +64,10 @@ const TeamSlot = (props: TeamSlotProps) => {
 		roundIndex,
 		matchIndex,
 		left,
+		winner,
 	} = props
 
+	const className = props.className ? props.className : getTeamClassName(roundIndex, matchIndex, left) + (winner ? ' wpbb-match-winner' : '')
 
 	const startEditing = () => {
 		if (!updateTeam) {
@@ -171,10 +173,14 @@ const MatchBox = (props: MatchBoxProps) => {
 		className += '-outer-lower'
 	}
 
+	const team1Wins = match.result && match.result === match.team1 ? true : false
+	const team2Wins = match.result && match.result === match.team2 ? true : false
+
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
 			<TeamSlot
 				// className='wpbb-team1'
+				winner={team1Wins}
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
@@ -184,6 +190,7 @@ const MatchBox = (props: MatchBoxProps) => {
 			/>
 			<TeamSlot
 				// className='wpbb-team2'
+				winner={team2Wins}
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
@@ -300,13 +307,17 @@ const MatchColumn = (props: MatchColumnProps) => {
 		return matchBoxes
 	}
 	const finalRound = round.depth === 0
+	const pickedWinner = round.matches[0]?.result ? true : false
 	let items = buildMatches()
 	if (finalRound) {
 		items = [
 			<div className='wpbb-final-round-col' style={{ height: '520px' }}>
 				<div className='wpbb-winner'>
 					<span className='wpbb-winner-text'>WINNER</span>
-					<TeamSlot className='wpbb-winner-team' team={round.matches[0]?.result} />
+					<TeamSlot
+						className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+						team={round.matches[0]?.result}
+					/>
 				</div>
 				<BracketLogo />
 			</div>,
@@ -575,7 +586,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						{...style}
 					/>,
 					<LineTo
-						from='wpbb-winner-team'
+						from='wpbb-final-winner'
 						to={team1}
 						fromAnchor='bottom'
 						toAnchor='top'
