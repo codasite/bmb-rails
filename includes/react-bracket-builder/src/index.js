@@ -33,7 +33,7 @@ const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
 const default_product_color = wpbb_ajax_obj.default_product_color;
 
 
-if (previewDiv) {
+if (previewDiv ) {
 	// Render the preview component into the DOM
 
 	// Remove the default woocommerce product variation gallery element from the page

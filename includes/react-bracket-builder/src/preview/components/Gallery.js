@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Thumbnails from './Thumbnails';
 
 // TODO: use bracket image url
 const bracketImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
@@ -91,6 +92,7 @@ const Gallery = ({ gallery_mapping, default_color}) => {
             &gt;
           </button>
         </div>
+        <Thumbnails imageUrls={imageUrls} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
       </div>
   );
 };
