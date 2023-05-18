@@ -1,5 +1,16 @@
 import { Nullable } from '../../utils/types';
-import { BracketRes, BracketReq, RoundReq, MatchReq, TeamReq } from '../../api/types/bracket';
+import {
+	BracketRes,
+	BracketReq,
+	RoundReq,
+	MatchReq,
+	TeamReq,
+	UserBracketReq,
+	UserMatchReq,
+	UserRoundReq,
+	UserTeamReq,
+	RoundRes,
+} from '../../api/types/bracket';
 
 export enum WildcardPlacement {
 	Top = 0,
@@ -10,20 +21,25 @@ export enum WildcardPlacement {
 
 export class Team {
 	name: string;
-	seed: Nullable<number> = null;
-	constructor(name: string) {
+	id: number | null;
+
+	constructor(name: string, id: number | null = null) {
 		this.name = name;
+		this.id = id;
 	}
 
 	clone(): Team {
-		return new Team(this.name);
+		return new Team(this.name, this.id);
 	}
 
 	toRequest(): TeamReq {
 		return {
 			name: this.name,
-			seed: this.seed,
 		}
+	}
+
+	toUserRequest(): Nullable<UserTeamReq> {
+		return this.id === null ? null : { id: this.id };
 	}
 }
 
@@ -70,6 +86,11 @@ export class MatchNode {
 		}
 	}
 
+	toUserRequest(): UserMatchReq {
+		return {
+			result: this.result ? this.result.toUserRequest() : null,
+		}
+	}
 }
 
 export class Round {
@@ -96,6 +117,19 @@ export class Round {
 		return {
 			name: round.name,
 			depth: round.depth,
+			matches: matches,
+		}
+	}
+
+	toUserRequest(): UserRoundReq {
+		const round = this;
+		const matches = round.matches.map((match, i) => {
+			if (match === null) {
+				return null;
+			}
+			return match.toUserRequest();
+		});
+		return {
 			matches: matches,
 		}
 	}
@@ -214,22 +248,22 @@ export class MatchTree {
 		return newTree;
 	}
 
-	static fromBracketResponse(bracket: BracketRes): MatchTree {
+	static fromRounds(rounds: RoundRes[]): MatchTree {
 		const tree = new MatchTree()
-		tree.rounds = bracket.rounds.map((round) => {
+		tree.rounds = rounds.map((round) => {
 			const newRound = new Round(round.id, round.name, round.depth);
 			return newRound;
 		});
 		// Then, iterate over the new rounds to create the matches and update their parent relationships.
 		tree.rounds.forEach((round, roundIndex) => {
-			round.matches = bracket.rounds[roundIndex].matches.map((match, matchIndex) => {
+			round.matches = rounds[roundIndex].matches.map((match, matchIndex) => {
 				if (match === null) {
 					return null;
 				}
 				const newMatch = new MatchNode(null, roundIndex);
-				newMatch.team1 = match.team1 ? new Team(match.team1.name) : null;
-				newMatch.team2 = match.team2 ? new Team(match.team2.name) : null;
-				newMatch.result = match.result ? new Team(match.result.name) : null;
+				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
+				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
+				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
 				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
 				if (parent) {
 					newMatch.parent = parent;
@@ -253,6 +287,18 @@ export class MatchTree {
 			numRounds: numRounds,
 			numWildcards: numWildcards,
 			wildcardPlacement: wildcardPlacement,
+		}
+	}
+
+	toUserRequest(name: string, bracketId: number): UserBracketReq {
+		const tree = this;
+		const rounds = tree.rounds.map((round) => {
+			return round.toUserRequest();
+		});
+		return {
+			rounds: rounds,
+			name: name,
+			bracketId: bracketId,
 		}
 	}
 

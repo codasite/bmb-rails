@@ -2,9 +2,32 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../utils/types';
-import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../models/MatchTree';
+import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
+import LineTo, { SteppedLineTo, Line } from 'react-lineto';
 // import html2canvas
-import html2canvas from 'html2canvas';
+
+const teamHeight = 20
+const defaultMatchGap = 20
+const depth4MatchGap = 10
+const depth5MatchGap = 4
+
+const getMatchGap = (depth: number) => {
+	let gap = teamHeight
+	if (depth === 4) {
+		gap += depth4MatchGap
+	} else if (depth === 5) {
+		gap += depth5MatchGap
+	} else {
+		gap += defaultMatchGap
+	}
+	return gap
+}
+
+const getTeamClassName = (roundIndex, matchIndex, left) => {
+	const className = `wpbb-team${left ? '1' : '2'} wpbb-team-${roundIndex}-${matchIndex}-${left ? 'left' : 'right'}`
+	return className
+}
+
 
 
 // Direction enum
@@ -18,20 +41,27 @@ enum Direction {
 
 
 interface TeamSlotProps {
-	className: string;
+	className?: string;
 	team?: Team | null;
 	updateTeam?: (name: string) => void;
 	pickTeam?: () => void;
+	roundIndex?: number;
+	matchIndex?: number;
+	left?: boolean;
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
+	const className = props.className ? props.className : getTeamClassName(props.roundIndex, props.matchIndex, props.left)
 
 	const {
 		team,
 		updateTeam,
-		pickTeam
+		pickTeam,
+		roundIndex,
+		matchIndex,
+		left,
 	} = props
 
 
@@ -62,7 +92,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 	}
 
 	return (
-		<div className={props.className} onClick={handleClick}>
+		<div className={className} onClick={handleClick}>
 			{editing ?
 				<input
 					className='wpbb-team-name-input'
@@ -79,7 +109,8 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+				// <span className='wpbb-team-name'>{team ? team.name : ''}</span>
+				<span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
 			}
 		</div>
 	)
@@ -92,6 +123,8 @@ interface MatchBoxProps {
 	spacing: number;
 	updateTeam?: (left: boolean, name: string) => void;
 	pickTeam?: (left: boolean) => void;
+	roundIndex: number;
+	matchIndex: number;
 }
 
 const MatchBox = (props: MatchBoxProps) => {
@@ -109,7 +142,6 @@ const MatchBox = (props: MatchBoxProps) => {
 			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
 		)
 	}
-
 	let className: string;
 
 	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
@@ -136,22 +168,26 @@ const MatchBox = (props: MatchBoxProps) => {
 		className += '-outer-lower'
 	}
 
-	// This component renders the lines connecting two nodes representing a "game"
-	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
 			<TeamSlot
-				className='wpbb-team1'
+				// className='wpbb-team1'
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
+				roundIndex={props.roundIndex}
+				matchIndex={props.matchIndex}
+				left={true}
 			/>
-			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
+			{/* {direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />} */}
 			<TeamSlot
-				className='wpbb-team2'
+				// className='wpbb-team2'
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
+				roundIndex={props.roundIndex}
+				matchIndex={props.matchIndex}
+				left={false}
 			/>
 		</div>
 	)
@@ -218,7 +254,7 @@ interface MatchColumnProps {
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
 	numDirections: number;
-	matchHeight: number;
+	targetHeight: number;
 	updateRoundName?: (roundId: number, name: string) => void;
 	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
 	pickTeam?: (matchIndex: number, left: boolean) => void;
@@ -230,25 +266,32 @@ const MatchColumn = (props: MatchColumnProps) => {
 		matches,
 		direction,
 		numDirections,
-		matchHeight,
+		targetHeight,
 		updateRoundName,
 		updateTeam,
 		pickTeam,
 	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
+	const matchHeight = getMatchGap(round.depth)
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
-			const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length
+			const matchIndex =
+				direction === Direction.TopLeft ||
+					direction === Direction.BottomLeft ||
+					direction === Direction.Center
+					? i : i + matches.length
 			return (
 				<MatchBox
 					match={match}
 					direction={direction}
 					height={matchHeight}
-					spacing={i + 1 < matches.length ? matchHeight : 0} // Do not add spacing to the last match in the round column
+					spacing={i + 1 < matches.length ? targetHeight - matchHeight : 0} // Do not add spacing to the last match in the round column
 					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
 					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
+					roundIndex={round.depth}
+					matchIndex={matchIndex}
 				/>
 			)
 		})
@@ -257,7 +300,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 	}
 	return (
 		<div className='wpbb-round'>
-			<RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} />
+			{/* <RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} /> */}
 			<div className='wpbb-round__body'>
 				{buildMatches()}
 			</div>
@@ -266,14 +309,14 @@ const MatchColumn = (props: MatchColumnProps) => {
 }
 
 
-interface BracketProps {
+interface PairedBracketProps {
 	matchTree: MatchTree;
 	canEdit?: boolean;
 	canPick?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
-export const Bracket = (props: BracketProps) => {
+export const PairedBracket = (props: PairedBracketProps) => {
 	// const { numRounds, numWildcards, wildcardPlacement } = props
 	// const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
 	const {
@@ -336,10 +379,16 @@ export const Bracket = (props: BracketProps) => {
 		setMatchTree(newMatchTree)
 	}
 
-	const targetHeight = 800;
+	const targetHeight = 806;
+	console.log('round length', rounds.length)
 
 	// The number of rounds sets the initial height of each match
-	const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 2) / 2;
+	// const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 1);
+	const numDirections = 2
+	const maxMatchesPerRound = 2 ** (rounds.length - 1)
+	const maxMatchesPerColumn = maxMatchesPerRound / numDirections
+	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
+	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
 
 	const bracketRef = useRef<HTMLDivElement>(null)
 
@@ -355,12 +404,14 @@ export const Bracket = (props: BracketProps) => {
 			...rounds.slice(1).reverse().map((round, idx) => {
 				// Get the first half of matches for this column
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
+				const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
 
 				return <MatchColumn
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
-					matchHeight={2 ** idx * firstRoundMatchHeight}
+					// targetHeight={2 ** idx * firstRoundMatchHeight}
+					targetHeight={targetHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -374,7 +425,7 @@ export const Bracket = (props: BracketProps) => {
 				round={rounds[0]}
 				direction={Direction.Center}
 				numDirections={numDirections}
-				matchHeight={targetHeight / 4}
+				targetHeight={targetHeight / 4}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
@@ -384,12 +435,15 @@ export const Bracket = (props: BracketProps) => {
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
+				// The target height decreases by half for each consecutive round in the second half of the bracket
+				const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
 
 				return <MatchColumn round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
-					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					// targetHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					targetHeight={targetHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -399,6 +453,88 @@ export const Bracket = (props: BracketProps) => {
 			})
 		]
 	}
+
+	// Helper function to create a SteppedLineTo JSX Element
+	const createSteppedLine = (
+		team1: string,
+		team2: string,
+		leftSide: boolean,
+		fromAnchor: string,
+		toAnchor: string,
+		style: object
+	): JSX.Element => (
+		<SteppedLineTo
+			from={leftSide ? team1 : team2} // Lines must be drawn from left to right to render properly
+			to={leftSide ? team2 : team1}
+			fromAnchor={fromAnchor}
+			toAnchor={toAnchor}
+			orientation='h'
+			{...style}
+		/>
+	);
+
+	// Function to handle the match side and draw the lines
+	// This function takes in the match details, team details, anchor details and style, 
+	// and returns an array of JSX elements for the lines to be drawn for a match
+	const handleMatchSide = (
+		match: MatchNode,
+		roundIdx: number,
+		matchIdx: number,
+		side: keyof MatchNode,
+		team: string,
+		leftSide: boolean,
+		fromAnchor: string,
+		toAnchor: string,
+		style: object
+	): JSX.Element[] => {
+		if (match[side]) {
+			const team1 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
+			const team2 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
+
+			return [
+				createSteppedLine(team1, team, leftSide, fromAnchor, toAnchor, style),
+				createSteppedLine(team2, team, leftSide, fromAnchor, toAnchor, style),
+			];
+		}
+
+		return [];
+	};
+
+	// Main function
+	const renderLines = (rounds: Round[]): JSX.Element[] => {
+		let lines: JSX.Element[] = [];
+		const fromAnchor = 'right';
+		const toAnchor = 'left';
+		const style = {
+			delay: true,
+			borderColor: '#FFFFFF',
+			borderStyle: 'solid',
+			borderWidth: 1,
+		};
+
+		rounds.forEach((round, roundIdx) => {
+			round.matches.forEach((match, matchIdx) => {
+				if (!match) {
+					return;
+				}
+
+				const team1 = getTeamClassName(roundIdx, matchIdx, true)
+				const team2 = getTeamClassName(roundIdx, matchIdx, false)
+				const team1LeftSide = matchIdx < round.matches.length / 2;
+				// The second team in the first match of the first round is on the opposite side
+				const team2LeftSide = roundIdx === 0 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
+
+				lines = [
+					...lines,
+					...handleMatchSide(match, roundIdx, matchIdx, 'left', team1, team1LeftSide, fromAnchor, toAnchor, style),
+					...handleMatchSide(match, roundIdx, matchIdx, 'right', team2, team2LeftSide, fromAnchor, toAnchor, style),
+				];
+			});
+		});
+
+		return lines;
+	};
+
 
 	const screenshot = () => {
 		const bracketEl: HTMLDivElement | null = bracketRef.current
@@ -431,61 +567,25 @@ export const Bracket = (props: BracketProps) => {
 		// })
 	}
 
+	const team1 = getTeamClassName(4, 0, true);
+	console.log('team1', team1)
+	const team2 = getTeamClassName(3, 0, true);
+	console.log('team2', team2)
+	const team3 = getTeamClassName(4, 0, false);
+	const style = {
+		delay: true,
+		borderColor: '#FFFFFF',
+		borderStyle: 'solid',
+		borderWidth: 1,
+	};
 
 	return (
 		<>
-			<div className='wpbb-bracket' ref={bracketRef}>
+			<div className='wpbb-bracket wpbb-paired' ref={bracketRef}>
 				{rounds.length > 0 && buildRounds2(rounds)}
+				{renderLines(rounds)}
 			</div>
-			<Button variant='primary' onClick={screenshot}>ref</Button>
+			{/* <Button variant='primary' onClick={screenshot}>ref</Button> */}
 		</>
 	)
-}
-
-
-function getElementChildrenAndStyles(element: HTMLElement): string {
-	const html = element.outerHTML;
-
-	const elements = Array.from(element.querySelectorAll('*'));
-
-	const rulesUsed: CSSStyleRule[] = [];
-
-	const sheets = document.styleSheets;
-	for (const sheet of Array.from(sheets)) {
-		let cssRules: CSSRuleList | null = null;
-		try {
-			cssRules = sheet.cssRules;
-		} catch (error) {
-			console.warn('Failed to access cssRules for stylesheet:', sheet, error);
-			continue;
-		}
-
-		if (!cssRules) {
-			continue;
-		}
-
-		for (const rule of Array.from(cssRules)) {
-			// Type guard to narrow down the type of the rule to CSSStyleRule
-			if (rule instanceof CSSStyleRule) {
-				const selectorText = rule.selectorText;
-				const matchedElts = Array.from(document.querySelectorAll(selectorText));
-				for (const elt of elements) {
-					if (matchedElts.includes(elt)) {
-						rulesUsed.push(rule);
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	const style = rulesUsed
-		.map((cssRule) => {
-			return `${cssRule.selectorText} { ${cssRule.style.cssText.toLowerCase()} }`;
-		})
-		.join('\n')
-		.replace(/(\{|;)\s+/g, '$1\n  ')
-		.replace(/\A\s+}/, '}');
-
-	return `<style>\n${style}\n</style>\n\n${html}`;
 }
