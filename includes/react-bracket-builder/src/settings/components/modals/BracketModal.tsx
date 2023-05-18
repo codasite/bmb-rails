@@ -191,7 +191,7 @@ const ViewBracketModal = (props: ViewBracketModalProps) => {
 			<Modal.Header className='wpbb-bracket-modal__header' closeButton>
 				<Modal.Title>{bracket?.name}</Modal.Title>
 			</Modal.Header >
-			<Modal.Body className='pt-0'>
+			<Modal.Body className='pt-0 wpbb-default'>
 				{matchTree ? <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
 			</Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>

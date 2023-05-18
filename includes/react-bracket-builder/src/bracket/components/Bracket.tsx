@@ -411,24 +411,6 @@ export const Bracket = (props: BracketProps) => {
 		const json = JSON.stringify(userBracket);
 		console.log(json)
 
-		// const bracketHTML = getElementChildrenAndStyles(bracketEl)
-		// use html2canvas to get a screenshot of the bracket
-		// html2canvas(bracket, {
-		// 	// scrollX: 0,
-		// 	// scrollY: -window.scrollY,
-		// 	// windowWidth: document.documentElement.clientWidth,
-		// 	// windowHeight: document.documentElement.clientHeight,
-		// }).then((canvas) => {
-		// 	// create a new image element and set the src to the canvas data url
-		// 	const img = new Image()
-		// 	img.src = canvas.toDataURL()
-		// 	// create a new window and append the image to it
-		// 	const win = window.open()
-		// 	if (!win) {
-		// 		return
-		// 	}
-		// 	win.document.write('<img src="' + img.src + '" />')
-		// })
 	}
 
 
@@ -441,7 +423,6 @@ export const Bracket = (props: BracketProps) => {
 		</>
 	)
 }
-
 
 function getElementChildrenAndStyles(element: HTMLElement): string {
 	const html = element.outerHTML;
