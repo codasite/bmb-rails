@@ -107,6 +107,7 @@ class Wp_Bracket_Builder_Public {
 
 		// Only get product details on product pages.
 		if ($product) {
+			$product_id = $product->get_id();
 			$default_color = get_default_product_color($product);
 			$variation_gallery_mapping = get_product_variation_galleries($product);
 		}
@@ -126,7 +127,7 @@ class Wp_Bracket_Builder_Public {
 				'bracket' => $bracket,
 				'variation_gallery_mapping' => $variation_gallery_mapping, // used for preview page
 				'default_product_color' => $default_color, // used for preview page
-				'product_id' => $product->get_id(), // used for preview page
+				'product_id' => $product_id, // used for preview page
 				// Get bracket url from query params
 				// 'bracket_url' => $_GET['bracket_url'],
 				// For testing:
