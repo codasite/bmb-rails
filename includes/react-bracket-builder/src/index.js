@@ -24,29 +24,29 @@ if (builderDiv && bracket) {
 	render(<App><UserBracket bracketRes={bracket} /></App>, builderDiv)
 }
 
+// ---------- Start Preview Page Logic ----------------
+// There must exist an element of class 'wpbb-bracket-preview-controller' to the 
+// product page for the component to be rendered.
+const product_id = wpbb_ajax_obj.product_id;
 const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
 const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
-const default_color = wpbb_ajax_obj.default_color;
-console.log(variation_gallery_mapping);
+const default_product_color = wpbb_ajax_obj.default_product_color;
 
 
 if (previewDiv) {
+	// Render the preview component into the DOM
 
-	// Remove (or hide) default gallery container
+	// Remove the default woocommerce product variation gallery element from the page
 	var woo_variation_gallery_container = document.querySelector('.woo-variation-gallery-container');
 	woo_variation_gallery_container.remove();
-	//woo_variation_gallery_container.style.display = 'none';
 
-
-
-	// Render gallery
-	var node = document.querySelector("#product-40");
+	// Find the location to render the gallery component, and render the gallery component.
+	var gallery_location = document.querySelector(`#product-${product_id}`);
 	var div = document.createElement("div");
 	div.setAttribute("id", "wpbb-bracket-preview");
-	// make div the first child of node
-	node.insertBefore(div, node.firstChild);
+	gallery_location.insertBefore(div, gallery_location.firstChild);
 
-	render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_color}/></App>, div);
+	render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_product_color}/></App>, div);
 }
 
 
