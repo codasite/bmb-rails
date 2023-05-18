@@ -1,0 +1,200 @@
+<?php
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-pick-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-pick.php';
+
+class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
+
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Pick_Repository_Interface
+	 */
+	private $pick_repo;
+
+	/**
+	 * @var string
+	 */
+	protected $namespace;
+
+	/**
+	 * @var string
+	 */
+	protected $rest_base;
+
+	/**
+	 * Constructor.
+	 */
+	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $pick_repo = null) {
+	public function __construct() {
+		// echo $pick_repo;
+		// $this->pick_repo = $pick_repo != null ? $pick_repo : new Wp_Bracket_Builder_Bracket_Repository();
+		$this->pick_repo = new Wp_Bracket_Builder_Bracket_Pick_Repository();
+		$this->namespace = 'wp-bracket-builder/v1';
+		$this->rest_base = 'bracket-picks';
+	}
+
+	/**
+	 * Register the routes for bracket objects.
+	 * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
+	 */
+	public function register_routes() {
+		$namespace = $this->namespace;
+		$base = $this->rest_base;
+		register_rest_route($namespace, '/' . $base, array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array($this, 'get_items'),
+				'permission_callback' => array($this, 'customer_permission_check'),
+				'args'                => array(
+					'bracket_id' => array(
+						'description' => 'The ID of the bracket.',
+						'type'        => 'integer',
+						'required'    => false, // Set to true if the parameter is required
+						'sanitize_callback' => 'absint', // Sanitize the input as an absolute integer value
+						'validate_callback' => function ($param, $request, $key) {
+							return is_numeric($param); // Validate that the input is a numeric value
+						},
+					),
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array($this, 'create_item'),
+				'permission_callback' => array($this, 'admin_permission_check'),
+				'args'                => $this->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE),
+			),
+			'schema' => array($this, 'get_public_item_schema'),
+		));
+		register_rest_route($namespace, '/' . $base . '/(?P<item_id>[\d]+)', array(
+			'args' => array(
+				'item_id' => array(
+					'description' => __('Unique identifier for the object.'),
+					'type'        => 'integer',
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array($this, 'get_item'),
+				'permission_callback' => array($this, 'customer_permission_check'),
+				'args'                => array(
+					'context' => $this->get_context_param(array('default' => 'view')),
+				),
+			),
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => array($this, 'update_item'),
+				'permission_callback' => array($this, 'admin_permission_check'),
+				'args'                => $this->get_endpoint_args_for_item_schema(WP_REST_Server::EDITABLE),
+			),
+			array(
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => array($this, 'delete_item'),
+				'permission_callback' => array($this, 'admin_permission_check'),
+				'args'                => array(
+					'force' => array(
+						'default'     => false,
+						'description' => __('Required to be true, as resource does not support trashing.'),
+						'type'        => 'boolean',
+					),
+				),
+			),
+		));
+	}
+
+	/**
+	 * Retrieves a collection of brackets.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_items($request) {
+		$bracket_id = $request->get_param('bracket_id');
+
+		$brackets = $this->pick_repo->get_all($bracket_id);
+		return new WP_REST_Response($brackets, 200);
+	}
+
+	/**
+	 * Retrieves a single bracket.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_item($request) {
+		// get id from request
+		$id = $request->get_param('item_id');
+		$bracket = $this->pick_repo->get($id);
+		return new WP_REST_Response($bracket, 200);
+	}
+
+	/**
+	 * Creates a single bracket.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function create_item($request) {
+		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
+
+		$saved = $this->pick_repo->add($pick);
+		return new WP_REST_Response($saved, 201);
+		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
+	}
+
+	// /**
+	//  * Updates a single bracket.
+	//  *
+	//  * @param WP_REST_Request $request Full details about the request.
+	//  * @return WP_Error|WP_REST_Response
+	//  */
+	// public function update_item($request) {
+	// 	// if id does not match item_id, return error
+	// 	// if ($request->get_param('id') != $request->get_param('item_id')) {
+	// 	// 	return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
+	// 	// }
+	// 	// get the update id 
+	// 	$update_id = $request->get_param('item_id');
+	// 	// create an array copy of the request params
+	// 	$bracket_params = $request->get_params();
+	// 	// remove the item_id from the array
+	// 	unset($bracket_params['item_id']);
+
+	// 	$bracket = Wp_Bracket_Builder_Bracket_Pick::from_array($bracket_params);
+	// 	$updated = $this->pick_repo->update($bracket);
+	// 	return new WP_REST_Response($updated, 200);
+	// }
+
+	// /**
+	//  * Deletes a single bracket.
+	//  *
+	//  * @param WP_REST_Request $request Full details about the request.
+	//  * @return WP_Error|WP_REST_Response
+	//  */
+	// public function delete_item($request) {
+	// 	// get id from request
+	// 	$id = $request->get_param('item_id');
+	// 	$deleted = $this->pick_repo->delete($id);
+	// 	if ($deleted) {
+	// 		return new WP_REST_Response(null, 204);
+	// 	}
+	// 	return new WP_Error('cant-delete', __('message', 'text-domain'), array('status' => 500));
+	// }
+
+	/**
+	 * Check if a given request has admin access to this plugin
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|bool
+	 */
+	public function admin_permission_check($request) {
+		return true;
+	}
+
+	/**
+	 * Check if a given request has customer access to this plugin. Anyone can view the data.
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|bool
+	 */
+	public function customer_permission_check($request) {
+		return true;
+	}
+}

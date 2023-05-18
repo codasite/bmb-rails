@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Button, Table, Modal } from 'react-bootstrap';
-import { BracketModal, BracketModalMode } from './BracketModal';
+import { BracketModal, BracketModalMode } from './modals/BracketModal';
 import { bracketApi } from '../../api/bracketApi';
 import { BracketRes } from '../../api/types/bracket';
 
@@ -68,6 +68,15 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 		})
 		console.log(e.target.checked)
 	}
+
+	const handleViewSubmissions = (e) => {
+		e.stopPropagation();
+		console.log('view submissions')
+		bracketApi.getSubmissions(bracket.id).then((submissions) => {
+			console.log(submissions)
+		})
+		props.handleShowBracketModal(BracketModalMode.Submissions, bracket.id);
+	}
 	const created = new Date(bracket.createdAt.date);
 
 	const timeAgo = (date: Date) => {
@@ -108,7 +117,11 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 				</td>
 				{/* <td className='text-center'>{bracket.userBracketCount}</td> */}
 				<td className='text-center'>{creationTime}</td>
-				<td className='text-center'>{bracket.numSubmissions}</td>
+				<td className='text-center'>
+					<Button variant="light" onClick={handleViewSubmissions}>
+						{bracket.numSubmissions}
+					</Button>
+				</td>
 				<td className='wpbb-bracket-table-action-col'>
 					<Button variant="primary" >Score</Button>
 					<Button variant="success" className='mx-2' onClick={handleCopyBracket}>Copy</Button>
