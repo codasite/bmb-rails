@@ -179,7 +179,6 @@ const MatchBox = (props: MatchBoxProps) => {
 				matchIndex={props.matchIndex}
 				left={true}
 			/>
-			{/* {direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />} */}
 			<TeamSlot
 				// className='wpbb-team2'
 				team={match.team2}
@@ -296,13 +295,25 @@ const MatchColumn = (props: MatchColumnProps) => {
 			)
 		})
 		return matchBoxes
-
 	}
+	if (round.depth === 0) {
+		console.log('final round', round)
+	}
+	const finalRound = round.depth === 0
+	let items = buildMatches()
+	if (finalRound) {
+		items = [
+			<TeamSlot className='wpbb-champion-team' team={round.matches[0]?.result} />,
+			...items,
+		]
+	}
+
+
 	return (
 		<div className='wpbb-round'>
 			{/* <RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} /> */}
 			<div className='wpbb-round__body'>
-				{buildMatches()}
+				{items}
 			</div>
 		</div>
 	)
@@ -380,7 +391,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	}
 
 	const targetHeight = 806;
-	console.log('round length', rounds.length)
 
 	// The number of rounds sets the initial height of each match
 	// const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 1);
@@ -503,6 +513,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	// Main function
 	const renderLines = (rounds: Round[]): JSX.Element[] => {
 		let lines: JSX.Element[] = [];
+		// Lines are always drawn from left to right so these two variables never change for horizontal lines
 		const fromAnchor = 'right';
 		const toAnchor = 'left';
 		const style = {
@@ -520,6 +531,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 				const team1 = getTeamClassName(roundIdx, matchIdx, true)
 				const team2 = getTeamClassName(roundIdx, matchIdx, false)
+				// Whether the matches appear on the left or right side of the bracket
+				// This determines the direction of the lines
 				const team1LeftSide = matchIdx < round.matches.length / 2;
 				// The second team in the first match of the first round is on the opposite side
 				const team2LeftSide = roundIdx === 0 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
@@ -529,7 +542,20 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					...handleMatchSide(match, roundIdx, matchIdx, 'left', team1, team1LeftSide, fromAnchor, toAnchor, style),
 					...handleMatchSide(match, roundIdx, matchIdx, 'right', team2, team2LeftSide, fromAnchor, toAnchor, style),
 				];
+				if (roundIdx === 0) {
+					// Render lines for the final match
+					lines = [...lines, <LineTo
+						from={team1}
+						to={team2}
+						fromAnchor='bottom'
+						toAnchor='top'
+						{...style}
+					/>,
+
+					];
+				}
 			});
+
 		});
 
 		return lines;
