@@ -299,7 +299,7 @@ const NewBracketModal = (props: NewBracketModalProps) => {
 					/>
 				</form>
 			</Modal.Header >
-			<Modal.Body className='pt-0'><Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit /></Modal.Body>
+			<Modal.Body className='pt-0 wpbb-default'><Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit /></Modal.Body>
 			<Modal.Footer className='wpbb-bracket-modal__footer'>
 				<Button variant="secondary" onClick={handleClose}>
 					Close
