@@ -26,6 +26,28 @@
  */
 
 // If uninstall not called from WordPress, then exit.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+if (!defined('WP_UNINSTALL_PLUGIN')) {
 	exit;
+}
+
+delete_tables();
+
+function delete_tables() {
+	global $wpdb;
+	$wp_prefix = $wpdb->prefix;
+	$plugin_prefix = 'bracket_builder_';
+	$prefix = $wp_prefix . $plugin_prefix;
+
+	$tables = [
+		$prefix . 'match_picks',
+		$prefix . 'bracket_picks',
+		$prefix . 'matches',
+		$prefix . 'teams',
+		$prefix . 'rounds',
+		$prefix . 'brackets',
+	];
+
+	foreach ($tables as $table) {
+		$wpdb->query("DROP TABLE IF EXISTS $table");
+	}
 }
