@@ -104,9 +104,11 @@ class Wp_Bracket_Builder_Public {
 		$bracket = $bracket_repo->get(post: $post);
 
 		$product = wc_get_product($post->ID);
-		$defaults = $product->get_default_attributes();
-		$default_color = $defaults['color'];
-		$variation_gallery_mapping = get_product_variation_galleries($product);
+		if ($product) {
+			$defaults = $product->get_default_attributes();
+			$default_color = $defaults['color'];
+			$variation_gallery_mapping = get_product_variation_galleries($product);
+		}
 
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);

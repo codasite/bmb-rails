@@ -34,7 +34,7 @@ const imageStyle = {
 };
 
 const logoImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
-const logoPosition = [50, 100];
+const logoPosition = [100, 200];
 const logoSize = [32,32];
 
 
@@ -46,7 +46,6 @@ const Gallery = ({ gallery_mapping, default_color}) => {
 
   useEffect(() => {
     // Get the images with bracket overlays
-    console.log("get the images with bracket overlays");
     setImageUrls([]);
 
     const addUrlToImageUrls = (url) => {
@@ -57,7 +56,13 @@ const Gallery = ({ gallery_mapping, default_color}) => {
     const variation_image_urls = gallery_mapping[currentColor];
     variation_image_urls.forEach((image_url) => {
       // Overlay the bracket (url is appended to the array inside overlayLogo function))
-      overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, addUrlToImageUrls);
+      if (image_url) {
+        if (image_url.includes('back')) {
+          overlayLogo(image_url, logoImageUrl, logoPosition, logoSize, addUrlToImageUrls);
+        } else {
+          addUrlToImageUrls(image_url);
+        }
+      }
     });
   }, [currentColor]);
 
@@ -69,11 +74,7 @@ const Gallery = ({ gallery_mapping, default_color}) => {
     selectElement.addEventListener('click', (event) => {
       if (event.target.value) {
         setCurrentColor(event.target.value);
-        set
       };
-      console.log('bruh');
-      console.log(event.target.value);
-      console.log('dodododo');
     });
   }, []);
 
@@ -119,6 +120,19 @@ const Gallery = ({ gallery_mapping, default_color}) => {
 
 
 function overlayLogo(backgroundImageUrl, logoImageUrl, logoPosition, logoSize, callback) {
+
+  // Overlay the bracket only if "back" is in the backgroundImageUrl, for example:
+  // white_tshirt_back.png
+  // Overwise, just use the original photo.
+  console.log(backgroundImageUrl);
+  //console.log(backgroundImageUrl.includes("back"));
+  console.log(backgroundImageUrl);
+
+  // if (backgroundImageUrl.includes("back")) {
+  //   console.log(backgroundImageUrl);
+  //   callback(backgroundImageUrl);
+  // };
+
 	// Create a new cross-origin image element for the background image
 	const backgroundImage = new Image();
 	backgroundImage.crossOrigin = "anonymous";
