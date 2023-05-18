@@ -420,7 +420,6 @@ export const Bracket = (props: BracketProps) => {
 				{rounds.length > 0 && buildRounds2(rounds)}
 			</div>
 			<Button variant='primary' onClick={screenshot}>ref</Button>
-
 		</>
 	)
 }
