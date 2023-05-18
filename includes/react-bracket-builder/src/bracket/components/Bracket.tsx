@@ -424,7 +424,6 @@ export const Bracket = (props: BracketProps) => {
 	)
 }
 
-
 function getElementChildrenAndStyles(element: HTMLElement): string {
 	const html = element.outerHTML;
 
