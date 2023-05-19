@@ -309,21 +309,6 @@ const MatchColumn = (props: MatchColumnProps) => {
 	const finalRound = round.depth === 0
 	const pickedWinner = round.matches[0]?.result ? true : false
 	let items = buildMatches()
-	if (finalRound) {
-		items = [
-			<div className='wpbb-final-round-col' style={{ height: '520px' }}>
-				<div className='wpbb-winner'>
-					<span className='wpbb-winner-text'>WINNER</span>
-					<TeamSlot
-						className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-						team={round.matches[0]?.result}
-					/>
-				</div>
-				<BracketLogo />
-			</div>,
-			...items,
-		]
-	}
 
 
 	return (
@@ -333,6 +318,18 @@ const MatchColumn = (props: MatchColumnProps) => {
 				{items}
 			</div>
 		</div>
+	)
+}
+
+interface BuyApparelBtnProps {
+	onClick: () => void;
+}
+
+const ApparelButton = (props: BuyApparelBtnProps) => {
+	return (
+		<button className='wpbb-buy-apparel-btn disabled' onClick={props.onClick}>
+			ADD TO APPAREL
+		</button>
 	)
 }
 
@@ -595,11 +592,44 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					];
 				}
 			});
-
 		});
-
 		return lines;
 	};
+
+	// Renders 
+	const renderPositioned = (rounds: Round[]): JSX.Element[] => {
+		// if (finalRound) {
+		// 	items = [
+		// 		<div className='wpbb-final-round-col' style={{ height: '520px' }}>
+		// 			<div className='wpbb-winner'>
+		// 				{pickedWinner && <span className='wpbb-winner-text'>WINNER</span>}
+		// 				<TeamSlot
+		// 					className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+		// 					team={round.matches[0]?.result}
+		// 				/>
+		// 			</div>
+		// 			<BracketLogo />
+		// 		</div>,
+		// 		...items,
+		// 	]
+		// }
+		const finalRound = rounds[0]
+		const pickedWinner = finalRound.matches[0]?.result ? true : false
+		const positioned = [
+			// {pickedWinner && <span className='wpbb-winner-text'>WINNER</span>}
+			<TeamSlot
+				className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+				team={finalRound.matches[0]?.result}
+			/>,
+			<div className='wpbb-bracket-options'>
+				<BracketLogo className="wpbb-bracket-logo" />
+				<ApparelButton onClick={() => { }} />
+			</div>
+
+		]
+		return positioned
+	}
+
 
 
 	const screenshot = () => {
@@ -648,6 +678,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			<div className='wpbb-bracket wpbb-paired' ref={bracketRef}>
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
+				{renderPositioned(rounds)}
 			</div>
 			{/* <Button variant='primary' onClick={screenshot}>ref</Button> */}
 		</>
