@@ -103,6 +103,8 @@ class Wp_Bracket_Builder_Public {
 		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
 		$bracket = $bracket_repo->get(post: $post);
 
+
+		// For product page
 		$product = wc_get_product($post->ID);
 
 		// Only get product details on product pages.
@@ -308,3 +310,25 @@ function merge_gallery_images($unmerged_image_id, $gallery_image_ids) {
 // 		}
 // 	}
 // }
+
+
+// Add the bracket url to the cart item data
+
+function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
+	$bracket_url = "http://www.gofuckyourself.com";
+	$cart_item_data['bracket_url'] = $bracket_url;
+	return $cart_item_data;
+}
+
+add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item',10,3);
+
+// Add the bracket url to the order
+function add_bracket_to_order($item, $cart_item_key, $values, $order) {
+	if (empty($values)) {
+		return;
+	}
+
+	$item->add_meta_data('bracket_url', $values['bracket_url'] );
+}
+
+add_action('woocommerce_checkout_create_order_line_item','add_bracket_to_order',10,4);

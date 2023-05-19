@@ -50,14 +50,14 @@ const thumbNailsStyle = {
     //justifyContent: 'center',
 }
 const thumbNailStyle = {
-    height: '100px',
-    width: '100px',
+    height: '130px',
+    width: '130px',
     cursor: 'pointer',  
 };
 
 const inactiveThumbNailStyle = {
-    height: '100px',
-    width: '100px',
+    height: '130px',
+    width: '130px',
     opacity: '0.5',
     cursor: 'pointer',
     };
