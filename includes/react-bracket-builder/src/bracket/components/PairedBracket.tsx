@@ -621,10 +621,10 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
 				team={finalRound.matches[0]?.result}
 			/>,
-			<div className='wpbb-bracket-options'>
-				<BracketLogo className="wpbb-bracket-logo" />
-				<ApparelButton onClick={() => { }} />
-			</div>
+			<BracketLogo className="wpbb-bracket-logo" />
+			// <div className='wpbb-bracket-options'>
+			// 	<ApparelButton onClick={() => { }} />
+			// </div>
 
 		]
 		return positioned
