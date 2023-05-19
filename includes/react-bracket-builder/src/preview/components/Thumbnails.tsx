@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 
-const Thumbnails = ({ imageUrls, currentIndex, setCurrentIndex }) => {
+interface ThumbnailsProps {
+    imageUrls: string[];
+    currentIndex: number;
+    setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
+  }
+  
+const Thumbnails: React.FC<ThumbnailsProps> = ({ imageUrls, currentIndex, setCurrentIndex }) => {
     return (
-        <div
-            className="wpbb-thumbnail-container"
-            style={thumbNailsStyle}
-        >
+        <div className="wpbb-thumbnail-container" style={thumbNailsStyle}>
             {imageUrls.map((imageUrl, index) => (
                 <Thumbnail
                     imageUrl={imageUrl}
@@ -14,19 +17,18 @@ const Thumbnails = ({ imageUrls, currentIndex, setCurrentIndex }) => {
                     setCurrentIndex={setCurrentIndex}
                     />
             ))}
-
-                {/* <img
-                    src={imageUrl}
-                    key={index}
-                    className={`wpbb-thumbnail ${index === currentIndex ? 'wpbb-thumbnail-active' : ''}`}
-                    style={humbNailStyle}
-                    />
-            ))} */}
         </div>
     );
 }
 
-const Thumbnail = ({ imageUrl, index, currentIndex, setCurrentIndex }) => {
+interface ThumbnailProps {
+    imageUrl: string;
+    index: number;
+    currentIndex: number;
+    setCurrentIndex: React.Dispatch<React.SetStateAction<number>>;
+}
+
+const Thumbnail: React.FC<ThumbnailProps> = ({ imageUrl, index, currentIndex, setCurrentIndex }) => {
     return (
         <img
             src={imageUrl}
@@ -44,20 +46,20 @@ export default Thumbnails;
 
 
 // Styles
-const thumbNailsStyle = {
+const thumbNailsStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
-    //justifyContent: 'center',
-}
-const thumbNailStyle = {
+};
+
+const thumbNailStyle: React.CSSProperties = {
     height: '130px',
     width: '130px',
     cursor: 'pointer',  
 };
 
-const inactiveThumbNailStyle = {
+const inactiveThumbNailStyle: React.CSSProperties = {
     height: '130px',
     width: '130px',
     opacity: '0.5',
     cursor: 'pointer',
-    };
+};
