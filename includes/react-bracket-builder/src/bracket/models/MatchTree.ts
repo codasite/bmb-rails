@@ -133,6 +133,15 @@ export class Round {
 			matches: matches,
 		}
 	}
+
+	isComplete(): boolean {
+		return this.matches.every((match) => {
+			if (match === null) {
+				return true;
+			}
+			return match.result !== null;
+		});
+	}
 }
 
 class WildcardRange {
@@ -303,19 +312,20 @@ export class MatchTree {
 	}
 
 	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
-		console.log('advanceTeam', depth, matchIndex, left)
-		const match = this.rounds[depth].matches[matchIndex]
+		const prevRound = this.rounds[depth + 1]
+		if (prevRound && !prevRound.isComplete()) {
+			return
+		}
+		const round = this.rounds[depth]
+		const match = round.matches[matchIndex]
 		if (!match) {
-			console.log('no match')
 			return
 		}
 		const team = left ? match.team1 : match.team2
 		if (!team) {
-			console.log('no team')
 			return
 		}
 		match.result = team
-		console.log('match', match)
 		const parent = match.parent
 		if (!parent) {
 			return
@@ -325,6 +335,18 @@ export class MatchTree {
 		} else if (match === parent.right) {
 			parent.team2 = team
 		}
+	}
+
+	isComplete = (): boolean => {
+		const finalRound = this.rounds[0]
+		if (!finalRound) {
+			return false
+		}
+		const finalMatch = finalRound.matches[0]
+		if (!finalMatch) {
+			return false
+		}
+		return finalMatch.result !== null
 	}
 
 	static getParent(matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null {

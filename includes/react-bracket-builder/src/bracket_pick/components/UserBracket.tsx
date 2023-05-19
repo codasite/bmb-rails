@@ -11,14 +11,30 @@ import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
 import { BracketRes } from '../../api/types/bracket';
 
 
+
+interface BuyApparelBtnProps {
+	onClick?: () => void;
+	disabled?: boolean;
+}
+
+const ApparelButton = (props: BuyApparelBtnProps) => {
+	const {
+		disabled = false,
+		onClick = () => { }
+	} = props;
+	return (
+		<button className={'wpbb-apparel-btn' + (disabled ? '-disabled' : '')} onClick={onClick} disabled={disabled}>
+			ADD TO APPAREL
+		</button>
+	)
+}
+
 interface UserBracketProps {
 	bracketId?: number;
 	bracketRes?: BracketRes;
 }
 
-
-
-const UserBracket = (props) => {
+const UserBracket = (props: UserBracketProps) => {
 	const {
 		bracketId,
 		bracketRes
@@ -36,10 +52,14 @@ const UserBracket = (props) => {
 		}
 	}, [bracketId, bracketRes]);
 
+	const disableActions = matchTree === null || !matchTree.isComplete();
+
 	return (
-		<div>
+		<div className='wpbb-bracket-container'>
 			{matchTree ? <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
-			{/* {matchTree ? <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'} */}
+			<div className={'wpbb-bracket-actions'}>
+				<ApparelButton disabled={disableActions} onClick={() => { }} />
+			</div>
 		</div>
 	)
 }
