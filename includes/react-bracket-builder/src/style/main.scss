@@ -36,12 +36,22 @@
 .wpbb-paired {
 	font-family: 'ClashDisplay-Variable';
 	color: white;
+	position: relative;
 
-	.wpbb-final-round-col {
+	.wpbb-slogan-text {
 		position: absolute;
-		top: 50%;
+		top: -50px;
 		left: 50%;
-		transform: translate(-50%, -50%);
+		transform: translateX(-50%);
+		font-size: 64px;
+		font-weight: 700;
+	}
+
+	.wpbb-winner-container {
+		position: absolute;
+		top: 150px;
+		left: 50%;
+		transform: translateX(-50%);
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -56,6 +66,10 @@
 	}
 
 	.wpbb-winner-text {
+		.hidden {
+			display: hidden;
+		}
+
 		font-size: 64px;
 		font-weight: 700;
 		line-height: 79px;
