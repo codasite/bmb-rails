@@ -336,19 +336,6 @@ const MatchColumn = (props: MatchColumnProps) => {
 	)
 }
 
-interface BuyApparelBtnProps {
-	onClick: () => void;
-}
-
-const ApparelButton = (props: BuyApparelBtnProps) => {
-	return (
-		<button className='wpbb-buy-apparel-btn disabled' onClick={props.onClick}>
-			ADD TO APPAREL
-		</button>
-	)
-}
-
-
 interface PairedBracketProps {
 	matchTree: MatchTree;
 	canEdit?: boolean;
@@ -612,23 +599,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		return lines;
 	};
 
-	// Renders 
 	const renderPositioned = (rounds: Round[]): JSX.Element[] => {
-		// if (finalRound) {
-		// 	items = [
-		// 		<div className='wpbb-final-round-col' style={{ height: '520px' }}>
-		// 			<div className='wpbb-winner'>
-		// 				{pickedWinner && <span className='wpbb-winner-text'>WINNER</span>}
-		// 				<TeamSlot
-		// 					className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-		// 					team={round.matches[0]?.result}
-		// 				/>
-		// 			</div>
-		// 			<BracketLogo />
-		// 		</div>,
-		// 		...items,
-		// 	]
-		// }
 		const finalRound = rounds[0]
 		const pickedWinner = finalRound.matches[0]?.result ? true : false
 		const positioned = [
@@ -641,9 +612,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				/>
 			</div>,
 			<BracketLogo className="wpbb-bracket-logo" />
-			// <div className='wpbb-bracket-options'>
-			// 	<ApparelButton onClick={() => { }} />
-			// </div>
 
 		]
 		return positioned
