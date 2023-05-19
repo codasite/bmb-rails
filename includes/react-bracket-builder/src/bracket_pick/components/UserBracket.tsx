@@ -52,6 +52,25 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 	}, [bracketId, bracketRes]);
 
+	const buildPrintArea = (inchWidth: number, inchHeight: number, innerHTML: string) => {
+		const width = inchWidth * 96;
+		const height = inchHeight * 96;
+		// return (
+		// 	<div
+		// 		className='wpbb-bracket-print-area'
+		// 		style={{ height: height, width: width }}
+		// 		dangerouslySetInnerHTML={{ __html: innerHTML }}
+		// 	>
+		// 	</div>
+		// )
+		return `
+			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px'>
+				${innerHTML}
+			</div>
+		`
+
+	}
+
 	const getImage = () => {
 		// const bracketEl: HTMLDivElement | null = bracketRef.current
 		// if (!bracketEl) {
@@ -60,7 +79,9 @@ const UserBracket = (props: UserBracketProps) => {
 		console.log('getting with class')
 		const bracketEl = document.getElementsByClassName('wpbb-bracket')[0]
 		const bracketHTML = bracketEl.outerHTML
-		console.log(bracketHTML)
+		const printArea = buildPrintArea(12, 16, bracketHTML)
+		// console.log(bracketHTML)
+		console.log(printArea)
 		// const userBracket = matchTree.toUserRequest('barry bracket', 999);
 		// const json = JSON.stringify(userBracket);
 		// console.log(json)
