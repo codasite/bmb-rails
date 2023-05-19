@@ -6,19 +6,24 @@ const bracketImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/
 
 // This will need to be updated for production to ensure proper
 // sizing of the bracket overlay on the garment.
-const bracketSize = [32,32];
+const bracketSize: [number, number] = [32,32];
 
-const Gallery = ({ gallery_mapping, default_color}) => {
+interface GalleryProps {
+  gallery_mapping: { [key: string]: string[] };
+  default_color: string;
+}
+
+const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color}) => {
 
   // Index of current image to display in the gallery
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   // URLs of images to display in the gallery. This is updated
   // when currentColor is updated. 
-  const [imageUrls, setImageUrls] = useState([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
   // Color of current variation selection  
-  const [currentColor, setCurrentColor] = useState(default_color);
+  const [currentColor, setCurrentColor] = useState<string>(default_color);
 
 
 
@@ -28,13 +33,14 @@ const Gallery = ({ gallery_mapping, default_color}) => {
   // is first rendered.
   useEffect(() => {
     // attach an event listener to the select element
-    const selectElement = document.querySelector('select#color');
+    const selectElement = document.querySelector('select#color') as HTMLSelectElement;
     const optionElements = selectElement.querySelectorAll('option');
 
     selectElement.addEventListener('click', (event) => {
-      if (event.target.value) {
-        setCurrentColor(event.target.value);
-      };
+      const target = event.target as HTMLSelectElement;
+      if (target.value) {
+        setCurrentColor(target.value);
+    };
     });
   }, []);
 
@@ -47,13 +53,13 @@ const Gallery = ({ gallery_mapping, default_color}) => {
 
     // Callback to append url to imageUrls. This is passed as the last arugment
     // to overlayBracket function.
-    const appendUrl = (url) => {
+    const appendUrl = (url: string) => {
       setImageUrls(prevImageUrls => [...prevImageUrls, url]);
     }
     
     // Get URLs of images rendered with bracket overlay.
     const variation_image_urls = gallery_mapping[currentColor];
-    variation_image_urls.forEach((image_url) => {
+    variation_image_urls?.forEach((image_url) => {
       // Overlay the bracket on the image, and append the url to imageUrls.
       if (image_url) { // null check
 
@@ -71,11 +77,11 @@ const Gallery = ({ gallery_mapping, default_color}) => {
 
   // Controls to navigate the gallery
   const handlePrevious = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === 0 ? imageUrls?.length - 1 : prevIndex - 1));
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? (imageUrls?.length ?? 0)- 1 : prevIndex - 1));
   };
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === imageUrls?.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) => (prevIndex === (imageUrls?.length ?? 0) - 1 ? 0 : prevIndex + 1));
   };
 
 
@@ -99,7 +105,7 @@ const Gallery = ({ gallery_mapping, default_color}) => {
 
 
 // This is the big function that overlays the bracket on the image.
-function overlayBracket(backgroundImageUrl, bracketImageUrl, bracketSize, callback) {
+function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, bracketSize: number[], callback: (url: string) => void) {
 
 	// Create a new image element for the background image
   // The background image comes from the product so no worries
@@ -164,11 +170,11 @@ function overlayBracket(backgroundImageUrl, bracketImageUrl, bracketSize, callba
   }
   
 
-  function loadImage(imageElement) {
-	return new Promise((resolve, reject) => {
-	  imageElement.addEventListener('load', () => resolve(), false);
-	  imageElement.addEventListener('error', (error) => reject(error), false);
-	});
+  function loadImage(imageElement: HTMLImageElement): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      imageElement.addEventListener('load', () => resolve(), false);
+      imageElement.addEventListener('error', (error) => reject(error), false);
+    });
   }
 
 
@@ -177,11 +183,11 @@ export default Gallery;
 
 
 // Gallery styles
-const galleryStyle = {
+const galleryStyle: React.CSSProperties = {
   position: 'relative',
 };
 
-const arrowLeftStyle = {
+const arrowLeftStyle: React.CSSProperties = {
   position: 'absolute',
   top: '50%',
   left: '0',
@@ -195,7 +201,7 @@ const arrowLeftStyle = {
   background: 'none'
 };
 
-const arrowRightStyle = {
+const arrowRightStyle: React.CSSProperties = {
   position: 'absolute',
   top: '50%',
   right: '0',
@@ -209,7 +215,7 @@ const arrowRightStyle = {
   background: 'none'
 };
 
-const imageStyle = {
+const imageStyle: React.CSSProperties = {
   maxWidth: '100%',
   height: 'auto',
 };
