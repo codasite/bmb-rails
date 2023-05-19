@@ -41,7 +41,6 @@ const UserBracket = (props: UserBracketProps) => {
 	} = props;
 
 	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
-	const bracketRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		if (bracketId) {
@@ -54,10 +53,12 @@ const UserBracket = (props: UserBracketProps) => {
 	}, [bracketId, bracketRes]);
 
 	const getImage = () => {
-		const bracketEl: HTMLDivElement | null = bracketRef.current
-		if (!bracketEl) {
-			return
-		}
+		// const bracketEl: HTMLDivElement | null = bracketRef.current
+		// if (!bracketEl) {
+		// 	return
+		// }
+		console.log('getting with class')
+		const bracketEl = document.getElementsByClassName('wpbb-bracket')[0]
 		const bracketHTML = bracketEl.outerHTML
 		console.log(bracketHTML)
 		// const userBracket = matchTree.toUserRequest('barry bracket', 999);
@@ -74,7 +75,7 @@ const UserBracket = (props: UserBracketProps) => {
 
 	return (
 		<div className='wpbb-bracket-container'>
-			{matchTree ? <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick ref={bracketRef} /> : 'Loading...'}
+			{matchTree ? <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
 			<div className={'wpbb-bracket-actions'}>
 				<ApparelButton disabled={disableActions} onClick={handleApparelClick} />
 			</div>
