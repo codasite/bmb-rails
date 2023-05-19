@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
 import { Button, InputGroup } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../utils/types';
@@ -343,7 +343,7 @@ interface PairedBracketProps {
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
-export const PairedBracket = (props: PairedBracketProps) => {
+export const PairedBracket = forwardRef((props: PairedBracketProps, ref: React.Ref<HTMLDivElement>) => {
 	const {
 		matchTree,
 		setMatchTree,
@@ -433,7 +433,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
 	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
 
-	const bracketRef = useRef<HTMLDivElement>(null)
 
 	/**
 	 * Build rounds in two directions, left to right and right to left
@@ -513,6 +512,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			fromAnchor={fromAnchor}
 			toAnchor={toAnchor}
 			orientation='h'
+			within='wpbb-bracket'
 			{...style}
 		/>
 	);
@@ -583,6 +583,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team2}
 						fromAnchor='bottom'
 						toAnchor='top'
+						within='wpbb-bracket'
 						{...style}
 					/>,
 					<LineTo
@@ -590,6 +591,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team1}
 						fromAnchor='bottom'
 						toAnchor='top'
+						within='wpbb-bracket'
 						{...style}
 					/>,
 					];
@@ -619,36 +621,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 
 
-	const screenshot = () => {
-		const bracketEl: HTMLDivElement | null = bracketRef.current
-		if (!bracketEl) {
-			return
-		}
-		// const bracketHTML = bracketEl.outerHTML
-		// console.log(bracketHTML)
-		const userBracket = matchTree.toUserRequest('barry bracket', 999);
-		const json = JSON.stringify(userBracket);
-		console.log(json)
-
-		// const bracketHTML = getElementChildrenAndStyles(bracketEl)
-		// use html2canvas to get a screenshot of the bracket
-		// html2canvas(bracket, {
-		// 	// scrollX: 0,
-		// 	// scrollY: -window.scrollY,
-		// 	// windowWidth: document.documentElement.clientWidth,
-		// 	// windowHeight: document.documentElement.clientHeight,
-		// }).then((canvas) => {
-		// 	// create a new image element and set the src to the canvas data url
-		// 	const img = new Image()
-		// 	img.src = canvas.toDataURL()
-		// 	// create a new window and append the image to it
-		// 	const win = window.open()
-		// 	if (!win) {
-		// 		return
-		// 	}
-		// 	win.document.write('<img src="' + img.src + '" />')
-		// })
-	}
 
 	const team1 = getTeamClassName(4, 0, true);
 	const team2 = getTeamClassName(3, 0, true);
@@ -662,7 +634,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 	return (
 		<>
-			<div className='wpbb-bracket wpbb-paired' ref={bracketRef}>
+			<div className='wpbb-bracket wpbb-paired' ref={ref}>
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
 				{renderPositioned(rounds)}
@@ -670,4 +642,4 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			{/* <Button variant='primary' onClick={screenshot}>ref</Button> */}
 		</>
 	)
-}
+});

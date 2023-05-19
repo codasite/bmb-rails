@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { bracketApi } from '../../api/bracketApi';
@@ -41,6 +41,7 @@ const UserBracket = (props: UserBracketProps) => {
 	} = props;
 
 	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
+	const bracketRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		if (bracketId) {
@@ -52,13 +53,30 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 	}, [bracketId, bracketRes]);
 
+	const getImage = () => {
+		const bracketEl: HTMLDivElement | null = bracketRef.current
+		if (!bracketEl) {
+			return
+		}
+		const bracketHTML = bracketEl.outerHTML
+		console.log(bracketHTML)
+		// const userBracket = matchTree.toUserRequest('barry bracket', 999);
+		// const json = JSON.stringify(userBracket);
+		// console.log(json)
+	}
+
+	const handleApparelClick = () => {
+		console.log('apparel click')
+		getImage()
+	}
+
 	const disableActions = matchTree === null || !matchTree.isComplete();
 
 	return (
 		<div className='wpbb-bracket-container'>
-			{matchTree ? <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
+			{matchTree ? <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick ref={bracketRef} /> : 'Loading...'}
 			<div className={'wpbb-bracket-actions'}>
-				<ApparelButton disabled={disableActions} onClick={() => { }} />
+				<ApparelButton disabled={disableActions} onClick={handleApparelClick} />
 			</div>
 		</div>
 	)
