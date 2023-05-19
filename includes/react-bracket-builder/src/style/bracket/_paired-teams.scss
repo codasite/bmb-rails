@@ -3,7 +3,7 @@ $team-height: 20px;
 // $team-background: #3c434a;
 $team-background: white;
 $team-color: white;
-$team-offset: -8px;
+// $team-offset: -8px;
 
 @mixin team() {
 	font-size: 12px;
@@ -32,18 +32,22 @@ $team-offset: -8px;
 	@include team();
 	position: absolute;
 	left: 50%;
-	transform: translateX(-50%);
+	// transform: translateX(-50%);
 }
 
 .wpbb-paired {
 	.wpbb-team1 {
 		@include positioned-team();
-		top: $team-offset;
+		// top: $team-offset;
+		top: 0;
+		transform: translate(-50%, -50%)
 	}
 
 	.wpbb-team2 {
 		@include positioned-team();
-		bottom: $team-offset;
+		// bottom: $team-offset;
+		bottom: 0;
+		transform: translate(-50%, 50%)
 	}
 
 	.wpbb-final-winner {
@@ -54,10 +58,10 @@ $team-offset: -8px;
 		border-color: white;
 		font-size: 36px;
 		font-weight: 700;
-		position: absolute;
-		top: 35%;
-		left: 50%;
-		transform: translate(-50%);
+		// position: absolute;
+		// top: 35%;
+		// left: 50%;
+		// transform: translate(-50%);
 	}
 
 	.wpbb-bracket-options {

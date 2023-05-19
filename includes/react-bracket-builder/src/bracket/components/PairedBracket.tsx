@@ -13,7 +13,7 @@ const defaultMatchGap = 20
 const depth4MatchGap = 10
 const depth5MatchGap = 4
 
-const getMatchGap = (depth: number) => {
+const getMatchHeight = (depth: number) => {
 	let gap = teamHeight
 	if (depth === 4) {
 		gap += depth4MatchGap
@@ -267,6 +267,7 @@ interface MatchColumnProps {
 	updateRoundName?: (roundId: number, name: string) => void;
 	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
 	pickTeam?: (matchIndex: number, left: boolean) => void;
+	paddingBottom?: number;
 }
 
 const MatchColumn = (props: MatchColumnProps) => {
@@ -279,10 +280,11 @@ const MatchColumn = (props: MatchColumnProps) => {
 		updateRoundName,
 		updateTeam,
 		pickTeam,
+		paddingBottom,
 	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
-	const matchHeight = getMatchGap(round.depth)
+	const matchHeight = getMatchHeight(round.depth)
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
@@ -309,12 +311,25 @@ const MatchColumn = (props: MatchColumnProps) => {
 	const finalRound = round.depth === 0
 	const pickedWinner = round.matches[0]?.result ? true : false
 	let items = buildMatches()
+	if (finalRound) {
+		const finalMatch = round.matches[0]
+		// find the team box to align the final match to
+		const alignTeam = document.getElementsByClassName('wpbb-team-1-1-left') // should generate this with function
+		console.log('alignTeam', alignTeam)
+		// const alignBox = alignTeam.getBoundingClientRect()
+		// console.log('alignBox', alignBox)
+	}
+	// const winner = 
+	// 		<TeamSlot
+	// 			className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+	// 			team={finalRound.matches[0]?.result}
+	// 		/> 
 
 
 	return (
 		<div className='wpbb-round'>
 			{/* <RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} /> */}
-			<div className={'wpbb-round__body'}>
+			<div className={'wpbb-round__body'} style={{ paddingBottom: paddingBottom }}>
 				{items}
 			</div>
 		</div>
@@ -472,6 +487,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				pickTeam={canPick ?
 					(_, left: boolean) => pickTeam(0, 0, left)
 					: undefined}
+				paddingBottom={getMatchHeight(1) * 2} // offset the final match by the height of the penultimate round
 			/>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
@@ -617,10 +633,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		const pickedWinner = finalRound.matches[0]?.result ? true : false
 		const positioned = [
 			// {pickedWinner && <span className='wpbb-winner-text'>WINNER</span>}
-			<TeamSlot
-				className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-				team={finalRound.matches[0]?.result}
-			/>,
 			<BracketLogo className="wpbb-bracket-logo" />
 			// <div className='wpbb-bracket-options'>
 			// 	<ApparelButton onClick={() => { }} />

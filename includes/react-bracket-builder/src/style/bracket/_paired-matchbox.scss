@@ -89,9 +89,9 @@ $darkblue: #010433;
 	// .wpbb-final-match {
 	.wpbb-match-box-center {
 		@include match-box();
-		position: absolute;
-		left: 50%;
-		bottom: 52%;
+		// position: absolute;
+		// left: 50%;
+		// bottom: 52%;
 
 		// transform: translate(0, -118%);
 		// flex-grow: 1;
