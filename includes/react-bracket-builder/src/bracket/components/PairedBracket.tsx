@@ -343,7 +343,7 @@ interface PairedBracketProps {
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
-export const PairedBracket = forwardRef((props: PairedBracketProps, ref: React.Ref<HTMLDivElement>) => {
+export const PairedBracket = (props: PairedBracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
@@ -634,7 +634,7 @@ export const PairedBracket = forwardRef((props: PairedBracketProps, ref: React.R
 
 	return (
 		<>
-			<div className='wpbb-bracket wpbb-paired' ref={ref}>
+			<div className='wpbb-bracket wpbb-paired' >
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
 				{renderPositioned(rounds)}
@@ -642,4 +642,4 @@ export const PairedBracket = forwardRef((props: PairedBracketProps, ref: React.R
 			{/* <Button variant='primary' onClick={screenshot}>ref</Button> */}
 		</>
 	)
-});
+};
