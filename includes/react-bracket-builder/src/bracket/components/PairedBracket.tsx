@@ -632,7 +632,14 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		const finalRound = rounds[0]
 		const pickedWinner = finalRound.matches[0]?.result ? true : false
 		const positioned = [
-			// {pickedWinner && <span className='wpbb-winner-text'>WINNER</span>}
+			<span className={'wpbb-slogan-text' + (pickedWinner ? ' invisible' : ' visible')}>WHO YOU GOT?</span>,
+			<div className='wpbb-winner-container'>
+				<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>WINNER</span>
+				<TeamSlot
+					className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+					team={finalRound.matches[0]?.result}
+				/>
+			</div>,
 			<BracketLogo className="wpbb-bracket-logo" />
 			// <div className='wpbb-bracket-options'>
 			// 	<ApparelButton onClick={() => { }} />
