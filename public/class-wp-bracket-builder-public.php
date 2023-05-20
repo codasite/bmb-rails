@@ -284,35 +284,9 @@ function merge_gallery_images($unmerged_image_id, $gallery_image_ids) {
 	return $gallery_image_ids_copy;
 }
 
-
-
-// function get_default_variation_id($product) {
-// 	// TODO: Error handling and not default check
-
-
-// 	// Check if the product is variable
-// 	if ($product->is_type('variable')) {
-// 		// Get the product variations
-// 		$variations = $product->get_available_variations();
-
-// 		foreach ($variations as $variation) {
-// 			$variation_id = $variation['variation_id'];
-// 			$variation_obj = wc_get_product($variation_id);
-// 			$variation_data = $variation_obj->get_data();
-// 			$variation_attributes = $variation_data['attributes'];
-// 			$variation_color = $variation_attributes['color'];
-// 			if ($variation_color == $default_color) {
-// 				echo 'variation_id: ' . $variation_id . '<br>';
-// 				return $variation_id;
-// 			}
-// 		}
-// 	}
-// }
-
-
 // Add the bracket url to the cart item data
 function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
-	$bracket_url = "http://www.gofuckyourself.com";
+	$bracket_url = 'http://bracketurl.com';
 	$cart_item_data['bracket_url'] = $bracket_url;
 	return $cart_item_data;
 }
