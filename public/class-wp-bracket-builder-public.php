@@ -106,7 +106,21 @@ class Wp_Bracket_Builder_Public {
 
 		// For product page
 		$product = wc_get_product($post->ID);
-		$bracket_url = $_GET['bracket_url']; // get bracket url from query params
+
+
+		function set_session_value($key, $value) {
+			if (!session_id()) {
+				session_start();
+			}
+			$_SESSION[$key] = $value;
+		}
+
+		// TODO: Replace with actual bracket url
+		$bracket_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
+
+		// Set bracket url in session
+		set_session_value('bracket_url', $bracket_url);
+
 
 		// Only get product details on product pages.
 		if ($product) {
@@ -286,18 +300,34 @@ function merge_gallery_images($unmerged_image_id, $gallery_image_ids) {
 
 // Add the bracket url to the cart item data
 function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
-	$bracket_url = 'http://bracketurl.com';
+	$bracket_url = $_GET['bracket_url']; // get bracket url from query params
+
 	$cart_item_data['bracket_url'] = $bracket_url;
 	return $cart_item_data;
 }
 add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item',10,3);
 
 
+// Get value from user session
+function get_session_value($key) {
+	if (!session_id()) {
+		session_start();
+	}
+	if (isset($_SESSION[$key])) {
+		return $_SESSION[$key];
+	}
+	return null;
+}
+
 // Add the bracket url to the order
 function add_bracket_to_order($item, $cart_item_key, $values, $order) {
 	if (empty($values)) {
 		return;
 	}
-	$item->add_meta_data('bracket_url', $values['bracket_url'] );
+
+	// Get bracket url from session
+	$bracket_url = get_session_value('bracket_url');
+	$item->add_meta_data('bracket_url', $bracket_url );
 }
 add_action('woocommerce_checkout_create_order_line_item','add_bracket_to_order',10,4);
+

@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import Thumbnails from './Thumbnails';
 
 // TODO: use bracket image url
-const bracketImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
+//const bracketImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
 
 interface GalleryProps {
   gallery_mapping: { [key: string]: string[] };
   default_color: string;
+  bracketImageUrl: string,
 }
 
-const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color}) => {
+const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, bracketImageUrl}) => {
+  console.log('bracket image url: ', bracketImageUrl);
 
   // Index of current image to display in the gallery
   const [currentIndex, setCurrentIndex] = useState<number>(0);
