@@ -11,6 +11,7 @@ import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
 import { BracketRes } from '../../api/types/bracket';
 
 
+//@ts-ignore
 
 interface BuyApparelBtnProps {
 	onClick?: () => void;
@@ -52,6 +53,37 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 	}, [bracketId, bracketRes]);
 
+	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchWidth: number, inchHeight: number) => {
+		const printArea = buildPrintArea(inchWidth, inchHeight, innerHTML)
+		return `
+			<html>
+				<head>
+					<link rel='stylesheet' href='${styleUrl}' />
+				</head>
+			<body style='margin: 0; padding: 0;'>
+				${printArea}
+			</body>
+			</html>
+		`
+	}
+
+	const getPrintStyles = () => {
+		return `
+			<style>
+				@page {
+					size: 12in 16in;
+					margin: 0;
+				}
+				@media print {
+					.wpbb-bracket-print-area {
+						page-break-after: always;
+					}
+				}
+			</style>
+			`
+	}
+
+
 	const buildPrintArea = (inchWidth: number, inchHeight: number, innerHTML: string) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
@@ -71,16 +103,28 @@ const UserBracket = (props: UserBracketProps) => {
 		const bracketEl = document.getElementsByClassName('wpbb-bracket')[0]
 		const bracketHTML = bracketEl.outerHTML
 		const printArea = buildPrintArea(12, 16, bracketHTML)
+		//@ts-ignore
+		const bracketCss = wpbb_ajax_obj.css_file
+		const printBody = buildPrintHTML(printArea, bracketCss)
 		// console.log(bracketHTML)
-		console.log(printArea)
+		// console.log(printArea)
+		console.log(printBody)
 		// const userBracket = matchTree.toUserRequest('barry bracket', 999);
 		// const json = JSON.stringify(userBracket);
 		// console.log(json)
 	}
 
+	const getStyles = () => {
+		const sheets = document.styleSheets;
+		console.log(sheets)
+	}
+
+
 	const handleApparelClick = () => {
 		console.log('apparel click')
-		getImage()
+		// getImage()
+		// getStyles()
+		console.log('bracket css', bracketCss)
 	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete();
