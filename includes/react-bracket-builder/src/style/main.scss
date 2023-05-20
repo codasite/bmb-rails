@@ -22,6 +22,14 @@
 
 }
 
+.visible {
+	visibility: visible;
+}
+
+.invisible {
+	visibility: hidden;
+}
+
 .wpbb-bracket {
 	display: flex;
 	// font-size: x-small;
@@ -34,6 +42,8 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	background-color: #010433;
+
 }
 
 .wpbb-default {
