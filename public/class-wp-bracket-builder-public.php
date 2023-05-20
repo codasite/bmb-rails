@@ -106,6 +106,7 @@ class Wp_Bracket_Builder_Public {
 
 		// For product page
 		$product = wc_get_product($post->ID);
+		$bracket_url = $_GET['bracket_url']; // get bracket url from query params
 
 		// Only get product details on product pages.
 		if ($product) {
@@ -130,10 +131,7 @@ class Wp_Bracket_Builder_Public {
 				'variation_gallery_mapping' => $variation_gallery_mapping, // used for preview page
 				'default_product_color' => $default_color, // used for preview page
 				'product_id' => $product_id, // used for preview page
-				// Get bracket url from query params
-				// 'bracket_url' => $_GET['bracket_url'],
-				// For testing:
-				//'bracket_url' => 'https://w0.peakpx.com/wallpaper/86/891/HD-wallpaper-smiley-face-cg-smiley-colors-black-yellow-graffiti-abstract-3d-face.jpg',
+				'bracket_url' => $bracket_url, // used for preview page
 			)
 		);
 	}
@@ -313,22 +311,19 @@ function merge_gallery_images($unmerged_image_id, $gallery_image_ids) {
 
 
 // Add the bracket url to the cart item data
-
 function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
 	$bracket_url = "http://www.gofuckyourself.com";
 	$cart_item_data['bracket_url'] = $bracket_url;
 	return $cart_item_data;
 }
-
 add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item',10,3);
+
 
 // Add the bracket url to the order
 function add_bracket_to_order($item, $cart_item_key, $values, $order) {
 	if (empty($values)) {
 		return;
 	}
-
 	$item->add_meta_data('bracket_url', $values['bracket_url'] );
 }
-
 add_action('woocommerce_checkout_create_order_line_item','add_bracket_to_order',10,4);
