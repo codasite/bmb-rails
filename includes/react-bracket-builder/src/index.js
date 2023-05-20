@@ -29,6 +29,7 @@ if (builderDiv && bracket) {
 // product page for the component to be rendered.
 const product_id = wpbb_ajax_obj.product_id;
 const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
+const bracket_url = wpbb_ajax_obj.bracket_url;
 const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
 const default_product_color = wpbb_ajax_obj.default_product_color;
 
@@ -46,7 +47,7 @@ if (previewDiv ) {
 	div.setAttribute("id", "wpbb-bracket-preview");
 	gallery_location.insertBefore(div, gallery_location.firstChild);
 
-	render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_product_color}/></App>, div);
+	render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_product_color} bracketImageUrl={bracket_url}/></App>, div);
 }
 
 
