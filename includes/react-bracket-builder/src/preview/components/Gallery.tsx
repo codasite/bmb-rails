@@ -4,10 +4,6 @@ import Thumbnails from './Thumbnails';
 // TODO: use bracket image url
 const bracketImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
 
-// This will need to be updated for production to ensure proper
-// sizing of the bracket overlay on the garment.
-const bracketSize: [number, number] = [32,32];
-
 interface GalleryProps {
   gallery_mapping: { [key: string]: string[] };
   default_color: string;
@@ -65,7 +61,7 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color}) => {
 
         // Only overlay the bracket on the back of the shirt.
         if (image_url.toLowerCase().includes('back')) {
-          overlayBracket(image_url, bracketImageUrl, bracketSize, appendUrl);
+          overlayBracket(image_url, bracketImageUrl, appendUrl);
         } else {
           appendUrl(image_url);
         }
@@ -103,9 +99,40 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color}) => {
   );
 };
 
+function extractFilenameFromUrl(url) {
+  const slashIndex = url.lastIndexOf('/');
+  if (slashIndex !== -1) {
+    const filename = url.substring(slashIndex + 1);
+    console.log('filename: ', filename);
+    return filename;
+  }
+  throw new Error("Error extracting filename from background image url");
+}
+
+function extractImageValues(imageUrl: string): { width: number, xOffset: number, yOffset: number } {
+  // Extract the width, x, and y values from the image URL
+  const filename = extractFilenameFromUrl(imageUrl);
+  console.log('filename: ', filename);
+
+  const matches = filename.match(/_(\d+)_(\d+)_(\d+)\.\w+$/);
+
+  if (matches && matches.length === 4) {
+    const width = parseInt(matches[1], 10);
+    const xOffset = parseInt(matches[2], 10);
+    const yOffset = parseInt(matches[3], 10);
+
+    return { width, xOffset, yOffset };
+  }
+  throw new Error("Error extracting image values");
+}
 
 // This is the big function that overlays the bracket on the image.
-function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, bracketSize: number[], callback: (url: string) => void) {
+function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, callback: (url: string) => void) {
+
+  // Extract the bracket overlay width, x, and y offsets from the background image filename in the background image URL. 
+  const {width, xOffset, yOffset} = extractImageValues(backgroundImageUrl);
+  const bracketWidth = width;
+  const bracketPosition = [xOffset, yOffset];
 
 	// Create a new image element for the background image
   // The background image comes from the product so no worries
@@ -130,13 +157,9 @@ function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, bra
 	Promise.all([loadImage(backgroundImage), loadImage(bracketImage)])
 	  .then(() => {
 
-      // Determine x and y offsets that will center the bracket from
-      // background image and logo dimensions.
-      const [bracketWidth, bracketHeight] = bracketSize;
-      const bracketPosition = [
-        (backgroundImage.width - bracketWidth) / 2,
-        (backgroundImage.height - bracketHeight) / 2,
-      ];
+      // Scale the bracket image to the correct size
+      const aspectRatio = bracketImage.width / bracketImage.height;
+      const bracketHeight = bracketWidth / aspectRatio;
 
 		// Create a canvas element
 		const canvas = document.createElement('canvas');
