@@ -55,20 +55,11 @@ const UserBracket = (props: UserBracketProps) => {
 	const buildPrintArea = (inchWidth: number, inchHeight: number, innerHTML: string) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
-		// return (
-		// 	<div
-		// 		className='wpbb-bracket-print-area'
-		// 		style={{ height: height, width: width }}
-		// 		dangerouslySetInnerHTML={{ __html: innerHTML }}
-		// 	>
-		// 	</div>
-		// )
 		return `
 			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px'>
 				${innerHTML}
 			</div>
 		`
-
 	}
 
 	const getImage = () => {
