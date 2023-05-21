@@ -64,7 +64,7 @@ const UserBracket = (props: UserBracketProps) => {
 				${printArea}
 			</body>
 			</html>
-		`
+		`.replace(/[\n\s]/g, '')
 	}
 
 	const getPrintStyles = () => {
@@ -106,7 +106,6 @@ const UserBracket = (props: UserBracketProps) => {
 
 	const getStyles = () => {
 		const sheets = document.styleSheets;
-		// console.log(sheets)
 	}
 
 
@@ -125,7 +124,14 @@ const UserBracket = (props: UserBracketProps) => {
 			rounds: roundReqs,
 			html: html,
 		}
-		console.log(submissionReq)
+		// console.log(submissionReq)
+		// bracketApi.createSubmission(submissionReq).then((res) => {
+		// 	console.log(res)
+		// })
+		bracketApi.htmlToImage({ html: html }).then((res) => {
+			console.log('res')
+			console.log(res)
+		})
 	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete();
