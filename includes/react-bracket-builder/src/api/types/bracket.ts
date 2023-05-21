@@ -93,3 +93,15 @@ export interface SubmissionMatchReq {
 export interface SubmissionTeamReq {
 	id: number;
 }
+
+export interface HTMLtoImageReq {
+	html: string;
+	width?: number;
+	height?: number;
+}
+
+export interface HTMLtoImageRes {
+	image: string;
+}
+
+

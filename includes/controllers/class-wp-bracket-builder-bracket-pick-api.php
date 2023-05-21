@@ -97,6 +97,17 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 				),
 			),
 		));
+		register_rest_route($namespace, '/' . $base . '/html-to-image', array(
+			'methods' => 'POST',
+			'callback' => array($this, 'html_to_image'),
+			'permission_callback' => array($this, 'customer_permission_check'),
+			'args' => array(
+				'id' => array(
+					'description' => __('Unique identifier for the object.'),
+					'type'        => 'integer',
+				),
+			),
+		));
 	}
 
 	/**
@@ -139,6 +150,24 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 		// return new WP_REST_Response($saved, 201);
 		return new WP_REST_Response($pick, 201);
 	}
+
+	/**
+	 * Converts html to image.
+	 * 
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+
+	public function html_to_image($request) {
+		$html = $request->get_param('html');
+
+		if (!$html) {
+			return new WP_Error('no-html', __('No html was passed in the request', 'text-domain'), array('status' => 400));
+		}
+
+		return new WP_REST_Response($html, 200);
+	}
+
 
 	// /**
 	//  * Updates a single bracket.

@@ -1,4 +1,11 @@
-import { BracketReq, BracketRes, SubmissionRes, SubmissionReq } from './types/bracket';
+import {
+	BracketReq,
+	BracketRes,
+	SubmissionRes,
+	SubmissionReq,
+	HTMLtoImageReq,
+	HTMLtoImageRes,
+} from './types/bracket';
 
 
 
@@ -48,11 +55,22 @@ class BracketApi {
 		return camelCaseKeys(await res.json());
 	}
 
+	// This is not used. Use htmlToImage instead
 	async createSubmission(submission: SubmissionReq): Promise<SubmissionRes> {
 		const res = await this.performRequest(this.submissionPath, 'POST', submission);
 		if (res.status !== 201) {
 			throw new Error('Failed to create submission');
 		}
+		return camelCaseKeys(await res.json());
+	}
+
+	async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
+		const res = await this.performRequest('html-to-image', 'POST', req);
+		if (res.status !== 200) {
+			throw new Error('Failed to convert html to image');
+		}
+		// const { image } = camelCaseKeys(await res.json());
+		// return image;
 		return camelCaseKeys(await res.json());
 	}
 
@@ -85,6 +103,7 @@ class BracketApi {
 
 	async performRequest(path: string, method: string, body: any = {}) {
 		const snakeBody = snakeCaseKeys(body);
+		console.log(JSON.stringify(snakeBody))
 		const request = {
 			method,
 			headers: {
@@ -98,8 +117,8 @@ class BracketApi {
 			// pass params as query string
 			path += '?' + Object.entries(snakeBody).map(([key, value]) => `${key}=${value}`).join('&');
 		}
-		console.log(path)
-		console.log(request)
+		// console.log(path)
+		// console.log(request)
 
 		return await fetch(`${this.baseUrl}${path}`, request);
 	}
