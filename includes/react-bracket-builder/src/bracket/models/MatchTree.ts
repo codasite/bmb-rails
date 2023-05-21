@@ -5,10 +5,10 @@ import {
 	RoundReq,
 	MatchReq,
 	TeamReq,
-	UserBracketReq,
-	UserMatchReq,
-	UserRoundReq,
-	UserTeamReq,
+	SubmissionReq,
+	SubmissionMatchReq,
+	SubmissionRoundReq,
+	SubmissionTeamReq,
 	RoundRes,
 } from '../../api/types/bracket';
 
@@ -38,7 +38,7 @@ export class Team {
 		}
 	}
 
-	toUserRequest(): Nullable<UserTeamReq> {
+	toSubmissionReq(): Nullable<SubmissionTeamReq> {
 		return this.id === null ? null : { id: this.id };
 	}
 }
@@ -86,9 +86,9 @@ export class MatchNode {
 		}
 	}
 
-	toUserRequest(): UserMatchReq {
+	toSubmissionReq(): SubmissionMatchReq {
 		return {
-			result: this.result ? this.result.toUserRequest() : null,
+			result: this.result ? this.result.toSubmissionReq() : null,
 		}
 	}
 }
@@ -121,13 +121,13 @@ export class Round {
 		}
 	}
 
-	toUserRequest(): UserRoundReq {
+	toSubmissionReq(): SubmissionRoundReq {
 		const round = this;
 		const matches = round.matches.map((match, i) => {
 			if (match === null) {
 				return null;
 			}
-			return match.toUserRequest();
+			return match.toSubmissionReq();
 		});
 		return {
 			matches: matches,
@@ -299,16 +299,17 @@ export class MatchTree {
 		}
 	}
 
-	toUserRequest(name: string, bracketId: number): UserBracketReq {
+	toSubmissionReq(): SubmissionRoundReq[] {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {
-			return round.toUserRequest();
+			return round.toSubmissionReq();
 		});
-		return {
-			rounds: rounds,
-			name: name,
-			bracketId: bracketId,
-		}
+		return rounds
+		// return {
+		// 	rounds: rounds,
+		// 	name: name,
+		// 	bracketId: bracketId,
+		// }
 	}
 
 	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {

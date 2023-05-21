@@ -407,8 +407,8 @@ export const Bracket = (props: BracketProps) => {
 		}
 		// const bracketHTML = bracketEl.outerHTML
 		// console.log(bracketHTML)
-		const userBracket = matchTree.toUserRequest('barry bracket', 999);
-		const json = JSON.stringify(userBracket);
+		const rounds = matchTree.toSubmissionReq();
+		const json = JSON.stringify(rounds);
 		console.log(json)
 
 	}
