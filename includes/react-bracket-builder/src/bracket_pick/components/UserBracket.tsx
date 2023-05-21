@@ -105,7 +105,7 @@ const UserBracket = (props: UserBracketProps) => {
 		const printArea = buildPrintArea(12, 16, bracketHTML)
 		//@ts-ignore
 		const bracketCss = wpbb_ajax_obj.css_file
-		const printBody = buildPrintHTML(printArea, bracketCss)
+		const printBody = buildPrintHTML(printArea, bracketCss, 12, 16)
 		// console.log(bracketHTML)
 		// console.log(printArea)
 		console.log(printBody)
@@ -122,9 +122,8 @@ const UserBracket = (props: UserBracketProps) => {
 
 	const handleApparelClick = () => {
 		console.log('apparel click')
-		// getImage()
+		getImage()
 		// getStyles()
-		console.log('bracket css', bracketCss)
 	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete();
