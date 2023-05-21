@@ -92,3 +92,21 @@ export interface SubmissionRes {
 	name: string;
 	rounds: RoundRes[];
 }
+
+export interface SubmissionReq {
+	bracketId: number;
+	name: string;
+	rounds: SubmissionRoundReq[];
+}
+
+export interface SubmissionRoundReq {
+	matches: Nullable<SubmissionMatchReq>[];
+}
+
+export interface SubmissionMatchReq {
+	result: Nullable<SubmissionTeamReq>;
+}
+
+export interface SubmissionTeamReq {
+	id: number;
+}

@@ -33,6 +33,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 
 		$name = $pick->name;
 		$cust_id = $pick->customer_id;
+		$img_url = $pick->img_url;
 		$table_name = $this->bracket_pick_table();
 
 		$this->wpdb->insert(
@@ -40,6 +41,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 			[
 				'bracket_id' => $bracket_id,
 				'name' => $name,
+				'img_url' => $img_url,
 				'customer_id' => $cust_id,
 			]
 		);

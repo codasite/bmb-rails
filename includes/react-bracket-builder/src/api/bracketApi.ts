@@ -1,4 +1,4 @@
-import { BracketReq, BracketRes, SubmissionRes } from './types/bracket';
+import { BracketReq, BracketRes, SubmissionRes, SubmissionReq } from './types/bracket';
 
 
 
@@ -44,6 +44,14 @@ class BracketApi {
 		const res = await this.performRequest(`${this.submissionPath}/${id}`, 'GET');
 		if (res.status !== 200) {
 			throw new Error('Failed to get submission');
+		}
+		return camelCaseKeys(await res.json());
+	}
+
+	async createSubmission(submission: SubmissionReq): Promise<SubmissionRes> {
+		const res = await this.performRequest(this.submissionPath, 'POST', submission);
+		if (res.status !== 201) {
+			throw new Error('Failed to create submission');
 		}
 		return camelCaseKeys(await res.json());
 	}
