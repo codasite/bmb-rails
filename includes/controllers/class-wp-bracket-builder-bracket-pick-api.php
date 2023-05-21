@@ -42,7 +42,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array($this, 'get_items'),
-				'permission_callback' => array($this, 'customer_permission_check'),
+				'permission_callback' => array($this, 'admin_permission_check'),
 				'args'                => array(
 					'bracket_id' => array(
 						'description' => 'The ID of the bracket.',
@@ -58,7 +58,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array($this, 'create_item'),
-				'permission_callback' => array($this, 'admin_permission_check'),
+				'permission_callback' => array($this, 'customer_permission_check'),
 				'args'                => $this->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE),
 			),
 			'schema' => array($this, 'get_public_item_schema'),
@@ -133,10 +133,11 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 */
 	public function create_item($request) {
 		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
+		print_r($pick);
 
-		$saved = $this->pick_repo->add($pick);
-		return new WP_REST_Response($saved, 201);
-		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
+		// $saved = $this->pick_repo->add($pick);
+		// return new WP_REST_Response($saved, 201);
+		return new WP_REST_Response($pick, 201);
 	}
 
 	// /**
@@ -185,7 +186,8 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function admin_permission_check($request) {
-		return true;
+		return true; // TODO: Disable this for production
+		// return current_user_can('manage_options');
 	}
 
 	/**
@@ -195,6 +197,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function customer_permission_check($request) {
-		return true;
+		return true; // TODO: Disable this for production
+		// return current_user_can('read');
 	}
 }

@@ -13,12 +13,22 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 	 */
 	public $bracket_id;
 
-	public function __construct(int $customer_id, int $bracket_id, string $name = null, int $id = null, array $rounds = []) {
-		// call parent constructor
+	/**
+	 * @var string
+	 */
+	public $img_url;
+
+	/**
+	 * @var string
+	 */
+	public $html;
+
+	public function __construct(int $customer_id, int $bracket_id, string $name = null, string $html = null, string $img_url = null, int $id = null, array $rounds = []) {
 		parent::__construct($name, $id, $rounds);
 		$this->customer_id = $customer_id;
 		$this->bracket_id = $bracket_id;
-		// $this->rounds = $rounds;
+		$this->html = $html;
+		$this->img_url = $img_url;
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Pick {
@@ -26,6 +36,14 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 
 		if (isset($data['id'])) {
 			$bracket_pick->id = (int) $data['id'];
+		}
+
+		if (isset($data['html'])) {
+			$bracket_pick->html = $data['html'];
+		}
+
+		if (isset($data['img_url'])) {
+			$bracket_pick->img_url = $data['img_url'];
 		}
 
 		if (isset($data['rounds'])) {

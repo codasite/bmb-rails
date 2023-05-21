@@ -35,7 +35,7 @@ class Wp_Bracket_Builder_Activator {
 		$plugin_prefix = 'bracket_builder_';
 		$prefix = $wp_prefix . $plugin_prefix;
 
-		// self::delete_tables($prefix);
+		self::delete_tables($prefix);
 
 		self::create_brackets_table($prefix);
 		self::create_teams_table($prefix);
@@ -105,6 +105,7 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id mediumint(9) NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
+			img_url varchar(255),
 			customer_id mediumint(9),
 			bracket_id mediumint(9) NOT NULL,
 			PRIMARY KEY (id),
