@@ -6,10 +6,13 @@ class BracketApi {
 	private baseUrl: string;
 	private bracketPath: string = 'brackets';
 	private submissionPath: string = 'bracket-picks';
+	private nonce: string = '';
 
 	constructor() {
 		// @ts-ignore
 		this.baseUrl = wpbb_ajax_obj.rest_url;
+		// @ts-ignore
+		this.nonce = wpbb_ajax_obj.nonce;
 	}
 
 	async getBrackets(): Promise<BracketRes[]> {
@@ -77,7 +80,8 @@ class BracketApi {
 		const request = {
 			method,
 			headers: {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				'X-WP-Nonce': this.nonce,
 			},
 		}
 		if (method !== 'GET') {
@@ -87,6 +91,7 @@ class BracketApi {
 			path += '?' + Object.entries(snakeBody).map(([key, value]) => `${key}=${value}`).join('&');
 		}
 		console.log(path)
+		console.log(request)
 
 		return await fetch(`${this.baseUrl}${path}`, request);
 	}

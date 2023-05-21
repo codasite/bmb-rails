@@ -229,7 +229,8 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function admin_permission_check($request) {
-		return true;
+		// return true;
+		return current_user_can('edit_others_posts');
 	}
 
 	/**
@@ -239,6 +240,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function customer_permission_check($request) {
-		return true;
+		// return true;
+		return current_user_can('read');
 	}
 }
