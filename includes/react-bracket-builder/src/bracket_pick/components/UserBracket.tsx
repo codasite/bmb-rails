@@ -55,16 +55,17 @@ const UserBracket = (props: UserBracketProps) => {
 
 	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchWidth: number, inchHeight: number) => {
 		const printArea = buildPrintArea(inchWidth, inchHeight, innerHTML)
+		const styles = 'https://backmybracket.com/wp-content/plugins/wp-bracket-builder/includes/react-bracket-builder/build/index.css'
 		return `
 			<html>
 				<head>
-					<link rel='stylesheet' href='${styleUrl}' />
+					<link rel='stylesheet' href='${styles}' />
 				</head>
 			<body style='margin: 0; padding: 0;'>
 				${printArea}
 			</body>
 			</html>
-		`.replace(/[\n\s]/g, '')
+		`.replace(/[\n\t]/g, '').replace(/"/g, "'")
 	}
 
 	const getPrintStyles = () => {
