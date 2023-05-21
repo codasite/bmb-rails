@@ -8,7 +8,7 @@ import { Nullable } from '../../utils/types';
 import { PairedBracket } from '../../bracket/components/PairedBracket';
 
 import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
-import { BracketRes } from '../../api/types/bracket';
+import { BracketRes, SubmissionReq } from '../../api/types/bracket';
 
 
 //@ts-ignore
@@ -94,36 +94,38 @@ const UserBracket = (props: UserBracketProps) => {
 		`
 	}
 
-	const getImage = () => {
-		// const bracketEl: HTMLDivElement | null = bracketRef.current
-		// if (!bracketEl) {
-		// 	return
-		// }
-		console.log('getting with class')
+	const getHTML = (): string => {
 		const bracketEl = document.getElementsByClassName('wpbb-bracket')[0]
 		const bracketHTML = bracketEl.outerHTML
 		const printArea = buildPrintArea(12, 16, bracketHTML)
 		//@ts-ignore
 		const bracketCss = wpbb_ajax_obj.css_file
-		const printBody = buildPrintHTML(printArea, bracketCss, 12, 16)
-		// console.log(bracketHTML)
-		// console.log(printArea)
-		console.log(printBody)
-		// const userBracket = matchTree.toUserRequest('barry bracket', 999);
-		// const json = JSON.stringify(userBracket);
-		// console.log(json)
+		const html = buildPrintHTML(printArea, bracketCss, 12, 16)
+		return html
 	}
 
 	const getStyles = () => {
 		const sheets = document.styleSheets;
-		console.log(sheets)
+		// console.log(sheets)
 	}
 
 
 	const handleApparelClick = () => {
+		const id = bracketId || bracketRes?.id;
+		if (!id || !matchTree) {
+			console.error('no bracket id or match tree')
+			return;
+		}
 		console.log('apparel click')
-		getImage()
-		// getStyles()
+		const html = getHTML()
+		const roundReqs = matchTree.toSubmissionReq();
+		const submissionReq: SubmissionReq = {
+			name: 'test submission',
+			bracketId: id,
+			rounds: roundReqs,
+			html: html,
+		}
+		console.log(submissionReq)
 	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete();

@@ -66,24 +66,6 @@ export interface BracketReq extends Bracket {
 	rounds: RoundReq[];
 }
 
-export interface UserTeamReq {
-	id: number;
-}
-
-export interface UserMatchReq {
-	result: Nullable<UserTeamReq>;
-}
-
-export interface UserRoundReq {
-	matches: Nullable<UserMatchReq>[];
-}
-
-export interface UserBracketReq {
-	bracketId: number;
-	name: string;
-	rounds: UserRoundReq[];
-}
-
 export interface SubmissionRes {
 	id: number;
 	// createdAt: phpDate;
@@ -96,6 +78,7 @@ export interface SubmissionRes {
 export interface SubmissionReq {
 	bracketId: number;
 	name: string;
+	html: string;
 	rounds: SubmissionRoundReq[];
 }
 
