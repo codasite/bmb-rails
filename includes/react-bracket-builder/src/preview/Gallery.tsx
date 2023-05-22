@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Thumbnails from './Thumbnails';
 
-// TODO: use bracket image url
-//const bracketImageUrl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
-
 interface GalleryProps {
   gallery_mapping: { [key: string]: string[] };
   default_color: string;
@@ -11,7 +8,6 @@ interface GalleryProps {
 }
 
 const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, bracketImageUrl}) => {
-  console.log('bracket image url: ', bracketImageUrl);
 
   // Index of current image to display in the gallery
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -105,7 +101,6 @@ function extractFilenameFromUrl(url) {
   const slashIndex = url.lastIndexOf('/');
   if (slashIndex !== -1) {
     const filename = url.substring(slashIndex + 1);
-    console.log('filename: ', filename);
     return filename;
   }
   throw new Error("Error extracting filename from background image url");
@@ -114,7 +109,6 @@ function extractFilenameFromUrl(url) {
 function extractImageValues(imageUrl: string): { width: number, xOffset: number, yOffset: number } {
   // Extract the width, x, and y values from the image URL
   const filename = extractFilenameFromUrl(imageUrl);
-  console.log('filename: ', filename);
 
   const matches = filename.match(/_(\d+)_(\d+)_(\d+)\.\w+$/);
 

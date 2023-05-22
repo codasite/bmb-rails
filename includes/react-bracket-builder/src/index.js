@@ -1,7 +1,7 @@
 import App from "./App";
 import { render } from '@wordpress/element';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Gallery from './preview/components/Gallery';
+import Gallery from './preview/Gallery';
 
 /**
  * Import the stylesheet for the plugin.
@@ -20,6 +20,7 @@ if (page === 'settings') {
 }
 const builderDiv = document.getElementById('wpbb-bracket-builder')
 const bracket = wpbb_ajax_obj.bracket
+console.log('bracket: ', bracket);
 if (builderDiv && bracket) {
 	render(<App><UserBracket bracketRes={bracket} /></App>, builderDiv)
 }
