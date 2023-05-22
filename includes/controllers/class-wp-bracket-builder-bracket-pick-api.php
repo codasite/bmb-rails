@@ -1,6 +1,10 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-pick-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-pick.php';
+// require vendor/autoload.php' from the root directory
+require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
+
+
 
 class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 
