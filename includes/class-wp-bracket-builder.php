@@ -131,6 +131,11 @@ class Wp_Bracket_Builder {
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-pick-api.php';
 
+		/**
+		 * The html to image converter api controller class
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-convert-api.php';
+
 		$this->loader = new Wp_Bracket_Builder_Loader();
 	}
 
@@ -162,6 +167,7 @@ class Wp_Bracket_Builder {
 		$plugin_admin = new Wp_Bracket_Builder_Admin($this->get_plugin_name(), $this->get_version());
 		$bracket_api = new Wp_Bracket_Builder_Bracket_Api();
 		$bracket_pick_api = new Wp_Bracket_Builder_Bracket_Pick_Api();
+		$convert_api = new Wp_Bracket_Builder_Convert_Api();
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -171,7 +177,8 @@ class Wp_Bracket_Builder {
 
 
 		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
-		$this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
+		// $this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 
 		$this->loader->add_action('init', $this, 'bracket_cpt');
 	}

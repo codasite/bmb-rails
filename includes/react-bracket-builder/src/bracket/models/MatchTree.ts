@@ -5,10 +5,10 @@ import {
 	RoundReq,
 	MatchReq,
 	TeamReq,
-	UserBracketReq,
-	UserMatchReq,
-	UserRoundReq,
-	UserTeamReq,
+	SubmissionReq,
+	SubmissionMatchReq,
+	SubmissionRoundReq,
+	SubmissionTeamReq,
 	RoundRes,
 } from '../../api/types/bracket';
 
@@ -38,7 +38,7 @@ export class Team {
 		}
 	}
 
-	toUserRequest(): Nullable<UserTeamReq> {
+	toSubmissionReq(): Nullable<SubmissionTeamReq> {
 		return this.id === null ? null : { id: this.id };
 	}
 }
@@ -86,9 +86,9 @@ export class MatchNode {
 		}
 	}
 
-	toUserRequest(): UserMatchReq {
+	toSubmissionReq(): SubmissionMatchReq {
 		return {
-			result: this.result ? this.result.toUserRequest() : null,
+			result: this.result ? this.result.toSubmissionReq() : null,
 		}
 	}
 }
@@ -121,17 +121,26 @@ export class Round {
 		}
 	}
 
-	toUserRequest(): UserRoundReq {
+	toSubmissionReq(): SubmissionRoundReq {
 		const round = this;
 		const matches = round.matches.map((match, i) => {
 			if (match === null) {
 				return null;
 			}
-			return match.toUserRequest();
+			return match.toSubmissionReq();
 		});
 		return {
 			matches: matches,
 		}
+	}
+
+	isComplete(): boolean {
+		return this.matches.every((match) => {
+			if (match === null) {
+				return true;
+			}
+			return match.result !== null;
+		});
 	}
 }
 
@@ -290,32 +299,34 @@ export class MatchTree {
 		}
 	}
 
-	toUserRequest(name: string, bracketId: number): UserBracketReq {
+	toSubmissionReq(): SubmissionRoundReq[] {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {
-			return round.toUserRequest();
+			return round.toSubmissionReq();
 		});
-		return {
-			rounds: rounds,
-			name: name,
-			bracketId: bracketId,
-		}
+		return rounds
+		// return {
+		// 	rounds: rounds,
+		// 	name: name,
+		// 	bracketId: bracketId,
+		// }
 	}
 
 	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
-		console.log('advanceTeam', depth, matchIndex, left)
-		const match = this.rounds[depth].matches[matchIndex]
+		// const prevRound = this.rounds[depth + 1]
+		// if (prevRound && !prevRound.isComplete()) {
+		// 	return
+		// }
+		const round = this.rounds[depth]
+		const match = round.matches[matchIndex]
 		if (!match) {
-			console.log('no match')
 			return
 		}
 		const team = left ? match.team1 : match.team2
 		if (!team) {
-			console.log('no team')
 			return
 		}
 		match.result = team
-		console.log('match', match)
 		const parent = match.parent
 		if (!parent) {
 			return
@@ -325,6 +336,18 @@ export class MatchTree {
 		} else if (match === parent.right) {
 			parent.team2 = team
 		}
+	}
+
+	isComplete = (): boolean => {
+		const finalRound = this.rounds[0]
+		if (!finalRound) {
+			return false
+		}
+		const finalMatch = finalRound.matches[0]
+		if (!finalMatch) {
+			return false
+		}
+		return finalMatch.result !== null
 	}
 
 	static getParent(matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null {

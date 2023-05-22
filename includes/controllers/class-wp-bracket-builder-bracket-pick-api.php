@@ -1,6 +1,13 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-pick-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-pick.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
+// require vendor/autoload.php' from the root directory
+// require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
+// use lambda
+// use Aws\Lambda\LambdaClient;
+
+
 
 class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 
@@ -42,7 +49,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array($this, 'get_items'),
-				'permission_callback' => array($this, 'customer_permission_check'),
+				'permission_callback' => array($this, 'admin_permission_check'),
 				'args'                => array(
 					'bracket_id' => array(
 						'description' => 'The ID of the bracket.',
@@ -58,7 +65,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array($this, 'create_item'),
-				'permission_callback' => array($this, 'admin_permission_check'),
+				'permission_callback' => array($this, 'customer_permission_check'),
 				'args'                => $this->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE),
 			),
 			'schema' => array($this, 'get_public_item_schema'),
@@ -94,6 +101,17 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 						'description' => __('Required to be true, as resource does not support trashing.'),
 						'type'        => 'boolean',
 					),
+				),
+			),
+		));
+		register_rest_route($namespace, '/' . $base . '/html-to-image', array(
+			'methods' => 'POST',
+			'callback' => array($this, 'html_to_image'),
+			'permission_callback' => array($this, 'customer_permission_check'),
+			'args' => array(
+				'id' => array(
+					'description' => __('Unique identifier for the object.'),
+					'type'        => 'integer',
 				),
 			),
 		));
@@ -133,11 +151,30 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 */
 	public function create_item($request) {
 		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
+		print_r($pick);
 
-		$saved = $this->pick_repo->add($pick);
-		return new WP_REST_Response($saved, 201);
-		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
+		// $saved = $this->pick_repo->add($pick);
+		// return new WP_REST_Response($saved, 201);
+		return new WP_REST_Response($pick, 201);
 	}
+
+	/**
+	 * Converts html to image.
+	 * 
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+
+	public function html_to_image($request) {
+		$html = $request->get_param('html');
+
+		if (!$html) {
+			return new WP_Error('no-html', __('No html was passed in the request', 'text-domain'), array('status' => 400));
+		}
+
+		return new WP_REST_Response($html, 200);
+	}
+
 
 	// /**
 	//  * Updates a single bracket.
@@ -185,7 +222,8 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function admin_permission_check($request) {
-		return true;
+		return true; // TODO: Disable this for production
+		// return current_user_can('manage_options');
 	}
 
 	/**
@@ -195,6 +233,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function customer_permission_check($request) {
-		return true;
+		return true; // TODO: Disable this for production
+		// return current_user_can('read');
 	}
 }

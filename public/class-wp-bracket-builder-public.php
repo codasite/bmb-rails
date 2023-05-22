@@ -102,6 +102,7 @@ class Wp_Bracket_Builder_Public {
 		$post = get_post();
 		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
 		$bracket = $bracket_repo->get(post: $post);
+		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
@@ -109,12 +110,13 @@ class Wp_Bracket_Builder_Public {
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
-				'nonce' => wp_create_nonce('wpbb-nonce'),
+				'nonce' => wp_create_nonce('wp_rest'),
 				'page' => 'user-bracket',
 				'ajax_url' => admin_url('admin-ajax.php'),
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 				'post' => $post,
 				'bracket' => $bracket,
+				'css_file' => $css_file,
 				// Get bracket url from query params
 				// 'bracket_url' => $_GET['bracket_url'],
 				// For testing:
