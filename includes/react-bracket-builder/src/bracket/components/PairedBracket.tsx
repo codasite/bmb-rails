@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button } from 'react-bootstrap';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
+import { Button, InputGroup } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../utils/types';
 import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
 import LineTo, { SteppedLineTo, Line } from 'react-lineto';
+//@ts-ignore
+import { ReactComponent as BracketLogo } from '../../assets/logo.svg';
 // import html2canvas
 
 const teamHeight = 20
@@ -11,7 +13,7 @@ const defaultMatchGap = 20
 const depth4MatchGap = 10
 const depth5MatchGap = 4
 
-const getMatchGap = (depth: number) => {
+const getMatchHeight = (depth: number) => {
 	let gap = teamHeight
 	if (depth === 4) {
 		gap += depth4MatchGap
@@ -48,12 +50,12 @@ interface TeamSlotProps {
 	roundIndex?: number;
 	matchIndex?: number;
 	left?: boolean;
+	winner?: boolean;
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
-	const className = props.className ? props.className : getTeamClassName(props.roundIndex, props.matchIndex, props.left)
 
 	const {
 		team,
@@ -62,8 +64,10 @@ const TeamSlot = (props: TeamSlotProps) => {
 		roundIndex,
 		matchIndex,
 		left,
+		winner,
 	} = props
 
+	const className = props.className ? props.className : getTeamClassName(roundIndex, matchIndex, left) + (winner ? ' wpbb-match-winner' : '')
 
 	const startEditing = () => {
 		if (!updateTeam) {
@@ -109,8 +113,9 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				// <span className='wpbb-team-name'>{team ? team.name : ''}</span>
-				<span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
+				<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+				// <span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
+				// <span className='wpbb-team-name'>Team</span>
 			}
 		</div>
 	)
@@ -168,10 +173,14 @@ const MatchBox = (props: MatchBoxProps) => {
 		className += '-outer-lower'
 	}
 
+	const team1Wins = match.result && match.result === match.team1 ? true : false
+	const team2Wins = match.result && match.result === match.team2 ? true : false
+
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
 			<TeamSlot
 				// className='wpbb-team1'
+				winner={team1Wins}
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
@@ -179,9 +188,9 @@ const MatchBox = (props: MatchBoxProps) => {
 				matchIndex={props.matchIndex}
 				left={true}
 			/>
-			{/* {direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />} */}
 			<TeamSlot
 				// className='wpbb-team2'
+				winner={team2Wins}
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
@@ -258,6 +267,7 @@ interface MatchColumnProps {
 	updateRoundName?: (roundId: number, name: string) => void;
 	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
 	pickTeam?: (matchIndex: number, left: boolean) => void;
+	paddingBottom?: number;
 }
 
 const MatchColumn = (props: MatchColumnProps) => {
@@ -270,10 +280,11 @@ const MatchColumn = (props: MatchColumnProps) => {
 		updateRoundName,
 		updateTeam,
 		pickTeam,
+		paddingBottom,
 	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
-	const matchHeight = getMatchGap(round.depth)
+	const matchHeight = getMatchHeight(round.depth)
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
@@ -296,18 +307,34 @@ const MatchColumn = (props: MatchColumnProps) => {
 			)
 		})
 		return matchBoxes
-
 	}
+	const finalRound = round.depth === 0
+	const pickedWinner = round.matches[0]?.result ? true : false
+	let items = buildMatches()
+	if (finalRound) {
+		const finalMatch = round.matches[0]
+		// find the team box to align the final match to
+		const alignTeam = document.getElementsByClassName('wpbb-team-1-1-left') // should generate this with function
+		console.log('alignTeam', alignTeam)
+		// const alignBox = alignTeam.getBoundingClientRect()
+		// console.log('alignBox', alignBox)
+	}
+	// const winner = 
+	// 		<TeamSlot
+	// 			className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+	// 			team={finalRound.matches[0]?.result}
+	// 		/> 
+
+
 	return (
 		<div className='wpbb-round'>
 			{/* <RoundHeader round={round} updateRoundName={canEdit ? updateRoundName : undefined} /> */}
-			<div className='wpbb-round__body'>
-				{buildMatches()}
+			<div className={'wpbb-round__body'} style={{ paddingBottom: paddingBottom }}>
+				{items}
 			</div>
 		</div>
 	)
 }
-
 
 interface PairedBracketProps {
 	matchTree: MatchTree;
@@ -317,12 +344,29 @@ interface PairedBracketProps {
 }
 
 export const PairedBracket = (props: PairedBracketProps) => {
-	// const { numRounds, numWildcards, wildcardPlacement } = props
-	// const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(numRounds, numWildcards, wildcardPlacement))
 	const {
 		matchTree,
 		setMatchTree,
 	} = props
+
+	const [dimensions, setDimensions] = useState({
+		height: window.innerHeight,
+		width: window.innerWidth,
+	})
+
+	useEffect(() => {
+		const handleResize = () => {
+			setDimensions({
+				height: window.innerHeight,
+				width: window.innerWidth,
+			})
+
+		}
+		window.addEventListener('resize', handleResize)
+		return () => {
+			window.removeEventListener('resize', handleResize)
+		}
+	}, [])
 
 	const rounds = matchTree.rounds
 	const canEdit = setMatchTree !== undefined && props.canEdit
@@ -380,7 +424,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	}
 
 	const targetHeight = 806;
-	console.log('round length', rounds.length)
 
 	// The number of rounds sets the initial height of each match
 	// const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 1);
@@ -390,7 +433,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
 	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
 
-	const bracketRef = useRef<HTMLDivElement>(null)
 
 	/**
 	 * Build rounds in two directions, left to right and right to left
@@ -431,6 +473,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				pickTeam={canPick ?
 					(_, left: boolean) => pickTeam(0, 0, left)
 					: undefined}
+				paddingBottom={getMatchHeight(1) * 2} // offset the final match by the height of the penultimate round
 			/>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
@@ -469,6 +512,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			fromAnchor={fromAnchor}
 			toAnchor={toAnchor}
 			orientation='h'
+			within='wpbb-bracket'
 			{...style}
 		/>
 	);
@@ -503,6 +547,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	// Main function
 	const renderLines = (rounds: Round[]): JSX.Element[] => {
 		let lines: JSX.Element[] = [];
+		// Lines are always drawn from left to right so these two variables never change for horizontal lines
 		const fromAnchor = 'right';
 		const toAnchor = 'left';
 		const style = {
@@ -520,6 +565,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 				const team1 = getTeamClassName(roundIdx, matchIdx, true)
 				const team2 = getTeamClassName(roundIdx, matchIdx, false)
+				// Whether the matches appear on the left or right side of the bracket
+				// This determines the direction of the lines
 				const team1LeftSide = matchIdx < round.matches.length / 2;
 				// The second team in the first match of the first round is on the opposite side
 				const team2LeftSide = roundIdx === 0 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
@@ -529,48 +576,54 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					...handleMatchSide(match, roundIdx, matchIdx, 'left', team1, team1LeftSide, fromAnchor, toAnchor, style),
 					...handleMatchSide(match, roundIdx, matchIdx, 'right', team2, team2LeftSide, fromAnchor, toAnchor, style),
 				];
+				if (roundIdx === 0) {
+					// Render lines for the final match
+					lines = [...lines, <LineTo
+						from={team1}
+						to={team2}
+						fromAnchor='bottom'
+						toAnchor='top'
+						within='wpbb-bracket'
+						{...style}
+					/>,
+					<LineTo
+						from='wpbb-final-winner'
+						to={team1}
+						fromAnchor='bottom'
+						toAnchor='top'
+						within='wpbb-bracket'
+						{...style}
+					/>,
+					];
+				}
 			});
 		});
-
 		return lines;
 	};
 
+	const renderPositioned = (rounds: Round[]): JSX.Element[] => {
+		const finalRound = rounds[0]
+		const pickedWinner = finalRound.matches[0]?.result ? true : false
+		const positioned = [
+			<span className={'wpbb-slogan-text' + (pickedWinner ? ' invisible' : ' visible')}>WHO YOU GOT?</span>,
+			<div className='wpbb-winner-container'>
+				<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>WINNER</span>
+				<TeamSlot
+					className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+					team={finalRound.matches[0]?.result}
+				/>
+			</div>,
+			<BracketLogo className="wpbb-bracket-logo" />
 
-	const screenshot = () => {
-		const bracketEl: HTMLDivElement | null = bracketRef.current
-		if (!bracketEl) {
-			return
-		}
-		// const bracketHTML = bracketEl.outerHTML
-		// console.log(bracketHTML)
-		const userBracket = matchTree.toUserRequest('barry bracket', 999);
-		const json = JSON.stringify(userBracket);
-		console.log(json)
-
-		// const bracketHTML = getElementChildrenAndStyles(bracketEl)
-		// use html2canvas to get a screenshot of the bracket
-		// html2canvas(bracket, {
-		// 	// scrollX: 0,
-		// 	// scrollY: -window.scrollY,
-		// 	// windowWidth: document.documentElement.clientWidth,
-		// 	// windowHeight: document.documentElement.clientHeight,
-		// }).then((canvas) => {
-		// 	// create a new image element and set the src to the canvas data url
-		// 	const img = new Image()
-		// 	img.src = canvas.toDataURL()
-		// 	// create a new window and append the image to it
-		// 	const win = window.open()
-		// 	if (!win) {
-		// 		return
-		// 	}
-		// 	win.document.write('<img src="' + img.src + '" />')
-		// })
+		]
+		return positioned
 	}
 
+
+
+
 	const team1 = getTeamClassName(4, 0, true);
-	console.log('team1', team1)
 	const team2 = getTeamClassName(3, 0, true);
-	console.log('team2', team2)
 	const team3 = getTeamClassName(4, 0, false);
 	const style = {
 		delay: true,
@@ -581,11 +634,12 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 	return (
 		<>
-			<div className='wpbb-bracket wpbb-paired' ref={bracketRef}>
+			<div className='wpbb-bracket wpbb-paired' >
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
+				{renderPositioned(rounds)}
 			</div>
 			{/* <Button variant='primary' onClick={screenshot}>ref</Button> */}
 		</>
 	)
-}
+};

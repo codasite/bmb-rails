@@ -27,15 +27,11 @@ $darkblue: #010433;
 	// border: 5px solid white;
 }
 
-.ct-section-inner-wrap {
-	background-color: $darkblue;
-	// font-family: 'ClashDisplay';
-	font-family: 'ClashDisplay-Medium';
-
-}
 
 .wpbb-paired {
 	position: relative;
+
+
 
 	// A match box placed on the left side of the page
 	// Only show the right border
@@ -58,37 +54,15 @@ $darkblue: #010433;
 		@extend .wpbb-match-box-left;
 	}
 
-	// Hide the trailing border on left outer match boxes
-	.wpbb-match-box-left-outer::after {
-		@include match-box-outer-after();
-		bottom: -5px;
-		top: -5px;
-		left: 0
-	}
-
 	// A left outer match box where the top node has no children
 	.wpbb-match-box-left-outer-upper {
 		@extend .wpbb-match-box-left;
 	}
 
 
-	// Hide the trailing border on the uppoer portion of left outer match boxes
-	.wpbb-match-box-left-outer-upper::after {
-		@include match-box-outer-after();
-		top: -5px;
-		left: 0
-	}
-
 	// A left outer match box where the bottom node has no children
 	.wpbb-match-box-left-outer-lower {
 		@extend .wpbb-match-box-left;
-	}
-
-	// Hide the trailing border on the lower portion of left outer match boxes
-	.wpbb-match-box-left-outer-lower::after {
-		@include match-box-outer-after();
-		bottom: -5px;
-		left: 0
 	}
 
 	// An outer matchbox on the right side of the page
@@ -96,24 +70,9 @@ $darkblue: #010433;
 		@extend .wpbb-match-box-right;
 	}
 
-	// Hide the trailing border on right outer match boxes
-	.wpbb-match-box-right-outer::after {
-		@include match-box-outer-after();
-		bottom: -5px;
-		top: -5px;
-		right: 0
-	}
-
 	// A right outer matchbox where the top node has no children
 	.wpbb-match-box-right-outer-upper {
 		@extend .wpbb-match-box-right;
-	}
-
-	// Hide the trailing border on the upper portion of right outer match boxes
-	.wpbb-match-box-right-outer-upper::after {
-		@include match-box-outer-after();
-		top: -5px;
-		right: 0
 	}
 
 	// A right outer matchbox where the bottom node has no children
@@ -121,30 +80,14 @@ $darkblue: #010433;
 		@extend .wpbb-match-box-right;
 	}
 
-	// Hide the trailing border on the lower portion of right outer match boxes
-	.wpbb-match-box-right-outer-lower::after {
-		@include match-box-outer-after();
-		bottom: -5px;
-		right: 0
-	}
-
 	// .wpbb-final-match {
 	.wpbb-match-box-center {
 		@include match-box();
-		transform: translate(0, -90%);
+		// position: absolute;
+		// left: 50%;
+		// bottom: 52%;
+
+		// transform: translate(0, -118%);
 		// flex-grow: 1;
 	}
-
-	.wpbb-match-box-center::before {
-		@include match-box-outer-after();
-		top: -5px;
-		right: 0;
-	}
-
-	.wpbb-match-box-center::after {
-		@include match-box-outer-after();
-		bottom: -5px;
-		left: 0;
-	}
-
 }
