@@ -69,7 +69,9 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 		// $res_body = json_decode(wp_remote_retrieve_body($res));
 
 		$lambda_service = new LambdaServicex();
-		$lambda_service . invoke('convert', $body);
+		// $lambda_service->invoke('HelloWorldFunction', array(
+		// 	'html' => $body,
+		// )
 
 		$res_body = 'hi';
 
