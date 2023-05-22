@@ -25,6 +25,7 @@ class LambdaServicex {
 		$this->lambdaClient = new LambdaClient([
 			'region' => $region,
 			'version' => $version,
+
 			'profile' => $profile,
 		]);
 	}
