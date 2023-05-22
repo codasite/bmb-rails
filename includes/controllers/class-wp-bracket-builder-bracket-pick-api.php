@@ -1,8 +1,11 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-pick-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-pick.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
 // require vendor/autoload.php' from the root directory
-require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
+// require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
+// use lambda
+// use Aws\Lambda\LambdaClient;
 
 
 
