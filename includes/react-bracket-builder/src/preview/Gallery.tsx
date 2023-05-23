@@ -33,7 +33,9 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
     selectElement.addEventListener('click', (event) => {
       const target = event.target as HTMLSelectElement;
       if (target.value) {
-        setCurrentColor(target.value);
+        let color = target.value;
+        console.log('current color: ', color.toLowerCase().trim());
+        setCurrentColor(color.toLowerCase().trim());
     };
     });
   }, []);
@@ -98,6 +100,7 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
 };
 
 function extractFilenameFromUrl(url) {
+  console.log('Image url:', url);
   const slashIndex = url.lastIndexOf('/');
   if (slashIndex !== -1) {
     const filename = url.substring(slashIndex + 1);

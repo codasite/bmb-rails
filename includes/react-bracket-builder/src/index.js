@@ -33,6 +33,7 @@ const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
 const bracket_url = wpbb_ajax_obj.bracket_url;
 const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
 const default_product_color = wpbb_ajax_obj.default_product_color;
+console.log('Default product color:', default_product_color);
 
 
 if (previewDiv ) {
