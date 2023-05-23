@@ -49,6 +49,7 @@ export default Thumbnails;
 const thumbNailsStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'center',
 };
 
 const thumbNailStyle: React.CSSProperties = {

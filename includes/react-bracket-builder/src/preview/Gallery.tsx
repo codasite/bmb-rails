@@ -83,20 +83,22 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
 
   // The outer two div classNames are copied from the original WooCommerce product page to
   // ensure that the gallery is styled correctly.
-  return (
-      <div className="woocommerce-product-gallery woocommerce-product-gallery--without-images woocommerce-product-gallery--columns-4 images">
-        <div className="woocommerce-product-gallery__wrapper" style={galleryStyle} >
-          <button style={arrowLeftStyle} onClick={handlePrevious}>
-            &lt;
-          </button>
-          <img className="wp-post-image" style={imageStyle} src={imageUrls[currentIndex]} alt={`Image ${currentIndex + 1}`} />
-          <button style={arrowRightStyle} onClick={handleNext}>
-            &gt;
-          </button>
+    return (
+        <div className="woocommerce-product-gallery woocommerce-product-gallery--without-images woocommerce-product-gallery--columns-4 images">
+          <div style={galleryWrapperStyle}>
+            <div className="woocommerce-product-gallery__wrapper" style={galleryStyle} >
+              <button style={arrowLeftStyle} onClick={handlePrevious}>
+                &lt;
+              </button>
+              <img className="wp-post-image" style={imageStyle} src={imageUrls[currentIndex]} alt={`Image ${currentIndex + 1}`} />
+              <button style={arrowRightStyle} onClick={handleNext}>
+                &gt;
+              </button>
+            </div>
+          </div>
+          <Thumbnails imageUrls={imageUrls} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
         </div>
-        <Thumbnails imageUrls={imageUrls} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
-      </div>
-  );
+    );
 };
 
 function extractFilenameFromUrl(url) {
@@ -206,8 +208,17 @@ export default Gallery;
 
 
 // Gallery styles
+const galleryWrapperStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
 const galleryStyle: React.CSSProperties = {
   position: 'relative',
+  maxWidth: '450px',
+  width: '100%',
+  height: 'auto',
 };
 
 const arrowLeftStyle: React.CSSProperties = {
