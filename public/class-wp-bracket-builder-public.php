@@ -143,7 +143,7 @@ class Wp_Bracket_Builder_Public {
 				'post' => $post,
 				'bracket' => $bracket,
 				'variation_gallery_mapping' => $variation_gallery_mapping, // used for preview page
-				'default_product_color' => $default_color, // used for preview page
+				'default_product_color' => trim(strtolower($default_color)), // used for preview page
 				'product_id' => $product_id, // used for preview page
 				'bracket_url' => $bracket_url, // used for preview page
 			)
@@ -195,11 +195,7 @@ function get_product_variation_galleries($product) {
 
 		foreach ($variations as $variation) {
 			// Get the variation image ids
-			$variation_image_ids = get_variation_image_ids($variation);
-
-			// Get the variation image urls
-			$variation_gallery_image_urls = get_image_urls($variation_image_ids);
-
+			$variation_gallery_image_urls = get_variation_image_urls($variation);
 
 			// Get the default variation color (should be set in admin panel)
 			$variation_color = get_variation_color($variation);
@@ -211,6 +207,28 @@ function get_product_variation_galleries($product) {
 		}
 	}
 	return $variation_gallery_mapping;
+}
+
+function get_variation_image_urls($variation) {
+
+	// Try getting variation image urls for variations created through
+	// Gelato API
+	$variation_gallery_images = $variation["variation_gallery_images"];
+
+	// if not empty
+	if (!empty($variation_gallery_images)) {
+		$urls = array();
+
+		foreach ($variation_gallery_images as $image) {
+			$urls[] = $image["url"];
+		}
+		return $urls;
+	}
+
+	// Get variation image urls for variations created through wp-admin
+	$variation_image_ids = get_variation_image_ids($variation);
+	$urls = get_image_urls($variation_image_ids);
+	return $urls;
 }
 
 /**
