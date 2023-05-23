@@ -199,6 +199,7 @@ function get_product_variation_galleries($product) {
 
 			// Get the default variation color (should be set in admin panel)
 			$variation_color = get_variation_color($variation);
+			$variation_color = trim(strtolower($variation_color));
 
 			// Map variation_colors to gallery image urls
 			// Note: I map from colors, not ids, because the color is what is

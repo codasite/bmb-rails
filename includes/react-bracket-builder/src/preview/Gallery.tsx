@@ -122,7 +122,7 @@ function extractImageValues(imageUrl: string): { width: number, xOffset: number,
 
     return { width, xOffset, yOffset };
   }
-  throw new Error("Error extracting image values");
+  throw new Error("Error extracting image values. Filename does not match expected format: product_color_back_{width}_{x_offset}_{y_offset}.png");
 }
 
 // This is the big function that overlays the bracket on the image.
