@@ -58,9 +58,9 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
     variation_image_urls?.forEach((image_url) => {
       // Overlay the bracket on the image, and append the url to imageUrls.
       if (image_url) { // null check
-
+        let filename = extractFilenameFromUrl(image_url);
         // Only overlay the bracket on the back of the shirt.
-        if (image_url.toLowerCase().includes('back')) {
+        if (filename.toLowerCase().includes('back')) {
           overlayBracket(image_url, bracketImageUrl, appendUrl);
         } else {
           appendUrl(image_url);
@@ -112,6 +112,7 @@ function extractFilenameFromUrl(url) {
 function extractImageValues(imageUrl: string): { width: number, xOffset: number, yOffset: number } {
   // Extract the width, x, and y values from the image URL
   const filename = extractFilenameFromUrl(imageUrl);
+  console.log('Filename:', filename);
 
   const matches = filename.match(/_(\d+)_(\d+)_(\d+)\.\w+$/);
 
@@ -122,7 +123,7 @@ function extractImageValues(imageUrl: string): { width: number, xOffset: number,
 
     return { width, xOffset, yOffset };
   }
-  throw new Error("Error extracting image values. Filename does not match expected format: product_color_back_{width}_{x_offset}_{y_offset}.png");
+  throw new Error(`Error extracting image values. ${filename} does not match expected format: product_color_back_{width}_{x_offset}_{y_offset}.png`);
 }
 
 // This is the big function that overlays the bracket on the image.
