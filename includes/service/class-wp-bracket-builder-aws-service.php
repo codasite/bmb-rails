@@ -23,10 +23,18 @@ class LambdaService {
 			return;
 		}
 
+		if (!defined('AWS_ACCESS_KEY') || !defined('AWS_SECRET_KEY')) {
+			return;
+		}
+
 		$this->lambdaClient = new LambdaClient([
 			'region' => $region,
 			'version' => $version,
 			'profile' => $profile,
+			'credentials' => [
+				'key' => AWS_ACCESS_KEY,
+				'secret' => AWS_SECRET_KEY,
+			],
 		]);
 	}
 
@@ -37,8 +45,15 @@ class LambdaService {
 		// ];
 		// $result = $this->invoke($functionName, $params);
 		// return $result['Payload']->getContents();
-		$res = $this->image_from_api($html);
+		// $res = $this->image_from_api($html);
+		// get global variable defined in wp-config.php
+		// echo 'hi there';
+		// echo AWS_ACCESS_KEY;
+		// echo AWS_SECRET_KEY;
+		$res = $this->image_from_invocation($html);
 		return $res;
+
+		// return 'return';
 	}
 
 	public function image_from_api($html) {
@@ -47,8 +62,6 @@ class LambdaService {
 		$body = array(
 			'html' => $html,
 		);
-		// convert body to json
-
 
 		$res = wp_remote_post($convert_url, array(
 			'method' => 'POST', // 'GET' or 'POST
@@ -69,7 +82,28 @@ class LambdaService {
 		return $res_body;
 	}
 
-	public function invoke($functionName, $params, $logType = 'None') {
+	private function image_from_invocation($html) {
+		$functionName = HTML_TO_IMAGE_FUNCTION_NAME;
+
+		$params = [
+			'html' => $html,
+		];
+
+		$result = $this->invoke($functionName, $params);
+
+		if (is_wp_error($result)) {
+			return $result;
+		}
+
+		return json_decode($result['Payload']->getContents());
+	}
+
+	private function invoke($functionName, $params, $logType = 'None') {
+		// check if lambda client is initialized
+		if (!isset($this->lambdaClient)) {
+			return new WP_Error('error', __('Lambda client is not initialized. Did you forget to add AWS credentials?', 'text-domain'), array('status' => 500));
+		}
+
 		return $this->lambdaClient->invoke([
 			'FunctionName' => $functionName,
 			'Payload' => json_encode($params),
