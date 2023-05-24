@@ -111,19 +111,25 @@ function extractFilenameFromUrl(url) {
   throw new Error("Error extracting filename from background image url");
 }
 
-function extractImageValues(imageUrl: string): { width: number, xOffset: number, yOffset: number } {
+function extractImageValues(imageUrl: string): { width: number, xCenter: number, yCenter: number } {
+  /*
+  Extract the width, and desired coordinates of the center of the bracket from the image URL.
+  
+  @param {string} imageUrl - URL of the bracket imgae to extract values from.
+  @returns {object} - Object containing the desired image width, plus x and y values of the center of the bracket.
+  */
   // Extract the width, x, and y values from the image URL
   const filename = extractFilenameFromUrl(imageUrl);
   console.log('Filename:', filename);
 
-  const matches = filename.match(/_(\d+)_(\d+)_(\d+)\.\w+$/);
+  const matches = filename.match(/-(\d+)-(\d+)-(\d+)\.\w+$/);
 
   if (matches && matches.length === 4) {
     const width = parseInt(matches[1], 10);
-    const xOffset = parseInt(matches[2], 10);
-    const yOffset = parseInt(matches[3], 10);
+    const xCenter = parseInt(matches[2], 10);
+    const yCenter = parseInt(matches[3], 10);
 
-    return { width, xOffset, yOffset };
+    return { width, xCenter, yCenter };
   }
   throw new Error(`Error extracting image values. ${filename} does not match expected format: product_color_back_{width}_{x_offset}_{y_offset}.png`);
 }
@@ -132,9 +138,9 @@ function extractImageValues(imageUrl: string): { width: number, xOffset: number,
 function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, callback: (url: string) => void) {
 
   // Extract the bracket overlay width, x, and y offsets from the background image filename in the background image URL. 
-  const {width, xOffset, yOffset} = extractImageValues(backgroundImageUrl);
+  const {width, xCenter, yCenter} = extractImageValues(backgroundImageUrl);
   const bracketWidth = width;
-  const bracketPosition = [xOffset, yOffset];
+  const bracketCenter = [xCenter, yCenter];
 
 	// Create a new image element for the background image
   // The background image comes from the product so no worries
@@ -163,31 +169,33 @@ function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, cal
       const aspectRatio = bracketImage.width / bracketImage.height;
       const bracketHeight = bracketWidth / aspectRatio;
 
-		// Create a canvas element
-		const canvas = document.createElement('canvas');
-		const context = canvas.getContext('2d');
+      // Create a canvas element
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
 
-    // Set canvas dimensions to match the background image
-		canvas.width = backgroundImage.width;
-		canvas.height = backgroundImage.height;
-  
-		// Draw the background image on the canvas
-		context?.drawImage(backgroundImage, 0, 0);
-  
-		// Calculate the position to place the logo on the canvas
-		//const [x, y] = logoPosition;
-    const [x,y] = bracketPosition;
+      // Set canvas dimensions to match the background image
+      canvas.width = backgroundImage.width;
+      canvas.height = backgroundImage.height;
     
-		// Draw the logo image on the canvas at the specified position and size
-		context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);
-  
-		// Convert the canvas image to a data URL
-		const outputImageUrl = canvas.toDataURL();
-  
-		// Create a new image element to display the output image
-		const outputImageElement = document.createElement('img');
-		outputImageElement.setAttribute('src', outputImageUrl);
-    callback(outputImageUrl);
+      // Draw the background image on the canvas
+      context?.drawImage(backgroundImage, 0, 0);
+    
+      // Calculate the position to place the logo on the canvas
+      //const [x, y] = logoPosition;
+      var [x,y] = bracketCenter;
+      x -= bracketImage.width / 2;
+      y += bracketImage.height / 2;
+      
+      // Draw the logo image on the canvas at the specified position and size
+      context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);
+    
+      // Convert the canvas image to a data URL
+      const outputImageUrl = canvas.toDataURL();
+    
+      // Create a new image element to display the output image
+      const outputImageElement = document.createElement('img');
+      outputImageElement.setAttribute('src', outputImageUrl);
+      callback(outputImageUrl);
 	  })
 	  .catch((error) => {
 		console.error('An error occurred:', error);
