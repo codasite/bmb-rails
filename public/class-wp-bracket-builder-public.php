@@ -160,9 +160,24 @@ class Wp_Bracket_Builder_Public {
 ?>
 		<div id="wpbb-bracket-builder">
 		</div>
+	<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Render the bracket preview
+	 * 
+	 * @return void
+	 */
+	public function render_bracket_preview() {
+		ob_start();
+	?>
+		<div id="wpbb-bracket-preview-controller" style="width: 100%">
+		</div>
 <?php
 		return ob_get_clean();
 	}
+
 
 
 	/**
@@ -172,6 +187,7 @@ class Wp_Bracket_Builder_Public {
 	 */
 	public function add_shortcodes() {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']);
+		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
 	}
 }
 
@@ -248,7 +264,7 @@ function get_variation_color($variation) {
 	$variation_data = $variation_obj->get_data();
 	$variation_attributes = $variation_data['attributes'];
 	$variation_color = $variation_attributes['color'];
-	
+
 	return $variation_color;
 }
 
@@ -312,7 +328,7 @@ function merge_gallery_images($unmerged_image_id, $gallery_image_ids) {
 
 	// Merge the unmergeed image id with the gallery images if it's not already in there
 	if (!in_array($unmerged_image_id, $gallery_image_ids_copy)) {
-		$gallery_image_ids_copy = array_merge(array($unmerged_image_id),$gallery_image_ids_copy);
+		$gallery_image_ids_copy = array_merge(array($unmerged_image_id), $gallery_image_ids_copy);
 	}
 	return $gallery_image_ids_copy;
 }
@@ -324,7 +340,7 @@ function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
 	$cart_item_data['bracket_url'] = $bracket_url;
 	return $cart_item_data;
 }
-add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item',10,3);
+add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item', 10, 3);
 
 
 // Get value from user session
@@ -346,7 +362,6 @@ function add_bracket_to_order($item, $cart_item_key, $values, $order) {
 
 	// Get bracket url from session
 	$bracket_url = get_session_value('bracket_url');
-	$item->add_meta_data('bracket_url', $bracket_url );
+	$item->add_meta_data('bracket_url', $bracket_url);
 }
-add_action('woocommerce_checkout_create_order_line_item','add_bracket_to_order',10,4);
-
+add_action('woocommerce_checkout_create_order_line_item', 'add_bracket_to_order', 10, 4);

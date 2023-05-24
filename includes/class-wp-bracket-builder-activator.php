@@ -35,7 +35,7 @@ class Wp_Bracket_Builder_Activator {
 		$plugin_prefix = 'bracket_builder_';
 		$prefix = $wp_prefix . $plugin_prefix;
 
-		self::delete_tables($prefix);
+		// self::delete_tables($prefix);
 
 		self::create_brackets_table($prefix);
 		self::create_teams_table($prefix);
