@@ -20,23 +20,22 @@ if (page === 'settings') {
 }
 const builderDiv = document.getElementById('wpbb-bracket-builder')
 const bracket = wpbb_ajax_obj.bracket
-console.log('bracket: ', bracket);
 if (builderDiv && bracket) {
 	render(<App><UserBracket bracketRes={bracket} /></App>, builderDiv)
 }
 
-// ---------- Start Preview Page Logic ----------------
-// There must exist an element of class 'wpbb-bracket-preview-controller' to the 
-// product page for the component to be rendered.
-const product_id = wpbb_ajax_obj.product_id;
 const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
-const bracket_url = wpbb_ajax_obj.bracket_url;
-const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
-const default_product_color = wpbb_ajax_obj.default_product_color;
 console.log('Default product color:', default_product_color);
 
 
-if (previewDiv ) {
+if (previewDiv) {
+	const product_id = wpbb_ajax_obj.product_id;
+	// ---------- Start Preview Page Logic ----------------
+	// There must exist an element of class 'wpbb-bracket-preview-controller' to the 
+	// product page for the component to be rendered.
+	const bracket_url = wpbb_ajax_obj.bracket_url;
+	const variation_gallery_mapping = wpbb_ajax_obj.variation_gallery_mapping;
+	const default_product_color = wpbb_ajax_obj.default_product_color;
 	// Render the preview component into the DOM
 
 	// Remove the default woocommerce product variation gallery element from the page
@@ -49,7 +48,7 @@ if (previewDiv ) {
 	div.setAttribute("id", "wpbb-bracket-preview");
 	gallery_location.insertBefore(div, gallery_location.firstChild);
 
-	render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_product_color} bracketImageUrl={bracket_url}/></App>, div);
+	render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_product_color} bracketImageUrl={bracket_url} /></App>, div);
 }
 
 
