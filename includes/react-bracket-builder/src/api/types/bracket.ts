@@ -96,8 +96,9 @@ export interface SubmissionTeamReq {
 
 export interface HTMLtoImageReq {
 	html: string;
-	width: number;
-	height: number;
+	inchHeight: number;
+	inchWidth: number;
+
 }
 
 export interface HTMLtoImageRes {

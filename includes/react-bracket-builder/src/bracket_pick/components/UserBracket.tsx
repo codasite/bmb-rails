@@ -53,8 +53,8 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 	}, [bracketId, bracketRes]);
 
-	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchWidth: number, inchHeight: number) => {
-		const printArea = buildPrintArea(inchWidth, inchHeight, innerHTML)
+	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchHeight: number, inchWidth: number,) => {
+		const printArea = buildPrintArea(innerHTML, inchHeight, inchWidth)
 		// const stylesheet = 'https://backmybracket.com/wp-content/plugins/wp-bracket-builder/includes/react-bracket-builder/build/index.css'
 		const stylesheet = 'https://wpbb-stylesheets.s3.amazonaws.com/index.css'
 		const styles = getPrintStyles();
@@ -86,7 +86,7 @@ const UserBracket = (props: UserBracketProps) => {
 	}
 
 
-	const buildPrintArea = (inchWidth: number, inchHeight: number, innerHTML: string) => {
+	const buildPrintArea = (innerHTML: string, inchHeight: number, inchWidth: number) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
 		return `
@@ -99,10 +99,10 @@ const UserBracket = (props: UserBracketProps) => {
 	const getHTML = (): string => {
 		const bracketEl = document.getElementsByClassName('wpbb-bracket')[0]
 		const bracketHTML = bracketEl.outerHTML
-		const printArea = buildPrintArea(12, 16, bracketHTML)
+		const printArea = buildPrintArea(bracketHTML, 16, 12)
 		//@ts-ignore
 		const bracketCss = wpbb_ajax_obj.css_file
-		const html = buildPrintHTML(printArea, bracketCss, 12, 16)
+		const html = buildPrintHTML(printArea, bracketCss, 16, 12)
 		return html
 	}
 
@@ -127,12 +127,12 @@ const UserBracket = (props: UserBracketProps) => {
 		// 	html: html,
 		// }
 
-		bracketApi.htmlToImage({ html: html, height: 16, width: 12 }).then((res) => {
+		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12 }).then((res) => {
 			console.log('res')
 			console.log(res)
 			console.log('hi')
 			//open new tab with imageURL
-			const newWindow = window.open(res.imageUrl)
+			// const newWindow = window.open(res.imageUrl)
 
 
 
