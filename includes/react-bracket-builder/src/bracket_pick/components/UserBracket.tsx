@@ -127,16 +127,12 @@ const UserBracket = (props: UserBracketProps) => {
 		// 	html: html,
 		// }
 
-		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12 }).then((res) => {
+		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 3 }).then((res) => {
 			console.log('res')
 			console.log(res)
 			console.log('hi')
 			//open new tab with imageURL
 			// const newWindow = window.open(res.imageUrl)
-
-
-
-
 		})
 
 		// const newWindow = window.open();
