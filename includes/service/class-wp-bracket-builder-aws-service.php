@@ -45,11 +45,12 @@ class LambdaService {
 		// ];
 		// $result = $this->invoke($functionName, $params);
 		// return $result['Payload']->getContents();
-		// $res = $this->image_from_api($html);
 		// get global variable defined in wp-config.php
 		// echo 'hi there';
 		// echo AWS_ACCESS_KEY;
 		// echo AWS_SECRET_KEY;
+
+		// $res = $this->image_from_api($body);
 		$res = $this->image_from_invocation($body);
 		return $res;
 
