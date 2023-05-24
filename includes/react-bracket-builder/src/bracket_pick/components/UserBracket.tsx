@@ -55,11 +55,13 @@ const UserBracket = (props: UserBracketProps) => {
 
 	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchWidth: number, inchHeight: number) => {
 		const printArea = buildPrintArea(inchWidth, inchHeight, innerHTML)
-		const styles = 'https://backmybracket.com/wp-content/plugins/wp-bracket-builder/includes/react-bracket-builder/build/index.css'
+		// const stylesheet = 'https://backmybracket.com/wp-content/plugins/wp-bracket-builder/includes/react-bracket-builder/build/index.css'
+		const stylesheet = 'https://wpbb-stylesheets.s3.amazonaws.com/index.css'
+		const styles = getPrintStyles();
 		return `
 			<html>
 				<head>
-					<link rel='stylesheet' href='${styles}' />
+					<link rel='stylesheet' href='${stylesheet}' />
 				</head>
 			<body style='margin: 0; padding: 0;'>
 				${printArea}
@@ -77,7 +79,6 @@ const UserBracket = (props: UserBracketProps) => {
 				}
 				@media print {
 					.wpbb-bracket-print-area {
-						page-break-after: always;
 					}
 				}
 			</style>
@@ -89,7 +90,7 @@ const UserBracket = (props: UserBracketProps) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
 		return `
-			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px'>
+			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: black'>
 				${innerHTML}
 			</div>
 		`
@@ -118,24 +119,34 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 		console.log('apparel click')
 		const html = getHTML()
-		const roundReqs = matchTree.toSubmissionReq();
-		const submissionReq: SubmissionReq = {
-			name: 'test submission',
-			bracketId: id,
-			rounds: roundReqs,
-			html: html,
-		}
-		// console.log(submissionReq)
-		// bracketApi.createSubmission(submissionReq).then((res) => {
-		// 	console.log(res)
-		// })
-		bracketApi.htmlToImage({ html: html }).then((res) => {
+		// const roundReqs = matchTree.toSubmissionReq();
+		// const submissionReq: SubmissionReq = {
+		// 	name: 'test submission',
+		// 	bracketId: id,
+		// 	rounds: roundReqs,
+		// 	html: html,
+		// }
+
+		bracketApi.htmlToImage({ html: html, height: 16, width: 12 }).then((res) => {
 			console.log('res')
 			console.log(res)
+			console.log('hi')
+			//open new tab with imageURL
+			const newWindow = window.open(res.imageUrl)
+
+
+
+
 		})
+
+		// const newWindow = window.open();
+		// newWindow?.document.write(html);
+		// newWindow?.document.close();
+
 	}
 
-	const disableActions = matchTree === null || !matchTree.isComplete();
+	// const disableActions = matchTree === null || !matchTree.isComplete();
+	const disableActions = false
 
 	return (
 		<div className='wpbb-bracket-container'>

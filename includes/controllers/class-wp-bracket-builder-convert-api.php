@@ -49,8 +49,7 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 
 	public function html_to_image($request) {
 		// get the entire request body
-		$html = $request->get_param('html');
-		$body = $request->get_body();
+		$body = json_decode($request->get_body(), true);
 		// $convert_url = 'http://localhost:8080/convert';
 		// // Make a request to the convert url using POST, content type application/json, and the html as the body, and accept *
 
@@ -70,7 +69,7 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 		// $res_body = json_decode(wp_remote_retrieve_body($res));
 
 		$lambda_service = new LambdaService();
-		$res = $lambda_service->html_to_image($html);
+		$res = $lambda_service->html_to_image($body);
 		// $lambda_service->invoke('HelloWorldFunction', array(
 		// 	'html' => $body,
 		// )
