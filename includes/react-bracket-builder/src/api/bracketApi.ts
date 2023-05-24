@@ -84,7 +84,6 @@ class BracketApi {
 
 	async deleteBracket(id: number): Promise<void> {
 		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'DELETE');
-		console.log(res)
 		if (res.status !== 204) {
 			throw new Error('Failed to delete bracket');
 		}
@@ -103,7 +102,6 @@ class BracketApi {
 
 	async performRequest(path: string, method: string, body: any = {}) {
 		const snakeBody = snakeCaseKeys(body);
-		console.log(JSON.stringify(snakeBody))
 		const request = {
 			method,
 			headers: {

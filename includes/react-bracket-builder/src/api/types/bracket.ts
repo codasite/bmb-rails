@@ -96,12 +96,12 @@ export interface SubmissionTeamReq {
 
 export interface HTMLtoImageReq {
 	html: string;
-	width?: number;
-	height?: number;
+	width: number;
+	height: number;
 }
 
 export interface HTMLtoImageRes {
-	image: string;
+	imageUrl: string;
 }
 
 

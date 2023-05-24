@@ -38,7 +38,7 @@ class LambdaService {
 		]);
 	}
 
-	public function html_to_image($html) {
+	public function html_to_image($body) {
 		// $functionName = 'html-to-image';
 		// $params = [
 		// 	'html' => $html,
@@ -50,18 +50,15 @@ class LambdaService {
 		// echo 'hi there';
 		// echo AWS_ACCESS_KEY;
 		// echo AWS_SECRET_KEY;
-		$res = $this->image_from_invocation($html);
+		$res = $this->image_from_invocation($body);
 		return $res;
 
 		// return 'return';
 	}
 
-	public function image_from_api($html) {
+	public function image_from_api($body) {
 		$convert_url = 'http://localhost:8080/convert';
 		// Make a request to the convert url using POST, content type application/json, and the html as the body, and accept *
-		$body = array(
-			'html' => $html,
-		);
 
 		$res = wp_remote_post($convert_url, array(
 			'method' => 'POST', // 'GET' or 'POST
@@ -82,12 +79,8 @@ class LambdaService {
 		return $res_body;
 	}
 
-	private function image_from_invocation($html) {
+	private function image_from_invocation($params) {
 		$functionName = HTML_TO_IMAGE_FUNCTION_NAME;
-
-		$params = [
-			'html' => $html,
-		];
 
 		$result = $this->invoke($functionName, $params);
 
