@@ -65,7 +65,7 @@ class BracketApi {
 	}
 
 	async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
-		const res = await this.performRequest('html-to-image', 'POST', req);
+		const res = await this.performRequest('html-to-image', 'POST', req, false);
 		if (res.status !== 200) {
 			throw new Error('Failed to convert html to image');
 		}
@@ -100,8 +100,10 @@ class BracketApi {
 	}
 
 
-	async performRequest(path: string, method: string, body: any = {}) {
-		const snakeBody = snakeCaseKeys(body);
+	async performRequest(path: string, method: string, body: any = {}, snakeCase: boolean = true): Promise<Response> {
+		if (snakeCase) {
+			body = snakeCaseKeys(body);
+		}
 		const request = {
 			method,
 			headers: {
@@ -110,10 +112,10 @@ class BracketApi {
 			},
 		}
 		if (method !== 'GET') {
-			request['body'] = JSON.stringify(snakeBody);
+			request['body'] = JSON.stringify(body);
 		} else if (Object.keys(body).length > 0) {
 			// pass params as query string
-			path += '?' + Object.entries(snakeBody).map(([key, value]) => `${key}=${value}`).join('&');
+			path += '?' + Object.entries(body).map(([key, value]) => `${key}=${value}`).join('&');
 		}
 		// console.log(path)
 		// console.log(request)
