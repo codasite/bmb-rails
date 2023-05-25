@@ -42,42 +42,43 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
     });
   }, []);
 
-
-
   // Update imageUrls.
-  // Runs every time the currentColor is updated.
   useEffect(() => {
-    console.log('gallery images')
-    console.log(galleryImages)
-    console.log('bracket url')
-    console.log(bracketImageUrl)
-    // setImageUrls(galleryImages);
+    addOverlays()
+  }, []);
 
-    // Callback to append url to imageUrls. This is passed as the last arugment
-    // to overlayBracket function.
-    const appendUrl = (url: string) => {
-      setImageUrls(prevImageUrls => [...prevImageUrls, url]);
-    }
+  const addOverlays = async () => {
+    const promises = galleryImages.map((imageUrl) => {
+      // let filename = extractFilenameFromUrl(imageUrl);
+      // Only overlay the bracket on the back of the shirt.
+      // if (filename.toLowerCase().includes('back')) {
+      const dataUrl = overlayImage(imageUrl, bracketImageUrl, 200, 415, 215);
+      return dataUrl
+      // } else {
+      //   return imageUrl;
+      // }
+      // return imageUrl;
+    })
 
     // Get URLs of images rendered with bracket overlay.
-    // const variation_image_urls = gallery_mapping[currentColor];
-    // setImageUrls(variation_image_urls ?? []);
-    // galleryImages?.forEach((image_url) => {
-    // const overlayedUrls = galleryImages?.map((imageUrl) => {
-    galleryImages?.forEach((imageUrl) => {
-      // Overlay the bracket on the image, and append the url to imageUrls.
-      if (imageUrl) { // null check
-        let filename = extractFilenameFromUrl(imageUrl);
-        // Only overlay the bracket on the back of the shirt.
-        if (filename.toLowerCase().includes('back')) {
-          console.log('overlaying bracket')
-          overlayBracket(imageUrl, bracketImageUrl, appendUrl);
-        } else {
-          appendUrl(imageUrl);
-        }
-      }
+    const dataUrls = await Promise.allSettled(promises).then(res => {
+      // get data urls where status is fulfilled
+      const fulfilledDataUrls = res.filter((promise) => {
+        return promise.status === 'fulfilled'
+      }).map((promise) => {
+        return (promise as PromiseFulfilledResult<string>).value;
+      })
+      return fulfilledDataUrls
+    }).catch(error => {
+      alert('Error loading images');
+      console.error(error);
     });
-  }, [currentColor]);
+    if (dataUrls) {
+      setImageUrls(dataUrls)
+    }
+  }
+
+
 
 
 
@@ -156,13 +157,7 @@ function extractImageValues(imageUrl: string): { width: number, xCenter: number,
 }
 
 // This is the big function that overlays the bracket on the image.
-function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, callback: (url: string) => void) {
-
-  // Extract the bracket overlay width, x, and y offsets from the background image filename in the background image URL. 
-  // const { width, xCenter, yCenter } = extractImageValues(backgroundImageUrl);
-  const width = 200
-  const xCenter = 415
-  const yCenter = 215
+async function overlayImage(backgroundUrl: string, foregroundUrl: string, width: number, xCenter: number, yCenter: number,) {
 
   const bracketWidth = width;
   const bracketCenter = [xCenter, yCenter];
@@ -174,7 +169,9 @@ function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, cal
   //backgroundImage.crossOrigin = "anonymous";  
 
   // Set the source URL for the background image
-  backgroundImage.src = backgroundImageUrl;
+  backgroundImage.src = backgroundUrl;
+  console.log('background image before load')
+  console.log(backgroundImage)
 
   // Create a new image element for the bracket image
   // Because the bracket image is hosted on a different domain (while I'm developing),
@@ -182,53 +179,63 @@ function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, cal
   // production.
   const bracketImage = new Image();
   bracketImage.crossOrigin = "anonymous";
+  console.log('bracket image before load')
+  console.log(bracketImage)
 
   // Set the source URL for the logo image
-  bracketImage.src = bracketImageUrl;
-
-  // Wait for both images to load
-  Promise.all([loadImage(backgroundImage), loadImage(bracketImage)])
-    .then(() => {
-
-      // Scale the bracket image to the correct size
-      const aspectRatio = bracketImage.width / bracketImage.height;
-      const bracketHeight = bracketWidth / aspectRatio;
-
-      // Create a canvas element
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-
-      // Set canvas dimensions to match the background image
-      canvas.width = backgroundImage.width;
-      canvas.height = backgroundImage.height;
-
-      // Draw the background image on the canvas
-      context?.drawImage(backgroundImage, 0, 0);
-
-      // Calculate the position to place the logo on the canvas
-      //const [x, y] = logoPosition;
-      var [x, y] = bracketCenter;
-      x -= bracketWidth / 2;
-      y += bracketHeight / 2;
-
-      // Draw the logo image on the canvas at the specified position and size
-      context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);
-
-      // Convert the canvas image to a data URL
-      const outputImageUrl = canvas.toDataURL();
-
-      // Create a new image element to display the output image
-      // const outputImageElement = document.createElement('img');
-      // outputImageElement.setAttribute('src', outputImageUrl);
-      // console.log('output url')
-      // console.log(outputImageUrl)
-
-
-      callback(outputImageUrl);
-    })
+  bracketImage.src = foregroundUrl;
+  const bracketRes = await loadImage(bracketImage).then((res) => {
+    console.log('bracket image loaded')
+  })
     .catch((error) => {
-      console.error('An error occurred:', error);
+      console.error(error);
+      throw new Error("Error loading bracket image");
     });
+
+
+  console.log('bracket image after load')
+  console.log(bracketImage)
+
+  // await loadImage(backgroundImage).then((res) => {
+  //   console.log('background image loaded')
+  // }).catch((error) => {
+  //   console.error(error);
+  //   throw new Error("Error loading background image");
+  // });
+
+  console.log('background image after load')
+  console.log(backgroundImage)
+
+
+  // Scale the bracket image to the correct size
+  const aspectRatio = bracketImage.width / bracketImage.height;
+  const bracketHeight = bracketWidth / aspectRatio;
+
+  // Create a canvas element
+  const canvas = document.createElement('canvas');
+  const context = canvas.getContext('2d');
+
+  // Set canvas dimensions to match the background image
+  canvas.width = backgroundImage.width;
+  canvas.height = backgroundImage.height;
+
+  // Draw the background image on the canvas
+  context?.drawImage(backgroundImage, 0, 0);
+
+  // Calculate the position to place the logo on the canvas
+  //const [x, y] = logoPosition;
+  var [x, y] = bracketCenter;
+  x -= bracketWidth / 2;
+  y += bracketHeight / 2;
+
+  // Draw the logo image on the canvas at the specified position and size
+  context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);
+
+  // Convert the canvas image to a data URL
+  const outputImageUrl = canvas.toDataURL();
+  console.log('output image url')
+  console.log(outputImageUrl)
+  return outputImageUrl;
 }
 
 
