@@ -49,7 +49,9 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
   useEffect(() => {
     console.log('gallery images')
     console.log(galleryImages)
-    setImageUrls(galleryImages);
+    console.log('bracket url')
+    console.log(bracketImageUrl)
+    // setImageUrls(galleryImages);
 
     // Callback to append url to imageUrls. This is passed as the last arugment
     // to overlayBracket function.
@@ -58,20 +60,23 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
     }
 
     // Get URLs of images rendered with bracket overlay.
-    const variation_image_urls = gallery_mapping[currentColor];
+    // const variation_image_urls = gallery_mapping[currentColor];
     // setImageUrls(variation_image_urls ?? []);
-    // variation_image_urls?.forEach((image_url) => {
-    //   // Overlay the bracket on the image, and append the url to imageUrls.
-    //   if (image_url) { // null check
-    //     let filename = extractFilenameFromUrl(image_url);
-    //     // Only overlay the bracket on the back of the shirt.
-    //     if (filename.toLowerCase().includes('back')) {
-    //       overlayBracket(image_url, bracketImageUrl, appendUrl);
-    //     } else {
-    //       appendUrl(image_url);
-    //     }
-    //   }
-    // });
+    // galleryImages?.forEach((image_url) => {
+    // const overlayedUrls = galleryImages?.map((imageUrl) => {
+    galleryImages?.forEach((imageUrl) => {
+      // Overlay the bracket on the image, and append the url to imageUrls.
+      if (imageUrl) { // null check
+        let filename = extractFilenameFromUrl(imageUrl);
+        // Only overlay the bracket on the back of the shirt.
+        if (filename.toLowerCase().includes('back')) {
+          console.log('overlaying bracket')
+          overlayBracket(imageUrl, bracketImageUrl, appendUrl);
+        } else {
+          appendUrl(imageUrl);
+        }
+      }
+    });
   }, [currentColor]);
 
 
@@ -104,7 +109,7 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
   //     <Thumbnails imageUrls={imageUrls} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
   //   </div>
   // );
-  const images = galleryImages.map((image) => {
+  const images = imageUrls.map((image) => {
     return {
       original: image,
       thumbnail: image
@@ -154,7 +159,11 @@ function extractImageValues(imageUrl: string): { width: number, xCenter: number,
 function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, callback: (url: string) => void) {
 
   // Extract the bracket overlay width, x, and y offsets from the background image filename in the background image URL. 
-  const { width, xCenter, yCenter } = extractImageValues(backgroundImageUrl);
+  // const { width, xCenter, yCenter } = extractImageValues(backgroundImageUrl);
+  const width = 200
+  const xCenter = 415
+  const yCenter = 215
+
   const bracketWidth = width;
   const bracketCenter = [xCenter, yCenter];
 
@@ -209,8 +218,12 @@ function overlayBracket(backgroundImageUrl: string, bracketImageUrl: string, cal
       const outputImageUrl = canvas.toDataURL();
 
       // Create a new image element to display the output image
-      const outputImageElement = document.createElement('img');
-      outputImageElement.setAttribute('src', outputImageUrl);
+      // const outputImageElement = document.createElement('img');
+      // outputImageElement.setAttribute('src', outputImageUrl);
+      // console.log('output url')
+      // console.log(outputImageUrl)
+
+
       callback(outputImageUrl);
     })
     .catch((error) => {
