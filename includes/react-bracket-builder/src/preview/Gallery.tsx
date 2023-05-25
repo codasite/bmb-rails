@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Thumbnails from './Thumbnails';
+import ImageGallery from 'react-image-gallery';
 
 interface GalleryProps {
   gallery_mapping: { [key: string]: string[] };
@@ -87,22 +88,33 @@ const Gallery: React.FC<GalleryProps> = ({ gallery_mapping, default_color, brack
 
   // The outer two div classNames are copied from the original WooCommerce product page to
   // ensure that the gallery is styled correctly.
+  // return (
+  //   <div className="woocommerce-product-gallery woocommerce-product-gallery--without-images woocommerce-product-gallery--columns-4 images">
+  //     <div style={galleryWrapperStyle}>
+  //       <div className="woocommerce-product-gallery__wrapper" style={galleryStyle} >
+  //         <button style={arrowLeftStyle} onClick={handlePrevious}>
+  //           &lt;
+  //         </button>
+  //         <img className="wp-post-image" style={imageStyle} src={imageUrls[currentIndex]} alt={`Image ${currentIndex + 1}`} />
+  //         <button style={arrowRightStyle} onClick={handleNext}>
+  //           &gt;
+  //         </button>
+  //       </div>
+  //     </div>
+  //     <Thumbnails imageUrls={imageUrls} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
+  //   </div>
+  // );
+  const images = galleryImages.map((image) => {
+    return {
+      original: image,
+      thumbnail: image
+    }
+  })
+
   return (
-    <div className="woocommerce-product-gallery woocommerce-product-gallery--without-images woocommerce-product-gallery--columns-4 images">
-      <div style={galleryWrapperStyle}>
-        <div className="woocommerce-product-gallery__wrapper" style={galleryStyle} >
-          <button style={arrowLeftStyle} onClick={handlePrevious}>
-            &lt;
-          </button>
-          <img className="wp-post-image" style={imageStyle} src={imageUrls[currentIndex]} alt={`Image ${currentIndex + 1}`} />
-          <button style={arrowRightStyle} onClick={handleNext}>
-            &gt;
-          </button>
-        </div>
-      </div>
-      <Thumbnails imageUrls={imageUrls} currentIndex={currentIndex} setCurrentIndex={setCurrentIndex} />
-    </div>
-  );
+    //@ts-ignore
+    <ImageGallery items={images} showPlayButton={false} />
+  )
 };
 
 function extractFilenameFromUrl(url) {
