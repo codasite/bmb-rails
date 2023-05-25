@@ -127,6 +127,8 @@ class Wp_Bracket_Builder_Public {
 			$product_id = $product->get_id();
 			$default_color = get_default_product_color($product);
 			$variation_gallery_mapping = get_product_variation_galleries($product);
+
+			$gallery_images = get_product_gallery($product);
 		}
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
@@ -146,6 +148,8 @@ class Wp_Bracket_Builder_Public {
 				'default_product_color' => trim(strtolower($default_color)), // used for preview page
 				'product_id' => $product_id, // used for preview page
 				'bracket_url' => $bracket_url, // used for preview page
+
+				'gallery_images' => $gallery_images, // used for preview page
 			)
 		);
 	}
@@ -191,6 +195,19 @@ class Wp_Bracket_Builder_Public {
 	}
 }
 
+/**
+ * Get all gallery images for the product
+ * 
+ * @param WC_Product $product
+ * @return array
+ */
+
+function get_product_gallery($product) {
+	// get all gallery images for the product
+	$attachment_ids = $product->get_gallery_image_ids();
+	$gallery_image_urls = get_image_urls($attachment_ids);
+	return $gallery_image_urls;
+}
 
 /**
  * Get the image ids for each variation

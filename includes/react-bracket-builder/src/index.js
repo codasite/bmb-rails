@@ -47,12 +47,13 @@ function renderPreview(wpbb_ajax_obj) {
 			product_id,
 			bracket_url,
 			variation_gallery_mapping,
-			default_product_color
+			default_product_color,
+			gallery_images,
 		} = wpbb_ajax_obj
 		// Render the preview component into the DOM
 
 		// Find the location to render the gallery component, and render the gallery component.
-		render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_product_color} bracketImageUrl={bracket_url} /></App>, previewDiv);
+		render(<App><Gallery gallery_mapping={variation_gallery_mapping} default_color={default_product_color} bracketImageUrl={bracket_url} galleryImages={gallery_images} /></App>, previewDiv);
 	}
 }
 
