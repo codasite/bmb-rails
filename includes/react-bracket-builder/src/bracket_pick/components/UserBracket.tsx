@@ -90,7 +90,7 @@ const UserBracket = (props: UserBracketProps) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
 		return `
-			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: black'>
+			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: transparent'>
 				${innerHTML}
 			</div>
 		`
@@ -127,7 +127,7 @@ const UserBracket = (props: UserBracketProps) => {
 		// 	html: html,
 		// }
 
-		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 3 }).then((res) => {
+		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
 			console.log('res')
 			console.log(res)
 			console.log('hi')

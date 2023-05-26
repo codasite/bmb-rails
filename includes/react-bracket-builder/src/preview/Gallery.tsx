@@ -268,7 +268,7 @@ async function addOverlay(backgroundUrl: string, overlayUrl: string, overlayPara
   //const [x, y] = logoPosition;
   var [x, y] = bracketCenter;
   x -= bracketWidth / 2;
-  y += bracketHeight / 2;
+  y -= bracketHeight / 2;
 
   // Draw the logo image on the canvas at the specified position and size
   context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);

@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -108,18 +109,14 @@ class Wp_Bracket_Builder_Public {
 		// For product page
 		$product = wc_get_product($post->ID);
 
-		function set_session_value($key, $value) {
-			if (!session_id()) {
-				session_start();
-			}
-			$_SESSION[$key] = $value;
-		}
 
-		// TODO: Replace with actual bracket url
-		$bracket_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
+		// // TODO: Replace with actual bracket url
+		// $bracket_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
 
-		// Set bracket url in session
-		set_session_value('bracket_url', $bracket_url);
+		// // Set bracket url in session
+		// set_session_value('bracket_url', $bracket_url);
+		$utils = new Wp_Bracket_Builder_Utils();
+		$bracket_url = $utils->get_session_value('bracket_url');
 
 
 		// Only get product details on product pages.
@@ -214,35 +211,25 @@ function get_image_urls($image_ids) {
 	return $image_urls;
 }
 
-// Add the bracket url to the cart item data
-function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
-	$bracket_url = $_GET['bracket_url']; // get bracket url from query params
+// // Add the bracket url to the cart item data
+// function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
+// 	$bracket_url = $_GET['bracket_url']; // get bracket url from query params
 
-	$cart_item_data['bracket_url'] = $bracket_url;
-	return $cart_item_data;
-}
-add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item', 10, 3);
+// 	$cart_item_data['bracket_url'] = $bracket_url;
+// 	return $cart_item_data;
+// }
+// add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item', 10, 3);
 
 
-// Get value from user session
-function get_session_value($key) {
-	if (!session_id()) {
-		session_start();
-	}
-	if (isset($_SESSION[$key])) {
-		return $_SESSION[$key];
-	}
-	return null;
-}
 
-// Add the bracket url to the order
-function add_bracket_to_order($item, $cart_item_key, $values, $order) {
-	if (empty($values)) {
-		return;
-	}
+// // Add the bracket url to the order
+// function add_bracket_to_order($item, $cart_item_key, $values, $order) {
+// 	if (empty($values)) {
+// 		return;
+// 	}
 
-	// Get bracket url from session
-	$bracket_url = get_session_value('bracket_url');
-	$item->add_meta_data('bracket_url', $bracket_url);
-}
-add_action('woocommerce_checkout_create_order_line_item', 'add_bracket_to_order', 10, 4);
+// 	// Get bracket url from session
+// 	$bracket_url = get_session_value('bracket_url');
+// 	$item->add_meta_data('bracket_url', $bracket_url);
+// }
+// add_action('woocommerce_checkout_create_order_line_item', 'add_bracket_to_order', 10, 4);
