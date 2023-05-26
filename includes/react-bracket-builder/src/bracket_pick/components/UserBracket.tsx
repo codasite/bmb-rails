@@ -137,8 +137,8 @@ const UserBracket = (props: UserBracketProps) => {
 		})
 	}
 
-	// const disableActions = matchTree === null || !matchTree.isComplete();
-	const disableActions = processingImage
+	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
+	// const disableActions = processingImage
 
 	return (
 		<div className='wpbb-bracket-container'>
