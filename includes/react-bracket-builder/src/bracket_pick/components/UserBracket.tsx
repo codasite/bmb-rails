@@ -33,12 +33,14 @@ const ApparelButton = (props: BuyApparelBtnProps) => {
 interface UserBracketProps {
 	bracketId?: number;
 	bracketRes?: BracketRes;
+	apparelUrl?: string;
 }
 
 const UserBracket = (props: UserBracketProps) => {
 	const {
 		bracketId,
-		bracketRes
+		bracketRes,
+		apparelUrl,
 	} = props;
 
 	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
@@ -126,14 +128,20 @@ const UserBracket = (props: UserBracketProps) => {
 		// 	rounds: roundReqs,
 		// 	html: html,
 		// }
+		console.log('apparel url')
+		console.log(apparelUrl)
 
-		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
-			console.log('res')
-			console.log(res)
-			console.log('hi')
-			//open new tab with imageURL
-			// const newWindow = window.open(res.imageUrl)
-		})
+		// bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
+		// 	console.log('res')
+		// 	console.log(res)
+		// 	console.log('hi')
+		// 	// navigate to the product page
+		// 	console.log('apparel url')
+		// 	console.log(apparelUrl)
+
+		// 	//open new tab with imageURL
+		// 	// const newWindow = window.open(res.imageUrl)
+		// })
 
 		// const newWindow = window.open();
 		// newWindow?.document.write(html);
