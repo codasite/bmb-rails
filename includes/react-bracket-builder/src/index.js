@@ -44,13 +44,11 @@ function renderPreview(wpbb_ajax_obj) {
 		// There must exist an element of class 'wpbb-bracket-preview-controller' to the 
 		// product page for the component to be rendered.
 		const {
-			product_id,
 			bracket_url,
 			default_product_color,
 			gallery_images,
 		} = wpbb_ajax_obj
 		// Render the preview component into the DOM
-
 		// Find the location to render the gallery component, and render the gallery component.
 		render(<App><Gallery default_color={default_product_color} bracketImageUrl={bracket_url} galleryImages={gallery_images} /></App>, previewDiv);
 	}
