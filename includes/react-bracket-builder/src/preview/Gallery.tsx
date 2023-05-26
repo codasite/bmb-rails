@@ -224,8 +224,8 @@ async function addOverlay(backgroundUrl: string, overlayUrl: string, overlayPara
     yCenter,
   } = overlayParams;
 
-  const bracketWidth = width;
-  const bracketCenter = [xCenter, yCenter];
+  const bracketWidth = 300;
+  const bracketCenter = [xCenter, 60];
 
   // Create a new image element for the background image
   // The background image comes from the product so no worries

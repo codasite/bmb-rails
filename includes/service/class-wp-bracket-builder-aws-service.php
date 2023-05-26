@@ -39,22 +39,9 @@ class LambdaService {
 	}
 
 	public function html_to_image($body) {
-		// $functionName = 'html-to-image';
-		// $params = [
-		// 	'html' => $html,
-		// ];
-		// $result = $this->invoke($functionName, $params);
-		// return $result['Payload']->getContents();
-		// get global variable defined in wp-config.php
-		// echo 'hi there';
-		// echo AWS_ACCESS_KEY;
-		// echo AWS_SECRET_KEY;
-
 		// $res = $this->image_from_api($body);
 		$res = $this->image_from_invocation($body);
 		return $res;
-
-		// return 'return';
 	}
 
 	public function image_from_api($body) {
