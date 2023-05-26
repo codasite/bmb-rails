@@ -224,8 +224,8 @@ async function addOverlay(backgroundUrl: string, overlayUrl: string, overlayPara
     yCenter,
   } = overlayParams;
 
-  const bracketWidth = 300;
-  const bracketCenter = [xCenter, 60];
+  const bracketWidth = width;
+  const bracketCenter = [xCenter, yCenter];
 
   // Create a new image element for the background image
   // The background image comes from the product so no worries
@@ -268,7 +268,7 @@ async function addOverlay(backgroundUrl: string, overlayUrl: string, overlayPara
   //const [x, y] = logoPosition;
   var [x, y] = bracketCenter;
   x -= bracketWidth / 2;
-  y += bracketHeight / 2;
+  y -= bracketHeight / 2;
 
   // Draw the logo image on the canvas at the specified position and size
   context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);
