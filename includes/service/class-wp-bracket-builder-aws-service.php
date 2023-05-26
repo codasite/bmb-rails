@@ -9,7 +9,7 @@ use Aws\Lambda\LambdaClient;
 #snippet-start:[php.example_code.lambda.service]
 
 
-class LambdaServicex {
+class LambdaService {
 	protected LambdaClient $lambdaClient;
 
 	public function __construct(
@@ -23,14 +23,81 @@ class LambdaServicex {
 			return;
 		}
 
+		if (!defined('AWS_ACCESS_KEY') || !defined('AWS_SECRET_KEY')) {
+			return;
+		}
+
 		$this->lambdaClient = new LambdaClient([
 			'region' => $region,
 			'version' => $version,
 			'profile' => $profile,
+			'credentials' => [
+				'key' => AWS_ACCESS_KEY,
+				'secret' => AWS_SECRET_KEY,
+			],
 		]);
 	}
 
-	public function invoke($functionName, $params, $logType = 'None') {
+	public function html_to_image($body) {
+		// $functionName = 'html-to-image';
+		// $params = [
+		// 	'html' => $html,
+		// ];
+		// $result = $this->invoke($functionName, $params);
+		// return $result['Payload']->getContents();
+		// get global variable defined in wp-config.php
+		// echo 'hi there';
+		// echo AWS_ACCESS_KEY;
+		// echo AWS_SECRET_KEY;
+
+		// $res = $this->image_from_api($body);
+		$res = $this->image_from_invocation($body);
+		return $res;
+
+		// return 'return';
+	}
+
+	public function image_from_api($body) {
+		$convert_url = 'http://localhost:8080/convert';
+		// Make a request to the convert url using POST, content type application/json, and the html as the body, and accept *
+
+		$res = wp_remote_post($convert_url, array(
+			'method' => 'POST', // 'GET' or 'POST
+			'timeout' => 45,
+			'headers' => array(
+				'Content-Type' => 'application/json',
+				'Accept' => '*',
+			),
+			'body' => json_encode($body)
+		));
+
+		if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
+			return new WP_Error('error', __('There was an error converting the html to an image', 'text-domain'), array('status' => 500));
+		}
+
+		// get the response body as json
+		$res_body = json_decode(wp_remote_retrieve_body($res));
+		return $res_body;
+	}
+
+	private function image_from_invocation($params) {
+		$functionName = HTML_TO_IMAGE_FUNCTION_NAME;
+
+		$result = $this->invoke($functionName, $params);
+
+		if (is_wp_error($result)) {
+			return $result;
+		}
+
+		return json_decode($result['Payload']->getContents());
+	}
+
+	private function invoke($functionName, $params, $logType = 'None') {
+		// check if lambda client is initialized
+		if (!isset($this->lambdaClient)) {
+			return new WP_Error('error', __('Lambda client is not initialized. Did you forget to add AWS credentials?', 'text-domain'), array('status' => 500));
+		}
+
 		return $this->lambdaClient->invoke([
 			'FunctionName' => $functionName,
 			'Payload' => json_encode($params),
