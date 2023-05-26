@@ -30,9 +30,12 @@ function renderSettings(wpbb_ajax_obj) {
 
 function renderBracketBuilder(wpbb_ajax_obj) {
 	const builderDiv = document.getElementById('wpbb-bracket-builder')
-	const bracket = wpbb_ajax_obj.bracket
+	const {
+		bracket,
+		bracket_product_archive_url,
+	} = wpbb_ajax_obj
 	if (builderDiv && bracket) {
-		render(<App><UserBracket bracketRes={bracket} /></App>, builderDiv)
+		render(<App><UserBracket bracketRes={bracket} apparelUrl={bracket_product_archive_url} /></App>, builderDiv)
 	}
 }
 
