@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Thumbnails from './Thumbnails';
 import ImageGallery from 'react-image-gallery';
 
 interface GalleryProps {
-  defaultColor: string;
   bracketImageUrl: string,
   galleryImages: string[];
 }
@@ -12,6 +11,11 @@ interface GalleryProps {
 enum ProductImageOrientation {
   FRONT = 'front',
   BACK = 'back',
+}
+
+interface ProductImageConfig {
+  url: string;
+  variationColor: string;
 }
 
 interface ProductImageParams {
@@ -27,67 +31,77 @@ interface ImageOverlayParams {
   yCenter: number;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ defaultColor, bracketImageUrl, galleryImages }) => {
+const Gallery: React.FC<GalleryProps> = ({ bracketImageUrl, galleryImages }) => {
   // URLs of images to display in the gallery. This is updated
-  // when currentColor is updated. 
+  // when the select listener is triggered.
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([]);
 
-  // Color of current variation selection  
-  const [currentColor, setCurrentColor] = useState<string>(defaultColor);
+  // Store image configs in a ref so we can access them in the colorSelectChangeHandler
+  const imageConfigsRef = useRef<ProductImageConfig[]>(imageConfigs);
 
-  // The product page is using the default woocommerce variation selector. We need to
-  // listen to this selector in order to know when to update the gallery, so
-  // attach a listener to the select element. Runs only once, when the component
-  // is first rendered.
   useEffect(() => {
-    // attach an event listener to the select element
-    const selectElement = document.querySelector('select#color') as HTMLSelectElement;
-    const optionElements = selectElement.querySelectorAll('option');
+    imageConfigsRef.current = imageConfigs;
+  }, [imageConfigs]);
 
-    selectElement.addEventListener('click', (event) => {
-      const target = event.target as HTMLSelectElement;
-      if (target.value) {
-        let color = target.value;
-        console.log('current color: ', color.toLowerCase().trim());
-        setCurrentColor(color.toLowerCase().trim());
-      };
-    });
-  }, []);
 
   // Update imageUrls.
   useEffect(() => {
-    addOverlays()
+    initImages()
   }, []);
 
-  const addOverlays = async () => {
-    const promises = galleryImages.map((imageUrl) => {
+  const initImages = async () => {
+    const imageConfigs = await buildImageConfigs();
+    setImageConfigs(imageConfigs);
 
-      const params = parseImageParams(imageUrl);
+    const selectElement = document.querySelector('select#color') as HTMLSelectElement;
 
-      if (params.orientation === ProductImageOrientation.BACK) {
-        const dataUrl = overlayImage(imageUrl, bracketImageUrl, 200, 415, 215);
-        return dataUrl
+    // If the select element exists, filter by color and add a change listener.
+    if (selectElement?.value) {
+      let color = selectElement.value;
+      const newUrls = getImageUrlsForColor(imageConfigs, color);
+      setImageUrls(newUrls);
+      selectElement.addEventListener('change', colorSelectChangeHandler);
+    } else {
+      // Else, set the image URLs for all colors.
+      setImageUrls(imageConfigs.map((config) => {
+        return config.url;
       }
-      return imageUrl
+      ));
+    }
+  }
 
-    })
+  // The product page is using the default woocommerce variation selector. We need to
+  // listen to this selector in order to know when to update the gallery, so
+  // attach a listener to the select element. 
+  const colorSelectChangeHandler = (event: Event) => {
+    const target = event.target as HTMLSelectElement;
+    if (target?.value) {
+      let color = target.value;
+      // Use the image configs stored in the ref to get the image URLs for the selected color.
+      // Needed because this handler is attached to the select element, which is not part of react.
+      const newUrls = getImageUrlsForColor(imageConfigsRef.current, color);
+      setImageUrls(newUrls);
+    };
+  }
 
-    // Get URLs of images rendered with bracket overlay.
-    const dataUrls = await Promise.allSettled(promises).then(res => {
+  const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
+    const promises = galleryImages.map((imageUrl) => {
+      return buildProductImageConfig(imageUrl, bracketImageUrl);
+    });
+
+    const configs = await Promise.allSettled(promises).then(res => {
       // get data urls where status is fulfilled
-      const fulfilledDataUrls = res.filter((promise) => {
+      const fulfilledConfigs = res.filter((promise) => {
         return promise.status === 'fulfilled'
       }).map((promise) => {
-        return (promise as PromiseFulfilledResult<string>).value;
+        return (promise as PromiseFulfilledResult<ProductImageConfig>).value;
       })
-      return fulfilledDataUrls
+      return fulfilledConfigs
     }).catch(error => {
-      alert('Error loading images');
       console.error(error);
     });
-    if (dataUrls) {
-      setImageUrls(dataUrls)
-    }
+    return configs ? configs : [];
   }
 
   const images = imageUrls.map((image) => {
@@ -96,11 +110,47 @@ const Gallery: React.FC<GalleryProps> = ({ defaultColor, bracketImageUrl, galler
       thumbnail: image
     }
   })
+
   return (
     //@ts-ignore
     <ImageGallery items={images} showPlayButton={false} />
   )
 };
+
+const getImageUrlsForColor = (configs: ProductImageConfig[], color: string): string[] => {
+  return configs.filter((config) => {
+    return compareProductAttributes(config.variationColor, color);
+  }).map((config) => {
+    return config.url;
+  });
+}
+
+
+const buildProductImageConfig = async (imageUrl: string, overlayUrl): Promise<ProductImageConfig> => {
+  const {
+    variationColor,
+    orientation,
+    overlayParams,
+  } = parseImageParams(imageUrl);
+
+  const url = orientation === ProductImageOrientation.BACK ? await addOverlay(imageUrl, overlayUrl, overlayParams) : imageUrl;
+
+  const config: ProductImageConfig = {
+    url,
+    variationColor,
+  };
+
+  return config;
+}
+
+const compareProductAttributes = (str1: string, str2: string): boolean => {
+  // Do a case-insensitive comparison of two strings, ignoring whitespace, underscores, and hyphens.
+  const formattedStr1 = str1.trim().toLowerCase().replace(/[-_\s]/g, '');
+  const formattedStr2 = str2.trim().toLowerCase().replace(/[-_\s]/g, '');
+
+  return formattedStr1 === formattedStr2;
+}
+
 
 const parseImageParams = (imageUrl: string): ProductImageParams => {
   const filename = extractFilenameFromUrl(imageUrl);
@@ -167,7 +217,12 @@ function extractFilenameFromUrl(url): string | null {
 }
 
 // This is the big function that overlays the bracket on the image.
-async function overlayImage(backgroundUrl: string, overlayUrl: string, width: number, xCenter: number, yCenter: number,) {
+async function addOverlay(backgroundUrl: string, overlayUrl: string, overlayParams: ImageOverlayParams) {
+  const {
+    width,
+    xCenter,
+    yCenter,
+  } = overlayParams;
 
   const bracketWidth = width;
   const bracketCenter = [xCenter, yCenter];
@@ -192,7 +247,6 @@ async function overlayImage(backgroundUrl: string, overlayUrl: string, width: nu
   bracketImage.src = overlayUrl;
   await loadImage(bracketImage).catch((error) => {
     console.error(error);
-    throw new Error("Error loading bracket image");
   });
 
   // Scale the bracket image to the correct size
