@@ -76,6 +76,7 @@ class Wp_Bracket_Builder_Public {
 		 */
 
 		// wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
+		wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css', array(), null, 'all');
 		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), null, 'all');
 	}
 
@@ -106,8 +107,10 @@ class Wp_Bracket_Builder_Public {
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
 
 
+
 		// For product page
 		$product = wc_get_product($post->ID);
+		$bracket_product_archive_url = $this->get_archive_url();
 
 
 		// // TODO: Replace with actual bracket url
@@ -137,6 +140,7 @@ class Wp_Bracket_Builder_Public {
 				'post' => $post,
 				'bracket' => $bracket,
 				'css_file' => $css_file,
+				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 
 				'bracket_url' => $bracket_url, // used for preview page
 				'gallery_images' => $gallery_images, // used for preview page
@@ -172,8 +176,6 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
-
-
 	/**
 	 * Add shortcode to render events
 	 *
@@ -182,6 +184,12 @@ class Wp_Bracket_Builder_Public {
 	public function add_shortcodes() {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']);
 		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
+	}
+
+	public function get_archive_url() {
+		$category_slug = 'bracket-ready';
+		$redirect_url = get_term_link($category_slug, 'product_cat');
+		return $redirect_url;
 	}
 }
 
