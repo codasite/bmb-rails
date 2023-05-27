@@ -16,7 +16,6 @@ class LambdaService {
 		$client = null,
 		$region = 'us-east-1',
 		$version = 'latest',
-		$profile = 'default'
 	) {
 		if (gettype($client) == LambdaClient::class) {
 			$this->lambdaClient = $client;
@@ -30,7 +29,6 @@ class LambdaService {
 		$this->lambdaClient = new LambdaClient([
 			'region' => $region,
 			'version' => $version,
-			'profile' => $profile,
 			'credentials' => [
 				'key' => AWS_ACCESS_KEY,
 				'secret' => AWS_SECRET_KEY,
