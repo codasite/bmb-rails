@@ -100,7 +100,8 @@ class Wp_Bracket_Builder_Public {
 		 */
 
 		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-public.js', array( 'jquery' ), $this->version, false );
-		$env = (defined('WP_ENV')) ? WP_ENV : 'production';
+		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
+		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
 
 		$post = get_post();
 		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
@@ -124,9 +125,7 @@ class Wp_Bracket_Builder_Public {
 
 
 		// Only get product details on product pages.
-		if ($product) {
-			$gallery_images = get_product_gallery($product);
-		}
+		$gallery_images = $product ? get_product_gallery($product) : array();
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
@@ -134,7 +133,8 @@ class Wp_Bracket_Builder_Public {
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
-				'env' => $env,
+				'sentry_env' => $sentry_env,
+				'sentry_dsn' => $sentry_dsn,
 				'nonce' => wp_create_nonce('wp_rest'),
 				'page' => 'user-bracket',
 				'ajax_url' => admin_url('admin-ajax.php'),
