@@ -127,7 +127,6 @@ const UserBracket = (props: UserBracketProps) => {
 			return;
 		}
 		const html = getHTML()
-		thisdoesnotexist()
 
 		setProcessingImage(true)
 		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
