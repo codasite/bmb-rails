@@ -3,3 +3,4 @@
 const AWS_ACCESS_KEY = '';
 const AWS_SECRET_KEY = '';
 const HTML_TO_IMAGE_FUNCTION_NAME = '';
+const WP_ENV = '';

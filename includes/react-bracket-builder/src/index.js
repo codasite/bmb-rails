@@ -9,10 +9,12 @@ import * as Sentry from '@sentry/react';
  * Import the stylesheet for the plugin.
  */
 import './style/main.scss';
+const env = wpbb_ajax_obj.env
 
 
 // Init Sentry
 Sentry.init({
+	environment: env,
 	dsn: "https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752",
 	integrations: [
 		new Sentry.BrowserTracing({

@@ -100,6 +100,7 @@ class Wp_Bracket_Builder_Public {
 		 */
 
 		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-public.js', array( 'jquery' ), $this->version, false );
+		$env = (defined('WP_ENV')) ? WP_ENV : 'production';
 
 		$post = get_post();
 		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
@@ -133,6 +134,7 @@ class Wp_Bracket_Builder_Public {
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
+				'env' => $env,
 				'nonce' => wp_create_nonce('wp_rest'),
 				'page' => 'user-bracket',
 				'ajax_url' => admin_url('admin-ajax.php'),

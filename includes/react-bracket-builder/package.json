@@ -16,7 +16,6 @@
   },
   "dependencies": {
     "@sentry/react": "^7.53.1",
-    "html2canvas": "^1.4.1",
     "react-bootstrap": "^2.7.4",
     "react-image-gallery": "^1.2.11",
     "react-lineto": "^3.3.0"
