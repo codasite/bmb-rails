@@ -134,7 +134,10 @@ const UserBracket = (props: UserBracketProps) => {
 			window.location.href = apparelUrl
 		}).catch((err) => {
 			console.error(err)
-		})
+		}).finally(() => {
+			setProcessingImage(false)
+		}
+		)
 	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage

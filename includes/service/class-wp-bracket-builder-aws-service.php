@@ -68,6 +68,9 @@ class LambdaService {
 	}
 
 	private function image_from_invocation($params) {
+		if (!defined('HTML_TO_IMAGE_FUNCTION_NAME')) {
+			return new WP_Error('error', __('Lambda function name not defined.', 'text-domain'), array('status' => 500));
+		}
 		$functionName = HTML_TO_IMAGE_FUNCTION_NAME;
 
 		$result = $this->invoke($functionName, $params);

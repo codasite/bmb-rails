@@ -67,7 +67,7 @@ class BracketApi {
 	async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
 		const res = await this.performRequest('html-to-image', 'POST', req, false);
 		if (res.status !== 200) {
-			throw new Error('Failed to convert html to image');
+			throw new Error(await res.text());
 		}
 		// const { image } = camelCaseKeys(await res.json());
 		// return image;

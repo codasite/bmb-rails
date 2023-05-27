@@ -65,10 +65,12 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 			// Add the image url to the user's session
 			$utils = new Wp_Bracket_Builder_Utils();
 			$utils->set_session_value('bracket_url', $res->imageUrl);
+			return new WP_REST_Response($res, 200);
+		} else if (is_wp_error($res)) {
+			return $res;
+		} else {
+			return new WP_Error('error', __('Error converting HTML to image. Image url not found', 'text-domain'), array('status' => 500));
 		}
-		$res_body = $res;
-
-		return new WP_REST_Response($res_body, 200);
 	}
 	/**
 	 * Check if a given request has admin access to this plugin
