@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react';
 import {
 	BracketReq,
 	BracketRes,
@@ -7,6 +8,13 @@ import {
 	HTMLtoImageRes,
 } from './types/bracket';
 
+
+interface RequestOptions {
+	method?: string;
+	body?: any;
+	snakeCaseBody?: boolean;
+	camelCaseResponse?: boolean;
+}
 
 
 class BracketApi {
@@ -23,85 +31,59 @@ class BracketApi {
 	}
 
 	async getBrackets(): Promise<BracketRes[]> {
-		const res = await this.performRequest(this.bracketPath, 'GET');
-		if (res.status !== 200) {
-			throw new Error('Failed to get brackets');
-		}
-		return camelCaseKeys(await res.json());
+		return await this.performRequest(this.bracketPath);
 	}
 
 	async getBracket(id: number): Promise<BracketRes> {
-		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'GET');
-		if (res.status !== 200) {
-			throw new Error('Failed to get bracket');
-		}
-		return camelCaseKeys(await res.json());
+		return await this.performRequest(`${this.bracketPath}/${id}`);
 	}
 
 	async getSubmissions(id?: number | null): Promise<SubmissionRes[]> {
-		const params = id ? { bracketId: id } : {};
-		const res = await this.performRequest(`${this.submissionPath}`, 'GET', params);
-		if (res.status !== 200) {
-			throw new Error('Failed to get submissions');
-		}
-		return camelCaseKeys(await res.json());
+		const options: RequestOptions = { method: 'GET', body: { bracketId: id } };
+		return await this.performRequest(`${this.submissionPath}`, options);
 	}
 
 	async getSubmission(id: number): Promise<SubmissionRes> {
-		const res = await this.performRequest(`${this.submissionPath}/${id}`, 'GET');
-		if (res.status !== 200) {
-			throw new Error('Failed to get submission');
-		}
-		return camelCaseKeys(await res.json());
+		return await this.performRequest(`${this.submissionPath}/${id}`);
 	}
 
-	// This is not used. Use htmlToImage instead
 	async createSubmission(submission: SubmissionReq): Promise<SubmissionRes> {
-		const res = await this.performRequest(this.submissionPath, 'POST', submission);
-		if (res.status !== 201) {
-			throw new Error('Failed to create submission');
-		}
-		return camelCaseKeys(await res.json());
+		const options: RequestOptions = { method: 'POST', body: submission };
+		const res = await this.performRequest(this.submissionPath, options);
+		return res;
 	}
 
 	async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
-		const res = await this.performRequest('html-to-image', 'POST', req, false);
-		if (res.status !== 200) {
-			throw new Error(await res.text());
-		}
-		// const { image } = camelCaseKeys(await res.json());
-		// return image;
-		return camelCaseKeys(await res.json());
+		const options: RequestOptions = { method: 'POST', body: req, snakeCaseBody: false };
+		const res = await this.performRequest('html-to-image', options);
+		return res;
 	}
 
 	async createBracket(bracket: BracketReq): Promise<BracketRes> {
-		const res = await this.performRequest(this.bracketPath, 'POST', bracket);
-		if (res.status !== 201) {
-			throw new Error('Failed to create bracket');
-		}
-		return camelCaseKeys(await res.json());
+		const options: RequestOptions = { method: 'POST', body: bracket };
+		const res = await this.performRequest(this.bracketPath, options);
+		return res;
 	}
 
 	async deleteBracket(id: number): Promise<void> {
-		const res = await this.performRequest(`${this.bracketPath}/${id}`, 'DELETE');
-		if (res.status !== 204) {
-			throw new Error('Failed to delete bracket');
-		}
+		await this.performRequest(`${this.bracketPath}/${id}`, { method: 'DELETE', camelCaseResponse: false });
 	}
 
 	async setActive(id: number, active: boolean): Promise<boolean> {
-		const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`
-		const res = await this.performRequest(path, 'POST');
-		if (res.status !== 200) {
-			throw new Error('Failed to set active');
-		}
-		const activated = await res.json();
-		return activated;
+		const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
+		const options: RequestOptions = { method: 'POST', camelCaseResponse: false };
+		const res = await this.performRequest(path, options);
+		return res;
 	}
+	async performRequest(path: string, options: RequestOptions = {}): Promise<any> {
+		let {
+			method = 'GET',
+			body = {},
+			snakeCaseBody = true,
+			camelCaseResponse = true,
+		} = options;
 
-
-	async performRequest(path: string, method: string, body: any = {}, snakeCase: boolean = true): Promise<Response> {
-		if (snakeCase) {
+		if (snakeCaseBody) {
 			body = snakeCaseKeys(body);
 		}
 		const request = {
@@ -117,12 +99,26 @@ class BracketApi {
 			// pass params as query string
 			path += '?' + Object.entries(body).map(([key, value]) => `${key}=${value}`).join('&');
 		}
-		// console.log(path)
-		// console.log(request)
+		try {
+			const response = await fetch(`${this.baseUrl}${path}`, request);
 
-		return await fetch(`${this.baseUrl}${path}`, request);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			let responseData = await response.json();
+
+			if (camelCaseResponse) {
+				responseData = camelCaseKeys(responseData);
+			}
+
+			return responseData;
+		} catch (error) {
+			Sentry.captureException(error);
+			throw error;
+		}
+
 	}
-
 }
 
 // Utility function to convert snake_case to camelCase
