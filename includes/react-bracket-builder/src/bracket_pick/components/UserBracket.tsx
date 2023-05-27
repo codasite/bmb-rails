@@ -121,7 +121,6 @@ const UserBracket = (props: UserBracketProps) => {
 
 
 	const handleApparelClick = () => {
-		thisdoesntexist()
 		const id = bracketId || bracketRes?.id;
 		if (!id || !matchTree) {
 			console.error('no bracket id or match tree')
