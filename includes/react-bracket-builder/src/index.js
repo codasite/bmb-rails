@@ -11,8 +11,6 @@ import * as Sentry from '@sentry/react';
 import './style/main.scss';
 const sentryEnv = wpbb_ajax_obj.sentry_env
 const sentryDsn = wpbb_ajax_obj.sentry_dsn
-console.log('sentry env', sentryEnv)
-console.log('sentry dsn', sentryDsn)
 
 if (sentryDsn) {
 	console.log('init sentry')

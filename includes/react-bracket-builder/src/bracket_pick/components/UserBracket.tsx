@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import * as Sentry from '@sentry/react';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { bracketApi } from '../../api/bracketApi';
@@ -135,6 +136,7 @@ const UserBracket = (props: UserBracketProps) => {
 		}).catch((err) => {
 			setProcessingImage(false)
 			console.error(err)
+			Sentry.captureException(err)
 		})
 	}
 

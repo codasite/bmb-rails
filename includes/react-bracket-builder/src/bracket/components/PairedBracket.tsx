@@ -315,7 +315,6 @@ const MatchColumn = (props: MatchColumnProps) => {
 		const finalMatch = round.matches[0]
 		// find the team box to align the final match to
 		const alignTeam = document.getElementsByClassName('wpbb-team-1-1-left') // should generate this with function
-		console.log('alignTeam', alignTeam)
 		// const alignBox = alignTeam.getBoundingClientRect()
 		// console.log('alignBox', alignBox)
 	}
