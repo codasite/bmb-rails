@@ -1,5 +1,7 @@
+import React from 'react';
 import App from "./App";
 import { render } from '@wordpress/element';
+import * as Sentry from '@sentry/react';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 // import Gallery from './preview/Gallery';
 
@@ -7,6 +9,24 @@ import { render } from '@wordpress/element';
  * Import the stylesheet for the plugin.
  */
 import './style/main.scss';
+
+
+// Init Sentry
+Sentry.init({
+	dsn: "https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752",
+	integrations: [
+		new Sentry.BrowserTracing({
+			// Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+			tracePropagationTargets: ["localhost", /^https:\/\/backmybracket\.com/],
+		}),
+		new Sentry.Replay(),
+	],
+	// Performance Monitoring
+	tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+	// Session Replay
+	replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+	replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+});
 
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./settings/components/Settings'))
