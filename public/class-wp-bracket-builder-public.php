@@ -126,6 +126,7 @@ class Wp_Bracket_Builder_Public {
 
 		// Only get product details on product pages.
 		$gallery_images = $product ? get_product_gallery($product) : array();
+		$color_options = $product ? $this->get_attribute_options($product, 'color') : array();
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
@@ -146,6 +147,7 @@ class Wp_Bracket_Builder_Public {
 
 				'bracket_url' => $bracket_url, // used for preview page
 				'gallery_images' => $gallery_images, // used for preview page
+				'color_options' => $color_options, // used for preview page
 			)
 		);
 	}
@@ -193,6 +195,20 @@ class Wp_Bracket_Builder_Public {
 		$redirect_url = get_term_link($category_slug, 'product_cat');
 		return $redirect_url;
 	}
+
+	// public function get_variation_attribute(int $variation_id, string $attribute_name) {
+	// 	$variation = wc_get_product($variation_id);
+	// 	$variation_attributes = $variation->get_attributes();
+	// 	$variation_attribute = $variation_attributes[$attribute_name];
+	// 	return $variation_attribute;
+	// }
+	// get all attribute options for a product
+	public function get_attribute_options(mixed $product, string $attribute_name) {
+		$attributes = $product->get_attributes();
+		$attribute = $attributes[$attribute_name];
+		$attribute_options = $attribute->get_options();
+		return $attribute_options;
+	}
 }
 
 /**
@@ -205,20 +221,25 @@ class Wp_Bracket_Builder_Public {
 function get_product_gallery($product) {
 	// get all gallery images for the product
 	$attachment_ids = $product->get_gallery_image_ids();
-	$gallery_image_urls = get_image_urls($attachment_ids);
-	return $gallery_image_urls;
+	$gallery_images = get_images($attachment_ids);
+	return $gallery_images;
 }
 
-function get_image_urls($image_ids) {
-	$image_urls = array();
+function get_images($image_ids) {
+	$images = array();
 
 	foreach ($image_ids as $imageId) {
-		$imageSrc = wp_get_attachment_image_src($imageId, 'full');
-		$imageUrl = $imageSrc[0];
-		$image_urls[] = $imageUrl;
+		// $imageSrc = wp_get_attachment_image_src($imageId, 'full');
+		// $imageUrl = $imageSrc[0];
+		// $image_urls[] = $imageUrl;
+		$image_attrs = array(
+			'src' => wp_get_attachment_url($imageId),
+			'title' => get_the_title($imageId),
+		);
+		$images[] = $image_attrs;
 	}
 
-	return $image_urls;
+	return $images;
 }
 
 // // Add the bracket url to the cart item data
