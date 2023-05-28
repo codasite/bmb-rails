@@ -67,7 +67,6 @@ function renderBracketBuilder(wpbb_ajax_obj) {
 
 function renderPreview(wpbb_ajax_obj) {
 	const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
-	console.log(wpbb_ajax_obj)
 
 	if (previewDiv) {
 		// ---------- Start Preview Page Logic ----------------
