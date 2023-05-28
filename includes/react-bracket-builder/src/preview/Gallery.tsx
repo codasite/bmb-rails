@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Thumbnails from './Thumbnails';
 import ImageGallery from 'react-image-gallery';
+import * as Sentry from '@sentry/react';
 
 interface GalleryImage {
   src: string;
@@ -42,53 +43,63 @@ const Gallery: React.FC<GalleryProps> = ({ overlayUrl, galleryImages, colorOptio
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([]);
 
-  // Store image configs in a ref so we can access them in the colorSelectChangeHandler
   const imageConfigsRef = useRef<ProductImageConfig[]>(imageConfigs);
 
   useEffect(() => {
+    // Store image configs in a ref so we can access them in the colorSelectChangeHandler
     imageConfigsRef.current = imageConfigs;
   }, [imageConfigs]);
 
 
-  // Update imageUrls.
   useEffect(() => {
-    initImages()
+    const imageConfigsPromise = buildImageConfigs();
+    const domContentLoadedPromise = createDomContentLoadedPromise();
+
+    // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
+    Promise.all([imageConfigsPromise, domContentLoadedPromise])
+      .then(([imageConfigs]) => {
+        setImageConfigs(imageConfigs);
+        initImages(imageConfigs);
+      })
+      .catch(error => {
+        console.error('An error occurred:', error);
+        Sentry.captureException(error);
+      });
   }, []);
 
-  const initImages = async () => {
-    const imageConfigs = await buildImageConfigs();
-    setImageConfigs(imageConfigs);
+  // This function is called when the image configs are ready and the DOM content is loaded.
+  // It sets the initial image URLs and attaches the select listener.
+  const initImages = (imageConfigs: ProductImageConfig[]) => {
+    const selectElement = document.querySelector('select#color') as HTMLSelectElement | null;
 
-    const selectElement = document.querySelector('select#color') as HTMLSelectElement;
-
-    // If the select element exists, filter by color and add a change listener.
     if (selectElement?.value) {
       let color = selectElement.value;
       const newUrls = getImageUrlsForColor(imageConfigs, color);
       setImageUrls(newUrls);
       selectElement.addEventListener('change', colorSelectChangeHandler);
     } else {
-      // Else, set the image URLs for all colors.
-      setImageUrls(imageConfigs.map((config) => {
-        return config.url;
-      }
-      ));
+      setImageUrls(imageConfigs.map((config) => config.url));
     }
   }
 
-  // The product page is using the default woocommerce variation selector. We need to
-  // listen to this selector in order to know when to update the gallery, so
-  // attach a listener to the select element. 
   const colorSelectChangeHandler = (event: Event) => {
     const target = event.target as HTMLSelectElement;
+    const imageConfigs = imageConfigsRef.current;
     if (target?.value) {
       let color = target.value;
       // Use the image configs stored in the ref to get the image URLs for the selected color.
       // Needed because this handler is attached to the select element, which is not part of react.
-      const newUrls = getImageUrlsForColor(imageConfigsRef.current, color);
-      setImageUrls(newUrls);
-    };
-  }
+      const newUrls = getImageUrlsForColor(imageConfigs, color);
+      if (newUrls.length > 0) {
+        return setImageUrls(newUrls);
+      }
+    } else {
+      const urls = imageConfigs.map(config => {
+        return config.url
+      })
+      setImageUrls(urls);
+    }
+  };
 
   const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
     const promises = galleryImages.map((image) => {
@@ -129,7 +140,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayUrl, galleryImages, colorOptio
       overlayParams,
     } = parseImageParams(brackgroundImageTitle, colorOptions);
 
-    const url = orientation === ProductImageOrientation.BACK && overlayParams
+    const url = orientation === ProductImageOrientation.BACK && overlayParams && overlayUrl
       ? await addOverlay(backgroundImageUrl, overlayUrl, overlayParams)
       : backgroundImageUrl;
 
@@ -161,8 +172,6 @@ const getImageUrlsForColor = (configs: ProductImageConfig[], color: string): str
     return config.url;
   });
 }
-
-
 
 const compareProductAttributes = (str1: string, str2: string): boolean => {
   // Do a case-insensitive comparison of two strings, ignoring whitespace, underscores, and hyphens.
@@ -290,6 +299,21 @@ function loadImage(imageElement: HTMLImageElement): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     imageElement.addEventListener('load', () => resolve(), false);
     imageElement.addEventListener('error', (error) => reject(error), false);
+  });
+}
+
+function createDomContentLoadedPromise(): Promise<void> {
+  return new Promise<void>((resolve) => {
+    const handleDOMContentLoaded = () => {
+      resolve();
+      document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
+    };
+
+    if (document.readyState === 'complete' || document.readyState === 'interactive') {
+      resolve();
+    } else {
+      document.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
+    }
   });
 }
 
