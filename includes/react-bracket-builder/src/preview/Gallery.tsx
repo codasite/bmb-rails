@@ -93,12 +93,11 @@ const Gallery: React.FC<GalleryProps> = ({ overlayUrl, galleryImages, colorOptio
       if (newUrls.length > 0) {
         return setImageUrls(newUrls);
       }
-    } else {
-      const urls = imageConfigs.map(config => {
-        return config.url
-      })
-      setImageUrls(urls);
     }
+    const urls = imageConfigs.map(config => {
+      return config.url
+    })
+    setImageUrls(urls);
   };
 
   const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
