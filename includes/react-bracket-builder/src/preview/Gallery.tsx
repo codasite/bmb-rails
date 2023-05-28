@@ -2,9 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import Thumbnails from './Thumbnails';
 import ImageGallery from 'react-image-gallery';
 
+interface GalleryImage {
+  src: string;
+  title: string;
+}
+
 interface GalleryProps {
-  bracketImageUrl: string,
-  galleryImages: string[];
+  overlayUrl: string,
+  galleryImages: GalleryImage[];
+  colorOptions: string[];
 }
 
 // An enum called ProductImageOrientation 
@@ -15,14 +21,13 @@ enum ProductImageOrientation {
 
 interface ProductImageConfig {
   url: string;
-  variationColor: string;
+  variationColor?: string;
 }
 
 interface ProductImageParams {
-  productSlug: string;
-  variationColor: string;
-  orientation: string;
-  overlayParams: ImageOverlayParams;
+  variationColor?: string;
+  orientation?: string;
+  overlayParams?: ImageOverlayParams;
 }
 
 interface ImageOverlayParams {
@@ -31,7 +36,7 @@ interface ImageOverlayParams {
   yCenter: number;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ bracketImageUrl, galleryImages }) => {
+const Gallery: React.FC<GalleryProps> = ({ overlayUrl, galleryImages, colorOptions }) => {
   // URLs of images to display in the gallery. This is updated
   // when the select listener is triggered.
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -86,8 +91,8 @@ const Gallery: React.FC<GalleryProps> = ({ bracketImageUrl, galleryImages }) => 
   }
 
   const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
-    const promises = galleryImages.map((imageUrl) => {
-      return buildProductImageConfig(imageUrl, bracketImageUrl);
+    const promises = galleryImages.map((image) => {
+      return buildProductImageConfig(image, overlayUrl);
     });
 
     const configs = await Promise.allSettled(promises).then(res => {
@@ -97,11 +102,43 @@ const Gallery: React.FC<GalleryProps> = ({ bracketImageUrl, galleryImages }) => 
       }).map((promise) => {
         return (promise as PromiseFulfilledResult<ProductImageConfig>).value;
       })
+      // get promisses that failed
+      const rejectedPromises = res.filter((promise) => {
+        return promise.status === 'rejected'
+      })
+      // log rejected promises
+      rejectedPromises.forEach((promise) => {
+        console.error(promise);
+      })
       return fulfilledConfigs
     }).catch(error => {
       console.error(error);
     });
     return configs ? configs : [];
+  }
+
+  const buildProductImageConfig = async (image: GalleryImage, overlayUrl): Promise<ProductImageConfig> => {
+    const {
+      src: backgroundImageUrl,
+      title: brackgroundImageTitle,
+    } = image;
+
+    const {
+      variationColor,
+      orientation,
+      overlayParams,
+    } = parseImageParams(brackgroundImageTitle, colorOptions);
+
+    const url = orientation === ProductImageOrientation.BACK && overlayParams
+      ? await addOverlay(backgroundImageUrl, overlayUrl, overlayParams)
+      : backgroundImageUrl;
+
+    const config: ProductImageConfig = {
+      url,
+      variationColor,
+    };
+
+    return config;
   }
 
   const images = imageUrls.map((image) => {
@@ -119,101 +156,71 @@ const Gallery: React.FC<GalleryProps> = ({ bracketImageUrl, galleryImages }) => 
 
 const getImageUrlsForColor = (configs: ProductImageConfig[], color: string): string[] => {
   return configs.filter((config) => {
-    return compareProductAttributes(config.variationColor, color);
+    return config.variationColor && compareProductAttributes(config.variationColor, color);
   }).map((config) => {
     return config.url;
   });
 }
 
 
-const buildProductImageConfig = async (imageUrl: string, overlayUrl): Promise<ProductImageConfig> => {
-  const {
-    variationColor,
-    orientation,
-    overlayParams,
-  } = parseImageParams(imageUrl);
-
-  const url = orientation === ProductImageOrientation.BACK ? await addOverlay(imageUrl, overlayUrl, overlayParams) : imageUrl;
-
-  const config: ProductImageConfig = {
-    url,
-    variationColor,
-  };
-
-  return config;
-}
 
 const compareProductAttributes = (str1: string, str2: string): boolean => {
   // Do a case-insensitive comparison of two strings, ignoring whitespace, underscores, and hyphens.
-  const formattedStr1 = str1.trim().toLowerCase().replace(/[-_\s]/g, '');
-  const formattedStr2 = str2.trim().toLowerCase().replace(/[-_\s]/g, '');
+  const formattedStr1 = normalizeString(str1);
+  const formattedStr2 = normalizeString(str2);
 
   return formattedStr1 === formattedStr2;
 }
 
-
-const parseImageParams = (imageUrl: string): ProductImageParams => {
-  const filename = extractFilenameFromUrl(imageUrl);
-  if (!filename) {
-    throw new Error('Unable to extract filename from image URL.');
-  }
-  const params = filename.split('_');
-
-  if (params.length < 6) {
-    throw new Error('Received too few parameters in image URL.');
-  }
-  // unpack params
-  const [productSlug, variationColor, orientation, width, xCenter, yCenter, ...rest] = params;
-
-  // validate that orientation is either 'front' or 'back'
-  if (orientation !== ProductImageOrientation.FRONT && orientation !== ProductImageOrientation.BACK) {
-    throw new Error(`Unexpected orientation value in image URL: ${orientation}`);
-  }
-
-  // validate that width is a number prefixed with 'w'
-  const widthRegex = /^w\d+$/;
-  if (!widthRegex.test(width)) {
-    throw new Error(`Unexpected width value in image URL: ${width}`);
-  }
-
-  // validate that xCenter and yCenter are numbers prefixed with 'xc' and 'yc'
-  const xCenterRegex = /^xc\d+$/;
-  if (!xCenterRegex.test(xCenter)) {
-    throw new Error(`Unexpected xCenter value in image URL: ${xCenter}`);
-  }
-
-  const yCenterRegex = /^yc\d+$/;
-  if (!yCenterRegex.test(yCenter)) {
-    throw new Error(`Unexpected yCenter value in image URL: ${yCenter}`);
-  }
-
-  // extract the numeric values from the strings
-  const widthValue = parseInt(width.substring(1), 10);
-  const xCenterValue = parseInt(xCenter.substring(2), 10);
-  const yCenterValue = parseInt(yCenter.substring(2), 10);
-
-  // return the parsed values
-  return {
-    productSlug,
-    variationColor,
-    orientation,
-    overlayParams: {
-      width: widthValue,
-      xCenter: xCenterValue,
-      yCenter: yCenterValue,
-    },
-  };
+const normalizeString = (str: string): string => {
+  // Normalize a string by removing whitespace, underscores, and hyphens, and converting to lowercase.
+  return str.trim().toLowerCase().replace(/[-_\s]/g, '');
 }
 
-function extractFilenameFromUrl(url): string | null {
-  // Extract the filename from the URL and strip the file extension.
-  let filename = url.split('/').pop()
-  // strip file extension from filename
-  const dotIndex = filename.lastIndexOf('.');
-  if (dotIndex !== -1) {
-    filename = filename.substring(0, dotIndex);
+const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductImageParams => {
+  // extract a matching value in the colorOptions array from the image title
+  const normalizedTitle = normalizeString(imageTitle);
+  const normalizedColors = colorOptions.map((color) => {
+    return normalizeString(color);
+  });
+
+  // get the colorOption where the corresponding normalizedColor is included in the normalizedTitle
+  const variationColor = colorOptions.find((colorOption, index) => {
+    return normalizedTitle.includes(normalizedColors[index]);
+  });
+
+  let orientation: string | undefined;
+  // const orientation = normalizedTitle.includes('back') ? ProductImageOrientation.BACK : ProductImageOrientation.FRONT;
+  if (normalizedTitle.includes('back')) {
+    orientation = ProductImageOrientation.BACK;
+  } else if (normalizedTitle.includes('front')) {
+    orientation = ProductImageOrientation.FRONT;
   }
-  return filename;
+
+  const widthRegex = /w\d+/;
+  const widthMatch = normalizedTitle.match(widthRegex);
+  const width = widthMatch ? widthMatch[0] : null;
+
+  const xCenterRegex = /xc\d+/;
+  const xCenterMatch = normalizedTitle.match(xCenterRegex);
+  const xCenter = xCenterMatch ? xCenterMatch[0] : null;
+
+  const yCenterRegex = /yc\d+/;
+  const yCenterMatch = normalizedTitle.match(yCenterRegex);
+  const yCenter = yCenterMatch ? yCenterMatch[0] : null;
+
+  const imageParams: ProductImageParams = {
+    variationColor,
+    orientation
+  }
+  if (width && xCenter && yCenter) {
+    imageParams.overlayParams = {
+      width: parseInt(width.substring(1), 10),
+      xCenter: parseInt(xCenter.substring(2), 10),
+      yCenter: parseInt(yCenter.substring(2), 10),
+    }
+  }
+  return imageParams;
 }
 
 // This is the big function that overlays the bracket on the image.

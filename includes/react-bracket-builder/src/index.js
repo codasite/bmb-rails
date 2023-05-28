@@ -67,6 +67,7 @@ function renderBracketBuilder(wpbb_ajax_obj) {
 
 function renderPreview(wpbb_ajax_obj) {
 	const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
+	console.log(wpbb_ajax_obj)
 
 	if (previewDiv) {
 		// ---------- Start Preview Page Logic ----------------
@@ -74,12 +75,12 @@ function renderPreview(wpbb_ajax_obj) {
 		// product page for the component to be rendered.
 		const {
 			bracket_url,
-			default_product_color,
 			gallery_images,
+			color_options,
 		} = wpbb_ajax_obj
 		// Render the preview component into the DOM
 		// Find the location to render the gallery component, and render the gallery component.
-		render(<App><Gallery default_color={default_product_color} bracketImageUrl={bracket_url} galleryImages={gallery_images} /></App>, previewDiv);
+		render(<App><Gallery overlayUrl={bracket_url} galleryImages={gallery_images} colorOptions={color_options} /></App>, previewDiv);
 	}
 }
 
