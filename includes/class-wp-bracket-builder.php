@@ -198,6 +198,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		$this->loader->add_action('init', $plugin_public, 'add_shortcodes');
+		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data');
 	}
 
 	/**

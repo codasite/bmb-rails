@@ -209,6 +209,17 @@ class Wp_Bracket_Builder_Public {
 		$attribute_options = $attribute->get_options();
 		return $attribute_options;
 	}
+
+	// Add the bracket url to the cart item data
+	// This method should be attached to the woocommerce_add_cart_item_data filter
+	public function add_bracket_to_cart_item_data($cart_item_data) {
+		echo 'add_bracket_to_cart_item_data';
+		$utils = new Wp_Bracket_Builder_Utils();
+		$bracket_url = $utils->get_session_value('bracket_url');
+
+		$cart_item_data['bracket_url'] = $bracket_url;
+		return $cart_item_data;
+	}
 }
 
 /**
