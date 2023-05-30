@@ -198,7 +198,9 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		$this->loader->add_action('init', $plugin_public, 'add_shortcodes');
-		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data');
+		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data', 10, 3);
+		$this->loader->add_action('woocommerce_checkout_create_order_line_item', $plugin_public, 'add_bracket_to_order_item', 10, 4);
+		$this->loader->add_action('woocommerce_payment_complete', $plugin_public, 'handle_payment_complete');
 	}
 
 	/**
