@@ -124,9 +124,10 @@ class Wp_Bracket_Builder_Public {
 		$bracket_url = $utils->get_session_value('bracket_url');
 
 
+		$is_bracket_product = $product && $this->product_has_category($product, 'bracket-ready');
 		// Only get product details on product pages.
-		$gallery_images = $product ? get_product_gallery($product) : array();
-		$color_options = $product ? $this->get_attribute_options($product, 'color') : array();
+		$gallery_images = $is_bracket_product ? get_product_gallery($product) : array();
+		$color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
@@ -196,15 +197,12 @@ class Wp_Bracket_Builder_Public {
 		return $redirect_url;
 	}
 
-	// public function get_variation_attribute(int $variation_id, string $attribute_name) {
-	// 	$variation = wc_get_product($variation_id);
-	// 	$variation_attributes = $variation->get_attributes();
-	// 	$variation_attribute = $variation_attributes[$attribute_name];
-	// 	return $variation_attribute;
-	// }
 	// get all attribute options for a product
 	public function get_attribute_options(mixed $product, string $attribute_name) {
 		$attributes = $product->get_attributes();
+		if (!array_key_exists($attribute_name, $attributes)) {
+			return array();
+		}
 		$attribute = $attributes[$attribute_name];
 		$attribute_options = $attribute->get_options();
 		return $attribute_options;
@@ -212,13 +210,60 @@ class Wp_Bracket_Builder_Public {
 
 	// Add the bracket url to the cart item data
 	// This method should be attached to the woocommerce_add_cart_item_data filter
-	public function add_bracket_to_cart_item_data($cart_item_data) {
-		echo 'add_bracket_to_cart_item_data';
-		$utils = new Wp_Bracket_Builder_Utils();
-		$bracket_url = $utils->get_session_value('bracket_url');
-
-		$cart_item_data['bracket_url'] = $bracket_url;
+	public function add_bracket_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
+		$product = wc_get_product($product_id);
+		if ($this->product_has_category($product, 'bracket-ready')) {
+			$utils = new Wp_Bracket_Builder_Utils();
+			$bracket_url = $utils->get_session_value('bracket_url');
+			$cart_item_data['bracket_url'] = $bracket_url;
+		}
 		return $cart_item_data;
+	}
+
+	// Add the bracket url to the order line item data when the order is created
+	public function add_bracket_to_order_item( $item, $cart_item_key, $values, $order ) {
+    if ( array_key_exists( 'bracket_url', $values ) ) {
+        $item->add_meta_data( 'bracket_url', $values['bracket_url'] );
+    }
+	}
+
+	public function handle_payment_complete($order_id) {
+    $order = wc_get_order($order_id);
+    if( $order ){
+        $items = $order->get_items();
+        foreach ( $items as $item ) {
+						$product = $item->get_product();
+						$is_bracket_product = $this->product_has_category($product, 'bracket-ready');
+						if ($is_bracket_product) {
+							$this->handle_bracket_product_item($order, $item);
+						}
+        }
+    }
+	}
+
+	private function handle_bracket_product_item($order, $item) {
+		$item_arr = array();
+		$bracket_url = $item->get_meta( 'bracket_url', true );
+		$item_arr['bracket_url'] = $bracket_url;
+		$item_arr['order_id'] = $order->get_id();
+		$item_arr['data'] = $item->get_data();
+		$item_arr['meta'] = $item->get_meta_data();
+		$item_arr['item_id'] = $item->get_id();
+    $utils = new Wp_Bracket_Builder_Utils();
+    $utils->log_sentry_message(json_encode($item_arr));
+	}
+
+	private function build_attachment_filename($order, $item) {
+		$order_id = $order->get_id();
+		$item_id = $item->get_id();
+	}
+
+	private function product_has_category($product, $category_slug) {
+		if ($product->is_type('variation')) {
+			return has_term( $category_slug, 'product_cat', $product->get_parent_id() );
+		} else {
+			return has_term( $category_slug, 'product_cat', $product->get_id() );
+		}
 	}
 }
 
