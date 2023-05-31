@@ -58,7 +58,7 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 		// // get the response body as json
 		// $res_body = json_decode(wp_remote_retrieve_body($res));
 
-		$lambda_service = new LambdaService();
+		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
 		$res = $lambda_service->html_to_image($body);
 
 		if (!is_wp_error($res) && isset($res->imageUrl)) {
