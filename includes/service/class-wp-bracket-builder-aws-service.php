@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 
 use Aws\Lambda\LambdaClient;
