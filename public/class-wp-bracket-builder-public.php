@@ -2,6 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-aws-service.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -221,48 +222,60 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	// Add the bracket url to the order line item data when the order is created
-	public function add_bracket_to_order_item( $item, $cart_item_key, $values, $order ) {
-    if ( array_key_exists( 'bracket_url', $values ) ) {
-        $item->add_meta_data( 'bracket_url', $values['bracket_url'] );
-    }
+	public function add_bracket_to_order_item($item, $cart_item_key, $values, $order) {
+		if (array_key_exists('bracket_url', $values)) {
+			$item->add_meta_data('bracket_url', $values['bracket_url']);
+		}
 	}
 
 	public function handle_payment_complete($order_id) {
-    $order = wc_get_order($order_id);
-    if( $order ){
-        $items = $order->get_items();
-        foreach ( $items as $item ) {
-						$product = $item->get_product();
-						$is_bracket_product = $this->product_has_category($product, 'bracket-ready');
-						if ($is_bracket_product) {
-							$this->handle_bracket_product_item($order, $item);
-						}
-        }
-    }
+		$order = wc_get_order($order_id);
+		if ($order) {
+			$items = $order->get_items();
+			foreach ($items as $item) {
+				$product = $item->get_product();
+				$is_bracket_product = $this->product_has_category($product, 'bracket-ready');
+				if ($is_bracket_product) {
+					$this->handle_bracket_product_item($order, $item);
+				}
+			}
+		}
 	}
 
 	private function handle_bracket_product_item($order, $item) {
 		$item_arr = array();
-		$bracket_url = $item->get_meta( 'bracket_url', true );
+		$bracket_url = $item->get_meta('bracket_url', true);
 		$item_arr['bracket_url'] = $bracket_url;
 		$item_arr['order_id'] = $order->get_id();
 		$item_arr['data'] = $item->get_data();
 		$item_arr['meta'] = $item->get_meta_data();
 		$item_arr['item_id'] = $item->get_id();
-    $utils = new Wp_Bracket_Builder_Utils();
-    $utils->log_sentry_message(json_encode($item_arr));
+
+		$s3_filename = $this->build_gelato_attachment_filename($order, $item);
+
+		$item_arr['s3-filename'] = $s3_filename;
+
+		$s3_service = new Wp_Bracket_Builder_S3_Service();
+		$source_key = $s3_service->extract_key_from_url($bracket_url);
+		// Copy bracket image to gelato bucket
+		$s3_service->copy('wpbb-gelato-orders', $s3_filename, 'wpbb-bracket-images', $source_key);
+
+		$utils = new Wp_Bracket_Builder_Utils();
+		$utils->log_sentry_message(json_encode($item_arr));
 	}
 
-	private function build_attachment_filename($order, $item) {
+	private function build_gelato_attachment_filename($order, $item) {
 		$order_id = $order->get_id();
 		$item_id = $item->get_id();
+		$filename = $order_id . '_' . $item_id . '.png';
+		return $filename;
 	}
 
 	private function product_has_category($product, $category_slug) {
 		if ($product->is_type('variation')) {
-			return has_term( $category_slug, 'product_cat', $product->get_parent_id() );
+			return has_term($category_slug, 'product_cat', $product->get_parent_id());
 		} else {
-			return has_term( $category_slug, 'product_cat', $product->get_id() );
+			return has_term($category_slug, 'product_cat', $product->get_id());
 		}
 	}
 }

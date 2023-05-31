@@ -1,15 +1,67 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 
 use Aws\Lambda\LambdaClient;
+use Aws\S3\S3Client;
 
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
 
 #snippet-start:[php.example_code.lambda.service]
 
+class Wp_Bracket_Builder_S3_Service {
+	protected S3Client $s3Client;
 
-class LambdaService {
+	public function __construct(
+		$region = 'us-east-1',
+		$version = 'latest',
+	) {
+		if (!defined('AWS_ACCESS_KEY') || !defined('AWS_SECRET_KEY')) {
+			return;
+		}
+		$this->s3Client = new S3Client([
+			'region' => $region,
+			'version' => $version,
+			'credentials' => [
+				'key' => AWS_ACCESS_KEY,
+				'secret' => AWS_SECRET_KEY,
+			],
+		]);
+	}
+	public function upload($bucket, $key, $file) {
+		$result = $this->s3Client->putObject([
+			'Bucket' => $bucket,
+			'Key' => $key,
+			'SourceFile' => $file,
+		]);
+		return $result;
+	}
+
+	public function copy($destination_bucket, $destination_key, $source_bucket, $source_key) {
+		try {
+			$result = $this->s3Client->copyObject([
+				'Bucket' => $destination_bucket,
+				'Key' => $destination_key,
+				'CopySource' => $source_bucket . '/' . $source_key,
+			]);
+			return $result;
+		} catch (Exception $e) {
+			$utils = new Wp_Bracket_Builder_Utils();
+			$utils->log_sentry_error($e);
+		}
+	}
+
+	public function extract_key_from_url($url) {
+		$parsed = parse_url($url);
+		$path = $parsed['path'];
+		$parts = explode('/', $path);
+		$key = $parts[count($parts) - 1];
+		return $key;
+	}
+}
+
+class Wp_Bracket_Builder_Lambda_Service {
 	protected LambdaClient $lambdaClient;
 
 	public function __construct(
