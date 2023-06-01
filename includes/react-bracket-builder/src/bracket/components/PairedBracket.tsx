@@ -14,7 +14,7 @@ const defaultMatchGap = 20
 const depth4MatchGap = 12
 const depth5MatchGap = 4
 
-const fourRoundHeight = 583
+const fourRoundHeight = 544
 const fiveRoundHeight = 806
 const sixRoundHeight = 1100
 // const sixRoundHeight = 854
@@ -159,6 +159,8 @@ const MatchBox = (props: MatchBoxProps) => {
 		spacing,
 		updateTeam,
 		pickTeam,
+		roundIndex,
+		matchIndex,
 	} = props
 
 	if (match === null) {
@@ -194,17 +196,33 @@ const MatchBox = (props: MatchBoxProps) => {
 
 	const team1Wins = match.result && match.result === match.team1 ? true : false
 	const team2Wins = match.result && match.result === match.team2 ? true : false
+	const finalMatch = roundIndex === 0 && matchIndex === 0
+	// const pickedWinner = match.result ? true : false
+	const pickedWinner = true;
+
+
 
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
+			{finalMatch &&
+				[<div className='wpbb-winner-container'>
+					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>WINNER</span>
+					<TeamSlot
+						className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+						team={match.result}
+					/>
+				</div>,
+				<BracketLogo className="wpbb-bracket-logo" />
+				]
+			}
 			<TeamSlot
 				// className='wpbb-team1'
 				winner={team1Wins}
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
-				roundIndex={props.roundIndex}
-				matchIndex={props.matchIndex}
+				roundIndex={roundIndex}
+				matchIndex={matchIndex}
 				left={true}
 			/>
 			<TeamSlot
@@ -213,8 +231,8 @@ const MatchBox = (props: MatchBoxProps) => {
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
-				roundIndex={props.roundIndex}
-				matchIndex={props.matchIndex}
+				roundIndex={roundIndex}
+				matchIndex={matchIndex}
 				left={false}
 			/>
 		</div>
@@ -628,14 +646,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
 				<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
 			</div>,
-			<div className='wpbb-winner-container'>
-				<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>WINNER</span>
-				<TeamSlot
-					className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-					team={finalRound.matches[0]?.result}
-				/>
-			</div>,
-			<BracketLogo className="wpbb-bracket-logo" />
 
 		]
 		return positioned
@@ -644,7 +654,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 	return (
 		<>
-			<div className={`wpbb-bracket wpbb-paired-${numRounds}`}>
+			<div className={`wpbb-bracket wpbb-paired-bracket wpbb-${numRounds}-rounds`}>
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
 				{renderPositioned(rounds)}
