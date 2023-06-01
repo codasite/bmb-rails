@@ -158,6 +158,11 @@
 	width: 1023px;
 }
 
+.wpbb-paired-4 {
+	@include paired-bracket();
+	width: 985px;
+}
+
 .wpbb-round {
 	display: flex;
 	flex-direction: column;
