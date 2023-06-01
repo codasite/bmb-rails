@@ -1,5 +1,7 @@
 @use 'matchbox';
-@use 'paired-matchbox';
+@use 'paired-matchbox' as *;
+@forward 'paired-matchbox';
 @use 'default-matchbox';
-@use 'paired-teams';
+@use 'paired-teams' as *;
+@forward 'paired-teams';
 @use 'default-teams';

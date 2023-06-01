@@ -1,4 +1,3 @@
-$bracket-radius: 3px;
 $team-height: 20px;
 // $team-background: #3c434a;
 $team-background: white;
@@ -35,7 +34,7 @@ $team-color: white;
 	// transform: translateX(-50%);
 }
 
-.wpbb-paired {
+@mixin paired-teams() {
 	.wpbb-team1 {
 		@include positioned-team();
 		// top: $team-offset;
@@ -90,18 +89,6 @@ $team-color: white;
 	.wpbb-team1:hover,
 	.wpbb-team2:hover {
 		cursor: pointer;
-	}
-
-	.wpbb-team-name-input {
-		width: 100%;
-		border: none !important;
-		min-height: 0 !important;
-		height: $team-height - 1 !important;
-		text-align: center;
-	}
-
-	.wpbb-team-name-input:focus {
-		border-radius: $bracket-radius - 1;
 	}
 
 	.wpbb-team-name {

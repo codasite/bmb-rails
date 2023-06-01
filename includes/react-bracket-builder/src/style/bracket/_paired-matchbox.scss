@@ -28,7 +28,7 @@ $darkblue: #010433;
 }
 
 
-.wpbb-paired {
+@mixin paired-matchbox() {
 	position: relative;
 
 
