@@ -1,4 +1,4 @@
-@use 'bracket';
+@use 'bracket/index' as br;
 
 @import 'https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&display=swap';
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
@@ -40,7 +40,7 @@
 .wpbb-bracket {
 	display: flex;
 	// font-size: x-small;
-	width: 1023px;
+	// width: 1023px;
 	margin: 0 auto;
 }
 
@@ -99,11 +99,15 @@
 
 }
 
-.wpbb-paired {
+
+@mixin paired-bracket {
 	// font-family: 'ClashDisplay-Variable';
 	font-family: 'Clash Display', sans-serif;
 	color: white;
 	position: relative;
+	@include br.paired-teams();
+	@include br.paired-matchbox();
+
 
 	.wpbb-slogan-container {
 		position: absolute;
@@ -144,6 +148,16 @@
 	}
 }
 
+.wpbb-paired-6 {
+	@include paired-bracket();
+	width: 1257px;
+}
+
+.wpbb-paired-5 {
+	@include paired-bracket();
+	width: 1023px;
+}
+
 .wpbb-round {
 	display: flex;
 	flex-direction: column;
@@ -182,6 +196,8 @@
 	}
 
 }
+
+
 
 
 .wpbb-options-form {

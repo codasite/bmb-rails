@@ -9,9 +9,27 @@ import { ReactComponent as BracketLogo } from '../../assets/logo.svg';
 // import html2canvas
 
 const teamHeight = 20
+
 const defaultMatchGap = 20
-const depth4MatchGap = 10
+const depth4MatchGap = 12
 const depth5MatchGap = 4
+
+const fourRoundHeight = 583
+const fiveRoundHeight = 806
+const sixRoundHeight = 854
+
+const targetRoundHeights = [
+	fourRoundHeight,
+	fourRoundHeight,
+	fourRoundHeight,
+	fourRoundHeight,
+	fiveRoundHeight,
+	sixRoundHeight,
+]
+
+const getTargetHeight = (numRounds: number) => {
+	return targetRoundHeights[numRounds - 1]
+}
 
 const getMatchHeight = (depth: number) => {
 	let gap = teamHeight
@@ -368,6 +386,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	}, [])
 
 	const rounds = matchTree.rounds
+	const numRounds = rounds.length
 	const canEdit = setMatchTree !== undefined && props.canEdit
 	const canPick = setMatchTree !== undefined && props.canPick
 
@@ -422,7 +441,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		setMatchTree(newMatchTree)
 	}
 
-	const targetHeight = 806;
+	const targetHeight = getTargetHeight(numRounds)
 
 	// The number of rounds sets the initial height of each match
 	// const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 1);
@@ -600,6 +619,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		return lines;
 	};
 
+
 	const renderPositioned = (rounds: Round[]): JSX.Element[] => {
 		const finalRound = rounds[0]
 		const pickedWinner = finalRound.matches[0]?.result ? true : false
@@ -621,21 +641,9 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	}
 
 
-
-
-	const team1 = getTeamClassName(4, 0, true);
-	const team2 = getTeamClassName(3, 0, true);
-	const team3 = getTeamClassName(4, 0, false);
-	const style = {
-		delay: true,
-		borderColor: '#FFFFFF',
-		borderStyle: 'solid',
-		borderWidth: 1,
-	};
-
 	return (
 		<>
-			<div className='wpbb-bracket wpbb-paired' >
+			<div className={`wpbb-bracket wpbb-paired-${numRounds}`}>
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
 				{renderPositioned(rounds)}
