@@ -197,8 +197,8 @@ const MatchBox = (props: MatchBoxProps) => {
 	const team1Wins = match.result && match.result === match.team1 ? true : false
 	const team2Wins = match.result && match.result === match.team2 ? true : false
 	const finalMatch = roundIndex === 0 && matchIndex === 0
-	// const pickedWinner = match.result ? true : false
-	const pickedWinner = true;
+	const pickedWinner = match.result ? true : false
+	// const pickedWinner = true;
 
 
 
