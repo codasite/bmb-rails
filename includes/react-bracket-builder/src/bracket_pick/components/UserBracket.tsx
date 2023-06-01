@@ -132,6 +132,7 @@ const UserBracket = (props: UserBracketProps) => {
 		setProcessingImage(true)
 		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
 			// redirect to apparel page
+			console.log(apparelUrl)
 			window.location.href = apparelUrl
 		}).catch((err) => {
 			setProcessingImage(false)
