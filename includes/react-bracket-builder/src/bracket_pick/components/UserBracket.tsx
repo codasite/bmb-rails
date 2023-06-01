@@ -142,13 +142,16 @@ const UserBracket = (props: UserBracketProps) => {
 
 	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
 	// const disableActions = processingImage
+	const numRounds = matchTree?.rounds.length;
 
 	return (
 		<div className='wpbb-bracket-container'>
-			{matchTree ? <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick /> : 'Loading...'}
-			<div className={'wpbb-bracket-actions'}>
-				<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
-			</div>
+			{matchTree ? [
+				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick />,
+				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
+					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
+				</div>
+			] : 'Loading...'}
 		</div>
 	)
 }
