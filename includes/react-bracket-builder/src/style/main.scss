@@ -1,4 +1,4 @@
-@use 'bracket';
+@use 'bracket/index' as br;
 
 @import 'https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&display=swap';
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
@@ -40,7 +40,7 @@
 .wpbb-bracket {
 	display: flex;
 	// font-size: x-small;
-	width: 1023px;
+	// width: 1023px;
 	margin: 0 auto;
 }
 
@@ -62,16 +62,45 @@
 	// font-family: 'ClashDisplay-Variable';
 	font-family: 'Clash Display', sans-serif;
 	background-color: #010433;
-	padding: 100px 0;
+	// padding: 100px 0;
+	padding-top: 120px;
+	padding-bottom: 100px;
+	min-width: fit-content;
 
 	.wpbb-bracket-actions {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-
 	}
 
-	@mixin apparel-btn {
+	&.wpbb-3-rounds {
+		padding-top: 250px;
+
+		.wpbb-bracket-actions {
+			margin-top: 220px;
+		}
+	}
+
+	&.wpbb-4-rounds {
+		.wpbb-bracket-actions {
+			margin-top: 94px;
+		}
+	}
+
+	&.wpbb-5-rounds {
+		.wpbb-bracket-actions {
+			margin-top: 50px;
+		}
+	}
+
+	&.wpbb-6-rounds {
+		.wpbb-bracket-actions {
+			margin-top: 20px;
+		}
+	}
+
+
+	%apparel-btn {
 		border-width: 4px;
 		border-style: solid;
 		border-radius: 8px;
@@ -83,33 +112,25 @@
 	}
 
 	.wpbb-apparel-btn {
-		@include apparel-btn();
+		@extend %apparel-btn;
 		background-color: #00440F;
 		border: 4px solid #05FF3C;
 		color: white;
 	}
 
 	.wpbb-apparel-btn-disabled {
-		@include apparel-btn();
+		@extend %apparel-btn;
 		background-color: transparent;
 		color: rgba(255, 255, 255, 0.2);
 		border-color: rgba(255, 255, 255, 0.2);
 	}
 
-}
-
-.wpbb-paired {
-	// font-family: 'ClashDisplay-Variable';
-	font-family: 'Clash Display', sans-serif;
-	color: white;
-	position: relative;
-
 	.wpbb-slogan-container {
+		color: white;
 		position: absolute;
-		top: -50px;
+		top: 100px;
 		left: 50%;
 		transform: translateX(-50%);
-
 	}
 
 	.wpbb-slogan-text {
@@ -117,10 +138,21 @@
 		font-size: 64px;
 		font-weight: 700;
 	}
+}
+
+
+.wpbb-paired-bracket {
+	// font-family: 'ClashDisplay-Variable';
+	font-family: 'Clash Display', sans-serif;
+	color: white;
+	position: relative;
+	@extend %paired-teams;
+	@extend %paired-matchbox;
+
+
 
 	.wpbb-winner-container {
 		position: absolute;
-		top: 150px;
 		left: 50%;
 		transform: translateX(-50%);
 		display: flex;
@@ -140,6 +172,76 @@
 		font-size: 64px;
 		font-weight: 700;
 		line-height: 79px;
+	}
+
+	.wpbb-bracket-logo {
+		width: 154px;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		color: #fff;
+	}
+
+	&.wpbb-6-rounds {
+		width: 1257px;
+
+		.wpbb-winner-container {
+			top: -200px;
+		}
+
+		.wpbb-bracket-logo {
+			bottom: -320px;
+		}
+
+		.wpbb-team1,
+		.wpbb-team2 {
+			height: 20px;
+			width: 87px;
+			font-size: 12px;
+		}
+	}
+
+	&.wpbb-5-rounds {
+		width: 1023px;
+
+		.wpbb-winner-container {
+			top: -200px;
+		}
+
+		.wpbb-bracket-logo {
+			bottom: -270px;
+		}
+
+		.wpbb-team1,
+		.wpbb-team2 {
+			height: 20px;
+			width: 87px;
+			font-size: 12px;
+		}
+	}
+
+	&.wpbb-4-rounds {
+		width: 985px;
+
+		.wpbb-winner-container {
+			top: -200px;
+		}
+
+		.wpbb-bracket-logo {
+			bottom: -300px;
+		}
+	}
+
+	&.wpbb-3-rounds {
+		width: 800px;
+
+		.wpbb-winner-container {
+			top: -200px;
+		}
+
+		.wpbb-bracket-logo {
+			bottom: -300px;
+		}
 	}
 }
 
@@ -181,6 +283,8 @@
 	}
 
 }
+
+
 
 
 .wpbb-options-form {
