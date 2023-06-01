@@ -62,7 +62,9 @@
 	// font-family: 'ClashDisplay-Variable';
 	font-family: 'Clash Display', sans-serif;
 	background-color: #010433;
-	padding: 100px 0;
+	// padding: 100px 0;
+	padding-top: 300px;
+	padding-bottom: 100px;
 	min-width: fit-content;
 
 	.wpbb-bracket-actions {
@@ -70,16 +72,20 @@
 		flex-direction: column;
 		align-items: center;
 
+		&.wpbb-3-rounds {
+			margin-top: 220px;
+		}
+
 		&.wpbb-4-rounds {
-			padding-top: 94px;
+			margin-top: 94px;
 		}
 
 		&.wpbb-5-rounds {
-			padding-top: 50px;
+			margin-top: 50px;
 		}
 
 		&.wpbb-6-rounds {
-			padding-top: 20px;
+			margin-top: 20px;
 		}
 
 	}
@@ -205,6 +211,18 @@
 
 	&.wpbb-4-rounds {
 		width: 985px;
+
+		.wpbb-winner-container {
+			top: -200px;
+		}
+
+		.wpbb-bracket-logo {
+			bottom: -300px;
+		}
+	}
+
+	&.wpbb-3-rounds {
+		width: 800px;
 
 		.wpbb-winner-container {
 			top: -200px;
