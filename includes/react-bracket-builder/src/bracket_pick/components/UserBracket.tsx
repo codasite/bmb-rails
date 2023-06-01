@@ -143,9 +143,13 @@ const UserBracket = (props: UserBracketProps) => {
 	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
 	// const disableActions = processingImage
 	const numRounds = matchTree?.rounds.length;
+	const pickedWinner = matchTree?.isComplete();
 
 	return (
 		<div className='wpbb-bracket-container'>
+			<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
+				<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
+			</div>,
 			{matchTree ? [
 				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick />,
 				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
