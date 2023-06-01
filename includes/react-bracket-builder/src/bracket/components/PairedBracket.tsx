@@ -5,7 +5,7 @@ import { Nullable } from '../../utils/types';
 import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
 import LineTo, { SteppedLineTo, Line } from 'react-lineto';
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../../assets/logo.svg';
+import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-WHITE.svg';
 // import html2canvas
 
 const teamHeight = 20
@@ -16,7 +16,8 @@ const depth5MatchGap = 4
 
 const fourRoundHeight = 583
 const fiveRoundHeight = 806
-const sixRoundHeight = 854
+const sixRoundHeight = 1100
+// const sixRoundHeight = 854
 
 const targetRoundHeights = [
 	fourRoundHeight,
