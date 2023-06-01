@@ -63,7 +63,7 @@
 	font-family: 'Clash Display', sans-serif;
 	background-color: #010433;
 	// padding: 100px 0;
-	padding-top: 300px;
+	padding-top: 120px;
 	padding-bottom: 100px;
 	min-width: fit-content;
 
@@ -71,24 +71,34 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+	}
 
-		&.wpbb-3-rounds {
+	&.wpbb-3-rounds {
+		padding-top: 250px;
+
+		.wpbb-bracket-actions {
 			margin-top: 220px;
 		}
+	}
 
-		&.wpbb-4-rounds {
+	&.wpbb-4-rounds {
+		.wpbb-bracket-actions {
 			margin-top: 94px;
 		}
+	}
 
-		&.wpbb-5-rounds {
+	&.wpbb-5-rounds {
+		.wpbb-bracket-actions {
 			margin-top: 50px;
 		}
+	}
 
-		&.wpbb-6-rounds {
+	&.wpbb-6-rounds {
+		.wpbb-bracket-actions {
 			margin-top: 20px;
 		}
-
 	}
+
 
 	%apparel-btn {
 		border-width: 4px;
@@ -115,6 +125,19 @@
 		border-color: rgba(255, 255, 255, 0.2);
 	}
 
+	.wpbb-slogan-container {
+		color: white;
+		position: absolute;
+		top: 100px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+
+	.wpbb-slogan-text {
+		white-space: nowrap;
+		font-size: 64px;
+		font-weight: 700;
+	}
 }
 
 
@@ -127,18 +150,6 @@
 	@extend %paired-matchbox;
 
 
-	.wpbb-slogan-container {
-		position: absolute;
-		top: -50px;
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
-	.wpbb-slogan-text {
-		white-space: nowrap;
-		font-size: 64px;
-		font-weight: 700;
-	}
 
 	.wpbb-winner-container {
 		position: absolute;
