@@ -1,9 +1,8 @@
-@use 'bracket/index' as br;
+@use 'bracket/index' as *;
 
 @import 'https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&display=swap';
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
-$darkblue: #010433;
 
 .image-gallery-left-nav .image-gallery-svg,
 .image-gallery-right-nav .image-gallery-svg {
@@ -50,8 +49,7 @@ $darkblue: #010433;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background-color: $darkblue;
-
+	background-color: $darkBlue;
 }
 
 .wpbb-default {
@@ -80,7 +78,7 @@ $darkblue: #010433;
 	background-image: url('../assets/BMB-ICON-BLACK.svg');
 	background-repeat: no-repeat;
 	background-position: center top;
-	color: $darkblue;
+	color: $darkBlue;
 	padding-top: 120px;
 	padding-bottom: 100px;
 	min-width: fit-content;
@@ -163,7 +161,7 @@ $darkblue: #010433;
 	}
 
 	&.wpbb-dark-mode {
-		background-color: $darkblue;
+		background-color: $darkBlue;
 		background-image: url('../assets/BMB-ICON-WHITE.svg');
 		color: #fff;
 	}
@@ -173,7 +171,7 @@ $darkblue: #010433;
 .wpbb-paired-bracket {
 	// font-family: 'ClashDisplay-Variable';
 	font-family: 'Clash Display', sans-serif;
-	color: $darkblue;
+	color: $darkBlue;
 	position: relative;
 	@extend %paired-teams;
 	@extend %paired-matchbox;
@@ -278,6 +276,14 @@ $darkblue: #010433;
 		.wpbb-bracket-logo {
 			color: #fff;
 			opacity: 1;
+		}
+
+		.wpbb-team {
+			border-color: rgba(255, 255, 255, 0.5);
+		}
+
+		.wpbb-final-winner {
+			border-color: #fff;
 		}
 	}
 }
