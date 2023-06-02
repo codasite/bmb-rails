@@ -39,8 +39,6 @@
 
 .wpbb-bracket {
 	display: flex;
-	// font-size: x-small;
-	// width: 1023px;
 	margin: 0 auto;
 }
 
@@ -54,30 +52,17 @@
 
 .wpbb-default {
 	font-size: x-small;
-	// width: 900px;
 }
-
-// .wpbb-bracket-container::before {
-// 	content: '';
-// 	background-image: url('../assets/BMB-ICON-BLACK.svg');
-// 	background-repeat: no-repeat;
-// 	background-position: center;
-// 	// background-size: cover;
-// 	position: absolute;
-// 	opacity: .03;
-// 	top: 0;
-// 	left: 0;
-// 	right: 0;
-// 	bottom: 0;
-// }
 
 .wpbb-bracket-container {
 	position: relative;
 	font-family: 'Clash Display', sans-serif;
 	background-color: #fff;
-	background-image: url('../assets/BMB-ICON-BLACK.svg');
+	background-image: url('../assets/bracket-bg-light.png');
 	background-repeat: no-repeat;
 	background-position: center top;
+	background-size: cover;
+	// background-size: contain;
 	color: $darkBlue;
 	padding-top: 160px;
 	padding-bottom: 100px;
@@ -162,14 +147,13 @@
 
 	&.wpbb-dark-mode {
 		background-color: $darkBlue;
-		background-image: url('../assets/BMB-ICON-WHITE.svg');
+		background-image: url('../assets/bracket-bg-dark.png');
 		color: #fff;
 	}
 }
 
 
 .wpbb-paired-bracket {
-	// font-family: 'ClashDisplay-Variable';
 	font-family: 'Clash Display', sans-serif;
 	color: $darkBlue;
 	position: relative;
