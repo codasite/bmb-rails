@@ -5,9 +5,10 @@ import { Nullable } from '../../utils/types';
 import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
 import LineTo, { SteppedLineTo, Line } from 'react-lineto';
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-WHITE.svg';
+import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg';
 // import html2canvas
 
+const darkBlue = '#010433'
 const teamHeight = 20
 
 const defaultMatchGap = 20
@@ -592,7 +593,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		const toAnchor = 'left';
 		const style = {
 			delay: true,
-			borderColor: '#FFFFFF',
+			borderColor: darkMode ? '#FFFFFF' : darkBlue,
 			borderStyle: 'solid',
 			borderWidth: 1,
 		};

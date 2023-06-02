@@ -59,9 +59,27 @@ $darkblue: #010433;
 	// width: 900px;
 }
 
+// .wpbb-bracket-container::before {
+// 	content: '';
+// 	background-image: url('../assets/BMB-ICON-BLACK.svg');
+// 	background-repeat: no-repeat;
+// 	background-position: center;
+// 	// background-size: cover;
+// 	position: absolute;
+// 	opacity: .03;
+// 	top: 0;
+// 	left: 0;
+// 	right: 0;
+// 	bottom: 0;
+// }
+
 .wpbb-bracket-container {
+	position: relative;
 	font-family: 'Clash Display', sans-serif;
 	background-color: #fff;
+	background-image: url('../assets/BMB-ICON-BLACK.svg');
+	background-repeat: no-repeat;
+	background-position: center top;
 	color: $darkblue;
 	padding-top: 120px;
 	padding-bottom: 100px;
@@ -98,12 +116,6 @@ $darkblue: #010433;
 			margin-top: 20px;
 		}
 	}
-
-	&.wpbb-dark-mode {
-		background-color: $darkblue;
-		color: #fff;
-	}
-
 
 	%apparel-btn {
 		border-width: 4px;
@@ -149,6 +161,12 @@ $darkblue: #010433;
 		left: 50%;
 		transform: translateX(-50%);
 	}
+
+	&.wpbb-dark-mode {
+		background-color: $darkblue;
+		background-image: url('../assets/BMB-ICON-WHITE.svg');
+		color: #fff;
+	}
 }
 
 
@@ -188,7 +206,8 @@ $darkblue: #010433;
 		position: absolute;
 		left: 50%;
 		transform: translateX(-50%);
-		color: #fff;
+		opacity: .25;
+		color: #000;
 	}
 
 	&.wpbb-6-rounds {
@@ -255,6 +274,11 @@ $darkblue: #010433;
 
 	&.wpbb-dark-mode {
 		color: #fff;
+
+		.wpbb-bracket-logo {
+			color: #fff;
+			opacity: 1;
+		}
 	}
 }
 
