@@ -1,3 +1,5 @@
+@use 'constants' as *;
+
 %positioned-team {
 	position: absolute;
 	left: 50%;
@@ -10,7 +12,8 @@
 		font-size: 16px;
 		height: 28px;
 		width: 115px;
-		border: 2px solid rgba(255, 255, 255, 0.5);
+		// border: 2px solid rgba(255, 255, 255, 0.5);
+		border: 2px solid rgba($darkBlueRGB, 0.5);
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -38,7 +41,7 @@
 		width: 257px;
 		height: 52px;
 		line-height: 44px;
-		border-color: white;
+		border-color: $darkBlue;
 		font-size: 36px;
 		font-weight: 700;
 	}
