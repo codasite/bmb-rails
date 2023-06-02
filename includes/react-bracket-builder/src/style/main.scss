@@ -67,6 +67,43 @@
 	padding-bottom: 100px;
 	min-width: fit-content;
 
+	.wpbb-theme-selector {
+		position: absolute;
+		top: 50px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		align-items: center;
+		text-transform: uppercase;
+		font-weight: 600;
+	}
+
+	.wpbb-theme-selector-text {
+		margin-right: 10px;
+	}
+
+	.wpbb-theme-selector-switch-outer {
+		display: flex;
+		align-items: center;
+		width: 71px;
+		height: 30px;
+		padding: 0 4px;
+		border-radius: 16px;
+		background-color: $darkBlue;
+	}
+
+	.wpbb-theme-selector-switch-inner {
+		width: 47px;
+		height: 22px;
+		border-radius: 16px;
+		background-color: white;
+		font-size: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding-top: 1px;
+	}
+
 	.wpbb-bracket-actions {
 		display: flex;
 		flex-direction: column;
@@ -128,13 +165,6 @@
 		white-space: nowrap;
 		font-size: 64px;
 		font-weight: 700;
-	}
-
-	.wpbb-theme-selector {
-		position: absolute;
-		top: 50px;
-		left: 50%;
-		transform: translateX(-50%);
 	}
 
 	&.wpbb-dark-mode {
