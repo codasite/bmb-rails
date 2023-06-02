@@ -52,6 +52,7 @@ const UserBracket = (props: UserBracketProps) => {
 
 	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
 	const [processingImage, setProcessingImage] = useState(false);
+	const [darkMode, setDarkMode] = useState(false);
 
 	useEffect(() => {
 		if (bracketId) {
@@ -100,7 +101,7 @@ const UserBracket = (props: UserBracketProps) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
 		return `
-			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: transparent'>
+			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: ${darkMode ? 'black' : 'white'}'>
 				${innerHTML}
 			</div>
 		`
@@ -132,8 +133,10 @@ const UserBracket = (props: UserBracketProps) => {
 		setProcessingImage(true)
 		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
 			// redirect to apparel page
-			console.log(apparelUrl)
-			window.location.href = apparelUrl
+			// console.log(apparelUrl)
+			console.log(res)
+			setProcessingImage(false)
+			// window.location.href = apparelUrl
 		}).catch((err) => {
 			setProcessingImage(false)
 			console.error(err)
@@ -147,12 +150,16 @@ const UserBracket = (props: UserBracketProps) => {
 	const pickedWinner = matchTree?.isComplete();
 
 	return (
-		<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds`}>
+		<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
 			{matchTree ? [
+				<div className='wpbb-theme-selector'>
+					<Button variant='light' onClick={() => setDarkMode(!darkMode)}>{darkMode ? 'Light Mode' : 'Dark Mode'}</Button>
+
+				</div>,
 				<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
 					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
 				</div>,
-				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick />,
+				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode />,
 				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
 					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
 				</div>

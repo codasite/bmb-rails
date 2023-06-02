@@ -377,6 +377,7 @@ interface PairedBracketProps {
 	matchTree: MatchTree;
 	canEdit?: boolean;
 	canPick?: boolean;
+	darkMode?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
@@ -384,6 +385,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
+		darkMode,
 	} = props
 
 	const [dimensions, setDimensions] = useState({
@@ -652,7 +654,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 	return (
 		<>
-			<div className={`wpbb-bracket wpbb-paired-bracket wpbb-${numRounds}-rounds`}>
+			<div className={`wpbb-bracket wpbb-paired-bracket wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
 				{rounds.length > 0 && buildRounds2(rounds)}
 				{renderLines(rounds)}
 				{renderPositioned(rounds)}
