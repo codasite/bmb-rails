@@ -88,7 +88,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 		winner,
 	} = props
 
-	const className = props.className ? props.className : getTeamClassName(roundIndex, matchIndex, left) + (winner ? ' wpbb-match-winner' : '')
+	const className = props.className ? props.className : 'wpbb-team ' + getTeamClassName(roundIndex, matchIndex, left) + (winner ? ' wpbb-match-winner' : '')
 
 	const startEditing = () => {
 		if (!updateTeam) {
@@ -210,7 +210,7 @@ const MatchBox = (props: MatchBoxProps) => {
 				[<div className='wpbb-winner-container'>
 					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>WINNER</span>
 					<TeamSlot
-						className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+						className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
 						team={match.result}
 					/>
 				</div>,
