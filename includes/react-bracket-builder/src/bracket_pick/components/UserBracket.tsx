@@ -15,6 +15,29 @@ import { BracketRes, SubmissionReq } from '../../api/types/bracket';
 
 //@ts-ignore
 
+interface ThemeSelectorProps {
+	darkMode: boolean;
+	setDarkMode: (darkMode: boolean) => void;
+}
+
+const ThemeSelector = (props: ThemeSelectorProps) => {
+	const {
+		darkMode,
+		setDarkMode,
+	} = props;
+	return (
+		<div className='wpbb-theme-selector'>
+			<span className='wpbb-theme-selector-text'>Theme</span>
+			<div className='wpbb-theme-selector-switch-outer'>
+				<div className='wpbb-theme-selector-switch-inner' onClick={() => setDarkMode(!darkMode)}>
+					<span className='wpbb-theme-selector-switch-text'>{darkMode ? 'dark' : 'light'}</span>
+				</div>
+			</div>
+		</div>
+	)
+}
+
+
 interface BuyApparelBtnProps {
 	onClick?: () => void;
 	disabled?: boolean;
@@ -152,10 +175,7 @@ const UserBracket = (props: UserBracketProps) => {
 	return (
 		<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
 			{matchTree ? [
-				<div className='wpbb-theme-selector'>
-					<Button variant='light' onClick={() => setDarkMode(!darkMode)}>{darkMode ? 'Light Mode' : 'Dark Mode'}</Button>
-
-				</div>,
+				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
 				<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
 					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
 				</div>,
