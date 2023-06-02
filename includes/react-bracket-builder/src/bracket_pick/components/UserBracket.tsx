@@ -159,7 +159,7 @@ const UserBracket = (props: UserBracketProps) => {
 				<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
 					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
 				</div>,
-				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode />,
+				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} />,
 				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
 					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
 				</div>
