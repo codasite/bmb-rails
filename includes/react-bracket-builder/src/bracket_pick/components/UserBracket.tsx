@@ -28,7 +28,7 @@ const ApparelButton = (props: BuyApparelBtnProps) => {
 		loading,
 	} = props;
 	return (
-		<button className={'wpbb-apparel-btn' + (disabled ? '-disabled' : '')} onClick={onClick} disabled={disabled}>
+		<button className={'wpbb-apparel-btn' + (disabled ? ' disabled' : '')} onClick={onClick} disabled={disabled}>
 			{props.loading ?
 				//@ts-ignore
 				<Spinner variant='light' animation="border" role="status" style={{ borderWidth: '4px' }} />

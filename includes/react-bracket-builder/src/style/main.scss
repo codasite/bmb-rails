@@ -62,7 +62,6 @@
 	background-repeat: no-repeat;
 	background-position: center top;
 	background-size: cover;
-	// background-size: contain;
 	color: $darkBlue;
 	padding-top: 160px;
 	padding-bottom: 100px;
@@ -100,29 +99,22 @@
 		}
 	}
 
-	%apparel-btn {
-		border-width: 4px;
-		border-style: solid;
+	.wpbb-apparel-btn {
+		border: none;
 		border-radius: 8px;
 		padding: 0;
 		font-size: 36px;
 		font-weight: 700;
 		width: 405.54px;
 		height: 72.18px;
-	}
+		background-color: $neonGreen;
+		color: $darkBlue;
 
-	.wpbb-apparel-btn {
-		@extend %apparel-btn;
-		background-color: #00440F;
-		border: 4px solid #05FF3C;
-		color: white;
-	}
-
-	.wpbb-apparel-btn-disabled {
-		@extend %apparel-btn;
-		background-color: transparent;
-		color: rgba(255, 255, 255, 0.2);
-		border-color: rgba(255, 255, 255, 0.2);
+		&.disabled {
+			background-color: transparent;
+			color: rgba(0, 0, 0, 0.2);
+			border: 4px solid rgba(0, 0, 0, 0.2)
+		}
 	}
 
 	.wpbb-slogan-container {
@@ -149,6 +141,18 @@
 		background-color: $darkBlue;
 		background-image: url('../assets/bracket-bg-dark.png');
 		color: #fff;
+
+		.wpbb-apparel-btn {
+			background-color: $darkGreen;
+			border: 4px solid $neonGreen;
+			color: white;
+
+			&.disabled {
+				background-color: transparent;
+				color: rgba(255, 255, 255, 0.2);
+				border-color: rgba(255, 255, 255, 0.2);
+			}
+		}
 	}
 }
 
