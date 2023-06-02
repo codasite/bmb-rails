@@ -3,6 +3,7 @@
 @import 'https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&display=swap';
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
+$darkblue: #010433;
 
 .image-gallery-left-nav .image-gallery-svg,
 .image-gallery-right-nav .image-gallery-svg {
@@ -49,7 +50,7 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	background-color: #010433;
+	background-color: $darkblue;
 
 }
 
@@ -59,10 +60,9 @@
 }
 
 .wpbb-bracket-container {
-	// font-family: 'ClashDisplay-Variable';
 	font-family: 'Clash Display', sans-serif;
-	background-color: #010433;
-	// padding: 100px 0;
+	background-color: #fff;
+	color: $darkblue;
 	padding-top: 120px;
 	padding-bottom: 100px;
 	min-width: fit-content;
@@ -99,6 +99,11 @@
 		}
 	}
 
+	&.wpbb-dark-mode {
+		background-color: $darkblue;
+		color: #fff;
+	}
+
 
 	%apparel-btn {
 		border-width: 4px;
@@ -126,7 +131,6 @@
 	}
 
 	.wpbb-slogan-container {
-		color: white;
 		position: absolute;
 		top: 100px;
 		left: 50%;
@@ -138,18 +142,23 @@
 		font-size: 64px;
 		font-weight: 700;
 	}
+
+	.wpbb-theme-selector {
+		position: absolute;
+		top: 50px;
+		left: 50%;
+		transform: translateX(-50%);
+	}
 }
 
 
 .wpbb-paired-bracket {
 	// font-family: 'ClashDisplay-Variable';
 	font-family: 'Clash Display', sans-serif;
-	color: white;
+	color: $darkblue;
 	position: relative;
 	@extend %paired-teams;
 	@extend %paired-matchbox;
-
-
 
 	.wpbb-winner-container {
 		position: absolute;
@@ -242,6 +251,10 @@
 		.wpbb-bracket-logo {
 			bottom: -300px;
 		}
+	}
+
+	&.wpbb-dark-mode {
+		color: #fff;
 	}
 }
 
