@@ -183,23 +183,25 @@ const UserBracket = (props: UserBracketProps) => {
 		// console.log('light mode')
 		// console.log(lightModeHTML)
 		const promises = [
-			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }),
-			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }),
+			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'dark' }),
+			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'light' }),
 		]
 		setProcessingImage(true)
 		Promise.all(promises).then((res) => {
-			const darkModeImage = res[0]
-			const lightModeImage = res[1]
+			// const darkModeImage = res[0]
+			// const lightModeImage = res[1]
+			// console.log('dark mode image')
+			// console.log(darkModeImage)
+			// console.log('light mode image')
+			// console.log(lightModeImage)
+			// setProcessingImage(false)
 
-			console.log('dark mode image')
-			console.log(darkModeImage)
-			console.log('light mode image')
-			console.log(lightModeImage)
-			setProcessingImage(false)
+			// redirect to apparel page
+			window.location.href = apparelUrl
 		}).catch((err) => {
-			console.error(err)
-			// Sentry.captureException(err)
 			setProcessingImage(false)
+			console.error(err)
+			Sentry.captureException(err)
 		})
 
 		// setProcessingImage(true)
