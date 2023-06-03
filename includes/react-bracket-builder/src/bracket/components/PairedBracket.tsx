@@ -592,10 +592,11 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		const fromAnchor = 'right';
 		const toAnchor = 'left';
 		const style = {
+			className: 'wpbb-bracket-line',
 			delay: true,
-			borderColor: darkMode ? '#FFFFFF' : darkBlue,
-			borderStyle: 'solid',
-			borderWidth: 1,
+			// borderColor: darkMode ? '#FFFFFF' : darkBlue,
+			// borderStyle: 'solid',
+			// borderWidth: 1,
 		};
 
 		rounds.forEach((round, roundIdx) => {
