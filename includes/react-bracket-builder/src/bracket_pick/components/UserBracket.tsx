@@ -75,7 +75,7 @@ const UserBracket = (props: UserBracketProps) => {
 
 	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
 	const [processingImage, setProcessingImage] = useState(false);
-	const [darkMode, setDarkMode] = useState(false);
+	const [darkMode, setDarkMode] = useState(true);
 
 	useEffect(() => {
 		if (bracketId) {

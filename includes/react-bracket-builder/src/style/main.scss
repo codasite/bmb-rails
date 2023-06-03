@@ -79,15 +79,17 @@
 	}
 
 	.wpbb-theme-selector-text {
-		margin-right: 10px;
+		margin-right: 16px;
 	}
 
 	.wpbb-theme-selector-switch-outer {
 		display: flex;
 		align-items: center;
+		justify-content: flex-end;
 		width: 71px;
 		height: 30px;
-		padding: 0 4px;
+		padding-left: 2px;
+		padding-right: 4px;
 		border-radius: 16px;
 		background-color: $darkBlue;
 	}
@@ -102,6 +104,10 @@
 		align-items: center;
 		justify-content: center;
 		padding-top: 1px;
+
+		&:hover {
+			cursor: pointer;
+		}
 	}
 
 	.wpbb-bracket-actions {
@@ -182,6 +188,12 @@
 				color: rgba(255, 255, 255, 0.2);
 				border-color: rgba(255, 255, 255, 0.2);
 			}
+		}
+
+		.wpbb-theme-selector-switch-outer {
+			justify-content: flex-start;
+			border: 2px solid #fff;
+			color: $darkBlue;
 		}
 	}
 }
