@@ -1,8 +1,9 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-aws-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-config.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-config-repo.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -109,21 +110,14 @@ class Wp_Bracket_Builder_Public {
 		$bracket = $bracket_repo->get(post: $post);
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
 
-
-
 		// For product page
 		$product = wc_get_product($post->ID);
 		$bracket_product_archive_url = $this->get_archive_url();
 
-
-		// // TODO: Replace with actual bracket url
-		// $bracket_url = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/SNice.svg/1200px-SNice.svg.png';
-
-		// // Set bracket url in session
-		// set_session_value('bracket_url', $bracket_url);
-		$utils = new Wp_Bracket_Builder_Utils();
-		$bracket_url = $utils->get_session_value('bracket_url');
-
+		// get the session bracket config for light and dark mode
+		$bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+		$bracket_config_light = $bracket_config_repo->get('light');
+		$bracket_config_dark = $bracket_config_repo->get('dark');
 
 		$is_bracket_product = $product && $this->product_has_category($product, 'bracket-ready');
 		// Only get product details on product pages.
@@ -147,9 +141,11 @@ class Wp_Bracket_Builder_Public {
 				'css_file' => $css_file,
 				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 
-				'bracket_url' => $bracket_url, // used for preview page
-				'gallery_images' => $gallery_images, // used for preview page
-				'color_options' => $color_options, // used for preview page
+				// For product page
+				'bracket_url_dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
+				'bracket_url_light' => $bracket_config_light ? $bracket_config_light->img_url : '',
+				'gallery_images' => $gallery_images,
+				'color_options' => $color_options,
 			)
 		);
 	}

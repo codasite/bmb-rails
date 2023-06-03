@@ -1,8 +1,9 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
-class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-config.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-config-repo.php';
 
+class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 	/**
 	 * @var string
 	 */
@@ -51,20 +52,18 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 	public function html_to_image($request) {
 		// get the entire request body
 		$body = json_decode($request->get_body(), true);
-		// if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
-		// 	return new WP_Error('error', __('There was an error converting the html to an image', 'text-domain'), array('status' => 500));
-		// }
-
-		// // get the response body as json
-		// $res_body = json_decode(wp_remote_retrieve_body($res));
+		$theme_mode = $body['themeMode'] ?? null;
+		unset($body['themeMode']);
 
 		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
 		$res = $lambda_service->html_to_image($body);
 
 		if (!is_wp_error($res) && isset($res->imageUrl)) {
+			// build a config object
+			$config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res->imageUrl);
 			// Add the image url to the user's session
-			$utils = new Wp_Bracket_Builder_Utils();
-			$utils->set_session_value('bracket_url', $res->imageUrl);
+			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+			$config_repo->add($config, $theme_mode);
 			return new WP_REST_Response($res, 200);
 		} else if (is_wp_error($res)) {
 			return $res;

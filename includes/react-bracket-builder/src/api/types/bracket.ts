@@ -99,6 +99,7 @@ export interface HTMLtoImageReq {
 	inchHeight: number;
 	inchWidth: number;
 	deviceScaleFactor?: number;
+	themeMode?: string;
 }
 
 export interface HTMLtoImageRes {
