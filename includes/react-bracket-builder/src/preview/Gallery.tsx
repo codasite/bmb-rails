@@ -83,14 +83,19 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
   const initImages = (imageConfigs: ProductImageConfig[]) => {
     const selectElement = document.querySelector('select#color') as HTMLSelectElement | null;
 
-    if (selectElement?.value) {
-      let color = selectElement.value;
-      const newUrls = getImageUrlsForColor(imageConfigs, color);
-      setImageUrls(newUrls);
-      selectElement.addEventListener('change', colorSelectChangeHandler);
-    } else {
-      setImageUrls(imageConfigs.map((config) => config.url));
+    if (!selectElement) {
+      return
     }
+
+    let urls: string[]
+    const color = selectElement.value;
+    if (color) {
+      urls = getImageUrlsForColor(imageConfigs, color);
+    } else {
+      urls = imageConfigs.map((config) => config.url);
+    }
+    setImageUrls(urls);
+    selectElement.addEventListener('change', colorSelectChangeHandler);
   }
 
   const colorSelectChangeHandler = (event: Event) => {
