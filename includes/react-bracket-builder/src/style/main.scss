@@ -206,6 +206,10 @@
 	@extend %paired-teams;
 	@extend %paired-matchbox;
 
+	.wpbb-bracket-line {
+		border-top: 1px solid $darkBlue !important;
+	}
+
 	.wpbb-winner-container {
 		position: absolute;
 		left: 50%;
@@ -319,6 +323,10 @@
 
 		.wpbb-final-winner {
 			border-color: #fff;
+		}
+
+		.wpbb-bracket-line {
+			border-top: 1px solid #fff !important;
 		}
 	}
 }

@@ -123,8 +123,13 @@ const UserBracket = (props: UserBracketProps) => {
 	const buildPrintArea = (innerHTML: string, inchHeight: number, inchWidth: number) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
+		// return `
+		// 	<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: ${darkMode ? 'black' : 'white'}'>
+		// 		${innerHTML}
+		// 	</div>
+		// `
 		return `
-			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: ${darkMode ? 'black' : 'white'}'>
+			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: transparent'>
 				${innerHTML}
 			</div>
 		`
@@ -153,18 +158,62 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 		const html = getHTML()
 
+		// console.log(html)
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(html, 'text/html');
+		const bracketEl = doc.getElementsByClassName('wpbb-bracket')[0]
+
+		let darkModeHTML: string;
+		let lightModeHTML: string;
+
+		// check if dark mode is set. if it is, remove the dark mode class to get the light mode version
+		// if not, add the dark mode class to get the dark mode version
+		if (darkMode) {
+			darkModeHTML = html
+			bracketEl.classList.remove('wpbb-dark-mode')
+			lightModeHTML = doc.documentElement.outerHTML
+		} else {
+			lightModeHTML = html
+			bracketEl.classList.add('wpbb-dark-mode')
+			darkModeHTML = doc.documentElement.outerHTML
+		}
+
+		// console.log('dark mode')
+		// console.log(darkModeHTML)
+		// console.log('light mode')
+		// console.log(lightModeHTML)
+		const promises = [
+			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }),
+			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }),
+		]
 		setProcessingImage(true)
-		bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
-			// redirect to apparel page
-			// console.log(apparelUrl)
-			console.log(res)
+		Promise.all(promises).then((res) => {
+			const darkModeImage = res[0]
+			const lightModeImage = res[1]
+
+			console.log('dark mode image')
+			console.log(darkModeImage)
+			console.log('light mode image')
+			console.log(lightModeImage)
 			setProcessingImage(false)
-			// window.location.href = apparelUrl
 		}).catch((err) => {
-			setProcessingImage(false)
 			console.error(err)
-			Sentry.captureException(err)
+			// Sentry.captureException(err)
+			setProcessingImage(false)
 		})
+
+		// setProcessingImage(true)
+		// bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
+		// 	// redirect to apparel page
+		// 	// console.log(apparelUrl)
+		// 	console.log(res)
+		// 	setProcessingImage(false)
+		// 	// window.location.href = apparelUrl
+		// }).catch((err) => {
+		// 	setProcessingImage(false)
+		// 	console.error(err)
+		// 	Sentry.captureException(err)
+		// })
 	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
