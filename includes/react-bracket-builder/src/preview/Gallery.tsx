@@ -3,13 +3,18 @@ import Thumbnails from './Thumbnails';
 import ImageGallery from 'react-image-gallery';
 import * as Sentry from '@sentry/react';
 
+// maps the theme name to the url of the overlay image
+export interface OverlayUrlThemeMap {
+  [key: string]: string;
+}
+
 interface GalleryImage {
   src: string;
   title: string;
 }
 
 interface GalleryProps {
-  overlayUrl: string,
+  overlayThemeMap: OverlayUrlThemeMap;
   galleryImages: GalleryImage[];
   colorOptions: string[];
 }
@@ -20,6 +25,11 @@ enum ProductImageOrientation {
   BACK = 'back',
 }
 
+enum ProductImageThemeMode {
+  DARK = 'dark',
+  LIGHT = 'light',
+}
+
 interface ProductImageConfig {
   url: string;
   variationColor?: string;
@@ -27,8 +37,9 @@ interface ProductImageConfig {
 
 interface ProductImageParams {
   variationColor?: string;
-  orientation?: string;
+  orientation?: ProductImageOrientation;
   overlayParams?: ImageOverlayParams;
+  themeMode?: ProductImageThemeMode;
 }
 
 interface ImageOverlayParams {
@@ -37,7 +48,7 @@ interface ImageOverlayParams {
   yCenter: number;
 }
 
-const Gallery: React.FC<GalleryProps> = ({ overlayUrl, galleryImages, colorOptions }) => {
+const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, colorOptions }) => {
   // URLs of images to display in the gallery. This is updated
   // when the select listener is triggered.
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -102,7 +113,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayUrl, galleryImages, colorOptio
 
   const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
     const promises = galleryImages.map((image) => {
-      return buildProductImageConfig(image, overlayUrl);
+      return buildProductImageConfig(image, overlayThemeMap);
     });
 
     const configs = await Promise.allSettled(promises).then(res => {
@@ -127,17 +138,20 @@ const Gallery: React.FC<GalleryProps> = ({ overlayUrl, galleryImages, colorOptio
     return configs ? configs : [];
   }
 
-  const buildProductImageConfig = async (image: GalleryImage, overlayUrl): Promise<ProductImageConfig> => {
+  const buildProductImageConfig = async (image: GalleryImage, overlayMap: OverlayUrlThemeMap): Promise<ProductImageConfig> => {
     const {
       src: backgroundImageUrl,
-      title: brackgroundImageTitle,
+      title: backgroundImageTitle,
     } = image;
 
     const {
       variationColor,
       orientation,
       overlayParams,
-    } = parseImageParams(brackgroundImageTitle, colorOptions);
+      themeMode,
+    } = parseImageParams(backgroundImageTitle, colorOptions);
+
+    const overlayUrl = overlayMap[themeMode || ProductImageThemeMode.DARK];
 
     const url = orientation === ProductImageOrientation.BACK && overlayParams && overlayUrl
       ? await addOverlay(backgroundImageUrl, overlayUrl, overlayParams)
@@ -197,12 +211,18 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
     return normalizedTitle.includes(normalizedColors[index]);
   });
 
-  let orientation: string | undefined;
-  // const orientation = normalizedTitle.includes('back') ? ProductImageOrientation.BACK : ProductImageOrientation.FRONT;
+  let orientation: ProductImageOrientation | undefined;
   if (normalizedTitle.includes('back')) {
     orientation = ProductImageOrientation.BACK;
   } else if (normalizedTitle.includes('front')) {
     orientation = ProductImageOrientation.FRONT;
+  }
+
+  let themeMode: ProductImageThemeMode | undefined;
+  if (normalizedTitle.includes('dark')) {
+    themeMode = ProductImageThemeMode.DARK;
+  } else if (normalizedTitle.includes('light')) {
+    themeMode = ProductImageThemeMode.LIGHT;
   }
 
   const widthRegex = /w\d+/;
@@ -219,7 +239,8 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
 
   const imageParams: ProductImageParams = {
     variationColor,
-    orientation
+    orientation,
+    themeMode,
   }
   if (width && xCenter && yCenter) {
     imageParams.overlayParams = {

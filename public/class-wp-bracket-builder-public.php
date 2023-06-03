@@ -114,10 +114,14 @@ class Wp_Bracket_Builder_Public {
 		$product = wc_get_product($post->ID);
 		$bracket_product_archive_url = $this->get_archive_url();
 
-		// get the session bracket config for light and dark mode
+		// get the bracket config for light and dark mode from the session
 		$bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 		$bracket_config_light = $bracket_config_repo->get('light');
 		$bracket_config_dark = $bracket_config_repo->get('dark');
+		$bracket_url_theme_map = array(
+			'light' => $bracket_config_light ? $bracket_config_light->img_url : '',
+			'dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
+		);
 
 		$is_bracket_product = $product && $this->product_has_category($product, 'bracket-ready');
 		// Only get product details on product pages.
@@ -142,8 +146,7 @@ class Wp_Bracket_Builder_Public {
 				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 
 				// For product page
-				'bracket_url_dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
-				'bracket_url_light' => $bracket_config_light ? $bracket_config_light->img_url : '',
+				'bracket_url_theme_map' => $bracket_url_theme_map, // map of theme mode to bracket image url
 				'gallery_images' => $gallery_images,
 				'color_options' => $color_options,
 			)
