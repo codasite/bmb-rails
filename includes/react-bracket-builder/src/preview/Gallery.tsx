@@ -286,7 +286,10 @@ async function addOverlay(backgroundUrl: string, overlayUrl: string, overlayPara
 
   // Set the source URL for the logo image
   bracketImage.src = overlayUrl;
-  await loadImage(bracketImage).catch((error) => {
+  // await loadImage(bracketImage).catch((error) => {
+  //   console.error(error);
+  // });
+  await Promise.all([loadImage(backgroundImage), loadImage(bracketImage)]).catch((error) => {
     console.error(error);
   });
 
