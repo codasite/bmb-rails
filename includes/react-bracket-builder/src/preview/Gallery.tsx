@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Thumbnails from './Thumbnails';
+import Spinner from 'react-bootstrap/Spinner'
 import ImageGallery from 'react-image-gallery';
 import * as Sentry from '@sentry/react';
 
@@ -48,11 +48,13 @@ interface ImageOverlayParams {
   yCenter: number;
 }
 
+
 const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, colorOptions }) => {
   // URLs of images to display in the gallery. This is updated
   // when the select listener is triggered.
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([]);
+  const [loadingImages, setLoadingImages] = useState<boolean>(true);
 
   const imageConfigsRef = useRef<ProductImageConfig[]>(imageConfigs);
 
@@ -95,6 +97,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
       urls = imageConfigs.map((config) => config.url);
     }
     setImageUrls(urls);
+    setLoadingImages(false)
     selectElement.addEventListener('change', colorSelectChangeHandler);
   }
 
@@ -179,7 +182,13 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
 
   return (
     //@ts-ignore
-    <ImageGallery items={images} showPlayButton={false} />
+    <>
+      {
+        loadingImages ?
+          <Spinner variant='dark' animation="border" role="status" style={{ borderWidth: '4px' }} /> :
+          <ImageGallery items={images} showPlayButton={false} />
+      }
+    </>
   )
 };
 
