@@ -438,3 +438,24 @@ $table-radius: 10px;
 	cursor: pointer;
 
 }
+
+.wpbb-gallery-spinner-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 300px;
+}
+
+.wpbb-gallery-container {
+	animation: fade-in 0.3s;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
