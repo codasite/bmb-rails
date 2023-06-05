@@ -185,8 +185,13 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
     <>
       {
         loadingImages ?
-          <Spinner variant='dark' animation="border" role="status" style={{ borderWidth: '4px' }} /> :
-          <ImageGallery items={images} showPlayButton={false} />
+          <div className='wpbb-gallery-spinner-container'>
+            <Spinner variant='dark' animation="border" role="status" style={{ borderWidth: '4px' }} />
+          </div>
+          :
+          <div className='wpbb-gallery-container'>
+            <ImageGallery items={images} showPlayButton={false} />
+          </div>
       }
     </>
   )
