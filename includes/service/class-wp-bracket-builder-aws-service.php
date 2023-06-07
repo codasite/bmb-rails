@@ -29,11 +29,11 @@ class Wp_Bracket_Builder_S3_Service {
 			],
 		]);
 	}
-	public function upload($bucket, $key, $file) {
+	public function put($bucket, $key, $body) {
 		$result = $this->s3Client->putObject([
 			'Bucket' => $bucket,
 			'Key' => $key,
-			'SourceFile' => $file,
+			'Body' => $body,
 		]);
 		return $result;
 	}
@@ -50,6 +50,14 @@ class Wp_Bracket_Builder_S3_Service {
 			$utils = new Wp_Bracket_Builder_Utils();
 			$utils->log_sentry_error($e);
 		}
+	}
+
+	public function get($bucket, $key) {
+		$result = $this->s3Client->getObject([
+			'Bucket' => $bucket,
+			'Key' => $key,
+		]);
+		return $result;
 	}
 
 	public function extract_key_from_url($url) {
