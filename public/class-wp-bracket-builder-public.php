@@ -217,24 +217,26 @@ class Wp_Bracket_Builder_Public {
 			// Get the selected theme
 			$variation = wc_get_product($variation_id);
 			$bracket_theme = $this->get_variation_attribute_value($variation, 'bracket-theme');
-			$attributes = $variation->get_attributes();
+			if (!empty($bracket_theme)) {
+				$attributes = $variation->get_attributes();
 
-			$utils = new Wp_Bracket_Builder_Utils();
-			$utils->log_sentry_message(json_encode($attributes));
+				$utils = new Wp_Bracket_Builder_Utils();
+				$utils->log_sentry_message(json_encode($attributes));
 
-			// $bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-			// $cart_item_data['bracket_theme'] = $bracket_theme;
-			// $bracket_config_light = $bracket_config_repo->get('light');
-			// $bracket_config_dark = $bracket_config_repo->get('dark');
+				// $bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+				// $cart_item_data['bracket_theme'] = $bracket_theme;
+				// $bracket_config_light = $bracket_config_repo->get('light');
+				// $bracket_config_dark = $bracket_config_repo->get('dark');
 
-			// get the html string for the selected theme
-			// add it directly to cart item data. This lets it persist beyond the user's current session.
-			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-			$config = $config_repo->get($bracket_theme);
-			// error here if config not found??
+				// get the html string for the selected theme
+				// add it directly to cart item data. This lets it persist beyond the user's current session.
+				$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+				$config = $config_repo->get($bracket_theme);
+				// error here if config not found??
 
-			// $cart_item_data['bracket_config'] = $config;
-			$cart_item_data['bracket_config'] = $bracket_theme;
+				// $cart_item_data['bracket_config'] = $config;
+				$cart_item_data['bracket_config'] = $bracket_theme;
+			}
 		}
 		return $cart_item_data;
 	}

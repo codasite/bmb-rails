@@ -13,6 +13,9 @@ class Wp_Bracket_Builder_Bracket_Config_Repository {
 	}
 
 	public function get(string $theme_mode = ''): Wp_Bracket_Builder_Bracket_Config | null {
+		if (empty($theme_mode)) {
+			return null;
+		}
 		$utils = new Wp_Bracket_Builder_Utils();
 		$session_key = $this->get_session_key($theme_mode);
 		$config = $utils->get_session_value($session_key);
