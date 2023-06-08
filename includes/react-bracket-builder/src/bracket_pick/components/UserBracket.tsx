@@ -178,10 +178,10 @@ const UserBracket = (props: UserBracketProps) => {
 			darkModeHTML = doc.documentElement.outerHTML
 		}
 
-		// console.log('dark mode')
-		// console.log(darkModeHTML)
-		// console.log('light mode')
-		// console.log(lightModeHTML)
+		console.log('dark mode')
+		console.log(darkModeHTML)
+		console.log('light mode')
+		console.log(lightModeHTML)
 		const promises = [
 			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'dark' }),
 			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'light' }),
@@ -197,7 +197,7 @@ const UserBracket = (props: UserBracketProps) => {
 			// setProcessingImage(false)
 
 			// redirect to apparel page
-			window.location.href = apparelUrl
+			// window.location.href = apparelUrl
 		}).catch((err) => {
 			setProcessingImage(false)
 			console.error(err)
