@@ -2,6 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-aws-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-pdf-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-config.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-config-repo.php';
 
@@ -213,23 +214,35 @@ class Wp_Bracket_Builder_Public {
 	public function add_bracket_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
 		$product = wc_get_product($product_id);
 		if ($this->product_has_category($product, 'bracket-ready')) {
-			// $utils = new Wp_Bracket_Builder_Utils();
-			// $bracket_url = $utils->get_session_value('bracket_url');
-			// $cart_item_data['bracket_url'] = $bracket_url;
-			// $variation = wc_get_product($variation_id);
-			// $bracket_theme = $this->get_variation_attribute_value($variation, 'attribute_pa_bracket-theme');
+			// Get the selected theme
+			$variation = wc_get_product($variation_id);
+			$bracket_theme = $this->get_variation_attribute_value($variation, 'bracket-theme');
+			$attributes = $variation->get_attributes();
+
+			$utils = new Wp_Bracket_Builder_Utils();
+			$utils->log_sentry_message(json_encode($attributes));
+
 			// $bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 			// $cart_item_data['bracket_theme'] = $bracket_theme;
 			// $bracket_config_light = $bracket_config_repo->get('light');
 			// $bracket_config_dark = $bracket_config_repo->get('dark');
+
+			// get the html string for the selected theme
+			// add it directly to cart item data. This lets it persist beyond the user's current session.
+			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+			$config = $config_repo->get($bracket_theme);
+			// error here if config not found??
+
+			// $cart_item_data['bracket_config'] = $config;
+			$cart_item_data['bracket_config'] = $bracket_theme;
 		}
 		return $cart_item_data;
 	}
 
-	// Add the bracket url to the order line item data when the order is created
+	// Add the bracket config to the order line item data when the order is created
 	public function add_bracket_to_order_item($item, $cart_item_key, $values, $order) {
-		if (array_key_exists('bracket_url', $values)) {
-			$item->add_meta_data('bracket_url', $values['bracket_url']);
+		if (array_key_exists('bracket_config', $values)) {
+			$item->add_meta_data('bracket_config', $values['bracket_config']);
 		}
 	}
 
@@ -252,15 +265,29 @@ class Wp_Bracket_Builder_Public {
 		// $bracket_url = $item->get_meta('bracket_url', true);
 		$bracket_theme = $item->get_meta('bracket-theme', true);
 		// $item_arr['bracket_url'] = $bracket_url;
+		$bracket_config = $item->get_meta('bracket_config');
+		$item_arr['config'] = $bracket_config;
 		// $item_arr['bracket_theme'] = $bracket_theme;
-		$item_arr['order_id'] = $order->get_id();
-		$item_arr['data'] = $item->get_data();
-		$item_arr['meta'] = $item->get_meta_data();
-		$item_arr['item_id'] = $item->get_id();
+		// $item_arr['order_id'] = $order->get_id();
+		// $item_arr['data'] = $item->get_data();
+		// $item_arr['meta'] = $item->get_meta_data();
+		// $item_arr['item_id'] = $item->get_id();
 
-		$filename = $this->get_gelato_order_filename($order, $item);
+		// // Generate a PDF file for the back design (the bracket)
+		// // We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
+		// $convert_req = array(
+		// 	'inchHeight' => 16,
+		// 	'inchWidth' => 12,
+		// 	'pdf' => true,
+		// 	'html' => $html,
+		// );
+		// $item_arr['convert_req'] = $convert_req;
+		// $lambda_service = new Wp_Bracket_Builder_Lambda_Service();
+		// // $back_url = $lambda_service->html_to_image($convert_req);
+		// // $item_arr['back_url'] = $back_url;
 
-		$item_arr['order_filename'] = $filename;
+		$order_filename = $this->get_gelato_order_filename($order, $item);
+		// $item_arr['order_filename'] = $order_filename;
 
 		// $s3_service = new Wp_Bracket_Builder_S3_Service();
 		// $source_key = $s3_service->extract_key_from_url($bracket_url);
@@ -284,7 +311,7 @@ class Wp_Bracket_Builder_Public {
 	private function get_gelato_order_filename($order, $item) {
 		$order_id = $order->get_id();
 		$item_id = $item->get_id();
-		$filename = $order_id . '_' . $item_id . '.png';
+		$filename = $order_id . '_' . $item_id . '.pdf';
 		return $filename;
 	}
 

@@ -140,7 +140,8 @@ class Wp_Bracket_Builder_Lambda_Service {
 
 		// Attempt to get the key name from params or wp config
 		if (!isset($params['s3Key'])) {
-			$params['s3Key'] = 'bracket-' . uniqid() . '.png';
+			$extension = (isset($params['pdf']) && $params['pdf'] === true) ? '.pdf' : '.png';
+			$params['s3Key'] = 'bracket-' . uniqid() . $extension;
 		}
 
 		$functionName = HTML_TO_IMAGE_FUNCTION_NAME;
