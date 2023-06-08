@@ -65,10 +65,9 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 			$config_repo->add($config, $theme_mode);
 			return new WP_REST_Response($res, 200);
-		} else if (is_wp_error($res)) {
-			return $res;
 		} else {
-			return new WP_Error('error', __('Error converting HTML to image. Image url not found', 'text-domain'), array('status' => 500));
+			return $res;
+			// return new WP_Error('error', __('Error converting HTML to image. Image url not found', 'text-domain'), array('status' => 500));
 		}
 	}
 	/**

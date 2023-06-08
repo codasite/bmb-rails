@@ -197,7 +197,8 @@ const UserBracket = (props: UserBracketProps) => {
 			// setProcessingImage(false)
 
 			// redirect to apparel page
-			// window.location.href = apparelUrl
+			console.log('res, ', res)
+			window.location.href = apparelUrl
 		}).catch((err) => {
 			setProcessingImage(false)
 			console.error(err)

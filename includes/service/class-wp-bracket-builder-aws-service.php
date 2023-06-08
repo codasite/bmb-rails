@@ -129,6 +129,20 @@ class Wp_Bracket_Builder_Lambda_Service {
 		if (!defined('HTML_TO_IMAGE_FUNCTION_NAME')) {
 			return new WP_Error('error', __('Lambda function name not defined.', 'text-domain'), array('status' => 500));
 		}
+
+		// Attempt to get the bucket name from params or wp config
+		if (!isset($params['s3Bucket'])) {
+			if (!defined('BRACKET_BUILDER_S3_IMAGE_BUCKET')) {
+				return new WP_Error('error', __('S3 image bucket name not found.', 'text-domain'), array('status' => 500));
+			}
+			$params['s3Bucket'] = BRACKET_BUILDER_S3_IMAGE_BUCKET;
+		}
+
+		// Attempt to get the key name from params or wp config
+		if (!isset($params['s3Key'])) {
+			$params['s3Key'] = 'bracket-' . uniqid() . '.png';
+		}
+
 		$functionName = HTML_TO_IMAGE_FUNCTION_NAME;
 
 		$result = $this->invoke($functionName, $params);
@@ -152,5 +166,43 @@ class Wp_Bracket_Builder_Lambda_Service {
 			'LogType' => $logType,
 		]);
 	}
+
+
+
+
+	/**
+	 * Invoke multiple AWS Lambda functions asynchronously.
+	 *
+	 * @param array $functions An array of associative arrays, each containing 'name' and 'args' keys. 
+	 * 'name' is the name of the function to invoke, and 'args' are the arguments to pass to the function.
+	 * Example:
+	 * [
+	 *     ['name' => 'MyFunction1', 'args' => '...'],
+	 *     ['name' => 'MyFunction2', 'args' => '...'],
+	 *     // ...
+	 * ]
+	 *
+	 * @return array An array of Aws\Result objects, each representing the result of invoking one of the functions. 
+	 * The order of the results corresponds to the order of the functions in the input array.
+	 *
+	 * @throws \GuzzleHttp\Promise\RejectionException If any of the promises are rejected.
+	 */
+	private function invoke_all(array $functions) {
+		if (!isset($this->lambdaClient)) {
+			return new WP_Error('error', __('Lambda client is not initialized. Did you forget to add AWS credentials?', 'text-domain'), array('status' => 500));
+		}
+
+		$promises = [];
+
+		foreach ($functions as $function) {
+			$promises[] = $this->lambdaClient->invokeAsync([
+				'FunctionName' => $function['name'],
+				'InvokeArgs'   => $function['args']
+			]);
+		}
+
+		$results = \GuzzleHttp\Promise\Utils::unwrap($promises);
+
+		return $results;
+	}
 }
-#snippet-end:[php.example_code.lambda.service]

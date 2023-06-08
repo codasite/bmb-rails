@@ -5,3 +5,4 @@ const AWS_SECRET_KEY = '';
 const HTML_TO_IMAGE_FUNCTION_NAME = '';
 const WP_SENTRY_ENV = '';
 const WP_SENTRY_PHP_DSN = '';
+const BRACKET_BUILDER_S3_IMAGE_BUCKET = '';
