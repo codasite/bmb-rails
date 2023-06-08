@@ -213,9 +213,15 @@ class Wp_Bracket_Builder_Public {
 	public function add_bracket_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
 		$product = wc_get_product($product_id);
 		if ($this->product_has_category($product, 'bracket-ready')) {
-			$utils = new Wp_Bracket_Builder_Utils();
-			$bracket_url = $utils->get_session_value('bracket_url');
-			$cart_item_data['bracket_url'] = $bracket_url;
+			// $utils = new Wp_Bracket_Builder_Utils();
+			// $bracket_url = $utils->get_session_value('bracket_url');
+			// $cart_item_data['bracket_url'] = $bracket_url;
+			$variation = wc_get_product($variation_id);
+			$bracket_theme = $this->get_variation_attribute_value($variation, 'attribute_pa_bracket-theme');
+			$bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+			$cart_item_data['bracket_theme'] = $bracket_theme;
+			// $bracket_config_light = $bracket_config_repo->get('light');
+			// $bracket_config_dark = $bracket_config_repo->get('dark');
 		}
 		return $cart_item_data;
 	}
@@ -243,27 +249,39 @@ class Wp_Bracket_Builder_Public {
 
 	private function handle_bracket_product_item($order, $item) {
 		$item_arr = array();
-		$bracket_url = $item->get_meta('bracket_url', true);
-		$item_arr['bracket_url'] = $bracket_url;
+		// $bracket_url = $item->get_meta('bracket_url', true);
+		// $bracket_theme = $item->get_meta('bracket_theme', true);
+		// $item_arr['bracket_url'] = $bracket_url;
+		// $item_arr['bracket_theme'] = $bracket_theme;
 		$item_arr['order_id'] = $order->get_id();
 		$item_arr['data'] = $item->get_data();
 		$item_arr['meta'] = $item->get_meta_data();
 		$item_arr['item_id'] = $item->get_id();
 
-		$s3_filename = $this->build_gelato_attachment_filename($order, $item);
+		$filename = $this->get_gelato_order_filename($order, $item);
 
-		$item_arr['s3-filename'] = $s3_filename;
+		$item_arr['order_filename'] = $filename;
 
-		$s3_service = new Wp_Bracket_Builder_S3_Service();
-		$source_key = $s3_service->extract_key_from_url($bracket_url);
-		// Copy bracket image to gelato bucket
-		$s3_service->copy('wpbb-gelato-orders', $s3_filename, 'wpbb-bracket-images', $source_key);
+		// $s3_service = new Wp_Bracket_Builder_S3_Service();
+		// $source_key = $s3_service->extract_key_from_url($bracket_url);
+		// // Copy bracket image to gelato bucket
+		// $s3_service->copy('wpbb-gelato-orders', $s3_filename, 'wpbb-bracket-images', $source_key);
 
 		$utils = new Wp_Bracket_Builder_Utils();
 		$utils->log_sentry_message(json_encode($item_arr));
 	}
 
-	private function build_gelato_attachment_filename($order, $item) {
+	private function get_variation_attribute_value($variation, $attribute_name) {
+		$attributes = $variation->get_attributes();
+		if (!array_key_exists($attribute_name, $attributes)) {
+			return null;
+		}
+		$attribute = $attributes[$attribute_name];
+		$attribute_value = $attribute;
+		return $attribute_value;
+	}
+
+	private function get_gelato_order_filename($order, $item) {
 		$order_id = $order->get_id();
 		$item_id = $item->get_id();
 		$filename = $order_id . '_' . $item_id . '.png';
@@ -309,26 +327,3 @@ function get_images($image_ids) {
 
 	return $images;
 }
-
-// // Add the bracket url to the cart item data
-// function add_bracket_to_cart_item($cart_item_data, $product_id, $variation_id) {
-// 	$bracket_url = $_GET['bracket_url']; // get bracket url from query params
-
-// 	$cart_item_data['bracket_url'] = $bracket_url;
-// 	return $cart_item_data;
-// }
-// add_filter('woocommerce_add_cart_item_data', 'add_bracket_to_cart_item', 10, 3);
-
-
-
-// // Add the bracket url to the order
-// function add_bracket_to_order($item, $cart_item_key, $values, $order) {
-// 	if (empty($values)) {
-// 		return;
-// 	}
-
-// 	// Get bracket url from session
-// 	$bracket_url = get_session_value('bracket_url');
-// 	$item->add_meta_data('bracket_url', $bracket_url);
-// }
-// add_action('woocommerce_checkout_create_order_line_item', 'add_bracket_to_order', 10, 4);
