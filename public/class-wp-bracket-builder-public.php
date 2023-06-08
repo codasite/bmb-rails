@@ -216,10 +216,10 @@ class Wp_Bracket_Builder_Public {
 			// $utils = new Wp_Bracket_Builder_Utils();
 			// $bracket_url = $utils->get_session_value('bracket_url');
 			// $cart_item_data['bracket_url'] = $bracket_url;
-			$variation = wc_get_product($variation_id);
-			$bracket_theme = $this->get_variation_attribute_value($variation, 'attribute_pa_bracket-theme');
-			$bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-			$cart_item_data['bracket_theme'] = $bracket_theme;
+			// $variation = wc_get_product($variation_id);
+			// $bracket_theme = $this->get_variation_attribute_value($variation, 'attribute_pa_bracket-theme');
+			// $bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+			// $cart_item_data['bracket_theme'] = $bracket_theme;
 			// $bracket_config_light = $bracket_config_repo->get('light');
 			// $bracket_config_dark = $bracket_config_repo->get('dark');
 		}
@@ -250,7 +250,7 @@ class Wp_Bracket_Builder_Public {
 	private function handle_bracket_product_item($order, $item) {
 		$item_arr = array();
 		// $bracket_url = $item->get_meta('bracket_url', true);
-		// $bracket_theme = $item->get_meta('bracket_theme', true);
+		$bracket_theme = $item->get_meta('bracket-theme', true);
 		// $item_arr['bracket_url'] = $bracket_url;
 		// $item_arr['bracket_theme'] = $bracket_theme;
 		$item_arr['order_id'] = $order->get_id();
