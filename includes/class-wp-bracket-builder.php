@@ -177,10 +177,14 @@ class Wp_Bracket_Builder {
 
 
 		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
-		// $this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 
 		$this->loader->add_action('init', $this, 'bracket_cpt');
+
+		// custom meta for bracket product variations
+		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
+		$this->loader->add_action('woocommerce_save_product_variation', $plugin_admin, 'save_variation_settings_fields', 10, 2);
+
 	}
 
 	/**
