@@ -215,27 +215,16 @@ class Wp_Bracket_Builder_Public {
 		$product = wc_get_product($product_id);
 		if ($this->product_has_category($product, 'bracket-ready')) {
 			// Get the selected theme
-			$variation = wc_get_product($variation_id);
-			$bracket_theme = $this->get_variation_attribute_value($variation, 'bracket-theme');
+			$bracket_theme = filter_input(INPUT_POST, 'attribute_bracket-theme', FILTER_SANITIZE_STRING);
 			if (!empty($bracket_theme)) {
-				$attributes = $variation->get_attributes();
-
-				$utils = new Wp_Bracket_Builder_Utils();
-				$utils->log_sentry_message(json_encode($attributes));
-
-				// $bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-				// $cart_item_data['bracket_theme'] = $bracket_theme;
-				// $bracket_config_light = $bracket_config_repo->get('light');
-				// $bracket_config_dark = $bracket_config_repo->get('dark');
-
-				// get the html string for the selected theme
-				// add it directly to cart item data. This lets it persist beyond the user's current session.
 				$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+				// Get the correct config from the session and store it in the cart item data
 				$config = $config_repo->get($bracket_theme);
-				// error here if config not found??
+				// Error here if config is not found?
+				$cart_item_data['bracket_config'] = $config;
 
-				// $cart_item_data['bracket_config'] = $config;
-				$cart_item_data['bracket_config'] = $bracket_theme;
+				// $utils = new Wp_Bracket_Builder_Utils();
+				// $utils->log_sentry_message(json_encode(array('bracket-theme' => $bracket_theme)));
 			}
 		}
 		return $cart_item_data;
@@ -248,6 +237,7 @@ class Wp_Bracket_Builder_Public {
 		}
 	}
 
+	// this function hooks into woocommerce_payment_complete
 	public function handle_payment_complete($order_id) {
 		$order = wc_get_order($order_id);
 		if ($order) {
@@ -264,38 +254,42 @@ class Wp_Bracket_Builder_Public {
 
 	private function handle_bracket_product_item($order, $item) {
 		$item_arr = array();
-		// $bracket_url = $item->get_meta('bracket_url', true);
-		$bracket_theme = $item->get_meta('bracket-theme', true);
-		// $item_arr['bracket_url'] = $bracket_url;
 		$bracket_config = $item->get_meta('bracket_config');
-		$item_arr['config'] = $bracket_config;
+		$html = $bracket_config->html;
+		// throw error if config not found?
+
+		// Generate a PDF file for the back design (the bracket)
+		// We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
+		$convert_req = array(
+			'inchHeight' => 16,
+			'inchWidth' => 12,
+			'pdf' => true,
+			'html' => $html,
+		);
+		// $item_arr['convert_req'] = $convert_req;
+		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
+		$back_url = $lambda_service->html_to_image($convert_req);
+		$item_arr['back_url'] = $back_url;
+
+		$order_filename = $this->get_gelato_order_filename($order, $item);
+		$item_arr['order_filename'] = $order_filename;
+
+		// get the url for the front design
+
 		// $item_arr['bracket_theme'] = $bracket_theme;
 		// $item_arr['order_id'] = $order->get_id();
 		// $item_arr['data'] = $item->get_data();
 		// $item_arr['meta'] = $item->get_meta_data();
 		// $item_arr['item_id'] = $item->get_id();
 
-		// // Generate a PDF file for the back design (the bracket)
-		// // We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
-		// $convert_req = array(
-		// 	'inchHeight' => 16,
-		// 	'inchWidth' => 12,
-		// 	'pdf' => true,
-		// 	'html' => $html,
-		// );
-		// $item_arr['convert_req'] = $convert_req;
-		// $lambda_service = new Wp_Bracket_Builder_Lambda_Service();
-		// // $back_url = $lambda_service->html_to_image($convert_req);
-		// // $item_arr['back_url'] = $back_url;
 
-		$order_filename = $this->get_gelato_order_filename($order, $item);
-		// $item_arr['order_filename'] = $order_filename;
 
 		// $s3_service = new Wp_Bracket_Builder_S3_Service();
 		// $source_key = $s3_service->extract_key_from_url($bracket_url);
 		// // Copy bracket image to gelato bucket
 		// $s3_service->copy('wpbb-gelato-orders', $s3_filename, 'wpbb-bracket-images', $source_key);
 
+		$item_arr['config'] = $bracket_config;
 		$utils = new Wp_Bracket_Builder_Utils();
 		$utils->log_sentry_message(json_encode($item_arr));
 	}
