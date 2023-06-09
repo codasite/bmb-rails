@@ -223,6 +223,8 @@ class Wp_Bracket_Builder_Public {
 				// Error here if config is not found?
 				$cart_item_data['bracket_config'] = $config;
 
+				// Get the url for the front print file
+
 				// $utils = new Wp_Bracket_Builder_Utils();
 				// $utils->log_sentry_message(json_encode(array('bracket-theme' => $bracket_theme)));
 			}
@@ -255,8 +257,9 @@ class Wp_Bracket_Builder_Public {
 	private function handle_bracket_product_item($order, $item) {
 		$item_arr = array();
 		$bracket_config = $item->get_meta('bracket_config');
-		$html = $bracket_config->html;
 		// throw error if config not found?
+		$bracket_theme = $bracket_config->theme_mode;
+		$html = $bracket_config->html;
 
 		// Generate a PDF file for the back design (the bracket)
 		// We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
@@ -274,7 +277,13 @@ class Wp_Bracket_Builder_Public {
 		$order_filename = $this->get_gelato_order_filename($order, $item);
 		$item_arr['order_filename'] = $order_filename;
 
+		$s3_front_key = '';
 		// get the url for the front design
+		// if ($this->product_has_category($product, '12x16-front')) {
+		// 	$s3_front_key = 
+
+		// } else if ($this->product_has_category($product, '12x12-front')) {
+		// }
 
 		// $item_arr['bracket_theme'] = $bracket_theme;
 		// $item_arr['order_id'] = $order->get_id();
@@ -292,6 +301,9 @@ class Wp_Bracket_Builder_Public {
 		$item_arr['config'] = $bracket_config;
 		$utils = new Wp_Bracket_Builder_Utils();
 		$utils->log_sentry_message(json_encode($item_arr));
+	}
+
+	private function get_front_print_area($product) {
 	}
 
 	private function get_variation_attribute_value($variation, $attribute_name) {

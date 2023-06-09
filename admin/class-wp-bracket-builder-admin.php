@@ -115,6 +115,7 @@ class Wp_Bracket_Builder_Admin {
 	public function bracket_builder_init_menu() {
 		add_menu_page(__('Bracket Builder', 'bracketbuilder'), __('Bracket Builder', 'bracketbuilder'), 'manage_options', 'bracketbuilder', array($this, 'bracket_builder_admin_page'), 'dashicons-admin-post', '2.1');
 	}
+
 	public function bracket_builder_admin_page() {
 		require_once plugin_dir_path(__FILE__) . 'templates/admin-panel.php';
 	}
@@ -122,5 +123,41 @@ class Wp_Bracket_Builder_Admin {
 	public function add_capabilities() {
 		$role = get_role('administrator');
 		$role->add_cap('manage_bracket_builder');
+	}
+
+	//  add a custom text field for the bmb-logo-theme in the admin product variation settings
+	// Attach to `woocommerce_product_after_variable_attributes` hook
+	public function variation_settings_fields($loop, $variation_data, $variation) {
+    // woocommerce_wp_text_input(
+    //     array(
+    //         'id'          => 'wpbb_logo_theme[' . $variation->ID . ']',
+    //         'label'       => __('BMB Logo Theme', 'woocommerce'),
+    //         'desc_tip'    => 'true',
+    //         'description' => __('The theme used for the BMB logo', 'woocommerce'),
+    //         'value'       => get_post_meta($variation->ID, 'wpbb_logo_theme', true)
+    //     )
+    // );
+		woocommerce_wp_select(
+			array(
+					'id'            => 'wpbb_logo_theme[' . $variation->ID . ']',
+					'label'         => __('BMB Logo Theme', 'woocommerce'),
+					'description'   => __('The theme used for the BMB logo', 'woocommerce'),
+					'desc_tip'      => 'true',
+					'value'         => get_post_meta($variation->ID, 'wpbb_logo_theme', true),
+					'options'       => array(
+							'light'  => __('Light', 'woocommerce'),
+							'dark'  => __('Dark', 'woocommerce'),
+					)
+			)
+	);
+	}
+
+	// save the value of this field when the product variation is saved
+	// Attach to `woocommerce_save_product_variation` hook
+	function save_variation_settings_fields($variation_id, $i) {
+		if(isset($_POST['wpbb_logo_theme'][$variation_id])) {
+			$custom_field = $_POST['wpbb_logo_theme'][$variation_id];
+			update_post_meta($variation_id, 'wpbb_logo_theme', esc_attr($custom_field));
+	}
 	}
 }
