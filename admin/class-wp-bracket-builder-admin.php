@@ -128,36 +128,29 @@ class Wp_Bracket_Builder_Admin {
 	//  add a custom text field for the bmb-logo-theme in the admin product variation settings
 	// Attach to `woocommerce_product_after_variable_attributes` hook
 	public function variation_settings_fields($loop, $variation_data, $variation) {
-    // woocommerce_wp_text_input(
-    //     array(
-    //         'id'          => 'wpbb_logo_theme[' . $variation->ID . ']',
-    //         'label'       => __('BMB Logo Theme', 'woocommerce'),
-    //         'desc_tip'    => 'true',
-    //         'description' => __('The theme used for the BMB logo', 'woocommerce'),
-    //         'value'       => get_post_meta($variation->ID, 'wpbb_logo_theme', true)
-    //     )
-    // );
-		woocommerce_wp_select(
-			array(
-					'id'            => 'wpbb_logo_theme[' . $variation->ID . ']',
-					'label'         => __('BMB Logo Theme', 'woocommerce'),
-					'description'   => __('The theme used for the BMB logo', 'woocommerce'),
-					'desc_tip'      => 'true',
-					'value'         => get_post_meta($variation->ID, 'wpbb_logo_theme', true),
-					'options'       => array(
-							'light'  => __('Light', 'woocommerce'),
-							'dark'  => __('Dark', 'woocommerce'),
-					)
-			)
-	);
+		// Get the parent product
+		$parent_product_id = wp_get_post_parent_id($variation->ID);
+
+		// Check if the parent product has the 'bracket-ready' category
+		if (has_term(BRACKET_PRODUCT_CATEGORY, 'product_cat', $parent_product_id)) {
+			woocommerce_wp_text_input(
+				array(
+						'id'            => 'wpbb_front_design[' . $variation->ID . ']',
+						'label'         => __('Front Design URL', 'woocommerce'),
+						'description'   => __('The design to print on the front of this product, in PDF format. Typically an S3 object URL.', 'woocommerce'),
+						'desc_tip'      => 'true',
+						'value'         => get_post_meta($variation->ID, 'wpbb_front_design', true),
+				)
+			);
+		}
 	}
 
 	// save the value of this field when the product variation is saved
 	// Attach to `woocommerce_save_product_variation` hook
 	function save_variation_settings_fields($variation_id, $i) {
-		if(isset($_POST['wpbb_logo_theme'][$variation_id])) {
-			$custom_field = $_POST['wpbb_logo_theme'][$variation_id];
-			update_post_meta($variation_id, 'wpbb_logo_theme', esc_attr($custom_field));
-	}
+		if(isset($_POST['wpbb_front_design'][$variation_id])) {
+			$custom_field = $_POST['wpbb_front_design'][$variation_id];
+			update_post_meta($variation_id, 'wpbb_front_design', esc_attr($custom_field));
+		}
 	}
 }
