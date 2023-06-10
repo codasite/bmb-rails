@@ -2,6 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-config.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-config-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
 class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 	/**
@@ -50,24 +51,31 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 	 */
 
 	public function html_to_image($request) {
+		$utils = new Wp_Bracket_Builder_Utils();
 		// get the entire request body
 		$body = json_decode($request->get_body(), true);
 		$theme_mode = $body['themeMode'] ?? null;
-		unset($body['themeMode']);
+
+		if (!$theme_mode) {
+			$utils->log_sentry_error('Theme mode is required. Request: ' . json_encode($body));
+			return new WP_Error('error', __('Theme mode is required', 'text-domain'), array('status' => 400));
+		}
 
 		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
 		$res = $lambda_service->html_to_image($body);
 
-		if (!is_wp_error($res) && isset($res->imageUrl)) {
+		if (!is_wp_error($res) && isset($res['imageUrl'])) {
 			// build a config object
-			$config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res->imageUrl);
+			$config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res['imageUrl']);
 			// Add the image url to the user's session
 			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 			$config_repo->add($config, $theme_mode);
+
 			return new WP_REST_Response($res, 200);
 		} else {
-			return $res;
-			// return new WP_Error('error', __('Error converting HTML to image. Image url not found', 'text-domain'), array('status' => 500));
+			$error = $res instanceof WP_Error ? $res : new WP_Error('error', __('Error converting HTML to image. Image url not found. Response: ' . json_encode($res), 'text-domain'), array('status' => 500));
+			$utils->log_sentry_message('Error converting HTML to image. Image url not found. Response: ' . json_encode($res), \Sentry\Severity::error());
+			return $error;
 		}
 	}
 	/**

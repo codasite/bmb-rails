@@ -103,7 +103,8 @@ class BracketApi {
 			const response = await fetch(`${this.baseUrl}${path}`, request);
 
 			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+				const text = await response.text();
+				throw new Error(`HTTP Error ${response.status}: ${response.statusText} - ${text}`);
 			}
 
 			let responseData = await response.json();

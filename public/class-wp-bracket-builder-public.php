@@ -281,9 +281,6 @@ class Wp_Bracket_Builder_Public {
 		$back_url = $convert_res['imageUrl'];
 		$item_arr['back_url'] = $back_url;
 
-		$order_filename = $this->get_gelato_order_filename($order, $item);
-		$item_arr['order_filename'] = $order_filename;
-
 		// get the url for the front design
 		// get the product variation for the order item
 		$variation = $item->get_product();
@@ -294,9 +291,18 @@ class Wp_Bracket_Builder_Public {
 
 		$item_arr['front_url'] = $front_url;
 
+		$order_filename = $this->get_gelato_order_filename($order, $item);
+		$item_arr['order_filename'] = $order_filename;
 
-
-
+		// merge pdfs
+		$pdf_service = new Wp_Bracket_Builder_PDF_Service();
+		$s3 = new Wp_Bracket_Builder_S3_Service();
+		$front = $s3->get_from_url($front_url);
+		$back = $s3->get_from_url($back_url);
+		$merged = $pdf_service->merge_from_string($front['Body'], $back['Body']);
+		$result = $s3->put(BRACKET_BUILDER_S3_ORDER_BUCKET, $order_filename, $merged);
+		$item_arr['order-result'] = $result;
+		
 
 		// $item_arr['bracket_theme'] = $bracket_theme;
 		// $item_arr['order_id'] = $order->get_id();
