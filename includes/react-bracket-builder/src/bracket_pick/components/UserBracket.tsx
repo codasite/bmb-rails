@@ -178,26 +178,26 @@ const UserBracket = (props: UserBracketProps) => {
 			darkModeHTML = doc.documentElement.outerHTML
 		}
 
-		console.log('dark mode')
-		console.log(darkModeHTML)
-		console.log('light mode')
-		console.log(lightModeHTML)
+		// console.log('dark mode')
+		// console.log(darkModeHTML)
+		// console.log('light mode')
+		// console.log(lightModeHTML)
 		const promises = [
 			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'dark' }),
 			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'light' }),
 		]
 		setProcessingImage(true)
 		Promise.all(promises).then((res) => {
-			// const darkModeImage = res[0]
-			// const lightModeImage = res[1]
-			// console.log('dark mode image')
-			// console.log(darkModeImage)
-			// console.log('light mode image')
-			// console.log(lightModeImage)
-			// setProcessingImage(false)
+			const darkModeImage = res[0]
+			const lightModeImage = res[1]
+			console.log('dark mode image')
+			console.log(darkModeImage)
+			console.log('light mode image')
+			console.log(lightModeImage)
+			setProcessingImage(false)
 
 			// redirect to apparel page
-			console.log('res, ', res)
+			// console.log('res, ', res)
 			window.location.href = apparelUrl
 		}).catch((err) => {
 			setProcessingImage(false)

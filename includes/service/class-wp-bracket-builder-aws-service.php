@@ -4,6 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 
 use Aws\Lambda\LambdaClient;
 use Aws\S3\S3Client;
+use Aws\S3\S3UriParser;
 
 # Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
 # SPDX-License-Identifier: Apache-2.0
@@ -60,12 +61,16 @@ class Wp_Bracket_Builder_S3_Service {
 		return $result;
 	}
 
-	public function extract_key_from_url($url) {
-		$parsed = parse_url($url);
-		$path = $parsed['path'];
-		$parts = explode('/', $path);
-		$key = $parts[count($parts) - 1];
-		return $key;
+	public function get_from_url($url) {
+		$parsed = $this->parse_s3_url($url);
+		$result = $this->get($parsed['bucket'], $parsed['key']);
+		return $result;
+	}
+
+	public function parse_s3_url($url) {
+		$parser = new S3UriParser();
+		$result = $parser->parse($url);
+		return $result;
 	}
 }
 

@@ -27,12 +27,14 @@ class Wp_Bracket_Builder_Utils {
 
 	}
 
-	public function log_sentry_message($msg) {
-		if ( function_exists( 'wp_sentry_safe' ) ) {
-			wp_sentry_safe( function ( \Sentry\State\HubInterface $client ) use ( $msg ) {
-				$client->captureMessage( $msg );
-			} );
-		}
-
-	}
+	public function log_sentry_message($msg, $level = null) {
+    if ( function_exists( 'wp_sentry_safe' ) ) {
+        wp_sentry_safe( function ( \Sentry\State\HubInterface $client ) use ( $msg, $level) {
+            if($level === null) {
+                $level = \Sentry\Severity::info();
+            }
+            $client->captureMessage( $msg, $level);
+        });
+    }
+}
 }
