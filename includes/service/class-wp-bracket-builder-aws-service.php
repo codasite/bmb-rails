@@ -121,7 +121,7 @@ class Wp_Bracket_Builder_Lambda_Service {
 		}
 
 		// get the response body as json
-		$res_body = json_decode(wp_remote_retrieve_body($res));
+		$res_body = json_decode(wp_remote_retrieve_body($res), true);
 		return $res_body;
 	}
 
@@ -152,7 +152,7 @@ class Wp_Bracket_Builder_Lambda_Service {
 			return $result;
 		}
 
-		return json_decode($result['Payload']->getContents());
+		return json_decode($result['Payload']->getContents(), true);
 	}
 
 	private function invoke($functionName, $params, $logType = 'None') {

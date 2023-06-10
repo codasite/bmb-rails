@@ -227,8 +227,8 @@ class Wp_Bracket_Builder_Public {
 
 				// Get the url for the front print file
 
-				// $utils = new Wp_Bracket_Builder_Utils();
-				// $utils->log_sentry_message(json_encode(array('bracket-config' => $config)));
+				$utils = new Wp_Bracket_Builder_Utils();
+				$utils->log_sentry_message(json_encode(array('bracket-config' => $config)));
 			}
 		}
 		return $cart_item_data;
@@ -260,7 +260,7 @@ class Wp_Bracket_Builder_Public {
 		$item_arr = array();
 		$bracket_config = $item->get_meta('bracket_config');
 		// throw error if config not found?
-		$item_arr['config'] = $bracket_config;
+		// $item_arr['config'] = $bracket_config;
 		$bracket_theme = $bracket_config->theme_mode;
 		$html = $bracket_config->html;
 
@@ -273,20 +273,27 @@ class Wp_Bracket_Builder_Public {
 			'html' => $html,
 		);
 		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
-		$back_url = $lambda_service->html_to_image($convert_req);
-		// check if back is successful
+		$convert_res = $lambda_service->html_to_image($convert_req);
+		// check if convert res is wp_error
+		if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
+			// throw error
+		}
+		$back_url = $convert_res['imageUrl'];
 		$item_arr['back_url'] = $back_url;
 
 		$order_filename = $this->get_gelato_order_filename($order, $item);
 		$item_arr['order_filename'] = $order_filename;
 
 		// get the url for the front design
-		$s3_front_key = $item->get_meta('wpbb_front_design', true);
-		$item_arr['front_url'] = $s3_front_key;
-
-		if (empty($s3_front_key)) {
+		// get the product variation for the order item
+		$variation = $item->get_product();
+		$front_url = get_post_meta($variation->get_id(), 'wpbb_front_design', true);
+		if (empty($front_url)) {
 			// handle empty
 		}
+
+		$item_arr['front_url'] = $front_url;
+
 
 
 
@@ -294,7 +301,15 @@ class Wp_Bracket_Builder_Public {
 		// $item_arr['bracket_theme'] = $bracket_theme;
 		// $item_arr['order_id'] = $order->get_id();
 		// $item_arr['data'] = $item->get_data();
-		// $item_arr['meta'] = $item->get_meta_data();
+		// Get all metadata
+		$metadata = $item->get_formatted_meta_data();
+
+		// Filter out bracket_config
+		$filtered_meta = array_filter($metadata, function($meta) {
+				return $meta->key !== 'bracket_config';
+		});
+
+		$item_arr['meta'] = $filtered_meta;
 		// $item_arr['item_id'] = $item->get_id();
 
 
