@@ -30,46 +30,49 @@ class Wp_Bracket_Builder_S3_Service {
 			],
 		]);
 	}
-	public function put($bucket, $key, $body) {
+
+/**
+ * Put an object in an Amazon S3 bucket.
+ * @param string $bucket bucket name
+ * @param string $key object key
+ * @param string $body object body
+ * 
+ * @return string URI of the object
+ */
+ public function put($bucket, $key, $body): string {
 		$result = $this->s3Client->putObject([
 			'Bucket' => $bucket,
 			'Key' => $key,
 			'Body' => $body,
 		]);
-		return $result;
+		return $result->get('@metadata')['effectiveUri'];
 	}
 
-	public function copy($destination_bucket, $destination_key, $source_bucket, $source_key) {
-		try {
-			$result = $this->s3Client->copyObject([
-				'Bucket' => $destination_bucket,
-				'Key' => $destination_key,
-				'CopySource' => $source_bucket . '/' . $source_key,
-			]);
-			return $result;
-		} catch (Exception $e) {
-			$utils = new Wp_Bracket_Builder_Utils();
-			$utils->log_sentry_error($e);
-		}
-	}
-
-	public function get($bucket, $key) {
+	/**
+	 * Get an object from an Amazon S3 bucket.
+	 * @param string $bucket bucket name
+	 * @param string $key object key
+	 * 
+	 * @return string object body
+	 */
+	public function get($bucket, $key): string {
 		$result = $this->s3Client->getObject([
 			'Bucket' => $bucket,
 			'Key' => $key,
 		]);
-		return $result;
+		return $result['Body'];
 	}
 
+	/**
+	 * Get an object from an Amazon S3 bucket given the object's URL.
+	 * @param string $url object url
+	 * 
+	 * @return string object body
+	 */
 	public function get_from_url($url) {
-		$parsed = $this->parse_s3_url($url);
-		$result = $this->get($parsed['bucket'], $parsed['key']);
-		return $result;
-	}
-
-	public function parse_s3_url($url) {
 		$parser = new S3UriParser();
-		$result = $parser->parse($url);
+		$parsed = $parser->parse($url);
+		$result = $this->get($parsed['bucket'], $parsed['key']);
 		return $result;
 	}
 }
@@ -101,13 +104,25 @@ class Wp_Bracket_Builder_Lambda_Service {
 		]);
 	}
 
-	public function html_to_image($body) {
+	/**
+	 * Invoke the BMB Lambda function.
+	 * @param array $body parameters to pass to the function
+	 * 
+	 * @return array response from the function
+	 */
+	public function html_to_image($body): array | WP_Error {
 		// $res = $this->image_from_api($body);
 		$res = $this->image_from_invocation($body);
 		return $res;
 	}
 
-	public function image_from_api($body) {
+	/**
+	 * Invoke the BMB Lambda function using the API Gateway. Only used for local testing.
+	 * @param array $body parameters to pass to the function
+	 * 
+	 * @return array response from the function
+	 */
+	private function image_from_api($body): array | WP_Error {
 		$convert_url = 'http://localhost:8080/convert';
 		// Make a request to the convert url using POST, content type application/json, and the html as the body, and accept *
 
@@ -130,7 +145,13 @@ class Wp_Bracket_Builder_Lambda_Service {
 		return $res_body;
 	}
 
-	private function image_from_invocation($params) {
+	/**
+	 * Invoke the BMB Lambda function using the Lambda client. Used in production.
+	 * @param array $params parameters to pass to the function
+	 * 
+	 * @return array response from the function
+	 */
+	private function image_from_invocation($params): array | WP_Error {
 		if (!defined('HTML_TO_IMAGE_FUNCTION_NAME')) {
 			return new WP_Error('error', __('Lambda function name not defined.', 'text-domain'), array('status' => 500));
 		}
@@ -172,8 +193,6 @@ class Wp_Bracket_Builder_Lambda_Service {
 			'LogType' => $logType,
 		]);
 	}
-
-
 
 
 	/**
