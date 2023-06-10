@@ -214,8 +214,10 @@ class Wp_Bracket_Builder_Public {
 	public function add_bracket_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
 		$product = wc_get_product($product_id);
 		if ($this->product_has_category($product, 'bracket-ready')) {
+			// $utils = new Wp_Bracket_Builder_Utils();
+			// $utils->log_sentry_message(json_encode($_POST));
 			// Get the selected theme
-			$bracket_theme = filter_input(INPUT_POST, 'attribute_bracket-theme', FILTER_SANITIZE_STRING);
+			$bracket_theme = filter_input(INPUT_POST, 'attribute_pa_bracket-theme', FILTER_SANITIZE_STRING);
 			if (!empty($bracket_theme)) {
 				$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 				// Get the correct config from the session and store it in the cart item data
@@ -226,7 +228,7 @@ class Wp_Bracket_Builder_Public {
 				// Get the url for the front print file
 
 				// $utils = new Wp_Bracket_Builder_Utils();
-				// $utils->log_sentry_message(json_encode(array('bracket-theme' => $bracket_theme)));
+				// $utils->log_sentry_message(json_encode(array('bracket-config' => $config)));
 			}
 		}
 		return $cart_item_data;
@@ -258,6 +260,7 @@ class Wp_Bracket_Builder_Public {
 		$item_arr = array();
 		$bracket_config = $item->get_meta('bracket_config');
 		// throw error if config not found?
+		$item_arr['config'] = $bracket_config;
 		$bracket_theme = $bracket_config->theme_mode;
 		$html = $bracket_config->html;
 
@@ -269,21 +272,24 @@ class Wp_Bracket_Builder_Public {
 			'pdf' => true,
 			'html' => $html,
 		);
-		// $item_arr['convert_req'] = $convert_req;
 		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
 		$back_url = $lambda_service->html_to_image($convert_req);
+		// check if back is successful
 		$item_arr['back_url'] = $back_url;
 
 		$order_filename = $this->get_gelato_order_filename($order, $item);
 		$item_arr['order_filename'] = $order_filename;
 
-		$s3_front_key = '';
 		// get the url for the front design
-		// if ($this->product_has_category($product, '12x16-front')) {
-		// 	$s3_front_key = 
+		$s3_front_key = $item->get_meta('wpbb_front_design', true);
+		$item_arr['front_url'] = $s3_front_key;
 
-		// } else if ($this->product_has_category($product, '12x12-front')) {
-		// }
+		if (empty($s3_front_key)) {
+			// handle empty
+		}
+
+
+
 
 		// $item_arr['bracket_theme'] = $bracket_theme;
 		// $item_arr['order_id'] = $order->get_id();
@@ -298,7 +304,7 @@ class Wp_Bracket_Builder_Public {
 		// // Copy bracket image to gelato bucket
 		// $s3_service->copy('wpbb-gelato-orders', $s3_filename, 'wpbb-bracket-images', $source_key);
 
-		$item_arr['config'] = $bracket_config;
+		// $item_arr['config'] = $bracket_config;
 		$utils = new Wp_Bracket_Builder_Utils();
 		$utils->log_sentry_message(json_encode($item_arr));
 	}

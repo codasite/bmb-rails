@@ -183,8 +183,8 @@ const UserBracket = (props: UserBracketProps) => {
 		console.log('light mode')
 		console.log(lightModeHTML)
 		const promises = [
-			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'dark' }),
-			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'light' }),
+			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'bracket-theme-dark' }),
+			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'bracket-theme-light' }),
 		]
 		setProcessingImage(true)
 		Promise.all(promises).then((res) => {
