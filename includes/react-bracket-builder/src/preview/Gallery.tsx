@@ -33,6 +33,7 @@ enum ProductImageThemeMode {
 interface ProductImageConfig {
   url: string;
   variationColor?: string;
+  variationTheme?: ProductImageThemeMode;
 }
 
 interface ProductImageParams {
@@ -52,6 +53,8 @@ interface ImageOverlayParams {
 const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, colorOptions }) => {
   // URLs of images to display in the gallery. This is updated
   // when the select listener is triggered.
+  const [currentColor, setCurrentColor] = useState<string>('');
+  const [currentTheme, setCurrentTheme] = useState<string>('');
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([]);
   const [loadingImages, setLoadingImages] = useState<boolean>(true);
@@ -80,6 +83,17 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
       });
   }, []);
 
+  // useEffect hook that runs whenever currentColor or currentTheme changes
+  useEffect(() => {
+    if (imageConfigs.length > 0) {
+      const newUrls = getImageUrlsForColor(imageConfigs, currentColor);
+      if (newUrls.length > 0) {
+        return setImageUrls(newUrls);
+      }
+    }
+  }, [currentColor, currentTheme]);
+
+
   // This function is called when the image configs are ready and the DOM content is loaded.
   // It sets the initial image URLs and attaches the select listener.
   const initImages = (imageConfigs: ProductImageConfig[]) => {
@@ -103,7 +117,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
 
   const colorSelectChangeHandler = (event: Event) => {
     const target = event.target as HTMLSelectElement;
-    const imageConfigs = imageConfigsRef.current;
+    // const imageConfigs = imageConfigsRef.current;
     if (target?.value) {
       let color = target.value;
       // Use the image configs stored in the ref to get the image URLs for the selected color.
@@ -112,10 +126,30 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
       if (newUrls.length > 0) {
         return setImageUrls(newUrls);
       }
+      setCurrentColor(color);
     }
     const urls = imageConfigs.map(config => {
       return config.url
     })
+    setImageUrls(urls);
+  };
+
+  const themeSelectChangeHandler = (event: Event) => {
+    const target = event.target as HTMLSelectElement;
+    const imageConfigs = imageConfigsRef.current;
+    if (target?.value) {
+      let theme = target.value;
+      // Use the image configs stored in the ref to get the image URLs for the selected color.
+      // Needed because this handler is attached to the select element, which is not part of react.
+      const newUrls = getImageUrlsForTheme(imageConfigs, theme);
+      if (newUrls.length > 0) {
+        return setImageUrls(newUrls);
+      }
+    }
+    const urls = imageConfigs.map(config => {
+      return config.url
+    }
+    )
     setImageUrls(urls);
   };
 
@@ -200,6 +234,14 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
 const getImageUrlsForColor = (configs: ProductImageConfig[], color: string): string[] => {
   return configs.filter((config) => {
     return config.variationColor && compareProductAttributes(config.variationColor, color);
+  }).map((config) => {
+    return config.url;
+  });
+}
+
+const getImageUrlsForTheme = (configs: ProductImageConfig[], theme: string): string[] => {
+  return configs.filter((config) => {
+    return config.variationTheme && compareProductAttributes(config.variationTheme, theme);
   }).map((config) => {
     return config.url;
   });
