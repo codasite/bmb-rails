@@ -109,7 +109,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
     initSelectHandler('pa_bracket-theme', setCurrentTheme, themeSelectChangeHandler);
   }
 
-  const initSelectHandler = (selector, setFunction, handler) => {
+  const initSelectHandler = (selector: string, setFunction: (value: string) => void, handler: (event: Event) => void) => {
     const selectElement = document.querySelector(`select#${selector}`) as HTMLSelectElement | null;
 
     if (!selectElement) {
@@ -123,7 +123,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
     selectElement.addEventListener('change', handler);
   };
 
-  const selectChangeHandler = (setFunction) => {
+  const selectChangeHandler = (setFunction: (value: string) => void) => {
     return (event: Event) => {
       const target = event.target as HTMLSelectElement;
       if (target?.value) {

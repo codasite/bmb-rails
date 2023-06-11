@@ -182,9 +182,11 @@ const UserBracket = (props: UserBracketProps) => {
 		// console.log(darkModeHTML)
 		// console.log('light mode')
 		// console.log(lightModeHTML)
+		// Random key to link the two images together
+		const key = Math.random().toString(36).substring(7);
 		const promises = [
-			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'dark' }),
-			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: 'light' }),
+			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, s3Key: `bracket-${key}-dark.png` }),
+			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, s3Key: `bracket-${key}-light.png` }),
 		]
 		setProcessingImage(true)
 		Promise.all(promises).then((res) => {
@@ -194,10 +196,8 @@ const UserBracket = (props: UserBracketProps) => {
 			console.log(darkModeImage)
 			console.log('light mode image')
 			console.log(lightModeImage)
-			setProcessingImage(false)
+			// setProcessingImage(false)
 
-			// redirect to apparel page
-			// console.log('res, ', res)
 			window.location.href = apparelUrl
 		}).catch((err) => {
 			setProcessingImage(false)
