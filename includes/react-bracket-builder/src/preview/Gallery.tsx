@@ -57,7 +57,8 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
   const [currentTheme, setCurrentTheme] = useState<string>('');
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([]);
-  const [loadingImages, setLoadingImages] = useState<boolean>(true);
+  // const [loadingImages, setLoadingImages] = useState<boolean>(true);
+  const [loadingImages, setLoadingImages] = useState<boolean>(false);
 
   const imageConfigsRef = useRef<ProductImageConfig[]>(imageConfigs);
 
@@ -75,7 +76,8 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
         setImageConfigs(imageConfigs);
-        initImages(imageConfigs);
+        // initImages(imageConfigs);
+        initChangeHandlers();
       })
       .catch(error => {
         console.error('An error occurred:', error);
@@ -85,12 +87,13 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
 
   // useEffect hook that runs whenever currentColor or currentTheme changes
   useEffect(() => {
-    if (imageConfigs.length > 0) {
-      const newUrls = getImageUrlsForColor(imageConfigs, currentColor);
-      if (newUrls.length > 0) {
-        return setImageUrls(newUrls);
-      }
-    }
+    console.log('running', currentColor, currentTheme)
+    // if (imageConfigs.length > 0) {
+    //   const newUrls = getImageUrlsForColor(imageConfigs, currentColor);
+    //   if (newUrls.length > 0) {
+    //     return setImageUrls(newUrls);
+    //   }
+    // }
   }, [currentColor, currentTheme]);
 
 
@@ -103,54 +106,79 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
       return
     }
 
-    let urls: string[]
-    const color = selectElement.value;
-    if (color) {
-      urls = getImageUrlsForColor(imageConfigs, color);
-    } else {
-      urls = imageConfigs.map((config) => config.url);
-    }
-    setImageUrls(urls);
+    // let urls: string[]
+    // const color = selectElement.value;
+    // if (color) {
+    //   urls = getImageUrlsForColor(imageConfigs, color);
+    // } else {
+    //   urls = imageConfigs.map((config) => config.url);
+    // }
+    // setImageUrls(urls);
     setLoadingImages(false)
     selectElement.addEventListener('change', colorSelectChangeHandler);
   }
+
+  const initChangeHandlers = () => {
+    initSelectHandler('color', setCurrentColor, colorSelectChangeHandler);
+    initSelectHandler('pa_bracket-theme', setCurrentTheme, themeSelectChangeHandler);
+  }
+
+
+  const initSelectHandler = (selector, setFunction, handler) => {
+    const selectElement = document.querySelector(`select#${selector}`) as HTMLSelectElement | null;
+
+    if (!selectElement) {
+      return;
+    }
+
+    const value = selectElement.value;
+    if (value) {
+      setFunction(value);
+    }
+    selectElement.addEventListener('change', handler);
+  };
+
+
 
   const colorSelectChangeHandler = (event: Event) => {
     const target = event.target as HTMLSelectElement;
     // const imageConfigs = imageConfigsRef.current;
     if (target?.value) {
       let color = target.value;
-      // Use the image configs stored in the ref to get the image URLs for the selected color.
-      // Needed because this handler is attached to the select element, which is not part of react.
-      const newUrls = getImageUrlsForColor(imageConfigs, color);
-      if (newUrls.length > 0) {
-        return setImageUrls(newUrls);
-      }
+      // // Use the image configs stored in the ref to get the image URLs for the selected color.
+      // // Needed because this handler is attached to the select element, which is not part of react.
+      // const newUrls = getImageUrlsForColor(imageConfigs, color);
+      // if (newUrls.length > 0) {
+      //   return setImageUrls(newUrls);
+      // }
       setCurrentColor(color);
+    } else {
+      setCurrentColor('');
     }
-    const urls = imageConfigs.map(config => {
-      return config.url
-    })
-    setImageUrls(urls);
+    // const urls = imageConfigs.map(config => {
+    //   return config.url
+    // })
+    // setImageUrls(urls);
   };
 
   const themeSelectChangeHandler = (event: Event) => {
     const target = event.target as HTMLSelectElement;
-    const imageConfigs = imageConfigsRef.current;
+    // const imageConfigs = imageConfigsRef.current;
     if (target?.value) {
       let theme = target.value;
       // Use the image configs stored in the ref to get the image URLs for the selected color.
       // Needed because this handler is attached to the select element, which is not part of react.
-      const newUrls = getImageUrlsForTheme(imageConfigs, theme);
-      if (newUrls.length > 0) {
-        return setImageUrls(newUrls);
-      }
+      //   const newUrls = getImageUrlsForTheme(imageConfigs, theme);
+      //   if (newUrls.length > 0) {
+      //     return setImageUrls(newUrls);
+      //   }
+      setCurrentTheme(theme);
     }
-    const urls = imageConfigs.map(config => {
-      return config.url
-    }
-    )
-    setImageUrls(urls);
+    // const urls = imageConfigs.map(config => {
+    //   return config.url
+    // }
+    // )
+    // setImageUrls(urls);
   };
 
   const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
