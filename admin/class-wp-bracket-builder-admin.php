@@ -135,11 +135,25 @@ class Wp_Bracket_Builder_Admin {
 		if (has_term(BRACKET_PRODUCT_CATEGORY, 'product_cat', $parent_product_id)) {
 			woocommerce_wp_text_input(
 				array(
-						'id'            => 'wpbb_front_design[' . $variation->ID . ']',
-						'label'         => __('Front Design URL', 'woocommerce'),
-						'description'   => __('The design to print on the front of this product, in PDF format. Typically an S3 object URL.', 'woocommerce'),
-						'desc_tip'      => 'true',
-						'value'         => get_post_meta($variation->ID, 'wpbb_front_design', true),
+					'id'            => 'wpbb_front_design[' . $variation->ID . ']',
+					'label'         => __('Front Design URL', 'woocommerce'),
+					'description'   => __('The design to print on the front of this product, in PDF format. Typically an S3 object URL.', 'woocommerce'),
+					'desc_tip'      => 'true',
+					'value'         => get_post_meta($variation->ID, 'wpbb_front_design', true),
+				)
+			);
+			// a select field
+			woocommerce_wp_select(
+				array(
+					'id'            => 'wpbb_bracket_theme' . $variation->ID . ']',
+					'label'         => __('Bracket Theme', 'woocommerce'),
+					'description'   => __('The bracket theme to be used on this variation', 'woocommerce'),
+					'desc_tip'      => 'true',
+					'value'         => get_post_meta($variation->ID, 'wpbb_bracket_theme', true),
+					'options'       => array(
+						'light' => __('Light', 'woocommerce'),
+						'dark' => __('Dark', 'woocommerce'),
+					),
 				)
 			);
 		}
@@ -148,9 +162,13 @@ class Wp_Bracket_Builder_Admin {
 	// save the value of this field when the product variation is saved
 	// Attach to `woocommerce_save_product_variation` hook
 	function save_variation_settings_fields($variation_id, $i) {
-		if(isset($_POST['wpbb_front_design'][$variation_id])) {
+		if (isset($_POST['wpbb_front_design'][$variation_id])) {
 			$custom_field = $_POST['wpbb_front_design'][$variation_id];
 			update_post_meta($variation_id, 'wpbb_front_design', esc_attr($custom_field));
+		}
+		if (isset($_POST['wpbb_bracket_theme'][$variation_id])) {
+			$custom_field = $_POST['wpbb_bracket_theme'][$variation_id];
+			update_post_meta($variation_id, 'wpbb_bracket_theme', esc_attr($custom_field));
 		}
 	}
 }
