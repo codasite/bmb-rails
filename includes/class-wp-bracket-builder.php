@@ -184,6 +184,7 @@ class Wp_Bracket_Builder {
 		// custom meta for bracket product variations
 		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
 		$this->loader->add_action('woocommerce_save_product_variation', $plugin_admin, 'save_variation_settings_fields', 10, 2);
+		$this->loader->add_action('woocommerce_save_product_variation', $plugin_admin, 'save_bracket_theme_setting_field', 10, 2);
 
 	}
 
