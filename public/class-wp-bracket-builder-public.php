@@ -62,7 +62,7 @@ class Wp_Bracket_Builder_Public {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->utils = new Wp_Bracket_Builder_Utils();
-		$this->bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repo();
+		$this->bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 	}
 
 	/**

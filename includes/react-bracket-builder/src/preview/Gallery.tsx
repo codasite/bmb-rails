@@ -57,8 +57,8 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
   const [currentTheme, setCurrentTheme] = useState<string>('');
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([]);
-  // const [loadingImages, setLoadingImages] = useState<boolean>(true);
-  const [loadingImages, setLoadingImages] = useState<boolean>(false);
+  const [loadingImages, setLoadingImages] = useState<boolean>(true);
+  // const [loadingImages, setLoadingImages] = useState<boolean>(false);
 
   useEffect(() => {
     const imageConfigsPromise = buildImageConfigs();
@@ -69,6 +69,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
       .then(([imageConfigs]) => {
         setImageConfigs(imageConfigs);
         initChangeHandlers();
+        setLoadingImages(false);
       })
       .catch(error => {
         console.error('An error occurred:', error);
@@ -78,7 +79,6 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
 
   // useEffect hook that runs whenever currentColor or currentTheme changes
   useEffect(() => {
-    console.log('running', currentColor, currentTheme)
     const filtered = filterImageConfigs(imageConfigs, currentColor, currentTheme);
     if (filtered.length > 0) {
       setImageUrls(filtered.map(config => {
