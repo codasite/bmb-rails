@@ -220,15 +220,20 @@ class Wp_Bracket_Builder_Public {
 		$product = wc_get_product($product_id);
 
 		if (!$this->is_bracket_product($product)) {
+			// Not a bracket product. Treat as a normal product.
 			return $passed;
 		}
 
 		$configs = $this->bracket_config_repo->get_all();
 
 		if (empty($configs)) {
+			// No bracket configs found. Treat as a normal product.
 			return $passed;
 		}
 
+		// The bracket theme must be set in the variation meta data.
+		// Errors out if this is not set. NOTE: The preview can still render the correct theme even if this is not set.
+		// This is because the preview obtains the bracket theme from the image title.
 		$bracket_theme = $this->get_bracket_theme($variation_id);
 
 		if (empty($bracket_theme)) {
@@ -236,6 +241,8 @@ class Wp_Bracket_Builder_Public {
 			return false;
 		}
 
+		// The config is stored in the session and set when "Add to Apparel" button is clicked on the bracket builder page.
+		// It contains the bracket theme and HTML to render the bracket.
 		$config = $configs[$bracket_theme];
 
 		if (empty($config)) {
@@ -246,9 +253,12 @@ class Wp_Bracket_Builder_Public {
 		return $passed;
 	}
 
+	// Add the bracket to the cart item data
+	// This hooks into the woocommerce_add_cart_item_data filter
 	public function add_bracket_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
 		$product = wc_get_product($product_id);
 
+		// Perform similar checks as above to make sure we are dealing with a bracket product and that we have a bracket config
 		if (!$this->is_bracket_product($product)) {
 			return $cart_item_data;
 		}
@@ -265,6 +275,14 @@ class Wp_Bracket_Builder_Public {
 		$cart_item_data['bracket_config'] = $config;
 
 		return $cart_item_data;
+	}
+
+	// Add the bracket config to the order line item data when the order is created
+	// This is needed to ensure that data added to the cart item is persisted in the order
+	public function add_bracket_to_order_item($item, $cart_item_key, $values, $order) {
+		if (array_key_exists('bracket_config', $values)) {
+			$item->add_meta_data('bracket_config', $values['bracket_config']);
+		}
 	}
 
 	// Helper method to check if product is a bracket product
@@ -290,12 +308,6 @@ class Wp_Bracket_Builder_Public {
 		wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
 	}
 
-	// Add the bracket config to the order line item data when the order is created
-	public function add_bracket_to_order_item($item, $cart_item_key, $values, $order) {
-		if (array_key_exists('bracket_config', $values)) {
-			$item->add_meta_data('bracket_config', $values['bracket_config']);
-		}
-	}
 
 	// this function hooks into woocommerce_payment_complete
 	public function handle_payment_complete($order_id) {
@@ -374,18 +386,7 @@ class Wp_Bracket_Builder_Public {
 		$item_arr['meta'] = $filtered_meta;
 		$item_arr['item_id'] = $item->get_id();
 
-
-
-		// $s3_service = new Wp_Bracket_Builder_S3_Service();
-		// $source_key = $s3_service->extract_key_from_url($bracket_url);
-		// // Copy bracket image to gelato bucket
-		// $s3_service->copy('wpbb-gelato-orders', $s3_filename, 'wpbb-bracket-images', $source_key);
-
-		// $item_arr['config'] = $bracket_config;
 		$this->utils->log_sentry_message(json_encode($item_arr));
-	}
-
-	private function get_front_print_area($product) {
 	}
 
 	private function get_variation_attribute_value($variation, $attribute_name) {
