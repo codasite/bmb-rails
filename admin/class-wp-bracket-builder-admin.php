@@ -1,4 +1,5 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
 
 /**
  * The admin-specific functionality of the plugin.
@@ -145,14 +146,14 @@ class Wp_Bracket_Builder_Admin {
 			// a select field
 			woocommerce_wp_select(
 				array(
-					'id'            => 'wpbb_bracket_theme' . $variation->ID . ']',
+					'id'            => 'wpbb_bracket_theme[' . $variation->ID . ']',
 					'label'         => __('Bracket Theme', 'woocommerce'),
 					'description'   => __('The bracket theme to be used on this variation', 'woocommerce'),
 					'desc_tip'      => 'true',
 					'value'         => get_post_meta($variation->ID, 'wpbb_bracket_theme', true),
 					'options'       => array(
-						'light' => __('Light', 'woocommerce'),
 						'dark' => __('Dark', 'woocommerce'),
+						'light' => __('Light', 'woocommerce'),
 					),
 				)
 			);
@@ -161,14 +162,17 @@ class Wp_Bracket_Builder_Admin {
 
 	// save the value of this field when the product variation is saved
 	// Attach to `woocommerce_save_product_variation` hook
-	function save_variation_settings_fields($variation_id, $i) {
+	public function save_variation_settings_fields($variation_id, $i) {
 		if (isset($_POST['wpbb_front_design'][$variation_id])) {
-			$custom_field = $_POST['wpbb_front_design'][$variation_id];
-			update_post_meta($variation_id, 'wpbb_front_design', esc_attr($custom_field));
+			$front_design = $_POST['wpbb_front_design'][$variation_id];
+			update_post_meta($variation_id, 'wpbb_front_design', esc_attr($front_design));
 		}
+	}
+
+	public function save_bracket_theme_setting_field($variation_id, $i) {
 		if (isset($_POST['wpbb_bracket_theme'][$variation_id])) {
-			$custom_field = $_POST['wpbb_bracket_theme'][$variation_id];
-			update_post_meta($variation_id, 'wpbb_bracket_theme', esc_attr($custom_field));
+			$bracket_theme = $_POST['wpbb_bracket_theme'][$variation_id];
+			update_post_meta($variation_id, 'wpbb_bracket_theme', esc_attr($bracket_theme));
 		}
 	}
 }
