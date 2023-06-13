@@ -152,6 +152,7 @@ class Wp_Bracket_Builder_Admin {
 					'desc_tip'      => 'true',
 					'value'         => get_post_meta($variation->ID, 'wpbb_bracket_theme', true),
 					'options'       => array(
+						'' => __('Choose Theme', 'woocommerce'),
 						'dark' => __('Dark', 'woocommerce'),
 						'light' => __('Light', 'woocommerce'),
 					),
@@ -167,9 +168,6 @@ class Wp_Bracket_Builder_Admin {
 			$front_design = $_POST['wpbb_front_design'][$variation_id];
 			update_post_meta($variation_id, 'wpbb_front_design', esc_attr($front_design));
 		}
-	}
-
-	public function save_bracket_theme_setting_field($variation_id, $i) {
 		if (isset($_POST['wpbb_bracket_theme'][$variation_id])) {
 			$bracket_theme = $_POST['wpbb_bracket_theme'][$variation_id];
 			update_post_meta($variation_id, 'wpbb_bracket_theme', esc_attr($bracket_theme));
