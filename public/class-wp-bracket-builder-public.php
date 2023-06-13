@@ -53,10 +53,16 @@ class Wp_Bracket_Builder_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
+
+	 private $utils;
+	 private $bracket_config_repo;
+
 	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repo();
 	}
 
 	/**
@@ -116,9 +122,8 @@ class Wp_Bracket_Builder_Public {
 		$bracket_product_archive_url = $this->get_archive_url();
 
 		// get the bracket config for light and dark mode from the session
-		$bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-		$bracket_config_light = $bracket_config_repo->get('light');
-		$bracket_config_dark = $bracket_config_repo->get('dark');
+		$bracket_config_light = $this->bracket_config_repo->get('light');
+		$bracket_config_dark = $this->bracket_config_repo->get('dark');
 		$bracket_url_theme_map = array(
 			'light' => $bracket_config_light ? $bracket_config_light->img_url : '',
 			'dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
@@ -211,88 +216,78 @@ class Wp_Bracket_Builder_Public {
 
 	// Validate bracket product data before adding to cart
 	// Hooks into woocommerce_add_to_cart_validation
-	function bracket_product_add_to_cart_validation( $passed, $product_id, $quantity, $variation_id = null, $variations = null ) {
+	public function bracket_product_add_to_cart_validation( $passed, $product_id, $quantity, $variation_id = null, $variations = null ) {
 		$product = wc_get_product($product_id);
 
-		if (!$this->product_has_category($product, 'bracket-ready')) {
-			// Not a bracket product, treat as a normal product
+		if (!$this->is_bracket_product($product)) {
 			return $passed;
 		}
 
-		// Check to see if a bracket config is stored in the session
-		$bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-		$configs = $bracket_config_repo->get_all();
+		$configs = $this->bracket_config_repo->get_all();
+
 		if (empty($configs)) {
-			// No bracket config found in session, treat as a normal product
 			return $passed;
 		}
 
-		// Get the selected theme from attribute (deprecated)
-		// $bracket_theme = filter_input(INPUT_POST, 'attribute_pa_bracket-theme', FILTER_SANITIZE_STRING);
+		$bracket_theme = $this->get_bracket_theme($variation_id);
 
-		// Get the selected theme from the variation
-		$utils = new Wp_Bracket_Builder_Utils();
-		$bracket_theme = get_post_meta($variation_id, 'wpbb_bracket_theme', true);
 		if (empty($bracket_theme)) {
-			$product_name = $product->get_name();
-			$error = array(
-				'error' => 'Error adding item to cart. No bracket theme found.',
-				'product_name' => $product_name,
-				'variation_id' => $variation_id,
-				'product_id' => $product_id,
-			);
-			$event_id = $utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
-			wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
+			$this->log_and_show_error($product, $variation_id, $product_id, 'No bracket theme found.');
 			return false;
 		}
 
-		$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-		// Attempt to get the bracket config from the session
-		$config = $config_repo->get($bracket_theme);
+		$config = $configs[$bracket_theme];
 
 		if (empty($config)) {
-			$product_name = $product->get_name();
-			$error = array(
-				'error' => 'Error adding item to cart. No bracket config found.',
-				'product_name' => $product_name,
-				'variation_id' => $variation_id,
-				'product_id' => $product_id,
-			);
-			$event_id = $utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
-			wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
+			$this->log_and_show_error($product, $variation_id, $product_id, 'No bracket config found.');
 			return false;
 		}
 
-    return $passed;
+		return $passed;
 	}
 
-	// Add the bracket url to the cart item data
-	// This method should be attached to the woocommerce_add_cart_item_data filter
 	public function add_bracket_to_cart_item_data($cart_item_data, $product_id, $variation_id) {
 		$product = wc_get_product($product_id);
-		if ($this->product_has_category($product, 'bracket-ready')) {
-			// Get the selected theme from attribute (deprecated)
-			// $bracket_theme = filter_input(INPUT_POST, 'attribute_pa_bracket-theme', FILTER_SANITIZE_STRING);
 
-			// Get the selected theme from the variation
-			$bracket_theme = get_post_meta($variation_id, 'wpbb_bracket_theme', true);
-
-			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-			// Get the correct config from the session and store it in the cart item data
-			$config = $config_repo->get($bracket_theme);
-
-			if (empty($config)) {
-				// throw error
-			}
-
-			$cart_item_data['bracket_config'] = $config;
-
-			// Get the url for the front print file
-
-			$utils = new Wp_Bracket_Builder_Utils();
-			$utils->log_sentry_message(json_encode(array('bracket-config' => $config)));
+		if (!$this->is_bracket_product($product)) {
+			return $cart_item_data;
 		}
+
+		$configs = $this->bracket_config_repo->get_all();
+
+		if (empty($configs)) {
+			return $cart_item_data;
+		}
+
+		$bracket_theme = $this->get_bracket_theme($variation_id);
+
+		$config = $configs[$bracket_theme];
+		$cart_item_data['bracket_config'] = $config;
+
 		return $cart_item_data;
+	}
+
+	// Helper method to check if product is a bracket product
+	private function is_bracket_product($product) {
+		return $this->product_has_category($product, BRACKET_PRODUCT_CATEGORY);
+	}
+
+	// Helper method to get the bracket theme
+	private function get_bracket_theme($variation_id) {
+		return get_post_meta($variation_id, 'wpbb_bracket_theme', true);
+	}
+
+	// Helper method to log error and show notice
+	private function log_and_show_error($product, $variation_id, $product_id, $error_message) {
+		$product_name = $product->get_name();
+		$error = array(
+			'error' => 'Error adding item to cart. ' . $error_message,
+			'product_name' => $product_name,
+			'variation_id' => $variation_id,
+			'product_id' => $product_id,
+		);
+		$event_id = $this->utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
+		wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
 	}
 
 	// Add the bracket config to the order line item data when the order is created
@@ -387,8 +382,7 @@ class Wp_Bracket_Builder_Public {
 		// $s3_service->copy('wpbb-gelato-orders', $s3_filename, 'wpbb-bracket-images', $source_key);
 
 		// $item_arr['config'] = $bracket_config;
-		$utils = new Wp_Bracket_Builder_Utils();
-		$utils->log_sentry_message(json_encode($item_arr));
+		$this->utils->log_sentry_message(json_encode($item_arr));
 	}
 
 	private function get_front_print_area($product) {
