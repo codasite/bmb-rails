@@ -213,46 +213,56 @@ class Wp_Bracket_Builder_Public {
 	// Hooks into woocommerce_add_to_cart_validation
 	function bracket_product_add_to_cart_validation( $passed, $product_id, $quantity, $variation_id = null, $variations = null ) {
 		$product = wc_get_product($product_id);
-		if ($this->product_has_category($product, 'bracket-ready')) {
-			// Get the selected theme from attribute (deprecated)
-			// $bracket_theme = filter_input(INPUT_POST, 'attribute_pa_bracket-theme', FILTER_SANITIZE_STRING);
 
-			// Get the selected theme from the variation
-			$utils = new Wp_Bracket_Builder_Utils();
-			$bracket_theme = get_post_meta($variation_id, 'wpbb_bracket_theme', true);
-			if (empty($bracket_theme)) {
-				$passed = false;
-				$product_name = $product->get_name();
-				$error = array(
-					'error' => 'Error adding item to cart. No bracket theme found.',
-					'product_name' => $product_name,
-					'variation_id' => $variation_id,
-					'product_id' => $product_id,
-				);
-				$event_id = $utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
-				wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
-			}
-
-			if ($passed) {
-				$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-				// Attempt to get the bracket config from the session
-				$config = $config_repo->get($bracket_theme);
-
-				if (empty($config)) {
-					$passed = false;
-					$product_name = $product->get_name();
-					$error = array(
-						'error' => 'Error adding item to cart. No bracket config found.',
-						'product_name' => $product_name,
-						'variation_id' => $variation_id,
-						'product_id' => $product_id,
-					);
-					$event_id = $utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
-					wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
-				}
-			}
+		if (!$this->product_has_category($product, 'bracket-ready')) {
+			// Not a bracket product, treat as a normal product
+			return $passed;
 		}
-    // Return the $passed variable - it should be false if validation failed, true otherwise.
+
+		// Check to see if a bracket config is stored in the session
+		$bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+		$configs = $bracket_config_repo->get_all();
+		if (empty($configs)) {
+			// No bracket config found in session, treat as a normal product
+			return $passed;
+		}
+
+		// Get the selected theme from attribute (deprecated)
+		// $bracket_theme = filter_input(INPUT_POST, 'attribute_pa_bracket-theme', FILTER_SANITIZE_STRING);
+
+		// Get the selected theme from the variation
+		$utils = new Wp_Bracket_Builder_Utils();
+		$bracket_theme = get_post_meta($variation_id, 'wpbb_bracket_theme', true);
+		if (empty($bracket_theme)) {
+			$product_name = $product->get_name();
+			$error = array(
+				'error' => 'Error adding item to cart. No bracket theme found.',
+				'product_name' => $product_name,
+				'variation_id' => $variation_id,
+				'product_id' => $product_id,
+			);
+			$event_id = $utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
+			wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
+			return false;
+		}
+
+		$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+		// Attempt to get the bracket config from the session
+		$config = $config_repo->get($bracket_theme);
+
+		if (empty($config)) {
+			$product_name = $product->get_name();
+			$error = array(
+				'error' => 'Error adding item to cart. No bracket config found.',
+				'product_name' => $product_name,
+				'variation_id' => $variation_id,
+				'product_id' => $product_id,
+			);
+			$event_id = $utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
+			wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
+			return false;
+		}
+
     return $passed;
 	}
 
