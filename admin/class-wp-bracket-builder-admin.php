@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-config-repo.php';
 
 /**
  * The admin-specific functionality of the plugin.
@@ -48,10 +49,13 @@ class Wp_Bracket_Builder_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
+
+	private $config_repo;
 	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 	}
 
 	/**
@@ -134,15 +138,23 @@ class Wp_Bracket_Builder_Admin {
 
 		// Check if the parent product has the 'bracket-ready' category
 		if (has_term(BRACKET_PRODUCT_CATEGORY, 'product_cat', $parent_product_id)) {
+			$front_design_value = get_post_meta($variation->ID, 'wpbb_front_design', true);
+			$bracket_theme_value = get_post_meta($variation->ID, 'wpbb_bracket_theme', true);
+
+			// if (empty($front_design_value) || empty($bracket_theme_value)) {
+			// 	throw new Exception('Front Design URL and Bracket Theme cannot be blank');
+			// }
+
 			woocommerce_wp_text_input(
 				array(
 					'id'            => 'wpbb_front_design[' . $variation->ID . ']',
 					'label'         => __('Front Design URL', 'woocommerce'),
 					'description'   => __('The design to print on the front of this product, in PDF format. Typically an S3 object URL.', 'woocommerce'),
 					'desc_tip'      => 'true',
-					'value'         => get_post_meta($variation->ID, 'wpbb_front_design', true),
+					'value'         => $front_design_value,
 				)
 			);
+
 			// a select field
 			woocommerce_wp_select(
 				array(
@@ -150,7 +162,7 @@ class Wp_Bracket_Builder_Admin {
 					'label'         => __('Bracket Theme', 'woocommerce'),
 					'description'   => __('The bracket theme to be used on this variation', 'woocommerce'),
 					'desc_tip'      => 'true',
-					'value'         => get_post_meta($variation->ID, 'wpbb_bracket_theme', true),
+					'value'         => $bracket_theme_value,
 					'options'       => array(
 						'' => __('Choose Theme', 'woocommerce'),
 						'dark' => __('Dark', 'woocommerce'),
@@ -171,6 +183,61 @@ class Wp_Bracket_Builder_Admin {
 		if (isset($_POST['wpbb_bracket_theme'][$variation_id])) {
 			$bracket_theme = $_POST['wpbb_bracket_theme'][$variation_id];
 			update_post_meta($variation_id, 'wpbb_bracket_theme', esc_attr($bracket_theme));
+		}
+	}
+
+	// public function validate_variation_fields($variation_id, $i) {
+	// 	// Check for Front Design URL
+	// 	if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
+	// 		update_option('custom_admin_error', 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.');
+	// 	}
+
+	// 	// Check for Bracket Theme
+	// 	if (empty(get_post_meta($variation_id, 'wpbb_bracket_theme', true))) {
+	// 		update_option('custom_admin_error', 'WARNING: Bracket theme is blank for variation ID ' . $variation_id . '. Customer will be unable to customize this product.');
+	// 	}
+	// }
+
+	// // Display the custom error message
+	// // hooked to `admin_notices` action hook
+	// public function display_custom_admin_error() {
+	// 	$message = get_option('custom_admin_error');
+	// 	if ($message) {
+	// 		echo '<div class="error notice">
+	//           <p>' . $message . '</p>
+	//       </div>';
+	// 		delete_option('custom_admin_error');
+	// 	}
+	// }
+
+	public function validate_variation_fields($variation_id, $i) {
+		// Get existing errors
+		$errors = get_option('custom_admin_error', []);
+
+		// Check for Front Design URL
+		if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
+			$errors[] = 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.';
+		}
+
+		// Check for Bracket Theme
+		if (empty(get_post_meta($variation_id, 'wpbb_bracket_theme', true))) {
+			$errors[] = 'WARNING: Bracket theme is blank for variation ID ' . $variation_id . '. Customer will be unable to customize this product.';
+		}
+
+		// Save errors
+		update_option('custom_admin_error', $errors);
+	}
+
+	public function display_custom_admin_error() {
+		$errors = get_option('custom_admin_error', []);
+		if (!empty($errors)) {
+			foreach ($errors as $error) {
+				echo '<div class="error notice">
+            <p>' . $error . '</p>
+            </div>';
+			}
+			// Clear the error messages after displaying
+			delete_option('custom_admin_error');
 		}
 	}
 }

@@ -29,6 +29,11 @@ class Wp_Bracket_Builder_Bracket_Config_Repository {
 		return [];
 	}
 
+	public function is_empty(): bool {
+		$configs = $this->get_all();
+		return empty($configs);
+	}
+
 	public function get(string $theme_mode = ''): Wp_Bracket_Builder_Bracket_Config | null {
 		if (empty($theme_mode)) {
 			return null;
