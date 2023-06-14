@@ -380,7 +380,7 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	private function handle_front_and_back_design($front_url, $bracket_config, $temp_filename) {
-		// If config exists, use it to generate the back design and merge it with the front design in a two-page PDF
+		// Use config to generate the back design and merge it with the front design in a two-page PDF
 		$html = $bracket_config->html;
 
 		// Generate a PDF file for the back design (the bracket)
@@ -429,8 +429,9 @@ class Wp_Bracket_Builder_Public {
 					// get the s3 url from the cart item
 					$s3_url = $item->get_meta('s3_url');
 
-					// handle s3 url not found
 					if (empty($s3_url)) {
+						// If S3 url is not found, log an error and continue to the next item. 
+						// Can't do anything else because the order has already been processed at this point.
 						$error_msg = 'ACTION NEEDED: S3 URL not found for completed order: ' . $order_id . ' item: ' . $item->get_id();
 						$this->utils->log_sentry_message($error_msg, \Sentry\Severity::error());
 						continue;
@@ -439,13 +440,9 @@ class Wp_Bracket_Builder_Public {
 					// rename the file
 					$order_url = $this->s3->rename_from_url($s3_url, $order_filename);
 
-					// update the cart item with the new s3 url
+					// update the cart item with the new s3 url for record keeping
 					$item->update_meta_data('s3_url', $order_url);
 					$item->save();
-
-					$item_arr['order_url'] = $order_url;
-
-					$this->utils->log_sentry_message(json_encode($item_arr));
 				}
 			}
 		}
