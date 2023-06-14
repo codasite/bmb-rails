@@ -54,8 +54,11 @@ class Wp_Bracket_Builder_Public {
 	 * @param      string    $version    The version of this plugin.
 	 */
 
-	 private $utils;
-	 private $bracket_config_repo;
+	private $utils;
+	private $bracket_config_repo;
+	private $s3;
+	private $pdf_service;
+	private $lambda_service;
 
 	public function __construct($plugin_name, $version) {
 
@@ -63,6 +66,9 @@ class Wp_Bracket_Builder_Public {
 		$this->version = $version;
 		$this->utils = new Wp_Bracket_Builder_Utils();
 		$this->bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+		$this->s3 = new Wp_Bracket_Builder_S3_Service();
+		$this->lambda_service = new Wp_Bracket_Builder_Lambda_Service();
+		$this->pdf_service = new Wp_Bracket_Builder_Pdf_Service();
 	}
 
 	/**
@@ -129,9 +135,9 @@ class Wp_Bracket_Builder_Public {
 			'dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
 		);
 
-		$is_bracket_product = $product && $this->product_has_category($product, 'bracket-ready');
+		$is_bracket_product = $this->is_bracket_product($product);
 		// Only get product details on product pages.
-		$gallery_images = $is_bracket_product ? get_product_gallery($product) : array();
+		$gallery_images = $is_bracket_product ? $this->get_product_gallery($product) : array();
 		$color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
@@ -216,7 +222,7 @@ class Wp_Bracket_Builder_Public {
 
 	// Validate bracket product data before adding to cart
 	// Hooks into woocommerce_add_to_cart_validation
-	public function bracket_product_add_to_cart_validation( $passed, $product_id, $quantity, $variation_id = null, $variations = null ) {
+	public function bracket_product_add_to_cart_validation($passed, $product_id, $quantity, $variation_id = null, $variations = null) {
 		$product = wc_get_product($product_id);
 
 		if (!$this->is_bracket_product($product)) {
@@ -237,7 +243,7 @@ class Wp_Bracket_Builder_Public {
 		$bracket_theme = $this->get_bracket_theme($variation_id);
 
 		if (empty($bracket_theme)) {
-			$this->log_and_show_error($product, $variation_id, $product_id, 'No bracket theme found.');
+			$this->handle_add_to_cart_error($product, $variation_id, $product_id, 'No bracket theme found.');
 			return false;
 		}
 
@@ -246,7 +252,7 @@ class Wp_Bracket_Builder_Public {
 		$config = $configs[$bracket_theme];
 
 		if (empty($config)) {
-			$this->log_and_show_error($product, $variation_id, $product_id, 'No bracket config found.');
+			$this->handle_add_to_cart_error($product, $variation_id, $product_id, 'No bracket config found.');
 			return false;
 		}
 
@@ -283,6 +289,9 @@ class Wp_Bracket_Builder_Public {
 		if (array_key_exists('bracket_config', $values)) {
 			$item->add_meta_data('bracket_config', $values['bracket_config']);
 		}
+		if (array_key_exists('s3_url', $values)) {
+			$item->add_meta_data('s3_url', $values['s3_url']);
+		}
 	}
 
 	// Helper method to check if product is a bracket product
@@ -296,7 +305,7 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	// Helper method to log error and show notice
-	private function log_and_show_error($product, $variation_id, $product_id, $error_message) {
+	private function handle_add_to_cart_error($product, $variation_id, $product_id, $error_message) {
 		$product_name = $product->get_name();
 		$error = array(
 			'error' => 'Error adding item to cart. ' . $error_message,
@@ -304,32 +313,74 @@ class Wp_Bracket_Builder_Public {
 			'variation_id' => $variation_id,
 			'product_id' => $product_id,
 		);
-		$event_id = $this->utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
-		wc_add_notice(__('Error adding item to cart. Please contact the site administrator. Event ID: ' . $event_id, 'wp-bracket-builder'), 'error');
+		$this->utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
+		wc_add_notice(__('Error adding item to cart. Please contact the site administrator.', 'wp-bracket-builder'), 'error');
 	}
 
+	// // this function hooks into woocommerce_before_checkout_process
+	public function handle_before_checkout_process() {
+		$cart = WC()->cart;
+		if (!$cart) {
+			return;
+		}
 
-	// this function hooks into woocommerce_payment_complete
-	public function handle_payment_complete($order_id) {
-		$order = wc_get_order($order_id);
-		if ($order) {
-			$items = $order->get_items();
-			foreach ($items as $item) {
-				$product = $item->get_product();
-				$is_bracket_product = $this->product_has_category($product, 'bracket-ready');
-				if ($is_bracket_product) {
-					$this->handle_bracket_product_item($order, $item);
-				}
+		$cart_items = $cart->get_cart();
+
+		foreach ($cart_items as $cart_item_key => $cart_item) {
+			$product = $cart_item['data'];
+			if ($this->is_bracket_product($product)) {
+				$this->process_bracket_product_item($cart_item);
 			}
 		}
 	}
 
-	private function handle_bracket_product_item($order, $item) {
-		$item_arr = array();
-		$bracket_config = $item->get_meta('bracket_config');
-		// throw error if config not found?
-		// $item_arr['config'] = $bracket_config;
-		$bracket_theme = $bracket_config->theme_mode;
+	private function process_bracket_product_item($cart_item) {
+		// get the url for the front design
+		// get the product variation for the order item
+		$front_url = get_post_meta($cart_item['variation_id'], 'wpbb_front_design', true);
+
+		// a random filename for uploaded file. This will change once the payment has completed 
+		$temp_filename = 'temp-' . uniqid() . '.pdf';
+
+		if (empty($front_url)) {
+			$error_data = array(
+				'error' => 'Front design not found',
+				'front_url' => $front_url,
+			);
+			$this->utils->log_sentry_message(json_encode($error_data), \Sentry\Severity::error());
+			throw new Exception('An error occurred while processing your order. Please try again.');
+		}
+
+		// Extract config from the cart item
+		$bracket_config = $cart_item['bracket_config'] ?? null;
+
+		if ($bracket_config) {
+			$result = $this->handle_front_and_back_design($front_url, $bracket_config, $temp_filename);
+		} else {
+			// If no config was found, use only the front design
+			$result = $this->handle_front_design_only($front_url, $temp_filename);
+		}
+
+		// Store the S3 URL in the cart item
+		// The processed S3 URL will be carried over when the cart is converted to an order
+		$cart_item['s3_url'] = $result; // The S3 URL of the final PDF
+
+		// Update the actual cart with the modified cart item
+		WC()->cart->cart_contents[$cart_item['key']] = $cart_item;
+	}
+
+	private function log($message) {
+		$this->utils->log_sentry_message($message, \Sentry\Severity::info());
+	}
+
+	private function handle_front_design_only($front_url, $temp_filename) {
+		// If no config was found, use only the front design
+		$result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
+		return $result;
+	}
+
+	private function handle_front_and_back_design($front_url, $bracket_config, $temp_filename) {
+		// If config exists, use it to generate the back design and merge it with the front design in a two-page PDF
 		$html = $bracket_config->html;
 
 		// Generate a PDF file for the back design (the bracket)
@@ -340,54 +391,75 @@ class Wp_Bracket_Builder_Public {
 			'pdf' => true,
 			'html' => $html,
 		);
-		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
-		$convert_res = $lambda_service->html_to_image($convert_req);
+
+		$convert_res = $this->lambda_service->html_to_image($convert_req);
 		// check if convert res is wp_error
 		if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
-			// throw error
+			throw new Exception('An error occurred while processing your order. Please try again.');
+			$error_data = array(
+				'error' => 'Error converting bracket to PDF.',
+				'convert_res' => $convert_res,
+			);
+			$this->utils->log_sentry_message(json_encode($error_data), \Sentry\Severity::error());
 		}
+
 		$back_url = $convert_res['imageUrl'];
-		$item_arr['back_url'] = $back_url;
-
-		// get the url for the front design
-		// get the product variation for the order item
-		$variation = $item->get_product();
-		$front_url = get_post_meta($variation->get_id(), 'wpbb_front_design', true);
-		if (empty($front_url)) {
-			// handle empty
-		}
-
-		$item_arr['front_url'] = $front_url;
-
-		$order_filename = $this->get_gelato_order_filename($order, $item);
-		$item_arr['order_filename'] = $order_filename;
 
 		// merge pdfs
-		$pdf_service = new Wp_Bracket_Builder_PDF_Service();
-		$s3 = new Wp_Bracket_Builder_S3_Service();
-		$front = $s3->get_from_url($front_url);
-		$back = $s3->get_from_url($back_url);
-		$merged = $pdf_service->merge_from_string($front, $back);
-		$result = $s3->put(BRACKET_BUILDER_S3_ORDER_BUCKET, $order_filename, $merged);
-		$item_arr['order-result'] = $result;
-		
-
-		// $item_arr['bracket_theme'] = $bracket_theme;
-		$item_arr['order_id'] = $order->get_id();
-		// $item_arr['data'] = $item->get_data();
-		// Get all metadata
-		$metadata = $item->get_formatted_meta_data();
-
-		// Filter out bracket_config
-		$filtered_meta = array_filter($metadata, function($meta) {
-				return $meta->key !== 'bracket_config';
-		});
-
-		$item_arr['meta'] = $filtered_meta;
-		$item_arr['item_id'] = $item->get_id();
-
-		$this->utils->log_sentry_message(json_encode($item_arr));
+		$front = $this->s3->get_from_url($front_url);
+		$back = $this->s3->get_from_url($back_url);
+		$merged = $this->pdf_service->merge_from_string($front, $back);
+		$result = $this->s3->put(BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename, $merged);
+		return $result;
 	}
+
+	// this function hooks into woocommerce_payment_complete
+	public function handle_payment_complete($order_id) {
+		$order = wc_get_order($order_id);
+		if ($order) {
+			$items = $order->get_items();
+			foreach ($items as $item) {
+				$product = $item->get_product();
+				if ($this->is_bracket_product($product)) {
+					// $this->handle_bracket_product_item($order, $item);
+					// Once the order has processed, we need to rename the s3 file to include the order ID and item ID
+					$order_filename = $this->get_gelato_order_filename($order, $item);
+					$item_arr['order_filename'] = $order_filename;
+
+					// get the s3 url from the cart item
+					$s3_url = $item->get_meta('s3_url');
+
+					// handle s3 url not found
+					if (empty($s3_url)) {
+						$error_msg = 'ACTION NEEDED: S3 URL not found for completed order: ' . $order_id . ' item: ' . $item->get_id();
+						$this->utils->log_sentry_message($error_msg, \Sentry\Severity::error());
+						continue;
+					}
+
+					// rename the file
+					$order_url = $this->s3->rename_from_url($s3_url, $order_filename);
+
+					// update the cart item with the new s3 url
+					$item->update_meta_data('s3_url', $order_url);
+					$item->save();
+
+					$item_arr['order_url'] = $order_url;
+
+					$this->utils->log_sentry_message(json_encode($item_arr));
+				}
+			}
+		}
+	}
+
+	// private function handle_bracket_product_item($order, $item) {
+	// 	$item_arr = array();
+
+	// 	// Once the order has processed, we need to rename the s3 file to include the order ID and item ID
+	// 	$order_filename = $this->get_gelato_order_filename($order, $item);
+	// 	$item_arr['order_filename'] = $order_filename;
+
+	// 	$this->utils->log_sentry_message(json_encode($item_arr));
+	// }
 
 	private function get_variation_attribute_value($variation, $attribute_name) {
 		$attributes = $variation->get_attributes();
@@ -413,35 +485,54 @@ class Wp_Bracket_Builder_Public {
 			return has_term($category_slug, 'product_cat', $product->get_id());
 		}
 	}
-}
 
-/**
- * Get all gallery images for the product
- * 
- * @param WC_Product $product
- * @return array
- */
+	// Disallow purchase of variations that don't have a front design
+	// hooks into filter `woocommerce_available_variation`
+	public function filter_variation_availability($available_array, $this_obj, $variation) {
+		// bail if not bracket product
+		if (!$this->is_bracket_product($variation)) {
+			return $available_array;
+		}
+		// Check if config exists
+		$custom_back = !$this->bracket_config_repo->is_empty(); // If config is not empty, the product has a custom back design so bracket theme is needed
+		$front_design = get_post_meta($variation->get_id(), 'wpbb_front_design', true);
+		$bracket_theme = get_post_meta($variation->get_id(), 'wpbb_bracket_theme', true);
 
-function get_product_gallery($product) {
-	// get all gallery images for the product
-	$attachment_ids = $product->get_gallery_image_ids();
-	$gallery_images = get_images($attachment_ids);
-	return $gallery_images;
-}
+		// If front design is empty, or bracket theme is empty AND config is set, make not purchasable
+		if (empty($front_design) || empty($bracket_theme) && $custom_back) {
+			$available_array['is_purchasable'] = false; // Make not purchasable
+			$available_array['variation_is_active'] = false; // Grey out unavailable variation
+		}
 
-function get_images($image_ids) {
-	$images = array();
-
-	foreach ($image_ids as $imageId) {
-		// $imageSrc = wp_get_attachment_image_src($imageId, 'full');
-		// $imageUrl = $imageSrc[0];
-		// $image_urls[] = $imageUrl;
-		$image_attrs = array(
-			'src' => wp_get_attachment_url($imageId),
-			'title' => get_the_title($imageId),
-		);
-		$images[] = $image_attrs;
+		return $available_array;
 	}
+	/**
+	 * Get all gallery images for the product
+	 * 
+	 * @param WC_Product $product
+	 * @return array
+	 */
 
-	return $images;
+	private function get_product_gallery($product) {
+		// get all gallery images for the product
+		$attachment_ids = $product->get_gallery_image_ids();
+		$gallery_images = $this->get_images($attachment_ids);
+		return $gallery_images;
+	}
+	private function get_images($image_ids) {
+		$images = array();
+
+		foreach ($image_ids as $imageId) {
+			// $imageSrc = wp_get_attachment_image_src($imageId, 'full');
+			// $imageUrl = $imageSrc[0];
+			// $image_urls[] = $imageUrl;
+			$image_attrs = array(
+				'src' => wp_get_attachment_url($imageId),
+				'title' => get_the_title($imageId),
+			);
+			$images[] = $image_attrs;
+		}
+
+		return $images;
+	}
 }

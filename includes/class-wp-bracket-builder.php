@@ -185,8 +185,8 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
 		$this->loader->add_action('woocommerce_save_product_variation', $plugin_admin, 'save_variation_settings_fields', 10, 2);
 
-
-
+		$this->loader->add_action('woocommerce_save_product_variation', $plugin_admin, 'validate_variation_fields', 10, 2);
+		$this->loader->add_action('admin_notices', $plugin_admin, 'display_custom_admin_error');
 	}
 
 	/**
@@ -204,10 +204,13 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		$this->loader->add_action('init', $plugin_public, 'add_shortcodes');
+
 		$this->loader->add_filter('woocommerce_add_to_cart_validation', $plugin_public, 'bracket_product_add_to_cart_validation', 10, 5);
 		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data', 10, 3);
 		$this->loader->add_action('woocommerce_checkout_create_order_line_item', $plugin_public, 'add_bracket_to_order_item', 10, 4);
+		$this->loader->add_action('woocommerce_before_checkout_process', $plugin_public, 'handle_before_checkout_process');
 		$this->loader->add_action('woocommerce_payment_complete', $plugin_public, 'handle_payment_complete');
+		$this->loader->add_filter('woocommerce_available_variation', $plugin_public, 'filter_variation_availability', 10, 3);
 	}
 
 	/**
