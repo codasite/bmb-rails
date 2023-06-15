@@ -272,11 +272,11 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
   const widthMatch = normalizedTitle.match(widthRegex);
   const width = widthMatch ? widthMatch[0] : null;
 
-  const xCenterRegex = /xc\d+/;
+  const xCenterRegex = /x\d+/;
   const xCenterMatch = normalizedTitle.match(xCenterRegex);
   const xCenter = xCenterMatch ? xCenterMatch[0] : null;
 
-  const yCenterRegex = /yc\d+/;
+  const yCenterRegex = /y\d+/;
   const yCenterMatch = normalizedTitle.match(yCenterRegex);
   const yCenter = yCenterMatch ? yCenterMatch[0] : null;
 
@@ -288,8 +288,8 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
   if (width && xCenter && yCenter) {
     imageParams.overlayParams = {
       width: parseInt(width.substring(1), 10),
-      xCenter: parseInt(xCenter.substring(2), 10),
-      yCenter: parseInt(yCenter.substring(2), 10),
+      xCenter: parseInt(xCenter.substring(1), 10),
+      yCenter: parseInt(yCenter.substring(1), 10),
     }
   }
   return imageParams;
