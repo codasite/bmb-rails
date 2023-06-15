@@ -378,7 +378,11 @@ class Wp_Bracket_Builder_Public {
 
 	private function handle_front_design_only($front_url, $temp_filename) {
 		// If no config was found, use only the front design
-		$result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
+		// However, Gelato still requires a two page PDF so we append a blank page to the front design
+		// $result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
+		$front = $this->s3->get_from_url($front_url);
+		$merged = $this->pdf_service->merge_from_string($front, '');
+		$result = $this->s3->put(BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename, $merged);
 		return $result;
 	}
 
