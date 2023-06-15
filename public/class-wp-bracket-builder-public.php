@@ -361,7 +361,7 @@ class Wp_Bracket_Builder_Public {
 			$result = $this->handle_front_and_back_design($front_url, $bracket_config, $temp_filename);
 		} else {
 			// If no config was found, use only the front design
-			$result = $this->handle_front_design_only($front_url, $temp_filename);
+			$result = $this->handle_front_design_only($front_url, $temp_filename, 12, 16);
 		}
 
 		// Store the S3 URL in the cart item
@@ -376,12 +376,20 @@ class Wp_Bracket_Builder_Public {
 		$this->utils->log_sentry_message($message, \Sentry\Severity::info());
 	}
 
-	private function handle_front_design_only($front_url, $temp_filename) {
+	private function handle_front_design_only($front_url, $temp_filename, $back_width, $back_height) {
 		// If no config was found, use only the front design
 		// However, Gelato still requires a two page PDF so we append a blank page to the front design
 		// $result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
 		$front = $this->s3->get_from_url($front_url);
-		$merged = $this->pdf_service->merge_from_string($front, '');
+		$merged = $this->pdf_service->merge_pdfs(array(
+			array(
+				'content' => $front,
+			),
+			array(
+				'content' => '',
+				'size' => array($back_width, $back_height),
+			),
+		));
 		$result = $this->s3->put(BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename, $merged);
 		return $result;
 	}
@@ -415,7 +423,14 @@ class Wp_Bracket_Builder_Public {
 		// merge pdfs
 		$front = $this->s3->get_from_url($front_url);
 		$back = $this->s3->get_from_url($back_url);
-		$merged = $this->pdf_service->merge_from_string($front, $back);
+		$merged = $this->pdf_service->merge_pdfs(array(
+			array(
+				'content' => $front,
+			),
+			array(
+				'content' => $back,
+			),
+		));
 		$result = $this->s3->put(BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename, $merged);
 		return $result;
 	}

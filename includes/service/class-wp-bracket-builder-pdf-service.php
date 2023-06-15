@@ -6,28 +6,56 @@ use setasign\Fpdi\PdfParser\StreamReader;
 
 class Wp_Bracket_Builder_PDF_Service {
 
-	public function merge_from_string($firstPdfContent, $secondPdfContent): string {
+	/**
+	 * @param array $pdfParams - array of arrays
+	 * @return string
+	 * 
+	 * $pdfParams = [
+	 * 	[
+	 * 		'content' => 'https://wpbb-static-designs.s3.amazonaws.com/12x16_bmb_cmyk_corner_light.pdf',
+	 * 	],
+	 * 	[
+	 * 		'content' => '',
+	 * 		'orientation' => 'P',
+	 * 		'size' => [12, 16]
+	 * 	]
+	 * ]
+	 */
+	public function merge_pdfs(array $pdfParams) {
 		// Initiate FPDI
-		$pdf = new Fpdi();
+		$pdf = new Fpdi('P', 'in');
 
 		// Add a page from the first and second PDFs
-		$this->addPageFromPdf($pdf, $firstPdfContent);
-		$this->addPageFromPdf($pdf, $secondPdfContent);
+		foreach ($pdfParams as $pdfParam) {
+			$content = $pdfParam['content'] ?? '';
+			$orientation = $pdfParam['orientation'] ?? '';
+			$size = $pdfParam['size'] ?? '';
+
+			$this->addPdfPage($pdf, $content, $orientation, $size);
+		}
 
 		// Output the result as a string
 		$outputPdfContent = $pdf->Output('S');
 		return $outputPdfContent;
 	}
 
-	private function addPageFromPdf($pdf, $content) {
+
+	private function addPdfPage($pdf, $content = '', $orientation = '', $size = '') {
 		if (empty($content)) {
-			return $pdf->AddPage();
+			return $pdf->AddPage($orientation, $size);
 		}
+
 		$pageId = $pdf->setSourceFile(StreamReader::createByString($content));
 		$template = $pdf->importPage($pageId);
-		$size = $pdf->getTemplateSize($template);
 
-		$pdf->AddPage($size['orientation'], $size);
+		// If no orientation or size is provided, derive them from the content
+		if (empty($orientation) || empty($size)) {
+			$sizeAndOrientation = $pdf->getTemplateSize($template);
+			$orientation = empty($orientation) ? $sizeAndOrientation['orientation'] : $orientation;
+			$size = empty($size) ? $sizeAndOrientation : $size;
+		}
+
+		$pdf->AddPage($orientation, $size);
 		$pdf->useTemplate($template);
 	}
 }
