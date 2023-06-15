@@ -296,6 +296,9 @@ class Wp_Bracket_Builder_Public {
 
 	// Helper method to check if product is a bracket product
 	private function is_bracket_product($product) {
+		if (!$product) {
+			return false;
+		}
 		return $this->product_has_category($product, BRACKET_PRODUCT_CATEGORY);
 	}
 
