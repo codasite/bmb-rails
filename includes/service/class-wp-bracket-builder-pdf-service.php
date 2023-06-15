@@ -6,10 +6,6 @@ use setasign\Fpdi\PdfParser\StreamReader;
 
 class Wp_Bracket_Builder_PDF_Service {
 
-	public function test_service() {
-		return 'test';
-	}
-
 	public function merge_from_string($firstPdfContent, $secondPdfContent): string {
 		// Initiate FPDI
 		$pdf = new Fpdi();
@@ -24,6 +20,9 @@ class Wp_Bracket_Builder_PDF_Service {
 	}
 
 	private function addPageFromPdf($pdf, $content) {
+		if (empty($content)) {
+			return $pdf->AddPage();
+		}
 		$pageId = $pdf->setSourceFile(StreamReader::createByString($content));
 		$template = $pdf->importPage($pageId);
 		$size = $pdf->getTemplateSize($template);
