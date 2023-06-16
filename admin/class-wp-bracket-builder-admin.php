@@ -148,7 +148,7 @@ class Wp_Bracket_Builder_Admin {
 			woocommerce_wp_text_input(
 				array(
 					'id'            => 'wpbb_front_design[' . $variation->ID . ']',
-					'label'         => __('Front Design URL', 'woocommerce'),
+					'label'         => __('Front design URL', 'woocommerce'),
 					'description'   => __('The design to print on the front of this product, in PDF format. Typically an S3 object URL.', 'woocommerce'),
 					'desc_tip'      => 'true',
 					'value'         => $front_design_value,
@@ -159,7 +159,7 @@ class Wp_Bracket_Builder_Admin {
 			woocommerce_wp_select(
 				array(
 					'id'            => 'wpbb_bracket_theme[' . $variation->ID . ']',
-					'label'         => __('Bracket Theme', 'woocommerce'),
+					'label'         => __('Bracket theme', 'woocommerce'),
 					'description'   => __('The bracket theme to be used on this variation', 'woocommerce'),
 					'desc_tip'      => 'true',
 					'value'         => $bracket_theme_value,
