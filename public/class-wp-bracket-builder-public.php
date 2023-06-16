@@ -315,64 +315,6 @@ class Wp_Bracket_Builder_Public {
 		wc_add_notice(__('Error adding item to cart. Please contact the site administrator.', 'wp-bracket-builder'), 'error');
 	}
 
-	// // this function hooks into woocommerce_before_checkout_process
-	// public function handle_before_checkout_process() {
-	// 	$cart = WC()->cart;
-	// 	if (!$cart) {
-	// 		return;
-	// 	}
-
-	// 	$cart_items = $cart->get_cart();
-
-	// 	// pass a reference to the cart item so that we can update it
-	// 	foreach ($cart_items as $cart_item_key => &$cart_item) {
-	// 		$this->log('processing cart item, key: ' . $cart_item_key . ',  product id: ' . $cart_item['product_id'] . ', variation id: ' . $cart_item['variation_id']);
-	// 		$product = $cart_item['data'];
-	// 		if ($this->is_bracket_product($product)) {
-	// 			$this->process_bracket_product_item($cart_item);
-	// 		}
-	// 	}
-
-	// 	// update the cart
-	// 	$cart->set_cart($cart_items);
-	// }
-
-
-	// private function process_bracket_product_item($cart_item) {
-	// 	// get the url for the front design
-	// 	// get the product variation for the order item
-	// 	$front_url = get_post_meta($cart_item['variation_id'], 'wpbb_front_design', true);
-
-	// 	// a random filename for uploaded file. This will change once the payment has completed 
-	// 	$temp_filename = 'temp-' . uniqid() . '.pdf';
-
-	// 	if (empty($front_url)) {
-	// 		$error_data = array(
-	// 			'error' => 'Front design not found',
-	// 			'front_url' => $front_url,
-	// 		);
-	// 		$this->utils->log_sentry_message(json_encode($error_data), \Sentry\Severity::error());
-	// 		throw new Exception('An error occurred while processing your order. Please try again.');
-	// 	}
-
-	// 	// Extract config from the cart item
-	// 	$bracket_config = $cart_item['bracket_config'] ?? null;
-
-	// 	if ($bracket_config) {
-	// 		$result = $this->handle_front_and_back_design($front_url, $bracket_config, $temp_filename);
-	// 	} else {
-	// 		// If no config was found, use only the front design
-	// 		$result = $this->handle_front_design_only($front_url, $temp_filename, 12, 16);
-	// 	}
-
-	// 	// Store the S3 URL in the cart item
-	// 	// The processed S3 URL will be carried over when the cart is converted to an order
-	// 	$cart_item['s3_url'] = $result; // The S3 URL of the final PDF
-
-	// 	// // Update the actual cart with the modified cart item
-	// 	// WC()->cart->cart_contents[$cart_item['key']] = $cart_item;
-	// }
-
 	// this function hooks into woocommerce_before_checkout_process
 	public function handle_before_checkout_process() {
 		$cart = WC()->cart;
@@ -523,8 +465,6 @@ class Wp_Bracket_Builder_Public {
 		if ($order) {
 			$items = $order->get_items();
 			foreach ($items as $item) {
-				$this->log('Processing item: ' . $item->get_name() . ' in order: ' . $order_id . ' item: ' . json_encode($item));
-
 				$product = $item->get_product();
 				if ($this->is_bracket_product($product)) {
 					try {
