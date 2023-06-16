@@ -310,13 +310,8 @@ class Wp_Bracket_Builder_Public {
 	// Helper method to log error and show notice
 	private function handle_add_to_cart_error($product, $variation_id, $product_id, $error_message) {
 		$product_name = $product->get_name();
-		$error = array(
-			'error' => 'Error adding item to cart. ' . $error_message,
-			'product_name' => $product_name,
-			'variation_id' => $variation_id,
-			'product_id' => $product_id,
-		);
-		$this->utils->log_sentry_message(json_encode($error), \Sentry\Severity::error());
+		$msg = 'Error adding ' . $product_name . ' to cart. ' . $error_message . '. Variation ID: ' . $variation_id . ' Product ID: ' . $product_id;
+		$this->log($msg, 'warning');
 		wc_add_notice(__('Error adding item to cart. Please contact the site administrator.', 'wp-bracket-builder'), 'error');
 	}
 
@@ -389,10 +384,14 @@ class Wp_Bracket_Builder_Public {
 		$updated_cart_items = [];
 
 		foreach ($original_cart_items as $cart_item_key => $cart_item) {
-			$this->log('processing cart item, key: ' . $cart_item_key . ',  product id: ' . $cart_item['product_id'] . ', variation id: ' . $cart_item['variation_id']);
 			$product = $cart_item['data'];
 			if ($this->is_bracket_product($product)) {
-				$cart_item = $this->process_bracket_product_item($cart_item);
+				try {
+					$cart_item = $this->process_bracket_product_item($cart_item);
+				} catch (Exception $e) {
+					$this->log_error('Error processing cart item: ' . $e->getMessage());
+					throw new Exception('An error occurred while processing your order. Please contact the site administrator.');
+				}
 			}
 			$updated_cart_items[$cart_item_key] = $cart_item;
 		}
@@ -413,8 +412,7 @@ class Wp_Bracket_Builder_Public {
 				'error' => 'Front design not found',
 				'front_url' => $front_url,
 			);
-			$this->utils->log_sentry_message(json_encode($error_data), \Sentry\Severity::error());
-			throw new Exception('An error occurred while processing your order. Please try again.');
+			throw new Exception(json_encode($error_data));
 		}
 
 		// Extract config from the cart item
@@ -433,9 +431,32 @@ class Wp_Bracket_Builder_Public {
 		return $cart_item;
 	}
 
+	private function log_error($message) {
+		$this->log($message, 'error');
+	}
 
-	private function log($message) {
-		$this->utils->log_sentry_message($message, \Sentry\Severity::info());
+	private function log($message, $log_level = 'debug') {
+		switch ($log_level) {
+			case 'debug':
+				$severity = \Sentry\Severity::debug();
+				break;
+			case 'info':
+				$severity = \Sentry\Severity::info();
+				break;
+			case 'warning':
+				$severity = \Sentry\Severity::warning();
+				break;
+			case 'error':
+				$severity = \Sentry\Severity::error();
+				break;
+			case 'fatal':
+				$severity = \Sentry\Severity::fatal();
+				break;
+			default:
+				$severity = \Sentry\Severity::info();
+				break;
+		}
+		$this->utils->log_sentry_message($message, $severity);
 	}
 
 	private function handle_front_design_only($front_url, $temp_filename, $back_width, $back_height) {
@@ -472,12 +493,11 @@ class Wp_Bracket_Builder_Public {
 		$convert_res = $this->lambda_service->html_to_image($convert_req);
 		// check if convert res is wp_error
 		if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
-			throw new Exception('An error occurred while processing your order. Please try again.');
 			$error_data = array(
 				'error' => 'Error converting bracket to PDF.',
 				'convert_res' => $convert_res,
 			);
-			$this->utils->log_sentry_message(json_encode($error_data), \Sentry\Severity::error());
+			throw new Exception(json_encode($error_data));
 		}
 
 		$back_url = $convert_res['imageUrl'];
@@ -503,30 +523,36 @@ class Wp_Bracket_Builder_Public {
 		if ($order) {
 			$items = $order->get_items();
 			foreach ($items as $item) {
+				$this->log('Processing item: ' . $item->get_name() . ' in order: ' . $order_id . ' item: ' . json_encode($item));
+
 				$product = $item->get_product();
 				if ($this->is_bracket_product($product)) {
-					// $this->handle_bracket_product_item($order, $item);
-					// Once the order has processed, we need to rename the s3 file to include the order ID and item ID
-					$order_filename = $this->get_gelato_order_filename($order, $item);
-					$item_arr['order_filename'] = $order_filename;
+					try {
+						// $this->handle_bracket_product_item($order, $item);
+						// Once the order has processed, we need to rename the s3 file to include the order ID and item ID
+						$order_filename = $this->get_gelato_order_filename($order, $item);
+						$item_arr['order_filename'] = $order_filename;
 
-					// get the s3 url from the cart item
-					$s3_url = $item->get_meta('s3_url');
+						// get the s3 url from the cart item
+						$s3_url = $item->get_meta('s3_url');
 
-					if (empty($s3_url)) {
-						// If S3 url is not found, log an error and continue to the next item. 
-						// Can't do anything else because the order has already been processed at this point.
-						$error_msg = 'ACTION NEEDED: S3 URL not found for completed order: ' . $order_id . ' item: ' . $item->get_id();
-						$this->utils->log_sentry_message($error_msg, \Sentry\Severity::error());
-						continue;
+						if (empty($s3_url)) {
+							// If S3 url is not found, log an error and continue to the next item. 
+							// Can't do anything else because the order has already been processed at this point.
+							$error_msg = 'ACTION NEEDED: S3 URL not found for completed order: ' . $order_id . ' item: ' . $item->get_id();
+							$this->utils->log_sentry_message($error_msg, \Sentry\Severity::error());
+							continue;
+						}
+
+						// rename the file
+						$order_url = $this->s3->rename_from_url($s3_url, $order_filename);
+
+						// update the cart item with the new s3 url for record keeping
+						$item->update_meta_data('s3_url', $order_url);
+						$item->save();
+					} catch (Exception $e) {
+						$this->utils->log_sentry_message($e->getMessage(), \Sentry\Severity::error());
 					}
-
-					// rename the file
-					$order_url = $this->s3->rename_from_url($s3_url, $order_filename);
-
-					// update the cart item with the new s3 url for record keeping
-					$item->update_meta_data('s3_url', $order_url);
-					$item->save();
 				}
 			}
 		}
