@@ -56,7 +56,6 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 		// get the entire request body
 		$body = json_decode($request->get_body(), true);
 		$theme_mode = $body['themeMode'] ?? null;
-		// $utils->log_sentry_message('themeMode: ' . $theme_mode . ' key: ' . $body['key'], \Sentry\Severity::info()); // TODO: Remove this line
 
 		if (!$theme_mode) {
 			$utils->log_sentry_error('Theme mode is required. Request: ' . json_encode($body));
@@ -67,7 +66,6 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 		$res = $lambda_service->html_to_image($body);
 
 		if (!is_wp_error($res) && isset($res['imageUrl'])) {
-			// $utils->log_sentry_message('themeMode: ' . $theme_mode . ' url: ' . $res['imageUrl'] . ' key: ' . $body['key'], \Sentry\Severity::info()); // TODO: Remove this line
 			// build a config object
 			$config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res['imageUrl']);
 			// Add the image url to the user's session
