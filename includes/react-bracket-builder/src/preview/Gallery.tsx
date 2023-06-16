@@ -89,7 +89,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
         return config.url
       }))
     }
-  }, [currentColor, currentTheme]);
+  }, [currentColor, currentTheme, imageConfigs]);
 
   const filterImageConfigs = (imageConfigs: ProductImageConfig[], color: string, theme: string): ProductImageConfig[] => {
     return imageConfigs.filter((config) => {
