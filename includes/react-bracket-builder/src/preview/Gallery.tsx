@@ -262,9 +262,9 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
   }
 
   let themeMode: ProductImageThemeMode | undefined;
-  if (normalizedTitle.includes('dark')) {
+  if (normalizedTitle.includes('darktheme')) {
     themeMode = ProductImageThemeMode.DARK;
-  } else if (normalizedTitle.includes('light')) {
+  } else if (normalizedTitle.includes('lighttheme')) {
     themeMode = ProductImageThemeMode.LIGHT;
   }
 
