@@ -186,58 +186,58 @@ class Wp_Bracket_Builder_Admin {
 		}
 	}
 
-	// public function validate_variation_fields($variation_id, $i) {
-	// 	// Check for Front Design URL
-	// 	if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
-	// 		update_option('custom_admin_error', 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.');
-	// 	}
-
-	// 	// Check for Bracket Theme
-	// 	if (empty(get_post_meta($variation_id, 'wpbb_bracket_theme', true))) {
-	// 		update_option('custom_admin_error', 'WARNING: Bracket theme is blank for variation ID ' . $variation_id . '. Customer will be unable to customize this product.');
-	// 	}
-	// }
-
-	// // Display the custom error message
-	// // hooked to `admin_notices` action hook
-	// public function display_custom_admin_error() {
-	// 	$message = get_option('custom_admin_error');
-	// 	if ($message) {
-	// 		echo '<div class="error notice">
-	//           <p>' . $message . '</p>
-	//       </div>';
-	// 		delete_option('custom_admin_error');
-	// 	}
-	// }
-
 	public function validate_variation_fields($variation_id, $i) {
-		// Get existing errors
-		$errors = get_option('custom_admin_error', []);
-
 		// Check for Front Design URL
 		if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
-			$errors[] = 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.';
+			update_option('custom_admin_error', 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.');
 		}
 
 		// Check for Bracket Theme
 		if (empty(get_post_meta($variation_id, 'wpbb_bracket_theme', true))) {
-			$errors[] = 'WARNING: Bracket theme is blank for variation ID ' . $variation_id . '. Customer will be unable to customize this product.';
+			update_option('custom_admin_error', 'WARNING: Bracket theme is blank for variation ID ' . $variation_id . '. Customer will be unable to customize this product.');
 		}
-
-		// Save errors
-		update_option('custom_admin_error', $errors);
 	}
 
+	// Display the custom error message
+	// hooked to `admin_notices` action hook
 	public function display_custom_admin_error() {
-		$errors = get_option('custom_admin_error', []);
-		if (!empty($errors)) {
-			foreach ($errors as $error) {
-				echo '<div class="error notice">
-            <p>' . $error . '</p>
-            </div>';
-			}
-			// Clear the error messages after displaying
+		$message = get_option('custom_admin_error');
+		if ($message) {
+			echo '<div class="error notice">
+	          <p>' . $message . '</p>
+	      </div>';
 			delete_option('custom_admin_error');
 		}
 	}
+
+	// public function validate_variation_fields($variation_id, $i) {
+	// 	// Get existing errors
+	// 	$errors = get_option('custom_admin_error', []);
+
+	// 	// Check for Front Design URL
+	// 	if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
+	// 		$errors[] = 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.';
+	// 	}
+
+	// 	// Check for Bracket Theme
+	// 	if (empty(get_post_meta($variation_id, 'wpbb_bracket_theme', true))) {
+	// 		$errors[] = 'WARNING: Bracket theme is blank for variation ID ' . $variation_id . '. Customer will be unable to customize this product.';
+	// 	}
+
+	// 	// Save errors
+	// 	update_option('custom_admin_error', $errors);
+	// }
+
+	// public function display_custom_admin_error() {
+	// 	$errors = get_option('custom_admin_error', []);
+	// 	if (!empty($errors)) {
+	// 		foreach ($errors as $error) {
+	// 			echo '<div class="error notice">
+	//           <p>' . $error . '</p>
+	//           </div>';
+	// 		}
+	// 		// Clear the error messages after displaying
+	// 		delete_option('custom_admin_error');
+	// 	}
+	// }
 }
