@@ -116,6 +116,14 @@
 		align-items: center;
 	}
 
+	&.wpbb-2-rounds {
+		padding-top: 350px;
+
+		.wpbb-bracket-actions {
+			margin-top: 220px;
+		}
+	}
+
 	&.wpbb-3-rounds {
 		padding-top: 290px;
 
@@ -243,7 +251,7 @@
 	}
 
 	&.wpbb-6-rounds {
-		width: 1257px;
+		width: 1137px;
 
 		.wpbb-winner-container {
 			top: -200px;
@@ -301,6 +309,18 @@
 
 		.wpbb-bracket-logo {
 			bottom: -300px;
+		}
+	}
+
+	&.wpbb-2-rounds {
+		width: 800px;
+
+		.wpbb-winner-container {
+			top: -200px;
+		}
+
+		.wpbb-bracket-logo {
+			bottom: -250px;
 		}
 	}
 

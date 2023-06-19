@@ -15,6 +15,7 @@ const defaultMatchGap = 20
 const depth4MatchGap = 12
 const depth5MatchGap = 4
 
+const twoRoundHeight = 300
 const threeRoundHeight = 300
 const fourRoundHeight = 544
 const fiveRoundHeight = 806
@@ -23,7 +24,7 @@ const sixRoundHeight = 1100
 
 const targetRoundHeights = [
 	fourRoundHeight,
-	fourRoundHeight,
+	twoRoundHeight,
 	threeRoundHeight,
 	fourRoundHeight,
 	fiveRoundHeight,
