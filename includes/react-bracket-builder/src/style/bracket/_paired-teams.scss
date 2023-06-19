@@ -7,12 +7,12 @@
 
 %paired-teams {
 	.wpbb-team {
+		box-sizing: border-box;
 		text-transform: uppercase;
 		font-weight: 600;
 		font-size: 16px;
 		height: 28px;
 		width: 115px;
-		// border: 2px solid rgba(255, 255, 255, 0.5);
 		border: 2px solid rgba($darkBlueRGB, 0.5);
 		display: flex;
 		flex-direction: column;
