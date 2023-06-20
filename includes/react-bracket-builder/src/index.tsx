@@ -3,14 +3,13 @@ import App from "./App";
 import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
-// import 'bootstrap/dist/css/bootstrap.min.css';
-// import Gallery from './preview/Gallery';
+import { BracketRes } from './api/types/bracket';
 
 interface WpbbAjaxObj {
 	page: string;
 	nonce: string;
 	rest_url: string;
-	bracket: any;
+	bracket: BracketRes;
 	// bracket_url: string;
 	// bracket_url_dark: string;
 	// bracket_url_light: string;
