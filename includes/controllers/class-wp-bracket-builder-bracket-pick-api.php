@@ -222,8 +222,8 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function admin_permission_check($request) {
-		return true; // TODO: Disable this for production
-		// return current_user_can('manage_options');
+		// return true; // TODO: Disable this for production
+		return current_user_can('manage_options');
 	}
 
 	/**
@@ -233,7 +233,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function customer_permission_check($request) {
-		return true; // TODO: Disable this for production
-		// return current_user_can('read');
+		// return true; // TODO: Disable this for production
+		return current_user_can('read');
 	}
 }
