@@ -66,6 +66,7 @@
 	padding-top: 160px;
 	padding-bottom: 100px;
 	min-width: fit-content;
+	text-align: center;
 
 	.wpbb-theme-selector {
 		position: absolute;
@@ -239,7 +240,11 @@
 	.wpbb-winner-text {
 		font-size: 64px;
 		font-weight: 700;
-		line-height: 79px;
+		// line-height: 79px;
+		line-height: 1;
+		margin-bottom: 16px;
+		// no wrap
+
 	}
 
 	.wpbb-bracket-logo {
@@ -257,6 +262,7 @@
 		.wpbb-bracket-logo {
 			bottom: -320px;
 		}
+
 
 		.wpbb-team1,
 		.wpbb-team2 {
@@ -292,6 +298,10 @@
 	&.wpbb-3-rounds {
 		width: 800px;
 
+		.wpbb-winner-text {
+			white-space: nowrap;
+		}
+
 		.wpbb-bracket-logo {
 			bottom: -300px;
 		}
@@ -299,6 +309,10 @@
 
 	&.wpbb-2-rounds {
 		width: 800px;
+
+		.wpbb-winner-text {
+			white-space: nowrap;
+		}
 
 		.wpbb-bracket-logo {
 			bottom: -250px;
