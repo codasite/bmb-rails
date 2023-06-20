@@ -41,7 +41,7 @@ export interface RoundReq extends Round {
 	matches: Nullable<MatchReq>[];
 }
 
-interface Bracket {
+interface BracketBase {
 	name: string;
 	active: boolean;
 	numRounds: number;
@@ -55,14 +55,14 @@ interface phpDate {
 	timezone: string;
 }
 
-export interface BracketRes extends Bracket {
+export interface BracketRes extends BracketBase {
 	id: number;
 	createdAt: phpDate;
 	numSubmissions: number;
 	rounds: RoundRes[];
 }
 
-export interface BracketReq extends Bracket {
+export interface BracketReq extends BracketBase {
 	rounds: RoundReq[];
 }
 

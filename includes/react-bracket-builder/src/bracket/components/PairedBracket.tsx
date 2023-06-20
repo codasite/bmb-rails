@@ -152,6 +152,7 @@ interface MatchBoxProps {
 	pickTeam?: (left: boolean) => void;
 	roundIndex: number;
 	matchIndex: number;
+	bracketName?: string;
 }
 
 const MatchBox = (props: MatchBoxProps) => {
@@ -164,6 +165,7 @@ const MatchBox = (props: MatchBoxProps) => {
 		pickTeam,
 		roundIndex,
 		matchIndex,
+		bracketName,
 	} = props
 
 	if (match === null) {
@@ -209,7 +211,7 @@ const MatchBox = (props: MatchBoxProps) => {
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
 			{finalMatch &&
 				[<div className='wpbb-winner-container'>
-					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>WINNER</span>
+					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{bracketName ? bracketName : 'WINNER'}</span>
 					<TeamSlot
 						className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
 						team={match.result}
@@ -308,6 +310,7 @@ interface MatchColumnProps {
 	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
 	pickTeam?: (matchIndex: number, left: boolean) => void;
 	paddingBottom?: number;
+	bracketName?: string;
 }
 
 const MatchColumn = (props: MatchColumnProps) => {
@@ -321,6 +324,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 		updateTeam,
 		pickTeam,
 		paddingBottom,
+		bracketName,
 	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
@@ -343,6 +347,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
 					roundIndex={round.depth}
 					matchIndex={matchIndex}
+					bracketName={bracketName}
 				/>
 			)
 		})
@@ -377,6 +382,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 
 interface PairedBracketProps {
 	matchTree: MatchTree;
+	bracketName?: string;
 	canEdit?: boolean;
 	canPick?: boolean;
 	darkMode?: boolean;
@@ -388,6 +394,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		matchTree,
 		setMatchTree,
 		darkMode,
+		bracketName,
 	} = props
 
 	const [dimensions, setDimensions] = useState({
@@ -491,6 +498,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
 
 				return <MatchColumn
+					bracketName={bracketName}
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
@@ -505,6 +513,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			}),
 			// handle final round differently
 			<MatchColumn
+				bracketName={bracketName}
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
@@ -523,7 +532,9 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				// The target height decreases by half for each consecutive round in the second half of the bracket
 				const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
 
-				return <MatchColumn round={round}
+				return <MatchColumn
+					bracketName={bracketName}
+					round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
