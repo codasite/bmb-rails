@@ -279,10 +279,9 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 
 		if ($bracket !== null && property_exists($bracket, 'cpt_id')) {
 			$cpt_id = $bracket->cpt_id;
-			$utils->log_sentry_message("cpt_id: " . $cpt_id);
 			wp_delete_post($cpt_id);
 		} else {
-			$utils->log_sentry_message("Bracket is null or does not have a cpt_id property. bracket: " . json_encode($bracket));
+			$utils->log_sentry_message("Error deleting bracket {$id}: could not find associated cpt id", \Sentry\Severity::error());
 			return false;
 		}
 		return true;
