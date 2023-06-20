@@ -155,16 +155,6 @@ class WildcardRange {
 export class MatchTree {
 	root: MatchNode | null
 	rounds: Round[]
-	// numRounds: number
-	// numWildcards: number
-	// wildcardsPlacement: WildcardPlacement
-
-	// constructor(numRounds: number, numWildcards: number, wildcardsPlacement: WildcardPlacement) {
-	// 	this.rounds = this.buildRounds(numRounds, numWildcards, wildcardsPlacement)
-	// 	this.numRounds = numRounds
-	// 	this.numWildcards = numWildcards
-	// 	this.wildcardsPlacement = wildcardsPlacement
-	// }
 	static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTree {
 		const tree = new MatchTree()
 		tree.rounds = this.buildRounds(numRounds, numWildcards, wildcardPlacement)
@@ -305,18 +295,13 @@ export class MatchTree {
 			return round.toSubmissionReq();
 		});
 		return rounds
-		// return {
-		// 	rounds: rounds,
-		// 	name: name,
-		// 	bracketId: bracketId,
-		// }
 	}
 
 	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
-		// const prevRound = this.rounds[depth + 1]
-		// if (prevRound && !prevRound.isComplete()) {
-		// 	return
-		// }
+		const prevRound = this.rounds[depth + 1]
+		if (prevRound && !prevRound.isComplete()) {
+			return
+		}
 		const round = this.rounds[depth]
 		const match = round.matches[matchIndex]
 		if (!match) {
