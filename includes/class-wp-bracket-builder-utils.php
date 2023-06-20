@@ -19,22 +19,21 @@ class Wp_Bracket_Builder_Utils {
 	}
 
 	public function log_sentry_error($error) {
-		if ( function_exists( 'wp_sentry_safe' ) ) {
-			wp_sentry_safe( function ( \Sentry\State\HubInterface $client ) use ( $error ) {
-				$client->captureException( $error );
-			} );
+		if (function_exists('wp_sentry_safe')) {
+			wp_sentry_safe(function (\Sentry\State\HubInterface $client) use ($error) {
+				$client->captureException($error);
+			});
 		}
-
 	}
 
 	public function log_sentry_message($msg, $level = null) {
-    if ( function_exists( 'wp_sentry_safe' ) ) {
-        return wp_sentry_safe( function ( \Sentry\State\HubInterface $client ) use ( $msg, $level) {
-            if($level === null) {
-                $level = \Sentry\Severity::info();
-            }
-            return $client->captureMessage( $msg, $level);
-        });
-    }
-}
+		if (function_exists('wp_sentry_safe')) {
+			return wp_sentry_safe(function (\Sentry\State\HubInterface $client) use ($msg, $level) {
+				if ($level === null) {
+					$level = \Sentry\Severity::info();
+				}
+				return $client->captureMessage($msg, $level);
+			});
+		}
+	}
 }
