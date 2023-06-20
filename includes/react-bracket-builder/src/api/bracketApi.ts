@@ -65,8 +65,8 @@ class BracketApi {
 		return res;
 	}
 
-	async deleteBracket(id: number): Promise<void> {
-		await this.performRequest(`${this.bracketPath}/${id}`, { method: 'DELETE', camelCaseResponse: false });
+	async deleteBracket(id: number): Promise<boolean> {
+		return await this.performRequest(`${this.bracketPath}/${id}`, { method: 'DELETE', camelCaseResponse: false });
 	}
 
 	async setActive(id: number, active: boolean): Promise<boolean> {

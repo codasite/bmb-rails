@@ -22,7 +22,6 @@ interface WpbbAjaxObj {
 }
 
 declare var wpbb_ajax_obj: WpbbAjaxObj;
-console.log(wpbb_ajax_obj)
 
 /**
  * Import the stylesheet for the plugin.
@@ -32,7 +31,6 @@ const sentryEnv = wpbb_ajax_obj.sentry_env
 const sentryDsn = wpbb_ajax_obj.sentry_dsn
 
 if (sentryDsn) {
-	console.log('init sentry')
 	// Init Sentry
 	Sentry.init({
 		environment: sentryEnv || 'production',

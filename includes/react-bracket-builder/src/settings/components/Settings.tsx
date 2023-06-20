@@ -18,7 +18,7 @@ const DeleteModal: React.FC<DeleteModalProps> = ({ show, onHide, onDelete }) => 
 			</Modal.Header>
 			<Modal.Body>
 				<p>
-					Are you sure you want to delete this bracket? This will delete all associated user brackets and cannot be undone.
+					Are you sure you want to delete this bracket?
 				</p>
 			</Modal.Body>
 			<Modal.Footer>
@@ -62,19 +62,13 @@ const BracketRow: React.FC<BracketRowProps> = (props) => {
 
 	const handleActiveToggle = (e) => {
 		e.stopPropagation();
-		console.log('toggle')
 		bracketApi.setActive(bracket.id, e.target.checked).then((isActive) => {
 			setActive(isActive);
 		})
-		console.log(e.target.checked)
 	}
 
 	const handleViewSubmissions = (e) => {
 		e.stopPropagation();
-		console.log('view submissions')
-		bracketApi.getSubmissions(bracket.id).then((submissions) => {
-			console.log(submissions)
-		})
 		props.handleShowBracketModal(BracketModalMode.Submissions, bracket.id);
 	}
 	const created = new Date(bracket.createdAt.date);
@@ -195,7 +189,8 @@ const Settings = () => {
 		setShowBracketModal(true);
 	};
 	const handleDeleteBracket = (bracketId: number) => {
-		bracketApi.deleteBracket(bracketId).then(() => {
+		bracketApi.deleteBracket(bracketId).then((deleted) => {
+			if (!deleted) return;
 			setBrackets(brackets.filter((bracket) => bracket.id !== bracketId));
 		})
 	}
@@ -204,7 +199,6 @@ const Settings = () => {
 
 	useEffect(() => {
 		bracketApi.getBrackets().then((brackets) => {
-			console.log(brackets);
 			setBrackets(brackets);
 		});
 	}, []);

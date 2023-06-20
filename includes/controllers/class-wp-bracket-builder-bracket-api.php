@@ -183,10 +183,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 		// get id from request
 		$id = $request->get_param('item_id');
 		$deleted = $this->bracket_repo->delete($id);
-		if ($deleted) {
-			return new WP_REST_Response(null, 204);
-		}
-		return new WP_Error('cant-delete', __('message', 'text-domain'), array('status' => 500));
+		return new WP_REST_Response($deleted, 200);
 	}
 
 	/**
