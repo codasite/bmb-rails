@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
 interface Wp_Bracket_Builder_Bracket_Repository_Interface {
 	public function add(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
@@ -273,10 +274,17 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		// 	]
 		// );
 		// Get the associated cpt id
+		$utils = new Wp_Bracket_Builder_Utils();
 		$bracket = $this->get($id);
-		$cpt_id = $bracket->cpt_id;
-		wp_delete_post($cpt_id);
 
+		if ($bracket !== null && property_exists($bracket, 'cpt_id')) {
+			$cpt_id = $bracket->cpt_id;
+			$utils->log_sentry_message("cpt_id: " . $cpt_id);
+			wp_delete_post($cpt_id);
+		} else {
+			$utils->log_sentry_message("Bracket is null or does not have a cpt_id property. bracket: " . json_encode($bracket));
+			return false;
+		}
 		return true;
 	}
 

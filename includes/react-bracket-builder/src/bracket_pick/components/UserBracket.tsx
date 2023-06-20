@@ -192,10 +192,10 @@ const UserBracket = (props: UserBracketProps) => {
 		Promise.all(promises).then((res) => {
 			const darkModeImage = res[0]
 			const lightModeImage = res[1]
-			console.log('dark mode image')
-			console.log(darkModeImage)
-			console.log('light mode image')
-			console.log(lightModeImage)
+			// console.log('dark mode image')
+			// console.log(darkModeImage)
+			// console.log('light mode image')
+			// console.log(lightModeImage)
 			// setProcessingImage(false)
 
 			window.location.href = apparelUrl
@@ -204,19 +204,6 @@ const UserBracket = (props: UserBracketProps) => {
 			console.error(err)
 			Sentry.captureException(err)
 		})
-
-		// setProcessingImage(true)
-		// bracketApi.htmlToImage({ html: html, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1 }).then((res) => {
-		// 	// redirect to apparel page
-		// 	// console.log(apparelUrl)
-		// 	console.log(res)
-		// 	setProcessingImage(false)
-		// 	// window.location.href = apparelUrl
-		// }).catch((err) => {
-		// 	setProcessingImage(false)
-		// 	console.error(err)
-		// 	Sentry.captureException(err)
-		// })
 	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage

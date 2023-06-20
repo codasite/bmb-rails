@@ -72,7 +72,6 @@ const SubmissionModalBody = (props: SubmissionModalBodyProps) => {
 			return;
 		}
 		bracketApi.getSubmission(subId).then((sub) => {
-			console.log(sub);
 			setActiveSub(sub);
 		});
 	};
@@ -111,7 +110,6 @@ export const BracketSubmissionsModal = (props: BracketSubmissionsModalProps) => 
 
 	useEffect(() => {
 		bracketApi.getSubmissions(bracketId).then((submissions) => {
-			console.log(submissions)
 			setSubmissions(submissions);
 		})
 	}, [bracketId])

@@ -61,6 +61,16 @@ const TeamSlot = (props: TeamSlotProps) => {
 		}
 	}
 
+	const handleUpdateTextBuffer = (e) => {
+		const value = e.target.value
+
+		if (value.length > 10) {
+			return
+		}
+		setTextBuffer(e.target.value)
+	}
+
+
 	return (
 		<div className={props.className} onClick={handleClick}>
 			{editing ?
@@ -70,7 +80,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 					onFocus={(e) => e.target.select()}
 					type='text'
 					value={textBuffer}
-					onChange={(e) => setTextBuffer(e.target.value)}
+					onChange={handleUpdateTextBuffer}
 					onBlur={doneEditing}
 					onKeyUp={(e) => {
 						if (e.key === 'Enter') {
@@ -400,26 +410,12 @@ export const Bracket = (props: BracketProps) => {
 		]
 	}
 
-	const screenshot = () => {
-		const bracketEl: HTMLDivElement | null = bracketRef.current
-		if (!bracketEl) {
-			return
-		}
-		// const bracketHTML = bracketEl.outerHTML
-		// console.log(bracketHTML)
-		const rounds = matchTree.toSubmissionReq();
-		const json = JSON.stringify(rounds);
-		console.log(json)
-
-	}
-
 
 	return (
 		<>
 			<div className='wpbb-bracket' ref={bracketRef}>
 				{rounds.length > 0 && buildRounds2(rounds)}
 			</div>
-			<Button variant='primary' onClick={screenshot}>ref</Button>
 		</>
 	)
 }
