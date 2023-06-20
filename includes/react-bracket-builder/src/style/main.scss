@@ -66,7 +66,6 @@
 	padding-top: 160px;
 	padding-bottom: 100px;
 	min-width: fit-content;
-	text-align: center;
 
 	.wpbb-theme-selector {
 		position: absolute;
@@ -240,10 +239,10 @@
 	.wpbb-winner-text {
 		font-size: 64px;
 		font-weight: 700;
-		// line-height: 79px;
 		line-height: 1;
 		margin-bottom: 16px;
-		// no wrap
+		text-align: center;
+		white-space: nowrap;
 
 	}
 
@@ -263,6 +262,9 @@
 			bottom: -320px;
 		}
 
+		.wpbb-winner-container {
+			bottom: 320px;
+		}
 
 		.wpbb-team1,
 		.wpbb-team2 {
@@ -279,6 +281,10 @@
 			bottom: -270px;
 		}
 
+		.wpbb-winner-container {
+			bottom: 190px;
+		}
+
 		.wpbb-team1,
 		.wpbb-team2 {
 			height: 20px;
@@ -290,6 +296,10 @@
 	&.wpbb-4-rounds {
 		width: 985px;
 
+		.wpbb-winner-container {
+			bottom: 150px;
+		}
+
 		.wpbb-bracket-logo {
 			bottom: -300px;
 		}
@@ -298,25 +308,26 @@
 	&.wpbb-3-rounds {
 		width: 800px;
 
-		.wpbb-winner-text {
-			white-space: nowrap;
-		}
-
 		.wpbb-bracket-logo {
 			bottom: -300px;
 		}
+
+		// .wpbb-winner-text {
+		// 	white-space: nowrap;
+		// }
 	}
 
 	&.wpbb-2-rounds {
 		width: 800px;
 
-		.wpbb-winner-text {
-			white-space: nowrap;
-		}
-
 		.wpbb-bracket-logo {
 			bottom: -250px;
 		}
+
+		// .wpbb-winner-text {
+		// 	white-space: nowrap;
+		// }
+
 	}
 
 	&.wpbb-dark-mode {
