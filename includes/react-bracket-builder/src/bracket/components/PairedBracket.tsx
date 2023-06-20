@@ -208,12 +208,22 @@ const MatchBox = (props: MatchBoxProps) => {
 	const winnerText = bracketName ? bracketName.split(' ')[0] + ' ' + bracketName.split(' ').slice(-1) : 'WINNER' // hack to get shortend bracket name. Should probably be a separate field
 	// const winnerText = 'WINNER'
 	// const winnerText = bracketName ? bracketName : 'WINNER'
+	const getWinnerText = () => {
+		if (bracketName) {
+			const bracketNameSplit = bracketName.split(' ')
+			if (bracketNameSplit.length > 1) {
+				return `${bracketNameSplit[0]} ${bracketNameSplit[bracketNameSplit.length - 1]}`
+			}
+			return bracketName
+		}
+		return 'WINNER'
+	}
 
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
 			{finalMatch &&
 				[<div className='wpbb-winner-container'>
-					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{winnerText}</span>
+					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{getWinnerText()}</span>
 					<TeamSlot
 						className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
 						team={match.result}
