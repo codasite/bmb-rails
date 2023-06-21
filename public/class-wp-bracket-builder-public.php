@@ -114,7 +114,8 @@ class Wp_Bracket_Builder_Public {
 		$product = wc_get_product($post->ID);
 		$bracket_product_archive_url = $this->get_archive_url();
 
-		$overlay_map = $this->build_overlay_map();
+		$bracket_placement = $this->get_bracket_placement($product);
+		$overlay_map = $this->build_overlay_map($bracket_placement);
 
 		$is_bracket_product = $this->is_bracket_product($product);
 		// Only get product details on product pages.
@@ -146,25 +147,36 @@ class Wp_Bracket_Builder_Public {
 		);
 	}
 
-	private function build_overlay_map(): array {
-		$dark_top = $this->bracket_config_repo->get('dark', 'top');
-		$dark_center = $this->bracket_config_repo->get('dark', 'center');
-		$light_top = $this->bracket_config_repo->get('light', 'top');
-		$light_center = $this->bracket_config_repo->get('light', 'center');
+	private function build_overlay_map($placement): array {
+		$dark = $this->bracket_config_repo->get('dark', $placement);
+		$light = $this->bracket_config_repo->get('light', $placement);
 
-		$bracket_url_theme_map = array(
-			'dark' => array(
-				'top' => $dark_top->img_url,
-				'center' => $dark_center->img_url,
-			),
-			'light' => array(
-				'top' => $light_top->img_url,
-				'center' => $light_center->img_url,
-			),
+		$overlay_map = array(
+			'dark' => $dark->img_url,
+			'light' => $light->img_url,
 		);
 
-		return $bracket_url_theme_map;
+		return $overlay_map;
 	}
+	// private function build_overlay_map(): array {
+	// 	$dark_top = $this->bracket_config_repo->get('dark', 'top');
+	// 	$dark_center = $this->bracket_config_repo->get('dark', 'center');
+	// 	$light_top = $this->bracket_config_repo->get('light', 'top');
+	// 	$light_center = $this->bracket_config_repo->get('light', 'center');
+
+	// 	$bracket_url_theme_map = array(
+	// 		'dark' => array(
+	// 			'top' => $dark_top->img_url,
+	// 			'center' => $dark_center->img_url,
+	// 		),
+	// 		'light' => array(
+	// 			'top' => $light_top->img_url,
+	// 			'center' => $light_center->img_url,
+	// 		),
+	// 	);
+
+	// 	return $bracket_url_theme_map;
+	// }
 
 	/**
 	 * Render bracket builder
