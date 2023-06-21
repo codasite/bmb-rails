@@ -56,10 +56,16 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 		// get the entire request body
 		$body = json_decode($request->get_body(), true);
 		$theme_mode = $body['themeMode'] ?? null;
+		$bracket_placement = $body['bracketPlacement'] ?? null;
 
 		if (!$theme_mode) {
 			$utils->log_sentry_error('Theme mode is required. Request: ' . json_encode($body));
 			return new WP_Error('error', __('Theme mode is required', 'text-domain'), array('status' => 400));
+		}
+
+		if (!$bracket_placement) {
+			$utils->log_sentry_error('Bracket placement is required. Request: ' . json_encode($body));
+			return new WP_Error('error', __('Bracket placement is required', 'text-domain'), array('status' => 400));
 		}
 
 		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
@@ -67,10 +73,10 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 
 		if (!is_wp_error($res) && isset($res['imageUrl'])) {
 			// build a config object
-			$config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res['imageUrl']);
+			$config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res['imageUrl'], $bracket_placement);
 			// Add the image url to the user's session
 			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-			$config_repo->add($config, $theme_mode);
+			$config_repo->add($config);
 
 			return new WP_REST_Response($res, 200);
 		} else {
