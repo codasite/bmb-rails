@@ -102,7 +102,7 @@ const UserBracket = (props: UserBracketProps) => {
 				${printArea}
 			</body>
 			</html>
-		`.replace(/[\n\t]/g, '').replace(/"/g, "'")
+		`
 	}
 
 	const buildPrintArea = (innerHTML: string, inchHeight: number, inchWidth: number) => {
@@ -123,6 +123,10 @@ const UserBracket = (props: UserBracketProps) => {
 		return html
 	}
 
+	const minify = (html: string) => {
+		return html.replace(/[\n\t]/g, '').replace(/"/g, "'")
+	}
+
 	const handleApparelClick = () => {
 		const id = bracketId || bracketRes?.id;
 		if (!id || !matchTree) {
@@ -138,22 +142,19 @@ const UserBracket = (props: UserBracketProps) => {
 
 		// if we were in dark mode, remove it to get the light mode version
 		bracketEl.classList.remove('wpbb-dark-mode')
-		const lightModeTopHTML = doc.documentElement.outerHTML
+		const lightModeTopHTML = minify(doc.documentElement.outerHTML)
 		printArea.classList.add('wpbb-print-center')
-		const lightModeCenterHTML = doc.documentElement.outerHTML
+		const lightModeCenterHTML = minify(doc.documentElement.outerHTML)
 		bracketEl.classList.add('wpbb-dark-mode')
-		const darkModeCenterHTML = doc.documentElement.outerHTML
+		const darkModeCenterHTML = minify(doc.documentElement.outerHTML)
 		printArea.classList.remove('wpbb-print-center')
-		const darkModeTopHTML = doc.documentElement.outerHTML
+		const darkModeTopHTML = minify(doc.documentElement.outerHTML)
+		// 
 
-		// console.log('light mode upper')
-		// console.log(lightModeUpperHTML)
-		// console.log('light mode mid')
-		// console.log(lightModeMidHTML)
-		// console.log('dark mode mid')
-		// console.log(darkModeMidHTML)
-		// console.log('dark mode upper')
-		// console.log(darkModeUpperHTML)
+		// console.log('light mode top', lightModeTopHTML)
+		// console.log('light mode center', lightModeCenterHTML)
+		// console.log('dark mode top', darkModeTopHTML)
+		// console.log('dark mode center', darkModeCenterHTML)
 
 		// Random key to link the two images together
 		const key = Math.random().toString(36).substring(7);
@@ -175,6 +176,7 @@ const UserBracket = (props: UserBracketProps) => {
 			Sentry.captureException(err)
 		})
 	}
+
 
 	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
 	// const disableActions = processingImage
