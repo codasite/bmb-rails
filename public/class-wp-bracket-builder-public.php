@@ -238,15 +238,8 @@ class Wp_Bracket_Builder_Public {
 	public function bracket_product_add_to_cart_validation($passed, $product_id, $quantity, $variation_id = null, $variations = null) {
 		$product = wc_get_product($product_id);
 
-		if (!$this->is_bracket_product($product)) {
+		if (!$this->is_bracket_product($product) || $this->bracket_config_repo->is_empty()) {
 			// Not a bracket product. Treat as a normal product.
-			return $passed;
-		}
-
-		$configs = $this->bracket_config_repo->get_all();
-
-		if (empty($configs)) {
-			// No bracket configs found. Treat as a normal product.
 			return $passed;
 		}
 
@@ -260,14 +253,23 @@ class Wp_Bracket_Builder_Public {
 			return false;
 		}
 
+		$bracket_placement = $this->get_bracket_placement($product);
+
+		if (empty($bracket_placement)) {
+			$this->handle_add_to_cart_error($product, $variation_id, $product_id, 'No bracket placement found.');
+			return false;
+		}
+
 		// The config is stored in the session and set when "Add to Apparel" button is clicked on the bracket builder page.
 		// It contains the bracket theme and HTML to render the bracket.
-		$config = $configs[$bracket_theme];
+		$config = $this->bracket_config_repo->get($bracket_theme, $bracket_placement);
 
 		if (empty($config)) {
 			$this->handle_add_to_cart_error($product, $variation_id, $product_id, 'No bracket config found.');
 			return false;
 		}
+
+		$this->log('passed validation');
 
 		return $passed;
 	}
@@ -278,19 +280,16 @@ class Wp_Bracket_Builder_Public {
 		$product = wc_get_product($product_id);
 
 		// Perform similar checks as above to make sure we are dealing with a bracket product and that we have a bracket config
-		if (!$this->is_bracket_product($product)) {
-			return $cart_item_data;
-		}
-
-
-		if ($this->bracket_config_repo->is_empty()) {
+		if (!$this->is_bracket_product($product) || $this->bracket_config_repo->is_empty()) {
+			$this->log('in add_bracket_to_cart_item_data: not a bracket product or no bracket config');
 			return $cart_item_data;
 		}
 
 		$bracket_theme = $this->get_bracket_theme($variation_id);
-		$bracket_placement = $this->get_bracket_placement($product_id);
+		$bracket_placement = $this->get_bracket_placement($product);
 
 		$config = $this->bracket_config_repo->get($bracket_theme, $bracket_placement);
+		$this->log('in add_bracket_to_cart_item_data: config: ' . json_encode($config));
 
 		$cart_item_data['bracket_config'] = $config;
 
