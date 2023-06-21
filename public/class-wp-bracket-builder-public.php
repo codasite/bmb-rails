@@ -128,12 +128,29 @@ class Wp_Bracket_Builder_Public {
 		$bracket_product_archive_url = $this->get_archive_url();
 
 		// get the bracket config for light and dark mode from the session
-		$bracket_config_light = $this->bracket_config_repo->get('light');
-		$bracket_config_dark = $this->bracket_config_repo->get('dark');
+		// $bracket_config_light = $this->bracket_config_repo->get('light');
+		// $bracket_config_dark = $this->bracket_config_repo->get('dark');
+		$dark_upper = $this->bracket_config_repo->get('dark', 'upper');
+		$dark_mid = $this->bracket_config_repo->get('dark', 'mid');
+		$light_upper = $this->bracket_config_repo->get('light', 'upper');
+		$light_mid = $this->bracket_config_repo->get('light', 'mid');
+
+		// $configs = $this->bracket_config_repo->get_all();
+		// $this->log(json_encode($configs));
 		$bracket_url_theme_map = array(
-			'light' => $bracket_config_light ? $bracket_config_light->img_url : '',
-			'dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
+			'light' => array(
+				'upper' => $dark_upper->img_url,
+				'mid' => $dark_mid->img_url,
+			),
+			'dark' => array(
+				'upper' => $light_upper->img_url,
+				'mid' => $light_mid->img_url,
+			),
 		);
+		// $bracket_url_theme_map = array(
+		// 	'light' => $bracket_config_light ? $bracket_config_light->img_url : '',
+		// 	'dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
+		// );
 
 		$is_bracket_product = $this->is_bracket_product($product);
 		// Only get product details on product pages.

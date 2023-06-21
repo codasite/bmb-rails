@@ -22,6 +22,7 @@ interface WpbbAjaxObj {
 }
 
 declare var wpbb_ajax_obj: WpbbAjaxObj;
+console.log('wpbb_ajax_obj', wpbb_ajax_obj)
 
 /**
  * Import the stylesheet for the plugin.

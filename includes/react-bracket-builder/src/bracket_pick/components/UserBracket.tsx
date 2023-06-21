@@ -185,8 +185,10 @@ const UserBracket = (props: UserBracketProps) => {
 		// Random key to link the two images together
 		const key = Math.random().toString(36).substring(7);
 		const promises = [
-			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, s3Key: `bracket-${key}-dark.png` }),
-			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, s3Key: `bracket-${key}-light.png` }),
+			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'upper', s3Key: `bracket-${key}-dark-upper.png` }),
+			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'upper', s3Key: `bracket-${key}-light-upper.png` }),
+			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'mid', s3Key: `bracket-${key}-dark-mid.png` }),
+			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'mid', s3Key: `bracket-${key}-light-mid.png` }),
 		]
 		setProcessingImage(true)
 		Promise.all(promises).then((res) => {

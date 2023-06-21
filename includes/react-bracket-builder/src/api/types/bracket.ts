@@ -100,6 +100,7 @@ export interface HTMLtoImageReq {
 	inchWidth: number;
 	deviceScaleFactor?: number;
 	themeMode?: string;
+	bracketPlacement?: string;
 	key?: string;
 	s3Key?: string;
 }
