@@ -138,11 +138,11 @@ class Wp_Bracket_Builder_Public {
 		// $configs = $this->bracket_config_repo->get_all();
 		// $this->log(json_encode($configs));
 		$bracket_url_theme_map = array(
-			'light' => array(
+			'dark' => array(
 				'upper' => $dark_upper->img_url,
 				'mid' => $dark_mid->img_url,
 			),
-			'dark' => array(
+			'light' => array(
 				'upper' => $light_upper->img_url,
 				'mid' => $light_mid->img_url,
 			),

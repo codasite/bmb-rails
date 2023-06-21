@@ -5,7 +5,14 @@ import * as Sentry from '@sentry/react';
 
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
-  [key: string]: string;
+  // [key: string]: string;
+  light: OverlayUrlPlacementMap;
+  dark: OverlayUrlPlacementMap;
+}
+
+interface OverlayUrlPlacementMap {
+  upper: string;
+  mid: string;
 }
 
 interface GalleryImage {
@@ -180,9 +187,12 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
       orientation,
       overlayParams,
       themeMode,
+      bracketPlacement,
     } = parseImageParams(backgroundImageTitle, colorOptions);
 
-    const overlayUrl = overlayMap[themeMode || ProductImageThemeMode.DARK];
+    console.log('overlayMap', JSON.stringify(overlayMap));
+
+    const overlayUrl = getOverlayUrl(overlayMap, themeMode, bracketPlacement);
 
     const url = orientation === ProductImageOrientation.BACK && overlayParams && overlayUrl
       ? await addOverlay(backgroundImageUrl, overlayUrl, overlayParams)
@@ -219,6 +229,23 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
     </>
   )
 };
+
+const getOverlayUrl = (overlayMap: OverlayUrlThemeMap, theme?: string, bracketPlacement?: string): string => {
+  if (theme === ProductImageThemeMode.DARK) {
+    if (bracketPlacement === ProductImageBracketPlacement.UPPER) {
+      return overlayMap.dark.upper
+    } else if (bracketPlacement === ProductImageBracketPlacement.MID) {
+      return overlayMap.dark.mid
+    }
+  } else if (theme === ProductImageThemeMode.LIGHT) {
+    if (bracketPlacement === ProductImageBracketPlacement.UPPER) {
+      return overlayMap.light.upper
+    } else if (bracketPlacement === ProductImageBracketPlacement.MID) {
+      return overlayMap.light.mid
+    }
+  }
+  return '';
+}
 
 const getImageUrlsForColor = (configs: ProductImageConfig[], color: string): string[] => {
   return configs.filter((config) => {
