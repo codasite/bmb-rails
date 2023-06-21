@@ -11,8 +11,8 @@ export interface OverlayUrlThemeMap {
 }
 
 interface OverlayUrlPlacementMap {
-  upper: string;
-  mid: string;
+  top: string;
+  center: string;
 }
 
 interface GalleryImage {
@@ -38,9 +38,9 @@ enum ProductImageThemeMode {
 }
 
 enum ProductImageBracketPlacement {
-  UPPER = 'upper',
-  MID = 'mid',
-  LOWER = 'lower',
+  TOP = 'top',
+  CENTER = 'center',
+  BOTTOM = 'bottom',
 }
 
 interface ProductImageConfig {
@@ -232,16 +232,16 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
 
 const getOverlayUrl = (overlayMap: OverlayUrlThemeMap, theme?: string, bracketPlacement?: string): string => {
   if (theme === ProductImageThemeMode.DARK) {
-    if (bracketPlacement === ProductImageBracketPlacement.UPPER) {
-      return overlayMap.dark.upper
-    } else if (bracketPlacement === ProductImageBracketPlacement.MID) {
-      return overlayMap.dark.mid
+    if (bracketPlacement === ProductImageBracketPlacement.TOP) {
+      return overlayMap.dark.top
+    } else if (bracketPlacement === ProductImageBracketPlacement.CENTER) {
+      return overlayMap.dark.center
     }
   } else if (theme === ProductImageThemeMode.LIGHT) {
-    if (bracketPlacement === ProductImageBracketPlacement.UPPER) {
-      return overlayMap.light.upper
-    } else if (bracketPlacement === ProductImageBracketPlacement.MID) {
-      return overlayMap.light.mid
+    if (bracketPlacement === ProductImageBracketPlacement.TOP) {
+      return overlayMap.light.top
+    } else if (bracketPlacement === ProductImageBracketPlacement.CENTER) {
+      return overlayMap.light.center
     }
   }
   return '';
@@ -303,12 +303,12 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
   }
 
   let bracketPlacement: ProductImageBracketPlacement | undefined;
-  if (normalizedTitle.includes('upper')) {
-    bracketPlacement = ProductImageBracketPlacement.UPPER;
-  } else if (normalizedTitle.includes('middle')) {
-    bracketPlacement = ProductImageBracketPlacement.MID;
-  } else if (normalizedTitle.includes('lower')) {
-    bracketPlacement = ProductImageBracketPlacement.LOWER;
+  if (normalizedTitle.includes('top')) {
+    bracketPlacement = ProductImageBracketPlacement.TOP;
+  } else if (normalizedTitle.includes('center')) {
+    bracketPlacement = ProductImageBracketPlacement.CENTER;
+  } else if (normalizedTitle.includes('bottom')) {
+    bracketPlacement = ProductImageBracketPlacement.BOTTOM;
   }
 
 
