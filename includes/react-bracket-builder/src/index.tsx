@@ -10,10 +10,8 @@ interface WpbbAjaxObj {
 	nonce: string;
 	rest_url: string;
 	bracket: BracketRes;
-	// bracket_url: string;
-	// bracket_url_dark: string;
-	// bracket_url_light: string;
 	bracket_url_theme_map: OverlayUrlThemeMap;
+	css_url: string;
 	bracket_product_archive_url: string;
 	gallery_images: any;
 	color_options: any;
@@ -76,9 +74,10 @@ function renderBracketBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	const {
 		bracket,
 		bracket_product_archive_url,
+		css_url
 	} = wpbb_ajax_obj
 	if (builderDiv && bracket) {
-		render(<App><UserBracket bracketRes={bracket} apparelUrl={bracket_product_archive_url} /> </App>, builderDiv)
+		render(<App><UserBracket bracketStylesheetUrl={css_url} bracketRes={bracket} apparelUrl={bracket_product_archive_url} /> </App>, builderDiv)
 	}
 }
 
