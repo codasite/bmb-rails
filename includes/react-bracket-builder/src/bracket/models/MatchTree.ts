@@ -299,9 +299,9 @@ export class MatchTree {
 
 	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
 		const prevRound = this.rounds[depth + 1]
-		// if (prevRound && !prevRound.isComplete()) {
-		// 	return
-		// }
+		if (prevRound && !prevRound.isComplete()) {
+			return
+		}
 		const round = this.rounds[depth]
 		const match = round.matches[matchIndex]
 		if (!match) {
