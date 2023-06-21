@@ -270,15 +270,16 @@ class Wp_Bracket_Builder_Public {
 			return $cart_item_data;
 		}
 
-		$configs = $this->bracket_config_repo->get_all();
 
-		if (empty($configs)) {
+		if ($this->bracket_config_repo->is_empty()) {
 			return $cart_item_data;
 		}
 
 		$bracket_theme = $this->get_bracket_theme($variation_id);
+		$bracket_placement = $this->get_bracket_placement($variation_id);
 
-		$config = $configs[$bracket_theme];
+		$config = $this->bracket_config_repo->get($bracket_theme, $bracket_placement);
+
 		$cart_item_data['bracket_config'] = $config;
 
 		return $cart_item_data;
@@ -306,6 +307,11 @@ class Wp_Bracket_Builder_Public {
 	// Helper method to get the bracket theme
 	private function get_bracket_theme($variation_id) {
 		return get_post_meta($variation_id, 'wpbb_bracket_theme', true);
+	}
+
+	// Helper method to get the bracket placement
+	private function get_bracket_placement($variation_id) {
+		return get_post_meta($variation_id, 'wpbb_bracket_placement', true);
 	}
 
 	// Helper method to log error and show notice

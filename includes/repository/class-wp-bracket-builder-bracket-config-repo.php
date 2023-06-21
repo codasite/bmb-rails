@@ -80,10 +80,7 @@ class Wp_Bracket_Builder_Bracket_Config_Repository {
 		return empty($this->get_all());
 	}
 
-	public function get(string $theme_mode = '', string $bracket_placement = ''): ?Wp_Bracket_Builder_Bracket_Config {
-		if (empty($theme_mode) || empty($bracket_placement)) {
-			return null;
-		}
+	public function get(string $theme_mode, string $bracket_placement): ?Wp_Bracket_Builder_Bracket_Config {
 		$configs = $this->get_all();
 		return $configs[$theme_mode][$bracket_placement] ?? null;
 	}
