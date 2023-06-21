@@ -215,37 +215,13 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
   )
 };
 
-const getOverlayUrl = (overlayMap: OverlayUrlThemeMap, theme?: string, bracketPlacement?: string): string => {
+const getOverlayUrl = (overlayMap: OverlayUrlThemeMap, theme?: string): string => {
   if (theme === ProductImageThemeMode.DARK) {
     return overlayMap.dark
   } else if (theme === ProductImageThemeMode.LIGHT) {
     return overlayMap.light
   }
   return '';
-}
-
-const getImageUrlsForColor = (configs: ProductImageConfig[], color: string): string[] => {
-  return configs.filter((config) => {
-    return config.variationColor && compareProductAttributes(config.variationColor, color);
-  }).map((config) => {
-    return config.url;
-  });
-}
-
-const getImageUrlsForTheme = (configs: ProductImageConfig[], theme: string): string[] => {
-  return configs.filter((config) => {
-    return config.variationTheme && compareProductAttributes(config.variationTheme, theme);
-  }).map((config) => {
-    return config.url;
-  });
-}
-
-const compareProductAttributes = (str1: string, str2: string): boolean => {
-  // Do a case-insensitive comparison of two strings, ignoring whitespace, underscores, and hyphens.
-  const formattedStr1 = normalizeString(str1);
-  const formattedStr2 = normalizeString(str2);
-
-  return formattedStr1 === formattedStr2;
 }
 
 const normalizeString = (str: string): string => {
