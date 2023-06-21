@@ -141,10 +141,7 @@ class Wp_Bracket_Builder_Admin {
 			$front_design_value = get_post_meta($variation->ID, 'wpbb_front_design', true);
 			$bracket_theme_value = get_post_meta($variation->ID, 'wpbb_bracket_theme', true);
 
-			// if (empty($front_design_value) || empty($bracket_theme_value)) {
-			// 	throw new Exception('Front Design URL and Bracket Theme cannot be blank');
-			// }
-
+			// Text input for front design url
 			woocommerce_wp_text_input(
 				array(
 					'id'            => 'wpbb_front_design[' . $variation->ID . ']',
@@ -154,8 +151,7 @@ class Wp_Bracket_Builder_Admin {
 					'value'         => $front_design_value,
 				)
 			);
-
-			// a select field
+			// Select input for bracket theme
 			woocommerce_wp_select(
 				array(
 					'id'            => 'wpbb_bracket_theme[' . $variation->ID . ']',
@@ -209,35 +205,4 @@ class Wp_Bracket_Builder_Admin {
 			delete_option('custom_admin_error');
 		}
 	}
-
-	// public function validate_variation_fields($variation_id, $i) {
-	// 	// Get existing errors
-	// 	$errors = get_option('custom_admin_error', []);
-
-	// 	// Check for Front Design URL
-	// 	if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
-	// 		$errors[] = 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.';
-	// 	}
-
-	// 	// Check for Bracket Theme
-	// 	if (empty(get_post_meta($variation_id, 'wpbb_bracket_theme', true))) {
-	// 		$errors[] = 'WARNING: Bracket theme is blank for variation ID ' . $variation_id . '. Customer will be unable to customize this product.';
-	// 	}
-
-	// 	// Save errors
-	// 	update_option('custom_admin_error', $errors);
-	// }
-
-	// public function display_custom_admin_error() {
-	// 	$errors = get_option('custom_admin_error', []);
-	// 	if (!empty($errors)) {
-	// 		foreach ($errors as $error) {
-	// 			echo '<div class="error notice">
-	//           <p>' . $error . '</p>
-	//           </div>';
-	// 		}
-	// 		// Clear the error messages after displaying
-	// 		delete_option('custom_admin_error');
-	// 	}
-	// }
 }

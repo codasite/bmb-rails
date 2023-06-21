@@ -49,11 +49,11 @@
 	background-color: $darkBlue;
 	padding: 75px 0;
 
-	&.wpbb-print-mid {
+	&.wpbb-print-center {
 		justify-content: center;
 	}
 
-	&.wpbb-print-lower {
+	&.wpbb-print-bottom {
 		justify-content: flex-end;
 	}
 }

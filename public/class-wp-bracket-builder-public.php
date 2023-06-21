@@ -147,19 +147,19 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	private function build_overlay_map(): array {
-		$dark_upper = $this->bracket_config_repo->get('dark', 'upper');
-		$dark_mid = $this->bracket_config_repo->get('dark', 'mid');
-		$light_upper = $this->bracket_config_repo->get('light', 'upper');
-		$light_mid = $this->bracket_config_repo->get('light', 'mid');
+		$dark_top = $this->bracket_config_repo->get('dark', 'top');
+		$dark_center = $this->bracket_config_repo->get('dark', 'center');
+		$light_top = $this->bracket_config_repo->get('light', 'top');
+		$light_center = $this->bracket_config_repo->get('light', 'center');
 
 		$bracket_url_theme_map = array(
 			'dark' => array(
-				'upper' => $dark_upper->img_url,
-				'mid' => $dark_mid->img_url,
+				'top' => $dark_top->img_url,
+				'center' => $dark_center->img_url,
 			),
 			'light' => array(
-				'upper' => $light_upper->img_url,
-				'mid' => $light_mid->img_url,
+				'top' => $light_top->img_url,
+				'center' => $light_center->img_url,
 			),
 		);
 
@@ -276,7 +276,7 @@ class Wp_Bracket_Builder_Public {
 		}
 
 		$bracket_theme = $this->get_bracket_theme($variation_id);
-		$bracket_placement = $this->get_bracket_placement($variation_id);
+		$bracket_placement = $this->get_bracket_placement($product_id);
 
 		$config = $this->bracket_config_repo->get($bracket_theme, $bracket_placement);
 
@@ -310,8 +310,12 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	// Helper method to get the bracket placement
-	private function get_bracket_placement($variation_id) {
-		return get_post_meta($variation_id, 'wpbb_bracket_placement', true);
+	private function get_bracket_placement($product_id) {
+		// return get_post_meta($variation_id, 'wpbb_bracket_placement', true);
+		if ($this->product_has_category($product_id, BRACKET_PLACEMENT_CENTER_CAT)) {
+			return 'center';
+		}
+		return 'top';
 	}
 
 	// Helper method to log error and show notice

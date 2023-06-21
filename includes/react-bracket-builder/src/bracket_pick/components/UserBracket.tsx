@@ -138,13 +138,13 @@ const UserBracket = (props: UserBracketProps) => {
 
 		// if we were in dark mode, remove it to get the light mode version
 		bracketEl.classList.remove('wpbb-dark-mode')
-		const lightModeUpperHTML = doc.documentElement.outerHTML
-		printArea.classList.add('wpbb-print-mid')
-		const lightModeMidHTML = doc.documentElement.outerHTML
+		const lightModeTopHTML = doc.documentElement.outerHTML
+		printArea.classList.add('wpbb-print-center')
+		const lightModeCenterHTML = doc.documentElement.outerHTML
 		bracketEl.classList.add('wpbb-dark-mode')
-		const darkModeMidHTML = doc.documentElement.outerHTML
-		printArea.classList.remove('wpbb-print-mid')
-		const darkModeUpperHTML = doc.documentElement.outerHTML
+		const darkModeCenterHTML = doc.documentElement.outerHTML
+		printArea.classList.remove('wpbb-print-center')
+		const darkModeTopHTML = doc.documentElement.outerHTML
 
 		// console.log('light mode upper')
 		// console.log(lightModeUpperHTML)
@@ -158,10 +158,10 @@ const UserBracket = (props: UserBracketProps) => {
 		// Random key to link the two images together
 		const key = Math.random().toString(36).substring(7);
 		const promises = [
-			bracketApi.htmlToImage({ html: darkModeUpperHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'upper', s3Key: `bracket-${key}-dark-upper.png` }),
-			bracketApi.htmlToImage({ html: lightModeUpperHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'upper', s3Key: `bracket-${key}-light-upper.png` }),
-			bracketApi.htmlToImage({ html: darkModeMidHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'mid', s3Key: `bracket-${key}-dark-mid.png` }),
-			bracketApi.htmlToImage({ html: lightModeMidHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'mid', s3Key: `bracket-${key}-light-mid.png` }),
+			bracketApi.htmlToImage({ html: darkModeTopHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'top', s3Key: `bracket-${key}-dark-top.png` }),
+			bracketApi.htmlToImage({ html: lightModeTopHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'top', s3Key: `bracket-${key}-light-top.png` }),
+			bracketApi.htmlToImage({ html: darkModeCenterHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'center', s3Key: `bracket-${key}-dark-center.png` }),
+			bracketApi.htmlToImage({ html: lightModeCenterHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'center', s3Key: `bracket-${key}-light-center.png` }),
 		]
 		setProcessingImage(true)
 		Promise.all(promises).then((res) => {
