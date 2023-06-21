@@ -32,12 +32,6 @@ enum ProductImageThemeMode {
   LIGHT = 'light',
 }
 
-enum ProductImageBracketPlacement {
-  TOP = 'top',
-  CENTER = 'center',
-  BOTTOM = 'bottom',
-}
-
 interface ProductImageConfig {
   url: string;
   variationColor?: string;
@@ -49,7 +43,6 @@ interface ProductImageParams {
   orientation?: ProductImageOrientation;
   overlayParams?: ImageOverlayParams;
   themeMode?: ProductImageThemeMode;
-  bracketPlacement?: ProductImageBracketPlacement;
 }
 
 interface ImageOverlayParams {
@@ -286,16 +279,6 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
     themeMode = ProductImageThemeMode.LIGHT;
   }
 
-  let bracketPlacement: ProductImageBracketPlacement | undefined;
-  if (normalizedTitle.includes('top')) {
-    bracketPlacement = ProductImageBracketPlacement.TOP;
-  } else if (normalizedTitle.includes('center')) {
-    bracketPlacement = ProductImageBracketPlacement.CENTER;
-  } else if (normalizedTitle.includes('bottom')) {
-    bracketPlacement = ProductImageBracketPlacement.BOTTOM;
-  }
-
-
   const widthRegex = /w\d+/;
   const widthMatch = normalizedTitle.match(widthRegex);
   const width = widthMatch ? widthMatch[0] : null;
@@ -312,7 +295,6 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
     variationColor,
     orientation,
     themeMode,
-    bracketPlacement,
   }
   if (width && xCenter && yCenter) {
     imageParams.overlayParams = {
