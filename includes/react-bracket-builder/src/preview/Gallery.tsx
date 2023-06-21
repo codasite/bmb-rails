@@ -177,7 +177,7 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
       themeMode,
     } = parseImageParams(backgroundImageTitle, colorOptions);
 
-    const overlayUrl = overlayMap[themeMode || ProductImageThemeMode.DARK];
+    const overlayUrl = getOverlayUrl(overlayMap, themeMode);
 
     const url = orientation === ProductImageOrientation.BACK && overlayParams && overlayUrl
       ? await addOverlay(backgroundImageUrl, overlayUrl, overlayParams)
