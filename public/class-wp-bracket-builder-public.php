@@ -115,12 +115,12 @@ class Wp_Bracket_Builder_Public {
 		$bracket_product_archive_url = $this->get_archive_url();
 
 		$bracket_placement = $this->get_bracket_placement($product);
-		$overlay_map = $this->build_overlay_map($bracket_placement);
 
 		$is_bracket_product = $this->is_bracket_product($product);
 		// Only get product details on product pages.
 		$gallery_images = $is_bracket_product ? $this->get_product_gallery($product) : array();
 		$color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
+		$overlay_map = $is_bracket_product ? $this->build_overlay_map($bracket_placement) : array();
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
 
@@ -321,9 +321,9 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	// Helper method to get the bracket placement
-	private function get_bracket_placement($product_id) {
+	private function get_bracket_placement($product) {
 		// return get_post_meta($variation_id, 'wpbb_bracket_placement', true);
-		if ($this->product_has_category($product_id, BRACKET_PLACEMENT_CENTER_CAT)) {
+		if ($product && $this->product_has_category($product, BRACKET_PLACEMENT_CENTER_CAT)) {
 			return 'center';
 		}
 		return 'top';
