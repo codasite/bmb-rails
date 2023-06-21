@@ -64,6 +64,7 @@ interface UserBracketProps {
 	bracketId?: number;
 	bracketRes?: BracketRes;
 	apparelUrl: string;
+	bracketStylesheetUrl: string;
 }
 
 const UserBracket = (props: UserBracketProps) => {
@@ -71,6 +72,7 @@ const UserBracket = (props: UserBracketProps) => {
 		bracketId,
 		bracketRes,
 		apparelUrl,
+		bracketStylesheetUrl,
 	} = props;
 
 	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
@@ -91,7 +93,6 @@ const UserBracket = (props: UserBracketProps) => {
 		const printArea = buildPrintArea(innerHTML, inchHeight, inchWidth)
 		// const stylesheet = 'https://backmybracket.com/wp-content/plugins/wp-bracket-builder/includes/react-bracket-builder/build/index.css'
 		const stylesheet = 'https://wpbb-stylesheets.s3.amazonaws.com/index.css'
-		const styles = getPrintStyles();
 		return `
 			<html>
 				<head>
@@ -104,30 +105,9 @@ const UserBracket = (props: UserBracketProps) => {
 		`.replace(/[\n\t]/g, '').replace(/"/g, "'")
 	}
 
-	const getPrintStyles = () => {
-		return `
-			<style>
-				@page {
-					size: 12in 16in;
-					margin: 0;
-				}
-				@media print {
-					.wpbb-bracket-print-area {
-					}
-				}
-			</style>
-			`
-	}
-
-
 	const buildPrintArea = (innerHTML: string, inchHeight: number, inchWidth: number) => {
 		const width = inchWidth * 96;
 		const height = inchHeight * 96;
-		// return `
-		// 	<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: ${darkMode ? 'black' : 'white'}'>
-		// 		${innerHTML}
-		// 	</div>
-		// `
 		return `
 			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: transparent'>
 				${innerHTML}
@@ -138,17 +118,10 @@ const UserBracket = (props: UserBracketProps) => {
 	const getHTML = (): string => {
 		const bracketEl = document.getElementsByClassName('wpbb-bracket')[0]
 		const bracketHTML = bracketEl.outerHTML
-		const printArea = buildPrintArea(bracketHTML, 16, 12)
-		//@ts-ignore
-		const bracketCss = wpbb_ajax_obj.css_file
-		const html = buildPrintHTML(printArea, bracketCss, 16, 12)
+		const bracketCss = bracketStylesheetUrl
+		const html = buildPrintHTML(bracketHTML, bracketCss, 16, 12)
 		return html
 	}
-
-	const getStyles = () => {
-		const sheets = document.styleSheets;
-	}
-
 
 	const handleApparelClick = () => {
 		const id = bracketId || bracketRes?.id;
@@ -158,48 +131,43 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 		const html = getHTML()
 
-		// console.log(html)
 		const parser = new DOMParser();
 		const doc = parser.parseFromString(html, 'text/html');
 		const bracketEl = doc.getElementsByClassName('wpbb-bracket')[0]
+		const printArea = doc.getElementsByClassName('wpbb-bracket-print-area')[0]
 
-		let darkModeHTML: string;
-		let lightModeHTML: string;
+		// if we were in dark mode, remove it to get the light mode version
+		bracketEl.classList.remove('wpbb-dark-mode')
+		const lightModeUpperHTML = doc.documentElement.outerHTML
+		printArea.classList.add('wpbb-print-mid')
+		const lightModeMidHTML = doc.documentElement.outerHTML
+		bracketEl.classList.add('wpbb-dark-mode')
+		const darkModeMidHTML = doc.documentElement.outerHTML
+		printArea.classList.remove('wpbb-print-mid')
+		const darkModeUpperHTML = doc.documentElement.outerHTML
 
-		// check if dark mode is set. if it is, remove the dark mode class to get the light mode version
-		// if not, add the dark mode class to get the dark mode version
-		if (darkMode) {
-			darkModeHTML = html
-			bracketEl.classList.remove('wpbb-dark-mode')
-			lightModeHTML = doc.documentElement.outerHTML
-		} else {
-			lightModeHTML = html
-			bracketEl.classList.add('wpbb-dark-mode')
-			darkModeHTML = doc.documentElement.outerHTML
-		}
+		// console.log('light mode upper')
+		// console.log(lightModeUpperHTML)
+		// console.log('light mode mid')
+		// console.log(lightModeMidHTML)
+		// console.log('dark mode mid')
+		// console.log(darkModeMidHTML)
+		// console.log('dark mode upper')
+		// console.log(darkModeUpperHTML)
 
-		// console.log('dark mode')
-		// console.log(darkModeHTML)
-		// console.log('light mode')
-		// console.log(lightModeHTML)
 		// Random key to link the two images together
 		const key = Math.random().toString(36).substring(7);
 		const promises = [
-			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'upper', s3Key: `bracket-${key}-dark-upper.png` }),
-			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'upper', s3Key: `bracket-${key}-light-upper.png` }),
-			bracketApi.htmlToImage({ html: darkModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'mid', s3Key: `bracket-${key}-dark-mid.png` }),
-			bracketApi.htmlToImage({ html: lightModeHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'mid', s3Key: `bracket-${key}-light-mid.png` }),
+			bracketApi.htmlToImage({ html: darkModeUpperHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'upper', s3Key: `bracket-${key}-dark-upper.png` }),
+			bracketApi.htmlToImage({ html: lightModeUpperHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'upper', s3Key: `bracket-${key}-light-upper.png` }),
+			bracketApi.htmlToImage({ html: darkModeMidHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'mid', s3Key: `bracket-${key}-dark-mid.png` }),
+			bracketApi.htmlToImage({ html: lightModeMidHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'mid', s3Key: `bracket-${key}-light-mid.png` }),
 		]
 		setProcessingImage(true)
 		Promise.all(promises).then((res) => {
-			const darkModeImage = res[0]
-			const lightModeImage = res[1]
-			// console.log('dark mode image')
-			// console.log(darkModeImage)
-			// console.log('light mode image')
-			// console.log(lightModeImage)
+			// console.log('res')
+			// console.log(res)
 			// setProcessingImage(false)
-
 			window.location.href = apparelUrl
 		}).catch((err) => {
 			setProcessingImage(false)

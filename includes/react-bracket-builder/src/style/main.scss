@@ -46,8 +46,16 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 	background-color: $darkBlue;
+	padding: 75px 0;
+
+	&.wpbb-print-mid {
+		justify-content: center;
+	}
+
+	&.wpbb-print-lower {
+		justify-content: flex-end;
+	}
 }
 
 .wpbb-default {

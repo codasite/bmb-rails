@@ -102,19 +102,6 @@ class Wp_Bracket_Builder_Public {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Wp_Bracket_Builder_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Wp_Bracket_Builder_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
-		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-bracket-builder-public.js', array( 'jquery' ), $this->version, false );
 		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
 
@@ -127,30 +114,7 @@ class Wp_Bracket_Builder_Public {
 		$product = wc_get_product($post->ID);
 		$bracket_product_archive_url = $this->get_archive_url();
 
-		// get the bracket config for light and dark mode from the session
-		// $bracket_config_light = $this->bracket_config_repo->get('light');
-		// $bracket_config_dark = $this->bracket_config_repo->get('dark');
-		$dark_upper = $this->bracket_config_repo->get('dark', 'upper');
-		$dark_mid = $this->bracket_config_repo->get('dark', 'mid');
-		$light_upper = $this->bracket_config_repo->get('light', 'upper');
-		$light_mid = $this->bracket_config_repo->get('light', 'mid');
-
-		// $configs = $this->bracket_config_repo->get_all();
-		// $this->log(json_encode($configs));
-		$bracket_url_theme_map = array(
-			'dark' => array(
-				'upper' => $dark_upper->img_url,
-				'mid' => $dark_mid->img_url,
-			),
-			'light' => array(
-				'upper' => $light_upper->img_url,
-				'mid' => $light_mid->img_url,
-			),
-		);
-		// $bracket_url_theme_map = array(
-		// 	'light' => $bracket_config_light ? $bracket_config_light->img_url : '',
-		// 	'dark' => $bracket_config_dark ? $bracket_config_dark->img_url : '',
-		// );
+		$overlay_map = $this->build_overlay_map();
 
 		$is_bracket_product = $this->is_bracket_product($product);
 		// Only get product details on product pages.
@@ -175,11 +139,31 @@ class Wp_Bracket_Builder_Public {
 				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 
 				// For product page
-				'bracket_url_theme_map' => $bracket_url_theme_map, // map of theme mode to bracket image url
+				'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
 				'gallery_images' => $gallery_images,
 				'color_options' => $color_options,
 			)
 		);
+	}
+
+	private function build_overlay_map(): array {
+		$dark_upper = $this->bracket_config_repo->get('dark', 'upper');
+		$dark_mid = $this->bracket_config_repo->get('dark', 'mid');
+		$light_upper = $this->bracket_config_repo->get('light', 'upper');
+		$light_mid = $this->bracket_config_repo->get('light', 'mid');
+
+		$bracket_url_theme_map = array(
+			'dark' => array(
+				'upper' => $dark_upper->img_url,
+				'mid' => $dark_mid->img_url,
+			),
+			'light' => array(
+				'upper' => $light_upper->img_url,
+				'mid' => $light_mid->img_url,
+			),
+		);
+
+		return $bracket_url_theme_map;
 	}
 
 	/**
