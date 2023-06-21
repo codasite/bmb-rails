@@ -6,13 +6,8 @@ import * as Sentry from '@sentry/react';
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
   // [key: string]: string;
-  light: OverlayUrlPlacementMap;
-  dark: OverlayUrlPlacementMap;
-}
-
-interface OverlayUrlPlacementMap {
-  top: string;
-  center: string;
+  light: string;
+  dark: string;
 }
 
 interface GalleryImage {
@@ -229,17 +224,9 @@ const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, color
 
 const getOverlayUrl = (overlayMap: OverlayUrlThemeMap, theme?: string, bracketPlacement?: string): string => {
   if (theme === ProductImageThemeMode.DARK) {
-    if (bracketPlacement === ProductImageBracketPlacement.TOP) {
-      return overlayMap.dark.top
-    } else if (bracketPlacement === ProductImageBracketPlacement.CENTER) {
-      return overlayMap.dark.center
-    }
+    return overlayMap.dark
   } else if (theme === ProductImageThemeMode.LIGHT) {
-    if (bracketPlacement === ProductImageBracketPlacement.TOP) {
-      return overlayMap.light.top
-    } else if (bracketPlacement === ProductImageBracketPlacement.CENTER) {
-      return overlayMap.light.center
-    }
+    return overlayMap.light
   }
   return '';
 }
