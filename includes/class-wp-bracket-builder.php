@@ -181,7 +181,8 @@ class Wp_Bracket_Builder {
 
 		$this->loader->add_action('init', $this, 'add_bracket_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_pick_post_type');
-		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_prediction_meta_box');
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
+		$this->loader->add_action('save_post', $plugin_admin, 'save_bracket_pick_html_meta_box');
 
 		// custom meta for bracket product variations
 		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
@@ -296,24 +297,5 @@ class Wp_Bracket_Builder {
 				// 'taxonomies' => array('category'),
 			)
 		);
-	}
-
-	public function add_bracket_prediction_meta_box() {
-		add_meta_box(
-			'bracket_prediction_meta_box', // id of the meta box
-			'Bracket Prediction', // title
-			array($this, 'display_bracket_prediction_meta_box'), // callback function that will echo the box content
-			'bracket-pick', // post type where to add it
-			'normal', // position
-			'high' // priority
-		);
-	}
-
-	// Meta box content
-	public function display_bracket_prediction_meta_box($post) {
-		$prediction = get_post_meta($post->ID, 'bracket_prediction', true);
-		wp_nonce_field('bracket_prediction_nonce', 'bracket_prediction_nonce_field');
-		echo '<label for="bracket_prediction">Prediction</label>';
-		echo '<input type="text" id="bracket_prediction" name="bracket_prediction" value="' . esc_attr($prediction) . '">';
 	}
 }

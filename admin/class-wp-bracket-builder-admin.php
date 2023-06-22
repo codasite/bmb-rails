@@ -205,4 +205,42 @@ class Wp_Bracket_Builder_Admin {
 			delete_option('custom_admin_error');
 		}
 	}
+
+	public function add_bracket_pick_meta_box() {
+		add_meta_box(
+			'bracket_pick_html_meta_box', // id of the meta box
+			'Bracket HTML', // title
+			array($this, 'display_bracket_pick_html_meta_box'), // callback function that will echo the box content
+			'bracket-pick', // post type where to add it
+			'normal', // position
+			'high' // priority
+		);
+	}
+
+	// Meta box content
+	public function display_bracket_pick_html_meta_box($post) {
+		$html = get_post_meta($post->ID, 'bracket_pick_html', true);
+		wp_nonce_field('bracket_pick_html_nonce', 'bracket_pick_html_nonce_field');
+		// echo '<label for="bracket_pick">Prediction</label>';
+		// echo '<input type="text" id="bracket_pick" name="bracket_pick" value="' . esc_attr($pick) . '">';
+		echo '<textarea id="bracket_pick_html" name="bracket_pick_html" rows="20" style="width:100%;" >' . esc_attr($html) . '</textarea>';
+	}
+
+	// Save meta box content
+	public function save_bracket_pick_html_meta_box($post_id) {
+		// Verify nonce
+		if (!isset($_POST['bracket_pick_html_nonce_field']) || !wp_verify_nonce($_POST['bracket_pick_html_nonce_field'], 'bracket_pick_html_nonce')) {
+			return $post_id;
+		}
+		// Check the user's permissions.
+		if (!current_user_can('edit_post', $post_id)) {
+			return $post_id;
+		}
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+			return $post_id;
+		}
+		// Save/Update the meta field in the database.
+		// update_post_meta($post_id, 'bracket_pick_html', sanitize_text_field($_POST['bracket_pick_html']));
+		update_post_meta($post_id, 'bracket_pick_html', wp_kses_post($_POST['bracket_pick_html']));
+	}
 }
