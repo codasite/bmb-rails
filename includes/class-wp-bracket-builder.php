@@ -178,6 +178,7 @@ class Wp_Bracket_Builder {
 
 		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
 
 		$this->loader->add_action('init', $this, 'add_bracket_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_pick_post_type');

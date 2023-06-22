@@ -47,7 +47,7 @@ class BracketApi {
 		return await this.performRequest(`${this.submissionPath}/${id}`);
 	}
 
-	async createSubmission(submission: SubmissionReq): Promise<SubmissionRes> {
+	async submitBracket(submission: SubmissionReq): Promise<SubmissionRes> {
 		const options: RequestOptions = { method: 'POST', body: submission };
 		const res = await this.performRequest(this.submissionPath, options);
 		return res;
