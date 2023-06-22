@@ -211,7 +211,7 @@ class Wp_Bracket_Builder_Admin {
 			'bracket_pick_html_meta_box', // id of the meta box
 			'Bracket HTML', // title
 			array($this, 'display_bracket_pick_html_meta_box'), // callback function that will echo the box content
-			'bracket-pick', // post type where to add it
+			'bracket_pick', // post type where to add it
 			'normal', // position
 			'high' // priority
 		);

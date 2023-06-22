@@ -279,9 +279,9 @@ class Wp_Bracket_Builder {
 	}
 
 	public function add_bracket_pick_post_type() {
-		// register a post type named "bracket-pick"
+		// register a post type named "bracket_pick"
 		register_post_type(
-			'bracket-pick',
+			'bracket_pick',
 			array(
 				'labels' => array(
 					'name' => __('Bracket Picks'),
