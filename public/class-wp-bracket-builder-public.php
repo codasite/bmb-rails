@@ -400,27 +400,7 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	private function log($message, $log_level = 'debug') {
-		switch ($log_level) {
-			case 'debug':
-				$severity = \Sentry\Severity::debug();
-				break;
-			case 'info':
-				$severity = \Sentry\Severity::info();
-				break;
-			case 'warning':
-				$severity = \Sentry\Severity::warning();
-				break;
-			case 'error':
-				$severity = \Sentry\Severity::error();
-				break;
-			case 'fatal':
-				$severity = \Sentry\Severity::fatal();
-				break;
-			default:
-				$severity = \Sentry\Severity::info();
-				break;
-		}
-		$this->utils->log_sentry_message($message, $severity);
+		$this->utils->log($message, $log_level);
 	}
 
 	private function handle_front_design_only($front_url, $temp_filename, $back_width, $back_height) {

@@ -134,6 +134,7 @@ const UserBracket = (props: UserBracketProps) => {
 			return;
 		}
 		const html = getHTML()
+		console.log(minify(html))
 
 		const key = Math.random().toString(36).substring(7);
 		const req: SubmissionReq = {
@@ -141,15 +142,16 @@ const UserBracket = (props: UserBracketProps) => {
 			html: minify(html),
 			name: `bracket-pick-${key}`,
 		}
-		setProcessingImage(true)
+		console.log(req)
+		// setProcessingImage(true)
 
-		bracketApi.submitBracket(req).then((res) => {
-			console.log(res)
-			setProcessingImage(false)
-		}).catch((err) => {
-			console.error(err)
-			setProcessingImage(false)
-		})
+		// bracketApi.submitBracket(req).then((res) => {
+		// 	console.log(res)
+		// 	setProcessingImage(false)
+		// }).catch((err) => {
+		// 	console.error(err)
+		// 	setProcessingImage(false)
+		// })
 
 
 
