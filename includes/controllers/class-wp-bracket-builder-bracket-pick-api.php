@@ -151,7 +151,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 */
 	public function create_item($request) {
 		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
-		print_r($pick);
+		// print_r($pick);
 
 		// $saved = $this->pick_repo->add($pick);
 		// return new WP_REST_Response($saved, 201);

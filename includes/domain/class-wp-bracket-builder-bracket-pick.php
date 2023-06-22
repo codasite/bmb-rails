@@ -1,6 +1,12 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-base.php';
 
+/**
+ * This class creates a bracket pick object by submitting 
+ */
+// class Wp_Bracket_Builder_Bracket_Pick_Factory extends Wp_Bracket_Builder_Bracket_Base {
+
+
 class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 
 	/**
@@ -23,7 +29,7 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 	 */
 	public $html;
 
-	public function __construct(int $customer_id, int $bracket_id, string $name = null, string $html = null, string $img_url = null, int $id = null, array $rounds = []) {
+	public function __construct(int $bracket_id, string $name, int $customer_id = null,  string $html = null, string $img_url = null, int $id = null, array $rounds = []) {
 		parent::__construct($name, $id, $rounds);
 		$this->customer_id = $customer_id;
 		$this->bracket_id = $bracket_id;
@@ -32,7 +38,7 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Pick {
-		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($data['customer_id'], $data['bracket_id'], $data['name']);
+		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($data['bracket_id'], $data['name']);
 
 		if (isset($data['id'])) {
 			$bracket_pick->id = (int) $data['id'];

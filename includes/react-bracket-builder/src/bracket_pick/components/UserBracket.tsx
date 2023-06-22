@@ -135,20 +135,39 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 		const html = getHTML()
 
-		const parser = new DOMParser();
-		const doc = parser.parseFromString(html, 'text/html');
-		const bracketEl = doc.getElementsByClassName('wpbb-bracket')[0]
-		const printArea = doc.getElementsByClassName('wpbb-bracket-print-area')[0]
+		const key = Math.random().toString(36).substring(7);
+		const req: SubmissionReq = {
+			bracketId: id,
+			html: minify(html),
+			name: `bracket-pick-${key}`,
+		}
+		setProcessingImage(true)
 
-		// if we were in dark mode, remove it to get the light mode version
-		bracketEl.classList.remove('wpbb-dark-mode')
-		const lightModeTopHTML = minify(doc.documentElement.outerHTML)
-		printArea.classList.add('wpbb-print-center')
-		const lightModeCenterHTML = minify(doc.documentElement.outerHTML)
-		bracketEl.classList.add('wpbb-dark-mode')
-		const darkModeCenterHTML = minify(doc.documentElement.outerHTML)
-		printArea.classList.remove('wpbb-print-center')
-		const darkModeTopHTML = minify(doc.documentElement.outerHTML)
+		bracketApi.submitBracket(req).then((res) => {
+			console.log(res)
+			setProcessingImage(false)
+		}).catch((err) => {
+			console.error(err)
+			setProcessingImage(false)
+		})
+
+
+
+
+		// const parser = new DOMParser();
+		// const doc = parser.parseFromString(html, 'text/html');
+		// const bracketEl = doc.getElementsByClassName('wpbb-bracket')[0]
+		// const printArea = doc.getElementsByClassName('wpbb-bracket-print-area')[0]
+
+		// // if we were in dark mode, remove it to get the light mode version
+		// bracketEl.classList.remove('wpbb-dark-mode')
+		// const lightModeTopHTML = minify(doc.documentElement.outerHTML)
+		// printArea.classList.add('wpbb-print-center')
+		// const lightModeCenterHTML = minify(doc.documentElement.outerHTML)
+		// bracketEl.classList.add('wpbb-dark-mode')
+		// const darkModeCenterHTML = minify(doc.documentElement.outerHTML)
+		// printArea.classList.remove('wpbb-print-center')
+		// const darkModeTopHTML = minify(doc.documentElement.outerHTML)
 		// 
 
 		// console.log('light mode top', lightModeTopHTML)
@@ -157,24 +176,24 @@ const UserBracket = (props: UserBracketProps) => {
 		// console.log('dark mode center', darkModeCenterHTML)
 
 		// Random key to link the two images together
-		const key = Math.random().toString(36).substring(7);
-		const promises = [
-			bracketApi.htmlToImage({ html: darkModeTopHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'top', s3Key: `bracket-${key}-dark-top.png` }),
-			bracketApi.htmlToImage({ html: lightModeTopHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'top', s3Key: `bracket-${key}-light-top.png` }),
-			bracketApi.htmlToImage({ html: darkModeCenterHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'center', s3Key: `bracket-${key}-dark-center.png` }),
-			bracketApi.htmlToImage({ html: lightModeCenterHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'center', s3Key: `bracket-${key}-light-center.png` }),
-		]
-		setProcessingImage(true)
-		Promise.all(promises).then((res) => {
-			// console.log('res')
-			// console.log(res)
-			// setProcessingImage(false)
-			window.location.href = apparelUrl
-		}).catch((err) => {
-			setProcessingImage(false)
-			console.error(err)
-			Sentry.captureException(err)
-		})
+		// const key = Math.random().toString(36).substring(7);
+		// const promises = [
+		// 	bracketApi.htmlToImage({ html: darkModeTopHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'top', s3Key: `bracket-${key}-dark-top.png` }),
+		// 	bracketApi.htmlToImage({ html: lightModeTopHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'top', s3Key: `bracket-${key}-light-top.png` }),
+		// 	bracketApi.htmlToImage({ html: darkModeCenterHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `dark`, bracketPlacement: 'center', s3Key: `bracket-${key}-dark-center.png` }),
+		// 	bracketApi.htmlToImage({ html: lightModeCenterHTML, inchHeight: 16, inchWidth: 12, deviceScaleFactor: 1, themeMode: `light`, bracketPlacement: 'center', s3Key: `bracket-${key}-light-center.png` }),
+		// ]
+		// setProcessingImage(true)
+		// Promise.all(promises).then((res) => {
+		// 	// console.log('res')
+		// 	// console.log(res)
+		// 	// setProcessingImage(false)
+		// 	window.location.href = apparelUrl
+		// }).catch((err) => {
+		// 	setProcessingImage(false)
+		// 	console.error(err)
+		// 	Sentry.captureException(err)
+		// })
 	}
 
 
