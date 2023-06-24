@@ -30,25 +30,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 	const dimensions = useWindowDimensions()
 
-	// const [dimensions, setDimensions] = useState({
-	// 	height: window.innerHeight,
-	// 	width: window.innerWidth,
-	// })
-
-	// useEffect(() => {
-	// 	const handleResize = () => {
-	// 		setDimensions({
-	// 			height: window.innerHeight,
-	// 			width: window.innerWidth,
-	// 		})
-
-	// 	}
-	// 	window.addEventListener('resize', handleResize)
-	// 	return () => {
-	// 		window.removeEventListener('resize', handleResize)
-	// 	}
-	// }, [])
-
 	const rounds = matchTree.rounds
 	const numRounds = rounds.length
 	const canEdit = setMatchTree !== undefined && props.canEdit
@@ -102,6 +83,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		}
 		const newMatchTree = matchTree.clone()
 		newMatchTree.advanceTeam(depth, matchIndex, left)
+		console.log('newMatchTree', newMatchTree)
 		setMatchTree(newMatchTree)
 	}
 
