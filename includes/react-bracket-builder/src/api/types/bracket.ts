@@ -5,7 +5,7 @@ interface Team {
 }
 
 export interface TeamRes extends Team {
-	id: number;
+	id: Nullable<number>;
 }
 
 export interface TeamReq extends Team { }
@@ -15,7 +15,7 @@ interface Match {
 }
 
 export interface MatchRes extends Match {
-	id: number;
+	id: Nullable<number>;
 	team1: Nullable<TeamRes>;
 	team2: Nullable<TeamRes>;
 	result: Nullable<TeamRes>;

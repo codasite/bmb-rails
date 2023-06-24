@@ -87,6 +87,7 @@ const UserBracket = (props: UserBracketProps) => {
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
 	// const rounds = useAppSelector((state) => state.matchTree.rounds);
 	const matchTree = useAppSelector(selectMatchTree);
+	console.log(matchTree)
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
@@ -197,7 +198,7 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 		const bracketProps = {
 			matchTree,
-			// setMatchTree,
+			setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
 			canPick: true,
 			darkMode,
 			bracketName: bracketRes?.name,
