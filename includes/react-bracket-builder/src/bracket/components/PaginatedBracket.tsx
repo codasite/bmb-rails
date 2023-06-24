@@ -10,10 +10,27 @@ import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg
 interface NavButtonProps {
 	onClick?: () => void;
 	disabled?: boolean;
-	loading?: boolean;
+	buttonLabel?: string;
+	// loading?: boolean;
 }
 
-// const NavButton = (props: NavButtonProps) => {
+export const NavButton = (props: NavButtonProps) => {
+	const {
+		disabled,
+		onClick = () => { },
+		buttonLabel,
+		// loading,
+	} = props;
+	return (
+		<button className={'wpbb-nav-btn' + (disabled ? ' disabled' : '')} onClick={onClick} disabled={disabled}>
+			{buttonLabel ? buttonLabel : 'NEXT'}
+			{/* {props.loading ?
+				//@ts-ignore
+				<Spinner variant='light' animation="border" role="status" style={{ borderWidth: '4px' }} />
+				: 'ADD TO APPAREL'} */}
+		</button>
+	)
+}
 
 
 interface PairedBracketProps {
