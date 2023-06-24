@@ -7,6 +7,15 @@ import LineTo, { SteppedLineTo, Line } from 'react-lineto';
 //@ts-ignore
 import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg';
 
+interface NavButtonProps {
+	onClick?: () => void;
+	disabled?: boolean;
+	loading?: boolean;
+}
+
+// const NavButton = (props: NavButtonProps) => {
+
+
 interface PairedBracketProps {
 	matchTree: MatchTree;
 	bracketName?: string;
@@ -15,6 +24,7 @@ interface PairedBracketProps {
 	darkMode?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
+
 
 export const PaginatedBracket = (props: PairedBracketProps) => {
 	const {
