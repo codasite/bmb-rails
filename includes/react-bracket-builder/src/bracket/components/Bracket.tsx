@@ -3,9 +3,6 @@ import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../utils/types';
 import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../models/MatchTree';
-// import html2canvas
-import html2canvas from 'html2canvas';
-
 
 // Direction enum
 enum Direction {
