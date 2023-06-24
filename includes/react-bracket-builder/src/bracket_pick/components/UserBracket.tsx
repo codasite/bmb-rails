@@ -8,7 +8,7 @@ import Spinner from 'react-bootstrap/Spinner'
 import { PairedBracket } from '../../bracket/components/PairedBracket';
 import { PaginatedBracket } from '../../bracket/components/PaginatedBracket';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { setMatchTree } from '../../features/match_tree/matchTreeSlice';
+import { setMatchTree, selectMatchTree } from '../../features/match_tree/matchTreeSlice';
 
 import { MatchTree } from '../../bracket/models/MatchTree';
 import { BracketRes } from '../../api/types/bracket';
@@ -85,18 +85,21 @@ const UserBracket = (props: UserBracketProps) => {
 	const [processingImage, setProcessingImage] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
-	const matchTree = useAppSelector((state) => state.matchTree.matchTree);
+	// const rounds = useAppSelector((state) => state.matchTree.rounds);
+	const matchTree = useAppSelector(selectMatchTree);
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (bracketId) {
 			bracketApi.getBracket(bracketId).then((res) => {
+				console.log(res.rounds)
 				// setMatchTree(MatchTree.fromRounds(res.rounds));
-				dispatch(setMatchTree(MatchTree.fromRounds(res.rounds)))
+				dispatch(setMatchTree(res.rounds))
 			});
 		} else if (bracketRes) {
+			console.log(bracketRes.rounds)
 			// setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
-			dispatch(setMatchTree(MatchTree.fromRounds(bracketRes.rounds)))
+			dispatch(setMatchTree(bracketRes.rounds))
 		}
 	}, [bracketId, bracketRes]);
 
@@ -194,7 +197,7 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 		const bracketProps = {
 			matchTree,
-			setMatchTree,
+			// setMatchTree,
 			canPick: true,
 			darkMode,
 			bracketName: bracketRes?.name,
