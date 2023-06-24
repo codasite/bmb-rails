@@ -34,19 +34,19 @@ export function useWindowDimensions(): WindowDimensions {
 	return windowDimensions;
 }
 
-const BracketContext = createContext();
+// const BracketContext = createContext();
 
-export function BracketProvider({ children }) {
-	const [matchTree, setMatchTree] = useState(/* initial state */);
+// export function BracketProvider({ children }) {
+// 	const [matchTree, setMatchTree] = useState(/* initial state */);
 
-	return (
-		<BracketContext.Provider value={{ matchTree, setMatchTree }}>
-			{children}
-		</BracketContext.Provider>
-	);
-}
+// 	return (
+// 		<BracketContext.Provider value={{ matchTree, setMatchTree }}>
+// 			{children}
+// 		</BracketContext.Provider>
+// 	);
+// }
 
-// Use this hook in any component to access the bracket state.
-export function useBracket() {
-	return useContext(BracketContext);
-}
+// // Use this hook in any component to access the bracket state.
+// export function useBracket() {
+// 	return useContext(BracketContext);
+// }

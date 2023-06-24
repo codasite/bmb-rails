@@ -1,18 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
-import { Button } from 'react-bootstrap';
-import { Modal } from 'react-bootstrap';
 import { bracketApi } from '../../api/bracketApi';
-import { Nullable } from '../../utils/types';
 import { useWindowDimensions } from '../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
 import { PairedBracket } from '../../bracket/components/PairedBracket';
 import { PaginatedBracket } from '../../bracket/components/PaginatedBracket';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { setMatchTree } from '../../features/match_tree/matchTreeSlice';
 
-import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
-import { BracketRes, SubmissionReq } from '../../api/types/bracket';
+import { MatchTree } from '../../bracket/models/MatchTree';
+import { BracketRes } from '../../api/types/bracket';
 import { bracketConstants } from '../../bracket/constants';
 
 const {
@@ -82,18 +81,22 @@ const UserBracket = (props: UserBracketProps) => {
 		bracketStylesheetUrl,
 	} = props;
 
-	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
+	// const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
 	const [processingImage, setProcessingImage] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
+	const matchTree = useAppSelector((state) => state.matchTree.matchTree);
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (bracketId) {
 			bracketApi.getBracket(bracketId).then((res) => {
-				setMatchTree(MatchTree.fromRounds(res.rounds));
+				// setMatchTree(MatchTree.fromRounds(res.rounds));
+				dispatch(setMatchTree(MatchTree.fromRounds(res.rounds)))
 			});
 		} else if (bracketRes) {
-			setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
+			// setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
+			dispatch(setMatchTree(MatchTree.fromRounds(bracketRes.rounds)))
 		}
 	}, [bracketId, bracketRes]);
 
