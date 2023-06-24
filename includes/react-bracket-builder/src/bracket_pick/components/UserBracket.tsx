@@ -14,6 +14,8 @@ import { MatchTree } from '../../bracket/models/MatchTree';
 import { BracketRes } from '../../api/types/bracket';
 import { bracketConstants } from '../../bracket/constants';
 
+import { NavButton } from '../../bracket/components/PaginatedBracket';
+
 const {
 	paginatedBracketWidth,
 } = bracketConstants
@@ -192,44 +194,70 @@ const UserBracket = (props: UserBracketProps) => {
 		})
 	}
 
-	const renderResponsiveBracket = () => {
+	const renderPairedBracket = (bracketProps) => {
+		const { matchTree } = bracketProps
 		if (!matchTree) {
 			return <></>
 		}
-		const bracketProps = {
-			matchTree,
-			setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
-			canPick: true,
-			darkMode,
-			bracketName: bracketRes?.name,
-		}
-
-		if (windowWidth < paginatedBracketWidth) {
-			return <PaginatedBracket {...bracketProps} />
-		}
-		return <PairedBracket {...bracketProps} />
+		const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
+		// const disableActions = processingImage
+		const numRounds = matchTree?.rounds.length;
+		const pickedWinner = matchTree?.isComplete();
+		return (
+			<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
+				{matchTree ? [
+					<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
+					<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
+						<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
+					</div>,
+					// <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} bracketName={bracketRes?.name} />,
+					<PairedBracket {...bracketProps} />,
+					<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
+						<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
+					</div>
+				] : 'Loading...'}
+			</div>
+		)
 	}
 
-	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
-	// const disableActions = processingImage
-	const numRounds = matchTree?.rounds.length;
-	const pickedWinner = matchTree?.isComplete();
+	const renderPaginatedBracket = (bracketProps) => {
+		const { matchTree } = bracketProps
+		if (!matchTree) {
+			return <></>
+		}
+		const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
+		// const disableActions = processingImage
+		const numRounds = matchTree?.rounds.length;
+		const pickedWinner = matchTree?.isComplete();
 
-	return (
-		<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
-			{matchTree ? [
-				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
-				<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
-					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
-				</div>,
-				// <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} bracketName={bracketRes?.name} />,
-				renderResponsiveBracket(),
-				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
-					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
-				</div>
-			] : 'Loading...'}
-		</div>
-	)
+		return (
+			// <div className={`wpbb-paginated-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
+			<div className={`wpbb-paginated-bracket-container`}>
+				{matchTree ? [
+					// <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
+					// <div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
+					// 	<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
+					// </div>,
+					<PaginatedBracket {...bracketProps} />,
+					<NavButton />,
+				] : 'Loading...'}
+			</div>
+		)
+	}
+
+
+	const bracketProps = {
+		matchTree,
+		setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
+		canPick: true,
+		darkMode,
+		bracketName: bracketRes?.name,
+	}
+
+	if (windowWidth < paginatedBracketWidth) {
+		return renderPaginatedBracket(bracketProps)
+	}
+	return renderPairedBracket(bracketProps)
 }
 
 
