@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
 import { bracketApi } from '../../api/bracketApi';
 import { Nullable } from '../../utils/types';
+import { useWindowDimensions } from '../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
@@ -78,6 +79,7 @@ const UserBracket = (props: UserBracketProps) => {
 	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
 	const [processingImage, setProcessingImage] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
 
 	useEffect(() => {
 		if (bracketId) {
