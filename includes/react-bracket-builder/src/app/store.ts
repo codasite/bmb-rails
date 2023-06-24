@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import matchTreeReducer from '../features/match_tree/matchTreeSlice';
+import bracketNavReducer from '../features/bracket_nav/bracketNavSlice';
 
 export const bracketBuilderStore = configureStore({
 	reducer: {
 		matchTree: matchTreeReducer,
+		bracketNav: bracketNavReducer,
 	},
 });
 
