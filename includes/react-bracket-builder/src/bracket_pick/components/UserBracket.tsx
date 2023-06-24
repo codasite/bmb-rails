@@ -9,9 +9,15 @@ import Spinner from 'react-bootstrap/Spinner'
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
 import { PairedBracket } from '../../bracket/components/PairedBracket';
+import { PaginatedBracket } from '../../bracket/components/PaginatedBracket';
 
 import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
 import { BracketRes, SubmissionReq } from '../../api/types/bracket';
+import { bracketConstants } from '../../bracket/constants';
+
+const {
+	paginatedBracketWidth,
+} = bracketConstants
 
 
 //@ts-ignore
@@ -179,6 +185,23 @@ const UserBracket = (props: UserBracketProps) => {
 		})
 	}
 
+	const renderResponsiveBracket = () => {
+		if (!matchTree) {
+			return <></>
+		}
+		const bracketProps = {
+			matchTree,
+			setMatchTree,
+			canPick: true,
+			darkMode,
+			bracketName: bracketRes?.name,
+		}
+
+		if (windowWidth < paginatedBracketWidth) {
+			return <PaginatedBracket {...bracketProps} />
+		}
+		return <PairedBracket {...bracketProps} />
+	}
 
 	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
 	// const disableActions = processingImage
@@ -192,7 +215,8 @@ const UserBracket = (props: UserBracketProps) => {
 				<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
 					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
 				</div>,
-				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} bracketName={bracketRes?.name} />,
+				// <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} bracketName={bracketRes?.name} />,
+				renderResponsiveBracket(),
 				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
 					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
 				</div>

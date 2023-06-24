@@ -21,12 +21,17 @@ export enum Direction {
 
 export const bracketConstants = {
 	teamHeight: 20,
+
 	defaultMatchGap: 20,
 	depth4MatchGap: 12,
 	depth5MatchGap: 4,
+
 	twoRoundHeight: 300,
 	threeRoundHeight: 300,
 	fourRoundHeight: 544,
 	fiveRoundHeight: 806,
 	sixRoundHeight: 1100,
+
+	// Window breakpoints
+	paginatedBracketWidth: 768,
 }

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
 import LineTo, { SteppedLineTo } from 'react-lineto';
+import { useWindowDimensions } from '../../utils/hooks';
 //@ts-ignore
 import { MatchColumn } from './MatchColumn'
 import { Direction, bracketConstants } from '../constants'
@@ -27,24 +28,26 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		bracketName,
 	} = props
 
-	const [dimensions, setDimensions] = useState({
-		height: window.innerHeight,
-		width: window.innerWidth,
-	})
+	const dimensions = useWindowDimensions()
 
-	useEffect(() => {
-		const handleResize = () => {
-			setDimensions({
-				height: window.innerHeight,
-				width: window.innerWidth,
-			})
+	// const [dimensions, setDimensions] = useState({
+	// 	height: window.innerHeight,
+	// 	width: window.innerWidth,
+	// })
 
-		}
-		window.addEventListener('resize', handleResize)
-		return () => {
-			window.removeEventListener('resize', handleResize)
-		}
-	}, [])
+	// useEffect(() => {
+	// 	const handleResize = () => {
+	// 		setDimensions({
+	// 			height: window.innerHeight,
+	// 			width: window.innerWidth,
+	// 		})
+
+	// 	}
+	// 	window.addEventListener('resize', handleResize)
+	// 	return () => {
+	// 		window.removeEventListener('resize', handleResize)
+	// 	}
+	// }, [])
 
 	const rounds = matchTree.rounds
 	const numRounds = rounds.length

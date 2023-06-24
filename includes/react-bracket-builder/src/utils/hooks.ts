@@ -20,6 +20,10 @@ export function useWindowDimensions(): WindowDimensions {
 
 	useEffect(() => {
 		function handleResize(): void {
+			// const { width, height } = getWindowDimensions();
+			// console.log('width: ', width);
+			// console.log('height: ', height);
+
 			setWindowDimensions(getWindowDimensions());
 		}
 
