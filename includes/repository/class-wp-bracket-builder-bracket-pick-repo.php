@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-pick-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
 interface Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
@@ -23,6 +24,11 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 	 */
 	private $wpdb;
 
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Pick_Service
+	 */
+	private $bracket_pick_service;
+
 	private Wp_Bracket_Builder_Bracket_Repository_Interface $bracket_repo;
 
 	public function __construct() {
@@ -30,6 +36,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 		$this->wpdb = $wpdb;
 		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
 		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
 	}
 
 	// public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
@@ -64,7 +71,6 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 
 	public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick {
 		$post = get_post($id);
-		$this->utils->log('got post: ' . json_encode($post));
 		if (!$post || $post->post_type !== 'bracket_pick') {
 			return null;
 		}
@@ -73,12 +79,17 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 		return $pick;
 	}
 
+	/**
+	 * This function adds a bracket pick to the database as a custom post type.
+	 * 
+	 * @param Wp_Bracket_Builder_Bracket_Pick $pick
+	 * @return Wp_Bracket_Builder_Bracket_Pick|null
+	 */
 	public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
 		// TODO: check if bracket exists
 		//$bracket_id = $pick->bracket_id;
 
 		$post_array = $pick->to_post_array();
-		$this->utils->log('post array: ' . json_encode($post_array));
 
 		$pick_id = wp_insert_post($post_array, true);
 
@@ -86,12 +97,16 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 			$this->utils->log('error inserting post: ' . $pick_id->get_error_message(), 'error');
 			return null;
 		}
-		$this->utils->log('pick id: ' . $pick_id);
-
 		// need to update the post meta separately
 		update_post_meta($pick_id, 'bracket_pick_html', wp_kses_post($pick->html));
 
-		// refresh the pick object
+		// generate images
+		$pick = $this->bracket_pick_service->generate_images($pick);
+
+		// update the post meta with the new image urls
+		update_post_meta($pick_id, 'bracket_pick_images', $pick->img_url);
+
+		// refresh from db
 		$pick = $this->get($pick_id);
 
 		return $pick;
