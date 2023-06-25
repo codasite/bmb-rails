@@ -65,6 +65,22 @@
 	font-size: x-small;
 }
 
+.wpbb-img-background {
+	position: relative;
+	background-color: #fff;
+	background-image: url('../assets/bracket-bg-light.png');
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: cover;
+	color: $darkBlue;
+
+	&.wpbb-dark-mode {
+		background-color: $darkBlue;
+		background-image: url('../assets/bracket-bg-dark.png');
+		color: #fff;
+	}
+}
+
 .wpbb-bracket-container {
 	position: relative;
 	font-family: 'Clash Display', sans-serif;
