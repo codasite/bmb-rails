@@ -89,18 +89,15 @@ const UserBracket = (props: UserBracketProps) => {
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
 	// const rounds = useAppSelector((state) => state.matchTree.rounds);
 	const matchTree = useAppSelector(selectMatchTree);
-	console.log(matchTree)
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (bracketId) {
 			bracketApi.getBracket(bracketId).then((res) => {
-				console.log(res.rounds)
 				// setMatchTree(MatchTree.fromRounds(res.rounds));
 				dispatch(setMatchTree(res.rounds))
 			});
 		} else if (bracketRes) {
-			console.log(bracketRes.rounds)
 			// setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
 			dispatch(setMatchTree(bracketRes.rounds))
 		}
