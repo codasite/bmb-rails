@@ -15,19 +15,27 @@ class Wp_Bracket_Builder_Bracket_Pick_Service {
 	 */
 	private $lamda_service;
 
-	/**
-	 * @var Wp_Bracket_Builder_Bracket_Pick
-	 */
-	private $bracket_pick;
+	// /**
+	//  * @var Wp_Bracket_Builder_Bracket_Pick
+	//  */
+	// private $bracket_pick;
 
-	public function __construct($bracket_pick) {
+	public function __construct($bracket_pick = null) {
 		$this->utils = new Wp_Bracket_Builder_Utils();
 		$this->lamda_service = new Wp_Bracket_Builder_Lambda_Service();
-		$this->bracket_pick = $bracket_pick;
+		// $this->bracket_pick = $bracket_pick;
 	}
 
-	public function populateImages() {
-		$html = $this->bracket_pick->html;
+	// public function set_bracket_pick($bracket_pick) {
+	// 	$this->bracket_pick = $bracket_pick;
+	// }
+
+	public function get_bracket_images($bracket_pick) {
+		// if ($this->bracket_pick == null) {
+		// 	return new WP_Error('error', __('Bracket pick object is null.', 'text-domain'), array('status' => 500));
+		// }
+
+		$html = $bracket_pick->html;
 		$convert_params = array(
 			'html' => $html,
 			'inchHeight' => 16,
@@ -41,18 +49,18 @@ class Wp_Bracket_Builder_Bracket_Pick_Service {
 		$res = $this->lamda_service->html_to_image($convert_params);
 
 		if (!is_wp_error($res) && isset($res['imageUrl'])) {
+			$bracket_pick->img_url = $res['imageUrl'];
 			// build a config object
 			// $config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res['imageUrl'], $bracket_placement);
 			// // Add the image url to the user's session
 			// $config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 			// $config_repo->add($config);
 
-			return new WP_REST_Response($res, 200);
+			return $bracket_pick;
 		} else {
-			$error = $res instanceof WP_Error ? $res : new WP_Error('error', __('Error converting HTML to image. Image url not found. Response: ' . json_encode($res), 'text-domain'), array('status' => 500));
-			$this->utils->log_sentry_message('Error converting HTML to image. Image url not found. Response: ' . json_encode($res), \Sentry\Severity::error());
-			return $error;
+			// $error = $res instanceof WP_Error ? $res : new WP_Error('error', __('Error converting HTML to image. Image url not found. Response: ' . json_encode($res), 'text-domain'), array('status' => 500));
+			$this->utils->log('Error converting HTML to image. Image url not found. Response: ' . json_encode($res), 'error');
+			return $bracket_pick;
 		}
-
 	}
 }
