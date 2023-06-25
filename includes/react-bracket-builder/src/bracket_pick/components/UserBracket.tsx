@@ -1,16 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
-import { Button } from 'react-bootstrap';
-import { Modal } from 'react-bootstrap';
 import { bracketApi } from '../../api/bracketApi';
-import { Nullable } from '../../utils/types';
+import { useWindowDimensions } from '../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
 import { PairedBracket } from '../../bracket/components/PairedBracket';
+import { PaginatedBracket } from '../../bracket/components/PaginatedBracket';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
+import { setMatchTree, selectMatchTree } from '../../features/match_tree/matchTreeSlice';
 
-import { MatchTree, WildcardPlacement } from '../../bracket/models/MatchTree';
-import { BracketRes, SubmissionReq } from '../../api/types/bracket';
+import { MatchTree } from '../../bracket/models/MatchTree';
+import { BracketRes } from '../../api/types/bracket';
+import { bracketConstants } from '../../bracket/constants';
+
+import { NavButton } from '../../bracket/components/PaginatedBracket';
+
+const {
+	paginatedBracketWidth,
+} = bracketConstants
 
 
 //@ts-ignore
@@ -75,17 +83,26 @@ const UserBracket = (props: UserBracketProps) => {
 		bracketStylesheetUrl,
 	} = props;
 
-	const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
+	// const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
 	const [processingImage, setProcessingImage] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
+	// const rounds = useAppSelector((state) => state.matchTree.rounds);
+	const matchTree = useAppSelector(selectMatchTree);
+	console.log(matchTree)
+	const dispatch = useAppDispatch();
 
 	useEffect(() => {
 		if (bracketId) {
 			bracketApi.getBracket(bracketId).then((res) => {
-				setMatchTree(MatchTree.fromRounds(res.rounds));
+				console.log(res.rounds)
+				// setMatchTree(MatchTree.fromRounds(res.rounds));
+				dispatch(setMatchTree(res.rounds))
 			});
 		} else if (bracketRes) {
-			setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
+			console.log(bracketRes.rounds)
+			// setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
+			dispatch(setMatchTree(bracketRes.rounds))
 		}
 	}, [bracketId, bracketRes]);
 
@@ -198,26 +215,70 @@ const UserBracket = (props: UserBracketProps) => {
 		// })
 	}
 
+	const renderPairedBracket = (bracketProps) => {
+		const { matchTree } = bracketProps
+		if (!matchTree) {
+			return <></>
+		}
+		const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
+		// const disableActions = processingImage
+		const numRounds = matchTree?.rounds.length;
+		const pickedWinner = matchTree?.isComplete();
+		return (
+			<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
+				{matchTree ? [
+					<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
+					<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
+						<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
+					</div>,
+					// <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} bracketName={bracketRes?.name} />,
+					<PairedBracket {...bracketProps} />,
+					<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
+						<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
+					</div>
+				] : 'Loading...'}
+			</div>
+		)
+	}
 
-	const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
-	// const disableActions = processingImage
-	const numRounds = matchTree?.rounds.length;
-	const pickedWinner = matchTree?.isComplete();
+	const renderPaginatedBracket = (bracketProps) => {
+		const { matchTree } = bracketProps
+		if (!matchTree) {
+			return <></>
+		}
+		const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
+		// const disableActions = processingImage
+		const numRounds = matchTree?.rounds.length;
+		const pickedWinner = matchTree?.isComplete();
 
-	return (
-		<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
-			{matchTree ? [
-				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
-				<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
-					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
-				</div>,
-				<PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} bracketName={bracketRes?.name} />,
-				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
-					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
-				</div>
-			] : 'Loading...'}
-		</div>
-	)
+		return (
+			// <div className={`wpbb-paginated-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
+			<div className={`wpbb-img-background wpbb-paginated-bracket-container wpbb-dark-mode`}>
+				{matchTree ? [
+					// <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
+					// <div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
+					// 	<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
+					// </div>,
+					<PaginatedBracket {...bracketProps} />,
+					<NavButton />,
+				] : 'Loading...'}
+			</div>
+		)
+	}
+
+
+	const bracketProps = {
+		matchTree,
+		setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
+		canPick: true,
+		darkMode,
+		bracketName: bracketRes?.name,
+	}
+
+	if (windowWidth < paginatedBracketWidth) {
+		return renderPaginatedBracket(bracketProps)
+	}
+	return renderPairedBracket(bracketProps)
 }
 
 

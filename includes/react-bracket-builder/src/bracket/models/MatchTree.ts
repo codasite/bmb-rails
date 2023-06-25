@@ -4,7 +4,9 @@ import {
 	BracketReq,
 	RoundReq,
 	MatchReq,
+	MatchRes,
 	TeamReq,
+	TeamRes,
 	SubmissionReq,
 	SubmissionMatchReq,
 	SubmissionRoundReq,
@@ -41,10 +43,18 @@ export class Team {
 	toSubmissionReq(): Nullable<SubmissionTeamReq> {
 		return this.id === null ? null : { id: this.id };
 	}
+
+	toSerializable(): TeamRes {
+		return {
+			name: this.name,
+			id: this.id,
+		}
+	}
 }
 
 
 export class MatchNode {
+	id: number | null = null;
 	team1: Nullable<Team> = null;
 	team2: Nullable<Team> = null;
 	result: Nullable<Team> = null;
@@ -53,25 +63,32 @@ export class MatchNode {
 	parent: Nullable<MatchNode> = null;
 	depth: number;
 
-	constructor(parent: Nullable<MatchNode>, depth: number) {
+	constructor(id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
+		this.id = id;
 		this.depth = depth;
 		this.parent = parent;
 	}
 
 	clone(): MatchNode {
 		const match = this;
-		const clone = new MatchNode(null, match.depth);
+		console.log('in clone, match.result', match.result)
+		const clone = new MatchNode(this.id, match.depth, match.parent);
 
 		clone.team1 = match.team1 ? match.team1.clone() : null;
 		clone.team2 = match.team2 ? match.team2.clone() : null;
 
 		if (match.result) {
 			if (match.result === match.team1) {
+				console.log('match.result === match.team1')
 				clone.result = clone.team1;
 			} else if (match.result === match.team2) {
+				console.log('match.result === match.team2')
 				clone.result = clone.team2;
+			} else {
+				console.log('match result is not team1 or team2')
 			}
 		}
+		console.log('after clone match.result', match.result)
 
 		return clone;
 	}
@@ -84,6 +101,19 @@ export class MatchNode {
 			team2: match.team2 ? match.team2.toRequest() : null,
 			result: match.result ? match.result.toRequest() : null,
 		}
+	}
+
+	toSerializable(i: number): MatchRes {
+		const match = this;
+		console.log('in toSerializable, match.result', match.result)
+		return {
+			id: match.id,
+			index: i,
+			team1: match.team1 ? match.team1.toSerializable() : null,
+			team2: match.team2 ? match.team2.toSerializable() : null,
+			result: match.result ? match.result.toSerializable() : null,
+		}
+
 	}
 
 	toSubmissionReq(): SubmissionMatchReq {
@@ -134,11 +164,32 @@ export class Round {
 		}
 	}
 
+	toSerializable(): RoundRes {
+		const round = this;
+		const matches = round.matches.map((match, i) => {
+			if (match === null) {
+				return null;
+			}
+			console.log('in round res toSerializable, match.result', match.result)
+			return match.toSerializable(i);
+		});
+		return {
+			id: round.id,
+			name: round.name,
+			depth: round.depth,
+			matches: matches,
+		}
+	}
+
 	isComplete(): boolean {
+		console.log('is complete')
 		return this.matches.every((match) => {
 			if (match === null) {
+				console.log('match is null')
 				return true;
 			}
+			console.log('match is not null')
+			console.log(match.result)
 			return match.result !== null;
 		});
 	}
@@ -198,8 +249,8 @@ export class MatchTree {
 				// const parentIndex = Math.floor(x / 2)
 				// const parent = rounds[i - 1].matches[parentIndex]
 				const parent = this.getParent(x, i, rounds)
-				const match = new MatchNode(parent, i)
-				this.assignMatchToParent(x, match, parent)
+				const match = new MatchNode(null, i, parent)
+				MatchTree.assignMatchToParent(x, match, parent)
 				matches[x] = match
 			}
 			round.matches = matches
@@ -224,27 +275,29 @@ export class MatchTree {
 	}
 
 	clone(): MatchTree {
-		const tree = this
-		const newTree = new MatchTree()
-		// First, create the new rounds.
-		newTree.rounds = tree.rounds.map((round) => {
-			const newRound = new Round(round.id, round.name, round.depth);
-			return newRound;
-		});
-		// Then, iterate over the new rounds to create the matches and update their parent relationships.
-		newTree.rounds.forEach((round, roundIndex) => {
-			round.matches = tree.rounds[roundIndex].matches.map((match, matchIndex) => {
-				if (match === null) {
-					return null;
-				}
-				const newMatch = match.clone();
-				const parent = MatchTree.getParent(matchIndex, roundIndex, newTree.rounds);
-				newMatch.parent = parent;
-				MatchTree.assignMatchToParent(matchIndex, newMatch, parent);
-				return newMatch;
-			});
-		});
-		return newTree;
+		// State is now maintained by Redux and stored as a serializable object so we can just return this
+		return this
+		// const tree = this
+		// const newTree = new MatchTree()
+		// // First, create the new rounds.
+		// newTree.rounds = tree.rounds.map((round) => {
+		// 	const newRound = new Round(round.id, round.name, round.depth);
+		// 	return newRound;
+		// });
+		// // Then, iterate over the new rounds to create the matches and update their parent relationships.
+		// newTree.rounds.forEach((round, roundIndex) => {
+		// 	round.matches = tree.rounds[roundIndex].matches.map((match, matchIndex) => {
+		// 		if (match === null) {
+		// 			return null;
+		// 		}
+		// 		const newMatch = match.clone();
+		// 		const parent = MatchTree.getParent(matchIndex, roundIndex, newTree.rounds);
+		// 		newMatch.parent = parent;
+		// 		MatchTree.assignMatchToParent(matchIndex, newMatch, parent);
+		// 		return newMatch;
+		// 	});
+		// });
+		// return newTree;
 	}
 
 	static fromRounds(rounds: RoundRes[]): MatchTree {
@@ -259,15 +312,19 @@ export class MatchTree {
 				if (match === null) {
 					return null;
 				}
-				const newMatch = new MatchNode(null, roundIndex);
+				console.log('createing new match: ', match)
+				const newMatch = new MatchNode(match.id, roundIndex);
+				console.log('created new match: ', newMatch)
 				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
 				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
+				console.log('result: ', newMatch.result)
 				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
 				if (parent) {
 					newMatch.parent = parent;
 					this.assignMatchToParent(matchIndex, newMatch, parent);
 				}
+				console.log('after assigning parent: ', newMatch)
 				return newMatch;
 			});
 		});
@@ -297,6 +354,15 @@ export class MatchTree {
 		return rounds
 	}
 
+	toSerializable(): RoundRes[] {
+		const tree = this;
+		const rounds = tree.rounds.map((round) => {
+			return round.toSerializable();
+		});
+		console.log('in match tree to serializable, rounds: ', rounds)
+		return rounds
+	}
+
 	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
 		const prevRound = this.rounds[depth + 1]
 		// if (prevRound && !prevRound.isComplete()) {
@@ -311,7 +377,9 @@ export class MatchTree {
 		if (!team) {
 			return
 		}
+		console.log('setting team')
 		match.result = team
+		console.log('result: ', match.result)
 		const parent = match.parent
 		if (!parent) {
 			return

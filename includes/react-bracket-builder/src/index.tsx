@@ -4,6 +4,8 @@ import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
 import { BracketRes } from './api/types/bracket';
+import { bracketBuilderStore } from './app/store';
+import { Provider } from 'react-redux';
 
 interface WpbbAjaxObj {
 	page: string;
@@ -77,7 +79,7 @@ function renderBracketBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		css_url
 	} = wpbb_ajax_obj
 	if (builderDiv && bracket) {
-		render(<App><UserBracket bracketStylesheetUrl={css_url} bracketRes={bracket} apparelUrl={bracket_product_archive_url} /> </App>, builderDiv)
+		render(<App><Provider store={bracketBuilderStore}><UserBracket bracketStylesheetUrl={css_url} bracketRes={bracket} apparelUrl={bracket_product_archive_url} /> </Provider></App>, builderDiv)
 	}
 }
 

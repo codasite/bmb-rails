@@ -1,4 +1,6 @@
 @use 'bracket/index' as *;
+@use 'paginated_bracket/index' as *;
+@use 'constants' as *;
 
 @import 'https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&display=swap';
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
@@ -61,6 +63,22 @@
 
 .wpbb-default {
 	font-size: x-small;
+}
+
+.wpbb-img-background {
+	position: relative;
+	background-color: #fff;
+	background-image: url('../assets/bracket-bg-light.png');
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: cover;
+	color: $darkBlue;
+
+	&.wpbb-dark-mode {
+		background-color: $darkBlue;
+		background-image: url('../assets/bracket-bg-dark.png');
+		color: #fff;
+	}
 }
 
 .wpbb-bracket-container {
