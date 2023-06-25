@@ -83,7 +83,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		}
 		const newMatchTree = matchTree.clone()
 		newMatchTree.advanceTeam(depth, matchIndex, left)
-		console.log('newMatchTree', newMatchTree)
 		setMatchTree(newMatchTree)
 	}
 
