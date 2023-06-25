@@ -11,7 +11,7 @@ import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { setMatchTree, selectMatchTree } from '../../features/match_tree/matchTreeSlice';
 
 import { MatchTree } from '../../bracket/models/MatchTree';
-import { BracketRes } from '../../api/types/bracket';
+import { BracketRes, SubmissionReq } from '../../api/types/bracket';
 import { bracketConstants } from '../../bracket/constants';
 
 import { NavButton } from '../../bracket/components/PaginatedBracket';
@@ -157,15 +157,15 @@ const UserBracket = (props: UserBracketProps) => {
 			name: `bracket-pick-${key}`,
 		}
 		console.log(req)
-		// setProcessingImage(true)
+		setProcessingImage(true)
 
-		// bracketApi.submitBracket(req).then((res) => {
-		// 	console.log(res)
-		// 	setProcessingImage(false)
-		// }).catch((err) => {
-		// 	console.error(err)
-		// 	setProcessingImage(false)
-		// })
+		bracketApi.submitBracket(req).then((res) => {
+			console.log(res)
+			setProcessingImage(false)
+		}).catch((err) => {
+			console.error(err)
+			setProcessingImage(false)
+		})
 
 
 

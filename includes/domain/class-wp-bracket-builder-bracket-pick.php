@@ -74,7 +74,7 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 		$pick_id = $post->ID;
 		$name = $post->post_title;
 		$bracket_id = $post->post_parent;
-		$img_url = get_post_meta($post->ID, 'bracket_pick_img_url', true);
+		$img_url = get_post_meta($post->ID, 'bracket_pick_images', true);
 		$html = get_post_meta($post->ID, 'bracket_pick_html', true);
 
 		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($bracket_id, $name, $pick_id, null, $html, $img_url);
