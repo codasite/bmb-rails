@@ -71,7 +71,6 @@ export class MatchNode {
 
 	clone(): MatchNode {
 		const match = this;
-		console.log('in clone, match.result', match.result)
 		const clone = new MatchNode(this.id, match.depth, match.parent);
 
 		clone.team1 = match.team1 ? match.team1.clone() : null;
@@ -79,16 +78,12 @@ export class MatchNode {
 
 		if (match.result) {
 			if (match.result === match.team1) {
-				console.log('match.result === match.team1')
 				clone.result = clone.team1;
 			} else if (match.result === match.team2) {
-				console.log('match.result === match.team2')
 				clone.result = clone.team2;
 			} else {
-				console.log('match result is not team1 or team2')
 			}
 		}
-		console.log('after clone match.result', match.result)
 
 		return clone;
 	}
@@ -105,7 +100,6 @@ export class MatchNode {
 
 	toSerializable(i: number): MatchRes {
 		const match = this;
-		console.log('in toSerializable, match.result', match.result)
 		return {
 			id: match.id,
 			index: i,
@@ -170,7 +164,6 @@ export class Round {
 			if (match === null) {
 				return null;
 			}
-			console.log('in round res toSerializable, match.result', match.result)
 			return match.toSerializable(i);
 		});
 		return {
@@ -182,14 +175,10 @@ export class Round {
 	}
 
 	isComplete(): boolean {
-		console.log('is complete')
 		return this.matches.every((match) => {
 			if (match === null) {
-				console.log('match is null')
 				return true;
 			}
-			console.log('match is not null')
-			console.log(match.result)
 			return match.result !== null;
 		});
 	}
@@ -312,19 +301,15 @@ export class MatchTree {
 				if (match === null) {
 					return null;
 				}
-				console.log('createing new match: ', match)
 				const newMatch = new MatchNode(match.id, roundIndex);
-				console.log('created new match: ', newMatch)
 				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
 				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
-				console.log('result: ', newMatch.result)
 				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
 				if (parent) {
 					newMatch.parent = parent;
 					this.assignMatchToParent(matchIndex, newMatch, parent);
 				}
-				console.log('after assigning parent: ', newMatch)
 				return newMatch;
 			});
 		});
@@ -359,7 +344,6 @@ export class MatchTree {
 		const rounds = tree.rounds.map((round) => {
 			return round.toSerializable();
 		});
-		console.log('in match tree to serializable, rounds: ', rounds)
 		return rounds
 	}
 
@@ -377,9 +361,7 @@ export class MatchTree {
 		if (!team) {
 			return
 		}
-		console.log('setting team')
 		match.result = team
-		console.log('result: ', match.result)
 		const parent = match.parent
 		if (!parent) {
 			return
