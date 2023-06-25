@@ -232,7 +232,7 @@ const UserBracket = (props: UserBracketProps) => {
 
 		return (
 			// <div className={`wpbb-paginated-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
-			<div className={`wpbb-paginated-bracket-container`}>
+			<div className={`wpbb-img-background wpbb-paginated-bracket-container wpbb-dark-mode`}>
 				{matchTree ? [
 					// <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
 					// <div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
