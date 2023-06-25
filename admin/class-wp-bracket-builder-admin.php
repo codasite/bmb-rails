@@ -217,6 +217,7 @@ class Wp_Bracket_Builder_Admin {
 		);
 	}
 
+
 	// Meta box content
 	public function display_bracket_pick_html_meta_box($post) {
 		$html = get_post_meta($post->ID, 'bracket_pick_html', true);
@@ -242,5 +243,55 @@ class Wp_Bracket_Builder_Admin {
 		// Save/Update the meta field in the database.
 		// update_post_meta($post_id, 'bracket_pick_html', sanitize_text_field($_POST['bracket_pick_html']));
 		update_post_meta($post_id, 'bracket_pick_html', wp_kses_post($_POST['bracket_pick_html']));
+	}
+
+	public function add_bracket_pick_img_urls_meta_box() {
+		add_meta_box(
+			'bracket_pick_img_urls_meta_box', // id of the meta box
+			'Bracket Image URLs', // title
+			array($this, 'display_bracket_pick_images_meta_box'), // callback function that will echo the box content
+			'bracket_pick', // post type where to add it
+			'normal', // position
+			'high' // priority
+		);
+	}
+
+	public function display_bracket_pick_images_meta_box($post) {
+		$urls = get_post_meta($post->ID, 'bracket_pick_images', true);
+		wp_nonce_field('bracket_pick_images_nonce', 'bracket_pick_images_nonce_field');
+		// echo '<label for="bracket_pick_images">Image URLs</label>';
+		// echo '<input type="text" id="bracket_pick_images" name="bracket_pick_images" value="' . esc_attr($urls) . '" style="width:100%;">';
+		ob_start();
+?>
+		<table id="bracket_pick_images_table" class="form-table">
+			<tbody>
+				<tr>
+					<th scope="row">
+						<label for="bracket_pick_images">Image URLs</label>
+					</th>
+					<td>
+						<input type="text" id="bracket_pick_images" name="bracket_pick_images" value="<?php echo esc_attr($urls); ?>">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+<?php
+		echo ob_get_clean();
+	}
+
+	public function save_bracket_pick_images_meta_box($post_id) {
+		// Verify nonce
+		if (!isset($_POST['bracket_pick_images_nonce_field']) || !wp_verify_nonce($_POST['bracket_pick_images_nonce_field'], 'bracket_pick_images_nonce')) {
+			return $post_id;
+		}
+		// Check the user's permissions.
+		if (!current_user_can('edit_post', $post_id)) {
+			return $post_id;
+		}
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+			return $post_id;
+		}
+		// Save/Update the meta field in the database.
+		update_post_meta($post_id, 'bracket_pick_images', sanitize_text_field($_POST['bracket_pick_images']));
 	}
 }

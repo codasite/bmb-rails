@@ -165,16 +165,10 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item($request) {
-		$this->utils->log('create_item');
 		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
-		$this->utils->log(json_encode($pick));
-
-
 		$saved_pick = $this->pick_repo->add($pick);
-		$this->bracket_pick_service->get_bracket_images($saved_pick);
 
 		return new WP_REST_Response($saved_pick, 201);
-		// return new WP_REST_Response($pick, 201);
 	}
 
 	/**

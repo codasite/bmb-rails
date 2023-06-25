@@ -266,10 +266,16 @@ const UserBracket = (props: UserBracketProps) => {
 		)
 	}
 
+	const handleSetMatchTree = (matchTree: MatchTree) => {
+		console.log('setting match tree')
+		console.log(matchTree)
+		dispatch(setMatchTree(matchTree.toSerializable()))
+	}
+
 
 	const bracketProps = {
 		matchTree,
-		setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
+		setMatchTree: handleSetMatchTree,
 		canPick: true,
 		darkMode,
 		bracketName: bracketRes?.name,

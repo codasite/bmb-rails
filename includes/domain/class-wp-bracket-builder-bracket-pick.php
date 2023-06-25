@@ -74,13 +74,20 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 		$pick_id = $post->ID;
 		$name = $post->post_title;
 		$bracket_id = $post->post_parent;
+		$img_url = get_post_meta($post->ID, 'bracket_pick_img_url', true);
 		$html = get_post_meta($post->ID, 'bracket_pick_html', true);
 
-		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($bracket_id, $name, $pick_id, null, $html);
+		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($bracket_id, $name, $pick_id, null, $html, $img_url);
 
 		return $bracket_pick;
 	}
 
+	/**
+	 * This function returns an array of the bracket pick object to be used when inserting/updating a bracket pick post.
+	 * The array returned from this function DOES NOT include field that are stored as post meta.
+	 * 
+	 * @return array
+	 */
 	public function to_post_array(): array {
 		$pick = $this;
 		$post_array = [
