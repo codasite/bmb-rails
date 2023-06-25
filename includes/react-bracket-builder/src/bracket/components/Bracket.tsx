@@ -4,7 +4,6 @@ import { Form } from 'react-bootstrap';
 import { Nullable } from '../../utils/types';
 import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../models/MatchTree';
 
-
 // Direction enum
 enum Direction {
 	TopLeft = 0,
