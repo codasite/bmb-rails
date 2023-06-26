@@ -267,6 +267,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				}
 			});
 		});
+		console.log(lines)
 		return lines;
 	};
 

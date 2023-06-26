@@ -15,6 +15,7 @@ import { BracketRes } from '../../api/types/bracket';
 import { bracketConstants } from '../../bracket/constants';
 
 import { NavButton } from '../../bracket/components/PaginatedBracket';
+import { PaginatedLandingPage } from './PaginatedLandingPage'
 
 const {
 	paginatedBracketWidth,
@@ -218,17 +219,8 @@ const UserBracket = (props: UserBracketProps) => {
 	}
 
 	const renderPaginatedLandingPage = (bracketProps) => {
-		if (!bracketProps.matchTree) {
-			return <></>
-		}
-
 		return (
-			<div className={`wpbb-paginated-landing-page wpbb-dark-mode`}>
-				<div className={'wpbb-slogan-container'}>
-					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
-				</div>
-				<PairedBracket {...bracketProps} canPick={false} scale={.8} />
-			</div>
+			<PaginatedLandingPage {...bracketProps} />
 		)
 	}
 

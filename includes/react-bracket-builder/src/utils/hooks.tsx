@@ -50,3 +50,27 @@ export function useWindowDimensions(): WindowDimensions {
 // export function useBracket() {
 // 	return useContext(BracketContext);
 // }
+
+export function useDomContentLoaded() {
+	const [domContentLoaded, setDomContentLoaded] = useState(
+		document.readyState === 'complete' || document.readyState === 'interactive'
+	);
+
+	useEffect(() => {
+		if (domContentLoaded) return;
+
+		const handleDOMContentLoaded = () => {
+			setDomContentLoaded(true);
+			document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
+		};
+
+		document.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
+
+		// Cleanup function
+		return () => {
+			document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
+		};
+	}, [domContentLoaded]); // Depend on domContentLoaded state
+
+	return domContentLoaded;
+}
