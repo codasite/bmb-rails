@@ -217,6 +217,21 @@ const UserBracket = (props: UserBracketProps) => {
 		)
 	}
 
+	const renderPaginatedLandingPage = (bracketProps) => {
+		if (!bracketProps.matchTree) {
+			return <></>
+		}
+
+		return (
+			<div className={`wpbb-paginated-landing-page wpbb-dark-mode`}>
+				<div className={'wpbb-slogan-container'}>
+					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
+				</div>
+				<PairedBracket {...bracketProps} canPick={false} scaled={.8} />
+			</div>
+		)
+	}
+
 	const renderPaginatedBracket = (bracketProps) => {
 		const { matchTree } = bracketProps
 		if (!matchTree) {
@@ -251,10 +266,16 @@ const UserBracket = (props: UserBracketProps) => {
 		bracketName: bracketRes?.name,
 	}
 
-	if (windowWidth < paginatedBracketWidth) {
-		return renderPaginatedBracket(bracketProps)
-	}
-	return renderPairedBracket(bracketProps)
+	// if (windowWidth < paginatedBracketWidth) {
+	// 	return renderPaginatedLandingPage(bracketProps)
+	// }
+	// return renderPairedBracket(bracketProps)
+
+	return (
+		<div className='wpbb-bracket-builder-root'>
+			{windowWidth < paginatedBracketWidth ? renderPaginatedLandingPage(bracketProps) : renderPairedBracket(bracketProps)}
+		</div>
+	)
 }
 
 

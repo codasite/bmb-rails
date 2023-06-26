@@ -1,0 +1,24 @@
+@use '../constants' as *;
+
+.wpbb-bracket-builder-root {
+	background-color: #fff;
+	color: $darkBlue;
+
+	&.wpbb-dark-mode {
+		background-color: $darkBlue;
+		color: #fff;
+	}
+
+}
+
+%wpbb-img-background {
+	position: relative;
+	background-image: url('../assets/bracket-bg-light.png');
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: cover;
+
+	&.wpbb-dark-mode {
+		background-image: url('../assets/bracket-bg-dark.png');
+	}
+}
