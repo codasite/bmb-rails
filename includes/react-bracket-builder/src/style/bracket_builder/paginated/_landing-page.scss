@@ -1,0 +1,13 @@
+@use '../builder' as *;
+
+.wpbb-paginated-landing-page {
+	@extend %wpbb-img-background;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.wpbb-scaled-bracket {
+	// transform: scale(0.8);
+	transform-origin: left top;
+}
