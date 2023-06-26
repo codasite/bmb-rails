@@ -180,7 +180,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			fromAnchor={fromAnchor}
 			toAnchor={toAnchor}
 			orientation='h'
-			within='wpbb-bracket'
+			within='wpbb-bracket-lines-container'
 			{...style}
 		/>
 	);
@@ -252,7 +252,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team2}
 						fromAnchor='bottom'
 						toAnchor='top'
-						within='wpbb-bracket'
+						within='wpbb-bracket-lines-container'
 						{...style}
 					/>,
 					<LineTo
@@ -260,7 +260,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team1}
 						fromAnchor='bottom'
 						toAnchor='top'
-						within='wpbb-bracket'
+						within='wpbb-bracket-lines-container'
 						{...style}
 					/>,
 					];
@@ -287,7 +287,9 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				<div className='wpbb-bracket-rounds-container'>
 					{rounds.length > 0 && buildRounds2(rounds)}
 				</div>
-				{renderLines(rounds)}
+				<div className='wpbb-bracket-lines-container'>
+					{renderLines(rounds)}
+				</div>
 				{renderPositioned(rounds)}
 			</div>
 			{/* <Button variant='primary' onClick={screenshot}>ref</Button> */}

@@ -5,9 +5,21 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	align-items: center;
+
+	// .wpbb-bracket-rounds-container {
+	// 	transform: scale(0.5);
+	// 	transform-origin: left top;
+
+	// }
+	.wpbb-paired-bracket {
+		transform: scale(0.5);
+		transform-origin: left top;
+		margin: 0 auto;
+	}
 }
 
-.wpbb-scaled-bracket {
-	// transform: scale(0.8);
-	transform-origin: left top;
-}
+// .wpbb-scaled-bracket {
+// 	// transform: scale(0.8);
+// 	transform-origin: left top;
+// }
