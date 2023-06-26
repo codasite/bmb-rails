@@ -226,6 +226,11 @@
 	@extend %paired-teams;
 	@extend %paired-matchbox;
 
+	.wpbb-bracket-rounds-container {
+		display: flex;
+		width: 100%;
+	}
+
 	.wpbb-bracket-line {
 		border-top: 1px solid $darkBlue !important;
 	}

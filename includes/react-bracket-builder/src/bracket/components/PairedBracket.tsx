@@ -18,6 +18,7 @@ interface PairedBracketProps {
 	canPick?: boolean;
 	darkMode?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
+	scale?: number;
 }
 
 export const PairedBracket = (props: PairedBracketProps) => {
@@ -283,7 +284,9 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	return (
 		<>
 			<div className={`wpbb-bracket wpbb-paired-bracket wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
-				{rounds.length > 0 && buildRounds2(rounds)}
+				<div className='wpbb-bracket-rounds-container'>
+					{rounds.length > 0 && buildRounds2(rounds)}
+				</div>
 				{renderLines(rounds)}
 				{renderPositioned(rounds)}
 			</div>

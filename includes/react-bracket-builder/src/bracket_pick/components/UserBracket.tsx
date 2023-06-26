@@ -227,7 +227,7 @@ const UserBracket = (props: UserBracketProps) => {
 				<div className={'wpbb-slogan-container'}>
 					<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
 				</div>
-				<PairedBracket {...bracketProps} canPick={false} scaled={.8} />
+				<PairedBracket {...bracketProps} canPick={false} scale={.8} />
 			</div>
 		)
 	}
