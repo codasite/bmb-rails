@@ -14,7 +14,6 @@ const PaginatedRoundHeader = (props) => {
 		<div className={'wpbb-paginated-round-header'}>
 			<span className={'wpbb-paginated-round-header-text'}>{title}</span>
 		</div>
-
 	)
 }
 
@@ -31,7 +30,8 @@ interface PaginatedRoundProps {
 	bracketName?: string;
 }
 
-export const PaginatedRound = (props: PaginatedRoundProps) => {
+// export const PaginatedRound = (props: PaginatedRoundProps) => {
+export const PaginatedRound = (props) => {
 	const {
 		round,
 		matches,

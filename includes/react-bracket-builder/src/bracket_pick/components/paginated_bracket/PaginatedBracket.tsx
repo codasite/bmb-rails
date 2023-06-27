@@ -9,34 +9,54 @@ import Spinner from 'react-bootstrap/Spinner'
 import { PairedBracket } from '../../../bracket/components/PairedBracket';
 import { useAppSelector, useAppDispatch } from '../../../app/hooks';
 import { setMatchTree, selectMatchTree } from '../../../features/match_tree/matchTreeSlice';
-import { nextPage, setPage, selectCurrentPage } from '../../../features/bracket_nav/bracketNavSlice';
+import { nextPage, setPage, selectCurrentPage, selectNumPages } from '../../../features/bracket_nav/bracketNavSlice';
 
 import { MatchTree } from '../../../bracket/models/MatchTree';
 import { BracketRes } from '../../../api/types/bracket';
 import { bracketConstants } from '../../../bracket/constants';
 import { PaginatedLandingPage } from './PaginatedLandingPage';
+import { PaginatedRound } from './PaginatedRound'
+import { PaginatedBracketResult } from './PaginatedBracketResult'
 
 import { NavButton } from '../../../bracket/components/PaginatedBracket';
 import { useDomContentLoaded } from '../../../utils/hooks';
 
-export const PaginatedBracket = (bracketProps) => {
-	if (!bracketProps.matchTree) {
+interface PaginatedBracketProps {
+	matchTree?: MatchTree;
+}
+
+export const PaginatedBracket = (props: PaginatedBracketProps) => {
+	const {
+		matchTree,
+	} = props;
+
+	if (!matchTree) {
 		return <></>
 	}
 
 	const currentPage = useAppSelector(selectCurrentPage)
+	const numPages = useAppSelector(selectNumPages)
 	const dispatch = useAppDispatch()
 	const goNext = () => dispatch(nextPage())
-	// const nextPage = dispatch()
 
 	const handleStart = () => {
 		console.log('current page', currentPage)
 		goNext()
 	}
 
+	const getPage = () => {
+		if (currentPage <= 0) {
+			return <PaginatedLandingPage onStart={handleStart} />
+		} else if (currentPage < numPages) {
+			return <PaginatedRound />
+		} else {
+			return <PaginatedBracketResult />
+		}
+	}
+
 	return (
 		<div className={`wpbb-paginated-bracket wpbb-dark-mode`}>
-			<PaginatedLandingPage onStart={handleStart} />
+			{getPage()}
 		</div>
 	)
 }
