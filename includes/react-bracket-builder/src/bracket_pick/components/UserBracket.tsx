@@ -6,16 +6,17 @@ import Spinner from 'react-bootstrap/Spinner'
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
 import { PairedBracket } from '../../bracket/components/PairedBracket';
-import { PaginatedBracket } from './PaginatedBracket'
+import { PaginatedBracket } from './paginated_bracket/PaginatedBracket'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { setMatchTree, selectMatchTree } from '../../features/match_tree/matchTreeSlice';
+import { setNumPages } from '../../features/bracket_nav/bracketNavSlice'
 
 import { MatchTree } from '../../bracket/models/MatchTree';
 import { BracketRes } from '../../api/types/bracket';
 import { bracketConstants } from '../../bracket/constants';
 
 import { NavButton } from '../../bracket/components/PaginatedBracket';
-import { PaginatedLandingPage } from './PaginatedLandingPage'
+import { PaginatedLandingPage } from './paginated_bracket/PaginatedLandingPage'
 
 const {
 	paginatedBracketWidth,
@@ -103,6 +104,14 @@ const UserBracket = (props: UserBracketProps) => {
 			dispatch(setMatchTree(bracketRes.rounds))
 		}
 	}, [bracketId, bracketRes]);
+
+	useEffect(() => {
+		if (matchTree) {
+			// For a paginated bracket there are two pages for all but the last round, plus a landing page
+			const numPages = matchTree.rounds.length * 2;
+			dispatch(setNumPages(numPages))
+		}
+	}, [matchTree])
 
 	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchHeight: number, inchWidth: number,) => {
 		const printArea = buildPrintArea(innerHTML, inchHeight, inchWidth)
