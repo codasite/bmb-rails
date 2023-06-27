@@ -1,16 +1,36 @@
 @use '../builder' as *;
 
+
 .wpbb-paginated-landing-page {
 	@extend %wpbb-img-background;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	height: 100%;
 
-	.wpbb-bracket-rounds-container {
-		transform: scale(0.5);
-		transform-origin: left top;
+	.wpbb-bracket-image-container {
+		img {
+			width: 100%;
+
+		}
 	}
+
+	.wpbb-slogan-container {
+		padding: 0;
+		text-align: center;
+	}
+
+	.wpbb-slogan-text {
+		// white-space: nowrap;
+		font-size: 48px;
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	// .wpbb-bracket-rounds-container {
+	// 	transform: scale(0.5);
+	// }
 
 	// .wpbb-paired-bracket-container {
 	// 	// transform: scale(0.5);

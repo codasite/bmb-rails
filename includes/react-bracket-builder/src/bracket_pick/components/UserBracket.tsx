@@ -6,7 +6,7 @@ import Spinner from 'react-bootstrap/Spinner'
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
 import { PairedBracket } from '../../bracket/components/PairedBracket';
-import { PaginatedBracket } from '../../bracket/components/PaginatedBracket';
+import { PaginatedBracket } from './PaginatedBracket'
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { setMatchTree, selectMatchTree } from '../../features/match_tree/matchTreeSlice';
 
@@ -218,36 +218,12 @@ const UserBracket = (props: UserBracketProps) => {
 		)
 	}
 
-	const renderPaginatedLandingPage = (bracketProps) => {
-		return (
-			<PaginatedLandingPage {...bracketProps} />
-		)
-	}
-
 	const renderPaginatedBracket = (bracketProps) => {
-		const { matchTree } = bracketProps
-		if (!matchTree) {
-			return <></>
-		}
-		const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
-		// const disableActions = processingImage
-		const numRounds = matchTree?.rounds.length;
-		const pickedWinner = matchTree?.isComplete();
-
 		return (
-			// <div className={`wpbb-paginated-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
-			<div className={`wpbb-img-background wpbb-paginated-bracket-container wpbb-dark-mode`}>
-				{matchTree ? [
-					// <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
-					// <div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
-					// 	<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
-					// </div>,
-					<PaginatedBracket {...bracketProps} />,
-					<NavButton />,
-				] : 'Loading...'}
-			</div>
+			<PaginatedBracket {...bracketProps} />
 		)
 	}
+
 
 
 	const bracketProps = {
@@ -265,7 +241,7 @@ const UserBracket = (props: UserBracketProps) => {
 
 	return (
 		<div className='wpbb-bracket-builder-root'>
-			{windowWidth < paginatedBracketWidth ? renderPaginatedLandingPage(bracketProps) : renderPairedBracket(bracketProps)}
+			{windowWidth < paginatedBracketWidth ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)}
 		</div>
 	)
 }
