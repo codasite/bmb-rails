@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 
-import { useDomContentLoaded } from '../../utils/hooks';
-import { ActionButton } from './shared/ActionButton';
+import { ActionButton } from '../shared/ActionButton';
 
-export const PaginatedLandingPage = () => {
-	const [bracketScale, setBracketScale] = useState(1);
-	const domContentLoaded = useDomContentLoaded();
+interface PaginatedLandingPageProps {
+	onStart: () => void;
+}
+
+export const PaginatedLandingPage = (props) => {
+	const {
+		onStart,
+	} = props;
 
 	return (
 		<div className={`wpbb-paginated-landing-page wpbb-dark-mode`}>
@@ -15,7 +19,7 @@ export const PaginatedLandingPage = () => {
 			<div className='wpbb-bracket-image-container'>
 				<img src='https://wpbb-bracket-images.s3.amazonaws.com/bracket-m7g1t-dark-center-cropped.png'></img>
 			</div>
-			<ActionButton label='START' onClick={() => { }} />
+			<ActionButton label='START' onClick={onStart} />
 		</div>
 	)
 }

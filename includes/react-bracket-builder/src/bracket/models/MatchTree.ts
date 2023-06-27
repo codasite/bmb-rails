@@ -182,6 +182,7 @@ export class Round {
 			return match.result !== null;
 		});
 	}
+
 }
 
 class WildcardRange {
