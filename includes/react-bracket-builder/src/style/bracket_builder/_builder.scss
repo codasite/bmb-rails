@@ -1,6 +1,8 @@
 @use '../constants' as *;
 
 .wpbb-bracket-builder-root {
+	height: 100%;
+	font-family: 'Clash Display', sans-serif;
 	background-color: #fff;
 	color: $darkBlue;
 

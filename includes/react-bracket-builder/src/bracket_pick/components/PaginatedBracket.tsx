@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
 import { bracketApi } from '../../api/bracketApi';
@@ -6,29 +7,28 @@ import Spinner from 'react-bootstrap/Spinner'
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
 import { PairedBracket } from '../../bracket/components/PairedBracket';
-import { PaginatedBracket } from '../../bracket/components/PaginatedBracket';
 import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import { setMatchTree, selectMatchTree } from '../../features/match_tree/matchTreeSlice';
 
 import { MatchTree } from '../../bracket/models/MatchTree';
 import { BracketRes } from '../../api/types/bracket';
 import { bracketConstants } from '../../bracket/constants';
+import { PaginatedLandingPage } from './PaginatedLandingPage';
 
 import { NavButton } from '../../bracket/components/PaginatedBracket';
 import { useDomContentLoaded } from '../../utils/hooks';
 
-export const PaginatedLandingPage = () => {
+export const PaginatedBracket = (bracketProps) => {
+	if (!bracketProps.matchTree) {
+		return <></>
+	}
+
 	const [bracketScale, setBracketScale] = useState(1);
 	const domContentLoaded = useDomContentLoaded();
 
 	return (
-		<div className={`wpbb-paginated-landing-page wpbb-dark-mode`}>
-			<div className={'wpbb-slogan-container'}>
-				<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
-			</div>
-			<div className='wpbb-bracket-image-container'>
-				<img src='https://wpbb-bracket-images.s3.amazonaws.com/bracket-m7g1t-dark-center-cropped.png'></img>
-			</div>
+		<div className={`wpbb-paginated-bracket wpbb-dark-mode`}>
+			<PaginatedLandingPage />
 		</div>
 	)
 }

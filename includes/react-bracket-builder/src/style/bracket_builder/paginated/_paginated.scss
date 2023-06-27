@@ -18,6 +18,16 @@
 	}
 }
 
+.wpbb-paginated-bracket {
+
+	&.wpbb-dark-mode {
+		color: #fff;
+	}
+
+	height: 100%;
+
+}
+
 // .wpbb-paginated-bracket-container {
 // 	display: flex;
 // 	flex-direction: column;
