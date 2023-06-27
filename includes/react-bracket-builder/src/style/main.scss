@@ -185,6 +185,7 @@ body {
 		}
 	}
 
+
 	.wpbb-slogan-container {
 		position: absolute;
 		top: 100px;
@@ -384,6 +385,33 @@ body {
 		.wpbb-bracket-line {
 			border-top: 1px solid #fff !important;
 		}
+	}
+}
+
+.wpbb-action-btn {
+	border: none;
+	border-radius: 8px;
+	padding: 0;
+	font-size: 36px;
+	font-weight: 700;
+	width: 405.54px;
+	height: 72.18px;
+	background-color: $neonGreen;
+	color: $darkBlue;
+
+	&.disabled {
+		background-color: transparent;
+		color: rgba(0, 0, 0, 0.2);
+		border: 4px solid rgba(0, 0, 0, 0.2)
+	}
+
+}
+
+.wpbb-dark-mode {
+	.wpbb-action-btn {
+		background-color: $darkGreen;
+		border: 4px solid $neonGreen;
+		color: #fff;
 	}
 }
 

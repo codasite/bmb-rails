@@ -1,21 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import * as Sentry from '@sentry/react';
-import { bracketApi } from '../../api/bracketApi';
-import { useWindowDimensions } from '../../utils/hooks';
-import Spinner from 'react-bootstrap/Spinner'
-// import { Bracket } from '../../bracket/components/Bracket';
-// import { Bracket } from '../../bracket/components/Bracket';
-import { PairedBracket } from '../../bracket/components/PairedBracket';
-import { PaginatedBracket } from '../../bracket/components/PaginatedBracket';
-import { useAppSelector, useAppDispatch } from '../../app/hooks';
-import { setMatchTree, selectMatchTree } from '../../features/match_tree/matchTreeSlice';
+import React, { useState } from 'react';
 
-import { MatchTree } from '../../bracket/models/MatchTree';
-import { BracketRes } from '../../api/types/bracket';
-import { bracketConstants } from '../../bracket/constants';
-
-import { NavButton } from '../../bracket/components/PaginatedBracket';
 import { useDomContentLoaded } from '../../utils/hooks';
+import { ActionButton } from './shared/ActionButton';
 
 export const PaginatedLandingPage = () => {
 	const [bracketScale, setBracketScale] = useState(1);
@@ -29,6 +15,7 @@ export const PaginatedLandingPage = () => {
 			<div className='wpbb-bracket-image-container'>
 				<img src='https://wpbb-bracket-images.s3.amazonaws.com/bracket-m7g1t-dark-center-cropped.png'></img>
 			</div>
+			<ActionButton label='START' onClick={() => { }} />
 		</div>
 	)
 }
