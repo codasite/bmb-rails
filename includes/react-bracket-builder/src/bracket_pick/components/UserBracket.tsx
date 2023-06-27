@@ -107,8 +107,8 @@ const UserBracket = (props: UserBracketProps) => {
 
 	useEffect(() => {
 		if (matchTree) {
-			// For a paginated bracket there are two pages for all but the last round, plus a landing page
-			const numPages = matchTree.rounds.length * 2;
+			// For a paginated bracket there are two pages for all but the last round, plus a landing page and a final page
+			const numPages = matchTree.rounds.length * 2 + 1;
 			dispatch(setNumPages(numPages))
 		}
 	}, [matchTree])
