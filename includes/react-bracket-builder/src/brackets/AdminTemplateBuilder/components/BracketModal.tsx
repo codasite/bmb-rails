@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
-import { bracketApi } from '../../../api/bracketApi';
+import { bracketApi } from '../../shared/api/bracketApi';
 import { Nullable } from '../../../utils/types';
-import { Bracket } from '../../shared/components/bracket_components/Bracket';
+import { Bracket } from '../../shared/components/Bracket';
 import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree';
-import { BracketRes } from '../../../api/types/bracket';
+import { BracketRes } from '../../shared/api/types/bracket';
 import { BracketSubmissionsModal } from './BracketSubmissionsModal';
 
 

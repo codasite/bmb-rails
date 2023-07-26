@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Table, Button } from 'react-bootstrap';
-import { bracketApi } from '../../../api/bracketApi';
-import { SubmissionRes } from '../../../api/types/bracket';
+import { bracketApi } from '../../shared/api/bracketApi';
+import { SubmissionRes } from '../../shared/api/types/bracket';
 import { Nullable } from '../../../utils/types';
-import { Bracket } from '../../shared/components/bracket_components/Bracket';
+import { Bracket } from '../../shared/components/Bracket';
 import { MatchTree } from '../../shared/models/MatchTree';
 // import { BracketRes } from '../../api/types/bracket';
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { MatchNode } from '../models/MatchTree';
 import { TeamSlot } from './TeamSlot'
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg';
+import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg';
 import { Direction } from '../constants'
 
 interface MatchBoxProps {

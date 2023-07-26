@@ -3,7 +3,7 @@ import App from "./App";
 import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
-import { BracketRes } from './api/types/bracket';
+import { BracketRes } from './brackets/shared/api/types/bracket';
 import { bracketBuilderStore } from './brackets/shared/app/store';
 import { Provider } from 'react-redux';
 
@@ -52,7 +52,7 @@ if (sentryDsn) {
 }
 
 // Dynamically render components to avoid loading unused modules
-const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/views/Settings'))
+const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
 const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserBracket/UserBracket'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 
