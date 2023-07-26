@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
-import { MatchTree } from "../../bracket/models/MatchTree";
+import { MatchTree } from "../models/MatchTree";
 import { RoundRes } from "../api/types/bracket";
 
 interface MatchTreeState {

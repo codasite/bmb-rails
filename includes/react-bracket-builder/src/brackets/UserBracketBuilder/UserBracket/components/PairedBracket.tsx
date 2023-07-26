@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { MatchTree, Round, MatchNode, Team } from '../models/MatchTree';
+import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
 import LineTo, { SteppedLineTo } from 'react-lineto';
-import { useWindowDimensions } from '../../../utils/hooks';
+import { useWindowDimensions } from '../../../../utils/hooks';
 //@ts-ignore
-import { MatchColumn } from './MatchColumn'
-import { Direction, bracketConstants } from '../constants'
-import { getTargetHeight, getTeamClassName, getMatchHeight } from '../utils'
+import { MatchColumn } from '../../../shared/components/MatchColumn'
+import { Direction, bracketConstants } from '../../../shared/constants'
+import { getTargetHeight, getTeamClassName, getMatchHeight } from '../../../shared/utils'
 
 const {
 	teamHeight,

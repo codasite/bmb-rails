@@ -76,7 +76,7 @@
 
 .wpbb-bracket-container {
 	position: relative;
-	background-image: url('../assets/bracket-bg-light.png');
+	background-image: url('../brackets/shared/assets/bracket-bg-light.png');
 	background-repeat: no-repeat;
 	background-position: center top;
 	background-size: cover;
@@ -201,7 +201,7 @@
 
 	&.wpbb-dark-mode {
 		background-color: $darkBlue;
-		background-image: url('../assets/bracket-bg-dark.png');
+		background-image: url('../brackets/shared/assets/bracket-bg-dark.png');
 		color: #fff;
 
 		.wpbb-apparel-btn {
