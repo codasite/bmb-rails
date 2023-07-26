@@ -1,33 +1,23 @@
-// @use '../constants' as *;
-
-.wpbb-nav-btn {
-	border: none;
-	border-radius: 8px;
-	padding: 0;
-	font-size: 24px;
-	font-weight: 600;
-	min-width: 268;
-	height: 48;
-	// background-color: $neonGreen;
-	color: white;
-
-	&.disabled {
-		background-color: transparent;
-		color: rgba(0, 0, 0, 0.2);
-		border: 4px solid rgba(0, 0, 0, 0.2)
-	}
-}
+// @use '../../constants' as *;
 
 .wpbb-paginated-bracket {
-	height: 90vh;
+	height: 100vh;
 
 	&.wpbb-dark-mode {
 		color: #fff;
 	}
 
+	.wpbb-action-btn {
+		font-size: 24px;
+		font-weight: 600;
+		width: 268px;
+		height: 48px;
+	}
+
 	// height: 100%;
 
 }
+
 
 // .wpbb-paginated-bracket-container {
 // 	display: flex;

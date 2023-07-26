@@ -412,6 +412,16 @@
 		background-color: $darkGreen;
 		border: 4px solid $neonGreen;
 		color: #fff;
+
+		&.secondary {
+			background-color: transparent;
+			border-color: #fff;
+		}
+
+		&.disabled {
+			color: rgba(255, 255, 255, 0.2);
+			border-color: rgba(255, 255, 255, 0.2);
+		}
 	}
 }
 

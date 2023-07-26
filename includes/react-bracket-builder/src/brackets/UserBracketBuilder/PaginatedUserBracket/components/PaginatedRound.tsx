@@ -4,6 +4,8 @@ import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchT
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction } from '../../../shared/constants'
 import { Nullable } from '../../../../utils/types';
+import { useAppSelector, useAppDispatch } from '../../../shared/app/hooks'
+import { nextPage, selectCurrentPage, selectNumPages } from '../../../shared/features/bracketNavSlice';
 
 const PaginatedRoundHeader = (props) => {
 	const {
@@ -32,18 +34,27 @@ interface PaginatedRoundProps {
 
 // export const PaginatedRound = (props: PaginatedRoundProps) => {
 export const PaginatedRound = (props) => {
-	const {
-		round,
-		matches,
-	} = props;
+	// const {
+	// 	round,
+	// 	matches,
+	// } = props;
+
+	const currentPage = useAppSelector(selectCurrentPage)
+	const numPages = useAppSelector(selectNumPages)
+	const dispatch = useAppDispatch()
+	const goNext = () => dispatch(nextPage())
+
+	// console.log('PaginatedRound', props)
+	console.log('page', currentPage)
 	return (
 		<div className={`wpbb-paginated-round`}>
-			<PaginatedRoundHeader title={round.name} />
+			{/* <PaginatedRoundHeader title={round.name} /> */}
+			<PaginatedRoundHeader title={`Page ${currentPage}`} />
 			<div className={'wpbb-paginated-round-content'}>
 				{/* <MatchColumn />
 				<MatchColumn /> */}
 			</div>
-			<ActionButton label='NEXT' onClick={() => { }} />
+			<ActionButton label='NEXT' onClick={() => { goNext() }} variant='secondary' />
 
 		</div>
 	)

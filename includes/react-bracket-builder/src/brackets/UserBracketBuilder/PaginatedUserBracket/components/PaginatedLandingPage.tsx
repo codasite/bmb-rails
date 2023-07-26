@@ -6,7 +6,7 @@ interface PaginatedLandingPageProps {
 	onStart: () => void;
 }
 
-export const PaginatedLandingPage = (props) => {
+export const PaginatedLandingPage = (props: PaginatedLandingPageProps) => {
 	const {
 		onStart,
 	} = props;
