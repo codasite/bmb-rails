@@ -34,7 +34,7 @@ export const PaginatedUserBracket = (props: PaginatedBracketProps) => {
 	const getPage = () => {
 		if (currentPage <= 0) {
 			return <PaginatedLandingPage onStart={handleStart} />
-		} else if (currentPage < numPages) {
+		} else if (currentPage < numPages - 1) {
 			return <PaginatedRound />
 		} else {
 			return <PaginatedBracketResult />
