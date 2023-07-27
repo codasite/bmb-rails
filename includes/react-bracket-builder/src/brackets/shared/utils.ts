@@ -41,3 +41,23 @@ export const getTeamClassName = (roundIndex, matchIndex, left) => {
 	const className = `wpbb-team${left ? '1' : '2'} wpbb-team-${roundIndex}-${matchIndex}-${left ? 'left' : 'right'}`
 	return className
 }
+
+/**
+ * Get the match height for the first round of a bracket given a target height
+ */
+export const getFirstRoundMatchHeight = (targetHeight, numDirections, numRounds, teamHeight) => {
+	const maxMatchesPerRound = 2 ** (numRounds - 1)
+	const maxMatchesPerColumn = maxMatchesPerRound / numDirections
+	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
+	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
+	return firstRoundMatchHeight
+}
+
+/**
+ * Get the match height for a subsequent round of a bracket given the first round match height
+ * @param {number} firstRoundMatchHeight The match height for the first round of a bracket
+ * @param {number} i The index of the round when building up from the first round
+ */
+export const getSubsequentRoundMatchHeight = (firstRoundMatchHeight, i) => {
+	return firstRoundMatchHeight * (2 ** i)
+}
