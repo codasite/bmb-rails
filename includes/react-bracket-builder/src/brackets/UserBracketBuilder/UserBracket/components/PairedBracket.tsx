@@ -5,7 +5,7 @@ import { useWindowDimensions } from '../../../../utils/hooks';
 //@ts-ignore
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
-import { getTargetHeight, getTeamClassName, getMatchHeight } from '../../../shared/utils'
+import { getTargetHeight, getTeamClassName, getMatchHeight, getFirstRoundMatchHeight } from '../../../shared/utils'
 
 const {
 	teamHeight,
@@ -89,13 +89,14 @@ export const PairedBracket = (props: PairedBracketProps) => {
 
 	const targetHeight = getTargetHeight(numRounds)
 
-	// The number of rounds sets the initial height of each match
-	// const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 1);
-	const numDirections = 2
-	const maxMatchesPerRound = 2 ** (rounds.length - 1)
-	const maxMatchesPerColumn = maxMatchesPerRound / numDirections
-	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
-	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
+	// // The number of rounds sets the initial height of each match
+	// // const firstRoundMatchHeight = targetHeight / 2 ** (rounds.length - 1);
+	// const numDirections = 2
+	// const maxMatchesPerRound = 2 ** (rounds.length - 1)
+	// const maxMatchesPerColumn = maxMatchesPerRound / numDirections
+	// let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
+	// firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn 
+	const firstRoundMatchHeight = getFirstRoundMatchHeight(targetHeight, 2, rounds.length, teamHeight)
 
 
 	/**
@@ -116,7 +117,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					bracketName={bracketName}
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
-					numDirections={numDirections}
 					// targetHeight={2 ** idx * firstRoundMatchHeight}
 					targetHeight={targetHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
@@ -132,7 +132,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
-				numDirections={numDirections}
 				targetHeight={targetHeight / 4}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
@@ -152,7 +151,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
-					numDirections={numDirections}
 					// targetHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
 					targetHeight={targetHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}

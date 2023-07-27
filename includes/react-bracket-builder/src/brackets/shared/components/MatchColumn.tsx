@@ -10,8 +10,8 @@ interface MatchColumnProps {
 	round: Round;
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
-	numDirections: number;
-	targetHeight: number;
+	matchBoxHeight: number;
+	matchBoxSpacing: number;
 	updateRoundName?: (roundId: number, name: string) => void;
 	updateTeam?: (roundId: number, matchIndex: number, left: boolean, name: string) => void;
 	pickTeam?: (matchIndex: number, left: boolean) => void;
@@ -24,8 +24,8 @@ export const MatchColumn = (props: MatchColumnProps) => {
 		round,
 		matches,
 		direction,
-		numDirections,
-		targetHeight,
+		matchBoxHeight,
+		matchBoxSpacing,
 		updateRoundName,
 		updateTeam,
 		pickTeam,
@@ -47,8 +47,10 @@ export const MatchColumn = (props: MatchColumnProps) => {
 				<MatchBox
 					match={match}
 					direction={direction}
-					height={matchHeight}
-					spacing={i + 1 < matches.length ? targetHeight - matchHeight : 0} // Do not add spacing to the last match in the round column
+					// height={matchHeight}
+					// spacing={i + 1 < matches.length ? targetHeight - matchHeight : 0} // Do not add spacing to the last match in the round column
+					height={matchBoxHeight}
+					spacing={matchBoxSpacing}
 					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
 					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
 					roundIndex={round.depth}
