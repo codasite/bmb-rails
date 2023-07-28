@@ -9,7 +9,7 @@ interface MatchBoxProps {
 	match: MatchNode | null;
 	direction: Direction;
 	height: number;
-	spacing: number;
+	spacing?: number;
 	updateTeam?: (left: boolean, name: string) => void;
 	pickTeam?: (left: boolean) => void;
 	roundIndex: number;
@@ -22,7 +22,7 @@ export const MatchBox = (props: MatchBoxProps) => {
 		match,
 		direction,
 		height,
-		spacing,
+		spacing = 0,
 		updateTeam,
 		pickTeam,
 		roundIndex,
