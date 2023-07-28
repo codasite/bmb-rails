@@ -118,9 +118,9 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				// Get the first half of matches for this column
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 				// const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
-				const targetMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, idx)
+				const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, idx)
 				const matchHeight = getMatchHeight(round.depth)
-				const matchSpacing = targetMatchHeight - matchHeight
+				const matchSpacing = totalMatchHeight - matchHeight
 
 				return <MatchColumn
 					bracketName={bracketName}
@@ -156,9 +156,14 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const colMatches = round.matches.slice(round.matches.length / 2)
 				// The target height decreases by half for each consecutive round in the second half of the bracket
 				// const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
-				const targetMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, arr.length - 1 - idx)
+				const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, arr.length - 1 - idx)
 				const matchHeight = getMatchHeight(round.depth)
-				const matchSpacing = targetMatchHeight - matchHeight
+				const matchSpacing = totalMatchHeight - matchHeight
+				console.log('targetHeight', targetHeight)
+				console.log('firstRoundMatchHeight', firstRoundMatchHeight)
+				console.log('totalMatchHeight', totalMatchHeight)
+				console.log('matchHeight', matchHeight)
+				console.log('matchSpacing', matchSpacing)
 
 				return <MatchColumn
 					bracketName={bracketName}
