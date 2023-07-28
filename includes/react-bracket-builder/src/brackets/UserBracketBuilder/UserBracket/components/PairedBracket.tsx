@@ -5,7 +5,13 @@ import { useWindowDimensions } from '../../../../utils/hooks';
 //@ts-ignore
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
-import { getTargetHeight, getTeamClassName, getMatchHeight, getFirstRoundMatchHeight } from '../../../shared/utils'
+import {
+	getTargetHeight,
+	getTeamClassName,
+	getMatchHeight,
+	getFirstRoundMatchHeight,
+	getTargetMatchHeight,
+} from '../../../shared/utils'
 
 const {
 	teamHeight,
@@ -111,14 +117,18 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			...rounds.slice(1).reverse().map((round, idx) => {
 				// Get the first half of matches for this column
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
-				const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
+				// const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
+				const targetMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, idx)
+				const matchHeight = getMatchHeight(round.depth)
+				const matchSpacing = targetMatchHeight - matchHeight
 
 				return <MatchColumn
 					bracketName={bracketName}
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					// targetHeight={2 ** idx * firstRoundMatchHeight}
-					targetHeight={targetHeight}
+					matchBoxHeight={matchHeight}
+					matchBoxSpacing={matchSpacing}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -132,7 +142,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
-				targetHeight={targetHeight / 4}
+				matchBoxHeight={getMatchHeight(0)}
+				// targetHeight={targetHeight / 4}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
@@ -144,7 +155,10 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
 				// The target height decreases by half for each consecutive round in the second half of the bracket
-				const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
+				// const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
+				const targetMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, arr.length - 1 - idx)
+				const matchHeight = getMatchHeight(round.depth)
+				const matchSpacing = targetMatchHeight - matchHeight
 
 				return <MatchColumn
 					bracketName={bracketName}
@@ -152,7 +166,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					matches={colMatches}
 					direction={Direction.TopRight}
 					// targetHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
-					targetHeight={targetHeight}
+					matchBoxHeight={matchHeight}
+					matchBoxSpacing={matchSpacing}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?

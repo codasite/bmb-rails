@@ -58,6 +58,6 @@ export const getFirstRoundMatchHeight = (targetHeight, numDirections, numRounds,
  * @param {number} firstRoundMatchHeight The match height for the first round of a bracket
  * @param {number} i The index of the round when building up from the first round
  */
-export const getSubsequentRoundMatchHeight = (firstRoundMatchHeight, i) => {
+export const getTargetMatchHeight = (firstRoundMatchHeight, i) => {
 	return firstRoundMatchHeight * (2 ** i)
 }
