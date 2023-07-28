@@ -71,30 +71,55 @@ export const PaginatedRound = (props) => {
 	const roundIndex = Math.floor((roundPageMaxIndex - roundPage) / numDirections)
 	const direction = directions[roundPage % numDirections]
 
-	// const direction = directions[(roundPageMaxIndex - roundPage) % numDirections]
-	const round = matchTree.rounds[roundIndex]
-	let matches: Nullable<MatchNode>[] = []
+	const round1 = matchTree.rounds[roundIndex] // The round teams will be selected from
+	const round2 = matchTree.rounds[roundIndex - 1] // The round being filled
+
+	let matches1: Nullable<MatchNode>[] = []
 	console.log('direction', direction)
 	if (direction === Direction.TopLeft) {
 		// if going from left to right, only show the first half of the matches
-		matches = round.matches.slice(0, round.matches.length / 2)
+		matches1 = round1.matches.slice(0, round1.matches.length / 2)
 	} else {
 		// if going from right to left, only show the second half of matches
-		matches = round.matches.slice(round.matches.length / 2, round.matches.length)
+		matches1 = round1.matches.slice(round1.matches.length / 2, round1.matches.length)
 	}
+
+	let matches2: Nullable<MatchNode>[] = []
+	if (direction === Direction.TopLeft) {
+		matches2 = round2.matches.slice(round2.matches.length / 2, round2.matches.length)
+	} else {
+		matches2 = round2.matches.slice(0, round2.matches.length / 2)
+	}
+
 	const targetHeight = getTargetHeight(numRounds)
 	const firstRoundMatchHeight = getFirstRoundMatchHeight(targetHeight, numDirections, numRounds, teamHeight)
-	const roundReverseIndex = numRounds - roundIndex - 1
-	const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, roundReverseIndex)
-	const matchHeight = getMatchHeight(round.depth)
-	const matchSpacing = totalMatchHeight - matchHeight
-	console.log('round', round)
+
+	const round1ReverseIndex = numRounds - roundIndex - 1
+	const round2ReverseIndex = numRounds - roundIndex
+	console.log('round1ReverseIndex', round1ReverseIndex)
+	console.log('round2ReverseIndex', round2ReverseIndex)
+
+	const totalMatchHeight1 = getTargetMatchHeight(firstRoundMatchHeight, round1ReverseIndex)
+	const totalMatchHeight2 = getTargetMatchHeight(firstRoundMatchHeight, round2ReverseIndex)
+
+	const matchHeight1 = getMatchHeight(round1.depth)
+	const matchHeight2 = getMatchHeight(round2.depth)
+
+	const matchSpacing1 = totalMatchHeight1 - matchHeight1
+	const matchSpacing2 = totalMatchHeight2 - matchHeight2
+
+
+	console.log('round', round1)
 	console.log('targetHeight', targetHeight)
 	console.log('roundIndex', roundIndex)
 	console.log('firstRoundMatchHeight', firstRoundMatchHeight)
-	console.log('totalMatchHeight', totalMatchHeight)
-	console.log('matchHeight', matchHeight)
-	console.log('matchSpacing', matchSpacing)
+	console.log('totalMatchHeight1', totalMatchHeight1)
+	console.log('matchHeight1', matchHeight1)
+	console.log('matchSpacing1', matchSpacing1)
+
+	console.log('totalMatchHeight2', totalMatchHeight2)
+	console.log('matchHeight2', matchHeight2)
+	console.log('matchSpacing2', matchSpacing2)
 	// const round = matchTree.rounds[numRounds - currentPage]
 
 	// console.log('PaginatedRound', props)
@@ -106,13 +131,19 @@ export const PaginatedRound = (props) => {
 			<PaginatedRoundHeader title={`Page ${currentPage}`} />
 			<div className={'wpbb-paginated-round-match-columns'}>
 				<MatchColumn
-					round={round}
-					matches={matches}
+					round={round1}
+					matches={matches1}
 					direction={direction}
-					matchBoxHeight={matchHeight}
-					matchBoxSpacing={matchSpacing}
+					matchBoxHeight={matchHeight1}
+					matchBoxSpacing={matchSpacing1}
 				/>
-				{/* <MatchColumn /> */}
+				<MatchColumn
+					round={round2}
+					matches={matches2}
+					direction={direction}
+					matchBoxHeight={matchHeight2}
+					matchBoxSpacing={matchSpacing2}
+				/>
 			</div>
 			<ActionButton label='NEXT' onClick={() => { goNext() }} variant='secondary' />
 
