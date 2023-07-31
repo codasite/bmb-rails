@@ -74,22 +74,11 @@ export const PaginatedRound = (props) => {
 	const round1 = matchTree.rounds[roundIndex] // The round teams will be selected from
 	const round2 = matchTree.rounds[roundIndex - 1] // The round being filled
 
-	let matches1: Nullable<MatchNode>[] = []
+	// let matches1: Nullable<MatchNode>[] = []
 	console.log('direction', direction)
-	if (direction === Direction.TopLeft) {
-		// if going from left to right, only show the first half of the matches
-		matches1 = round1.matches.slice(0, round1.matches.length / 2)
-	} else {
-		// if going from right to left, only show the second half of matches
-		matches1 = round1.matches.slice(round1.matches.length / 2, round1.matches.length)
-	}
 
-	let matches2: Nullable<MatchNode>[] = []
-	if (direction === Direction.TopLeft) {
-		matches2 = round2.matches.slice(round2.matches.length / 2, round2.matches.length)
-	} else {
-		matches2 = round2.matches.slice(0, round2.matches.length / 2)
-	}
+	const matches1 = getMatches(round1, direction)
+	const matches2 = getMatches(round2, direction)
 
 	const targetHeight = getTargetHeight(numRounds)
 	const firstRoundMatchHeight = getFirstRoundMatchHeight(targetHeight, numDirections, numRounds, teamHeight)
@@ -125,28 +114,40 @@ export const PaginatedRound = (props) => {
 	// console.log('PaginatedRound', props)
 	console.log('page', currentPage)
 	// console.log('round', round)
+	const matchColumn1 = buildMatchColumn(round1, matches1, direction, matchHeight1, matchSpacing1)
+	const matchColumn2 = buildMatchColumn(round2, matches2, direction, matchHeight2, matchSpacing2)
+
 	return (
 		<div className={`wpbb-paginated-round`}>
 			{/* <PaginatedRoundHeader title={round.name} /> */}
 			<PaginatedRoundHeader title={`Page ${currentPage}`} />
 			<div className={'wpbb-paginated-round-match-columns'}>
-				<MatchColumn
-					round={round1}
-					matches={matches1}
-					direction={direction}
-					matchBoxHeight={matchHeight1}
-					matchBoxSpacing={matchSpacing1}
-				/>
-				<MatchColumn
-					round={round2}
-					matches={matches2}
-					direction={direction}
-					matchBoxHeight={matchHeight2}
-					matchBoxSpacing={matchSpacing2}
-				/>
+				{direction === Direction.TopLeft ? matchColumn1 : matchColumn2}
+				{direction === Direction.TopLeft ? matchColumn2 : matchColumn1}
 			</div>
 			<ActionButton label='NEXT' onClick={() => { goNext() }} variant='secondary' />
 
 		</div>
 	)
+}
+
+function buildMatchColumn(round: Round, matches: Nullable<MatchNode>[], direction: Direction, matchBoxHeight: number, matchBoxSpacing: number) {
+	return (
+		<MatchColumn
+			round={round}
+			matches={matches}
+			direction={direction}
+			matchBoxHeight={matchBoxHeight}
+			matchBoxSpacing={matchBoxSpacing}
+		/>
+	)
+}
+
+function getMatches(round, direction) {
+	if (direction === Direction.TopLeft) {
+		// if going from left to right, only show the first half of the matches
+		return round.matches.slice(0, round.matches.length / 2)
+	} else {
+		return round.matches.slice(round.matches.length / 2, round.matches.length)
+	}
 }
