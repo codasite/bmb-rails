@@ -160,11 +160,6 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, arr.length - 1 - idx)
 				const matchHeight = getMatchHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
-				console.log('targetHeight', targetHeight)
-				console.log('firstRoundMatchHeight', firstRoundMatchHeight)
-				console.log('totalMatchHeight', totalMatchHeight)
-				console.log('matchHeight', matchHeight)
-				console.log('matchSpacing', matchSpacing)
 
 				return <MatchColumn
 					bracketName={bracketName}

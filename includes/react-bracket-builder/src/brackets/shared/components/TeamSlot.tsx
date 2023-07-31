@@ -27,7 +27,7 @@ export const TeamSlot = (props: TeamSlotProps) => {
 		left,
 		winner,
 	} = props
-	console.log('winner', winner)
+	// console.log('winner', winner)
 
 	let className = props.className
 	// const className = props.className ? props.className : 'wpbb-team ' + getTeamClasses(roundIndex, matchIndex, left) + (winner ? ' wpbb-match-winner' : '')
@@ -40,7 +40,7 @@ export const TeamSlot = (props: TeamSlotProps) => {
 			className += ' wpbb-match-winner'
 		}
 	}
-	console.log('className', className)
+	// console.log('className', className)
 
 	const startEditing = () => {
 		if (!updateTeam) {
