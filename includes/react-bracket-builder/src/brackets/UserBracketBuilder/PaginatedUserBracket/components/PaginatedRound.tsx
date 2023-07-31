@@ -98,23 +98,6 @@ export const PaginatedRound = (props) => {
 	const matchSpacing1 = totalMatchHeight1 - matchHeight1
 	const matchSpacing2 = totalMatchHeight2 - matchHeight2
 
-
-	console.log('round', round1)
-	console.log('targetHeight', targetHeight)
-	console.log('roundIndex', roundIndex)
-	console.log('firstRoundMatchHeight', firstRoundMatchHeight)
-	console.log('totalMatchHeight1', totalMatchHeight1)
-	console.log('matchHeight1', matchHeight1)
-	console.log('matchSpacing1', matchSpacing1)
-
-	console.log('totalMatchHeight2', totalMatchHeight2)
-	console.log('matchHeight2', matchHeight2)
-	console.log('matchSpacing2', matchSpacing2)
-	// const round = matchTree.rounds[numRounds - currentPage]
-
-	// console.log('PaginatedRound', props)
-	console.log('page', currentPage)
-	// console.log('round', round)
 	const matchColumn1 = buildMatchColumn(round1, matches1, direction, matchHeight1, matchSpacing1)
 	const matchColumn2 = buildMatchColumn(round2, matches2, direction, matchHeight2, matchSpacing2)
 
@@ -222,8 +205,6 @@ function getTeamClassPairsForRound(roundIdx: number, numDirections: number): Tea
 function getTeamClassPairsForRoundSide(roundIdx: number, numDirections: number, side: Direction): TeamClassPair[] {
 	let teamClassPairs: TeamClassPair[] = []
 	const [matchStart, matchEnd] = getMatchRange(roundIdx, numDirections, side)
-	console.log('matchStart', matchStart)
-	console.log('matchEnd', matchEnd)
 
 	const swapTeams = side === Direction.TopRight
 
@@ -245,16 +226,12 @@ function buildClassPair(fromTeam: string, toTeam: string, swapTeams: boolean): T
 
 function getMatchRange(roundIdx: number, numDirections: number, side: Direction): [number, number] {
 	const numMatches = Math.pow(2, roundIdx)
-	console.log('numMatches', numMatches)
-	console.log('side', side)
-	console.log('top left', Direction.TopLeft)
 	let startIdx = 0
 	if (side === Direction.TopRight) {
 		startIdx = numMatches / 2
 	}
 	let endIdx = numMatches
 	if (side === Direction.TopLeft) {
-		console.log('side is top left')
 		endIdx = numMatches / numDirections
 	}
 	return [startIdx, endIdx]
