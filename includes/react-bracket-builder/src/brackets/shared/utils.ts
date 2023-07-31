@@ -37,10 +37,23 @@ export const getMatchHeight = (depth: number) => {
 	return gap
 }
 
-export const getTeamClassName = (roundIndex, matchIndex, left) => {
-	const className = `wpbb-team${left ? '1' : '2'} wpbb-team-${roundIndex}-${matchIndex}-${left ? 'left' : 'right'}`
+export const getTeamClasses = (roundIndex: number, matchIndex: number, left: boolean) => {
+	const uniqueClass = getUniqueTeamClass(roundIndex, matchIndex, left)
+	const teamClass = getTeamClass(left)
+	const className = `${teamClass} ${uniqueClass}`
 	return className
 }
+
+const getTeamClass = (left: boolean) => {
+	const teamClass = `wpbb-team${left ? '1' : '2'}`
+	return teamClass
+}
+
+export const getUniqueTeamClass = (roundIndex: number, matchIndex: number, left: boolean) => {
+	const className = `wpbb-team-${roundIndex}-${matchIndex}-${left ? 'left' : 'right'}`
+	return className
+}
+
 
 /**
  * Get the match height for the first round of a bracket given a target height
