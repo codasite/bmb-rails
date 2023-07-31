@@ -25,7 +25,7 @@ export const getTargetHeight = (numRounds: number) => {
 	return targetRoundHeights[numRounds - 1]
 }
 
-export const getMatchHeight = (depth: number) => {
+export const getMatchBoxHeight = (depth: number) => {
 	let gap = teamHeight
 	if (depth === 4) {
 		gap += depth4MatchGap

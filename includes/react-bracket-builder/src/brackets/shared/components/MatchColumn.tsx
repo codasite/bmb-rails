@@ -4,7 +4,7 @@ import { Round, MatchNode } from '../models/MatchTree';
 import { MatchBox } from './MatchBox';
 //@ts-ignore
 import { Direction } from '../constants'
-import { getMatchHeight } from '../utils'
+import { getMatchBoxHeight } from '../utils'
 
 interface MatchColumnProps {
 	round: Round;
@@ -34,7 +34,7 @@ export const MatchColumn = (props: MatchColumnProps) => {
 	} = props
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
-	const matchHeight = getMatchHeight(round.depth)
+	const matchHeight = getMatchBoxHeight(round.depth)
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
