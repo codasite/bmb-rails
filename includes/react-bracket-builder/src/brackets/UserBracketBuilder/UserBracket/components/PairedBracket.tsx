@@ -9,7 +9,7 @@ import {
 	getTargetHeight,
 	getTeamClasses,
 	getUniqueTeamClass,
-	getMatchHeight,
+	getMatchBoxHeight,
 	getFirstRoundMatchHeight,
 	getTargetMatchHeight,
 } from '../../../shared/utils'
@@ -120,7 +120,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 				// const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
 				const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, idx)
-				const matchHeight = getMatchHeight(round.depth)
+				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
 
 				return <MatchColumn
@@ -143,14 +143,14 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
-				matchBoxHeight={getMatchHeight(0)}
+				matchBoxHeight={getMatchBoxHeight(0)}
 				// targetHeight={targetHeight / 4}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
 					(_, left: boolean) => pickTeam(0, 0, left)
 					: undefined}
-				paddingBottom={getMatchHeight(1) * 2} // offset the final match by the height of the penultimate round
+				paddingBottom={getMatchBoxHeight(1) * 2} // offset the final match by the height of the penultimate round
 			/>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
@@ -158,7 +158,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				// The target height decreases by half for each consecutive round in the second half of the bracket
 				// const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
 				const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, arr.length - 1 - idx)
-				const matchHeight = getMatchHeight(round.depth)
+				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
 
 				return <MatchColumn
