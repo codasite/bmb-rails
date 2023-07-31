@@ -1,5 +1,6 @@
 import React from 'react';
 import { ActionButton } from '../../../shared/components/ActionButton'
+import LineTo, { SteppedLineTo } from 'react-lineto';
 import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
@@ -103,16 +104,21 @@ export const PaginatedRound = (props) => {
 
 	// const classes = getTeamClassNames(numRounds, numDirections)
 	// const classes = getTeamClassPairs(numRounds, numDirections)
-	const classes = getTeamClassPairsForRoundSide(roundIndex, numDirections, direction)
-	console.log('classes', classes)
+	// const classes = getTeamClassPairsForRoundSide(roundIndex, numDirections, direction)
+	// console.log('classes', classes)
+	const lines = renderLines(roundIndex, numDirections, direction)
+	console.log('lines', lines)
 
 	return (
-		<div className={`wpbb-paginated-round`}>
+		<div className='wpbb-paginated-round'>
 			{/* <PaginatedRoundHeader title={round.name} /> */}
 			<PaginatedRoundHeader title={`Page ${currentPage}`} />
-			<div className={'wpbb-paginated-round-match-columns'}>
+			<div className='wpbb-paginated-round-match-columns'>
 				{direction === Direction.TopLeft ? matchColumn1 : matchColumn2}
 				{direction === Direction.TopLeft ? matchColumn2 : matchColumn1}
+			</div>
+			<div className='wpbb-bracket-lines-container'>
+				{lines}
 			</div>
 			<ActionButton label='NEXT' onClick={() => { goNext() }} variant='secondary' />
 
@@ -120,8 +126,7 @@ export const PaginatedRound = (props) => {
 	)
 }
 
-function renderLines(roundIdx: number, direction: Direction, matches: Nullable<MatchNode>[]) {
-	let lines: JSX.Element[] = [];
+function renderLines(roundIdx: number, numDirections: number, side: Direction) {
 	// Lines are always drawn from left to right so these two variables never change for horizontal lines
 	const fromAnchor = 'right';
 	const toAnchor = 'left';
@@ -133,10 +138,21 @@ function renderLines(roundIdx: number, direction: Direction, matches: Nullable<M
 		// borderWidth: 1,
 	};
 
-	matches.forEach((match, matchIdx) => {
-		const teamLeftClass = getUniqueTeamClass(roundIdx, matchIdx, true)
-		const teamRightClass = getUniqueTeamClass(roundIdx, matchIdx, false)
+	const pairs = getTeamClassPairsForRoundSide(roundIdx, numDirections, side)
+	const lines = pairs.map(pair => {
+		return (
+			<SteppedLineTo
+				from={pair.fromTeam}
+				to={pair.toTeam}
+				fromAnchor={fromAnchor}
+				toAnchor={toAnchor}
+				within={'wpbb-bracket-lines-container'}
+				orientation='h'
+				{...style}
+			/>
+		)
 	})
+	return lines
 }
 
 interface TeamClassPair {
@@ -206,22 +222,18 @@ function getTeamClassPairsForRoundSide(roundIdx: number, numDirections: number, 
 	let teamClassPairs: TeamClassPair[] = []
 	const [matchStart, matchEnd] = getMatchRange(roundIdx, numDirections, side)
 
+	// If building the right hand side, teams will be swapped so that lines are always drawn left to right
 	const swapTeams = side === Direction.TopRight
 
 	for (let matchIdx = matchStart; matchIdx < matchEnd; matchIdx++) {
+		const thisTeamLeft = getUniqueTeamClass(roundIdx, matchIdx, true)
+		const thisTeamRight = getUniqueTeamClass(roundIdx, matchIdx, false)
 		const nextTeamIsLeft = matchIdx % 2 === 0
 		const nextTeam = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), nextTeamIsLeft)
-		teamClassPairs.push(buildClassPair(getUniqueTeamClass(roundIdx, matchIdx, true), nextTeam, swapTeams))
-		teamClassPairs.push(buildClassPair(getUniqueTeamClass(roundIdx, matchIdx, false), nextTeam, swapTeams))
+		teamClassPairs.push(buildClassPair(thisTeamLeft, nextTeam, swapTeams))
+		teamClassPairs.push(buildClassPair(thisTeamRight, nextTeam, swapTeams))
 	}
 	return teamClassPairs
-}
-
-function buildClassPair(fromTeam: string, toTeam: string, swapTeams: boolean): TeamClassPair {
-	return {
-		fromTeam: swapTeams ? toTeam : fromTeam,
-		toTeam: swapTeams ? fromTeam : toTeam,
-	}
 }
 
 function getMatchRange(roundIdx: number, numDirections: number, side: Direction): [number, number] {
@@ -235,6 +247,13 @@ function getMatchRange(roundIdx: number, numDirections: number, side: Direction)
 		endIdx = numMatches / numDirections
 	}
 	return [startIdx, endIdx]
+}
+
+function buildClassPair(fromTeam: string, toTeam: string, swapTeams: boolean): TeamClassPair {
+	return {
+		fromTeam: swapTeams ? toTeam : fromTeam,
+		toTeam: swapTeams ? fromTeam : toTeam,
+	}
 }
 
 function buildMatchColumn(round: Round, matches: Nullable<MatchNode>[], direction: Direction, matchBoxHeight: number, matchBoxSpacing: number) {
