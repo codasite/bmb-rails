@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Team } from '../models/MatchTree';
 //@ts-ignore
-import { getTeamClassName } from '../utils';
+import { getTeamClasses } from '../utils';
 
 interface TeamSlotProps {
 	className?: string;
@@ -27,8 +27,20 @@ export const TeamSlot = (props: TeamSlotProps) => {
 		left,
 		winner,
 	} = props
+	console.log('winner', winner)
 
-	const className = props.className ? props.className : 'wpbb-team ' + getTeamClassName(roundIndex, matchIndex, left) + (winner ? ' wpbb-match-winner' : '')
+	let className = props.className
+	// const className = props.className ? props.className : 'wpbb-team ' + getTeamClasses(roundIndex, matchIndex, left) + (winner ? ' wpbb-match-winner' : '')
+	if (className === undefined) {
+		className = 'wpbb-team'
+		if (roundIndex !== undefined && matchIndex !== undefined && left !== undefined) {
+			className += ' ' + getTeamClasses(roundIndex, matchIndex, left)
+		}
+		if (winner) {
+			className += ' wpbb-match-winner'
+		}
+	}
+	console.log('className', className)
 
 	const startEditing = () => {
 		if (!updateTeam) {

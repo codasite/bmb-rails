@@ -9,7 +9,8 @@ import { nextPage, selectCurrentPage, selectNumPages } from '../../../shared/fea
 import { selectMatchTree } from '../../../shared/features/matchTreeSlice';
 import {
 	getTargetHeight,
-	getTeamClassName,
+	getTeamClasses,
+	getUniqueTeamClass,
 	getMatchHeight,
 	getFirstRoundMatchHeight,
 	getTargetMatchHeight,
@@ -117,6 +118,11 @@ export const PaginatedRound = (props) => {
 	const matchColumn1 = buildMatchColumn(round1, matches1, direction, matchHeight1, matchSpacing1)
 	const matchColumn2 = buildMatchColumn(round2, matches2, direction, matchHeight2, matchSpacing2)
 
+	// const classes = getTeamClassNames(numRounds, numDirections)
+	// const classes = getTeamClassPairs(numRounds, numDirections)
+	const classes = getTeamClassPairsForRoundSide(roundIndex, numDirections, direction)
+	console.log('classes', classes)
+
 	return (
 		<div className={`wpbb-paginated-round`}>
 			{/* <PaginatedRoundHeader title={round.name} /> */}
@@ -129,6 +135,129 @@ export const PaginatedRound = (props) => {
 
 		</div>
 	)
+}
+
+function renderLines(roundIdx: number, direction: Direction, matches: Nullable<MatchNode>[]) {
+	let lines: JSX.Element[] = [];
+	// Lines are always drawn from left to right so these two variables never change for horizontal lines
+	const fromAnchor = 'right';
+	const toAnchor = 'left';
+	const style = {
+		className: 'wpbb-bracket-line',
+		delay: true,
+		// borderColor: darkMode ? '#FFFFFF' : darkBlue,
+		// borderStyle: 'solid',
+		// borderWidth: 1,
+	};
+
+	matches.forEach((match, matchIdx) => {
+		const teamLeftClass = getUniqueTeamClass(roundIdx, matchIdx, true)
+		const teamRightClass = getUniqueTeamClass(roundIdx, matchIdx, false)
+	})
+}
+
+interface TeamClassPair {
+	fromTeam: string;
+	toTeam: string;
+}
+
+function getTeamClassNames(numRounds: number, numDirections: number): string[] {
+	let teamClassNames: string[] = []
+	for (let roundIdx = 0; roundIdx < numRounds; roundIdx++) {
+		console.log('roundIdx', roundIdx)
+		const numMatches = Math.pow(2, roundIdx)
+		console.log('numMatches', numMatches)
+		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
+			console.log('matchIdx', matchIdx)
+			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, true))
+			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, false))
+		}
+	}
+	return teamClassNames
+}
+
+function getTeamClassPairs(numRounds: number, numDirections: number): TeamClassPair[] {
+	let teamClassPairs: TeamClassPair[] = []
+	for (let roundIdx = numRounds - 1; roundIdx > 0; roundIdx--) {
+		console.log('roundIdx', roundIdx)
+		const numMatches = Math.pow(2, roundIdx)
+		console.log('numMatches', numMatches)
+		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
+			console.log('matchIdx', matchIdx)
+			const toLeftTeam = matchIdx % 2 === 0
+			const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
+			teamClassPairs.push({
+				fromTeam: getUniqueTeamClass(roundIdx, matchIdx, true),
+				toTeam: toTeamClass
+			})
+			teamClassPairs.push({
+				fromTeam: getUniqueTeamClass(roundIdx, matchIdx, false),
+				toTeam: toTeamClass
+			})
+		}
+	}
+	return teamClassPairs
+}
+
+function getTeamClassPairsForRound(roundIdx: number, numDirections: number): TeamClassPair[] {
+	let teamClassPairs: TeamClassPair[] = []
+	const numMatches = Math.pow(2, roundIdx)
+	console.log('numMatches', numMatches)
+	for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
+		console.log('matchIdx', matchIdx)
+		const toLeftTeam = matchIdx % 2 === 0
+		const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
+		teamClassPairs.push({
+			fromTeam: getUniqueTeamClass(roundIdx, matchIdx, true),
+			toTeam: toTeamClass
+		})
+		teamClassPairs.push({
+			fromTeam: getUniqueTeamClass(roundIdx, matchIdx, false),
+			toTeam: toTeamClass
+		})
+	}
+	return teamClassPairs
+}
+
+function getTeamClassPairsForRoundSide(roundIdx: number, numDirections: number, side: Direction): TeamClassPair[] {
+	let teamClassPairs: TeamClassPair[] = []
+	const [matchStart, matchEnd] = getMatchRange(roundIdx, numDirections, side)
+	console.log('matchStart', matchStart)
+	console.log('matchEnd', matchEnd)
+
+	const swapTeams = side === Direction.TopRight
+
+	for (let matchIdx = matchStart; matchIdx < matchEnd; matchIdx++) {
+		const nextTeamIsLeft = matchIdx % 2 === 0
+		const nextTeam = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), nextTeamIsLeft)
+		teamClassPairs.push(buildClassPair(getUniqueTeamClass(roundIdx, matchIdx, true), nextTeam, swapTeams))
+		teamClassPairs.push(buildClassPair(getUniqueTeamClass(roundIdx, matchIdx, false), nextTeam, swapTeams))
+	}
+	return teamClassPairs
+}
+
+function buildClassPair(fromTeam: string, toTeam: string, swapTeams: boolean): TeamClassPair {
+	return {
+		fromTeam: swapTeams ? toTeam : fromTeam,
+		toTeam: swapTeams ? fromTeam : toTeam,
+	}
+}
+
+function getMatchRange(roundIdx: number, numDirections: number, side: Direction): [number, number] {
+	const numMatches = Math.pow(2, roundIdx)
+	console.log('numMatches', numMatches)
+	console.log('side', side)
+	console.log('top left', Direction.TopLeft)
+	let startIdx = 0
+	if (side === Direction.TopRight) {
+		startIdx = numMatches / 2
+	}
+	let endIdx = numMatches
+	if (side === Direction.TopLeft) {
+		console.log('side is top left')
+		endIdx = numMatches / numDirections
+	}
+	return [startIdx, endIdx]
 }
 
 function buildMatchColumn(round: Round, matches: Nullable<MatchNode>[], direction: Direction, matchBoxHeight: number, matchBoxSpacing: number) {

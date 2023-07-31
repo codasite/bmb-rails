@@ -7,7 +7,8 @@ import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
 import {
 	getTargetHeight,
-	getTeamClassName,
+	getTeamClasses,
+	getUniqueTeamClass,
 	getMatchHeight,
 	getFirstRoundMatchHeight,
 	getTargetMatchHeight,
@@ -218,8 +219,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		style: object
 	): JSX.Element[] => {
 		if (match[side]) {
-			const team1 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
-			const team2 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
+			const team1 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
+			const team2 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
 
 			return [
 				createSteppedLine(team1, team, leftSide, fromAnchor, toAnchor, style),
@@ -250,12 +251,12 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					return;
 				}
 
-				const team1 = getTeamClassName(roundIdx, matchIdx, true)
-				const team2 = getTeamClassName(roundIdx, matchIdx, false)
+				const team1 = getUniqueTeamClass(roundIdx, matchIdx, true)
+				const team2 = getUniqueTeamClass(roundIdx, matchIdx, false)
 				// Whether the matches appear on the left or right side of the bracket
 				// This determines the direction of the lines
 				const team1LeftSide = matchIdx < round.matches.length / 2;
-				// The second team in the first match of the first round is on the opposite side
+				// The second team in the last match of the last round is on the opposite side
 				const team2LeftSide = roundIdx === 0 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
 
 				lines = [
