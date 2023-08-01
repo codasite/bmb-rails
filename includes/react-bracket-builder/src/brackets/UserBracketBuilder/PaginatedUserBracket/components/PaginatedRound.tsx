@@ -106,8 +106,8 @@ export const PaginatedRound = (props) => {
 
 	return (
 		<div className='wpbb-paginated-round'>
-			{/* <PaginatedRoundHeader title={round.name} /> */}
-			<PaginatedRoundHeader title={`Page ${currentPage}`} />
+			<PaginatedRoundHeader title={round1.name} />
+			{/* <PaginatedRoundHeader title={`Page ${currentPage}`} /> */}
 			<div className='wpbb-paginated-round-match-columns'>
 				{direction === Direction.TopLeft ? matchColumn1 : matchColumn2}
 				{direction === Direction.TopLeft ? matchColumn2 : matchColumn1}
