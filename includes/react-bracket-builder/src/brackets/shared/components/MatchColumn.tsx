@@ -8,6 +8,7 @@ import { getMatchBoxHeight } from '../utils'
 
 interface MatchColumnProps {
 	round: Round;
+	matchStartIndex?: number
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
 	matchBoxHeight: number;
@@ -32,23 +33,24 @@ export const MatchColumn = (props: MatchColumnProps) => {
 		paddingBottom,
 		bracketName,
 	} = props
+
+	let matchStartIndex: number = 0
+	if (props.matchStartIndex !== undefined) {
+		matchStartIndex = props.matchStartIndex
+	} else if (direction === Direction.TopRight) {
+		matchStartIndex = matches.length
+	}
+
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
-	const matchHeight = getMatchBoxHeight(round.depth)
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
-			const matchIndex =
-				direction === Direction.TopLeft ||
-					direction === Direction.BottomLeft ||
-					direction === Direction.Center
-					? i : i + matches.length
+			const matchIndex = matchStartIndex + i
 			return (
 				<MatchBox
 					match={match}
 					direction={direction}
-					// height={matchHeight}
-					// spacing={i + 1 < matches.length ? targetHeight - matchHeight : 0} // Do not add spacing to the last match in the round column
 					height={matchBoxHeight}
 					spacing={i + 1 < matches.length && matchBoxSpacing !== undefined ? matchBoxSpacing : 0} // Do not add spacing to the last match in the round column
 					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
@@ -61,22 +63,8 @@ export const MatchColumn = (props: MatchColumnProps) => {
 		})
 		return matchBoxes
 	}
-	const finalRound = round.depth === 0
-	const pickedWinner = round.matches[0]?.result ? true : false
 	let items = buildMatches()
-	if (finalRound) {
-		const finalMatch = round.matches[0]
-		// find the team box to align the final match to
-		const alignTeam = document.getElementsByClassName('wpbb-team-1-1-left') // should generate this with function
-		// const alignBox = alignTeam.getBoundingClientRect()
-		// console.log('alignBox', alignBox)
-	}
-	// const winner = 
-	// 		<TeamSlot
-	// 			className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-	// 			team={finalRound.matches[0]?.result}
-	// 		/> 
-
+	// console.log('items', items)
 
 	return (
 		<div className='wpbb-round'>
