@@ -15,6 +15,7 @@ interface MatchBoxProps {
 	roundIndex: number;
 	matchIndex: number;
 	bracketName?: string;
+	children?: React.ReactNode;
 }
 
 export const MatchBox = (props: MatchBoxProps) => {
@@ -28,6 +29,7 @@ export const MatchBox = (props: MatchBoxProps) => {
 		roundIndex,
 		matchIndex,
 		bracketName,
+		children,
 	} = props
 
 	if (match === null) {
@@ -70,20 +72,20 @@ export const MatchBox = (props: MatchBoxProps) => {
 	const winnerText = bracketName ? bracketName.split(' ')[0] + ' ' + bracketName.split(' ').slice(-1) : 'WINNER' // hack to get shortend bracket name. Should probably be a separate field
 	// const winnerText = 'WINNER'
 	// const winnerText = bracketName ? bracketName : 'WINNER'
-	const getWinnerText = () => {
-		if (bracketName) {
-			const bracketNameSplit = bracketName.split(' ')
-			if (bracketNameSplit.length > 1) {
-				return `${bracketNameSplit[0]} ${bracketNameSplit[bracketNameSplit.length - 1]}`
-			}
-			return bracketName
-		}
-		return 'WINNER'
-	}
+	// const getWinnerText = () => {
+	// 	if (bracketName) {
+	// 		const bracketNameSplit = bracketName.split(' ')
+	// 		if (bracketNameSplit.length > 1) {
+	// 			return `${bracketNameSplit[0]} ${bracketNameSplit[bracketNameSplit.length - 1]}`
+	// 		}
+	// 		return bracketName
+	// 	}
+	// 	return 'WINNER'
+	// }
 
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
-			{finalMatch &&
+			{/* {finalMatch &&
 				[<div className='wpbb-winner-container'>
 					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{getWinnerText()}</span>
 					<TeamSlot
@@ -93,7 +95,8 @@ export const MatchBox = (props: MatchBoxProps) => {
 				</div>,
 				<BracketLogo className="wpbb-bracket-logo" />
 				]
-			}
+			} */}
+			{children}
 			<TeamSlot
 				// className='wpbb-team1'
 				winner={team1Wins}

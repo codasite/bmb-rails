@@ -2,6 +2,9 @@ import React, { } from 'react';
 import { Nullable } from '../../../utils/types';
 import { Round, MatchNode } from '../models/MatchTree';
 import { MatchBox } from './MatchBox';
+import { TeamSlot } from './TeamSlot'
+//@ts-ignore
+import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg';
 //@ts-ignore
 import { Direction } from '../constants'
 import { getMatchBoxHeight } from '../utils'
@@ -44,9 +47,24 @@ export const MatchColumn = (props: MatchColumnProps) => {
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
 
+	const buildFinalTeamSlot = (match: MatchNode, pickedWinner: boolean) => {
+		return [<div className='wpbb-winner-container'>
+			<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{getWinnerText(bracketName)}</span>
+			<TeamSlot
+				className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+				team={match.result}
+			/>
+		</div>,
+		<BracketLogo className="wpbb-bracket-logo" />
+		]
+
+	}
+
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
 			const matchIndex = matchStartIndex + i
+			const finalMatch = match && round.depth === 0 && matchIndex === 0
+			const pickedWinner = match?.result ? true : false
 			return (
 				<MatchBox
 					match={match}
@@ -58,7 +76,12 @@ export const MatchColumn = (props: MatchColumnProps) => {
 					roundIndex={round.depth}
 					matchIndex={matchIndex}
 					bracketName={bracketName}
-				/>
+				>
+					{finalMatch &&
+						buildFinalTeamSlot(match, pickedWinner)
+					}
+
+				</MatchBox>
 			)
 		})
 		return matchBoxes
@@ -74,4 +97,14 @@ export const MatchColumn = (props: MatchColumnProps) => {
 			</div>
 		</div>
 	)
+}
+function getWinnerText(bracketName: string | undefined) {
+	if (bracketName) {
+		const bracketNameSplit = bracketName.split(' ')
+		if (bracketNameSplit.length > 1) {
+			return `${bracketNameSplit[0]} ${bracketNameSplit[bracketNameSplit.length - 1]}`
+		}
+		return bracketName
+	}
+	return 'WINNER'
 }
