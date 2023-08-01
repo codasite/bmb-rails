@@ -21,6 +21,8 @@ interface MatchColumnProps {
 	pickTeam?: (matchIndex: number, left: boolean) => void;
 	paddingBottom?: number;
 	bracketName?: string;
+	showBracketLogo?: boolean;
+	showWinnerContainer?: boolean;
 }
 
 export const MatchColumn = (props: MatchColumnProps) => {
@@ -35,6 +37,8 @@ export const MatchColumn = (props: MatchColumnProps) => {
 		pickTeam,
 		paddingBottom,
 		bracketName,
+		showBracketLogo = true,
+		showWinnerContainer = true,
 	} = props
 
 	let matchStartIndex: number = 0
@@ -47,17 +51,16 @@ export const MatchColumn = (props: MatchColumnProps) => {
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
 
-	const buildFinalTeamSlot = (match: MatchNode, pickedWinner: boolean) => {
-		return [<div className='wpbb-winner-container'>
-			<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{getWinnerText(bracketName)}</span>
-			<TeamSlot
-				className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-				team={match.result}
-			/>
-		</div>,
-		<BracketLogo className="wpbb-bracket-logo" />
-		]
-
+	const buildWinnerContainer = (match: MatchNode, pickedWinner: boolean) => {
+		return (
+			<div className='wpbb-winner-container'>
+				<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{getWinnerText(bracketName)}</span>
+				<TeamSlot
+					className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+					team={match.result}
+				/>
+			</div>
+		)
 	}
 
 	const buildMatches = () => {
@@ -77,10 +80,12 @@ export const MatchColumn = (props: MatchColumnProps) => {
 					matchIndex={matchIndex}
 					bracketName={bracketName}
 				>
-					{finalMatch &&
-						buildFinalTeamSlot(match, pickedWinner)
+					{finalMatch && showWinnerContainer &&
+						buildWinnerContainer(match, pickedWinner)
 					}
-
+					{finalMatch && showBracketLogo &&
+						<BracketLogo className="wpbb-bracket-logo" />
+					}
 				</MatchBox>
 			)
 		})
