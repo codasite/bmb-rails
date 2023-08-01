@@ -70,11 +70,9 @@ export const PaginatedRound = (props) => {
 
 	const roundPage = currentPage - roundPageOffset // The current page ignoring pages before the first round
 	const roundIndex = Math.floor((roundPageMaxIndex - roundPage) / numDirections)
-	console.log('roundIndex', roundIndex)
 	const direction = directions[roundPage % numDirections]
 
 	const round1 = matchTree.rounds[roundIndex] // The round teams will be selected from
-	console.log('round1', round1)
 	const round2 = roundIndex > 0 ? matchTree.rounds[roundIndex - 1] : null // The round being filled
 
 	const targetHeight = getTargetHeight(numRounds)
@@ -111,13 +109,14 @@ export const PaginatedRound = (props) => {
 }
 
 function buildMatchColumn(round: Round, direction: Direction, firstRoundMatchHeight: number, reverseIndex: number) {
-	const matches = getMatches(round, direction)
+	const [matchStart, matches] = getMatches(round, direction)
 	const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, reverseIndex)
 	const matchHeight = getMatchBoxHeight(round.depth)
 	const matchSpacing = totalMatchHeight - matchHeight
 	return (
 		<MatchColumn
 			round={round}
+			matchStartIndex={matchStart}
 			matches={matches}
 			direction={direction}
 			matchBoxHeight={matchHeight}
@@ -164,11 +163,8 @@ interface TeamClassPair {
 function getTeamClassNames(numRounds: number, numDirections: number): string[] {
 	let teamClassNames: string[] = []
 	for (let roundIdx = 0; roundIdx < numRounds; roundIdx++) {
-		console.log('roundIdx', roundIdx)
 		const numMatches = Math.pow(2, roundIdx)
-		console.log('numMatches', numMatches)
 		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-			console.log('matchIdx', matchIdx)
 			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, true))
 			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, false))
 		}
@@ -179,11 +175,8 @@ function getTeamClassNames(numRounds: number, numDirections: number): string[] {
 function getTeamClassPairs(numRounds: number, numDirections: number): TeamClassPair[] {
 	let teamClassPairs: TeamClassPair[] = []
 	for (let roundIdx = numRounds - 1; roundIdx > 0; roundIdx--) {
-		console.log('roundIdx', roundIdx)
 		const numMatches = Math.pow(2, roundIdx)
-		console.log('numMatches', numMatches)
 		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-			console.log('matchIdx', matchIdx)
 			const toLeftTeam = matchIdx % 2 === 0
 			const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
 			teamClassPairs.push({
@@ -202,9 +195,7 @@ function getTeamClassPairs(numRounds: number, numDirections: number): TeamClassP
 function getTeamClassPairsForRound(roundIdx: number, numDirections: number): TeamClassPair[] {
 	let teamClassPairs: TeamClassPair[] = []
 	const numMatches = Math.pow(2, roundIdx)
-	console.log('numMatches', numMatches)
 	for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-		console.log('matchIdx', matchIdx)
 		const toLeftTeam = matchIdx % 2 === 0
 		const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
 		teamClassPairs.push({
@@ -257,11 +248,15 @@ function buildClassPair(fromTeam: string, toTeam: string, swapTeams: boolean): T
 	}
 }
 
-function getMatches(round, direction) {
+function getMatches(round, direction): [number, Nullable<MatchNode>[]] {
+	let startIdx = 0
+	let matches: Nullable<MatchNode>[] = []
 	if (direction === Direction.TopLeft) {
 		// if going from left to right, only show the first half of the matches
-		return round.matches.slice(0, round.matches.length / 2)
+		matches = round.matches.slice(startIdx, Math.ceil(round.matches.length / 2))
 	} else {
-		return round.matches.slice(round.matches.length / 2, round.matches.length)
+		startIdx = Math.floor(round.matches.length / 2)
+		matches = round.matches.slice(startIdx, round.matches.length)
 	}
+	return [startIdx, matches]
 }
