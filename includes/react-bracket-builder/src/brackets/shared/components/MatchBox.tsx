@@ -1,8 +1,6 @@
 import React from 'react';
 import { MatchNode } from '../models/MatchTree';
 import { TeamSlot } from './TeamSlot'
-//@ts-ignore
-import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg';
 import { Direction } from '../constants'
 
 interface MatchBoxProps {
@@ -70,35 +68,11 @@ export const MatchBox = (props: MatchBoxProps) => {
 	// const pickedWinner = true;
 
 	const winnerText = bracketName ? bracketName.split(' ')[0] + ' ' + bracketName.split(' ').slice(-1) : 'WINNER' // hack to get shortend bracket name. Should probably be a separate field
-	// const winnerText = 'WINNER'
-	// const winnerText = bracketName ? bracketName : 'WINNER'
-	// const getWinnerText = () => {
-	// 	if (bracketName) {
-	// 		const bracketNameSplit = bracketName.split(' ')
-	// 		if (bracketNameSplit.length > 1) {
-	// 			return `${bracketNameSplit[0]} ${bracketNameSplit[bracketNameSplit.length - 1]}`
-	// 		}
-	// 		return bracketName
-	// 	}
-	// 	return 'WINNER'
-	// }
 
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing }}>
-			{/* {finalMatch &&
-				[<div className='wpbb-winner-container'>
-					<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{getWinnerText()}</span>
-					<TeamSlot
-						className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-						team={match.result}
-					/>
-				</div>,
-				<BracketLogo className="wpbb-bracket-logo" />
-				]
-			} */}
 			{children}
 			<TeamSlot
-				// className='wpbb-team1'
 				winner={team1Wins}
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
@@ -108,7 +82,6 @@ export const MatchBox = (props: MatchBoxProps) => {
 				left={true}
 			/>
 			<TeamSlot
-				// className='wpbb-team2'
 				winner={team2Wins}
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}

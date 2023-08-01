@@ -65,15 +65,18 @@ export const PaginatedRound = (props) => {
 	const numRounds = matchTree.rounds.length
 	const numDirections = 2 // 1 direction for single trees, 2 for double trees
 	const directions = [Direction.TopLeft, Direction.TopRight]
-	const roundPageMaxIndex = numRounds * numDirections - 1 // This is the index of the last page of the last round
+	const numRoundPages = numRounds * numDirections - 1 // This is the index of the last page of the last round
+	console.log('numRoundPages', numRoundPages)
 	const roundPageOffset = 1 // Number of pages that have been added before the first round
 
 	const roundPage = currentPage - roundPageOffset // The current page ignoring pages before the first round
-	const roundIndex = Math.floor((roundPageMaxIndex - roundPage) / numDirections)
+	const roundIndex = Math.floor((numRoundPages - roundPage) / numDirections)
 	const direction = directions[roundPage % numDirections]
+	console.log('roundPage', roundPage)
 
 	const round1 = matchTree.rounds[roundIndex] // The round teams will be selected from
-	const round2 = roundIndex > 0 ? matchTree.rounds[roundIndex - 1] : null // The round being filled
+	const lastPage = roundPage === numRoundPages - 1 // Whether this is the last final selection page
+	const round2 = lastPage ? null : matchTree.rounds[roundIndex - 1] // The round to fill. If this is the last page, there is no next round to fill
 
 	const targetHeight = getTargetHeight(numRounds)
 	const firstRoundMatchHeight = getFirstRoundMatchHeight(targetHeight, numDirections, numRounds, teamHeight)
@@ -81,15 +84,25 @@ export const PaginatedRound = (props) => {
 	const round1ReverseIndex = numRounds - roundIndex - 1
 	const round2ReverseIndex = numRounds - roundIndex
 
-	const matchColumn1 = buildMatchColumn(round1, direction, firstRoundMatchHeight, round1ReverseIndex)
-	const matchColumn2 = round2 ? buildMatchColumn(round2, direction, firstRoundMatchHeight, round2ReverseIndex) : null
-
-
-	// const classes = getTeamClassNames(numRounds, numDirections)
-	// const classes = getTeamClassPairs(numRounds, numDirections)
-	// const classes = getTeamClassPairsForRoundSide(roundIndex, numDirections, direction)
-	// console.log('classes', classes)
-	const lines = renderLines(roundIndex, numDirections, direction)
+	// const matchColumn1 = buildPaginatedMatchColumn(round1, direction, firstRoundMatchHeight, round1ReverseIndex)
+	// const matchColumn2 = round2 ? buildPaginatedMatchColumn(round2, direction, firstRoundMatchHeight, round2ReverseIndex) : null
+	const matchColumn1 = <PaginatedMatchColumn
+		round={round1}
+		direction={direction}
+		firstRoundMatchHeight={firstRoundMatchHeight}
+		reverseIndex={round1ReverseIndex}
+		showBracketLogo={false}
+		showWinnerContainer={lastPage}
+	/>
+	const matchColumn2 = round2 ? <PaginatedMatchColumn
+		round={round2}
+		direction={direction}
+		firstRoundMatchHeight={firstRoundMatchHeight}
+		reverseIndex={round2ReverseIndex}
+		showBracketLogo={false}
+		showWinnerContainer={false}
+		paddingBottom={round2.depth === 0 ? getMatchBoxHeight(1) * 2 : undefined}
+	/> : null
 
 	return (
 		<div className='wpbb-paginated-round'>
@@ -99,16 +112,41 @@ export const PaginatedRound = (props) => {
 				{direction === Direction.TopLeft ? matchColumn1 : matchColumn2}
 				{direction === Direction.TopLeft ? matchColumn2 : matchColumn1}
 			</div>
-			<div className='wpbb-bracket-lines-container'>
+			{/* <div className='wpbb-bracket-lines-container'>
 				{lines}
-			</div>
+			</div> */}
+			<PaginatedBracketLines
+				roundIdx={roundIndex}
+				numDirections={numDirections}
+				side={direction}
+			/>
 			<ActionButton label='NEXT' onClick={() => { goNext() }} variant='secondary' />
 
 		</div>
 	)
 }
 
-function buildMatchColumn(round: Round, direction: Direction, firstRoundMatchHeight: number, reverseIndex: number) {
+interface PaginatedMatchColumnProps {
+	round: Round;
+	direction: Direction;
+	firstRoundMatchHeight: number;
+	reverseIndex: number;
+	showBracketLogo?: boolean;
+	showWinnerContainer?: boolean;
+	paddingBottom?: number;
+}
+
+const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
+	const {
+		round,
+		direction,
+		firstRoundMatchHeight,
+		reverseIndex,
+		paddingBottom,
+		showBracketLogo = false,
+		showWinnerContainer = false,
+	} = props
+
 	const [matchStart, matches] = getMatches(round, direction)
 	const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, reverseIndex)
 	const matchHeight = getMatchBoxHeight(round.depth)
@@ -121,12 +159,25 @@ function buildMatchColumn(round: Round, direction: Direction, firstRoundMatchHei
 			direction={direction}
 			matchBoxHeight={matchHeight}
 			matchBoxSpacing={matchSpacing}
+			showBracketLogo={showBracketLogo}
+			showWinnerContainer={showWinnerContainer}
+			paddingBottom={paddingBottom}
 		/>
 	)
-
 }
 
-function renderLines(roundIdx: number, numDirections: number, side: Direction) {
+interface PaginatedBracketLinesProps {
+	roundIdx: number,
+	numDirections: number,
+	side: Direction
+}
+
+const PaginatedBracketLines = (props: PaginatedBracketLinesProps) => {
+	const {
+		roundIdx,
+		numDirections,
+		side,
+	} = props
 	// Lines are always drawn from left to right so these two variables never change for horizontal lines
 	const fromAnchor = 'right';
 	const toAnchor = 'left';
@@ -137,23 +188,50 @@ function renderLines(roundIdx: number, numDirections: number, side: Direction) {
 		// borderStyle: 'solid',
 		// borderWidth: 1,
 	};
+	let lines: JSX.Element[] = []
 
-	const pairs = getTeamClassPairsForRoundSide(roundIdx, numDirections, side)
-	const lines = pairs.map(pair => {
-		return (
-			<SteppedLineTo
-				from={pair.fromTeam}
-				to={pair.toTeam}
-				fromAnchor={fromAnchor}
-				toAnchor={toAnchor}
-				within={'wpbb-bracket-lines-container'}
-				orientation='h'
-				{...style}
-			/>
-		)
-	})
-	return lines
+	if (roundIdx === 0) {
+		// Final round, draw vertical lines connecting final match to winner
+		const pairs: TeamClassPair[] = [
+			{ fromTeam: 'wpbb-final-winner', toTeam: 'wpbb-team-0-0-left' },
+			{ fromTeam: 'wpbb-team-0-0-left', toTeam: 'wpbb-team-0-0-right' },
+		]
+		lines = pairs.map(pair => {
+			return (
+				<LineTo
+					from={pair.fromTeam}
+					to={pair.toTeam}
+					fromAnchor={'bottom'}
+					toAnchor={'top'}
+					within={'wpbb-bracket-lines-container'}
+					{...style}
+				/>
+			)
+		})
+	} else {
+		// Not final round, draw horizontal lines connecting matches
+		const pairs = getTeamClassPairsForRoundSide(roundIdx, numDirections, side)
+		lines = pairs.map(pair => {
+			return (
+				<SteppedLineTo
+					from={pair.fromTeam}
+					to={pair.toTeam}
+					fromAnchor={fromAnchor}
+					toAnchor={toAnchor}
+					within={'wpbb-bracket-lines-container'}
+					orientation='h'
+					{...style}
+				/>
+			)
+		})
+	}
+	return (
+		<div className='wpbb-bracket-lines-container'>
+			{lines}
+		</div>
+	)
 }
+
 
 interface TeamClassPair {
 	fromTeam: string;
