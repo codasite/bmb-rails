@@ -10,11 +10,13 @@ import { PaginatedLandingPage, PaginatedRound, PaginatedBracketResult } from './
 
 interface PaginatedBracketProps {
 	matchTree?: MatchTree;
+	canPick?: boolean;
 }
 
 export const PaginatedUserBracket = (props: PaginatedBracketProps) => {
 	const {
 		matchTree,
+		canPick
 	} = props;
 
 	if (!matchTree) {
@@ -35,7 +37,7 @@ export const PaginatedUserBracket = (props: PaginatedBracketProps) => {
 		if (currentPage <= 0) {
 			return <PaginatedLandingPage onStart={handleStart} />
 		} else if (currentPage < numPages - 1) {
-			return <PaginatedRound />
+			return <PaginatedRound canPick={canPick} />
 		} else {
 			return <PaginatedBracketResult />
 		}

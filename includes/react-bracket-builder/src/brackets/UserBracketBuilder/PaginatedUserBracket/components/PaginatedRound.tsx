@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ActionButton } from '../../../shared/components/ActionButton'
 import LineTo, { SteppedLineTo } from 'react-lineto';
 import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
@@ -7,7 +7,7 @@ import { Direction, bracketConstants } from '../../../shared/constants'
 import { Nullable } from '../../../../utils/types';
 import { useAppSelector, useAppDispatch } from '../../../shared/app/hooks'
 import { nextPage, selectCurrentPage, selectNumPages } from '../../../shared/features/bracketNavSlice';
-import { selectMatchTree } from '../../../shared/features/matchTreeSlice';
+import { setMatchTree, selectMatchTree } from '../../../shared/features/matchTreeSlice';
 import {
 	getTargetHeight,
 	getTeamClasses,
@@ -21,6 +21,7 @@ const {
 	teamHeight,
 } = bracketConstants
 
+
 const PaginatedRoundHeader = (props) => {
 	const {
 		title,
@@ -32,7 +33,6 @@ const PaginatedRoundHeader = (props) => {
 		</div>
 	)
 }
-
 
 interface PaginatedRoundProps {
 	round: Round;
@@ -53,6 +53,11 @@ export const PaginatedRound = (props) => {
 	// 	round,
 	// 	matches,
 	// } = props;
+	const {
+		canPick,
+	} = props;
+
+	const [allPicked, setAllPicked] = useState(false)
 
 	const currentPage = useAppSelector(selectCurrentPage)
 	const numPages = useAppSelector(selectNumPages)
@@ -66,13 +71,11 @@ export const PaginatedRound = (props) => {
 	const numDirections = 2 // 1 direction for single trees, 2 for double trees
 	const directions = [Direction.TopLeft, Direction.TopRight]
 	const numRoundPages = numRounds * numDirections - 1 // This is the index of the last page of the last round
-	console.log('numRoundPages', numRoundPages)
 	const roundPageOffset = 1 // Number of pages that have been added before the first round
 
 	const roundPage = currentPage - roundPageOffset // The current page ignoring pages before the first round
 	const roundIndex = Math.floor((numRoundPages - roundPage) / numDirections)
 	const direction = directions[roundPage % numDirections]
-	console.log('roundPage', roundPage)
 
 	const round1 = matchTree.rounds[roundIndex] // The round teams will be selected from
 	const lastPage = roundPage === numRoundPages - 1 // Whether this is the last final selection page
@@ -84,8 +87,19 @@ export const PaginatedRound = (props) => {
 	const round1ReverseIndex = numRounds - roundIndex - 1
 	const round2ReverseIndex = numRounds - roundIndex
 
-	// const matchColumn1 = buildPaginatedMatchColumn(round1, direction, firstRoundMatchHeight, round1ReverseIndex)
-	// const matchColumn2 = round2 ? buildPaginatedMatchColumn(round2, direction, firstRoundMatchHeight, round2ReverseIndex) : null
+	const pickTeam = (matchIndex: number, left: boolean) => {
+		if (!canPick) {
+			return
+		}
+		matchTree.advanceTeam(round1.depth, matchIndex, left)
+		dispatch(setMatchTree(matchTree.toSerializable()))
+	}
+
+	const onActionButtonPressed = () => {
+		setAllPicked(false)
+		goNext()
+	}
+
 	const matchColumn1 = <PaginatedMatchColumn
 		round={round1}
 		direction={direction}
@@ -93,6 +107,8 @@ export const PaginatedRound = (props) => {
 		reverseIndex={round1ReverseIndex}
 		showBracketLogo={false}
 		showWinnerContainer={lastPage}
+		pickTeam={pickTeam}
+		onAllPicked={() => setAllPicked(true)}
 	/>
 	const matchColumn2 = round2 ? <PaginatedMatchColumn
 		round={round2}
@@ -107,20 +123,16 @@ export const PaginatedRound = (props) => {
 	return (
 		<div className='wpbb-paginated-round'>
 			<PaginatedRoundHeader title={round1.name} />
-			{/* <PaginatedRoundHeader title={`Page ${currentPage}`} /> */}
 			<div className='wpbb-paginated-round-match-columns'>
 				{direction === Direction.TopLeft ? matchColumn1 : matchColumn2}
 				{direction === Direction.TopLeft ? matchColumn2 : matchColumn1}
 			</div>
-			{/* <div className='wpbb-bracket-lines-container'>
-				{lines}
-			</div> */}
 			<PaginatedBracketLines
 				roundIdx={roundIndex}
 				numDirections={numDirections}
 				side={direction}
 			/>
-			<ActionButton label='NEXT' onClick={() => { goNext() }} variant='secondary' />
+			<ActionButton label='NEXT' onClick={onActionButtonPressed} variant='secondary' disabled={!allPicked} />
 
 		</div>
 	)
@@ -134,6 +146,8 @@ interface PaginatedMatchColumnProps {
 	showBracketLogo?: boolean;
 	showWinnerContainer?: boolean;
 	paddingBottom?: number;
+	pickTeam?: (matchIndex: number, left: boolean) => void;
+	onAllPicked?: () => void;
 }
 
 const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
@@ -143,11 +157,22 @@ const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
 		firstRoundMatchHeight,
 		reverseIndex,
 		paddingBottom,
+		pickTeam,
+		onAllPicked,
 		showBracketLogo = false,
 		showWinnerContainer = false,
 	} = props
 
 	const [matchStart, matches] = getMatches(round, direction)
+	const allPicked = matches.every(match => {
+		if (match === null) {
+			return true
+		}
+		return match.result !== null
+	})
+	if (allPicked && onAllPicked) {
+		onAllPicked()
+	}
 	const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, reverseIndex)
 	const matchHeight = getMatchBoxHeight(round.depth)
 	const matchSpacing = totalMatchHeight - matchHeight
@@ -162,6 +187,7 @@ const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
 			showBracketLogo={showBracketLogo}
 			showWinnerContainer={showWinnerContainer}
 			paddingBottom={paddingBottom}
+			pickTeam={pickTeam}
 		/>
 	)
 }
@@ -232,60 +258,9 @@ const PaginatedBracketLines = (props: PaginatedBracketLinesProps) => {
 	)
 }
 
-
 interface TeamClassPair {
 	fromTeam: string;
 	toTeam: string;
-}
-
-function getTeamClassNames(numRounds: number, numDirections: number): string[] {
-	let teamClassNames: string[] = []
-	for (let roundIdx = 0; roundIdx < numRounds; roundIdx++) {
-		const numMatches = Math.pow(2, roundIdx)
-		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, true))
-			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, false))
-		}
-	}
-	return teamClassNames
-}
-
-function getTeamClassPairs(numRounds: number, numDirections: number): TeamClassPair[] {
-	let teamClassPairs: TeamClassPair[] = []
-	for (let roundIdx = numRounds - 1; roundIdx > 0; roundIdx--) {
-		const numMatches = Math.pow(2, roundIdx)
-		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-			const toLeftTeam = matchIdx % 2 === 0
-			const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
-			teamClassPairs.push({
-				fromTeam: getUniqueTeamClass(roundIdx, matchIdx, true),
-				toTeam: toTeamClass
-			})
-			teamClassPairs.push({
-				fromTeam: getUniqueTeamClass(roundIdx, matchIdx, false),
-				toTeam: toTeamClass
-			})
-		}
-	}
-	return teamClassPairs
-}
-
-function getTeamClassPairsForRound(roundIdx: number, numDirections: number): TeamClassPair[] {
-	let teamClassPairs: TeamClassPair[] = []
-	const numMatches = Math.pow(2, roundIdx)
-	for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-		const toLeftTeam = matchIdx % 2 === 0
-		const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
-		teamClassPairs.push({
-			fromTeam: getUniqueTeamClass(roundIdx, matchIdx, true),
-			toTeam: toTeamClass
-		})
-		teamClassPairs.push({
-			fromTeam: getUniqueTeamClass(roundIdx, matchIdx, false),
-			toTeam: toTeamClass
-		})
-	}
-	return teamClassPairs
 }
 
 function getTeamClassPairsForRoundSide(roundIdx: number, numDirections: number, side: Direction): TeamClassPair[] {
