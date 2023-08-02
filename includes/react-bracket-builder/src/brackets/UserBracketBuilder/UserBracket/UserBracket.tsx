@@ -229,8 +229,6 @@ const UserBracket = (props: UserBracketProps) => {
 		)
 	}
 
-
-
 	const bracketProps = {
 		matchTree,
 		setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
