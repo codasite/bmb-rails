@@ -17,7 +17,6 @@ export const matchTreeSlice = createSlice({
 	initialState,
 	reducers: {
 		setMatchTree: (state, action: PayloadAction<RoundRes[]>) => {
-			console.log('setMatchTree', action.payload)
 			state.rounds = action.payload;
 		}
 	}

@@ -238,17 +238,15 @@
 		width: 100%;
 	}
 
-	.wpbb-bracket-lines-container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		// height: 100%;
-	}
+	// .wpbb-bracket-lines-container,
+	// .wpbb-paginated-bracket-lines-container {
+	// 	position: absolute;
+	// 	top: 0;
+	// 	left: 0;
+	// 	width: 100%;
+	// 	// height: 100%;
+	// }
 
-	.wpbb-bracket-line {
-		border-top: 1px solid $darkBlue !important;
-	}
 
 	.wpbb-winner-container {
 		position: absolute;
@@ -383,9 +381,17 @@
 			border-color: #fff;
 		}
 
-		.wpbb-bracket-line {
-			border-top: 1px solid #fff !important;
-		}
+		// .wpbb-bracket-line {
+		// 	border-top: 1px solid #fff !important;
+		// }
+	}
+}
+
+.wpbb-bracket-line {
+	border-top: 1px solid $darkBlue !important;
+
+	&.wpbb-dark-mode {
+		border-top: 1px solid #fff !important;
 	}
 }
 

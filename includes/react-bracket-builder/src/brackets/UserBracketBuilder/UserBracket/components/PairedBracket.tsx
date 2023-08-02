@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
 import LineTo, { SteppedLineTo } from 'react-lineto';
 import { useWindowDimensions } from '../../../../utils/hooks';
 //@ts-ignore
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
+import { DarkModeContext } from '../../../shared/context';
 import {
 	getTargetHeight,
 	getTeamClasses,
@@ -23,7 +24,7 @@ interface PairedBracketProps {
 	bracketName?: string;
 	canEdit?: boolean;
 	canPick?: boolean;
-	darkMode?: boolean;
+	// darkMode?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	scale?: number;
 }
@@ -32,7 +33,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
-		darkMode,
+		// darkMode,
 		bracketName,
 	} = props
 
@@ -42,6 +43,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	const numRounds = rounds.length
 	const canEdit = setMatchTree !== undefined && props.canEdit
 	const canPick = setMatchTree !== undefined && props.canPick
+	const darkMode = useContext(DarkModeContext)
 
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -194,7 +196,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			fromAnchor={fromAnchor}
 			toAnchor={toAnchor}
 			orientation='h'
-			within='wpbb-bracket-lines-container'
+			// within='wpbb-bracket-lines-container'
 			{...style}
 		/>
 	);
@@ -233,7 +235,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		const fromAnchor = 'right';
 		const toAnchor = 'left';
 		const style = {
-			className: 'wpbb-bracket-line',
+			className: `wpbb-bracket-line${darkMode ? ' wpbb-dark-mode' : ''}`,
 			delay: true,
 			// borderColor: darkMode ? '#FFFFFF' : darkBlue,
 			// borderStyle: 'solid',
@@ -266,7 +268,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team2}
 						fromAnchor='bottom'
 						toAnchor='top'
-						within='wpbb-bracket-lines-container'
+						// within='wpbb-bracket-lines-container'
 						{...style}
 					/>,
 					<LineTo
@@ -274,7 +276,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team1}
 						fromAnchor='bottom'
 						toAnchor='top'
-						within='wpbb-bracket-lines-container'
+						// within='wpbb-bracket-lines-container'
 						{...style}
 					/>,
 					];

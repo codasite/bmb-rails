@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import * as Sentry from '@sentry/react';
 import { bracketApi } from '../../shared/api/bracketApi';
 import { useWindowDimensions } from '../../../utils/hooks';
@@ -12,14 +12,13 @@ import { setNumPages } from '../../shared/features/bracketNavSlice'
 import { MatchTree } from '../../shared/models/MatchTree';
 import { BracketRes } from '../../shared/api/types/bracket';
 import { bracketConstants } from '../../shared/constants';
+import { DarkModeContext } from '../../shared/context';
 
 
 const {
 	paginatedBracketWidth,
 } = bracketConstants
 
-
-//@ts-ignore
 
 interface ThemeSelectorProps {
 	darkMode: boolean;
@@ -84,6 +83,7 @@ const UserBracket = (props: UserBracketProps) => {
 	// const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
 	const [processingImage, setProcessingImage] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
+	const [showPaginated, setShowPaginated] = useState(false);
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
 	// const rounds = useAppSelector((state) => state.matchTree.rounds);
 	const matchTree = useAppSelector(selectMatchTree);
@@ -108,6 +108,16 @@ const UserBracket = (props: UserBracketProps) => {
 			dispatch(setNumPages(numPages))
 		}
 	}, [matchTree])
+
+	useEffect(() => {
+		if (windowWidth < paginatedBracketWidth) {
+			if (!showPaginated) {
+				setShowPaginated(true)
+			}
+		} else if (showPaginated) {
+			setShowPaginated(false)
+		}
+	}, [windowWidth])
 
 	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchHeight: number, inchWidth: number,) => {
 		const printArea = buildPrintArea(innerHTML, inchHeight, inchWidth)
@@ -243,9 +253,11 @@ const UserBracket = (props: UserBracketProps) => {
 	// return renderPairedBracket(bracketProps)
 
 	return (
-		<div className='wpbb-bracket-builder-root'>
-			{windowWidth < paginatedBracketWidth ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)}
-		</div>
+		<DarkModeContext.Provider value={darkMode}>
+			<div className='wpbb-bracket-builder-root'>
+				{showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)}
+			</div>
+		</DarkModeContext.Provider>
 	)
 }
 
