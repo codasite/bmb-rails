@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 import { MatchTree } from "../models/MatchTree";
 import { RoundRes } from "../api/types/bracket";
@@ -25,9 +25,10 @@ export const matchTreeSlice = createSlice({
 
 export const { setMatchTree } = matchTreeSlice.actions;
 
-// export const selectMatchTree = (state: RootState) => state.matchTree.matchTree;
-// export const selectMatchTree = (state: RootState) => state.matchTree.rounds;
-export const selectMatchTree = (state: RootState) => state.matchTree.rounds ? MatchTree.fromRounds(state.matchTree.rounds) : null;
+export const selectMatchTree = createSelector(
+	(state: RootState) => state.matchTree.rounds,
+	rounds => rounds ? MatchTree.fromRounds(rounds) : null
+)
 
 export default matchTreeSlice.reducer;
 
