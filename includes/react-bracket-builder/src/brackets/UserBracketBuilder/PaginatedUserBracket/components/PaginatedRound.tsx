@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ActionButton } from '../../../shared/components/ActionButton'
 import LineTo, { SteppedLineTo } from 'react-lineto';
 import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
@@ -16,6 +16,7 @@ import {
 	getFirstRoundMatchHeight,
 	getTargetMatchHeight,
 } from '../../../shared/utils';
+import { DarkModeContext } from '../../../shared/context';
 
 const {
 	teamHeight,
@@ -204,11 +205,12 @@ const PaginatedBracketLines = (props: PaginatedBracketLinesProps) => {
 		numDirections,
 		side,
 	} = props
+	const darkMode = useContext(DarkModeContext)
 	// Lines are always drawn from left to right so these two variables never change for horizontal lines
 	const fromAnchor = 'right';
 	const toAnchor = 'left';
 	const style = {
-		className: 'wpbb-bracket-line',
+		className: `wpbb-bracket-line${darkMode ? ' wpbb-dark-mode' : ''}`,
 		delay: true,
 		// borderColor: darkMode ? '#FFFFFF' : darkBlue,
 		// borderStyle: 'solid',
@@ -229,7 +231,7 @@ const PaginatedBracketLines = (props: PaginatedBracketLinesProps) => {
 					to={pair.toTeam}
 					fromAnchor={'bottom'}
 					toAnchor={'top'}
-					within={'wpbb-bracket-lines-container'}
+					// within={'wpbb-bracket-lines-container'}
 					{...style}
 				/>
 			)
@@ -244,7 +246,7 @@ const PaginatedBracketLines = (props: PaginatedBracketLinesProps) => {
 					to={pair.toTeam}
 					fromAnchor={fromAnchor}
 					toAnchor={toAnchor}
-					within={'wpbb-bracket-lines-container'}
+					// within={'wpbb-bracket-lines-container'}
 					orientation='h'
 					{...style}
 				/>
