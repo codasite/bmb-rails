@@ -94,6 +94,7 @@
     width: 200px;
     box-sizing: content-box !important;
     border-radius: 7px;
+    padding: 11px;
 }
 
 .how-many-teams-text {
@@ -134,3 +135,64 @@
 .highlight {
     color: green;
 }
+
+.btn-secondary {
+    width: 12vw;
+    background: none;
+    margin-right: 6px;
+}
+
+.btn-secondary[disabled] {
+    background-color: transparent;
+}
+
+.btn-save-bracket {
+    width: 80vw;
+    border-radius: 8px;
+    border: 1px solid #2137FF;
+    background: rgba(33, 55, 255, 0.15);
+
+}
+
+.btn-save-bracket:hover,
+.btn-save-bracket:active {
+    border: 1px solid #2137FF !important;
+    background: rgba(33, 55, 255, 0.15) !important;
+}
+
+
+.btn-play-bracket {
+    width: 80vw;
+    border-radius: 8px;
+    border: 1px solid var(--green, #05FF3C);
+    background: rgba(5, 255, 60, 0.15);
+
+}
+
+.btn-play-bracket:hover,
+.bbtn-play-brackett:active {
+    border: 1px solid var(--green, #05FF3C) !important;
+    background: rgba(5, 255, 60, 0.15) !important;
+}
+
+.save-bracket-text,
+.play-bracket-text {
+    color: #FFF;
+    text-align: center;
+    font-family: Clash Display Variable;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-left: 3px;
+}
+
+.no-highlight-button:hover, no-highlight-button:active {
+    background-color: transparent !important;
+    transition: none !important;
+  }
+
+  
+
+  

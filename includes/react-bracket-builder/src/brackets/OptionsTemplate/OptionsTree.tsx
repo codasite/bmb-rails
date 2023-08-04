@@ -64,49 +64,36 @@ const Options = () => {
     }
 
     useEffect(() => {
-        if (firstNum === MatchSetValues.firstSetMaxValue) {
-            setdisableFirstSetAdd(true)
-        }
-        else {
-            setdisableFirstSetAdd(false)
-        }
-        if (firstNum === MatchSetValues.firstSetMinValue) {
-            setdisableFirstSetMinus(true)
-        }
-        else {
-            setdisableFirstSetMinus(false)
-        }
-    }, [firstNum])
+        const [disableFirstAdd, disableFirstMinus] = setDisableFlags(
+            firstNum,
+            MatchSetValues.firstSetMinValue,
+            MatchSetValues.firstSetMaxValue
+        );
+        setdisableFirstSetAdd(disableFirstAdd);
+        setdisableFirstSetMinus(disableFirstMinus);
 
-    useEffect(() => {
-        if (secondNum === MatchSetValues.secondSetMaxValue) {
-            setdisableSecondSetAdd(true)
-        }
-        else {
-            setdisableSecondSetAdd(false)
-        }
-        if (secondNum === MatchSetValues.secondSetMinValue) {
-            setdisableSecondSetMinus(true)
-        }
-        else {
-            setdisableSecondSetMinus(false)
-        }
-    }, [secondNum])
+        const [disableSecondAdd, disableSecondMinus] = setDisableFlags(
+            secondNum,
+            MatchSetValues.secondSetMinValue,
+            MatchSetValues.secondSetMaxValue
+        );
+        setdisableSecondSetAdd(disableSecondAdd);
+        setdisableSecondSetMinus(disableSecondMinus);
 
-    useEffect(() => {
-        if (thirdNum === MatchSetValues.thirdSetMaxValue) {
-            setdisableThirdSetAdd(true)
-        }
-        else {
-            setdisableThirdSetAdd(false)
-        }
-        if (thirdNum === MatchSetValues.thirdSetMinValue) {
-            setdisableThirdSetMinus(true)
-        }
-        else {
-            setdisableThirdSetMinus(false)
-        }
-    }, [thirdNum])
+        const [disableThirdAdd, disableThirdMinus] = setDisableFlags(
+            thirdNum,
+            MatchSetValues.thirdSetMinValue,
+            MatchSetValues.thirdSetMaxValue
+        );
+        setdisableThirdSetAdd(disableThirdAdd);
+        setdisableThirdSetMinus(disableThirdMinus);
+    }, [firstNum, secondNum, thirdNum]);
+
+    const setDisableFlags = (num, minValue, maxValue) => {
+        const disableAdd = num === maxValue;
+        const disableMinus = num === minValue;
+        return [disableAdd, disableMinus];
+    }
 
     const handleOperation = (op) => {
         let a = performOperation(op)
@@ -158,8 +145,8 @@ const Options = () => {
         return (
             <div>
                 <ButtonGroup aria-label="Basic example">
-                    <Button disabled={isAddDisable} variant='secondary' onClick={() => handleOperation('+')}>+</Button>
-                    <Button disabled={isSubstractDisabled} variant='secondary' onClick={() => handleOperation('-')}>-</Button>
+                    <Button className='btn-secondary no-highlight-button' disabled={isSubstractDisabled} variant='secondary' onClick={() => handleOperation('-')}>-</Button>
+                    <Button className='btn-secondary no-highlight-button' disabled={isAddDisable} variant='secondary' onClick={() => handleOperation('+')}>+</Button>
                 </ButtonGroup>
             </div>
         )
@@ -206,11 +193,7 @@ const Options = () => {
                             ))}
                         </div>
                     </Row>
-                </Container>
-            </div>
-            <div>
-                <Container>
-                    <Row>
+                    <Row className="justify-content-center">
                         <Col>
                             <div style={{ visibility: isShowfirstMatchOperators ? 'visible' : 'hidden' }}>
                                 <CreateButtons isAddDisable={disableFirstSetAdd} isSubstractDisabled={disableFirstSetMinus} />
@@ -226,6 +209,30 @@ const Options = () => {
                                 <CreateButtons isAddDisable={disableThirdSetAdd} isSubstractDisabled={disableThirdSetMinus} />
                             </div>
                         </Col>
+                    </Row>
+                </Container>
+            </div>
+            <div>
+                <Container>
+                    <Row>
+                        <ButtonGroup className='save-bracket'>
+                            <Button className='btn-save-bracket' variant='secondary' >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+                                    <path d="M7 3.5V6.9C7 7.46005 7 7.74008 7.10899 7.95399C7.20487 8.14215 7.35785 8.29513 7.54601 8.39101C7.75992 8.5 8.03995 8.5 8.6 8.5H15.4C15.9601 8.5 16.2401 8.5 16.454 8.39101C16.6422 8.29513 16.7951 8.14215 16.891 7.95399C17 7.74008 17 7.46005 17 6.9V4.5M17 21.5V15.1C17 14.5399 17 14.2599 16.891 14.046C16.7951 13.8578 16.6422 13.7049 16.454 13.609C16.2401 13.5 15.9601 13.5 15.4 13.5H8.6C8.03995 13.5 7.75992 13.5 7.54601 13.609C7.35785 13.7049 7.20487 13.8578 7.10899 14.046C7 14.2599 7 14.5399 7 15.1V21.5M21 9.82548V16.7C21 18.3802 21 19.2202 20.673 19.862C20.3854 20.4265 19.9265 20.8854 19.362 21.173C18.7202 21.5 17.8802 21.5 16.2 21.5H7.8C6.11984 21.5 5.27976 21.5 4.63803 21.173C4.07354 20.8854 3.6146 20.4265 3.32698 19.862C3 19.2202 3 18.3802 3 16.7V8.3C3 6.61984 3 5.77976 3.32698 5.13803C3.6146 4.57354 4.07354 4.1146 4.63803 3.82698C5.27976 3.5 6.11984 3.5 7.8 3.5H14.6745C15.1637 3.5 15.4083 3.5 15.6385 3.55526C15.8425 3.60425 16.0376 3.68506 16.2166 3.79472C16.4184 3.9184 16.5914 4.09135 16.9373 4.43726L20.0627 7.56274C20.4086 7.90865 20.5816 8.0816 20.7053 8.28343C20.8149 8.46237 20.8957 8.65746 20.9447 8.86154C21 9.09171 21 9.3363 21 9.82548Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span className='save-bracket-text'>Save Bracket</span>
+                            </Button>
+                        </ButtonGroup>
+                    </Row>
+                    <Row className='pt-3'>
+                        <ButtonGroup className='play-bracket'>
+                            <Button className='btn-play-bracket' variant='secondary' >
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
+                                    <path d="M5.5 5.48951C5.5 4.51835 5.5 4.03277 5.70249 3.7651C5.87889 3.53191 6.14852 3.38761 6.4404 3.37018C6.77544 3.35017 7.17946 3.61953 7.98752 4.15823L18.5031 11.1686C19.1708 11.6137 19.5046 11.8363 19.6209 12.1168C19.7227 12.3621 19.7227 12.6377 19.6209 12.883C19.5046 13.1635 19.1708 13.386 18.5031 13.8312L7.98752 20.8415C7.17946 21.3802 6.77544 21.6496 6.4404 21.6296C6.14852 21.6122 5.87889 21.4679 5.70249 21.2347C5.5 20.967 5.5 20.4814 5.5 19.5103V5.48951Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                <span className='play-bracket-text'>Play Bracket</span>
+                            </Button>
+                        </ButtonGroup>
                     </Row>
                 </Container>
             </div>
