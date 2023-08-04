@@ -1,0 +1,101 @@
+/**
+*From here Options css is started
+*
+**/
+.options-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    background: var(--dark-blue, #010433);
+    padding-bottom: 2%;
+}
+
+.options-bracket-display {
+    padding-top: 3%;
+}
+
+.options-bracket-display-text {
+    color: rgba(255, 255, 255, 0.50);
+    text-align: center;
+    font-family: Clash Display Variable;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-top: 15%;
+    padding-bottom: 5%;
+}
+
+.randomize-teams {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    border: 1px solid #2137FF;
+    background: rgba(33, 55, 255, 0.15);
+    box-sizing: content-box !important;
+}
+
+.randomize-teams-text {
+    color: #FFFFFF;
+    text-transform: uppercase;
+}
+
+.options-bracket-tree {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.options-bracket-dual-tree,
+.options-bracket-single-tree {
+    display: flex;
+    justify-content: center;
+    flex: 1 0 0;
+    border: 1px solid #FFF;
+    background: rgba(255, 255, 255, 0.15);
+    text-transform: uppercase;
+    color: #FFFFFF;
+    width: 200px;
+    box-sizing: content-box !important;
+}
+
+.how-many-teams-text {
+    color: rgba(255, 255, 255, 0.50);
+    text-align: center;
+    font-family: Clash Display Variable;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-top: 2%;
+}
+
+.teams-number {
+    display: flex;
+    width: 700px;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.custom-col {
+    border: 2px solid #ccc;
+    padding: 30px;
+    margin: 10px;
+    color: #FFFFFF;
+    flex-basis: calc(80% / 3 - 30px);
+    flex: 1;
+}
+
+.highlight {
+    color: green;
+}
