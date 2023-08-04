@@ -2,6 +2,34 @@
 *From here Options css is started
 *
 **/
+.custom-col-container{
+    display: flex;
+    width: 90vw;
+}
+
+@media (max-width: 600px) {
+    .how-many-teams-text {
+        font-size: 14px;
+        color:red;
+    }
+    .custom-col {
+        width: 80vw !important;
+    }
+    .custom-col-container{
+        display: grid !important;
+        align-self: stretch; 
+        width: 90vw !important;
+    }
+    .options-bracket-display-text{
+        font-size: 18px;
+    }
+    .options-bracket-tree {
+        width: 90vw;
+    }
+    
+  }
+
+
 .options-page {
     display: flex;
     flex-direction: column;
@@ -37,6 +65,7 @@
     border: 1px solid #2137FF;
     background: rgba(33, 55, 255, 0.15);
     box-sizing: content-box !important;
+    width: 25vw;
 }
 
 .randomize-teams-text {
@@ -48,6 +77,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 6%;
+    border-radius: 7px;
+    width: 80vw;
 }
 
 .options-bracket-dual-tree,
@@ -61,6 +93,7 @@
     color: #FFFFFF;
     width: 200px;
     box-sizing: content-box !important;
+    border-radius: 7px;
 }
 
 .how-many-teams-text {
@@ -94,6 +127,8 @@
     color: #FFFFFF;
     flex-basis: calc(80% / 3 - 30px);
     flex: 1;
+    border-radius: 7px;
+    text-align: center;
 }
 
 .highlight {
