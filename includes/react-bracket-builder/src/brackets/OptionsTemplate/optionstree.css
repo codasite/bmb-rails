@@ -52,7 +52,6 @@
     font-weight: 500;
     line-height: normal;
     text-transform: uppercase;
-    padding-top: 15%;
     padding-bottom: 5%;
 }
 
@@ -73,20 +72,18 @@
     text-transform: uppercase;
 }
 
-.options-bracket-tree {
+/* .options-bracket-tree {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 6%;
     border-radius: 7px;
     width: 80vw;
-}
+} */
 
 .options-bracket-dual-tree,
 .options-bracket-single-tree {
-    display: flex;
-    justify-content: center;
-    flex: 1 0 0;
+    text-align: center;
     border: 1px solid #FFF;
     background: rgba(255, 255, 255, 0.15);
     text-transform: uppercase;
@@ -97,7 +94,7 @@
     padding: 11px;
 }
 
-.how-many-teams-text {
+.how-many-teams-text,.wild-card-display-text {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
     font-family: Clash Display Variable;
@@ -193,6 +190,15 @@
     transition: none !important;
   }
 
-  
+  .wild-btn {
+    width: 80vw !important;
+  }
+
+.pos-btn {
+    width: 17vw;
+    color: #FFF;
+    text-align: center;
+    font-family: Clash Display Variable;
+}
 
   
