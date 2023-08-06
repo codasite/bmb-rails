@@ -196,7 +196,7 @@ const Options = () => {
                             Bracket style
                         </div>
                     </Row>
-                    <Row>
+                    <Row className='tree-group'>
                         <Col>
                             <div className={'options-bracket-dual-tree'}>
                                 Dual Tree
@@ -257,13 +257,13 @@ const Options = () => {
                                 </div>
                             </div>
                         </Row>
-                        <Row className="justify-content-center">
+                        <div className="wild-card-group">
                             {WildCardPlacements.map((pos, index) => (
                                 <Col className='wild-card-btn' key={index}>
                                     <CreateWildCardPlacementButtons position={pos} />
                                 </Col>
                             ))}
-                        </Row>
+                        </div>
                     </Row>
                 </Container>
             </div>

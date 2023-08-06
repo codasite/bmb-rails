@@ -26,6 +26,10 @@
     .options-bracket-tree {
         width: 90vw;
     }
+
+    .randomize-teams{
+        width: 70vw !important;
+    }
     
   }
 
@@ -64,7 +68,8 @@
     border: 1px solid #2137FF;
     background: rgba(33, 55, 255, 0.15);
     box-sizing: content-box !important;
-    width: 25vw;
+    width: 35vw;
+    padding: 11px;
 }
 
 .randomize-teams-text {
@@ -92,8 +97,13 @@
     box-sizing: content-box !important;
     border-radius: 7px;
     padding: 11px;
+    display: flex;
+    justify-content: center;
 }
-
+.tree-group{
+    display: flex;
+    width: 40vw;
+}
 .how-many-teams-text,.wild-card-display-text {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
@@ -199,6 +209,13 @@
     color: #FFF;
     text-align: center;
     font-family: Clash Display Variable;
+}
+
+.wild-card-group {
+    display: flex;
+    width: 90vw;
+    position: relative;
+    left: 8%
 }
 
   
