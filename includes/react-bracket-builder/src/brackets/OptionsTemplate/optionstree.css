@@ -157,7 +157,8 @@
 }
 
 .highlight {
-    background-color: green;
+    background-color: #0b2e33;
+    border-color: #05ff3c;
 }
 
 .btn-secondary {
