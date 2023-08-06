@@ -250,18 +250,18 @@ const Options = () => {
                         </Col>
                     </Row>
                     <Row className="d-flex justify-content-center wild-btn" style={{ visibility: isShowWildCardPositions ? 'visible' : 'hidden' }}>
-                        <Row className='pb-3'>
+                        {/* <Row className='pb-3'> */}
                             <div className={'wild-card-display'}>
                                 <div className={'wild-card-display-text'}>
                                     Wildcard Display
                                 </div>
                             </div>
-                        </Row>
+                        {/* </Row> */}
                         <div className="wild-card-group">
                             {WildCardPlacements.map((pos, index) => (
-                                <Col className='wild-card-btn' key={index}>
+                                <div className='wild-card-btn' key={index}>
                                     <CreateWildCardPlacementButtons position={pos} />
-                                </Col>
+                                </div>
                             ))}
                         </div>
                     </Row>

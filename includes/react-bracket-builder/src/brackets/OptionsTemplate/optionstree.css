@@ -34,6 +34,10 @@
     .tree-group{
         width: 70vw !important;
     }
+
+    .pos-btn{
+        width: 25vw !important;
+    }
     
   }
 
@@ -123,6 +127,10 @@
     line-height: normal;
     text-transform: uppercase;
     padding-top: 2%;
+    padding-bottom: 2%;
+}
+.wild-card-display-text{
+    width: 90vw;    
 }
 
 .teams-number {
