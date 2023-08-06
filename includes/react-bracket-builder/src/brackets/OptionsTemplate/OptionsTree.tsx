@@ -196,18 +196,18 @@ const Options = () => {
                             Bracket style
                         </div>
                     </Row>
-                    <Row className='tree-group'>
-                        <Col>
+                    <div className='tree-group'>
+                        {/* <Col> */}
                             <div className={'options-bracket-dual-tree'}>
                                 Dual Tree
                             </div>
-                        </Col>
-                        <Col>
+                        {/* </Col> */}
+                        {/* <Col> */}
                             <div className={'options-bracket-single-tree'}>
                                 Single Tree
                             </div>
-                        </Col>
-                    </Row>
+                        {/* </Col> */}
+                    </div>
                 </Container>
             </div>
             <div className="d-flex justify-content-center">
