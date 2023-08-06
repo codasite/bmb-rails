@@ -30,6 +30,10 @@
     .randomize-teams{
         width: 70vw !important;
     }
+
+    .tree-group{
+        width: 70vw !important;
+    }
     
   }
 
@@ -99,6 +103,11 @@
     padding: 11px;
     display: flex;
     justify-content: center;
+}
+
+.options-bracket-single-tree{
+    position: relative;
+    left: 10%;
 }
 .tree-group{
     display: flex;
