@@ -5,6 +5,7 @@ import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import './user-template-builder.scss'
+import { set } from 'immer/dist/internal'
 
 enum MatchSetValues {
     firstSetMinValue = 2,
@@ -16,6 +17,106 @@ enum MatchSetValues {
 }
 
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
+
+const teamPickerDefaults = [16, 32, 64]
+const teamPickerMin = [2, 18, 34]
+const teamPickerMax = [30, 62, 64]
+
+interface NumTeamsPickerProps {
+    currentValue: number
+    defaultValue: number
+    min: number
+    max: number
+    selected: boolean
+    setSelected: () => void
+    increment: () => void
+    decrement: () => void
+    setCurrentValue: (value: number) => void
+    selectNextPicker?: () => void
+    selectPrevPicker?: () => void
+}
+
+/**
+ * A component that allows the user to select the number of teams in a bracket
+ * If the user increments or decrements the number of teams beyone the min-max range, 
+ * the next or previous picker is selected (if it exists)
+ * 
+ * If the user clicks a box that is already selected, the value is reset to the default value
+ */
+const NumTeamsPicker = (props: NumTeamsPickerProps) => {
+    const {
+        currentValue,
+        defaultValue,
+        min,
+        max,
+        selected,
+        setSelected,
+        increment,
+        decrement,
+        setCurrentValue,
+        selectNextPicker,
+        selectPrevPicker
+    } = props
+
+    const handleBoxClick = () => {
+        if (selected) {
+            // if the box is already selected, set the value to the default
+            setCurrentValue(defaultValue)
+        } else {
+            setSelected()
+        }
+    }
+
+    const handleIncrement = () => {
+        if (currentValue < max) {
+            increment()
+        }
+        else if (selectNextPicker) {
+            selectNextPicker()
+        }
+    }
+
+    const handleDecrement = () => {
+        if (currentValue > min) {
+            decrement()
+        }
+        else if (selectPrevPicker) {
+            selectPrevPicker()
+        }
+    }
+
+    const incrementDisabled = currentValue >= max && !selectNextPicker
+    const decrementDisabled = currentValue <= min && !selectPrevPicker
+
+    return (
+        <div>
+            <div
+                // key={num}
+                className={`custom-col ${selected ? 'highlight' : ''}`}
+                onClick={handleBoxClick}
+            >
+                {currentValue}
+                {selected && currentValue === defaultValue && <span className="corner-text">Default</span>}
+
+            </div>
+            <Col>
+                <div style={{ visibility: selected ? 'visible' : 'hidden' }}>
+                    <div>
+                        <ButtonGroup aria-label="Basic example" className='button-container'>
+                            <Button className='btn-secondary no-highlight-button step-down-button' disabled={decrementDisabled} variant='secondary' onClick={handleDecrement}>-</Button>
+                            <Button className='btn-secondary no-highlight-button step-up-button' disabled={incrementDisabled} variant='secondary' onClick={handleIncrement}>+</Button>
+                        </ButtonGroup>
+                    </div>
+                </div>
+            </Col>
+        </div>
+    )
+}
+
+interface NumTeamsPickerState {
+    currentValue: number
+    selected: boolean
+}
 
 const UserTemplateBuilder = () => {
 
@@ -39,6 +140,13 @@ const UserTemplateBuilder = () => {
     const [disableThirdSetMinus, setdisableThirdSetMinus] = useState(false)
 
     const [isShowWildCardPositions, setShowWildCardPositions] = useState(false)
+
+    const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
+        teamPickerDefaults.map((val, i) => ({
+            currentValue: val,
+            selected: i === 1
+        }))
+    )
 
     const handleBoxClick = (currentValue) => {
         setSelectedBox(currentValue)
@@ -178,6 +286,81 @@ const UserTemplateBuilder = () => {
         )
     }
 
+    const updateTeamPicker = (index: number, newPicker: NumTeamsPickerState) => {
+        const newPickers = teamPickerState.map((picker, i) => {
+            if (i === index) {
+                return newPicker
+            }
+            return picker
+        })
+        setTeamPickerState(newPickers)
+    }
+
+    const updateTeamPickerValueBy = (index: number, value: number) => {
+        const picker = teamPickerState[index]
+        const newPicker = {
+            ...picker,
+            currentValue: picker.currentValue + value
+        }
+        updateTeamPicker(index, newPicker)
+    }
+
+    const incrementTeamPicker = (index: number) => {
+        updateTeamPickerValueBy(index, 2)
+    }
+
+    const decrementTeamPicker = (index: number) => {
+        updateTeamPickerValueBy(index, -2)
+    }
+
+    const setTeamPickerValue = (index: number, value: number) => {
+        const picker = teamPickerState[index]
+        const newPicker = {
+            ...picker,
+            currentValue: value
+        }
+        updateTeamPicker(index, newPicker)
+    }
+
+    const setTeamPickerSelected = (index: number, resetValue: boolean = false) => {
+        const newPickers = teamPickerState.map((picker, i) => {
+            if (i === index) {
+                return {
+                    ...picker,
+                    currentValue: resetValue ? teamPickerDefaults[index] : picker.currentValue,
+                    selected: true
+                }
+            }
+            return {
+                ...picker,
+                selected: false
+            }
+        })
+        setTeamPickerState(newPickers)
+    }
+
+    /**
+     * Get the function to select the next team picker
+     * When the next team picker is selected, its value is reset to the default value
+     */
+    const getSelectNextTeamPicker = (index: number) => {
+        if (index < teamPickerState.length - 1) {
+            return () => setTeamPickerSelected(index + 1, true)
+        }
+        return undefined
+    }
+
+    /**
+     * Get the function to select the previous team picker
+     * When the previous team picker is selected, its value is reset to the default value
+     */
+    const getSelectPrevTeamPicker = (index: number) => {
+        if (index > 0) {
+            return () => setTeamPickerSelected(index - 1, true)
+        }
+        return undefined
+    }
+
     return (
         <div className={'options-page'}>
             <div className="d-flex justify-content-center">
@@ -220,7 +403,24 @@ const UserTemplateBuilder = () => {
                     <Row className="justify-content-center">
                         <div>
                             <div className="custom-col-container">
-                                {[firstNum].map((num) => (
+                                {teamPickerState.map((pickerState, i) => {
+                                    return (
+                                        <NumTeamsPicker
+                                            currentValue={pickerState.currentValue}
+                                            defaultValue={teamPickerDefaults[i]}
+                                            min={teamPickerMin[i]}
+                                            max={teamPickerMax[i]}
+                                            selected={pickerState.selected}
+                                            setSelected={() => setTeamPickerSelected(i)}
+                                            increment={() => incrementTeamPicker(i)}
+                                            decrement={() => decrementTeamPicker(i)}
+                                            setCurrentValue={(value) => setTeamPickerValue(i, value)}
+                                            selectNextPicker={getSelectNextTeamPicker(i)}
+                                            selectPrevPicker={getSelectPrevTeamPicker(i)}
+                                        />
+                                    )
+                                })}
+                                {/* {[firstNum].map((num) => (
                                     <div>
                                         <div
                                             key={num}
@@ -275,7 +475,7 @@ const UserTemplateBuilder = () => {
                                             </div>
                                         </Col>
                                     </div>
-                                ))}
+                                ))} */}
                             </div>
                         </div>
                     </Row>
