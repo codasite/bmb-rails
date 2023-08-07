@@ -7,7 +7,11 @@
     width: 90vw;
 }
 
-@media (max-width: 600px) {
+.button-container{
+    margin: 10px;
+}
+
+@media (max-width: 768px) {
     .how-many-teams-text {
         font-size: 14px;
         color:red;
@@ -18,7 +22,8 @@
     .custom-col-container{
         display: grid !important;
         align-self: stretch; 
-        width: 90vw !important;
+        width: 95vw !important;
+        place-items: center;
     }
     .options-bracket-display-text{
         font-size: 18px;
@@ -36,11 +41,25 @@
     }
 
     .pos-btn{
-        width: 25vw !important;
+        width: 22vw !important;
+        font-size: 14px;
+    }
+
+    .step-up-button{
+        width: 40vw !important;
+    }
+
+    .step-down-button{
+        width: 40vw !important;
+    }
+
+    .wild-card-btn{
+        padding: 0px !important;
+        margin: 0px !important;
+        
     }
     
   }
-
 
 .options-page {
     display: flex;
@@ -157,6 +176,16 @@
     text-align: center;
 }
 
+.wild-card-btn{
+    padding: 15px;
+    margin: 10px;
+    color: #FFFFFF;
+    flex-basis: calc(80% / 3 - 30px);
+    flex: 1;
+    border-radius: 7px;
+    text-align: center;
+}
+
 .highlight {
     background-color: #0b2e33;
     border-color: #05ff3c;
@@ -233,8 +262,8 @@
 .wild-card-group {
     display: flex;
     width: 90vw;
-    position: relative;
-    left: 8%
+    /* position: relative;
+    left: 8% */
 }
 
 .options-bracket-dual-tree:hover,
@@ -250,6 +279,7 @@
     font-weight: 700;
     line-height: normal;
     text-transform: uppercase;
+    color: #05ff3c;
 }
 
 .corner-text {
