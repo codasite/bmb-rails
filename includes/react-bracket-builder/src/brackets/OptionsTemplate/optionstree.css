@@ -47,7 +47,9 @@
     flex-direction: column;
     align-items: center;
     gap: 60px;
-    background: var(--dark-blue, #010433);
+    background-image: url('../shared/assets/bracket-bg-dark.png');
+    background-repeat: no-repeat;
+    background-size: cover;  
     padding-bottom: 2%;
 }
 
@@ -98,7 +100,6 @@
 .options-bracket-single-tree {
     text-align: center;
     border: 1px solid #FFF;
-    background: rgba(255, 255, 255, 0.15);
     text-transform: uppercase;
     color: #FFFFFF;
     width: 200px;
@@ -236,4 +237,24 @@
     left: 8%
 }
 
-  
+.options-bracket-dual-tree:hover,
+.options-bracket-single-tree:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.corner-text {
+    text-align: center;
+    font-family: Clash Display Variable;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: uppercase;
+}
+
+.corner-text {
+    position: absolute;
+    /* bottom: -10px !important; */
+    left: 130px;
+    padding: 5px;
+  }

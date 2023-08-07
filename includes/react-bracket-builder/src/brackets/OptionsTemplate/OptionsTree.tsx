@@ -153,8 +153,10 @@ const Options = () => {
         isSubstractDisabled: boolean
     }
 
-    const CreateButtons = (props: ButtonProps) => {
-        const { isAddDisable, isSubstractDisabled } = props
+    const CreateButtons: React.FC<ButtonProps> = ({
+        isAddDisable,
+        isSubstractDisabled,
+    }) => {
         return (
             <div>
                 <ButtonGroup aria-label="Basic example">
@@ -228,6 +230,7 @@ const Options = () => {
                                     onClick={() => handleBoxClick(num)}
                                 >
                                     {num}
+                                    {num === firstNum && <span className="corner-text">Default</span>}
                                 </div>
                             ))}
                         </div>
