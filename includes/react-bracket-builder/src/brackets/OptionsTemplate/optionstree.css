@@ -292,11 +292,9 @@
     line-height: normal;
     text-transform: uppercase;
     color: #05ff3c;
+    justify-content: flex-start;
+    display: flex;
+    position: relative;
+    bottom: 15%;
+    left: 5%;
 }
-
-.corner-text {
-    position: absolute;
-    /* bottom: -10px !important; */
-    left: 130px;
-    padding: 5px;
-  }
