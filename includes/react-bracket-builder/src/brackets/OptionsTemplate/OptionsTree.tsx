@@ -16,8 +16,75 @@ enum MatchSetValues {
 }
 
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
+const defaultBracketName = "MY BRACKET NAME"
+const defautNumTeam = 16
+const defaultNumRounds = 4
+
+const BracketTitle = (props) => {
+    const {
+        title, 
+        setTitle
+    } = props
+
+    const [editing, setEditing] = useState(false)
+	const [textBuffer, setTextBuffer] = useState(title)
+
+	const startEditing = () => {
+		setEditing(true)
+		setTextBuffer(title)
+	}
+	const doneEditing = (event) => {
+		setTitle(textBuffer)
+		setEditing(false)
+	}
+
+	return (
+		<div className='wpbb-bracket-title' onClick={startEditing}>
+			{editing ?
+				<input
+					className='wpbb-bracket-title-input'
+					autoFocus
+					onFocus={(e) => e.target.select()}
+					type='text'
+					value={textBuffer}
+					onChange={(e) => setTextBuffer(e.target.value)}
+					onBlur={doneEditing}
+					onKeyUp={(e) => {
+						if (e.key === 'Enter') {
+							doneEditing(e)
+						}
+					}}
+				/>
+				:
+				<span className='wpbb-bracket-title-name'>{title}</span>
+			}
+		</div>
+	)
+}
+
+const BracketModel = (props) => {
+    const {
+        team,
+        setTeam,
+        round,
+        setRound
+    } = props
+
+    // return (
+    //     <div>
+    //         <div className="team-size">
+    //             Team Size {team}
+    //         </div>
+    //         <div className="team-round">
+    //             Rounds {round}
+    //         </div>
+    //     </div>
+    // )
+}
 
 const Options = () => {
+    let exponent = 1
+    let wildCardGame = 0
 
     const [firstNum, setFirstNum] = useState(MatchSetValues.firstSetMaxValue)
     const [secondNum, setSecondNum] = useState(MatchSetValues.secondSetMaxValue)
@@ -40,6 +107,31 @@ const Options = () => {
 
     const [isShowWildCardPositions, setShowWildCardPositions] = useState(false)
 
+    const [bracketTitle, setBracketTitle] = useState(defaultBracketName);
+
+    const [teamCount, setTeamCount] = useState(defautNumTeam)
+
+    const [roundCount, setRoundCount] = useState(defaultNumRounds);
+
+    const [wildCardCount, setWildCardCount] = useState(wildCardGame)
+
+    const evaluateNumRoundAndWildCard = (inputNumber : number) => {
+        while (inputNumber > Math.pow(2, exponent)) {
+            exponent++;
+        }
+
+        wildCardGame = inputNumber - Math.pow(2, exponent - 1);
+        if (wildCardGame == Math.pow(2, exponent - 1)) {
+            wildCardGame = 0
+        }
+        // console.log('Round for team ' + inputNumber + ' is ' + exponent)
+        // console.log('Wild Card for ' + inputNumber + ' is ' + wildCardGame)
+        return {
+            exponent,
+            wildCardGame
+        };
+    }
+
     const handleBoxClick = (currentValue) => {
         setSelectedBox(currentValue)
         switch (currentValue) {
@@ -47,16 +139,25 @@ const Options = () => {
                 setOperators(true, false, false)
                 setSecondNum(MatchSetValues.secondSetMaxValue)
                 setThirdNum(MatchSetValues.thirdSetMaxValue)
+                setTeamCount(MatchSetValues.firstSetMaxValue)
+                setRoundCount(evaluateNumRoundAndWildCard(MatchSetValues.firstSetMaxValue).exponent)
+                setWildCardCount(evaluateNumRoundAndWildCard(MatchSetValues.firstSetMaxValue).wildCardGame)
                 break
             case secondNum:
                 setOperators(false, true, false)
                 setFirstNum(MatchSetValues.firstSetMaxValue)
                 setThirdNum(MatchSetValues.thirdSetMaxValue)
+                setTeamCount(MatchSetValues.secondSetMaxValue)
+                setRoundCount(evaluateNumRoundAndWildCard(MatchSetValues.secondSetMaxValue).exponent)
+                setWildCardCount(evaluateNumRoundAndWildCard(MatchSetValues.secondSetMaxValue).wildCardGame)
                 break
             case thirdNum:
                 setOperators(false, false, true)
                 setFirstNum(MatchSetValues.firstSetMaxValue)
                 setSecondNum(MatchSetValues.secondSetMaxValue)
+                setTeamCount(MatchSetValues.thirdSetMaxValue)
+                setRoundCount(evaluateNumRoundAndWildCard(MatchSetValues.thirdSetMaxValue).exponent)
+                setWildCardCount(evaluateNumRoundAndWildCard(MatchSetValues.thirdSetMaxValue).wildCardGame)
                 break
         }
     }
@@ -110,6 +211,7 @@ const Options = () => {
 
     const handleOperation = (op) => {
         let a = performOperation(op)
+        setTeamCount(a)
         setSelectedBox(a)
     }
 
@@ -119,24 +221,36 @@ const Options = () => {
                 case '+':
                     if (selectedBox === firstNum) {
                         setFirstNum(firstNum + 2)
+                        setRoundCount(evaluateNumRoundAndWildCard(firstNum + 2).exponent)
+                        setWildCardCount(evaluateNumRoundAndWildCard(firstNum + 2).wildCardGame)
                         return firstNum + 2
                     } else if (selectedBox === secondNum) {
                         setSecondNum(secondNum + 2)
+                        setRoundCount(evaluateNumRoundAndWildCard(secondNum + 2).exponent)
+                        setWildCardCount(evaluateNumRoundAndWildCard(secondNum + 2).wildCardGame)
                         return secondNum + 2
                     } else if (selectedBox === thirdNum) {
                         setThirdNum(thirdNum + 2)
+                        setRoundCount(evaluateNumRoundAndWildCard(thirdNum + 2).exponent)
+                        setWildCardCount(evaluateNumRoundAndWildCard(thirdNum + 2).wildCardGame)
                         return thirdNum + 2
                     }
                     break
                 case '-':
                     if (selectedBox === firstNum) {
                         setFirstNum(firstNum - 2)
+                        setRoundCount(evaluateNumRoundAndWildCard(firstNum - 2).exponent)
+                        setWildCardCount(evaluateNumRoundAndWildCard(firstNum - 2).wildCardGame)
                         return firstNum - 2
                     } else if (selectedBox === secondNum) {
                         setSecondNum(secondNum - 2)
+                        setRoundCount(evaluateNumRoundAndWildCard(secondNum - 2).exponent)
+                        setWildCardCount(evaluateNumRoundAndWildCard(secondNum - 2).wildCardGame)
                         return secondNum - 2
                     } else if (selectedBox === thirdNum) {
                         setThirdNum(thirdNum - 2)
+                        setRoundCount(evaluateNumRoundAndWildCard(thirdNum - 2).exponent)
+                        setWildCardCount(evaluateNumRoundAndWildCard(thirdNum - 2).wildCardGame)
                         return thirdNum - 2
                     }
                     break
@@ -180,6 +294,16 @@ const Options = () => {
 
     return (
         <div className={'options-page'}>
+            <Container>
+                <Row className="mt-5">
+                    <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
+                </Row>
+            </Container>
+            {/* <Container>
+                <Row className="mt-5">
+                    <BracketModel team={teamCount} setTeam={setTeamCount} round={roundCount} setRound={setRoundCount} />
+                </Row>
+            </Container> */}
             <div className="d-flex justify-content-center">
                 <Container>
                     <Row className='mt-5'>
