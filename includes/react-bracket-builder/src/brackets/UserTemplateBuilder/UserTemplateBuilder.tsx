@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import './optionstree.css'
+import './user-template-builder.scss'
 
 enum MatchSetValues {
     firstSetMinValue = 2,
@@ -17,7 +17,7 @@ enum MatchSetValues {
 
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
 
-const Options = () => {
+const UserTemplateBuilder = () => {
 
     const [firstNum, setFirstNum] = useState(MatchSetValues.firstSetMaxValue)
     const [secondNum, setSecondNum] = useState(MatchSetValues.secondSetMaxValue)
@@ -343,6 +343,6 @@ const Options = () => {
     )
 }
 
-export default Options
+export default UserTemplateBuilder
 
 
