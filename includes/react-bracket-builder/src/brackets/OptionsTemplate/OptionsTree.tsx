@@ -298,23 +298,21 @@ const Options = () => {
                         </Col>
                         </div>
                     </Row> */}
-                    <Row className="d-flex justify-content-center wild-btn" style={{ visibility: isShowWildCardPositions ? 'visible' : 'hidden' }}>
+                    <div className="justify-content-center wild-btn" style={{ visibility: isShowWildCardPositions ? 'visible' : 'hidden' }}>
                         {/* <Row className='pb-3'> */}
-                        <div className={'wild-card-display'}>
-                            <div className={'wild-card-display-text'}>
-                                Wildcard Display
-                            </div>
+                        <div className={'wild-card-display-text'}>
+                            WILDCARD DISPLAY
                         </div>
                         <Row>
-                        <div className="wild-card-group">
-                            {WildCardPlacements.map((pos, index) => (
-                                <div className='wild-card-btn' key={index}>
-                                    <CreateWildCardPlacementButtons position={pos} />
-                                </div>
-                            ))}
-                        </div>
+                            <div className="wild-card-group">
+                                {WildCardPlacements.map((pos, index) => (
+                                    <div className='wild-card-btn' key={index}>
+                                        <CreateWildCardPlacementButtons position={pos} />
+                                    </div>
+                                ))}
+                            </div>
                         </Row>
-                    </Row>
+                    </div>
                 </Container>
             </div>
             <div>
