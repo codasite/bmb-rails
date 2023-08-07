@@ -7,15 +7,6 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import './user-template-builder.scss'
 import { set } from 'immer/dist/internal'
 
-enum MatchSetValues {
-    firstSetMinValue = 2,
-    firstSetMaxValue = 16,
-    secondSetMinValue = 18,
-    secondSetMaxValue = 32,
-    thirdSetMinValue = 34,
-    thirdSetMaxValue = 64
-}
-
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
 
 const teamPickerDefaults = [16, 32, 64]
@@ -120,25 +111,6 @@ interface NumTeamsPickerState {
 
 const UserTemplateBuilder = () => {
 
-    const [firstNum, setFirstNum] = useState(MatchSetValues.firstSetMaxValue)
-    const [secondNum, setSecondNum] = useState(MatchSetValues.secondSetMaxValue)
-    const [thirdNum, setThirdNum] = useState(MatchSetValues.thirdSetMaxValue)
-
-    const [selectedBox, setSelectedBox] = useState(firstNum)
-
-    const [isShowfirstMatchOperators, setShowfirstMatchOperators] = useState(true)
-    const [isShowsecondMatchOperators, setShowsecondMatchOperators] = useState(false)
-    const [isShowthirdMatchOperators, setShowthirdMatchOperators] = useState(false)
-
-    const [disableFirstSetAdd, setdisableFirstSetAdd] = useState(true)
-    const [disableFirstSetMinus, setdisableFirstSetMinus] = useState(false)
-
-    const [disableSecondSetAdd, setdisableSecondSetAdd] = useState(true)
-    const [disableSecondSetMinus, setdisableSecondSetMinus] = useState(false)
-
-    const [disableThirdSetAdd, setdisableThirdSetAdd] = useState(true)
-    const [disableThirdSetMinus, setdisableThirdSetMinus] = useState(false)
-
     const [isShowWildCardPositions, setShowWildCardPositions] = useState(false)
 
     const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
@@ -147,134 +119,6 @@ const UserTemplateBuilder = () => {
             selected: i === 1
         }))
     )
-
-    const handleBoxClick = (currentValue) => {
-        setSelectedBox(currentValue)
-        switch (currentValue) {
-            case firstNum:
-                setOperators(true, false, false)
-                setSecondNum(MatchSetValues.secondSetMaxValue)
-                setThirdNum(MatchSetValues.thirdSetMaxValue)
-                break
-            case secondNum:
-                setOperators(false, true, false)
-                setFirstNum(MatchSetValues.firstSetMaxValue)
-                setThirdNum(MatchSetValues.thirdSetMaxValue)
-                break
-            case thirdNum:
-                setOperators(false, false, true)
-                setFirstNum(MatchSetValues.firstSetMaxValue)
-                setSecondNum(MatchSetValues.secondSetMaxValue)
-                break
-        }
-    }
-
-    const setOperators = (showFirst, showSecond, showThird) => {
-        setShowfirstMatchOperators(showFirst)
-        setShowsecondMatchOperators(showSecond)
-        setShowthirdMatchOperators(showThird)
-    }
-
-    useEffect(() => {
-        const [disableFirstAdd, disableFirstMinus] = setDisableFlags(
-            firstNum,
-            MatchSetValues.firstSetMinValue,
-            MatchSetValues.firstSetMaxValue
-        );
-        setdisableFirstSetAdd(disableFirstAdd);
-        setdisableFirstSetMinus(disableFirstMinus);
-
-        const [disableSecondAdd, disableSecondMinus] = setDisableFlags(
-            secondNum,
-            MatchSetValues.secondSetMinValue,
-            MatchSetValues.secondSetMaxValue
-        );
-        setdisableSecondSetAdd(disableSecondAdd);
-        setdisableSecondSetMinus(disableSecondMinus);
-
-        const [disableThirdAdd, disableThirdMinus] = setDisableFlags(
-            thirdNum,
-            MatchSetValues.thirdSetMinValue,
-            MatchSetValues.thirdSetMaxValue
-        );
-        setdisableThirdSetAdd(disableThirdAdd);
-        setdisableThirdSetMinus(disableThirdMinus);
-
-        //Disable and enable wild card 
-        if (firstNum === MatchSetValues.firstSetMaxValue && secondNum === MatchSetValues.secondSetMaxValue && thirdNum === MatchSetValues.thirdSetMaxValue) {
-            setShowWildCardPositions(false)
-        }
-        else {
-            setShowWildCardPositions(true)
-        }
-
-    }, [firstNum, secondNum, thirdNum]);
-
-    const setDisableFlags = (num, minValue, maxValue) => {
-        const disableAdd = num === maxValue;
-        const disableMinus = num === minValue;
-        return [disableAdd, disableMinus];
-    }
-
-    const handleOperation = (op) => {
-        let a = performOperation(op)
-        setSelectedBox(a)
-    }
-
-    const performOperation = (op) => {
-        if (selectedBox !== null) {
-            switch (op) {
-                case '+':
-                    if (selectedBox === firstNum) {
-                        setFirstNum(firstNum + 2)
-                        return firstNum + 2
-                    } else if (selectedBox === secondNum) {
-                        setSecondNum(secondNum + 2)
-                        return secondNum + 2
-                    } else if (selectedBox === thirdNum) {
-                        setThirdNum(thirdNum + 2)
-                        return thirdNum + 2
-                    }
-                    break
-                case '-':
-                    if (selectedBox === firstNum) {
-                        setFirstNum(firstNum - 2)
-                        return firstNum - 2
-                    } else if (selectedBox === secondNum) {
-                        setSecondNum(secondNum - 2)
-                        return secondNum - 2
-                    } else if (selectedBox === thirdNum) {
-                        setThirdNum(thirdNum - 2)
-                        return thirdNum - 2
-                    }
-                    break
-                default:
-                    break
-            }
-        }
-
-        return selectedBox // Return selectedBox if no valid operation is performed
-    }
-
-    interface ButtonProps {
-        isAddDisable: boolean
-        isSubstractDisabled: boolean
-    }
-
-    const CreateButtons: React.FC<ButtonProps> = ({
-        isAddDisable,
-        isSubstractDisabled,
-    }) => {
-        return (
-            <div>
-                <ButtonGroup aria-label="Basic example" className='button-container'>
-                    <Button className='btn-secondary no-highlight-button step-down-button' disabled={isSubstractDisabled} variant='secondary' onClick={() => handleOperation('-')}>-</Button>
-                    <Button className='btn-secondary no-highlight-button step-up-button' disabled={isAddDisable} variant='secondary' onClick={() => handleOperation('+')}>+</Button>
-                </ButtonGroup>
-            </div>
-        )
-
-    }
 
     const CreateWildCardPlacementButtons = (props) => {
         return (
@@ -401,103 +245,26 @@ const UserTemplateBuilder = () => {
                         </div>
                     </Row>
                     <Row className="justify-content-center">
-                        <div>
-                            <div className="custom-col-container">
-                                {teamPickerState.map((pickerState, i) => {
-                                    return (
-                                        <NumTeamsPicker
-                                            currentValue={pickerState.currentValue}
-                                            defaultValue={teamPickerDefaults[i]}
-                                            min={teamPickerMin[i]}
-                                            max={teamPickerMax[i]}
-                                            selected={pickerState.selected}
-                                            setSelected={() => setTeamPickerSelected(i)}
-                                            increment={() => incrementTeamPicker(i)}
-                                            decrement={() => decrementTeamPicker(i)}
-                                            setCurrentValue={(value) => setTeamPickerValue(i, value)}
-                                            selectNextPicker={getSelectNextTeamPicker(i)}
-                                            selectPrevPicker={getSelectPrevTeamPicker(i)}
-                                        />
-                                    )
-                                })}
-                                {/* {[firstNum].map((num) => (
-                                    <div>
-                                        <div
-                                            key={num}
-                                            className={`custom-col ${selectedBox === num ? 'highlight' : ''}`}
-                                            onClick={() => handleBoxClick(num)}
-                                        >
-                                            {num}
-                                            {num === firstNum && <span className="corner-text">Default</span>}
-
-                                        </div>
-                                        <Col>
-                                            <div style={{ visibility: isShowfirstMatchOperators ? 'visible' : 'hidden' }}>
-                                                <CreateButtons isAddDisable={disableFirstSetAdd} isSubstractDisabled={disableFirstSetMinus} />
-                                            </div>
-                                        </Col>
-                                    </div>
-                                ))}
-
-                                {[secondNum].map((num) => (
-                                    <div>
-                                        <div
-                                            key={num}
-                                            className={`custom-col ${selectedBox === num ? 'highlight' : ''}`}
-                                            onClick={() => handleBoxClick(num)}
-                                        >
-                                            {num}
-                                            {num === firstNum && <span className="corner-text">Default</span>}
-
-                                        </div>
-                                        <Col>
-                                            <div style={{ visibility: isShowsecondMatchOperators ? 'visible' : 'hidden' }}>
-                                                <CreateButtons isAddDisable={disableSecondSetAdd} isSubstractDisabled={disableSecondSetMinus} />
-                                            </div>
-                                        </Col>
-                                    </div>
-                                ))}
-
-                                {[thirdNum].map((num) => (
-                                    <div>
-                                        <div
-                                            key={num}
-                                            className={`custom-col ${selectedBox === num ? 'highlight' : ''}`}
-                                            onClick={() => handleBoxClick(num)}
-                                        >
-                                            {num}
-                                            {num === firstNum && <span className="corner-text">Default</span>}
-
-                                        </div>
-                                        <Col>
-                                            <div style={{ visibility: isShowthirdMatchOperators ? 'visible' : 'hidden' }}>
-                                                <CreateButtons isAddDisable={disableThirdSetAdd} isSubstractDisabled={disableThirdSetMinus} />
-                                            </div>
-                                        </Col>
-                                    </div>
-                                ))} */}
-                            </div>
+                        <div className="custom-col-container">
+                            {teamPickerState.map((pickerState, i) => {
+                                return (
+                                    <NumTeamsPicker
+                                        currentValue={pickerState.currentValue}
+                                        defaultValue={teamPickerDefaults[i]}
+                                        min={teamPickerMin[i]}
+                                        max={teamPickerMax[i]}
+                                        selected={pickerState.selected}
+                                        setSelected={() => setTeamPickerSelected(i)}
+                                        increment={() => incrementTeamPicker(i)}
+                                        decrement={() => decrementTeamPicker(i)}
+                                        setCurrentValue={(value) => setTeamPickerValue(i, value)}
+                                        selectNextPicker={getSelectNextTeamPicker(i)}
+                                        selectPrevPicker={getSelectPrevTeamPicker(i)}
+                                    />
+                                )
+                            })}
                         </div>
                     </Row>
-                    {/* <Row className="justify-content-center">
-                    <div className="custom-col-container">
-                        <Col>
-                            <div style={{ visibility: isShowfirstMatchOperators ? 'visible' : 'hidden' }}>
-                                <CreateButtons isAddDisable={disableFirstSetAdd} isSubstractDisabled={disableFirstSetMinus} />
-                            </div>
-                        </Col>
-                        <Col>
-                            <div style={{ visibility: isShowsecondMatchOperators ? 'visible' : 'hidden' }}>
-                                <CreateButtons isAddDisable={disableSecondSetAdd} isSubstractDisabled={disableSecondSetMinus} />
-                            </div>
-                        </Col>
-                        <Col>
-                            <div style={{ visibility: isShowthirdMatchOperators ? 'visible' : 'hidden' }}>
-                                <CreateButtons isAddDisable={disableThirdSetAdd} isSubstractDisabled={disableThirdSetMinus} />
-                            </div>
-                        </Col>
-                        </div>
-                    </Row> */}
                     <div className="justify-content-center wild-btn" style={{ visibility: isShowWildCardPositions ? 'visible' : 'hidden' }}>
                         {/* <Row className='pb-3'> */}
                         <div className={'wild-card-display-text'}>
