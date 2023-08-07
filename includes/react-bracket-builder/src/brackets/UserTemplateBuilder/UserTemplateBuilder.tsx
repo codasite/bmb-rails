@@ -111,14 +111,22 @@ interface NumTeamsPickerState {
 
 const UserTemplateBuilder = () => {
 
-    const [isShowWildCardPositions, setShowWildCardPositions] = useState(false)
-
+    const initialPickerIndex = 1
+    const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
     const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
         teamPickerDefaults.map((val, i) => ({
             currentValue: val,
-            selected: i === 1
+            selected: i === initialPickerIndex
         }))
     )
+
+    // Update the global `numTeams` variable whenever picker state changes
+    useEffect(() => {
+        const picker = teamPickerState.find(picker => picker.selected)
+        if (picker) {
+            setNumTeams(picker.currentValue)
+        }
+    }, [teamPickerState])
 
     const CreateWildCardPlacementButtons = (props) => {
         return (
@@ -205,6 +213,17 @@ const UserTemplateBuilder = () => {
         return undefined
     }
 
+    /**
+     * Bitwise operation to check if a number is a power of 2
+     */
+    const isPowerOfTwo = (num: number) => {
+        return (num & (num - 1)) === 0
+    }
+
+    // Show wild card options if numTeams is a power of 2
+    const showWildCardOptions = !isPowerOfTwo(numTeams)
+
+
     return (
         <div className={'options-page'}>
             <div className="d-flex justify-content-center">
@@ -265,7 +284,7 @@ const UserTemplateBuilder = () => {
                             })}
                         </div>
                     </Row>
-                    <div className="justify-content-center wild-btn" style={{ visibility: isShowWildCardPositions ? 'visible' : 'hidden' }}>
+                    <div className="justify-content-center wild-btn" style={{ visibility: showWildCardOptions ? 'visible' : 'hidden' }}>
                         {/* <Row className='pb-3'> */}
                         <div className={'wild-card-display-text'}>
                             WILDCARD DISPLAY
