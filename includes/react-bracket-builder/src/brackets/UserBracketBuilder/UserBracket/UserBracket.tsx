@@ -14,7 +14,6 @@ import { BracketRes } from '../../shared/api/types/bracket';
 import { bracketConstants } from '../../shared/constants';
 import { DarkModeContext } from '../../shared/context';
 
-
 const {
 	paginatedBracketWidth,
 } = bracketConstants

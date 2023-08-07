@@ -1,76 +1,78 @@
-/**
-*From here Options css is started
-*
-**/
-.custom-col-container{
-    display: flex;
-    width: 90vw;
-}
-
-.button-container{
-    margin: 10px;
-}
-
-@media (max-width: 768px) {
-    .how-many-teams-text {
-        font-size: 14px;
-        color:red;
-    }
-    .custom-col {
-        width: 80vw !important;
-    }
-    .custom-col-container{
-        display: grid !important;
-        align-self: stretch; 
-        width: 95vw !important;
-        place-items: center;
-    }
-    .options-bracket-display-text{
-        font-size: 18px;
-    }
-    .options-bracket-tree {
-        width: 90vw;
-    }
-
-    .randomize-teams{
-        width: 70vw !important;
-    }
-
-    .tree-group{
-        width: 70vw !important;
-    }
-
-    .pos-btn{
-        width: 22vw !important;
-        font-size: 14px;
-    }
-
-    .step-up-button{
-        width: 40vw !important;
-    }
-
-    .step-down-button{
-        width: 40vw !important;
-    }
-
-    .wild-card-btn{
-        padding: 0px !important;
-        margin: 0px !important;
-        
-    }
-    
-  }
-
-.options-page {
+.wpbb-template-builder-root {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 60px;
     background-image: url('../shared/assets/bracket-bg-dark.png');
     background-repeat: no-repeat;
-    background-size: cover;  
+    background-size: cover;
     padding-bottom: 2%;
+    font-family: 'Clash Display', sans-serif;
 }
+
+.custom-col-container {
+    display: flex;
+    width: 90vw;
+}
+
+.button-container {
+    margin: 10px;
+}
+
+@media (max-width: 768px) {
+    .how-many-teams-text {
+        font-size: 14px;
+        color: red;
+    }
+
+    .custom-col {
+        width: 80vw !important;
+    }
+
+    .custom-col-container {
+        display: grid !important;
+        align-self: stretch;
+        width: 95vw !important;
+        place-items: center;
+    }
+
+    .options-bracket-display-text {
+        font-size: 18px;
+    }
+
+    .options-bracket-tree {
+        width: 90vw;
+    }
+
+    .randomize-teams {
+        width: 70vw !important;
+    }
+
+    .tree-group {
+        width: 70vw !important;
+    }
+
+    .pos-btn {
+        width: 22vw !important;
+        font-size: 14px;
+    }
+
+    .step-up-button {
+        width: 40vw !important;
+    }
+
+    .step-down-button {
+        width: 40vw !important;
+    }
+
+    .wild-card-btn {
+        padding: 0px !important;
+        margin: 0px !important;
+
+    }
+
+}
+
 
 .options-bracket-display {
     padding-top: 3%;
@@ -79,7 +81,6 @@
 .options-bracket-display-text {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
-    font-family: Clash Display Variable;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -129,18 +130,19 @@
     justify-content: center;
 }
 
-.options-bracket-single-tree{
+.options-bracket-single-tree {
     position: relative;
     left: 10%;
 }
-.tree-group{
+
+.tree-group {
     display: flex;
     width: 30vw;
 }
+
 .how-many-teams-text {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
-    font-family: Clash Display Variable;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -154,7 +156,6 @@
 .wild-card-display-text {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
-    font-family: Clash Display Variable;
     font-size: 24px;
     font-style: normal;
     font-weight: 500;
@@ -162,7 +163,7 @@
     text-transform: uppercase;
     padding-top: 2%;
     padding-bottom: 2%;
-    width: 85vw;    
+    width: 85vw;
 }
 
 .teams-number {
@@ -188,7 +189,7 @@
     text-align: center;
 }
 
-.wild-card-btn{
+.wild-card-btn {
     padding: 1vw;
     margin: 1%;
     color: #FFFFFF;
@@ -246,7 +247,6 @@
 .play-bracket-text {
     color: #FFF;
     text-align: center;
-    font-family: Clash Display Variable;
     font-size: 20px;
     font-style: normal;
     font-weight: 500;
@@ -255,20 +255,20 @@
     padding-left: 3px;
 }
 
-.no-highlight-button:hover, no-highlight-button:active {
+.no-highlight-button:hover,
+no-highlight-button:active {
     background-color: transparent !important;
     transition: none !important;
-  }
+}
 
-  .wild-btn {
+.wild-btn {
     width: 80vw !important;
-  }
+}
 
 .pos-btn {
     width: 17vw;
     color: #FFF;
     text-align: center;
-    font-family: Clash Display Variable;
 }
 
 .wild-card-group {
@@ -285,7 +285,6 @@
 
 .corner-text {
     text-align: center;
-    font-family: Clash Display Variable;
     font-size: 12px;
     font-style: normal;
     font-weight: 700;
