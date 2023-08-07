@@ -189,8 +189,8 @@
 }
 
 .wild-card-btn{
-    padding: 15px;
-    margin: 10px;
+    padding: 1vw;
+    margin: 1%;
     color: #FFFFFF;
     flex-basis: calc(80% / 3 - 30px);
     flex: 1;
