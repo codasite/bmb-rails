@@ -2,12 +2,16 @@ import React, { } from 'react';
 import { Nullable } from '../../../utils/types';
 import { Round, MatchNode } from '../models/MatchTree';
 import { MatchBox } from './MatchBox';
+import { TeamSlot } from './TeamSlot'
+//@ts-ignore
+import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg';
 //@ts-ignore
 import { Direction } from '../constants'
-import { getMatchHeight } from '../utils'
+import { getMatchBoxHeight } from '../utils'
 
 interface MatchColumnProps {
 	round: Round;
+	matchStartIndex?: number
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
 	matchBoxHeight: number;
@@ -17,6 +21,8 @@ interface MatchColumnProps {
 	pickTeam?: (matchIndex: number, left: boolean) => void;
 	paddingBottom?: number;
 	bracketName?: string;
+	showBracketLogo?: boolean;
+	showWinnerContainer?: boolean;
 }
 
 export const MatchColumn = (props: MatchColumnProps) => {
@@ -31,24 +37,41 @@ export const MatchColumn = (props: MatchColumnProps) => {
 		pickTeam,
 		paddingBottom,
 		bracketName,
+		showBracketLogo = true,
+		showWinnerContainer = true,
 	} = props
+
+	let matchStartIndex: number = 0
+	if (props.matchStartIndex !== undefined) {
+		matchStartIndex = props.matchStartIndex
+	} else if (direction === Direction.TopRight) {
+		matchStartIndex = matches.length
+	}
+
 	// const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 	const canEdit = updateTeam !== undefined && updateRoundName !== undefined
-	const matchHeight = getMatchHeight(round.depth)
+
+	const buildWinnerContainer = (match: MatchNode, pickedWinner: boolean) => {
+		return (
+			<div className='wpbb-winner-container'>
+				<span className={'wpbb-winner-text' + (pickedWinner ? ' visible' : ' invisible')}>{getWinnerText(bracketName)}</span>
+				<TeamSlot
+					className={'wpbb-team wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
+					team={match.result}
+				/>
+			</div>
+		)
+	}
 
 	const buildMatches = () => {
 		const matchBoxes = matches.map((match, i) => {
-			const matchIndex =
-				direction === Direction.TopLeft ||
-					direction === Direction.BottomLeft ||
-					direction === Direction.Center
-					? i : i + matches.length
+			const matchIndex = matchStartIndex + i
+			const finalMatch = match && round.depth === 0 && matchIndex === 0
+			const pickedWinner = match?.result ? true : false
 			return (
 				<MatchBox
 					match={match}
 					direction={direction}
-					// height={matchHeight}
-					// spacing={i + 1 < matches.length ? targetHeight - matchHeight : 0} // Do not add spacing to the last match in the round column
 					height={matchBoxHeight}
 					spacing={i + 1 < matches.length && matchBoxSpacing !== undefined ? matchBoxSpacing : 0} // Do not add spacing to the last match in the round column
 					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
@@ -56,27 +79,20 @@ export const MatchColumn = (props: MatchColumnProps) => {
 					roundIndex={round.depth}
 					matchIndex={matchIndex}
 					bracketName={bracketName}
-				/>
+				>
+					{finalMatch && showWinnerContainer &&
+						buildWinnerContainer(match, pickedWinner)
+					}
+					{finalMatch && showBracketLogo &&
+						<BracketLogo className="wpbb-bracket-logo" />
+					}
+				</MatchBox>
 			)
 		})
 		return matchBoxes
 	}
-	const finalRound = round.depth === 0
-	const pickedWinner = round.matches[0]?.result ? true : false
 	let items = buildMatches()
-	if (finalRound) {
-		const finalMatch = round.matches[0]
-		// find the team box to align the final match to
-		const alignTeam = document.getElementsByClassName('wpbb-team-1-1-left') // should generate this with function
-		// const alignBox = alignTeam.getBoundingClientRect()
-		// console.log('alignBox', alignBox)
-	}
-	// const winner = 
-	// 		<TeamSlot
-	// 			className={'wpbb-final-winner' + (pickedWinner ? ' wpbb-match-winner' : '')}
-	// 			team={finalRound.matches[0]?.result}
-	// 		/> 
-
+	// console.log('items', items)
 
 	return (
 		<div className='wpbb-round'>
@@ -86,4 +102,14 @@ export const MatchColumn = (props: MatchColumnProps) => {
 			</div>
 		</div>
 	)
+}
+function getWinnerText(bracketName: string | undefined) {
+	if (bracketName) {
+		const bracketNameSplit = bracketName.split(' ')
+		if (bracketNameSplit.length > 1) {
+			return `${bracketNameSplit[0]} ${bracketNameSplit[bracketNameSplit.length - 1]}`
+		}
+		return bracketName
+	}
+	return 'WINNER'
 }
