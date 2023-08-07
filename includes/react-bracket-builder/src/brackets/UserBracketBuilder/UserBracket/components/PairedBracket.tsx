@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
 import LineTo, { SteppedLineTo } from 'react-lineto';
 import { useWindowDimensions } from '../../../../utils/hooks';
 //@ts-ignore
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
+import { DarkModeContext } from '../../../shared/context';
 import {
 	getTargetHeight,
-	getTeamClassName,
-	getMatchHeight,
+	getTeamClasses,
+	getUniqueTeamClass,
+	getMatchBoxHeight,
 	getFirstRoundMatchHeight,
 	getTargetMatchHeight,
 } from '../../../shared/utils'
@@ -22,7 +24,7 @@ interface PairedBracketProps {
 	bracketName?: string;
 	canEdit?: boolean;
 	canPick?: boolean;
-	darkMode?: boolean;
+	// darkMode?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	scale?: number;
 }
@@ -31,7 +33,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
-		darkMode,
+		// darkMode,
 		bracketName,
 	} = props
 
@@ -41,6 +43,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	const numRounds = rounds.length
 	const canEdit = setMatchTree !== undefined && props.canEdit
 	const canPick = setMatchTree !== undefined && props.canPick
+	const darkMode = useContext(DarkModeContext)
 
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -119,7 +122,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 				// const targetHeight = 2 ** idx * firstRoundMatchHeight // the target match height doubles for each consecutive round
 				const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, idx)
-				const matchHeight = getMatchHeight(round.depth)
+				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
 
 				return <MatchColumn
@@ -142,14 +145,14 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
-				matchBoxHeight={getMatchHeight(0)}
+				matchBoxHeight={getMatchBoxHeight(0)}
 				// targetHeight={targetHeight / 4}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
 					(_, left: boolean) => pickTeam(0, 0, left)
 					: undefined}
-				paddingBottom={getMatchHeight(1) * 2} // offset the final match by the height of the penultimate round
+				paddingBottom={getMatchBoxHeight(1) * 2} // offset the final match by the height of the penultimate round
 			/>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
@@ -157,13 +160,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				// The target height decreases by half for each consecutive round in the second half of the bracket
 				// const targetHeight = 2 ** (arr.length - 1 - idx) * firstRoundMatchHeight
 				const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, arr.length - 1 - idx)
-				const matchHeight = getMatchHeight(round.depth)
+				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
-				console.log('targetHeight', targetHeight)
-				console.log('firstRoundMatchHeight', firstRoundMatchHeight)
-				console.log('totalMatchHeight', totalMatchHeight)
-				console.log('matchHeight', matchHeight)
-				console.log('matchSpacing', matchSpacing)
 
 				return <MatchColumn
 					bracketName={bracketName}
@@ -198,7 +196,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 			fromAnchor={fromAnchor}
 			toAnchor={toAnchor}
 			orientation='h'
-			within='wpbb-bracket-lines-container'
+			// within='wpbb-bracket-lines-container'
 			{...style}
 		/>
 	);
@@ -218,8 +216,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		style: object
 	): JSX.Element[] => {
 		if (match[side]) {
-			const team1 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
-			const team2 = getTeamClassName(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
+			const team1 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
+			const team2 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
 
 			return [
 				createSteppedLine(team1, team, leftSide, fromAnchor, toAnchor, style),
@@ -237,7 +235,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		const fromAnchor = 'right';
 		const toAnchor = 'left';
 		const style = {
-			className: 'wpbb-bracket-line',
+			className: `wpbb-bracket-line${darkMode ? ' wpbb-dark-mode' : ''}`,
 			delay: true,
 			// borderColor: darkMode ? '#FFFFFF' : darkBlue,
 			// borderStyle: 'solid',
@@ -250,12 +248,12 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					return;
 				}
 
-				const team1 = getTeamClassName(roundIdx, matchIdx, true)
-				const team2 = getTeamClassName(roundIdx, matchIdx, false)
+				const team1 = getUniqueTeamClass(roundIdx, matchIdx, true)
+				const team2 = getUniqueTeamClass(roundIdx, matchIdx, false)
 				// Whether the matches appear on the left or right side of the bracket
 				// This determines the direction of the lines
 				const team1LeftSide = matchIdx < round.matches.length / 2;
-				// The second team in the first match of the first round is on the opposite side
+				// The second team in the last match of the last round is on the opposite side
 				const team2LeftSide = roundIdx === 0 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
 
 				lines = [
@@ -270,7 +268,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team2}
 						fromAnchor='bottom'
 						toAnchor='top'
-						within='wpbb-bracket-lines-container'
+						// within='wpbb-bracket-lines-container'
 						{...style}
 					/>,
 					<LineTo
@@ -278,7 +276,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						to={team1}
 						fromAnchor='bottom'
 						toAnchor='top'
-						within='wpbb-bracket-lines-container'
+						// within='wpbb-bracket-lines-container'
 						{...style}
 					/>,
 					];

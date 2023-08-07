@@ -12,7 +12,7 @@ import {
 	SubmissionRoundReq,
 	SubmissionTeamReq,
 	RoundRes,
-} from '../../api/types/bracket';
+} from '../api/types/bracket';
 
 export enum WildcardPlacement {
 	Top = 0,
