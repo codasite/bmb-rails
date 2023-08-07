@@ -91,7 +91,7 @@ const Options = () => {
         );
         setdisableThirdSetAdd(disableThirdAdd);
         setdisableThirdSetMinus(disableThirdMinus);
-        
+
         //Disable and enable wild card 
         if (firstNum === MatchSetValues.firstSetMaxValue && secondNum === MatchSetValues.secondSetMaxValue && thirdNum === MatchSetValues.thirdSetMaxValue) {
             setShowWildCardPositions(false)
@@ -99,7 +99,7 @@ const Options = () => {
         else {
             setShowWildCardPositions(true)
         }
-        
+
     }, [firstNum, secondNum, thirdNum]);
 
     const setDisableFlags = (num, minValue, maxValue) => {
@@ -159,9 +159,9 @@ const Options = () => {
     }) => {
         return (
             <div>
-                <ButtonGroup aria-label="Basic example">
-                    <Button className='btn-secondary no-highlight-button' disabled={isSubstractDisabled} variant='secondary' onClick={() => handleOperation('-')}>-</Button>
-                    <Button className='btn-secondary no-highlight-button' disabled={isAddDisable} variant='secondary' onClick={() => handleOperation('+')}>+</Button>
+                <ButtonGroup aria-label="Basic example" className='button-container'>
+                    <Button className='btn-secondary no-highlight-button step-down-button' disabled={isSubstractDisabled} variant='secondary' onClick={() => handleOperation('-')}>-</Button>
+                    <Button className='btn-secondary no-highlight-button step-up-button' disabled={isAddDisable} variant='secondary' onClick={() => handleOperation('+')}>+</Button>
                 </ButtonGroup>
             </div>
         )
@@ -200,14 +200,14 @@ const Options = () => {
                     </Row>
                     <div className='tree-group'>
                         {/* <Col> */}
-                            <div className={'options-bracket-dual-tree'}>
-                                Dual Tree
-                            </div>
+                        <div className={'options-bracket-dual-tree'}>
+                            Dual Tree
+                        </div>
                         {/* </Col> */}
                         {/* <Col> */}
-                            <div className={'options-bracket-single-tree'}>
-                                Single Tree
-                            </div>
+                        <div className={'options-bracket-single-tree'}>
+                            Single Tree
+                        </div>
                         {/* </Col> */}
                     </div>
                 </Container>
@@ -222,20 +222,69 @@ const Options = () => {
                         </div>
                     </Row>
                     <Row className="justify-content-center">
-                        <div className="custom-col-container">
-                            {[firstNum, secondNum, thirdNum].map((num) => (
-                                <div
-                                    key={num}
-                                    className={`custom-col ${selectedBox === num ? 'highlight' : ''}`}
-                                    onClick={() => handleBoxClick(num)}
-                                >
-                                    {num}
-                                    {num === firstNum && <span className="corner-text">Default</span>}
-                                </div>
-                            ))}
+                        <div>
+                            <div className="custom-col-container">
+                                {[firstNum].map((num) => (
+                                    <div>
+                                        <div
+                                            key={num}
+                                            className={`custom-col ${selectedBox === num ? 'highlight' : ''}`}
+                                            onClick={() => handleBoxClick(num)}
+                                        >
+                                            {num}
+                                            {num === firstNum && <span className="corner-text">Default</span>}
+
+                                        </div>
+                                        <Col>
+                                            <div style={{ visibility: isShowfirstMatchOperators ? 'visible' : 'hidden' }}>
+                                                <CreateButtons isAddDisable={disableFirstSetAdd} isSubstractDisabled={disableFirstSetMinus} />
+                                            </div>
+                                        </Col>
+                                    </div>
+                                ))}
+
+                                {[secondNum].map((num) => (
+                                    <div>
+                                        <div
+                                            key={num}
+                                            className={`custom-col ${selectedBox === num ? 'highlight' : ''}`}
+                                            onClick={() => handleBoxClick(num)}
+                                        >
+                                            {num}
+                                            {num === firstNum && <span className="corner-text">Default</span>}
+
+                                        </div>
+                                        <Col>
+                                            <div style={{ visibility: isShowsecondMatchOperators ? 'visible' : 'hidden' }}>
+                                                <CreateButtons isAddDisable={disableSecondSetAdd} isSubstractDisabled={disableSecondSetMinus} />
+                                            </div>
+                                        </Col>
+                                    </div>
+                                ))}
+
+                                {[thirdNum].map((num) => (
+                                    <div>
+                                        <div
+                                            key={num}
+                                            className={`custom-col ${selectedBox === num ? 'highlight' : ''}`}
+                                            onClick={() => handleBoxClick(num)}
+                                        >
+                                            {num}
+                                            {num === firstNum && <span className="corner-text">Default</span>}
+
+                                        </div>
+                                        <Col>
+                                            <div style={{ visibility: isShowthirdMatchOperators ? 'visible' : 'hidden' }}>
+                                                <CreateButtons isAddDisable={disableThirdSetAdd} isSubstractDisabled={disableThirdSetMinus} />
+                                            </div>
+                                        </Col>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </Row>
-                    <Row className="justify-content-center">
+                    {/* <Row className="justify-content-center">
+                    <div className="custom-col-container">
                         <Col>
                             <div style={{ visibility: isShowfirstMatchOperators ? 'visible' : 'hidden' }}>
                                 <CreateButtons isAddDisable={disableFirstSetAdd} isSubstractDisabled={disableFirstSetMinus} />
@@ -251,15 +300,16 @@ const Options = () => {
                                 <CreateButtons isAddDisable={disableThirdSetAdd} isSubstractDisabled={disableThirdSetMinus} />
                             </div>
                         </Col>
-                    </Row>
+                        </div>
+                    </Row> */}
                     <Row className="d-flex justify-content-center wild-btn" style={{ visibility: isShowWildCardPositions ? 'visible' : 'hidden' }}>
                         {/* <Row className='pb-3'> */}
-                            <div className={'wild-card-display'}>
-                                <div className={'wild-card-display-text'}>
-                                    Wildcard Display
-                                </div>
+                        <div className={'wild-card-display'}>
+                            <div className={'wild-card-display-text'}>
+                                Wildcard Display
                             </div>
-                        {/* </Row> */}
+                        </div>
+                        <Row>
                         <div className="wild-card-group">
                             {WildCardPlacements.map((pos, index) => (
                                 <div className='wild-card-btn' key={index}>
@@ -267,6 +317,7 @@ const Options = () => {
                                 </div>
                             ))}
                         </div>
+                        </Row>
                     </Row>
                 </Container>
             </div>
@@ -299,3 +350,5 @@ const Options = () => {
 }
 
 export default Options
+
+
