@@ -199,16 +199,12 @@ const Options = () => {
                         </div>
                     </Row>
                     <div className='tree-group'>
-                        {/* <Col> */}
                         <div className={'options-bracket-dual-tree'}>
                             Dual Tree
                         </div>
-                        {/* </Col> */}
-                        {/* <Col> */}
                         <div className={'options-bracket-single-tree'}>
                             Single Tree
                         </div>
-                        {/* </Col> */}
                     </div>
                 </Container>
             </div>
