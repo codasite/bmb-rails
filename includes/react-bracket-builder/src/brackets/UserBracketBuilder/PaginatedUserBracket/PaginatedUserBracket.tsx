@@ -1,4 +1,4 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 // import { Bracket } from '../../bracket/components/Bracket';
 // import { Bracket } from '../../bracket/components/Bracket';
 import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
@@ -6,16 +6,20 @@ import { nextPage, selectCurrentPage, selectNumPages } from '../../shared/featur
 
 import { MatchTree } from '../../shared/models/MatchTree';
 import { PaginatedLandingPage, PaginatedRound, PaginatedBracketResult } from './components'
+import { DarkModeContext } from '../../shared/context';
 
 
 interface PaginatedBracketProps {
 	matchTree?: MatchTree;
+	canPick?: boolean;
 }
 
 export const PaginatedUserBracket = (props: PaginatedBracketProps) => {
 	const {
 		matchTree,
+		canPick
 	} = props;
+	// const [darkMode, setDarkMode] = useState(true)
 
 	if (!matchTree) {
 		return <></>
@@ -35,15 +39,17 @@ export const PaginatedUserBracket = (props: PaginatedBracketProps) => {
 		if (currentPage <= 0) {
 			return <PaginatedLandingPage onStart={handleStart} />
 		} else if (currentPage < numPages - 1) {
-			return <PaginatedRound />
+			return <PaginatedRound canPick={canPick} />
 		} else {
 			return <PaginatedBracketResult />
 		}
 	}
 
 	return (
-		<div className={`wpbb-paginated-bracket wpbb-dark-mode`}>
-			{getPage()}
-		</div>
+		<DarkModeContext.Provider value={true}>
+			<div className={`wpbb-paginated-bracket wpbb-dark-mode`}>
+				{getPage()}
+			</div>
+		</DarkModeContext.Provider>
 	)
 }

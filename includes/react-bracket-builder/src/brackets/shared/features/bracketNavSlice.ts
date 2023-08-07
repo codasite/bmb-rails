@@ -8,7 +8,7 @@ interface BracketNavState {
 
 const initialState: BracketNavState = {
 	numPages: 0,
-	currentPage: 1
+	currentPage: 0
 }
 
 export const bracketNavSlice = createSlice({
