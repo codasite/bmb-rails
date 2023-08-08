@@ -10,9 +10,8 @@
     font-family: 'Clash Display', sans-serif;
 }
 
-.custom-col-container {
+.team-picker {
     display: flex;
-    width: 90vw;
 }
 
 .button-container {
@@ -22,14 +21,13 @@
 @media (max-width: 768px) {
     .how-many-teams-text {
         font-size: 14px;
-        color: red;
     }
 
-    .custom-col {
-        width: 80vw !important;
+    .team-chooser-box ,.wild-card-display-text{
+        width: 95vw !important;
     }
 
-    .custom-col-container {
+    .team-picker {
         display: grid !important;
         align-self: stretch;
         width: 95vw !important;
@@ -57,18 +55,17 @@
         font-size: 14px;
     }
 
-    .step-up-button {
-        width: 40vw !important;
-    }
-
-    .step-down-button {
-        width: 40vw !important;
+    .step-up-button, .step-down-button {
+        width: 45vw !important;
     }
 
     .wild-card-btn {
         padding: 0px !important;
         margin: 0px !important;
 
+    }
+    .wild-card-group{
+        width: 100vw !important;
     }
 
   .wpbb-bracket-title {
@@ -216,7 +213,7 @@
     padding-right: 10%;
 }
 
-.custom-col {
+.team-chooser-box {
     border: 2px solid #ccc;
     padding: 30px;
     margin: 10px;
@@ -228,8 +225,6 @@
 }
 
 .wild-card-btn {
-    padding: 1vw;
-    margin: 1%;
     color: #FFFFFF;
     flex-basis: calc(80% / 3 - 30px);
     flex: 1;
@@ -307,13 +302,12 @@ no-highlight-button:active {
     width: 17vw;
     color: #FFF;
     text-align: center;
+    border-radius: 7px;
+    padding: 10px;
 }
 
 .wild-card-group {
     display: flex;
-    width: 90vw;
-    /* position: relative;
-    left: 8% */
 }
 
 .options-bracket-dual-tree:hover,
@@ -334,4 +328,9 @@ no-highlight-button:active {
     position: relative;
     bottom: 15%;
     left: 5%;
+}
+
+.step-up-button, .step-down-button{
+    color: white;
+    border-radius: 8px;
 }
