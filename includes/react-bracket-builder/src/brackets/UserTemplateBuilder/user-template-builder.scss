@@ -71,6 +71,44 @@
 
     }
 
+  .wpbb-bracket-title {
+    display: flex;
+    padding: 16px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    align-self: stretch; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+    
+    }
+}
+
+.wpbb-bracket-title-name {
+    color: rgba(255, 255, 255, 0.20);
+    text-align: center;
+    font-family: Clash Display Variable;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase; 
+}
+
+.wpbb-bracket-title-input {
+    text-decoration: none;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.20);
+}
+
+.options-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    background-image: url('../shared/assets/bracket-bg-dark.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 2%;
 }
 
 
