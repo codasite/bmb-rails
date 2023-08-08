@@ -168,14 +168,12 @@ const UserTemplateBuilder = () => {
             <div className="d-flex justify-content-center">
                 <Container>
                     <Row className='pb-2'>
-                        <div className={'how-many-teams'}>
-                            <div className={'how-many-teams-text'}>
-                                How Many total teams in Your Bracket
-                            </div>
+                        <div className={'how-many-teams-text'}>
+                            How Many total teams in Your Bracket
                         </div>
                     </Row>
                     <Row className="justify-content-center">
-                        <div className="custom-col-container">
+                        <div className="team-picker">
                             {teamPickerState.map((pickerState, i) => {
                                 return (
                                     <NumTeamsPicker
