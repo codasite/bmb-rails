@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import { ActionButton } from '../../../shared/components/ActionButton'
+import LineTo, { SteppedLineTo } from 'react-lineto';
 import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
 import { Nullable } from '../../../../utils/types';
 import { useAppSelector, useAppDispatch } from '../../../shared/app/hooks'
 import { nextPage, selectCurrentPage, selectNumPages } from '../../../shared/features/bracketNavSlice';
-import { selectMatchTree } from '../../../shared/features/matchTreeSlice';
+import { setMatchTree, selectMatchTree } from '../../../shared/features/matchTreeSlice';
 import {
 	getTargetHeight,
-	getTeamClassName,
-	getMatchHeight,
+	getTeamClasses,
+	getUniqueTeamClass,
+	getMatchBoxHeight,
 	getFirstRoundMatchHeight,
 	getTargetMatchHeight,
 } from '../../../shared/utils';
+import { DarkModeContext } from '../../../shared/context';
 
 const {
 	teamHeight,
 } = bracketConstants
+
 
 const PaginatedRoundHeader = (props) => {
 	const {
@@ -30,7 +34,6 @@ const PaginatedRoundHeader = (props) => {
 		</div>
 	)
 }
-
 
 interface PaginatedRoundProps {
 	round: Round;
@@ -51,6 +54,11 @@ export const PaginatedRound = (props) => {
 	// 	round,
 	// 	matches,
 	// } = props;
+	const {
+		canPick,
+	} = props;
+
+	const [allPicked, setAllPicked] = useState(false)
 
 	const currentPage = useAppSelector(selectCurrentPage)
 	const numPages = useAppSelector(selectNumPages)
@@ -60,93 +68,250 @@ export const PaginatedRound = (props) => {
 	if (!matchTree) {
 		return null
 	}
-	console.log('rounds', matchTree.rounds)
 	const numRounds = matchTree.rounds.length
 	const numDirections = 2 // 1 direction for single trees, 2 for double trees
 	const directions = [Direction.TopLeft, Direction.TopRight]
-	const roundPageMaxIndex = numRounds * numDirections - 1 // This is the index of the last page of the last round
+	const numRoundPages = numRounds * numDirections - 1 // This is the index of the last page of the last round
 	const roundPageOffset = 1 // Number of pages that have been added before the first round
 
 	const roundPage = currentPage - roundPageOffset // The current page ignoring pages before the first round
-	const roundIndex = Math.floor((roundPageMaxIndex - roundPage) / numDirections)
+	const roundIndex = Math.floor((numRoundPages - roundPage) / numDirections)
 	const direction = directions[roundPage % numDirections]
 
 	const round1 = matchTree.rounds[roundIndex] // The round teams will be selected from
-	const round2 = matchTree.rounds[roundIndex - 1] // The round being filled
-
-	let matches1: Nullable<MatchNode>[] = []
-	console.log('direction', direction)
-	if (direction === Direction.TopLeft) {
-		// if going from left to right, only show the first half of the matches
-		matches1 = round1.matches.slice(0, round1.matches.length / 2)
-	} else {
-		// if going from right to left, only show the second half of matches
-		matches1 = round1.matches.slice(round1.matches.length / 2, round1.matches.length)
-	}
-
-	let matches2: Nullable<MatchNode>[] = []
-	if (direction === Direction.TopLeft) {
-		matches2 = round2.matches.slice(round2.matches.length / 2, round2.matches.length)
-	} else {
-		matches2 = round2.matches.slice(0, round2.matches.length / 2)
-	}
+	const lastPage = roundPage === numRoundPages - 1 // Whether this is the last final selection page
+	const round2 = lastPage ? null : matchTree.rounds[roundIndex - 1] // The round to fill. If this is the last page, there is no next round to fill
 
 	const targetHeight = getTargetHeight(numRounds)
 	const firstRoundMatchHeight = getFirstRoundMatchHeight(targetHeight, numDirections, numRounds, teamHeight)
 
 	const round1ReverseIndex = numRounds - roundIndex - 1
 	const round2ReverseIndex = numRounds - roundIndex
-	console.log('round1ReverseIndex', round1ReverseIndex)
-	console.log('round2ReverseIndex', round2ReverseIndex)
 
-	const totalMatchHeight1 = getTargetMatchHeight(firstRoundMatchHeight, round1ReverseIndex)
-	const totalMatchHeight2 = getTargetMatchHeight(firstRoundMatchHeight, round2ReverseIndex)
+	const pickTeam = (matchIndex: number, left: boolean) => {
+		if (!canPick) {
+			return
+		}
+		matchTree.advanceTeam(round1.depth, matchIndex, left)
+		dispatch(setMatchTree(matchTree.toSerializable()))
+	}
 
-	const matchHeight1 = getMatchHeight(round1.depth)
-	const matchHeight2 = getMatchHeight(round2.depth)
+	const onActionButtonPressed = () => {
+		setAllPicked(false)
+		goNext()
+	}
 
-	const matchSpacing1 = totalMatchHeight1 - matchHeight1
-	const matchSpacing2 = totalMatchHeight2 - matchHeight2
+	const matchColumn1 = <PaginatedMatchColumn
+		round={round1}
+		direction={direction}
+		firstRoundMatchHeight={firstRoundMatchHeight}
+		reverseIndex={round1ReverseIndex}
+		showBracketLogo={false}
+		showWinnerContainer={lastPage}
+		pickTeam={pickTeam}
+		onAllPicked={() => setAllPicked(true)}
+	/>
+	const matchColumn2 = round2 ? <PaginatedMatchColumn
+		round={round2}
+		direction={direction}
+		firstRoundMatchHeight={firstRoundMatchHeight}
+		reverseIndex={round2ReverseIndex}
+		showBracketLogo={false}
+		showWinnerContainer={false}
+		paddingBottom={round2.depth === 0 ? getMatchBoxHeight(1) * 2 : undefined}
+	/> : null
 
-
-	console.log('round', round1)
-	console.log('targetHeight', targetHeight)
-	console.log('roundIndex', roundIndex)
-	console.log('firstRoundMatchHeight', firstRoundMatchHeight)
-	console.log('totalMatchHeight1', totalMatchHeight1)
-	console.log('matchHeight1', matchHeight1)
-	console.log('matchSpacing1', matchSpacing1)
-
-	console.log('totalMatchHeight2', totalMatchHeight2)
-	console.log('matchHeight2', matchHeight2)
-	console.log('matchSpacing2', matchSpacing2)
-	// const round = matchTree.rounds[numRounds - currentPage]
-
-	// console.log('PaginatedRound', props)
-	console.log('page', currentPage)
-	// console.log('round', round)
 	return (
-		<div className={`wpbb-paginated-round`}>
-			{/* <PaginatedRoundHeader title={round.name} /> */}
-			<PaginatedRoundHeader title={`Page ${currentPage}`} />
-			<div className={'wpbb-paginated-round-match-columns'}>
-				<MatchColumn
-					round={round1}
-					matches={matches1}
-					direction={direction}
-					matchBoxHeight={matchHeight1}
-					matchBoxSpacing={matchSpacing1}
-				/>
-				<MatchColumn
-					round={round2}
-					matches={matches2}
-					direction={direction}
-					matchBoxHeight={matchHeight2}
-					matchBoxSpacing={matchSpacing2}
-				/>
+		<div className='wpbb-paginated-round'>
+			<PaginatedRoundHeader title={round1.name} />
+			<div className='wpbb-paginated-round-match-columns'>
+				{direction === Direction.TopLeft ? matchColumn1 : matchColumn2}
+				{direction === Direction.TopLeft ? matchColumn2 : matchColumn1}
 			</div>
-			<ActionButton label='NEXT' onClick={() => { goNext() }} variant='secondary' />
+			<PaginatedBracketLines
+				roundIdx={roundIndex}
+				numDirections={numDirections}
+				side={direction}
+			/>
+			<ActionButton label='NEXT' onClick={onActionButtonPressed} variant='secondary' disabled={!allPicked} />
 
 		</div>
 	)
+}
+
+interface PaginatedMatchColumnProps {
+	round: Round;
+	direction: Direction;
+	firstRoundMatchHeight: number;
+	reverseIndex: number;
+	showBracketLogo?: boolean;
+	showWinnerContainer?: boolean;
+	paddingBottom?: number;
+	pickTeam?: (matchIndex: number, left: boolean) => void;
+	onAllPicked?: () => void;
+}
+
+const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
+	const {
+		round,
+		direction,
+		firstRoundMatchHeight,
+		reverseIndex,
+		paddingBottom,
+		pickTeam,
+		onAllPicked,
+		showBracketLogo = false,
+		showWinnerContainer = false,
+	} = props
+
+	const [matchStart, matches] = getMatches(round, direction)
+	const allPicked = matches.every(match => {
+		if (match === null) {
+			return true
+		}
+		return match.result !== null
+	})
+	if (allPicked && onAllPicked) {
+		onAllPicked()
+	}
+	const totalMatchHeight = getTargetMatchHeight(firstRoundMatchHeight, reverseIndex)
+	const matchHeight = getMatchBoxHeight(round.depth)
+	const matchSpacing = totalMatchHeight - matchHeight
+	return (
+		<MatchColumn
+			round={round}
+			matchStartIndex={matchStart}
+			matches={matches}
+			direction={direction}
+			matchBoxHeight={matchHeight}
+			matchBoxSpacing={matchSpacing}
+			showBracketLogo={showBracketLogo}
+			showWinnerContainer={showWinnerContainer}
+			paddingBottom={paddingBottom}
+			pickTeam={pickTeam}
+		/>
+	)
+}
+
+interface PaginatedBracketLinesProps {
+	roundIdx: number,
+	numDirections: number,
+	side: Direction
+}
+
+const PaginatedBracketLines = (props: PaginatedBracketLinesProps) => {
+	const {
+		roundIdx,
+		numDirections,
+		side,
+	} = props
+	const darkMode = useContext(DarkModeContext)
+	// Lines are always drawn from left to right so these two variables never change for horizontal lines
+	const fromAnchor = 'right';
+	const toAnchor = 'left';
+	const style = {
+		className: `wpbb-bracket-line${darkMode ? ' wpbb-dark-mode' : ''}`,
+		delay: true,
+		// borderColor: darkMode ? '#FFFFFF' : darkBlue,
+		// borderStyle: 'solid',
+		// borderWidth: 1,
+	};
+	let lines: JSX.Element[] = []
+
+	if (roundIdx === 0) {
+		// Final round, draw vertical lines connecting final match to winner
+		const pairs: TeamClassPair[] = [
+			{ fromTeam: 'wpbb-final-winner', toTeam: 'wpbb-team-0-0-left' },
+			{ fromTeam: 'wpbb-team-0-0-left', toTeam: 'wpbb-team-0-0-right' },
+		]
+		lines = pairs.map(pair => {
+			return (
+				<LineTo
+					from={pair.fromTeam}
+					to={pair.toTeam}
+					fromAnchor={'bottom'}
+					toAnchor={'top'}
+					// within={'wpbb-bracket-lines-container'}
+					{...style}
+				/>
+			)
+		})
+	} else {
+		// Not final round, draw horizontal lines connecting matches
+		const pairs = getTeamClassPairsForRoundSide(roundIdx, numDirections, side)
+		lines = pairs.map(pair => {
+			return (
+				<SteppedLineTo
+					from={pair.fromTeam}
+					to={pair.toTeam}
+					fromAnchor={fromAnchor}
+					toAnchor={toAnchor}
+					// within={'wpbb-bracket-lines-container'}
+					orientation='h'
+					{...style}
+				/>
+			)
+		})
+	}
+	return (
+		<div className='wpbb-bracket-lines-container'>
+			{lines}
+		</div>
+	)
+}
+
+interface TeamClassPair {
+	fromTeam: string;
+	toTeam: string;
+}
+
+function getTeamClassPairsForRoundSide(roundIdx: number, numDirections: number, side: Direction): TeamClassPair[] {
+	let teamClassPairs: TeamClassPair[] = []
+	const [matchStart, matchEnd] = getMatchRange(roundIdx, numDirections, side)
+
+	// If building the right hand side, teams will be swapped so that lines are always drawn left to right
+	const swapTeams = side === Direction.TopRight
+
+	for (let matchIdx = matchStart; matchIdx < matchEnd; matchIdx++) {
+		const thisTeamLeft = getUniqueTeamClass(roundIdx, matchIdx, true)
+		const thisTeamRight = getUniqueTeamClass(roundIdx, matchIdx, false)
+		const nextTeamIsLeft = matchIdx % 2 === 0
+		const nextTeam = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), nextTeamIsLeft)
+		teamClassPairs.push(buildClassPair(thisTeamLeft, nextTeam, swapTeams))
+		teamClassPairs.push(buildClassPair(thisTeamRight, nextTeam, swapTeams))
+	}
+	return teamClassPairs
+}
+
+function getMatchRange(roundIdx: number, numDirections: number, side: Direction): [number, number] {
+	const numMatches = Math.pow(2, roundIdx)
+	let startIdx = 0
+	if (side === Direction.TopRight) {
+		startIdx = numMatches / 2
+	}
+	let endIdx = numMatches
+	if (side === Direction.TopLeft) {
+		endIdx = numMatches / numDirections
+	}
+	return [startIdx, endIdx]
+}
+
+function buildClassPair(fromTeam: string, toTeam: string, swapTeams: boolean): TeamClassPair {
+	return {
+		fromTeam: swapTeams ? toTeam : fromTeam,
+		toTeam: swapTeams ? fromTeam : toTeam,
+	}
+}
+
+function getMatches(round, direction): [number, Nullable<MatchNode>[]] {
+	let startIdx = 0
+	let matches: Nullable<MatchNode>[] = []
+	if (direction === Direction.TopLeft) {
+		// if going from left to right, only show the first half of the matches
+		matches = round.matches.slice(startIdx, Math.ceil(round.matches.length / 2))
+	} else {
+		startIdx = Math.floor(round.matches.length / 2)
+		matches = round.matches.slice(startIdx, round.matches.length)
+	}
+	return [startIdx, matches]
 }

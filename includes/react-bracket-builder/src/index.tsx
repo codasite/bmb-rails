@@ -55,7 +55,7 @@ if (sentryDsn) {
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
 const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserBracket/UserBracket'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
-const Options = React.lazy(() => import('./brackets/OptionsTemplate/OptionsTree'))
+const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
 
 // Get the wpbb_ajax_obj from the global scope
 
@@ -75,7 +75,7 @@ function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 
 function renderOptionsTree() {
 	const optionsBuilder = document.getElementById('wpbb-bracket-option-preview')
-	if(optionsBuilder) {
+	if (optionsBuilder) {
 		render(<App><Options /></App >, optionsBuilder);
 	}
 }
