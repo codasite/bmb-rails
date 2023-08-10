@@ -215,6 +215,15 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_bracket_manager_preview() {
+		ob_start();
+	?>
+		<div id="wpbb-bracket-manager-preview" style="width: 100%">
+		</div>
+<?php
+		return ob_get_clean();
+	}
+
 
 	/**
 	 * Add shortcode to render events
@@ -225,6 +234,7 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']);
 		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
 		add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
+		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager_preview']);
 	}
 
 	public function get_archive_url() {
