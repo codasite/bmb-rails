@@ -1,0 +1,155 @@
+/* Shared utility classes */
+.rounded-border {
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+  }
+  
+  .text-uppercase {
+    text-align: center;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 16px;
+  }
+  
+  /* Main styles */
+  .wpbb-bracket-manager-root {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+    font-family: 'Clash Display', sans-serif;
+    background: var(--dark-blue, #010433) no-repeat;
+    padding: 2% 3% 2% 2%;
+  }
+
+
+  
+  .our-picks {
+    height: 20vw;
+    align-self: stretch;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.10);
+    background-image: url('../shared/assets/Our-Picks.png');
+  }
+  
+  .new-bracket {
+    background: rgba(5, 255, 60, 0.15);
+    border: 1px solid #05ff3c;
+    border-radius: 8px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    height: 5vw;
+    padding: 1vw;
+  }
+  
+  .play-bracket,
+  .set-bracket-score,
+  .private-bracket,
+  .view-leaderboard,
+  .share-bracket {
+    color: #fff;
+    text-align: center;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+  }
+
+  .new-bracket-text {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  
+  .bracket-name {
+    margin-right: 0.5vw;
+    font-size: 30px;
+    font-weight: 700px;
+  }
+
+  .my-brackets-text {
+    text-align: start !important;
+  }
+  
+  .bracket-action-images {
+    padding: 0.9vw 0.2vw 0.2vw 0.2vw;
+    justify-content: start;
+    align-items: center;
+    gap: 4px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    margin-right: 1vw;
+  }
+  
+  .bracket-list {
+    display: flex;
+    flex-direction: row;
+    align-self: stretch;
+    border: 2px solid rgba(33, 55, 255, 0.20);
+    margin-bottom: 1vw;
+  }
+  
+  .bracket-details {
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    margin-bottom: 2%;
+    gap: 20px;
+    justify-content: start;
+    text-align: start;
+    border-radius: 16px;
+    background: var(--bracket-frame, linear-gradient(315deg, rgba(1, 4, 51, 0.10) 0%, rgba(13, 20, 84, 0.10) 33.33%, rgba(21, 34, 150, 0.10) 66.67%, rgba(33, 55, 255, 0.10) 100%), #010433);
+  }
+  
+  .bracket-state-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    flex-grow: 1;
+    padding: 2%;
+    text-align: end;
+  }
+  
+  .play-bracket-btn,
+  .set-bracket-score-btn {
+    border-radius: 8px;
+    border: 1px solid #05FF3C;
+    background: rgba(5, 255, 60, 0.15);
+    margin-right: 1vw;
+    padding-top: 0.5vw;
+  }
+  
+  .play-bracket,
+  .set-bracket-score {
+    height: 2vw;
+    background: transparent;
+    border: transparent;
+  }
+  
+  .set-bracket-score-btn {
+    border: 1px solid #f8e11a;
+    background: rgba(248, 225, 26, 0.15);
+  }
+  
+  .play-set-btn {
+    width: 1.5vw;
+    margin-left: 0.5vw;
+    margin-top: 0.8vw;
+  }
+  
+  .view-leaderboard-btn,
+  .share-bracket-btn {
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.50);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .view-leaderboard,
+  .share-bracket {
+    background: transparent;
+    border: transparent;
+  }
+  
