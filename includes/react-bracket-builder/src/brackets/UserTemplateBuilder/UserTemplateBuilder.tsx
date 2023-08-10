@@ -7,7 +7,10 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup'
 import './user-template-builder.scss'
 import { set } from 'immer/dist/internal'
 import { NumTeamsPicker } from './NumTeamsPicker/NumTeamsPicker'
+import { MatchTree } from '../shared/models/MatchTree'
+import { Bracket } from '../shared/components/Bracket'
 
+const defaultBracketName = "MY BRACKET NAME"
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
 
 const teamPickerDefaults = [16, 32, 64]
@@ -20,6 +23,67 @@ interface NumTeamsPickerState {
     selected: boolean
 }
 
+const BracketTitle = (props) => {
+    const {
+        title, 
+        setTitle
+    } = props
+
+    const [editing, setEditing] = useState(false)
+	const [textBuffer, setTextBuffer] = useState(title)
+
+	const startEditing = () => {
+		setEditing(true)
+		setTextBuffer(title)
+	}
+	const doneEditing = (event:any) => {
+		setTitle(textBuffer)
+		setEditing(false)
+	}
+
+	return (
+		<div className='wpbb-bracket-title' onClick={startEditing}>
+			{editing ?
+				<input
+					className='wpbb-bracket-title-input'
+					autoFocus
+					onFocus={(e) => e.target.select()}
+					type='text'
+					value={textBuffer}
+					onChange={(e) => setTextBuffer(e.target.value)}
+					onBlur={doneEditing}
+					onKeyUp={(e) => {
+						if (e.key === 'Enter') {
+							doneEditing(e)
+						}
+					}}
+				/>
+				:
+				<div className='wpbb-bracket-title-name'>{title}</div>
+			}
+		</div>
+	)
+}
+
+const evaluateNumRoundAndWildCard = (inputNumber : number) => {
+    let numRounds = 1
+    let wildCardGame = 0
+    while (inputNumber > Math.pow(2, numRounds)) {
+        numRounds++;
+    }
+
+    wildCardGame = inputNumber - Math.pow(2, numRounds - 1);
+    if (wildCardGame == Math.pow(2, numRounds - 1)) {
+        wildCardGame = 0
+    }
+    // console.log('Round for team ' + inputNumber + ' is ' + numRounds)
+    // console.log('Wild Card for ' + inputNumber + ' is ' + wildCardGame)
+    return [
+        numRounds,
+        wildCardGame
+    ];
+}
+
 const UserTemplateBuilder = () => {
 
     const initialPickerIndex = 1
@@ -30,20 +94,29 @@ const UserTemplateBuilder = () => {
             selected: i === initialPickerIndex
         }))
     )
+    const [bracketTitle, setBracketTitle] = useState(defaultBracketName);
+    const [wildCardPos, setWildCardPos] = useState(initialPickerIndex)
+    const [matchTree, setMatchTree] = useState<MatchTree>(MatchTree.fromOptions(4, 0, initialPickerIndex));
 
     // Update the global `numTeams` variable whenever picker state changes
     useEffect(() => {
         const picker = teamPickerState.find(picker => picker.selected)
         if (picker) {
             setNumTeams(picker.currentValue)
+            const [totalRounds, totalWildCardGames] = evaluateNumRoundAndWildCard(picker.currentValue)
+            setMatchTree(MatchTree.fromOptions(totalRounds, totalWildCardGames, wildCardPos))
         }
-    }, [teamPickerState])
+    }, [teamPickerState, wildCardPos])
 
-    const CreateWildCardPlacementButtons = (props) => {
+    const handleWildCardPlacement = (index) => {
+        setWildCardPos(index)
+    }
+
+    const CreateWildCardPlacementButtons = (props) => {        
         return (
             <div>
                 <ButtonGroup aria-label="Basic example">
-                    <Button className='btn-secondary no-highlight-button pos-btn' variant='secondary'>{props.position}</Button>
+                    <Button className='btn-secondary no-highlight-button pos-btn' variant='secondary' onClick={() => handleWildCardPlacement(props.positionIndex)}>{props.position}</Button>
                 </ButtonGroup>
             </div>
         )
@@ -139,6 +212,16 @@ const UserTemplateBuilder = () => {
         <div className='wpbb-template-builder-root'>
             <div className="d-flex justify-content-center">
                 <Container>
+                    <Row>
+                        <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
+                    </Row>
+                </Container>
+            </div>
+            <div className='pt-5 wpbb-default'>
+                <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit />
+            </div>
+            <div className="d-flex justify-content-center">
+                <Container>
                     <Row className='mt-5'>
                         <div className={'randomize-teams'}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
@@ -202,7 +285,7 @@ const UserTemplateBuilder = () => {
                             <div className="wild-card-group">
                                 {WildCardPlacements.map((pos, index) => (
                                     <div className='wild-card-btn' key={index}>
-                                        <CreateWildCardPlacementButtons position={pos} />
+                                        <CreateWildCardPlacementButtons position={pos} positionIndex={index} />
                                     </div>
                                 ))}
                             </div>
