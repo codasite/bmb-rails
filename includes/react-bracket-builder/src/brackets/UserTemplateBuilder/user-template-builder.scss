@@ -67,17 +67,23 @@
     .wild-card-group{
         width: 100vw !important;
     }
+}
 
-  .wpbb-bracket-title {
-    display: flex;
+.wpbb-bracket-title {
+    position: relative;
     padding: 16px;
     justify-content: center;
-    align-items: flex-start;
     gap: 16px;
     align-self: stretch; 
     border-bottom: 1px solid rgba(255, 255, 255, 0.30);
-    
-    }
+}
+
+.wpbb-bracket-title input:focus {
+    outline: none;
+    border: none;
+    font-size: 32px; 
+    text-transform: uppercase;
+    text-align: center;
 }
 
 .wpbb-bracket-title-name {
