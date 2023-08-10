@@ -74,7 +74,7 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
         <div>
             <div
                 // key={num}
-                className={`custom-col ${selected ? 'highlight' : ''}`}
+                className={`team-chooser-box ${selected ? 'highlight' : ''}`}
                 onClick={handleBoxClick}
             >
                 {currentValue}
