@@ -119,10 +119,14 @@ class Wp_Bracket_Builder_Admin {
 	}
 	public function bracket_builder_init_menu() {
 		add_menu_page(__('Bracket Builder', 'bracketbuilder'), __('Bracket Builder', 'bracketbuilder'), 'manage_options', 'bracketbuilder', array($this, 'bracket_builder_admin_page'), 'dashicons-admin-post', '2.1');
+		add_submenu_page('bracketbuilder','Bracket Builder Settings','Settings', 'manage_options', 'bracket-builder-settings',array($this, 'bracket_builder_settings_page'));
 	}
 
 	public function bracket_builder_admin_page() {
 		require_once plugin_dir_path(__FILE__) . 'templates/admin-panel.php';
+	}
+	public function bracket_builder_settings_page() {
+		require_once plugin_dir_path(__FILE__) . 'templates/admin-submenu-settings.php';
 	}
 
 	public function add_capabilities() {
