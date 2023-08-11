@@ -65,15 +65,15 @@ const BracketTitle = (props) => {
 	)
 }
 
-const evaluateNumRoundAndWildCard = (inputNumber : number) => {
+const evaluateNumRoundAndWildCard = (numTeams : number) => {
     let numRounds = 1
     let wildCardGame = 0
-    while (inputNumber > Math.pow(2, numRounds)) {
+    while (numTeams > Math.pow(2, numRounds)) {
         numRounds++;
     }
 
-    wildCardGame = inputNumber - Math.pow(2, numRounds - 1);
-    if (wildCardGame == Math.pow(2, numRounds - 1)) {
+    wildCardGame = numTeams - Math.pow(2, numRounds - 1);
+    if (wildCardGame === Math.pow(2, numRounds - 1)) {
         wildCardGame = 0
     }
     // console.log('Round for team ' + inputNumber + ' is ' + numRounds)
