@@ -1,10 +1,19 @@
-@use 'bracket/index' as *;
-@use 'paginated_bracket/index' as *;
+@use 'bracket' as *;
+@use 'bracket_builder' as *;
 @use 'constants' as *;
 
 @import 'https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&display=swap';
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
+// html,
+// body {
+// 	height: 100%;
+// }
+
+// // The div rendered by the wpbb-bracket-builder shortcode
+// #wpbb-bracket-builder {
+// 	height: 100%;
+// }
 
 .image-gallery-left-nav .image-gallery-svg,
 .image-gallery-right-nav .image-gallery-svg {
@@ -65,31 +74,12 @@
 	font-size: x-small;
 }
 
-.wpbb-img-background {
-	position: relative;
-	background-color: #fff;
-	background-image: url('../assets/bracket-bg-light.png');
-	background-repeat: no-repeat;
-	background-position: center top;
-	background-size: cover;
-	color: $darkBlue;
-
-	&.wpbb-dark-mode {
-		background-color: $darkBlue;
-		background-image: url('../assets/bracket-bg-dark.png');
-		color: #fff;
-	}
-}
-
 .wpbb-bracket-container {
 	position: relative;
-	font-family: 'Clash Display', sans-serif;
-	background-color: #fff;
-	background-image: url('../assets/bracket-bg-light.png');
+	background-image: url('../brackets/shared/assets/bracket-bg-light.png');
 	background-repeat: no-repeat;
 	background-position: center top;
 	background-size: cover;
-	color: $darkBlue;
 	padding-top: 160px;
 	padding-bottom: 100px;
 	min-width: fit-content;
@@ -195,6 +185,7 @@
 		}
 	}
 
+
 	.wpbb-slogan-container {
 		position: absolute;
 		top: 100px;
@@ -210,7 +201,7 @@
 
 	&.wpbb-dark-mode {
 		background-color: $darkBlue;
-		background-image: url('../assets/bracket-bg-dark.png');
+		background-image: url('../brackets/shared/assets/bracket-bg-dark.png');
 		color: #fff;
 
 		.wpbb-apparel-btn {
@@ -234,16 +225,28 @@
 }
 
 
-.wpbb-paired-bracket {
+.wpbb-paired-bracket,
+.wpbb-paginated-bracket {
 	font-family: 'Clash Display', sans-serif;
 	color: $darkBlue;
 	position: relative;
 	@extend %paired-teams;
 	@extend %paired-matchbox;
 
-	.wpbb-bracket-line {
-		border-top: 1px solid $darkBlue !important;
+	.wpbb-bracket-rounds-container {
+		display: flex;
+		width: 100%;
 	}
+
+	// .wpbb-bracket-lines-container,
+	// .wpbb-paginated-bracket-lines-container {
+	// 	position: absolute;
+	// 	top: 0;
+	// 	left: 0;
+	// 	width: 100%;
+	// 	// height: 100%;
+	// }
+
 
 	.wpbb-winner-container {
 		position: absolute;
@@ -378,8 +381,53 @@
 			border-color: #fff;
 		}
 
-		.wpbb-bracket-line {
-			border-top: 1px solid #fff !important;
+		// .wpbb-bracket-line {
+		// 	border-top: 1px solid #fff !important;
+		// }
+	}
+}
+
+.wpbb-bracket-line {
+	border-top: 1px solid $darkBlue !important;
+
+	&.wpbb-dark-mode {
+		border-top: 1px solid #fff !important;
+	}
+}
+
+.wpbb-action-btn {
+	border: none;
+	border-radius: 8px;
+	padding: 0;
+	font-size: 36px;
+	font-weight: 700;
+	width: 405.54px;
+	height: 72.18px;
+	background-color: $neonGreen;
+	color: $darkBlue;
+
+	&.disabled {
+		background-color: transparent;
+		color: rgba(0, 0, 0, 0.2);
+		border: 4px solid rgba(0, 0, 0, 0.2)
+	}
+
+}
+
+.wpbb-dark-mode {
+	.wpbb-action-btn {
+		background-color: $darkGreen;
+		border: 4px solid $neonGreen;
+		color: #fff;
+
+		&.secondary {
+			background-color: transparent;
+			border-color: #fff;
+		}
+
+		&.disabled {
+			color: rgba(255, 255, 255, 0.2);
+			border-color: rgba(255, 255, 255, 0.2);
 		}
 	}
 }
@@ -422,9 +470,6 @@
 	}
 
 }
-
-
-
 
 .wpbb-options-form {
 	display: flex;

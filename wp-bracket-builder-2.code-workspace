@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"name": "wp-bracket-builder",
+			"path": "."
+		},
+		{
+			"name": "react-bracket-builder",
+			"path": "includes/react-bracket-builder"
+		},
+		{
+			"name": "HTML-to-PDF2",
+			"path": "../HTML-to-PDF2"
+		},
+		{
+			"name": "bracket-export",
+			"path": "../bracket-export"
+		}
+	],
+	"settings": {}
+}

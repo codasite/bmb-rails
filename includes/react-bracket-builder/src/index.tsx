@@ -3,8 +3,8 @@ import App from "./App";
 import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
-import { BracketRes } from './api/types/bracket';
-import { bracketBuilderStore } from './app/store';
+import { BracketRes } from './brackets/shared/api/types/bracket';
+import { bracketBuilderStore } from './brackets/shared/app/store';
 import { Provider } from 'react-redux';
 
 interface WpbbAjaxObj {
@@ -52,8 +52,8 @@ if (sentryDsn) {
 }
 
 // Dynamically render components to avoid loading unused modules
-const Settings = React.lazy(() => import('./settings/components/Settings'))
-const UserBracket = React.lazy(() => import('./bracket_pick/components/UserBracket'))
+const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
+const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserBracket/UserBracket'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 
 // Get the wpbb_ajax_obj from the global scope

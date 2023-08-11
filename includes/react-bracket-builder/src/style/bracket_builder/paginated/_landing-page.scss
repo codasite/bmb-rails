@@ -1,0 +1,46 @@
+@use '../builder' as *;
+
+
+.wpbb-paginated-landing-page {
+	@extend %wpbb-img-background;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+
+	.wpbb-bracket-image-container {
+		margin-top: 50px;
+
+		img {
+			width: 100%;
+
+		}
+	}
+
+	.wpbb-slogan-container {
+		padding: 0 20px;
+		text-align: center;
+	}
+
+	.wpbb-slogan-text {
+		// white-space: nowrap;
+		font-size: 48px;
+		font-weight: 600;
+		line-height: 1;
+	}
+
+	.wpbb-action-btn {
+		margin-top: 70px;
+	}
+
+	// .wpbb-bracket-rounds-container {
+	// 	transform: scale(0.5);
+	// }
+
+	// .wpbb-paired-bracket-container {
+	// 	// transform: scale(0.5);
+	// 	// transform-origin: left top;
+
+	// }
+}
