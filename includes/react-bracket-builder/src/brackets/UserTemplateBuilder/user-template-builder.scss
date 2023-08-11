@@ -74,9 +74,9 @@
     position: relative;
     padding: 16px;
     justify-content: center;
-    gap: 16px;
-    align-self: stretch; 
+    align-self: center; 
     border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+    width: 75%;
 }
 
 .wpbb-bracket-title input:focus {
@@ -85,6 +85,7 @@
     font-size: 32px; 
     text-transform: uppercase;
     text-align: center;
+    width: inherit;
 }
 
 .wpbb-bracket-title-name {
