@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 
 class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 
@@ -8,6 +9,11 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 * @var Wp_Bracket_Builder_Bracket_Repo
 	 */
 	private $bracket_repo;
+
+		/**
+	 * @var Wp_Bracket_Builder_Bracket_Api_Validation
+	 */
+	private $bracket_validate;
 
 	/**
 	 * @var string
@@ -29,6 +35,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'brackets';
+		$this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
 	}
 
 	/**
@@ -145,8 +152,13 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	public function create_item($request) {
 		$bracket = Wp_Bracket_Builder_Bracket::from_array($request->get_params());
 
-		$saved = $this->bracket_repo->add($bracket);
-		return new WP_REST_Response($saved, 201);
+		//checking validation for requested data
+		$validated = $this->bracket_validate->validate_bracket_api($bracket);
+		if(! isset($validatied)){
+			$saved = $this->bracket_repo->add($bracket);
+			return new WP_REST_Response($saved, 201);
+		}
+		return $validated;
 		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
 	}
 
