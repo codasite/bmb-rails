@@ -2,6 +2,9 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-pick-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-pick.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-pick-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
+
 // require vendor/autoload.php' from the root directory
 // require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 // use lambda
@@ -15,6 +18,16 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @var Wp_Bracket_Builder_Bracket_Pick_Repository_Interface
 	 */
 	private $pick_repo;
+
+	/**
+	 * @var Wp_Bracket_Builder_Utils
+	 */
+	private $utils;
+
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Pick_Service
+	 */
+	private $bracket_pick_service;
 
 	/**
 	 * @var string
@@ -33,7 +46,9 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	public function __construct() {
 		// echo $pick_repo;
 		// $this->pick_repo = $pick_repo != null ? $pick_repo : new Wp_Bracket_Builder_Bracket_Repository();
+		$this->utils = new Wp_Bracket_Builder_Utils();
 		$this->pick_repo = new Wp_Bracket_Builder_Bracket_Pick_Repository();
+		$this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'bracket-picks';
 	}
@@ -151,11 +166,9 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 */
 	public function create_item($request) {
 		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
-		print_r($pick);
+		$saved_pick = $this->pick_repo->add($pick);
 
-		// $saved = $this->pick_repo->add($pick);
-		// return new WP_REST_Response($saved, 201);
-		return new WP_REST_Response($pick, 201);
+		return new WP_REST_Response($saved_pick, 201);
 	}
 
 	/**
@@ -222,8 +235,8 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function admin_permission_check($request) {
-		// return true; // TODO: Disable this for production
-		return current_user_can('manage_options');
+		return true; // TODO: Disable this for production
+		// return current_user_can('manage_options');
 	}
 
 	/**
@@ -233,7 +246,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function customer_permission_check($request) {
-		// return true; // TODO: Disable this for production
-		return current_user_can('read');
+		return true; // TODO: Disable this for production
+		// return current_user_can('read');
 	}
 }
