@@ -44,7 +44,7 @@ const BracketsListItem = () => {
     ];
 
     useEffect(() => {
-        bracketApi.getBrackets().then((brackets) => {
+        bracketApi.getUserBrackets().then((brackets) => {
             setBrackets(brackets)
         });
     }, []);
