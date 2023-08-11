@@ -178,8 +178,15 @@ class Wp_Bracket_Builder {
 
 		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
 
-		$this->loader->add_action('init', $this, 'bracket_cpt');
+		$this->loader->add_action('init', $this, 'add_bracket_post_type');
+		$this->loader->add_action('init', $this, 'add_bracket_pick_post_type');
+
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
+
+		$this->loader->add_action('save_post', $plugin_admin, 'save_bracket_pick_html_meta_box');
 
 		// custom meta for bracket product variations
 		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
@@ -253,9 +260,7 @@ class Wp_Bracket_Builder {
 		return $this->version;
 	}
 
-	public function bracket_cpt() {
-		$bracket_api = new Wp_Bracket_Builder_Bracket_Api();
-
+	public function add_bracket_post_type() {
 		register_post_type(
 			'bracket',
 			array(
@@ -268,10 +273,32 @@ class Wp_Bracket_Builder {
 				'has_archive' => true,
 				// 'supports' => array('title', 'editor', 'thumbnail'),
 				'show_ui' => true,
-				'show_in_rest' => true,
+				'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wp_Bracket_Builder_Bracket_Api
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('category'),
+			)
+		);
+	}
+
+	public function add_bracket_pick_post_type() {
+		// register a post type named "bracket_pick"
+		register_post_type(
+			'bracket_pick',
+			array(
+				'labels' => array(
+					'name' => __('Bracket Picks'),
+					'singular_name' => __('Bracket Pick'),
+				),
+				'description' => 'Bracket picks for the WP Bracket Builder plugin',
+				// 'public' => true,
+				// 'has_archive' => true,
+				// 'supports' => array('title', 'editor', 'thumbnail'),
+				'show_ui' => true,
+				// 'show_in_rest' => true,
+				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
+				// 'taxonomies' => array('category'),
 			)
 		);
 	}
