@@ -210,13 +210,7 @@ const UserTemplateBuilder = () => {
 
     return (
         <div className='wpbb-template-builder-root'>
-            <div className="d-flex justify-content-center">
-                <Container>
-                    <Row>
-                        <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
-                    </Row>
-                </Container>
-            </div>
+            <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
             <div className='pt-5 wpbb-default'>
                 <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit />
             </div>
