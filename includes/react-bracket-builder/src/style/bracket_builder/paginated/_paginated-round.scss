@@ -1,0 +1,30 @@
+@use '../../constants' as *;
+
+.wpbb-paginated-round {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	background-color: $darkBlue;
+	// height: 100%;
+	min-height: 100vh;
+	padding: 60px 0;
+
+	.wpbb-action-btn {
+		font-size: 24px;
+		font-weight: 600;
+		height: 268;
+	}
+}
+
+.wpbb-paginated-round-header-text {
+	font-size: 24px;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.wpbb-paginated-round-match-columns {
+	display: flex;
+	width: 290px;
+
+}

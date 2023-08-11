@@ -1,0 +1,26 @@
+@use '../constants' as *;
+
+.wpbb-bracket-builder-root {
+	// height: 100%;
+	font-family: 'Clash Display', sans-serif;
+	background-color: #fff;
+	color: $darkBlue;
+
+	&.wpbb-dark-mode {
+		background-color: $darkBlue;
+		color: #fff;
+	}
+
+}
+
+%wpbb-img-background {
+	position: relative;
+	background-image: url('../brackets/shared/assets/bracket-bg-light.png');
+	background-repeat: no-repeat;
+	background-position: center top;
+	background-size: cover;
+
+	&.wpbb-dark-mode {
+		background-image: url('../brackets/shared/assets/bracket-bg-dark.png');
+	}
+}

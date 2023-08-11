@@ -1,0 +1,27 @@
+// @use '../../constants' as *;
+
+.wpbb-paginated-bracket {
+	// min-height: 100vh;
+
+	&.wpbb-dark-mode {
+		color: #fff;
+	}
+
+	.wpbb-action-btn {
+		font-size: 24px;
+		font-weight: 600;
+		width: 268px;
+		height: 48px;
+	}
+
+	// height: 100%;
+
+}
+
+
+// .wpbb-paginated-bracket-container {
+// 	display: flex;
+// 	flex-direction: column;
+// 	justify-content: space-between;
+// 	align-items: center;
+// }
