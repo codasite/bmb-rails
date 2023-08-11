@@ -26,7 +26,7 @@ const deleteBracket = (bracketId: number) => {
     console.log(response)
 }
 
-const BracketsDisplay = () => {
+const BracketsListItem = () => {
 
     const [brackets, setBrackets] = useState<BracketRes[]>([])
     let bracketId: number
@@ -102,4 +102,4 @@ const BracketsDisplay = () => {
 
 }
 
-export default BracketsDisplay
+export default BracketsListItem
