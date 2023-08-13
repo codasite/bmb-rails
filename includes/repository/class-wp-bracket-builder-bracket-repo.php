@@ -9,6 +9,7 @@ interface Wp_Bracket_Builder_Bracket_Repository_Interface {
 	public function delete(int $id): bool;
 	public function add_max_teams(int $max);
 	public function get_max_teams();
+	public function get_user_brackets(): array;
 	// public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
 }
 
@@ -353,6 +354,28 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 
 	}
 
+
+	public function get_user_brackets(): array {
+		$current_user = wp_get_current_user();
+		$current_user_id = $current_user->ID;
+
+		$bracket_table = $this->bracket_table();
+		$cpt_table = $this->cpt_table();
+		$bracket_fields = $this->bracket_fields();
+		$brackets = $this->wpdb->get_results(
+			"SELECT {$bracket_fields},
+				(SELECT COUNT(*) FROM {$this->bracket_pick_table()} WHERE bracket_id = {$bracket_table}.id) as num_submissions
+			 FROM {$bracket_table}
+			 LEFT JOIN {$cpt_table} ON {$bracket_table}.cpt_id = {$cpt_table}.ID where {$cpt_table}.post_author = $current_user_id
+			 ORDER BY created_at DESC",
+			ARRAY_A
+		);
+		$brackets_array = [];
+		foreach ($brackets as $bracket) {
+			$brackets_array[] = Wp_Bracket_Builder_Bracket::from_array($bracket);
+		}
+		return $brackets_array;
+	}
 
 	private function bracket_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_brackets';
