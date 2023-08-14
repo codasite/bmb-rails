@@ -12,18 +12,22 @@
 
 .team-picker {
     display: flex;
+    gap: 5px;
+    margin-top: 1%;
 }
 
 .button-container {
     margin: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 @media (max-width: 768px) {
-    .how-many-teams-text {
+    .bracket-text-info {
         font-size: 14px;
     }
 
-    .team-chooser-box ,.wild-card-display-text{
+    .team-chooser-box ,.wild-card-display-text,.btn-play-bracket,.btn-save-bracket{
         width: 95vw !important;
     }
 
@@ -47,7 +51,7 @@
     }
 
     .tree-group {
-        width: 70vw !important;
+        width: 96vw !important;
     }
 
     .pos-btn {
@@ -56,7 +60,7 @@
     }
 
     .step-up-button, .step-down-button {
-        width: 45vw !important;
+        width: 46vw !important;
     }
 
     .wild-card-btn {
@@ -74,9 +78,9 @@
     position: relative;
     padding: 16px;
     justify-content: center;
-    align-self: center; 
+    gap: 16px;
+    align-self: stretch; 
     border-bottom: 1px solid rgba(255, 255, 255, 0.30);
-    width: 75%;
 }
 
 .wpbb-bracket-title input:focus {
@@ -85,7 +89,6 @@
     font-size: 32px; 
     text-transform: uppercase;
     text-align: center;
-    width: inherit;
 }
 
 .wpbb-bracket-title-name {
@@ -116,11 +119,6 @@
     padding-bottom: 2%;
 }
 
-
-.options-bracket-display {
-    padding-top: 3%;
-}
-
 .options-bracket-display-text {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
@@ -129,7 +127,7 @@
     font-weight: 500;
     line-height: normal;
     text-transform: uppercase;
-    padding-bottom: 5%;
+    // padding-bottom: 3%;
 }
 
 .randomize-teams {
@@ -150,40 +148,32 @@
     text-transform: uppercase;
 }
 
-/* .options-bracket-tree {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6%;
-    border-radius: 7px;
-    width: 80vw;
-} */
 
-.options-bracket-dual-tree,
-.options-bracket-single-tree {
+.tree-type {
+    width: 392px;
+    height: 56px;
+    padding: 16px 0px 15px 0px;
+    border-radius: 8px;
+    border: 1px solid #FFFFFF;
     text-align: center;
-    border: 1px solid #FFF;
     text-transform: uppercase;
     color: #FFFFFF;
-    width: 200px;
-    box-sizing: content-box !important;
-    border-radius: 7px;
-    padding: 11px;
-    display: flex;
-    justify-content: center;
-}
-
-.options-bracket-single-tree {
-    position: relative;
-    left: 10%;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 25px;
+    letter-spacing: 0em;
+    text-align: center;
 }
 
 .tree-group {
     display: flex;
-    width: 30vw;
+    width: 800px;
+    height: 56px;
+    gap: 16px;
+    margin-top: 2%;
 }
 
-.how-many-teams-text {
+.bracket-text-info {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
     font-size: 24px;
@@ -191,20 +181,10 @@
     font-weight: 500;
     line-height: normal;
     text-transform: uppercase;
-    padding-top: 2%;
-    padding-bottom: 2%;
 }
 
 
 .wild-card-display-text {
-    color: rgba(255, 255, 255, 0.50);
-    text-align: center;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-transform: uppercase;
-    padding-top: 2%;
     padding-bottom: 2%;
     width: 85vw;
 }
@@ -222,27 +202,31 @@
 }
 
 .team-chooser-box {
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     padding: 30px;
     margin: 10px;
     color: #FFFFFF;
     flex-basis: calc(80% / 3 - 30px);
     flex: 1;
-    border-radius: 7px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 48px;
     text-align: center;
+    height: 125px;
+    padding-left: 15px;
 }
 
 .wild-card-btn {
     color: #FFFFFF;
     flex-basis: calc(80% / 3 - 30px);
     flex: 1;
-    border-radius: 7px;
+    border-radius: 8px;
     text-align: center;
 }
 
 .highlight {
     background-color: #0b2e33;
-    border-color: #05ff3c;
+    border: 4px solid #05ff3c;
 }
 
 .btn-secondary {
@@ -260,13 +244,20 @@
     border-radius: 8px;
     border: 1px solid #2137FF;
     background: rgba(33, 55, 255, 0.15);
+    height: 57px;
+    align-items: center;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    gap: 10px;
 
 }
 
 .btn-save-bracket:hover,
 .btn-save-bracket:active {
-    border: 1px solid #2137FF !important;
-    background: rgba(33, 55, 255, 0.15) !important;
+    border: 1px solid #2137FF ;
+    background: rgba(33, 55, 255, 0.15) ;
+   
 }
 
 
@@ -275,6 +266,12 @@
     border-radius: 8px;
     border: 1px solid var(--green, #05FF3C);
     background: rgba(5, 255, 60, 0.15);
+    height: 57px;
+    align-items: center;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    gap: 10px;
 
 }
 
@@ -302,24 +299,26 @@ no-highlight-button:active {
     transition: none !important;
 }
 
-.wild-btn {
-    width: 80vw !important;
-}
+// .wild-btn {
+//     width: 80vw !important;
+// }
 
 .pos-btn {
-    width: 17vw;
+    width: 16vw;
     color: #FFF;
     text-align: center;
-    border-radius: 7px;
-    padding: 10px;
+    border-radius: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #FFFFFF;
+    height: 56px;
 }
 
 .wild-card-group {
     display: flex;
 }
 
-.options-bracket-dual-tree:hover,
-.options-bracket-single-tree:hover {
+.tree-type:hover {
     background: rgba(255, 255, 255, 0.15);
 }
 
@@ -335,10 +334,21 @@ no-highlight-button:active {
     display: flex;
     position: relative;
     bottom: 15%;
-    left: 5%;
+    .highlight{
+        padding-top: 0% !important;
+    }
 }
 
 .step-up-button, .step-down-button{
     color: white;
-    border-radius: 8px;
+    border-radius: 4px;
+    border: 1px solid #FFFFFF ;
+    height: 30px;
+    margin-top: 3%;
+}
+
+.bracket-button{
+    display: grid;
+    gap: 16px;
+
 }

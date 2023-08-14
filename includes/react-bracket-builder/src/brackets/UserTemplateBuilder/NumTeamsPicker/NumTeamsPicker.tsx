@@ -78,10 +78,9 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
                 onClick={handleBoxClick}
             >
                 {currentValue}
-                {selected && currentValue === defaultValue && <span className="corner-text">Default</span>}
+                {selected && currentValue === defaultValue && <span className='corner-text'>Default</span>}
 
             </div>
-            <Col>
                 <div style={{ visibility: selected ? 'visible' : 'hidden' }}>
                     <div>
                         <ButtonGroup aria-label="Basic example" className='button-container'>
@@ -90,7 +89,6 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
                         </ButtonGroup>
                     </div>
                 </div>
-            </Col>
         </div>
     )
 }
