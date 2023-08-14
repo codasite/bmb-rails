@@ -91,7 +91,7 @@ class Wp_Bracket_Builder_Public {
 		 */
 
 		// wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
-		wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css', array(), null, 'all');
+		// wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css', array(), null, 'all');
 		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), null, 'all');
 	}
 
@@ -202,9 +202,28 @@ class Wp_Bracket_Builder_Public {
 	?>
 		<div id="wpbb-bracket-preview-controller" style="width: 100%">
 		</div>
+	<?php
+		return ob_get_clean();
+	}
+
+	public function render_options_bracket_preview() {
+		ob_start();
+	?>
+		<div id="wpbb-bracket-option-preview" style="width: 100%">
+		</div>
 <?php
 		return ob_get_clean();
 	}
+
+	public function render_bracket_manager_preview() {
+		ob_start();
+	?>
+		<div id="wpbb-bracket-manager-preview" style="width: 100%">
+		</div>
+<?php
+		return ob_get_clean();
+	}
+
 
 	/**
 	 * Add shortcode to render events
@@ -214,6 +233,8 @@ class Wp_Bracket_Builder_Public {
 	public function add_shortcodes() {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']);
 		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
+		add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
+		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager_preview']);
 	}
 
 	public function get_archive_url() {

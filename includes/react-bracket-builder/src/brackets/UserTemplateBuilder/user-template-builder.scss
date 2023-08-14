@@ -1,0 +1,344 @@
+.wpbb-template-builder-root {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    background-image: url('../shared/assets/bracket-bg-dark.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 2%;
+    font-family: 'Clash Display', sans-serif;
+}
+
+.team-picker {
+    display: flex;
+}
+
+.button-container {
+    margin: 10px;
+}
+
+@media (max-width: 768px) {
+    .how-many-teams-text {
+        font-size: 14px;
+    }
+
+    .team-chooser-box ,.wild-card-display-text{
+        width: 95vw !important;
+    }
+
+    .team-picker {
+        display: grid !important;
+        align-self: stretch;
+        width: 95vw !important;
+        place-items: center;
+    }
+
+    .options-bracket-display-text {
+        font-size: 18px;
+    }
+
+    .options-bracket-tree {
+        width: 90vw;
+    }
+
+    .randomize-teams {
+        width: 70vw !important;
+    }
+
+    .tree-group {
+        width: 70vw !important;
+    }
+
+    .pos-btn {
+        width: 22vw !important;
+        font-size: 14px;
+    }
+
+    .step-up-button, .step-down-button {
+        width: 45vw !important;
+    }
+
+    .wild-card-btn {
+        padding: 0px !important;
+        margin: 0px !important;
+
+    }
+    .wild-card-group{
+        width: 100vw !important;
+    }
+}
+
+.wpbb-bracket-title {
+    display: flex;
+    position: relative;
+    padding: 16px;
+    justify-content: center;
+    align-self: center; 
+    border-bottom: 1px solid rgba(255, 255, 255, 0.30);
+    width: 75%;
+}
+
+.wpbb-bracket-title input:focus {
+    outline: none;
+    border: none;
+    font-size: 32px; 
+    text-transform: uppercase;
+    text-align: center;
+    width: inherit;
+}
+
+.wpbb-bracket-title-name {
+    color: rgba(255, 255, 255, 0.20);
+    text-align: center;
+    font-family: Clash Display Variable;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase; 
+}
+
+.wpbb-bracket-title-input {
+    text-decoration: none;
+    background-color: transparent;
+    color: rgba(255, 255, 255, 0.20);
+}
+
+.options-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    background-image: url('../shared/assets/bracket-bg-dark.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-bottom: 2%;
+}
+
+
+.options-bracket-display {
+    padding-top: 3%;
+}
+
+.options-bracket-display-text {
+    color: rgba(255, 255, 255, 0.50);
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-bottom: 5%;
+}
+
+.randomize-teams {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    border: 1px solid #2137FF;
+    background: rgba(33, 55, 255, 0.15);
+    box-sizing: content-box !important;
+    width: 35vw;
+    padding: 11px;
+}
+
+.randomize-teams-text {
+    color: #FFFFFF;
+    text-transform: uppercase;
+}
+
+/* .options-bracket-tree {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6%;
+    border-radius: 7px;
+    width: 80vw;
+} */
+
+.options-bracket-dual-tree,
+.options-bracket-single-tree {
+    text-align: center;
+    border: 1px solid #FFF;
+    text-transform: uppercase;
+    color: #FFFFFF;
+    width: 200px;
+    box-sizing: content-box !important;
+    border-radius: 7px;
+    padding: 11px;
+    display: flex;
+    justify-content: center;
+}
+
+.options-bracket-single-tree {
+    position: relative;
+    left: 10%;
+}
+
+.tree-group {
+    display: flex;
+    width: 30vw;
+}
+
+.how-many-teams-text {
+    color: rgba(255, 255, 255, 0.50);
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+
+.wild-card-display-text {
+    color: rgba(255, 255, 255, 0.50);
+    text-align: center;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    width: 85vw;
+}
+
+.teams-number {
+    display: flex;
+    width: 700px;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+    padding-left: 10%;
+    padding-right: 10%;
+}
+
+.team-chooser-box {
+    border: 2px solid #ccc;
+    padding: 30px;
+    margin: 10px;
+    color: #FFFFFF;
+    flex-basis: calc(80% / 3 - 30px);
+    flex: 1;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.wild-card-btn {
+    color: #FFFFFF;
+    flex-basis: calc(80% / 3 - 30px);
+    flex: 1;
+    border-radius: 7px;
+    text-align: center;
+}
+
+.highlight {
+    background-color: #0b2e33;
+    border-color: #05ff3c;
+}
+
+.btn-secondary {
+    width: 12vw;
+    background: none;
+    margin-right: 6px;
+}
+
+.btn-secondary[disabled] {
+    background-color: transparent;
+}
+
+.btn-save-bracket {
+    width: 80vw;
+    border-radius: 8px;
+    border: 1px solid #2137FF;
+    background: rgba(33, 55, 255, 0.15);
+
+}
+
+.btn-save-bracket:hover,
+.btn-save-bracket:active {
+    border: 1px solid #2137FF !important;
+    background: rgba(33, 55, 255, 0.15) !important;
+}
+
+
+.btn-play-bracket {
+    width: 80vw;
+    border-radius: 8px;
+    border: 1px solid var(--green, #05FF3C);
+    background: rgba(5, 255, 60, 0.15);
+
+}
+
+.btn-play-bracket:hover,
+.bbtn-play-brackett:active {
+    border: 1px solid var(--green, #05FF3C) !important;
+    background: rgba(5, 255, 60, 0.15) !important;
+}
+
+.save-bracket-text,
+.play-bracket-text {
+    color: #FFF;
+    text-align: center;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: uppercase;
+    padding-left: 3px;
+}
+
+.no-highlight-button:hover,
+no-highlight-button:active {
+    background-color: transparent !important;
+    transition: none !important;
+}
+
+.wild-btn {
+    width: 80vw !important;
+}
+
+.pos-btn {
+    width: 17vw;
+    color: #FFF;
+    text-align: center;
+    border-radius: 7px;
+    padding: 10px;
+}
+
+.wild-card-group {
+    display: flex;
+}
+
+.options-bracket-dual-tree:hover,
+.options-bracket-single-tree:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.corner-text {
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-transform: uppercase;
+    color: #05ff3c;
+    justify-content: flex-start;
+    display: flex;
+    position: relative;
+    bottom: 15%;
+    left: 5%;
+}
+
+.step-up-button, .step-down-button{
+    color: white;
+    border-radius: 8px;
+}

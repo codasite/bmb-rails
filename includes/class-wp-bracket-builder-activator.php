@@ -43,6 +43,7 @@ class Wp_Bracket_Builder_Activator {
 		self::create_matches_table($prefix);
 		self::create_bracket_picks_table($prefix);
 		self::create_match_picks_table($prefix);
+		self::create_max_team_table($prefix);
 	}
 
 	private static function delete_tables(string $prefix) {
@@ -256,6 +257,26 @@ class Wp_Bracket_Builder_Activator {
 			FOREIGN KEY (bracket_pick_id) REFERENCES {$prefix}bracket_picks(id) ON DELETE CASCADE,
 			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id) ON DELETE CASCADE,
 			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
+		) $charset_collate;";
+
+		// import dbDelta
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		dbDelta($sql);
+	}
+
+	private static function create_max_team_table(string $prefix) {
+		/**
+		 * Create the predictions table
+		 */
+
+		global $wpdb;
+		$table_name = $prefix . 'max_teams';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id mediumint(9) NOT NULL AUTO_INCREMENT,
+			max_teams mediumint(9) NOT NULL,
+			PRIMARY KEY (id)
 		) $charset_collate;";
 
 		// import dbDelta

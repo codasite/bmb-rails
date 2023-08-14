@@ -55,12 +55,16 @@ if (sentryDsn) {
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
 const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserBracket/UserBracket'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
+const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
+const BracketManager = React.lazy(() => import('./brackets/BracketManager/BracketManager'))
 
 // Get the wpbb_ajax_obj from the global scope
 
 renderSettings(wpbb_ajax_obj)
 renderBracketBuilder(wpbb_ajax_obj)
 renderPreview(wpbb_ajax_obj)
+renderOptionsTree()
+renderBracketManager()
 
 function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	const page = wpbb_ajax_obj.page
@@ -68,6 +72,20 @@ function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	if (page === 'settings') {
 		// Render the App component into the DOM
 		render(<App><Settings /></App >, document.getElementById('wpbb-admin-panel'));
+	}
+}
+
+function renderOptionsTree() {
+	const optionsBuilder = document.getElementById('wpbb-bracket-option-preview')
+	if (optionsBuilder) {
+		render(<App><Options /></App >, optionsBuilder);
+	}
+}
+
+function renderBracketManager() {
+	const bracketMangerBuilder = document.getElementById('wpbb-bracket-manager-preview')
+	if (bracketMangerBuilder) {
+		render(<App><BracketManager /></App >, bracketMangerBuilder);
 	}
 }
 

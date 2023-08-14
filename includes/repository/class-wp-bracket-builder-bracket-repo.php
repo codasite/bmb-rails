@@ -7,6 +7,8 @@ interface Wp_Bracket_Builder_Bracket_Repository_Interface {
 	public function get(int $id): ?Wp_Bracket_Builder_Bracket;
 	public function get_all(): array;
 	public function delete(int $id): bool;
+	public function add_max_teams(int $max);
+	public function get_max_teams();
 	// public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
 }
 
@@ -323,6 +325,35 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		]);
 	}
 
+	public function add_max_teams(int $max) {
+		$table_name = $this->max_teams_table();
+		$existing_max_team_info = $this->get_max_teams();
+
+		$data = array(
+			"max_teams" => $max
+		);
+
+		if (isset($existing_max_team_info)) {
+			$where = array('id' => $existing_max_team_info['id']);
+			$this->wpdb->update($table_name, $data, $where);
+		} else {
+			$this->wpdb->insert($table_name, $data);
+		}
+		
+	}
+
+	public function get_max_teams() {
+		$table_name = $this->max_teams_table();
+		$existing_max_team_info = $this->wpdb->get_row(
+			$this->wpdb->prepare("SELECT * FROM {$table_name}"),
+			ARRAY_A
+		);
+		
+		return $existing_max_team_info;
+
+	}
+
+
 	private function bracket_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_brackets';
 	}
@@ -340,5 +371,8 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 	}
 	private function team_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_teams';
+	}
+	private function max_teams_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_max_teams';
 	}
 }
