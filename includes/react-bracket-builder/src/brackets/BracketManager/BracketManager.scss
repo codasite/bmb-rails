@@ -44,20 +44,6 @@
         height: 5vw;
         padding: 1vw;
       }
-      
-      .play-bracket,
-      .set-bracket-score,
-      .private-bracket,
-      .view-leaderboard,
-      .share-bracket {
-        color: #fff;
-        text-align: center;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-        text-transform: uppercase;
-      }
     
       .new-bracket-text {
         font-size: 32px;
@@ -71,7 +57,7 @@
       }
     
       .my-brackets-text {
-        text-align: start !important;
+        text-align: start;
       }
       
       .bracket-action-images {
