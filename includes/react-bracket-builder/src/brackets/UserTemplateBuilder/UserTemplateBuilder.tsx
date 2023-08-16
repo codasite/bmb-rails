@@ -113,10 +113,11 @@ const UserTemplateBuilder = () => {
     }
 
     const CreateWildCardPlacementButtons = (props) => {
+        const selected = props.wildCard();
         return (
             <div>
                 <ButtonGroup aria-label="Basic example">
-                    <Button className='btn-secondary no-highlight-button pos-btn' variant='secondary' onClick={() => handleWildCardPlacement(props.positionIndex)}>{props.position}</Button>
+                    <Button className={`btn-secondary no-highlight-button pos-btn ${selected ? 'selected-btn' : ''}`}  variant='secondary' onClick={() => handleWildCardPlacement(props.positionIndex)}>{props.position}</Button>
                 </ButtonGroup>
             </div>
         )
@@ -173,6 +174,12 @@ const UserTemplateBuilder = () => {
             }
         })
         setTeamPickerState(newPickers)
+    }
+
+    const setWildCardSelected = (index) => {
+        if(wildCardPos === index){
+            return true;
+        }
     }
 
     /**
@@ -271,7 +278,7 @@ const UserTemplateBuilder = () => {
                 <div className='wild-card-group'>
                     {WildCardPlacements.map((pos, index) => (
                         <div className='wild-card-btn' key={index}>
-                            <CreateWildCardPlacementButtons position={pos} positionIndex={index} />
+                            <CreateWildCardPlacementButtons position={pos} positionIndex={index} wildCard={() => setWildCardSelected(index)}/>
                         </div>
                     ))}
                 </div>

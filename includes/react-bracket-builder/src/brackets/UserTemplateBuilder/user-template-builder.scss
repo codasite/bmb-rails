@@ -54,9 +54,14 @@
         width: 96vw !important;
     }
 
+    .tree-type{
+        width: 45vw !important;
+    }
+
     .pos-btn {
         width: 22vw !important;
         font-size: 14px;
+        cursor: pointer;
     }
 
     .step-up-button, .step-down-button {
@@ -141,6 +146,7 @@
     box-sizing: content-box !important;
     width: 35vw;
     padding: 11px;
+    cursor: pointer;
 }
 
 .randomize-teams-text {
@@ -150,7 +156,7 @@
 
 
 .tree-type {
-    width: 392px;
+    width: 40vw;
     height: 56px;
     padding: 16px 0px 15px 0px;
     border-radius: 8px;
@@ -161,16 +167,18 @@
     font-size: 20px;
     font-weight: 500;
     line-height: 25px;
-    letter-spacing: 0em;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
 }
 
 .tree-group {
     display: flex;
-    width: 800px;
+    width: 55vw;
     height: 56px;
     gap: 16px;
     margin-top: 2%;
+    justify-content: center;
 }
 
 .bracket-text-info {
@@ -214,6 +222,7 @@
     text-align: center;
     height: 125px;
     padding-left: 15px;
+    cursor: pointer;
 }
 
 .wild-card-btn {
@@ -247,9 +256,9 @@
     height: 57px;
     align-items: center;
     display: flex;
-    text-align: center;
     justify-content: center;
     gap: 10px;
+    cursor: pointer;
 
 }
 
@@ -269,9 +278,9 @@
     height: 57px;
     align-items: center;
     display: flex;
-    text-align: center;
     justify-content: center;
     gap: 10px;
+    cursor: pointer;
 
 }
 
@@ -312,6 +321,7 @@ no-highlight-button:active {
     padding-bottom: 10px;
     border: 1px solid #FFFFFF;
     height: 56px;
+    cursor: pointer;
 }
 
 .wild-card-group {
@@ -345,10 +355,16 @@ no-highlight-button:active {
     border: 1px solid #FFFFFF ;
     height: 30px;
     margin-top: 3%;
+    cursor: pointer;
 }
 
 .bracket-button{
     display: grid;
     gap: 16px;
 
+}
+
+.selected-btn{
+    border: 1px solid #817727;
+    color: #f8e11a;
 }
