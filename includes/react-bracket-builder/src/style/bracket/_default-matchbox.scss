@@ -2,8 +2,8 @@ $match-box-border: 2px solid #3c434a;
 // $match-box-border: none;
 
 @mixin match-box() {
-	border-top: $match-box-border;
-	border-bottom: $match-box-border;
+	// border-top: $match-box-border;
+	// border-bottom: $match-box-border;
 	position: relative;
 	box-sizing: border-box;
 }
@@ -17,7 +17,7 @@ $match-box-border: 2px solid #3c434a;
 	// bottom: -5px;
 	// top: -5px;
 	width: 50%;
-	border: 5px solid white;
+	// border: 5px solid white;
 }
 
 $bracket-radius: 3px;
@@ -28,7 +28,7 @@ $bracket-radius: 3px;
 	// Only show the right border
 	.wpbb-match-box-left {
 		@include match-box();
-		border-right: $match-box-border;
+		// border-right: $match-box-border;
 		border-radius: 0 $bracket-radius $bracket-radius 0;
 	}
 
@@ -36,7 +36,7 @@ $bracket-radius: 3px;
 	// Only show the left border
 	.wpbb-match-box-right {
 		@include match-box();
-		border-left: $match-box-border;
+		// border-left: $match-box-border;
 		border-radius: $bracket-radius 0 0 $bracket-radius;
 	}
 
