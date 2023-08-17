@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../../utils/types';
 import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../models/MatchTree'
+import { bracketConstants } from '../constants';
 // Direction enum
 enum Direction {
 	TopLeft = 0,
@@ -366,7 +367,8 @@ export const Bracket = (props: BracketProps) => {
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
-					matchHeight={2 ** idx * firstRoundMatchHeight}
+					// matchHeight={2 ** idx * firstRoundMatchHeight}
+					matchHeight={2 * bracketConstants.teamHeight }
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -380,7 +382,8 @@ export const Bracket = (props: BracketProps) => {
 				round={rounds[0]}
 				direction={Direction.Center}
 				numDirections={numDirections}
-				matchHeight={targetHeight / 4}
+				// matchHeight={targetHeight / 4}
+				matchHeight={2 * bracketConstants.teamHeight}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
@@ -395,7 +398,8 @@ export const Bracket = (props: BracketProps) => {
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
-					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					// matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					matchHeight={2 * bracketConstants.teamHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?

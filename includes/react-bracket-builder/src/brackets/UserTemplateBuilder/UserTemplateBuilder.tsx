@@ -218,7 +218,7 @@ const UserTemplateBuilder = () => {
     return (
         <div className='wpbb-template-builder-root'>
             <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
-            <div className='wpbb-default'>
+            <div className='pt-5 wpbb-default'>
                 <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit />
             </div>
             <div>
