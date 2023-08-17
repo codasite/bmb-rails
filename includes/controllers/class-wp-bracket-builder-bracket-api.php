@@ -117,6 +117,15 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 				),
 			),
 		));
+
+		register_rest_route($namespace, '/' . $base .'/random-team-names', array(
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array($this, 'random_teams'),
+				'permission_callback' => array($this, 'customer_permission_check'),
+				'args'                => array(),
+			),
+		));
 	}
 
 	/**
@@ -141,6 +150,20 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 		$id = $request->get_param('item_id');
 		$bracket = $this->bracket_repo->get($id);
 		return new WP_REST_Response($bracket, 200);
+	}
+
+		/**
+	 * Randomizes Team Names
+	 *
+	 * @param WP_REST_Request $request Full details about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function random_teams($request) {
+		// get id from request
+		// echo $request;
+		$bracket = Wp_Bracket_Builder_Bracket::from_array($request->get_params());
+		$test = $this->bracket_repo->randomize($bracket);
+		return $test;
 	}
 
 	/**
