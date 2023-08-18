@@ -20,6 +20,7 @@ interface TeamSlotProps {
 	updateTeam?: (name: string) => void;
 	pickTeam?: () => void;
 	round?: Round;
+	match?: MatchNode | null;
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
@@ -68,13 +69,22 @@ const TeamSlot = (props: TeamSlotProps) => {
 		}
 		setTextBuffer(e.target.value)
 	}
-	const isReadOnly = (round)=>{
-		if(props.round?.name=='Round 1'){
+	const isReadOnly = (round, match, className) => {
+		if (round?.name == 'Round 1') {
 			return false;
 		}
-		else{
-			return true;
+		else if (round?.name == 'Round 2') {
+			if (match.left == null && className == 'wpbb-team1') {
+				return false;
+			}
+			else if (match.right == null && className == 'wpbb-team2') {
+				return false;
+			}
+			else {
+				return true;
+			}
 		}
+		return true;
 	}
 
 
@@ -84,7 +94,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 				<input
 					className='wpbb-team-name-input'
 					autoFocus
-					readOnly = {isReadOnly(props.round)}
+					readOnly={isReadOnly(props.round, props.match, props.className)}
 					onFocus={(e) => e.target.select()}
 					type='text'
 					value={textBuffer}
@@ -97,7 +107,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{textBuffer ? textBuffer: (props.round?.name=='Round 1'? 'ADD TEAM...': '')}</span>
+				<span className='wpbb-team-name'>{textBuffer ? textBuffer : (isReadOnly(props.round, props.match, props.className) ? '' : 'ADD TEAM...')}</span>
 			}
 		</div>
 	)
@@ -166,6 +176,7 @@ const MatchBox = (props: MatchBoxProps) => {
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
 				round={round}
+				match={match}
 			/>
 			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
@@ -174,6 +185,7 @@ const MatchBox = (props: MatchBoxProps) => {
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
 				round={round}
+				match={match}
 			/>
 		</div>
 	)
@@ -271,7 +283,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 					spacing={i + 1 < matches.length ? matchHeight : 0} // Do not add spacing to the last match in the round column
 					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
 					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
-					round = {round}
+					round={round}
 				/>
 			)
 		})
