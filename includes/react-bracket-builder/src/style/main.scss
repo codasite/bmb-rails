@@ -448,6 +448,7 @@
 		height: 34px;
 		line-height: 30px;
 		font-size: medium;
+		display: none;
 
 		input {
 			text-align: center;
@@ -557,5 +558,11 @@ $table-radius: 10px;
 
 	to {
 		opacity: 1;
+	}
+}
+
+@media (max-width: 768px) {
+	.wpbb-round{
+		width: 4.7vw !important;
 	}
 }
