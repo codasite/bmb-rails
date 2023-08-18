@@ -223,9 +223,8 @@ const UserTemplateBuilder = () => {
         const req = matchTree.toRequest(bracketTitle, true, totalRounds, totalWildCardGames, wildCardPos)
         bracketApi.createBracket(req)
             .then((bracket) => {
-                // console.log("Bracket Created Successfuly");
+                window.location.href = '/wp-admin/edit.php?post_type=bracket';
             })
-
     }
 
 
