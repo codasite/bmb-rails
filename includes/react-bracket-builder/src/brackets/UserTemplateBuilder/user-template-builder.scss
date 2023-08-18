@@ -10,10 +10,20 @@
     font-family: 'Clash Display', sans-serif;
 }
 
+.bracket-container {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-top: 60px;
+    padding-bottom: 240px;
+}
+
 .team-picker {
     display: flex;
-    gap: 5px;
-    margin-top: 1%;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .button-container {
@@ -193,42 +203,38 @@
 
 
 .wild-card-display-text {
-    padding-bottom: 2%;
-    width: 85vw;
+    padding-bottom: 12px;
 }
 
-.teams-number {
+.team-picker-container {
+    width: 100%;
     display: flex;
-    width: 700px;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 30px;
-    background: rgba(255, 255, 255, 0.05);
-    flex-shrink: 0;
-    padding-left: 10%;
-    padding-right: 10%;
+    gap: 24px;
+}
+
+.team-box-container {
+    width: calc(100%/3 - 24px);
 }
 
 .team-chooser-box {
     border: 1px solid #ccc;
     padding: 30px;
-    margin: 10px;
     color: #FFFFFF;
-    flex-basis: calc(80% / 3 - 30px);
+    flex-basis: calc(75% / 3 - 30px);
     flex: 1;
     border-radius: 8px;
     font-weight: 500;
     font-size: 48px;
     text-align: center;
-    height: 125px;
+    height: 136px;
     padding-left: 15px;
     cursor: pointer;
 }
 
 .wild-card-btn {
     color: #FFFFFF;
-    flex-basis: calc(80% / 3 - 30px);
-    flex: 1;
     border-radius: 8px;
     text-align: center;
 }
@@ -249,7 +255,7 @@
 }
 
 .btn-save-bracket {
-    width: 80vw;
+    width: 100%;
     border-radius: 8px;
     border: 1px solid #2137FF;
     background: rgba(33, 55, 255, 0.15);
@@ -271,7 +277,7 @@
 
 
 .btn-play-bracket {
-    width: 80vw;
+    width: 100%;
     border-radius: 8px;
     border: 1px solid var(--green, #05FF3C);
     background: rgba(5, 255, 60, 0.15);
@@ -308,9 +314,9 @@ no-highlight-button:active {
     transition: none !important;
 }
 
-// .wild-btn {
-//     width: 80vw !important;
-// }
+.wild-btn {
+    width: 100%;
+}
 
 .pos-btn {
     width: 16vw;
@@ -326,6 +332,8 @@ no-highlight-button:active {
 
 .wild-card-group {
     display: flex;
+    justify-content: space-between;
+    gap: 24px;
 }
 
 .tree-type:hover {
@@ -359,9 +367,9 @@ no-highlight-button:active {
 }
 
 .bracket-button{
+    width: 100%;
     display: grid;
     gap: 16px;
-
 }
 
 .selected-btn{
