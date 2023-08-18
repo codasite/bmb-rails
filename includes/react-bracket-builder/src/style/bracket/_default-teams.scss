@@ -7,7 +7,7 @@ $team-offset: -8px;
 @mixin team() {
 	position: absolute;
 	// height: $team-height;
-	height: 20px;
+	height: 28px;
 	min-width: 103px;
 	// border: 1px solid black;
 	left: 50%;
@@ -34,14 +34,15 @@ $team-offset: -8px;
 
 	.wpbb-team2 {
 		@include team();
-		bottom: $team-offset;
+		bottom: -12px;
 		gap: 24px;
 	}
 
 	.wpbb-champion-team {
 		@include team();
 		top: 50%;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, -300%);
+		display: none;
 	}
 
 	.wpbb-team1:hover,
@@ -64,18 +65,29 @@ $team-offset: -8px;
 		// font-style: normal;
 		// font-weight: 500;
 		// line-height: normal;
-		text-transform: uppercase; 
+		text-transform: uppercase;
 		z-index: 1;
+		font-size: 14px;
+		font-weight: 500;
 	}
 
 	.wpbb-team-name-input:focus {
 		border-radius: $bracket-radius - 1;
+		border: none;
 	}
 
 	.wpbb-team-name {
 		white-space: nowrap;
 		margin-top: 1px;
 		color: rgba(255, 255, 255, 0.50);
+		font-size: 14px;
+		font-weight: 500;
 		// font-size: small;
+	}
+
+	@media (max-width: 768px) {
+		.wpbb-team-name {
+			font-size: 6px
+		}
 	}
 }

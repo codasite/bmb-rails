@@ -33,19 +33,32 @@
 }
 
 @media (max-width: 768px) {
+    .bracket-container {
+        width: 100%;
+        padding: 0px 10px;
+    }
+
     .bracket-text-info {
         font-size: 14px;
     }
 
-    .team-chooser-box ,.wild-card-display-text,.btn-play-bracket,.btn-save-bracket{
+    .team-picker-container {
+        width: 100vw;
+    }
+
+    .team-box-container {
+        width: 95vw !important;
+    }
+
+    .team-chooser-box,
+    .wild-card-display-text,
+    .btn-play-bracket,
+    .btn-save-bracket {
         width: 95vw !important;
     }
 
     .team-picker {
         display: grid !important;
-        align-self: stretch;
-        width: 95vw !important;
-        place-items: center;
     }
 
     .options-bracket-display-text {
@@ -64,7 +77,7 @@
         width: 96vw !important;
     }
 
-    .tree-type{
+    .tree-type {
         width: 45vw !important;
     }
 
@@ -74,17 +87,21 @@
         cursor: pointer;
     }
 
-    .step-up-button, .step-down-button {
+    .step-up-button,
+    .step-down-button {
         width: 46vw !important;
     }
 
-    .wild-card-btn {
-        padding: 0px !important;
-        margin: 0px !important;
-
+    .wild-card-group {
+        gap: 10px !important;
     }
-    .wild-card-group{
-        width: 100vw !important;
+
+    .wpbb-bracket-title {
+        font-size: 14px !important;
+    }
+
+    .wpbb-bracket-title-name {
+        font-size: 28px !important;
     }
 }
 
@@ -94,14 +111,14 @@
     padding: 16px;
     justify-content: center;
     gap: 16px;
-    align-self: stretch; 
+    align-self: stretch;
     border-bottom: 1px solid rgba(255, 255, 255, 0.30);
 }
 
 .wpbb-bracket-title input:focus {
     outline: none;
     border: none;
-    font-size: 32px; 
+    font-size: 32px;
     text-transform: uppercase;
     text-align: center;
 }
@@ -114,7 +131,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    text-transform: uppercase; 
+    text-transform: uppercase;
 }
 
 .wpbb-bracket-title-input {
@@ -247,7 +264,7 @@
 .btn-secondary {
     width: 12vw;
     background: none;
-    margin-right: 6px;
+    // margin-right: 6px;
 }
 
 .btn-secondary[disabled] {
@@ -270,13 +287,14 @@
 
 .btn-save-bracket:hover,
 .btn-save-bracket:active {
-    border: 1px solid #2137FF ;
-    background: rgba(33, 55, 255, 0.15) ;
-   
+    border: 1px solid #2137FF;
+    background: rgba(33, 55, 255, 0.15);
+
 }
 
 
 .btn-play-bracket {
+    // width: 80vw;
     width: 100%;
     border-radius: 8px;
     border: 1px solid var(--green, #05FF3C);
@@ -352,27 +370,29 @@ no-highlight-button:active {
     display: flex;
     position: relative;
     bottom: 15%;
-    .highlight{
+
+    .highlight {
         padding-top: 0% !important;
     }
 }
 
-.step-up-button, .step-down-button{
+.step-up-button,
+.step-down-button {
     color: white;
     border-radius: 4px;
-    border: 1px solid #FFFFFF ;
+    border: 1px solid #FFFFFF;
     height: 30px;
     margin-top: 3%;
     cursor: pointer;
 }
 
-.bracket-button{
+.bracket-button {
     width: 100%;
     display: grid;
     gap: 16px;
 }
 
-.selected-btn{
+.selected-btn {
     border: 1px solid #817727;
     color: #f8e11a;
 }
