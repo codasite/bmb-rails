@@ -119,7 +119,7 @@ class Wp_Bracket_Builder_Admin {
 	}
 	public function bracket_builder_init_menu() {
 		add_menu_page(__('Bracket Builder', 'bracketbuilder'), __('Bracket Builder', 'bracketbuilder'), 'manage_options', 'bracketbuilder', array($this, 'bracket_builder_admin_page'), 'dashicons-admin-post', '2.1');
-		add_submenu_page('bracketbuilder','Bracket Builder Settings','Settings', 'manage_options', 'bracket-builder-settings',array($this, 'bracket_builder_settings_page'));
+		add_submenu_page('bracketbuilder', 'Bracket Builder Settings', 'Settings', 'manage_options', 'bracket-builder-settings', array($this, 'bracket_builder_settings_page'));
 	}
 
 	public function bracket_builder_admin_page() {
@@ -297,5 +297,18 @@ class Wp_Bracket_Builder_Admin {
 		}
 		// Save/Update the meta field in the database.
 		update_post_meta($post_id, 'bracket_pick_images', sanitize_text_field($_POST['bracket_pick_images']));
+	}
+
+	public function add_bracket_pick_columns($columns) {
+		$columns['author'] = 'Author';
+		return $columns;
+	}
+
+	public function show_backet_pick_data($column, $post_id) {
+		if ('author' === $column) {
+			$author_id = get_post_field('post_author', $post_id);
+			$author_name = get_the_author_meta('display_name', $author_id);
+			echo $author_name;
+		}
 	}
 }

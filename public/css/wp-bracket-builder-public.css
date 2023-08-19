@@ -13,6 +13,10 @@
 	gap: 30px;
 }
 
+.wpbb-tourney-leaderboard button:hover {
+	cursor: pointer;
+}
+
 .wpbb-tourney-leaderboard-header {
 	display: flex;
 	flex-direction: column;
@@ -24,10 +28,10 @@
 	background-size: cover;
 	background-position: center left;
 	background-image:
-		linear-gradient(rgba(248, 225, 26, .7), rgba(255, 108, 76, 0.5), rgba(255, 31, 79, 0.15)),
+		linear-gradient(rgba(248, 225, 26, .7) 0%, rgba(255, 108, 76, 0.5) 66.67%, rgba(255, 31, 79, 0.15) 100%),
 		url('../assets/images/bmb_icon_white_05.png');
 	/* color: #fff; */
-	padding: 56px 32px;
+	padding: 66px 30px 53px;
 }
 
 .wpbb-tourney-leaderboard-header svg {
@@ -148,7 +152,6 @@ body {
 }
 
 .wpbb-leaderboard-view-play-btn:hover {
-	cursor: pointer;
 	color: #010433;
 	background-color: #fff;
 }
