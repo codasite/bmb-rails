@@ -182,6 +182,7 @@ class Wp_Bracket_Builder {
 
 		$this->loader->add_action('init', $this, 'add_bracket_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_pick_post_type');
+		$this->loader->add_action('init', $this, 'add_tournament_post_type');
 
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
@@ -295,7 +296,29 @@ class Wp_Bracket_Builder {
 				// 'has_archive' => true,
 				// 'supports' => array('title', 'editor', 'thumbnail'),
 				'show_ui' => true,
-				// 'show_in_rest' => true,
+				'show_in_rest' => true,
+				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
+				// 'taxonomies' => array('category'),
+			)
+		);
+	}
+
+	public function add_tournament_post_type() {
+		// register a post type named "tournament"
+		register_post_type(
+			'tournament',
+			array(
+				'labels' => array(
+					'name' => __('Tournaments'),
+					'singular_name' => __('Tournament'),
+				),
+				'description' => 'Tournaments for the WP Bracket Builder plugin',
+				'public' => true,
+				'has_archive' => true,
+				// 'supports' => array('title', 'editor', 'thumbnail'),
+				'show_ui' => true,
+				'show_in_rest' => true,
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				// 'taxonomies' => array('category'),
