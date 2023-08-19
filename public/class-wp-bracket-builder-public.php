@@ -90,7 +90,7 @@ class Wp_Bracket_Builder_Public {
 		 * class.
 		 */
 
-		// wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
 		// wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css', array(), null, 'all');
 		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), null, 'all');
 	}
@@ -211,7 +211,7 @@ class Wp_Bracket_Builder_Public {
 	?>
 		<div id="wpbb-bracket-option-preview" style="width: 100%">
 		</div>
-<?php
+	<?php
 		return ob_get_clean();
 	}
 
@@ -224,6 +224,12 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_tourney_leaderboard() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-tourney-leaderboard.php';
+
+		return ob_get_clean();
+	}
 
 	/**
 	 * Add shortcode to render events
@@ -235,6 +241,7 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
 		add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
 		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
+		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
 	}
 
 	public function get_archive_url() {
