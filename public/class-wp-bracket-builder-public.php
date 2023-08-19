@@ -231,6 +231,13 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_bracket_dashboard() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/dashboard/wp-bracket-builder-dashboard.php';
+
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -242,6 +249,19 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
 		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
 		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
+		add_shortcode('wpbb-bracket-dashboard', [$this, 'render_bracket_dashboard']);
+	}
+
+	public function add_rewrite_rules() {
+		add_rewrite_rule('^dashboard/profile/?', 'index.php?pagename=dashboard&tab=profile', 'top');
+		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
+		add_rewrite_rule('^dashboard/tournaments/?', 'index.php?pagename=dashboard&tab=tournaments', 'top');
+		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
+	}
+
+	public function add_query_vars($vars) {
+		$vars[] = 'tab';
+		return $vars;
 	}
 
 	public function get_archive_url() {
