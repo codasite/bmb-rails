@@ -231,7 +231,7 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
-	public function render_bracket_dashboard() {
+	public function render_dashboard() {
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/dashboard/wp-bracket-builder-dashboard.php';
 
@@ -249,7 +249,7 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
 		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
 		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
-		add_shortcode('wpbb-bracket-dashboard', [$this, 'render_bracket_dashboard']);
+		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
 	}
 
 	public function add_rewrite_rules() {
