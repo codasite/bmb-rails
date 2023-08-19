@@ -187,6 +187,9 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
 
+		$this->loader->add_filter('manage_bracket_pick_posts_columns', $plugin_admin, 'add_bracket_pick_columns');
+		$this->loader->add_filter('manage_bracket_pick_posts_custom_column', $plugin_admin, 'show_bracket_pick_data', 10, 2);
+
 		$this->loader->add_action('save_post', $plugin_admin, 'save_bracket_pick_html_meta_box');
 
 		// custom meta for bracket product variations
