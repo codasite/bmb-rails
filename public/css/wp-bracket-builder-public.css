@@ -203,6 +203,10 @@ body {
 	text-decoration: none;
 }
 
+.wpbb-dashboard-content {
+	flex-grow: 1;
+}
+
 /** DASHBOARD NAV START */
 .wpbb-dashboard-nav li {
 	list-style: none;
@@ -286,6 +290,18 @@ body {
 	justify-content: space-between;
 }
 
+/** PROFILE END */
+
+/** TEMPLATES START */
+.wpbb-create-template-link {
+	border: 1px solid #fff;
+	background-color: rgba(255, 255, 255, 0.15);
+	padding: 16px;
+}
+
+.wpbb-template-list-item {
+	border: 2px solid rgba(255, 255, 255, 0.2)
+}
 
 
 
@@ -300,6 +316,10 @@ body {
 
 
 /** UTILITY CLASSES START */
+
+.wpbb-block {
+	display: block;
+}
 
 /** FLEXBOX */
 .wpbb-flex {
@@ -319,6 +339,13 @@ body {
 	align-items: center;
 }
 
+.wpbb-justify-center {
+	justify-content: center;
+}
+
+.wpbb-gap-30 {
+	gap: 30px;
+}
 
 .wpbb-gap-16 {
 	gap: 16px;
@@ -334,8 +361,20 @@ body {
 
 /** TEXT */
 
+.wpbb-font-size-24 {
+	font-size: 24px;
+}
+
 .wpbb-font-size-20 {
 	font-size: 20px;
+}
+
+.wpbb-font-size-12 {
+	font-size: 12px;
+}
+
+.wpbb-font-weight-700 {
+	font-weight: 700;
 }
 
 .wpbb-font-weight-500 {
@@ -346,6 +385,22 @@ body {
 	color: rgba(255, 255, 255, 0.5);
 }
 
+/** SPACING */
+
 .wpbb-margin-bottom-16 {
 	margin-bottom: 16px;
+}
+
+.wpbb-padding-30 {
+	padding: 30px;
+}
+
+/** BORDER */
+
+.wpbb-border-radius-16 {
+	border-radius: 16px;
+}
+
+.wpbb-border-radius-8 {
+	border-radius: 8px;
 }
