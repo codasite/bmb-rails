@@ -215,10 +215,7 @@ body {
 }
 
 .wpbb-dashboard-nav a {
-	display: block;
-	padding: 16px;
 	background-color: rgba(255, 255, 255, 0.1);
-	border-radius: 8px;
 	white-space: nowrap;
 }
 
@@ -266,7 +263,7 @@ body {
 .wpbb-profile-widget {
 	border-radius: 16px;
 	padding: 30px;
-	border: 2px solid rgba(255, 255, 255, 0.5);
+	border: 2px solid rgba(255, 255, 255, 0.10);
 	height: 308px;
 	width: 340px;
 	display: flex;
@@ -280,6 +277,7 @@ body {
 
 .wpbb-accuracy-widget {
 	justify-content: space-between;
+	background: rgba(5, 255, 60, 0.15);
 }
 
 .wpbb-wins-widget {
@@ -299,10 +297,60 @@ body {
 	padding: 16px;
 }
 
-.wpbb-template-list-item {
-	border: 2px solid rgba(255, 255, 255, 0.2)
+.wpbb-bracket-action-icon-btn {
+	height: 40px;
+	width: 40px;
+	padding: 8px;
+	background-color: rgba(255, 255, 255, 0.15);
+	border: none;
+	color: #fff;
 }
 
+.wpbb-bracket-action-icon-btn:hover {
+	cursor: pointer;
+	background-color: #fff;
+	color: #000;
+}
+
+.wpbb-bracket-action-btn {
+	border: 1px solid #fff;
+	padding: 12px 16px;
+}
+
+.wpbb-add-apparel-btn {
+	background: linear-gradient(117deg, rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%);
+	border-color: #05FF3C;
+}
+
+.wpbb-host-tournament-btn {
+	border: 1px solid #2137FF;
+	background: rgba(33, 55, 255, 0.15);
+}
+
+/** TEMPLATES END */
+
+/** TOURNAMENTS START */
+
+.wpbb-create-tournament-link {
+	border: 1px solid #fff;
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.wpbb-create-tournament-link:hover {
+	cursor: pointer;
+	background-color: #fff;
+	color: #000;
+}
+
+.wpbb-play-tournament-btn {
+	border: 1px solid #05FF3C;
+	background: rgba(5, 255, 60, 0.15);
+}
+
+.wpbb-dashboard-score-tournament-btn {
+	border: 1px solid #F8E11A;
+	background: rgba(248, 225, 26, 0.15);
+}
 
 
 
@@ -339,9 +387,22 @@ body {
 	align-items: center;
 }
 
+.wpbb-align-start {
+	align-items: flex-start;
+}
+
+.wpbb-align-end {
+	align-items: flex-end;
+}
+
 .wpbb-justify-center {
 	justify-content: center;
 }
+
+.wpbb-space-between {
+	justify-content: space-between;
+}
+
 
 .wpbb-gap-30 {
 	gap: 30px;
@@ -349,6 +410,10 @@ body {
 
 .wpbb-gap-16 {
 	gap: 16px;
+}
+
+.wpbb-gap-15 {
+	gap: 15px;
 }
 
 .wpbb-gap-10 {
@@ -360,6 +425,10 @@ body {
 }
 
 /** TEXT */
+
+.wpbb-font-size-30 {
+	font-size: 30px;
+}
 
 .wpbb-font-size-24 {
 	font-size: 24px;
@@ -385,6 +454,10 @@ body {
 	color: rgba(255, 255, 255, 0.5);
 }
 
+.wpbb-color-white {
+	color: #fff;
+}
+
 /** SPACING */
 
 .wpbb-margin-bottom-16 {
@@ -395,6 +468,10 @@ body {
 	padding: 30px;
 }
 
+.wpbb-padding-16 {
+	padding: 16px;
+}
+
 /** BORDER */
 
 .wpbb-border-radius-16 {
@@ -403,4 +480,8 @@ body {
 
 .wpbb-border-radius-8 {
 	border-radius: 8px;
+}
+
+.wpbb-border-grey-15-2 {
+	border: 2px solid rgba(255, 255, 255, 0.15);
 }

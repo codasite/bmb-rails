@@ -24,12 +24,26 @@ switch ($current_tab) {
 }
 
 
-function wpbb_get_nav_link($tab, $current_tab, $label) {
-	$classes = array('wpbb-dashboard-nav-link');
+function wpbb_get_nav_link($tab, $current_tab, $label, $icon) {
+	$classes = array(
+		'wpbb-dashboard-nav-link',
+		'wpbb-flex',
+		'wpbb-gap-10',
+		'wpbb-align-center',
+		'wpbb-border-radius-8',
+		'wpbb-padding-16',
+	);
 	if ($tab === $current_tab) {
 		$classes[] = 'active';
 	}
-	return '<a href="' . get_permalink() . $tab . '" class="' . implode(' ', $classes) . '" data-tab="' . $tab . '">' . $label . '</a>';
+	ob_start();
+?>
+	<a href="<?php echo get_permalink() . $tab; ?>" class="<?php echo implode(' ', $classes); ?>" data-tab="<?php echo $tab; ?>">
+		<?php echo file_get_contents(plugins_url($icon, __FILE__)); ?>
+		<span class="wpbb-dashboard-nav-link-label"><?php echo $label; ?></span>
+	</a>
+<?php
+	return ob_get_clean();
 }
 
 ?>
@@ -37,10 +51,10 @@ function wpbb_get_nav_link($tab, $current_tab, $label) {
 	<nav class="wpbb-dashboard-nav">
 		<h4 class="wpbb-dashboard-nav-title">Dashboard</h4>
 		<ul class="wpbb-dashboard-nav-list">
-			<li><?php echo wpbb_get_nav_link('profile', $current_tab, 'Profile'); ?></li>
-			<li><?php echo wpbb_get_nav_link('templates', $current_tab, 'My Templates'); ?></li>
-			<li><?php echo wpbb_get_nav_link('tournaments', $current_tab, 'My Tournaments'); ?></li>
-			<li><?php echo wpbb_get_nav_link('play-history', $current_tab, 'My Play History'); ?></li>
+			<li><?php echo wpbb_get_nav_link('profile', $current_tab, 'Profile', '../../assets/icons/user.svg'); ?></li>
+			<li><?php echo wpbb_get_nav_link('templates', $current_tab, 'My Templates', '../../assets/icons/file.svg'); ?></li>
+			<li><?php echo wpbb_get_nav_link('tournaments', $current_tab, 'My Tournaments', '../../assets/icons/signal.svg'); ?></li>
+			<li><?php echo wpbb_get_nav_link('play-history', $current_tab, 'My Play History', '../../assets/icons/clock.svg'); ?></li>
 		</ul>
 	</nav>
 	<div class="wpbb-dashboard-content">
