@@ -5,6 +5,7 @@
 
 /** TOURNAMENT LEADERBOARD START */
 
+
 .wpbb-tourney-leaderboard {
 	font-family: 'Clash Display', sans-serif;
 	text-transform: uppercase;
@@ -180,9 +181,171 @@ body {
 	display: flex;
 	flex-direction: row;
 	gap: 60px;
+	line-height: normal;
+	text-transform: uppercase;
 }
 
 .wpbb-dashboard h1 {
 	color: #fff;
 	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-dashboard h1,
+.wpbb-dashboard h2,
+.wpbb-dashboard h3,
+.wpbb-dashboard h4,
+.wpbb-dashboard h5,
+.wpbb-dashboard h6 {
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-dashboard a {
+	text-decoration: none;
+}
+
+/** DASHBOARD NAV START */
+.wpbb-dashboard-nav li {
+	list-style: none;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.wpbb-dashboard-nav a {
+	display: block;
+	padding: 16px;
+	background-color: rgba(255, 255, 255, 0.1);
+	border-radius: 8px;
+	white-space: nowrap;
+}
+
+.wpbb-dashboard-nav a:hover {
+	background-color: #2137ff;
+}
+
+.wpbb-dashboard-nav a.active {
+	background-color: #fff;
+	color: #000;
+}
+
+.wpbb-dashboard-nav ul {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	padding: 0;
+	margin: 0;
+}
+
+.wpbb-dashboard-nav-title {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 16px;
+	font-weight: 500;
+	font-family: 'Clash Display', sans-serif;
+	margin-bottom: 15px;
+}
+
+/** DASHBOARD NAV END */
+
+/** PROFILE START */
+.wpbb-my-profile {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.wpbb-tournament-score-title {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 24px;
+	font-weight: 500;
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-profile-widget {
+	border-radius: 16px;
+	padding: 30px;
+	border: 2px solid rgba(255, 255, 255, 0.5);
+	height: 308px;
+	width: 340px;
+	display: flex;
+	flex-direction: column;
+}
+
+.wpbb-profile-widget a:hover {
+	color: #2137ff;
+
+}
+
+.wpbb-accuracy-widget {
+	justify-content: space-between;
+}
+
+.wpbb-wins-widget {
+	justify-content: flex-end;
+}
+
+.wpbb-total-tournaments-widget {
+	justify-content: space-between;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/** UTILITY CLASSES START */
+
+/** FLEXBOX */
+.wpbb-flex {
+	display: flex;
+}
+
+.wpbb-flex-wrap {
+	flex-wrap: wrap;
+}
+
+.wpbb-flex-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.wpbb-align-center {
+	align-items: center;
+}
+
+
+.wpbb-gap-16 {
+	gap: 16px;
+}
+
+.wpbb-gap-10 {
+	gap: 10px;
+}
+
+.wpbb-gap-4 {
+	gap: 4px;
+}
+
+/** TEXT */
+
+.wpbb-font-size-20 {
+	font-size: 20px;
+}
+
+.wpbb-font-weight-500 {
+	font-weight: 500;
+}
+
+.wpbb-color-grey-50 {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.wpbb-margin-bottom-16 {
+	margin-bottom: 16px;
 }
