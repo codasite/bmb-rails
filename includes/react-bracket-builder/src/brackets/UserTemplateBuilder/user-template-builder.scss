@@ -36,6 +36,7 @@
     .bracket-container {
         width: 100%;
         padding: 0px 10px;
+        align-items: initial;
     }
 
     .bracket-text-info {
@@ -67,6 +68,11 @@
 
     .options-bracket-tree {
         width: 90vw;
+    }
+    .randomize-team-container{
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     .randomize-teams {
