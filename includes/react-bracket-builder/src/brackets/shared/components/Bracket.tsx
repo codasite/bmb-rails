@@ -31,7 +31,8 @@ const TeamSlot = (props: TeamSlotProps) => {
 		team,
 		updateTeam,
 		pickTeam,
-		round
+		round,
+		match
 	} = props
 
 
@@ -107,7 +108,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{textBuffer ? textBuffer : (isReadOnly(props.round, props.match, props.className) ? '' : 'ADD TEAM...')}</span>
+				<span className='wpbb-team-name'>{team?team.name :(textBuffer ? textBuffer : (isReadOnly(props.round, props.match, props.className) ? '' : 'ADD TEAM...'))}</span>
 			}
 		</div>
 	)
@@ -281,7 +282,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 					direction={direction}
 					height={matchHeight}
 					spacing={i + 1 < matches.length ? matchHeight : 0} // Do not add spacing to the last match in the round column
-					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
+					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.depth, matchIndex, left, name) : undefined}
 					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
 					round={round}
 				/>
@@ -333,12 +334,12 @@ export const Bracket = (props: BracketProps) => {
 		}
 	};
 
-	const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
+	const updateTeam = (depth: number, matchIndex: number, left: boolean, name: string) => {
 		if (!canEdit) {
 			return
 		}
 		const newMatchTree = matchTree.clone();
-		const roundToUpdate = newMatchTree.rounds.find((round) => round.id === roundId);
+		const roundToUpdate = newMatchTree.rounds.find((round) => round.depth === depth);
 		if (roundToUpdate) {
 			const matchToUpdate = roundToUpdate.matches[matchIndex];
 			if (matchToUpdate) {
