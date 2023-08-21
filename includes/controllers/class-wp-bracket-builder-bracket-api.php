@@ -177,7 +177,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 
 		//checking validation for requested data
 		$validated = $this->bracket_validate->validate_bracket_api($bracket);
-		if(! isset($validatied)){
+		if(! isset($validated)){
 			$saved = $this->bracket_repo->add($bracket);
 			return new WP_REST_Response($saved, 201);
 		}
