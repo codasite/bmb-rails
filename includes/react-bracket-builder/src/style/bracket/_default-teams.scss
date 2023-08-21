@@ -20,7 +20,7 @@ $team-offset: -8px;
 	// padding: 0 4px;
 	padding: 4px 8px;
 	border-radius: $bracket-radius;
-	border: 0.5px solid rgba(255, 255, 255, 0.50);
+	// border: 0.5px solid rgba(255, 255, 255, 0.50);
 	background: rgba(255, 255, 255, 0.15);
 	z-index: 1;
 	text-align: center;
@@ -85,9 +85,4 @@ $team-offset: -8px;
 		// font-size: small;
 	}
 
-	@media (max-width: 768px) {
-		.wpbb-team-name {
-			font-size: 6px
-		}
-	}
 }

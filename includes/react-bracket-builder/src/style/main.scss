@@ -51,7 +51,8 @@
 .wpbb-bracket {
 	display: flex;
 	margin: 0 auto;
-	gap: 16px;
+	// gap: 16px;
+	max-width: 63vw;
 }
 
 .wpbb-bracket-print-area {
@@ -561,8 +562,8 @@ $table-radius: 10px;
 	}
 }
 
-// @media (max-width: 768px) {
-// 	.wpbb-round{
-// 		width: 10vw !important;
-// 	}
-// }
+@media (max-width: 768px) {
+	.wpbb-bracket{
+		max-width: 80vw !important;
+	}
+}
