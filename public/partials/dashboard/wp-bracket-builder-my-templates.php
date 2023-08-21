@@ -24,7 +24,7 @@ $templates = array(
 function host_tournament_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="wpbb-bracket-action-btn wpbb-host-tournament-btn wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
+	<a class="wpbb-bracket-action-btn wpbb-host-tournament-btn wpbb-btn-padding-md wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
 		<span class="wpbb-font-weight-500 wpbb-color-white">Host Tournament</span>
 	</a>
@@ -52,7 +52,7 @@ function template_list_item($template) {
 			<?php echo delete_bracket_btn($delete_link, $id); ?>
 		</div>
 		<div class="wpbb-template-buttons wpbb-flex wpbb-gap-16">
-			<?php echo add_apparel_btn($template_play_link); ?>
+			<?php echo add_to_apparel_btn($template_play_link); ?>
 			<?php echo host_tournament_btn($template_host_link); ?>
 		</div>
 	</div>
