@@ -30,6 +30,17 @@ function share_tournament_btn($endpoint, $tournament_id) {
 	return ob_get_clean();
 }
 
+function gradient_border_wrap($content, $class_arr = array()) {
+	$classes = implode(' ', $class_arr);
+	ob_start();
+?>
+	<div class="<?php echo esc_attr($classes) ?>">
+		<?php echo $content; ?>
+	</div>
+<?php
+	return ob_get_clean();
+}
+
 function delete_bracket_btn($endpoint, $post_id) {
 	ob_start();
 ?>
@@ -47,12 +58,12 @@ function delete_bracket_btn($endpoint, $post_id) {
 function add_to_apparel_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="wpbb-border-green wpbb-btn-padding-md wpbb-add-apparel-btn wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
+	<a class="wpbb-add-apparel-btn wpbb-btn-padding-md wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/plus.svg', __FILE__)); ?>
 		<span class="wpbb-font-weight-700 wpbb-color-white">Add to Apparel</span>
 	</a>
 <?php
-	return ob_get_clean();
+	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'wpbb-border-radius-8'));
 }
 
 function play_tournament_btn($endpoint, $tournament_id) {
@@ -66,15 +77,30 @@ function play_tournament_btn($endpoint, $tournament_id) {
 	return ob_get_clean();
 }
 
-function view_leaderboard_btn($endpoint, $args) {
-	$size = $args['size'] ?? 'md';
-	$label = $args['label'] ?? 'Leaderboard';
+
+function view_leaderboard_btn($endpoint, $variant = 'primary') {
+	$size = 'md';
+	$gap = '10';
+	$label = 'View Leaderboard';
+	$final = false;
+	switch ($variant) {
+		case 'compact':
+			$size = 'sm';
+			$gap = '4';
+			$label = 'Leaderboard';
+			break;
+		case 'final';
+			$label = 'View Final Leaderboard';
+			$final = true;
+			break;
+	}
 	ob_start();
 ?>
-	<a class="wpbb-flex wpbb-gap-4 wpbb-align-center wpbb-color-white wpbb-btn-padding-<?php echo $size ?> wpbb-border-radius-8 wpbb-border-grey-50 wpbb-bg-grey-15" href="<?php echo esc_url($endpoint) ?>">
+	<a class="wpbb-view<?php echo $final ? '-final' : ''; ?>-leaderboard-btn wpbb-flex wpbb-gap-<?php echo $gap ?> wpbb-align-center wpbb-color-white wpbb-btn-padding-<?php echo $size ?> wpbb-border-radius-8 wpbb-border-grey-50 wpbb-bg-grey-15" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/trend_up.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-500 wpbb-font-size-16">Leaderboard</span>
+		<span class="wpbb-font-weight-500 wpbb-font-size-16"><?php echo esc_html($label) ?></span>
 	</a>
 <?php
-	return ob_get_clean();
+	$btn = ob_get_clean();
+	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border wpbb-border-radius-8')) : $btn;
 }

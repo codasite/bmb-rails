@@ -107,7 +107,7 @@ function tournament_list_item($tournament) {
 				<span class="wpbb-font-weight-500 wpbb-font-size-20 wpbb-color-white"><?php echo esc_html($num_plays) ?></span>
 				<span class="wpbb-font-weight-500 wpbb-font-size-20 wpbb-color-grey-50">Plays</span>
 			</div>
-			<?php echo view_leaderboard_btn($leaderboard_link, 'sm'); ?>
+			<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
 		</div>
 	</div>
 <?php
