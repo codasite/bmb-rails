@@ -564,6 +564,15 @@ $table-radius: 10px;
 
 @media (max-width: 768px) {
 	.wpbb-bracket{
-		max-width: 80vw !important;
+		max-width: 100% !important;
+		overflow-x: auto;
+	}
+
+	.wpbb-default {
+		width: 100%;
+	}
+
+	.wpbb-round {
+		margin: 55px;
 	}
 }
