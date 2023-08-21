@@ -44,10 +44,10 @@ function delete_bracket_btn($endpoint, $post_id) {
 	return ob_get_clean();
 }
 
-function add_apparel_btn($endpoint) {
+function add_to_apparel_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="wpbb-bracket-action-btn wpbb-add-apparel-btn wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
+	<a class="wpbb-border-green wpbb-btn-padding-md wpbb-add-apparel-btn wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/plus.svg', __FILE__)); ?>
 		<span class="wpbb-font-weight-700 wpbb-color-white">Add to Apparel</span>
 	</a>
@@ -58,9 +58,22 @@ function add_apparel_btn($endpoint) {
 function play_tournament_btn($endpoint, $tournament_id) {
 	ob_start();
 ?>
-	<a class="wpbb-bracket-action-btn wpbb-play-tournament-btn wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8 wpbb-color-white" href="<?php echo esc_url($endpoint) ?>">
+	<a class="wpbb-border-green wpbb-bg-green-15 wpbb-play-tournament-btn wpbb-btn-padding-md wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8 wpbb-color-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/play.svg', __FILE__)); ?>
 		<span class="wpbb-font-weight-500">Play Tournament</span>
+	</a>
+<?php
+	return ob_get_clean();
+}
+
+function view_leaderboard_btn($endpoint, $args) {
+	$size = $args['size'] ?? 'md';
+	$label = $args['label'] ?? 'Leaderboard';
+	ob_start();
+?>
+	<a class="wpbb-flex wpbb-gap-4 wpbb-align-center wpbb-color-white wpbb-btn-padding-<?php echo $size ?> wpbb-border-radius-8 wpbb-border-grey-50 wpbb-bg-grey-15" href="<?php echo esc_url($endpoint) ?>">
+		<?php echo file_get_contents(plugins_url('../../assets/icons/trend_up.svg', __FILE__)); ?>
+		<span class="wpbb-font-weight-500 wpbb-font-size-16">Leaderboard</span>
 	</a>
 <?php
 	return ob_get_clean();
