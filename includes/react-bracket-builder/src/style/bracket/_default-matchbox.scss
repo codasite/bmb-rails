@@ -1,27 +1,7 @@
 $match-box-border: 2px solid #3c434a;
 // $match-box-border: none;
 
-@media (max-width: 768px) {
-	.wpbb-match-box-left {
-		margin-left: 5px !important;
-	}
 
-	.wpbb-match-box-right {
-		margin-right: 5px !important;
-	}
-
-	// .wpbb-round {
-	// 	width: 4vw;
-
-	// }
-
-	.wpbb-default .wpbb-team1,
-	.wpbb-default .wpbb-team2 {
-		width: 36px;
-		padding: 0;
-		min-width: 0;
-	}
-}
 
 @mixin match-box() {
 	// border-top: $match-box-border;

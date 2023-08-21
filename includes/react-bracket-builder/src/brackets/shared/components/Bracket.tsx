@@ -21,6 +21,7 @@ interface TeamSlotProps {
 	pickTeam?: () => void;
 	round?: Round;
 	match?: MatchNode | null;
+	width?: number
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
@@ -32,7 +33,8 @@ const TeamSlot = (props: TeamSlotProps) => {
 		updateTeam,
 		pickTeam,
 		round,
-		match
+		match,
+		width
 	} = props
 
 
@@ -88,9 +90,18 @@ const TeamSlot = (props: TeamSlotProps) => {
 		return true;
 	}
 
+	const setBorder = (width)=>{
+		if(width === bracketConstants.roundWidth){
+			return false 
+		}
+		else{
+			return true
+		}
+	}
+
 
 	return (
-		<div className={props.className} onClick={handleClick}>
+		<div className={props.className} onClick={handleClick} style={{ minWidth:  width, border: (setBorder(width)?'0.5px solid #FFFFFF80':'none')}} >
 			{editing ?
 				<input
 					className='wpbb-team-name-input'
@@ -134,7 +145,6 @@ const MatchBox = (props: MatchBoxProps) => {
 		pickTeam,
 		round
 	} = props
-
 	if (match === null) {
 		return (
 			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
@@ -142,15 +152,30 @@ const MatchBox = (props: MatchBoxProps) => {
 	}
 
 	let className: string;
+	let width: number;
+	let bottom = 0;
+
+	const setWidth = () =>{
+		if (round?.name == 'Round 1') {
+			return bracketConstants.firstRoundWidth;
+		}
+		else{
+			return bracketConstants.roundWidth;
+		}
+	}
 
 	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
 		// Left side of the bracket
 		className = 'wpbb-match-box-left'
+		width = bracketConstants.roundWidth
 	} else if (direction === Direction.TopRight || direction === Direction.BottomRight) {
 		// Right side of the bracket
 		className = 'wpbb-match-box-right'
+		width = bracketConstants.roundWidth
 	} else {
+		bottom = 10;
 		className = 'wpbb-match-box-center'
+		width = bracketConstants.roundWidth
 	}
 
 	const upperOuter = match.left === null
@@ -159,18 +184,21 @@ const MatchBox = (props: MatchBoxProps) => {
 	if (upperOuter && lowerOuter) {
 		// First round
 		className += '-outer'
+		width = setWidth()
 	} else if (upperOuter) {
 		// Upper bracket
 		className += '-outer-upper'
+		width = setWidth()
 	} else if (lowerOuter) {
 		// Lower bracket
 		className += '-outer-lower'
+		width = setWidth()
 	}
 
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
-		<div className={className} style={{ height: height, marginBottom: spacing }}>
+		<div className={className} style={{ height: height, marginBottom: spacing, bottom: bottom }}>
 			<TeamSlot
 				className='wpbb-team1'
 				team={match.team1}
@@ -178,6 +206,7 @@ const MatchBox = (props: MatchBoxProps) => {
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
 				round={round}
 				match={match}
+				width={width}
 			/>
 			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
@@ -187,6 +216,7 @@ const MatchBox = (props: MatchBoxProps) => {
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
 				round={round}
 				match={match}
+				width={width}
 			/>
 		</div>
 	)
