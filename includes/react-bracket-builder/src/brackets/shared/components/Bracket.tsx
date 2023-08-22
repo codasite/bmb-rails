@@ -119,7 +119,8 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{team?team.name :(textBuffer ? textBuffer : (isReadOnly(props.round, props.match, props.className) ? '' : 'ADD TEAM...'))}</span>
+				// <span className='wpbb-team-name'>{team?team.name :(textBuffer ? textBuffer : (isReadOnly(props.round, props.match, props.className) ? '' : 'ADD TEAM...'))}</span>
+				<span className='wpbb-team-name'>{team?team.name :(isReadOnly(props.round, props.match, props.className) ? '':textBuffer? textBuffer: 'ADD TEAM...')}</span>
 			}
 		</div>
 	)

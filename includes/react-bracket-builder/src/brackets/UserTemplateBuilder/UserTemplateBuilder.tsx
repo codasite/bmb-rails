@@ -298,7 +298,7 @@ const UserTemplateBuilder = () => {
                             })}
                         </div>
                     </div>
-                    <div className='wild-btn' style={{ visibility: showWildCardOptions ? 'visible' : 'hidden' }}>
+                    <div className='wild-btn' style={{ display: showWildCardOptions ? 'block' : 'none' }}>
                         <div className='bracket-text-info  wild-card-display-text'>
                             WILDCARD DISPLAY
                         </div>
