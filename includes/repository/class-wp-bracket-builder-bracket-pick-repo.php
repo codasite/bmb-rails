@@ -1,6 +1,8 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-pick-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
 interface Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
 	public function add(Wp_Bracket_Builder_Bracket_Pick $bracket): ?Wp_Bracket_Builder_Bracket_Pick;
@@ -12,43 +14,100 @@ interface Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
 }
 
 class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
+	/**
+	 * @var Wp_Bracket_Builder_Utils
+	 */
+	private $utils;
+
+	/**
+	 * @var wpdb
+	 */
 	private $wpdb;
+
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Pick_Service
+	 */
+	private $bracket_pick_service;
+
 	private Wp_Bracket_Builder_Bracket_Repository_Interface $bracket_repo;
 
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
+		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
 	}
 
-	public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
-		// print_r($pick);
-		$bracket_id = $pick->bracket_id;
+	// public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
+	// 	$bracket_id = $pick->bracket_id;
 
-		$bracket = $this->bracket_repo->get($bracket_id);
-		if (!$bracket) {
+	// 	$bracket = $this->bracket_repo->get($bracket_id);
+	// 	if (!$bracket) {
+	// 		return null;
+	// 	}
+
+	// 	$name = $pick->name;
+	// 	$cust_id = $pick->customer_id;
+	// 	$img_url = $pick->img_url;
+	// 	$table_name = $this->bracket_pick_table();
+
+	// 	$this->wpdb->insert(
+	// 		$table_name,
+	// 		[
+	// 			'bracket_id' => $bracket_id,
+	// 			'name' => $name,
+	// 			'img_url' => $img_url,
+	// 			'customer_id' => $cust_id,
+	// 		]
+	// 	);
+
+	// 	$pick->id = $this->wpdb->insert_id;
+	// 	$this->insert_match_picks($pick, $bracket);
+	// 	$pick = $this->get($pick->id);
+
+	// 	return $pick;
+	// }
+
+	public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick {
+		$post = get_post($id);
+		if (!$post || $post->post_type !== 'bracket_pick') {
 			return null;
 		}
-		// print_r($bracket);
+		$pick = Wp_Bracket_Builder_Bracket_Pick::from_post($post);
 
-		$name = $pick->name;
-		$cust_id = $pick->customer_id;
-		$img_url = $pick->img_url;
-		$table_name = $this->bracket_pick_table();
+		return $pick;
+	}
 
-		$this->wpdb->insert(
-			$table_name,
-			[
-				'bracket_id' => $bracket_id,
-				'name' => $name,
-				'img_url' => $img_url,
-				'customer_id' => $cust_id,
-			]
-		);
+	/**
+	 * This function adds a bracket pick to the database as a custom post type.
+	 * 
+	 * @param Wp_Bracket_Builder_Bracket_Pick $pick
+	 * @return Wp_Bracket_Builder_Bracket_Pick|null
+	 */
+	public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
+		// TODO: check if bracket exists
+		//$bracket_id = $pick->bracket_id;
 
-		$pick->id = $this->wpdb->insert_id;
-		$this->insert_match_picks($pick, $bracket);
-		$pick = $this->get($pick->id);
+		$post_array = $pick->to_post_array();
+
+		$pick_id = wp_insert_post($post_array, true);
+
+		if (is_wp_error($pick_id)) {
+			$this->utils->log('error inserting post: ' . $pick_id->get_error_message(), 'error');
+			return null;
+		}
+		// need to update the post meta separately
+		update_post_meta($pick_id, 'bracket_pick_html', wp_kses_post($pick->html));
+
+		// generate images
+		$pick = $this->bracket_pick_service->generate_images($pick);
+
+		// update the post meta with the new image urls
+		update_post_meta($pick_id, 'bracket_pick_images', $pick->img_url);
+
+		// refresh from db
+		$pick = $this->get($pick_id);
 
 		return $pick;
 	}
@@ -97,23 +156,23 @@ class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_B
 		return $this->wpdb->insert_id;
 	}
 
-	public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick {
-		$table_name = $this->bracket_pick_table();
-		$sql = "SELECT * FROM $table_name WHERE id = $id";
-		$result = $this->wpdb->get_row($sql, ARRAY_A);
-		if (!$result) {
-			return null;
-		}
-		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($result);
-		$bracket = $this->bracket_repo->get($result['bracket_id']);
+	// public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick {
+	// 	$table_name = $this->bracket_pick_table();
+	// 	$sql = "SELECT * FROM $table_name WHERE id = $id";
+	// 	$result = $this->wpdb->get_row($sql, ARRAY_A);
+	// 	if (!$result) {
+	// 		return null;
+	// 	}
+	// 	$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($result);
+	// 	$bracket = $this->bracket_repo->get($result['bracket_id']);
 
-		$pick->rounds = $bracket->rounds;
-		$match_results_map = $this->get_match_results_map($pick->id);
+	// 	$pick->rounds = $bracket->rounds;
+	// 	$match_results_map = $this->get_match_results_map($pick->id);
 
-		$pick->fill_in_results($match_results_map);
+	// 	$pick->fill_in_results($match_results_map);
 
-		return $pick;
-	}
+	// 	return $pick;
+	// }
 
 	private function get_match_results_map(int $pick_id): array {
 		$match_picks = $this->get_match_picks($pick_id);

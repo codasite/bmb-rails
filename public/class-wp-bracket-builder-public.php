@@ -90,7 +90,7 @@ class Wp_Bracket_Builder_Public {
 		 * class.
 		 */
 
-		// wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
 		// wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css', array(), null, 'all');
 		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), null, 'all');
 	}
@@ -101,6 +101,8 @@ class Wp_Bracket_Builder_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
+		wp_enqueue_script('tailwind', 'https://cdn.tailwindcss.com', array(), $this->version, false);
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/wp-bracket-builder-public.js', array('jquery'), $this->version, false);
 
 		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
@@ -211,7 +213,7 @@ class Wp_Bracket_Builder_Public {
 	?>
 		<div id="wpbb-bracket-option-preview" style="width: 100%">
 		</div>
-<?php
+	<?php
 		return ob_get_clean();
 	}
 
@@ -224,6 +226,19 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_tourney_leaderboard() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-tourney-leaderboard.php';
+
+		return ob_get_clean();
+	}
+
+	public function render_dashboard() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/dashboard/wp-bracket-builder-dashboard.php';
+
+		return ob_get_clean();
+	}
 
 	/**
 	 * Add shortcode to render events
@@ -235,6 +250,20 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
 		add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
 		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
+		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
+		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
+	}
+
+	public function add_rewrite_rules() {
+		add_rewrite_rule('^dashboard/profile/?', 'index.php?pagename=dashboard&tab=profile', 'top');
+		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
+		add_rewrite_rule('^dashboard/tournaments/?', 'index.php?pagename=dashboard&tab=tournaments', 'top');
+		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
+	}
+
+	public function add_query_vars($vars) {
+		$vars[] = 'tab';
+		return $vars;
 	}
 
 	public function get_archive_url() {
@@ -421,27 +450,7 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	private function log($message, $log_level = 'debug') {
-		switch ($log_level) {
-			case 'debug':
-				$severity = \Sentry\Severity::debug();
-				break;
-			case 'info':
-				$severity = \Sentry\Severity::info();
-				break;
-			case 'warning':
-				$severity = \Sentry\Severity::warning();
-				break;
-			case 'error':
-				$severity = \Sentry\Severity::error();
-				break;
-			case 'fatal':
-				$severity = \Sentry\Severity::fatal();
-				break;
-			default:
-				$severity = \Sentry\Severity::info();
-				break;
-		}
-		$this->utils->log_sentry_message($message, $severity);
+		$this->utils->log($message, $log_level);
 	}
 
 	private function handle_front_design_only($front_url, $temp_filename, $back_width, $back_height) {
