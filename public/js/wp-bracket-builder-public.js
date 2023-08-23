@@ -63,6 +63,7 @@ tailwind.config = {
 			'green': '#05FF3C',
 			'blue': '#2137ff',
 			'dark-blue': '#40FF6A',
+			'yellow': '#F8E11A',
 		},
 		borderRadius: {
 			'4': '4px',

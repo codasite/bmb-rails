@@ -32,9 +32,9 @@ $completed_tournaments = array(
 function score_tournament_btn($endpoint, $tournament) {
 	ob_start();
 ?>
-	<a class="wpbb-bracket-action-btn wpbb-dashboard-score-tournament-btn wpbb-btn-padding-md wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8 wpbb-color-white" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/trophy_24.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-500">Score Tournament</span>
+		<span class="tw-font-500">Score Tournament</span>
 	</a>
 <?php
 	return ob_get_clean();
@@ -45,7 +45,7 @@ function active_tournament_buttons($tournament) {
 	$tournament_score_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/score';
 	ob_start();
 ?>
-	<div class="wpbb-flex wpbb-gap-16">
+	<div class="tw-flex tw-gap-16">
 		<?php echo play_tournament_btn($tournament_play_link, $tournament); ?>
 		<?php echo score_tournament_btn($tournament_score_link, $tournament); ?>
 	</div>
@@ -57,9 +57,9 @@ function active_tournament_buttons($tournament) {
 function live_tournament_tag() {
 	ob_start();
 ?>
-	<div class="wpbb-color-green wpbb-bg-green-15 wpbb-border-green wpbb-btn-padding-sm wpbb-flex wpbb-gap-4 wpbb-align-center wpbb-border-radius-8">
+	<div class="tw-text-green tw-bg-green/15 tw-border tw-border-solid tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/ellipse.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-500 wpbb-font-size-12">Live</span>
+		<span class="tw-font-500 tw-text-12">Live</span>
 	</div>
 <?php
 	return ob_get_clean();
@@ -68,9 +68,9 @@ function live_tournament_tag() {
 function completed_tournament_tag() {
 	ob_start();
 ?>
-	<div class="wpbb-completed-tournament-tag wpbb-btn-padding-sm wpbb-flex wpbb-gap-4 wpbb-align-center wpbb-border-radius-8">
+	<div class="tw-text-yellow tw-bg-yellow/15 tw-border tw-border-solid tw-border-yellow tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/ellipse.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-500 wpbb-font-size-12">Completed</span>
+		<span class="tw-font-500 tw-text-12">Completed</span>
 	</div>
 <?php
 	return ob_get_clean();
@@ -89,23 +89,23 @@ function tournament_list_item($tournament) {
 	$leaderboard_link = get_permalink() . 'tournaments/' . $id . '/leaderboard';
 	ob_start();
 ?>
-	<div class="wpbb-tournament-list-item wpbb-border-grey-15-2 wpbb-flex wpbb-space-between wpbb-padding-30 wpbb-border-radius-16">
-		<div class="wpbb-flex-col wpbb-gap-10 wpbb-align-start">
-			<span class="wpbb-font-weight-500 wpbb-font-size-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
-			<div class="wpbb-flex wpbb-gap-10 wpbb-align-center">
-				<h2 class="wpbb-color-white wpbb-font-weight-700 wpbb-font-size-30"><?php echo esc_html($name) ?></h2>
+	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-justify-between tw-p-30 tw-rounded-16">
+		<div class="tw-flex tw-flex-col tw-gap-10 tw-items-start">
+			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
+			<div class="tw-flex tw-gap-10 tw-items-center">
+				<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 				<?php echo share_tournament_btn($share_link, $id); ?>
 				<?php echo duplicate_bracket_btn($share_link, $id); ?>
 				<?php echo delete_bracket_btn($delete_link, $id); ?>
 			</div>
 			<?php echo $completed ? add_to_apparel_btn($play_link) : active_tournament_buttons($tournament); ?>
 		</div>
-		<div class="wpbb-flex-col wpbb-space-between wpbb-align-end">
-			<div class="wpbb-flex wpbb-gap-4 wpbb-align-center">
+		<div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
+			<div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo $completed ? completed_tournament_tag() : live_tournament_tag(); ?>
 				<?php echo file_get_contents(plugins_url('../../assets/icons/bar_chart.svg', __FILE__)); ?>
-				<span class="wpbb-font-weight-500 wpbb-font-size-20 wpbb-color-white"><?php echo esc_html($num_plays) ?></span>
-				<span class="wpbb-font-weight-500 wpbb-font-size-20 wpbb-color-grey-50">Plays</span>
+				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
+				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
 			</div>
 			<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
 		</div>
@@ -117,8 +117,8 @@ function tournament_list_item($tournament) {
 function tournament_section($tournaments, $title) {
 	ob_start();
 ?>
-	<div class="wpbb-tournaments-list wpbb-flex-col wpbb-gap-15">
-		<h3 class="wpbb-font-weight-500 wpbb-font-size-24 wpbb-color-grey-50"><?php echo esc_html($title) ?></h3>
+	<div class="tw-flex tw-flex-col tw-gap-15">
+		<h3 class="tw-font-500 tw-text-24 tw-text-white/50"><?php echo esc_html($title) ?></h3>
 		<?php foreach ($tournaments as $tournament) {
 			echo tournament_list_item($tournament);
 		} ?>
@@ -128,11 +128,11 @@ function tournament_section($tournaments, $title) {
 }
 ?>
 
-<div class="wpbb-my-tournaments wpbb-flex-col wpbb-gap-30">
+<div class="tw-flex tw-flex-col tw-gap-30">
 	<h1>My Tournaments</h1>
-	<a href="#" class="wpbb-create-tournament-link wpbb-block wpbb-flex wpbb-gap-16 wpbb-align-center wpbb-justify-center wpbb-border-radius-8 wpbb-padding-16">
+	<a href="#" class="tw-border-solid tw-border tw-border-white tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-16 hover:tw-bg-white hover:tw-text-black">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-700 wpbb-font-size-24">Create Tournament</span>
+		<span class="tw-font-700 tw-text-24">Create Tournament</span>
 	</a>
 	<?php echo tournament_section($active_tournaments, 'Active') ?>
 	<?php echo tournament_section($completed_tournaments, 'Completed') ?>
