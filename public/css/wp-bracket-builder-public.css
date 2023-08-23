@@ -347,15 +347,6 @@ body {
 /** TOURNAMENT LEADERBOARD END */
 
 /** DASHBOARD START */
-.wpbb-dashboard {
-	color: #fff;
-	font-family: 'Clash Display', sans-serif;
-	display: flex;
-	flex-direction: row;
-	gap: 60px;
-	line-height: normal;
-	text-transform: uppercase;
-}
 
 .wpbb-dashboard h1 {
 	color: #fff;
@@ -374,57 +365,6 @@ body {
 .wpbb-dashboard a {
 	text-decoration: none;
 }
-
-.wpbb-dashboard-content {
-	flex-grow: 1;
-}
-
-/** DASHBOARD NAV START */
-.wpbb-dashboard-nav li {
-	list-style: none;
-	font-size: 20px;
-	font-weight: 500;
-}
-
-.wpbb-dashboard-nav a {
-	background-color: rgba(255, 255, 255, 0.1);
-	white-space: nowrap;
-}
-
-.wpbb-dashboard-nav a:hover {
-	background-color: #2137ff;
-}
-
-.wpbb-dashboard-nav a.active {
-	background-color: #fff;
-	color: #000;
-}
-
-.wpbb-dashboard-nav ul {
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-	padding: 0;
-	margin: 0;
-}
-
-.wpbb-dashboard-nav-title {
-	color: rgba(255, 255, 255, 0.5);
-	font-size: 16px;
-	font-weight: 500;
-	font-family: 'Clash Display', sans-serif;
-	margin-bottom: 15px;
-}
-
-/** DASHBOARD NAV END */
-
-/** PROFILE START */
-.wpbb-profile-widget a:hover {
-	color: #2137ff;
-
-}
-
-/** PROFILE END */
 
 /** TEMPLATES START */
 .wpbb-create-template-link {
