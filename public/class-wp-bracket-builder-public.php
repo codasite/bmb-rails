@@ -101,6 +101,8 @@ class Wp_Bracket_Builder_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
+		wp_enqueue_script('tailwind', 'https://cdn.tailwindcss.com', array(), $this->version, false);
+		wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/wp-bracket-builder-public.js', array('jquery'), $this->version, false);
 
 		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';

@@ -104,3 +104,13 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	$btn = ob_get_clean();
 	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border wpbb-border-radius-8')) : $btn;
 }
+
+function view_play_btn($endpoint) {
+	ob_start();
+?>
+	<a class="wpbb-view-play-btn wpbb-flex wpbb-align-center wpbb-color-white wpbb-btn-padding-md wpbb-border-radius-8 wpbb-border-green wpbb-bg-green-15" href="<?php echo esc_url($endpoint) ?>">
+		<span class="wpbb-font-weight-700">View Play</span>
+	</a>
+<?php
+	return ob_get_clean();
+}

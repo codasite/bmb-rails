@@ -1,5 +1,5 @@
 <div class="wpbb-my-profile">
-	<h1 class="wpbb-margin-bottom-16">My Profile</h1>
+	<h1 class="bb-mb-16">My Profile</h1>
 	<h3 class="wpbb-color-grey-50">Overall Tournament Score</h3>
 	<div class="wpbb-flex wpbb-gap-10 wpbb-flex-wrap">
 		<div class="wpbb-profile-widget wpbb-accuracy-widget">
