@@ -49,7 +49,7 @@ function play_list_item($play) {
 		<div class="wpbb-flex-col wpbb-gap-20">
 			<h2 class="wpbb-font-weight-700 wpbb-font-size-30 wpbb-color-white"><?php echo esc_html($tournament_name) ?></h2>
 			<div class="wpbb-flex wpbb-gap-16">
-				<?php echo add_to_apparel_btn($play_link); ?>
+				<?php echo view_play_btn($play_link); ?>
 				<?php echo view_leaderboard_btn($leaderboard_link, $leaderboard_variant); ?>
 			</div>
 		</div>
