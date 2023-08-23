@@ -53,13 +53,16 @@ tailwind.config = {
 			'16': '16px',
 			'24': '24px',
 			'30': '30px',
+			'40': '40px',
 			'60': '60px',
 		},
 		colors: {
+			'transparent': 'transparent',
 			'black': '#000',
 			'white': '#fff',
 			'green': '#05FF3C',
 			'blue': '#2137ff',
+			'dark-blue': '#40FF6A',
 		},
 		borderRadius: {
 			'4': '4px',

@@ -367,11 +367,11 @@ body {
 }
 
 /** TEMPLATES START */
-.wpbb-create-template-link {
+/* .wpbb-create-template-link {
 	border: 1px solid #fff;
 	background-color: rgba(255, 255, 255, 0.15);
 	padding: 16px;
-}
+} */
 
 .wpbb-bracket-action-icon-btn {
 	height: 40px;
@@ -389,7 +389,6 @@ body {
 }
 
 .wpbb-add-apparel-btn {
-	/* background: linear-gradient(117deg, rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%); */
 	background: linear-gradient(rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%), #010433;
 	border: 1px solid transparent;
 	background-clip: padding-box;
@@ -399,10 +398,10 @@ body {
 	background: linear-gradient(rgb(248, 225, 26) 0%, rgb(64, 255, 106) 100%);
 }
 
-.wpbb-host-tournament-btn {
+/* .wpbb-host-tournament-btn {
 	border: 1px solid #2137FF;
 	background: rgba(33, 55, 255, 0.15);
-}
+} */
 
 /** TEMPLATES END */
 

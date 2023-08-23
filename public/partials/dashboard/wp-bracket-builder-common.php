@@ -13,7 +13,8 @@ function icon_btn($icon_path, $endpoint) {
 function duplicate_bracket_btn($endpoint, $post_id) {
 	ob_start();
 ?>
-	<a class="wpbb-bracket-action-icon-btn wpbb-flex-col wpbb-border-radius-8 wpbb-align-center wpbb-justify-center">
+	<!-- <a class="wpbb-bracket-action-icon-btn wpbb-flex-col wpbb-border-radius-8 wpbb-align-center wpbb-justify-center"> -->
+	<a class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/copy.svg', __FILE__)); ?>
 	</a>
 <?php
@@ -47,7 +48,7 @@ function delete_bracket_btn($endpoint, $post_id) {
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
 		<input type="hidden" name="delete_template_id" value="<?php echo esc_attr($post_id) ?>">
 		<?php wp_nonce_field('delete_template_action', 'delete_template_nonce'); ?>
-		<button type="submit" class="wpbb-bracket-action-icon-btn wpbb-flex-col wpbb-border-radius-8 wpbb-align-center wpbb-justify-center" value="">
+		<button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
 			<?php echo file_get_contents(plugins_url('../../assets/icons/trash.svg', __FILE__)); ?>
 		</button>
 	</form>
@@ -58,9 +59,9 @@ function delete_bracket_btn($endpoint, $post_id) {
 function add_to_apparel_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="wpbb-add-apparel-btn wpbb-btn-padding-md wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
+	<a class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-rounded-8" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/plus.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-700 wpbb-color-white">Add to Apparel</span>
+		<span class="tw-font-700 tw-text-white">Add to Apparel</span>
 	</a>
 <?php
 	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'wpbb-border-radius-8'));

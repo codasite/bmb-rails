@@ -24,9 +24,9 @@ $templates = array(
 function host_tournament_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="wpbb-bracket-action-btn wpbb-host-tournament-btn wpbb-btn-padding-md wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-rounded-8" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-500 wpbb-color-white">Host Tournament</span>
+		<span class="tw-font-500 tw-text-white">Host Tournament</span>
 	</a>
 <?php
 	return ob_get_clean();
@@ -44,14 +44,17 @@ function template_list_item($template) {
 	$template_host_link = get_permalink() . 'templates/' . $id . '/host';
 	ob_start();
 ?>
-	<div class="wpbb-template-list-item wpbb-border-grey-15-2 wpbb-padding-30 wpbb-flex-col wpbb-gap-10 wpbb-border-radius-16">
-		<span class="wpbb-font-weight-500 wpbb-font-size-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
-		<div class="wpbb-flex wpbb-gap-10 wpbb-align-center">
-			<h2 class="wpbb-color-white wpbb-font-weight-700 wpbb-font-size-30"><?php echo esc_html($name) ?></h2>
-			<?php echo duplicate_bracket_btn($share_link, $id); ?>
-			<?php echo delete_bracket_btn($delete_link, $id); ?>
+	<div class="tw-border-2 tw-border-white/15 tw-border-solid tw-p-30 tw-flex tw-flex-col tw-gap-10 tw-rounded-16">
+		<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
+		<div class="tw-flex tw-gap-10 tw-items-center tw-justify-between md:tw-justify-start">
+			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
+			<div class="tw-flex tw-gap-10">
+				<?php echo duplicate_bracket_btn($share_link, $id); ?>
+				<?php echo delete_bracket_btn($delete_link, $id); ?>
+			</div>
 		</div>
-		<div class="wpbb-template-buttons wpbb-flex wpbb-gap-16">
+		<div class="tw-flex tw-gap-16">
+			<!-- <div class="tw-flex tw-flex-col lg:tw-flex-row tw-gap-16"> -->
 			<?php echo add_to_apparel_btn($template_play_link); ?>
 			<?php echo host_tournament_btn($template_host_link); ?>
 		</div>
@@ -60,20 +63,14 @@ function template_list_item($template) {
 	return ob_get_clean();
 }
 
-// function template_share_btn($template) {
-// 	$id = $template['id'];
-// 	return get_permalink() . 'templates/' . $id;
-// }
-
-// function get_template_delete
 ?>
-<div class="wpbb-my-templates wpbb-flex-col wpbb-gap-30">
+<div class="tw-flex tw-flex-col tw-gap-30">
 	<h1>My Templates</h1>
-	<a href="#" class="wpbb-create-template-link wpbb-block wpbb-flex wpbb-gap-16 wpbb-align-center wpbb-justify-center wpbb-border-radius-8">
+	<a href="#" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/file_plus.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-700 wpbb-font-size-24">Create Bracket Template</span>
+		<span class="tw-font-700 tw-text-24">Create Bracket Template</span>
 	</a>
-	<div class="wpbb-templates-list wpbb-flex-col wpbb-gap-16">
+	<div class="tw-flex tw-flex-col tw-gap-16">
 		<?php foreach ($templates as $template) {
 			echo template_list_item($template);
 		} ?>
