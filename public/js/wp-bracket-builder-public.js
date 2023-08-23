@@ -44,6 +44,7 @@ tailwind.config = {
 			},
 		},
 		spacing: {
+			'0': '0px',
 			'4': '4px',
 			'8': '8px',
 			'10': '10px',
@@ -77,6 +78,9 @@ tailwind.config = {
 			'500': '500',
 			'600': '600',
 			'700': '700',
+		},
+		fontFamily: {
+			'sans': ['Clash Display', 'sans-serif'],
 		}
 	}
 }
