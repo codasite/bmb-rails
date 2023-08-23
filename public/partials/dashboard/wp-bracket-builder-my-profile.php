@@ -1,28 +1,28 @@
-<div class="wpbb-my-profile">
-	<h1 class="bb-mb-16">My Profile</h1>
-	<h3 class="wpbb-color-grey-50">Overall Tournament Score</h3>
-	<div class="wpbb-flex wpbb-gap-10 wpbb-flex-wrap">
-		<div class="wpbb-profile-widget wpbb-accuracy-widget">
+<div class="tw-flex tw-flex-col tw-gap-15">
+	<h1 class="tw-mb-16">My Profile</h1>
+	<h3 class="tw-text-white/50">Overall Tournament Score</h3>
+	<div class="tw-flex tw-gap-10 tw-flex-wrap">
+		<div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-between tw-bg-green/15 ">
 			<?php echo file_get_contents(plugins_url('../../assets/icons/pie.svg', __FILE__)); ?>
-			<div class="wpbb-flex-col wpbb-gap-4">
-				<h1 class="wpbb-widget-value">0%</h1>
-				<h3 class="wpbb-font-size-20 wpbb-color-grey-50">Accuracy Score</h3>
+			<div class="tw-flex tw-flex-col tw-gap-4">
+				<h1>0%</h1>
+				<h3 class="tw-text-20 tw-text-white/50">Accuracy Score</h3>
 			</div>
 		</div>
-		<div class="wpbb-profile-widget wpbb-wins-widget">
-			<div class="wpbb-flex-col wpbb-gap-4">
-				<h1 class="wpbb-widget-value">2</h1>
-				<h3 class="wpbb-font-size-20 wpbb-color-grey-50">Tournament Wins</h3>
+		<div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-end">
+			<div class="tw-flex tw-flex-col tw-gap-4">
+				<h1>2</h1>
+				<h3 class="tw-text-20 tw-text-white/50">Tournament Wins</h3>
 			</div>
 		</div>
-		<div class="wpbb-profile-widget wpbb-total-tournaments-widget">
-			<a href="#" class="wpbb-flex wpbb-gap-16 wpbb-align-center">
+		<div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-between">
+			<a href="#" class="tw-flex tw-gap-16 tw-items-center hover:tw-text-blue">
 				<?php echo file_get_contents(plugins_url('../../assets/icons/arrow_up_right.svg', __FILE__)); ?>
-				<span class="wpbb-font-weight-500">View My Play History</span>
+				<span class="tw-font-500">View My Play History</span>
 			</a>
-			<div class="wpbb-flex-col wpbb-gap-4">
-				<h1 class="wpbb-widget-value">524</h1>
-				<h3 class="wpbb-font-size-20 wpbb-color-grey-50">Total Tournaments Played</h3>
+			<div class="tw-flex tw-flex-col tw-gap-4">
+				<h1>524</h1>
+				<h3 class="tw-text-20 tw-text-white/50">Total Tournaments Played</h3>
 			</div>
 		</div>
 	</div>
