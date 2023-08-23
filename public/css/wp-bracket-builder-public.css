@@ -407,7 +407,7 @@ body {
 
 /** TOURNAMENTS START */
 
-.wpbb-create-tournament-link {
+/* .wpbb-create-tournament-link {
 	border: 1px solid #fff;
 	background-color: rgba(255, 255, 255, 0.15);
 }
@@ -416,9 +416,9 @@ body {
 	cursor: pointer;
 	background-color: #fff;
 	color: #000;
-}
+} */
 
-.wpbb-dashboard-score-tournament-btn {
+/* .wpbb-dashboard-score-tournament-btn {
 	border: 1px solid #F8E11A;
 	background: rgba(248, 225, 26, 0.15);
 }
@@ -427,7 +427,7 @@ body {
 	color: #F8E11A;
 	background: rgba(248, 225, 26, 0.15);
 	border: 1px solid #F8E11A;
-}
+} */
 
 /** TOURNAMENTS END */
 
