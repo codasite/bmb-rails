@@ -119,7 +119,7 @@ class Wp_Bracket_Builder_Admin {
 	}
 	public function bracket_builder_init_menu() {
 		add_menu_page(__('Bracket Builder', 'bracketbuilder'), __('Bracket Builder', 'bracketbuilder'), 'manage_options', 'bracketbuilder', array($this, 'bracket_builder_admin_page'), 'dashicons-admin-post', '2.1');
-		add_submenu_page('bracketbuilder','Bracket Builder Settings','Settings', 'manage_options', 'bracket-builder-settings',array($this, 'bracket_builder_settings_page'));
+		add_submenu_page('bracketbuilder', 'Bracket Builder Settings', 'Settings', 'manage_options', 'bracket-builder-settings', array($this, 'bracket_builder_settings_page'));
 	}
 
 	public function bracket_builder_admin_page() {
@@ -207,6 +207,108 @@ class Wp_Bracket_Builder_Admin {
 	          <p>' . $message . '</p>
 	      </div>';
 			delete_option('custom_admin_error');
+		}
+	}
+
+	public function add_bracket_pick_meta_box() {
+		add_meta_box(
+			'bracket_pick_html_meta_box', // id of the meta box
+			'Bracket HTML', // title
+			array($this, 'display_bracket_pick_html_meta_box'), // callback function that will echo the box content
+			'bracket_pick', // post type where to add it
+			'normal', // position
+			'high' // priority
+		);
+	}
+
+
+	// Meta box content
+	public function display_bracket_pick_html_meta_box($post) {
+		$html = get_post_meta($post->ID, 'bracket_pick_html', true);
+		wp_nonce_field('bracket_pick_html_nonce', 'bracket_pick_html_nonce_field');
+		// echo '<label for="bracket_pick">Prediction</label>';
+		// echo '<input type="text" id="bracket_pick" name="bracket_pick" value="' . esc_attr($pick) . '">';
+		echo '<textarea id="bracket_pick_html" name="bracket_pick_html" rows="20" style="width:100%;" >' . esc_attr($html) . '</textarea>';
+	}
+
+	// Save meta box content
+	public function save_bracket_pick_html_meta_box($post_id) {
+		// Verify nonce
+		if (!isset($_POST['bracket_pick_html_nonce_field']) || !wp_verify_nonce($_POST['bracket_pick_html_nonce_field'], 'bracket_pick_html_nonce')) {
+			return $post_id;
+		}
+		// Check the user's permissions.
+		if (!current_user_can('edit_post', $post_id)) {
+			return $post_id;
+		}
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+			return $post_id;
+		}
+		// Save/Update the meta field in the database.
+		// update_post_meta($post_id, 'bracket_pick_html', sanitize_text_field($_POST['bracket_pick_html']));
+		update_post_meta($post_id, 'bracket_pick_html', wp_kses_post($_POST['bracket_pick_html']));
+	}
+
+	public function add_bracket_pick_img_urls_meta_box() {
+		add_meta_box(
+			'bracket_pick_img_urls_meta_box', // id of the meta box
+			'Bracket Image URLs', // title
+			array($this, 'display_bracket_pick_images_meta_box'), // callback function that will echo the box content
+			'bracket_pick', // post type where to add it
+			'normal', // position
+			'high' // priority
+		);
+	}
+
+	public function display_bracket_pick_images_meta_box($post) {
+		$urls = get_post_meta($post->ID, 'bracket_pick_images', true);
+		wp_nonce_field('bracket_pick_images_nonce', 'bracket_pick_images_nonce_field');
+		// echo '<label for="bracket_pick_images">Image URLs</label>';
+		// echo '<input type="text" id="bracket_pick_images" name="bracket_pick_images" value="' . esc_attr($urls) . '" style="width:100%;">';
+		ob_start();
+?>
+		<table id="bracket_pick_images_table" class="form-table">
+			<tbody>
+				<tr>
+					<th scope="row">
+						<label for="bracket_pick_images">Image URLs</label>
+					</th>
+					<td>
+						<input type="text" id="bracket_pick_images" name="bracket_pick_images" value="<?php echo esc_attr($urls); ?>">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+<?php
+		echo ob_get_clean();
+	}
+
+	public function save_bracket_pick_images_meta_box($post_id) {
+		// Verify nonce
+		if (!isset($_POST['bracket_pick_images_nonce_field']) || !wp_verify_nonce($_POST['bracket_pick_images_nonce_field'], 'bracket_pick_images_nonce')) {
+			return $post_id;
+		}
+		// Check the user's permissions.
+		if (!current_user_can('edit_post', $post_id)) {
+			return $post_id;
+		}
+		if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+			return $post_id;
+		}
+		// Save/Update the meta field in the database.
+		update_post_meta($post_id, 'bracket_pick_images', sanitize_text_field($_POST['bracket_pick_images']));
+	}
+
+	public function add_bracket_pick_columns($columns) {
+		$columns['author'] = 'Author';
+		return $columns;
+	}
+
+	public function show_backet_pick_data($column, $post_id) {
+		if ('author' === $column) {
+			$author_id = get_post_field('post_author', $post_id);
+			$author_name = get_the_author_meta('display_name', $author_id);
+			echo $author_name;
 		}
 	}
 }

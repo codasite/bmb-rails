@@ -2,3 +2,541 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+/** UTILITY CLASSES START */
+
+/** DISPLAY */
+
+.wpbb-block {
+	display: block;
+}
+
+.wpbb-display-none {
+	display: none;
+}
+
+/** FLEXBOX */
+.wpbb-flex {
+	display: flex;
+}
+
+.wpbb-flex-wrap {
+	flex-wrap: wrap;
+}
+
+.wpbb-flex-col {
+	display: flex;
+	flex-direction: column;
+}
+
+.wpbb-align-center {
+	align-items: center;
+}
+
+.wpbb-align-start {
+	align-items: flex-start;
+}
+
+.wpbb-align-end {
+	align-items: flex-end;
+}
+
+.wpbb-justify-center {
+	justify-content: center;
+}
+
+.wpbb-space-between {
+	justify-content: space-between;
+}
+
+.wpbb-gap-30 {
+	gap: 30px;
+}
+
+.wpbb-gap-20 {
+	gap: 20px;
+}
+
+.wpbb-gap-16 {
+	gap: 16px;
+}
+
+.wpbb-gap-15 {
+	gap: 15px;
+}
+
+.wpbb-gap-10 {
+	gap: 10px;
+}
+
+.wpbb-gap-4 {
+	gap: 4px;
+}
+
+/** TEXT */
+
+.wpbb-font-size-48 {
+	font-size: 48px;
+}
+
+.wpbb-font-size-30 {
+	font-size: 30px;
+}
+
+.wpbb-font-size-24 {
+	font-size: 24px;
+}
+
+.wpbb-font-size-20 {
+	font-size: 20px;
+}
+
+.wpbb-font-size-12 {
+	font-size: 12px;
+}
+
+.wpbb-font-weight-700 {
+	font-weight: 700;
+}
+
+.wpbb-font-weight-500 {
+	font-weight: 500;
+}
+
+.wpbb-color-grey-50 {
+	color: rgba(255, 255, 255, 0.5);
+}
+
+.wpbb-color-white {
+	color: #fff;
+}
+
+.wpbb-color-green {
+	color: #05FF3C;
+}
+
+/** SPACING */
+
+.wpbb-margin-bottom-16 {
+	margin-bottom: 16px;
+}
+
+.wpbb-padding-30 {
+	padding: 30px;
+}
+
+.wpbb-padding-16 {
+	padding: 16px;
+}
+
+.wpbb-btn-padding-md {
+	padding: 12px 16px;
+}
+
+.wpbb-btn-padding-sm {
+	padding: 4px 8px;
+}
+
+/** BORDER */
+
+.wpbb-border-radius-16 {
+	border-radius: 16px;
+}
+
+.wpbb-border-radius-8 {
+	border-radius: 8px;
+}
+
+.wpbb-border-white {
+	border: 1px solid #fff;
+}
+
+.wpbb-border-green {
+	border: 1px solid #05FF3C;
+}
+
+.wpbb-border-grey-15-2 {
+	border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.wpbb-border-grey-50 {
+	border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.wpbb-border-blue-20-2 {
+	border: 2px solid rgba(33, 55, 255, 0.2);
+}
+
+/** BACKGROUND */
+.wpbb-bg-grey-15 {
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.wpbb-bg-green-15 {
+	background: rgba(5, 255, 60, 0.15);
+}
+
+/** TOURNAMENT LEADERBOARD START */
+
+
+.wpbb-tourney-leaderboard {
+	font-family: 'Clash Display', sans-serif;
+	text-transform: uppercase;
+	color: #fff;
+	line-height: normal;
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.wpbb-tourney-leaderboard button:hover {
+	cursor: pointer;
+}
+
+.wpbb-tourney-leaderboard-header {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	border-radius: 16px;
+	/* background-color: orange; */
+	/* background image relative path: ../images/leaderboard-header-bg.png */
+
+	background-size: cover;
+	background-position: center left;
+	background-image:
+		linear-gradient(rgba(248, 225, 26, .7) 0%, rgba(255, 108, 76, 0.5) 66.67%, rgba(255, 31, 79, 0.15) 100%),
+		url('../assets/images/bmb_icon_white_05.png');
+	/* color: #fff; */
+	padding: 66px 30px 53px;
+}
+
+.wpbb-tourney-leaderboard-header svg {
+	height: 56px;
+	width: 56px;
+}
+
+.wpbb-tourney-leaderboard-header h1 {
+	font-family: 'Clash Display', sans-serif;
+	color: #fff;
+	margin-top: 16px;
+	margin-bottom: 24px;
+}
+
+.wpbb-score-tournament-btn {
+	padding: 10px 16px;
+	border-radius: 8px;
+	border: none;
+	background-color: #F8E11A;
+}
+
+.wpbb-score-tournament-btn-content {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	color: #000225;
+	text-transform: uppercase;
+}
+
+.wpbb-score-tournament-btn-content svg {
+	height: 24px;
+	width: 24px;
+}
+
+.wpbb-score-tournament-btn-text {
+	margin-left: 8px;
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 500;
+}
+
+body {
+	font-family: 'Clash Display', sans-serif !important;
+}
+
+.wpbb-tournament-plays-title {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 24px;
+	font-weight: 500;
+	font-family: 'Clash Display', sans-serif;
+	margin-bottom: 16px;
+}
+
+.wpbb-tournament-plays {
+	display: flex;
+	flex-direction: column;
+	padding: 0 30px;
+	gap: 16px;
+
+}
+
+.wpbb-leaderboard-play-row {
+	display: flex;
+	flex-direction: row;
+	gap: 16px;
+}
+
+.wpbb-leaderboard-play-winning-pick-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 4px;
+}
+
+.wpbb-leaderboard-play-winning-pick {
+	padding: 4px 16px;
+	background-color: #fff;
+	color: #010433;
+	font-weight: 700;
+}
+
+.wpbb-leaderboard-play-winning-pick-label {
+	/* line-height: normal; */
+	font-weight: 500;
+	font-size: 12px;
+}
+
+.wpbb-leaderboard-play-author-info {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.wpbb-leaderboard-play-author-name {
+	font-size: 24px;
+	font-weight: 700;
+	/* line-height: normal; */
+}
+
+.wpbb-leaderboard-play-date {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 12px;
+	font-weight: 500;
+	/* line-height: normal; */
+}
+
+.wpbb-leaderboard-view-play-btn {
+	align-self: center;
+	font-family: 'Clash Display', sans-serif;
+	color: #fff;
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: 500;
+	background: none;
+	border: none;
+	padding: 8px 16px 8px 12px;
+	border-radius: 8px;
+}
+
+.wpbb-leaderboard-view-play-btn:hover {
+	color: #010433;
+	background-color: #fff;
+}
+
+.wpbb-leaderboard-view-play-btn-content {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 4px;
+}
+
+.wpbb-leaderboard-view-play-btn-icon {
+	display: flex;
+	flex-direction: column;
+}
+
+/** TOURNAMENT LEADERBOARD END */
+
+/** DASHBOARD START */
+.wpbb-dashboard {
+	color: #fff;
+	font-family: 'Clash Display', sans-serif;
+	display: flex;
+	flex-direction: row;
+	gap: 60px;
+	line-height: normal;
+	text-transform: uppercase;
+}
+
+.wpbb-dashboard h1 {
+	color: #fff;
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-dashboard h1,
+.wpbb-dashboard h2,
+.wpbb-dashboard h3,
+.wpbb-dashboard h4,
+.wpbb-dashboard h5,
+.wpbb-dashboard h6 {
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-dashboard a {
+	text-decoration: none;
+}
+
+.wpbb-dashboard-content {
+	flex-grow: 1;
+}
+
+/** DASHBOARD NAV START */
+.wpbb-dashboard-nav li {
+	list-style: none;
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.wpbb-dashboard-nav a {
+	background-color: rgba(255, 255, 255, 0.1);
+	white-space: nowrap;
+}
+
+.wpbb-dashboard-nav a:hover {
+	background-color: #2137ff;
+}
+
+.wpbb-dashboard-nav a.active {
+	background-color: #fff;
+	color: #000;
+}
+
+.wpbb-dashboard-nav ul {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	padding: 0;
+	margin: 0;
+}
+
+.wpbb-dashboard-nav-title {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 16px;
+	font-weight: 500;
+	font-family: 'Clash Display', sans-serif;
+	margin-bottom: 15px;
+}
+
+/** DASHBOARD NAV END */
+
+/** PROFILE START */
+.wpbb-my-profile {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.wpbb-tournament-score-title {
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 24px;
+	font-weight: 500;
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-profile-widget {
+	border-radius: 16px;
+	padding: 30px;
+	border: 2px solid rgba(255, 255, 255, 0.10);
+	height: 308px;
+	width: 340px;
+	display: flex;
+	flex-direction: column;
+}
+
+.wpbb-profile-widget a:hover {
+	color: #2137ff;
+
+}
+
+.wpbb-accuracy-widget {
+	justify-content: space-between;
+	background: rgba(5, 255, 60, 0.15);
+}
+
+.wpbb-wins-widget {
+	justify-content: flex-end;
+}
+
+.wpbb-total-tournaments-widget {
+	justify-content: space-between;
+}
+
+/** PROFILE END */
+
+/** TEMPLATES START */
+.wpbb-create-template-link {
+	border: 1px solid #fff;
+	background-color: rgba(255, 255, 255, 0.15);
+	padding: 16px;
+}
+
+.wpbb-bracket-action-icon-btn {
+	height: 40px;
+	width: 40px;
+	padding: 8px;
+	background-color: rgba(255, 255, 255, 0.15);
+	border: none;
+	color: #fff;
+}
+
+.wpbb-bracket-action-icon-btn:hover {
+	cursor: pointer;
+	background-color: #fff;
+	color: #000;
+}
+
+.wpbb-add-apparel-btn {
+	/* background: linear-gradient(117deg, rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%); */
+	background: linear-gradient(rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%), #010433;
+	border: 1px solid transparent;
+	background-clip: padding-box;
+}
+
+.wpbb-add-apparel-gradient-border {
+	background: linear-gradient(rgb(248, 225, 26) 0%, rgb(64, 255, 106) 100%);
+}
+
+.wpbb-host-tournament-btn {
+	border: 1px solid #2137FF;
+	background: rgba(33, 55, 255, 0.15);
+}
+
+/** TEMPLATES END */
+
+/** TOURNAMENTS START */
+
+.wpbb-create-tournament-link {
+	border: 1px solid #fff;
+	background-color: rgba(255, 255, 255, 0.15);
+}
+
+.wpbb-create-tournament-link:hover {
+	cursor: pointer;
+	background-color: #fff;
+	color: #000;
+}
+
+.wpbb-dashboard-score-tournament-btn {
+	border: 1px solid #F8E11A;
+	background: rgba(248, 225, 26, 0.15);
+}
+
+.wpbb-completed-tournament-tag {
+	color: #F8E11A;
+	background: rgba(248, 225, 26, 0.15);
+	border: 1px solid #F8E11A;
+}
+
+/** TOURNAMENTS END */
+
+/** PLAY HISTORY START */
+
+.wpbb-leaderboard-gradient-border {
+	background: linear-gradient(rgb(238, 254, 232) 0%, rgba(248, 225, 26) 33.33%, rgba(255, 108, 76) 66.67%, rgba(255, 31, 79) 100%), #010433;
+}
+
+.wpbb-view-final-leaderboard-btn {
+	/* background: linear-gradient(135deg, rgba(238, 254, 232, 0.15) 0%, rgba(248, 225, 26, 0.15) 33.33%, rgba(255, 108, 76, 0.15) 66.67%, rgba(255, 31, 79, 0.15) 100%); */
+	background: linear-gradient(rgba(238, 254, 232, 0.15) 0%, rgba(248, 225, 26, 0.15) 33.33%, rgba(255, 108, 76, 0.15) 66.67%, rgba(255, 31, 79, 0.15) 100%), #010433;
+	border: 1px solid transparent;
+	background-clip: padding-box;
+}

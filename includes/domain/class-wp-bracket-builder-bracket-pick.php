@@ -1,6 +1,12 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-base.php';
 
+/**
+ * This class creates a bracket pick object by submitting 
+ */
+// class Wp_Bracket_Builder_Bracket_Pick_Factory extends Wp_Bracket_Builder_Bracket_Base {
+
+
 class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 
 	/**
@@ -23,7 +29,7 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 	 */
 	public $html;
 
-	public function __construct(int $customer_id, int $bracket_id, string $name = null, string $html = null, string $img_url = null, int $id = null, array $rounds = []) {
+	public function __construct(int $bracket_id, string $name, int $id = null, int $customer_id = null, string $html = null, string $img_url = null,  array $rounds = []) {
 		parent::__construct($name, $id, $rounds);
 		$this->customer_id = $customer_id;
 		$this->bracket_id = $bracket_id;
@@ -32,7 +38,7 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Pick {
-		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($data['customer_id'], $data['bracket_id'], $data['name']);
+		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($data['bracket_id'], $data['name']);
 
 		if (isset($data['id'])) {
 			$bracket_pick->id = (int) $data['id'];
@@ -55,7 +61,50 @@ class Wp_Bracket_Builder_Bracket_Pick extends Wp_Bracket_Builder_Bracket_Base {
 
 		return $bracket_pick;
 	}
+
+	public static function from_post(WP_Post $post): Wp_Bracket_Builder_Bracket_Pick | null {
+		// $bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($post->post_parent, $post->post_title, $post->post_author, $post->post_content, get_the_post_thumbnail_url($post->ID));
+
+		// bail if post is not a bracket pick
+		if ($post->post_type !== 'bracket_pick') {
+			return null;
+		}
+
+		// name is store in the title field
+		$pick_id = $post->ID;
+		$name = $post->post_title;
+		$bracket_id = $post->post_parent;
+		$img_url = get_post_meta($post->ID, 'bracket_pick_images', true);
+		$html = get_post_meta($post->ID, 'bracket_pick_html', true);
+
+		$bracket_pick = new Wp_Bracket_Builder_Bracket_Pick($bracket_id, $name, $pick_id, null, $html, $img_url);
+
+		return $bracket_pick;
+	}
+
+	/**
+	 * This function returns an array of the bracket pick object to be used when inserting/updating a bracket pick post.
+	 * The array returned from this function DOES NOT include field that are stored as post meta.
+	 * 
+	 * @return array
+	 */
+	public function to_post_array(): array {
+		$pick = $this;
+		$post_array = [
+			'post_type' => 'bracket_pick',
+			'post_parent' => $pick->bracket_id,
+			'post_title' => $pick->name,
+			'post_status' => 'publish',
+		];
+
+		if ($pick->id) {
+			$post_array['ID'] = $pick->id;
+		}
+
+		return $post_array;
+	}
 }
+
 
 class Wp_Bracket_Builder_Match_Pick {
 	public $match_id;
