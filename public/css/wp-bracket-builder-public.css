@@ -419,45 +419,9 @@ body {
 /** DASHBOARD NAV END */
 
 /** PROFILE START */
-.wpbb-my-profile {
-	display: flex;
-	flex-direction: column;
-	gap: 15px;
-}
-
-.wpbb-tournament-score-title {
-	color: rgba(255, 255, 255, 0.5);
-	font-size: 24px;
-	font-weight: 500;
-	font-family: 'Clash Display', sans-serif;
-}
-
-.wpbb-profile-widget {
-	border-radius: 16px;
-	padding: 30px;
-	border: 2px solid rgba(255, 255, 255, 0.10);
-	height: 308px;
-	width: 340px;
-	display: flex;
-	flex-direction: column;
-}
-
 .wpbb-profile-widget a:hover {
 	color: #2137ff;
 
-}
-
-.wpbb-accuracy-widget {
-	justify-content: space-between;
-	background: rgba(5, 255, 60, 0.15);
-}
-
-.wpbb-wins-widget {
-	justify-content: flex-end;
-}
-
-.wpbb-total-tournaments-widget {
-	justify-content: space-between;
 }
 
 /** PROFILE END */
