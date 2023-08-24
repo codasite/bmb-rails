@@ -121,15 +121,13 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				// <span className='wpbb-team-name'>{team?team.name :(textBuffer ? textBuffer : (isReadOnly(props.round, props.match, props.className) ? '' : 'ADD TEAM...'))}</span>
-				<span className='wpbb-team-name'>{team?team.name :(isReadOnly(props.round, props.match, props.className) ? '':textBuffer? textBuffer: 'ADD TEAM...')}</span>
-			}
+				<span className='wpbb-team-name'>{team?team.name :(isReadOnly(props.round, props.match, props.className) ? '':textBuffer? textBuffer: 'ADD TEAM...')}</span>			}
 		</div>
 	)
 }
 
 interface MatchBoxProps {
-	totalRound: number
+	totalRound?: number
 	match: MatchNode | null;
 	direction: Direction;
 	height: number;
@@ -157,10 +155,13 @@ const MatchBox = (props: MatchBoxProps) => {
 	}
 
 	let className: string;
-	let width: number;
+	let width: any;
 	let bottom = 0;
 
 	const setWidth = () =>{
+		if(!totalRound){
+			return
+		}
 		if (round?.depth == (totalRound - 1)) {
 			return bracketConstants.firstRoundWidth;
 		}
@@ -228,7 +229,6 @@ const MatchBox = (props: MatchBoxProps) => {
 		</div>
 	)
 }
-
 interface RoundHeaderProps {
 	round: Round;
 	updateRoundName?: (roundId: number, name: string) => void;
@@ -286,7 +286,7 @@ const RoundHeader = (props: RoundHeaderProps) => {
 }
 
 interface MatchColumnProps {
-	totalRound,
+	totalRound?: number
 	round: Round;
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
@@ -297,7 +297,7 @@ interface MatchColumnProps {
 	pickTeam?: (matchIndex: number, left: boolean) => void;
 }
 
-const MatchColumn = (props: MatchColumnProps) => {
+export const MatchColumn = (props: MatchColumnProps) => {
 	const {
 		totalRound,
 		round,
@@ -373,34 +373,8 @@ export const Bracket = (props: BracketProps) => {
 			setMatchTree(newMatchTree);
 		}
 	};
-
 	const updateTeam = (depth: number, matchIndex: number, left: boolean, name: string) => {
-		if (!canEdit) {
-			return
-		}
-		const newMatchTree = matchTree.clone();
-		const roundToUpdate = newMatchTree.rounds.find((round) => round.depth === depth);
-		if (roundToUpdate) {
-			const matchToUpdate = roundToUpdate.matches[matchIndex];
-			if (matchToUpdate) {
-				if (left) {
-					const team = matchToUpdate.team1;
-					if (team) {
-						team.name = name;
-					} else {
-						matchToUpdate.team1 = new Team(name);
-					}
-				} else {
-					const team = matchToUpdate.team2;
-					if (team) {
-						team.name = name;
-					} else {
-						matchToUpdate.team2 = new Team(name);
-					}
-				}
-			}
-			setMatchTree(newMatchTree);
-		}
+		return (MatchTree.updateTeam(canEdit,matchTree,depth,matchIndex,left,name))
 	}
 
 	const pickTeam = (depth: number, matchIndex: number, left: boolean) => {
@@ -437,8 +411,7 @@ export const Bracket = (props: BracketProps) => {
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
-					// matchHeight={2 ** idx * firstRoundMatchHeight}
-					matchHeight={2 * bracketConstants.teamHeight }
+					matchHeight={2 ** idx * firstRoundMatchHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -453,8 +426,7 @@ export const Bracket = (props: BracketProps) => {
 				round={rounds[0]}
 				direction={Direction.Center}
 				numDirections={numDirections}
-				// matchHeight={targetHeight / 4}
-				matchHeight={2 * bracketConstants.teamHeight}
+				matchHeight={targetHeight / 4}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
@@ -471,8 +443,7 @@ export const Bracket = (props: BracketProps) => {
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
-					// matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
-					matchHeight={2 * bracketConstants.teamHeight}
+					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
