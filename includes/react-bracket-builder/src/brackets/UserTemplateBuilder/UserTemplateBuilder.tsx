@@ -12,6 +12,7 @@ import { Bracket } from '../shared/components/Bracket'
 import { bracketApi } from '../shared/api/bracketApi';
 import Loader from '../shared/components/Loader/Loader'
 import { ShuffleTeam } from './ShuffleTeam'
+import { UserTemplateBracket } from './UserTemplateBracket/UserTemplateBracket'
 
 const defaultBracketName = "MY BRACKET NAME"
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
@@ -251,7 +252,7 @@ const UserTemplateBuilder = () => {
                 <div className="bracket-container">
                     <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
                     <div className='pt-5 wpbb-default'>
-                        <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit />
+                        <UserTemplateBracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit />
                     </div>
                     <div className='randomize-team-container'>
                         <Button className='randomize-teams no-highlight-button' onClick={handleShuffle}>
