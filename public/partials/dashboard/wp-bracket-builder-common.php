@@ -1,36 +1,65 @@
 <?php
 
-function icon_btn($icon_path, $endpoint) {
+/**
+ * Icon Buttons DO something (make post request, execute JS, etc.)
+ */
+function icon_btn($icon_path, $type = '') {
 	ob_start();
 ?>
-	<button class="wpbb-bracket-action-icon-btn wpbb-flex-col wpbb-border-radius-8">
+	<button <?php echo !empty($type) ? "type=$type" : '' ?> class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-items-center tw-justify-center tw-rounded-8 hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
 		<?php echo file_get_contents(plugins_url($icon_path, __FILE__)); ?>
 	</button>
 <?php
-
 }
 
-function duplicate_bracket_btn($endpoint, $post_id) {
+/**
+ * Icon Links GO somewhere. (To another page, etc.)
+ */
+function icon_link($icon_path, $endpoint) {
 	ob_start();
 ?>
-	<!-- <a class="wpbb-bracket-action-icon-btn wpbb-flex-col wpbb-border-radius-8 wpbb-align-center wpbb-justify-center"> -->
-	<a class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/copy.svg', __FILE__)); ?>
+	<a class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black" href="<?php echo esc_url($endpoint) ?>">
+		<?php echo file_get_contents(plugins_url($icon_path, __FILE__)); ?>
 	</a>
 <?php
 	return ob_get_clean();
 }
 
+/**
+ * This link will take the user to the Template Builder page
+ */
+function duplicate_bracket_btn($endpoint, $post_id) {
+	return icon_link('../../assets/icons/copy.svg', $endpoint);
+}
+
+/**
+ * This button will execute JS to open up the share dialog
+ */
 function share_tournament_btn($endpoint, $tournament_id) {
+	return icon_btn('../../assets/icons/link.svg');
+}
+
+/**
+ * This button sends a POST request to delete the template
+ */
+function delete_bracket_btn($endpoint, $post_id) {
 	ob_start();
 ?>
-	<button class="wpbb-bracket-action-icon-btn wpbb-flex-col wpbb-border-radius-8 wpbb-align-center wpbb-justify-center">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/link.svg', __FILE__)); ?>
-	</button>
+	<form method="post" action="<?php echo esc_url($endpoint) ?>">
+		<input type="hidden" name="delete_template_id" value="<?php echo esc_attr($post_id) ?>">
+		<?php wp_nonce_field('delete_template_action', 'delete_template_nonce'); ?>
+		<?php echo icon_btn('../../assets/icons/trash.svg', 'submit'); ?>
+		<!-- <button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
+			<?php echo file_get_contents(plugins_url('../../assets/icons/trash.svg', __FILE__)); ?>
+		</button> -->
+	</form>
 <?php
 	return ob_get_clean();
 }
 
+/**
+ * This is a utility wrapper for buttons that have a gradient border
+ */
 function gradient_border_wrap($content, $class_arr = array()) {
 	$classes = implode(' ', $class_arr);
 	ob_start();
@@ -42,20 +71,10 @@ function gradient_border_wrap($content, $class_arr = array()) {
 	return ob_get_clean();
 }
 
-function delete_bracket_btn($endpoint, $post_id) {
-	ob_start();
-?>
-	<form method="post" action="<?php echo esc_url($endpoint) ?>">
-		<input type="hidden" name="delete_template_id" value="<?php echo esc_attr($post_id) ?>">
-		<?php wp_nonce_field('delete_template_action', 'delete_template_nonce'); ?>
-		<button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
-			<?php echo file_get_contents(plugins_url('../../assets/icons/trash.svg', __FILE__)); ?>
-		</button>
-	</form>
-<?php
-	return ob_get_clean();
-}
 
+/**
+ * This button goes to the Play Bracket page
+ */
 function add_to_apparel_btn($endpoint) {
 	ob_start();
 ?>
@@ -67,18 +86,24 @@ function add_to_apparel_btn($endpoint) {
 	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'wpbb-border-radius-8'));
 }
 
+/**
+ * This button also goes to the Play Bracket page
+ */
 function play_tournament_btn($endpoint, $tournament_id) {
 	ob_start();
 ?>
 	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/play.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-500">Play Tournament</span>
+		<span class="tw-font-500">Play Tournament</span>
 	</a>
 <?php
 	return ob_get_clean();
 }
 
 
+/**
+ * This button goes to the Leaderboard page
+ */
 function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	$label = 'View Leaderboard';
 	$final = false;
@@ -100,46 +125,21 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 ?>
 	<a class="<?php echo implode(' ', $cls_list[$variant]) ?>" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/trend_up.svg', __FILE__)); ?>
-		<!-- <span class="wpbb-font-weight-500 wpbb-font-size-16"><?php echo esc_html($label) ?></span> -->
 		<span class="tw-font-500 tw-text-16"><?php echo esc_html($label) ?></span>
 	</a>
 <?php
 	$btn = ob_get_clean();
-	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border wpbb-border-radius-8')) : $btn;
+	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border tw-rounded-8')) : $btn;
 }
 
-function view_leaderboard_btn_old($endpoint, $variant = 'primary') {
-	$size = 'md';
-	$gap = '10';
-	$label = 'View Leaderboard';
-	$final = false;
-	switch ($variant) {
-		case 'compact':
-			$size = 'sm';
-			$gap = '4';
-			break;
-		case 'final';
-			$label = 'View Final Leaderboard';
-			$final = true;
-			break;
-	}
-	ob_start();
-?>
-	<a class="wpbb-view<?php echo $final ? '-final' : ''; ?>-leaderboard-btn wpbb-flex wpbb-gap-<?php echo $gap ?> wpbb-align-center wpbb-color-white wpbb-btn-padding-<?php echo $size ?> wpbb-border-radius-8 wpbb-border-grey-50 wpbb-bg-grey-15" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/trend_up.svg', __FILE__)); ?>
-		<!-- <span class="wpbb-font-weight-500 wpbb-font-size-16"><?php echo esc_html($label) ?></span> -->
-		<span class="tw-font-500 tw-text-16"><?php echo esc_html($label) ?></span>
-	</a>
-<?php
-	$btn = ob_get_clean();
-	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border wpbb-border-radius-8')) : $btn;
-}
-
+/**
+ * This button goes to the View Play page
+ */
 function view_play_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="wpbb-view-play-btn wpbb-flex wpbb-align-center wpbb-color-white wpbb-btn-padding-md wpbb-border-radius-8 wpbb-border-green wpbb-bg-green-15" href="<?php echo esc_url($endpoint) ?>">
-		<span class="wpbb-font-weight-700">View Play</span>
+	<a class="tw-flex tw-items-center tw-text-white tw-px-16 tw-py-12 tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15" href="<?php echo esc_url($endpoint) ?>">
+		<span class="tw-font-700">View Play</span>
 	</a>
 <?php
 	return ob_get_clean();

@@ -54,7 +54,7 @@ function play_list_item($play) {
 			</div>
 		</div>
 		<div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
-			<div class="wpbb-flex wpbb-gap-4 wpbb-align-center">
+			<div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo file_get_contents(plugins_url("../../assets/icons/$trend_icon", __FILE__)); ?>
 				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html($user_rank) ?></span>
 				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
