@@ -49,7 +49,9 @@ function play_list_item($play) {
 		<div class="tw-flex tw-flex-col tw-gap-20">
 			<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($tournament_name) ?></h2>
 			<div class="tw-flex tw-gap-16">
+				<!-- Play this tournament again -->
 				<?php echo view_play_btn($play_link); ?>
+				<!-- View the leaderboard for this tournament -->
 				<?php echo view_leaderboard_btn($leaderboard_link, $leaderboard_variant); ?>
 			</div>
 		</div>

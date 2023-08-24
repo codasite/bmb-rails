@@ -32,16 +32,18 @@ function host_tournament_btn($endpoint) {
 	return ob_get_clean();
 }
 
-
-
 function template_list_item($template) {
 	$name = $template['name'];
 	$id = $template['id'];
 	$num_teams = $template['num_teams'];
-	$share_link = get_permalink() . 'templates/' . $id;
+	// This link leads to the Create Template page. It passes in the original template_id as a query param
+	$duplicate_link = get_permalink() . 'templates/create?template_id=' . $id;
+	// This link executes a POST request to delete the template. It should prompt the user to confirm the deletion
 	$delete_link = get_permalink() . 'templates/delete';
-	$template_play_link = get_permalink() . 'templates/' . $id . '/play';
-	$template_host_link = get_permalink() . 'templates/' . $id . '/host';
+	// This link leads to the Play Bracket page. It passes in the template_id as a query param
+	$template_play_link = get_permalink() . 'templates/play?template_id=' . $id;
+	// This link creates a tournamnent from the template. Instead of a link, it should be a button that makes a POST request
+	$template_host_link = get_permalink() . 'tournaments/host?template_id=' . $id;
 	ob_start();
 ?>
 	<div class="tw-border-2 tw-border-white/15 tw-border-solid tw-p-30 tw-flex tw-flex-col tw-gap-10 tw-rounded-16">
@@ -49,7 +51,7 @@ function template_list_item($template) {
 		<div class="tw-flex tw-gap-10 tw-items-center tw-justify-between md:tw-justify-start">
 			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 			<div class="tw-flex tw-gap-10">
-				<?php echo duplicate_bracket_btn($share_link, $id); ?>
+				<?php echo duplicate_bracket_btn($duplicate_link, $id); ?>
 				<?php echo delete_bracket_btn($delete_link, $id); ?>
 			</div>
 		</div>
@@ -66,7 +68,8 @@ function template_list_item($template) {
 ?>
 <div class="tw-flex tw-flex-col tw-gap-30">
 	<h1>My Templates</h1>
-	<a href="#" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15">
+	<!-- this link leads to the Create Template page to create a new bracket from scratch -->
+	<a href="#" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 hover:tw-text-black hover:tw-bg-white">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/file_plus.svg', __FILE__)); ?>
 		<span class="tw-font-700 tw-text-24">Create Bracket Template</span>
 	</a>

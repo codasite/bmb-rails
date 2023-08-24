@@ -83,7 +83,7 @@ function add_to_apparel_btn($endpoint) {
 		<span class="tw-font-700 tw-text-white">Add to Apparel</span>
 	</a>
 <?php
-	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'wpbb-border-radius-8'));
+	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'tw-rounded-8'));
 }
 
 /**
