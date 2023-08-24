@@ -31,7 +31,9 @@
 
 // })(jQuery);
 
-console.log('hello from script')
+// The Tailwind configuration
+// Most of the values are overrides to narrow the styling options
+// Add new values here
 tailwind.config = {
 	prefix: 'tw-',
 	corePlugins: {

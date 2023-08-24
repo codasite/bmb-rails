@@ -47,9 +47,12 @@ function active_tournament_buttons($tournament) {
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
+			<!-- This goes to the Play Bracket page -->
 			<?php echo play_tournament_btn($tournament_play_link, $tournament); ?>
+			<!-- This goes to the Score Tournament page -->
 			<?php echo score_tournament_btn($tournament_score_link, $tournament); ?>
 		</div>
+		<!-- This goes to the Leaderboard page -->
 		<?php echo view_leaderboard_btn($tournament_score_link, 'compact'); ?>
 	</div>
 <?php
@@ -63,7 +66,9 @@ function completed_tournament_buttons($tournament) {
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-end tw-gap-8">
+		<!-- This goes to the Play Bracket page -->
 		<?php echo add_to_apparel_btn($play_link); ?>
+		<!-- This goes to the Leaderboard page -->
 		<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
 	</div>
 <?php
@@ -117,8 +122,11 @@ function tournament_list_item($tournament) {
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
 			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 			<div class="tw-flex tw-gap-10 tw-items-center">
+				<!-- The share button should execute an AJAX request to generate a shareable link -->
 				<?php echo share_tournament_btn($share_link, $id); ?>
+				<!-- The duplicate button opens up the "Host a Tournamnet" modal -->
 				<?php echo duplicate_bracket_btn($share_link, $id); ?>
+				<!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
 				<?php echo delete_bracket_btn($delete_link, $id); ?>
 			</div>
 		</div>
