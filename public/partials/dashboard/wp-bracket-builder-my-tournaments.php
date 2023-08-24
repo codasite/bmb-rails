@@ -32,7 +32,7 @@ $completed_tournaments = array(
 function score_tournament_btn($endpoint, $tournament) {
 	ob_start();
 ?>
-	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/trophy_24.svg', __FILE__)); ?>
 		<span class="tw-font-500">Score Tournament</span>
 	</a>
@@ -45,12 +45,28 @@ function active_tournament_buttons($tournament) {
 	$tournament_score_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/score';
 	ob_start();
 ?>
-	<div class="tw-flex tw-gap-16">
-		<?php echo play_tournament_btn($tournament_play_link, $tournament); ?>
-		<?php echo score_tournament_btn($tournament_score_link, $tournament); ?>
+	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
+		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
+			<?php echo play_tournament_btn($tournament_play_link, $tournament); ?>
+			<?php echo score_tournament_btn($tournament_score_link, $tournament); ?>
+		</div>
+		<?php echo view_leaderboard_btn($tournament_score_link, 'compact'); ?>
 	</div>
 <?php
 
+	return ob_get_clean();
+}
+
+function completed_tournament_buttons($tournament) {
+	$play_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/play';
+	$leaderboard_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/leaderboard';
+	ob_start();
+?>
+	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-end tw-gap-8">
+		<?php echo add_to_apparel_btn($play_link); ?>
+		<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
+	</div>
+<?php
 	return ob_get_clean();
 }
 
@@ -76,7 +92,6 @@ function completed_tournament_tag() {
 	return ob_get_clean();
 }
 
-
 function tournament_list_item($tournament) {
 	$name = $tournament['name'];
 	$num_teams = $tournament['num_teams'];
@@ -89,31 +104,31 @@ function tournament_list_item($tournament) {
 	$leaderboard_link = get_permalink() . 'tournaments/' . $id . '/leaderboard';
 	ob_start();
 ?>
-	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-justify-between tw-p-30 tw-rounded-16">
-		<div class="tw-flex tw-flex-col tw-gap-10 tw-items-start">
+	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-8 tw-p-30 tw-rounded-16">
+		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
 			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
-			<div class="tw-flex tw-gap-10 tw-items-center">
-				<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
-				<?php echo share_tournament_btn($share_link, $id); ?>
-				<?php echo duplicate_bracket_btn($share_link, $id); ?>
-				<?php echo delete_bracket_btn($delete_link, $id); ?>
-			</div>
-			<?php echo $completed ? add_to_apparel_btn($play_link) : active_tournament_buttons($tournament); ?>
-		</div>
-		<div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
 			<div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo $completed ? completed_tournament_tag() : live_tournament_tag(); ?>
 				<?php echo file_get_contents(plugins_url('../../assets/icons/bar_chart.svg', __FILE__)); ?>
 				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
 				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
 			</div>
-			<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
+		</div>
+		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
+			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
+			<div class="tw-flex tw-gap-10 tw-items-center">
+				<?php echo share_tournament_btn($share_link, $id); ?>
+				<?php echo duplicate_bracket_btn($share_link, $id); ?>
+				<?php echo delete_bracket_btn($delete_link, $id); ?>
+			</div>
+		</div>
+		<div class="tw-mt-8">
+			<?php echo $completed ? completed_tournament_buttons($tournament) : active_tournament_buttons($tournament); ?>
 		</div>
 	</div>
 <?php
 	return ob_get_clean();
 }
-
 function tournament_section($tournaments, $title) {
 	ob_start();
 ?>
