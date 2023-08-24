@@ -22,7 +22,6 @@ class BracketApi {
 	private bracketPath: string = 'brackets';
 	private submissionPath: string = 'bracket-picks';
 	private nonce: string = '';
-	private randomizePath = 'random-team-names';
 
 	constructor() {
 		// @ts-ignore
@@ -68,12 +67,6 @@ class BracketApi {
 
 	async deleteBracket(id: number): Promise<boolean> {
 		return await this.performRequest(`${this.bracketPath}/${id}`, { method: 'DELETE', camelCaseResponse: false });
-	}
-
-	async shuffleBracket(bracket: any): Promise<BracketRes> {
-		const options: RequestOptions = { method: 'POST', body: bracket };
-		const res = this.performRequest(`${this.bracketPath}/${this.randomizePath}`, options);
-		return res;
 	}
 
 	async setActive(id: number, active: boolean): Promise<boolean> {

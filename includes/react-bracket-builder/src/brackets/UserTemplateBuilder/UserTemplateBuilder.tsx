@@ -11,13 +11,14 @@ import { MatchTree } from '../shared/models/MatchTree'
 import { Bracket } from '../shared/components/Bracket'
 import { bracketApi } from '../shared/api/bracketApi';
 import Loader from '../shared/components/Loader/Loader'
+import { ShuffleTeam } from './ShuffleTeam'
 
 const defaultBracketName = "MY BRACKET NAME"
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
 
 const teamPickerDefaults = [16, 32, 64]
 const teamPickerMin = [2, 18, 34]
-const teamPickerMax = [30, 62, 64]
+const teamPickerMax = [16, 32, 64]
 
 
 interface NumTeamsPickerState {
@@ -236,13 +237,11 @@ const UserTemplateBuilder = () => {
     }
 
     const handleShuffle = ()=>{
-        const shuffleData = matchTree;
-        const req = matchTree.toRequest(bracketTitle, true, totalRounds, totalWildCardGames, wildCardPos)
-        bracketApi.shuffleBracket(req)
-        .then((bracket) => {
-            setMatchTree(MatchTree.fromRounds(bracket.rounds))          
-        })
-        
+        let currentTreeData = matchTree.rounds;
+        let size = currentTreeData.length - 1;
+        let shuffledData = ShuffleTeam.getTeamNames(currentTreeData,size,totalWildCardGames);
+        let matchValue = ShuffleTeam.updateMatchTree(shuffledData,currentTreeData,size,totalWildCardGames);
+        setMatchTree(MatchTree.fromRounds(matchValue))
     }
 
 
@@ -261,7 +260,7 @@ const UserTemplateBuilder = () => {
                             </svg><span className={'randomize-teams-text'}>scramble team order</span>
                         </Button>
                     </div>
-                    <div>
+                    {/* <div>
                         <div className='options-bracket-display-text'>
                             Bracket style
                         </div>
@@ -273,7 +272,7 @@ const UserTemplateBuilder = () => {
                                 Single Tree
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className='team-picker-container'>
                         <div className='bracket-text-info'>
                             How Many total teams in Your Bracket
