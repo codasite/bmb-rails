@@ -15,6 +15,7 @@ enum Direction {
 
 
 interface TeamSlotProps {
+	totalRound,
 	className: string;
 	team?: Team | null;
 	updateTeam?: (name: string) => void;
@@ -32,11 +33,11 @@ const TeamSlot = (props: TeamSlotProps) => {
 		team,
 		updateTeam,
 		pickTeam,
+		totalRound,
 		round,
 		match,
 		width
 	} = props
-
 
 	const startEditing = () => {
 		if (!updateTeam) {
@@ -72,15 +73,16 @@ const TeamSlot = (props: TeamSlotProps) => {
 		}
 		setTextBuffer(e.target.value)
 	}
+	
 	const isReadOnly = (round, match, className) => {
-		if (round?.name == 'Round 1') {
+		if (round?.depth === (totalRound - 1)) {
 			return false;
 		}
-		else if (round?.name == 'Round 2') {
-			if (match.left == null && className == 'wpbb-team1') {
+		else if (round?.depth === (totalRound - 2)) {
+			if (match.left == null && className == bracketConstants.team1) {
 				return false;
 			}
-			else if (match.right == null && className == 'wpbb-team2') {
+			else if (match.right == null && className == bracketConstants.team2) {
 				return false;
 			}
 			else {
@@ -127,6 +129,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 }
 
 interface MatchBoxProps {
+	totalRound: number
 	match: MatchNode | null;
 	direction: Direction;
 	height: number;
@@ -138,6 +141,7 @@ interface MatchBoxProps {
 
 const MatchBox = (props: MatchBoxProps) => {
 	const {
+		totalRound,
 		match,
 		direction,
 		height,
@@ -157,7 +161,7 @@ const MatchBox = (props: MatchBoxProps) => {
 	let bottom = 0;
 
 	const setWidth = () =>{
-		if (round?.name == 'Round 1') {
+		if (round?.depth == (totalRound - 1)) {
 			return bracketConstants.firstRoundWidth;
 		}
 		else{
@@ -201,6 +205,7 @@ const MatchBox = (props: MatchBoxProps) => {
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing, bottom: bottom }}>
 			<TeamSlot
+				totalRound={totalRound}
 				className='wpbb-team1'
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
@@ -209,8 +214,9 @@ const MatchBox = (props: MatchBoxProps) => {
 				match={match}
 				width={width}
 			/>
-			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
+			{direction === Direction.Center && <TeamSlot totalRound={totalRound} className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
+				totalRound={totalRound}
 				className='wpbb-team2'
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
@@ -280,6 +286,7 @@ const RoundHeader = (props: RoundHeaderProps) => {
 }
 
 interface MatchColumnProps {
+	totalRound,
 	round: Round;
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
@@ -292,6 +299,7 @@ interface MatchColumnProps {
 
 const MatchColumn = (props: MatchColumnProps) => {
 	const {
+		totalRound,
 		round,
 		matches,
 		direction,
@@ -309,6 +317,7 @@ const MatchColumn = (props: MatchColumnProps) => {
 			const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length
 			return (
 				<MatchBox
+					totalRound={totalRound}
 					match={match}
 					direction={direction}
 					height={matchHeight}
@@ -424,6 +433,7 @@ export const Bracket = (props: BracketProps) => {
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 
 				return <MatchColumn
+					totalRound={rounds.length}
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
@@ -438,6 +448,7 @@ export const Bracket = (props: BracketProps) => {
 			}),
 			// handle final round differently
 			<MatchColumn
+				totalRound={rounds.length}
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
@@ -454,7 +465,9 @@ export const Bracket = (props: BracketProps) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
 
-				return <MatchColumn round={round}
+				return <MatchColumn 
+					totalRound={rounds.length}
+					round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
