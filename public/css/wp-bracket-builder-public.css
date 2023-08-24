@@ -367,12 +367,6 @@ body {
 }
 
 /** TEMPLATES START */
-/* .wpbb-create-template-link {
-	border: 1px solid #fff;
-	background-color: rgba(255, 255, 255, 0.15);
-	padding: 16px;
-} */
-
 .wpbb-bracket-action-icon-btn {
 	height: 40px;
 	width: 40px;
@@ -390,44 +384,11 @@ body {
 
 .wpbb-add-apparel-btn {
 	background: linear-gradient(rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%), #010433;
-	border: 1px solid transparent;
-	background-clip: padding-box;
 }
 
 .wpbb-add-apparel-gradient-border {
 	background: linear-gradient(rgb(248, 225, 26) 0%, rgb(64, 255, 106) 100%);
 }
-
-/* .wpbb-host-tournament-btn {
-	border: 1px solid #2137FF;
-	background: rgba(33, 55, 255, 0.15);
-} */
-
-/** TEMPLATES END */
-
-/** TOURNAMENTS START */
-
-/* .wpbb-create-tournament-link {
-	border: 1px solid #fff;
-	background-color: rgba(255, 255, 255, 0.15);
-}
-
-.wpbb-create-tournament-link:hover {
-	cursor: pointer;
-	background-color: #fff;
-	color: #000;
-} */
-
-/* .wpbb-dashboard-score-tournament-btn {
-	border: 1px solid #F8E11A;
-	background: rgba(248, 225, 26, 0.15);
-}
-
-.wpbb-completed-tournament-tag {
-	color: #F8E11A;
-	background: rgba(248, 225, 26, 0.15);
-	border: 1px solid #F8E11A;
-} */
 
 /** TOURNAMENTS END */
 
@@ -438,8 +399,5 @@ body {
 }
 
 .wpbb-view-final-leaderboard-btn {
-	/* background: linear-gradient(135deg, rgba(238, 254, 232, 0.15) 0%, rgba(248, 225, 26, 0.15) 33.33%, rgba(255, 108, 76, 0.15) 66.67%, rgba(255, 31, 79, 0.15) 100%); */
 	background: linear-gradient(rgba(238, 254, 232, 0.15) 0%, rgba(248, 225, 26, 0.15) 33.33%, rgba(255, 108, 76, 0.15) 66.67%, rgba(255, 31, 79, 0.15) 100%), #010433;
-	border: 1px solid transparent;
-	background-clip: padding-box;
 }

@@ -59,7 +59,7 @@ function delete_bracket_btn($endpoint, $post_id) {
 function add_to_apparel_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-rounded-8" href="<?php echo esc_url($endpoint) ?>">
+	<a class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/plus.svg', __FILE__)); ?>
 		<span class="tw-font-700 tw-text-white">Add to Apparel</span>
 	</a>
@@ -70,7 +70,7 @@ function add_to_apparel_btn($endpoint) {
 function play_tournament_btn($endpoint, $tournament_id) {
 	ob_start();
 ?>
-	<a class="wpbb-border-green wpbb-bg-green-15 wpbb-play-tournament-btn wpbb-btn-padding-md wpbb-flex wpbb-gap-10 wpbb-align-center wpbb-border-radius-8 wpbb-color-white" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/play.svg', __FILE__)); ?>
 		<span class="wpbb-font-weight-500">Play Tournament</span>
 	</a>
@@ -80,6 +80,35 @@ function play_tournament_btn($endpoint, $tournament_id) {
 
 
 function view_leaderboard_btn($endpoint, $variant = 'primary') {
+	$label = 'View Leaderboard';
+	$final = false;
+
+	$base_cls = array('tw-flex', 'tw-justify-center', 'sm:tw-justify-start', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
+
+	$cls_list = array(
+		'primary' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12')),
+		'compact' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-4', 'sm:tw-px-8', 'sm:tw-py-4')),
+		'final' => array_merge($base_cls, array('wpbb-view-final-leaderboard-btn', 'tw-border-transparent', 'tw-bg-clip-padding', 'tw-gap-10', 'tw-px-16', 'tw-py-12')),
+	);
+
+	if ($variant === 'final') {
+		$label = 'View Final Leaderboard';
+		$final = true;
+	}
+
+	ob_start();
+?>
+	<a class="<?php echo implode(' ', $cls_list[$variant]) ?>" href="<?php echo esc_url($endpoint) ?>">
+		<?php echo file_get_contents(plugins_url('../../assets/icons/trend_up.svg', __FILE__)); ?>
+		<!-- <span class="wpbb-font-weight-500 wpbb-font-size-16"><?php echo esc_html($label) ?></span> -->
+		<span class="tw-font-500 tw-text-16"><?php echo esc_html($label) ?></span>
+	</a>
+<?php
+	$btn = ob_get_clean();
+	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border wpbb-border-radius-8')) : $btn;
+}
+
+function view_leaderboard_btn_old($endpoint, $variant = 'primary') {
 	$size = 'md';
 	$gap = '10';
 	$label = 'View Leaderboard';
@@ -88,7 +117,6 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 		case 'compact':
 			$size = 'sm';
 			$gap = '4';
-			$label = 'Leaderboard';
 			break;
 		case 'final';
 			$label = 'View Final Leaderboard';
@@ -99,7 +127,8 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 ?>
 	<a class="wpbb-view<?php echo $final ? '-final' : ''; ?>-leaderboard-btn wpbb-flex wpbb-gap-<?php echo $gap ?> wpbb-align-center wpbb-color-white wpbb-btn-padding-<?php echo $size ?> wpbb-border-radius-8 wpbb-border-grey-50 wpbb-bg-grey-15" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/trend_up.svg', __FILE__)); ?>
-		<span class="wpbb-font-weight-500 wpbb-font-size-16"><?php echo esc_html($label) ?></span>
+		<!-- <span class="wpbb-font-weight-500 wpbb-font-size-16"><?php echo esc_html($label) ?></span> -->
+		<span class="tw-font-500 tw-text-16"><?php echo esc_html($label) ?></span>
 	</a>
 <?php
 	$btn = ob_get_clean();

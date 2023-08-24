@@ -45,23 +45,23 @@ function play_list_item($play) {
 	$user_score_percent = $user_score * 100;
 	ob_start();
 ?>
-	<div class="wpbb-play-list-item wpbb-flex wpbb-space-between wpbb-padding-30 wpbb-border-radius-16 wpbb-border-blue-20-2">
-		<div class="wpbb-flex-col wpbb-gap-20">
-			<h2 class="wpbb-font-weight-700 wpbb-font-size-30 wpbb-color-white"><?php echo esc_html($tournament_name) ?></h2>
-			<div class="wpbb-flex wpbb-gap-16">
+	<div class="tw-flex tw-justify-between tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
+		<div class="tw-flex tw-flex-col tw-gap-20">
+			<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($tournament_name) ?></h2>
+			<div class="tw-flex tw-gap-16">
 				<?php echo view_play_btn($play_link); ?>
 				<?php echo view_leaderboard_btn($leaderboard_link, $leaderboard_variant); ?>
 			</div>
 		</div>
-		<div class="wpbb-flex-col wpbb-space-between wpbb-align-end">
+		<div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
 			<div class="wpbb-flex wpbb-gap-4 wpbb-align-center">
 				<?php echo file_get_contents(plugins_url("../../assets/icons/$trend_icon", __FILE__)); ?>
-				<span class="wpbb-font-weight-500 wpbb-font-size-16 wpbb-color-white"><?php echo esc_html($user_rank) ?></span>
-				<span class="wpbb-font-weight-500 wpbb-font-size-16 wpbb-color-grey-50">Rank</span>
+				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html($user_rank) ?></span>
+				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
 			</div>
-			<div class="wpbb-flex-col wpbb-align-end">
-				<h2 class="wpbb-font-weight-700 wpbb-font-size-48 wpbb-color-white"><?php echo esc_html($user_score_percent) ?>%</h2>
-				<span class="wpbb-font-weight-500 wpbb-font-size-12 wpbb-color-white">My Score</span>
+			<div class="tw-flex tw-flex-col tw-items-end">
+				<h2 class="tw-font-700 tw-text-48 tw-text-white"><?php echo esc_html($user_score_percent) ?>%</h2>
+				<span class="tw-font-500 tw-text-12 tw-text-white">My Score</span>
 			</div>
 		</div>
 	</div>
@@ -69,9 +69,9 @@ function play_list_item($play) {
 	return ob_get_clean();
 }
 ?>
-<div class="wpbb-my-play-history wpbb-flex-col wpbb-gap-30">
+<div class="tw-flex tw-flex-col tw-gap-30">
 	<h1>My Play History</h1>
-	<div class="wpbb-flex-col wpbb-gap-16">
+	<div class="tw-flex tw-flex-col tw-gap-16">
 		<?php foreach ($plays as $play) {
 			echo play_list_item($play);
 		} ?>
