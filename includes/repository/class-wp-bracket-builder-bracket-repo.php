@@ -9,7 +9,6 @@ interface Wp_Bracket_Builder_Bracket_Repository_Interface {
 	public function delete(int $id): bool;
 	public function add_max_teams(int $max);
 	public function get_max_teams();
-	public function randomize(Wp_Bracket_Builder_Bracket $bracket);
 	// public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
 }
 
@@ -312,62 +311,6 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		return true;
 	}
 
-	public function randomize(Wp_Bracket_Builder_Bracket $bracket)
-	{
-		$array_of_teams = []; 
-		$wildcard = $bracket->num_wildcards;
-		$total_rounds = $bracket->num_rounds;
-		$first_round = end($bracket->rounds)->matches;
-		$randomize_team = $first_round;
-		if($wildcard != 0){
-			$second_round = $bracket->rounds[ $total_rounds - 2]->matches;
-			$randomize_team = array_merge($first_round,$second_round);
-		}
-		foreach ($randomize_team as $match) {
-			if(isset($match)){
-				if($match->team1->name != null){
-					array_push($array_of_teams,$match->team1->name);
-				}
-				if($match->team2->name != null){
-					array_push($array_of_teams,$match->team2->name);
-				}
-			}
-		}
-		 shuffle($array_of_teams);
-		$a = $this->set_names_to_bracket($array_of_teams, $wildcard, $bracket);
-		return $a;
-	}
-
-	private function set_names_to_bracket($shuffled_teams,$wildcard,$bracket) {
-		$value = 0;
-		$total_rounds = $bracket->num_rounds;
-		if($wildcard != 0 ){
-			$bracket_second_round_team = $bracket->rounds[ $total_rounds - 2]->matches;
-			$result = $this->set_teams($bracket_second_round_team,$shuffled_teams,$value);
-			$value = $result['value'];
-			$bracket->rounds[ $total_rounds - 2]->matches = $result['teams'];
-		}
-		$bracket_first_round_team = end($bracket->rounds)->matches;
-		$result = $this->set_teams($bracket_first_round_team,$shuffled_teams,$value);
-		$bracket->rounds[ $total_rounds - 1]->matches = $result['teams'];
-		return $bracket;
-	}
-
-	private function set_teams($teams,$shuffled_teams,$value){
-		foreach($teams as $match){
-			if(isset($match)){
-				if(isset($match->team1->name)){
-					$match->team1->name = $shuffled_teams[$value];
-					$value++;
-				}
-				if(isset($match->team2->name)){
-					$match->team2->name = $shuffled_teams[$value];
-					$value++;
-				}
-			}
-		}
-		return ['teams' => $teams, 'value' => $value];
-	}
 
 	private function bracket_fields(): string {
 		$bracket_table = $this->bracket_table();
