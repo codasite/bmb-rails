@@ -38,7 +38,6 @@ const TeamSlot = (props: TeamSlotProps) => {
 		match,
 		width
 	} = props
-	let tree: any;
 	const startEditing = () => {
 		if (!updateTeam) {
 			return
