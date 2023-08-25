@@ -180,9 +180,9 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
 
-		$this->loader->add_action('init', $this, 'add_bracket_post_type');
-		$this->loader->add_action('init', $this, 'add_bracket_pick_post_type');
-		$this->loader->add_action('init', $this, 'add_tournament_post_type');
+		$this->loader->add_action('init', $this, 'add_bracket_template_post_type');
+		$this->loader->add_action('init', $this, 'add_bracket_play_post_type');
+		$this->loader->add_action('init', $this, 'add_bracket_tournament_post_type');
 
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
@@ -266,67 +266,67 @@ class Wp_Bracket_Builder {
 		return $this->version;
 	}
 
-	public function add_bracket_post_type() {
+	public function add_bracket_template_post_type() {
 		register_post_type(
-			'bracket',
+			'bracket_template',
 			array(
 				'labels' => array(
-					'name' => __('Brackets'),
-					'singular_name' => __('Bracket'),
+					'name' => __('Bracket Templates'),
+					'singular_name' => __('Bracket Template'),
 				),
 				'description' => 'Bracket templates for the WP Bracket Builder plugin',
 				'public' => true,
 				'has_archive' => true,
-				// 'supports' => array('title', 'editor', 'thumbnail'),
+				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
 				'show_ui' => true,
 				'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wp_Bracket_Builder_Bracket_Api
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
-				'taxonomies' => array('category'),
+				'taxonomies' => array('post_tag'),
 			)
 		);
 	}
 
-	public function add_bracket_pick_post_type() {
+	public function add_bracket_play_post_type() {
 		// register a post type named "bracket_pick"
 		register_post_type(
-			'bracket_pick',
+			'bracket_play',
 			array(
 				'labels' => array(
-					'name' => __('Bracket Picks'),
-					'singular_name' => __('Bracket Pick'),
+					'name' => __('Bracket Plays'),
+					'singular_name' => __('Bracket Play'),
 				),
-				'description' => 'Bracket picks for the WP Bracket Builder plugin',
-				// 'public' => true,
-				// 'has_archive' => true,
-				// 'supports' => array('title', 'editor', 'thumbnail'),
+				'description' => 'Bracket plays for the WP Bracket Builder plugin',
+				'public' => true,
+				'has_archive' => true,
+				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
 				'show_ui' => true,
 				'show_in_rest' => true,
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
-				// 'taxonomies' => array('category'),
+				'taxonomies' => array('post_tag'),
 			)
 		);
 	}
 
-	public function add_tournament_post_type() {
+	public function add_bracket_tournament_post_type() {
 		// register a post type named "tournament"
 		register_post_type(
-			'tournament',
+			'bracket_tournament',
 			array(
 				'labels' => array(
-					'name' => __('Tournaments'),
-					'singular_name' => __('Tournament'),
+					'name' => __('Bracket Tournaments'),
+					'singular_name' => __('Bracket Tournament'),
 				),
 				'description' => 'Tournaments for the WP Bracket Builder plugin',
 				'public' => true,
 				'has_archive' => true,
-				// 'supports' => array('title', 'editor', 'thumbnail'),
+				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
 				'show_ui' => true,
 				'show_in_rest' => true,
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
-				// 'taxonomies' => array('category'),
+				'taxonomies' => array('post_tag'),
 			)
 		);
 	}
