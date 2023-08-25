@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
 import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../../utils/types';
@@ -13,9 +13,13 @@ enum Direction {
 	BottomRight = 4,
 }
 
+export interface BracketDetials{
+	numRounds: number;
+}
+
+const BracketContext = createContext<BracketDetials | undefined>(undefined)
 
 interface TeamSlotProps {
-	numRounds?: number,
 	className: string;
 	team?: Team | null;
 	updateTeam?: (name: string) => void;
@@ -28,12 +32,12 @@ interface TeamSlotProps {
 const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
+	const bracket = useContext(BracketContext);
 
 	const {
 		team,
 		updateTeam,
 		pickTeam,
-		numRounds,
 		round,
 		match,
 		width
@@ -81,13 +85,13 @@ const TeamSlot = (props: TeamSlotProps) => {
 	}
 	
 	const isReadOnly = (round, match, className) => {
-		if(!numRounds){
+		if(!bracket?.numRounds){
 			return
 		}
-		if (round?.depth === (numRounds - 1)) {
+		if (round?.depth === (bracket?.numRounds - 1)) {
 			return false;
 		}
-		else if (round?.depth === (numRounds - 2)) {
+		else if (round?.depth === (bracket?.numRounds - 2)) {
 			if (match.left == null && className == bracketConstants.team1) {
 				return false;
 			}
@@ -136,7 +140,6 @@ const TeamSlot = (props: TeamSlotProps) => {
 }
 
 interface MatchBoxProps {
-	numRounds?: number
 	match: MatchNode | null;
 	direction: Direction;
 	height: number;
@@ -148,7 +151,6 @@ interface MatchBoxProps {
 
 const MatchBox = (props: MatchBoxProps) => {
 	const {
-		numRounds,
 		match,
 		direction,
 		height,
@@ -162,16 +164,17 @@ const MatchBox = (props: MatchBoxProps) => {
 			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
 		)
 	}
+	const bracket = useContext(BracketContext);
 
 	let className: string;
 	let width: any ;
 	let bottom = 0;
 
 	const setWidth = () =>{
-		if(!numRounds){
+		if(!bracket?.numRounds){
 			return
 		}
-		if (round?.depth === (numRounds - 1)) {
+		if (round?.depth === (bracket?.numRounds - 1)) {
 			return bracketConstants.firstRoundWidth;
 		}
 		else{
@@ -215,7 +218,6 @@ const MatchBox = (props: MatchBoxProps) => {
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing, bottom: bottom }}>
 			<TeamSlot
-				numRounds={numRounds}
 				className='wpbb-team1'
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
@@ -224,9 +226,8 @@ const MatchBox = (props: MatchBoxProps) => {
 				match={match}
 				width={width}
 			/>
-			{direction === Direction.Center && <TeamSlot numRounds={numRounds} className='wpbb-champion-team' team={match.result} />}
+			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
-				numRounds={numRounds}
 				className='wpbb-team2'
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
@@ -295,7 +296,6 @@ const RoundHeader = (props: RoundHeaderProps) => {
 }
 
 interface MatchColumnProps {
-	numRounds?: number
 	round: Round;
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
@@ -308,7 +308,6 @@ interface MatchColumnProps {
 
 export const MatchColumn = (props: MatchColumnProps) => {
 	const {
-		numRounds,
 		round,
 		matches,
 		direction,
@@ -326,7 +325,6 @@ export const MatchColumn = (props: MatchColumnProps) => {
 			const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length
 			return (
 				<MatchBox
-					numRounds={numRounds}
 					match={match}
 					direction={direction}
 					height={matchHeight}
@@ -370,6 +368,7 @@ export const Bracket = (props: BracketProps) => {
 	const rounds = matchTree.rounds
 	const canEdit = setMatchTree !== undefined && props.canEdit
 	const canPick = setMatchTree !== undefined && props.canPick
+
 
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -441,8 +440,8 @@ export const Bracket = (props: BracketProps) => {
 				// Get the first half of matches for this column
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 
-				return <MatchColumn
-					numRounds={rounds.length}
+				return <BracketContext.Provider value={{ numRounds:rounds.length }}>
+				<MatchColumn
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
@@ -453,10 +452,11 @@ export const Bracket = (props: BracketProps) => {
 						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
 						: undefined}
 				/>
+				</BracketContext.Provider>
 			}),
 			// handle final round differently
+			<BracketContext.Provider value={{ numRounds:rounds.length }}>
 			<MatchColumn
-				numRounds={rounds.length}
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
@@ -467,13 +467,12 @@ export const Bracket = (props: BracketProps) => {
 				pickTeam={canPick ?
 					(_, left: boolean) => pickTeam(0, 0, left)
 					: undefined}
-			/>,
+			/></BracketContext.Provider>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
 
-				return <MatchColumn 
-					numRounds={rounds.length}
+				return  <BracketContext.Provider value={{ numRounds:rounds.length }}><MatchColumn 
 					round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
@@ -484,7 +483,7 @@ export const Bracket = (props: BracketProps) => {
 					pickTeam={canPick ?
 						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
 						: undefined}
-				/>
+				/></BracketContext.Provider>
 			})
 		]
 	}
