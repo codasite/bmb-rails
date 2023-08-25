@@ -12,7 +12,7 @@ import { Bracket } from '../shared/components/Bracket'
 import { bracketApi } from '../shared/api/bracketApi';
 import Loader from '../shared/components/Loader/Loader'
 import { ShuffleTeam } from './ShuffleTeam'
-import { UserTemplateBracket } from './UserTemplateBracket/UserTemplateBracket'
+import { bracketConstants } from '../shared/constants'
 
 const defaultBracketName = "MY BRACKET NAME"
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
@@ -80,8 +80,7 @@ const evaluateNumRoundAndWildCard = (numTeams: number) => {
     if (wildCardGame === Math.pow(2, numRounds - 1)) {
         wildCardGame = 0
     }
-    // console.log('Round for team ' + inputNumber + ' is ' + numRounds)
-    // console.log('Wild Card for ' + inputNumber + ' is ' + wildCardGame)
+    
     return [
         numRounds,
         wildCardGame
@@ -252,7 +251,7 @@ const UserTemplateBuilder = () => {
                 <div className="bracket-container">
                     <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
                     <div className='pt-5 wpbb-default'>
-                        <UserTemplateBracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit />
+                        <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit matchHeight={2 * bracketConstants.teamHeight}/>
                     </div>
                     <div className='randomize-team-container'>
                         <Button className='randomize-teams no-highlight-button' onClick={handleShuffle}>
