@@ -1,19 +1,19 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
-interface Wp_Bracket_Builder_Bracket_Repository_Interface {
-	public function add(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
-	public function get(int $id): ?Wp_Bracket_Builder_Bracket;
+interface Wp_Bracket_Builder_Bracket_Template_Repository_Interface {
+	public function add(Wp_Bracket_Builder_Bracket_Template $template): Wp_Bracket_Builder_Bracket_Template;
+	public function get(int $id): ?Wp_Bracket_Builder_Bracket_Template;
 	public function get_all(): array;
 	public function delete(int $id): bool;
 	public function add_max_teams(int $max);
 	public function get_max_teams();
 	public function get_user_brackets(): array;
-	// public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
+	// public function update(Wp_Bracket_Builder_Bracket_Template $bracket): Wp_Bracket_Builder_Bracket_Template;
 }
 
-class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracket_Repository_Interface {
+class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracket_Template_Repository_Interface {
 	private $wpdb;
 
 	public function __construct() {
@@ -21,32 +21,32 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		$this->wpdb = $wpdb;
 	}
 
-	public function add(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket {
+	public function add(Wp_Bracket_Builder_Bracket_Template $template): Wp_Bracket_Builder_Bracket_Template {
 
-		$cpt_id = $this->insert_cpt($bracket);
+		$template_id = $this->insert_cpt($template);
 
-		$table_name = $this->bracket_table();
-		$this->wpdb->insert(
-			$table_name,
-			[
-				// 'name' => $bracket->name,
-				'cpt_id' => $cpt_id,
-				// 'active' => $bracket->active ? 1 : 0,
-				'num_rounds' => $bracket->num_rounds,
-				'num_wildcards' => $bracket->num_wildcards,
-				'wildcard_placement' => $bracket->wildcard_placement,
-			]
-		);
-		$bracket_id = $this->wpdb->insert_id;
-		if ($bracket->rounds) {
-			$this->insert_rounds_for_bracket($bracket_id, $bracket->rounds);
+		// $table_name = $this->bracket_table();
+		// $this->wpdb->insert(
+		// 	$table_name,
+		// 	[
+		// 		// 'name' => $bracket->name,
+		// 		'cpt_id' => $cpt_id,
+		// 		// 'active' => $bracket->active ? 1 : 0,
+		// 		'num_rounds' => $bracket->num_rounds,
+		// 		'num_wildcards' => $bracket->num_wildcards,
+		// 		'wildcard_placement' => $bracket->wildcard_placement,
+		// 	]
+		// );
+		// $bracket_id = $this->wpdb->insert_id;
+		if ($template->rounds) {
+			$this->insert_rounds_for_bracket($template_id, $template->rounds);
 		}
 		# refresh from db
-		$bracket = $this->get($bracket_id);
-		return $bracket;
+		$template = $this->get($template_id);
+		return $template;
 	}
 
-	private function insert_cpt(Wp_Bracket_Builder_Bracket $bracket): int {
+	private function insert_cpt(Wp_Bracket_Builder_Bracket_Template $bracket): int {
 		$post_id = wp_insert_post([
 			'post_title' => $bracket->name,
 			'post_type' => 'bracket',
@@ -123,7 +123,7 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		return $team;
 	}
 
-	public function get(int $id = null, int $post_id = null, WP_Post $post = null): ?Wp_Bracket_Builder_Bracket {
+	public function get(int $id = null, int $post_id = null, WP_Post $post = null): ?Wp_Bracket_Builder_Bracket_Template {
 		$bracket_arr = null;
 
 		if ($id) {
@@ -138,7 +138,7 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			# get rounds
 			$round_arr = $this->get_rounds_for_bracket($bracket_arr['id']);
 			$bracket_arr['rounds'] = $round_arr;
-			return Wp_Bracket_Builder_Bracket::from_array($bracket_arr);
+			return Wp_Bracket_Builder_Bracket_Template::from_array($bracket_arr);
 		}
 
 		return null;
@@ -262,7 +262,7 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		$brackets_array = [];
 
 		foreach ($brackets as $bracket) {
-			$brackets_array[] = Wp_Bracket_Builder_Bracket::from_array($bracket);
+			$brackets_array[] = Wp_Bracket_Builder_Bracket_Template::from_array($bracket);
 		}
 
 		return $brackets_array;
@@ -340,7 +340,6 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		} else {
 			$this->wpdb->insert($table_name, $data);
 		}
-		
 	}
 
 	public function get_max_teams() {
@@ -349,9 +348,8 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 			$this->wpdb->prepare("SELECT * FROM {$table_name}"),
 			ARRAY_A
 		);
-		
-		return $existing_max_team_info;
 
+		return $existing_max_team_info;
 	}
 
 
@@ -372,7 +370,7 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		);
 		$brackets_array = [];
 		foreach ($brackets as $bracket) {
-			$brackets_array[] = Wp_Bracket_Builder_Bracket::from_array($bracket);
+			$brackets_array[] = Wp_Bracket_Builder_Bracket_Template::from_array($bracket);
 		}
 		return $brackets_array;
 	}
