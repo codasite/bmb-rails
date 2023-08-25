@@ -1,7 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-base.php';
 
-class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
+class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Bracket_Base {
 	/**
 	 * @var int
 	 * 
@@ -56,8 +56,8 @@ class Wp_Bracket_Builder_Bracket extends Wp_Bracket_Builder_Bracket_Base {
 		$this->created_at = $created_at;
 	}
 
-	public static function from_array(array $data): Wp_Bracket_Builder_Bracket {
-		$bracket = new Wp_Bracket_Builder_Bracket(
+	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
+		$bracket = new Wp_Bracket_Builder_Bracket_Template(
 			$data['name'],
 			$data['num_rounds'],
 			$data['num_wildcards'],
