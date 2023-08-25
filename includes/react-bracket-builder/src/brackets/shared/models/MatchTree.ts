@@ -405,32 +405,4 @@ export class MatchTree {
 		}
 	}
 
-	static updateTeam = (canEdit: boolean | undefined, matchTree: MatchTree, depth: number, matchIndex: number, left: boolean, name: string )=>{
-        if (!canEdit) {
-			return
-		}
-		const newMatchTree = matchTree.clone();
-		const roundToUpdate = newMatchTree.rounds.find((round) => round.depth === depth);
-		if (roundToUpdate) {
-			const matchToUpdate = roundToUpdate.matches[matchIndex];
-			if (matchToUpdate) {
-				if (left) {
-					const team = matchToUpdate.team1;
-					if (team) {
-						team.name = name;
-					} else {
-						matchToUpdate.team1 = new Team(name);
-					}
-				} else {
-					const team = matchToUpdate.team2;
-					if (team) {
-						team.name = name;
-					} else {
-						matchToUpdate.team2 = new Team(name);
-					}
-				}
-			}
-			return newMatchTree;
-		}
-    }
 }

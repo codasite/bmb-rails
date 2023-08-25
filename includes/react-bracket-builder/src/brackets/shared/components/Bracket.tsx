@@ -15,7 +15,7 @@ enum Direction {
 
 
 interface TeamSlotProps {
-	totalRound,
+	numRounds?: number,
 	className: string;
 	team?: Team | null;
 	updateTeam?: (name: string) => void;
@@ -33,12 +33,12 @@ const TeamSlot = (props: TeamSlotProps) => {
 		team,
 		updateTeam,
 		pickTeam,
-		totalRound,
+		numRounds,
 		round,
 		match,
 		width
 	} = props
-
+	let tree: any;
 	const startEditing = () => {
 		if (!updateTeam) {
 			return
@@ -53,6 +53,13 @@ const TeamSlot = (props: TeamSlotProps) => {
 		}
 		if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
 			updateTeam(textBuffer)
+			//updating team names in props to display in span tag
+			if(props.className === bracketConstants.team1){
+				props.team = props.match?.team1
+			}
+			else if(props.className === bracketConstants.team2){
+				props.team = props.match?.team2
+			}
 		}
 		setEditing(false)
 	}
@@ -75,10 +82,13 @@ const TeamSlot = (props: TeamSlotProps) => {
 	}
 	
 	const isReadOnly = (round, match, className) => {
-		if (round?.depth === (totalRound - 1)) {
+		if(!numRounds){
+			return
+		}
+		if (round?.depth === (numRounds - 1)) {
 			return false;
 		}
-		else if (round?.depth === (totalRound - 2)) {
+		else if (round?.depth === (numRounds - 2)) {
 			if (match.left == null && className == bracketConstants.team1) {
 				return false;
 			}
@@ -121,13 +131,13 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{team?team.name :(isReadOnly(props.round, props.match, props.className) ? '':textBuffer? textBuffer: 'ADD TEAM...')}</span>			}
+				<span className='wpbb-team-name'>{props.team?props.team.name :(isReadOnly(props.round, props.match, props.className) ? '': 'ADD TEAM...')}</span>			}
 		</div>
 	)
 }
 
 interface MatchBoxProps {
-	totalRound?: number
+	numRounds?: number
 	match: MatchNode | null;
 	direction: Direction;
 	height: number;
@@ -139,7 +149,7 @@ interface MatchBoxProps {
 
 const MatchBox = (props: MatchBoxProps) => {
 	const {
-		totalRound,
+		numRounds,
 		match,
 		direction,
 		height,
@@ -155,14 +165,14 @@ const MatchBox = (props: MatchBoxProps) => {
 	}
 
 	let className: string;
-	let width: any;
+	let width: any ;
 	let bottom = 0;
 
 	const setWidth = () =>{
-		if(!totalRound){
+		if(!numRounds){
 			return
 		}
-		if (round?.depth == (totalRound - 1)) {
+		if (round?.depth === (numRounds - 1)) {
 			return bracketConstants.firstRoundWidth;
 		}
 		else{
@@ -206,7 +216,7 @@ const MatchBox = (props: MatchBoxProps) => {
 	return (
 		<div className={className} style={{ height: height, marginBottom: spacing, bottom: bottom }}>
 			<TeamSlot
-				totalRound={totalRound}
+				numRounds={numRounds}
 				className='wpbb-team1'
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
@@ -215,9 +225,9 @@ const MatchBox = (props: MatchBoxProps) => {
 				match={match}
 				width={width}
 			/>
-			{direction === Direction.Center && <TeamSlot totalRound={totalRound} className='wpbb-champion-team' team={match.result} />}
+			{direction === Direction.Center && <TeamSlot numRounds={numRounds} className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
-				totalRound={totalRound}
+				numRounds={numRounds}
 				className='wpbb-team2'
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
@@ -286,7 +296,7 @@ const RoundHeader = (props: RoundHeaderProps) => {
 }
 
 interface MatchColumnProps {
-	totalRound?: number
+	numRounds?: number
 	round: Round;
 	matches: Nullable<MatchNode>[];
 	direction: Direction;
@@ -299,7 +309,7 @@ interface MatchColumnProps {
 
 export const MatchColumn = (props: MatchColumnProps) => {
 	const {
-		totalRound,
+		numRounds,
 		round,
 		matches,
 		direction,
@@ -317,7 +327,7 @@ export const MatchColumn = (props: MatchColumnProps) => {
 			const matchIndex = direction === Direction.TopLeft || direction === Direction.BottomLeft ? i : i + matches.length
 			return (
 				<MatchBox
-					totalRound={totalRound}
+					numRounds={numRounds}
 					match={match}
 					direction={direction}
 					height={matchHeight}
@@ -346,6 +356,7 @@ interface BracketProps {
 	matchTree: MatchTree;
 	canEdit?: boolean;
 	canPick?: boolean;
+	matchHeight?: number;
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
@@ -374,7 +385,32 @@ export const Bracket = (props: BracketProps) => {
 		}
 	};
 	const updateTeam = (depth: number, matchIndex: number, left: boolean, name: string) => {
-		return (MatchTree.updateTeam(canEdit,matchTree,depth,matchIndex,left,name))
+		if (!canEdit) {
+			return
+		}
+		const newMatchTree = matchTree.clone();
+		const roundToUpdate = newMatchTree.rounds.find((round) => round.depth === depth);
+		if (roundToUpdate) {
+			const matchToUpdate = roundToUpdate.matches[matchIndex];
+			if (matchToUpdate) {
+				if (left) {
+					const team = matchToUpdate.team1;
+					if (team) {
+						team.name = name;
+					} else {
+						matchToUpdate.team1 = new Team(name);
+					}
+				} else {
+					const team = matchToUpdate.team2;
+					if (team) {
+						team.name = name;
+					} else {
+						matchToUpdate.team2 = new Team(name);
+					}
+				}
+			}
+			return newMatchTree;
+		}
 	}
 
 	const pickTeam = (depth: number, matchIndex: number, left: boolean) => {
@@ -407,11 +443,11 @@ export const Bracket = (props: BracketProps) => {
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 
 				return <MatchColumn
-					totalRound={rounds.length}
+					numRounds={rounds.length}
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
-					matchHeight={2 ** idx * firstRoundMatchHeight}
+					matchHeight={props.matchHeight ? props.matchHeight: (2 ** idx * firstRoundMatchHeight)}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
@@ -421,12 +457,12 @@ export const Bracket = (props: BracketProps) => {
 			}),
 			// handle final round differently
 			<MatchColumn
-				totalRound={rounds.length}
+				numRounds={rounds.length}
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
 				numDirections={numDirections}
-				matchHeight={targetHeight / 4}
+				matchHeight={props.matchHeight ? props.matchHeight: (targetHeight / 4)}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
@@ -438,12 +474,12 @@ export const Bracket = (props: BracketProps) => {
 				const colMatches = round.matches.slice(round.matches.length / 2)
 
 				return <MatchColumn 
-					totalRound={rounds.length}
+					numRounds={rounds.length}
 					round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
-					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+					matchHeight={props.matchHeight ? props.matchHeight: (2 ** (arr.length - 1 - idx) * firstRoundMatchHeight)}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
