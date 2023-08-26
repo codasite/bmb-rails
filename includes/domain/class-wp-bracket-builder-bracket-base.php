@@ -9,29 +9,99 @@ class Wp_Bracket_Builder_Bracket_Base {
 	/**
 	 * @var string
 	 */
-	public $name;
+	public $title;
+
+	/**
+	 * @var int
+	 * 
+	 * ID of the user who created the bracket
+	 */
+	public $author;
+
+	/**
+	 * @var string
+	 */
+	public $status;
+
+	/**
+	 * @var int
+	 */
+	public $num_teams;
+
+	/**
+	 * @var int
+	 */
+	public $wildcard_placement;
+
+	/**
+	 * @var DateTime
+	 * 
+	 * Date the bracket was created
+	 */
+	public $date;
+
+	/**
+	 * @var DateTime
+	 * 
+	 * Date the bracket was created in GMT
+	 */
+	public $date_gmt;
+
+	/**
+	 * @var string
+	 * 
+	 * HTML representation of the bracket. Used to generate bracket images.
+	 */
+	public $html;
+
+	/**
+	 * @var string
+	 * 
+	 * URL of the bracket image
+	 */
+	public $img_url;
 
 	/**
 	 * @var Wp_Bracket_Builder_Round[]
 	 */
 	public $rounds;
 
-	public function __construct(string $name, int $id = null, array $rounds = []) {
+	public function __construct(
+		int $id = null,
+		string $title = '',
+		int $author = null,
+		string $status = 'draft',
+		int $num_teams = null,
+		int $wildcard_placement = null,
+		DateTime $date = null,
+		DateTime $date_gmt = null,
+		string $html = '',
+		string $img_url = '',
+		array $rounds = []
+	) {
 		$this->id = $id;
-		$this->name = $name;
+		$this->title = $title;
+		$this->author = $author;
+		$this->status = $status;
+		$this->num_teams = $num_teams;
+		$this->wildcard_placement = $wildcard_placement;
+		$this->date = $date;
+		$this->date_gmt = $date_gmt;
+		$this->html = $html;
+		$this->img_url = $img_url;
 		$this->rounds = $rounds;
 	}
 
-	public function equals(Wp_Bracket_Builder_Bracket_Base $bracket): bool {
-		if ($this->id !== $bracket->id) {
-			return false;
-		}
-		if ($this->name !== $bracket->name) {
-			return false;
-		}
-		return Wp_Bracket_Builder_Round::array_equals($this->rounds, $bracket->rounds);
-		return true;
-	}
+	// public function equals(Wp_Bracket_Builder_Bracket_Base $bracket): bool {
+	// 	if ($this->id !== $bracket->id) {
+	// 		return false;
+	// 	}
+	// 	if ($this->title !== $bracket->title) {
+	// 		return false;
+	// 	}
+	// 	return Wp_Bracket_Builder_Round::array_equals($this->rounds, $bracket->rounds);
+	// 	return true;
+	// }
 
 	public function get_team_map(): array {
 		// return an array of team ids to teams
@@ -108,16 +178,22 @@ class Wp_Bracket_Builder_Round {
 	 */
 	public $depth;
 
-	public function __construct(int $depth, string $name = null, int $id = null, array $matches = []) {
+	/**
+	 * @var int
+	 */
+	public $round_index;
+
+	public function __construct(int $depth, int $round_index, string $name = null, int $id = null, array $matches = []) {
 		// public function __construct(string $name,  int $id = null, array $matches = []) {
 		$this->id = $id;
 		$this->depth = $depth;
+		$this->round_index = $round_index;
 		$this->name = $name;
 		$this->matches = $matches;
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Round {
-		$round = new Wp_Bracket_Builder_Round($data['depth']);
+		$round = new Wp_Bracket_Builder_Round($data['depth'], $data['round_index']);
 
 		if (isset($data['name'])) {
 			$round->name = $data['name'];
@@ -140,30 +216,30 @@ class Wp_Bracket_Builder_Round {
 		return $round;
 	}
 
-	public function equals(Wp_Bracket_Builder_Round $round): bool {
-		if ($this->id !== $round->id) {
-			return false;
-		}
-		if ($this->name !== $round->name) {
-			return false;
-		}
-		// if ($this->depth !== $round->depth) {
-		// 	return false;
-		// }
-		return Wp_Bracket_Builder_Match::array_equals($this->matches, $round->matches);
-	}
+	// public function equals(Wp_Bracket_Builder_Round $round): bool {
+	// 	if ($this->id !== $round->id) {
+	// 		return false;
+	// 	}
+	// 	if ($this->name !== $round->name) {
+	// 		return false;
+	// 	}
+	// 	// if ($this->depth !== $round->depth) {
+	// 	// 	return false;
+	// 	// }
+	// 	return Wp_Bracket_Builder_Match::array_equals($this->matches, $round->matches);
+	// }
 
-	static function array_equals(array $rounds1, array $rounds2): bool {
-		if (count($rounds1) !== count($rounds2)) {
-			return false;
-		}
-		for ($i = 0; $i < count($rounds1); $i++) {
-			if (!$rounds1[$i]->equals($rounds2[$i])) {
-				return false;
-			}
-		}
-		return true;
-	}
+	// static function array_equals(array $rounds1, array $rounds2): bool {
+	// 	if (count($rounds1) !== count($rounds2)) {
+	// 		return false;
+	// 	}
+	// 	for ($i = 0; $i < count($rounds1); $i++) {
+	// 		if (!$rounds1[$i]->equals($rounds2[$i])) {
+	// 			return false;
+	// 		}
+	// 	}
+	// 	return true;
+	// }
 }
 
 class Wp_Bracket_Builder_Match {
@@ -222,36 +298,36 @@ class Wp_Bracket_Builder_Match {
 		return $match;
 	}
 
-	public function equals(Wp_Bracket_Builder_Match $match): bool {
-		if ($this->id !== $match->id) {
-			return false;
-		}
-		if ($this->index !== $match->index) {
-			return false;
-		}
-		if (!$this->team1->equals($match->team1)) {
-			return false;
-		}
-		if (!$this->team2->equals($match->team2)) {
-			return false;
-		}
-		if ($this->result !== null && $match->result !== null && !$this->result->equals($match->result)) {
-			return false;
-		}
-		return true;
-	}
+	// public function equals(Wp_Bracket_Builder_Match $match): bool {
+	// 	if ($this->id !== $match->id) {
+	// 		return false;
+	// 	}
+	// 	if ($this->index !== $match->index) {
+	// 		return false;
+	// 	}
+	// 	if (!$this->team1->equals($match->team1)) {
+	// 		return false;
+	// 	}
+	// 	if (!$this->team2->equals($match->team2)) {
+	// 		return false;
+	// 	}
+	// 	if ($this->result !== null && $match->result !== null && !$this->result->equals($match->result)) {
+	// 		return false;
+	// 	}
+	// 	return true;
+	// }
 
-	static function array_equals(array $matches1, array $matches2): bool {
-		if (count($matches1) !== count($matches2)) {
-			return false;
-		}
-		for ($i = 0; $i < count($matches1); $i++) {
-			if (!$matches1[$i]->equals($matches2[$i])) {
-				return false;
-			}
-		}
-		return true;
-	}
+	// static function array_equals(array $matches1, array $matches2): bool {
+	// 	if (count($matches1) !== count($matches2)) {
+	// 		return false;
+	// 	}
+	// 	for ($i = 0; $i < count($matches1); $i++) {
+	// 		if (!$matches1[$i]->equals($matches2[$i])) {
+	// 			return false;
+	// 		}
+	// 	}
+	// 	return true;
+	// }
 }
 
 class Wp_Bracket_Builder_Team {
@@ -265,16 +341,10 @@ class Wp_Bracket_Builder_Team {
 	 */
 	public $name;
 
-	/**
-	 * @var int
-	 */
-	public $seed;
 
-
-	public function __construct(string $name = null, int $id = null, int $seed = null) {
+	public function __construct(string $name = null, int $id = null) {
 		$this->id = $id;
 		$this->name = $name;
-		$this->seed = $seed;
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Team {
@@ -286,10 +356,6 @@ class Wp_Bracket_Builder_Team {
 
 		if (isset($data['id'])) {
 			$team->id = (int) $data['id'];
-		}
-
-		if (isset($data['seed'])) {
-			$team->seed = (int) $data['seed'];
 		}
 
 		return $team;

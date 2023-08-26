@@ -2,63 +2,29 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-base.php';
 
 class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Bracket_Base {
-	/**
-	 * @var int
-	 * 
-	 */
-	public $cpt_id;
 
-	/**
-	 * @var bool
-	 */
-	public $active;
-
-	/**
-	 * @var int
-	 */
-	public $num_rounds;
-
-	/**
-	 * @var int
-	 */
-	public $num_wildcards;
-
-	/**
-	 * @var int
-	 */
-	public $wildcard_placement;
-
-	/**
-	 * @var DateTime
-	 */
-	public $created_at;
-
-	/**
-	 * @var int
-	 */
-	public $num_submissions;
 
 	public function __construct(
-		string $name,
-		int $num_rounds,
-		int $num_wildcards,
-		int $wildcard_placement = null,
-		bool $active = false,
 		int $id = null,
-		DateTime $created_at = null,
+		string $title,
+		int $author,
+		string $status = 'publish',
+		int $num_teams,
+		int $wildcard_placement = null,
+		DateTime $date = null,
+		DateTime $date_gmt = null,
 		array $rounds = []
 	) {
-		parent::__construct($name, $id, $rounds);
-		$this->active = $active;
-		$this->num_rounds = $num_rounds;
-		$this->num_wildcards = $num_wildcards;
+		parent::__construct($title, $id, $rounds);
+		$this->status = $status;
+		$this->num_teams = $num_teams;
 		$this->wildcard_placement = $wildcard_placement;
-		$this->created_at = $created_at;
+		$this->date = $date;
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
 		$bracket = new Wp_Bracket_Builder_Bracket_Template(
-			$data['name'],
+			$data['title'],
 			$data['num_rounds'],
 			$data['num_wildcards'],
 			$data['wildcard_placement'],
@@ -69,14 +35,9 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Bracket_Bas
 			$bracket->id = (int) $data['id'];
 		}
 
-		if (isset($data['created_at'])) {
-			$bracket->created_at = new DateTime($data['created_at']);
+		if (isset($data['date'])) {
+			$bracket->date = new DateTime($data['date']);
 		}
-
-		if (isset($data['num_submissions'])) {
-			$bracket->num_submissions = (int) $data['num_submissions'];
-		}
-
 
 		if (isset($data['rounds'])) {
 			$bracket->rounds = array_map(function ($index, $round) {
@@ -85,8 +46,8 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Bracket_Bas
 			}, array_keys($data['rounds']), $data['rounds']);
 		}
 
-		if (isset($data['cpt_id'])) {
-			$bracket->cpt_id = (int) $data['cpt_id'];
+		if (isset($data['id'])) {
+			$bracket->id = (int) $data['id'];
 		}
 
 		return $bracket;
