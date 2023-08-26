@@ -46,11 +46,11 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		return $template;
 	}
 
-	private function insert_cpt(Wp_Bracket_Builder_Bracket_Template $bracket): int {
+	private function insert_cpt(Wp_Bracket_Builder_Bracket_Template $template): int {
 		$post_id = wp_insert_post([
-			'post_title' => $bracket->name,
-			'post_type' => 'bracket',
-			'post_status' => $bracket->active ? 'publish' : 'draft',
+			'post_title' => $template->name,
+			'post_type' => 'bracket_template',
+			'post_status' => $template->active ? 'publish' : 'draft',
 		]);
 		return $post_id;
 	}

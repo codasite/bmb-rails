@@ -37,7 +37,7 @@ class Wp_Bracket_Builder_Activator {
 
 		self::delete_tables($prefix);
 
-		self::create_rounds_table($prefix);
+		// self::create_rounds_table($prefix);
 		self::create_teams_table($prefix);
 		self::create_matches_table($prefix);
 		self::create_match_picks_table($prefix);
@@ -59,30 +59,30 @@ class Wp_Bracket_Builder_Activator {
 		}
 	}
 
-	private static function create_rounds_table(string $prefix) {
-		/**
-		 * Create the rounds table
-		 */
+	// private static function create_rounds_table(string $prefix) {
+	// 	/**
+	// 	 * Create the rounds table
+	// 	 */
 
-		global $wpdb;
-		$table_name = $prefix . 'rounds';
-		$charset_collate = $wpdb->get_charset_collate();
+	// 	global $wpdb;
+	// 	$table_name = $prefix . 'rounds';
+	// 	$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
-			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			name varchar(255) NOT NULL,
-			bracket_template_id bigint(20) UNSIGNED NOT NULL,
-			depth tinyint(4) NOT NULL,
-			round_index tinyint(4) NOT NULL,
-			PRIMARY KEY (id),
-			UNIQUE KEY (bracket_template_id),
-			FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
-		) $charset_collate;";
+	// 	$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+	// 		id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+	// 		name varchar(255) NOT NULL,
+	// 		bracket_template_id bigint(20) UNSIGNED NOT NULL,
+	// 		depth tinyint(4) NOT NULL,
+	// 		round_index tinyint(4) NOT NULL,
+	// 		PRIMARY KEY (id),
+	// 		UNIQUE KEY (bracket_template_id),
+	// 		FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+	// 	) $charset_collate;";
 
-		// import dbDelta
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
-	}
+	// 	// import dbDelta
+	// 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	// 	dbDelta($sql);
+	// }
 
 	private static function create_matches_table(string $prefix) {
 		/**
@@ -95,12 +95,13 @@ class Wp_Bracket_Builder_Activator {
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			round_id bigint(20) UNSIGNED NOT NULL,
+	 		bracket_template_id bigint(20) UNSIGNED NOT NULL,
+			round_index tinyint(4) NOT NULL,
 			match_index tinyint(4) NOT NULL,
 			team1_id bigint(20) UNSIGNED,
 			team2_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
-			FOREIGN KEY (round_id) REFERENCES {$prefix}rounds(id) ON DELETE CASCADE,
+	 		FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
 			FOREIGN KEY (team1_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL,
 			FOREIGN KEY (team2_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL
 		) $charset_collate;";
