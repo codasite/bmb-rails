@@ -38,8 +38,8 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		int $author = null,
 		string $html = '',
 		string $img_url = '',
-		DateTime $date = null,
-		DateTime $date_gmt = null,
+		DateTimeImmutable|false $date = false,
+		DateTimeImmutable|false $date_gmt = false,
 		array $picks = [],
 	) {
 		parent::__construct(
