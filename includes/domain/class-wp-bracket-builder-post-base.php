@@ -24,14 +24,14 @@ class Wp_Bracket_Builder_Post_Base {
 	public $status;
 
 	/**
-	 * @var DateTime
+	 * @var DateTimeImmutable|false
 	 * 
 	 * Date the bracket was created
 	 */
 	public $date;
 
 	/**
-	 * @var DateTime
+	 * @var DateTimeImmutable|false
 	 * 
 	 * Date the bracket was created in GMT
 	 */
@@ -42,8 +42,8 @@ class Wp_Bracket_Builder_Post_Base {
 		string $title = '',
 		int $author = null,
 		string $status = 'draft',
-		DateTime $date = null,
-		DateTime $date_gmt = null,
+		DateTimeImmutable|false $date = false,
+		DateTimeImmutable|false $date_gmt = false,
 	) {
 		$this->id = $id;
 		$this->title = $title;

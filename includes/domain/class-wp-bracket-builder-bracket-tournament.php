@@ -14,8 +14,8 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		string $title = '',
 		int $author = null,
 		string $status = 'draft',
-		DateTime $date = null,
-		DateTime $date_gmt = null,
+		DateTimeImmutable|false $date = false,
+		DateTimeImmutable|false $date_gmt = false,
 	) {
 		parent::__construct(
 			$id,

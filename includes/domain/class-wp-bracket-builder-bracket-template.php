@@ -1,7 +1,8 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 
-class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
+class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom_Post_Interface {
 	/**
 	 * @var int
 	 */
@@ -38,8 +39,8 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		string $status = 'draft',
 		int $num_teams = null,
 		int $wildcard_placement = null,
-		DateTime $date = null,
-		DateTime $date_gmt = null,
+		DateTimeImmutable|false $date = false,
+		DateTimeImmutable|false $date_gmt = false,
 		string $html = '',
 		string $img_url = '',
 		array $matches = []
@@ -58,6 +59,69 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		$this->img_url = $img_url;
 		$this->matches = $matches;
 	}
+
+	static public function get_post_type(): string {
+		return 'bracket_template';
+	}
+
+	public function get_post_data(): array {
+		return [
+			'post_title' => $this->title,
+			'post_author' => $this->author,
+			'post_status' => $this->status,
+			'post_type' => self::get_post_type(),
+		];
+	}
+
+	public function get_post_meta(): array {
+		return [
+			'num_teams' => $this->num_teams,
+			'wildcard_placement' => $this->wildcard_placement,
+			'html' => $this->html,
+			'img_url' => $this->img_url,
+			'matches' => $this->matches,
+		];
+	}
+
+	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
+		$template = new Wp_Bracket_Builder_Bracket_Template();
+		// $data['id'],
+		// $data['title'],
+		// $data['author'],
+		// $data['status'],
+		// $data['num_teams'],
+		// $data['wildcard_placement'],
+		// false,
+		// false,
+		// $data['html'],
+		// $data['img_url'],
+		// );
+
+		foreach ($data as $key => $value) {
+			if (property_exists($template, $key)) {
+				$template->$key = $value;
+			}
+		}
+
+		return $template;
+	}
+
+	// public static function from_wp_post(WP_Post $post) {
+	// 	$bracket = new Wp_Bracket_Builder_Bracket_Template(
+	// 		$post->ID,
+	// 		$post->post_title,
+	// 		$post->post_author,
+	// 		$post->post_status,
+	// 		get_post_meta($post->ID, 'num_teams', true),
+	// 		get_post_meta($post->ID, 'wildcard_placement', true),
+	// 		get_post_datetime($post->ID, 'date', 'local'),
+	// 		get_post_datetime($post->ID, 'date_gmt', 'gmt'),
+	// 		get_post_meta($post->ID, 'html', true),
+	// 		get_post_meta($post->ID, 'img_url', true),
+	// 	);
+
+	// 	return $bracket;
+	// }
 
 	// public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
 	// 	$bracket = new Wp_Bracket_Builder_Bracket_Template(
