@@ -142,13 +142,16 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return new Wp_Bracket_Builder_Team($team['name'], $team['id']);
 	}
 
-	public function get_all(): array {
-		$query = new WP_Query([
+	public function get_all(array $query_args = []): array {
+		$default_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Template::get_post_type(),
-			'posts_per_page' => -1,
 			'post_status' => 'any',
-		]);
+		];
+
+		$args = array_merge($default_args, $query_args);
+		$query = new WP_Query($args);
 		$templates = [];
+
 		foreach ($query->posts as $post) {
 			$templates[] = $this->get($post, false);
 		}
