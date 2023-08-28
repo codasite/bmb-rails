@@ -122,9 +122,14 @@ class Wp_Bracket_Builder {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public.php';
 
 		/**
-		 * The bracket api controller class
+		 * The bracket template api controller class
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-template-api.php';
+
+		/**
+		 * The bracket tournament api controller class
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-tournament-api.php';
 
 		/**
 		 * The bracket picks api controller class
@@ -166,6 +171,7 @@ class Wp_Bracket_Builder {
 
 		$plugin_admin = new Wp_Bracket_Builder_Admin($this->get_plugin_name(), $this->get_version());
 		$template_api = new Wp_Bracket_Builder_Bracket_Template_Api();
+		$tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
 		// $bracket_pick_api = new Wp_Bracket_Builder_Bracket_Pick_Api();
 		$convert_api = new Wp_Bracket_Builder_Convert_Api();
 
@@ -177,6 +183,7 @@ class Wp_Bracket_Builder {
 
 
 		$this->loader->add_action('rest_api_init', $template_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $tournament_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 		// $this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
 

@@ -1,21 +1,28 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 
 class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base {
 	/**
+	 * @var ?int
+	 */
+	public $bracket_template_id;
+
+	/**
 	 * @var Wp_Bracket_Builder_Bracket_Template
 	 */
-	public $template;
+	public $bracket_template;
 
 	public function __construct(
-		Wp_Bracket_Builder_Bracket_Template $template,
+		int $bracket_template_id = null,
 		int $id = null,
 		string $title = '',
 		int $author = null,
 		string $status = 'draft',
 		DateTimeImmutable|false $date = false,
 		DateTimeImmutable|false $date_gmt = false,
+		Wp_Bracket_Builder_Bracket_Template $bracket_template = null
 	) {
 		parent::__construct(
 			$id,
@@ -25,6 +32,29 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			$date,
 			$date_gmt,
 		);
-		$this->template = $template;
+		$this->bracket_template_id = $bracket_template_id;
+		$this->bracket_template = $bracket_template;
+	}
+
+	static public function get_post_type(): string {
+		return 'bracket_tournament';
+	}
+
+	public function get_post_meta(): array {
+		return [
+			'bracket_template_id' => $this->bracket_template_id,
+		];
+	}
+
+	static public function from_array($data) {
+		$tournament = new Wp_Bracket_Builder_Bracket_Tournament();
+
+		foreach ($data as $key => $value) {
+			if (property_exists($tournament, $key)) {
+				$tournament->$key = $value;
+			}
+		}
+
+		return $tournament;
 	}
 }
