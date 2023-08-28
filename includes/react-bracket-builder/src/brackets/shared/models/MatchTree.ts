@@ -404,4 +404,5 @@ export class MatchTree {
 			parent.right = match
 		}
 	}
+
 }
