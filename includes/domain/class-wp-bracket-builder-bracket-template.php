@@ -2,7 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 
-class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom_Post_Interface {
+class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 	/**
 	 * @var int
 	 */
@@ -64,14 +64,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base i
 		return 'bracket_template';
 	}
 
-	public function get_post_data(): array {
-		return [
-			'post_title' => $this->title,
-			'post_author' => $this->author,
-			'post_status' => $this->status,
-			'post_type' => self::get_post_type(),
-		];
-	}
 
 	public function get_post_meta(): array {
 		return [
@@ -93,17 +85,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base i
 			}
 			unset($data['matches']);
 		}
-		// $data['id'],
-		// $data['title'],
-		// $data['author'],
-		// $data['status'],
-		// $data['num_teams'],
-		// $data['wildcard_placement'],
-		// false,
-		// false,
-		// $data['html'],
-		// $data['img_url'],
-		// );
 
 		foreach ($data as $key => $value) {
 			if (property_exists($template, $key)) {
@@ -115,54 +96,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base i
 
 		return $template;
 	}
-
-	// public static function from_wp_post(WP_Post $post) {
-	// 	$bracket = new Wp_Bracket_Builder_Bracket_Template(
-	// 		$post->ID,
-	// 		$post->post_title,
-	// 		$post->post_author,
-	// 		$post->post_status,
-	// 		get_post_meta($post->ID, 'num_teams', true),
-	// 		get_post_meta($post->ID, 'wildcard_placement', true),
-	// 		get_post_datetime($post->ID, 'date', 'local'),
-	// 		get_post_datetime($post->ID, 'date_gmt', 'gmt'),
-	// 		get_post_meta($post->ID, 'html', true),
-	// 		get_post_meta($post->ID, 'img_url', true),
-	// 	);
-
-	// 	return $bracket;
-	// }
-
-	// public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
-	// 	$bracket = new Wp_Bracket_Builder_Bracket_Template(
-	// 		$data['title'],
-	// 		$data['num_rounds'],
-	// 		$data['num_wildcards'],
-	// 		$data['wildcard_placement'],
-	// 		$data['active'],
-	// 	);
-
-	// 	if (isset($data['id'])) {
-	// 		$bracket->id = (int) $data['id'];
-	// 	}
-
-	// 	if (isset($data['date'])) {
-	// 		$bracket->date = new DateTime($data['date']);
-	// 	}
-
-	// 	if (isset($data['rounds'])) {
-	// 		$bracket->rounds = array_map(function ($index, $round) {
-	// 			$round['depth'] = $index;
-	// 			return Wp_Bracket_Builder_Round::from_array($round);
-	// 		}, array_keys($data['rounds']), $data['rounds']);
-	// 	}
-
-	// 	if (isset($data['id'])) {
-	// 		$bracket->id = (int) $data['id'];
-	// 	}
-
-	// 	return $bracket;
-	// }
 }
 
 class Wp_Bracket_Builder_Match {
@@ -192,15 +125,20 @@ class Wp_Bracket_Builder_Match {
 	public $team2;
 
 	public function __construct(int $round_index, int $match_index, Wp_Bracket_Builder_Team $team1 = null, Wp_Bracket_Builder_Team $team2 = null, int $id = null) {
-		$this->id = $id;
 		$this->round_index = $round_index;
 		$this->match_index = $match_index;
 		$this->team1 = $team1;
 		$this->team2 = $team2;
+		$this->id = $id;
 	}
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Match {
+		if (!isset($data['round_index']) || !isset($data['match_index'])) {
+			throw new InvalidArgumentException('round_index and match_index are required');
+		}
+
 		$match = new Wp_Bracket_Builder_Match($data['round_index'], $data['match_index']);
+
 
 		if (isset($data['id'])) {
 			$match->id = (int) $data['id'];
@@ -237,14 +175,6 @@ class Wp_Bracket_Builder_Team {
 
 	static public function from_array(array $data): Wp_Bracket_Builder_Team {
 		$team = new Wp_Bracket_Builder_Team();
-
-		// if (isset($data['name'])) {
-		// 	$team->name = $data['name'];
-		// }
-
-		// if (isset($data['id'])) {
-		// 	$team->id = (int) $data['id'];
-		// }
 
 		foreach ($data as $key => $value) {
 			if (property_exists($team, $key)) {

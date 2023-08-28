@@ -6,7 +6,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Repo
+	 * @var Wp_Bracket_Builder_Bracket_Template_Repo
 	 */
 	private $template_repo;
 
@@ -105,38 +105,17 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 				),
 			),
 		));
-
-		register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/deactivate', array(
-			'methods' => 'POST',
-			'callback' => array($this, 'deactivate_bracket'),
-			'permission_callback' => array($this, 'admin_permission_check'),
-			'args' => array(
-				'id' => array(
-					'description' => __('Unique identifier for the object.'),
-					'type'        => 'integer',
-				),
-			),
-		));
-
-		register_rest_route($namespace, '/' . $base . '/get-user-brackets', array(
-			array(
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array($this, 'get_user_items'),
-				'permission_callback' => array($this, 'customer_permission_check'),
-				'args'                => array(),
-			),
-		));
 	}
 
 	/**
-	 * Retrieves a collection of brackets.
+	 * Retrieves a collection of templates.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items($request) {
-		$brackets = $this->template_repo->get_all();
-		return new WP_REST_Response($brackets, 200);
+		$templates = $this->template_repo->get_all();
+		return new WP_REST_Response($templates, 200);
 	}
 
 	/**
@@ -148,8 +127,8 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 	public function get_item($request) {
 		// get id from request
 		$id = $request->get_param('item_id');
-		$bracket = $this->template_repo->get($id);
-		return new WP_REST_Response($bracket, 200);
+		$template = $this->template_repo->get($id);
+		return new WP_REST_Response($template, 200);
 	}
 
 	/**
@@ -222,39 +201,6 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 		$brackets = $this->template_repo->get_user_brackets();
 		return new WP_REST_Response($brackets, 200);
 	}
-
-	/**
-	 * Activates a single bracket.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function activate_bracket($request) {
-		// get id from request
-		$id = $request->get_param('id');
-		$activated = $this->template_repo->set_active($id, true);
-		if ($activated) {
-			return new WP_REST_Response(true, 200);
-		}
-		return new WP_Error('cant-activate', __('message', 'text-domain'), array('status' => 500));
-	}
-
-	/**
-	 * Deactivates a single bracket.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function deactivate_bracket($request) {
-		// get id from request
-		$id = $request->get_param('id');
-		$deactivated = $this->template_repo->set_active($id, false);
-		if ($deactivated) {
-			return new WP_REST_Response(false, 200);
-		}
-		return new WP_Error('cant-deactivate', __('message', 'text-domain'), array('status' => 500));
-	}
-
 
 	/**
 	 * Check if a given request has admin access to this plugin

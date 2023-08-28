@@ -56,6 +56,18 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		$this->picks = $picks;
 	}
 
+	static public function get_post_type(): string {
+		return 'bracket_play';
+	}
+
+	public function get_post_meta(): array {
+		return [
+			'bracket_play_html' => $this->html,
+			'bracket_play_img_url' => $this->img_url,
+			'bracket_play_picks' => $this->picks,
+		];
+	}
+
 	// public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Play {
 	// 	$bracket_pick = new Wp_Bracket_Builder_Bracket_Play($data['bracket_id'], $data['name']);
 
