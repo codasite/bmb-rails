@@ -172,7 +172,7 @@ class Wp_Bracket_Builder {
 		$plugin_admin = new Wp_Bracket_Builder_Admin($this->get_plugin_name(), $this->get_version());
 		$template_api = new Wp_Bracket_Builder_Bracket_Template_Api();
 		$tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
-		// $bracket_pick_api = new Wp_Bracket_Builder_Bracket_Pick_Api();
+		$play_api = new Wp_Bracket_Builder_Bracket_Play_Api();
 		$convert_api = new Wp_Bracket_Builder_Convert_Api();
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
@@ -184,8 +184,8 @@ class Wp_Bracket_Builder {
 
 		$this->loader->add_action('rest_api_init', $template_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $tournament_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
-		// $this->loader->add_action('rest_api_init', $bracket_pick_api, 'register_routes');
 
 		$this->loader->add_action('init', $this, 'add_bracket_template_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_play_post_type');

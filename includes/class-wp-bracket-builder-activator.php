@@ -37,7 +37,6 @@ class Wp_Bracket_Builder_Activator {
 
 		self::delete_tables($prefix);
 
-		// self::create_rounds_table($prefix);
 		self::create_teams_table($prefix);
 		self::create_matches_table($prefix);
 		self::create_match_picks_table($prefix);
@@ -146,12 +145,12 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			bracket_play_id bigint(20) UNSIGNED NOT NULL,
-			match_id bigint(20) UNSIGNED NOT NULL,
-			team_id bigint(20) UNSIGNED NOT NULL,
+			round_index tinyint(4) NOT NULL,
+			match_index tinyint(4) NOT NULL,
+			winning_team_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			FOREIGN KEY (bracket_play_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (match_id) REFERENCES {$prefix}matches(id) ON DELETE CASCADE,
-			FOREIGN KEY (team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
+			FOREIGN KEY (winning_team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta
