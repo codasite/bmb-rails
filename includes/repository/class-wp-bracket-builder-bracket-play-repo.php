@@ -55,9 +55,9 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 
 		$play = new Wp_Bracket_Builder_Bracket_Play(
 			$tournament_id,
+			$play_post->post_author,
 			$play_post->ID,
 			$play_post->post_title,
-			$play_post->post_author,
 			$play_post->post_status,
 			get_post_meta($play_post->ID, 'html', true),
 			get_post_meta($play_post->ID, 'img_url', true),

@@ -38,9 +38,9 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 
 	public function __construct(
 		int $tournament_id,
+		int $author,
 		int $id = null,
 		string $title = '',
-		int $author = null,
 		string $status = 'publish',
 		string $html = '',
 		string $img_url = '',
@@ -81,6 +81,10 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 			throw new Exception('tournament_id is required');
 		}
 
+		if (!isset($data['author'])) {
+			throw new Exception('author is required');
+		}
+
 		if (isset($data['picks'])) {
 			$picks = [];
 			foreach ($data['picks'] as $pick) {
@@ -89,7 +93,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 			$data['picks'] = $picks;
 		}
 
-		$play = new Wp_Bracket_Builder_Bracket_Play($data['tournament_id']);
+		$play = new Wp_Bracket_Builder_Bracket_Play($data['tournament_id'], $data['author']);
 
 		foreach ($data as $key => $value) {
 			if (property_exists($play, $key)) {
