@@ -56,11 +56,15 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $tournament;
 	}
 
-	public function get_all(): array {
-		$query = new WP_Query([
+	public function get_all(array $query_args = []): array {
+		$default_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
-			'posts_per_page' => -1,
-		]);
+		];
+
+		$args = array_merge($default_args, $query_args);
+
+		$query = new WP_Query($args);
+
 		$tournaments = [];
 		foreach ($query->posts as $post) {
 			$tournaments[] = $this->get($post, false);

@@ -1,5 +1,9 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once('wp-bracket-builder-common.php');
+
+$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])) {
 	echo 'delete template_id: ' . $_POST['delete_template_id'];
 	echo get_query_var(('delete'));
@@ -7,19 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])
 		echo 'nonce verified';
 	}
 }
-$templates = array(
-	array(
-		"name" => "Lakeside High Football",
-		"id" => 1,
-		"num_teams" => 16,
-	),
-	array(
-		"name" => "Springfield 2024",
-		"id" => 2,
-		"num_teams" => 6,
-	),
-);
-
 
 function host_tournament_btn($endpoint) {
 	ob_start();
@@ -33,9 +24,9 @@ function host_tournament_btn($endpoint) {
 }
 
 function template_list_item($template) {
-	$name = $template['name'];
-	$id = $template['id'];
-	$num_teams = $template['num_teams'];
+	$name = $template->title;
+	$id = $template->id;
+	$num_teams = $template->num_teams;
 	// This link leads to the Create Template page. It passes in the original template_id as a query param
 	$duplicate_link = get_permalink() . 'templates/create?template_id=' . $id;
 	// This link executes a POST request to delete the template. It should prompt the user to confirm the deletion
@@ -64,6 +55,13 @@ function template_list_item($template) {
 <?php
 	return ob_get_clean();
 }
+
+$templates = $template_repo->get_all(
+	[
+		'author' => get_current_user_id(),
+		'posts_per_page' => -1,
+	]
+);
 
 ?>
 <div class="tw-flex tw-flex-col tw-gap-30">
