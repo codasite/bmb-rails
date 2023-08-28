@@ -167,6 +167,7 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 
 		$saved = $this->template_repo->add($template);
 		return new WP_REST_Response($saved, 201);
+		// return new WP_REST_Response($template, 201);
 
 		// }
 		// return $validated;

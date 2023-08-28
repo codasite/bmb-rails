@@ -22,24 +22,24 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		$this->wpdb = $wpdb;
 	}
 
-	// public function add(Wp_Bracket_Builder_Bracket_Template $template): ?Wp_Bracket_Builder_Bracket_Template {
-	public function add(Wp_Bracket_Builder_Bracket_Template $template): mixed {
+	public function add(Wp_Bracket_Builder_Bracket_Template $template): ?Wp_Bracket_Builder_Bracket_Template {
+		// public function add(Wp_Bracket_Builder_Bracket_Template $template): mixed {
 
 		$template_id = $this->insert_post($template, true);
 
-		return $template_id;
+		// return $template_id;
 
-		// if (is_wp_error($template_id)) {
-		// 	return null;
-		// }
+		if (is_wp_error($template_id)) {
+			return null;
+		}
 
-		// if ($template->matches) {
-		// 	$this->insert_matches_for_template($template_id, $template->matches);
-		// }
+		if ($template->matches) {
+			$this->insert_matches_for_template($template_id, $template->matches);
+		}
 
-		// # refresh from db
-		// $template = $this->get($template_id);
-		// return $template;
+		# refresh from db
+		$template = $this->get($template_id);
+		return $template;
 	}
 
 	private function insert_matches_for_template(int $template_id, array $matches): void {
@@ -50,34 +50,25 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 				continue;
 			}
 			// First, insert teams
-			$team1_id = null;
-			$team2_id = null;
-
-			if ($match->team1 !== null) {
-				if ($match->team1->id === null) {
-					$match->team1 = $this->insert_team_for_template($template_id, $match->team1);
-				}
-				$team1_id = $match->team1->id;
-			}
-
-			if ($match->team2 !== null) {
-				if ($match->team2->id === null) {
-					$match->team2 = $this->insert_team_for_template($template_id, $match->team2);
-				}
-				$team2_id = $match->team2->id;
-			}
+			$team1 = $this->insert_team_for_template($template_id, $match->team1);
+			$team2 = $this->insert_team_for_template($template_id, $match->team2);
 
 			$this->wpdb->insert(
 				$table_name,
 				[
 					'bracket_template_id' => $template_id,
 					'round_index' => $match->round_index,
-					'match_index' => $$match->match_index,
-					'team1_id' => $team1_id,
-					'team2_id' => $team2_id,
+					'match_index' => $match->match_index,
+					'team1_id' => $team1->id,
+					'team2_id' => $team2->id,
 				]
 			);
 			$match->id = $this->wpdb->insert_id;
+			echo $match->id;
+			// Print the error
+			if ($this->wpdb->last_error) {
+				echo $this->wpdb->last_error;
+			}
 		}
 	}
 
@@ -139,11 +130,11 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			$team2 = $this->get_team($match['team2_id']);
 
 			$matches[$match['round_index']][$match['match_index']] = new Wp_Bracket_Builder_Match(
-				$match['id'],
 				$match['round_index'],
 				$match['match_index'],
 				$team1,
 				$team2,
+				$match['id'],
 			);
 		}
 
