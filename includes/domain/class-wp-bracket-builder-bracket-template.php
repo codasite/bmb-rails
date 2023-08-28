@@ -28,7 +28,7 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base i
 	public $img_url;
 
 	/**
-	 * @var Wp_Bracket_Builder_Match[][] Array of arrays containing Wp_Bracket_Builder_Match objects
+	 * @var Wp_Bracket_Builder_Match[] Array of Wp_Bracket_Builder_Match objects
 	 */
 	public $matches;
 
@@ -85,6 +85,14 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base i
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
 		$template = new Wp_Bracket_Builder_Bracket_Template();
+		$matches = [];
+
+		if (isset($data['matches'])) {
+			foreach ($data['matches'] as $match) {
+				$matches[] = Wp_Bracket_Builder_Match::from_array($match);
+			}
+			unset($data['matches']);
+		}
 		// $data['id'],
 		// $data['title'],
 		// $data['author'],
@@ -102,6 +110,8 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base i
 				$template->$key = $value;
 			}
 		}
+
+		$template->matches = $matches;
 
 		return $template;
 	}
@@ -228,12 +238,18 @@ class Wp_Bracket_Builder_Team {
 	static public function from_array(array $data): Wp_Bracket_Builder_Team {
 		$team = new Wp_Bracket_Builder_Team();
 
-		if (isset($data['name'])) {
-			$team->name = $data['name'];
-		}
+		// if (isset($data['name'])) {
+		// 	$team->name = $data['name'];
+		// }
 
-		if (isset($data['id'])) {
-			$team->id = (int) $data['id'];
+		// if (isset($data['id'])) {
+		// 	$team->id = (int) $data['id'];
+		// }
+
+		foreach ($data as $key => $value) {
+			if (property_exists($team, $key)) {
+				$team->$key = $value;
+			}
 		}
 
 		return $team;

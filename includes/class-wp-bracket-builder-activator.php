@@ -101,7 +101,7 @@ class Wp_Bracket_Builder_Activator {
 			team1_id bigint(20) UNSIGNED,
 			team2_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
-	 		FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+	 		FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
 			FOREIGN KEY (team1_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL,
 			FOREIGN KEY (team2_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL
 		) $charset_collate;";
