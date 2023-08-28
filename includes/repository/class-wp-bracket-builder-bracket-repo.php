@@ -311,6 +311,7 @@ class Wp_Bracket_Builder_Bracket_Repository implements Wp_Bracket_Builder_Bracke
 		return true;
 	}
 
+
 	private function bracket_fields(): string {
 		$bracket_table = $this->bracket_table();
 		return implode(', ', [
