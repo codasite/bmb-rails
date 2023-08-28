@@ -1,228 +1,138 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
-// interface Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
-// 	public function add(Wp_Bracket_Builder_Bracket_Pick $bracket): ?Wp_Bracket_Builder_Bracket_Pick;
-// 	public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick;
-// 	public function get_all(): array;
-// 	// public function get_all(): array;
-// 	// public function delete(int $id): bool;
-// 	// public function update(Wp_Bracket_Builder_Bracket $bracket): Wp_Bracket_Builder_Bracket;
-// }
+class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Custom_Post_Repository_Base {
+	/**
+	 * @var Wp_Bracket_Builder_Utils
+	 */
+	private $utils;
 
-// class Wp_Bracket_Builder_Bracket_Pick_Repository implements Wp_Bracket_Builder_Bracket_Pick_Repository_Interface {
-// 	/**
-// 	 * @var Wp_Bracket_Builder_Utils
-// 	 */
-// 	private $utils;
+	/**
+	 * @var wpdb
+	 */
+	private $wpdb;
 
-// 	/**
-// 	 * @var wpdb
-// 	 */
-// 	private $wpdb;
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Pick_Service
+	 */
+	private $bracket_pick_service;
 
-// 	/**
-// 	 * @var Wp_Bracket_Builder_Bracket_Pick_Service
-// 	 */
-// 	private $bracket_pick_service;
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Tournament_Repository
+	 */
+	private $tournament_repo;
 
-// 	private Wp_Bracket_Builder_Bracket_Repository_Interface $bracket_repo;
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Template_Repository
+	 */
+	private $template_repo;
 
-// 	public function __construct() {
-// 		global $wpdb;
-// 		$this->wpdb = $wpdb;
-// 		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
-// 		$this->utils = new Wp_Bracket_Builder_Utils();
-// 		$this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
-// 	}
+	public function __construct() {
+		global $wpdb;
+		$this->wpdb = $wpdb;
+		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
+	}
 
-// 	// public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
-// 	// 	$bracket_id = $pick->bracket_id;
+	public function get(int|WP_Post|null $post = null, bool $fetch_picks = true, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Play {
+		$play_post = get_post($post);
 
-// 	// 	$bracket = $this->bracket_repo->get($bracket_id);
-// 	// 	if (!$bracket) {
-// 	// 		return null;
-// 	// 	}
+		if (!$play_post || $play_post->post_type !== Wp_Bracket_Builder_Bracket_Play::get_post_type()) {
+			return null;
+		}
 
-// 	// 	$name = $pick->name;
-// 	// 	$cust_id = $pick->customer_id;
-// 	// 	$img_url = $pick->img_url;
-// 	// 	$table_name = $this->bracket_pick_table();
+		$picks = $fetch_picks ? $this->get_picks($play_post->ID) : [];
 
-// 	// 	$this->wpdb->insert(
-// 	// 		$table_name,
-// 	// 		[
-// 	// 			'bracket_id' => $bracket_id,
-// 	// 			'name' => $name,
-// 	// 			'img_url' => $img_url,
-// 	// 			'customer_id' => $cust_id,
-// 	// 		]
-// 	// 	);
+		$tournament_id = get_post_meta($play_post->ID, 'bracket_tournament_id', true);
 
-// 	// 	$pick->id = $this->wpdb->insert_id;
-// 	// 	$this->insert_match_picks($pick, $bracket);
-// 	// 	$pick = $this->get($pick->id);
+		$play = new Wp_Bracket_Builder_Bracket_Play(
+			$tournament_id,
+			$play_post->ID,
+			$play_post->post_title,
+			$play_post->post_author,
+			$play_post->post_status,
+			get_post_meta($play_post->ID, 'html', true),
+			get_post_meta($play_post->ID, 'img_url', true),
+			get_post_datetime($play_post->ID, 'date', 'local'),
+			get_post_datetime($play_post->ID, 'date_gmt', 'gmt'),
+			$picks,
+			$this->tournament_repo->get($tournament_id, $fetch_matches),
+		);
 
-// 	// 	return $pick;
-// 	// }
+		return $play;
+	}
 
-// 	public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick {
-// 		$post = get_post($id);
-// 		if (!$post || $post->post_type !== 'bracket_pick') {
-// 			return null;
-// 		}
-// 		$pick = Wp_Bracket_Builder_Bracket_Pick::from_post($post);
+	private function get_picks(int $play_id): array {
+		$table_name = $this->match_pick_table();
+		$sql = "SELECT * FROM $table_name WHERE bracket_play_id = $play_id ORDER BY round_index, match_index ASC";
+		$results = $this->wpdb->get_results($sql, ARRAY_A);
 
-// 		return $pick;
-// 	}
+		$picks = [];
+		foreach ($results as $result) {
+			$winning_team_id = $result['winning_team_id'];
+			$winning_team = $this->template_repo->get_team($winning_team_id);
+			$picks[] = new Wp_Bracket_Builder_Match_Pick(
+				$result['round_index'],
+				$result['match_index'],
+				$winning_team_id,
+				$result['id'],
+				$winning_team,
+			);
+		}
+		return $picks;
+	}
 
-// 	/**
-// 	 * This function adds a bracket pick to the database as a custom post type.
-// 	 * 
-// 	 * @param Wp_Bracket_Builder_Bracket_Pick $pick
-// 	 * @return Wp_Bracket_Builder_Bracket_Pick|null
-// 	 */
-// 	public function add(Wp_Bracket_Builder_Bracket_Pick $pick): ?Wp_Bracket_Builder_Bracket_Pick {
-// 		// TODO: check if bracket exists
-// 		//$bracket_id = $pick->bracket_id;
+	public function get_all(): array {
+		$query = new WP_Query([
+			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'posts_per_page' => -1,
+			'post_status' => 'any',
+		]);
 
-// 		$post_array = $pick->to_post_array();
+		$plays = [];
+		foreach ($query->posts as $post) {
+			$plays[] = $this->get($post, false, false);
+		}
+		return $plays;
+	}
 
-// 		$pick_id = wp_insert_post($post_array, true);
+	public function add(Wp_Bracket_Builder_Bracket_Play $play): ?Wp_Bracket_Builder_Bracket_Play {
+		$play_id = $this->insert_post($play, true);
 
-// 		if (is_wp_error($pick_id)) {
-// 			$this->utils->log('error inserting post: ' . $pick_id->get_error_message(), 'error');
-// 			return null;
-// 		}
-// 		// need to update the post meta separately
-// 		update_post_meta($pick_id, 'bracket_pick_html', wp_kses_post($pick->html));
+		if (is_wp_error($play_id)) {
+			return null;
+		}
 
-// 		// generate images
-// 		$pick = $this->bracket_pick_service->generate_images($pick);
+		// insert match picks
+		$this->insert_match_picks($play_id, $play->picks);
 
-// 		// update the post meta with the new image urls
-// 		update_post_meta($pick_id, 'bracket_pick_images', $pick->img_url);
+		return $this->get($play_id);
+	}
 
-// 		// refresh from db
-// 		$pick = $this->get($pick_id);
+	private function insert_match_picks(int $play_id, array $picks): void {
+		$table_name = $this->match_pick_table();
+		foreach ($picks as $pick) {
+			$this->wpdb->insert(
+				$table_name,
+				[
+					'bracket_play_id' => $play_id,
+					'round_index' => $pick->round_index,
+					'match_index' => $pick->match_index,
+					'winning_team_id' => $pick->winning_team_id,
+				]
+			);
+		}
+	}
 
-// 		return $pick;
-// 	}
-
-// 	private function insert_match_picks(Wp_Bracket_Builder_Bracket_Pick $pick, Wp_Bracket_Builder_Bracket $bracket): void {
-// 		$pick_id = $pick->id;
-
-// 		if (!$pick_id) {
-// 			echo 'pick id is null';
-// 			return;
-// 		}
-// 		foreach ($pick->rounds as $i => $round) {
-// 			if (!$round->matches) {
-// 				echo 'round matches is null';
-// 				continue;
-// 			}
-// 			foreach ($round->matches as $j => $match) {
-// 				if (!$match->result) {
-// 					echo 'match result is null';
-// 					continue;
-// 				}
-// 				$match_id = $bracket->rounds[$i]->matches[$j]->id;
-// 				$team_id = $match->result->id;
-// 				if (!$match_id || !$team_id) {
-// 					echo 'match id or team id is null';
-// 					continue;
-// 				}
-// 				echo "inserting match pick: $pick_id, $match_id, $team_id";
-// 				$this->insert_match_pick($pick_id, $match_id, $team_id);
-// 			}
-// 		}
-// 	}
-
-// 	private function insert_match_pick(int $bracket_pick_id, int $match_id, int $team_id): int {
-// 		$table_name = $this->match_pick_table();
-
-// 		$this->wpdb->insert(
-// 			$table_name,
-// 			[
-// 				'bracket_pick_id' => $bracket_pick_id,
-// 				'match_id' => $match_id,
-// 				'team_id' => $team_id,
-// 			]
-// 		);
-
-// 		return $this->wpdb->insert_id;
-// 	}
-
-// 	// public function get(int $id): ?Wp_Bracket_Builder_Bracket_Pick {
-// 	// 	$table_name = $this->bracket_pick_table();
-// 	// 	$sql = "SELECT * FROM $table_name WHERE id = $id";
-// 	// 	$result = $this->wpdb->get_row($sql, ARRAY_A);
-// 	// 	if (!$result) {
-// 	// 		return null;
-// 	// 	}
-// 	// 	$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($result);
-// 	// 	$bracket = $this->bracket_repo->get($result['bracket_id']);
-
-// 	// 	$pick->rounds = $bracket->rounds;
-// 	// 	$match_results_map = $this->get_match_results_map($pick->id);
-
-// 	// 	$pick->fill_in_results($match_results_map);
-
-// 	// 	return $pick;
-// 	// }
-
-// 	private function get_match_results_map(int $pick_id): array {
-// 		$match_picks = $this->get_match_picks($pick_id);
-// 		$match_results_map = [];
-// 		foreach ($match_picks as $match_pick) {
-// 			$match_results_map[$match_pick['match_id']] = $match_pick['team_id'];
-// 		}
-// 		return $match_results_map;
-// 	}
-
-// 	private function get_match_picks(int $pick_id): array {
-// 		$table_name = $this->match_pick_table();
-// 		$sql = "SELECT * FROM $table_name WHERE bracket_pick_id = $pick_id";
-// 		$results = $this->wpdb->get_results($sql, ARRAY_A);
-// 		return $results;
-// 	}
-
-// 	public function get_all($bracket_id = null): array {
-// 		$table_name = $this->bracket_pick_table();
-// 		$sql = "SELECT * FROM $table_name";
-// 		if ($bracket_id) {
-// 			$sql .= " WHERE bracket_id = $bracket_id";
-// 		}
-// 		$results = $this->wpdb->get_results($sql, ARRAY_A);
-// 		$brackets = [];
-// 		foreach ($results as $result) {
-// 			$brackets[] = Wp_Bracket_Builder_Bracket_Pick::from_array($result);
-// 		}
-// 		return $brackets;
-// 	}
-
-// 	private function bracket_table(): string {
-// 		return $this->wpdb->prefix . 'bracket_builder_brackets';
-// 	}
-// 	private function cpt_table(): string {
-// 		return $this->wpdb->prefix . 'posts';
-// 	}
-// 	private function bracket_pick_table(): string {
-// 		return $this->wpdb->prefix . 'bracket_builder_bracket_picks';
-// 	}
-// 	private function match_pick_table(): string {
-// 		return $this->wpdb->prefix . 'bracket_builder_match_picks';
-// 	}
-// 	private function round_table(): string {
-// 		return $this->wpdb->prefix . 'bracket_builder_rounds';
-// 	}
-// 	private function match_table(): string {
-// 		return $this->wpdb->prefix . 'bracket_builder_matches';
-// 	}
-// 	private function team_table(): string {
-// 		return $this->wpdb->prefix . 'bracket_builder_teams';
-// 	}
-// }
+	private function match_pick_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_match_picks';
+	}
+}

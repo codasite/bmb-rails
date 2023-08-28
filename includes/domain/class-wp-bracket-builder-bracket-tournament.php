@@ -10,16 +10,16 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	public $bracket_template_id;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Template
+	 * @var ?Wp_Bracket_Builder_Bracket_Template
 	 */
 	public $bracket_template;
 
 	public function __construct(
-		int $bracket_template_id = null,
+		int $bracket_template_id,
 		int $id = null,
 		string $title = '',
 		int $author = null,
-		string $status = 'draft',
+		string $status = 'publish',
 		DateTimeImmutable|false $date = false,
 		DateTimeImmutable|false $date_gmt = false,
 		Wp_Bracket_Builder_Bracket_Template $bracket_template = null
@@ -47,7 +47,12 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	}
 
 	static public function from_array($data) {
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament();
+
+		if (!isset($data['bracket_template_id'])) {
+			throw new Exception('bracket_template_id is required');
+		}
+
+		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data['bracket_template_id']);
 
 		foreach ($data as $key => $value) {
 			if (property_exists($tournament, $key)) {

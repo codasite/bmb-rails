@@ -12,6 +12,11 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 
 	/**
+	 * @var int
+	 */
+	public $tournament_id;
+
+	/**
 	 * @var Wp_Bracket_Builder_Bracket_Tournament
 	 */
 	public $tournament;
@@ -32,24 +37,27 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	public $picks;
 
 	public function __construct(
-		Wp_Bracket_Builder_Bracket_Tournament $tournament,
-		string $title = '',
+		int $tournament_id,
 		int $id = null,
+		string $title = '',
 		int $author = null,
+		string $status = 'publish',
 		string $html = '',
 		string $img_url = '',
 		DateTimeImmutable|false $date = false,
 		DateTimeImmutable|false $date_gmt = false,
 		array $picks = [],
+		Wp_Bracket_Builder_Bracket_Tournament $tournament = null,
 	) {
 		parent::__construct(
 			$id,
 			$title,
 			$author,
-			'publish',
+			$status,
 			$date,
 			$date_gmt,
 		);
+		$this->tournament_id = $tournament_id;
 		$this->tournament = $tournament;
 		$this->html = $html;
 		$this->img_url = $img_url;
@@ -62,80 +70,36 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 
 	public function get_post_meta(): array {
 		return [
-			'bracket_play_html' => $this->html,
-			'bracket_play_img_url' => $this->img_url,
-			'bracket_play_picks' => $this->picks,
+			'html' => $this->html,
+			'img_url' => $this->img_url,
+			'bracket_tournament_id' => $this->tournament_id,
 		];
 	}
 
-	// public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Play {
-	// 	$bracket_pick = new Wp_Bracket_Builder_Bracket_Play($data['bracket_id'], $data['name']);
+	static public function from_array($data): Wp_Bracket_Builder_Bracket_Play {
+		if (!isset($data['tournament_id'])) {
+			throw new Exception('tournament_id is required');
+		}
 
-	// 	if (isset($data['id'])) {
-	// 		$bracket_pick->id = (int) $data['id'];
-	// 	}
+		if (isset($data['picks'])) {
+			$picks = [];
+			foreach ($data['picks'] as $pick) {
+				$picks[] = Wp_Bracket_Builder_Match_Pick::from_array($pick);
+			}
+			$data['picks'] = $picks;
+		}
 
-	// 	if (isset($data['html'])) {
-	// 		$bracket_pick->html = $data['html'];
-	// 	}
+		$play = new Wp_Bracket_Builder_Bracket_Play($data['tournament_id']);
 
-	// 	if (isset($data['img_url'])) {
-	// 		$bracket_pick->img_url = $data['img_url'];
-	// 	}
+		foreach ($data as $key => $value) {
+			if (property_exists($play, $key)) {
+				$play->$key = $value;
+			}
+		}
 
-	// 	if (isset($data['rounds'])) {
-	// 		$bracket_pick->rounds = array_map(function ($index, $round) {
-	// 			$round['depth'] = $index;
-	// 			return Wp_Bracket_Builder_Round::from_array($round);
-	// 		}, array_keys($data['rounds']), $data['rounds']);
-	// 	}
-
-	// 	return $bracket_pick;
-	// }
-
-	// public static function from_post(WP_Post $post): Wp_Bracket_Builder_Bracket_Play | null {
-	// 	// $bracket_pick = new Wp_Bracket_Builder_Bracket_Play($post->post_parent, $post->post_title, $post->post_author, $post->post_content, get_the_post_thumbnail_url($post->ID));
-
-	// 	// bail if post is not a bracket pick
-	// 	if ($post->post_type !== 'bracket_pick') {
-	// 		return null;
-	// 	}
-
-	// 	// name is store in the title field
-	// 	$pick_id = $post->ID;
-	// 	$name = $post->post_title;
-	// 	$bracket_id = $post->post_parent;
-	// 	$img_url = get_post_meta($post->ID, 'bracket_pick_images', true);
-	// 	$html = get_post_meta($post->ID, 'bracket_pick_html', true);
-
-	// 	$bracket_pick = new Wp_Bracket_Builder_Bracket_Play($bracket_id, $name, $pick_id, null, $html, $img_url);
-
-	// 	return $bracket_pick;
-	// }
-
-	/**
-	 * This function returns an array of the bracket pick object to be used when inserting/updating a bracket pick post.
-	 * The array returned from this function DOES NOT include field that are stored as post meta.
-	 * 
-	 * @return array
-	 */
-	// public function to_post_array(): array {
-	// 	$pick = $this;
-	// 	$post_array = [
-	// 		'post_type' => 'bracket_pick',
-	// 		'post_parent' => $pick->bracket_id,
-	// 		'post_title' => $pick->name,
-	// 		'post_status' => 'publish',
-	// 	];
-
-	// 	if ($pick->id) {
-	// 		$post_array['ID'] = $pick->id;
-	// 	}
-
-	// 	return $post_array;
-	// }
+		return $play;
+	}
 }
-
 
 class Wp_Bracket_Builder_Match_Pick {
 	/**
@@ -144,22 +108,54 @@ class Wp_Bracket_Builder_Match_Pick {
 	public $id;
 
 	/**
-	 * @var Wp_Bracket_Builder_Match
+	 * @var int
 	 */
-	public $match;
+	public $round_index;
+
+	/**
+	 * @var int
+	 */
+	public $match_index;
 
 	/** 
 	 * @var Wp_Bracket_Builder_Team
 	 */
-	public $winner;
+	public $winning_team;
+
+	/**
+	 * @var int
+	 */
+	public $winning_team_id;
 
 	public function __construct(
-		Wp_Bracket_Builder_Match $match,
-		Wp_Bracket_Builder_Team $winner,
+		int $round_index,
+		int $match_index,
+		int $winning_team_id,
 		int $id = null,
+		Wp_Bracket_Builder_Team $winning_team = null,
 	) {
+		$this->round_index = $round_index;
+		$this->match_index = $match_index;
+		$this->winning_team_id = $winning_team_id;
+		$this->winning_team = $winning_team;
 		$this->id = $id;
-		$this->match = $match;
-		$this->winner = $winner;
+	}
+
+	static public function from_array($data) {
+		$pick = new Wp_Bracket_Builder_Match_Pick(
+			$data['round_index'],
+			$data['match_index'],
+			$data['winning_team_id'],
+		);
+
+		if (isset($data['id'])) {
+			$pick->id = (int) $data['id'];
+		}
+
+		if (isset($data['winning_team'])) {
+			$pick->winning_team = Wp_Bracket_Builder_Team::from_array($data['winning_team']);
+		}
+
+		return $pick;
 	}
 }

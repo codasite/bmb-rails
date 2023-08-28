@@ -110,7 +110,8 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			$team1 = $this->get_team($match['team1_id']);
 			$team2 = $this->get_team($match['team2_id']);
 
-			$matches[$match['round_index']][$match['match_index']] = new Wp_Bracket_Builder_Match(
+			// $matches[$match['round_index']][$match['match_index']] = new Wp_Bracket_Builder_Match(
+			$matches[] = new Wp_Bracket_Builder_Match(
 				$match['round_index'],
 				$match['match_index'],
 				$team1,
@@ -125,7 +126,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 	/**
 	 * could get all teams for template instead
 	 */
-	private function get_team(int|null $id): ?Wp_Bracket_Builder_Team {
+	public function get_team(int|null $id): ?Wp_Bracket_Builder_Team {
 		if ($id === null) {
 			return null;
 		}
@@ -145,6 +146,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		$query = new WP_Query([
 			'post_type' => Wp_Bracket_Builder_Bracket_Template::get_post_type(),
 			'posts_per_page' => -1,
+			'post_status' => 'any',
 		]);
 		$templates = [];
 		foreach ($query->posts as $post) {

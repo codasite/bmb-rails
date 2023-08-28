@@ -71,7 +71,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 			'wildcard_placement' => $this->wildcard_placement,
 			'html' => $this->html,
 			'img_url' => $this->img_url,
-			'matches' => $this->matches,
 		];
 	}
 
@@ -83,7 +82,7 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 			foreach ($data['matches'] as $match) {
 				$matches[] = Wp_Bracket_Builder_Match::from_array($match);
 			}
-			unset($data['matches']);
+			$data['matches'] = $matches;
 		}
 
 		foreach ($data as $key => $value) {
@@ -91,8 +90,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 				$template->$key = $value;
 			}
 		}
-
-		$template->matches = $matches;
 
 		return $template;
 	}

@@ -29,7 +29,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $tournament;
 	}
 
-	public function get(int|WP_Post|null $post = null): ?Wp_Bracket_Builder_Bracket_Tournament {
+	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Tournament {
 		$tournament_post = get_post($post);
 
 		if ($tournament_post === null) {
@@ -50,7 +50,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			$tournament_post->post_status,
 			get_post_datetime($tournament_post->ID, 'date', 'local'),
 			get_post_datetime($tournament_post->ID, 'date_gmt', 'gmt'),
-			$this->template_repo->get($template_id, false),
+			$this->template_repo->get($template_id, $fetch_matches),
 		);
 
 		return $tournament;
