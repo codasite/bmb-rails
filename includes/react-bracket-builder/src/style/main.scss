@@ -284,6 +284,18 @@
 		opacity: .25;
 		color: #000;
 	}
+	.who-you-got-text {
+		left: 50%;
+		position: absolute;
+		transform: translateX(-50%);
+		width: 300px;
+		font-family: Clash Display Variable;
+		font-size: 32px;
+		font-weight: 700;
+		line-height: 44px;
+		letter-spacing: 0em;
+		text-align: center;
+	}
 
 	&.wpbb-6-rounds {
 		width: 1137px;
@@ -291,7 +303,9 @@
 		.wpbb-bracket-logo {
 			bottom: -320px;
 		}
-
+		.who-you-got-text{
+			bottom: -175px;
+		}
 		.wpbb-winner-container {
 			bottom: 320px;
 		}
@@ -309,6 +323,9 @@
 
 		.wpbb-bracket-logo {
 			bottom: -270px;
+		}
+		.who-you-got-text{
+			bottom: -125px;
 		}
 
 		.wpbb-winner-container {
@@ -333,6 +350,9 @@
 		.wpbb-bracket-logo {
 			bottom: -300px;
 		}
+		.who-you-got-text{
+			bottom: -155px;
+		}
 	}
 
 	&.wpbb-3-rounds {
@@ -342,6 +362,9 @@
 			bottom: -300px;
 		}
 
+		.who-you-got-text{
+			bottom: -155px;
+		}
 		// .wpbb-winner-text {
 		// 	white-space: nowrap;
 		// }
@@ -352,6 +375,9 @@
 
 		.wpbb-bracket-logo {
 			bottom: -250px;
+		}
+		.who-you-got-text{
+			bottom: -105px;
 		}
 
 		// .wpbb-winner-text {
@@ -367,7 +393,10 @@
 			color: #fff;
 			opacity: 1;
 		}
-
+		.who-you-got-text{
+			color: #ffffff;
+			opacity: 1;
+		}
 		.wpbb-team {
 			border-color: rgba(255, 255, 255, 0.5);
 		}
@@ -546,6 +575,25 @@ $table-radius: 10px;
 
 .wpbb-gallery-container {
 	animation: fade-in 0.3s;
+}
+
+.create-bracket{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    font-family:'Clash Display', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 25px;
+    letter-spacing: 0em;
+    text-align: left;
+    top: -100px;
+    position: relative;
+    left: 5%;
 }
 
 @keyframes fade-in {

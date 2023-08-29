@@ -395,6 +395,13 @@ no-highlight-button:active {
     width: 100%;
     display: grid;
     gap: 16px;
+    margin-top: 10vh;
+}
+
+.action-buttons{
+    width: 80%;
+    left: 10%;
+    position: relative;
 }
 
 .selected-btn {
@@ -413,7 +420,6 @@ $team-offset: -8px;
 .wpbb-bracket {
 	display: flex;
 	margin: 0 auto;
-	gap: 16px;
 }
 
 .wpbb-round__header{
@@ -421,7 +427,7 @@ $team-offset: -8px;
 }
 
 .wpbb-round{
-	width: 100px;
+	width: 75px;
 }
 
 @mixin match-box() {
@@ -457,7 +463,7 @@ $team-offset: -8px;
 	}
 
 	.wpbb-round {
-		margin: 15%;
+		margin: 8%;
 	}
 }
 
