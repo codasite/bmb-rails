@@ -22,6 +22,7 @@ const teamPickerDefaults = [16, 32, 64]
 const teamPickerMin = [2, 18, 34]
 const teamPickerMax = [16, 32, 64]
 
+let bracketRes: any;
 
 interface NumTeamsPickerState {
     currentValue: number
@@ -123,7 +124,6 @@ const UserTemplateBuilder = (props: UserBracketProps) => {
         wildCardPos: initialPickerIndex
     }
     )
-    let bracketRes: any;
     // Update the global `numTeams` variable whenever picker state changes
     useEffect(() => {
         const picker = teamPickerState.find(picker => picker.selected)
