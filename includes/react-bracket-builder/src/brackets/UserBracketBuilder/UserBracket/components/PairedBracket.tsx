@@ -5,7 +5,7 @@ import { useWindowDimensions } from '../../../../utils/hooks';
 //@ts-ignore
 import { MatchColumn } from '../../../shared/components/MatchColumn'
 import { Direction, bracketConstants } from '../../../shared/constants'
-import { DarkModeContext } from '../../../shared/context';
+import { BracketContext, DarkModeContext } from '../../../shared/context';
 import {
 	getTargetHeight,
 	getTeamClasses,
@@ -125,7 +125,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
 
-				return <MatchColumn
+				return   <BracketContext.Provider value={{numRounds:rounds?.length, canEdit: canEdit}}>
+				<MatchColumn
 					bracketName={bracketName}
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
@@ -138,8 +139,10 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
 						: undefined}
 				/>
+				</BracketContext.Provider>
 			}),
 			// handle final round differently
+			<BracketContext.Provider value={{numRounds:rounds?.length, canEdit: canEdit}}>
 			<MatchColumn
 				bracketName={bracketName}
 				matches={rounds[0].matches}
@@ -153,7 +156,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					(_, left: boolean) => pickTeam(0, 0, left)
 					: undefined}
 				paddingBottom={getMatchBoxHeight(1) * 2} // offset the final match by the height of the penultimate round
-			/>,
+			/>
+			</BracketContext.Provider>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
@@ -163,7 +167,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
 
-				return <MatchColumn
+				return <BracketContext.Provider value={{numRounds:rounds?.length, canEdit: canEdit}}>
+				<MatchColumn
 					bracketName={bracketName}
 					round={round}
 					matches={colMatches}
@@ -177,6 +182,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
 						: undefined}
 				/>
+				</BracketContext.Provider>
 			})
 		]
 	}

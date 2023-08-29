@@ -4,6 +4,7 @@ import { Form } from 'react-bootstrap';
 import { Nullable } from '../../../utils/types';
 import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../models/MatchTree'
 import { bracketConstants } from '../constants';
+import { BracketContext } from '../context';
 // Direction enum
 enum Direction {
 	TopLeft = 0,
@@ -15,9 +16,11 @@ enum Direction {
 
 export interface BracketDetials{
 	numRounds: number;
+	minWidth?: number;
+	userBracketWindow?: boolean;
+	canEdit?: boolean;
 }
 
-const BracketContext = createContext<BracketDetials | undefined>(undefined)
 
 interface TeamSlotProps {
 	className: string;
@@ -26,7 +29,6 @@ interface TeamSlotProps {
 	pickTeam?: () => void;
 	round?: Round;
 	match?: MatchNode | null;
-	width?: number
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
@@ -40,7 +42,6 @@ const TeamSlot = (props: TeamSlotProps) => {
 		pickTeam,
 		round,
 		match,
-		width
 	} = props
 	const startEditing = () => {
 		if (!updateTeam) {
@@ -84,7 +85,11 @@ const TeamSlot = (props: TeamSlotProps) => {
 		setTextBuffer(e.target.value)
 	}
 	
-	const isReadOnly = (round, match, className) => {
+	const isReadOnly = (round, match, className,userBracketWindow) => {
+		//in user bracket builder screen all the fields will be read only
+		if(userBracketWindow){
+			return true
+		}
 		if(!bracket?.numRounds){
 			return
 		}
@@ -105,23 +110,27 @@ const TeamSlot = (props: TeamSlotProps) => {
 		return true;
 	}
 
-	const setBorder = (width)=>{
-		if(width === bracketConstants.roundWidth){
-			return false 
-		}
-		else{
-			return true
+	const setBackground = (className) =>{
+		//backgroud color will get changed base on user selection on number of teams
+		if(bracket?.minWidth !==0){
+			let backgroundColor = isReadOnly(round, match, className,false)
+			if(backgroundColor){
+				return bracketConstants.color1
+			}
+			else{
+				return bracketConstants.color2
+			}
 		}
 	}
 
 
 	return (
-		<div className={props.className} onClick={handleClick} style={{ minWidth:  width, border: (setBorder(width)?'0.5px solid #FFFFFF80':'none')}} >
+		<div className={props.className} onClick={handleClick} style={{ minWidth: ((bracket?.minWidth !==0)? bracket?.minWidth : 104), background: setBackground( props.className)}} >
 			{editing ?
 				<input
 					className='wpbb-team-name-input'
 					autoFocus
-					readOnly={isReadOnly(props.round, props.match, props.className)}
+					readOnly={isReadOnly(props.round, props.match, props.className,bracket?.userBracketWindow)}
 					onFocus={(e) => e.target.select()}
 					type='text'
 					value={textBuffer}
@@ -134,7 +143,7 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{props.team?props.team.name :(isReadOnly(props.round, props.match, props.className) ? '': 'ADD TEAM...')}</span>			}
+				<span className='wpbb-team-name'>{props.team?props.team.name : ''}</span>			}
 		</div>
 	)
 }
@@ -164,36 +173,19 @@ const MatchBox = (props: MatchBoxProps) => {
 			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
 		)
 	}
-	const bracket = useContext(BracketContext);
 
 	let className: string;
-	let width: any ;
 	let bottom = 0;
-
-	const setWidth = () =>{
-		if(!bracket?.numRounds){
-			return
-		}
-		if (round?.depth === (bracket?.numRounds - 1)) {
-			return bracketConstants.firstRoundWidth;
-		}
-		else{
-			return bracketConstants.roundWidth;
-		}
-	}
 
 	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
 		// Left side of the bracket
 		className = 'wpbb-match-box-left'
-		width = bracketConstants.roundWidth
 	} else if (direction === Direction.TopRight || direction === Direction.BottomRight) {
 		// Right side of the bracket
 		className = 'wpbb-match-box-right'
-		width = bracketConstants.roundWidth
 	} else {
 		bottom = 10;
 		className = 'wpbb-match-box-center'
-		width = bracketConstants.roundWidth
 	}
 
 	const upperOuter = match.left === null
@@ -202,15 +194,12 @@ const MatchBox = (props: MatchBoxProps) => {
 	if (upperOuter && lowerOuter) {
 		// First round
 		className += '-outer'
-		width = setWidth()
 	} else if (upperOuter) {
 		// Upper bracket
 		className += '-outer-upper'
-		width = setWidth()
 	} else if (lowerOuter) {
 		// Lower bracket
 		className += '-outer-lower'
-		width = setWidth()
 	}
 
 	// This component renders the lines connecting two nodes representing a "game"
@@ -224,7 +213,6 @@ const MatchBox = (props: MatchBoxProps) => {
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
 				round={round}
 				match={match}
-				width={width}
 			/>
 			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
@@ -234,7 +222,6 @@ const MatchBox = (props: MatchBoxProps) => {
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
 				round={round}
 				match={match}
-				width={width}
 			/>
 		</div>
 	)
@@ -354,6 +341,8 @@ interface BracketProps {
 	canEdit?: boolean;
 	canPick?: boolean;
 	matchHeight?: number;
+	minWidth?: number;
+	userBracketWindow?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
@@ -363,11 +352,14 @@ export const Bracket = (props: BracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
+		minWidth,
 	} = props
 
 	const rounds = matchTree.rounds
 	const canEdit = setMatchTree !== undefined && props.canEdit
 	const canPick = setMatchTree !== undefined && props.canPick
+	//user bracket window used to differentiate between admin create page and new usr bracket builder page base on this styles will be rendered
+	const userBracketWindow = props.userBracketWindow? true: false
 
 
 
@@ -440,7 +432,7 @@ export const Bracket = (props: BracketProps) => {
 				// Get the first half of matches for this column
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 
-				return <BracketContext.Provider value={{ numRounds:rounds.length }}>
+				return <BracketContext.Provider value={{ numRounds:rounds.length, minWidth:minWidth?minWidth:0, userBracketWindow: userBracketWindow }}>
 				<MatchColumn
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
@@ -455,7 +447,7 @@ export const Bracket = (props: BracketProps) => {
 				</BracketContext.Provider>
 			}),
 			// handle final round differently
-			<BracketContext.Provider value={{ numRounds:rounds.length }}>
+			<BracketContext.Provider value={{ numRounds:rounds.length, minWidth:minWidth?minWidth:0, userBracketWindow: userBracketWindow}}>
 			<MatchColumn
 				matches={rounds[0].matches}
 				round={rounds[0]}
@@ -472,7 +464,7 @@ export const Bracket = (props: BracketProps) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
 
-				return  <BracketContext.Provider value={{ numRounds:rounds.length }}><MatchColumn 
+				return  <BracketContext.Provider value={{ numRounds:rounds.length, minWidth:minWidth?minWidth:0, userBracketWindow: userBracketWindow }}><MatchColumn 
 					round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}

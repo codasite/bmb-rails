@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Team } from '../models/MatchTree';
+import React, { useState, useContext } from 'react';
+import { MatchNode, Round, Team } from '../models/MatchTree';
 //@ts-ignore
 import { getTeamClasses } from '../utils';
+import { bracketConstants } from '../constants';
+import { BracketContext } from '../context';
 
 interface TeamSlotProps {
 	className?: string;
@@ -12,11 +14,14 @@ interface TeamSlotProps {
 	matchIndex?: number;
 	left?: boolean;
 	winner?: boolean;
+	match?: MatchNode | null;
+	round?: Round;
 }
 
 export const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
+	const bracket = useContext(BracketContext);
 
 	const {
 		team,
@@ -26,6 +31,8 @@ export const TeamSlot = (props: TeamSlotProps) => {
 		matchIndex,
 		left,
 		winner,
+		match,
+		round
 	} = props
 	// console.log('winner', winner)
 
@@ -67,15 +74,46 @@ export const TeamSlot = (props: TeamSlotProps) => {
 			pickTeam()
 		}
 	}
+	const isReadOnly = (round, match,left) => {
+		//in user bracket window all the fields will be read only
+		if(!bracket?.numRounds){
+			return
+		}
+		if (round?.depth === (bracket?.numRounds - 1)) {
+			return false;
+		}
+		else if (round?.depth === (bracket?.numRounds - 2)) {
+			if (match.left === null && left === true) {
+				return false;
+			}
+			else if (match.right === null && left !== true) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		return true;
+	}
+	const setBackground = (left) =>{
+		//backgroud color will get changed base on user selection on number of teams
+		let backgroundColor = isReadOnly(round, match, left)
+		if(bracket?.canEdit){
+			if(!backgroundColor){
+				return bracketConstants.color3	
+			}
+		}
+	}
 
 	return (
-		<div className={className} onClick={handleClick}>
-			{editing ?
+		<div className={className} onClick={handleClick} style={{ background :setBackground(left)}}>
+			{editing && !isReadOnly(round, match,left) ?
 				<input
 					className='wpbb-team-name-input'
 					autoFocus
 					onFocus={(e) => e.target.select()}
 					type='text'
+					// readOnly={isReadOnly(props.round, props.match, props.className)}
 					value={textBuffer}
 					onChange={(e) => setTextBuffer(e.target.value)}
 					onBlur={doneEditing}
@@ -86,7 +124,7 @@ export const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+				<span className='wpbb-team-name'>{team ? team.name : (isReadOnly(round, match,left) ? '':'ADD TEAM')}</span>
 				// <span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
 				// <span className='wpbb-team-name'>Team</span>
 			}
