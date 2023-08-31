@@ -14,6 +14,19 @@ import { ShuffleTeam } from './ShuffleTeam'
 import { bracketConstants } from '../shared/constants'
 import UserBracket from '../UserBracketBuilder/UserBracket/UserBracket'
 import { BracketRes } from '../shared/api/types/bracket'
+import { UserTemplatePreview } from './UserTemplatePreview/UserTemplatePreview'
+import { PairedBracket } from '../UserBracketBuilder/UserBracket/components/PairedBracket'
+//@ts-ignore
+import { ReactComponent as ArrowNarrowLeft } from '../shared/assets/arrow-narrow-left.svg'
+//@ts-ignore
+import { ReactComponent as SaveIcon } from '../shared/assets/save-icon.svg'
+//@ts-ignore
+import { ReactComponent as PlayIcon } from '../shared/assets/play-icon.svg'
+//@ts-ignore
+import { ReactComponent as ShuffleIcon } from '../shared/assets/shuffle-icon.svg'
+import Loader from '../shared/components/Loader/Loader'
+import { DarkModeContext } from '../shared/context'
+
 
 const defaultBracketName = "MY BRACKET NAME"
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
@@ -89,19 +102,14 @@ const evaluateNumRoundAndWildCard = (numTeams: number) => {
     if (wildCardGame === Math.pow(2, numRounds - 1)) {
         wildCardGame = 0
     }
-    
+
     return [
         numRounds,
         wildCardGame
     ];
 }
-interface UserBracketProps {
-    bracketId?: number;
-    apparelUrl: string;
-    bracketStylesheetUrl: string;
-}
 
-const UserTemplateBuilder = (props: UserBracketProps) => {
+const UserTemplateBuilder = () => {
 
     const initialPickerIndex = 1
     const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
@@ -117,6 +125,7 @@ const UserTemplateBuilder = (props: UserBracketProps) => {
     const [totalRounds, setTotalRounds] = useState(Number);
     const [totalWildCardGames, setTotalWildCardGames] = useState(Number);
     const [showComponent, setShowComponent] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [bracketFields, setBracketFields] = useState<BracketFields>({
         bracketTitle: bracketTitle,
         totalRounds: 4,
@@ -254,63 +263,116 @@ const UserTemplateBuilder = (props: UserBracketProps) => {
         setShowComponent(true);
     }
 
+    const handleShuffle = () => {
+        let currentTreeData = matchTree.rounds;
+        let size = currentTreeData.length - 1;
+        let shuffledData = ShuffleTeam.getTeamNames(currentTreeData, size, bracketFields?.totalWildCardGames);
+        let matchValue = ShuffleTeam.updateMatchTree(shuffledData, currentTreeData, size, bracketFields?.totalWildCardGames);
+        setMatchTree(MatchTree.fromRounds(matchValue))
+    }
+
+    const handleSave = () => {
+        setIsLoading(true)
+        const req = matchTree.toRequest(bracketFields?.bracketTitle, true, bracketFields?.totalRounds, bracketFields?.totalWildCardGames, bracketFields?.wildCardPos)
+        bracketApi.createBracket(req)
+            .then((bracket) => {
+                setIsLoading(false)
+                window.location.href = '/wp-admin/edit.php?post_type=bracket';
+            })
+            .catch((error) => {
+                MatchTree.fromOptions(4, 0, 1)
+                setIsLoading(false)
+            });
+    }
+    const handleRedirect = () => {
+
+        setShowComponent(false)
+    }
+
+    const bracketProps = {
+        matchTree,
+        setMatchTree: (matchTree: MatchTree) => setMatchTree(matchTree),
+        canPick: false,
+        canEdit: true,
+        bracketName: bracketRes?.name,
+    }
 
     return (
         <div>
-            {showComponent ? <UserBracket bracketStylesheetUrl={props.bracketStylesheetUrl} bracketRes={bracketRes} apparelUrl={props.apparelUrl} bracketFields={bracketFields} canEdit /> :
+            {isLoading ? <Loader /> :
                 <div className='wpbb-template-builder-root'>
-                    <div className="bracket-container">
-                        <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
-                        <div className='pt-5 wpbb-default'>
-                            <Bracket matchTree={matchTree} setMatchTree={setMatchTree} canEdit matchHeight={2 * bracketConstants.teamHeight} minWidth={bracketConstants.roundWidth} userBracketWindow />
+                    {showComponent ? <div className="bracket-container">
+                        <div>{<Button className='create-bracket' onClick={handleRedirect}><ArrowNarrowLeft />CREATE BRACKET</Button>}</div>
+                        <div className='bracket-title'>{bracketTitle}</div>
+                        <div className='paired-bracket'>
+                            <DarkModeContext.Provider value={true}>
+                                <PairedBracket {...bracketProps} />
+                            </DarkModeContext.Provider>
                         </div>
-                        <div className='team-picker-container'>
-                            <div className='bracket-text-info'>
-                                How Many total teams in Your Bracket
-                            </div>
-                            <div className='team-picker'>
-                                {teamPickerState.map((pickerState, i) => {
-                                    return (
-                                        <NumTeamsPicker
-                                            currentValue={pickerState.currentValue}
-                                            defaultValue={teamPickerDefaults[i]}
-                                            min={teamPickerMin[i]}
-                                            max={teamPickerMax[i]}
-                                            selected={pickerState.selected}
-                                            setSelected={() => setTeamPickerSelected(i)}
-                                            increment={() => incrementTeamPicker(i)}
-                                            decrement={() => decrementTeamPicker(i)}
-                                            setCurrentValue={(value) => setTeamPickerValue(i, value)}
-                                            selectNextPicker={getSelectNextTeamPicker(i)}
-                                            selectPrevPicker={getSelectPrevTeamPicker(i)}
-                                        />
-                                    )
-                                })}
-                            </div>
-                        </div>
-                        <div className='wild-btn' style={{ display: showWildCardOptions ? 'block' : 'none' }}>
-                            <div className='bracket-text-info  wild-card-display-text'>
-                                WILDCARD DISPLAY
-                            </div>
-                            <div className='wild-card-group'>
-                                {WildCardPlacements.map((pos, index) => (
-                                    <div className='wild-card-btn' key={index}>
-                                        <CreateWildCardPlacementButtons position={pos} positionIndex={index} wildCard={() => setWildCardSelected(index)} />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div className='bracket-button'>
-                            <ButtonGroup className='play-bracket'>
-                                <Button className='btn-play-bracket' variant='secondary' onClick={handleTeams}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" fill="none">
-                                        <path d="M5.5 5.48951C5.5 4.51835 5.5 4.03277 5.70249 3.7651C5.87889 3.53191 6.14852 3.38761 6.4404 3.37018C6.77544 3.35017 7.17946 3.61953 7.98752 4.15823L18.5031 11.1686C19.1708 11.6137 19.5046 11.8363 19.6209 12.1168C19.7227 12.3621 19.7227 12.6377 19.6209 12.883C19.5046 13.1635 19.1708 13.386 18.5031 13.8312L7.98752 20.8415C7.17946 21.3802 6.77544 21.6496 6.4404 21.6296C6.14852 21.6122 5.87889 21.4679 5.70249 21.2347C5.5 20.967 5.5 20.4814 5.5 19.5103V5.48951Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <span className='play-bracket-text'>Add Your Teams</span>
+                            <div className={`randomize-team-container wpbb-bracket-actions`}>
+                                <Button className='randomize-teams no-highlight-button' onClick={handleShuffle} >
+                                    <ShuffleIcon/>
+                                    <span className={'randomize-teams-text'}>scramble team order</span>
                                 </Button>
-                            </ButtonGroup>
-                        </div>
+                            </div>
+                            <div className='bracket-button'>
+                                    <Button className='btn-save-bracket' variant='secondary' onClick={handleSave}>
+                                        <SaveIcon/>
+                                        <span className='save-bracket-text'>Save As Template</span>
+                                    </Button>
+                                    <Button className='btn-play-bracket' variant='secondary'>
+                                        <PlayIcon/>
+                                        <span className='play-bracket-text'>Create Tournament</span>
+                                    </Button>
+                            </div>
                     </div>
+                        :
+                        <div className="bracket-container">
+                            <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
+                            <div className='wpbb-default'>
+                                <UserTemplatePreview matchTree={matchTree} />
+                            </div>
+                            <div className='team-picker-container'>
+                                <div className='bracket-text-info'>
+                                    How Many total teams in Your Bracket
+                                </div>
+                                <div className='team-picker'>
+                                    {teamPickerState.map((pickerState, i) => {
+                                        return (
+                                            <NumTeamsPicker
+                                                currentValue={pickerState.currentValue}
+                                                defaultValue={teamPickerDefaults[i]}
+                                                min={teamPickerMin[i]}
+                                                max={teamPickerMax[i]}
+                                                selected={pickerState.selected}
+                                                setSelected={() => setTeamPickerSelected(i)}
+                                                increment={() => incrementTeamPicker(i)}
+                                                decrement={() => decrementTeamPicker(i)}
+                                                setCurrentValue={(value) => setTeamPickerValue(i, value)}
+                                                selectNextPicker={getSelectNextTeamPicker(i)}
+                                                selectPrevPicker={getSelectPrevTeamPicker(i)}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                            <div className='wild-btn' style={{ display: showWildCardOptions ? 'block' : 'none' }}>
+                                <div className='bracket-text-info  wild-card-display-text'>
+                                    WILDCARD DISPLAY
+                                </div>
+                                <div className='wild-card-group'>
+                                    {WildCardPlacements.map((pos, index) => (
+                                        <div className='wild-card-btn' key={index}>
+                                            <CreateWildCardPlacementButtons position={pos} positionIndex={index} wildCard={() => setWildCardSelected(index)} />
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <Button className='btn-play-bracket' variant='secondary' onClick={handleTeams}>
+                                <span className='play-bracket-text'>Add Your Teams</span>
+                            </Button>
+                        </div>
+                    }
                 </div>
             }
         </div>

@@ -77,12 +77,8 @@ function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 
 function renderOptionsTree() {
 	const optionsBuilder = document.getElementById('wpbb-bracket-option-preview')
-	const {
-		bracket_product_archive_url,
-		css_url
-	} = wpbb_ajax_obj
 	if (optionsBuilder) {
-		render(<App><Provider store={bracketBuilderStore}><Options bracketStylesheetUrl={css_url} apparelUrl={bracket_product_archive_url}/> </Provider></App >, optionsBuilder);
+		render(<App><Provider store={bracketBuilderStore}><Options /></Provider></App >, optionsBuilder);
 	}
 }
 

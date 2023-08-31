@@ -124,7 +124,7 @@ export const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{team ? team.name : (isReadOnly(round, match,left) ? '':'ADD TEAM')}</span>
+				<span className='wpbb-team-name'>{team ? team.name : (isReadOnly(round, match,left) ? '':textBuffer? textBuffer :'ADD TEAM')}</span>
 				// <span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
 				// <span className='wpbb-team-name'>Team</span>
 			}
