@@ -1,10 +1,8 @@
-import React, { useState, useEffect, useRef, createContext, useContext } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../../utils/types';
 import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../models/MatchTree'
-import { bracketConstants } from '../constants';
-import { BracketContext } from '../context';
 // Direction enum
 enum Direction {
 	TopLeft = 0,
@@ -14,35 +12,25 @@ enum Direction {
 	BottomRight = 4,
 }
 
-export interface BracketDetials{
-	numRounds: number;
-	minWidth?: number;
-	userBracketWindow?: boolean;
-	canEdit?: boolean;
-}
-
 
 interface TeamSlotProps {
 	className: string;
 	team?: Team | null;
 	updateTeam?: (name: string) => void;
 	pickTeam?: () => void;
-	round?: Round;
-	match?: MatchNode | null;
 }
 
 const TeamSlot = (props: TeamSlotProps) => {
 	const [editing, setEditing] = useState(false)
 	const [textBuffer, setTextBuffer] = useState('')
-	const bracket = useContext(BracketContext);
 
 	const {
 		team,
 		updateTeam,
-		pickTeam,
-		round,
-		match,
+		pickTeam
 	} = props
+
+
 	const startEditing = () => {
 		if (!updateTeam) {
 			return
@@ -57,13 +45,6 @@ const TeamSlot = (props: TeamSlotProps) => {
 		}
 		if (!team && textBuffer !== '' || team && textBuffer !== team.name) {
 			updateTeam(textBuffer)
-			//updating team names in props to display in span tag
-			if(props.className === bracketConstants.team1){
-				props.team = props.match?.team1
-			}
-			else if(props.className === bracketConstants.team2){
-				props.team = props.match?.team2
-			}
 		}
 		setEditing(false)
 	}
@@ -84,53 +65,14 @@ const TeamSlot = (props: TeamSlotProps) => {
 		}
 		setTextBuffer(e.target.value)
 	}
-	
-	const isReadOnly = (round, match, className,userBracketWindow) => {
-		//in user bracket builder screen all the fields will be read only
-		if(userBracketWindow){
-			return true
-		}
-		if(!bracket?.numRounds){
-			return
-		}
-		if (round?.depth === (bracket?.numRounds - 1)) {
-			return false;
-		}
-		else if (round?.depth === (bracket?.numRounds - 2)) {
-			if (match.left == null && className == bracketConstants.team1) {
-				return false;
-			}
-			else if (match.right == null && className == bracketConstants.team2) {
-				return false;
-			}
-			else {
-				return true;
-			}
-		}
-		return true;
-	}
-
-	const setBackground = (className) =>{
-		//backgroud color will get changed base on user selection on number of teams
-		if(bracket?.minWidth !==0){
-			let backgroundColor = isReadOnly(round, match, className,false)
-			if(backgroundColor){
-				return bracketConstants.color1
-			}
-			else{
-				return bracketConstants.color2
-			}
-		}
-	}
 
 
 	return (
-		<div className={props.className} onClick={handleClick} style={{ minWidth: ((bracket?.minWidth !==0)? bracket?.minWidth : 104), background: setBackground( props.className)}} >
+		<div className={props.className} onClick={handleClick}>
 			{editing ?
 				<input
 					className='wpbb-team-name-input'
 					autoFocus
-					readOnly={isReadOnly(props.round, props.match, props.className,bracket?.userBracketWindow)}
 					onFocus={(e) => e.target.select()}
 					type='text'
 					value={textBuffer}
@@ -143,7 +85,8 @@ const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{props.team?props.team.name : ''}</span>			}
+				<span className='wpbb-team-name'>{team ? team.name : ''}</span>
+			}
 		</div>
 	)
 }
@@ -155,7 +98,6 @@ interface MatchBoxProps {
 	spacing: number;
 	updateTeam?: (left: boolean, name: string) => void;
 	pickTeam?: (left: boolean) => void;
-	round: Round;
 }
 
 const MatchBox = (props: MatchBoxProps) => {
@@ -166,8 +108,8 @@ const MatchBox = (props: MatchBoxProps) => {
 		spacing,
 		updateTeam,
 		pickTeam,
-		round
 	} = props
+
 	if (match === null) {
 		return (
 			<div className='wpbb-match-box-empty' style={{ height: height + spacing }} />
@@ -175,7 +117,6 @@ const MatchBox = (props: MatchBoxProps) => {
 	}
 
 	let className: string;
-	let bottom = 0;
 
 	if (direction === Direction.TopLeft || direction === Direction.BottomLeft) {
 		// Left side of the bracket
@@ -184,7 +125,6 @@ const MatchBox = (props: MatchBoxProps) => {
 		// Right side of the bracket
 		className = 'wpbb-match-box-right'
 	} else {
-		bottom = 10;
 		className = 'wpbb-match-box-center'
 	}
 
@@ -205,14 +145,12 @@ const MatchBox = (props: MatchBoxProps) => {
 	// This component renders the lines connecting two nodes representing a "game"
 	// These should be evenly spaced in the column and grow according to the number of other matches in the round
 	return (
-		<div className={className} style={{ height: height, marginBottom: spacing, bottom: bottom }}>
+		<div className={className} style={{ height: height, marginBottom: spacing }}>
 			<TeamSlot
 				className='wpbb-team1'
 				team={match.team1}
 				updateTeam={updateTeam ? (name: string) => updateTeam(true, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(true) : undefined}
-				round={round}
-				match={match}
 			/>
 			{direction === Direction.Center && <TeamSlot className='wpbb-champion-team' team={match.result} />}
 			<TeamSlot
@@ -220,12 +158,11 @@ const MatchBox = (props: MatchBoxProps) => {
 				team={match.team2}
 				updateTeam={updateTeam ? (name: string) => updateTeam(false, name) : undefined}
 				pickTeam={pickTeam ? () => pickTeam(false) : undefined}
-				round={round}
-				match={match}
 			/>
 		</div>
 	)
 }
+
 interface RoundHeaderProps {
 	round: Round;
 	updateRoundName?: (roundId: number, name: string) => void;
@@ -293,7 +230,7 @@ interface MatchColumnProps {
 	pickTeam?: (matchIndex: number, left: boolean) => void;
 }
 
-export const MatchColumn = (props: MatchColumnProps) => {
+const MatchColumn = (props: MatchColumnProps) => {
 	const {
 		round,
 		matches,
@@ -316,9 +253,8 @@ export const MatchColumn = (props: MatchColumnProps) => {
 					direction={direction}
 					height={matchHeight}
 					spacing={i + 1 < matches.length ? matchHeight : 0} // Do not add spacing to the last match in the round column
-					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.depth, matchIndex, left, name) : undefined}
+					updateTeam={canEdit ? (left: boolean, name: string) => updateTeam(round.id, matchIndex, left, name) : undefined}
 					pickTeam={pickTeam ? (left: boolean) => pickTeam(matchIndex, left) : undefined}
-					round={round}
 				/>
 			)
 		})
@@ -340,9 +276,6 @@ interface BracketProps {
 	matchTree: MatchTree;
 	canEdit?: boolean;
 	canPick?: boolean;
-	matchHeight?: number;
-	minWidth?: number;
-	userBracketWindow?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
 }
 
@@ -352,15 +285,11 @@ export const Bracket = (props: BracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
-		minWidth,
 	} = props
 
 	const rounds = matchTree.rounds
 	const canEdit = setMatchTree !== undefined && props.canEdit
 	const canPick = setMatchTree !== undefined && props.canPick
-	//user bracket window used to differentiate between admin create page and new usr bracket builder page base on this styles will be rendered
-	const userBracketWindow = props.userBracketWindow? true: false
-
 
 
 	const updateRoundName = (roundId: number, name: string) => {
@@ -374,12 +303,13 @@ export const Bracket = (props: BracketProps) => {
 			setMatchTree(newMatchTree);
 		}
 	};
-	const updateTeam = (depth: number, matchIndex: number, left: boolean, name: string) => {
+
+	const updateTeam = (roundId: number, matchIndex: number, left: boolean, name: string) => {
 		if (!canEdit) {
 			return
 		}
 		const newMatchTree = matchTree.clone();
-		const roundToUpdate = newMatchTree.rounds.find((round) => round.depth === depth);
+		const roundToUpdate = newMatchTree.rounds.find((round) => round.id === roundId);
 		if (roundToUpdate) {
 			const matchToUpdate = roundToUpdate.matches[matchIndex];
 			if (matchToUpdate) {
@@ -399,7 +329,7 @@ export const Bracket = (props: BracketProps) => {
 					}
 				}
 			}
-			return newMatchTree;
+			setMatchTree(newMatchTree);
 		}
 	}
 
@@ -432,50 +362,46 @@ export const Bracket = (props: BracketProps) => {
 				// Get the first half of matches for this column
 				const colMatches = round.matches.slice(0, round.matches.length / 2)
 
-				return <BracketContext.Provider value={{ numRounds:rounds.length, minWidth:minWidth?minWidth:0, userBracketWindow: userBracketWindow }}>
-				<MatchColumn
+				return <MatchColumn
 					matches={colMatches}
 					round={round} direction={Direction.TopLeft}
 					numDirections={numDirections}
-					matchHeight={props.matchHeight ? props.matchHeight: (2 ** idx * firstRoundMatchHeight)}
+					matchHeight={2 ** idx * firstRoundMatchHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
 						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
 						: undefined}
 				/>
-				</BracketContext.Provider>
 			}),
 			// handle final round differently
-			<BracketContext.Provider value={{ numRounds:rounds.length, minWidth:minWidth?minWidth:0, userBracketWindow: userBracketWindow}}>
 			<MatchColumn
 				matches={rounds[0].matches}
 				round={rounds[0]}
 				direction={Direction.Center}
 				numDirections={numDirections}
-				matchHeight={props.matchHeight ? props.matchHeight: (targetHeight / 4)}
+				matchHeight={targetHeight / 4}
 				updateRoundName={canEdit ? updateRoundName : undefined}
 				updateTeam={canEdit ? updateTeam : undefined}
 				pickTeam={canPick ?
 					(_, left: boolean) => pickTeam(0, 0, left)
 					: undefined}
-			/></BracketContext.Provider>,
+			/>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
 				const colMatches = round.matches.slice(round.matches.length / 2)
 
-				return  <BracketContext.Provider value={{ numRounds:rounds.length, minWidth:minWidth?minWidth:0, userBracketWindow: userBracketWindow }}><MatchColumn 
-					round={round}
+				return <MatchColumn round={round}
 					matches={colMatches}
 					direction={Direction.TopRight}
 					numDirections={numDirections}
-					matchHeight={props.matchHeight ? props.matchHeight: (2 ** (arr.length - 1 - idx) * firstRoundMatchHeight)}
+					matchHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
 					updateRoundName={canEdit ? updateRoundName : undefined}
 					updateTeam={canEdit ? updateTeam : undefined}
 					pickTeam={canPick ?
 						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
 						: undefined}
-				/></BracketContext.Provider>
+				/>
 			})
 		]
 	}
