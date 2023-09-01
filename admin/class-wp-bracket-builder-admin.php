@@ -125,8 +125,20 @@ class Wp_Bracket_Builder_Admin {
 	public function bracket_builder_admin_page() {
 		require_once plugin_dir_path(__FILE__) . 'templates/admin-panel.php';
 	}
+	
 	public function bracket_builder_settings_page() {
-		require_once plugin_dir_path(__FILE__) . 'templates/admin-submenu-settings.php';
+		?>
+		<div class="wrap">
+			<h1><?php echo get_admin_page_title() ?></h1>
+			<form method="post" action="options.php">
+				<?php
+					settings_fields( 'bracket-builder-settings' ); // settings group name
+					do_settings_sections( 'bracket-builder-settings-page' ); // just a page slug
+					submit_button(); // "Save Changes" button
+					?>
+			</form>
+		</div>
+		<?php
 	}
 
 	public function add_capabilities() {
@@ -209,4 +221,42 @@ class Wp_Bracket_Builder_Admin {
 			delete_option('custom_admin_error');
 		}
 	}
+}
+?>
+<?php
+/* Bracket builder settings page related code */
+
+add_action( 'admin_init',  'bracket_builder_settings_fields' );
+
+function bracket_builder_settings_fields(){
+    // settings section
+	add_settings_section(
+        'bracket_builder_setting_section_id',  // Custom slug for the setting section.
+        '', // Setting section title.
+        '',
+		'bracket-builder-settings-page' // The page slug that we want to add our settings section.
+
+    );
+
+    // settings fields
+	add_settings_field(
+		'bracket_builder_setting_field_id', // Custom slug for the setting field.
+		'Max teams', // Setting the field title.
+		'show_bracket_builder_settings_fields', // Callback function that adds markups to the settings section. 
+		'bracket-builder-settings-page', // The page slug of which we want to show setting field on it.
+		'bracket_builder_setting_section_id' // The section that we want to show setting field under it.
+	 );
+
+	 register_setting( 'bracket-builder-settings', // group name
+		'bracket_builder_max_teams', // field name (column name) to be create in database
+		'absint'  // type of data (absint converts a value in non-negative integer)
+	);
+
+}
+
+function show_bracket_builder_settings_fields() {
+    ?>
+	<?php settings_errors(); ?>
+    <input type="number" id="bracket_builder_max_teams" name="bracket_builder_max_teams" value=<?php echo get_option('bracket_builder_max_teams'); ?> />
+    <?php
 }
