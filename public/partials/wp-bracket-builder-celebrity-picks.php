@@ -1,22 +1,25 @@
 <?php
 require_once('shared/wp-bracket-builder-tournaments-common.php');
+require_once('shared/wp-bracket-builder-partials-common.php');
 
 $plays = array(
 	array(
 		"play_title" => "Terrell Owen's March Maddress Picks",
 		"play_id" => 1,
 		"tournament_id" => 1,
+		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Terrell.png",
 	),
 	array(
 		"play_title" => "Aaron Rodgers' NCAA NIT Bracket",
 		"play_id" => 2,
 		"tournament_id" => 2,
+		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Aaron.png",
 	),
-	array(
-		"play_title" => "NCAA Womens World Series 2024",
-		"play_id" => 3,
-		"tournament_id" => 3,
-	),
+	// array(
+	// 	"play_title" => "NCAA Womens World Series 2024",
+	// 	"play_id" => 3,
+	// 	"tournament_id" => 3,
+	// ),
 );
 
 $tournaments = array(
@@ -62,6 +65,28 @@ function wpbb_tournament_sort_buttons() {
 	return ob_get_clean();
 }
 
+function wpbb_celebrity_play_list_item($play) {
+	$title = $play['play_title'];
+	$id = $play['play_id'];
+	$tournament_id = $play['tournament_id'];
+	// $thumbnail = get_the_post_thumbnail_url($tournament_id);
+	$thumbnail = $play['thumbnail'];
+	$play_link = get_permalink() . 'tournaments/' . $tournament_id . '/plays/' . $id;
+	$bust_link = get_permalink() . 'tournaments/' . $tournament_id . '/bust/' . $id;
+	ob_start();
+?>
+	<div class="tw-flex tw-flex-col tw-rounded-16 tw-border-2 tw-border-white/20 tw-border-solid tw-bg-dd-blue tw-pb-30 tw-overflow-hidden">
+		<div class="tw-flex tw-flex-col tw-bg-white tw-justify-end tw-flex-grow tw-px-30">
+			<h3 class="tw-text-30 tw-text-black"><?php echo esc_html($title) ?></h3>
+		</div>
+		<div class="tw-flex tw-gap-10 tw-mt-20 tw-px-30">
+			<?php echo view_play_btn($play_link); ?>
+		</div>
+	</div>
+<?php
+	return ob_get_clean();
+}
+
 ?>
 <div class="wpbb-reset wpbb-official-tourneys tw-flex tw-flex-col">
 	<div class="tw-flex tw-flex-col md:tw-flex-row-reverse tw-py-60 tw-gap-15 tw-items-center md:tw-justify-between">
@@ -70,6 +95,12 @@ function wpbb_tournament_sort_buttons() {
 	</div>
 	<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60">
 		<h2 class="tw-text-48 tw-font-700">Plays</h2>
+		<div class="tw-flex tw-gap-10">
+			<?php foreach ($plays as $play) : ?>
+				<?php echo wpbb_celebrity_play_list_item($play); ?>
+			<?php endforeach; ?>
+		</div>
+
 	</div>
 	<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60">
 		<h2 class="tw-text-48 tw-font-700">Tournaments</h2>
