@@ -247,6 +247,13 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_celebrity_picks() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-celebrity-picks.php';
+
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -260,6 +267,7 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
 		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']);
+		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']);
 	}
 
 	public function add_rewrite_rules() {
