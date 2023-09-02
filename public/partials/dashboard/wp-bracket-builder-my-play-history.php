@@ -1,5 +1,7 @@
 <?php
-require_once 'wp-bracket-builder-common.php';
+require_once 'wp-bracket-builder-dashboard-common.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'shared/wp-bracket-builder-partials-common.php';
+
 $plays = array(
 	array(
 		"tournament_name" => "NCAA College Football 2024 hosted by Ahmad Merritt",

@@ -240,6 +240,13 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_official_tournamnets() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-official-tournaments.php';
+
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -252,6 +259,7 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
 		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
+		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']);
 	}
 
 	public function add_rewrite_rules() {
@@ -263,6 +271,7 @@ class Wp_Bracket_Builder_Public {
 
 	public function add_query_vars($vars) {
 		$vars[] = 'tab';
+		$vars[] = 'status';
 		return $vars;
 	}
 

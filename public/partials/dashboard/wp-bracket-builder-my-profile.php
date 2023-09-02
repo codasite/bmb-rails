@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wp-bracket-builder-user-profile.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'shared/wp-bracket-builder-partials-common.php';
 /**
  * The template for displaying the user's profile.
  *

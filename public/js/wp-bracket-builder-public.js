@@ -50,6 +50,7 @@ tailwind.config = {
 			'4': '4px',
 			'8': '8px',
 			'10': '10px',
+			'11': '11px',
 			'12': '12px',
 			'15': '15px',
 			'16': '16px',
@@ -58,6 +59,7 @@ tailwind.config = {
 			'30': '30px',
 			'40': '40px',
 			'60': '60px',
+			'80': '80px',
 		},
 		colors: {
 			'transparent': 'transparent',
@@ -65,7 +67,8 @@ tailwind.config = {
 			'white': '#fff',
 			'green': '#05FF3C',
 			'blue': '#2137ff',
-			'dark-blue': '#40FF6A',
+			'dark-blue': '#0D1454',
+			'dd-blue': '#010433',
 			'yellow': '#F8E11A',
 		},
 		borderRadius: {
