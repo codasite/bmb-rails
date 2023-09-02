@@ -1,6 +1,8 @@
 <?php
 require_once 'wp-bracket-builder-dashboard-common.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'shared/wp-bracket-builder-partials-common.php';
+$shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
+require_once $shared_dir . 'wp-bracket-builder-partials-common.php';
+require_once $shared_dir . 'wp-bracket-builder-tournaments-common.php';
 
 $active_tournaments = array(
 	array(

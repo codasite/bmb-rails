@@ -201,25 +201,19 @@ body {
 	line-height: normal;
 }
 
-.wpbb-reset h1 {
-	color: #fff;
-	font-family: 'Clash Display', sans-serif;
-}
-
 .wpbb-reset h1,
 .wpbb-reset h2,
 .wpbb-reset h3,
 .wpbb-reset h4,
 .wpbb-reset h5,
 .wpbb-reset h6 {
+	color: #fff;
 	font-family: 'Clash Display', sans-serif;
 }
 
 .wpbb-reset a {
 	text-decoration: none;
 }
-
-
 
 .wpbb-add-apparel-btn {
 	background: linear-gradient(rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%), #010433;

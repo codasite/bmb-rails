@@ -1,6 +1,6 @@
 <?php
 require_once('shared/wp-bracket-builder-partials-constants.php');
-require_once('shared/wp-bracket-builder-partials-common.php');
+require_once('shared/wp-bracket-builder-tournaments-common.php');
 
 $tournaments = array(
 	array(
@@ -34,38 +34,6 @@ function wpbb_get_official_tournaments() {
 	);
 	$tournaments = get_posts($args);
 	return $tournaments;
-}
-
-function wpbb_sort_button($label, $endpoint, $active = false) {
-	$base_cls = [
-		'tw-flex',
-		'tw-items-center',
-		'tw-justify-center',
-		'tw-text-16',
-		'tw-font-500',
-		'tw-rounded-8',
-		'tw-py-8',
-		'tw-px-16',
-	];
-
-	$inactive_cls = [
-		'tw-border',
-		'tw-border-solid',
-		'tw-border-white/50',
-	];
-	$active_cls = [
-		'tw-bg-white',
-		'tw-text-dark-blue',
-	];
-
-	$cls_list = array_merge($base_cls, $active ? $active_cls : $inactive_cls);
-	ob_start();
-?>
-	<a class="<?php echo implode(' ', $cls_list) ?>" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo esc_html($label) ?>
-	</a>
-<?php
-	return ob_get_clean();
 }
 
 function wpbb_tournament_sort_buttons() {
