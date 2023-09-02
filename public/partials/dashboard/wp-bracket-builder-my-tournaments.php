@@ -1,5 +1,6 @@
 <?php
-require_once 'wp-bracket-builder-common.php';
+require_once 'wp-bracket-builder-dashboard-common.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'shared/wp-bracket-builder-partials-common.php';
 
 $active_tournaments = array(
 	array(
@@ -75,27 +76,6 @@ function completed_tournament_buttons($tournament) {
 	return ob_get_clean();
 }
 
-function live_tournament_tag() {
-	ob_start();
-?>
-	<div class="tw-text-green tw-bg-green/15 tw-border tw-border-solid tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/ellipse.svg', __FILE__)); ?>
-		<span class="tw-font-500 tw-text-12">Live</span>
-	</div>
-<?php
-	return ob_get_clean();
-}
-
-function completed_tournament_tag() {
-	ob_start();
-?>
-	<div class="tw-text-yellow tw-bg-yellow/15 tw-border tw-border-solid tw-border-yellow tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/ellipse.svg', __FILE__)); ?>
-		<span class="tw-font-500 tw-text-12">Completed</span>
-	</div>
-<?php
-	return ob_get_clean();
-}
 
 function tournament_list_item($tournament) {
 	$name = $tournament['name'];
@@ -109,7 +89,7 @@ function tournament_list_item($tournament) {
 	$leaderboard_link = get_permalink() . 'tournaments/' . $id . '/leaderboard';
 	ob_start();
 ?>
-	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-8 tw-p-30 tw-rounded-16">
+	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
 			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-4 tw-items-center">
@@ -130,7 +110,7 @@ function tournament_list_item($tournament) {
 				<?php echo delete_bracket_btn($delete_link, $id); ?>
 			</div>
 		</div>
-		<div class="tw-mt-8">
+		<div class="tw-mt-10">
 			<?php echo $completed ? completed_tournament_buttons($tournament) : active_tournament_buttons($tournament); ?>
 		</div>
 	</div>

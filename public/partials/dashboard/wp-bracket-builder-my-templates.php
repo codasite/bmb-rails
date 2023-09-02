@@ -1,6 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
-require_once('wp-bracket-builder-common.php');
+require_once 'wp-bracket-builder-dashboard-common.php';
 
 $template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 
