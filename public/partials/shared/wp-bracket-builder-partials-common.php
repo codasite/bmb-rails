@@ -6,11 +6,12 @@
 function view_play_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="tw-flex tw-items-center tw-text-white tw-px-16 tw-py-12 tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-flex tw-items-center tw-text-white tw-px-16 tw-py-12 tw-rounded-8 tw-border tw-border-solid tw-border-transparent tw-bg-dd-blue/80 tw-bg-clip-padding tw-h-full" href="<?php echo esc_url($endpoint) ?>">
 		<span class="tw-font-700">View Play</span>
 	</a>
 <?php
-	return ob_get_clean();
+	// return ob_get_clean();
+	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'tw-rounded-8'));
 }
 
 /**

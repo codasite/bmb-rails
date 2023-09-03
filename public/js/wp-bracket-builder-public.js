@@ -47,6 +47,8 @@ tailwind.config = {
 		},
 		spacing: {
 			'0': '0px',
+			'1': '1px',
+			'2': '2px',
 			'4': '4px',
 			'8': '8px',
 			'10': '10px',
@@ -70,6 +72,7 @@ tailwind.config = {
 			'dark-blue': '#0D1454',
 			'dd-blue': '#010433',
 			'yellow': '#F8E11A',
+			'red': '#FF456D',
 		},
 		borderRadius: {
 			'4': '4px',
