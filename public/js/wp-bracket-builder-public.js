@@ -31,6 +31,7 @@
 
 // })(jQuery);
 
+// const plugin = require('tailwindcss/plugin')
 // The Tailwind configuration
 // Most of the values are overrides to narrow the styling options
 // Add new values here
@@ -97,5 +98,33 @@ tailwind.config = {
 		fontFamily: {
 			'sans': ['Clash Display', 'sans-serif'],
 		}
-	}
+	},
+	plugins: [
+		function ({ addUtilities, addComponents, e, prefix, config }) {
+			const individualBorderStyles = {
+				'.border-t-none': {
+					'border-top-style': 'none',
+				},
+				'.border-r-none': {
+					'border-right-style': 'none',
+				},
+				'.border-b-none': {
+					'border-bottom-style': 'none',
+				},
+				'.border-l-none': {
+					'border-left-style': 'none',
+				},
+				'.border-x-none': {
+					'border-left-style': 'none',
+					'border-right-style': 'none',
+				},
+				'.border-y-none': {
+					'border-top-style': 'none',
+					'border-bottom-style': 'none',
+				},
+			}
+			addUtilities(individualBorderStyles)
+		}
+
+	]
 }
