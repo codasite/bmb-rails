@@ -110,6 +110,7 @@ export const TeamSlot = (props: TeamSlotProps) => {
 			{editing && !isReadOnly(round, match,left) ?
 				<input
 					className='wpbb-team-name-input'
+					style={{background: 'none', border: 'none', color:'#FFFFFF'}}
 					autoFocus
 					onFocus={(e) => e.target.select()}
 					type='text'

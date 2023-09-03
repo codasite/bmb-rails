@@ -173,7 +173,7 @@ export const UserTemplatePreview = (props: BracketProps) => {
                         matches={colMatches}
                         round={round} direction={Direction.TopLeft}
                         numDirections={numDirections}
-                        matchHeight={bracketConstants.previewBracketHeight1}
+                        matchHeight={bracketConstants.previewBracketHeight}
                         matchWidth={bracketConstants.previewBracketWidth}
                     />
                 </BracketContext.Provider>
@@ -185,7 +185,7 @@ export const UserTemplatePreview = (props: BracketProps) => {
                     round={rounds[0]}
                     direction={Direction.Center}
                     numDirections={numDirections}
-                    matchHeight={bracketConstants.previewBracketHeight1}
+                    matchHeight={bracketConstants.previewBracketHeight}
                     matchWidth={bracketConstants.previewBracketWidth}
                 /></BracketContext.Provider>,
             ...rounds.slice(1).map((round, idx, arr) => {
@@ -196,7 +196,7 @@ export const UserTemplatePreview = (props: BracketProps) => {
                     matches={colMatches}
                     direction={Direction.TopRight}
                     numDirections={numDirections}
-                    matchHeight={bracketConstants.previewBracketHeight1}
+                    matchHeight={bracketConstants.previewBracketHeight}
                     matchWidth={bracketConstants.previewBracketWidth}
                 /></BracketContext.Provider>
             })
