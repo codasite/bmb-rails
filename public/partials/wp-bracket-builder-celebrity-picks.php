@@ -99,12 +99,13 @@ function wpbb_celebrity_play_list_item($play) {
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col">
-		<div class="tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-h-[324px] tw-w-[575px]">
+		<!-- <div class="tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-h-[324px] tw-w-[575px]"> -->
+		<div class="tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-h-[324px]">
 			<div class="tw-flex tw-flex-col tw-justify-end tw-flex-grow tw-px-30 tw-rounded-t-16 tw-bg-gradient-to-t tw-from-[#03073C] tw-to-[72%] tw-border-solid tw-border-white/20 tw-border-2 tw-border-y-none tw-h-full">
 				<h3 class="tw-text-30 tw-text-black"><?php echo esc_html($title) ?></h3>
 			</div>
 		</div>
-		<div class="tw-flex tw-pt-20 tw-gap-10 tw-px-30 tw-pb-30 tw-bg-dd-blue tw-bg-gradient-to-r tw-from-[#03073C]/50 tw-to-50% tw-rounded-b-16 tw-border-solid tw-border-white/20 tw-border-2 tw-border-t-none">
+		<div class="tw-flex tw-flex-col sm:tw-flex-row md:tw-flex-col lg:tw-flex-row tw-pt-20 tw-gap-10 tw-px-30 tw-pb-30 tw-bg-dd-blue tw-bg-gradient-to-r tw-from-[#03073C]/50 tw-to-50% tw-rounded-b-16 tw-border-solid tw-border-white/20 tw-border-2 tw-border-t-none">
 			<?php echo view_play_btn($play_link); ?>
 			<?php echo wpbb_bust_bracket_btn($bust_link); ?>
 		</div>
@@ -116,14 +117,14 @@ function wpbb_celebrity_play_list_item($play) {
 ?>
 <div class="wpbb-reset tw-bg-dd-blue">
 	<div class="tw-flex tw-flex-col">
-		<div class="tw-flex tw-flex-col md:tw-flex-row-reverse tw-py-60 tw-gap-15 tw-items-center md:tw-justify-between tw-max-w-screen-lg tw-m-auto">
+		<div class="tw-flex tw-flex-col md:tw-flex-row-reverse tw-py-60 tw-gap-15 tw-items-center md:tw-justify-between tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
 			<?php echo file_get_contents(plugins_url('../assets/icons/logo_dark.svg', __FILE__)); ?>
 			<h1 class="tw-text-64 sm:tw-text-80 tw-font-700 tw-text-center md:tw-text-left">Celebrity Picks</h1>
 		</div>
-		<div class="tw-py-60 tw-bg-dark-blue">
-			<div class="tw-flex tw-flex-col tw-gap-30 tw-bg-dark-blue ">
-				<h2 class="tw-text-48 tw-font-700">Plays</h2>
-				<div class="tw-flex tw-gap-10 tw-overflow-scroll tw-no-scrollbar">
+		<div class="tw-py-60 tw-bg-dark-blue tw-px-20 lg:tw-px-0">
+			<div class="tw-flex tw-flex-col tw-gap-30 tw-bg-dark-blue tw-max-w-screen-lg tw-m-auto ">
+				<h2 class="tw-text-48 tw-font-700 ">Plays</h2>
+				<div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10">
 					<?php foreach ($plays as $play) : ?>
 						<?php echo wpbb_celebrity_play_list_item($play); ?>
 					<?php endforeach; ?>
@@ -131,7 +132,7 @@ function wpbb_celebrity_play_list_item($play) {
 			</div>
 
 		</div>
-		<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60 tw-max-w-screen-lg tw-m-auto">
+		<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
 			<h2 class="tw-text-48 tw-font-700">Tournaments</h2>
 			<div class="tw-flex tw-flex-col tw-gap-15">
 				<?php echo wpbb_tournament_sort_buttons(); ?>
