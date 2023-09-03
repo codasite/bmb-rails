@@ -6,7 +6,7 @@
 function view_play_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="tw-flex tw-items-center tw-text-white tw-px-16 tw-py-12 tw-rounded-8 tw-border tw-border-solid tw-border-transparent tw-bg-dd-blue/80 tw-bg-clip-padding tw-h-full" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-flex tw-items-center tw-justify-center tw-text-white tw-px-16 tw-py-12 tw-rounded-8 tw-border tw-border-solid tw-border-transparent tw-bg-dd-blue/80 tw-bg-clip-padding tw-h-full" href="<?php echo esc_url($endpoint) ?>">
 		<span class="tw-font-700">View Play</span>
 	</a>
 <?php
