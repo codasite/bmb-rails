@@ -42,8 +42,6 @@ export const bracketConstants = {
 	color1: '#FFFFFF1A',
 	color2: '#FFFFFF4D',
 	color3: '#FFFFFF26',
-	previewBracketHeight1 : 50,
-	previewBracketHeight2 : 40,
-	previewBracketHeight3 : 30,
+	previewBracketHeight : 50,
 	previewBracketWidth : 54
 }

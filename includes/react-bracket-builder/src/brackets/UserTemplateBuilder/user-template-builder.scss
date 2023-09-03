@@ -184,7 +184,7 @@
 
 .paired-bracket{
     height: 100%;
-    min-height: 400px;
+    min-height: 500px;
 }
 
 .randomize-teams-text {
@@ -454,6 +454,7 @@ $team-offset: -8px;
 .wpbb-bracket {
 	display: flex;
 	margin: 0 auto;
+    margin-top: 15%;
 }
 
 .wpbb-round__header{
@@ -594,7 +595,11 @@ $team-offset: -8px;
 
 .wpbb-default{
     display: flex;
-    align-content: center;
+    flex-direction: column;
+    height: 500px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow-y: scroll;
 }
 
 
