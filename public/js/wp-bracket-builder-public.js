@@ -63,6 +63,7 @@ tailwind.config = {
 			'40': '40px',
 			'60': '60px',
 			'80': '80px',
+			'section': '1160px',
 		},
 		colors: {
 			'transparent': 'transparent',
@@ -124,7 +125,18 @@ tailwind.config = {
 				},
 			}
 			addUtilities(individualBorderStyles)
+		},
+		function ({ addUtilities }) {
+			const hideScrollbar = {
+				'.no-scrollbar::-webkit-scrollbar': {
+					display: 'none',
+				},
+				'.no-scrollbar': {
+					'-ms-overflow-style': 'none',
+					'scrollbar-width': 'none',
+				}
+			}
+			addUtilities(hideScrollbar)
 		}
-
 	]
 }
