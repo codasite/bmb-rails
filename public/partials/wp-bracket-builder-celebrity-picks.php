@@ -65,6 +65,17 @@ function wpbb_tournament_sort_buttons() {
 	return ob_get_clean();
 }
 
+function wpbb_bust_bracket_btn($endpoint) {
+	ob_start();
+?>
+	<a class="tw-flex tw-items-center tw-text-white tw-px-16 tw-py-11 tw-rounded-8 tw-border tw-border-solid tw-justify-center tw-gap-10 tw-bg-red/20 tw-border-red" href="<?php echo esc_url($endpoint) ?>">
+		<?php echo file_get_contents(plugins_url('../assets/icons/lightning.svg', __FILE__)); ?>
+		<span class="tw-font-700">Bust Bracket</span>
+	</a>
+<?php
+	return ob_get_clean();
+}
+
 function wpbb_celebrity_play_list_item($play) {
 	$title = $play['play_title'];
 	$id = $play['play_id'];
@@ -81,6 +92,7 @@ function wpbb_celebrity_play_list_item($play) {
 		</div>
 		<div class="tw-flex tw-gap-10 tw-mt-20 tw-px-30">
 			<?php echo view_play_btn($play_link); ?>
+			<?php echo wpbb_bust_bracket_btn($bust_link); ?>
 		</div>
 	</div>
 <?php
