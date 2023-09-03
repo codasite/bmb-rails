@@ -88,7 +88,7 @@ function wpbb_celebrity_play_list_item($play) {
 ?>
 	<!-- <div class="tw-flex tw-flex-col tw-rounded-16 tw-border-2 tw-border-white/20 tw-border-solid tw-bg-dd-blue tw-pb-30 tw-overflow-hidden"> -->
 	<div class="tw-flex tw-flex-col tw-bg-dd-blue tw-overflow-hidden ">
-		<div class="tw-flex tw-flex-col tw-bg-white tw-justify-end tw-flex-grow tw-px-30 tw-rounded-t-16 tw-h-[324px] tw-bg-gradient-to-t tw-from-[#03073C] tw-to-[72%] tw-border-solid tw-border-white/20 tw-border-2 tw-border-y-none">
+		<div class="tw-flex tw-flex-col tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-white tw-justify-end tw-flex-grow tw-px-30 tw-rounded-t-16 tw-h-[324px] tw-bg-gradient-to-t tw-from-[#03073C] tw-to-[72%] tw-border-solid tw-border-white/20 tw-border-2 tw-border-y-none">
 			<h3 class="tw-text-30 tw-text-black"><?php echo esc_html($title) ?></h3>
 		</div>
 		<div class="tw-flex tw-pt-20 tw-gap-10 tw-px-30 tw-pb-30 tw-bg-gradient-to-r tw-from-[#03073C]/50 tw-to-50% tw-rounded-b-16 tw-border-solid tw-border-white/20 tw-border-2 tw-border-t-none">
