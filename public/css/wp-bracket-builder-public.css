@@ -233,8 +233,6 @@ body {
 
 /** DASHBOARD END */
 
-.wpbb-celeb-grid {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-	gap: 10px;
+.wpbb-celeb-plays {
+	background: linear-gradient(236deg, rgba(5, 9, 73, 0.40) 0%, #010433 100%), url('../assets/images/bracket_bg.png'), lightgray 50% / cover no-repeat;
 }
