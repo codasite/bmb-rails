@@ -15,6 +15,18 @@ $plays = array(
 		"tournament_id" => 2,
 		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Aaron.png",
 	),
+	array(
+		"play_title" => "Aaron Rodgers' NCAA NIT Bracket",
+		"play_id" => 2,
+		"tournament_id" => 2,
+		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Aaron.png",
+	),
+	array(
+		"play_title" => "Aaron Rodgers' NCAA NIT Bracket",
+		"play_id" => 2,
+		"tournament_id" => 2,
+		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Aaron.png",
+	),
 	// array(
 	// 	"play_title" => "NCAA Womens World Series 2024",
 	// 	"play_id" => 3,
@@ -86,12 +98,13 @@ function wpbb_celebrity_play_list_item($play) {
 	$bust_link = get_permalink() . 'tournaments/' . $tournament_id . '/bust/' . $id;
 	ob_start();
 ?>
-	<!-- <div class="tw-flex tw-flex-col tw-rounded-16 tw-border-2 tw-border-white/20 tw-border-solid tw-bg-dd-blue tw-pb-30 tw-overflow-hidden"> -->
-	<div class="tw-flex tw-flex-col tw-bg-dd-blue tw-overflow-hidden ">
-		<div class="tw-flex tw-flex-col tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-white tw-justify-end tw-flex-grow tw-px-30 tw-rounded-t-16 tw-h-[324px] tw-bg-gradient-to-t tw-from-[#03073C] tw-to-[72%] tw-border-solid tw-border-white/20 tw-border-2 tw-border-y-none">
-			<h3 class="tw-text-30 tw-text-black"><?php echo esc_html($title) ?></h3>
+	<div class="tw-flex tw-flex-col">
+		<div class="tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-h-[324px] tw-w-[575px]">
+			<div class="tw-flex tw-flex-col tw-justify-end tw-flex-grow tw-px-30 tw-rounded-t-16 tw-bg-gradient-to-t tw-from-[#03073C] tw-to-[72%] tw-border-solid tw-border-white/20 tw-border-2 tw-border-y-none tw-h-full">
+				<h3 class="tw-text-30 tw-text-black"><?php echo esc_html($title) ?></h3>
+			</div>
 		</div>
-		<div class="tw-flex tw-pt-20 tw-gap-10 tw-px-30 tw-pb-30 tw-bg-gradient-to-r tw-from-[#03073C]/50 tw-to-50% tw-rounded-b-16 tw-border-solid tw-border-white/20 tw-border-2 tw-border-t-none">
+		<div class="tw-flex tw-pt-20 tw-gap-10 tw-px-30 tw-pb-30 tw-bg-dd-blue tw-bg-gradient-to-r tw-from-[#03073C]/50 tw-to-50% tw-rounded-b-16 tw-border-solid tw-border-white/20 tw-border-2 tw-border-t-none">
 			<?php echo view_play_btn($play_link); ?>
 			<?php echo wpbb_bust_bracket_btn($bust_link); ?>
 		</div>
@@ -101,27 +114,31 @@ function wpbb_celebrity_play_list_item($play) {
 }
 
 ?>
-<div class="wpbb-reset wpbb-official-tourneys tw-flex tw-flex-col">
-	<div class="tw-flex tw-flex-col md:tw-flex-row-reverse tw-py-60 tw-gap-15 tw-items-center md:tw-justify-between">
-		<?php echo file_get_contents(plugins_url('../assets/icons/logo_dark.svg', __FILE__)); ?>
-		<h1 class="tw-text-64 sm:tw-text-80 tw-font-700 tw-text-center md:tw-text-left">Celebrity Picks</h1>
-	</div>
-	<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60">
-		<h2 class="tw-text-48 tw-font-700">Plays</h2>
-		<div class="tw-flex tw-gap-10">
-			<?php foreach ($plays as $play) : ?>
-				<?php echo wpbb_celebrity_play_list_item($play); ?>
-			<?php endforeach; ?>
+<div class="wpbb-reset tw-bg-dd-blue">
+	<div class="tw-flex tw-flex-col">
+		<div class="tw-flex tw-flex-col md:tw-flex-row-reverse tw-py-60 tw-gap-15 tw-items-center md:tw-justify-between tw-max-w-screen-lg tw-m-auto">
+			<?php echo file_get_contents(plugins_url('../assets/icons/logo_dark.svg', __FILE__)); ?>
+			<h1 class="tw-text-64 sm:tw-text-80 tw-font-700 tw-text-center md:tw-text-left">Celebrity Picks</h1>
 		</div>
+		<div class="tw-py-60 tw-bg-dark-blue">
+			<div class="tw-flex tw-flex-col tw-gap-30 tw-bg-dark-blue ">
+				<h2 class="tw-text-48 tw-font-700">Plays</h2>
+				<div class="tw-flex tw-gap-10 tw-overflow-scroll tw-no-scrollbar">
+					<?php foreach ($plays as $play) : ?>
+						<?php echo wpbb_celebrity_play_list_item($play); ?>
+					<?php endforeach; ?>
+				</div>
+			</div>
 
-	</div>
-	<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60">
-		<h2 class="tw-text-48 tw-font-700">Tournaments</h2>
-		<div class="tw-flex tw-flex-col tw-gap-15">
-			<?php echo wpbb_tournament_sort_buttons(); ?>
-			<?php foreach ($tournaments as $tournament) : ?>
-				<?php echo public_tournament_list_item($tournament); ?>
-			<?php endforeach; ?>
+		</div>
+		<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60 tw-max-w-screen-lg tw-m-auto">
+			<h2 class="tw-text-48 tw-font-700">Tournaments</h2>
+			<div class="tw-flex tw-flex-col tw-gap-15">
+				<?php echo wpbb_tournament_sort_buttons(); ?>
+				<?php foreach ($tournaments as $tournament) : ?>
+					<?php echo public_tournament_list_item($tournament); ?>
+				<?php endforeach; ?>
+			</div>
 		</div>
 	</div>
 </div>
