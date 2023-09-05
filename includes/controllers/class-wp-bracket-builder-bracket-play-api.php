@@ -1,8 +1,8 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-pick-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-pick.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-pick-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
 // require vendor/autoload.php' from the root directory
@@ -12,22 +12,22 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-util
 
 
 
-class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
+class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Pick_Repository_Interface
+	 * @var Wp_Bracket_Builder_Bracket_Play_Repository
 	 */
-	private $pick_repo;
+	private $play_repo;
 
 	/**
 	 * @var Wp_Bracket_Builder_Utils
 	 */
 	private $utils;
 
-	/**
-	 * @var Wp_Bracket_Builder_Bracket_Pick_Service
-	 */
-	private $bracket_pick_service;
+	// /**
+	//  * @var Wp_Bracket_Builder_Bracket_Pick_Service
+	//  */
+	// private $bracket_pick_service;
 
 	/**
 	 * @var string
@@ -42,15 +42,15 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 */
-	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $pick_repo = null) {
+	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $play_repo = null) {
 	public function __construct() {
-		// echo $pick_repo;
-		// $this->pick_repo = $pick_repo != null ? $pick_repo : new Wp_Bracket_Builder_Bracket_Repository();
+		// echo $play_repo;
+		// $this->play_repo = $play_repo != null ? $play_repo : new Wp_Bracket_Builder_Bracket_Repository();
 		$this->utils = new Wp_Bracket_Builder_Utils();
-		$this->pick_repo = new Wp_Bracket_Builder_Bracket_Pick_Repository();
-		$this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
+		$this->play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+		// $this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
-		$this->rest_base = 'bracket-picks';
+		$this->rest_base = 'plays';
 	}
 
 	/**
@@ -139,9 +139,9 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items($request) {
-		$bracket_id = $request->get_param('bracket_id');
+		// $bracket_id = $request->get_param('bracket_id');
 
-		$brackets = $this->pick_repo->get_all($bracket_id);
+		$brackets = $this->play_repo->get_all();
 		return new WP_REST_Response($brackets, 200);
 	}
 
@@ -154,7 +154,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	public function get_item($request) {
 		// get id from request
 		$id = $request->get_param('item_id');
-		$bracket = $this->pick_repo->get($id);
+		$bracket = $this->play_repo->get($id);
 		return new WP_REST_Response($bracket, 200);
 	}
 
@@ -165,10 +165,10 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item($request) {
-		$pick = Wp_Bracket_Builder_Bracket_Pick::from_array($request->get_params());
-		$saved_pick = $this->pick_repo->add($pick);
+		$play = Wp_Bracket_Builder_Bracket_Play::from_array($request->get_params());
+		$saved = $this->play_repo->add($play);
 
-		return new WP_REST_Response($saved_pick, 201);
+		return new WP_REST_Response($saved, 201);
 	}
 
 	/**
@@ -208,7 +208,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	// 	unset($bracket_params['item_id']);
 
 	// 	$bracket = Wp_Bracket_Builder_Bracket_Pick::from_array($bracket_params);
-	// 	$updated = $this->pick_repo->update($bracket);
+	// 	$updated = $this->play_repo->update($bracket);
 	// 	return new WP_REST_Response($updated, 200);
 	// }
 
@@ -221,7 +221,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Api extends WP_REST_Controller {
 	// public function delete_item($request) {
 	// 	// get id from request
 	// 	$id = $request->get_param('item_id');
-	// 	$deleted = $this->pick_repo->delete($id);
+	// 	$deleted = $this->play_repo->delete($id);
 	// 	if ($deleted) {
 	// 		return new WP_REST_Response(null, 204);
 	// 	}
