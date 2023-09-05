@@ -1,16 +1,16 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
+// require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 
-class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
+class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Repo
+	 * @var Wp_Bracket_Builder_Bracket_Template_Repo
 	 */
-	private $bracket_repo;
+	private $template_repo;
 
-		/**
+	/**
 	 * @var Wp_Bracket_Builder_Bracket_Api_Validation
 	 */
 	private $bracket_validate;
@@ -32,10 +32,10 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	public function __construct() {
 		// echo $bracket_repo;
 		// $this->bracket_repo = $bracket_repo != null ? $bracket_repo : new Wp_Bracket_Builder_Bracket_Repository();
-		$this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
+		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 		$this->namespace = 'wp-bracket-builder/v1';
-		$this->rest_base = 'brackets';
-		$this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
+		$this->rest_base = 'templates';
+		// $this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
 	}
 
 	/**
@@ -105,38 +105,17 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 				),
 			),
 		));
-
-		register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/deactivate', array(
-			'methods' => 'POST',
-			'callback' => array($this, 'deactivate_bracket'),
-			'permission_callback' => array($this, 'admin_permission_check'),
-			'args' => array(
-				'id' => array(
-					'description' => __('Unique identifier for the object.'),
-					'type'        => 'integer',
-				),
-			),
-		));
-
-		register_rest_route($namespace, '/' . $base .'/get-user-brackets', array(
-			array(
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array($this, 'get_user_items'),
-				'permission_callback' => array($this, 'customer_permission_check'),
-				'args'                => array(),
-			),
-		));
 	}
 
 	/**
-	 * Retrieves a collection of brackets.
+	 * Retrieves a collection of templates.
 	 *
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items($request) {
-		$brackets = $this->bracket_repo->get_all();
-		return new WP_REST_Response($brackets, 200);
+		$templates = $this->template_repo->get_all();
+		return new WP_REST_Response($templates, 200);
 	}
 
 	/**
@@ -148,8 +127,8 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	public function get_item($request) {
 		// get id from request
 		$id = $request->get_param('item_id');
-		$bracket = $this->bracket_repo->get($id);
-		return new WP_REST_Response($bracket, 200);
+		$template = $this->template_repo->get($id);
+		return new WP_REST_Response($template, 200);
 	}
 
 	/**
@@ -159,16 +138,20 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item($request) {
-		$bracket = Wp_Bracket_Builder_Bracket::from_array($request->get_params());
+		$template = Wp_Bracket_Builder_Bracket_Template::from_array($request->get_params());
 
 		//checking validation for requested data
-		$validated = $this->bracket_validate->validate_bracket_api($bracket);
-		if(! isset($validated)){
-			$saved = $this->bracket_repo->add($bracket);
-			return new WP_REST_Response($saved, 201);
-		}
-		return $validated;
+		// $validated = $this->bracket_validate->validate_bracket_api($template);
+		// if (!isset($validated)) {
+
+		$saved = $this->template_repo->add($template);
+		return new WP_REST_Response($saved, 201);
+		// return new WP_REST_Response($template, 201);
+
+		// }
+		// return $validated;
 		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
+
 	}
 
 	/**
@@ -180,18 +163,19 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	public function update_item($request) {
 		// if id does not match item_id, return error
 		// if ($request->get_param('id') != $request->get_param('item_id')) {
-		// 	return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
+		return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
 		// }
-		// get the update id 
-		$update_id = $request->get_param('item_id');
-		// create an array copy of the request params
-		$bracket_params = $request->get_params();
-		// remove the item_id from the array
-		unset($bracket_params['item_id']);
 
-		$bracket = Wp_Bracket_Builder_Bracket::from_array($bracket_params);
-		$updated = $this->bracket_repo->update($bracket);
-		return new WP_REST_Response($updated, 200);
+		// // get the update id 
+		// $update_id = $request->get_param('item_id');
+		// // create an array copy of the request params
+		// $bracket_params = $request->get_params();
+		// // remove the item_id from the array
+		// unset($bracket_params['item_id']);
+
+		// $bracket = Wp_Bracket_Builder_Bracket::from_array($bracket_params);
+		// $updated = $this->template_repo->update($bracket);
+		// return new WP_REST_Response($updated, 200);
 	}
 
 	/**
@@ -203,7 +187,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	public function delete_item($request) {
 		// get id from request
 		$id = $request->get_param('item_id');
-		$deleted = $this->bracket_repo->delete($id);
+		$deleted = $this->template_repo->delete($id);
 		return new WP_REST_Response($deleted, 200);
 	}
 
@@ -213,43 +197,10 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response
 	 */
-   	public function get_user_items($request) {
-	   $brackets = $this->bracket_repo->get_user_brackets();
-	   return new WP_REST_Response($brackets, 200);
-   	}
-
-	/**
-	 * Activates a single bracket.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function activate_bracket($request) {
-		// get id from request
-		$id = $request->get_param('id');
-		$activated = $this->bracket_repo->set_active($id, true);
-		if ($activated) {
-			return new WP_REST_Response(true, 200);
-		}
-		return new WP_Error('cant-activate', __('message', 'text-domain'), array('status' => 500));
+	public function get_user_items($request) {
+		$brackets = $this->template_repo->get_user_brackets();
+		return new WP_REST_Response($brackets, 200);
 	}
-
-	/**
-	 * Deactivates a single bracket.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function deactivate_bracket($request) {
-		// get id from request
-		$id = $request->get_param('id');
-		$deactivated = $this->bracket_repo->set_active($id, false);
-		if ($deactivated) {
-			return new WP_REST_Response(false, 200);
-		}
-		return new WP_Error('cant-deactivate', __('message', 'text-domain'), array('status' => 500));
-	}
-
 
 	/**
 	 * Check if a given request has admin access to this plugin
@@ -258,8 +209,8 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function admin_permission_check($request) {
-		// return true;
-		return current_user_can('edit_others_posts');
+		return true;
+		// return current_user_can('edit_others_posts');
 	}
 
 	/**
@@ -269,7 +220,7 @@ class Wp_Bracket_Builder_Bracket_Api extends WP_REST_Controller {
 	 * @return WP_Error|bool
 	 */
 	public function customer_permission_check($request) {
-		// return true;
-		return current_user_can('read');
+		return true;
+		// return current_user_can('read');
 	}
 }

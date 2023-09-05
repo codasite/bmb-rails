@@ -31,6 +31,7 @@
 
 // })(jQuery);
 
+// const plugin = require('tailwindcss/plugin')
 // The Tailwind configuration
 // Most of the values are overrides to narrow the styling options
 // Add new values here
@@ -47,9 +48,12 @@ tailwind.config = {
 		},
 		spacing: {
 			'0': '0px',
+			'1': '1px',
+			'2': '2px',
 			'4': '4px',
 			'8': '8px',
 			'10': '10px',
+			'11': '11px',
 			'12': '12px',
 			'15': '15px',
 			'16': '16px',
@@ -58,6 +62,8 @@ tailwind.config = {
 			'30': '30px',
 			'40': '40px',
 			'60': '60px',
+			'80': '80px',
+			'section': '1160px',
 		},
 		colors: {
 			'transparent': 'transparent',
@@ -65,8 +71,10 @@ tailwind.config = {
 			'white': '#fff',
 			'green': '#05FF3C',
 			'blue': '#2137ff',
-			'dark-blue': '#40FF6A',
+			'dark-blue': '#0D1454',
+			'dd-blue': '#010433',
 			'yellow': '#F8E11A',
+			'red': '#FF456D',
 		},
 		borderRadius: {
 			'4': '4px',
@@ -80,6 +88,8 @@ tailwind.config = {
 			'24': '24px',
 			'30': '30px',
 			'48': '48px',
+			'64': '64px',
+			'80': '80px',
 		},
 		fontWeight: {
 			'500': '500',
@@ -89,5 +99,44 @@ tailwind.config = {
 		fontFamily: {
 			'sans': ['Clash Display', 'sans-serif'],
 		}
-	}
+	},
+	plugins: [
+		function ({ addUtilities, addComponents, e, prefix, config }) {
+			const individualBorderStyles = {
+				'.border-t-none': {
+					'border-top-style': 'none',
+				},
+				'.border-r-none': {
+					'border-right-style': 'none',
+				},
+				'.border-b-none': {
+					'border-bottom-style': 'none',
+				},
+				'.border-l-none': {
+					'border-left-style': 'none',
+				},
+				'.border-x-none': {
+					'border-left-style': 'none',
+					'border-right-style': 'none',
+				},
+				'.border-y-none': {
+					'border-top-style': 'none',
+					'border-bottom-style': 'none',
+				},
+			}
+			addUtilities(individualBorderStyles)
+		},
+		function ({ addUtilities }) {
+			const hideScrollbar = {
+				'.no-scrollbar::-webkit-scrollbar': {
+					display: 'none',
+				},
+				'.no-scrollbar': {
+					'-ms-overflow-style': 'none',
+					'scrollbar-width': 'none',
+				}
+			}
+			addUtilities(hideScrollbar)
+		}
+	]
 }

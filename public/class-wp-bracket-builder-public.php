@@ -1,6 +1,6 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-aws-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-pdf-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-config.php';
@@ -108,8 +108,8 @@ class Wp_Bracket_Builder_Public {
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
 
 		$post = get_post();
-		$bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
-		$bracket = $bracket_repo->get(post: $post);
+		$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$bracket = $template_repo->get(post: $post);
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
 
 		// For product page
@@ -240,6 +240,20 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_official_tournamnets() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-official-tournaments.php';
+
+		return ob_get_clean();
+	}
+
+	public function render_celebrity_picks() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-celebrity-picks.php';
+
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -252,6 +266,8 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
 		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
+		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']);
+		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']);
 	}
 
 	public function add_rewrite_rules() {
@@ -263,6 +279,7 @@ class Wp_Bracket_Builder_Public {
 
 	public function add_query_vars($vars) {
 		$vars[] = 'tab';
+		$vars[] = 'status';
 		return $vars;
 	}
 
