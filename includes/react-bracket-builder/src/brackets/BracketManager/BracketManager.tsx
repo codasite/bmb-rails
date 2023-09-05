@@ -1,8 +1,8 @@
 import React from 'react'
 import './BracketManager.scss'
-import BracketsDisplay from './BracketsDisplay'
-import bracketIcon from '../shared/assets/BMB-ICON-WHITE.png'
-import plusIcon from '../shared/assets/plus.png'
+import BracketsListItem from './BracketListItem'
+import bracketIcon from '../shared/assets/BMB-ICON-WHITE.svg'
+import plusIcon from '../shared/assets/plus.svg'
 
 const BracketManager = () => {
 
@@ -24,7 +24,7 @@ const BracketManager = () => {
                 </div>
             </div>
             <div className='brackets-list'>
-                <BracketsDisplay />
+                <BracketsListItem />
             </div>
         </div>
     )

@@ -79,7 +79,7 @@ export interface SubmissionReq {
 	bracketId: number;
 	name: string;
 	html: string;
-	rounds: SubmissionRoundReq[];
+	rounds?: SubmissionRoundReq[];
 }
 
 export interface SubmissionRoundReq {
