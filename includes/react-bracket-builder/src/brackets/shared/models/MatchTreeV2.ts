@@ -194,11 +194,11 @@ class WildcardRange {
 	}
 }
 
-export class MatchTree {
+export class MatchTreeV2 {
 	root: MatchNode | null
 	rounds: Round[]
-	static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTree {
-		const tree = new MatchTree()
+	static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTreeV2 {
+		const tree = new MatchTreeV2()
 		tree.rounds = this.buildRounds(numRounds, numWildcards, wildcardPlacement)
 		return tree
 	}
@@ -241,7 +241,7 @@ export class MatchTree {
 				// const parent = rounds[i - 1].matches[parentIndex]
 				const parent = this.getParent(x, i, rounds)
 				const match = new MatchNode(null, i, parent)
-				MatchTree.assignMatchToParent(x, match, parent)
+				MatchTreeV2.assignMatchToParent(x, match, parent)
 				matches[x] = match
 			}
 			round.matches = matches
@@ -265,7 +265,7 @@ export class MatchTree {
 		}
 	}
 
-	clone(): MatchTree {
+	clone(): MatchTreeV2 {
 		// State is now maintained by Redux and stored as a serializable object so we can just return this
 		return this
 		// const tree = this
@@ -291,8 +291,8 @@ export class MatchTree {
 		// return newTree;
 	}
 
-	static fromRounds(rounds: RoundRes[]): MatchTree {
-		const tree = new MatchTree()
+	static fromRounds(rounds: RoundRes[]): MatchTreeV2 {
+		const tree = new MatchTreeV2()
 		tree.rounds = rounds.map((round) => {
 			const newRound = new Round(round.id, round.name, round.depth);
 			return newRound;
@@ -318,44 +318,21 @@ export class MatchTree {
 		return tree;
 	}
 
-	static fromMatches(numTeams: number, matches: MatchResV2[]): MatchTree | null {
-		const tree = new MatchTree()
+	static fromMatches(numTeams: number, matches: MatchResV2[]): MatchTreeV2 | null {
+		const tree = new MatchTreeV2()
 		const numRounds = getNumRounds(numTeams)
 		const nullMatches = getNullMatchRounds(numRounds)
+		let filledMatches: Nullable<MatchResV2>[][] | null = null
 
 		try {
-			fillInMatches(nullMatches, matches)
-		}
-		catch (e) {
+			filledMatches = fillInMatches(nullMatches, matches)
+		} catch (e) {
 			console.log(e)
+		}
+
+		if (!filledMatches) {
 			return null
 		}
-		const filledMatches: Nullable<MatchResV2>[][] = nullMatches
-
-		tree.rounds = filledMatches.map((round, roundIndex) => {
-			const newRound = new Round(roundIndex + 1, `Round ${numRounds - roundIndex}`, fillInMatches.length - roundIndex);
-			return newRound;
-		})
-		tree.rounds.forEach((round, roundIndex) => {
-			round.matches = filledMatches[roundIndex].map((match, matchIndex) => {
-				if (match === null) {
-					return null;
-				}
-				const newMatch = new MatchNode(match.id, round.depth);
-				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
-				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
-				// newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
-				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
-				if (parent) {
-					newMatch.parent = parent;
-					this.assignMatchToParent(matchIndex, newMatch, parent);
-				}
-				return newMatch;
-			})
-		})
-
-
-
 
 		return tree
 	}

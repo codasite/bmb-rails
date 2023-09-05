@@ -187,6 +187,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 
+<<<<<<< Updated upstream
 		$this->loader->add_action('init', $this, 'add_bracket_template_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_play_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_tournament_post_type');
@@ -198,6 +199,10 @@ class Wp_Bracket_Builder {
 		$this->loader->add_filter('manage_bracket_pick_posts_custom_column', $plugin_admin, 'show_bracket_pick_data', 10, 2);
 
 		$this->loader->add_action('save_post', $plugin_admin, 'save_bracket_pick_html_meta_box');
+=======
+		$this->loader->add_action('init', $this, 'bracket_cpt');
+		$this->loader->add_action('init', $this, 'bracket_pick_cpt');
+>>>>>>> Stashed changes
 
 		// custom meta for bracket product variations
 		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
@@ -334,6 +339,28 @@ class Wp_Bracket_Builder {
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
+			)
+		);
+	}
+
+	public function bracket_pick_cpt() {
+
+		register_post_type(
+			'bracket_pick',
+			array(
+				'labels' => array(
+					'name' => __('Bracket Picks'),
+					'singular_name' => __('Bracket Pick'),
+				),
+				'description' => 'Bracket picks for the WP Bracket Builder plugin',
+				'public' => true,
+				'has_archive' => true,
+				// 'supports' => array('title', 'editor', 'thumbnail'),
+				'show_ui' => true,
+				'show_in_rest' => true,
+				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
+				'taxonomies' => array('category'),
 			)
 		);
 	}
