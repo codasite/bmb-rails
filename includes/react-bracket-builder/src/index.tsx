@@ -11,7 +11,7 @@ interface WpbbAjaxObj {
 	page: string;
 	nonce: string;
 	rest_url: string;
-	bracket: BracketRes;
+	tournament: BracketRes;
 	bracket_url_theme_map: OverlayUrlThemeMap;
 	css_url: string;
 	bracket_product_archive_url: string;
@@ -19,6 +19,7 @@ interface WpbbAjaxObj {
 	color_options: any;
 	sentry_env: string;
 	sentry_dsn: string;
+	post: any;
 }
 
 declare var wpbb_ajax_obj: WpbbAjaxObj;
@@ -61,7 +62,7 @@ const BracketManager = React.lazy(() => import('./brackets/BracketManager/Bracke
 // Get the wpbb_ajax_obj from the global scope
 
 renderSettings(wpbb_ajax_obj)
-renderBracketBuilder(wpbb_ajax_obj)
+renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderPreview(wpbb_ajax_obj)
 renderOptionsTree()
 bracketManager()
@@ -89,15 +90,17 @@ function bracketManager() {
 	}
 }
 
-function renderBracketBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
-	const builderDiv = document.getElementById('wpbb-bracket-builder')
+function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
+	const builderDiv = document.getElementById('wpbb-play-tournament-builder')
 	const {
-		bracket,
+		tournament,
 		bracket_product_archive_url,
-		css_url
+		css_url,
 	} = wpbb_ajax_obj
-	if (builderDiv && bracket) {
-		render(<App><Provider store={bracketBuilderStore}><UserBracket bracketStylesheetUrl={css_url} bracketRes={bracket} apparelUrl={bracket_product_archive_url} canPick/> </Provider></App>, builderDiv)
+
+	if (builderDiv && tournament) {
+		console.log('rendering play tournament builder')
+		render(<App><Provider store={bracketBuilderStore}><UserBracket bracketStylesheetUrl={css_url} bracketRes={tournament} apparelUrl={bracket_product_archive_url} canPick /> </Provider></App>, builderDiv)
 	}
 }
 

@@ -109,4 +109,10 @@ export interface HTMLtoImageRes {
 	imageUrl: string;
 }
 
-
+export interface MatchResV2 {
+	id: number;
+	roundIndex: number;
+	matchIndex: number;
+	team1?: TeamRes;
+	team2?: TeamRes;
+}
