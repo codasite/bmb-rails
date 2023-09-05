@@ -1,4 +1,5 @@
 import { bracketConstants } from "./constants"
+import { BracketRes, TeamRes, MatchRes, RoundRes } from "./api/types/bracket"
 
 const {
 	teamHeight,
@@ -123,4 +124,8 @@ export const getTargetMatchHeight = (firstRoundMatchHeight, i) => {
 // 		})
 // 	}
 // 	return teamClassPairs
+// }
+
+// export const getBracketRes(obj: any): BracketRes {
+
 // }

@@ -12,6 +12,7 @@ import {
 	SubmissionRoundReq,
 	SubmissionTeamReq,
 	RoundRes,
+	MatchResV2,
 } from '../api/types/bracket';
 
 export enum WildcardPlacement {
@@ -317,6 +318,30 @@ export class MatchTree {
 		return tree;
 	}
 
+	static fromMatches(numTeams: number, matches: MatchResV2[]): MatchTree {
+		const tree = new MatchTree()
+		const numRounds = getNumRounds(numTeams)
+		const nullMatches = getNullMatchRounds(numRounds)
+		try {
+			const filledMatches = fillInMatches(nullMatches, matches)
+
+		}
+		console.log(numRounds)
+
+		let rounds = []
+		let roundIndex = 0
+		let matchIndex = 0
+
+		for (const match of matches) {
+			if (match.roundIndex > roundIndex) {
+
+			}
+
+		}
+
+		return tree
+	}
+
 	toRequest(name: string, active: boolean, numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): BracketReq {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {
@@ -404,5 +429,29 @@ export class MatchTree {
 			parent.right = match
 		}
 	}
+}
 
+export const getNumRounds = (numTeams: number): number => {
+	return Math.ceil(Math.log2(numTeams))
+}
+
+export const getNullMatchRounds = (numRounds) => {
+	let rounds: any[] = []
+	for (let i = numRounds - 1; i >= 0; i--) {
+		rounds.push(new Array(Math.pow(2, i)).fill(null))
+	}
+	return rounds
+}
+
+export const fillInMatches = (nullMatches: any[][], matches: MatchResV2[]) => {
+	for (const match of matches) {
+		if (match.roundIndex >= nullMatches.length) {
+			throw new Error(`Invalid round index ${match.roundIndex} for match ${match.id}`)
+		}
+		if (match.matchIndex >= nullMatches[match.roundIndex].length) {
+			throw new Error(`Invalid match index ${match.matchIndex} for match ${match.id}`)
+		}
+		nullMatches[match.roundIndex][match.matchIndex] = match
+	}
+	return nullMatches
 }

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "wp-scripts build",
     "start": "wp-scripts start"
   },
@@ -12,7 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@wordpress/scripts": "^26.1.0"
+    "@jest/globals": "^29.6.4",
+    "@wordpress/scripts": "^26.1.0",
+    "ts-jest": "^29.1.1"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
