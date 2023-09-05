@@ -37,6 +37,7 @@ $team-offset: -8px;
 		@include team();
 		top: 50%;
 		transform: translate(-50%, -50%);
+		min-width: 56px;
 	}
 
 	.wpbb-team1:hover,

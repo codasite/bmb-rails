@@ -10,28 +10,55 @@
     font-family: 'Clash Display', sans-serif;
 }
 
+.bracket-container {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-top: 60px;
+    padding-bottom: 240px;
+}
+
 .team-picker {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .button-container {
     margin: 10px;
+    display: flex;
+    gap: 10px;
 }
 
 @media (max-width: 768px) {
-    .how-many-teams-text {
+    .bracket-container {
+        width: 100%;
+        padding: 0px 10px;
+    }
+
+    .bracket-text-info {
         font-size: 14px;
     }
 
-    .team-chooser-box ,.wild-card-display-text{
+    .team-picker-container {
+        width: 100vw;
+    }
+
+    .team-box-container {
+        width: 95vw !important;
+    }
+
+    .team-chooser-box,
+    .wild-card-display-text,
+    .btn-play-bracket,
+    .btn-save-bracket {
         width: 95vw !important;
     }
 
     .team-picker {
         display: grid !important;
-        align-self: stretch;
-        width: 95vw !important;
-        place-items: center;
     }
 
     .options-bracket-display-text {
@@ -41,31 +68,45 @@
     .options-bracket-tree {
         width: 90vw;
     }
+    .randomize-team-container{
+        display: flex;
+        justify-content: center !important;
+        align-items: center !important;
+    }
 
     .randomize-teams {
         width: 70vw !important;
     }
 
     .tree-group {
-        width: 70vw !important;
+        width: 96vw !important;
+    }
+
+    .tree-type {
+        width: 45vw !important;
     }
 
     .pos-btn {
         width: 22vw !important;
         font-size: 14px;
+        cursor: pointer;
     }
 
-    .step-up-button, .step-down-button {
-        width: 45vw !important;
+    .step-up-button,
+    .step-down-button {
+        width: 46vw !important;
     }
 
-    .wild-card-btn {
-        padding: 0px !important;
-        margin: 0px !important;
-
+    .wild-card-group {
+        gap: 10px !important;
     }
-    .wild-card-group{
-        width: 100vw !important;
+
+    .wpbb-bracket-title {
+        font-size: 14px !important;
+    }
+
+    .wpbb-bracket-title-name {
+        font-size: 28px !important;
     }
 }
 
@@ -74,18 +115,18 @@
     position: relative;
     padding: 16px;
     justify-content: center;
-    align-self: center; 
+    gap: 16px;
+    align-self: stretch;
     border-bottom: 1px solid rgba(255, 255, 255, 0.30);
-    width: 75%;
 }
 
 .wpbb-bracket-title input:focus {
     outline: none;
     border: none;
-    font-size: 32px; 
+    font-size: 32px;
     text-transform: uppercase;
     text-align: center;
-    width: inherit;
+    font-family: Clash Display Variable;
 }
 
 .wpbb-bracket-title-name {
@@ -96,7 +137,7 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
-    text-transform: uppercase; 
+    text-transform: uppercase;
 }
 
 .wpbb-bracket-title-input {
@@ -116,11 +157,6 @@
     padding-bottom: 2%;
 }
 
-
-.options-bracket-display {
-    padding-top: 3%;
-}
-
 .options-bracket-display-text {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
@@ -129,7 +165,7 @@
     font-weight: 500;
     line-height: normal;
     text-transform: uppercase;
-    padding-bottom: 5%;
+    // padding-bottom: 3%;
 }
 
 .randomize-teams {
@@ -140,9 +176,9 @@
     border-radius: 8px;
     border: 1px solid #2137FF;
     background: rgba(33, 55, 255, 0.15);
-    box-sizing: content-box !important;
-    width: 35vw;
-    padding: 11px;
+    min-width: 20vw;
+    padding: 10px;
+    cursor: pointer;
 }
 
 .randomize-teams-text {
@@ -150,40 +186,34 @@
     text-transform: uppercase;
 }
 
-/* .options-bracket-tree {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6%;
-    border-radius: 7px;
-    width: 80vw;
-} */
 
-.options-bracket-dual-tree,
-.options-bracket-single-tree {
+.tree-type {
+    width: 40vw;
+    height: 56px;
+    padding: 16px 0px 15px 0px;
+    border-radius: 8px;
+    border: 1px solid #FFFFFF;
     text-align: center;
-    border: 1px solid #FFF;
     text-transform: uppercase;
     color: #FFFFFF;
-    width: 200px;
-    box-sizing: content-box !important;
-    border-radius: 7px;
-    padding: 11px;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 25px;
     display: flex;
     justify-content: center;
-}
-
-.options-bracket-single-tree {
-    position: relative;
-    left: 10%;
+    cursor: pointer;
 }
 
 .tree-group {
     display: flex;
-    width: 30vw;
+    width: 55vw;
+    height: 56px;
+    gap: 16px;
+    margin-top: 2%;
+    justify-content: center;
 }
 
-.how-many-teams-text {
+.bracket-text-info {
     color: rgba(255, 255, 255, 0.50);
     text-align: center;
     font-size: 24px;
@@ -191,64 +221,55 @@
     font-weight: 500;
     line-height: normal;
     text-transform: uppercase;
-    padding-top: 2%;
-    padding-bottom: 2%;
 }
 
 
 .wild-card-display-text {
-    color: rgba(255, 255, 255, 0.50);
-    text-align: center;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-transform: uppercase;
-    padding-top: 2%;
-    padding-bottom: 2%;
-    width: 85vw;
+    padding-bottom: 12px;
 }
 
-.teams-number {
+.team-picker-container {
+    width: 100%;
     display: flex;
-    width: 700px;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    gap: 30px;
-    background: rgba(255, 255, 255, 0.05);
-    flex-shrink: 0;
-    padding-left: 10%;
-    padding-right: 10%;
+    gap: 24px;
+}
+
+.team-box-container {
+    width: calc(100%/3 - 24px);
 }
 
 .team-chooser-box {
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
     padding: 30px;
-    margin: 10px;
     color: #FFFFFF;
-    flex-basis: calc(80% / 3 - 30px);
+    flex-basis: calc(75% / 3 - 30px);
     flex: 1;
-    border-radius: 7px;
+    border-radius: 8px;
+    font-weight: 500;
+    font-size: 48px;
     text-align: center;
+    height: 136px;
+    padding-left: 15px;
+    cursor: pointer;
 }
 
 .wild-card-btn {
     color: #FFFFFF;
-    flex-basis: calc(80% / 3 - 30px);
-    flex: 1;
-    border-radius: 7px;
+    border-radius: 8px;
     text-align: center;
 }
 
 .highlight {
     background-color: #0b2e33;
-    border-color: #05ff3c;
+    border: 4px solid #05ff3c;
 }
 
 .btn-secondary {
     width: 12vw;
     background: none;
-    margin-right: 6px;
+    // margin-right: 6px;
 }
 
 .btn-secondary[disabled] {
@@ -256,25 +277,39 @@
 }
 
 .btn-save-bracket {
-    width: 80vw;
+    width: 100%;
     border-radius: 8px;
     border: 1px solid #2137FF;
     background: rgba(33, 55, 255, 0.15);
+    height: 57px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
 
 }
 
 .btn-save-bracket:hover,
 .btn-save-bracket:active {
-    border: 1px solid #2137FF !important;
-    background: rgba(33, 55, 255, 0.15) !important;
+    border: 1px solid #2137FF;
+    background: rgba(33, 55, 255, 0.15);
+
 }
 
 
 .btn-play-bracket {
-    width: 80vw;
+    // width: 80vw;
+    width: 100%;
     border-radius: 8px;
     border: 1px solid var(--green, #05FF3C);
     background: rgba(5, 255, 60, 0.15);
+    height: 57px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
 
 }
 
@@ -303,23 +338,28 @@ no-highlight-button:active {
 }
 
 .wild-btn {
-    width: 80vw !important;
+    width: 100%;
 }
 
 .pos-btn {
-    width: 17vw;
+    width: 16vw;
     color: #FFF;
     text-align: center;
-    border-radius: 7px;
-    padding: 10px;
+    border-radius: 8px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #FFFFFF;
+    height: 56px;
+    cursor: pointer;
 }
 
 .wild-card-group {
     display: flex;
+    justify-content: space-between;
+    gap: 24px;
 }
 
-.options-bracket-dual-tree:hover,
-.options-bracket-single-tree:hover {
+.tree-type:hover {
     background: rgba(255, 255, 255, 0.15);
 }
 
@@ -335,10 +375,258 @@ no-highlight-button:active {
     display: flex;
     position: relative;
     bottom: 15%;
-    left: 5%;
+
+    .highlight {
+        padding-top: 0% !important;
+    }
 }
 
-.step-up-button, .step-down-button{
+.step-up-button,
+.step-down-button {
     color: white;
-    border-radius: 8px;
+    border-radius: 4px;
+    border: 1px solid #FFFFFF;
+    height: 30px;
+    margin-top: 3%;
+    cursor: pointer;
+}
+
+.bracket-button {
+    width: 100%;
+    display: grid;
+    gap: 16px;
+}
+
+.selected-btn {
+    border: 1px solid #817727;
+    color: #f8e11a;
+}
+
+$match-box-border: 2px solid #3c434a;
+$bracket-radius: 4px;
+$team-height: 16px;
+$team-background: #3c434a;
+$team-color: white;
+$team-offset: -8px;
+
+
+.wpbb-bracket {
+	display: flex;
+	margin: 0 auto;
+	gap: 16px;
+}
+
+.wpbb-round__header{
+    display: none !important;
+}
+
+.wpbb-round{
+	width: 100px;
+}
+
+@mixin match-box() {
+	border-top: 0;
+	border-bottom: 0;
+	position: relative;
+}
+@mixin match-box() {
+	position: relative;
+}
+
+.wpbb-match-box-left {
+	@include match-box();
+	border-right: $match-box-border;
+	border-radius: 0 $bracket-radius $bracket-radius 0;
+}
+
+.wpbb-match-box-right {
+	@include match-box();
+	border-left: $match-box-border;
+	border-radius: $bracket-radius 0 0 $bracket-radius;
+}
+
+@media (max-width: 768px) {
+	.wpbb-bracket{
+		max-width: 100% !important;
+		overflow-x: auto;
+		gap: 0px;
+	}
+
+	.wpbb-default {
+		width: 100%;
+	}
+
+	.wpbb-round {
+		margin: 15%;
+	}
+}
+
+@mixin team() {
+	position: absolute;
+	height: 28px;
+	min-width: 103px;
+	left: 50%;
+	transform: translateX(-50%);
+	box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+	color: $team-color;
+	padding: 4px 8px;
+	border-radius: $bracket-radius;
+	background: rgba(255, 255, 255, 0.15);
+	z-index: 1;
+	text-align: center;
+}
+
+.wpbb-default {
+	.wpbb-team1 {
+		@include team();
+		top: $team-offset;
+	}
+
+	.wpbb-team2 {
+		@include team();
+		bottom: -12px;
+		gap: 24px;
+	}
+
+	.wpbb-champion-team {
+		@include team();
+		top: 50%;
+		transform: translate(-50%, -300%);
+		display: none;
+	}
+
+	.wpbb-team1:hover,
+	.wpbb-team2:hover {
+		cursor: pointer;
+	}
+
+	.wpbb-team-name-input {
+		width: 100%;
+		outline: none;
+		height: 20px;
+		text-align: center;
+		background: transparent;
+		color: rgba(255, 255, 255, 0.50);
+		font-family: Clash Display Variable;
+		text-transform: uppercase;
+		z-index: 1;
+		font-size: 14px;
+		font-weight: 500;
+	}
+
+	.wpbb-team-name-input:focus {
+		border-radius: $bracket-radius - 1;
+		font-family: Clash Display Variable;
+		border: none;
+	}
+
+	.wpbb-team-name {
+		white-space: nowrap;
+		margin-top: 1px;
+		color: rgba(255, 255, 255, 0.50);
+		font-size: 14px;
+		font-weight: 500;
+		text-transform: uppercase;
+		font-family: Clash Display Variable;
+	}
+
+}
+
+.wpbb-default .wpbb-match-box-left, .wpbb-default .wpbb-match-box-left-outer, .wpbb-default .wpbb-match-box-left-outer-lower, .wpbb-default .wpbb-match-box-left-outer-upper 
+{
+	border-bottom: 0; 
+	border-radius: 0; 
+	border-right:0;
+	border-top: 0; 
+	box-sizing: 0;
+	position: relative;
+}
+
+
+.wpbb-default .wpbb-match-box-right, .wpbb-default .wpbb-match-box-right-outer, .wpbb-default .wpbb-match-box-right-outer-lower, .wpbb-default .wpbb-match-box-right-outer-upper {
+	border-bottom: 0;
+	border-left: 0;
+	border-radius: 0;
+	border-top: 0;
+	box-sizing: 0;
+	position: relative;
+}
+
+
+.wpbb-default .wpbb-match-box-center {
+	border-bottom: 0;
+	border-top: 0; 
+	box-sizing: 0; 
+	position: relative;
+}
+
+@mixin match-box() {
+	border-top: $match-box-border;
+	border-bottom: $match-box-border;
+	position: relative;
+	box-sizing: border-box;
+}
+
+@mixin match-box-outer-after() {
+	content: '';
+	position: absolute;
+	display: block;
+	width: 50%;
+	border: none;
+}
+
+$bracket-radius: 3px;
+
+.wpbb-default {
+
+	.wpbb-match-box-left-outer::after {
+		@include match-box-outer-after();
+		bottom: -5px;
+		top: -5px;
+		left: 0
+	}
+
+	.wpbb-match-box-left-outer-upper::after {
+		@include match-box-outer-after();
+		top: -5px;
+		left: 0
+	}
+
+	.wpbb-match-box-left-outer-lower::after {
+		@include match-box-outer-after();
+		bottom: -5px;
+		left: 0
+	}
+
+	.wpbb-match-box-right-outer::after {
+		@include match-box-outer-after();
+		bottom: -5px;
+		top: -5px;
+		right: 0
+	}
+
+	.wpbb-match-box-right-outer-upper::after {
+		@include match-box-outer-after();
+		top: -5px;
+		right: 0
+	}
+
+	.wpbb-match-box-right-outer-lower::after {
+		@include match-box-outer-after();
+		bottom: -5px;
+		right: 0
+	}
+
+
+	.wpbb-match-box-center::before {
+		@include match-box-outer-after();
+		top: -5px;
+		right: 0;
+	}
+
+	.wpbb-match-box-center::after {
+		@include match-box-outer-after();
+		bottom: -5px;
+		left: 0;
+	}
 }

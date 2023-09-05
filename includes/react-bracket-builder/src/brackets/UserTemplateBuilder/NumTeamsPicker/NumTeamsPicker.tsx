@@ -71,17 +71,16 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
     const decrementDisabled = currentValue <= min && !selectPrevPicker
 
     return (
-        <div>
+        <div className='team-box-container'>
             <div
                 // key={num}
                 className={`team-chooser-box ${selected ? 'highlight' : ''}`}
                 onClick={handleBoxClick}
             >
                 {currentValue}
-                {selected && currentValue === defaultValue && <span className="corner-text">Default</span>}
+                {selected && currentValue === defaultValue && <span className='corner-text'>Default</span>}
 
             </div>
-            <Col>
                 <div style={{ visibility: selected ? 'visible' : 'hidden' }}>
                     <div>
                         <ButtonGroup aria-label="Basic example" className='button-container'>
@@ -90,7 +89,6 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
                         </ButtonGroup>
                     </div>
                 </div>
-            </Col>
         </div>
     )
 }
