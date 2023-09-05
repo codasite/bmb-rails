@@ -22,6 +22,7 @@ class BracketApi {
 	private bracketPath: string = 'brackets';
 	private submissionPath: string = 'bracket-picks';
 	private nonce: string = '';
+	private getUserBracketsPath = 'get-user-brackets';
 
 	constructor() {
 		// @ts-ignore
@@ -32,6 +33,9 @@ class BracketApi {
 
 	async getBrackets(): Promise<BracketRes[]> {
 		return await this.performRequest(this.bracketPath);
+	}
+	async getUserBrackets(): Promise<BracketRes[]> {
+		return await this.performRequest(`${this.bracketPath}/${this.getUserBracketsPath}`);
 	}
 
 	async getBracket(id: number): Promise<BracketRes> {
@@ -47,7 +51,7 @@ class BracketApi {
 		return await this.performRequest(`${this.submissionPath}/${id}`);
 	}
 
-	async createSubmission(submission: SubmissionReq): Promise<SubmissionRes> {
+	async submitBracket(submission: SubmissionReq): Promise<SubmissionRes> {
 		const options: RequestOptions = { method: 'POST', body: submission };
 		const res = await this.performRequest(this.submissionPath, options);
 		return res;

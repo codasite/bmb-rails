@@ -64,7 +64,7 @@ renderSettings(wpbb_ajax_obj)
 renderBracketBuilder(wpbb_ajax_obj)
 renderPreview(wpbb_ajax_obj)
 renderOptionsTree()
-renderBracketManager()
+bracketManager()
 
 function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	const page = wpbb_ajax_obj.page
@@ -82,7 +82,7 @@ function renderOptionsTree() {
 	}
 }
 
-function renderBracketManager() {
+function bracketManager() {
 	const bracketMangerBuilder = document.getElementById('wpbb-bracket-manager-preview')
 	if (bracketMangerBuilder) {
 		render(<App><BracketManager /></App >, bracketMangerBuilder);

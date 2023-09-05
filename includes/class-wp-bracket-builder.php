@@ -122,14 +122,19 @@ class Wp_Bracket_Builder {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public.php';
 
 		/**
-		 * The bracket api controller class
+		 * The bracket template api controller class
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-template-api.php';
+
+		/**
+		 * The bracket tournament api controller class
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-tournament-api.php';
 
 		/**
 		 * The bracket picks api controller class
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-pick-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-play-api.php';
 
 		/**
 		 * The html to image converter api controller class
@@ -165,8 +170,9 @@ class Wp_Bracket_Builder {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Wp_Bracket_Builder_Admin($this->get_plugin_name(), $this->get_version());
-		$bracket_api = new Wp_Bracket_Builder_Bracket_Api();
-		$bracket_pick_api = new Wp_Bracket_Builder_Bracket_Pick_Api();
+		$template_api = new Wp_Bracket_Builder_Bracket_Template_Api();
+		$tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
+		$play_api = new Wp_Bracket_Builder_Bracket_Play_Api();
 		$convert_api = new Wp_Bracket_Builder_Convert_Api();
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
@@ -176,10 +182,22 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('init', $plugin_admin, 'add_capabilities');
 
 
-		$this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $template_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $tournament_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 
-		$this->loader->add_action('init', $this, 'bracket_cpt');
+		$this->loader->add_action('init', $this, 'add_bracket_template_post_type');
+		$this->loader->add_action('init', $this, 'add_bracket_play_post_type');
+		$this->loader->add_action('init', $this, 'add_bracket_tournament_post_type');
+
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
+
+		$this->loader->add_filter('manage_bracket_pick_posts_columns', $plugin_admin, 'add_bracket_pick_columns');
+		$this->loader->add_filter('manage_bracket_pick_posts_custom_column', $plugin_admin, 'show_bracket_pick_data', 10, 2);
+
+		$this->loader->add_action('save_post', $plugin_admin, 'save_bracket_pick_html_meta_box');
 
 		// custom meta for bracket product variations
 		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
@@ -204,6 +222,8 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		$this->loader->add_action('init', $plugin_public, 'add_shortcodes');
+		$this->loader->add_action('init', $plugin_public, 'add_rewrite_rules', 10, 0);
+		$this->loader->add_filter('query_vars', $plugin_public, 'add_query_vars');
 
 		$this->loader->add_filter('woocommerce_add_to_cart_validation', $plugin_public, 'bracket_product_add_to_cart_validation', 10, 5);
 		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data', 10, 3);
@@ -253,25 +273,67 @@ class Wp_Bracket_Builder {
 		return $this->version;
 	}
 
-	public function bracket_cpt() {
-		$bracket_api = new Wp_Bracket_Builder_Bracket_Api();
-
+	public function add_bracket_template_post_type() {
 		register_post_type(
-			'bracket',
+			'bracket_template',
 			array(
 				'labels' => array(
-					'name' => __('Brackets'),
-					'singular_name' => __('Bracket'),
+					'name' => __('Bracket Templates'),
+					'singular_name' => __('Bracket Template'),
 				),
 				'description' => 'Bracket templates for the WP Bracket Builder plugin',
 				'public' => true,
 				'has_archive' => true,
-				// 'supports' => array('title', 'editor', 'thumbnail'),
+				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
+				'show_ui' => true,
+				'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wp_Bracket_Builder_Bracket_Api
+				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
+				'taxonomies' => array('post_tag'),
+			)
+		);
+	}
+
+	public function add_bracket_play_post_type() {
+		// register a post type named "bracket_pick"
+		register_post_type(
+			'bracket_play',
+			array(
+				'labels' => array(
+					'name' => __('Bracket Plays'),
+					'singular_name' => __('Bracket Play'),
+				),
+				'description' => 'Bracket plays for the WP Bracket Builder plugin',
+				'public' => true,
+				'has_archive' => true,
+				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
 				'show_ui' => true,
 				'show_in_rest' => true,
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
-				'taxonomies' => array('category'),
+				'taxonomies' => array('post_tag'),
+			)
+		);
+	}
+
+	public function add_bracket_tournament_post_type() {
+		// register a post type named "tournament"
+		register_post_type(
+			'bracket_tournament',
+			array(
+				'labels' => array(
+					'name' => __('Bracket Tournaments'),
+					'singular_name' => __('Bracket Tournament'),
+				),
+				'description' => 'Tournaments for the WP Bracket Builder plugin',
+				'public' => true,
+				'has_archive' => true,
+				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
+				'show_ui' => true,
+				'show_in_rest' => true,
+				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
+				'taxonomies' => array('post_tag'),
 			)
 		);
 	}
