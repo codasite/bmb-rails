@@ -3,7 +3,7 @@ import { describe, test, expect, it } from '@jest/globals';
 
 describe('MatchTree', () => {
 
-	test.skip('testing create match tree from matches', () => {
+	test('testing create match tree from matches', () => {
 		const matches = [
 			{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
 			{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" } },
