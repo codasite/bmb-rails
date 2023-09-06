@@ -20,7 +20,8 @@ export enum Direction {
 }
 
 export const bracketConstants = {
-	teamHeight: 20,
+	teamHeight: 28,
+	teamGap: 20,
 
 	defaultMatchGap: 20,
 	depth4MatchGap: 12,
@@ -34,14 +35,6 @@ export const bracketConstants = {
 
 	// Window breakpoints
 	paginatedBracketWidth: 768,
-	roundWidth:54,
+	roundWidth: 54,
 
-	team1: 'wpbb-team1',
-	team2: 'wpbb-team2',
-
-	color1: '#FFFFFF1A',
-	color2: '#FFFFFF4D',
-	color3: '#FFFFFF26',
-	previewBracketHeight : 50,
-	previewBracketWidth : 54
 }

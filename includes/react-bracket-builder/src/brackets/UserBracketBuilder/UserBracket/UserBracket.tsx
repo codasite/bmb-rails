@@ -3,8 +3,8 @@ import * as Sentry from '@sentry/react';
 import { bracketApi, camelCaseKeys } from '../../shared/api/bracketApi';
 import { useWindowDimensions } from '../../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
-import { PairedBracket } from './components/PairedBracket2';
-import { MatchColumnBase } from '../../shared/components';
+import { DefaultBracket } from '../../shared/components';
+import { DefaultMatchColumn, DefaultMatchBox, DefaultTeamSlot } from '../../shared/components';
 import { PaginatedUserBracket } from '../PaginatedUserBracket/PaginatedUserBracket'
 import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
 import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSlice'
@@ -14,11 +14,17 @@ import { MatchTree } from '../../shared/models/MatchTree';
 import { BracketRes } from '../../shared/api/types/bracket';
 import { bracketConstants } from '../../shared/constants';
 import { DarkModeContext } from '../../shared/context';
-
-const {
-	paginatedBracketWidth,
-} = bracketConstants
-
+import './UserBracket.scss'
+import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
+import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
+import {
+	getTargetHeight,
+	getTeamClasses,
+	getUniqueTeamClass,
+	getMatchBoxHeight,
+	getFirstRoundMatchGap,
+	getTargetMatchHeight,
+} from '../../shared/utils'
 
 interface ThemeSelectorProps {
 	darkMode: boolean;
@@ -65,6 +71,8 @@ const ApparelButton = (props: BuyApparelBtnProps) => {
 	)
 }
 
+// const UserBracketBracket = (props: any) => {}
+
 interface UserBracketProps {
 	bracketId?: number;
 	bracketRes?: BracketRes;
@@ -72,6 +80,7 @@ interface UserBracketProps {
 	bracketStylesheetUrl: string;
 	tournament?: any;
 }
+
 
 const UserBracket = (props: UserBracketProps) => {
 	const {
@@ -123,7 +132,7 @@ const UserBracket = (props: UserBracketProps) => {
 	}, [matchTree])
 
 	useEffect(() => {
-		if (windowWidth < paginatedBracketWidth) {
+		if (windowWidth < bracketConstants.paginatedBracketWidth) {
 			if (!showPaginated) {
 				setShowPaginated(true)
 			}
@@ -220,7 +229,26 @@ const UserBracket = (props: UserBracketProps) => {
 		})
 	}
 
-	const renderPairedBracket = (bracketProps) => {
+	// const getTeamSlotComponent = () => {
+	// 	return (
+	// 		<DefaultTeamSlot />
+	// 	)
+	// }
+
+	// const getMatchBoxComponent = () => {
+	// 	return (
+	// 		<DefaultMatchBox
+	// 			TeamSlotComponent={getTeamSlotComponent()}
+	// 		/>
+
+	// 	)
+	// }
+
+	// const getMatchColumnComponent = () => {
+	// 	return ()
+	// }
+
+	const renderPlayTournamentBracket = (bracketProps) => {
 		const { matchTree } = bracketProps
 		if (!matchTree) {
 			return <></>
@@ -229,19 +257,26 @@ const UserBracket = (props: UserBracketProps) => {
 		// const disableActions = processingImage
 		const numRounds = matchTree?.rounds.length;
 		const pickedWinner = matchTree?.isComplete();
+		console.log('numRounds', numRounds)
+		const targetHeight = getTargetHeight(numRounds);
+		const teamHeight = bracketConstants.teamHeight;
+		const teamGap = bracketConstants.teamGap;
 		return (
-			<div className={`wpbb-bracket-container wpbb-${numRounds}-rounds${darkMode ? ' wpbb-dark-mode' : ''}`}>
-				{matchTree ? [
-					<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />,
-					<div className={'wpbb-slogan-container' + (pickedWinner ? ' invisible' : ' visible')}>
-						<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
-					</div>,
-					// <PairedBracket matchTree={matchTree} setMatchTree={setMatchTree} canPick darkMode={darkMode} bracketName={bracketRes?.name} />,
-					<PairedBracket {...bracketProps} />,
-					<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
-						<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
-					</div>
-				] : 'Loading...'}
+			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}>
+				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
+				<DefaultBracket
+					targetHeight={targetHeight}
+					teamHeight={teamHeight}
+					teamGap={teamGap}
+					matchTree={matchTree}
+					setMatchTree={(matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable()))}
+					MatchColumnComponent={DefaultMatchColumn}
+					MatchBoxComponent={DefaultMatchBox}
+					TeamSlotComponent={DefaultTeamSlot}
+				/>
+				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
+					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
+				</div>
 			</div>
 		)
 	}
@@ -256,16 +291,17 @@ const UserBracket = (props: UserBracketProps) => {
 		matchTree,
 		setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
 		canPick: true,
-		darkMode,
 		bracketName: bracketRes?.name,
 	}
 
 
+
 	return (
 		<DarkModeContext.Provider value={darkMode}>
-			<div className='tw-bg-black tw-h-80'>
+			{/* <div className='tw-h-[800px] tw-bg-[url("http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/bracket-bg-dark.png")]'> */}
+			<div className='wpbb-reset tw-uppercase tw-relative tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
+				{renderPlayTournamentBracket(bracketProps)}
 				{/* {showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)} */}
-				hiiii
 
 			</div>
 		</DarkModeContext.Provider>

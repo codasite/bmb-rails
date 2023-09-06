@@ -125,38 +125,38 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
 
-				return   <BracketContext.Provider value={{numRounds:rounds?.length, canEdit: canEdit}}>
-				<MatchColumn
-					bracketName={bracketName}
-					matches={colMatches}
-					round={round} direction={Direction.TopLeft}
-					// targetHeight={2 ** idx * firstRoundMatchHeight}
-					matchBoxHeight={matchHeight}
-					matchBoxSpacing={matchSpacing}
-					updateRoundName={canEdit ? updateRoundName : undefined}
-					updateTeam={canEdit ? updateTeam : undefined}
-					pickTeam={canPick ?
-						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
-						: undefined}
-				/>
+				return <BracketContext.Provider value={{ numRounds: rounds?.length, canEdit: canEdit }}>
+					<MatchColumn
+						bracketName={bracketName}
+						matches={colMatches}
+						round={round} direction={Direction.TopLeft}
+						// targetHeight={2 ** idx * firstRoundMatchHeight}
+						matchBoxHeight={matchHeight}
+						matchBoxSpacing={matchSpacing}
+						updateRoundName={canEdit ? updateRoundName : undefined}
+						updateTeam={canEdit ? updateTeam : undefined}
+						pickTeam={canPick ?
+							(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
+							: undefined}
+					/>
 				</BracketContext.Provider>
 			}),
 			// handle final round differently
-			<BracketContext.Provider value={{numRounds:rounds?.length, canEdit: canEdit}}>
-			<MatchColumn
-				bracketName={bracketName}
-				matches={rounds[0].matches}
-				round={rounds[0]}
-				direction={Direction.Center}
-				matchBoxHeight={getMatchBoxHeight(0)}
-				// targetHeight={targetHeight / 4}
-				updateRoundName={canEdit ? updateRoundName : undefined}
-				updateTeam={canEdit ? updateTeam : undefined}
-				pickTeam={canPick ?
-					(_, left: boolean) => pickTeam(0, 0, left)
-					: undefined}
-				paddingBottom={getMatchBoxHeight(1) * 2} // offset the final match by the height of the penultimate round
-			/>
+			<BracketContext.Provider value={{ numRounds: rounds?.length, canEdit: canEdit }}>
+				<MatchColumn
+					bracketName={bracketName}
+					matches={rounds[0].matches}
+					round={rounds[0]}
+					direction={Direction.Center}
+					matchBoxHeight={getMatchBoxHeight(0)}
+					// targetHeight={targetHeight / 4}
+					updateRoundName={canEdit ? updateRoundName : undefined}
+					updateTeam={canEdit ? updateTeam : undefined}
+					pickTeam={canPick ?
+						(_, left: boolean) => pickTeam(0, 0, left)
+						: undefined}
+					paddingBottom={getMatchBoxHeight(1) * 2} // offset the final match by the height of the penultimate round
+				/>
 			</BracketContext.Provider>,
 			...rounds.slice(1).map((round, idx, arr) => {
 				// Get the second half of matches for this column
@@ -167,21 +167,21 @@ export const PairedBracket = (props: PairedBracketProps) => {
 				const matchHeight = getMatchBoxHeight(round.depth)
 				const matchSpacing = totalMatchHeight - matchHeight
 
-				return <BracketContext.Provider value={{numRounds:rounds?.length, canEdit: canEdit}}>
-				<MatchColumn
-					bracketName={bracketName}
-					round={round}
-					matches={colMatches}
-					direction={Direction.TopRight}
-					// targetHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
-					matchBoxHeight={matchHeight}
-					matchBoxSpacing={matchSpacing}
-					updateRoundName={canEdit ? updateRoundName : undefined}
-					updateTeam={canEdit ? updateTeam : undefined}
-					pickTeam={canPick ?
-						(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
-						: undefined}
-				/>
+				return <BracketContext.Provider value={{ numRounds: rounds?.length, canEdit: canEdit }}>
+					<MatchColumn
+						bracketName={bracketName}
+						round={round}
+						matches={colMatches}
+						direction={Direction.TopRight}
+						// targetHeight={2 ** (arr.length - 1 - idx) * firstRoundMatchHeight}
+						matchBoxHeight={matchHeight}
+						matchBoxSpacing={matchSpacing}
+						updateRoundName={canEdit ? updateRoundName : undefined}
+						updateTeam={canEdit ? updateTeam : undefined}
+						pickTeam={canPick ?
+							(matchIndex: number, left: boolean) => pickTeam(round.depth, matchIndex, left)
+							: undefined}
+					/>
 				</BracketContext.Provider>
 			})
 		]

@@ -65,7 +65,6 @@ renderSettings(wpbb_ajax_obj)
 renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderPreview(wpbb_ajax_obj)
 renderOptionsTree()
-bracketManager()
 
 function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	const page = wpbb_ajax_obj.page
