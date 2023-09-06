@@ -134,7 +134,7 @@ function toCamelCase(str: string): string {
 }
 
 // Recursive function to convert object keys to camelCase
-function camelCaseKeys(obj: any): any {
+export function camelCaseKeys(obj: any): any {
 	if (Array.isArray(obj)) {
 		return obj.map((value) => camelCaseKeys(value));
 	} else if (typeof obj === 'object' && obj !== null) {

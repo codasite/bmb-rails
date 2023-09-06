@@ -1,9 +1,9 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import * as Sentry from '@sentry/react';
-import { bracketApi } from '../../shared/api/bracketApi';
+import { bracketApi, camelCaseKeys } from '../../shared/api/bracketApi';
 import { useWindowDimensions } from '../../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
-import { PairedBracket } from './components/PairedBracket';
+import { PairedBracket } from './components/PairedBracket2';
 import { PaginatedUserBracket } from '../PaginatedUserBracket/PaginatedUserBracket'
 import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
 import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSlice'
@@ -69,10 +69,12 @@ interface UserBracketProps {
 	bracketRes?: BracketRes;
 	apparelUrl: string;
 	bracketStylesheetUrl: string;
+	tournament?: any;
 }
 
 const UserBracket = (props: UserBracketProps) => {
 	const {
+		tournament,
 		bracketId,
 		bracketRes,
 		apparelUrl,
@@ -89,16 +91,27 @@ const UserBracket = (props: UserBracketProps) => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		if (bracketId) {
-			bracketApi.getBracket(bracketId).then((res) => {
-				// setMatchTree(MatchTree.fromRounds(res.rounds));
-				dispatch(setMatchTree(res.rounds))
-			});
-		} else if (bracketRes) {
-			// setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
-			dispatch(setMatchTree(bracketRes.rounds))
+		console.log('tournament', tournament)
+		if (tournament && tournament.bracketTemplate) {
+			const template = tournament.bracketTemplate;
+			const numTeams = template.numTeams;
+			const matches = template.matches;
+			const tree = MatchTree.fromMatches(numTeams, matches);
+			console.log('tree', tree)
+			if (tree) {
+				dispatch(setMatchTree(tree.toSerializable()))
+			}
 		}
-	}, [bracketId, bracketRes]);
+		// if (bracketId) {
+		// 	bracketApi.getBracket(bracketId).then((res) => {
+		// 		// setMatchTree(MatchTree.fromRounds(res.rounds));
+		// 		dispatch(setMatchTree(res.rounds))
+		// 	});
+		// } else if (bracketRes) {
+		// 	// setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
+		// 	dispatch(setMatchTree(bracketRes.rounds))
+		// }
+	}, [tournament]);
 
 	useEffect(() => {
 		if (matchTree) {
