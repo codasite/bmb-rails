@@ -199,7 +199,6 @@ class WildcardRange {
 }
 
 export class MatchTree {
-	root: MatchNode | null
 	rounds: Round[]
 	// static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTree {
 	// 	const tree = new MatchTree()

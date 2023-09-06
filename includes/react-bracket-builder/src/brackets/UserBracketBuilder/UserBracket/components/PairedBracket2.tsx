@@ -15,6 +15,7 @@ import {
 	getTargetMatchHeight,
 } from '../../../shared/utils'
 import { Nullable } from '../../../../utils/types';
+import { MatchBoxProps, MatchColumnProps, TeamSlotProps } from '../../../shared/components/types';
 
 const {
 	teamHeight,
@@ -28,8 +29,9 @@ interface PairedBracketProps {
 	canPick?: boolean;
 	// darkMode?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
-	scale?: number;
-	MatchColumnComponent: ComponentType<any>;
+	MatchColumnComponent: React.FC<MatchColumnProps>;
+	MatchBoxComponent: React.FC<MatchBoxProps>;
+	TeamSlotComponent: React.FC<TeamSlotProps>;
 }
 
 export const PairedBracket = (props: PairedBracketProps) => {
@@ -38,7 +40,9 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		setMatchTree,
 		// darkMode,
 		bracketName,
-		MatchColumnComponent
+		MatchColumnComponent,
+		MatchBoxComponent,
+		TeamSlotComponent,
 	} = props
 
 	const dimensions = useWindowDimensions()
@@ -111,7 +115,7 @@ export const PairedBracket = (props: PairedBracketProps) => {
 	// firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn 
 	const firstRoundMatchHeight = getFirstRoundMatchHeight(targetHeight, 2, rounds.length, teamHeight)
 
-	const getMatchColumns = (rounds: Nullable<MatchNode>[][], position): JSX.Element[] => {
+	const getMatchColumns = (rounds: Nullable<MatchNode>[][], position: string): JSX.Element[] => {
 		const matchColumns = rounds.map((matches, i) => {
 			return (
 				<MatchColumnComponent
@@ -119,6 +123,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					position={position}
 					matchTree={matchTree}
 					setMatchTree={setMatchTree}
+					MatchBoxComponent={MatchBoxComponent}
+					TeamSlotComponent={TeamSlotComponent}
 				/>
 			)
 		})
