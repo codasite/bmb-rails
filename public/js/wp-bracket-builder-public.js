@@ -37,6 +37,7 @@
 // Add new values here
 tailwind.config = {
 	prefix: 'tw-',
+	darkMode: 'class',
 	corePlugins: {
 		preflight: false,
 	},

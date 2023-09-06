@@ -11,7 +11,7 @@ import { Direction } from '../constants'
 import { getMatchBoxHeight } from '../utils'
 
 
-export const MatchColumnBase = (props: MatchColumnProps) => {
+export const DefaultMatchColumn = (props: MatchColumnProps) => {
 	const {
 		matches,
 		position,
@@ -19,10 +19,13 @@ export const MatchColumnBase = (props: MatchColumnProps) => {
 		setMatchTree,
 		MatchBoxComponent,
 		TeamSlotComponent,
+		matchGap,
+		teamGap,
+		teamHeight,
 	} = props
 
 	return (
-		<div>
+		<div className={`tw-flex tw-flex-col tw-justify-center tw-gap-[${matchGap}px]`}>
 			{matches.map((match, index) => {
 				return (
 					<MatchBoxComponent
@@ -32,6 +35,8 @@ export const MatchColumnBase = (props: MatchColumnProps) => {
 						matchTree={matchTree}
 						setMatchTree={setMatchTree}
 						TeamSlotComponent={TeamSlotComponent}
+						teamGap={teamGap}
+						teamHeight={teamHeight}
 					/>
 				)
 			})}
