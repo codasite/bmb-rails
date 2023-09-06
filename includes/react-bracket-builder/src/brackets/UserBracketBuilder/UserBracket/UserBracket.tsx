@@ -4,6 +4,7 @@ import { bracketApi, camelCaseKeys } from '../../shared/api/bracketApi';
 import { useWindowDimensions } from '../../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
 import { PairedBracket } from './components/PairedBracket2';
+import { MatchColumnBase } from '../../shared/components';
 import { PaginatedUserBracket } from '../PaginatedUserBracket/PaginatedUserBracket'
 import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
 import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSlice'
@@ -259,15 +260,13 @@ const UserBracket = (props: UserBracketProps) => {
 		bracketName: bracketRes?.name,
 	}
 
-	// if (windowWidth < paginatedBracketWidth) {
-	// 	return renderPaginatedLandingPage(bracketProps)
-	// }
-	// return renderPairedBracket(bracketProps)
 
 	return (
 		<DarkModeContext.Provider value={darkMode}>
-			<div className='wpbb-bracket-builder-root'>
-				{showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)}
+			<div className='tw-bg-black tw-h-80'>
+				{/* {showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)} */}
+				hiiii
+
 			</div>
 		</DarkModeContext.Provider>
 	)
