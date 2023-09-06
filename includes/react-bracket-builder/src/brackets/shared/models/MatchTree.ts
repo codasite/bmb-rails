@@ -56,6 +56,8 @@ export class Team {
 
 export class MatchNode {
 	id: number | null = null;
+	matchIndex: number;
+	roundIndex: number;
 	team1: Nullable<Team> = null;
 	team2: Nullable<Team> = null;
 	result: Nullable<Team> = null;
@@ -64,30 +66,32 @@ export class MatchNode {
 	parent: Nullable<MatchNode> = null;
 	depth: number;
 
-	constructor(id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
+	constructor(matchIndex, roundIndex, id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
+		this.matchIndex = matchIndex;
+		this.roundIndex = roundIndex;
 		this.id = id;
 		this.depth = depth;
 		this.parent = parent;
 	}
 
-	clone(): MatchNode {
-		const match = this;
-		const clone = new MatchNode(this.id, match.depth, match.parent);
+	// clone(): MatchNode {
+	// 	const match = this;
+	// 	const clone = new MatchNode(this.id, match.depth, match.parent);
 
-		clone.team1 = match.team1 ? match.team1.clone() : null;
-		clone.team2 = match.team2 ? match.team2.clone() : null;
+	// 	clone.team1 = match.team1 ? match.team1.clone() : null;
+	// 	clone.team2 = match.team2 ? match.team2.clone() : null;
 
-		if (match.result) {
-			if (match.result === match.team1) {
-				clone.result = clone.team1;
-			} else if (match.result === match.team2) {
-				clone.result = clone.team2;
-			} else {
-			}
-		}
+	// 	if (match.result) {
+	// 		if (match.result === match.team1) {
+	// 			clone.result = clone.team1;
+	// 		} else if (match.result === match.team2) {
+	// 			clone.result = clone.team2;
+	// 		} else {
+	// 		}
+	// 	}
 
-		return clone;
-	}
+	// 	return clone;
+	// }
 
 	toRequest(index: number): MatchReq {
 		const match = this;
@@ -197,58 +201,58 @@ class WildcardRange {
 export class MatchTree {
 	root: MatchNode | null
 	rounds: Round[]
-	static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTree {
-		const tree = new MatchTree()
-		tree.rounds = this.buildRounds(numRounds, numWildcards, wildcardPlacement)
-		return tree
-	}
+	// static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTree {
+	// 	const tree = new MatchTree()
+	// 	tree.rounds = this.buildRounds(numRounds, numWildcards, wildcardPlacement)
+	// 	return tree
+	// }
 
-	static buildRounds(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): Round[] {
-		// The number of matches in a round is equal to 2^depth unless it's the first round
-		// and there are wildcards. In that case, the number of matches equals the number of wildcards
-		const rootMatch = new MatchNode(null, 0)
-		const finalRound = new Round(1, `Round ${numRounds}`, 0)
-		finalRound.matches = [rootMatch]
-		const rounds = [finalRound]
+	// static buildRounds(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): Round[] {
+	// 	// The number of matches in a round is equal to 2^depth unless it's the first round
+	// 	// and there are wildcards. In that case, the number of matches equals the number of wildcards
+	// 	const rootMatch = new MatchNode(0, 0, null, 0)
+	// 	const finalRound = new Round(1, `Round ${numRounds}`, 0)
+	// 	finalRound.matches = [rootMatch]
+	// 	const rounds = [finalRound]
 
-		for (let i = 1; i < numRounds; i++) {
+	// 	for (let i = 1; i < numRounds; i++) {
 
-			let ranges: WildcardRange[] = []
+	// 		let ranges: WildcardRange[] = []
 
-			if (i === numRounds - 1 && numWildcards > 0) {
-				const placement = wildcardPlacement
-				const maxNodes = 2 ** i
-				const range1 = this.getWildcardRange(0, maxNodes / 2, numWildcards / 2, placement)
-				const range2 = this.getWildcardRange(maxNodes / 2, maxNodes, numWildcards / 2, placement)
-				ranges = [...range1, ...range2]
-			}
+	// 		if (i === numRounds - 1 && numWildcards > 0) {
+	// 			const placement = wildcardPlacement
+	// 			const maxNodes = 2 ** i
+	// 			const range1 = this.getWildcardRange(0, maxNodes / 2, numWildcards / 2, placement)
+	// 			const range2 = this.getWildcardRange(maxNodes / 2, maxNodes, numWildcards / 2, placement)
+	// 			ranges = [...range1, ...range2]
+	// 		}
 
-			const round = new Round(i + 1, `Round ${numRounds - i}`, i);
-			const maxMatches = 2 ** i
-			const matches: (MatchNode | null)[] = []
-			for (let x = 0; x < maxMatches; x++) {
-				if (ranges.length > 0) {
-					// check to see if x is in the range of any of the wildcard ranges
-					const inRange = ranges.some(range => {
-						return x >= range.min && x < range.max
-					})
-					if (!inRange) {
-						matches[x] = null
-						continue
-					}
-				}
-				// const parentIndex = Math.floor(x / 2)
-				// const parent = rounds[i - 1].matches[parentIndex]
-				const parent = this.getParent(x, i, rounds)
-				const match = new MatchNode(null, i, parent)
-				MatchTree.assignMatchToParent(x, match, parent)
-				matches[x] = match
-			}
-			round.matches = matches
-			rounds[i] = round
-		};
-		return rounds
-	}
+	// 		const round = new Round(i + 1, `Round ${numRounds - i}`, i);
+	// 		const maxMatches = 2 ** i
+	// 		const matches: (MatchNode | null)[] = []
+	// 		for (let x = 0; x < maxMatches; x++) {
+	// 			if (ranges.length > 0) {
+	// 				// check to see if x is in the range of any of the wildcard ranges
+	// 				const inRange = ranges.some(range => {
+	// 					return x >= range.min && x < range.max
+	// 				})
+	// 				if (!inRange) {
+	// 					matches[x] = null
+	// 					continue
+	// 				}
+	// 			}
+	// 			// const parentIndex = Math.floor(x / 2)
+	// 			// const parent = rounds[i - 1].matches[parentIndex]
+	// 			const parent = this.getParent(x, i, rounds)
+	// 			const match = new MatchNode(null, i, parent)
+	// 			MatchTree.assignMatchToParent(x, match, parent)
+	// 			matches[x] = match
+	// 		}
+	// 		round.matches = matches
+	// 		rounds[i] = round
+	// 	};
+	// 	return rounds
+	// }
 
 
 	static getWildcardRange(start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] {
@@ -303,7 +307,7 @@ export class MatchTree {
 				if (match === null) {
 					return null;
 				}
-				const newMatch = new MatchNode(match.id, roundIndex);
+				const newMatch = new MatchNode(matchIndex, roundIndex, match.id, roundIndex);
 				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
 				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
@@ -333,7 +337,7 @@ export class MatchTree {
 		const filledMatches: Nullable<MatchResV2>[][] = nullMatches
 
 		tree.rounds = filledMatches.map((round, roundIndex) => {
-			const newRound = new Round(roundIndex + 1, `Round ${numRounds - roundIndex}`, fillInMatches.length - roundIndex);
+			const newRound = new Round(roundIndex + 1, `Round ${numRounds - roundIndex}`, filledMatches.length - roundIndex - 1);
 			return newRound;
 		})
 		tree.rounds.forEach((round, roundIndex) => {
@@ -341,7 +345,7 @@ export class MatchTree {
 				if (match === null) {
 					return null;
 				}
-				const newMatch = new MatchNode(match.id, round.depth);
+				const newMatch = new MatchNode(matchIndex, roundIndex, match.id, round.depth);
 				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
 				// newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
@@ -353,10 +357,6 @@ export class MatchTree {
 				return newMatch;
 			})
 		})
-
-
-
-
 		return tree
 	}
 
@@ -454,14 +454,18 @@ export const getNumRounds = (numTeams: number): number => {
 }
 
 export const getNullMatchRounds = (numRounds) => {
+	console.log(numRounds)
 	let rounds: any[] = []
 	for (let i = numRounds - 1; i >= 0; i--) {
 		rounds.push(new Array(Math.pow(2, i)).fill(null))
 	}
+	console.log(rounds)
 	return rounds
 }
 
 export const fillInMatches = (nullMatches: any[][], matches: MatchResV2[]) => {
+	console.log(nullMatches)
+	console.log(matches)
 	for (const match of matches) {
 		if (match.roundIndex >= nullMatches.length) {
 			throw new Error(`Invalid round index ${match.roundIndex} for match ${match.id}`)
