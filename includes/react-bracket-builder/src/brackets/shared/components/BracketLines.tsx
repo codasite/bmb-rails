@@ -50,8 +50,8 @@ export const BracketLines = (props: BracketLinesProps) => {
 		style: object
 	): JSX.Element[] => {
 		if (match[side]) {
-			const team1 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
-			const team2 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
+			const team1 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), 'left');
+			const team2 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), 'right');
 
 			return [
 				createSteppedLine(team1, team, leftSide, fromAnchor, toAnchor, style),
@@ -82,39 +82,39 @@ export const BracketLines = (props: BracketLinesProps) => {
 					return;
 				}
 
-				const team1 = getUniqueTeamClass(roundIdx, matchIdx, true)
-				const team2 = getUniqueTeamClass(roundIdx, matchIdx, false)
+				const team1 = getUniqueTeamClass(roundIdx, matchIdx, 'left')
+				const team2 = getUniqueTeamClass(roundIdx, matchIdx, 'right')
 				// Whether the matches appear on the left or right side of the bracket
 				// This determines the direction of the lines
 				const team1LeftSide = matchIdx < round.matches.length / 2;
-				// The second team in the last match of the last round is on the opposite side
-				const team2LeftSide = roundIdx === 0 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
+				// The second team in the final match is on the opposite side
+				const team2LeftSide = roundIdx === rounds.length - 1 && matchIdx === 0 ? !team1LeftSide : team1LeftSide;
 
 				lines = [
 					...lines,
 					...handleMatchSide(match, roundIdx, matchIdx, 'left', team1, team1LeftSide, fromAnchor, toAnchor, style),
 					...handleMatchSide(match, roundIdx, matchIdx, 'right', team2, team2LeftSide, fromAnchor, toAnchor, style),
 				];
-				if (roundIdx === 0) {
-					// Render lines for the final match
-					lines = [...lines, <LineTo
-						from={team1}
-						to={team2}
-						fromAnchor='bottom'
-						toAnchor='top'
-						// within='wpbb-bracket-lines-container'
-						{...style}
-					/>,
-					<LineTo
-						from='wpbb-final-winner'
-						to={team1}
-						fromAnchor='bottom'
-						toAnchor='top'
-						// within='wpbb-bracket-lines-container'
-						{...style}
-					/>,
-					];
-				}
+				// if (roundIdx === 0) {
+				// 	// Render lines for the final match
+				// 	lines = [...lines, <LineTo
+				// 		from={team1}
+				// 		to={team2}
+				// 		fromAnchor='bottom'
+				// 		toAnchor='top'
+				// 		// within='wpbb-bracket-lines-container'
+				// 		{...style}
+				// 	/>,
+				// 	<LineTo
+				// 		from='wpbb-final-winner'
+				// 		to={team1}
+				// 		fromAnchor='bottom'
+				// 		toAnchor='top'
+				// 		// within='wpbb-bracket-lines-container'
+				// 		{...style}
+				// 	/>,
+				// 	];
+				// }
 			});
 		});
 		return lines;

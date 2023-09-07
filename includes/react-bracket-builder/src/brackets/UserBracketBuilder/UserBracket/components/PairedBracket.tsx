@@ -222,8 +222,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 		style: object
 	): JSX.Element[] => {
 		if (match[side]) {
-			const team1 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), true);
-			const team2 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), false);
+			const team1 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), 'left');
+			const team2 = getUniqueTeamClass(roundIdx + 1, matchIdx * 2 + (side === 'right' ? 1 : 0), 'right');
 
 			return [
 				createSteppedLine(team1, team, leftSide, fromAnchor, toAnchor, style),
@@ -254,8 +254,8 @@ export const PairedBracket = (props: PairedBracketProps) => {
 					return;
 				}
 
-				const team1 = getUniqueTeamClass(roundIdx, matchIdx, true)
-				const team2 = getUniqueTeamClass(roundIdx, matchIdx, false)
+				const team1 = getUniqueTeamClass(roundIdx, matchIdx, 'left')
+				const team2 = getUniqueTeamClass(roundIdx, matchIdx, 'right')
 				// Whether the matches appear on the left or right side of the bracket
 				// This determines the direction of the lines
 				const team1LeftSide = matchIdx < round.matches.length / 2;

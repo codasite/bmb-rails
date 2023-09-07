@@ -14,7 +14,7 @@ import { getMatchBoxHeight } from '../utils'
 export const DefaultMatchColumn = (props: MatchColumnProps) => {
 	const {
 		matches,
-		position,
+		matchPosition,
 		matchTree,
 		setMatchTree,
 		MatchBoxComponent,
@@ -31,7 +31,7 @@ export const DefaultMatchColumn = (props: MatchColumnProps) => {
 					<MatchBoxComponent
 						key={index}
 						match={match}
-						position={position}
+						matchPosition={matchPosition}
 						matchTree={matchTree}
 						setMatchTree={setMatchTree}
 						TeamSlotComponent={TeamSlotComponent}

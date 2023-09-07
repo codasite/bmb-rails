@@ -29,7 +29,7 @@ export const DefaultBracket = (props: BracketProps) => {
 			return (
 				<MatchColumnComponent
 					matches={matches}
-					position={position}
+					matchPosition={position}
 					matchTree={matchTree}
 					setMatchTree={setMatchTree}
 					MatchBoxComponent={MatchBoxComponent}
@@ -68,7 +68,7 @@ export const DefaultBracket = (props: BracketProps) => {
 	}
 
 	return (
-		<div className='tw-flex tw-w-full tw-justify-between'>
+		<div className='tw-flex tw-w-full tw-justify-between tw-relative'>
 			{buildMatches(matchTree.rounds)}
 			<BracketLines
 				rounds={matchTree.rounds}

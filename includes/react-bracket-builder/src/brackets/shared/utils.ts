@@ -39,7 +39,7 @@ export const getMatchBoxHeight = (depth: number) => {
 }
 
 export const getTeamClasses = (roundIndex: number, matchIndex: number, left: boolean) => {
-	const uniqueClass = getUniqueTeamClass(roundIndex, matchIndex, left)
+	const uniqueClass = getUniqueTeamClass(roundIndex, matchIndex, left ? 'left' : 'right')
 	const teamClass = getTeamClass(left)
 	const className = `${teamClass} ${uniqueClass}`
 	return className
@@ -50,8 +50,8 @@ const getTeamClass = (left: boolean) => {
 	return teamClass
 }
 
-export const getUniqueTeamClass = (roundIndex: number, matchIndex: number, left: boolean) => {
-	const className = `wpbb-team-${roundIndex}-${matchIndex}-${left ? 'left' : 'right'}`
+export const getUniqueTeamClass = (roundIndex: number, matchIndex: number, position: string) => {
+	const className = `wpbb-team-${roundIndex}-${matchIndex}-${position}`
 	return className
 }
 
