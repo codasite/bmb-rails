@@ -320,6 +320,43 @@ export class MatchTree {
 		});
 		return tree;
 	}
+	static fromMatchesOld(numTeams: number, matches: MatchResV2[]): MatchTree | null {
+		const tree = new MatchTree()
+		const numRounds = getNumRounds(numTeams)
+		const nullMatches = getNullMatchRounds(numRounds)
+
+		try {
+			fillInMatches(nullMatches, matches)
+		}
+		catch (e) {
+			console.log(e)
+			return null
+		}
+		const filledMatches: Nullable<MatchResV2>[][] = nullMatches
+
+		tree.rounds = filledMatches.map((round, roundIndex) => {
+			const newRound = new Round(roundIndex + 1, `Round ${numRounds - roundIndex}`, filledMatches.length - roundIndex - 1);
+			return newRound;
+		})
+		tree.rounds.forEach((round, roundIndex) => {
+			round.matches = filledMatches[roundIndex].map((match, matchIndex) => {
+				if (match === null) {
+					return null;
+				}
+				const newMatch = new MatchNode(matchIndex, roundIndex, match.id, round.depth);
+				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
+				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
+				// newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
+				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
+				if (parent) {
+					newMatch.parent = parent;
+					this.assignMatchToParent(matchIndex, newMatch, parent);
+				}
+				return newMatch;
+			})
+		})
+		return tree
+	}
 
 	static fromMatches(numTeams: number, matches: MatchResV2[]): MatchTree | null {
 		const tree = new MatchTree()
@@ -333,7 +370,7 @@ export class MatchTree {
 			console.log(e)
 			return null
 		}
-		const filledMatches: Nullable<MatchResV2>[][] = nullMatches
+		const filledMatches: Nullable<MatchResV2>[][] = addEmptyMatches(nullMatches)
 
 		tree.rounds = filledMatches.map((round, roundIndex) => {
 			const newRound = new Round(roundIndex + 1, `Round ${numRounds - roundIndex}`, filledMatches.length - roundIndex - 1);
@@ -453,18 +490,14 @@ export const getNumRounds = (numTeams: number): number => {
 }
 
 export const getNullMatchRounds = (numRounds) => {
-	console.log(numRounds)
 	let rounds: any[] = []
 	for (let i = numRounds - 1; i >= 0; i--) {
 		rounds.push(new Array(Math.pow(2, i)).fill(null))
 	}
-	console.log(rounds)
 	return rounds
 }
 
 export const fillInMatches = (nullMatches: any[][], matches: MatchResV2[]) => {
-	console.log(nullMatches)
-	console.log(matches)
 	for (const match of matches) {
 		if (match.roundIndex >= nullMatches.length) {
 			throw new Error(`Invalid round index ${match.roundIndex} for match ${match.id}`)
@@ -475,4 +508,23 @@ export const fillInMatches = (nullMatches: any[][], matches: MatchResV2[]) => {
 		nullMatches[match.roundIndex][match.matchIndex] = match
 	}
 	return nullMatches
+}
+
+export const addEmptyMatches = (rounds: any[][], roundStart: number = 1): any[][] => {
+	const newRounds = rounds.map((round, roundIndex) => {
+		if (roundIndex < roundStart) {
+			return round
+		}
+		const newRound = round.map((match, matchIndex) => {
+			if (match !== null) {
+				return match
+			}
+			return {
+				id: null, roundIndex: roundIndex, matchIndex: matchIndex, team1: null, team2: null
+			}
+		})
+		return newRound
+
+	})
+	return newRounds
 }

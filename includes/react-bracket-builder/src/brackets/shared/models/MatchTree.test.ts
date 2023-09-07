@@ -1,4 +1,10 @@
-import { MatchTree, getNumRounds, getNullMatchRounds, fillInMatches } from './MatchTree';
+import {
+	MatchTree,
+	getNumRounds,
+	getNullMatchRounds,
+	fillInMatches,
+	addEmptyMatches,
+} from './MatchTree';
 import { describe, test, expect, it } from '@jest/globals';
 
 describe('MatchTree', () => {
@@ -40,9 +46,20 @@ describe('MatchTree', () => {
 		expect(matchTree?.rounds[0].matches[6]?.team2?.name).toBe("Team 14")
 		expect(matchTree?.rounds[0].matches[7]?.team1?.name).toBe("Team 15")
 		expect(matchTree?.rounds[0].matches[7]?.team2?.name).toBe("Team 16")
-
-		// expect(matchTree?.rounds[1].matches[0]).toBeNull()
-
+		expect(matchTree?.rounds[1].matches[0]?.team1).toBeNull()
+		expect(matchTree?.rounds[1].matches[0]?.team2).toBeNull()
+		expect(matchTree?.rounds[1].matches[1]?.team1).toBeNull()
+		expect(matchTree?.rounds[1].matches[1]?.team2).toBeNull()
+		expect(matchTree?.rounds[1].matches[2]?.team1).toBeNull()
+		expect(matchTree?.rounds[1].matches[2]?.team2).toBeNull()
+		expect(matchTree?.rounds[1].matches[3]?.team1).toBeNull()
+		expect(matchTree?.rounds[1].matches[3]?.team2).toBeNull()
+		expect(matchTree?.rounds[2].matches[0]?.team1).toBeNull()
+		expect(matchTree?.rounds[2].matches[0]?.team2).toBeNull()
+		expect(matchTree?.rounds[2].matches[1]?.team1).toBeNull()
+		expect(matchTree?.rounds[2].matches[1]?.team2).toBeNull()
+		expect(matchTree?.rounds[3].matches[0]?.team1).toBeNull()
+		expect(matchTree?.rounds[3].matches[0]?.team2).toBeNull()
 	})
 });
 
@@ -153,4 +170,65 @@ describe('MatchTree Utils', () => {
 		}
 		expect(t).toThrowError('Invalid round index 4 for match 10')
 	})
+
+	test('testing addEmptyMatches', () => {
+		const matches =
+			[[
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" } },
+				{ id: 11, roundIndex: 0, matchIndex: 2, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
+				{ id: 12, roundIndex: 0, matchIndex: 3, team1: { id: 23, name: "Team 7" }, team2: { id: 24, name: "Team 8" } },
+			],
+			[null, null],
+			[null],
+			]
+
+		const expected = [
+			[
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" } },
+				{ id: 11, roundIndex: 0, matchIndex: 2, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
+				{ id: 12, roundIndex: 0, matchIndex: 3, team1: { id: 23, name: "Team 7" }, team2: { id: 24, name: "Team 8" } },
+			],
+			[
+				{ id: null, roundIndex: 1, matchIndex: 0, team1: null, team2: null },
+				{ id: null, roundIndex: 1, matchIndex: 1, team1: null, team2: null },
+			],
+			[
+				{ id: null, roundIndex: 2, matchIndex: 0, team1: null, team2: null },
+			]
+		]
+
+		const filled = addEmptyMatches(matches)
+		expect(filled).toEqual(expected)
+	})
+	test('testing addEmptyMatches wildcards', () => {
+		const matches =
+			[[
+				null,
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" } },
+				{ id: 11, roundIndex: 0, matchIndex: 2, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
+				null,
+			],
+			[null, null],
+			[null],
+			]
+
+		const expected = [
+			[
+				null,
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" } },
+				{ id: 11, roundIndex: 0, matchIndex: 2, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
+				null,
+			],
+			[
+				{ id: null, roundIndex: 1, matchIndex: 0, team1: null, team2: null },
+				{ id: null, roundIndex: 1, matchIndex: 1, team1: null, team2: null },
+			],
+			[
+				{ id: null, roundIndex: 2, matchIndex: 0, team1: null, team2: null },
+			]
+		]
+	})
+
 })
