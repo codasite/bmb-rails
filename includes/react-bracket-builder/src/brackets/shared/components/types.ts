@@ -5,7 +5,7 @@ import { Match } from '@sentry/react/types/reactrouterv3';
 
 export interface TeamSlotProps {
 	team?: Nullable<Team>;
-	match: Nullable<MatchNode>;
+	match: MatchNode;
 	position: string;
 	teamHeight: number;
 	matchTree: MatchTree;

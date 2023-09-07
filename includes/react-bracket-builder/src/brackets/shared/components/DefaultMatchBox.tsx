@@ -19,6 +19,12 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 	const center = position === 'center'
 	const offset = teamHeight + teamGap
 
+	if (!match) {
+		return (
+			<div className={`tw-h-[${teamHeight * 2 + teamGap}px]`} />
+		)
+	}
+
 	const getTeamSlot = (team: Nullable<Team> | undefined) => {
 		return (
 			<TeamSlotComponent
