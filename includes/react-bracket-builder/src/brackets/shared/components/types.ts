@@ -6,16 +6,17 @@ import { Match } from '@sentry/react/types/reactrouterv3';
 export interface TeamSlotProps {
 	team?: Nullable<Team>;
 	match: MatchNode;
-	position: string;
+	matchPosition: string;
+	teamPosition: string;
 	teamHeight: number;
 	matchTree: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
-	getTeamClass?: (roundIndex: number, matchIndex: number, left: boolean) => string;
+	getTeamClass?: (roundIndex: number, matchIndex: number, position: string) => string;
 }
 
 export interface MatchBoxProps {
 	match: Nullable<MatchNode>;
-	position: string;
+	matchPosition: string;
 	matchTree: MatchTree;
 	teamGap: number;
 	teamHeight: number;
@@ -25,7 +26,7 @@ export interface MatchBoxProps {
 
 export interface MatchColumnProps {
 	matches: Nullable<MatchNode>[];
-	position: string;
+	matchPosition: string;
 	teamGap: number;
 	teamHeight: number;
 	matchGap: number;

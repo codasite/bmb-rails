@@ -8,7 +8,7 @@ import { Nullable } from '../../../utils/types';
 export const DefaultMatchBox = (props: MatchBoxProps) => {
 	const {
 		match,
-		position,
+		matchPosition,
 		matchTree,
 		setMatchTree,
 		TeamSlotComponent,
@@ -16,7 +16,7 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		teamHeight,
 	} = props
 
-	const center = position === 'center'
+	const center = matchPosition === 'center'
 	const offset = teamHeight + teamGap
 
 	if (!match) {
@@ -25,14 +25,15 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		)
 	}
 
-	const getTeamSlot = (team: Nullable<Team> | undefined) => {
+	const getTeamSlot = (team: Nullable<Team> | undefined, teamPosition: string) => {
 		return (
 			<TeamSlotComponent
 				team={team}
 				match={match}
 				matchTree={matchTree}
 				setMatchTree={setMatchTree}
-				position={position}
+				matchPosition={matchPosition}
+				teamPosition={teamPosition}
 				teamHeight={teamHeight}
 			/>
 		)
@@ -40,8 +41,8 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 
 	return (
 		<div className={`tw-flex tw-flex-col tw-gap-[${teamGap}px] tw-translate-y-[${center ? -offset : 0}px]`}>
-			{getTeamSlot(match?.team1)}
-			{getTeamSlot(match?.team2)}
+			{getTeamSlot(match.team1, 'left')}
+			{getTeamSlot(match.team2, 'right')}
 		</div>
 	)
 }
