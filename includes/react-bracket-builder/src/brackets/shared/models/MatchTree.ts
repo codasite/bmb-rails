@@ -193,12 +193,9 @@ export class Round {
 
 }
 
-class WildcardRange {
-	constructor(public min: number, public max: number) { }
-
-	toString(): string {
-		return `${this.min}-${this.max}`;
-	}
+interface WildcardRange {
+	min: number;
+	max: number;
 }
 
 export class MatchTree {
@@ -257,19 +254,6 @@ export class MatchTree {
 	// }
 
 
-	static getWildcardRange(start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] {
-		switch (placement) {
-			case WildcardPlacement.Top:
-				return [new WildcardRange(start, start + count)]
-			case WildcardPlacement.Bottom:
-				return [new WildcardRange(end - count, end)]
-			case WildcardPlacement.Center:
-				const offset = (end - start - count) / 2;
-				return [new WildcardRange(start + offset, end - offset)];
-			case WildcardPlacement.Split:
-				return [new WildcardRange(start, start + count / 2), new WildcardRange(end - count / 2, end)]
-		}
-	}
 
 	clone(): MatchTree {
 		// State is now maintained by Redux and stored as a serializable object so we can just return this
@@ -324,6 +308,13 @@ export class MatchTree {
 		return tree;
 	}
 
+	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement): MatchTree {
+		const numRounds = getNumRounds(numTeams)
+		const nullableMatches = getNullMatches(numRounds) as Nullable<MatchRepr>[][]
+
+
+	}
+
 	static fromMatchRes(numTeams: number, matches: MatchResV2[]): MatchTree | null {
 		const numRounds = getNumRounds(numTeams)
 
@@ -348,7 +339,7 @@ export class MatchTree {
 				const newMatch = new MatchNode(matchIndex, roundIndex, match.id ? match.id : null, newRound.depth);
 				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
-				// newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
+				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
 				return newMatch;
 			})
 			newRound.matches = matches
@@ -357,7 +348,6 @@ export class MatchTree {
 		const tree = new MatchTree()
 		tree.rounds = rounds
 		return tree
-
 	}
 
 	toRequest(name: string, active: boolean, numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): BracketReq {
@@ -436,6 +426,10 @@ export class MatchTree {
 	}
 
 }
+export const linkNodes = (rounds: Round[]) => {
+
+}
+
 export const getParent = (matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null => {
 	if (roundIndex === 0) {
 		return null
@@ -499,4 +493,18 @@ export const fillInEmptyMatches = (rounds: any[][], roundStart: number = 1): any
 
 	})
 	return newRounds
+}
+
+export const getWildcardRange = (start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] => {
+	switch (placement) {
+		case WildcardPlacement.Top:
+			return [{ min: start, max: start + count }]
+		case WildcardPlacement.Bottom:
+			return [{ min: end - count, max: end }]
+		case WildcardPlacement.Center:
+			const offset = (end - start - count) / 2;
+			return [{ min: start + offset, max: end - offset }]
+		case WildcardPlacement.Split:
+			return [{ min: start, max: start + count / 2 }, { min: end - count / 2, max: end }]
+	}
 }
