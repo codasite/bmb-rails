@@ -68,6 +68,7 @@ tailwind.config = {
 		colors: {
 			'transparent': 'transparent',
 			'black': '#000',
+			'off-black': '#000225',
 			'white': '#fff',
 			'green': '#05FF3C',
 			'blue': '#2137ff',
