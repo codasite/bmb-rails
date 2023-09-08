@@ -158,6 +158,11 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $templates;
 	}
 
+	public function delete(int $id): bool {
+		$result = wp_delete_post($id, true);
+		return $result !== false;
+	}
+
 	// public function delete(int $id): bool {
 	// 	// $table_name = $this->bracket_table();
 	// 	// $this->wpdb->delete(
