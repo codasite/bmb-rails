@@ -232,4 +232,10 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 		return true;
 		// return current_user_can('read');
 	}
+
+	public function get_matches($request) {
+		// get all matches for all templates
+		$matches = $this->template_repo->get_matches();
+		return new WP_REST_Response($matches, 200);
+	}
 }
