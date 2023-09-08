@@ -34,9 +34,14 @@ export const bracketConstants = {
 
 	// Window breakpoints
 	paginatedBracketWidth: 768,
-	firstRoundWidth: 111,
-	roundWidth:56,
+	roundWidth:54,
 
 	team1: 'wpbb-team1',
-	team2: 'wpbb-team2'
+	team2: 'wpbb-team2',
+
+	color1: '#FFFFFF1A',
+	color2: '#FFFFFF4D',
+	color3: '#FFFFFF26',
+	previewBracketHeight : 50,
+	previewBracketWidth : 54
 }
