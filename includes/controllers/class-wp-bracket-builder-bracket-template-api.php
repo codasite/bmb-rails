@@ -105,6 +105,15 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 				),
 			),
 		));
+		
+		register_rest_route($namespace, '/' . $base .'/matches', array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array($this, 'get_matches'),
+				'permission_callback' => array($this, 'customer_permission_check'),
+				'args'                => array(),
+			),
+		));
 	}
 
 	/**
