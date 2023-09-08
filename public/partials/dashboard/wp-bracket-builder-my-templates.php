@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])
 	echo get_query_var(('delete'));
 	if (wp_verify_nonce($_POST['delete_template_nonce'], 'delete_template_action')) {
 		echo 'nonce verified';
+		$template_repo->delete($_POST['delete_template_id']);
 	}
 }
 

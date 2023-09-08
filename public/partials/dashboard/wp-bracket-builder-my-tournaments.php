@@ -3,16 +3,21 @@ require_once 'wp-bracket-builder-dashboard-common.php';
 $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
 require_once $shared_dir . 'wp-bracket-builder-partials-common.php';
 require_once $shared_dir . 'wp-bracket-builder-tournaments-common.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
 
-$active_tournaments = array(
-	array(
-		"name" => "Lakeside High Football",
-		"id" => 1,
-		"num_teams" => 16,
-		"num_plays" => 3,
-		"completed" => false,
-	),
-);
+$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+$tournaments = $tournament_repo->get_all();
+$active_tournaments = $tournaments;
+
+// $active_tournaments = array(
+// 	array(
+// 		"name" => "Lakeside High Football",
+// 		"id" => 1,
+// 		"num_teams" => 16,
+// 		"num_plays" => 3,
+// 		"completed" => false,
+// 	),
+// );
 
 $completed_tournaments = array(
 	array(
