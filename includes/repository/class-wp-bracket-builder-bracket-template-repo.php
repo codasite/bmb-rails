@@ -96,6 +96,19 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $template;
 	}
 
+	public function get_teams(): array {
+		$table_name = $this->team_table();
+		$team_results = $this->wpdb->get_results(
+			"SELECT * FROM {$table_name}",
+			ARRAY_A
+		);
+		$teams = [];
+		foreach ($team_results as $team) {
+			$teams[] = new Wp_Bracket_Builder_Team($team['name'], $team['id']);
+		}
+		return $teams;
+	}
+
 	public function get_matches(): array {
 		// get all matches for all templates
 		$table_name = $this->match_table();

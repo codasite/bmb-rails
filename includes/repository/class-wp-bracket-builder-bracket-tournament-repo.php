@@ -59,6 +59,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	public function get_all(array $query_args = []): array {
 		$default_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+			'post_status' => 'any',
 		];
 
 		$args = array_merge($default_args, $query_args);
