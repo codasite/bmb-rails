@@ -47,26 +47,38 @@ function wpbb_leaderboard_play_list_item($play, $winner = false) {
 	$play_author = $play->post_author;
 	$author_name = get_the_author_meta('display_name', $play_author);
 	$time_ago = human_time_diff(get_the_time('U', $play_id), current_time('timestamp')) . ' ago';
+	$score = $winner ? .95 : .25;
+
 	ob_start();
 ?>
-	<div class="tw-flex tw-gap-<?php echo $winner ? '20' : '16' ?> tw-px-30<?php echo $winner ? ' tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-py-30' : '' ?>">
-		<div class="tw-flex tw-flex-col tw-items-center tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
-			<span class="tw-px-16 tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700">
-				milwaukee
-			</span>
-			<span class="tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500<?php echo $winner ? ' tw-text-white/50' : '' ?>">
-				winning team
-			</span>
+	<div class="tw-flex tw-justify-between tw-px-30<?php echo $winner ? ' tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-py-30' : '' ?>">
+		<div class="tw-flex tw-flex-col tw-gap-16">
+			<?php if ($winner) : ?>
+				<div class="tw-flex tw-flex-col">
+					<span class="tw-text-60 tw-font-700 tw-text-green"><?php echo $score * 100; ?>%</span>
+					<span class="tw-text-16 tw-font-500 tw-text-white/50">Accuracy Score</span>
+				</div>
+			<?php endif; ?>
+			<div class="tw-flex tw-gap-<?php echo $winner ? '20' : '16' ?>">
+				<div class="tw-flex tw-flex-col tw-items-center tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
+					<span class="tw-px-16 tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>">
+						milwaukee
+					</span>
+					<span class="tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500<?php echo $winner ? ' tw-text-white/50' : '' ?>">
+						winning team
+					</span>
+				</div>
+				<div class="tw-flex tw-flex-col tw-flex-grow">
+					<span class="tw-text-<?php echo $winner ? '32' : '24' ?> tw-font-700">
+						<?php echo esc_html($author_name); ?>
+					</span>
+					<span class="tw-text-white/50 tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500">
+						<?php echo "played " . esc_html($time_ago); ?>
+					</span>
+				</div>
+			</div>
 		</div>
-		<div class="tw-flex tw-flex-col tw-flex-grow">
-			<span class="tw-text-<?php echo $winner ? '32' : '24' ?> tw-font-700">
-				<?php echo esc_html($author_name); ?>
-			</span>
-			<span class="tw-text-white/50 tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500">
-				<?php echo "played " . esc_html($time_ago); ?>
-			</span>
-		</div>
-		<a href="#" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-center tw-text-white tw-text-16 tw-font-500 tw-py-8 tw-pl-12 tw-pr-16 tw-rounded-8 hover:tw-text-dd-blue hover:tw-bg-white">
+		<a href="#" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-<?php echo $winner ? 'end' : 'center' ?> tw-text-white tw-text-16 tw-font-500 hover:tw-text-green">
 			<?php echo file_get_contents(plugins_url('../assets/icons/arrow_up_right.svg', __FILE__)); ?>
 			<span>View Play</span>
 		</a>
