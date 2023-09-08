@@ -78,7 +78,7 @@ function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 function renderOptionsTree() {
 	const optionsBuilder = document.getElementById('wpbb-bracket-option-preview')
 	if (optionsBuilder) {
-		render(<App><Options /></App >, optionsBuilder);
+		render(<App><Provider store={bracketBuilderStore}><Options /></Provider></App >, optionsBuilder);
 	}
 }
 
@@ -97,7 +97,7 @@ function renderBracketBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		css_url
 	} = wpbb_ajax_obj
 	if (builderDiv && bracket) {
-		render(<App><Provider store={bracketBuilderStore}><UserBracket bracketStylesheetUrl={css_url} bracketRes={bracket} apparelUrl={bracket_product_archive_url} /> </Provider></App>, builderDiv)
+		render(<App><Provider store={bracketBuilderStore}><UserBracket bracketStylesheetUrl={css_url} bracketRes={bracket} apparelUrl={bracket_product_archive_url} canPick/> </Provider></App>, builderDiv)
 	}
 }
 

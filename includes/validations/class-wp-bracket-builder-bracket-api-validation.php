@@ -1,6 +1,5 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket.php';
-require_once plugin_dir_path(dirname(__FILE__)) . '../includes/repository/class-wp-bracket-builder-bracket-repo.php';
 
 
 class Wp_Bracket_Builder_Bracket_Api_Validation
@@ -11,19 +10,17 @@ class Wp_Bracket_Builder_Bracket_Api_Validation
 
     private $bracket;
     private $wpdb;
-    private $bracket_repo;
 
 
     public function validate_bracket_api($bracket)
     {
-        $this->bracket_repo = new Wp_Bracket_Builder_Bracket_Repository();
         $this->bracket = $bracket;
         $this->total_rounds = $this->bracket->num_rounds;
         $this->wildcards = $this->bracket->num_wildcards;
 
-        $teams = $this->bracket_repo->get_max_teams();
+        $teams = get_option('bracket_builder_max_teams');
         $total_no_of_teams = $this->get_team_count($this->total_rounds, $this->wildcards);
-        if($total_no_of_teams > $teams['max_teams']){
+        if($total_no_of_teams > $teams){
             return $this->createError('Given Number of teams is more than maximum allowed teams to participate');
         }
 
