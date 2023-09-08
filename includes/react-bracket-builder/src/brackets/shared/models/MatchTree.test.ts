@@ -9,7 +9,11 @@ import { describe, test, expect, it } from '@jest/globals';
 
 describe('MatchTree', () => {
 
-	test('test create match tree from nested array of matches', () => {
+	test('testing create match tree from a number of teams and wildcard placement', () => {
+
+	})
+
+	test('testing create match tree from nested array of matches', () => {
 		const matches = [
 			[
 				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
@@ -276,5 +280,10 @@ describe('MatchTree Utils', () => {
 			{ id: 12, roundIndex: 0, matchIndex: 3, team1: { id: 23, name: "Team 7" }, team2: { id: 24, name: "Team 8" } },
 		])
 		console.log('tree')
+	})
+
+	test('testing linkNodes', () => {
+
+
 	})
 })
