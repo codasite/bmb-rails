@@ -42,18 +42,6 @@ function wpbb_share_tournament_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function wpbb_winning_play_wrap($play, $content) {
-	$score = .95;
-	ob_start();
-?>
-	<div class="tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-py-30">
-		<?php echo $content; ?>
-	</div>
-<?php
-
-	return ob_get_clean();
-}
-
 function wpbb_leaderboard_play_list_item($play, $winner = false) {
 	$play_id = $play->ID;
 	$play_author = $play->post_author;
@@ -61,20 +49,20 @@ function wpbb_leaderboard_play_list_item($play, $winner = false) {
 	$time_ago = human_time_diff(get_the_time('U', $play_id), current_time('timestamp')) . ' ago';
 	ob_start();
 ?>
-	<div class="tw-flex tw-gap-16 tw-px-30">
-		<div class="tw-flex tw-flex-col tw-items-center tw-gap-4">
+	<div class="tw-flex tw-gap-<?php echo $winner ? '20' : '16' ?> tw-px-30<?php echo $winner ? ' tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-py-30' : '' ?>">
+		<div class="tw-flex tw-flex-col tw-items-center tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
 			<span class="tw-px-16 tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700">
 				milwaukee
 			</span>
-			<span class="tw-text-12 tw-font-500">
+			<span class="tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500<?php echo $winner ? ' tw-text-white/50' : '' ?>">
 				winning team
 			</span>
 		</div>
 		<div class="tw-flex tw-flex-col tw-flex-grow">
-			<span class="tw-text-24 tw-font-700">
+			<span class="tw-text-<?php echo $winner ? '32' : '24' ?> tw-font-700">
 				<?php echo esc_html($author_name); ?>
 			</span>
-			<span class="tw-text-white/50 tw-text-12 tw-font-500">
+			<span class="tw-text-white/50 tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500">
 				<?php echo "played " . esc_html($time_ago); ?>
 			</span>
 		</div>
@@ -84,8 +72,7 @@ function wpbb_leaderboard_play_list_item($play, $winner = false) {
 		</a>
 	</div>
 <?php
-	$list_item = ob_get_clean();
-	return $winner ? wpbb_winning_play_wrap($play, $list_item) : $list_item;
+	return ob_get_clean();
 }
 
 ?>
