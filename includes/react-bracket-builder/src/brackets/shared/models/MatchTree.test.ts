@@ -4,13 +4,21 @@ import {
 	getNullMatches,
 	getMatchRepr,
 	fillInEmptyMatches,
+	WildcardPlacement,
+	getWildcardRange,
+	getFirstRoundMatchCount,
+	fillFirstRoundMatches,
 } from './MatchTree';
 import { describe, test, expect, it } from '@jest/globals';
 
 describe('MatchTree', () => {
 
-	test('testing create match tree from a number of teams and wildcard placement', () => {
+	test.skip('testing create match tree from a number of teams and wildcard placement', () => {
+		const numTeams = 8
+		const wildcardPlacement = WildcardPlacement.Top
+		const matchTree = MatchTree.fromNumTeams(numTeams, wildcardPlacement)
 
+		expect(matchTree).not.toBeNull()
 	})
 
 	test('testing create match tree from nested array of matches', () => {
@@ -282,8 +290,114 @@ describe('MatchTree Utils', () => {
 		console.log('tree')
 	})
 
-	test('testing linkNodes', () => {
+	test.skip('testing linkNodes', () => {
 
+	})
 
+	test('testing getWildcardRange top', () => {
+		const start = 0
+		const end = 8
+		const wildcardPlacement = WildcardPlacement.Top
+		const count = 4
+
+		const expected = [{
+			min: 0,
+			max: 4,
+		}]
+
+		const range = getWildcardRange(start, end, count, wildcardPlacement)
+		expect(range).toEqual(expected)
+	})
+
+	test('testing getWildcardRange bottom', () => {
+		const start = 0
+		const end = 8
+		const wildcardPlacement = WildcardPlacement.Bottom
+		const count = 4
+
+		const expected = [{
+			min: 4,
+			max: 8,
+		}]
+
+		const range = getWildcardRange(start, end, count, wildcardPlacement)
+		expect(range).toEqual(expected)
+	})
+
+	test('testing getWildcardRange center', () => {
+		const start = 0
+		const end = 8
+		const wildcardPlacement = WildcardPlacement.Center
+		const count = 4
+
+		const expected = [{
+			min: 2,
+			max: 6,
+		}]
+
+		const range = getWildcardRange(start, end, count, wildcardPlacement)
+		expect(range).toEqual(expected)
+	})
+
+	test('testing getWildcardRange split', () => {
+		const start = 0
+		const end = 8
+		const wildcardPlacement = WildcardPlacement.Split
+		const count = 4
+
+		const expected = [{
+			min: 0,
+			max: 2,
+		}, {
+			min: 6,
+			max: 8,
+		}]
+
+		const range = getWildcardRange(start, end, count, wildcardPlacement)
+		expect(range).toEqual(expected)
+	})
+
+	test('testing getFirstRoundMatchCount', () => {
+		expect(getFirstRoundMatchCount(6)).toBe(2)
+		expect(getFirstRoundMatchCount(7)).toBe(3)
+		expect(getFirstRoundMatchCount(8)).toBe(4)
+		expect(getFirstRoundMatchCount(9)).toBe(1)
+		expect(getFirstRoundMatchCount(10)).toBe(2)
+		expect(getFirstRoundMatchCount(11)).toBe(3)
+		expect(getFirstRoundMatchCount(12)).toBe(4)
+		expect(getFirstRoundMatchCount(13)).toBe(5)
+		expect(getFirstRoundMatchCount(14)).toBe(6)
+		expect(getFirstRoundMatchCount(15)).toBe(7)
+		expect(getFirstRoundMatchCount(16)).toBe(8)
+		expect(getFirstRoundMatchCount(17)).toBe(1)
+		expect(getFirstRoundMatchCount(18)).toBe(2)
+		expect(getFirstRoundMatchCount(19)).toBe(3)
+	})
+
+	test('testing fillInFirstRoundMatches full', () => {
+		const numTeams = 8
+		const rounds = [
+			[null, null, null, null],
+			[null, null],
+			[null],
+		]
+		const expected = [
+			[
+				{ roundIndex: 0, matchIndex: 0 },
+				{ roundIndex: 0, matchIndex: 1 },
+				{ roundIndex: 0, matchIndex: 2 },
+				{ roundIndex: 0, matchIndex: 3 },
+			],
+			[
+				null,
+				null,
+			],
+			[
+				null,
+			]
+		]
+
+		const filled = fillFirstRoundMatches(numTeams, rounds)
+		expect(filled).toEqual(expected)
 	})
 })
