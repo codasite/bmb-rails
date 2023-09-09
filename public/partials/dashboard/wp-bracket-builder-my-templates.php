@@ -5,10 +5,8 @@ require_once 'wp-bracket-builder-dashboard-common.php';
 $template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])) {
-	echo 'delete template_id: ' . $_POST['delete_template_id'];
-	echo get_query_var(('delete'));
 	if (wp_verify_nonce($_POST['delete_template_nonce'], 'delete_template_action')) {
-		echo 'nonce verified';
+		$template_repo->delete($_POST['delete_template_id']);
 	}
 }
 
