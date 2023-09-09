@@ -337,4 +337,17 @@ class Wp_Bracket_Builder {
 			)
 		);
 	}
+
+	public function register_custom_post_types() {
+
+		// Custom post status for completed tournaments
+		register_post_status("complete", array(
+			'label' => 'Complete',
+			'public' => true,
+			'exclude_from_search' => false,
+			'show_in_admin_all_list' => true,
+			'show_in_admin_status_list' => true,
+			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>'),
+		));
+	}
 }
