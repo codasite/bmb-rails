@@ -76,6 +76,10 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		];
 	}
 
+	public function get_update_post_meta(): array {
+		return [];
+	}
+
 	static public function from_array($data): Wp_Bracket_Builder_Bracket_Play {
 		if (!isset($data['tournament_id'])) {
 			throw new Exception('tournament_id is required');

@@ -18,4 +18,18 @@ interface Wp_Bracket_Builder_Custom_Post_Interface {
 	 * @return array
 	 */
 	public function get_post_meta(): array;
+
+	/**
+	 * Get all the post data to update as a wp_update_post compatible array
+	 * 
+	 * @return array
+	 */
+	public function get_update_post_data(): array;
+
+	/**
+	 * Get all the post meta to update as a key-value associative array
+	 * 
+	 * @return array
+	 */
+	public function get_update_post_meta(): array;
 }

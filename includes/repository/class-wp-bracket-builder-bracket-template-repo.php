@@ -195,9 +195,9 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $templates;
 	}
 
-	public function delete(int $id): bool {
-		$result = wp_delete_post($id, true);
-		return $result !== false;
+	public function delete(int $id, $force = false): bool {
+		// Changed this to false so users can still see deleted templates. 
+		return $this->delete_post($id, $force);
 	}
 
 	// public function delete(int $id): bool {

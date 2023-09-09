@@ -74,6 +74,10 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		];
 	}
 
+	public function get_update_post_meta(): array {
+		return [];
+	}
+
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
 		$template = new Wp_Bracket_Builder_Bracket_Template();
 		$matches = [];
