@@ -190,6 +190,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('init', $this, 'add_bracket_template_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_play_post_type');
 		$this->loader->add_action('init', $this, 'add_bracket_tournament_post_type');
+		$this->loader->add_action('init', $this, 'register_custom_post_status');
 
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
@@ -338,7 +339,7 @@ class Wp_Bracket_Builder {
 		);
 	}
 
-	public function register_custom_post_types() {
+	public function register_custom_post_status() {
 
 		// Custom post status for completed tournaments
 		register_post_status("complete", array(
