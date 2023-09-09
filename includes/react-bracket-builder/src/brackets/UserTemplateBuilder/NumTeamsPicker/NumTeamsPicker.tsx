@@ -81,13 +81,11 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
                 {selected && currentValue === defaultValue && <span className='corner-text'>Default</span>}
 
             </div>
-                <div style={{ visibility: selected ? 'visible' : 'hidden' }}>
-                    <div>
+                <div style={{ display: selected ? 'block' : 'none'  }}>
                         <ButtonGroup aria-label="Basic example" className='button-container'>
                             <Button className='btn-secondary no-highlight-button step-down-button' disabled={decrementDisabled} variant='secondary' onClick={handleDecrement}>-</Button>
                             <Button className='btn-secondary no-highlight-button step-up-button' disabled={incrementDisabled} variant='secondary' onClick={handleIncrement}>+</Button>
                         </ButtonGroup>
-                    </div>
                 </div>
         </div>
     )
