@@ -11,13 +11,15 @@ $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_tournament_id'])) {
 	if (wp_verify_nonce($_POST['archive_tournament_nonce'], 'archive_tournament_action')) {
-		echo 'archive tournament';
-		echo $_POST['archive_tournament_id'];
-		// $tournament_repo->update($_POST['archive_tournament_id'], ['status' => 'archive']);
-
 		$tournament = $tournament_repo->get($_POST['archive_tournament_id']);
 		$tournament->status = 'archive';
 		$tournament_repo->update($tournament);
+	}
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_tournament_id'])) {
+	if (wp_verify_nonce($_POST['delete_tournament_nonce'], 'delete_tournament_action')) {
+		$tournament_repo->delete($_POST['delete_tournament_id']);
 	}
 }
 
@@ -133,7 +135,7 @@ function tournament_list_item($tournament) {
 				<?php echo duplicate_bracket_btn($share_link, $id); ?>
 				<?php echo archive_tournament_btn($archive_link, $id); ?>
 				<!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
-				<?php echo delete_bracket_btn($delete_link, $id); ?>
+				<?php echo delete_post_btn($delete_link, $id, 'delete_tournament_id', 'delete_tournament_action', 'delete_tournament_nonce'); ?>
 			</div>
 		</div>
 		<div class="tw-mt-10">

@@ -43,12 +43,12 @@ function share_tournament_btn($endpoint, $tournament_id) {
 /**
  * This button sends a POST request to delete the template
  */
-function delete_bracket_btn($endpoint, $post_id) {
+function delete_post_btn($endpoint, $post_id, $post_id_field, $nonce_action, $nonce_name) {
 	ob_start();
 ?>
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
-		<input type="hidden" name="delete_template_id" value="<?php echo esc_attr($post_id) ?>">
-		<?php wp_nonce_field('delete_template_action', 'delete_template_nonce'); ?>
+		<input type="hidden" name="<?php echo $post_id_field ?>" value="<?php echo esc_attr($post_id) ?>">
+		<?php wp_nonce_field($nonce_action, $nonce_name); ?>
 		<?php echo icon_btn('../../assets/icons/trash.svg', 'submit'); ?>
 	</form>
 <?php
