@@ -91,6 +91,10 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $tournaments;
 	}
 
+	public function delete(int $id, $force = false): bool {
+		return $this->delete_post($id, $force);
+	}
+
 	public function update(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
 		$tournament_id = $this->update_post($tournament);
 
