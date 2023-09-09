@@ -10,18 +10,6 @@ $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 
-// Custom post status for completed tournaments
-function scored_post_status() {
-	register_post_status("completed", array(
-		'label' => 'Completed',
-		'public' => true,
-		'exclude_from_search' => false,
-		'show_in_admin_all_list' => true,
-		'show_in_admin_status_list' => true,
-		'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>'),
-	));
-}
-add_action('init', 'scored_post_status');
 
 // get all of the current user's tournaments
 $tournaments = $tournament_repo->get_all_by_author(get_current_user_id());
@@ -30,8 +18,8 @@ $tournaments = $tournament_repo->get_all_by_author(get_current_user_id());
 $completed_tournaments = array();
 $active_tournaments = array();
 
-foreach($tournaments as $tournament) {
-	if ($tournament->status === 'completed') {
+foreach ($tournaments as $tournament) {
+	if ($tournament->status === 'complete') {
 		array_push($completed_tournaments, $tournament);
 	} else {
 		array_push($active_tournaments, $tournament);
