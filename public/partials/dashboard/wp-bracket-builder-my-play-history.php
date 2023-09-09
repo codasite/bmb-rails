@@ -9,10 +9,10 @@ $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 $plays = $play_repo->get_all_by_author(get_current_user_id());
 
-function play_list_item($play) {
+function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	$tournament_name = $play->title;
 	$user_rank = 99999;
-	$complete = $play->status === 'complete';
+	$complete = $play->tournament->status === 'complete';
 	$play_id = $play->id;
 	$tournament_id = $play->tournament_id;
 	$play_link = get_permalink() . 'tournaments/' . $tournament_id . '/play/' . $play_id;
@@ -20,7 +20,7 @@ function play_list_item($play) {
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
-	$user_score_percent = 99;// $user_score * 100;
+	$user_score_percent = 99; // $user_score * 100;
 	ob_start();
 
 	// $tournament_name = $play['tournament_name'];
