@@ -72,4 +72,22 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		}
 		return $tournaments;
 	}
+
+	public function get_all_by_author(int $author_id, array $query_args = []): array {
+		$default_args = [
+			'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+			'post_status' => 'any',
+			'author' => $author_id,
+		];
+
+		$args = array_merge($default_args, $query_args);
+
+		$query = new WP_Query($args);
+
+		$tournaments = [];
+		foreach ($query->posts as $post) {
+			$tournaments[] = $this->get($post, false);
+		}
+		return $tournaments;
+	}
 }
