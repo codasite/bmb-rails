@@ -50,9 +50,6 @@ function delete_bracket_btn($endpoint, $post_id) {
 		<input type="hidden" name="delete_template_id" value="<?php echo esc_attr($post_id) ?>">
 		<?php wp_nonce_field('delete_template_action', 'delete_template_nonce'); ?>
 		<?php echo icon_btn('../../assets/icons/trash.svg', 'submit'); ?>
-		<!-- <button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
-			<?php echo file_get_contents(plugins_url('../../assets/icons/trash.svg', __FILE__)); ?>
-		</button> -->
 	</form>
 <?php
 	return ob_get_clean();

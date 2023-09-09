@@ -65,4 +65,15 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 			'post_type' => static::get_post_type(),
 		];
 	}
+
+	/**
+	 * Only allow certain fields to be updated
+	 */
+	public function get_update_post_data(): array {
+		return [
+			'ID' => $this->id,
+			'post_title' => $this->title,
+			'post_status' => $this->status,
+		];
+	}
 }

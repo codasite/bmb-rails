@@ -112,8 +112,10 @@ class Wp_Bracket_Builder_Public {
 		$bracket = $template_repo->get(post: $post);
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
 
+
 		// For product page
-		$product = wc_get_product($post->ID);
+		// $product = wc_get_product($post->ID);
+		$product = wc_get_product(0);
 		$bracket_product_archive_url = $this->get_archive_url();
 
 		$bracket_placement = $this->get_bracket_placement($product);
