@@ -3,36 +3,31 @@ require_once 'wp-bracket-builder-dashboard-common.php';
 $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
 require_once $shared_dir . 'wp-bracket-builder-partials-common.php';
 require_once $shared_dir . 'wp-bracket-builder-tournaments-common.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 
-$active_tournaments = array(
-	array(
-		"name" => "Lakeside High Football",
-		"id" => 1,
-		"num_teams" => 16,
-		"num_plays" => 3,
-		"completed" => false,
-	),
-);
+$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
-$completed_tournaments = array(
-	array(
-		"name" => "College Basketball",
-		"id" => 2,
-		"num_teams" => 6,
-		"num_plays" => 999,
-		"completed" => true,
-	),
-	array(
-		"name" => "Midwest Baseball",
-		"id" => 3,
-		"num_teams" => 8,
-		"num_plays" => 103,
-		"completed" => true,
-	),
-);
 
+
+// get all of the current user's tournaments
+$tournaments = $tournament_repo->get_all_by_author(get_current_user_id());
+
+// partition appointments based on status (completed vs any other status)
+$completed_tournaments = array();
+$active_tournaments = array();
+
+foreach ($tournaments as $tournament) {
+	if ($tournament->status === 'complete') {
+		array_push($completed_tournaments, $tournament);
+	} else {
+		array_push($active_tournaments, $tournament);
+	}
+}
 
 function score_tournament_btn($endpoint, $tournament) {
+
 	ob_start();
 ?>
 	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
@@ -44,8 +39,8 @@ function score_tournament_btn($endpoint, $tournament) {
 }
 
 function active_tournament_buttons($tournament) {
-	$tournament_play_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/play';
-	$tournament_score_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/score';
+	$tournament_play_link = get_permalink() . 'tournaments/' . $tournament->id . '/play';
+	$tournament_score_link = get_permalink() . 'tournaments/' . $tournament->id . '/score';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
@@ -64,8 +59,8 @@ function active_tournament_buttons($tournament) {
 }
 
 function completed_tournament_buttons($tournament) {
-	$play_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/play';
-	$leaderboard_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/leaderboard';
+	$play_link = get_permalink() . 'tournaments/' . $tournament->id . '/play';
+	$leaderboard_link = get_permalink() . 'tournaments/' . $tournament->id . '/leaderboard';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-end tw-gap-8">
@@ -78,13 +73,15 @@ function completed_tournament_buttons($tournament) {
 	return ob_get_clean();
 }
 
-
 function tournament_list_item($tournament) {
-	$name = $tournament['name'];
-	$num_teams = $tournament['num_teams'];
-	$num_plays = $tournament['num_plays'];
-	$id = $tournament['id'];
-	$completed = $tournament['completed'];
+	// TODO: fix play_repo->get_all_by_tournament
+	// $play_repo->get_all_by_tournament($tournament->id);
+
+	$name = $tournament->title;
+	$num_teams = $tournament->bracket_template->num_teams;
+	$num_plays = 999999; //count($plays);
+	$id = $tournament->id;
+	$completed = true;
 	$share_link = get_permalink() . 'tournaments/' . $id . '/share';
 	$delete_link = get_permalink() . 'tournaments/';
 	$play_link = get_permalink() . 'tournaments/' . $id . '/play';

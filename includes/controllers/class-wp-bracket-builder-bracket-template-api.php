@@ -105,6 +105,24 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 				),
 			),
 		));
+		
+		register_rest_route($namespace, '/' . $base .'/matches', array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array($this, 'get_matches'),
+				'permission_callback' => array($this, 'customer_permission_check'),
+				'args'                => array(),
+			),
+		));
+
+		register_rest_route($namespace, '/' . $base .'/teams', array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array($this, 'get_teams'),
+				'permission_callback' => array($this, 'customer_permission_check'),
+				'args'                => array(),
+			),
+		));
 	}
 
 	/**
@@ -222,5 +240,16 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 	public function customer_permission_check($request) {
 		return true;
 		// return current_user_can('read');
+	}
+
+	public function get_matches($request) {
+		// get all matches for all templates
+		$matches = $this->template_repo->get_matches();
+		return new WP_REST_Response($matches, 200);
+	}
+
+	public function get_teams($request) {
+		$teams = $this->template_repo->get_teams();
+		return new WP_REST_Response($teams, 200);
 	}
 }
