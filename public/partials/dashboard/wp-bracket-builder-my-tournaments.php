@@ -9,7 +9,17 @@ require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_tournament_id'])) {
+	if (wp_verify_nonce($_POST['archive_tournament_nonce'], 'archive_tournament_action')) {
+		echo 'archive tournament';
+		echo $_POST['archive_tournament_id'];
+		// $tournament_repo->update($_POST['archive_tournament_id'], ['status' => 'archive']);
 
+		$tournament = $tournament_repo->get($_POST['archive_tournament_id']);
+		$tournament->status = 'archive';
+		$tournament_repo->update($tournament);
+	}
+}
 
 // get all of the current user's tournaments
 $tournaments = $tournament_repo->get_all_by_author(get_current_user_id());
@@ -73,6 +83,21 @@ function completed_tournament_buttons($tournament) {
 	return ob_get_clean();
 }
 
+/**
+ * This button sends a POST request to archive the template
+ */
+function archive_tournament_btn($endpoint, $tournament_id) {
+	ob_start();
+?>
+	<form method="post" action="<?php echo esc_url($endpoint) ?>">
+		<input type="hidden" name="archive_tournament_id" value="<?php echo esc_attr($tournament_id) ?>">
+		<?php wp_nonce_field('archive_tournament_action', 'archive_tournament_nonce'); ?>
+		<?php echo icon_btn('../../assets/icons/archive.svg', 'submit'); ?>
+	</form>
+<?php
+	return ob_get_clean();
+}
+
 function tournament_list_item($tournament) {
 	// TODO: fix play_repo->get_all_by_tournament
 	// $play_repo->get_all_by_tournament($tournament->id);
@@ -81,11 +106,12 @@ function tournament_list_item($tournament) {
 	$num_teams = $tournament->bracket_template->num_teams;
 	$num_plays = 999999; //count($plays);
 	$id = $tournament->id;
-	$completed = true;
+	$completed = $tournament->status === 'complete';
 	$share_link = get_permalink() . 'tournaments/' . $id . '/share';
 	$delete_link = get_permalink() . 'tournaments/';
 	$play_link = get_permalink() . 'tournaments/' . $id . '/play';
 	$leaderboard_link = get_permalink() . 'tournaments/' . $id . '/leaderboard';
+	$archive_link = get_permalink() . 'tournaments/';
 	ob_start();
 ?>
 	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
@@ -105,6 +131,7 @@ function tournament_list_item($tournament) {
 				<?php echo share_tournament_btn($share_link, $id); ?>
 				<!-- The duplicate button opens up the "Host a Tournamnet" modal -->
 				<?php echo duplicate_bracket_btn($share_link, $id); ?>
+				<?php echo archive_tournament_btn($archive_link, $id); ?>
 				<!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
 				<?php echo delete_bracket_btn($delete_link, $id); ?>
 			</div>
