@@ -41,7 +41,7 @@ function template_list_item($template) {
 			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 			<div class="tw-flex tw-gap-10">
 				<?php echo duplicate_bracket_btn($duplicate_link, $id); ?>
-				<?php echo delete_bracket_btn($delete_link, $id); ?>
+				<?php echo delete_post_btn($delete_link, $id, 'delete_template_id', 'delete_template_action', 'delete_template_nonce'); ?>
 			</div>
 		</div>
 		<div class="tw-flex tw-gap-16">
