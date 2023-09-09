@@ -66,7 +66,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $team;
 	}
 
-	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
+	public function get(int|WP_Post|null|string $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
 		$template_post = get_post($post);
 
 		if ($template_post === null) {
