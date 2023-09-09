@@ -1,7 +1,8 @@
 <?php
 $page = get_query_var('paged');
+// This is just temporary. Don't do this
 // $complete = false;
-$complete = true;
+$complete = has_tag('scored');
 $winner = 'Milwaukee';
 function wpbb_get_plays($tournament_id) {
 	$args = array(
@@ -42,7 +43,7 @@ function wpbb_share_tournament_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function wpbb_leaderboard_play_list_item($play, $winner = false) {
+function wpbb_leaderboard_play_list_item($play, $winner = false, $complete = false) {
 	$play_id = $play->ID;
 	$play_author = $play->post_author;
 	$author_name = get_the_author_meta('display_name', $play_author);
@@ -78,7 +79,7 @@ function wpbb_leaderboard_play_list_item($play, $winner = false) {
 				</div>
 			</div>
 		</div>
-		<a href="#" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-<?php echo $winner ? 'end' : 'center' ?> tw-text-white tw-text-16 tw-font-500 hover:tw-text-green">
+		<a href="#" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-<?php echo $winner ? 'end' : 'center' ?> tw-text-white tw-text-16 tw-font-500 hover:tw-text-<?php echo $complete ? 'green' : 'yellow' ?>">
 			<?php echo file_get_contents(plugins_url('../assets/icons/arrow_up_right.svg', __FILE__)); ?>
 			<span>View Play</span>
 		</a>
@@ -107,7 +108,7 @@ function wpbb_leaderboard_play_list_item($play, $winner = false) {
 			<?php
 			$plays = wpbb_get_plays(get_the_ID());
 			foreach ($plays as $i => $play) {
-				echo wpbb_leaderboard_play_list_item($play, $i === 0);
+				echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $complete);
 			}
 			?>
 		</div>
