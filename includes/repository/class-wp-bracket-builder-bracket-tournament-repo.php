@@ -43,7 +43,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		$template_id = get_post_meta($tournament_post->ID, 'bracket_template_id', true);
 
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament(
-			$template_id,
+			(int)$template_id,
 			$tournament_post->ID,
 			$tournament_post->post_title,
 			$tournament_post->post_author,
@@ -89,5 +89,21 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			$tournaments[] = $this->get($post, false);
 		}
 		return $tournaments;
+	}
+
+	public function delete(int $id, $force = false): bool {
+		return $this->delete_post($id, $force);
+	}
+
+	public function update(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
+		$tournament_id = $this->update_post($tournament);
+
+		if (is_wp_error($tournament_id)) {
+			return null;
+		}
+
+		# refresh from db
+		$tournament = $this->get($tournament_id);
+		return $tournament;
 	}
 }
