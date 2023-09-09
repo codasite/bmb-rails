@@ -1,5 +1,5 @@
 import React from 'react';
-import { MatchNode } from '../models/MatchTree';
+import { MatchNode, Round } from '../models/MatchTree';
 import { TeamSlot } from './TeamSlot'
 import { Direction } from '../constants'
 
@@ -14,6 +14,7 @@ interface MatchBoxProps {
 	matchIndex: number;
 	bracketName?: string;
 	children?: React.ReactNode;
+	round: Round;
 }
 
 export const MatchBox = (props: MatchBoxProps) => {
@@ -28,6 +29,7 @@ export const MatchBox = (props: MatchBoxProps) => {
 		matchIndex,
 		bracketName,
 		children,
+		round
 	} = props
 
 	if (match === null) {
@@ -80,6 +82,8 @@ export const MatchBox = (props: MatchBoxProps) => {
 				roundIndex={roundIndex}
 				matchIndex={matchIndex}
 				left={true}
+				match={match}
+				round={round}
 			/>
 			<TeamSlot
 				winner={team2Wins}
@@ -89,6 +93,8 @@ export const MatchBox = (props: MatchBoxProps) => {
 				roundIndex={roundIndex}
 				matchIndex={matchIndex}
 				left={false}
+				match={match}
+				round={round}
 			/>
 		</div>
 	)

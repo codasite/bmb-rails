@@ -79,9 +79,13 @@ export const MatchColumn = (props: MatchColumnProps) => {
 					roundIndex={round.depth}
 					matchIndex={matchIndex}
 					bracketName={bracketName}
+					round= {round}
 				>
 					{finalMatch && showWinnerContainer &&
 						buildWinnerContainer(match, pickedWinner)
+					}
+					{canEdit && finalMatch && showBracketLogo &&
+						<div className='who-you-got-text'>WHO YOU GOT?</div>
 					}
 					{finalMatch && showBracketLogo &&
 						<BracketLogo className="wpbb-bracket-logo" />

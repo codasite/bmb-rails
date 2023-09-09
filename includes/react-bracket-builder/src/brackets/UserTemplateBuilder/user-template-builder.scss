@@ -59,6 +59,7 @@
 
     .team-picker {
         display: grid !important;
+        gap: 16px;
     }
 
     .options-bracket-display-text {
@@ -181,6 +182,11 @@
     cursor: pointer;
 }
 
+.paired-bracket{
+    height: 100%;
+    min-height: 500px;
+}
+
 .randomize-teams-text {
     color: #FFFFFF;
     text-transform: uppercase;
@@ -241,7 +247,7 @@
 }
 
 .team-chooser-box {
-    border: 1px solid #ccc;
+    border: 1px solid #FFFFFF80;
     padding: 30px;
     color: #FFFFFF;
     flex-basis: calc(75% / 3 - 30px);
@@ -374,7 +380,6 @@ no-highlight-button:active {
     justify-content: flex-start;
     display: flex;
     position: relative;
-    bottom: 15%;
 
     .highlight {
         padding-top: 0% !important;
@@ -391,15 +396,51 @@ no-highlight-button:active {
     cursor: pointer;
 }
 
+.step-up-button:disabled , 
+.step-down-button:disabled {
+    color: #FFFFFF80;
+    border: 1px solid #FFFFFF80;
+    cursor: default;
+}
+
 .bracket-button {
     width: 100%;
     display: grid;
     gap: 16px;
 }
 
+
 .selected-btn {
     border: 1px solid #817727;
     color: #f8e11a;
+}
+
+.bracket-title {
+    font-family: 'Clash Display', sans-serif;
+    font-size: 46px;
+    font-weight: 700;
+    line-height: 57px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.create-bracket{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    color: #FFFFFF;
+    border: none;
+    cursor: pointer;
+    font-family:'Clash Display', sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 25px;
+    letter-spacing: 0em;
+    text-align: left;
+    position: relative;
+    left: -35vw;
 }
 
 $match-box-border: 2px solid #3c434a;
@@ -413,7 +454,7 @@ $team-offset: -8px;
 .wpbb-bracket {
 	display: flex;
 	margin: 0 auto;
-	gap: 16px;
+    margin-top: 15%;
 }
 
 .wpbb-round__header{
@@ -421,7 +462,7 @@ $team-offset: -8px;
 }
 
 .wpbb-round{
-	width: 100px;
+	width: 75px;
 }
 
 @mixin match-box() {
@@ -457,7 +498,7 @@ $team-offset: -8px;
 	}
 
 	.wpbb-round {
-		margin: 15%;
+		margin: 8%;
 	}
 }
 
@@ -550,6 +591,15 @@ $team-offset: -8px;
 	border-top: 0;
 	box-sizing: 0;
 	position: relative;
+}
+
+.wpbb-default{
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow-y: scroll;
 }
 
 

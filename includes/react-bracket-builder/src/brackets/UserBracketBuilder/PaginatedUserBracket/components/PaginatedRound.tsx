@@ -16,7 +16,7 @@ import {
 	getFirstRoundMatchHeight,
 	getTargetMatchHeight,
 } from '../../../shared/utils';
-import { DarkModeContext } from '../../../shared/context';
+import { BracketContext, DarkModeContext } from '../../../shared/context';
 
 const {
 	teamHeight,
@@ -110,6 +110,7 @@ export const PaginatedRound = (props) => {
 		showWinnerContainer={lastPage}
 		pickTeam={pickTeam}
 		onAllPicked={() => setAllPicked(true)}
+		numRounds={numRounds}
 	/>
 	const matchColumn2 = round2 ? <PaginatedMatchColumn
 		round={round2}
@@ -119,6 +120,7 @@ export const PaginatedRound = (props) => {
 		showBracketLogo={false}
 		showWinnerContainer={false}
 		paddingBottom={round2.depth === 0 ? getMatchBoxHeight(1) * 2 : undefined}
+		numRounds={numRounds}
 	/> : null
 
 	return (
@@ -149,6 +151,7 @@ interface PaginatedMatchColumnProps {
 	paddingBottom?: number;
 	pickTeam?: (matchIndex: number, left: boolean) => void;
 	onAllPicked?: () => void;
+	numRounds: number;
 }
 
 const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
@@ -162,6 +165,7 @@ const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
 		onAllPicked,
 		showBracketLogo = false,
 		showWinnerContainer = false,
+		numRounds
 	} = props
 
 	const [matchStart, matches] = getMatches(round, direction)
@@ -178,6 +182,7 @@ const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
 	const matchHeight = getMatchBoxHeight(round.depth)
 	const matchSpacing = totalMatchHeight - matchHeight
 	return (
+		<BracketContext.Provider value={{numRounds:numRounds, canEdit: true}}>
 		<MatchColumn
 			round={round}
 			matchStartIndex={matchStart}
@@ -190,6 +195,7 @@ const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
 			paddingBottom={paddingBottom}
 			pickTeam={pickTeam}
 		/>
+		</BracketContext.Provider>
 	)
 }
 
