@@ -83,7 +83,7 @@ function tournament_list_item($tournament) {
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
 			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-4 tw-items-center">
-				<?php echo $completed ? completed_tournament_tag() : live_tournament_tag(); ?>
+				<?php  echo $tournament->status === 'complete'? completed_tournament_tag(): ($tournament->status === 'publish'? live_tournament_tag(): null)?>
 				<?php echo file_get_contents(plugins_url('../../assets/icons/bar_chart.svg', __FILE__)); ?>
 				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
 				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
