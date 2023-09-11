@@ -259,15 +259,21 @@ export class MatchTree {
 }
 
 export const linkTeams = (rounds: Round[]) => {
-	const allTeams: Team[] = []
 
 	rounds.forEach((round, roundIndex) => {
 		round.matches.forEach((match, matchIndex) => {
 			if (!match) {
 				return
 			}
-			const parent = getParent(matchIndex, roundIndex, rounds)
+			const { team1, team2, team1Wins, team2Wins } = match
+			const team1Winner = team1Wins && team1
+			const team2Winner = team2Wins && team2
 
+			if (team1Winner) {
+				linkParentAndResultTeam(team1Winner, match, matchIndex, roundIndex, rounds)
+			} else if (team2Winner) {
+				linkParentAndResultTeam(team2Winner, match, matchIndex, roundIndex, rounds)
+			}
 		})
 	})
 }
@@ -304,6 +310,23 @@ export const assignMatchToParent = (matchIndex: number, match: MatchNode, parent
 	} else {
 		parent.right = match
 	}
+}
+
+export const linkParentAndResultTeam = (winningTeam: Team, match: MatchNode, matchIndex: number, roundIndex: number, rounds: Round[]) => {
+	match.result = winningTeam;
+	const parent = getParent(matchIndex, roundIndex, rounds);
+	const leftChild = isLeftChild(matchIndex);
+	if (parent) {
+		if (leftChild) {
+			parent.team1 = winningTeam;
+		} else {
+			parent.team2 = winningTeam;
+		}
+	}
+}
+
+export const isLeftChild = (matchIndex: number): boolean => {
+	return matchIndex % 2 === 0
 }
 
 export const getNumRounds = (numTeams: number): number => {

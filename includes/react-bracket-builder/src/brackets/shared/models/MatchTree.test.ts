@@ -128,14 +128,14 @@ describe('MatchTree', () => {
 		expect(matchTree?.rounds[3].matches[0]?.team2).toBeNull()
 	})
 
-	test.skip('testing isComplete true', () => {
+	test('testing isComplete true', () => {
 		const matches = [
 			[
-				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, result: { id: 17, name: "Team 1" } },
-				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, result: { id: 20, name: "Team 4" } },
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, team1Wins: true },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, team1Wins: true },
 			],
 			[
-				{ roundIndex: 1, matchIndex: 1, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" }, result: { id: 21, name: "Team 5" } },
+				{ roundIndex: 1, matchIndex: 1, team2Wins: true },
 			],
 		]
 
@@ -143,14 +143,14 @@ describe('MatchTree', () => {
 		expect(matchTree?.isComplete()).toBe(true)
 	})
 
-	test.skip('testing isComplete false', () => {
+	test('testing isComplete false', () => {
 		const matches = [
 			[
-				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, result: { id: 17, name: "Team 1" } },
-				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, result: { id: 20, name: "Team 4" } },
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, team1Wins: true },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, team1Wins: true },
 			],
 			[
-				{ roundIndex: 1, matchIndex: 1, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
+				{ roundIndex: 1, matchIndex: 1 },
 			],
 		]
 
@@ -460,14 +460,17 @@ describe('MatchTree Utils', () => {
 		expect(r1m2?.result).toBe(team4)
 		expect(r1m3?.result).toBe(team5)
 		expect(r1m4?.result).toBe(team8)
+
 		expect(r2m1?.team1).toBe(team1)
-		expect(r2m1?.team2).toBe(team3)
-		expect(r2m1?.result).toBe(team5)
+		expect(r2m1?.team2).toBe(team4)
+		expect(r2m1?.result).toBe(team1)
+
 		expect(r2m2?.team1).toBe(team5)
-		expect(r2m2?.team2).toBe(team7)
+		expect(r2m2?.team2).toBe(team8)
 		expect(r2m2?.result).toBe(team8)
+
 		expect(r3m1?.team1).toBe(team1)
-		expect(r3m1?.team2).toBe(team5)
+		expect(r3m1?.team2).toBe(team8)
 		expect(r3m1?.result).toBe(team1)
 	})
 
