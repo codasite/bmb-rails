@@ -1,18 +1,7 @@
 import { Nullable } from '../../../utils/types';
 import {
-	BracketRes,
-	BracketReq,
-	RoundReq,
-	MatchReq,
 	MatchRes,
-	TeamReq,
-	TeamRes,
-	SubmissionReq,
-	SubmissionMatchReq,
-	SubmissionRoundReq,
-	SubmissionTeamReq,
-	RoundRes,
-	MatchResV2,
+	MatchPicksRes,
 	MatchRepr,
 	TeamRepr,
 } from '../api/types/bracket';
@@ -46,7 +35,7 @@ export class Team {
 }
 
 export interface MatchNodeArgs {
-	id?: number | null;
+	id?: number;
 	matchIndex: number;
 	roundIndex: number;
 	team1?: Nullable<Team>;
@@ -60,7 +49,7 @@ export interface MatchNodeArgs {
 }
 
 export class MatchNode {
-	id?: number | null = null;
+	id?: number;
 	matchIndex: number;
 	roundIndex: number;
 	private team1: Nullable<Team> = null;
@@ -101,14 +90,25 @@ export class MatchNode {
 		this.team2 = team2 ? team2 : null;
 	}
 
-	serialize(i: number): MatchRepr {
-		const match = this;
+	serialize(): MatchRepr {
+		const {
+			id,
+			matchIndex,
+			roundIndex,
+			team1,
+			team2,
+			team1Wins,
+			team2Wins,
+		} = this
+
 		return {
-			id: match.id ? match.id : undefined,
-			matchIndex: match.matchIndex,
-			roundIndex: match.roundIndex,
-			team1: match.team1 ? match.team1.serialize() : undefined,
-			team2: match.team2 ? match.team2.serialize() : undefined,
+			id,
+			matchIndex,
+			roundIndex,
+			team1: team1 ? team1.serialize() : undefined,
+			team2: team2 ? team2.serialize() : undefined,
+			team1Wins,
+			team2Wins,
 		}
 	}
 
@@ -154,6 +154,14 @@ export class Round {
 		});
 	}
 
+	serialize(): Nullable<MatchRepr>[] {
+		return this.matches.map((match, i) => {
+			if (match === null) {
+				return null;
+			}
+			return match.serialize();
+		})
+	}
 }
 
 interface WildcardRange {
@@ -167,13 +175,7 @@ export class MatchTree {
 	serialize(): Nullable<MatchRepr>[][] {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {
-			const matches = round.matches.map((match) => {
-				if (match === null) {
-					return null;
-				}
-				return match.serialize(match.matchIndex);
-			});
-			return matches;
+			return round.serialize()
 		});
 		return rounds
 	}
@@ -211,15 +213,15 @@ export class MatchTree {
 
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
 		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
-		return MatchTree.fromMatchRepr(matches)
+		return MatchTree.deserialize(matches)
 	}
 
-	static fromMatchRes(numTeams: number, matches: MatchResV2[]): MatchTree | null {
+	static fromMatchRes(numTeams: number, matches: MatchRes[]): MatchTree | null {
 		const numRounds = getNumRounds(numTeams)
 
 		try {
 			const nestedMatches = getMatchRepr(numRounds, matches)
-			return MatchTree.fromMatchRepr(nestedMatches)
+			return MatchTree.deserialize(nestedMatches)
 		}
 		catch (e) {
 			console.log(e)
@@ -227,7 +229,40 @@ export class MatchTree {
 		}
 	}
 
-	static fromMatchRepr(matchRes: Nullable<MatchRepr>[][]) {
+	static fromPicks(numTeams: number, matches: MatchRes[], picks: MatchPicksRes[]): MatchTree | null {
+		const matchTree = MatchTree.fromMatchRes(numTeams, matches)
+		if (!matchTree) {
+			return null
+		}
+		for (const pick of picks) {
+			const { roundIndex, matchIndex, winningTeamId } = pick
+			console.log(roundIndex, matchIndex, winningTeamId)
+			const match = matchTree.rounds[roundIndex].matches[matchIndex]
+			console.log(match)
+			if (!match) {
+				return null
+			}
+			const team1 = match.getTeam1()
+			const team2 = match.getTeam2()
+			if (!team1 || !team2) {
+				console.log('no teams')
+				return null
+			}
+			if (team1.id === winningTeamId) {
+				console.log('team1 wins')
+				match.team1Wins = true
+			} else if (team2.id === winningTeamId) {
+				console.log('team2 wins')
+				match.team2Wins = true
+			} else {
+				console.log('no match')
+				return null
+			}
+		}
+		return matchTree
+	}
+
+	static deserialize(matchRes: Nullable<MatchRepr>[][]) {
 		const rounds = matchRes.map((round, roundIndex) => {
 			const depth = matchRes.length - roundIndex - 1
 			const newRound = new Round(roundIndex, depth)
