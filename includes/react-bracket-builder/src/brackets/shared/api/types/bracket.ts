@@ -128,6 +128,7 @@ export interface MatchRepr {
 	matchIndex: number;
 	team1?: TeamRepr;
 	team2?: TeamRepr;
-	result?: TeamRepr;
+	team1Wins?: boolean;
+	team2Wins?: boolean;
 }
 

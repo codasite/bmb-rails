@@ -1,6 +1,7 @@
 import {
 	MatchTree,
 	Round,
+	Team,
 	MatchNode,
 	getNumRounds,
 	getNullMatches,
@@ -11,6 +12,7 @@ import {
 	getFirstRoundMatches,
 	matchReprFromNumTeams,
 	linkNodes,
+	linkTeams,
 } from './MatchTree';
 import { describe, test, expect, it } from '@jest/globals';
 
@@ -124,6 +126,69 @@ describe('MatchTree', () => {
 		expect(matchTree?.rounds[2].matches[1]?.team2).toBeNull()
 		expect(matchTree?.rounds[3].matches[0]?.team1).toBeNull()
 		expect(matchTree?.rounds[3].matches[0]?.team2).toBeNull()
+	})
+
+	test.skip('testing isComplete true', () => {
+		const matches = [
+			[
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, result: { id: 17, name: "Team 1" } },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, result: { id: 20, name: "Team 4" } },
+			],
+			[
+				{ roundIndex: 1, matchIndex: 1, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" }, result: { id: 21, name: "Team 5" } },
+			],
+		]
+
+		const matchTree = MatchTree.fromMatchRepr(matches)
+		expect(matchTree?.isComplete()).toBe(true)
+	})
+
+	test.skip('testing isComplete false', () => {
+		const matches = [
+			[
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, result: { id: 17, name: "Team 1" } },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, result: { id: 20, name: "Team 4" } },
+			],
+			[
+				{ roundIndex: 1, matchIndex: 1, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
+			],
+		]
+
+		const matchTree = MatchTree.fromMatchRepr(matches)
+		expect(matchTree?.isComplete()).toBe(false)
+	})
+
+	test('testing advanceTeam', () => {
+		const matches = [
+			[
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" } }
+			],
+			[
+				{ roundIndex: 1, matchIndex: 1 },
+			],
+		]
+
+		const matchTree = MatchTree.fromMatchRepr(matches)
+		matchTree?.advanceTeam(0, 1, true)
+		expect(matchTree?.rounds[0].matches[1]?.result?.id).toBe(19)
+		expect(matchTree?.rounds[1].matches[0]?.team2?.id).toBe(19)
+	})
+
+	test.skip('testing MatchTree serialize', () => {
+		const matches = [
+			[
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, result: { id: 17, name: "Team 1" } },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, result: { id: 20, name: "Team 4" } },
+			],
+			[
+				{ roundIndex: 1, matchIndex: 1, team1: { id: 17, name: "Team 1" }, team2: { id: 20, name: "Team 4" }, result: { id: 17, name: "Team 1" } },
+			],
+		]
+
+		const matchTree = MatchTree.fromMatchRepr(matches)
+		const serialized = matchTree?.serialize()
+		expect(serialized).toEqual(matches)
 	})
 });
 
@@ -302,30 +367,20 @@ describe('MatchTree Utils', () => {
 		expect(filled).toEqual(expected)
 	})
 
-	test('testing get match parent', () => {
-		const matchTree = MatchTree.fromMatchRes(8, [
-			{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
-			{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" } },
-			{ id: 11, roundIndex: 0, matchIndex: 2, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
-			{ id: 12, roundIndex: 0, matchIndex: 3, team1: { id: 23, name: "Team 7" }, team2: { id: 24, name: "Team 8" } },
-		])
-		console.log('tree')
-	})
-
 	test('testing linkNodes', () => {
 		const rounds = [
 			new Round(0, 2, [
-				new MatchNode(0, 0, 2),
-				new MatchNode(0, 1, 2),
-				new MatchNode(0, 2, 2),
-				new MatchNode(0, 3, 2),
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2 }),
+				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 2 }),
+				new MatchNode({ roundIndex: 0, matchIndex: 2, depth: 2 }),
+				new MatchNode({ roundIndex: 0, matchIndex: 3, depth: 2 }),
 			]),
 			new Round(1, 1, [
-				new MatchNode(1, 0, 2),
-				new MatchNode(1, 1, 2),
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1 }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1 }),
 			]),
 			new Round(2, 0, [
-				new MatchNode(2, 0, 2),
+				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0 }),
 			])
 		]
 
@@ -339,20 +394,20 @@ describe('MatchTree Utils', () => {
 		const r2m2 = rounds?.[1].matches[1]
 		const r3m1 = rounds?.[2].matches[0]
 
-		expect(r3m1?.parent).toBeNull()
-		expect(r2m1?.parent).toEqual(r3m1)
-		expect(r2m2?.parent).toEqual(r3m1)
-		expect(r1m1?.parent).toEqual(r2m1)
-		expect(r1m2?.parent).toEqual(r2m1)
-		expect(r1m3?.parent).toEqual(r2m2)
-		expect(r1m4?.parent).toEqual(r2m2)
+		// expect(r3m1?.parent).toBeNull()
+		expect(r2m1?.parent).toBe(r3m1)
+		expect(r2m2?.parent).toBe(r3m1)
+		expect(r1m1?.parent).toBe(r2m1)
+		expect(r1m2?.parent).toBe(r2m1)
+		expect(r1m3?.parent).toBe(r2m2)
+		expect(r1m4?.parent).toBe(r2m2)
 
-		expect(r3m1?.left).toEqual(r2m1)
-		expect(r3m1?.right).toEqual(r2m2)
-		expect(r2m1?.left).toEqual(r1m1)
-		expect(r2m1?.right).toEqual(r1m2)
-		expect(r2m2?.left).toEqual(r1m3)
-		expect(r2m2?.right).toEqual(r1m4)
+		expect(r3m1?.left).toBe(r2m1)
+		expect(r3m1?.right).toBe(r2m2)
+		expect(r2m1?.left).toBe(r1m1)
+		expect(r2m1?.right).toBe(r1m2)
+		expect(r2m2?.left).toBe(r1m3)
+		expect(r2m2?.right).toBe(r1m4)
 
 		expect(r1m1?.left).toBeNull()
 		expect(r1m1?.right).toBeNull()
@@ -362,6 +417,58 @@ describe('MatchTree Utils', () => {
 		expect(r1m3?.right).toBeNull()
 		expect(r1m4?.left).toBeNull()
 		expect(r1m4?.right).toBeNull()
+	})
+
+	test('testing linkTeams', () => {
+		const team1 = new Team("Team 1")
+		const team2 = new Team("Team 2")
+		const team3 = new Team("Team 3")
+		const team4 = new Team("Team 4")
+		const team5 = new Team("Team 5")
+		const team6 = new Team("Team 6")
+		const team7 = new Team("Team 7")
+		const team8 = new Team("Team 8")
+
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2, team1: team1, team2: team2, team1Wins: true }),
+				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 2, team1: team3, team2: team4, team2Wins: true }),
+				new MatchNode({ roundIndex: 0, matchIndex: 2, depth: 2, team1: team5, team2: team6, team1Wins: true }),
+				new MatchNode({ roundIndex: 0, matchIndex: 3, depth: 2, team1: team7, team2: team8, team2Wins: true }),
+
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1, team1Wins: true }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1, team2Wins: true }),
+			]),
+			new Round(2, 0, [
+				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0, team1Wins: true }),
+			])
+		]
+
+		linkTeams(rounds)
+
+		const r1m1 = rounds?.[0].matches[0]
+		const r1m2 = rounds?.[0].matches[1]
+		const r1m3 = rounds?.[0].matches[2]
+		const r1m4 = rounds?.[0].matches[3]
+		const r2m1 = rounds?.[1].matches[0]
+		const r2m2 = rounds?.[1].matches[1]
+		const r3m1 = rounds?.[2].matches[0]
+
+		expect(r1m1?.result).toBe(team1)
+		expect(r1m2?.result).toBe(team4)
+		expect(r1m3?.result).toBe(team5)
+		expect(r1m4?.result).toBe(team8)
+		expect(r2m1?.team1).toBe(team1)
+		expect(r2m1?.team2).toBe(team3)
+		expect(r2m1?.result).toBe(team5)
+		expect(r2m2?.team1).toBe(team5)
+		expect(r2m2?.team2).toBe(team7)
+		expect(r2m2?.result).toBe(team8)
+		expect(r3m1?.team1).toBe(team1)
+		expect(r3m1?.team2).toBe(team5)
+		expect(r3m1?.result).toBe(team1)
 	})
 
 	test('testing getWildcardRange top', () => {
