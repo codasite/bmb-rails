@@ -9,10 +9,16 @@ require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
+$status = $_GET['status'];
+
 
 
 // get all of the current user's tournaments
-$tournaments = $tournament_repo->get_all_by_author(get_current_user_id());
+// $tournaments = $tournament_repo->get_all_by_author(get_current_user_id());
+$tournaments = $tournament_repo->filter(array(
+	'author' => get_current_user_id(),
+	'status' => $status,
+));
 
 // partition appointments based on status (completed vs any other status)
 $completed_tournaments = array();
@@ -116,11 +122,11 @@ function tournament_list_item($tournament) {
 <?php
 	return ob_get_clean();
 }
-function tournament_section($tournaments, $title) {
+
+function tournament_section($tournaments) {
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col tw-gap-15">
-		<h3 class="tw-font-500 tw-text-24 tw-text-white/50"><?php echo esc_html($title) ?></h3>
 		<?php foreach ($tournaments as $tournament) {
 			echo tournament_list_item($tournament);
 		} ?>
@@ -136,6 +142,14 @@ function tournament_section($tournaments, $title) {
 		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
 		<span class="tw-font-700 tw-text-24">Create Tournament</span>
 	</a>
-	<?php echo tournament_section($active_tournaments, 'Active') ?>
-	<?php echo tournament_section($completed_tournaments, 'Completed') ?>
+	<div class="tw-flex tw-justify-center tw-gap-10 tw-gap-30 tw-py-11">
+		<?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?>
+		<?php echo wpbb_sort_button('Live', get_permalink() . "tournaments/?status=publish", $status === 'publish'); ?>
+		<?php echo wpbb_sort_button('Scored', get_permalink() . "tournaments/?status=complete", $status === 'complete'); ?>
+		<?php echo wpbb_sort_button('Archive', get_permalink() . "tournaments/?status=archive", $status === 'archive'); ?>
+		<?php echo wpbb_sort_button('Trash', get_permalink() . "tournaments/?status=trash", $status === 'trash'); ?>
+	</div>
+
+	<?php echo tournament_section($active_tournaments) ?>
+	<?php echo tournament_section($completed_tournaments) ?>
 </div>
