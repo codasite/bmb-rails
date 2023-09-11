@@ -11,26 +11,11 @@ $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 $status = $_GET['status'];
 
-
-
-// get all of the current user's tournaments
-// $tournaments = $tournament_repo->get_all_by_author(get_current_user_id());
+// filter tournaments for current user, by status in the query params
 $tournaments = $tournament_repo->filter(array(
 	'author' => get_current_user_id(),
 	'status' => $status,
 ));
-
-// partition appointments based on status (completed vs any other status)
-$completed_tournaments = array();
-$active_tournaments = array();
-
-foreach ($tournaments as $tournament) {
-	if ($tournament->status === 'complete') {
-		array_push($completed_tournaments, $tournament);
-	} else {
-		array_push($active_tournaments, $tournament);
-	}
-}
 
 function score_tournament_btn($endpoint, $tournament) {
 
@@ -87,7 +72,7 @@ function tournament_list_item($tournament) {
 	$num_teams = $tournament->bracket_template->num_teams;
 	$num_plays = 999999; //count($plays);
 	$id = $tournament->id;
-	$completed = true;
+	$completed = $tournament->status === 'complete';
 	$share_link = get_permalink() . 'tournaments/' . $id . '/share';
 	$delete_link = get_permalink() . 'tournaments/';
 	$play_link = get_permalink() . 'tournaments/' . $id . '/play';
@@ -150,6 +135,5 @@ function tournament_section($tournaments) {
 		<?php echo wpbb_sort_button('Trash', get_permalink() . "tournaments/?status=trash", $status === 'trash'); ?>
 	</div>
 
-	<?php echo tournament_section($active_tournaments) ?>
-	<?php echo tournament_section($completed_tournaments) ?>
+	<?php echo tournament_section($tournaments) ?>
 </div>
