@@ -312,46 +312,46 @@ export class MatchTree {
 		const numRounds = getNumRounds(numTeams)
 		const nullableMatches = getNullMatches(numRounds) as Nullable<MatchRepr>[][]
 
-		const firstRoundMatches = getFirstRoundMatchCount(numTeams, numRounds)
+		// const firstRoundMatches = getFirstRoundMatchCount(numTeams, numRounds)
 
 
 
-		for (let i = 1; i < numRounds; i++) {
+		// for (let i = 1; i < numRounds; i++) {
 
-			let ranges: WildcardRange[] = []
+		// 	let ranges: WildcardRange[] = []
 
-			if (i === numRounds - 1 && firstRoundMatches > 0) {
-				const placement = wildcardPlacement
-				const maxNodes = 2 ** i
-				const range1 = getWildcardRange(0, maxNodes / 2, firstRoundMatches / 2, placement)
-				const range2 = getWildcardRange(maxNodes / 2, maxNodes, firstRoundMatches / 2, placement)
-				ranges = [...range1, ...range2]
-			}
+		// 	if (i === numRounds - 1 && firstRoundMatches > 0) {
+		// 		const placement = wildcardPlacement
+		// 		const maxNodes = 2 ** i
+		// 		const range1 = getWildcardRange(0, maxNodes / 2, firstRoundMatches / 2, placement)
+		// 		const range2 = getWildcardRange(maxNodes / 2, maxNodes, firstRoundMatches / 2, placement)
+		// 		ranges = [...range1, ...range2]
+		// 	}
 
-			const round = new Round(i + 1, `Round ${numRounds - i}`, i);
-			const maxMatches = 2 ** i
-			const matches: (MatchNode | null)[] = []
-			for (let x = 0; x < maxMatches; x++) {
-				if (ranges.length > 0) {
-					// check to see if x is in the range of any of the wildcard ranges
-					const inRange = ranges.some(range => {
-						return x >= range.min && x < range.max
-					})
-					if (!inRange) {
-						matches[x] = null
-						continue
-					}
-				}
-				// const parentIndex = Math.floor(x / 2)
-				// const parent = rounds[i - 1].matches[parentIndex]
-				// const parent = getParent(x, i, rounds)
-				// const match = new MatchNode(null, i, parent)
-				// assignMatchToParent(x, match, parent)
-				// matches[x] = match
-			}
-			round.matches = matches
-			// rounds[i] = round
-		};
+		// 	const round = new Round(i + 1, `Round ${numRounds - i}`, i);
+		// 	const maxMatches = 2 ** i
+		// 	const matches: (MatchNode | null)[] = []
+		// 	for (let x = 0; x < maxMatches; x++) {
+		// 		if (ranges.length > 0) {
+		// 			// check to see if x is in the range of any of the wildcard ranges
+		// 			const inRange = ranges.some(range => {
+		// 				return x >= range.min && x < range.max
+		// 			})
+		// 			if (!inRange) {
+		// 				matches[x] = null
+		// 				continue
+		// 			}
+		// 		}
+		// 		// const parentIndex = Math.floor(x / 2)
+		// 		// const parent = rounds[i - 1].matches[parentIndex]
+		// 		// const parent = getParent(x, i, rounds)
+		// 		// const match = new MatchNode(null, i, parent)
+		// 		// assignMatchToParent(x, match, parent)
+		// 		// matches[x] = match
+		// 	}
+		// 	round.matches = matches
+		// 	// rounds[i] = round
+		// };
 
 		const tree = new MatchTree()
 		return tree
@@ -539,54 +539,6 @@ export const fillInEmptyMatches = (rounds: any[][], roundStart: number = 1): any
 	return newRounds
 }
 
-export const matchReprFromNumTeams = (numTeams: number, wildcardPlacement: WildcardPlacement): MatchRepr[][] => {
-	const numRounds = getNumRounds(numTeams)
-
-	for (let i = numRounds - 1; i >= 0; i--) {
-		const maxMatches = 2 ** i
-		if (i === 0) {
-
-		}
-	}
-
-
-}
-
-export const fillFirstRoundMatches = (numTeams: number, rounds: Nullable<MatchRepr>[][]): Nullable<MatchRepr>[][] => {
-	const matchCount = getFirstRoundMatchCount(numTeams)
-	const maxMatches = 2 ** (rounds.length - 1)
-	const leftSideCount = Math.ceil(matchCount / 2)
-	const rightSideCount = Math.floor(matchCount / 2)
-	console.log(`leftSideCount: ${leftSideCount}`)
-	console.log(`rightSideCount: ${rightSideCount}`)
-
-	const leftRange = getWildcardRange(0, maxMatches / 2, leftSideCount, WildcardPlacement.Top)
-	const rightRange = getWildcardRange(maxMatches / 2, maxMatches, rightSideCount, WildcardPlacement.Bottom)
-	const ranges = [...leftRange, ...rightRange]
-
-	const newRounds = rounds.map((round, roundIndex) => {
-		if (roundIndex !== 0) {
-			return round
-		}
-		const newRound = round.map((match, matchIndex) => {
-			if (match !== null) {
-				return match
-			}
-			const inRange = ranges.some(range => {
-				return matchIndex >= range.min && matchIndex < range.max
-			})
-			if (!inRange) {
-				return null
-			}
-			return { roundIndex: roundIndex, matchIndex: matchIndex }
-		})
-		return newRound
-	})
-
-	return newRounds
-
-}
-
 export const getWildcardRange = (start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] => {
 	switch (placement) {
 		case WildcardPlacement.Top:
@@ -601,11 +553,16 @@ export const getWildcardRange = (start: number, end: number, count: number, plac
 	}
 }
 
-export const getFirstRoundMatches = (numTeams: number, wildcardPlacement: WildcardPlacement, numRounds?: number,) => {
-	if (!numRounds) {
-		numRounds = getNumRounds(numTeams)
+export const getFirstRoundMatches = (numTeams: number, wildcardPlacement?: WildcardPlacement, maxMatches?: number): Nullable<MatchRepr>[] => {
+	// This somehow works to get the number of matches that are not null in the first round
+	if (!maxMatches) {
+		maxMatches = 2 ** (getNumRounds(numTeams) - 1)
 	}
-	const maxMatches = 2 ** (numRounds - 1)
+
+	if (!wildcardPlacement) {
+		wildcardPlacement = WildcardPlacement.Top
+	}
+
 	const matchCount = numTeams - maxMatches
 
 	const leftSideCount = Math.ceil(matchCount / 2)
@@ -615,8 +572,9 @@ export const getFirstRoundMatches = (numTeams: number, wildcardPlacement: Wildca
 	const rightRange = getWildcardRange(maxMatches / 2, maxMatches, rightSideCount, wildcardPlacement)
 
 	const ranges = [...leftRange, ...rightRange]
+	console.log('ranges: ', ranges)
 
-	const matches = new Array(maxMatches).map((match, matchIndex) => {
+	const matches = Array.from({ length: maxMatches }).map((match, matchIndex) => {
 		const inRange = ranges.some(range => {
 			return matchIndex >= range.min && matchIndex < range.max
 		})
@@ -624,7 +582,28 @@ export const getFirstRoundMatches = (numTeams: number, wildcardPlacement: Wildca
 			return null
 		}
 		return { roundIndex: 0, matchIndex: matchIndex }
+
 	})
+	console.log('matches: ', matches)
 
 	return matches
+}
+
+export const matchReprFromNumTeams = (numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): Nullable<MatchRepr>[][] => {
+	const numRounds = getNumRounds(numTeams)
+
+	const rounds = Array.from({ length: numRounds }).map((round, roundIndex) => {
+		const depth = numRounds - roundIndex - 1
+		const maxMatches = 2 ** depth
+		if (roundIndex === 0) {
+			const matches = getFirstRoundMatches(numTeams, wildcardPlacement, maxMatches)
+			return matches
+		} else {
+			const matches = Array.from({ length: maxMatches }).map((match, matchIndex) => {
+				return { roundIndex: roundIndex, matchIndex: matchIndex }
+			})
+			return matches
+		}
+	})
+	return rounds
 }

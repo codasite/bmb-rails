@@ -6,8 +6,8 @@ import {
 	fillInEmptyMatches,
 	WildcardPlacement,
 	getWildcardRange,
-	getFirstRoundMatchCount,
-	fillFirstRoundMatches,
+	getFirstRoundMatches,
+	matchReprFromNumTeams,
 } from './MatchTree';
 import { describe, test, expect, it } from '@jest/globals';
 
@@ -357,30 +357,99 @@ describe('MatchTree Utils', () => {
 		expect(range).toEqual(expected)
 	})
 
-	test('testing getFirstRoundMatchCount', () => {
-		expect(getFirstRoundMatchCount(6)).toBe(2)
-		expect(getFirstRoundMatchCount(7)).toBe(3)
-		expect(getFirstRoundMatchCount(8)).toBe(4)
-		expect(getFirstRoundMatchCount(9)).toBe(1)
-		expect(getFirstRoundMatchCount(10)).toBe(2)
-		expect(getFirstRoundMatchCount(11)).toBe(3)
-		expect(getFirstRoundMatchCount(12)).toBe(4)
-		expect(getFirstRoundMatchCount(13)).toBe(5)
-		expect(getFirstRoundMatchCount(14)).toBe(6)
-		expect(getFirstRoundMatchCount(15)).toBe(7)
-		expect(getFirstRoundMatchCount(16)).toBe(8)
-		expect(getFirstRoundMatchCount(17)).toBe(1)
-		expect(getFirstRoundMatchCount(18)).toBe(2)
-		expect(getFirstRoundMatchCount(19)).toBe(3)
+	test('testing getFirstRoundMatches 8 teams', () => {
+		const numTeams = 8
+
+		const expected = [
+			{ roundIndex: 0, matchIndex: 0 },
+			{ roundIndex: 0, matchIndex: 1 },
+			{ roundIndex: 0, matchIndex: 2 },
+			{ roundIndex: 0, matchIndex: 3 },
+		]
+
+		const matches = getFirstRoundMatches(numTeams)
+		expect(matches).toEqual(expected)
 	})
 
-	test('testing fillInFirstRoundMatches full', () => {
-		const numTeams = 8
-		const rounds = [
-			[null, null, null, null],
-			[null, null],
-			[null],
+	test('testing getFirstRoundMatches 12 teams top', () => {
+		const numTeams = 12
+		const wildcardPlacement = WildcardPlacement.Top
+
+		const expected = [
+			{ roundIndex: 0, matchIndex: 0 },
+			{ roundIndex: 0, matchIndex: 1 },
+			null,
+			null,
+			{ roundIndex: 0, matchIndex: 4 },
+			{ roundIndex: 0, matchIndex: 5 },
+			null,
+			null,
 		]
+
+		const matches = getFirstRoundMatches(numTeams, wildcardPlacement)
+		expect(matches).toEqual(expected)
+	})
+
+	test('testing getFirstRoundMatches 12 teams bottom', () => {
+		const numTeams = 12
+		const wildcardPlacement = WildcardPlacement.Bottom
+
+		const expected = [
+			null,
+			null,
+			{ roundIndex: 0, matchIndex: 2 },
+			{ roundIndex: 0, matchIndex: 3 },
+			null,
+			null,
+			{ roundIndex: 0, matchIndex: 6 },
+			{ roundIndex: 0, matchIndex: 7 },
+		]
+
+		const matches = getFirstRoundMatches(numTeams, wildcardPlacement)
+		expect(matches).toEqual(expected)
+	})
+
+	test('testing getFirstRoundMatches 12 teams center', () => {
+		const numTeams = 12
+		const wildcardPlacement = WildcardPlacement.Center
+
+		const expected = [
+			null,
+			{ roundIndex: 0, matchIndex: 1 },
+			{ roundIndex: 0, matchIndex: 2 },
+			null,
+			null,
+			{ roundIndex: 0, matchIndex: 5 },
+			{ roundIndex: 0, matchIndex: 6 },
+			null,
+		]
+
+		const matches = getFirstRoundMatches(numTeams, wildcardPlacement)
+		expect(matches).toEqual(expected)
+	})
+
+	test('testing getFirstRoundMatches 12 teams split', () => {
+		const numTeams = 12
+		const wildcardPlacement = WildcardPlacement.Split
+
+		const expected = [
+			{ roundIndex: 0, matchIndex: 0 },
+			null,
+			null,
+			{ roundIndex: 0, matchIndex: 3 },
+			{ roundIndex: 0, matchIndex: 4 },
+			null,
+			null,
+			{ roundIndex: 0, matchIndex: 7 },
+		]
+
+		const matches = getFirstRoundMatches(numTeams, wildcardPlacement)
+		expect(matches).toEqual(expected)
+	})
+
+	test('testing getMatchReprFromNumTeams 8 teams', () => {
+		const numTeams = 8
+
 		const expected = [
 			[
 				{ roundIndex: 0, matchIndex: 0 },
@@ -389,15 +458,49 @@ describe('MatchTree Utils', () => {
 				{ roundIndex: 0, matchIndex: 3 },
 			],
 			[
+				{ roundIndex: 1, matchIndex: 0 },
+				{ roundIndex: 1, matchIndex: 1 },
+			],
+			[
+				{ roundIndex: 2, matchIndex: 0 },
+			],
+		]
+
+		const matches = matchReprFromNumTeams(numTeams)
+		expect(matches).toEqual(expected)
+	})
+
+	test('testing getMatchReprFromNumTeams 12 teams top', () => {
+		const numTeams = 12
+		const wildcardPlacement = WildcardPlacement.Top
+
+		const expected = [
+			[
+				{ roundIndex: 0, matchIndex: 0 },
+				{ roundIndex: 0, matchIndex: 1 },
+				null,
+				null,
+				{ roundIndex: 0, matchIndex: 4 },
+				{ roundIndex: 0, matchIndex: 5 },
 				null,
 				null,
 			],
 			[
-				null,
-			]
+				{ roundIndex: 1, matchIndex: 0 },
+				{ roundIndex: 1, matchIndex: 1 },
+				{ roundIndex: 1, matchIndex: 2 },
+				{ roundIndex: 1, matchIndex: 3 },
+			],
+			[
+				{ roundIndex: 2, matchIndex: 0 },
+				{ roundIndex: 2, matchIndex: 1 },
+			],
+			[
+				{ roundIndex: 3, matchIndex: 0 },
+			],
 		]
 
-		const filled = fillFirstRoundMatches(numTeams, rounds)
-		expect(filled).toEqual(expected)
+		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
+		expect(matches).toEqual(expected)
 	})
 })
