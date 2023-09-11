@@ -53,7 +53,6 @@ export interface MatchNodeArgs {
 	team2?: Nullable<Team>;
 	team1Wins?: boolean;
 	team2Wins?: boolean;
-	result?: Nullable<Team>;
 	left?: Nullable<MatchNode>;
 	right?: Nullable<MatchNode>;
 	parent?: Nullable<MatchNode>;
@@ -64,11 +63,10 @@ export class MatchNode {
 	id?: number | null = null;
 	matchIndex: number;
 	roundIndex: number;
-	team1: Nullable<Team> = null;
-	team2: Nullable<Team> = null;
+	private team1: Nullable<Team> = null;
+	private team2: Nullable<Team> = null;
 	team1Wins?: boolean = false;
 	team2Wins?: boolean = false;
-	result: Nullable<Team> = null;
 	left: Nullable<MatchNode> = null;
 	right: Nullable<MatchNode> = null;
 	parent: Nullable<MatchNode> = null;
@@ -84,7 +82,6 @@ export class MatchNode {
 			team2,
 			team1Wins,
 			team2Wins,
-			result,
 			left,
 			right,
 			parent,
@@ -97,7 +94,6 @@ export class MatchNode {
 		this.id = id;
 		this.team1Wins = team1Wins;
 		this.team2Wins = team2Wins;
-		this.result = result ? result : null;
 		this.left = left ? left : null;
 		this.right = right ? right : null;
 		this.parent = parent ? parent : null;
@@ -114,6 +110,27 @@ export class MatchNode {
 			team1: match.team1 ? match.team1.serialize() : undefined,
 			team2: match.team2 ? match.team2.serialize() : undefined,
 		}
+	}
+
+	getWinner(): Nullable<Team> {
+		if (this.team1Wins) {
+			return this.getTeam1();
+		} else if (this.team2Wins) {
+			return this.getTeam2();
+		}
+		return null;
+	}
+
+	isLeftChild(): boolean {
+		return this.parent !== null && this.parent.left === this;
+	}
+
+	getTeam1(): Nullable<Team> {
+		return this.left ? this.left.getWinner() : this.team1;
+	}
+
+	getTeam2(): Nullable<Team> {
+		return this.right ? this.right.getWinner() : this.team2;
 	}
 }
 
@@ -133,7 +150,7 @@ export class Round {
 			if (match === null) {
 				return true;
 			}
-			return match.result !== null;
+			return match.getWinner() !== null;
 		});
 	}
 
@@ -173,19 +190,10 @@ export class MatchTree {
 		if (!match) {
 			return
 		}
-		const team = left ? match.team1 : match.team2
-		if (!team) {
-			return
-		}
-		match.result = team
-		const parent = match.parent
-		if (!parent) {
-			return
-		}
-		if (match === parent.left) {
-			parent.team1 = team
-		} else if (match === parent.right) {
-			parent.team2 = team
+		if (left) {
+			match.team1Wins = true
+		} else {
+			match.team2Wins = true
 		}
 	}
 
@@ -198,7 +206,7 @@ export class MatchTree {
 		if (!finalMatch) {
 			return false
 		}
-		return finalMatch.result !== null
+		return finalMatch.getWinner() !== null
 	}
 
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
@@ -239,7 +247,6 @@ export class MatchTree {
 					team2,
 					team1Wins,
 					team2Wins,
-					result: null,
 					left: null,
 					right: null,
 					parent: null,
@@ -252,31 +259,33 @@ export class MatchTree {
 		})
 		const tree = new MatchTree()
 		linkNodes(rounds)
-		linkTeams(rounds)
+		// linkTeams(rounds)
 		tree.rounds = rounds
 		return tree
 	}
 }
 
-export const linkTeams = (rounds: Round[]) => {
+// export const linkTeams = (rounds: Round[]) => {
 
-	rounds.forEach((round, roundIndex) => {
-		round.matches.forEach((match, matchIndex) => {
-			if (!match) {
-				return
-			}
-			const { team1, team2, team1Wins, team2Wins } = match
-			const team1Winner = team1Wins && team1
-			const team2Winner = team2Wins && team2
+// 	rounds.forEach((round, roundIndex) => {
+// 		round.matches.forEach((match, matchIndex) => {
+// 			if (!match) {
+// 				return
+// 			}
+// 			const { team1Wins, team2Wins } = match
+// 			const team1 = match.getTeam1()
+// 			const team2 = match.getTeam2()
+// 			const team1Winner = team1Wins && team1
+// 			const team2Winner = team2Wins && team2
 
-			if (team1Winner) {
-				linkParentAndResultTeam(team1Winner, match, matchIndex, roundIndex, rounds)
-			} else if (team2Winner) {
-				linkParentAndResultTeam(team2Winner, match, matchIndex, roundIndex, rounds)
-			}
-		})
-	})
-}
+// 			if (team1Winner) {
+// 				linkParentTeam(team1Winner, matchIndex, roundIndex, rounds)
+// 			} else if (team2Winner) {
+// 				linkParentTeam(team2Winner, matchIndex, roundIndex, rounds)
+// 			}
+// 		})
+// 	})
+// }
 
 export const linkNodes = (rounds: Round[]) => {
 	rounds.forEach((round, roundIndex) => {
@@ -312,18 +321,17 @@ export const assignMatchToParent = (matchIndex: number, match: MatchNode, parent
 	}
 }
 
-export const linkParentAndResultTeam = (winningTeam: Team, match: MatchNode, matchIndex: number, roundIndex: number, rounds: Round[]) => {
-	match.result = winningTeam;
-	const parent = getParent(matchIndex, roundIndex, rounds);
-	const leftChild = isLeftChild(matchIndex);
-	if (parent) {
-		if (leftChild) {
-			parent.team1 = winningTeam;
-		} else {
-			parent.team2 = winningTeam;
-		}
-	}
-}
+// export const linkParentTeam = (winningTeam: Team, matchIndex: number, roundIndex: number, rounds: Round[]) => {
+// 	const parent = getParent(matchIndex, roundIndex, rounds);
+// 	const leftChild = isLeftChild(matchIndex);
+// 	if (parent) {
+// 		if (leftChild) {
+// 			parent.team1 = winningTeam;
+// 		} else {
+// 			parent.team2 = winningTeam;
+// 		}
+// 	}
+// }
 
 export const isLeftChild = (matchIndex: number): boolean => {
 	return matchIndex % 2 === 0
