@@ -309,54 +309,8 @@ export class MatchTree {
 	}
 
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement): MatchTree {
-		const numRounds = getNumRounds(numTeams)
-		const nullableMatches = getNullMatches(numRounds) as Nullable<MatchRepr>[][]
-
-		// const firstRoundMatches = getFirstRoundMatchCount(numTeams, numRounds)
-
-
-
-		// for (let i = 1; i < numRounds; i++) {
-
-		// 	let ranges: WildcardRange[] = []
-
-		// 	if (i === numRounds - 1 && firstRoundMatches > 0) {
-		// 		const placement = wildcardPlacement
-		// 		const maxNodes = 2 ** i
-		// 		const range1 = getWildcardRange(0, maxNodes / 2, firstRoundMatches / 2, placement)
-		// 		const range2 = getWildcardRange(maxNodes / 2, maxNodes, firstRoundMatches / 2, placement)
-		// 		ranges = [...range1, ...range2]
-		// 	}
-
-		// 	const round = new Round(i + 1, `Round ${numRounds - i}`, i);
-		// 	const maxMatches = 2 ** i
-		// 	const matches: (MatchNode | null)[] = []
-		// 	for (let x = 0; x < maxMatches; x++) {
-		// 		if (ranges.length > 0) {
-		// 			// check to see if x is in the range of any of the wildcard ranges
-		// 			const inRange = ranges.some(range => {
-		// 				return x >= range.min && x < range.max
-		// 			})
-		// 			if (!inRange) {
-		// 				matches[x] = null
-		// 				continue
-		// 			}
-		// 		}
-		// 		// const parentIndex = Math.floor(x / 2)
-		// 		// const parent = rounds[i - 1].matches[parentIndex]
-		// 		// const parent = getParent(x, i, rounds)
-		// 		// const match = new MatchNode(null, i, parent)
-		// 		// assignMatchToParent(x, match, parent)
-		// 		// matches[x] = match
-		// 	}
-		// 	round.matches = matches
-		// 	// rounds[i] = round
-		// };
-
-		const tree = new MatchTree()
-		return tree
-
-
+		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
+		return MatchTree.fromMatchRepr(matches)
 	}
 
 	static fromMatchRes(numTeams: number, matches: MatchResV2[]): MatchTree | null {

@@ -13,12 +13,31 @@ import { describe, test, expect, it } from '@jest/globals';
 
 describe('MatchTree', () => {
 
-	test.skip('testing create match tree from a number of teams and wildcard placement', () => {
+	test('testing create match tree from a number of teams and wildcard placement', () => {
 		const numTeams = 8
 		const wildcardPlacement = WildcardPlacement.Top
 		const matchTree = MatchTree.fromNumTeams(numTeams, wildcardPlacement)
 
 		expect(matchTree).not.toBeNull()
+		const rounds = matchTree?.rounds
+		expect(rounds).not.toBeNull()
+		expect(rounds?.length).toBe(3)
+		const round1 = rounds?.[0]
+		expect(round1).not.toBeNull()
+		expect(round1?.matches.length).toBe(4)
+		expect(round1?.matches[0]).not.toBeNull()
+		expect(round1?.matches[1]).not.toBeNull()
+		expect(round1?.matches[2]).not.toBeNull()
+		expect(round1?.matches[3]).not.toBeNull()
+		const round2 = rounds?.[1]
+		expect(round2).not.toBeNull()
+		expect(round2?.matches.length).toBe(2)
+		expect(round2?.matches[0]).not.toBeNull()
+		expect(round2?.matches[1]).not.toBeNull()
+		const round3 = rounds?.[2]
+		expect(round3).not.toBeNull()
+		expect(round3?.matches.length).toBe(1)
+		expect(round3?.matches[0]).not.toBeNull()
 	})
 
 	test('testing create match tree from nested array of matches', () => {
