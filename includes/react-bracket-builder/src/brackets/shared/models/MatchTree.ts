@@ -68,12 +68,12 @@ export class MatchNode {
 	parent: Nullable<MatchNode> = null;
 	depth: number;
 
-	constructor(matchIndex, roundIndex, id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
+	// constructor(matchIndex, roundIndex, id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
+	constructor(roundIndex: number, matchIndex: number, depth: number, id: Nullable<number> = null) {
 		this.matchIndex = matchIndex;
 		this.roundIndex = roundIndex;
-		this.id = id;
 		this.depth = depth;
-		this.parent = parent;
+		this.id = id;
 	}
 
 	// clone(): MatchNode {
@@ -126,45 +126,43 @@ export class MatchNode {
 }
 
 export class Round {
-	id: number;
-	name: string;
+	index: number;
 	depth: number;
 	matches: Array<Nullable<MatchNode>>;
 
-	constructor(id: number, name: string, depth: number,) {
-		this.id = id;
-		this.name = name;
+	constructor(index: number, depth: number, matches: Array<Nullable<MatchNode>> = []) {
+		this.index = index;
 		this.depth = depth;
-		// this.matches = [];
+		this.matches = matches;
 	}
 
-	toRequest(): RoundReq {
-		const round = this;
-		const matches = round.matches.map((match, i) => {
-			if (match === null) {
-				return null;
-			}
-			return match.toRequest(i);
-		});
-		return {
-			name: round.name,
-			depth: round.depth,
-			matches: matches,
-		}
-	}
+	// toRequest(): RoundReq {
+	// 	const round = this;
+	// 	const matches = round.matches.map((match, i) => {
+	// 		if (match === null) {
+	// 			return null;
+	// 		}
+	// 		return match.toRequest(i);
+	// 	});
+	// 	return {
+	// 		name: round.name,
+	// 		depth: round.depth,
+	// 		matches: matches,
+	// 	}
+	// }
 
-	toSubmissionReq(): SubmissionRoundReq {
-		const round = this;
-		const matches = round.matches.map((match, i) => {
-			if (match === null) {
-				return null;
-			}
-			return match.toSubmissionReq();
-		});
-		return {
-			matches: matches,
-		}
-	}
+	// toSubmissionReq(): SubmissionRoundReq {
+	// 	const round = this;
+	// 	const matches = round.matches.map((match, i) => {
+	// 		if (match === null) {
+	// 			return null;
+	// 		}
+	// 		return match.toSubmissionReq();
+	// 	});
+	// 	return {
+	// 		matches: matches,
+	// 	}
+	// }
 
 	// toSerializable(): RoundRes {
 	// 	const round = this;
@@ -281,34 +279,34 @@ export class MatchTree {
 		// return newTree;
 	}
 
-	static fromRounds(rounds: RoundRes[]): MatchTree {
-		const tree = new MatchTree()
-		tree.rounds = rounds.map((round) => {
-			const newRound = new Round(round.id, round.name, round.depth);
-			return newRound;
-		});
-		// Then, iterate over the new rounds to create the matches and update their parent relationships.
-		tree.rounds.forEach((round, roundIndex) => {
-			round.matches = rounds[roundIndex].matches.map((match, matchIndex) => {
-				if (match === null) {
-					return null;
-				}
-				const newMatch = new MatchNode(matchIndex, roundIndex, match.id, roundIndex);
-				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
-				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
-				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
-				const parent = getParent(matchIndex, roundIndex, tree.rounds);
-				if (parent) {
-					newMatch.parent = parent;
-					assignMatchToParent(matchIndex, newMatch, parent);
-				}
-				return newMatch;
-			});
-		});
-		return tree;
-	}
+	// static fromRounds(rounds: RoundRes[]): MatchTree {
+	// 	const tree = new MatchTree()
+	// 	tree.rounds = rounds.map((round) => {
+	// 		const newRound = new Round(round.id, round.name, round.depth);
+	// 		return newRound;
+	// 	});
+	// 	// Then, iterate over the new rounds to create the matches and update their parent relationships.
+	// 	tree.rounds.forEach((round, roundIndex) => {
+	// 		round.matches = rounds[roundIndex].matches.map((match, matchIndex) => {
+	// 			if (match === null) {
+	// 				return null;
+	// 			}
+	// 			const newMatch = new MatchNode(roundIndex, matchIndex, round.depth, match.id);
+	// 			newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
+	// 			newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
+	// 			newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
+	// 			const parent = getParent(matchIndex, roundIndex, tree.rounds);
+	// 			if (parent) {
+	// 				newMatch.parent = parent;
+	// 				assignMatchToParent(matchIndex, newMatch, parent);
+	// 			}
+	// 			return newMatch;
+	// 		});
+	// 	});
+	// 	return tree;
+	// }
 
-	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement): MatchTree {
+	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
 		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
 		return MatchTree.fromMatchRepr(matches)
 	}
@@ -329,12 +327,12 @@ export class MatchTree {
 	static fromMatchRepr(matchRes: Nullable<MatchRepr>[][]) {
 		const rounds = matchRes.map((round, roundIndex) => {
 			const depth = matchRes.length - roundIndex - 1
-			const newRound = new Round(roundIndex + 1, `Round ${roundIndex + 1}`, depth);
+			const newRound = new Round(roundIndex, depth)
 			const matches = round.map((match, matchIndex) => {
 				if (match === null) {
 					return null;
 				}
-				const newMatch = new MatchNode(matchIndex, roundIndex, match.id ? match.id : null, newRound.depth);
+				const newMatch = new MatchNode(roundIndex, matchIndex, depth, match.id)
 				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
 				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
 				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
@@ -348,28 +346,28 @@ export class MatchTree {
 		return tree
 	}
 
-	toRequest(name: string, active: boolean, numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): BracketReq {
-		const tree = this;
-		const rounds = tree.rounds.map((round) => {
-			return round.toRequest();
-		});
-		return {
-			rounds: rounds,
-			name: name,
-			active: active,
-			numRounds: numRounds,
-			numWildcards: numWildcards,
-			wildcardPlacement: wildcardPlacement,
-		}
-	}
+	// toRequest(name: string, active: boolean, numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): BracketReq {
+	// 	const tree = this;
+	// 	const rounds = tree.rounds.map((round) => {
+	// 		return round.toRequest();
+	// 	});
+	// 	return {
+	// 		rounds: rounds,
+	// 		name: name,
+	// 		active: active,
+	// 		numRounds: numRounds,
+	// 		numWildcards: numWildcards,
+	// 		wildcardPlacement: wildcardPlacement,
+	// 	}
+	// }
 
-	toSubmissionReq(): SubmissionRoundReq[] {
-		const tree = this;
-		const rounds = tree.rounds.map((round) => {
-			return round.toSubmissionReq();
-		});
-		return rounds
-	}
+	// toSubmissionReq(): SubmissionRoundReq[] {
+	// 	const tree = this;
+	// 	const rounds = tree.rounds.map((round) => {
+	// 		return round.toSubmissionReq();
+	// 	});
+	// 	return rounds
+	// }
 
 	toSerializable(): Nullable<MatchRepr>[][] {
 		const tree = this;
@@ -526,7 +524,6 @@ export const getFirstRoundMatches = (numTeams: number, wildcardPlacement?: Wildc
 	const rightRange = getWildcardRange(maxMatches / 2, maxMatches, rightSideCount, wildcardPlacement)
 
 	const ranges = [...leftRange, ...rightRange]
-	console.log('ranges: ', ranges)
 
 	const matches = Array.from({ length: maxMatches }).map((match, matchIndex) => {
 		const inRange = ranges.some(range => {
@@ -538,7 +535,6 @@ export const getFirstRoundMatches = (numTeams: number, wildcardPlacement?: Wildc
 		return { roundIndex: 0, matchIndex: matchIndex }
 
 	})
-	console.log('matches: ', matches)
 
 	return matches
 }

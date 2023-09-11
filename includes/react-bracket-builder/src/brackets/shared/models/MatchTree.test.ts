@@ -1,5 +1,7 @@
 import {
 	MatchTree,
+	Round,
+	MatchNode,
 	getNumRounds,
 	getNullMatches,
 	getMatchRepr,
@@ -8,6 +10,7 @@ import {
 	getWildcardRange,
 	getFirstRoundMatches,
 	matchReprFromNumTeams,
+	linkNodes,
 } from './MatchTree';
 import { describe, test, expect, it } from '@jest/globals';
 
@@ -309,8 +312,56 @@ describe('MatchTree Utils', () => {
 		console.log('tree')
 	})
 
-	test.skip('testing linkNodes', () => {
+	test('testing linkNodes', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode(0, 0, 2),
+				new MatchNode(0, 1, 2),
+				new MatchNode(0, 2, 2),
+				new MatchNode(0, 3, 2),
+			]),
+			new Round(1, 1, [
+				new MatchNode(1, 0, 2),
+				new MatchNode(1, 1, 2),
+			]),
+			new Round(2, 0, [
+				new MatchNode(2, 0, 2),
+			])
+		]
 
+		linkNodes(rounds)
+
+		const r1m1 = rounds?.[0].matches[0]
+		const r1m2 = rounds?.[0].matches[1]
+		const r1m3 = rounds?.[0].matches[2]
+		const r1m4 = rounds?.[0].matches[3]
+		const r2m1 = rounds?.[1].matches[0]
+		const r2m2 = rounds?.[1].matches[1]
+		const r3m1 = rounds?.[2].matches[0]
+
+		expect(r3m1?.parent).toBeNull()
+		expect(r2m1?.parent).toEqual(r3m1)
+		expect(r2m2?.parent).toEqual(r3m1)
+		expect(r1m1?.parent).toEqual(r2m1)
+		expect(r1m2?.parent).toEqual(r2m1)
+		expect(r1m3?.parent).toEqual(r2m2)
+		expect(r1m4?.parent).toEqual(r2m2)
+
+		expect(r3m1?.left).toEqual(r2m1)
+		expect(r3m1?.right).toEqual(r2m2)
+		expect(r2m1?.left).toEqual(r1m1)
+		expect(r2m1?.right).toEqual(r1m2)
+		expect(r2m2?.left).toEqual(r1m3)
+		expect(r2m2?.right).toEqual(r1m4)
+
+		expect(r1m1?.left).toBeNull()
+		expect(r1m1?.right).toBeNull()
+		expect(r1m2?.left).toBeNull()
+		expect(r1m2?.right).toBeNull()
+		expect(r1m3?.left).toBeNull()
+		expect(r1m3?.right).toBeNull()
+		expect(r1m4?.left).toBeNull()
+		expect(r1m4?.right).toBeNull()
 	})
 
 	test('testing getWildcardRange top', () => {
