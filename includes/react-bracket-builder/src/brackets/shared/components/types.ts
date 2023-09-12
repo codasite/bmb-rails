@@ -8,7 +8,10 @@ export interface TeamSlotProps {
 	match: MatchNode;
 	matchPosition: string;
 	teamPosition: string;
-	teamHeight: number;
+	height: number;
+	width?: number;
+	fontSize?: number;
+	fontWeight?: number;
 	matchTree: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	getTeamClass?: (roundIndex: number, matchIndex: number, position: string) => string;
