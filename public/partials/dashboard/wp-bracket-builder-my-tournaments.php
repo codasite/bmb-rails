@@ -10,7 +10,10 @@ require_once 'wp-bracket-builder-dashboard-common.php';
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
-$status = $_GET['status'];
+$status = get_query_var('status');
+if (empty($status)) {
+	$status = 'publish';
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_tournament_id'])) {
 	if (wp_verify_nonce($_POST['archive_tournament_nonce'], 'archive_tournament_action')) {
@@ -26,11 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_tournament_id'
 	}
 }
 
-// filter tournaments for current user, by status in the query params
-$tournaments = $tournament_repo->filter(array(
-	'author' => get_current_user_id(),
-	'status' => $status,
-));
+$tournaments = $tournament_repo->get_all(
+	[
+		'post_status' => $status,
+		'author' => get_current_user_id(),
+	]
+);
 
 function score_tournament_btn($endpoint, $tournament) {
 
@@ -94,6 +98,29 @@ function archive_tournament_btn($endpoint, $tournament_id) {
 	return ob_get_clean();
 }
 
+function archived_tournament_tag() {
+	return tournament_tag('Archive', 'white/50');
+}
+
+function trash_tournament_tag() {
+	return tournament_tag('Trash', 'red');
+}
+
+function get_tournament_tag($status) {
+	switch ($status) {
+		case 'publish':
+			return live_tournament_tag();
+		case 'complete':
+			return completed_tournament_tag();
+		case 'archive':
+			return archived_tournament_tag();
+		case 'trash':
+			return trash_tournament_tag();
+		default:
+			return '';
+	}
+}
+
 function tournament_list_item($tournament) {
 	// TODO: fix play_repo->get_all_by_tournament
 	// $play_repo->get_all_by_tournament($tournament->id);
@@ -115,7 +142,7 @@ function tournament_list_item($tournament) {
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
 			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-4 tw-items-center">
-				<?php  echo $tournament->status === 'complete'? completed_tournament_tag(): ($tournament->status === 'publish'? live_tournament_tag(): null)?>
+				<?php echo get_tournament_tag($tournament->status); ?>
 				<?php echo file_get_contents(plugins_url('../../assets/icons/bar_chart.svg', __FILE__)); ?>
 				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
 				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
@@ -154,14 +181,14 @@ function tournament_section($tournaments) {
 }
 ?>
 
-<div class="tw-flex tw-flex-col tw-gap-30">
-	<h1>My Tournaments</h1>
+<div class="tw-flex tw-flex-col tw-gap-15">
+	<h1 class="tw-mb-8">My Tournaments</h1>
 	<a href="#" class="tw-border-solid tw-border tw-border-white tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-16 hover:tw-bg-white hover:tw-text-black">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
 		<span class="tw-font-700 tw-text-24">Create Tournament</span>
 	</a>
-	<div class="tw-flex tw-justify-center tw-gap-10 tw-gap-30 tw-py-11">
-		<?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?>
+	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
+		<!-- <?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?> -->
 		<?php echo wpbb_sort_button('Live', get_permalink() . "tournaments/?status=publish", $status === 'publish'); ?>
 		<?php echo wpbb_sort_button('Scored', get_permalink() . "tournaments/?status=complete", $status === 'complete'); ?>
 		<?php echo wpbb_sort_button('Archive', get_permalink() . "tournaments/?status=archive", $status === 'archive'); ?>
