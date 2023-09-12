@@ -2,7 +2,7 @@
 $page = get_query_var('paged');
 // This is just temporary. Don't do this
 // $complete = false;
-$complete = has_tag('scored');
+$complete = get_post_status() === 'complete';
 $winner = 'Milwaukee';
 function wpbb_get_plays($tournament_id) {
 	$args = array(
