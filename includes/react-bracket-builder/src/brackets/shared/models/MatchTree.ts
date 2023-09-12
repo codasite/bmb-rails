@@ -153,12 +153,12 @@ export class Round {
 		this.matches = matches;
 	}
 
-	isComplete(): boolean {
+	allPicked(): boolean {
 		return this.matches.every((match) => {
 			if (match === null) {
 				return true;
 			}
-			return match.getWinner() !== null;
+			return match.team1Wins || match.team2Wins;
 		});
 	}
 
@@ -191,7 +191,7 @@ export class MatchTree {
 	advanceTeam = (roundIndex: number, matchIndex: number, left: boolean, requireComplete: boolean = false) => {
 		if (requireComplete && roundIndex > 0) {
 			const prevRound = this.rounds[roundIndex - 1]
-			if (prevRound && !prevRound.isComplete()) {
+			if (prevRound && !prevRound.allPicked()) {
 				return
 			}
 		}
@@ -200,6 +200,8 @@ export class MatchTree {
 		if (!match) {
 			return
 		}
+		match.team1Wins = false
+		match.team2Wins = false
 		if (left) {
 			match.team1Wins = true
 		} else {
@@ -207,16 +209,10 @@ export class MatchTree {
 		}
 	}
 
-	isComplete = (): boolean => {
-		const finalRound = this.rounds[this.rounds.length - 1]
-		if (!finalRound) {
-			return false
-		}
-		const finalMatch = finalRound.matches[0]
-		if (!finalMatch) {
-			return false
-		}
-		return finalMatch.getWinner() !== null
+	allPicked = (): boolean => {
+		return this.rounds.every((round) => {
+			return round.allPicked()
+		})
 	}
 
 	toMatchReq = (): MatchReq[] => {
