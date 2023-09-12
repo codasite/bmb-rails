@@ -42,6 +42,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 		$template_id = get_post_meta($tournament_post->ID, 'bracket_template_id', true);
 
+		// This is to avoid "Argument #1 ($bracket_template_id) must be of type int, string given" error
+		if ($template_id === '') {
+			return null;
+		}
+
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament(
 			(int)$template_id,
 			$tournament_post->ID,
@@ -73,20 +78,22 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $tournaments;
 	}
 
-	public function get_all_by_author(int $author_id, array $query_args = []): array {
-		$default_args = [
+	public function filter($args) {
+		$author = isset($args['author']) ? $args['author'] : null;
+		$status = isset($args['status']) ? $args['status'] : null;
+
+		$filter_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
-			'post_status' => 'any',
-			'author' => $author_id,
+			'post_status' => $status === null ? 'any' : $status,
+			'author' => $author,
 		];
 
-		$args = array_merge($default_args, $query_args);
-
-		$query = new WP_Query($args);
-
+		$query = new WP_Query($filter_args);
 		$tournaments = [];
 		foreach ($query->posts as $post) {
-			$tournaments[] = $this->get($post, false);
+			if ($post->post_status === $status || $status === null) {
+				$tournaments[] = $this->get($post, false);
+			}
 		}
 		return $tournaments;
 	}
