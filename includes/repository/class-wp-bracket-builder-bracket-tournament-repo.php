@@ -93,8 +93,21 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $tournaments;
 	}
 
+	// Permanently deletes the post
 	public function delete(int $id): bool {
 		$result = wp_delete_post($id, true);
+		return $result !== false;
+	}
+
+	// Updates the post status to 'trash'
+	public function trash_post(int $id): bool {
+		$result = wp_trash_post($id);
+		return $result !== false;
+	}
+
+	// Untrash post
+	public function restore_post(int $id): bool {
+		$result = wp_untrash_post($id);
 		return $result !== false;
 	}
 }
