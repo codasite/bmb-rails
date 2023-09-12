@@ -6,6 +6,10 @@ export interface TeamRes {
 	name: string;
 }
 
+export interface TeamReq {
+	name: string;
+}
+
 interface BracketBase {
 	name: string;
 	active: boolean;
@@ -80,6 +84,13 @@ export interface MatchRes {
 	matchIndex: number;
 	team1?: TeamRes;
 	team2?: TeamRes;
+}
+
+export interface MatchReq {
+	roundIndex: number;
+	matchIndex: number;
+	team1?: TeamReq;
+	team2?: TeamReq;
 }
 
 export interface MatchPicksRes {
