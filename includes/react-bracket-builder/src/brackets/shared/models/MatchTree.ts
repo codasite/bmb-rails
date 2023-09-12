@@ -5,6 +5,7 @@ import {
 	MatchRepr,
 	TeamRepr,
 	MatchReq,
+	TeamReq,
 } from '../api/types/bracket';
 
 export enum WildcardPlacement {
@@ -31,6 +32,12 @@ export class Team {
 		return {
 			name: this.name,
 			id: this.id ? this.id : undefined,
+		}
+	}
+
+	toTeamReq(): TeamReq {
+		return {
+			name: this.name,
 		}
 	}
 }
@@ -220,10 +227,38 @@ export class MatchTree {
 		const matches: MatchReq[] = []
 		const queue: MatchNode[] = [root]
 		while (queue.length > 0) {
-
-
-
+			const match = queue.shift()
+			if (!match) {
+				continue
+			}
+			if (!match.left && !match.right) {
+				const {
+					roundIndex,
+					matchIndex,
+				} = match
+				const team1 = match.getTeam1()
+				const team2 = match.getTeam2()
+				if (!team1 || !team2) {
+					continue
+				}
+				matches.push({
+					roundIndex,
+					matchIndex,
+					team1: team1.toTeamReq(),
+					team2: team2.toTeamReq(),
+				})
+			} else {
+				if (match.left) {
+					queue.push(match.left)
+				}
+				if (match.right) {
+					queue.push(match.right)
+				}
+			}
 		}
+
+		return matches
+	}
 
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
 		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
