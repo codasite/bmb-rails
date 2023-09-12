@@ -8,11 +8,13 @@ import {
 
 interface BracketLinesProps {
 	rounds: Round[]
+	style?: any
 }
 
 export const BracketLines = (props: BracketLinesProps) => {
 	const {
 		rounds,
+		style,
 	} = props
 	const darkMode = useContext(DarkModeContext);
 	// Main function
@@ -21,15 +23,6 @@ export const BracketLines = (props: BracketLinesProps) => {
 		// Lines are always drawn from left to right so these two variables never change for horizontal lines
 		const fromAnchor = 'right';
 		const toAnchor = 'left';
-		const style = {
-			// className: `wpbb-bracket-line${darkMode ? ' wpbb-dark-mode' : ''}`,
-			// className: '!tw-border-t-white dark:!tw-border-t-dd-blue',
-			className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
-			delay: true,
-			// borderColor: darkMode ? '#FFFFFF' : darkBlue,
-			// borderStyle: 'solid',
-			// borderWidth: 1,
-		};
 
 		rounds.forEach((round) => {
 			round.matches.forEach((match, i, matches) => {
@@ -69,6 +62,7 @@ export const BracketLines = (props: BracketLinesProps) => {
 						fromAnchor={fromAnchor}
 						toAnchor={toAnchor}
 						orientation='h'
+						delay={true}
 						{...style}
 					/>,
 					<SteppedLineTo
@@ -77,6 +71,7 @@ export const BracketLines = (props: BracketLinesProps) => {
 						fromAnchor={fromAnchor}
 						toAnchor={toAnchor}
 						orientation='h'
+						delay={true}
 						{...style}
 					/>,
 				];
@@ -88,5 +83,42 @@ export const BracketLines = (props: BracketLinesProps) => {
 		<div className='tw-absolute'>
 			{renderLines(rounds)}
 		</div>
+	)
+}
+
+export const RootMatchLines = (props: BracketLinesProps) => {
+	const {
+		rounds,
+		style,
+	} = props
+
+	const rootMatch = rounds[props.rounds.length - 1].matches[0]
+	if (!rootMatch) {
+		return null
+	}
+	const rootWinnerClass = getUniqueTeamClass(rootMatch.roundIndex, rootMatch.matchIndex, 'winner')
+	const rootTeam1Class = getUniqueTeamClass(rootMatch.roundIndex, rootMatch.matchIndex, 'left');
+	const rootTeam2Class = getUniqueTeamClass(rootMatch.roundIndex, rootMatch.matchIndex, 'right');
+
+	return (
+		<div className='tw-absolute' key={'jaiefji'}>
+			<LineTo
+				from={rootWinnerClass}
+				to={rootTeam1Class}
+				fromAnchor='bottom'
+				toAnchor='top'
+				delay={true}
+				{...style}
+			/>
+			<LineTo
+				from={rootTeam1Class}
+				to={rootTeam2Class}
+				fromAnchor='bottom'
+				toAnchor='top'
+				delay={true}
+				{...style}
+			/>
+		</div>
+
 	)
 }

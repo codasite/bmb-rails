@@ -41,8 +41,8 @@ const ThemeSelector = (props: ThemeSelectorProps) => {
 	return (
 		<div className='tw-absolute tw-top-50 tw-left-[50%] tw-translate-x-[-50%] tw-flex tw-items-center tw-font-600 tw-gap-14 tw-z-10'>
 			<span className='tw-text-dd-blue dark:tw-text-white'>Theme</span>
-			<button className='tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none'>
-				<div className='tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center' onClick={() => setDarkMode(!darkMode)}>
+			<button onClick={() => setDarkMode(!darkMode)} className='tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none'>
+				<div className='tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center'>
 					<span className='tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase'>{darkMode ? 'dark' : 'light'}</span>
 				</div>
 			</button>
