@@ -134,7 +134,7 @@ describe('MatchTree', () => {
 		expect(matchTree?.rounds[3].matches[0]?.getTeam2()).toBeNull()
 	})
 
-	test('testing isComplete true', () => {
+	test('testing allPicked true', () => {
 		const matches = [
 			[
 				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, team1Wins: true },
@@ -146,10 +146,10 @@ describe('MatchTree', () => {
 		]
 
 		const matchTree = MatchTree.deserialize(matches)
-		expect(matchTree?.isComplete()).toBe(true)
+		expect(matchTree?.allPicked()).toBe(true)
 	})
 
-	test('testing isComplete false', () => {
+	test('testing allPicked false', () => {
 		const matches = [
 			[
 				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, team1Wins: true },
@@ -161,7 +161,7 @@ describe('MatchTree', () => {
 		]
 
 		const matchTree = MatchTree.deserialize(matches)
-		expect(matchTree?.isComplete()).toBe(false)
+		expect(matchTree?.allPicked()).toBe(false)
 	})
 
 	test('testing advanceTeam', () => {
@@ -179,6 +179,27 @@ describe('MatchTree', () => {
 		matchTree?.advanceTeam(0, 1, true)
 		expect(matchTree?.rounds[0].matches[1]?.getWinner()?.id).toBe(19)
 		expect(matchTree?.rounds[1].matches[0]?.getTeam2()?.id).toBe(19)
+	})
+	test('testing advanceTeam with picked tree', () => {
+		const matches = [
+			[
+				{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" }, team1Wins: true },
+				{ id: 10, roundIndex: 0, matchIndex: 1, team1: { id: 19, name: "Team 3" }, team2: { id: 20, name: "Team 4" }, team2Wins: true }
+			],
+			[
+				{ roundIndex: 1, matchIndex: 1, team2Wins: true },
+			],
+		]
+
+		const matchTree = MatchTree.deserialize(matches)
+		expect(matchTree?.rounds[1].matches[0]?.getWinner()?.id).toBe(20)
+
+		matchTree?.advanceTeam(0, 1, true)
+
+		expect(matchTree?.rounds[0].matches[1]?.team1Wins).toBe(true)
+		expect(matchTree?.rounds[0].matches[1]?.team2Wins).toBe(false)
+		expect(matchTree?.rounds[0].matches[1]?.getWinner()?.id).toBe(19)
+
 	})
 
 	test('testing MatchTree serialize', () => {
