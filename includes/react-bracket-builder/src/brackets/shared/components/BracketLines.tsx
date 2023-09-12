@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Round, MatchNode } from '../models/MatchTree';
 import LineTo, { SteppedLineTo } from 'react-lineto';
+import { DarkModeContext } from '../context';
 import {
 	getUniqueTeamClass,
 } from '../utils'
 
 interface BracketLinesProps {
 	rounds: Round[]
-	darkMode?: boolean
 }
 
 export const BracketLines = (props: BracketLinesProps) => {
 	const {
 		rounds,
-		darkMode,
 	} = props
+	const darkMode = useContext(DarkModeContext);
 	// Main function
 	const renderLines = (rounds: Round[]): JSX.Element[] => {
 		let lines: JSX.Element[] = [];
@@ -23,7 +23,8 @@ export const BracketLines = (props: BracketLinesProps) => {
 		const toAnchor = 'left';
 		const style = {
 			// className: `wpbb-bracket-line${darkMode ? ' wpbb-dark-mode' : ''}`,
-			className: '!tw-border-t-white',
+			// className: '!tw-border-t-white dark:!tw-border-t-dd-blue',
+			className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
 			delay: true,
 			// borderColor: darkMode ? '#FFFFFF' : darkBlue,
 			// borderStyle: 'solid',
