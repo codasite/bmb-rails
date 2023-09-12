@@ -19,12 +19,14 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import {
 	getTargetHeight,
+	getTargetWidth,
 	getTeamClasses,
 	getUniqueTeamClass,
 	getMatchBoxHeight,
 	getFirstRoundMatchGap,
 	getTargetMatchHeight,
 } from '../../shared/utils'
+
 
 interface ThemeSelectorProps {
 	darkMode: boolean;
@@ -37,7 +39,7 @@ const ThemeSelector = (props: ThemeSelectorProps) => {
 		setDarkMode,
 	} = props;
 	return (
-		<div className='tw-absolute tw-top-50 tw-left-50% tw-flex tw-items-center tw-font-600 tw-gap-14 tw-z-10'>
+		<div className='tw-absolute tw-top-50 tw-left-[50%] tw-translate-x-[-50%] tw-flex tw-items-center tw-font-600 tw-gap-14 tw-z-10'>
 			<span className='tw-text-dd-blue dark:tw-text-white'>Theme</span>
 			<button className='tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none'>
 				<div className='tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center' onClick={() => setDarkMode(!darkMode)}>
@@ -292,14 +294,18 @@ const UserBracket = (props: UserBracketProps) => {
 		const numRounds = matchTree?.rounds.length;
 		// const pickedWinner = matchTree?.allPicked();
 		console.log('numRounds', numRounds)
-		const targetHeight = getTargetHeight(numRounds);
+		const bracketHeight = getTargetHeight(numRounds);
+		const bracketWidth = getTargetWidth(numRounds);
 		const teamHeight = bracketConstants.teamHeight;
 		const teamGap = bracketConstants.teamGap;
+		const actionButtonMargin = bracketConstants.bracketActionsMarginTop[numRounds]
+
 		return (
-			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}>
+			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-gap-[${actionButtonMargin}px]`}>
 				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
 				<DefaultBracket
-					targetHeight={targetHeight}
+					height={bracketHeight}
+					width={bracketWidth}
 					teamHeight={teamHeight}
 					teamGap={teamGap}
 					matchTree={matchTree}
@@ -308,9 +314,7 @@ const UserBracket = (props: UserBracketProps) => {
 					MatchBoxComponent={DefaultMatchBox}
 					TeamSlotComponent={DefaultTeamSlot}
 				/>
-				<div className={`wpbb-bracket-actions wpbb-${numRounds}-rounds`}>
-					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
-				</div>
+				<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
 			</div>
 		)
 	}
@@ -331,7 +335,7 @@ const UserBracket = (props: UserBracketProps) => {
 	return (
 		<DarkModeContext.Provider value={darkMode}>
 			{/* <div className='tw-h-[800px] tw-bg-[url("http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/bracket-bg-dark.png")]'> */}
-			<div className={`wpbb-reset tw-uppercase tw-relative tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
+			<div className={`wpbb-reset tw-uppercase tw-relative tw-pt-[160px] tw-pb-[100px] tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
 				{renderPlayTournamentBracket(bracketProps)}
 				{/* {showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)} */}
 

@@ -85,7 +85,7 @@ export const BracketLines = (props: BracketLinesProps) => {
 		return lines;
 	};
 	return (
-		<div className='wpbb-bracket-lines-container'>
+		<div className='tw-absolute'>
 			{renderLines(rounds)}
 		</div>
 	)
