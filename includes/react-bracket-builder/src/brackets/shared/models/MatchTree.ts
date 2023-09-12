@@ -4,6 +4,7 @@ import {
 	MatchPicksRes,
 	MatchRepr,
 	TeamRepr,
+	MatchReq,
 } from '../api/types/bracket';
 
 export enum WildcardPlacement {
@@ -211,6 +212,19 @@ export class MatchTree {
 		return finalMatch.getWinner() !== null
 	}
 
+	toMatchReq = (): MatchReq[] => {
+		const root = this.rounds[this.rounds.length - 1].matches[0]
+		if (!root) {
+			return []
+		}
+		const matches: MatchReq[] = []
+		const queue: MatchNode[] = [root]
+		while (queue.length > 0) {
+
+
+
+		}
+
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
 		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
 		return MatchTree.deserialize(matches)
@@ -245,17 +259,13 @@ export class MatchTree {
 			const team1 = match.getTeam1()
 			const team2 = match.getTeam2()
 			if (!team1 || !team2) {
-				console.log('no teams')
 				return null
 			}
 			if (team1.id === winningTeamId) {
-				console.log('team1 wins')
 				match.team1Wins = true
 			} else if (team2.id === winningTeamId) {
-				console.log('team2 wins')
 				match.team2Wins = true
 			} else {
-				console.log('no match')
 				return null
 			}
 		}
