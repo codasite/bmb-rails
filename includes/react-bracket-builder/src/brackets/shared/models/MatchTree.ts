@@ -133,6 +133,10 @@ export class MatchNode {
 		return this.parent !== null && this.parent.left === this;
 	}
 
+	isRightChild(): boolean {
+		return !this.isLeftChild();
+	}
+
 	getTeam1(): Nullable<Team> {
 		return this.left ? this.left.getWinner() : this.team1;
 	}

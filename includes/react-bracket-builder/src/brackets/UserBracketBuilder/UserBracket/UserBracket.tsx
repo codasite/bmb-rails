@@ -11,7 +11,7 @@ import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSl
 import { setNumPages } from '../../shared/features/bracketNavSlice'
 
 import { MatchTree } from '../../shared/models/MatchTree';
-import { BracketRes } from '../../shared/api/types/bracket';
+import { MatchRepr, MatchPicks } from '../../shared/api/types/bracket';
 import { bracketConstants } from '../../shared/constants';
 import { DarkModeContext } from '../../shared/context';
 import './UserBracket.scss'
@@ -74,19 +74,22 @@ const ApparelButton = (props: BuyApparelBtnProps) => {
 // const UserBracketBracket = (props: any) => {}
 
 interface UserBracketProps {
-	bracketId?: number;
-	bracketRes?: BracketRes;
 	apparelUrl: string;
 	bracketStylesheetUrl: string;
 	tournament?: any;
+}
+
+interface RenderBracketProps {
+	matchTree: MatchTree | null;
+	setMatchTree: (matchTree: MatchTree) => void;
+	canPick: boolean;
+	bracketTitle?: string;
 }
 
 
 const UserBracket = (props: UserBracketProps) => {
 	const {
 		tournament,
-		bracketId,
-		bracketRes,
 		apparelUrl,
 		bracketStylesheetUrl,
 	} = props;
@@ -106,10 +109,10 @@ const UserBracket = (props: UserBracketProps) => {
 			const template = tournament.bracketTemplate;
 			const numTeams = template.numTeams;
 			const matches = template.matches;
-			const tree = MatchTree.fromMatches(numTeams, matches);
+			const tree = MatchTree.fromMatchRes(numTeams, matches);
 			console.log('tree', tree)
 			if (tree) {
-				dispatch(setMatchTree(tree.toSerializable()))
+				dispatch(setMatchTree(tree.serialize()))
 			}
 		}
 		// if (bracketId) {
@@ -180,11 +183,11 @@ const UserBracket = (props: UserBracketProps) => {
 	}
 
 	const handleApparelClick = () => {
-		const id = bracketId || bracketRes?.id;
-		if (!id || !matchTree) {
-			console.error('no bracket id or match tree')
-			return;
-		}
+		// const id = bracketId || bracketRes?.id;
+		// if (!id || !matchTree) {
+		// 	console.error('no bracket id or match tree')
+		// 	return;
+		// }
 		const html = getHTML()
 
 		const parser = new DOMParser();
@@ -248,15 +251,15 @@ const UserBracket = (props: UserBracketProps) => {
 	// 	return ()
 	// }
 
-	const renderPlayTournamentBracket = (bracketProps) => {
+	const renderPlayTournamentBracket = (bracketProps: RenderBracketProps) => {
 		const { matchTree } = bracketProps
 		if (!matchTree) {
 			return <></>
 		}
-		const disableActions = matchTree === null || !matchTree.isComplete() || processingImage
+		const disableActions = matchTree === null || !matchTree.allPicked() || processingImage
 		// const disableActions = processingImage
 		const numRounds = matchTree?.rounds.length;
-		const pickedWinner = matchTree?.isComplete();
+		// const pickedWinner = matchTree?.allPicked();
 		console.log('numRounds', numRounds)
 		const targetHeight = getTargetHeight(numRounds);
 		const teamHeight = bracketConstants.teamHeight;
@@ -269,7 +272,7 @@ const UserBracket = (props: UserBracketProps) => {
 					teamHeight={teamHeight}
 					teamGap={teamGap}
 					matchTree={matchTree}
-					setMatchTree={(matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable()))}
+					setMatchTree={(matchTree: MatchTree) => dispatch(setMatchTree(matchTree.serialize()))}
 					MatchColumnComponent={DefaultMatchColumn}
 					MatchBoxComponent={DefaultMatchBox}
 					TeamSlotComponent={DefaultTeamSlot}
@@ -281,20 +284,18 @@ const UserBracket = (props: UserBracketProps) => {
 		)
 	}
 
-	const renderPaginatedBracket = (bracketProps) => {
-		return (
-			<PaginatedUserBracket {...bracketProps} />
-		)
+	const renderPaginatedBracket = (bracketProps: RenderBracketProps) => {
+		// return (
+		// 	// <PaginatedUserBracket {...bracketProps} />
+		// )
 	}
 
 	const bracketProps = {
 		matchTree,
-		setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.toSerializable())),
+		setMatchTree: (matchTree: MatchTree) => dispatch(setMatchTree(matchTree.serialize())),
 		canPick: true,
-		bracketName: bracketRes?.name,
+		bracketTitle: tournament?.title
 	}
-
-
 
 	return (
 		<DarkModeContext.Provider value={darkMode}>

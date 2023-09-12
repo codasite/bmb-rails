@@ -1,5 +1,5 @@
 import { bracketConstants } from "./constants"
-import { BracketRes, TeamRes, MatchRes, RoundRes } from "./api/types/bracket"
+// import { BracketRes, TeamRes, MatchRes, RoundRes } from "./api/types/bracket"
 
 const {
 	teamHeight,
