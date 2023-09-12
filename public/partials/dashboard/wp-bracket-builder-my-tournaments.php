@@ -10,7 +10,10 @@ require_once 'wp-bracket-builder-dashboard-common.php';
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
-$status = $_GET['status'];
+$status = get_query_var('status');
+if (empty($status)) {
+	$status = 'any';
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_tournament_id'])) {
 	if (wp_verify_nonce($_POST['archive_tournament_nonce'], 'archive_tournament_action')) {
@@ -26,11 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_tournament_id'
 	}
 }
 
-// filter tournaments for current user, by status in the query params
-$tournaments = $tournament_repo->filter(array(
-	'author' => get_current_user_id(),
-	'status' => $status,
-));
+$tournaments = $tournament_repo->get_all(
+	[
+		'post_status' => $status,
+		'author' => get_current_user_id(),
+	]
+);
 
 function score_tournament_btn($endpoint, $tournament) {
 
