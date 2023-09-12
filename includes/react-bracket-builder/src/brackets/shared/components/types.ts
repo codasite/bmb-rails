@@ -37,7 +37,8 @@ export interface MatchColumnProps {
 }
 
 export interface BracketProps {
-	targetHeight: number;
+	height: number;
+	width: number;
 	teamHeight: number;
 	teamGap: number;
 	matchTree: MatchTree;

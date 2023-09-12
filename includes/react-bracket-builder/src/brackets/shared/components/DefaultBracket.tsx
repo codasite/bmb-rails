@@ -11,7 +11,8 @@ import { BracketProps } from './types';
 
 export const DefaultBracket = (props: BracketProps) => {
 	const {
-		targetHeight,
+		height,
+		width,
 		teamHeight,
 		teamGap,
 		matchTree,
@@ -52,7 +53,7 @@ export const DefaultBracket = (props: BracketProps) => {
 		const finalMatch = rounds[rounds.length - 1].matches
 
 		const matchHeight = teamHeight * 2 + teamGap
-		const firstRoundMatchGap = getFirstRoundMatchGap(targetHeight, matchTree.rounds.length, matchHeight)
+		const firstRoundMatchGap = getFirstRoundMatchGap(height, matchTree.rounds.length, matchHeight)
 
 		const leftMatchColumns = getMatchColumns(leftMatches, 'left', firstRoundMatchGap, matchHeight)
 		const rightMatchColumns = getMatchColumns(rightMatches, 'right', firstRoundMatchGap, matchHeight)
@@ -66,7 +67,7 @@ export const DefaultBracket = (props: BracketProps) => {
 	}
 
 	return (
-		<div className='tw-flex tw-w-full tw-justify-between tw-relative'>
+		<div className={`tw-flex tw-justify-between tw-relative tw-w-[${width}px]`}>
 			{buildMatches(matchTree.rounds)}
 			<BracketLines
 				rounds={matchTree.rounds}

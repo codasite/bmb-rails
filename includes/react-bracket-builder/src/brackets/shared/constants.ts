@@ -33,8 +33,37 @@ export const bracketConstants = {
 	fiveRoundHeight: 806,
 	sixRoundHeight: 1100,
 
+	bracketWidths: [
+		800, // 0 rounds
+		800, // 1 rounds
+		800, // 2 round
+		800, // 3 rounds
+		985, // 4 rounds
+		1023, // 5 rounds
+		1137, // 6 rounds
+	],
+
+	bracketLogoBottom: [
+		-250, // 0 rounds
+		-250, // 1 round
+		-250, // 2 rounds
+		-300, // 3 rounds
+		-300, // 4 rounds
+		-270, // 5 rounds
+		-320, // 6 rounds
+	],
+
+	bracketActionsMarginTop: [
+		220, // 0 rounds
+		220, // 1 round
+		220, // 2 rounds
+		220, // 3 rounds
+		94, // 4 rounds
+		50, // 5 rounds
+		20, // 6 rounds
+	],
+
 	// Window breakpoints
 	paginatedBracketWidth: 768,
 	roundWidth: 54,
-
 }

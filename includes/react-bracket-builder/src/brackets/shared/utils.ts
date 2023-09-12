@@ -11,6 +11,7 @@ const {
 	fourRoundHeight,
 	fiveRoundHeight,
 	sixRoundHeight,
+	bracketWidths,
 } = bracketConstants
 
 const targetRoundHeights = [
@@ -25,6 +26,11 @@ const targetRoundHeights = [
 export const getTargetHeight = (numRounds: number) => {
 	return targetRoundHeights[numRounds - 1]
 }
+
+export const getTargetWidth = (numRounds: number) => {
+	return bracketWidths[numRounds]
+}
+
 
 export const getMatchBoxHeight = (depth: number) => {
 	let gap = teamHeight
