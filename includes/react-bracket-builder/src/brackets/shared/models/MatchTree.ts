@@ -184,6 +184,14 @@ interface WildcardRange {
 export class MatchTree {
 	rounds: Round[]
 
+	getRootMatch(): Nullable<MatchNode> {
+		const lastRound = this.rounds[this.rounds.length - 1]
+		if (!lastRound) {
+			return null
+		}
+		return lastRound.matches[0]
+	}
+
 	serialize(): Nullable<MatchRepr>[][] {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {
