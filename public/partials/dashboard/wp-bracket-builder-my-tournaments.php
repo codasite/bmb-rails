@@ -5,11 +5,28 @@ require_once $shared_dir . 'wp-bracket-builder-partials-common.php';
 require_once $shared_dir . 'wp-bracket-builder-tournaments-common.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once 'wp-bracket-builder-dashboard-common.php';
+
 
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 $status = $_GET['status'];
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_tournament_id'])) {
+	if (wp_verify_nonce($_POST['delete_tournament_nonce'], 'delete_tournament_action')) {
+		echo 'deleting tournament';
+		// $tournament_repo->delete($_POST['delete_tournament_id']);
+		$tournament_repo->trash_post($_POST['delete_tournament_id']);
+	}
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['restore_tournament_id'])) {
+	if (wp_verify_nonce($_POST['restore_tournament_nonce'], 'restore_tournament_action')) {
+		echo 'restoring tournament';
+		$tournament_repo->restore_post($_POST['restore_tournament_id']);
+	}
+}
 
 // filter tournaments for current user, by status in the query params
 $tournaments = $tournament_repo->filter(array(
@@ -97,7 +114,7 @@ function tournament_list_item($tournament) {
 				<!-- The duplicate button opens up the "Host a Tournamnet" modal -->
 				<?php echo duplicate_bracket_btn($share_link, $id); ?>
 				<!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
-				<?php echo delete_bracket_btn($delete_link, $id); ?>
+				<?php echo $tournament->status === 'trash'? restore_tournament_btn($delete_link, $id): delete_tournament_btn($delete_link, $id); ?>
 			</div>
 		</div>
 		<div class="tw-mt-10">
