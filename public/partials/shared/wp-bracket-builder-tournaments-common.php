@@ -35,27 +35,25 @@ function wpbb_sort_button($label, $endpoint, $active = false) {
 }
 
 
-function live_tournament_tag() {
+function tournament_tag($label, $color) {
 	ob_start();
 ?>
-	<div class="tw-text-green tw-bg-green/15 tw-border tw-border-solid tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
+	<div class="tw-text-<?php echo $color ?> tw-bg-<?php echo $color; ?>/15 tw-border tw-border-solid tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/ellipse.svg', __FILE__)); ?>
-		<span class="tw-font-500 tw-text-12">Live</span>
+		<span class="tw-font-500 tw-text-12"><?php echo $label ?></span>
 	</div>
 <?php
 	return ob_get_clean();
 }
 
-function completed_tournament_tag() {
-	ob_start();
-?>
-	<div class="tw-text-yellow tw-bg-yellow/15 tw-border tw-border-solid tw-border-yellow tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/ellipse.svg', __FILE__)); ?>
-		<span class="tw-font-500 tw-text-12">Scored</span>
-	</div>
-<?php
-	return ob_get_clean();
+function live_tournament_tag() {
+	return tournament_tag('Live', 'green');
 }
+
+function completed_tournament_tag() {
+	return tournament_tag('Scored', 'yellow');
+}
+
 
 
 /**
