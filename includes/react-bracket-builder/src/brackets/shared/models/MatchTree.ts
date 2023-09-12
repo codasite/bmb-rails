@@ -231,31 +231,25 @@ export class MatchTree {
 			if (!match) {
 				continue
 			}
-			if (!match.left && !match.right) {
-				const {
-					roundIndex,
-					matchIndex,
-				} = match
-				const team1 = match.getTeam1()
-				const team2 = match.getTeam2()
-				if (!team1 || !team2) {
-					continue
-				}
-				matches.push({
-					roundIndex,
-					matchIndex,
-					team1: team1.toTeamReq(),
-					team2: team2.toTeamReq(),
-				})
+			const matchReq: MatchReq = {
+				roundIndex: match.roundIndex,
+				matchIndex: match.matchIndex,
+			}
+			if (!match.left) {
+				matchReq.team1 = match.getTeam1()?.toTeamReq()
 			} else {
-				if (match.left) {
-					queue.push(match.left)
-				}
-				if (match.right) {
-					queue.push(match.right)
-				}
+				queue.push(match.left)
+			}
+			if (!match.right) {
+				matchReq.team2 = match.getTeam2()?.toTeamReq()
+			} else {
+				queue.push(match.right)
+			}
+			if (matchReq.team1 || matchReq.team2) {
+				matches.push(matchReq)
 			}
 		}
+		console.log(matches)
 
 		return matches
 	}
@@ -285,9 +279,7 @@ export class MatchTree {
 		}
 		for (const pick of picks) {
 			const { roundIndex, matchIndex, winningTeamId } = pick
-			console.log(roundIndex, matchIndex, winningTeamId)
 			const match = matchTree.rounds[roundIndex].matches[matchIndex]
-			console.log(match)
 			if (!match) {
 				return null
 			}

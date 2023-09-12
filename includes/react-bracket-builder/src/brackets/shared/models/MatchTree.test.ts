@@ -318,7 +318,6 @@ describe('MatchTree', () => {
 		const tree = new MatchTree()
 		tree.rounds = rounds
 		const req = tree?.toMatchReq()
-		console.log(req)
 
 		expect(req).toEqual(expected)
 	})
@@ -328,18 +327,19 @@ describe('MatchTree', () => {
 		const team2 = new Team("Team 2")
 		const team3 = new Team("Team 3")
 		const team4 = new Team("Team 4")
+		const team5 = new Team("Team 5")
+		const team6 = new Team("Team 6")
 
 		const rounds = [
 			new Round(0, 2, [
 				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2, team1: team1, team2: team2 }),
 				null,
-				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 2, team1: team3, team2: team4 }),
+				new MatchNode({ roundIndex: 0, matchIndex: 2, depth: 2, team1: team3, team2: team4 }),
 				null,
-
 			]),
 			new Round(1, 1, [
-				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1 }),
-				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1 }),
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1, team2: team5 }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1, team2: team6 }),
 			]),
 			new Round(2, 0, [
 				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0 }),
@@ -348,6 +348,18 @@ describe('MatchTree', () => {
 
 		linkNodes(rounds)
 
+		const expected: MatchReq[] = [
+			{ roundIndex: 1, matchIndex: 0, team2: { name: "Team 5" } },
+			{ roundIndex: 1, matchIndex: 1, team2: { name: "Team 6" } },
+			{ roundIndex: 0, matchIndex: 0, team1: { name: "Team 1" }, team2: { name: "Team 2" } },
+			{ roundIndex: 0, matchIndex: 2, team1: { name: "Team 3" }, team2: { name: "Team 4" } },
+		]
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+		const req = tree?.toMatchReq()
+
+		expect(req).toEqual(expected)
 	})
 });
 
