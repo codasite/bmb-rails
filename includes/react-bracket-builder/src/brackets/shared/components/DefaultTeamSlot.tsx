@@ -19,14 +19,17 @@ export const DefaultTeamSlot = (props: TeamSlotProps) => {
 		setMatchTree,
 		matchPosition,
 		teamPosition,
-		teamHeight,
+		height,
+		width = 115,
+		fontWeight = 500,
+		fontSize = 16,
 		getTeamClass = getUniqueTeamClass,
 	} = props
 	// console.log('winner', winner)
 	const teamClass = getTeamClass(match.roundIndex, match.matchIndex, teamPosition)
 	return (
-		<div className={`${teamClass} tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-w-[115px] tw-h-[${teamHeight}px] tw-border-2 tw-border-solid tw-border-dd-blue/50 dark:tw-border-white/50 tw-text-14 tw-font-500 tw-text-dd-blue dark:tw-text-white`}>
-			<span>{team ? team.name : ''}</span>
+		<div className={`${teamClass} tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-w-[${width}px] tw-h-[${height}px] tw-border-2 tw-border-solid tw-border-dd-blue/50 dark:tw-border-white/50 tw-text-14 tw-font-500 tw-text-dd-blue dark:tw-text-white`}>
+			<span className={`tw-font-${fontWeight} tw-text-${fontSize}`}>{team ? team.name : ''}</span>
 		</div>
 	)
 

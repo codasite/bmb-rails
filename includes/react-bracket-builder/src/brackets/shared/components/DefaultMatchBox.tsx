@@ -35,21 +35,26 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 				setMatchTree={setMatchTree}
 				matchPosition={matchPosition}
 				teamPosition={teamPosition}
-				teamHeight={teamHeight}
+				height={teamHeight}
 			/>
 		)
 	}
 
 	const getFinalMatchChildren = () => {
-		const winnerClass = getUniqueTeamClass(match.roundIndex, match.matchIndex, 'winner')
 		return (
 			<div className='tw-flex tw-flex-col tw-gap-16 tw-absolute tw-bottom-[150px] tw-items-center tw-left-[50%] tw-translate-x-[-50%]'>
 				<span className='tw-text-64 tw-font-700 tw-whitespace-nowrap'>Bracket Title</span>
-				<div className={`${winnerClass} tw-h-[52px] tw-w-[257px] tw-border tw-border-solid tw-border-white `}>
-					<span className='tw-text-36 tw-font-700 tw-text-dd-blue dark:tw-text-white'>
-						{match.getWinner()?.name}
-					</span>
-				</div>
+				<TeamSlotComponent
+					team={match.getWinner()}
+					match={match}
+					matchTree={matchTree}
+					matchPosition={matchPosition}
+					teamPosition={'winner'}
+					height={52}
+					width={257}
+					fontSize={36}
+					fontWeight={700}
+				/>
 			</div>
 		)
 	}
