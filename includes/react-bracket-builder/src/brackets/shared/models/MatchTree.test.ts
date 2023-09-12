@@ -199,7 +199,6 @@ describe('MatchTree', () => {
 		expect(matchTree?.rounds[0].matches[1]?.team1Wins).toBe(true)
 		expect(matchTree?.rounds[0].matches[1]?.team2Wins).toBe(false)
 		expect(matchTree?.rounds[0].matches[1]?.getWinner()?.id).toBe(19)
-
 	})
 
 	test('testing MatchTree serialize', () => {
