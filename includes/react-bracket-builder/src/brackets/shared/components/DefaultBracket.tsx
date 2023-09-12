@@ -16,8 +16,6 @@ export const DefaultBracket = (props: BracketProps) => {
 		teamGap,
 		matchTree,
 		setMatchTree,
-		// darkMode,
-		// bracketName,
 		MatchColumnComponent,
 		MatchBoxComponent,
 		TeamSlotComponent,
@@ -72,7 +70,6 @@ export const DefaultBracket = (props: BracketProps) => {
 			{buildMatches(matchTree.rounds)}
 			<BracketLines
 				rounds={matchTree.rounds}
-				darkMode={true}
 			/>
 		</div>
 	)

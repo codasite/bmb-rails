@@ -37,13 +37,13 @@ const ThemeSelector = (props: ThemeSelectorProps) => {
 		setDarkMode,
 	} = props;
 	return (
-		<div className='wpbb-theme-selector'>
-			<span className='wpbb-theme-selector-text'>Theme</span>
-			<div className='wpbb-theme-selector-switch-outer'>
-				<div className='wpbb-theme-selector-switch-inner' onClick={() => setDarkMode(!darkMode)}>
-					<span className='wpbb-theme-selector-switch-text'>{darkMode ? 'dark' : 'light'}</span>
+		<div className='tw-absolute tw-top-50 tw-left-50% tw-flex tw-items-center tw-font-600 tw-gap-14 tw-z-10'>
+			<span className='tw-text-dd-blue dark:tw-text-white'>Theme</span>
+			<button className='tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none'>
+				<div className='tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center' onClick={() => setDarkMode(!darkMode)}>
+					<span className='tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase'>{darkMode ? 'dark' : 'light'}</span>
 				</div>
-			</div>
+			</button>
 		</div>
 	)
 }
@@ -61,8 +61,38 @@ const ApparelButton = (props: BuyApparelBtnProps) => {
 		onClick = () => { },
 		loading,
 	} = props;
+	const baseStyles = [
+		'tw-border-4',
+		'tw-rounded-8',
+		'tw-font-700',
+		'tw-text-36',
+		'tw-px-30',
+		'tw-py-14',
+		'tw-font-sans',
+	]
+	const disabledStyles = [
+		'tw-border-solid',
+		'tw-bg-transparent',
+		'tw-text-black/20',
+		'dark:tw-text-white/20',
+		'dark:tw-border-white/20',
+		'tw-border-black/20',
+	]
+	const enabledStyles = [
+		'tw-border-none',
+		'tw-bg-green',
+		'tw-text-dd-blue',
+		'dark:tw-text-white',
+		'dark:tw-bg-dark-green',
+		'dark:tw-border-green',
+		'dark:tw-border-solid'
+	]
+
+	const extra = disabled ? disabledStyles : enabledStyles
+
+	const styles = [...baseStyles, ...extra].join(' ')
 	return (
-		<button className={'wpbb-apparel-btn' + (disabled ? ' disabled' : '')} onClick={onClick} disabled={disabled}>
+		<button className={styles} onClick={onClick} disabled={disabled}>
 			{props.loading ?
 				//@ts-ignore
 				<Spinner variant='light' animation="border" role="status" style={{ borderWidth: '4px' }} />
@@ -256,7 +286,8 @@ const UserBracket = (props: UserBracketProps) => {
 		if (!matchTree) {
 			return <></>
 		}
-		const disableActions = matchTree === null || !matchTree.allPicked() || processingImage
+		// const disableActions = matchTree === null || !matchTree.allPicked() || processingImage
+		const disableActions = false;
 		// const disableActions = processingImage
 		const numRounds = matchTree?.rounds.length;
 		// const pickedWinner = matchTree?.allPicked();
@@ -300,7 +331,7 @@ const UserBracket = (props: UserBracketProps) => {
 	return (
 		<DarkModeContext.Provider value={darkMode}>
 			{/* <div className='tw-h-[800px] tw-bg-[url("http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/bracket-bg-dark.png")]'> */}
-			<div className='wpbb-reset tw-uppercase tw-relative tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
+			<div className={`wpbb-reset tw-uppercase tw-relative tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
 				{renderPlayTournamentBracket(bracketProps)}
 				{/* {showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)} */}
 
