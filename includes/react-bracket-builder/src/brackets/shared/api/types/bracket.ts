@@ -93,7 +93,7 @@ export interface MatchReq {
 	team2?: TeamReq;
 }
 
-export interface MatchPicksRes {
+export interface MatchPicks {
 	roundIndex: number;
 	matchIndex: number;
 	winningTeamId: number;

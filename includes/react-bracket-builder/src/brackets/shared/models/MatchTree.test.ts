@@ -15,7 +15,7 @@ import {
 	// linkTeams,
 } from './MatchTree';
 import {
-	MatchPicksRes,
+	MatchPicks,
 	MatchRes,
 	MatchReq
 } from '../api/types/bracket';
@@ -239,7 +239,7 @@ describe('MatchTree', () => {
 			{ id: 11, roundIndex: 0, matchIndex: 2, team1: { id: 21, name: "Team 5" }, team2: { id: 22, name: "Team 6" } },
 			{ id: 12, roundIndex: 0, matchIndex: 3, team1: { id: 23, name: "Team 7" }, team2: { id: 24, name: "Team 8" } },
 		]
-		const picks: MatchPicksRes[] = [
+		const picks: MatchPicks[] = [
 			{ roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
 			{ roundIndex: 0, matchIndex: 1, winningTeamId: 20 },
 			{ roundIndex: 0, matchIndex: 2, winningTeamId: 21 },
@@ -361,7 +361,53 @@ describe('MatchTree', () => {
 
 		expect(req).toEqual(expected)
 	})
+
+	test('testing to match picks', () => {
+		const team1 = new Team("Team 1", 1)
+		const team2 = new Team("Team 2", 2)
+		const team3 = new Team("Team 3", 3)
+		const team4 = new Team("Team 4", 4)
+		const team5 = new Team("Team 5", 5)
+		const team6 = new Team("Team 6", 6)
+
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2, team1Wins: true, team1: team1, team2: team2 }),
+				null,
+				new MatchNode({ roundIndex: 0, matchIndex: 2, depth: 2, team2Wins: true, team1: team3, team2: team4 }),
+				null,
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1, team1Wins: true, team2: team5 }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1, team1Wins: true, team2: team6 }),
+			]),
+			new Round(2, 0, [
+				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0, team1Wins: true }),
+			])
+		]
+
+		linkNodes(rounds)
+
+		const expected = [
+			{ roundIndex: 0, matchIndex: 0, winningTeamId: 1 },
+			{ roundIndex: 0, matchIndex: 2, winningTeamId: 4 },
+			{ roundIndex: 1, matchIndex: 0, winningTeamId: 1 },
+			{ roundIndex: 1, matchIndex: 1, winningTeamId: 4 },
+			{ roundIndex: 2, matchIndex: 0, winningTeamId: 1 },
+		]
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+		const picks = tree?.toMatchPicks()
+
+		expect(picks).toEqual(expected)
+	})
 });
+
+
+
+
+/** MATCH TREE UTILS */
 
 describe('MatchTree Utils', () => {
 	test('testing getNumRounds', () => {

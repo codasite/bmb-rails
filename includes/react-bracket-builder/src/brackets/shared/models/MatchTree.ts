@@ -1,7 +1,7 @@
 import { Nullable } from '../../../utils/types';
 import {
 	MatchRes,
-	MatchPicksRes,
+	MatchPicks,
 	MatchRepr,
 	TeamRepr,
 	MatchReq,
@@ -254,6 +254,38 @@ export class MatchTree {
 		return matches
 	}
 
+	toMatchPicks = (): MatchPicks[] => {
+		const picks: MatchPicks[] = []
+		this.rounds.forEach((round, roundIndex) => {
+			round.matches.forEach((match, matchIndex) => {
+				if (!match) {
+					return
+				}
+				const { team1Wins, team2Wins } = match
+				const team1 = match.getTeam1()
+				const team2 = match.getTeam2()
+				const team1Winner = team1Wins && team1
+				const team2Winner = team2Wins && team2
+
+				if (team1Winner && team1.id) {
+					picks.push({
+						roundIndex,
+						matchIndex,
+						winningTeamId: team1.id
+					})
+				} else if (team2Winner && team2.id) {
+					picks.push({
+						roundIndex,
+						matchIndex,
+						winningTeamId: team2.id
+					})
+				}
+			})
+		})
+		console.log('picks', picks)
+		return picks
+	}
+
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
 		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
 		return MatchTree.deserialize(matches)
@@ -272,7 +304,7 @@ export class MatchTree {
 		}
 	}
 
-	static fromPicks(numTeams: number, matches: MatchRes[], picks: MatchPicksRes[]): MatchTree | null {
+	static fromPicks(numTeams: number, matches: MatchRes[], picks: MatchPicks[]): MatchTree | null {
 		const matchTree = MatchTree.fromMatchRes(numTeams, matches)
 		if (!matchTree) {
 			return null
