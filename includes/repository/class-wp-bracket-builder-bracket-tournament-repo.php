@@ -42,6 +42,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 		$template_id = get_post_meta($tournament_post->ID, 'bracket_template_id', true);
 
+		// This is to avoid "Argument #1 ($bracket_template_id) must be of type int, string given" error
+		if ($template_id === '') {
+			return null;
+		}
+
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament(
 			$template_id,
 			$tournament_post->ID,
