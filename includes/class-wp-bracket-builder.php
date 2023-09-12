@@ -187,9 +187,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 
-		$this->loader->add_action('init', $this, 'add_bracket_template_post_type');
-		$this->loader->add_action('init', $this, 'add_bracket_play_post_type');
-		$this->loader->add_action('init', $this, 'add_bracket_tournament_post_type');
+		$this->loader->add_action('init', $this, 'register_custom_post_types');
 		$this->loader->add_action('init', $this, 'register_custom_post_status');
 
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
@@ -274,7 +272,7 @@ class Wp_Bracket_Builder {
 		return $this->version;
 	}
 
-	public function add_bracket_template_post_type() {
+	public function register_custom_post_types() {
 		register_post_type(
 			'bracket_template',
 			array(
@@ -293,10 +291,7 @@ class Wp_Bracket_Builder {
 				'taxonomies' => array('post_tag'),
 			)
 		);
-	}
 
-	public function add_bracket_play_post_type() {
-		// register a post type named "bracket_pick"
 		register_post_type(
 			'bracket_play',
 			array(
@@ -315,10 +310,6 @@ class Wp_Bracket_Builder {
 				'taxonomies' => array('post_tag'),
 			)
 		);
-	}
-
-	public function add_bracket_tournament_post_type() {
-		// register a post type named "tournament"
 		register_post_type(
 			'bracket_tournament',
 			array(
@@ -348,7 +339,16 @@ class Wp_Bracket_Builder {
 			'exclude_from_search' => false,
 			'show_in_admin_all_list' => true,
 			'show_in_admin_status_list' => true,
-			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Completed <span class="count">(%s)</span>'),
+			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Complete <span class="count">(%s)</span>'),
+		));
+
+		register_post_status("archive", array(
+			'label' => 'Archive',
+			'public' => true,
+			'exclude_from_search' => false,
+			'show_in_admin_all_list' => true,
+			'show_in_admin_status_list' => true,
+			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Archive <span class="count">(%s)</span>'),
 		));
 	}
 }
