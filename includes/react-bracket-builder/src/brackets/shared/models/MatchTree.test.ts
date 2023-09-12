@@ -318,8 +318,36 @@ describe('MatchTree', () => {
 		const tree = new MatchTree()
 		tree.rounds = rounds
 		const req = tree?.toMatchReq()
+		console.log(req)
 
 		expect(req).toEqual(expected)
+	})
+
+	test('testing to match req with wildcards', () => {
+		const team1 = new Team("Team 1")
+		const team2 = new Team("Team 2")
+		const team3 = new Team("Team 3")
+		const team4 = new Team("Team 4")
+
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2, team1: team1, team2: team2 }),
+				null,
+				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 2, team1: team3, team2: team4 }),
+				null,
+
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1 }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1 }),
+			]),
+			new Round(2, 0, [
+				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0 }),
+			])
+		]
+
+		linkNodes(rounds)
+
 	})
 });
 
