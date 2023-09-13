@@ -258,6 +258,14 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	public function render_template_builder() {
+		wp_localize_script(
+			'wpbb-bracket-builder-react',
+			'wpbb_ajax_obj',
+			array(
+				'my_templates_url' => '/templates',
+				'my_tournaments_url' => '/tournaments',
+			)
+		);
 		ob_start();
 	?>
 		<div id="wpbb-template-builder">
@@ -318,10 +326,11 @@ class Wp_Bracket_Builder_Public {
 	 */
 	public function add_shortcodes() {
 		add_shortcode('wpbb-play-tournament-builder', [$this, 'render_play_tourney_builder']);
-		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
-		add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
-		add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
-		add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
+		add_shortcode('wpbb-template-builder', [$this, 'render_template_builder']);
+		// add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
+		// add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
+		// add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
+		// add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
 		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']);
 		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']);

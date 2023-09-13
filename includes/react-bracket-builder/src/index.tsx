@@ -3,16 +3,17 @@ import App from "./App";
 import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
-import { BracketRes } from './brackets/shared/api/types/bracket';
+// import { BracketRes } from './brackets/shared/api/types/bracket';
 import { bracketBuilderStore } from './brackets/shared/app/store';
 import { Provider } from 'react-redux';
 import { camelCaseKeys } from './brackets/shared/api/bracketApi';
+import withMatchTree from './brackets/shared/components/WithMatchTree';
 
 interface WpbbAjaxObj {
 	page: string;
 	nonce: string;
 	rest_url: string;
-	tournament: BracketRes;
+	tournament: any;
 	bracket_url_theme_map: OverlayUrlThemeMap;
 	css_url: string;
 	bracket_product_archive_url: string;
@@ -21,6 +22,8 @@ interface WpbbAjaxObj {
 	sentry_env: string;
 	sentry_dsn: string;
 	post: any;
+	my_templates_url: string;
+	my_tournaments_url: string;
 }
 
 declare var wpbb_ajax_obj: WpbbAjaxObj;
@@ -58,6 +61,8 @@ const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settin
 const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserBracket/UserBracket'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
+const TemplateBuilder = React.lazy(() => import('./brackets/TemplateBuilder/TemplateBuilder'))
+// const WithMatchTree = React.lazy(() => import('./brackets/shared/components/WithMatchTree'))
 
 // Get the wpbb_ajax_obj from the global scope
 
@@ -65,6 +70,7 @@ renderSettings(wpbb_ajax_obj)
 renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderPreview(wpbb_ajax_obj)
 renderOptionsTree()
+renderTemplateBuilder(wpbb_ajax_obj)
 
 function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	const page = wpbb_ajax_obj.page
@@ -72,6 +78,24 @@ function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	if (page === 'settings') {
 		// Render the App component into the DOM
 		render(<App><Settings /></App >, document.getElementById('wpbb-admin-panel'));
+	}
+}
+
+function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
+	const templateBuilder = document.getElementById('wpbb-template-builder')
+	const {
+		my_templates_url,
+		my_tournaments_url,
+	} = wpbb_ajax_obj
+	if (templateBuilder) {
+		console.log('rendering template builder')
+		const TemplateBuilderWithMatchTree = withMatchTree(TemplateBuilder)
+		render(
+			<App>
+				<Provider store={bracketBuilderStore}>
+					<TemplateBuilderWithMatchTree saveTemplateLink={my_templates_url} saveTournamentLink={my_tournaments_url} />
+				</Provider>
+			</App >, templateBuilder);
 	}
 }
 
@@ -94,7 +118,12 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 
 	if (builderDiv && tournament) {
 		console.log('rendering play tournament builder')
-		render(<App><Provider store={bracketBuilderStore}><UserBracket bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} canPick /> </Provider></App>, builderDiv)
+		render(
+			<App>
+				<Provider store={bracketBuilderStore}>
+					<UserBracket bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
+				</Provider>
+			</App>, builderDiv)
 	}
 }
 

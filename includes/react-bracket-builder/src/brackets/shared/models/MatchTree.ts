@@ -158,6 +158,7 @@ export class MatchNode {
 			this.team2Wins = true;
 		}
 	}
+
 }
 
 export class Round {
