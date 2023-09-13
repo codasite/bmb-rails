@@ -33,6 +33,9 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 		'tw-font-500',
 		`tw-text-${textColor}`,
 	]
+	if (onTeamClick) {
+		baseStyles.push('tw-cursor-pointer')
+	}
 	if (backgroundColor) {
 		baseStyles.push(`tw-bg-${backgroundColor}`)
 	}
@@ -47,8 +50,8 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 	const styles = baseStyles.join(' ')
 
 	const handleTeamClick = () => {
-		if (onTeamClick) {
-			onTeamClick(match, teamPosition)
+		if (onTeamClick && team) {
+			onTeamClick(match, team)
 		}
 	}
 

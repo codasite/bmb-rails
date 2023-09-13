@@ -11,7 +11,7 @@ export const TeamSlotToggle = (props: TeamSlotProps) => {
 		teamPosition,
 	} = props
 
-	const active = match.getWinner() === team ? true : false
+	const active = team && match.getWinner() === team ? true : false
 
 	return (
 		active ? <ActiveTeamSlot {...props} /> : <InactiveTeamSlot {...props} />
