@@ -71,6 +71,7 @@ tailwind.config = {
 		colors: {
 			'transparent': 'transparent',
 			'black': '#000',
+			'off-black': '#000225',
 			'white': '#fff',
 			'green': '#05FF3C',
 			'dark-green': '#00440F',
@@ -93,7 +94,9 @@ tailwind.config = {
 			'24': '24px',
 			'30': '30px',
 			'36': '36px',
+			'32': '32px',
 			'48': '48px',
+			'60': '60px',
 			'64': '64px',
 			'80': '80px',
 		},

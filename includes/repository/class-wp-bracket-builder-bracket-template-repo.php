@@ -66,7 +66,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $team;
 	}
 
-	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
+	public function get(int|WP_Post|null|string $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
 		$template_post = get_post($post);
 
 		if ($template_post === null) {
@@ -94,6 +94,43 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		);
 
 		return $template;
+	}
+
+	public function get_teams(): array {
+		$table_name = $this->team_table();
+		$team_results = $this->wpdb->get_results(
+			"SELECT * FROM {$table_name}",
+			ARRAY_A
+		);
+		$teams = [];
+		foreach ($team_results as $team) {
+			$teams[] = new Wp_Bracket_Builder_Team($team['name'], $team['id']);
+		}
+		return $teams;
+	}
+
+	public function get_matches(): array {
+		// get all matches for all templates
+		$table_name = $this->match_table();
+		$match_results = $this->wpdb->get_results(
+			"SELECT * FROM {$table_name} ORDER BY bracket_template_id, round_index, match_index ASC",
+			ARRAY_A
+		);
+		$matches = [];
+		foreach ($match_results as $match) {
+			$team1 = $this->get_team($match['team1_id']);
+			$team2 = $this->get_team($match['team2_id']);
+
+			$matches[] = new Wp_Bracket_Builder_Match(
+				$match['round_index'],
+				$match['match_index'],
+				$team1,
+				$team2,
+				$match['id'],
+			);
+		}
+
+		return $matches;
 	}
 
 	private function get_matches_for_template(int $template_id): array {
@@ -156,6 +193,11 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			$templates[] = $this->get($post, false);
 		}
 		return $templates;
+	}
+
+	public function delete(int $id, $force = false): bool {
+		// Changed this to false so users can still see deleted templates. 
+		return $this->delete_post($id, $force);
 	}
 
 	// public function delete(int $id): bool {
