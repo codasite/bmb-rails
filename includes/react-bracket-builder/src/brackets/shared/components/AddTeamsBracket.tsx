@@ -5,7 +5,7 @@ import { DefaultBracket } from './DefaultBracket';
 import { TeamSlotToggle } from './TeamSlot';
 
 
-export const PickableBracket = (props: BracketProps) => {
+export const AddTeamsBracket = (props: BracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
@@ -21,8 +21,7 @@ export const PickableBracket = (props: BracketProps) => {
 		if (!team) {
 			return;
 		}
-		match.pick(team);
-		setMatchTree(matchTree);
+		console.log('AddTeamsBracket handleTeamClick match', match);
 	}
 
 	return (

@@ -255,6 +255,16 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_template_builder() {
+		ob_start();
+	?>
+		<div id="wpbb-template-builder">
+		</div>
+	<?php
+
+		return ob_get_clean();
+	}
+
 	public function render_bracket_manager() {
 		ob_start();
 	?>
