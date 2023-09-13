@@ -1,12 +1,12 @@
 import React from 'react';
 import { MatchNode, Round, Team, MatchTree } from '../models/MatchTree';
-import { TeamSlot } from './TeamSlot'
 import { Direction, bracketConstants } from '../constants'
 import { MatchBoxProps, TeamSlotProps } from './types';
 import { Nullable } from '../../../utils/types';
 import { getUniqueTeamClass } from '../utils';
 //@ts-ignore
 import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg'
+import { DefaultTeamSlot } from './TeamSlot';
 
 interface FinalMatchChildrenProps {
 	match: MatchNode
@@ -65,9 +65,10 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		matchPosition,
 		matchTree,
 		setMatchTree,
-		TeamSlotComponent,
-		teamGap,
-		teamHeight,
+		TeamSlotComponent = DefaultTeamSlot,
+		teamGap = 20,
+		teamHeight = 28,
+		onTeamClick,
 	} = props
 
 	const center = matchPosition === 'center'
@@ -89,6 +90,7 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 				matchPosition={matchPosition}
 				teamPosition={teamPosition}
 				height={teamHeight}
+				onTeamClick={onTeamClick}
 			/>
 		)
 	}

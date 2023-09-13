@@ -23,11 +23,11 @@ const targetRoundHeights = [
 	sixRoundHeight,
 ]
 
-export const getTargetHeight = (numRounds: number) => {
+export const getBracketHeight = (numRounds: number) => {
 	return targetRoundHeights[numRounds - 1]
 }
 
-export const getTargetWidth = (numRounds: number) => {
+export const getBracketWidth = (numRounds: number) => {
 	return bracketWidths[numRounds]
 }
 

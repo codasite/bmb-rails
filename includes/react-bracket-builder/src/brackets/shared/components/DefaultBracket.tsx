@@ -4,23 +4,29 @@ import { BracketLines, RootMatchLines } from './BracketLines'
 import {
 	getFirstRoundMatchGap,
 	getMatchGap,
+	getBracketHeight,
+	getBracketWidth,
 } from '../utils'
 import { Nullable } from '../../../utils/types';
 import { BracketProps } from './types';
 import { DarkModeContext } from '../context';
-
+import { DefaultMatchColumn } from './DefaultMatchColumn';
+import { DefaultMatchBox } from './DefaultMatchBox';
+import { DefaultTeamSlot } from './TeamSlot';
+import { bracketConstants } from '../constants';
 
 export const DefaultBracket = (props: BracketProps) => {
 	const {
-		height,
-		width,
-		teamHeight,
-		teamGap,
+		getHeight = getBracketHeight,
+		getWidth = getBracketWidth,
+		getTeamHeight = () => bracketConstants.teamHeight,
+		getTeamGap = () => bracketConstants.teamGap,
 		matchTree,
 		setMatchTree,
-		MatchColumnComponent,
-		MatchBoxComponent,
-		TeamSlotComponent,
+		MatchColumnComponent = DefaultMatchColumn,
+		MatchBoxComponent = DefaultMatchBox,
+		TeamSlotComponent = DefaultTeamSlot,
+		onTeamClick,
 	} = props
 
 	const darkMode = useContext(DarkModeContext);
@@ -37,8 +43,9 @@ export const DefaultBracket = (props: BracketProps) => {
 					MatchBoxComponent={MatchBoxComponent}
 					TeamSlotComponent={TeamSlotComponent}
 					matchGap={matchGap}
-					teamGap={teamGap}
-					teamHeight={teamHeight}
+					// teamGap={teamGap}
+					// teamHeight={teamHeight}
+					onTeamClick={onTeamClick}
 				/>
 			)
 		})
@@ -55,6 +62,9 @@ export const DefaultBracket = (props: BracketProps) => {
 		const rightMatches = sideMatches.map((round) => round.matches.slice(round.matches.length / 2))
 		const finalMatch = rounds[rounds.length - 1].matches
 
+		const height = getHeight(rounds.length)
+		const teamHeight = getTeamHeight(rounds.length - 1)
+		const teamGap = getTeamGap(rounds.length - 1)
 		const matchHeight = teamHeight * 2 + teamGap
 		const firstRoundMatchGap = getFirstRoundMatchGap(height, matchTree.rounds.length, matchHeight)
 
@@ -73,6 +83,7 @@ export const DefaultBracket = (props: BracketProps) => {
 		delay: true,
 	}
 
+	const width = getWidth(matchTree.rounds.length)
 
 	return (
 		<div className={`tw-flex tw-justify-between tw-relative tw-w-[${width}px]`}>
