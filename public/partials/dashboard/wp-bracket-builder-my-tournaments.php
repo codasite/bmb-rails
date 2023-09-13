@@ -49,8 +49,9 @@ function score_tournament_btn($endpoint, $tournament) {
 }
 
 function active_tournament_buttons($tournament) {
-	$tournament_play_link = get_permalink() . 'tournaments/' . $tournament->id . '/play';
-	$tournament_score_link = get_permalink() . 'tournaments/' . $tournament->id . '/score';
+	$tournament_play_link = get_permalink($tournament->id) . '/play';
+	$tournament_score_link = get_permalink($tournament->id) . '/score';
+	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
@@ -61,7 +62,7 @@ function active_tournament_buttons($tournament) {
 			<?php echo score_tournament_btn($tournament_score_link, $tournament); ?>
 		</div>
 		<!-- This goes to the Leaderboard page -->
-		<?php echo view_leaderboard_btn($tournament_score_link, 'compact'); ?>
+		<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
 	</div>
 <?php
 
@@ -70,7 +71,7 @@ function active_tournament_buttons($tournament) {
 
 function completed_tournament_buttons($tournament) {
 	$play_link = get_permalink() . 'tournaments/' . $tournament->id . '/play';
-	$leaderboard_link = get_permalink() . 'tournaments/' . $tournament->id . '/leaderboard';
+	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-end tw-gap-8">
