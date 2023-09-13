@@ -256,6 +256,13 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_bracket_tournament() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-tournament.php';
+
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -270,6 +277,7 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
 		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']);
 		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']);
+		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament']);
 	}
 
 	public function add_rewrite_rules() {
@@ -277,11 +285,13 @@ class Wp_Bracket_Builder_Public {
 		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
 		add_rewrite_rule('^dashboard/tournaments/?', 'index.php?pagename=dashboard&tab=tournaments', 'top');
 		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
+		add_rewrite_rule('^bracket_tournament/([^/]+)/([^/]+)', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
 	}
 
 	public function add_query_vars($vars) {
 		$vars[] = 'tab';
 		$vars[] = 'status';
+		$vars[] = 'view';
 		return $vars;
 	}
 
