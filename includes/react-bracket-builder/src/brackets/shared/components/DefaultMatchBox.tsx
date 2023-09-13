@@ -36,7 +36,7 @@ const FinalMatchChildren = (props: FinalMatchChildrenProps) => {
 	return (
 		<>
 			<div className={`tw-flex tw-flex-col tw-gap-16 tw-absolute tw-bottom-[${winnerContainerBottom[numRounds]}px] tw-items-center tw-left-[50%] tw-translate-x-[-50%]`}>
-				<span className='tw-text-64 tw-font-700 tw-whitespace-nowrap'>Bracket Title</span>
+				<span className='tw-text-64 tw-font-700 tw-whitespace-nowrap tw-text-dd-blue dark:tw-text-white'>Bracket Title</span>
 				<TeamSlotComponent
 					team={match.getWinner()}
 					match={match}
@@ -50,9 +50,9 @@ const FinalMatchChildren = (props: FinalMatchChildrenProps) => {
 				/>
 			</div>
 			{/* <div className='tw-absolute tw-bottom-0 tw-left-[50%] tw-translate-x-[-50%] tw-text-black/20 dark:tw-text-white/20 '> */}
-			<div className={`tw-absolute tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-left-[50%] tw-translate-x-[-50%] tw-bottom-[${bracketLogoBottom[numRounds]}px] tw-text-white tw-text-36 tw-font-700 tw-whitespace-nowrap`}>
+			<div className={`tw-absolute tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-left-[50%] tw-translate-x-[-50%] tw-bottom-[${bracketLogoBottom[numRounds]}px] tw-text-dd-blue dark:tw-text-white tw-text-36 tw-font-700 tw-whitespace-nowrap `}>
 				<span>{sloganText}</span>
-				<BracketLogo className={'tw-w-[124px]'} />
+				<BracketLogo className={'tw-w-[124px] tw-text-black/25 dark:tw-text-white'} />
 				<span>{bracketDate}</span>
 			</div>
 		</>
