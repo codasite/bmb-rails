@@ -132,6 +132,9 @@ tailwind.config = {
 					'border-top-style': 'none',
 					'border-bottom-style': 'none',
 				},
+				'.border-b-solid': {
+					'border-bottom-style': 'solid',
+				},
 			}
 			addUtilities(individualBorderStyles)
 		},
