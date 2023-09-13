@@ -8,11 +8,15 @@ export interface TeamSlotProps {
 	match: MatchNode;
 	matchPosition: string;
 	teamPosition: string;
-	height: number;
+	height?: number;
 	width?: number;
 	fontSize?: number;
 	fontWeight?: number;
+	textColor?: string;
+	backgroundColor?: string;
+	borderColor?: string;
 	matchTree: MatchTree;
+	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	getTeamClass?: (roundIndex: number, matchIndex: number, position: string) => string;
 }
@@ -21,38 +25,42 @@ export interface MatchBoxProps {
 	match: Nullable<MatchNode>;
 	matchPosition: string;
 	matchTree: MatchTree;
-	teamGap: number;
-	teamHeight: number;
+	teamGap?: number;
+	teamHeight?: number;
 	setMatchTree?: (matchTree: MatchTree) => void;
-	TeamSlotComponent: React.FC<TeamSlotProps>;
+	TeamSlotComponent?: React.FC<TeamSlotProps>;
+	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
 }
 
 export interface MatchColumnProps {
 	matches: Nullable<MatchNode>[];
 	matchPosition: string;
-	teamGap: number;
-	teamHeight: number;
-	matchGap: number;
+	teamGap?: number;
+	teamHeight?: number;
+	matchGap?: number;
 	matchTree: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
-	MatchBoxComponent: React.FC<MatchBoxProps>;
-	TeamSlotComponent: React.FC<TeamSlotProps>;
+	MatchBoxComponent?: React.FC<MatchBoxProps>;
+	TeamSlotComponent?: React.FC<TeamSlotProps>;
+	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
 }
 
 export interface BracketProps {
-	height: number;
-	width: number;
-	teamHeight: number;
-	teamGap: number;
+	getHeight?: (numRounds: number) => number;
+	getWidth?: (numRounds: number) => number;
+	getMatchBoxHeight?: (depth: number) => number;
+	getTeamGap?: (depth: number) => number;
+	getTeamHeight?: (depth: number) => number;
 	matchTree: MatchTree;
 	// bracketName?: string;
 	// canEdit?: boolean;
 	// canPick?: boolean;
 	// darkMode?: boolean;
 	setMatchTree?: (matchTree: MatchTree) => void;
-	MatchColumnComponent: React.FC<MatchColumnProps>;
-	MatchBoxComponent: React.FC<MatchBoxProps>;
-	TeamSlotComponent: React.FC<TeamSlotProps>;
+	MatchColumnComponent?: React.FC<MatchColumnProps>;
+	MatchBoxComponent?: React.FC<MatchBoxProps>;
+	TeamSlotComponent?: React.FC<TeamSlotProps>;
+	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
 }
 
 

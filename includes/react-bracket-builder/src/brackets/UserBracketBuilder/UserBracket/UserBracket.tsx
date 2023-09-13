@@ -18,14 +18,15 @@ import './UserBracket.scss'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import {
-	getTargetHeight,
-	getTargetWidth,
+	getBracketHeight,
+	getBracketWidth,
 	getTeamClasses,
 	getUniqueTeamClass,
 	getMatchBoxHeight,
 	getFirstRoundMatchGap,
 	getTargetMatchHeight,
 } from '../../shared/utils'
+import { PickableBracket } from '../../shared/components/PickableBracket';
 
 
 interface ThemeSelectorProps {
@@ -294,25 +295,14 @@ const UserBracket = (props: UserBracketProps) => {
 		const numRounds = matchTree?.rounds.length;
 		// const pickedWinner = matchTree?.allPicked();
 		console.log('numRounds', numRounds)
-		const bracketHeight = getTargetHeight(numRounds);
-		const bracketWidth = getTargetWidth(numRounds);
-		const teamHeight = bracketConstants.teamHeight;
-		const teamGap = bracketConstants.teamGap;
 		const actionButtonMargin = bracketConstants.bracketActionsMarginTop[numRounds]
 
 		return (
 			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-gap-[${actionButtonMargin}px]`}>
 				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
-				<DefaultBracket
-					height={bracketHeight}
-					width={bracketWidth}
-					teamHeight={teamHeight}
-					teamGap={teamGap}
+				<PickableBracket
 					matchTree={matchTree}
 					setMatchTree={(matchTree: MatchTree) => dispatch(setMatchTree(matchTree.serialize()))}
-					MatchColumnComponent={DefaultMatchColumn}
-					MatchBoxComponent={DefaultMatchBox}
-					TeamSlotComponent={DefaultTeamSlot}
 				/>
 				<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
 			</div>
