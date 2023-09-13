@@ -53,6 +53,16 @@ export const bracketConstants = {
 		-320, // 6 rounds
 	],
 
+	winnerContainerBottom: [
+		100, // 0 rounds
+		100, // 1 round
+		100, // 2 rounds
+		100, // 3 rounds
+		150, // 4 rounds
+		190, // 5 rounds
+		320, // 6 rounds
+	],
+
 	bracketActionsMarginTop: [
 		220, // 0 rounds
 		220, // 1 round
