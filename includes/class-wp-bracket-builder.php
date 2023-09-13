@@ -187,9 +187,8 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
 
-		$this->loader->add_action('init', $this, 'add_bracket_template_post_type');
-		$this->loader->add_action('init', $this, 'add_bracket_play_post_type');
-		$this->loader->add_action('init', $this, 'add_bracket_tournament_post_type');
+		$this->loader->add_action('init', $this, 'register_custom_post_types');
+		$this->loader->add_action('init', $this, 'register_custom_post_status');
 
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
@@ -273,7 +272,7 @@ class Wp_Bracket_Builder {
 		return $this->version;
 	}
 
-	public function add_bracket_template_post_type() {
+	public function register_custom_post_types() {
 		register_post_type(
 			'bracket_template',
 			array(
@@ -292,10 +291,7 @@ class Wp_Bracket_Builder {
 				'taxonomies' => array('post_tag'),
 			)
 		);
-	}
 
-	public function add_bracket_play_post_type() {
-		// register a post type named "bracket_pick"
 		register_post_type(
 			'bracket_play',
 			array(
@@ -314,10 +310,6 @@ class Wp_Bracket_Builder {
 				'taxonomies' => array('post_tag'),
 			)
 		);
-	}
-
-	public function add_bracket_tournament_post_type() {
-		// register a post type named "tournament"
 		register_post_type(
 			'bracket_tournament',
 			array(
@@ -338,25 +330,25 @@ class Wp_Bracket_Builder {
 		);
 	}
 
-	public function bracket_pick_cpt() {
+	public function register_custom_post_status() {
 
-		register_post_type(
-			'bracket_pick',
-			array(
-				'labels' => array(
-					'name' => __('Bracket Picks'),
-					'singular_name' => __('Bracket Pick'),
-				),
-				'description' => 'Bracket picks for the WP Bracket Builder plugin',
-				'public' => true,
-				'has_archive' => true,
-				// 'supports' => array('title', 'editor', 'thumbnail'),
-				'show_ui' => true,
-				'show_in_rest' => true,
-				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
-				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
-				'taxonomies' => array('category'),
-			)
-		);
+		// Custom post status for completed tournaments
+		register_post_status("complete", array(
+			'label' => 'Complete',
+			'public' => true,
+			'exclude_from_search' => false,
+			'show_in_admin_all_list' => true,
+			'show_in_admin_status_list' => true,
+			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Complete <span class="count">(%s)</span>'),
+		));
+
+		register_post_status("archive", array(
+			'label' => 'Archive',
+			'public' => true,
+			'exclude_from_search' => false,
+			'show_in_admin_all_list' => true,
+			'show_in_admin_status_list' => true,
+			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Archive <span class="count">(%s)</span>'),
+		));
 	}
 }

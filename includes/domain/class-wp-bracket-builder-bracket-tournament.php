@@ -46,6 +46,10 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		];
 	}
 
+	public function get_update_post_meta(): array {
+		return [];
+	}
+
 	static public function from_array($data) {
 
 		if (!isset($data['bracket_template_id'])) {

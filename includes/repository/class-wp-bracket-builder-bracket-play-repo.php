@@ -104,6 +104,37 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		return $plays;
 	}
 
+	// get all plays for a specific tournament
+	public function get_all_by_tournament(int $tournament_id): array {
+		$query = new WP_Query([
+			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'posts_per_page' => -1,
+			'post_status' => 'any',
+			'tournament_id' => $tournament_id,
+		]);
+		$plays = [];
+		foreach ($query->posts as $post) {
+			$plays[] = $this->get($post, false, false);
+		}
+		return $plays;
+	}
+
+	// get plays made by a specific author
+	public function get_all_by_author(int $tournament_id): array {
+		$query = new WP_Query([
+			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'posts_per_page' => -1,
+			'post_status' => 'any',
+			'author' => get_current_user_id(),
+		]);
+
+		$plays = [];
+		foreach ($query->posts as $post) {
+			$plays[] = $this->get($post, false, false);
+		}
+		return $plays;
+	}
+
 	public function add(Wp_Bracket_Builder_Bracket_Play $play): ?Wp_Bracket_Builder_Bracket_Play {
 		$play_id = $this->insert_post($play, true);
 

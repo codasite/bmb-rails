@@ -6,170 +6,20 @@
 /** TOURNAMENT LEADERBOARD START */
 
 
-.wpbb-tourney-leaderboard {
-	font-family: 'Clash Display', sans-serif;
-	text-transform: uppercase;
-	color: #fff;
-	line-height: normal;
-	display: flex;
-	flex-direction: column;
-	gap: 30px;
-}
-
-.wpbb-tourney-leaderboard button:hover {
-	cursor: pointer;
-}
-
-.wpbb-tourney-leaderboard-header {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	border-radius: 16px;
-	/* background-color: orange; */
-	/* background image relative path: ../images/leaderboard-header-bg.png */
-
+.wpbb-leaderboard-header {
 	background-size: cover;
 	background-position: center left;
 	background-image:
 		linear-gradient(rgba(248, 225, 26, .7) 0%, rgba(255, 108, 76, 0.5) 66.67%, rgba(255, 31, 79, 0.15) 100%),
 		url('../assets/images/bmb_icon_white_05.png');
 	/* color: #fff; */
-	padding: 66px 30px 53px;
 }
 
-.wpbb-tourney-leaderboard-header svg {
-	height: 56px;
-	width: 56px;
-}
+.wpbb-leaderboard-header.wpbb-tourney-complete {
+	background-image:
+		linear-gradient(151deg, rgba(248, 225, 26, 0.40) 0%, rgba(64, 255, 106, 0.40) 67.82%),
+		url('../assets/images/bmb_icon_white_05.png');
 
-.wpbb-tourney-leaderboard-header h1 {
-	font-family: 'Clash Display', sans-serif;
-	color: #fff;
-	margin-top: 16px;
-	margin-bottom: 24px;
-}
-
-.wpbb-score-tournament-btn {
-	padding: 10px 16px;
-	border-radius: 8px;
-	border: none;
-	background-color: #F8E11A;
-}
-
-.wpbb-score-tournament-btn-content {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	color: #000225;
-	text-transform: uppercase;
-}
-
-.wpbb-score-tournament-btn-content svg {
-	height: 24px;
-	width: 24px;
-}
-
-.wpbb-score-tournament-btn-text {
-	margin-left: 8px;
-	font-family: 'Clash Display', sans-serif;
-	font-weight: 500;
-}
-
-body {
-	font-family: 'Clash Display', sans-serif !important;
-}
-
-.wpbb-tournament-plays-title {
-	color: rgba(255, 255, 255, 0.5);
-	font-size: 24px;
-	font-weight: 500;
-	font-family: 'Clash Display', sans-serif;
-	margin-bottom: 16px;
-}
-
-.wpbb-tournament-plays {
-	display: flex;
-	flex-direction: column;
-	padding: 0 30px;
-	gap: 16px;
-
-}
-
-.wpbb-leaderboard-play-row {
-	display: flex;
-	flex-direction: row;
-	gap: 16px;
-}
-
-.wpbb-leaderboard-play-winning-pick-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 4px;
-}
-
-.wpbb-leaderboard-play-winning-pick {
-	padding: 4px 16px;
-	background-color: #fff;
-	color: #010433;
-	font-weight: 700;
-}
-
-.wpbb-leaderboard-play-winning-pick-label {
-	/* line-height: normal; */
-	font-weight: 500;
-	font-size: 12px;
-}
-
-.wpbb-leaderboard-play-author-info {
-	display: flex;
-	flex-direction: column;
-	flex-grow: 1;
-}
-
-.wpbb-leaderboard-play-author-name {
-	font-size: 24px;
-	font-weight: 700;
-	/* line-height: normal; */
-}
-
-.wpbb-leaderboard-play-date {
-	color: rgba(255, 255, 255, 0.5);
-	font-size: 12px;
-	font-weight: 500;
-	/* line-height: normal; */
-}
-
-.wpbb-leaderboard-view-play-btn {
-	align-self: center;
-	font-family: 'Clash Display', sans-serif;
-	color: #fff;
-	text-transform: uppercase;
-	font-size: 16px;
-	font-weight: 500;
-	background: none;
-	border: none;
-	padding: 8px 16px 8px 12px;
-	border-radius: 8px;
-}
-
-.wpbb-leaderboard-view-play-btn:hover {
-	color: #010433;
-	background-color: #fff;
-}
-
-.wpbb-leaderboard-view-play-btn-content {
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	align-items: center;
-	gap: 4px;
-}
-
-.wpbb-leaderboard-view-play-btn-icon {
-	display: flex;
-	flex-direction: column;
 }
 
 /** TOURNAMENT LEADERBOARD END */
