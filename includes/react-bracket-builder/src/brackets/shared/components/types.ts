@@ -16,7 +16,7 @@ export interface TeamSlotProps {
 	backgroundColor?: string;
 	borderColor?: string;
 	matchTree: MatchTree;
-	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
+	onTeamClick?: (match: MatchNode, team: Team) => void;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	getTeamClass?: (roundIndex: number, matchIndex: number, position: string) => string;
 }
@@ -29,7 +29,7 @@ export interface MatchBoxProps {
 	teamHeight?: number;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
-	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
+	onTeamClick?: (match: MatchNode, team: Team) => void;
 }
 
 export interface MatchColumnProps {
@@ -42,7 +42,7 @@ export interface MatchColumnProps {
 	setMatchTree?: (matchTree: MatchTree) => void;
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
-	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
+	onTeamClick?: (match: MatchNode, team: Team) => void;
 }
 
 export interface BracketProps {
@@ -60,7 +60,7 @@ export interface BracketProps {
 	MatchColumnComponent?: React.FC<MatchColumnProps>;
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
-	onTeamClick?: (match: MatchNode, teamPosition: string) => void;
+	onTeamClick?: (match: MatchNode, team: Team) => void;
 }
 
 

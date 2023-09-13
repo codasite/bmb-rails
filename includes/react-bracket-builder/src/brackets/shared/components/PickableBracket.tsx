@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Round, MatchNode } from '../models/MatchTree';
+import { Round, MatchNode, Team } from '../models/MatchTree';
 import { BracketLines, RootMatchLines } from './BracketLines'
 import {
 	getFirstRoundMatchGap,
@@ -27,8 +27,18 @@ export const PickableBracket = (props: BracketProps) => {
 	// const teamHeight = bracketConstants.teamHeight;
 	// const teamGap = bracketConstants.teamGap;
 
-	const handleTeamClick = (match: MatchNode, teamPosition: string) => {
-		console.log('handleTeamClick', teamPosition);
+	const handleTeamClick = (match: MatchNode, team: Team) => {
+		if (!match) {
+			return;
+		}
+		if (!setMatchTree) {
+			return
+		}
+		if (!team) {
+			return;
+		}
+		match.pick(team);
+		setMatchTree(matchTree);
 	}
 
 	return (

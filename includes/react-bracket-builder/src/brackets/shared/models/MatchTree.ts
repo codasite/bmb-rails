@@ -144,6 +144,20 @@ export class MatchNode {
 	getTeam2(): Nullable<Team> {
 		return this.right ? this.right.getWinner() : this.team2;
 	}
+
+	pick(team: Nullable<Team>): void {
+		if (!team) {
+			return;
+		}
+		this.team1Wins = false;
+		this.team2Wins = false;
+
+		if (this.getTeam1() === team) {
+			this.team1Wins = true;
+		} else if (this.getTeam2() === team) {
+			this.team2Wins = true;
+		}
+	}
 }
 
 export class Round {
