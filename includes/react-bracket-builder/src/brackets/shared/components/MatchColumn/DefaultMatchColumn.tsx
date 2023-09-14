@@ -1,15 +1,8 @@
 import React, { } from 'react';
-import { Nullable } from '../../../utils/types';
-import { Round, MatchNode } from '../models/MatchTree';
-import { MatchBox } from './MatchBox';
-import { DefaultTeamSlot, TeamSlot } from './TeamSlot'
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg';
-import { MatchColumnProps } from './types';
+import { MatchColumnProps } from '../types';
 //@ts-ignore
-import { Direction } from '../constants'
-import { getMatchBoxHeight } from '../utils'
-import { DefaultMatchBox } from './DefaultMatchBox';
+import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox';
 
 
 export const DefaultMatchColumn = (props: MatchColumnProps) => {

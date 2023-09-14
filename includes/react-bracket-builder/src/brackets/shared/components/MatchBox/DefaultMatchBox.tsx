@@ -1,12 +1,12 @@
 import React from 'react';
-import { MatchNode, Round, Team, MatchTree } from '../models/MatchTree';
-import { Direction, bracketConstants } from '../constants'
-import { MatchBoxProps, TeamSlotProps } from './types';
-import { Nullable } from '../../../utils/types';
-import { getUniqueTeamClass } from '../utils';
+import { MatchNode, Round, Team, MatchTree } from '../../models/MatchTree';
+import { Direction, bracketConstants } from '../../constants'
+import { MatchBoxProps, TeamSlotProps } from '../types';
+import { Nullable } from '../../../../utils/types';
+import { getUniqueTeamClass } from '../../utils';
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg'
-import { DefaultTeamSlot } from './TeamSlot';
+import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg'
+import { DefaultTeamSlot } from '../TeamSlot';
 
 interface FinalMatchChildrenProps {
 	match: MatchNode

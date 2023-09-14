@@ -1,19 +1,19 @@
 import React, { useContext } from 'react';
-import { Round, MatchNode } from '../models/MatchTree';
+import { Round, MatchNode } from '../../models/MatchTree';
 import { BracketLines, RootMatchLines } from './BracketLines'
 import {
 	getFirstRoundMatchGap,
 	getMatchGap,
 	getBracketHeight,
 	getBracketWidth,
-} from '../utils'
-import { Nullable } from '../../../utils/types';
-import { BracketProps } from './types';
-import { DarkModeContext } from '../context';
-import { DefaultMatchColumn } from './DefaultMatchColumn';
-import { DefaultMatchBox } from './DefaultMatchBox';
-import { DefaultTeamSlot } from './TeamSlot';
-import { bracketConstants } from '../constants';
+} from '../../utils'
+import { Nullable } from '../../../../utils/types';
+import { BracketProps } from '../types';
+import { DarkModeContext } from '../../context';
+import { DefaultMatchColumn } from '../MatchColumn/DefaultMatchColumn';
+import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox';
+import { DefaultTeamSlot } from '../TeamSlot';
+import { bracketConstants } from '../../constants';
 
 export const DefaultBracket = (props: BracketProps) => {
 	const {

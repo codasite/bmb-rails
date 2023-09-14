@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
-import { Round, MatchNode } from '../models/MatchTree';
+import { Round, MatchNode } from '../../models/MatchTree';
 import LineTo, { SteppedLineTo } from 'react-lineto';
-import { DarkModeContext } from '../context';
+import { DarkModeContext } from '../../context';
 import {
 	getUniqueTeamClass,
-} from '../utils'
+} from '../../utils'
 
 interface BracketLinesProps {
 	rounds: Round[]

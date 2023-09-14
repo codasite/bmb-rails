@@ -207,6 +207,24 @@ export class MatchTree {
 		return lastRound.matches[0]
 	}
 
+	/**
+	 * Returns the total number of POSSIBLE teams in the tournament.
+	 * This should reflect the number of teams that would be used to create the same structure with MatchTree.fromNumTeams()
+	 */
+	getNumTeams(): number {
+		// count all non null matches in the tree
+		const numMatches = this.rounds.reduce((acc, round) => {
+			return acc + round.matches.reduce((acc, match) => {
+				if (match) {
+					return acc + 1
+				}
+				return acc
+			}, 0)
+		}, 0)
+
+		return numMatches + 1
+	}
+
 	serialize(): Nullable<MatchRepr>[][] {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './template-builder.scss'
-import { NumTeamsPicker } from './NumTeamsPicker/NumTeamsPicker'
+import { NumTeamsPicker } from './NumTeamsPicker'
 import { MatchTree } from '../shared/models/MatchTree'
 //@ts-ignore
 //@ts-ignore
@@ -8,6 +8,7 @@ import { MatchTree } from '../shared/models/MatchTree'
 //@ts-ignore
 import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
 import { AddTeamsPage } from './AddTeamsPage'
+import { BracketTemplatePreview } from './BracketTemplatePreview'
 
 
 
@@ -69,15 +70,20 @@ interface NumTeamsPickerState {
   selected: boolean
 }
 
+interface NumTeamsPageProps {
+  matchTree?: MatchTree
+  setMatchTree?: (matchTree: MatchTree) => void
+  onAddTeamsClick: () => void
+}
 
-const NumTeamsPage = (props) => {
+const NumTeamsPage = (props: NumTeamsPageProps) => {
   const {
     matchTree,
     setMatchTree,
     onAddTeamsClick,
   } = props
 
-  const initialPickerIndex = 1
+  const initialPickerIndex = 0
   const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
   const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
     teamPickerDefaults.map((val, i) => ({
@@ -247,6 +253,12 @@ const NumTeamsPage = (props) => {
   return (
     <div className="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
       <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
+      {
+        matchTree &&
+        <div>
+          <BracketTemplatePreview matchTree={matchTree} />
+        </div>
+      }
       <div className='tw-flex tw-flex-col tw-gap-24'>
         <span className='tw-text-white/50 tw-text-center tw-font-500 tw-text-24'>
           How Many total teams in Your Bracket
