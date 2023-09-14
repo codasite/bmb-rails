@@ -103,8 +103,8 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 }
 
 function public_tournament_active_buttons($tournament) {
-	$tournament_play_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/play';
-	$leaderboard_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/leaderboard';
+	$tournament_play_link = get_permalink($tournament->id) . '/play';
+	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
@@ -118,7 +118,7 @@ function public_tournament_active_buttons($tournament) {
 }
 
 function public_tournament_completed_buttons($tournament) {
-	$leaderboard_link = get_permalink() . 'tournaments/' . $tournament['id'] . '/leaderboard';
+	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 
 	ob_start();
 ?>

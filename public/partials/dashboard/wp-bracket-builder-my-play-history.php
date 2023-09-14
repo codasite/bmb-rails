@@ -15,8 +15,9 @@ function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	$complete = $play->tournament->status === 'complete';
 	$play_id = $play->id;
 	$tournament_id = $play->tournament_id;
-	$play_link = get_permalink() . 'tournaments/' . $tournament_id . '/play/' . $play_id;
-	$leaderboard_link = get_permalink() . 'tournaments/' . $tournament_id . '/leaderboard';
+	// $play_link = get_permalink() . 'tournaments/' . $tournament_id . '/play/' . $play_id;
+	$play_link = get_permalink($tournament_id) . '/play';
+	$leaderboard_link = get_permalink($tournament_id) . '/leaderboard';
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';

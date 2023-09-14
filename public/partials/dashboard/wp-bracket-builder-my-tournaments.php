@@ -134,8 +134,8 @@ function tournament_list_item($tournament) {
 	$completed = $tournament->status === 'complete';
 	$share_link = get_permalink() . 'tournaments/' . $id . '/share';
 	$delete_link = get_permalink() . 'tournaments/';
-	$play_link = get_permalink() . 'tournaments/' . $id . '/play';
-	$leaderboard_link = get_permalink() . 'tournaments/' . $id . '/leaderboard';
+	$play_link = get_permalink($tournament->id) . '/play';
+	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 	$archive_link = get_permalink() . 'tournaments/';
 	ob_start();
 ?>
