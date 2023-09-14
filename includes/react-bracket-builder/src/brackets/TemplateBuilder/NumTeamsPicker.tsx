@@ -136,7 +136,7 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
   const styles = baseStyles.concat(selected ? activeStyles : inactiveStyles).join(' ')
 
   return (
-    <div className={'tw-flex tw-flex-col tw-gap-24 tw-grow tw-pb-24'}>
+    <div className={'tw-flex tw-flex-col tw-gap-24 tw-grow'}>
       <div
         className={styles}
         onClick={handleBoxClick}
@@ -150,9 +150,7 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
           <NumTeamsIncrementButton active={!decrementDisabled} onPressed={handleDecrement}>-</NumTeamsIncrementButton>
           <NumTeamsIncrementButton active={!incrementDisabled} onPressed={handleIncrement}>+</NumTeamsIncrementButton>
         </div>
-
       }
-
       {/* <div style={{ display: selected ? 'block' : 'none' }}>
         <div aria-label="Basic example" className='button-container'>
           <button className='btn-secondary no-highlight-button step-down-button' disabled={decrementDisabled} onClick={handleDecrement}>-</button>

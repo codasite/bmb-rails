@@ -3,13 +3,11 @@ import './template-builder.scss'
 import { NumTeamsPicker } from './NumTeamsPicker'
 import { MatchTree, WildcardPlacement } from '../shared/models/MatchTree'
 //@ts-ignore
-//@ts-ignore
-//@ts-ignore
-//@ts-ignore
 import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
 import { AddTeamsPage } from './AddTeamsPage'
 import { BracketTemplatePreview } from './BracketTemplatePreview'
 import { isPowerOfTwo } from '../shared/utils'
+import { WildcardPicker } from './WildcardPicker'
 
 
 
@@ -32,12 +30,9 @@ const BracketTitle = (props) => {
   }
 
   return (
-    // <div className='wpbb-bracket-title' onClick={startEditing}>
     <div className='tw-flex tw-justify-center tw-border-b-solid tw-border-white/30 tw-p-16 ' onClick={startEditing}>
-      {/* {true ? */}
       {editing ?
         <input
-          // className='wpbb-bracket-title-input'
           className='tw-py-0 tw-outline-none tw-border-none tw-bg-transparent tw-text-32 tw-text-white tw-text-center tw-font-sans tw-w-full tw-uppercase'
           autoFocus
           onFocus={(e) => e.target.select()}
@@ -52,7 +47,6 @@ const BracketTitle = (props) => {
           }}
         />
         :
-        // <div className='wpbb-bracket-title-name'>{title}</div>
         <h1 className='tw-font-500 tw-text-32 !tw-text-white/20 tw-text-center'>{title}</h1>
       }
     </div>
@@ -60,7 +54,6 @@ const BracketTitle = (props) => {
 }
 
 const defaultBracketName = "MY BRACKET NAME"
-const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
 
 const teamPickerDefaults = [16, 32, 64]
 const teamPickerMin = [1, 17, 33]
@@ -93,7 +86,7 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
     }))
   )
   const [bracketTitle, setBracketTitle] = useState(defaultBracketName);
-  const [wildCardPos, setWildCardPos] = useState(initialPickerIndex)
+  const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Split)
 
   // Update the global `numTeams` variable whenever picker state changes
   useEffect(() => {
@@ -102,25 +95,11 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
       const numTeams = picker.currentValue
       setNumTeams(numTeams)
       if (setMatchTree) {
-        setMatchTree(MatchTree.fromNumTeams(numTeams, WildcardPlacement.Split))
+        setMatchTree(MatchTree.fromNumTeams(numTeams, wildcardPlacement))
       }
     }
-  }, [teamPickerState, wildCardPos])
+  }, [teamPickerState, wildcardPlacement])
 
-  const handleWildCardPlacement = (index) => {
-    setWildCardPos(index)
-  }
-
-  const CreateWildCardPlacementButtons = (props) => {
-    const selected = props.wildCard();
-    return (
-      <div>
-        <div aria-label="Basic example">
-          <button className={`btn-secondary no-highlight-button pos-btn ${selected ? 'selected-btn' : ''}`} onClick={() => handleWildCardPlacement(props.positionIndex)}>{props.position}</button>
-        </div>
-      </div>
-    )
-  }
 
   const updateTeamPicker = (index: number, newPicker: NumTeamsPickerState) => {
     const newPickers = teamPickerState.map((picker, i) => {
@@ -175,12 +154,6 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
     setTeamPickerState(newPickers)
   }
 
-  const setWildCardSelected = (index) => {
-    if (wildCardPos === index) {
-      return true;
-    }
-  }
-
   /**
    * Get the function to select the next team picker
    * When the next team picker is selected, its value is reset to the default value
@@ -207,17 +180,9 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
   // Show wild card options if numTeams is a power of 2
   const showWildCardOptions = !isPowerOfTwo(numTeams)
 
-  // const handleTeams = () => {
-  //   setBracketFields({
-  //     bracketTitle: bracketTitle,
-  //     totalRounds: totalRounds,
-  //     totalWildCardGames: totalWildCardGames,
-  //     wildCardPos: wildCardPos
-  //   }
-  //   )
-  //   bracketRes = matchTree;
-  //   setShowComponent(true);
-  // }
+  const handleWildcardPlacement = (placement: WildcardPlacement) => {
+    setWildcardPlacement(placement)
+  }
 
   // const handleShuffle = () => {
   //   let currentTreeData = matchTree.rounds;
@@ -254,7 +219,7 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
           <BracketTemplatePreview matchTree={matchTree} />
         </div>
       }
-      <div className='tw-flex tw-flex-col tw-gap-24'>
+      <div className={`tw-flex tw-flex-col tw-gap-24${showWildCardOptions ? '' : ' tw-pb-24'}`}>
         <span className='tw-text-white/50 tw-text-center tw-font-500 tw-text-24'>
           How Many total teams in Your Bracket
         </span>
@@ -277,19 +242,14 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
             )
           })}
         </div>
+        {
+          showWildCardOptions &&
+          <WildcardPicker
+            wildcardPlacement={wildcardPlacement}
+            onWildcardPlacementChanged={handleWildcardPlacement}
+          />
+        }
       </div>
-      {/* <div className='wild-btn' style={{ display: showWildCardOptions ? 'block' : 'none' }}>
-          <div className='bracket-text-info  wild-card-display-text'>
-            WILDCARD DISPLAY
-          </div>
-          <div className='wild-card-group'>
-            {WildCardPlacements.map((pos, index) => (
-              <div className='wild-card-btn' key={index}>
-                <CreateWildCardPlacementButtons position={pos} positionIndex={index} wildCard={() => setWildCardSelected(index)} />
-              </div>
-            ))}
-          </div>
-        </div> */}
       <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
         <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans '>Add Your Teams</span>
       </button>
@@ -327,10 +287,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
         <AddTeamsPage matchTree={matchTree} setMatchTree={setMatchTree} />
       }
     </div>
-
   )
-
-
 }
 
 export default TemplateBuilder
