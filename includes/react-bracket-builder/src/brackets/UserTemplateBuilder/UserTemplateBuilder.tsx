@@ -309,22 +309,22 @@ const UserTemplateBuilder = () => {
                                 <PairedBracket {...bracketProps} />
                             </DarkModeContext.Provider>
                         </div>
-                            <div className={`randomize-team-container wpbb-bracket-actions`}>
-                                <Button className='randomize-teams no-highlight-button' onClick={handleShuffle} >
-                                    <ShuffleIcon/>
-                                    <span className={'randomize-teams-text'}>scramble team order</span>
-                                </Button>
-                            </div>
-                            <div className='bracket-button'>
-                                    <Button className='btn-save-bracket' variant='secondary' onClick={handleSave}>
-                                        <SaveIcon/>
-                                        <span className='save-bracket-text'>Save As Template</span>
-                                    </Button>
-                                    <Button className='btn-play-bracket' variant='secondary'>
-                                        <PlayIcon/>
-                                        <span className='play-bracket-text'>Create Tournament</span>
-                                    </Button>
-                            </div>
+                        <div className={`randomize-team-container wpbb-bracket-actions`}>
+                            <Button className='randomize-teams no-highlight-button' onClick={handleShuffle} >
+                                <ShuffleIcon />
+                                <span className={'randomize-teams-text'}>scramble team order</span>
+                            </Button>
+                        </div>
+                        <div className='bracket-button'>
+                            <Button className='btn-save-bracket' variant='secondary' onClick={handleSave}>
+                                <SaveIcon />
+                                <span className='save-bracket-text'>Save As Template</span>
+                            </Button>
+                            <Button className='btn-play-bracket' variant='secondary'>
+                                <PlayIcon />
+                                <span className='play-bracket-text'>Create Tournament</span>
+                            </Button>
+                        </div>
                     </div>
                         :
                         <div className="bracket-container">
