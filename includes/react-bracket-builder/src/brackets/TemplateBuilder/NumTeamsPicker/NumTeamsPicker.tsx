@@ -1,5 +1,44 @@
 import React, { } from 'react'
 
+interface NumTeamsIncrementButtonProps {
+  active: boolean
+  onPressed: () => void
+  children: React.ReactNode
+}
+
+const NumTeamsIncrementButton = (props: NumTeamsIncrementButtonProps) => {
+  const { active, onPressed, children } = props
+  const baseStyles = [
+    'tw-flex',
+    'tw-justify-center',
+    'tw-items-center',
+    'tw-border-solid',
+    'tw-border',
+    'tw-rounded-4',
+    'tw-text-36',
+    'tw-font-500',
+    'tw-font-sans',
+    'tw-h-30',
+    'tw-bg-transparent',
+  ]
+  const activeStyles = [
+    'tw-border-white',
+    'tw-text-white',
+  ]
+  const inactiveStyles = [
+    'tw-border-white/50',
+    'tw-text-white/50',
+  ]
+
+  const styles = baseStyles.concat(active ? activeStyles : inactiveStyles).join(' ')
+
+  return (
+    <button className={styles} onClick={onPressed}>
+      {children}
+    </button>
+  )
+}
+
 interface NumTeamsPickerProps {
   currentValue: number
   defaultValue: number
@@ -99,6 +138,15 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
         <span className='tw-font-500 tw-text-48 tw-text-white'>{currentValue}</span>
         {selected && currentValue === defaultValue && <span className='tw-absolute tw-bottom-10 tw-left-10 tw-text-green tw-font-500 tw-text-12'>Default</span>}
       </div>
+      {
+        selected &&
+        <div className='tw-flex tw-justify-center tw-gap-12 tw-flex-grow'>
+          <NumTeamsIncrementButton active={!decrementDisabled} onPressed={handleDecrement}>-</NumTeamsIncrementButton>
+          <NumTeamsIncrementButton active={!incrementDisabled} onPressed={handleIncrement}>+</NumTeamsIncrementButton>
+        </div>
+
+      }
+
       {/* <div style={{ display: selected ? 'block' : 'none' }}>
         <div aria-label="Basic example" className='button-container'>
           <button className='btn-secondary no-highlight-button step-down-button' disabled={decrementDisabled} onClick={handleDecrement}>-</button>

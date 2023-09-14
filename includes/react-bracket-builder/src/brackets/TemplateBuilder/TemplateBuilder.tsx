@@ -2,19 +2,12 @@ import React, { useState, useEffect } from 'react'
 import './template-builder.scss'
 import { NumTeamsPicker } from './NumTeamsPicker/NumTeamsPicker'
 import { MatchTree } from '../shared/models/MatchTree'
-import { bracketApi } from '../shared/api/bracketApi';
-import { ShuffleTeam } from './ShuffleTeam'
-import { PairedBracket } from '../UserBracketBuilder/UserBracket/components/PairedBracket'
 //@ts-ignore
-import { ReactComponent as ArrowNarrowLeft } from '../shared/assets/arrow-narrow-left.svg'
 //@ts-ignore
-import { ReactComponent as SaveIcon } from '../shared/assets/save-icon.svg'
 //@ts-ignore
-import { ReactComponent as PlayIcon } from '../shared/assets/play-icon.svg'
 //@ts-ignore
-import { ReactComponent as ShuffleIcon } from '../shared/assets/shuffle-icon.svg'
-import Loader from '../shared/components/Loader/Loader'
-import { DarkModeContext } from '../shared/context'
+import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
+import { AddTeamsPage } from './AddTeamsPage'
 
 
 
@@ -62,38 +55,6 @@ const BracketTitle = (props) => {
       }
     </div>
   )
-}
-
-const AddTeamsPage = (props) => {
-
-  return (
-    <div className="bracket-container">
-      <div><button className='create-bracket' onClick={handleRedirect}><ArrowNarrowLeft />CREATE BRACKET</button></div>
-      <div className='bracket-title'>{bracketTitle}</div>
-      <div className='paired-bracket'>
-        <DarkModeContext.Provider value={true}>
-          <PairedBracket {...bracketProps} />
-        </DarkModeContext.Provider>
-      </div>
-      <div className={`randomize-team-container wpbb-bracket-actions`}>
-        <button className='randomize-teams no-highlight-button' onClick={handleShuffle} >
-          <ShuffleIcon />
-          <span className={'randomize-teams-text'}>scramble team order</span>
-        </button>
-      </div>
-      <div className='bracket-button'>
-        <button className='btn-save-bracket' onClick={handleSave}>
-          <SaveIcon />
-          <span className='save-bracket-text'>Save As Template</span>
-        </button>
-        <button className='btn-play-bracket' >
-          <PlayIcon />
-          <span className='play-bracket-text'>Create Tournament</span>
-        </button>
-      </div>
-    </div>
-  )
-
 }
 
 const defaultBracketName = "MY BRACKET NAME"
@@ -284,37 +245,33 @@ const NumTeamsPage = (props) => {
   // }
 
   return (
-    <div className='wpbb-reset wpbb-template-builder-root'>
-      <div className="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg">
-        <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
-        {/* <div className='wpbb-default'>
-                <UserTemplatePreview matchTree={matchTree} />
-              </div> */}
-        <div className='tw-flex tw-flex-col tw-gap-24'>
-          <span className='tw-text-white/50 tw-text-center tw-font-500 tw-text-24'>
-            How Many total teams in Your Bracket
-          </span>
-          <div className='tw-flex tw-gap-24 tw-w-full'>
-            {teamPickerState.map((pickerState, i) => {
-              return (
-                <NumTeamsPicker
-                  currentValue={pickerState.currentValue}
-                  defaultValue={teamPickerDefaults[i]}
-                  min={teamPickerMin[i]}
-                  max={teamPickerMax[i]}
-                  selected={pickerState.selected}
-                  setSelected={() => setTeamPickerSelected(i)}
-                  increment={() => incrementTeamPicker(i)}
-                  decrement={() => decrementTeamPicker(i)}
-                  setCurrentValue={(value) => setTeamPickerValue(i, value)}
-                  selectNextPicker={getSelectNextTeamPicker(i)}
-                  selectPrevPicker={getSelectPrevTeamPicker(i)}
-                />
-              )
-            })}
-          </div>
+    <div className="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
+      <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
+      <div className='tw-flex tw-flex-col tw-gap-24'>
+        <span className='tw-text-white/50 tw-text-center tw-font-500 tw-text-24'>
+          How Many total teams in Your Bracket
+        </span>
+        <div className='tw-flex tw-flex-col md:tw-flex-row tw-gap-24'>
+          {teamPickerState.map((pickerState, i) => {
+            return (
+              <NumTeamsPicker
+                currentValue={pickerState.currentValue}
+                defaultValue={teamPickerDefaults[i]}
+                min={teamPickerMin[i]}
+                max={teamPickerMax[i]}
+                selected={pickerState.selected}
+                setSelected={() => setTeamPickerSelected(i)}
+                increment={() => incrementTeamPicker(i)}
+                decrement={() => decrementTeamPicker(i)}
+                setCurrentValue={(value) => setTeamPickerValue(i, value)}
+                selectNextPicker={getSelectNextTeamPicker(i)}
+                selectPrevPicker={getSelectPrevTeamPicker(i)}
+              />
+            )
+          })}
         </div>
-        {/* <div className='wild-btn' style={{ display: showWildCardOptions ? 'block' : 'none' }}>
+      </div>
+      {/* <div className='wild-btn' style={{ display: showWildCardOptions ? 'block' : 'none' }}>
           <div className='bracket-text-info  wild-card-display-text'>
             WILDCARD DISPLAY
           </div>
@@ -326,11 +283,10 @@ const NumTeamsPage = (props) => {
             ))}
           </div>
         </div> */}
-        <button className='btn-play-bracket' onClick={onAddTeamsClick}>
-          <span className='play-bracket-text'>Add Your Teams</span>
-        </button>
-      </div>
-    </div >
+      <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
+        <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans '>Add Your Teams</span>
+      </button>
+    </div>
   )
 }
 
@@ -356,7 +312,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   }
 
   return (
-    <div className='wpbb-template-builder-root'>
+    <div className='wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'backgroundImage': `url(${darkBracketBg})` }}>
       {currentPage === 'num-teams' &&
         <NumTeamsPage matchTree={matchTree} setMatchTree={setMatchTree} onAddTeamsClick={onAddTeamsClick} />
       }
