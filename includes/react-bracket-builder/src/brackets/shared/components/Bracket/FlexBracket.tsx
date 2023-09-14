@@ -21,13 +21,13 @@ const teamBreakpoints = [
 
 const teamHeights = [
 	24,
-	16,
-	8,
+	12,
+	6,
 ]
 
 const teamGaps = [
 	8,
-	8,
+	4,
 	4,
 ]
 

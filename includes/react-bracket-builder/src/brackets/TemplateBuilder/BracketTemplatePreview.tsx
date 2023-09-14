@@ -11,7 +11,7 @@ export const BracketTemplatePreview = (props: BracketPreviewProps) => {
 		matchTree
 	} = props
 	return (
-		<div className='tw-m-auto tw-max-w-[474px]'>
+		<div className='tw-m-auto tw-max-w-[474px] tw-h-[296px]'>
 			<FlexBracket
 				matchTree={matchTree}
 			/>

@@ -16,6 +16,7 @@ export const FlexTeamSlot = (props: TeamSlotProps) => {
 	const baseStyles = [
 		'tw-rounded-4',
 		`tw-h-[${height}px]`,
+		'tw-max-w-[150px]',
 	]
 
 	const activeStyles = [
