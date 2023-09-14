@@ -8,6 +8,12 @@ import { getUniqueTeamClass } from '../../utils';
 import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg'
 import { DefaultTeamSlot, FlexTeamSlot } from '../TeamSlot';
 
+const FlexMatchGap = (props: any) => {
+	return (
+		<div className='tw-flex-grow tw-flex-shrink tw-flex-basis-10 tw-max-h-[16px] tw-min-h-[4px]'></div>
+	)
+}
+
 export const FlexMatchBox = (props: MatchBoxProps) => {
 	const {
 		match,
@@ -21,7 +27,6 @@ export const FlexMatchBox = (props: MatchBoxProps) => {
 	} = props
 
 	const center = matchPosition === 'center'
-	const offset = teamHeight + teamGap
 
 	if (!match) {
 		return <>	</>
