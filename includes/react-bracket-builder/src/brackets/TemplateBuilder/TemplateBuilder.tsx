@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import './template-builder.scss'
 import { NumTeamsPicker } from './NumTeamsPicker'
-import { MatchTree } from '../shared/models/MatchTree'
+import { MatchTree, WildcardPlacement } from '../shared/models/MatchTree'
 //@ts-ignore
 //@ts-ignore
 //@ts-ignore
@@ -9,6 +9,7 @@ import { MatchTree } from '../shared/models/MatchTree'
 import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
 import { AddTeamsPage } from './AddTeamsPage'
 import { BracketTemplatePreview } from './BracketTemplatePreview'
+import { isPowerOfTwo } from '../shared/utils'
 
 
 
@@ -101,7 +102,7 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
       const numTeams = picker.currentValue
       setNumTeams(numTeams)
       if (setMatchTree) {
-        setMatchTree(MatchTree.fromNumTeams(numTeams, 0))
+        setMatchTree(MatchTree.fromNumTeams(numTeams, WildcardPlacement.Split))
       }
     }
   }, [teamPickerState, wildCardPos])
@@ -202,12 +203,6 @@ const NumTeamsPage = (props: NumTeamsPageProps) => {
     return undefined
   }
 
-  /**
-   * Bitwise operation to check if a number is a power of 2
-   */
-  const isPowerOfTwo = (num: number) => {
-    return (num & (num - 1)) === 0
-  }
 
   // Show wild card options if numTeams is a power of 2
   const showWildCardOptions = !isPowerOfTwo(numTeams)

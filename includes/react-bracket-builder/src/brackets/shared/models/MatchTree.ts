@@ -158,7 +158,6 @@ export class MatchNode {
 			this.team2Wins = true;
 		}
 	}
-
 }
 
 export class Round {
@@ -198,6 +197,14 @@ interface WildcardRange {
 
 export class MatchTree {
 	rounds: Round[]
+	private wildCardPlacement: WildcardPlacement
+	private numTeams: number
+
+	constructor(rounds: Round[] = [], wildCardPlacement: WildcardPlacement = WildcardPlacement.Split) {
+		linkNodes(rounds)
+		this.rounds = rounds
+		this.wildCardPlacement = wildCardPlacement
+	}
 
 	getRootMatch(): Nullable<MatchNode> {
 		const lastRound = this.rounds[this.rounds.length - 1]
@@ -212,6 +219,9 @@ export class MatchTree {
 	 * This should reflect the number of teams that would be used to create the same structure with MatchTree.fromNumTeams()
 	 */
 	getNumTeams(): number {
+		if (this.numTeams) {
+			return this.numTeams
+		}
 		// count all non null matches in the tree
 		const numMatches = this.rounds.reduce((acc, round) => {
 			return acc + round.matches.reduce((acc, match) => {
@@ -222,7 +232,14 @@ export class MatchTree {
 			}, 0)
 		}, 0)
 
-		return numMatches + 1
+		const numTeams = numMatches + 1
+		this.numTeams = numTeams
+
+		return numTeams
+	}
+
+	getWildcardPlacement(): WildcardPlacement {
+		return this.wildCardPlacement
 	}
 
 	serialize(): Nullable<MatchRepr>[][] {

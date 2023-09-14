@@ -105,56 +105,9 @@ export const getMatchGap = (firstRoundMatchGap: number, matchHeight: number, i: 
 	return firstRoundMatchGap * power + (power - 1) * matchHeight
 }
 
-// function getTeamClassNames(numRounds: number, numDirections: number): string[] {
-// 	let teamClassNames: string[] = []
-// 	for (let roundIdx = 0; roundIdx < numRounds; roundIdx++) {
-// 		const numMatches = Math.pow(2, roundIdx)
-// 		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-// 			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, true))
-// 			teamClassNames.push(getUniqueTeamClass(roundIdx, matchIdx, false))
-// 		}
-// 	}
-// 	return teamClassNames
-// }
-
-// function getTeamClassPairs(numRounds: number, numDirections: number): TeamClassPair[] {
-// 	let teamClassPairs: TeamClassPair[] = []
-// 	for (let roundIdx = numRounds - 1; roundIdx > 0; roundIdx--) {
-// 		const numMatches = Math.pow(2, roundIdx)
-// 		for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-// 			const toLeftTeam = matchIdx % 2 === 0
-// 			const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
-// 			teamClassPairs.push({
-// 				fromTeam: getUniqueTeamClass(roundIdx, matchIdx, true),
-// 				toTeam: toTeamClass
-// 			})
-// 			teamClassPairs.push({
-// 				fromTeam: getUniqueTeamClass(roundIdx, matchIdx, false),
-// 				toTeam: toTeamClass
-// 			})
-// 		}
-// 	}
-// 	return teamClassPairs
-// }
-
-// function getTeamClassPairsForRound(roundIdx: number, numDirections: number): TeamClassPair[] {
-// 	let teamClassPairs: TeamClassPair[] = []
-// 	const numMatches = Math.pow(2, roundIdx)
-// 	for (let matchIdx = 0; matchIdx < numMatches; matchIdx++) {
-// 		const toLeftTeam = matchIdx % 2 === 0
-// 		const toTeamClass = getUniqueTeamClass(roundIdx - 1, Math.floor(matchIdx / 2), toLeftTeam)
-// 		teamClassPairs.push({
-// 			fromTeam: getUniqueTeamClass(roundIdx, matchIdx, true),
-// 			toTeam: toTeamClass
-// 		})
-// 		teamClassPairs.push({
-// 			fromTeam: getUniqueTeamClass(roundIdx, matchIdx, false),
-// 			toTeam: toTeamClass
-// 		})
-// 	}
-// 	return teamClassPairs
-// }
-
-// export const getBracketRes(obj: any): BracketRes {
-
-// }
+/**
+ * Bitwise operation to check if a number is a power of 2
+ */
+export const isPowerOfTwo = (num: number) => {
+	return (num & (num - 1)) === 0
+}

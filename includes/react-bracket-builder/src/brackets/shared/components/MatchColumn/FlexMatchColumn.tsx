@@ -5,11 +5,24 @@ import { MatchColumnProps } from '../types';
 import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox';
 import { FlexMatchBox } from '../MatchBox';
 import { FlexTeamSlot } from '../TeamSlot';
+import { WildcardPlacement } from '../../models/MatchTree';
+import { isPowerOfTwo } from '../../utils';
 
 
-const FlexMatchGap = (props: any) => {
+interface FlexMatchColumnProps {
+	minHeight?: number
+	maxHeight?: number
+}
+
+const FlexMatchGap = (props: FlexMatchColumnProps) => {
+	const {
+		minHeight = 4,
+		maxHeight = 16,
+	} = props
+	const minHeightClass = minHeight >= 0 ? ` tw-min-h-[${minHeight}px]` : ''
+	const maxHeightClass = maxHeight >= 0 ? ` tw-max-h-[${maxHeight}px]` : ''
 	return (
-		<div className='tw-flex-grow tw-flex-shrink tw-flex-basis-10 tw-max-h-[16px] tw-min-h-[4px]'></div>
+		<div className={`tw-flex-grow tw-flex-shrink tw-flex-basis-10${minHeightClass}${maxHeightClass}`}></div>
 	)
 }
 
@@ -20,27 +33,41 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
 		matchTree,
 		setMatchTree,
 		MatchBoxComponent = FlexMatchBox,
-		matchGap,
 		teamGap,
 		teamHeight,
 		onTeamClick,
 	} = props
 
 
+	let justifyContent = 'tw-justify-center'
+
+	const outerColumn = matches.find(match => match !== null)?.roundIndex === 0
+	const wildcardPlacement = matchTree.getWildcardPlacement()
+	// const wildcardPlacement = WildcardPlacement.Bottom
+
+	if (outerColumn && !isPowerOfTwo(matchTree.getNumTeams())) {
+		if (wildcardPlacement === WildcardPlacement.Top) {
+			justifyContent = 'tw-justify-start'
+		} else if (wildcardPlacement === WildcardPlacement.Bottom) {
+			justifyContent = 'tw-justify-end'
+		}
+	}
+
 	return (
-		<div className={`tw-flex tw-flex-col tw-justify-center tw-flex-grow`}>
+		<div className={`tw-flex tw-flex-col ${justifyContent} tw-flex-grow`}>
 			{
-				matches.reduce((matches, match, index) => {
+				matches.reduce((matchBoxes, match, index) => {
 					if (!match) {
-						return matches
+						if (outerColumn && wildcardPlacement === WildcardPlacement.Split) {
+							matchBoxes.push(<FlexMatchGap maxHeight={32} />)
+						}
+						return matchBoxes
 					}
 					if (index > 0) {
-						matches.push(<FlexMatchGap key={index} />)
+						matchBoxes.push(<FlexMatchGap />)
 					}
-					matches.push(
+					matchBoxes.push(
 						<MatchBoxComponent
-
-							key={index}
 							match={match}
 							matchPosition={matchPosition}
 							matchTree={matchTree}
@@ -50,23 +77,9 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
 							onTeamClick={onTeamClick}
 						/>
 					)
-					return matches
+					return matchBoxes
 				}, [] as JSX.Element[])
 			}
-			{/* {matches.map((match, index) => {
-				return (
-					<MatchBoxComponent
-						key={index}
-						match={match}
-						matchPosition={matchPosition}
-						matchTree={matchTree}
-						setMatchTree={setMatchTree}
-						teamGap={teamGap}
-						teamHeight={teamHeight}
-						onTeamClick={onTeamClick}
-					/>
-				)
-			})} */}
 		</div>
 	)
 }
