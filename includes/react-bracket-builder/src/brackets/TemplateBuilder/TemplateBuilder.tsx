@@ -61,8 +61,8 @@ const defaultBracketName = "MY BRACKET NAME"
 const WildCardPlacements = ['TOP', 'BOTTOM', 'CENTER', 'SPLIT']
 
 const teamPickerDefaults = [16, 32, 64]
-const teamPickerMin = [2, 18, 34]
-const teamPickerMax = [16, 32, 64]
+const teamPickerMin = [1, 17, 33]
+const teamPickerMax = [31, 63, 64]
 
 interface NumTeamsPickerState {
   currentValue: number
@@ -135,11 +135,11 @@ const NumTeamsPage = (props) => {
   }
 
   const incrementTeamPicker = (index: number) => {
-    updateTeamPickerValueBy(index, 2)
+    updateTeamPickerValueBy(index, 1)
   }
 
   const decrementTeamPicker = (index: number) => {
-    updateTeamPickerValueBy(index, -2)
+    updateTeamPickerValueBy(index, -1)
   }
 
   const setTeamPickerValue = (index: number, value: number) => {

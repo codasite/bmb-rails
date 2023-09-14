@@ -120,7 +120,8 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
     'tw-items-center',
     'tw-border-solid',
     'tw-rounded-8',
-    'tw-relative'
+    'tw-relative',
+    'tw-cursor-pointer',
   ]
   const inactiveStyles = [
     'tw-border',
@@ -137,7 +138,6 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
   return (
     <div className={'tw-flex tw-flex-col tw-gap-24 tw-grow'}>
       <div
-        // className={`team-chooser-box ${selected ? 'highlight' : ''}`}
         className={styles}
         onClick={handleBoxClick}
       >
