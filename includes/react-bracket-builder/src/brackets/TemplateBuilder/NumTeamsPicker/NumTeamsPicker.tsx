@@ -7,11 +7,16 @@ interface NumTeamsIncrementButtonProps {
 }
 
 const NumTeamsIncrementButton = (props: NumTeamsIncrementButtonProps) => {
-  const { active, onPressed, children } = props
+  const {
+    onPressed,
+    children,
+    active,
+  } = props
   const baseStyles = [
     'tw-flex',
     'tw-justify-center',
     'tw-items-center',
+    'tw-flex-grow',
     'tw-border-solid',
     'tw-border',
     'tw-rounded-4',
@@ -24,6 +29,7 @@ const NumTeamsIncrementButton = (props: NumTeamsIncrementButtonProps) => {
   const activeStyles = [
     'tw-border-white',
     'tw-text-white',
+    'tw-cursor-pointer',
   ]
   const inactiveStyles = [
     'tw-border-white/50',
@@ -33,7 +39,7 @@ const NumTeamsIncrementButton = (props: NumTeamsIncrementButtonProps) => {
   const styles = baseStyles.concat(active ? activeStyles : inactiveStyles).join(' ')
 
   return (
-    <button className={styles} onClick={onPressed}>
+    <button className={styles} onClick={onPressed} disabled={!active}>
       {children}
     </button>
   )
@@ -136,11 +142,11 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
         onClick={handleBoxClick}
       >
         <span className='tw-font-500 tw-text-48 tw-text-white'>{currentValue}</span>
-        {selected && currentValue === defaultValue && <span className='tw-absolute tw-bottom-10 tw-left-10 tw-text-green tw-font-500 tw-text-12'>Default</span>}
+        {selected && currentValue === defaultValue && <span className='tw-absolute tw-bottom-8 tw-left-14 tw-text-green tw-font-500 tw-text-12'>Default</span>}
       </div>
       {
         selected &&
-        <div className='tw-flex tw-justify-center tw-gap-12 tw-flex-grow'>
+        <div className='tw-flex tw-justify-center tw-gap-12'>
           <NumTeamsIncrementButton active={!decrementDisabled} onPressed={handleDecrement}>-</NumTeamsIncrementButton>
           <NumTeamsIncrementButton active={!incrementDisabled} onPressed={handleIncrement}>+</NumTeamsIncrementButton>
         </div>
