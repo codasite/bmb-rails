@@ -55,6 +55,7 @@ tailwind.config = {
 			'10': '10px',
 			'11': '11px',
 			'12': '12px',
+			'14': '14px',
 			'15': '15px',
 			'16': '16px',
 			'20': '20px',
@@ -64,6 +65,10 @@ tailwind.config = {
 			'60': '60px',
 			'80': '80px',
 			'section': '1160px',
+		},
+		minWidth: {
+			'20': '20px',
+			'24': '24px',
 		},
 		colors: {
 			'transparent': 'transparent',
