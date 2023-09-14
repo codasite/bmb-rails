@@ -136,7 +136,7 @@ export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
   const styles = baseStyles.concat(selected ? activeStyles : inactiveStyles).join(' ')
 
   return (
-    <div className={'tw-flex tw-flex-col tw-gap-24 tw-grow'}>
+    <div className={'tw-flex tw-flex-col tw-gap-24 tw-grow tw-pb-24'}>
       <div
         className={styles}
         onClick={handleBoxClick}

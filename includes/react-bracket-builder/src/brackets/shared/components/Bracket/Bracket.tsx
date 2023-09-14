@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
-import { Nullable } from '../../../utils/types';
-import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../models/MatchTree'
+import { Nullable } from '../../../../utils/types';
+import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../../models/MatchTree'
 // Direction enum
 enum Direction {
 	TopLeft = 0,

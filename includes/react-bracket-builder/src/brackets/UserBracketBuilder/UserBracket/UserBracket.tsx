@@ -26,7 +26,7 @@ import {
 	getFirstRoundMatchGap,
 	getTargetMatchHeight,
 } from '../../shared/utils'
-import { PickableBracket } from '../../shared/components/PickableBracket';
+import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
 
 
 interface ThemeSelectorProps {

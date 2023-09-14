@@ -422,8 +422,80 @@ describe('MatchTree', () => {
 
 		expect(picks).toEqual(expected)
 	})
-});
 
+	test('testing getNumTeams', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 1, team1: new Team("Team 1"), team2: new Team("Team 2") }),
+				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 1, team1: new Team("Team 3"), team2: new Team("Team 4") }),
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 0 }),
+			]),
+		]
+
+		linkNodes(rounds)
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+
+		expect(tree?.getNumTeams()).toBe(4)
+	})
+
+	test('testing getNumTeams with null teams', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 1 }),
+				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 1 }),
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 0 }),
+			]),
+		]
+
+		linkNodes(rounds)
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+
+		expect(tree?.getNumTeams()).toBe(4)
+	})
+
+	test('testing getNumTeams with wildcards', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2, team1: new Team("Team 1"), team2: new Team("Team 2") }),
+				null,
+				new MatchNode({ roundIndex: 0, matchIndex: 2, depth: 2, team1: new Team("Team 3"), team2: new Team("Team 4") }),
+				null,
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1, team2: new Team("Team 5") }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1, team2: new Team("Team 6") }),
+			]),
+			new Round(2, 0, [
+				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0 }),
+			])
+		]
+
+		linkNodes(rounds)
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+		expect(tree?.getNumTeams()).toBe(6)
+
+	});
+
+	test('testing getNumTeams from fromNumTeams', () => {
+		expect(MatchTree.fromNumTeams(2)?.getNumTeams()).toBe(2)
+		expect(MatchTree.fromNumTeams(4)?.getNumTeams()).toBe(4)
+		expect(MatchTree.fromNumTeams(8)?.getNumTeams()).toBe(8)
+		expect(MatchTree.fromNumTeams(12)?.getNumTeams()).toBe(12)
+		expect(MatchTree.fromNumTeams(20)?.getNumTeams()).toBe(20)
+		expect(MatchTree.fromNumTeams(36)?.getNumTeams()).toBe(36)
+		expect(MatchTree.fromNumTeams(64)?.getNumTeams()).toBe(64)
+	})
+})
 
 
 

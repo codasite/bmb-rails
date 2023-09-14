@@ -1,7 +1,7 @@
 import React from 'react';
-import { MatchNode, Round } from '../models/MatchTree';
-import { TeamSlot } from './TeamSlot'
-import { Direction } from '../constants'
+import { MatchNode, Round } from '../../models/MatchTree';
+import { TeamSlot } from '../TeamSlot'
+import { Direction } from '../../constants'
 
 interface MatchBoxProps {
 	match: MatchNode | null;
