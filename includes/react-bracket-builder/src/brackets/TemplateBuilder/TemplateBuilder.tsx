@@ -68,7 +68,7 @@ const AddTeamsPage = (props) => {
 
   return (
     <div className="bracket-container">
-      <div>{<button className='create-bracket' onClick={handleRedirect}><ArrowNarrowLeft />CREATE BRACKET</button>}</div>
+      <div><button className='create-bracket' onClick={handleRedirect}><ArrowNarrowLeft />CREATE BRACKET</button></div>
       <div className='bracket-title'>{bracketTitle}</div>
       <div className='paired-bracket'>
         <DarkModeContext.Provider value={true}>
@@ -109,10 +109,11 @@ interface NumTeamsPickerState {
 }
 
 
-const NumTeamsPage = (props: TemplateBuilderProps) => {
+const NumTeamsPage = (props) => {
   const {
     matchTree,
     setMatchTree,
+    onAddTeamsClick,
   } = props
 
   const initialPickerIndex = 1
@@ -147,7 +148,7 @@ const NumTeamsPage = (props: TemplateBuilderProps) => {
     return (
       <div>
         <div aria-label="Basic example">
-          <button className={`btn-secondary no-highlight-button pos-btn ${selected ? 'selected-btn' : ''}`} variant='secondary' onClick={() => handleWildCardPlacement(props.positionIndex)}>{props.position}</Button>
+          <button className={`btn-secondary no-highlight-button pos-btn ${selected ? 'selected-btn' : ''}`} onClick={() => handleWildCardPlacement(props.positionIndex)}>{props.position}</button>
         </div>
       </div>
     )
@@ -289,11 +290,11 @@ const NumTeamsPage = (props: TemplateBuilderProps) => {
         {/* <div className='wpbb-default'>
                 <UserTemplatePreview matchTree={matchTree} />
               </div> */}
-        <div className='team-picker-container'>
-          <div className='bracket-text-info'>
+        <div className='tw-flex tw-flex-col tw-gap-24'>
+          <span className='tw-text-white/50 tw-text-center tw-font-500 tw-text-24'>
             How Many total teams in Your Bracket
-          </div>
-          <div className='team-picker'>
+          </span>
+          <div className='tw-flex tw-gap-24 tw-w-full'>
             {teamPickerState.map((pickerState, i) => {
               return (
                 <NumTeamsPicker
@@ -325,7 +326,7 @@ const NumTeamsPage = (props: TemplateBuilderProps) => {
             ))}
           </div>
         </div> */}
-        <button className='btn-play-bracket' onClick={handleTeams}>
+        <button className='btn-play-bracket' onClick={onAddTeamsClick}>
           <span className='play-bracket-text'>Add Your Teams</span>
         </button>
       </div>
@@ -348,6 +349,23 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
     saveTournamentLink
   } = props
 
+  const [currentPage, setCurrentPage] = useState('num-teams')
+
+  const onAddTeamsClick = () => {
+    setCurrentPage('add-teams')
+  }
+
+  return (
+    <div className='wpbb-template-builder-root'>
+      {currentPage === 'num-teams' &&
+        <NumTeamsPage matchTree={matchTree} setMatchTree={setMatchTree} onAddTeamsClick={onAddTeamsClick} />
+      }
+      {currentPage === 'add-teams' &&
+        <AddTeamsPage matchTree={matchTree} setMatchTree={setMatchTree} />
+      }
+    </div>
+
+  )
 
 
 }

@@ -1,21 +1,17 @@
 import React, { } from 'react'
-import Col from 'react-bootstrap/Col'
-import Button from 'react-bootstrap/Button'
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-// import './user-template-builder.scss'
 
 interface NumTeamsPickerProps {
-    currentValue: number
-    defaultValue: number
-    min: number
-    max: number
-    selected: boolean
-    setSelected: () => void
-    increment: () => void
-    decrement: () => void
-    setCurrentValue: (value: number) => void
-    selectNextPicker?: () => void
-    selectPrevPicker?: () => void
+  currentValue: number
+  defaultValue: number
+  min: number
+  max: number
+  selected: boolean
+  setSelected: () => void
+  increment: () => void
+  decrement: () => void
+  setCurrentValue: (value: number) => void
+  selectNextPicker?: () => void
+  selectPrevPicker?: () => void
 }
 
 /**
@@ -26,67 +22,89 @@ interface NumTeamsPickerProps {
  * If the user clicks a box that is already selected, the value is reset to the default value
  */
 export const NumTeamsPicker = (props: NumTeamsPickerProps) => {
-    const {
-        currentValue,
-        defaultValue,
-        min,
-        max,
-        selected,
-        setSelected,
-        increment,
-        decrement,
-        setCurrentValue,
-        selectNextPicker,
-        selectPrevPicker
-    } = props
+  const {
+    currentValue,
+    defaultValue,
+    min,
+    max,
+    selected,
+    setSelected,
+    increment,
+    decrement,
+    setCurrentValue,
 
-    const handleBoxClick = () => {
-        if (selected) {
-            // if the box is already selected, set the value to the default
-            setCurrentValue(defaultValue)
-        } else {
-            setSelected()
-        }
+    selectNextPicker,
+    selectPrevPicker
+  } = props
+
+  const handleBoxClick = () => {
+    if (selected) {
+      // if the box is already selected, set the value to the default
+      setCurrentValue(defaultValue)
+    } else {
+      setSelected()
     }
+  }
 
-    const handleIncrement = () => {
-        if (currentValue < max) {
-            increment()
-        }
-        else if (selectNextPicker) {
-            selectNextPicker()
-        }
+  const handleIncrement = () => {
+    if (currentValue < max) {
+      increment()
     }
-
-    const handleDecrement = () => {
-        if (currentValue > min) {
-            decrement()
-        }
-        else if (selectPrevPicker) {
-            selectPrevPicker()
-        }
+    else if (selectNextPicker) {
+      selectNextPicker()
     }
+  }
 
-    const incrementDisabled = currentValue >= max && !selectNextPicker
-    const decrementDisabled = currentValue <= min && !selectPrevPicker
+  const handleDecrement = () => {
+    if (currentValue > min) {
+      decrement()
+    }
+    else if (selectPrevPicker) {
+      selectPrevPicker()
+    }
+  }
 
-    return (
-        <div className='team-box-container'>
-            <div
-                // key={num}
-                className={`team-chooser-box ${selected ? 'highlight' : ''}`}
-                onClick={handleBoxClick}
-            >
-                {currentValue}
-                {selected && currentValue === defaultValue && <span className='corner-text'>Default</span>}
+  const incrementDisabled = currentValue >= max && !selectNextPicker
+  const decrementDisabled = currentValue <= min && !selectPrevPicker
 
-            </div>
-                <div style={{ display: selected ? 'block' : 'none'  }}>
-                        <ButtonGroup aria-label="Basic example" className='button-container'>
-                            <Button className='btn-secondary no-highlight-button step-down-button' disabled={decrementDisabled} variant='secondary' onClick={handleDecrement}>-</Button>
-                            <Button className='btn-secondary no-highlight-button step-up-button' disabled={incrementDisabled} variant='secondary' onClick={handleIncrement}>+</Button>
-                        </ButtonGroup>
-                </div>
+  const baseStyles = [
+    'tw-flex',
+    'tw-justify-center',
+    // 'tw-py-[38px]',
+    'tw-h-[136px]',
+    'tw-items-center',
+    'tw-border-solid',
+    'tw-rounded-8',
+    'tw-relative'
+  ]
+  const inactiveStyles = [
+    'tw-border',
+    'tw-border-white/50',
+  ]
+  const activeStyles = [
+    'tw-bg-green/15',
+    'tw-border-4',
+    'tw-border-green',
+  ]
+
+  const styles = baseStyles.concat(selected ? activeStyles : inactiveStyles).join(' ')
+
+  return (
+    <div className={'tw-flex tw-flex-col tw-gap-24 tw-grow'}>
+      <div
+        // className={`team-chooser-box ${selected ? 'highlight' : ''}`}
+        className={styles}
+        onClick={handleBoxClick}
+      >
+        <span className='tw-font-500 tw-text-48 tw-text-white'>{currentValue}</span>
+        {selected && currentValue === defaultValue && <span className='tw-absolute tw-bottom-10 tw-left-10 tw-text-green tw-font-500 tw-text-12'>Default</span>}
+      </div>
+      {/* <div style={{ display: selected ? 'block' : 'none' }}>
+        <div aria-label="Basic example" className='button-container'>
+          <button className='btn-secondary no-highlight-button step-down-button' disabled={decrementDisabled} onClick={handleDecrement}>-</button>
+          <button className='btn-secondary no-highlight-button step-up-button' disabled={incrementDisabled} onClick={handleIncrement}>+</button>
         </div>
-    )
+      </div> */}
+    </div>
+  )
 }
