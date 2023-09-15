@@ -1,17 +1,15 @@
 import React, { useContext } from 'react';
-import { MatchNode, Round, Team, MatchTree } from '../../../models/MatchTree';
-import { Direction, bracketConstants } from '../../../constants'
-import { MatchBoxChildProps, MatchBoxProps, TeamSlotProps } from '../../types';
-import { Nullable } from '../../../../../utils/types';
-import { getUniqueTeamClass } from '../../../utils';
+import { bracketConstants } from '../../../constants'
+import { MatchBoxChildProps } from '../../types';
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg'
 import { DefaultTeamSlot } from '../../TeamSlot';
-import { Bracket } from '../../Bracket/Bracket';
 import { BracketMetaContext } from '../../../context';
-import { FinalTeamSlot } from '../../TeamSlot/FinalTeamSlot';
 
 interface WinnerContainerProps extends MatchBoxChildProps {
+	topText?: string,
+	topTextFontSize?: number,
+	topTextColor?: string,
+	topTextColorDark?: string,
 	bottom?: number[],
 }
 
@@ -20,22 +18,27 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
 		match,
 		matchTree,
 		bottom = bracketConstants.winnerContainerBottom,
+		TeamSlotComponent = DefaultTeamSlot,
+		topText = 'Winner',
+		topTextFontSize = 64,
+		topTextColor = 'dd-blue',
+		topTextColorDark = 'white',
 	} = props
 
 	const numRounds = matchTree.rounds.length
-	const bracketMeta = useContext(BracketMetaContext)
-
-	const {
-		title: bracketTitle,
-	} = bracketMeta
 
 	return (
 		<div className={`tw-flex tw-flex-col tw-gap-16 tw-absolute tw-bottom-[${bottom[numRounds]}px] tw-items-center tw-left-[50%] tw-translate-x-[-50%]`}>
-			{/* <span className='tw-text-64 tw-font-700 tw-whitespace-nowrap tw-text-dd-blue dark:tw-text-white'>{bracketTitle}</span> */}
-			<span className='tw-text-64 tw-font-700 tw-whitespace-nowrap tw-text-dd-blue dark:tw-text-white'>HIHHIHHII</span>
-			<FinalTeamSlot
+			<span className={`tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-whitespace-nowrap`}>{topText}</span>
+			<TeamSlotComponent
 				match={match}
 				matchTree={matchTree}
+				team={match.getWinner()}
+				teamPosition={'winner'}
+				height={52}
+				width={257}
+				fontSize={36}
+				fontWeight={700}
 			/>
 		</div>
 	)

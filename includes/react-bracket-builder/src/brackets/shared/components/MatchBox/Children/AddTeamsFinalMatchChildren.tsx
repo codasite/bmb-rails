@@ -6,7 +6,7 @@ import { WinnerContainer } from './WinnerContainer';
 import { LogoContainer } from './LogoContainer';
 
 
-export const DefaultFinalMatchChildren = (props: MatchBoxChildProps) => {
+export const AddTeamsFinalMatchChildren = (props: MatchBoxChildProps) => {
 	const {
 		matchPosition,
 	} = props
@@ -16,16 +16,22 @@ export const DefaultFinalMatchChildren = (props: MatchBoxChildProps) => {
 		title: bracketTitle
 	} = useContext(BracketMetaContext)
 
+	console.log('AddTeamsFinalMatchChildren', props)
 	return (
 		matchPosition === 'center' ?
 			<>
 				<WinnerContainer
-					{...props}
 					topText={bracketTitle}
+					topTextFontSize={48}
+					{...props}
 				/>
 				<LogoContainer
 					{...props}
+					topTextColorDark='white/50'
+					logoColorDark='white/50'
 					bottomText={bracketDate}
+					bottomTextColorDark='white/50'
+					bottomTextFontSize={24}
 				/>
 			</>
 			: <></>

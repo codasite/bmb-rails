@@ -12,6 +12,7 @@ export const DefaultMatchColumn = (props: MatchColumnProps) => {
 		matchTree,
 		setMatchTree,
 		MatchBoxComponent = DefaultMatchBox,
+		MatchBoxChildComponent,
 		TeamSlotComponent,
 		matchGap,
 		teamGap = 20,
@@ -30,6 +31,7 @@ export const DefaultMatchColumn = (props: MatchColumnProps) => {
 						matchTree={matchTree}
 						setMatchTree={setMatchTree}
 						TeamSlotComponent={TeamSlotComponent}
+						MatchBoxChildComponent={MatchBoxChildComponent}
 						teamGap={teamGap}
 						teamHeight={teamHeight}
 						onTeamClick={onTeamClick}
