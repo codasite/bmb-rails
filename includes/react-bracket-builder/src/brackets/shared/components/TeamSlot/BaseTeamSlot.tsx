@@ -51,7 +51,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 	const styles = baseStyles.join(' ')
 
 	const handleTeamClick = () => {
-		if (onTeamClick && team) {
+		if (onTeamClick) {
 			onTeamClick(match, team)
 		}
 	}

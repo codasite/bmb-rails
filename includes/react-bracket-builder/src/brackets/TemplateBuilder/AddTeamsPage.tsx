@@ -31,10 +31,12 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 	return (
 		<div className='tw-flex tw-flex-col tw-gap-60 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'background': `url(${iconBackground}), #000225` }}>
 			<div className='tw-px-60'>
-				<a href="#" className='tw-flex tw-gap-10 tw-color-white tw-p-16' onClick={handleBack}>
-					<ArrowNarrowLeft />
-					<span className='tw-font-500 tw-text-20 tw-text-white '>Create Template</span>
-				</a>
+				<div className='tw-flex tw-p-16' >
+					<a href="#" className='tw-flex tw-gap-10 tw-items-center' onClick={handleBack}>
+						<ArrowNarrowLeft />
+						<span className='tw-font-500 tw-text-20 tw-text-white '>Create Template</span>
+					</a>
+				</div>
 			</div>
 			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-xl tw-m-auto tw-dark`}>
 				{

@@ -3,6 +3,7 @@ import { MatchNode, Team } from '../../models/MatchTree';
 import { BracketProps } from '../types';
 import { DefaultBracket } from '../Bracket/DefaultBracket';
 import { TeamSlotToggle } from '../TeamSlot';
+import { Nullable } from '../../../../utils/types';
 
 
 export const PickableBracket = (props: BracketProps) => {
@@ -11,7 +12,7 @@ export const PickableBracket = (props: BracketProps) => {
 		setMatchTree,
 	} = props
 
-	const handleTeamClick = (match: MatchNode, team: Team) => {
+	const handleTeamClick = (match: MatchNode, team?: Nullable<Team>) => {
 		if (!match) {
 			return;
 		}
