@@ -15,7 +15,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 		setMatchTree,
 	} = props
 
-	const [editing, setEditing] = useState(true)
+	const [editing, setEditing] = useState(false)
 	const [teamName, setTeamName] = useState('')
 
 	const handleClick = () => {
@@ -26,7 +26,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 	}
 
 	const doneEditing = () => {
-		// setEditing(false)
+		setEditing(false)
 		if (!setMatchTree) {
 			return
 		}
@@ -53,7 +53,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 	return (
 		<BaseTeamSlot
 			{...props}
-			backgroundColor='white/15'
+			backgroundColor={team && !editing ? 'transparent' : 'white/15'}
 			borderColor='white/50'
 			textColor='white'
 			onTeamClick={handleClick}
@@ -63,7 +63,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 					?
 					<input
 						type="text"
-						className='tw-w-inherit'
+						className='tw-w-[inherit] tw-border-none tw-outline-none tw-text-white tw-bg-transparent tw-px-8 tw-font-sans tw-uppercase tw-font-500 tw-text-center'
 						autoFocus
 						onFocus={(e) => e.target.select()}
 						value={teamName}

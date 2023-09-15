@@ -10,6 +10,9 @@ export const AddTeamsBracket = (props: BracketProps) => {
 		<DefaultBracket
 			{...props}
 			TeamSlotComponent={EditableTeamSlotSwitch}
+			lineStyle={{
+				className: '!tw-border-t-[#333551]'
+			}}
 		/>
 	)
 };

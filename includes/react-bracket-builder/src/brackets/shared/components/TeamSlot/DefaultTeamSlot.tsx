@@ -15,7 +15,7 @@ export const DefaultTeamSlot = (props: TeamSlotProps) => {
 		getTeamClass = getUniqueTeamClass,
 	} = props
 	// console.log('winner', winner)
-	const teamClass = getTeamClass(match.roundIndex, match.matchIndex, teamPosition)
+	const teamClass = getTeamClass(match.roundIndex, match.matchIndex, teamPosition ? teamPosition : 'left')
 	const active = true
 
 	const baseStyles = [

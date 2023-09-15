@@ -6,8 +6,8 @@ import { Match } from '@sentry/react/types/reactrouterv3';
 export interface TeamSlotProps {
 	team?: Nullable<Team>;
 	match: MatchNode;
-	matchPosition: string;
-	teamPosition: string;
+	matchPosition?: string;
+	teamPosition?: string;
 	height?: number;
 	width?: number;
 	fontSize?: number;
@@ -31,6 +31,7 @@ export interface MatchBoxProps {
 	setMatchTree?: (matchTree: MatchTree) => void;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
+	children?: React.ReactNode;
 }
 
 export interface MatchColumnProps {
@@ -58,6 +59,17 @@ export interface BracketProps {
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
+	lineStyle?: object;
+}
+
+export interface FinalMatchChildrenProps {
+	match: MatchNode
+	matchTree: MatchTree
+	matchPosition: string
+	TeamSlotComponent: React.FC<TeamSlotProps>
+	sloganText?: string
+	bracketLogoBottom?: number[]
+	winnerContainerBottom?: number[]
 }
 
 
