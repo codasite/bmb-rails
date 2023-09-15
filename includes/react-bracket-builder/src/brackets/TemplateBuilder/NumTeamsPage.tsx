@@ -6,6 +6,7 @@ import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
 import { BracketTemplatePreview } from './BracketTemplatePreview'
 import { isPowerOfTwo } from '../shared/utils'
 import { WildcardPicker } from './WildcardPicker'
+import { ActionButton } from './ActionButtons'
 
 
 
@@ -250,9 +251,15 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
             />
           }
         </div>
-        <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
+        {/* <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
           <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans '>Add Your Teams</span>
-        </button>
+        </button> */}
+        <ActionButton
+          variant='green'
+          onClick={onAddTeamsClick}
+        >
+          <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Add Your Teams</span>
+        </ActionButton>
       </div>
     </div>
   )

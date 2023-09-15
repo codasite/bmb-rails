@@ -3,7 +3,7 @@ import React, { } from 'react'
 interface NumTeamsIncrementButtonProps {
   active: boolean
   onPressed: () => void
-  children: React.ReactNode
+  children?: React.ReactNode
 }
 
 const NumTeamsIncrementButton = (props: NumTeamsIncrementButtonProps) => {

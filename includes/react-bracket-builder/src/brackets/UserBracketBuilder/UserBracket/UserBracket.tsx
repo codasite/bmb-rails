@@ -1,31 +1,18 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
-import { bracketApi, camelCaseKeys } from '../../shared/api/bracketApi';
+import { bracketApi } from '../../shared/api/bracketApi';
 import { useWindowDimensions } from '../../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
-import { DefaultBracket } from '../../shared/components';
-import { DefaultMatchColumn, DefaultMatchBox, DefaultTeamSlot } from '../../shared/components';
-import { PaginatedUserBracket } from '../PaginatedUserBracket/PaginatedUserBracket'
 import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
 import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSlice'
 import { setNumPages } from '../../shared/features/bracketNavSlice'
 
 import { MatchTree } from '../../shared/models/MatchTree';
-import { MatchRepr, MatchPicks } from '../../shared/api/types/bracket';
 import { bracketConstants } from '../../shared/constants';
 import { DarkModeContext } from '../../shared/context';
 import './UserBracket.scss'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import {
-	getBracketHeight,
-	getBracketWidth,
-	getTeamClasses,
-	getUniqueTeamClass,
-	getMatchBoxHeight,
-	getFirstRoundMatchGap,
-	getTargetMatchHeight,
-} from '../../shared/utils'
 import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
 
 
@@ -131,7 +118,7 @@ const UserBracket = (props: UserBracketProps) => {
 	const [processingImage, setProcessingImage] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
 	const [showPaginated, setShowPaginated] = useState(false);
-	const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
+	// const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
 	// const rounds = useAppSelector((state) => state.matchTree.rounds);
 	const matchTree = useAppSelector(selectMatchTree);
 	const dispatch = useAppDispatch();
@@ -167,15 +154,15 @@ const UserBracket = (props: UserBracketProps) => {
 		}
 	}, [matchTree])
 
-	useEffect(() => {
-		if (windowWidth < bracketConstants.paginatedBracketWidth) {
-			if (!showPaginated) {
-				setShowPaginated(true)
-			}
-		} else if (showPaginated) {
-			setShowPaginated(false)
-		}
-	}, [windowWidth])
+	// useEffect(() => {
+	// 	if (windowWidth < bracketConstants.paginatedBracketWidth) {
+	// 		if (!showPaginated) {
+	// 			setShowPaginated(true)
+	// 		}
+	// 	} else if (showPaginated) {
+	// 		setShowPaginated(false)
+	// 	}
+	// }, [windowWidth])
 
 	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchHeight: number, inchWidth: number,) => {
 		const printArea = buildPrintArea(innerHTML, inchHeight, inchWidth)
