@@ -31,7 +31,7 @@ export interface MatchBoxProps {
 	setMatchTree?: (matchTree: MatchTree) => void;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
-	children?: React.ReactNode;
+	MatchBoxChildComponent?: React.FC<MatchBoxChildProps>;
 }
 
 export interface MatchColumnProps {
@@ -62,14 +62,14 @@ export interface BracketProps {
 	lineStyle?: object;
 }
 
-export interface FinalMatchChildrenProps {
+export interface MatchBoxChildProps {
 	match: MatchNode
 	matchTree: MatchTree
 	matchPosition: string
-	TeamSlotComponent: React.FC<TeamSlotProps>
-	sloganText?: string
-	bracketLogoBottom?: number[]
-	winnerContainerBottom?: number[]
+	// TeamSlotComponent: React.FC<TeamSlotProps>
+	// sloganText?: string
+	// bracketLogoBottom?: number[]
+	// winnerContainerBottom?: number[]
 }
 
 

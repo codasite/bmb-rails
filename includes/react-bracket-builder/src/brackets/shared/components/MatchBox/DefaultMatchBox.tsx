@@ -10,6 +10,7 @@ import { DefaultTeamSlot } from '../TeamSlot';
 import { Bracket } from '../Bracket/Bracket';
 import { BracketMetaContext } from '../../context';
 import { FinalTeamSlot } from '../TeamSlot/FinalTeamSlot';
+import { DefaultFinalMatchChildren } from './Children/DefaultFinalMatchChildren';
 
 export const DefaultMatchBox = (props: MatchBoxProps) => {
 	const {
@@ -18,6 +19,7 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		matchTree,
 		setMatchTree,
 		TeamSlotComponent = DefaultTeamSlot,
+		MatchBoxChildComponent = DefaultFinalMatchChildren,
 		teamGap = 20,
 		teamHeight = 28,
 		onTeamClick,
@@ -52,29 +54,11 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		<div className={`tw-flex tw-flex-col tw-gap-[${teamGap}px] tw-translate-y-[${center ? -offset : 0}px]`}>
 			{getTeamSlot(match.getTeam1(), 'left')}
 			{getTeamSlot(match.getTeam2(), 'right')}
-			{match.parent === null &&
-				// <FinalMatchChildren
-				// 	match={match}
-				// 	matchTree={matchTree}
-				// 	matchPosition={matchPosition}
-				// 	TeamSlotComponent={TeamSlotComponent}
-				// />
-				<>
-					<div className={`tw-flex tw-flex-col tw-gap-16 tw-absolute tw-bottom-[${winnerContainerBottom[numRounds]}px] tw-items-center tw-left-[50%] tw-translate-x-[-50%]`}>
-						<span className='tw-text-64 tw-font-700 tw-whitespace-nowrap tw-text-dd-blue dark:tw-text-white'>{bracketTitle}</span>
-						<FinalTeamSlot
-							match={match}
-							matchTree={matchTree}
-						/>
-					</div>
-					{/* <div className='tw-absolute tw-bottom-0 tw-left-[50%] tw-translate-x-[-50%] tw-text-black/20 dark:tw-text-white/20 '> */}
-					<div className={`tw-absolute tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-left-[50%] tw-translate-x-[-50%] tw-bottom-[${bracketLogoBottom[numRounds]}px] tw-text-dd-blue dark:tw-text-white tw-text-36 tw-font-700 tw-whitespace-nowrap `}>
-						<span>{sloganText}</span>
-						<BracketLogo className={'tw-w-[124px] tw-text-black/25 dark:tw-text-white'} />
-						<span>{bracketDate}</span>
-					</div>
-				</>
-			}
+			<MatchBoxChildComponent
+				match={match}
+				matchTree={matchTree}
+				matchPosition={matchPosition}
+			/>
 		</div>
 	)
 }
