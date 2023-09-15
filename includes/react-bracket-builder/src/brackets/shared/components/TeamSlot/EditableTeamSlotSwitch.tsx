@@ -3,9 +3,9 @@ import React, { useState, useContext } from 'react';
 import { TeamSlotProps } from '../types';
 import { InactiveTeamSlot } from './InactiveTeamSlot';
 import { ActiveTeamSlot } from './ActiveTeamSlot';
-import { BaseTeamSlot } from './BaseTeamSlot';
+import { EditableTeamSlot } from './EditableTeamSlot';
 
-export const EditableTeamSlot = (props: TeamSlotProps) => {
+export const EditableTeamSlotSwitch = (props: TeamSlotProps) => {
 	const {
 		team,
 		match,
@@ -14,17 +14,9 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 		setMatchTree,
 	} = props
 
+	const editable = teamPosition === 'left' ? match.left === null : match.right === null
+
 	return (
-		<BaseTeamSlot
-			{...props}
-			backgroundColor='white/15'
-			borderColor='white/50'
-			textColor='white'
-			onTeamClick={() => { }}
-		>
-			<span>Add Team</span>
-		</BaseTeamSlot>
-
+		editable ? <EditableTeamSlot {...props} /> : <InactiveTeamSlot {...props} />
 	)
-
 }

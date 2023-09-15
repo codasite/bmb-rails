@@ -17,6 +17,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 		borderColor,
 		getTeamClass = getUniqueTeamClass,
 		onTeamClick,
+		children,
 	} = props
 	// console.log('winner', winner)
 	const teamClass = getTeamClass(match.roundIndex, match.matchIndex, teamPosition)
@@ -29,9 +30,9 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 		'tw-whitespace-nowrap',
 		`tw-w-[${width}px]`,
 		`tw-h-[${height}px]`,
-		'tw-text-14',
-		'tw-font-500',
 		`tw-text-${textColor}`,
+		`tw-font-${fontWeight}`,
+		`tw-text-${fontSize}`,
 	]
 	if (onTeamClick) {
 		baseStyles.push('tw-cursor-pointer')
@@ -58,7 +59,10 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 
 	return (
 		<div className={styles} onClick={handleTeamClick}>
-			<span className={`tw-font-${fontWeight} tw-text-${fontSize}`}>{team ? team.name : ''}</span>
+			{
+				children ? children :
+					<span className={`tw-font-${fontWeight} tw-text-${fontSize}`}>{team ? team.name : ''}</span>
+			}
 		</div>
 	)
 
