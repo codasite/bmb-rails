@@ -27,6 +27,7 @@ export const DefaultBracket = (props: BracketProps) => {
 		MatchBoxComponent = DefaultMatchBox,
 		TeamSlotComponent = DefaultTeamSlot,
 		onTeamClick,
+		lineStyle,
 	} = props
 
 	const darkMode = useContext(DarkModeContext);
@@ -78,9 +79,8 @@ export const DefaultBracket = (props: BracketProps) => {
 			...rightMatchColumns
 		]
 	}
-	const lineStyle = {
+	const linesStyle = lineStyle || {
 		className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
-		delay: true,
 	}
 
 	const width = getWidth(matchTree.rounds.length)
@@ -90,11 +90,11 @@ export const DefaultBracket = (props: BracketProps) => {
 			{buildMatches(matchTree.rounds)}
 			<BracketLines
 				rounds={matchTree.rounds}
-				style={lineStyle}
+				style={linesStyle}
 			/>
 			<RootMatchLines
 				rounds={matchTree.rounds}
-				style={lineStyle}
+				style={linesStyle}
 			/>
 		</div>
 	)

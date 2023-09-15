@@ -20,7 +20,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 		children,
 	} = props
 	// console.log('winner', winner)
-	const teamClass = getTeamClass(match.roundIndex, match.matchIndex, teamPosition)
+	const teamClass = getTeamClass(match.roundIndex, match.matchIndex, teamPosition ? teamPosition : 'left')
 
 	const baseStyles = [
 		teamClass,
