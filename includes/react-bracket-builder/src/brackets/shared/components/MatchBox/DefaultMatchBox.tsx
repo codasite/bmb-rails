@@ -58,6 +58,7 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 				match={match}
 				matchTree={matchTree}
 				matchPosition={matchPosition}
+				TeamSlotComponent={TeamSlotComponent}
 			/>
 		</div>
 	)

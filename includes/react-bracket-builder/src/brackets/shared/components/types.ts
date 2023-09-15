@@ -43,6 +43,7 @@ export interface MatchColumnProps {
 	matchTree: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
+	MatchBoxChildComponent?: React.FC<MatchBoxChildProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
 }
@@ -57,6 +58,7 @@ export interface BracketProps {
 	setMatchTree?: (matchTree: MatchTree) => void;
 	MatchColumnComponent?: React.FC<MatchColumnProps>;
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
+	MatchBoxChildComponent?: React.FC<MatchBoxChildProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
 	lineStyle?: object;
@@ -66,10 +68,7 @@ export interface MatchBoxChildProps {
 	match: MatchNode
 	matchTree: MatchTree
 	matchPosition: string
-	// TeamSlotComponent: React.FC<TeamSlotProps>
-	// sloganText?: string
-	// bracketLogoBottom?: number[]
-	// winnerContainerBottom?: number[]
+	TeamSlotComponent: React.FC<TeamSlotProps>
 }
 
 

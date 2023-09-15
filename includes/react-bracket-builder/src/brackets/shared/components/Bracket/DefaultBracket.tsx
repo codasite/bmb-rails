@@ -24,8 +24,9 @@ export const DefaultBracket = (props: BracketProps) => {
 		matchTree,
 		setMatchTree,
 		MatchColumnComponent = DefaultMatchColumn,
-		MatchBoxComponent = DefaultMatchBox,
-		TeamSlotComponent = DefaultTeamSlot,
+		MatchBoxComponent,
+		TeamSlotComponent,
+		MatchBoxChildComponent,
 		onTeamClick,
 		lineStyle,
 	} = props
@@ -43,6 +44,7 @@ export const DefaultBracket = (props: BracketProps) => {
 					setMatchTree={setMatchTree}
 					MatchBoxComponent={MatchBoxComponent}
 					TeamSlotComponent={TeamSlotComponent}
+					MatchBoxChildComponent={MatchBoxChildComponent}
 					matchGap={matchGap}
 					// teamGap={teamGap}
 					// teamHeight={teamHeight}
