@@ -22,7 +22,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
     saveTournamentLink
   } = props
 
-  const [currentPage, setCurrentPage] = useState('add-teams')
+  const [currentPage, setCurrentPage] = useState('num-teams')
   const [bracketTitle, setBracketTitle] = useState(defaultBracketName)
 
   const onAddTeamsClick = () => {
