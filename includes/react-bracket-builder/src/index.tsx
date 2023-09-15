@@ -60,7 +60,7 @@ if (sentryDsn) {
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
 const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserBracket/UserBracket'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
-const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
+// const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
 const TemplateBuilder = React.lazy(() => import('./brackets/TemplateBuilder/TemplateBuilder'))
 // const WithMatchTree = React.lazy(() => import('./brackets/shared/components/WithMatchTree'))
 
@@ -69,7 +69,7 @@ const TemplateBuilder = React.lazy(() => import('./brackets/TemplateBuilder/Temp
 renderSettings(wpbb_ajax_obj)
 renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderPreview(wpbb_ajax_obj)
-renderOptionsTree()
+// renderOptionsTree()
 renderTemplateBuilder(wpbb_ajax_obj)
 
 function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
@@ -99,12 +99,12 @@ function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	}
 }
 
-function renderOptionsTree() {
-	const optionsBuilder = document.getElementById('wpbb-bracket-option-preview')
-	if (optionsBuilder) {
-		render(<App><Provider store={bracketBuilderStore}><Options /></Provider></App >, optionsBuilder);
-	}
-}
+// function renderOptionsTree() {
+// 	const optionsBuilder = document.getElementById('wpbb-bracket-option-preview')
+// 	if (optionsBuilder) {
+// 		render(<App><Provider store={bracketBuilderStore}><Options /></Provider></App >, optionsBuilder);
+// 	}
+// }
 
 function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-play-tournament-builder')
