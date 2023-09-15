@@ -145,6 +145,14 @@ export class MatchNode {
 		return this.right ? this.right.getWinner() : this.team2;
 	}
 
+	setTeam1(team: Team): void {
+		this.team1 = team;
+	}
+
+	setTeam2(team: Team): void {
+		this.team2 = team;
+	}
+
 	pick(team: Nullable<Team>): void {
 		if (!team) {
 			return;
