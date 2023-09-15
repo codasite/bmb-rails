@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import './template-builder.scss'
 import { MatchTree } from '../shared/models/MatchTree'
 //@ts-ignore
 import { AddTeamsPage } from './AddTeamsPage'

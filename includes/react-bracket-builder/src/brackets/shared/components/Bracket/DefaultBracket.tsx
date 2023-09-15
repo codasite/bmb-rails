@@ -14,6 +14,7 @@ import { DefaultMatchColumn } from '../MatchColumn/DefaultMatchColumn';
 import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox';
 import { DefaultTeamSlot } from '../TeamSlot';
 import { bracketConstants } from '../../constants';
+import { useWindowDimensions } from '../../../../utils/hooks';
 
 export const DefaultBracket = (props: BracketProps) => {
 	const {
@@ -31,6 +32,7 @@ export const DefaultBracket = (props: BracketProps) => {
 		lineStyle,
 	} = props
 
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions()
 	const darkMode = useContext(DarkModeContext);
 
 	const getMatchColumns = (rounds: Nullable<MatchNode>[][], position: string, firstRoundMatchGap: number, matchHeight: number): JSX.Element[] => {
