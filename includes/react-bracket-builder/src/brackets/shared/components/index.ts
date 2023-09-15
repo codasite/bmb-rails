@@ -4,7 +4,7 @@ export { MatchBox } from './MatchBox'
 export { DefaultMatchColumn } from './MatchColumn/DefaultMatchColumn'
 export { DefaultMatchBox } from './MatchBox/DefaultMatchBox'
 export { DefaultTeamSlot } from './TeamSlot'
-export { DefaultBracket } from './DefaultBracket'
+export { DefaultBracket } from './Bracket/DefaultBracket'
 export { RoundHeader } from './RoundHeader'
 export { TeamSlot } from './TeamSlot'
 

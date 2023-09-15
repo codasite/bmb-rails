@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MatchNode, Round, Team, MatchTree } from '../../models/MatchTree';
 import { Direction, bracketConstants } from '../../constants'
 import { MatchBoxProps, TeamSlotProps } from '../types';
@@ -7,13 +7,14 @@ import { getUniqueTeamClass } from '../../utils';
 //@ts-ignore
 import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg'
 import { DefaultTeamSlot } from '../TeamSlot';
+import { Bracket } from '../Bracket/Bracket';
+import { BracketMetaContext } from '../../context';
 
 interface FinalMatchChildrenProps {
 	match: MatchNode
 	matchTree: MatchTree
 	matchPosition: string
 	TeamSlotComponent: React.FC<TeamSlotProps>
-	bracketDate: string
 	sloganText?: string
 	bracketLogoBottom?: number[]
 	winnerContainerBottom?: number[]
@@ -25,7 +26,6 @@ const FinalMatchChildren = (props: FinalMatchChildrenProps) => {
 		matchTree,
 		matchPosition,
 		TeamSlotComponent,
-		bracketDate,
 		sloganText = 'Who You Got?',
 		bracketLogoBottom = bracketConstants.bracketLogoBottom,
 		winnerContainerBottom = bracketConstants.winnerContainerBottom,
@@ -33,10 +33,17 @@ const FinalMatchChildren = (props: FinalMatchChildrenProps) => {
 
 	const numRounds = matchTree.rounds.length
 
+	const bracketMeta = useContext(BracketMetaContext)
+
+	const {
+		title: bracketTitle,
+		date: bracketDate,
+	} = bracketMeta
+
 	return (
 		<>
 			<div className={`tw-flex tw-flex-col tw-gap-16 tw-absolute tw-bottom-[${winnerContainerBottom[numRounds]}px] tw-items-center tw-left-[50%] tw-translate-x-[-50%]`}>
-				<span className='tw-text-64 tw-font-700 tw-whitespace-nowrap tw-text-dd-blue dark:tw-text-white'>Bracket Title</span>
+				<span className='tw-text-64 tw-font-700 tw-whitespace-nowrap tw-text-dd-blue dark:tw-text-white'>{bracketTitle}</span>
 				<TeamSlotComponent
 					team={match.getWinner()}
 					match={match}
@@ -106,7 +113,6 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 					matchTree={matchTree}
 					matchPosition={matchPosition}
 					TeamSlotComponent={TeamSlotComponent}
-					bracketDate='March 2024'
 				/>
 			}
 		</div>
