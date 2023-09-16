@@ -46,7 +46,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 					</a>
 				</div>
 			</div>
-			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-xl tw-m-auto tw-dark`}>
+			<div className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-max-w-screen-xl tw-min-h-[500px] tw-m-auto tw-dark`}>
 				{
 					matchTree &&
 					<DarkModeContext.Provider value={true}>
@@ -69,7 +69,8 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 						<SaveIcon />
 						<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Save As Template</span>
 					</ActionButton>
-					<ActionButton variant='green' gap={16} disabled={createDisabled} onClick={handleSaveTournament}>
+					{/* <ActionButton variant='green' gap={16} disabled={createDisabled} onClick={handleSaveTournament}> */}
+					<ActionButton variant='green' gap={16} disabled={true} onClick={handleSaveTournament}>
 						<PlayIcon />
 						<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Create Tournament</span>
 					</ActionButton>

@@ -214,7 +214,7 @@ class Wp_Bracket_Builder_Public {
 				'nonce' => wp_create_nonce('wp_rest'),
 				// 'page' => 'user-bracket',
 				// 'ajax_url' => admin_url('admin-ajax.php'),
-				// 'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 				// 'post' => $post,
 				// 'bracket' => $bracket,
 				'css_file' => $css_file,
@@ -262,8 +262,10 @@ class Wp_Bracket_Builder_Public {
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
-				'my_templates_url' => '/templates',
-				'my_tournaments_url' => '/tournaments',
+				'my_templates_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=templates',
+				'my_tournaments_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=tournaments',
+				'nonce' => wp_create_nonce('wp_rest'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 			)
 		);
 		ob_start();

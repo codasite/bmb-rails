@@ -31,7 +31,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   const [currentPage, setCurrentPage] = useState('num-teams')
   const [bracketTitle, setBracketTitle] = useState(defaultBracketName)
   const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
-  const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Top)
+  const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Split)
   const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
     teamPickerDefaults.map((val, i) => ({
       currentValue: val,
@@ -55,9 +55,18 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       matches: matchTree.toMatchReq()
     }
     console.log(req)
+    console.log(JSON.stringify(req))
 
-    // bracketApi.createTemplate()
-
+    bracketApi.createTemplate(req)
+      .then((res) => {
+        console.log(res)
+        if (saveTemplateLink) {
+          window.location.href = saveTemplateLink
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   const handleSaveTournamentClick = () => {
