@@ -1,4 +1,7 @@
 <?php
+
+use function PHPUnit\Framework\isInstanceOf;
+
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
@@ -182,16 +185,24 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return new Wp_Bracket_Builder_Team($team['name'], $team['id']);
 	}
 
-	public function get_all(array $query_args = []): array {
+	public function get_all(array|WP_Query $query = []): array {
+		if ($query instanceof WP_Query) {
+			return $this->templates_from_query($query);
+		}
+
 		$default_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Template::get_post_type(),
 			'post_status' => 'any',
 		];
 
-		$args = array_merge($default_args, $query_args);
+		$args = array_merge($default_args, $query);
 		$query = new WP_Query($args);
-		$templates = [];
 
+		return $this->templates_from_query($query);
+	}
+
+	public function templates_from_query($query): array {
+		$templates = [];
 		foreach ($query->posts as $post) {
 			$templates[] = $this->get($post, false);
 		}
