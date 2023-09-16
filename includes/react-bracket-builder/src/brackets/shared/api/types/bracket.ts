@@ -57,6 +57,11 @@ export interface TeamRepr {
 	name: string;
 }
 
+export interface MatchTreeRepr {
+	rounds: Nullable<MatchRepr>[][];
+	wildcardPlacement?: WildcardPlacement;
+}
+
 export interface MatchRepr {
 	id?: number;
 	roundIndex: number;

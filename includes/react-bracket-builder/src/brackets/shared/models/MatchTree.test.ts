@@ -62,7 +62,7 @@ describe('MatchTree', () => {
 			],
 		]
 
-		const matchTree = MatchTree.deserialize(matches)
+		const matchTree = MatchTree.deserialize({ rounds: matches })
 
 		expect(matchTree).not.toBeNull()
 		const rounds = matchTree?.rounds
@@ -145,7 +145,7 @@ describe('MatchTree', () => {
 			],
 		]
 
-		const matchTree = MatchTree.deserialize(matches)
+		const matchTree = MatchTree.deserialize({ rounds: matches })
 		expect(matchTree?.allPicked()).toBe(true)
 	})
 
@@ -160,7 +160,7 @@ describe('MatchTree', () => {
 			],
 		]
 
-		const matchTree = MatchTree.deserialize(matches)
+		const matchTree = MatchTree.deserialize({ rounds: matches })
 		expect(matchTree?.allPicked()).toBe(false)
 	})
 
@@ -175,7 +175,7 @@ describe('MatchTree', () => {
 			],
 		]
 
-		const matchTree = MatchTree.deserialize(matches)
+		const matchTree = MatchTree.deserialize({ rounds: matches })
 		matchTree?.advanceTeam(0, 1, true)
 		expect(matchTree?.rounds[0].matches[1]?.getWinner()?.id).toBe(19)
 		expect(matchTree?.rounds[1].matches[0]?.getTeam2()?.id).toBe(19)
@@ -191,7 +191,7 @@ describe('MatchTree', () => {
 			],
 		]
 
-		const matchTree = MatchTree.deserialize(matches)
+		const matchTree = MatchTree.deserialize({ rounds: matches })
 		expect(matchTree?.rounds[1].matches[0]?.getWinner()?.id).toBe(20)
 
 		matchTree?.advanceTeam(0, 1, true)
@@ -228,26 +228,26 @@ describe('MatchTree', () => {
 			])
 		]
 
-		linkNodes(rounds)
-
-		const expected = [
-			[
-				{ roundIndex: 0, matchIndex: 0, team1: { name: "Team 1" }, team2: { name: "Team 2" }, team1Wins: true },
-				{ roundIndex: 0, matchIndex: 1, team1: { name: "Team 3" }, team2: { name: "Team 4" }, team2Wins: true },
-				{ roundIndex: 0, matchIndex: 2, team1: { name: "Team 5" }, team2: { name: "Team 6" }, team1Wins: true },
-				{ roundIndex: 0, matchIndex: 3, team1: { name: "Team 7" }, team2: { name: "Team 8" }, team2Wins: true },
-			],
-			[
-				{ roundIndex: 1, matchIndex: 0, team1Wins: true },
-				{ roundIndex: 1, matchIndex: 1, team2Wins: true },
-			],
-			[
-				{ roundIndex: 2, matchIndex: 0, team1Wins: true },
+		const expected = {
+			wildcardPlacement: WildcardPlacement.Top,
+			rounds: [
+				[
+					{ roundIndex: 0, matchIndex: 0, team1: { name: "Team 1" }, team2: { name: "Team 2" }, team1Wins: true },
+					{ roundIndex: 0, matchIndex: 1, team1: { name: "Team 3" }, team2: { name: "Team 4" }, team2Wins: true },
+					{ roundIndex: 0, matchIndex: 2, team1: { name: "Team 5" }, team2: { name: "Team 6" }, team1Wins: true },
+					{ roundIndex: 0, matchIndex: 3, team1: { name: "Team 7" }, team2: { name: "Team 8" }, team2Wins: true },
+				],
+				[
+					{ roundIndex: 1, matchIndex: 0, team1Wins: true },
+					{ roundIndex: 1, matchIndex: 1, team2Wins: true },
+				],
+				[
+					{ roundIndex: 2, matchIndex: 0, team1Wins: true },
+				]
 			]
-		]
+		}
 
-		const tree = new MatchTree()
-		tree.rounds = rounds
+		const tree = new MatchTree(rounds, WildcardPlacement.Top)
 		const serialized = tree?.serialize()
 		expect(serialized).toEqual(expected)
 	})

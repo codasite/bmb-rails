@@ -3,6 +3,7 @@ import {
 	MatchRes,
 	MatchPicks,
 	MatchRepr,
+	MatchTreeRepr,
 	TeamRepr,
 	MatchReq,
 	TeamReq,
@@ -251,12 +252,15 @@ export class MatchTree {
 	}
 
 
-	serialize(): Nullable<MatchRepr>[][] {
+	serialize(): MatchTreeRepr {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {
 			return round.serialize()
 		});
-		return rounds
+		return {
+			rounds: rounds,
+			wildcardPlacement: tree.wildcardPlacement
+		}
 	}
 
 	advanceTeam = (roundIndex: number, matchIndex: number, left: boolean, requireComplete: boolean = false) => {
@@ -375,7 +379,10 @@ export class MatchTree {
 
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
 		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
-		return MatchTree.deserialize(matches, wildcardPlacement)
+		return MatchTree.deserialize({
+			rounds: matches,
+			wildcardPlacement,
+		})
 	}
 
 	static fromMatchRes(numTeams: number, matches: MatchRes[], wildcardPlacement?: WildcardPlacement): MatchTree | null {
@@ -383,7 +390,10 @@ export class MatchTree {
 
 		try {
 			const nestedMatches = getMatchRepr(numRounds, matches)
-			return MatchTree.deserialize(nestedMatches, wildcardPlacement)
+			return MatchTree.deserialize({
+				rounds: nestedMatches,
+				wildcardPlacement,
+			})
 		}
 		catch (e) {
 			console.log(e)
@@ -418,7 +428,11 @@ export class MatchTree {
 		return matchTree
 	}
 
-	static deserialize(matchRes: Nullable<MatchRepr>[][], wildcardPlacement?: WildcardPlacement) {
+	static deserialize(matchTreeRepr: MatchTreeRepr): MatchTree {
+		const {
+			rounds: matchRes,
+			wildcardPlacement,
+		} = matchTreeRepr
 		const rounds = matchRes.map((round, roundIndex) => {
 			const depth = matchRes.length - roundIndex - 1
 			const newRound = new Round(roundIndex, depth)
