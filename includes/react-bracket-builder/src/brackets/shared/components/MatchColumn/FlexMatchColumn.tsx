@@ -17,6 +17,7 @@ interface FlexMatchColumnProps {
 const FlexMatchGap = (props: FlexMatchColumnProps) => {
 	const {
 		minHeight = 4,
+		// minHeight = 8,
 		maxHeight = 16,
 	} = props
 	const minHeightClass = minHeight >= 0 ? ` tw-min-h-[${minHeight}px]` : ''
@@ -61,6 +62,15 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
 						if (outerColumn && wildcardPlacement === WildcardPlacement.Split) {
 							matchBoxes.push(<FlexMatchGap maxHeight={32} />)
 						}
+						return matchBoxes
+						// if (outerColumn) {
+						// 	if (wildcardPlacement === WildcardPlacement.Split) {
+						// 		matchBoxes.push(<FlexMatchGap maxHeight={32} />)
+						// 	}
+						// 	else if (wildcardPlacement === WildcardPlacement.Top || wildcardPlacement === WildcardPlacement.Bottom) {
+						// 		matchBoxes.push(<FlexMatchGap minHeight={32} />)
+						// 	}
+						// }
 						return matchBoxes
 					}
 					if (index > 0) {
