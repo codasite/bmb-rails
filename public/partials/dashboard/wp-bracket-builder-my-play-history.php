@@ -3,11 +3,24 @@ require_once 'wp-bracket-builder-dashboard-common.php';
 $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
 require_once $shared_dir . 'wp-bracket-builder-partials-common.php';
 require_once $shared_dir . 'wp-bracket-builder-tournaments-common.php';
+require_once $shared_dir . 'wp-bracket-builder-pagination-widget.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
-$plays = $play_repo->get_all_by_author(get_current_user_id());
+$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+
+$the_query = new WP_Query([
+	'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+	'author' => get_current_user_id(),
+	'posts_per_page' => 6,
+	'paged' => $paged,
+	'post_status' => 'any'
+]);
+
+$num_pages = $the_query->max_num_pages;
+
+$plays = $play_repo->get_all($the_query);
 
 function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	$tournament_name = $play->title;
@@ -69,6 +82,8 @@ function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	<div class="tw-flex tw-flex-col tw-gap-16">
 		<?php foreach ($plays as $play) {
 			echo play_list_item($play);
-		} ?>
+		}
+		?>
+		<?php wpbb_pagination($paged, $num_pages); ?>
 	</div>
 </div>

@@ -62,40 +62,28 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $tournament;
 	}
 
-	public function get_all(array $query_args = []): array {
+	public function get_all(array|WP_Query $query = []): array {
+		if ($query instanceof WP_Query) {
+			return $this->tournaments_from_query($query);
+		}
+
 		$default_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
 			'post_status' => 'any',
 		];
 
-		$args = array_merge($default_args, $query_args);
+		$args = array_merge($default_args, $query);
 
 		$query = new WP_Query($args);
+		return $this->tournaments_from_query($query);
+	}
 
+	public function tournaments_from_query(WP_Query $query) {
 		$tournaments = [];
 		foreach ($query->posts as $post) {
 			$tournaments[] = $this->get($post, false);
 		}
 		return $tournaments;
-	}
-
-	public function get_num_plays(int|null $tournament_id): int {
-		if ($tournament_id === null) {
-			return 0;
-		}
-		$query = new WP_Query(
-			[
-				'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
-				'meta_query' => [
-					[
-						'key' => 'bracket_tournament_id',
-						'value' => $tournament_id,
-					],
-				],
-				'posts_per_page' => -1,
-			]
-		);
-		return $query->found_posts;
 	}
 
 	public function filter($args) {
