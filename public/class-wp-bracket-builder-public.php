@@ -374,10 +374,20 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament']);
 	}
 
+	public function add_rewrite_tags() {
+		add_rewrite_tag('%tab%', '([^&]+)');
+		add_rewrite_tag('%pagename%', '([^&]+)');
+	}
+
 	public function add_rewrite_rules() {
+
+
 		add_rewrite_rule('^dashboard/profile/?', 'index.php?pagename=dashboard&tab=profile', 'top');
+		add_rewrite_rule('^dashboard/templates/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=templates&paged=$matches[1]', 'top');
 		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
+		add_rewrite_rule('^dashboard/tournaments/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=tournaments&paged=$matches[1]', 'top');
 		add_rewrite_rule('^dashboard/tournaments/?', 'index.php?pagename=dashboard&tab=tournaments', 'top');
+		add_rewrite_rule('^dashboard/play-history/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=play-history&paged=$matches[1]', 'top');
 		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
 		add_rewrite_rule('^bracket_tournament/([^/]+)/([^/]+)', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
 	}

@@ -5,10 +5,11 @@ require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once('shared/wp-bracket-builder-partials-constants.php');
 require_once('shared/wp-bracket-builder-tournaments-common.php');
+require_once('shared/wp-bracket-builder-pagination-widget.php');
 
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
-$page = get_query_var('paged');
+
 $status = get_query_var('status');
 
 $filter_status = 'publish';
@@ -18,15 +19,21 @@ if ($status === ALL_STATUS) {
 	$filter_status = 'complete';
 }
 
-$tournaments = $tournament_repo->get_all(
-	[
-		'post_status' => $filter_status,
-		'tag' => 'bmb_official_tourney',
-		'orderby' => 'date',
-		'order' => 'DESC',
-	]
-);
+$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
+$the_query = new WP_Query([
+	'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+	'tag' => 'bmb_official_tourney',
+	'posts_per_page' => 8,
+	'paged' => $paged,
+	'post_status' => $filter_status,
+	'orderby' => 'date',
+	'order' => 'DESC',
+]);
+
+$num_pages = $the_query->max_num_pages;
+
+$tournaments = $tournament_repo->get_all($the_query);
 
 function wpbb_tournament_sort_buttons() {
 	$all_endpoint = get_permalink();
@@ -48,12 +55,13 @@ function wpbb_tournament_sort_buttons() {
 <div class="wpbb-reset wpbb-official-tourneys tw-flex tw-flex-col tw-gap-30">
 	<div class="tw-flex tw-flex-col tw-py-30 tw-gap-15 tw-items-center">
 		<?php echo file_get_contents(plugins_url('../assets/icons/logo_dark.svg', __FILE__)); ?>
-		<h1 class="tw-text-80 tw-font-700">Official Tournaments</h1>
+		<h1 class="tw-text-80 tw-font-700 tw-text-center">Official Tournaments</h1>
 	</div>
 	<div class="tw-flex tw-flex-col tw-gap-15">
 		<?php echo wpbb_tournament_sort_buttons(); ?>
 		<?php foreach ($tournaments as $tournament) : ?>
 			<?php echo public_tournament_list_item($tournament, $play_repo); ?>
 		<?php endforeach; ?>
+		<?php wpbb_pagination($paged, $num_pages); ?>
 	</div>
 </div>

@@ -55,12 +55,19 @@ function template_list_item($template) {
 	return ob_get_clean();
 }
 
-$templates = $template_repo->get_all(
-	[
-		'author' => get_current_user_id(),
-		'posts_per_page' => -1,
-	]
-);
+$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+
+$the_query = new WP_Query([
+	'post_type' => Wp_Bracket_Builder_Bracket_Template::get_post_type(),
+	'author' => get_current_user_id(),
+	'posts_per_page' => 6,
+	'paged' => $paged,
+	'post_status' => 'any',
+]);
+
+$num_pages = $the_query->max_num_pages;
+
+$templates = $template_repo->get_all($the_query);
 
 $create_template_link = get_permalink(get_page_by_path('bracket-template-builder'));
 
@@ -76,11 +83,7 @@ $create_template_link = get_permalink(get_page_by_path('bracket-template-builder
 		<?php foreach ($templates as $template) {
 			echo template_list_item($template);
 		} ?>
+		<?php wpbb_pagination($paged, $num_pages); ?>
 	</div>
 
 </div>
-
-<?php
-$num_pages = 10;
-my_pagination_component($num_pages);
-?>
