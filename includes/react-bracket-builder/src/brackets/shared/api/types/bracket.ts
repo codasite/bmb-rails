@@ -1,67 +1,11 @@
 import { Nullable } from '../../../../utils/types';
-
-
-export interface TeamRes {
-	id: number;
-	name: string;
-}
-
-export interface TeamReq {
-	name: string;
-}
-
-interface BracketBase {
-	name: string;
-	active: boolean;
-	numRounds: number;
-	numWildcards: number;
-	wildcardPlacement: number;
-}
+import { WildcardPlacement } from '../../models/MatchTree';
 
 interface phpDate {
 	date: string;
 	timezone_type: number;
 	timezone: string;
 }
-
-// export interface BracketRes extends BracketBase {
-// 	id: number;
-// 	createdAt: phpDate;
-// 	numSubmissions: number;
-// 	rounds: RoundRes[];
-// }
-
-// export interface BracketReq extends BracketBase {
-// 	rounds: RoundReq[];
-// }
-
-// export interface SubmissionRes {
-// 	id: number;
-// 	// createdAt: phpDate;
-// 	bracketId: number;
-// 	customerId: number;
-// 	name: string;
-// 	rounds: RoundRes[];
-// }
-
-// export interface SubmissionReq {
-// 	bracketId: number;
-// 	name: string;
-// 	html: string;
-// 	rounds?: SubmissionRoundReq[];
-// }
-
-// export interface SubmissionRoundReq {
-// 	matches: Nullable<SubmissionMatchReq>[];
-// }
-
-// export interface SubmissionMatchReq {
-// 	result: Nullable<SubmissionTeamReq>;
-// }
-
-// export interface SubmissionTeamReq {
-// 	id: number;
-// }
 
 export interface HTMLtoImageReq {
 	html: string;
@@ -76,6 +20,15 @@ export interface HTMLtoImageReq {
 
 export interface HTMLtoImageRes {
 	imageUrl: string;
+}
+
+export interface TeamRes {
+	id: number;
+	name: string;
+}
+
+export interface TeamReq {
+	name: string;
 }
 
 export interface MatchRes {
@@ -112,6 +65,27 @@ export interface MatchRepr {
 	team2?: TeamRepr;
 	team1Wins?: boolean;
 	team2Wins?: boolean;
+}
+
+export interface TemplateReq {
+	title: string;
+	numTeams: number;
+	status?: string;
+	wildcardPlacement: WildcardPlacement;
+	matches: MatchReq[];
+}
+
+export interface TemplateRes {
+	id: number;
+	title: string;
+	numTeams: number;
+	status: string;
+	date: phpDate;
+	dateGmt: phpDate;
+	wildcardPlacement: WildcardPlacement;
+	html: string;
+	imgUrl: string;
+	matches?: MatchRes[];
 }
 
 

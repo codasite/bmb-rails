@@ -8,8 +8,11 @@ import { DefaultBracket } from '../shared/components'
 import { BracketMetaContext, DarkModeContext } from '../shared/context'
 import { AddTeamsBracket } from '../shared/components/Bracket'
 import { ActionButton } from './ActionButtons'
+//@ts-ignore
 import { ReactComponent as ShuffleIcon } from '../shared/assets/shuffle.svg'
+//@ts-ignore
 import { ReactComponent as SaveIcon } from '../shared/assets/save.svg'
+//@ts-ignore
 import { ReactComponent as PlayIcon } from '../shared/assets/play.svg'
 
 interface AddTeamsPageProps {
@@ -30,6 +33,8 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 		handleSaveTournament,
 		handleBack
 	} = props
+
+	const createDisabled = !matchTree || !matchTree.allTeamsAdded()
 
 	return (
 		<div className='tw-flex tw-flex-col tw-gap-60 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'background': `url(${iconBackground}), #000225` }}>
@@ -57,47 +62,20 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 			<div className='tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full'>
 				<ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />
-					<span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
+					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
 				</ActionButton>
 				<div className='tw-flex tw-flex-col tw-gap-16'>
-					<ActionButton variant='blue' gap={16} onClick={handleSaveTemplate}>
+					<ActionButton variant='blue' gap={16} disabled={createDisabled} onClick={handleSaveTemplate}>
 						<SaveIcon />
-						<span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Save As Template</span>
+						<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Save As Template</span>
 					</ActionButton>
-					<ActionButton variant='green' gap={16} onClick={handleSaveTournament}>
+					<ActionButton variant='green' gap={16} disabled={createDisabled} onClick={handleSaveTournament}>
 						<PlayIcon />
-						<span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Create Tournament</span>
+						<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Create Tournament</span>
 					</ActionButton>
 				</div>
 
 			</div>
 		</div>
-
-		// <div className="bracket-container">
-		// 	<div><button className='create-bracket' onClick={handleRedirect}><ArrowNarrowLeft />CREATE BRACKET</button></div>
-		// 	<div className='bracket-title'>{bracketTitle}</div>
-		// 	<div className='paired-bracket'>
-		// 		<DarkModeContext.Provider value={true}>
-		// 			<PairedBracket {...bracketProps} />
-		// 		</DarkModeContext.Provider>
-		// 	</div>
-		// 	<div className={`randomize-team-container wpbb-bracket-actions`}>
-		// 		<button className='randomize-teams no-highlight-button' onClick={handleShuffle} >
-		// 			<ShuffleIcon />
-		// 			<span className={'randomize-teams-text'}>scramble team order</span>
-		// 		</button>
-		// 	</div>
-		// 	<div className='bracket-button'>
-		// 		<button className='btn-save-bracket' onClick={handleSave}>
-		// 			<SaveIcon />
-		// 			<span className='save-bracket-text'>Save As Template</span>
-		// 		</button>
-		// 		<button className='btn-play-bracket' >
-		// 			<PlayIcon />
-		// 			<span className='play-bracket-text'>Create Tournament</span>
-		// 		</button>
-		// 	</div>
-		// </div>
 	)
-
 }

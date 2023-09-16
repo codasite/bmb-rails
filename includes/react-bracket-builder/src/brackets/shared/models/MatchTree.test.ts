@@ -299,7 +299,7 @@ describe('MatchTree', () => {
 		expect(round3?.matches[0]?.getWinner()?.id).toBe(17)
 	})
 
-	test('testing to match res', () => {
+	test('testing to match req', () => {
 		const team1 = new Team("Team 1")
 		const team2 = new Team("Team 2")
 		const team3 = new Team("Team 3")
@@ -369,10 +369,10 @@ describe('MatchTree', () => {
 		linkNodes(rounds)
 
 		const expected: MatchReq[] = [
-			{ roundIndex: 1, matchIndex: 0, team2: { name: "Team 5" } },
-			{ roundIndex: 1, matchIndex: 1, team2: { name: "Team 6" } },
 			{ roundIndex: 0, matchIndex: 0, team1: { name: "Team 1" }, team2: { name: "Team 2" } },
 			{ roundIndex: 0, matchIndex: 2, team1: { name: "Team 3" }, team2: { name: "Team 4" } },
+			{ roundIndex: 1, matchIndex: 0, team2: { name: "Team 5" } },
+			{ roundIndex: 1, matchIndex: 1, team2: { name: "Team 6" } },
 		]
 
 		const tree = new MatchTree()
@@ -494,6 +494,93 @@ describe('MatchTree', () => {
 		expect(MatchTree.fromNumTeams(20)?.getNumTeams()).toBe(20)
 		expect(MatchTree.fromNumTeams(36)?.getNumTeams()).toBe(36)
 		expect(MatchTree.fromNumTeams(64)?.getNumTeams()).toBe(64)
+	})
+
+	test('testing allTeamsAdded true', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 1, team1: new Team("Team 1"), team2: new Team("Team 2") }),
+				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 1, team1: new Team("Team 3"), team2: new Team("Team 4") }),
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 0 }),
+			]),
+		]
+
+		linkNodes(rounds)
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+
+		expect(tree?.allTeamsAdded()).toBe(true)
+	})
+
+	test('testing allTeamsAdded false', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 1, team1: new Team("Team 1"), team2: new Team("Team 2") }),
+				new MatchNode({ roundIndex: 0, matchIndex: 1, depth: 1, team1: new Team("Team 3") }),
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 0 }),
+			]),
+		]
+
+		linkNodes(rounds)
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+
+		expect(tree?.allTeamsAdded()).toBe(false)
+	})
+
+	test('testing allTeamsAdded with wildcards true', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2, team1: new Team("Team 1"), team2: new Team("Team 2") }),
+				null,
+				new MatchNode({ roundIndex: 0, matchIndex: 2, depth: 2, team1: new Team("Team 3"), team2: new Team("Team 4") }),
+				null,
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1, team2: new Team("Team 5") }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1, team2: new Team("Team 6") }),
+			]),
+			new Round(2, 0, [
+				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0 }),
+			])
+		]
+
+		linkNodes(rounds)
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+		expect(tree?.allTeamsAdded()).toBe(true)
+
+	})
+
+	test('testing allTeamsAdded with wildcards false', () => {
+		const rounds = [
+			new Round(0, 2, [
+				new MatchNode({ roundIndex: 0, matchIndex: 0, depth: 2, team1: new Team("Team 1"), team2: new Team("Team 2") }),
+				null,
+				new MatchNode({ roundIndex: 0, matchIndex: 2, depth: 2, team1: new Team("Team 3") }),
+				null,
+			]),
+			new Round(1, 1, [
+				new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 1, team2: new Team("Team 5") }),
+				new MatchNode({ roundIndex: 1, matchIndex: 1, depth: 1, team2: new Team("Team 6") }),
+			]),
+			new Round(2, 0, [
+				new MatchNode({ roundIndex: 2, matchIndex: 0, depth: 0 }),
+			])
+		]
+
+		linkNodes(rounds)
+
+		const tree = new MatchTree()
+		tree.rounds = rounds
+		expect(tree?.allTeamsAdded()).toBe(false)
 	})
 })
 

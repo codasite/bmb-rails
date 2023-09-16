@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
+import { bracketApi } from '../shared/api/bracketApi'
 import { MatchTree } from '../shared/models/MatchTree'
 //@ts-ignore
 import { AddTeamsPage } from './AddTeamsPage'
 import { NumTeamsPage } from './NumTeamsPage'
+import { TemplateReq } from '../shared/api/types/bracket'
 
 const defaultBracketName = "MY BRACKET NAME"
 
@@ -24,8 +26,30 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   const [currentPage, setCurrentPage] = useState('num-teams')
   const [bracketTitle, setBracketTitle] = useState(defaultBracketName)
 
-  const onAddTeamsClick = () => {
+  const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
+  }
+
+  const handleSaveTemplateClick = () => {
+    console.log('save template')
+    if (!matchTree) {
+      return
+    }
+    const req: TemplateReq = {
+      title: bracketTitle,
+      numTeams: matchTree.getNumTeams(),
+      wildcardPlacement: matchTree.getWildcardPlacement(),
+      matches: matchTree.toMatchReq()
+    }
+    console.log(req)
+
+    // bracketApi.createTemplate()
+
+
+  }
+
+  const handleSaveTournamentClick = () => {
+    console.log('save tournament')
   }
 
   return (
@@ -34,7 +58,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
         <NumTeamsPage
           matchTree={matchTree}
           setMatchTree={setMatchTree}
-          onAddTeamsClick={onAddTeamsClick}
+          onAddTeamsClick={handleAddTeamsClick}
           bracketTitle={bracketTitle}
           setBracketTitle={setBracketTitle}
         />
@@ -45,8 +69,8 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           setMatchTree={setMatchTree}
           bracketTitle={bracketTitle}
           handleBack={() => setCurrentPage('num-teams')}
-          handleSaveTemplate={() => { }}
-          handleSaveTournament={() => { }}
+          handleSaveTemplate={handleSaveTemplateClick}
+          handleSaveTournament={handleSaveTournamentClick}
         />
       }
     </div>
