@@ -8,13 +8,12 @@ switch ($view) {
         include 'wp-bracket-builder-tourney-leaderboard.php';
         break;
     case 'play':
-        echo '<div id="wpbb-bracket-builder"></div>';
+        echo '<div id="wpbb-play-tournament-builder"></div>';
         break;
     case 'score':
         echo 'Error: Score Tournament page not implemented yet.';
         break;
     default:
-        echo 'Error: view must be set to either "leaderboard", "play", or score.';
+        echo '<div id="wpbb-play-tournament-builder"></div>';
         break;
 }
-?>

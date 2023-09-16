@@ -1,25 +1,32 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
+
 $page = get_query_var('paged');
+$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+$tournament = $tournament_repo->get(get_the_ID());
 // This is just temporary. Don't do this
 // $complete = false;
 $complete = get_post_status() === 'complete';
-$winner = 'Milwaukee';
-function wpbb_get_plays($tournament_id) {
-	$args = array(
-		'post_type' => 'bracket_pick',
-		'posts_per_page' => -1,
 
-		// 'meta_query' => array(
-		// 	array(
-		// 		'key' => 'wpbb_play_tournament',
-		// 		'value' => $tournament_id,
-		// 		'compare' => '='
-		// 	)
-		// )
-	);
-	$plays = get_posts($args);
-	return $plays;
-}
+$plays = $play_repo->get_all(
+	[
+		'post_status' => 'publish',
+		'meta_query' => [
+			[
+				'key' => 'bracket_tournament_id',
+				'value' => get_the_ID(),
+			],
+		],
+		// 'orderby' => 'score',
+		// 'order' => 'DESC',
+	]
+);
+
+$winner = 'Milwaukee';
 
 function wpbb_score_tournament_btn($endpoint) {
 	ob_start();
@@ -43,9 +50,9 @@ function wpbb_share_tournament_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function wpbb_leaderboard_play_list_item($play, $winner = false, $complete = false) {
-	$play_id = $play->ID;
-	$play_author = $play->post_author;
+function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, $winner = false, $complete = false) {
+	$play_id = $play->id;
+	$play_author = $play->author;
 	$author_name = get_the_author_meta('display_name', $play_author);
 	$time_ago = human_time_diff(get_the_time('U', $play_id), current_time('timestamp')) . ' ago';
 	$score = $winner ? .95 : .25;
@@ -89,28 +96,30 @@ function wpbb_leaderboard_play_list_item($play, $winner = false, $complete = fal
 }
 
 ?>
-<div class="wpbb-reset tw-flex tw-flex-col tw-gap-30">
-	<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 tw-pb-<?php echo $complete ? '30' : '[53px]' ?>">
-		<?php echo file_get_contents(plugins_url('../assets/icons/trophy.svg', __FILE__)); ?>
-		<h1 class="tw-mt-16 tw-mb-12">
-			<?php echo $complete ? "$winner Wins" : esc_html(get_the_title()); ?>
-		</h1>
-		<?php if ($complete) : ?>
-			<h3 class="tw-text-20 tw-font-400 ">
-				<?php echo esc_html(get_the_title()); ?>
-			</h3>
-		<?php endif; ?>
-		<?php echo $complete ? wpbb_share_tournament_btn(get_permalink()) : wpbb_score_tournament_btn(get_permalink()); ?>
-	</div>
-	<div class="tw-flex tw-flex-col tw-gap-16">
-		<h2 class="!tw-text-white/50 tw-text-24 tw-font-500">Plays by Tournament Participants</h2>
+<div class="wpbb-reset tw-bg-dd-blue tw-flex tw-justify-center">
+	<div class="tw-max-w-screen-lg tw-flex tw-flex-grow tw-flex-col tw-gap-30 tw-px-20 lg:tw-px-0 tw-py-60">
+
+		<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 tw-pb-<?php echo $complete ? '30' : '[53px]' ?>">
+			<?php echo file_get_contents(plugins_url('../assets/icons/trophy.svg', __FILE__)); ?>
+			<h1 class="tw-mt-16 tw-mb-12">
+				<?php echo $complete ? "$winner Wins" : esc_html(get_the_title()); ?>
+			</h1>
+			<?php if ($complete) : ?>
+				<h3 class="tw-text-20 tw-font-400 ">
+					<?php echo esc_html(get_the_title()); ?>
+				</h3>
+			<?php endif; ?>
+			<?php echo $complete ? wpbb_share_tournament_btn(get_permalink()) : wpbb_score_tournament_btn(get_permalink()); ?>
+		</div>
 		<div class="tw-flex tw-flex-col tw-gap-16">
-			<?php
-			$plays = wpbb_get_plays(get_the_ID());
-			foreach ($plays as $i => $play) {
-				echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $complete);
-			}
-			?>
+			<h2 class="!tw-text-white/50 tw-text-24 tw-font-500">Plays by Tournament Participants</h2>
+			<div class="tw-flex tw-flex-col tw-gap-16">
+				<?php
+				foreach ($plays as $i => $play) {
+					echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $complete);
+				}
+				?>
+			</div>
 		</div>
 	</div>
 </div>
