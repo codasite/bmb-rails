@@ -3,7 +3,7 @@ import { bracketApi } from '../shared/api/bracketApi'
 import { MatchTree, WildcardPlacement } from '../shared/models/MatchTree'
 //@ts-ignore
 import { AddTeamsPage } from './AddTeamsPage'
-import { NumTeamsPage } from './NumTeamsPage'
+import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
 import { TemplateReq } from '../shared/api/types/bracket'
 
 const defaultBracketName = "MY BRACKET NAME"
@@ -32,6 +32,12 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   const [bracketTitle, setBracketTitle] = useState(defaultBracketName)
   const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
   const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Top)
+  const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
+    teamPickerDefaults.map((val, i) => ({
+      currentValue: val,
+      selected: i === initialPickerIndex
+    }))
+  )
 
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
@@ -69,12 +75,13 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           setBracketTitle={setBracketTitle}
           numTeams={numTeams}
           setNumTeams={setNumTeams}
-          initialPickerIndex={initialPickerIndex}
           teamPickerDefaults={teamPickerDefaults}
           teamPickerMin={teamPickerMin}
           teamPickerMax={teamPickerMax}
           wildcardPlacement={wildcardPlacement}
           setWildcardPlacement={setWildcardPlacement}
+          teamPickerState={teamPickerState}
+          setTeamPickerState={setTeamPickerState}
         />
       }
       {currentPage === 'add-teams' &&
