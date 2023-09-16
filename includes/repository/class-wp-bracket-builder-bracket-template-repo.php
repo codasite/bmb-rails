@@ -53,7 +53,10 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		}
 	}
 
-	private function insert_team_for_template(int $template_id, Wp_Bracket_Builder_Team $team): Wp_Bracket_Builder_Team {
+	private function insert_team_for_template(int $template_id, ?Wp_Bracket_Builder_Team $team): ?Wp_Bracket_Builder_Team {
+		if (empty($team)) {
+			return $team;
+		}
 		$table_name = $this->team_table();
 		$this->wpdb->insert(
 			$table_name,
