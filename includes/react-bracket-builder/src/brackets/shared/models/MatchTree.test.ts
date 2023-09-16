@@ -583,12 +583,12 @@ describe('MatchTree', () => {
 		expect(tree?.allTeamsAdded()).toBe(false)
 	})
 
-	// test('testing getWildcardPlacement', () => {
-	// 	expect(MatchTree.fromNumTeams(8, WildcardPlacement.Bottom)?.getWildcardPlacement()).toBe(WildcardPlacement.Bottom)
-	// 	expect(MatchTree.fromNumTeams(8, WildcardPlacement.Top)?.getWildcardPlacement()).toBe(WildcardPlacement.Top)
-	// 	expect(MatchTree.fromNumTeams(8, WildcardPlacement.Center)?.getWildcardPlacement()).toBe(WildcardPlacement.Center)
-	// 	expect(MatchTree.fromNumTeams(8, WildcardPlacement.Split)?.getWildcardPlacement()).toBe(WildcardPlacement.Split)
-	// })
+	test('testing getWildcardPlacement', () => {
+		expect(MatchTree.fromNumTeams(8, WildcardPlacement.Bottom)?.getWildcardPlacement()).toBe(WildcardPlacement.Bottom)
+		expect(MatchTree.fromNumTeams(8, WildcardPlacement.Top)?.getWildcardPlacement()).toBe(WildcardPlacement.Top)
+		expect(MatchTree.fromNumTeams(8, WildcardPlacement.Center)?.getWildcardPlacement()).toBe(WildcardPlacement.Center)
+		expect(MatchTree.fromNumTeams(8, WildcardPlacement.Split)?.getWildcardPlacement()).toBe(WildcardPlacement.Split)
+	})
 })
 
 
