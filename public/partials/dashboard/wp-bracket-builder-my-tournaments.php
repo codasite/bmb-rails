@@ -3,11 +3,12 @@ require_once 'wp-bracket-builder-dashboard-common.php';
 $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
 require_once $shared_dir . 'wp-bracket-builder-partials-common.php';
 require_once $shared_dir . 'wp-bracket-builder-tournaments-common.php';
+require_once $shared_dir . 'wp-bracket-builder-pagination-widget.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
-require_once 'wp-bracket-builder-dashboard-common.php';
 
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 $status = get_query_var('status');
 if (empty($status)) {
@@ -28,12 +29,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_tournament_id'
 	}
 }
 
-$tournaments = $tournament_repo->get_all(
-	[
-		'post_status' => $status,
-		'author' => get_current_user_id(),
-	]
-);
+$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+
+$the_query = new WP_Query([
+	'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+	'author' => get_current_user_id(),
+	'posts_per_page' => 6,
+	'paged' => $paged,
+	'post_status' => $status,
+]);
+
+$num_pages = $the_query->max_num_pages;
+
+$tournaments = $tournament_repo->get_all($the_query);
 
 function score_tournament_btn($endpoint, $tournament) {
 
@@ -121,13 +129,21 @@ function get_tournament_tag($status) {
 	}
 }
 
-function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Tournament_Repository $tournament_repo) {
+function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repository $play_repo) {
 	// TODO: fix play_repo->get_all_by_tournament
 	// $play_repo->get_all_by_tournament($tournament->id);
 
 	$name = $tournament->title;
 	$num_teams = $tournament->bracket_template->num_teams;
-	$num_plays = $tournament_repo->get_num_plays($tournament->id);
+	$num_plays = $play_repo ? $play_repo->get_count([
+		'meta_query' => [
+			[
+				'key' => 'bracket_tournament_id',
+				'value' => $tournament->id,
+			],
+		],
+	]) : 0;
+
 	$id = $tournament->id;
 	$completed = $tournament->status === 'complete';
 	$completed = $tournament->status === 'complete';
@@ -185,7 +201,8 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Tournament
 	</div>
 	<div class="tw-flex tw-flex-col tw-gap-15">
 		<?php foreach ($tournaments as $tournament) {
-			echo tournament_list_item($tournament, $tournament_repo);
+			echo tournament_list_item($tournament, $play_repo);
 		} ?>
+		<?php wpbb_pagination($paged, $num_pages); ?>
 	</div>
 </div>

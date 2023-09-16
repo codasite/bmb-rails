@@ -201,7 +201,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $this->templates_from_query($query);
 	}
 
-	public function templates_from_query($query): array {
+	public function templates_from_query(WP_Query $query): array {
 		$templates = [];
 		foreach ($query->posts as $post) {
 			$templates[] = $this->get($post, false);
