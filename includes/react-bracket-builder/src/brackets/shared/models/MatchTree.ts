@@ -205,13 +205,11 @@ interface WildcardRange {
 
 export class MatchTree {
 	rounds: Round[]
-	private wildCardPlacement: WildcardPlacement
 	private numTeams: number
 
-	constructor(rounds: Round[] = [], wildCardPlacement: WildcardPlacement = WildcardPlacement.Split) {
+	constructor(rounds: Round[] = []) {
 		linkNodes(rounds)
 		this.rounds = rounds
-		this.wildCardPlacement = wildCardPlacement
 	}
 
 	getRootMatch(): Nullable<MatchNode> {
@@ -244,10 +242,6 @@ export class MatchTree {
 		this.numTeams = numTeams
 
 		return numTeams
-	}
-
-	getWildcardPlacement(): WildcardPlacement {
-		return this.wildCardPlacement
 	}
 
 	serialize(): Nullable<MatchRepr>[][] {

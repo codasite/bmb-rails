@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 import { bracketApi } from '../shared/api/bracketApi'
-import { MatchTree } from '../shared/models/MatchTree'
+import { MatchTree, WildcardPlacement } from '../shared/models/MatchTree'
 //@ts-ignore
 import { AddTeamsPage } from './AddTeamsPage'
 import { NumTeamsPage } from './NumTeamsPage'
 import { TemplateReq } from '../shared/api/types/bracket'
 
 const defaultBracketName = "MY BRACKET NAME"
+
+const initialPickerIndex = 0
+const teamPickerDefaults = [16, 32, 64]
+const teamPickerMin = [1, 17, 33]
+const teamPickerMax = [31, 63, 64]
 
 interface TemplateBuilderProps {
   matchTree?: MatchTree
@@ -25,26 +30,27 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
 
   const [currentPage, setCurrentPage] = useState('num-teams')
   const [bracketTitle, setBracketTitle] = useState(defaultBracketName)
+  const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
+  const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Top)
 
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
   }
 
   const handleSaveTemplateClick = () => {
-    console.log('save template')
-    if (!matchTree) {
+    if (!matchTree || !matchTree.allTeamsAdded()) {
       return
     }
+
     const req: TemplateReq = {
       title: bracketTitle,
-      numTeams: matchTree.getNumTeams(),
-      wildcardPlacement: matchTree.getWildcardPlacement(),
+      numTeams: numTeams,
+      wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq()
     }
     console.log(req)
 
     // bracketApi.createTemplate()
-
 
   }
 
@@ -61,6 +67,14 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           onAddTeamsClick={handleAddTeamsClick}
           bracketTitle={bracketTitle}
           setBracketTitle={setBracketTitle}
+          numTeams={numTeams}
+          setNumTeams={setNumTeams}
+          initialPickerIndex={initialPickerIndex}
+          teamPickerDefaults={teamPickerDefaults}
+          teamPickerMin={teamPickerMin}
+          teamPickerMax={teamPickerMax}
+          wildcardPlacement={wildcardPlacement}
+          setWildcardPlacement={setWildcardPlacement}
         />
       }
       {currentPage === 'add-teams' &&

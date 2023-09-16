@@ -11,7 +11,9 @@ import { MatchTree } from '../../shared/models/MatchTree';
 import { bracketConstants } from '../../shared/constants';
 import { DarkModeContext } from '../../shared/context';
 import './UserBracket.scss'
+//@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
+//@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
 
