@@ -16,7 +16,6 @@ export const AddTeamsFinalMatchChildren = (props: MatchBoxChildProps) => {
 		title: bracketTitle
 	} = useContext(BracketMetaContext)
 
-	console.log('AddTeamsFinalMatchChildren', props)
 	return (
 		matchPosition === 'center' ?
 			<>

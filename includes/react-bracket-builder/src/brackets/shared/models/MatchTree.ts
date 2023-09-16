@@ -285,38 +285,36 @@ export class MatchTree {
 		})
 	}
 
-	toMatchReq = (): MatchReq[] => {
-		const root = this.rounds[this.rounds.length - 1].matches[0]
-		if (!root) {
-			return []
-		}
-		const matches: MatchReq[] = []
-		const queue: MatchNode[] = [root]
-		while (queue.length > 0) {
-			const match = queue.shift()
-			if (!match) {
-				continue
+	allTeamsAdded = (): boolean => {
+		return this.everyMatch((match) => {
+			let hasNeededTeams = true
+			if (!match.left && !match.getTeam1()) {
+				hasNeededTeams = false
 			}
+			if (hasNeededTeams && !match.right && !match.getTeam2()) {
+				hasNeededTeams = false
+			}
+			return hasNeededTeams
+		})
+	}
+
+	toMatchReq = (): MatchReq[] => {
+		const matches: MatchReq[] = []
+		this.forEachMatch((match, matchIndex, roundIndex) => {
 			const matchReq: MatchReq = {
 				roundIndex: match.roundIndex,
 				matchIndex: match.matchIndex,
 			}
 			if (!match.left) {
 				matchReq.team1 = match.getTeam1()?.toTeamReq()
-			} else {
-				queue.push(match.left)
 			}
 			if (!match.right) {
 				matchReq.team2 = match.getTeam2()?.toTeamReq()
-			} else {
-				queue.push(match.right)
 			}
 			if (matchReq.team1 || matchReq.team2) {
 				matches.push(matchReq)
 			}
-		}
-		console.log(matches)
-
+		})
 		return matches
 	}
 
@@ -350,6 +348,28 @@ export class MatchTree {
 		})
 		console.log('picks', picks)
 		return picks
+	}
+
+	forEachMatch = (callback: (match: MatchNode, matchIndex: number, roundIndex: number) => void) => {
+		this.rounds.forEach((round, roundIndex) => {
+			round.matches.forEach((match, matchIndex) => {
+				if (!match) {
+					return
+				}
+				callback(match, matchIndex, roundIndex)
+			})
+		})
+	}
+
+	everyMatch = (callback: (match: MatchNode, matchIndex: number, roundIndex: number) => boolean) => {
+		return this.rounds.every((round, roundIndex) => {
+			return round.matches.every((match, matchIndex) => {
+				if (!match) {
+					return true
+				}
+				return callback(match, matchIndex, roundIndex)
+			})
+		})
 	}
 
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
@@ -435,28 +455,6 @@ export class MatchTree {
 	}
 }
 
-// export const linkTeams = (rounds: Round[]) => {
-
-// 	rounds.forEach((round, roundIndex) => {
-// 		round.matches.forEach((match, matchIndex) => {
-// 			if (!match) {
-// 				return
-// 			}
-// 			const { team1Wins, team2Wins } = match
-// 			const team1 = match.getTeam1()
-// 			const team2 = match.getTeam2()
-// 			const team1Winner = team1Wins && team1
-// 			const team2Winner = team2Wins && team2
-
-// 			if (team1Winner) {
-// 				linkParentTeam(team1Winner, matchIndex, roundIndex, rounds)
-// 			} else if (team2Winner) {
-// 				linkParentTeam(team2Winner, matchIndex, roundIndex, rounds)
-// 			}
-// 		})
-// 	})
-// }
-
 export const linkNodes = (rounds: Round[]) => {
 	rounds.forEach((round, roundIndex) => {
 		round.matches.forEach((match, matchIndex) => {
@@ -469,7 +467,6 @@ export const linkNodes = (rounds: Round[]) => {
 		})
 	})
 }
-
 
 export const getParent = (matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null => {
 	if (roundIndex === rounds.length - 1) {
@@ -490,18 +487,6 @@ export const assignMatchToParent = (matchIndex: number, match: MatchNode, parent
 		parent.right = match
 	}
 }
-
-// export const linkParentTeam = (winningTeam: Team, matchIndex: number, roundIndex: number, rounds: Round[]) => {
-// 	const parent = getParent(matchIndex, roundIndex, rounds);
-// 	const leftChild = isLeftChild(matchIndex);
-// 	if (parent) {
-// 		if (leftChild) {
-// 			parent.team1 = winningTeam;
-// 		} else {
-// 			parent.team2 = winningTeam;
-// 		}
-// 	}
-// }
 
 export const isLeftChild = (matchIndex: number): boolean => {
 	return matchIndex % 2 === 0

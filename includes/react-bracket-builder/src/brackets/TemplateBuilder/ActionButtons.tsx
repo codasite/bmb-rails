@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface ActionButtonProps {
+	disabled?: boolean
 	onClick?: () => void
 	children?: React.ReactNode
 	backgroundColor?: string
@@ -29,7 +30,9 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 		borderColor,
 		borderWidth = 1,
 		borderRadius,
-		className
+		className,
+		disabled,
+
 	} = props
 
 	const baseStyles = [
@@ -37,9 +40,9 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 		'tw-flex-row',
 		'tw-items-center',
 		'tw-justify-center',
-		'tw-cursor-pointer',
 	]
 
+	if (!disabled) baseStyles.push('tw-cursor-pointer')
 	if (backgroundColor) baseStyles.push(`tw-bg-${backgroundColor}`)
 	if (textColor) baseStyles.push(`tw-text-${textColor}`)
 	if (gap) baseStyles.push(`tw-gap-${gap}`)
@@ -65,6 +68,7 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 		<button
 			className={styles}
 			onClick={onClick}
+			disabled={disabled}
 		>
 			{children}
 		</button>
@@ -72,27 +76,40 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 }
 
 export const GreenButton = (props: ActionButtonProps) => {
+	const {
+		disabled
+	} = props
+	const background = disabled ? 'transparent' : 'green/15'
+	const border = disabled ? 'white/50' : 'green'
+	const textColor = disabled ? 'white/50' : 'white'
 	return (
 		<ActionButtonBase
 			{...props}
-			backgroundColor='green/15'
+			backgroundColor={background}
 			padding={16}
-			textColor='white'
+			textColor={textColor}
 			borderRadius={8}
-			borderColor='green'
+			borderColor={border}
 		/>
 	)
 }
 
 export const BlueButton = (props: ActionButtonProps) => {
+	const {
+		disabled
+	} = props
+	const background = disabled ? 'transparent' : 'blue/15'
+	const border = disabled ? 'white/50' : 'blue'
+	const textColor = disabled ? 'white/50' : 'white'
+
 	return (
 		<ActionButtonBase
 			{...props}
-			backgroundColor='blue/15'
+			backgroundColor={background}
 			padding={16}
-			textColor='white'
+			textColor={textColor}
 			borderRadius={8}
-			borderColor='blue'
+			borderColor={border}
 		/>
 	)
 }
