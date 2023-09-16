@@ -52,9 +52,6 @@ const BracketTitle = (props) => {
   )
 }
 
-const teamPickerDefaults = [16, 32, 64]
-const teamPickerMin = [1, 17, 33]
-const teamPickerMax = [31, 63, 64]
 
 interface NumTeamsPickerState {
   currentValue: number
@@ -67,6 +64,14 @@ interface NumTeamsPageProps {
   onAddTeamsClick: () => void
   bracketTitle: string
   setBracketTitle: (title: string) => void
+  numTeams: number
+  setNumTeams: (numTeams: number) => void
+  initialPickerIndex?: number
+  teamPickerDefaults: number[]
+  teamPickerMin: number[]
+  teamPickerMax: number[]
+  wildcardPlacement: WildcardPlacement
+  setWildcardPlacement: (placement: WildcardPlacement) => void
 }
 
 export const NumTeamsPage = (props: NumTeamsPageProps) => {
@@ -76,17 +81,23 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     onAddTeamsClick,
     bracketTitle,
     setBracketTitle,
+    numTeams,
+    setNumTeams,
+    initialPickerIndex,
+    teamPickerDefaults,
+    teamPickerMin,
+    teamPickerMax,
+    wildcardPlacement,
+    setWildcardPlacement,
   } = props
 
-  const initialPickerIndex = 0
-  const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
+  // const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
   const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
     teamPickerDefaults.map((val, i) => ({
       currentValue: val,
       selected: i === initialPickerIndex
     }))
   )
-  const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Split)
 
   // Update the global `numTeams` variable whenever picker state changes
   useEffect(() => {
