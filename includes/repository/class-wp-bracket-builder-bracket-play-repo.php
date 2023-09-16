@@ -90,17 +90,25 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		return $picks;
 	}
 
-	public function get_all(array $query_args): array {
+	public function get_all(array|WP_Query $query): array {
+		if ($query instanceof WP_Query) {
+			return $this->plays_from_query($query);
+		}
+
 		$default_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
 			'posts_per_page' => -1,
 			'post_status' => 'publish',
 		];
 
-		$args = array_merge($default_args, $query_args);
+		$args = array_merge($default_args, $query);
 
 		$query = new WP_Query($args);
 
+		return $this->plays_from_query($query);
+	}
+
+	public function plays_from_query(WP_Query $query): array {
 		$plays = [];
 		foreach ($query->posts as $post) {
 			$plays[] = $this->get($post, false, false);
