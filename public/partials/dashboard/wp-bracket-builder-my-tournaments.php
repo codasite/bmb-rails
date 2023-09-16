@@ -8,7 +8,6 @@ require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-
 require_once 'wp-bracket-builder-dashboard-common.php';
 
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 $status = get_query_var('status');
 if (empty($status)) {
@@ -122,13 +121,13 @@ function get_tournament_tag($status) {
 	}
 }
 
-function tournament_list_item($tournament) {
+function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Tournament_Repository $tournament_repo) {
 	// TODO: fix play_repo->get_all_by_tournament
 	// $play_repo->get_all_by_tournament($tournament->id);
 
 	$name = $tournament->title;
 	$num_teams = $tournament->bracket_template->num_teams;
-	$num_plays = 999999; //count($plays);
+	$num_plays = $tournament_repo->get_num_plays($tournament->id);
 	$id = $tournament->id;
 	$completed = $tournament->status === 'complete';
 	$completed = $tournament->status === 'complete';
@@ -169,17 +168,6 @@ function tournament_list_item($tournament) {
 	return ob_get_clean();
 }
 
-function tournament_section($tournaments) {
-	ob_start();
-?>
-	<div class="tw-flex tw-flex-col tw-gap-15">
-		<?php foreach ($tournaments as $tournament) {
-			echo tournament_list_item($tournament);
-		} ?>
-	</div>
-<?php
-	return ob_get_clean();
-}
 ?>
 
 <div class="tw-flex tw-flex-col tw-gap-15">
@@ -195,6 +183,9 @@ function tournament_section($tournaments) {
 		<?php echo wpbb_sort_button('Archive', get_permalink() . "tournaments/?status=archive", $status === 'archive'); ?>
 		<?php echo wpbb_sort_button('Trash', get_permalink() . "tournaments/?status=trash", $status === 'trash'); ?>
 	</div>
-
-	<?php echo tournament_section($tournaments) ?>
+	<div class="tw-flex tw-flex-col tw-gap-15">
+		<?php foreach ($tournaments as $tournament) {
+			echo tournament_list_item($tournament, $tournament_repo);
+		} ?>
+	</div>
 </div>

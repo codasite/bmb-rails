@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
@@ -76,6 +77,25 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			$tournaments[] = $this->get($post, false);
 		}
 		return $tournaments;
+	}
+
+	public function get_num_plays(int|null $tournament_id): int {
+		if ($tournament_id === null) {
+			return 0;
+		}
+		$query = new WP_Query(
+			[
+				'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+				'meta_query' => [
+					[
+						'key' => 'bracket_tournament_id',
+						'value' => $tournament_id,
+					],
+				],
+				'posts_per_page' => -1,
+			]
+		);
+		return $query->found_posts;
 	}
 
 	public function filter($args) {
