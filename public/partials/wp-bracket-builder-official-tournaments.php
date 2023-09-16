@@ -1,40 +1,32 @@
 <?php
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once('shared/wp-bracket-builder-partials-constants.php');
 require_once('shared/wp-bracket-builder-tournaments-common.php');
 
-$tournaments = array(
-	array(
-		"name" => "Lakeside High Football",
-		"id" => 1,
-		"num_teams" => 16,
-		"num_plays" => 3,
-		"completed" => false,
-	),
-	array(
-		"name" => "College Basketball",
-		"id" => 2,
-		"num_teams" => 6,
-		"num_plays" => 999,
-		"completed" => true,
-	),
-	array(
-		"name" => "Midwest Baseball",
-		"id" => 3,
-		"num_teams" => 8,
-		"num_plays" => 103,
-		"completed" => true,
-	),
+$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+$page = get_query_var('paged');
+$status = get_query_var('status');
+
+$filter_status = 'publish';
+if ($status === ALL_STATUS) {
+	$filter_status = 'any';
+} else if ($status === SCORED_STATUS) {
+	$filter_status = 'complete';
+}
+
+$tournaments = $tournament_repo->get_all(
+	[
+		'post_status' => $filter_status,
+		'tag' => 'bmb_official_tourney',
+		'orderby' => 'date',
+		'order' => 'DESC',
+	]
 );
 
-$page = get_query_var('paged');
-function wpbb_get_official_tournaments() {
-	$args = array(
-		'post_type' => 'bracket_tournament',
-		'posts_per_page' => -1,
-	);
-	$tournaments = get_posts($args);
-	return $tournaments;
-}
 
 function wpbb_tournament_sort_buttons() {
 	$all_endpoint = get_permalink();
@@ -61,7 +53,7 @@ function wpbb_tournament_sort_buttons() {
 	<div class="tw-flex tw-flex-col tw-gap-15">
 		<?php echo wpbb_tournament_sort_buttons(); ?>
 		<?php foreach ($tournaments as $tournament) : ?>
-			<?php echo public_tournament_list_item($tournament); ?>
+			<?php echo public_tournament_list_item($tournament, $play_repo); ?>
 		<?php endforeach; ?>
 	</div>
 </div>
