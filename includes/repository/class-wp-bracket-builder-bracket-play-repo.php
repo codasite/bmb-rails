@@ -94,7 +94,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		$default_args = [
 			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
 			'posts_per_page' => -1,
-			'post_status' => 'any',
+			'post_status' => 'publish',
 		];
 
 		$args = array_merge($default_args, $query_args);
@@ -106,6 +106,20 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			$plays[] = $this->get($post, false, false);
 		}
 		return $plays;
+	}
+
+	public function get_count(array $query_args): int {
+		$default_args = [
+			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'posts_per_page' => -1,
+			'post_status' => 'publish',
+		];
+
+		$args = array_merge($default_args, $query_args);
+
+		$query = new WP_Query($args);
+
+		return $query->found_posts;
 	}
 
 	// get all plays for a specific tournament
