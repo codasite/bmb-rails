@@ -1,6 +1,9 @@
 <?php
 require_once('wp-bracket-builder-partials-common.php');
 require_once('wp-bracket-builder-partials-constants.php');
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
 
 function wpbb_sort_button($label, $endpoint, $active = false) {
 	$base_cls = [
@@ -102,7 +105,7 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border tw-rounded-8')) : $btn;
 }
 
-function public_tournament_active_buttons($tournament) {
+function public_tournament_active_buttons(Wp_Bracket_Builder_Bracket_Tournament $tournament) {
 	$tournament_play_link = get_permalink($tournament->id) . '/play';
 	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 	ob_start();
@@ -117,7 +120,7 @@ function public_tournament_active_buttons($tournament) {
 	return ob_get_clean();
 }
 
-function public_tournament_completed_buttons($tournament) {
+function public_tournament_completed_buttons(Wp_Bracket_Builder_Bracket_Tournament $tournament) {
 	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 
 	ob_start();
@@ -130,12 +133,21 @@ function public_tournament_completed_buttons($tournament) {
 	return ob_get_clean();
 }
 
-function public_tournament_list_item($tournament) {
-	$name = $tournament['name'];
-	$num_teams = $tournament['num_teams'];
-	$num_plays = $tournament['num_plays'];
-	$id = $tournament['id'];
-	$completed = $tournament['completed'];
+function public_tournament_list_item(Wp_Bracket_Builder_Bracket_Tournament $tournament, Wp_Bracket_Builder_Bracket_Play_Repository $play_repo = null) {
+	$name = $tournament->title;
+	$num_teams = $tournament->bracket_template->num_teams;
+	$num_plays = $play_repo ? $play_repo->get_count([
+		'meta_query' => [
+			[
+				'key' => 'bracket_tournament_id',
+				'value' => $tournament->id,
+			],
+		],
+	]) : 0;
+
+	$id = $tournament->id;
+	$completed = $tournament->status === 'complete';
+
 	ob_start();
 ?>
 	<div class="tw-border-2 tw-border-solid tw-border-<?php echo $completed ? 'white/15' : 'blue' ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
