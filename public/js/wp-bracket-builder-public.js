@@ -37,6 +37,7 @@
 // Add new values here
 tailwind.config = {
 	prefix: 'tw-',
+	darkMode: 'class',
 	corePlugins: {
 		preflight: false,
 	},
@@ -55,12 +56,14 @@ tailwind.config = {
 			'10': '10px',
 			'11': '11px',
 			'12': '12px',
+			'14': '14px',
 			'15': '15px',
 			'16': '16px',
 			'20': '20px',
 			'24': '24px',
 			'30': '30px',
 			'40': '40px',
+			'50': '50px',
 			'60': '60px',
 			'80': '80px',
 			'section': '1160px',
@@ -71,6 +74,7 @@ tailwind.config = {
 			'off-black': '#000225',
 			'white': '#fff',
 			'green': '#05FF3C',
+			'dark-green': '#00440F',
 			'blue': '#2137ff',
 			'dark-blue': '#0D1454',
 			'dd-blue': '#010433',
@@ -83,11 +87,13 @@ tailwind.config = {
 			'16': '16px',
 		},
 		fontSize: {
+			'10': '10px',
 			'12': '12px',
 			'16': '16px',
 			'20': '20px',
 			'24': '24px',
 			'30': '30px',
+			'36': '36px',
 			'32': '32px',
 			'48': '48px',
 			'60': '60px',
@@ -125,6 +131,9 @@ tailwind.config = {
 				'.border-y-none': {
 					'border-top-style': 'none',
 					'border-bottom-style': 'none',
+				},
+				'.border-b-solid': {
+					'border-bottom-style': 'solid',
 				},
 			}
 			addUtilities(individualBorderStyles)

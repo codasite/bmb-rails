@@ -1,13 +1,12 @@
 import React, { } from 'react';
-import { Nullable } from '../../../utils/types';
-import { Round, MatchNode } from '../models/MatchTree';
-import { MatchBox } from './MatchBox';
-import { TeamSlot } from './TeamSlot'
+import { Nullable } from '../../../../utils/types';
+import { Round, MatchNode } from '../../models/MatchTree';
+import { MatchBox } from '../MatchBox';
+import { TeamSlot } from '../TeamSlot'
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../assets/BMB-ICON-CURRENT.svg';
+import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg';
 //@ts-ignore
-import { Direction } from '../constants'
-import { getMatchBoxHeight } from '../utils'
+import { Direction } from '../../constants'
 
 interface MatchColumnProps {
 	round: Round;
@@ -79,7 +78,7 @@ export const MatchColumn = (props: MatchColumnProps) => {
 					roundIndex={round.depth}
 					matchIndex={matchIndex}
 					bracketName={bracketName}
-					round= {round}
+					round={round}
 				>
 					{finalMatch && showWinnerContainer &&
 						buildWinnerContainer(match, pickedWinner)

@@ -1,23 +1,24 @@
 import { createSlice, PayloadAction, createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../app/store";
 import { MatchTree } from "../models/MatchTree";
-import { RoundRes } from "../api/types/bracket";
+import { MatchTreeRepr } from "../api/types/bracket";
+import { Nullable } from "../../../utils/types";
+
 
 interface MatchTreeState {
-	// matchTree: MatchTree | null
-	rounds: RoundRes[] | null
+	matchTree: MatchTreeRepr | null
 }
 
 const initialState: MatchTreeState = {
-	rounds: null
+	matchTree: null
 }
 
 export const matchTreeSlice = createSlice({
 	name: 'matchTree',
 	initialState,
 	reducers: {
-		setMatchTree: (state, action: PayloadAction<RoundRes[]>) => {
-			state.rounds = action.payload;
+		setMatchTree: (state, action: PayloadAction<Nullable<MatchTreeRepr>>) => {
+			state.matchTree = action.payload;
 		}
 	}
 });
@@ -25,8 +26,8 @@ export const matchTreeSlice = createSlice({
 export const { setMatchTree } = matchTreeSlice.actions;
 
 export const selectMatchTree = createSelector(
-	(state: RootState) => state.matchTree.rounds,
-	rounds => rounds ? MatchTree.fromRounds(rounds) : null
+	(state: RootState) => state.matchTree.matchTree,
+	matchTree => matchTree ? MatchTree.deserialize(matchTree) : null
 )
 
 export default matchTreeSlice.reducer;

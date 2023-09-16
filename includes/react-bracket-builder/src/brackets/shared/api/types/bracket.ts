@@ -1,97 +1,10 @@
 import { Nullable } from '../../../../utils/types';
-
-interface Team {
-	name: string;
-}
-
-export interface TeamRes extends Team {
-	id: Nullable<number>;
-}
-
-export interface TeamReq extends Team { }
-
-interface Match {
-	index: number;
-}
-
-export interface MatchRes extends Match {
-	id: Nullable<number>;
-	team1: Nullable<TeamRes>;
-	team2: Nullable<TeamRes>;
-	result: Nullable<TeamRes>;
-}
-
-export interface MatchReq extends Match {
-	team1: Nullable<TeamReq>;
-	team2: Nullable<TeamReq>;
-	result: Nullable<TeamReq>;
-}
-
-interface Round {
-	name: string;
-	depth: number;
-}
-
-export interface RoundRes extends Round {
-	id: number;
-	matches: Nullable<MatchRes>[];
-}
-
-export interface RoundReq extends Round {
-	matches: Nullable<MatchReq>[];
-}
-
-interface BracketBase {
-	name: string;
-	active: boolean;
-	numRounds: number;
-	numWildcards: number;
-	wildcardPlacement: number;
-}
+import { WildcardPlacement } from '../../models/MatchTree';
 
 interface phpDate {
 	date: string;
 	timezone_type: number;
 	timezone: string;
-}
-
-export interface BracketRes extends BracketBase {
-	id: number;
-	createdAt: phpDate;
-	numSubmissions: number;
-	rounds: RoundRes[];
-}
-
-export interface BracketReq extends BracketBase {
-	rounds: RoundReq[];
-}
-
-export interface SubmissionRes {
-	id: number;
-	// createdAt: phpDate;
-	bracketId: number;
-	customerId: number;
-	name: string;
-	rounds: RoundRes[];
-}
-
-export interface SubmissionReq {
-	bracketId: number;
-	name: string;
-	html: string;
-	rounds?: SubmissionRoundReq[];
-}
-
-export interface SubmissionRoundReq {
-	matches: Nullable<SubmissionMatchReq>[];
-}
-
-export interface SubmissionMatchReq {
-	result: Nullable<SubmissionTeamReq>;
-}
-
-export interface SubmissionTeamReq {
-	id: number;
 }
 
 export interface HTMLtoImageReq {
@@ -107,6 +20,77 @@ export interface HTMLtoImageReq {
 
 export interface HTMLtoImageRes {
 	imageUrl: string;
+}
+
+export interface TeamRes {
+	id: number;
+	name: string;
+}
+
+export interface TeamReq {
+	name: string;
+}
+
+export interface MatchRes {
+	id: number;
+	roundIndex: number;
+	matchIndex: number;
+	team1?: TeamRes;
+	team2?: TeamRes;
+}
+
+export interface MatchReq {
+	roundIndex: number;
+	matchIndex: number;
+	team1?: TeamReq;
+	team2?: TeamReq;
+}
+
+export interface MatchPicks {
+	roundIndex: number;
+	matchIndex: number;
+	winningTeamId: number;
+}
+
+export interface TeamRepr {
+	id?: number;
+	name: string;
+}
+
+export interface MatchTreeRepr {
+	rounds: Nullable<MatchRepr>[][];
+	wildcardPlacement?: WildcardPlacement;
+}
+
+export interface MatchRepr {
+	id?: number;
+	roundIndex: number;
+	matchIndex: number;
+	team1?: TeamRepr;
+	team2?: TeamRepr;
+	team1Wins?: boolean;
+	team2Wins?: boolean;
+}
+
+export interface TemplateReq {
+	title: string;
+	numTeams: number;
+	status?: string;
+	wildcardPlacement: WildcardPlacement;
+	matches: MatchReq[];
+}
+
+export interface TemplateRes {
+	id: number;
+	title: string;
+	numTeams: number;
+	status: string;
+	date: phpDate;
+	dateGmt: phpDate;
+	wildcardPlacement: WildcardPlacement;
+	html: string;
+	imgUrl: string;
+	matches?: MatchRes[];
 }
 
 

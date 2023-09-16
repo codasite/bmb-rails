@@ -20,7 +20,8 @@ export enum Direction {
 }
 
 export const bracketConstants = {
-	teamHeight: 20,
+	teamHeight: 28,
+	teamGap: 20,
 
 	defaultMatchGap: 20,
 	depth4MatchGap: 12,
@@ -32,16 +33,47 @@ export const bracketConstants = {
 	fiveRoundHeight: 806,
 	sixRoundHeight: 1100,
 
+	bracketWidths: [
+		800, // 0 rounds
+		800, // 1 rounds
+		800, // 2 round
+		800, // 3 rounds
+		985, // 4 rounds
+		1023, // 5 rounds
+		1137, // 6 rounds
+	],
+
+	bracketLogoBottom: [
+		-250, // 0 rounds
+		-250, // 1 round
+		-250, // 2 rounds
+		-300, // 3 rounds
+		-300, // 4 rounds
+		-270, // 5 rounds
+		-320, // 6 rounds
+	],
+
+	winnerContainerBottom: [
+		100, // 0 rounds
+		100, // 1 round
+		100, // 2 rounds
+		100, // 3 rounds
+		150, // 4 rounds
+		190, // 5 rounds
+		320, // 6 rounds
+	],
+
+	bracketActionsMarginTop: [
+		220, // 0 rounds
+		220, // 1 round
+		220, // 2 rounds
+		220, // 3 rounds
+		94, // 4 rounds
+		50, // 5 rounds
+		20, // 6 rounds
+	],
+
 	// Window breakpoints
 	paginatedBracketWidth: 768,
-	roundWidth:54,
-
-	team1: 'wpbb-team1',
-	team2: 'wpbb-team2',
-
-	color1: '#FFFFFF1A',
-	color2: '#FFFFFF4D',
-	color3: '#FFFFFF26',
-	previewBracketHeight : 50,
-	previewBracketWidth : 54
+	roundWidth: 54,
 }

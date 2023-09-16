@@ -3,7 +3,7 @@ import { Modal, Table, Button } from 'react-bootstrap';
 import { bracketApi } from '../../shared/api/bracketApi';
 import { SubmissionRes } from '../../shared/api/types/bracket';
 import { Nullable } from '../../../utils/types';
-import { Bracket } from '../../shared/components/Bracket';
+import { Bracket } from '../../shared/components/Bracket/Bracket';
 import { MatchTree } from '../../shared/models/MatchTree';
 // import { BracketRes } from '../../api/types/bracket';
 

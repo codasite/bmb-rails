@@ -1,11 +1,14 @@
 import * as Sentry from '@sentry/react';
 import {
-	BracketReq,
-	BracketRes,
-	SubmissionRes,
-	SubmissionReq,
 	HTMLtoImageReq,
 	HTMLtoImageRes,
+	MatchReq,
+	MatchRes,
+	MatchPicks,
+	TeamReq,
+	TeamRes,
+	TemplateReq,
+	TemplateRes,
 } from './types/bracket';
 
 
@@ -31,31 +34,37 @@ class BracketApi {
 		this.nonce = wpbb_ajax_obj.nonce;
 	}
 
-	async getBrackets(): Promise<BracketRes[]> {
-		return await this.performRequest(this.bracketPath);
-	}
-	async getUserBrackets(): Promise<BracketRes[]> {
-		return await this.performRequest(`${this.bracketPath}/${this.getUserBracketsPath}`);
-	}
+	// async getBrackets(): Promise<BracketRes[]> {
+	// 	return await this.performRequest(this.bracketPath);
+	// }
+	// async getUserBrackets(): Promise<BracketRes[]> {
+	// 	return await this.performRequest(`${this.bracketPath}/${this.getUserBracketsPath}`);
+	// }
 
-	async getBracket(id: number): Promise<BracketRes> {
-		return await this.performRequest(`${this.bracketPath}/${id}`);
-	}
+	// async getBracket(id: number): Promise<BracketRes> {
+	// 	return await this.performRequest(`${this.bracketPath}/${id}`);
+	// }
 
-	async getSubmissions(id?: number | null): Promise<SubmissionRes[]> {
-		const options: RequestOptions = { method: 'GET', body: { bracketId: id } };
-		return await this.performRequest(`${this.submissionPath}`, options);
-	}
+	// async getSubmissions(id?: number | null): Promise<SubmissionRes[]> {
+	// 	const options: RequestOptions = { method: 'GET', body: { bracketId: id } };
+	// 	return await this.performRequest(`${this.submissionPath}`, options);
+	// }
 
-	async getSubmission(id: number): Promise<SubmissionRes> {
-		return await this.performRequest(`${this.submissionPath}/${id}`);
-	}
+	// async getSubmission(id: number): Promise<SubmissionRes> {
+	// 	return await this.performRequest(`${this.submissionPath}/${id}`);
+	// }
 
-	async submitBracket(submission: SubmissionReq): Promise<SubmissionRes> {
-		const options: RequestOptions = { method: 'POST', body: submission };
-		const res = await this.performRequest(this.submissionPath, options);
+	async createTemplate(template: TemplateReq): Promise<TemplateRes> {
+		const options: RequestOptions = { method: 'POST', body: template };
+		const res = await this.performRequest('templates', options);
 		return res;
 	}
+
+	// async submitBracket(submission: SubmissionReq): Promise<SubmissionRes> {
+	// 	const options: RequestOptions = { method: 'POST', body: submission };
+	// 	const res = await this.performRequest(this.submissionPath, options);
+	// 	return res;
+	// }
 
 	async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
 		const options: RequestOptions = { method: 'POST', body: req, snakeCaseBody: false };
@@ -63,22 +72,22 @@ class BracketApi {
 		return res;
 	}
 
-	async createBracket(bracket: BracketReq): Promise<BracketRes> {
-		const options: RequestOptions = { method: 'POST', body: bracket };
-		const res = await this.performRequest(this.bracketPath, options);
-		return res;
-	}
+	// async createBracket(bracket: BracketReq): Promise<BracketRes> {
+	// 	const options: RequestOptions = { method: 'POST', body: bracket };
+	// 	const res = await this.performRequest(this.bracketPath, options);
+	// 	return res;
+	// }
 
-	async deleteBracket(id: number): Promise<boolean> {
-		return await this.performRequest(`${this.bracketPath}/${id}`, { method: 'DELETE', camelCaseResponse: false });
-	}
+	// async deleteBracket(id: number): Promise<boolean> {
+	// 	return await this.performRequest(`${this.bracketPath}/${id}`, { method: 'DELETE', camelCaseResponse: false });
+	// }
 
-	async setActive(id: number, active: boolean): Promise<boolean> {
-		const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
-		const options: RequestOptions = { method: 'POST', camelCaseResponse: false };
-		const res = await this.performRequest(path, options);
-		return res;
-	}
+	// async setActive(id: number, active: boolean): Promise<boolean> {
+	// 	const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
+	// 	const options: RequestOptions = { method: 'POST', camelCaseResponse: false };
+	// 	const res = await this.performRequest(path, options);
+	// 	return res;
+	// }
 	async performRequest(path: string, options: RequestOptions = {}): Promise<any> {
 		let {
 			method = 'GET',
@@ -134,7 +143,7 @@ function toCamelCase(str: string): string {
 }
 
 // Recursive function to convert object keys to camelCase
-function camelCaseKeys(obj: any): any {
+export function camelCaseKeys(obj: any): any {
 	if (Array.isArray(obj)) {
 		return obj.map((value) => camelCaseKeys(value));
 	} else if (typeof obj === 'object' && obj !== null) {

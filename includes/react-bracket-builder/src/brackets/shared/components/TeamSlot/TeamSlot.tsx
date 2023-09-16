@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { MatchNode, Round, Team } from '../models/MatchTree';
+import { MatchNode, Round, Team } from '../../models/MatchTree';
 //@ts-ignore
-import { getTeamClasses } from '../utils';
-import { bracketConstants } from '../constants';
-import { BracketContext } from '../context';
+import { getTeamClasses } from '../../utils';
+import { bracketConstants } from '../../constants';
+import { BracketContext } from '../../context';
 
 interface TeamSlotProps {
 	className?: string;
@@ -74,9 +74,9 @@ export const TeamSlot = (props: TeamSlotProps) => {
 			pickTeam()
 		}
 	}
-	const isReadOnly = (round, match,left) => {
+	const isReadOnly = (round, match, left) => {
 		//in user bracket window all the fields will be read only
-		if(!bracket?.numRounds){
+		if (!bracket?.numRounds) {
 			return
 		}
 		if (round?.depth === (bracket?.numRounds - 1)) {
@@ -95,22 +95,22 @@ export const TeamSlot = (props: TeamSlotProps) => {
 		}
 		return true;
 	}
-	const setBackground = (left) =>{
+	const setBackground = (left) => {
 		//backgroud color will get changed base on user selection on number of teams
 		let backgroundColor = isReadOnly(round, match, left)
-		if(bracket?.canEdit){
-			if(!backgroundColor){
-				return bracketConstants.color3	
+		if (bracket?.canEdit) {
+			if (!backgroundColor) {
+				return bracketConstants.color3
 			}
 		}
 	}
 
 	return (
-		<div className={className} onClick={handleClick} style={{ background :setBackground(left)}}>
-			{editing && !isReadOnly(round, match,left) ?
+		<div className={className} onClick={handleClick} style={{ background: setBackground(left) }}>
+			{editing && !isReadOnly(round, match, left) ?
 				<input
 					className='wpbb-team-name-input'
-					style={{background: 'none', border: 'none', color:'#FFFFFF'}}
+					style={{ background: 'none', border: 'none', color: '#FFFFFF' }}
 					autoFocus
 					onFocus={(e) => e.target.select()}
 					type='text'
@@ -125,7 +125,7 @@ export const TeamSlot = (props: TeamSlotProps) => {
 					}}
 				/>
 				:
-				<span className='wpbb-team-name'>{team ? team.name : (isReadOnly(round, match,left) ? '':textBuffer? textBuffer :'ADD TEAM')}</span>
+				<span className='wpbb-team-name'>{team ? team.name : (isReadOnly(round, match, left) ? '' : textBuffer ? textBuffer : 'ADD TEAM')}</span>
 				// <span className='wpbb-team-name'>{roundIndex}-{matchIndex}-{left ? 'left' : 'right'}</span>
 				// <span className='wpbb-team-name'>Team</span>
 			}

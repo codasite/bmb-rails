@@ -1,17 +1,12 @@
 import { Nullable } from '../../../utils/types';
 import {
-	BracketRes,
-	BracketReq,
-	RoundReq,
-	MatchReq,
 	MatchRes,
+	MatchPicks,
+	MatchRepr,
+	MatchTreeRepr,
+	TeamRepr,
+	MatchReq,
 	TeamReq,
-	TeamRes,
-	SubmissionReq,
-	SubmissionMatchReq,
-	SubmissionRoundReq,
-	SubmissionTeamReq,
-	RoundRes,
 } from '../api/types/bracket';
 
 export enum WildcardPlacement {
@@ -34,375 +29,590 @@ export class Team {
 		return new Team(this.name, this.id);
 	}
 
-	toRequest(): TeamReq {
+	serialize(): TeamRepr {
 		return {
 			name: this.name,
+			id: this.id ? this.id : undefined,
 		}
 	}
 
-	toSubmissionReq(): Nullable<SubmissionTeamReq> {
-		return this.id === null ? null : { id: this.id };
-	}
-
-	toSerializable(): TeamRes {
+	toTeamReq(): TeamReq {
 		return {
 			name: this.name,
-			id: this.id,
 		}
 	}
 }
 
+export interface MatchNodeArgs {
+	id?: number;
+	matchIndex: number;
+	roundIndex: number;
+	team1?: Nullable<Team>;
+	team2?: Nullable<Team>;
+	team1Wins?: boolean;
+	team2Wins?: boolean;
+	left?: Nullable<MatchNode>;
+	right?: Nullable<MatchNode>;
+	parent?: Nullable<MatchNode>;
+	depth: number;
+}
 
 export class MatchNode {
-	id: number | null = null;
-	team1: Nullable<Team> = null;
-	team2: Nullable<Team> = null;
-	result: Nullable<Team> = null;
+	id?: number;
+	matchIndex: number;
+	roundIndex: number;
+	private team1: Nullable<Team> = null;
+	private team2: Nullable<Team> = null;
+	team1Wins?: boolean = false;
+	team2Wins?: boolean = false;
 	left: Nullable<MatchNode> = null;
 	right: Nullable<MatchNode> = null;
 	parent: Nullable<MatchNode> = null;
 	depth: number;
 
-	constructor(id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
-		this.id = id;
+	// constructor(matchIndex, roundIndex, id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
+	constructor(args: MatchNodeArgs) {
+		const {
+			id,
+			matchIndex,
+			roundIndex,
+			team1,
+			team2,
+			team1Wins,
+			team2Wins,
+			left,
+			right,
+			parent,
+			depth,
+		} = args
+
+		this.matchIndex = matchIndex;
+		this.roundIndex = roundIndex;
 		this.depth = depth;
-		this.parent = parent;
+		this.id = id;
+		this.team1Wins = team1Wins;
+		this.team2Wins = team2Wins;
+		this.left = left ? left : null;
+		this.right = right ? right : null;
+		this.parent = parent ? parent : null;
+		this.team1 = team1 ? team1 : null;
+		this.team2 = team2 ? team2 : null;
 	}
 
-	clone(): MatchNode {
-		const match = this;
-		const clone = new MatchNode(this.id, match.depth, match.parent);
+	serialize(): MatchRepr {
+		const {
+			id,
+			matchIndex,
+			roundIndex,
+			team1,
+			team2,
+			team1Wins,
+			team2Wins,
+		} = this
 
-		clone.team1 = match.team1 ? match.team1.clone() : null;
-		clone.team2 = match.team2 ? match.team2.clone() : null;
-
-		if (match.result) {
-			if (match.result === match.team1) {
-				clone.result = clone.team1;
-			} else if (match.result === match.team2) {
-				clone.result = clone.team2;
-			} else {
-			}
-		}
-
-		return clone;
-	}
-
-	toRequest(index: number): MatchReq {
-		const match = this;
 		return {
-			index: index,
-			team1: match.team1 ? match.team1.toRequest() : null,
-			team2: match.team2 ? match.team2.toRequest() : null,
-			result: match.result ? match.result.toRequest() : null,
+			id,
+			matchIndex,
+			roundIndex,
+			team1: team1 ? team1.serialize() : undefined,
+			team2: team2 ? team2.serialize() : undefined,
+			team1Wins,
+			team2Wins,
 		}
 	}
 
-	toSerializable(i: number): MatchRes {
-		const match = this;
-		return {
-			id: match.id,
-			index: i,
-			team1: match.team1 ? match.team1.toSerializable() : null,
-			team2: match.team2 ? match.team2.toSerializable() : null,
-			result: match.result ? match.result.toSerializable() : null,
+	getWinner(): Nullable<Team> {
+		if (this.team1Wins) {
+			return this.getTeam1();
+		} else if (this.team2Wins) {
+			return this.getTeam2();
 		}
-
+		return null;
 	}
 
-	toSubmissionReq(): SubmissionMatchReq {
-		return {
-			result: this.result ? this.result.toSubmissionReq() : null,
+	isLeftChild(): boolean {
+		return this.parent !== null && this.parent.left === this;
+	}
+
+	isRightChild(): boolean {
+		return !this.isLeftChild();
+	}
+
+	getTeam1(): Nullable<Team> {
+		return this.left ? this.left.getWinner() : this.team1;
+	}
+
+	getTeam2(): Nullable<Team> {
+		return this.right ? this.right.getWinner() : this.team2;
+	}
+
+	setTeam1(team: Team): void {
+		this.team1 = team;
+	}
+
+	setTeam2(team: Team): void {
+		this.team2 = team;
+	}
+
+	pick(team: Nullable<Team>): void {
+		if (!team) {
+			return;
+		}
+		this.team1Wins = false;
+		this.team2Wins = false;
+
+		if (this.getTeam1() === team) {
+			this.team1Wins = true;
+		} else if (this.getTeam2() === team) {
+			this.team2Wins = true;
 		}
 	}
 }
 
 export class Round {
-	id: number;
-	name: string;
+	index: number;
 	depth: number;
 	matches: Array<Nullable<MatchNode>>;
 
-	constructor(id: number, name: string, depth: number,) {
-		this.id = id;
-		this.name = name;
+	constructor(index: number, depth: number, matches: Array<Nullable<MatchNode>> = []) {
+		this.index = index;
 		this.depth = depth;
-		// this.matches = [];
+		this.matches = matches;
 	}
 
-	toRequest(): RoundReq {
-		const round = this;
-		const matches = round.matches.map((match, i) => {
-			if (match === null) {
-				return null;
-			}
-			return match.toRequest(i);
-		});
-		return {
-			name: round.name,
-			depth: round.depth,
-			matches: matches,
-		}
-	}
-
-	toSubmissionReq(): SubmissionRoundReq {
-		const round = this;
-		const matches = round.matches.map((match, i) => {
-			if (match === null) {
-				return null;
-			}
-			return match.toSubmissionReq();
-		});
-		return {
-			matches: matches,
-		}
-	}
-
-	toSerializable(): RoundRes {
-		const round = this;
-		const matches = round.matches.map((match, i) => {
-			if (match === null) {
-				return null;
-			}
-			return match.toSerializable(i);
-		});
-		return {
-			id: round.id,
-			name: round.name,
-			depth: round.depth,
-			matches: matches,
-		}
-	}
-
-	isComplete(): boolean {
+	allPicked(): boolean {
 		return this.matches.every((match) => {
 			if (match === null) {
 				return true;
 			}
-			return match.result !== null;
+			return match.team1Wins || match.team2Wins;
 		});
 	}
 
+	serialize(): Nullable<MatchRepr>[] {
+		return this.matches.map((match, i) => {
+			if (match === null) {
+				return null;
+			}
+			return match.serialize();
+		})
+	}
 }
 
-class WildcardRange {
-	constructor(public min: number, public max: number) { }
-
-	toString(): string {
-		return `${this.min}-${this.max}`;
-	}
+interface WildcardRange {
+	min: number;
+	max: number;
 }
 
 export class MatchTree {
-	root: MatchNode | null
 	rounds: Round[]
-	static fromOptions(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): MatchTree {
-		const tree = new MatchTree()
-		tree.rounds = this.buildRounds(numRounds, numWildcards, wildcardPlacement)
-		return tree
+	private numTeams: number
+	private wildcardPlacement?: WildcardPlacement
+
+	constructor(rounds: Round[] = [], wildcardPlacement?: WildcardPlacement) {
+		linkNodes(rounds)
+		this.rounds = rounds
+		this.wildcardPlacement = wildcardPlacement
 	}
 
-	static buildRounds(numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): Round[] {
-		// The number of matches in a round is equal to 2^depth unless it's the first round
-		// and there are wildcards. In that case, the number of matches equals the number of wildcards
-		const rootMatch = new MatchNode(null, 0)
-		const finalRound = new Round(1, `Round ${numRounds}`, 0)
-		finalRound.matches = [rootMatch]
-		const rounds = [finalRound]
-
-		for (let i = 1; i < numRounds; i++) {
-
-			let ranges: WildcardRange[] = []
-
-			if (i === numRounds - 1 && numWildcards > 0) {
-				const placement = wildcardPlacement
-				const maxNodes = 2 ** i
-				const range1 = this.getWildcardRange(0, maxNodes / 2, numWildcards / 2, placement)
-				const range2 = this.getWildcardRange(maxNodes / 2, maxNodes, numWildcards / 2, placement)
-				ranges = [...range1, ...range2]
-			}
-
-			const round = new Round(i + 1, `Round ${numRounds - i}`, i);
-			const maxMatches = 2 ** i
-			const matches: (MatchNode | null)[] = []
-			for (let x = 0; x < maxMatches; x++) {
-				if (ranges.length > 0) {
-					// check to see if x is in the range of any of the wildcard ranges
-					const inRange = ranges.some(range => {
-						return x >= range.min && x < range.max
-					})
-					if (!inRange) {
-						matches[x] = null
-						continue
-					}
-				}
-				// const parentIndex = Math.floor(x / 2)
-				// const parent = rounds[i - 1].matches[parentIndex]
-				const parent = this.getParent(x, i, rounds)
-				const match = new MatchNode(null, i, parent)
-				MatchTree.assignMatchToParent(x, match, parent)
-				matches[x] = match
-			}
-			round.matches = matches
-			rounds[i] = round
-		};
-		return rounds
-	}
-
-
-	static getWildcardRange(start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] {
-		switch (placement) {
-			case WildcardPlacement.Top:
-				return [new WildcardRange(start, start + count)]
-			case WildcardPlacement.Bottom:
-				return [new WildcardRange(end - count, end)]
-			case WildcardPlacement.Center:
-				const offset = (end - start - count) / 2;
-				return [new WildcardRange(start + offset, end - offset)];
-			case WildcardPlacement.Split:
-				return [new WildcardRange(start, start + count / 2), new WildcardRange(end - count / 2, end)]
+	getRootMatch(): Nullable<MatchNode> {
+		const lastRound = this.rounds[this.rounds.length - 1]
+		if (!lastRound) {
+			return null
 		}
+		return lastRound.matches[0]
 	}
 
-	clone(): MatchTree {
-		// State is now maintained by Redux and stored as a serializable object so we can just return this
-		return this
-		// const tree = this
-		// const newTree = new MatchTree()
-		// // First, create the new rounds.
-		// newTree.rounds = tree.rounds.map((round) => {
-		// 	const newRound = new Round(round.id, round.name, round.depth);
-		// 	return newRound;
-		// });
-		// // Then, iterate over the new rounds to create the matches and update their parent relationships.
-		// newTree.rounds.forEach((round, roundIndex) => {
-		// 	round.matches = tree.rounds[roundIndex].matches.map((match, matchIndex) => {
-		// 		if (match === null) {
-		// 			return null;
-		// 		}
-		// 		const newMatch = match.clone();
-		// 		const parent = MatchTree.getParent(matchIndex, roundIndex, newTree.rounds);
-		// 		newMatch.parent = parent;
-		// 		MatchTree.assignMatchToParent(matchIndex, newMatch, parent);
-		// 		return newMatch;
-		// 	});
-		// });
-		// return newTree;
-	}
-
-	static fromRounds(rounds: RoundRes[]): MatchTree {
-		const tree = new MatchTree()
-		tree.rounds = rounds.map((round) => {
-			const newRound = new Round(round.id, round.name, round.depth);
-			return newRound;
-		});
-		// Then, iterate over the new rounds to create the matches and update their parent relationships.
-		tree.rounds.forEach((round, roundIndex) => {
-			round.matches = rounds[roundIndex].matches.map((match, matchIndex) => {
-				if (match === null) {
-					return null;
+	/**
+	 * Returns the total number of POSSIBLE teams in the tournament.
+	 * This should reflect the number of teams that would be used to create the same structure with MatchTree.fromNumTeams()
+	 */
+	getNumTeams(): number {
+		if (this.numTeams) {
+			return this.numTeams
+		}
+		// count all non null matches in the tree
+		const numMatches = this.rounds.reduce((acc, round) => {
+			return acc + round.matches.reduce((acc, match) => {
+				if (match) {
+					return acc + 1
 				}
-				const newMatch = new MatchNode(match.id, roundIndex);
-				newMatch.team1 = match.team1 ? new Team(match.team1.name, match.team1.id) : null;
-				newMatch.team2 = match.team2 ? new Team(match.team2.name, match.team2.id) : null;
-				newMatch.result = match.result ? new Team(match.result.name, match.result.id) : null;
-				const parent = this.getParent(matchIndex, roundIndex, tree.rounds);
-				if (parent) {
-					newMatch.parent = parent;
-					this.assignMatchToParent(matchIndex, newMatch, parent);
-				}
-				return newMatch;
-			});
-		});
-		return tree;
+				return acc
+			}, 0)
+		}, 0)
+
+		const numTeams = numMatches + 1
+		this.numTeams = numTeams
+
+		return numTeams
 	}
 
-	toRequest(name: string, active: boolean, numRounds: number, numWildcards: number, wildcardPlacement: WildcardPlacement): BracketReq {
+	getWildcardPlacement(): WildcardPlacement | undefined {
+		return this.wildcardPlacement
+	}
+
+
+	serialize(): MatchTreeRepr {
 		const tree = this;
 		const rounds = tree.rounds.map((round) => {
-			return round.toRequest();
+			return round.serialize()
 		});
 		return {
 			rounds: rounds,
-			name: name,
-			active: active,
-			numRounds: numRounds,
-			numWildcards: numWildcards,
-			wildcardPlacement: wildcardPlacement,
+			wildcardPlacement: tree.wildcardPlacement
 		}
 	}
 
-	toSubmissionReq(): SubmissionRoundReq[] {
-		const tree = this;
-		const rounds = tree.rounds.map((round) => {
-			return round.toSubmissionReq();
-		});
-		return rounds
-	}
-
-	toSerializable(): RoundRes[] {
-		const tree = this;
-		const rounds = tree.rounds.map((round) => {
-			return round.toSerializable();
-		});
-		return rounds
-	}
-
-	advanceTeam = (depth: number, matchIndex: number, left: boolean) => {
-		const prevRound = this.rounds[depth + 1]
-		// if (prevRound && !prevRound.isComplete()) {
-		// 	return
-		// }
-		const round = this.rounds[depth]
+	advanceTeam = (roundIndex: number, matchIndex: number, left: boolean, requireComplete: boolean = false) => {
+		if (requireComplete && roundIndex > 0) {
+			const prevRound = this.rounds[roundIndex - 1]
+			if (prevRound && !prevRound.allPicked()) {
+				return
+			}
+		}
+		const round = this.rounds[roundIndex]
 		const match = round.matches[matchIndex]
 		if (!match) {
 			return
 		}
-		const team = left ? match.team1 : match.team2
-		if (!team) {
-			return
-		}
-		match.result = team
-		const parent = match.parent
-		if (!parent) {
-			return
-		}
-		if (match === parent.left) {
-			parent.team1 = team
-		} else if (match === parent.right) {
-			parent.team2 = team
+		match.team1Wins = false
+		match.team2Wins = false
+		if (left) {
+			match.team1Wins = true
+		} else {
+			match.team2Wins = true
 		}
 	}
 
-	isComplete = (): boolean => {
-		const finalRound = this.rounds[0]
-		if (!finalRound) {
-			return false
-		}
-		const finalMatch = finalRound.matches[0]
-		if (!finalMatch) {
-			return false
-		}
-		return finalMatch.result !== null
+	allPicked = (): boolean => {
+		return this.rounds.every((round) => {
+			return round.allPicked()
+		})
 	}
 
-	static getParent(matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null {
-		if (roundIndex === 0) {
+	allTeamsAdded = (): boolean => {
+		return this.everyMatch((match) => {
+			let hasNeededTeams = true
+			if (!match.left && !match.getTeam1()) {
+				hasNeededTeams = false
+			}
+			if (hasNeededTeams && !match.right && !match.getTeam2()) {
+				hasNeededTeams = false
+			}
+			return hasNeededTeams
+		})
+	}
+
+	toMatchReq = (): MatchReq[] => {
+		const matches: MatchReq[] = []
+		this.forEachMatch((match, matchIndex, roundIndex) => {
+			const matchReq: MatchReq = {
+				roundIndex: match.roundIndex,
+				matchIndex: match.matchIndex,
+			}
+			if (!match.left) {
+				matchReq.team1 = match.getTeam1()?.toTeamReq()
+			}
+			if (!match.right) {
+				matchReq.team2 = match.getTeam2()?.toTeamReq()
+			}
+			if (matchReq.team1 || matchReq.team2) {
+				matches.push(matchReq)
+			}
+		})
+		return matches
+	}
+
+	toMatchPicks = (): MatchPicks[] => {
+		const picks: MatchPicks[] = []
+		this.rounds.forEach((round, roundIndex) => {
+			round.matches.forEach((match, matchIndex) => {
+				if (!match) {
+					return
+				}
+				const { team1Wins, team2Wins } = match
+				const team1 = match.getTeam1()
+				const team2 = match.getTeam2()
+				const team1Winner = team1Wins && team1
+				const team2Winner = team2Wins && team2
+
+				if (team1Winner && team1.id) {
+					picks.push({
+						roundIndex,
+						matchIndex,
+						winningTeamId: team1.id
+					})
+				} else if (team2Winner && team2.id) {
+					picks.push({
+						roundIndex,
+						matchIndex,
+						winningTeamId: team2.id
+					})
+				}
+			})
+		})
+		console.log('picks', picks)
+		return picks
+	}
+
+	forEachMatch = (callback: (match: MatchNode, matchIndex: number, roundIndex: number) => void) => {
+		this.rounds.forEach((round, roundIndex) => {
+			round.matches.forEach((match, matchIndex) => {
+				if (!match) {
+					return
+				}
+				callback(match, matchIndex, roundIndex)
+			})
+		})
+	}
+
+	everyMatch = (callback: (match: MatchNode, matchIndex: number, roundIndex: number) => boolean) => {
+		return this.rounds.every((round, roundIndex) => {
+			return round.matches.every((match, matchIndex) => {
+				if (!match) {
+					return true
+				}
+				return callback(match, matchIndex, roundIndex)
+			})
+		})
+	}
+
+	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
+		const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
+		return MatchTree.deserialize({
+			rounds: matches,
+			wildcardPlacement,
+		})
+	}
+
+	static fromMatchRes(numTeams: number, matches: MatchRes[], wildcardPlacement?: WildcardPlacement): MatchTree | null {
+		const numRounds = getNumRounds(numTeams)
+
+		try {
+			const nestedMatches = getMatchRepr(numRounds, matches)
+			return MatchTree.deserialize({
+				rounds: nestedMatches,
+				wildcardPlacement,
+			})
+		}
+		catch (e) {
+			console.log(e)
 			return null
 		}
-		const parentIndex = Math.floor(matchIndex / 2)
-		return rounds[roundIndex - 1].matches[parentIndex]
 	}
 
-	static assignMatchToParent(matchIndex: number, match: MatchNode, parent: MatchNode | null) {
-		if (parent === null) {
-			return
+	static fromPicks(numTeams: number, matches: MatchRes[], picks: MatchPicks[], wildcardPlacement?: WildcardPlacement): MatchTree | null {
+		const matchTree = MatchTree.fromMatchRes(numTeams, matches, wildcardPlacement)
+		if (!matchTree) {
+			return null
 		}
-		if (matchIndex % 2 === 0) {
-			parent.left = match
+		for (const pick of picks) {
+			const { roundIndex, matchIndex, winningTeamId } = pick
+			const match = matchTree.rounds[roundIndex].matches[matchIndex]
+			if (!match) {
+				return null
+			}
+			const team1 = match.getTeam1()
+			const team2 = match.getTeam2()
+			if (!team1 || !team2) {
+				return null
+			}
+			if (team1.id === winningTeamId) {
+				match.team1Wins = true
+			} else if (team2.id === winningTeamId) {
+				match.team2Wins = true
+			} else {
+				return null
+			}
+		}
+		return matchTree
+	}
+
+	static deserialize(matchTreeRepr: MatchTreeRepr): MatchTree {
+		const {
+			rounds: matchRes,
+			wildcardPlacement,
+		} = matchTreeRepr
+		const rounds = matchRes.map((round, roundIndex) => {
+			const depth = matchRes.length - roundIndex - 1
+			const newRound = new Round(roundIndex, depth)
+			const matches = round.map((match, matchIndex) => {
+				if (match === null) {
+					return null;
+				}
+				const { id, team1: team1Repr, team2: team2Repr, team1Wins, team2Wins } = match
+				const team1 = team1Repr ? new Team(team1Repr.name, team1Repr.id) : null;
+				const team2 = team2Repr ? new Team(team2Repr.name, team2Repr.id) : null;
+				// const newMatch = new MatchNode(roundIndex, matchIndex, depth, match.id, team1, team2, team1Wins, team2Wins)
+				const newMatch = new MatchNode({
+					id,
+					matchIndex,
+					roundIndex,
+					team1,
+					team2,
+					team1Wins,
+					team2Wins,
+					left: null,
+					right: null,
+					parent: null,
+					depth,
+				})
+				return newMatch;
+			})
+			newRound.matches = matches
+			return newRound;
+		})
+		const tree = new MatchTree(rounds, wildcardPlacement)
+		return tree
+	}
+}
+
+export const linkNodes = (rounds: Round[]) => {
+	rounds.forEach((round, roundIndex) => {
+		round.matches.forEach((match, matchIndex) => {
+			if (!match) {
+				return
+			}
+			const parent = getParent(matchIndex, roundIndex, rounds)
+			match.parent = parent
+			assignMatchToParent(matchIndex, match, parent)
+		})
+	})
+}
+
+export const getParent = (matchIndex: number, roundIndex: number, rounds: Round[]): MatchNode | null => {
+	if (roundIndex === rounds.length - 1) {
+		// last round does not have a parent
+		return null
+	}
+	const parentIndex = Math.floor(matchIndex / 2)
+	return rounds[roundIndex + 1].matches[parentIndex]
+}
+
+export const assignMatchToParent = (matchIndex: number, match: MatchNode, parent: MatchNode | null) => {
+	if (parent === null) {
+		return
+	}
+	if (matchIndex % 2 === 0) {
+		parent.left = match
+	} else {
+		parent.right = match
+	}
+}
+
+export const isLeftChild = (matchIndex: number): boolean => {
+	return matchIndex % 2 === 0
+}
+
+export const getNumRounds = (numTeams: number): number => {
+	return Math.ceil(Math.log2(numTeams))
+}
+
+
+export const getMatchRepr = (numRounds: number, matches: MatchRepr[]) => {
+	const nullableMatches = getNullMatches(numRounds) as Nullable<MatchRepr>[][]
+	for (const match of matches) {
+		if (match.roundIndex >= nullableMatches.length) {
+			throw new Error(`Invalid round index ${match.roundIndex} for match ${match.id}`)
+		}
+		if (match.matchIndex >= nullableMatches[match.roundIndex].length) {
+			throw new Error(`Invalid match index ${match.matchIndex} for match ${match.id}`)
+		}
+		nullableMatches[match.roundIndex][match.matchIndex] = match
+	}
+	const filledMatches = fillInEmptyMatches(nullableMatches)
+
+	return filledMatches
+}
+
+export const getNullMatches = (numRounds: number): null[][] => {
+	let rounds: any[] = []
+	for (let i = numRounds - 1; i >= 0; i--) {
+		rounds.push(new Array(Math.pow(2, i)).fill(null))
+	}
+	return rounds
+}
+
+export const fillInEmptyMatches = (rounds: any[][], roundStart: number = 1): any[][] => {
+	const newRounds = rounds.map((round, roundIndex) => {
+		if (roundIndex < roundStart) {
+			return round
+		}
+		const newRound = round.map((match, matchIndex) => {
+			if (match !== null) {
+				return match
+			}
+			return { roundIndex: roundIndex, matchIndex: matchIndex }
+		})
+		return newRound
+
+	})
+	return newRounds
+}
+
+export const getWildcardRange = (start: number, end: number, count: number, placement: WildcardPlacement): WildcardRange[] => {
+	switch (placement) {
+		case WildcardPlacement.Top:
+			return [{ min: start, max: start + count }]
+		case WildcardPlacement.Bottom:
+			return [{ min: end - count, max: end }]
+		case WildcardPlacement.Center:
+			const offset = (end - start - count) / 2;
+			return [{ min: start + offset, max: end - offset }]
+		case WildcardPlacement.Split:
+			return [{ min: start, max: start + count / 2 }, { min: end - count / 2, max: end }]
+	}
+}
+
+export const getFirstRoundMatches = (numTeams: number, wildcardPlacement?: WildcardPlacement, maxMatches?: number): Nullable<MatchRepr>[] => {
+	// This somehow works to get the number of matches that are not null in the first round
+	if (!maxMatches) {
+		maxMatches = 2 ** (getNumRounds(numTeams) - 1)
+	}
+
+	if (!wildcardPlacement) {
+		wildcardPlacement = WildcardPlacement.Top
+	}
+
+	const matchCount = numTeams - maxMatches
+
+	const leftSideCount = Math.ceil(matchCount / 2)
+	const rightSideCount = Math.floor(matchCount / 2)
+
+	const leftRange = getWildcardRange(0, maxMatches / 2, leftSideCount, wildcardPlacement)
+	const rightRange = getWildcardRange(maxMatches / 2, maxMatches, rightSideCount, wildcardPlacement)
+
+	const ranges = [...leftRange, ...rightRange]
+
+	const matches = Array.from({ length: maxMatches }).map((match, matchIndex) => {
+		const inRange = ranges.some(range => {
+			return matchIndex >= range.min && matchIndex < range.max
+		})
+		if (!inRange) {
+			return null
+		}
+		return { roundIndex: 0, matchIndex: matchIndex }
+
+	})
+
+	return matches
+}
+
+export const matchReprFromNumTeams = (numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): Nullable<MatchRepr>[][] => {
+	const numRounds = getNumRounds(numTeams)
+
+	const rounds = Array.from({ length: numRounds }).map((round, roundIndex) => {
+		const depth = numRounds - roundIndex - 1
+		const maxMatches = 2 ** depth
+		if (roundIndex === 0) {
+			const matches = getFirstRoundMatches(numTeams, wildcardPlacement, maxMatches)
+			return matches
 		} else {
-			parent.right = match
+			const matches = Array.from({ length: maxMatches }).map((match, matchIndex) => {
+				return { roundIndex: roundIndex, matchIndex: matchIndex }
+			})
+			return matches
 		}
-	}
-
+	})
+	return rounds
 }
