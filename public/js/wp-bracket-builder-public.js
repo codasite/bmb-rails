@@ -68,6 +68,10 @@ tailwind.config = {
 			'80': '80px',
 			'section': '1160px',
 		},
+		minWidth: {
+			'20': '20px',
+			'24': '24px',
+		},
 		colors: {
 			'transparent': 'transparent',
 			'black': '#000',

@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once 'wp-bracket-builder-dashboard-common.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'public/partials/shared/wp-bracket-builder-pagination-widget.php';
 
 $template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 
@@ -78,3 +79,8 @@ $create_template_link = get_permalink(get_page_by_path('bracket-template-builder
 	</div>
 
 </div>
+
+<?php
+$num_pages = 10;
+my_pagination_component($num_pages);
+?>
