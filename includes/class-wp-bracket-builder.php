@@ -221,6 +221,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		$this->loader->add_action('init', $plugin_public, 'add_shortcodes');
+		$this->loader->add_action('init', $plugin_public, 'add_rewrite_tags', 10, 0);
 		$this->loader->add_action('init', $plugin_public, 'add_rewrite_rules', 10, 0);
 		$this->loader->add_filter('query_vars', $plugin_public, 'add_query_vars');
 
