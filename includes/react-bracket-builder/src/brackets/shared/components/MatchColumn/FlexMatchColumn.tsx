@@ -7,7 +7,15 @@ import { FlexMatchBox } from '../MatchBox';
 import { FlexTeamSlot } from '../TeamSlot';
 import { WildcardPlacement } from '../../models/MatchTree';
 import { isPowerOfTwo } from '../../utils';
+import { flexBracketConstants } from '../../constants';
 
+const {
+	teamBreakpoints,
+	teamHeights,
+	teamGaps,
+	matchGapMin,
+	matchGapMax,
+} = flexBracketConstants
 
 interface FlexMatchColumnProps {
 	minHeight?: number
@@ -35,6 +43,7 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
 		setMatchTree,
 		MatchBoxComponent = FlexMatchBox,
 		teamGap,
+		matchGap,
 		teamHeight,
 		onTeamClick,
 	} = props
@@ -44,6 +53,10 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
 
 	const outerColumn = matches.find(match => match !== null)?.roundIndex === 0
 	const wildcardPlacement = matchTree.getWildcardPlacement()
+	const numTeams = matchTree.getNumTeams()
+	const teamBreakpointIndex = teamBreakpoints.findIndex((breakpoint) => numTeams <= breakpoint)
+	const minMatchGap = matchGapMin[teamBreakpointIndex]
+	const maxMatchGap = matchGapMax[teamBreakpointIndex]
 	// const wildcardPlacement = WildcardPlacement.Bottom
 
 	if (outerColumn && !isPowerOfTwo(matchTree.getNumTeams())) {
@@ -59,22 +72,22 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
 			{
 				matches.reduce((matchBoxes, match, index) => {
 					if (!match) {
-						if (outerColumn && wildcardPlacement === WildcardPlacement.Split) {
-							matchBoxes.push(<FlexMatchGap maxHeight={32} />)
-						}
-						return matchBoxes
-						// if (outerColumn) {
-						// 	if (wildcardPlacement === WildcardPlacement.Split) {
-						// 		matchBoxes.push(<FlexMatchGap maxHeight={32} />)
-						// 	}
-						// 	else if (wildcardPlacement === WildcardPlacement.Top || wildcardPlacement === WildcardPlacement.Bottom) {
-						// 		matchBoxes.push(<FlexMatchGap minHeight={32} />)
-						// 	}
+						// if (outerColumn && wildcardPlacement === WildcardPlacement.Split) {
+						// 	matchBoxes.push(<FlexMatchGap maxHeight={99} />)
 						// }
+						// return matchBoxes
+						if (outerColumn) {
+							if (wildcardPlacement === WildcardPlacement.Split) {
+								matchBoxes.push(<FlexMatchGap maxHeight={99} />)
+							}
+							// else if (wildcardPlacement === WildcardPlacement.Top || wildcardPlacement === WildcardPlacement.Bottom) {
+							// 	matchBoxes.push(<FlexMatchGap minHeight={matchGap} />)
+							// }
+						}
 						return matchBoxes
 					}
 					if (index > 0) {
-						matchBoxes.push(<FlexMatchGap />)
+						matchBoxes.push(<FlexMatchGap minHeight={minMatchGap} maxHeight={maxMatchGap} />)
 					}
 					matchBoxes.push(
 						<MatchBoxComponent
