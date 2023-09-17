@@ -5,7 +5,7 @@ import {
 	MatchNode,
 	getNumRounds,
 	getNullMatches,
-	getMatchRepr,
+	matchReprFromRes,
 	fillInEmptyMatches,
 	WildcardPlacement,
 	getWildcardRange,
@@ -628,7 +628,7 @@ describe('MatchTree Utils', () => {
 		expect(nullMatches).toEqual(expected)
 	})
 
-	test('testing getMatchRepr', () => {
+	test('testing matchReprFromRes', () => {
 		const numRounds = 2
 		const matches = [
 			{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
@@ -645,11 +645,11 @@ describe('MatchTree Utils', () => {
 			]
 		]
 
-		const matchRepr = getMatchRepr(numRounds, matches)
+		const matchRepr = matchReprFromRes(numRounds, matches)
 		expect(matchRepr).toEqual(expected)
 	})
 
-	test('testing getMatchRepr invalid round index', () => {
+	test('testing matchReprFromRes invalid round index', () => {
 		const numRounds = 2
 		const matches = [
 			{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
@@ -657,12 +657,12 @@ describe('MatchTree Utils', () => {
 		]
 
 		const t = () => {
-			const matchRepr = getMatchRepr(numRounds, matches)
+			const matchRepr = matchReprFromRes(numRounds, matches)
 		}
 		expect(t).toThrowError('Invalid round index 4 for match 10')
 	})
 
-	test('testing getMatchRepr invalid match index', () => {
+	test('testing matchReprFromRes invalid match index', () => {
 		const numRounds = 2
 		const matches = [
 			{ id: 9, roundIndex: 0, matchIndex: 0, team1: { id: 17, name: "Team 1" }, team2: { id: 18, name: "Team 2" } },
@@ -670,9 +670,41 @@ describe('MatchTree Utils', () => {
 		]
 
 		const t = () => {
-			const matchRepr = getMatchRepr(numRounds, matches)
+			const matchRepr = matchReprFromRes(numRounds, matches)
 		}
 		expect(t).toThrowError('Invalid match index 8 for match 10')
+	})
+
+	test('testing matchReprFromRes wildcards', () => {
+		const numRounds = getNumRounds(6)
+		console.log('numRounds', numRounds)
+		const matches =
+			[
+				{ "id": 23, "roundIndex": 0, "matchIndex": 0, "team1": { "id": 45, "name": "asefe" }, "team2": { "id": 46, "name": "fefe" } },
+				{ "id": 24, "roundIndex": 0, "matchIndex": 2, "team1": { "id": 47, "name": "asef" }, "team2": { "id": 48, "name": "feef" } },
+				{ "id": 25, "roundIndex": 1, "matchIndex": 0, "team1": null, "team2": { "id": 49, "name": "asfe" } },
+				{ "id": 26, "roundIndex": 1, "matchIndex": 1, "team1": null, "team2": { "id": 50, "name": "afsef" } }
+			]
+
+		const expected = [
+			[
+				{ id: 23, roundIndex: 0, matchIndex: 0, team1: { id: 45, name: "asefe" }, team2: { id: 46, name: "fefe" } },
+				null,
+				{ id: 24, roundIndex: 0, matchIndex: 2, team1: { id: 47, name: "asef" }, team2: { id: 48, name: "feef" } },
+				null,
+			],
+			[
+				{ id: 25, roundIndex: 1, matchIndex: 0, team2: { id: 49, name: "asfe" } },
+				{ id: 26, roundIndex: 1, matchIndex: 1, team2: { id: 50, name: "afsef" } },
+			],
+			[
+				{ roundIndex: 2, matchIndex: 0 },
+			]
+		]
+
+		const matchRepr = matchReprFromRes(numRounds, matches)
+		expect(matchRepr).toEqual(expected)
+
 	})
 
 	test('testing fillInEmptyMatches', () => {
