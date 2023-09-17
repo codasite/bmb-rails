@@ -54,12 +54,12 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		<div className={`tw-flex tw-flex-col tw-gap-[${teamGap}px] tw-translate-y-[${center ? -offset : 0}px]`}>
 			{getTeamSlot(match.getTeam1(), 'left')}
 			{getTeamSlot(match.getTeam2(), 'right')}
-			<MatchBoxChildComponent
+			{/* <MatchBoxChildComponent
 				match={match}
 				matchTree={matchTree}
 				matchPosition={matchPosition}
 				TeamSlotComponent={TeamSlotComponent}
-			/>
+			/> */}
 		</div>
 	)
 }
