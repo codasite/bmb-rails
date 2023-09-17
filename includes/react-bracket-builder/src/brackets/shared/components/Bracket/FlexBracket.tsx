@@ -11,39 +11,17 @@ import { DarkModeContext } from '../../context';
 import { FlexMatchColumn } from '../MatchColumn'
 import { FlexMatchBox } from '../MatchBox'
 import { FlexTeamSlot } from '../TeamSlot'
-import { bracketConstants } from '../../constants';
+import { flexBracketConstants } from '../../constants';
 
-const teamBreakpoints = [
-	24,
-	48,
-	999,
-]
-
-const teamHeights = [
-	24,
-	12,
-	6,
-]
-
-const teamGaps = [
-	8,
-	4,
-	4,
-]
-
-const matchGaps = [
-	24,
-	12,
-	12,
-]
-
+const {
+	teamBreakpoints,
+	teamHeights,
+	teamGaps,
+	// matchGaps,
+} = flexBracketConstants
 
 export const FlexBracket = (props: BracketProps) => {
 	const {
-		getHeight = getBracketHeight,
-		getWidth = getBracketWidth,
-		getTeamHeight = () => bracketConstants.teamHeight,
-		getTeamGap = () => bracketConstants.teamGap,
 		matchTree,
 		setMatchTree,
 		MatchColumnComponent = FlexMatchColumn,
@@ -55,7 +33,7 @@ export const FlexBracket = (props: BracketProps) => {
 	const getMatchColumns = (
 		rounds: Nullable<MatchNode>[][],
 		position: string,
-		matchGap: number,
+		// matchGap: number,
 		teamGap: number,
 		teamHeight: number
 	): JSX.Element[] => {
@@ -68,7 +46,7 @@ export const FlexBracket = (props: BracketProps) => {
 					matchTree={matchTree}
 					onTeamClick={onTeamClick}
 					setMatchTree={setMatchTree}
-					matchGap={matchGap}
+					// matchGap={matchGap}
 					teamGap={teamGap}
 					teamHeight={teamHeight}
 				/>
@@ -92,11 +70,10 @@ export const FlexBracket = (props: BracketProps) => {
 		const teamBreakpointIndex = teamBreakpoints.findIndex((breakpoint) => numTeams <= breakpoint)
 		const teamHeight = teamHeights[teamBreakpointIndex]
 		const teamGap = teamGaps[teamBreakpointIndex]
-		const matchGap = matchGaps[teamBreakpointIndex]
 
-		const leftMatchColumns = getMatchColumns(leftMatches, 'left', matchGap, teamGap, teamHeight)
-		const rightMatchColumns = getMatchColumns(rightMatches, 'right', matchGap, teamGap, teamHeight)
-		const finalMatchColumn = getMatchColumns([finalMatch], 'center', matchGap, teamGap, teamHeight)
+		const leftMatchColumns = getMatchColumns(leftMatches, 'left', teamGap, teamHeight)
+		const rightMatchColumns = getMatchColumns(rightMatches, 'right', teamGap, teamHeight)
+		const finalMatchColumn = getMatchColumns([finalMatch], 'center', teamGap, teamHeight)
 
 		return [
 			...leftMatchColumns,
@@ -106,7 +83,7 @@ export const FlexBracket = (props: BracketProps) => {
 	}
 
 	return (
-		<div className={`tw-flex tw-justify-between tw-h-full tw-gap-8 md:tw-gap-16 `}>
+		<div className={`tw-flex tw-justify-between tw-gap-8 md:tw-gap-16 `}>
 			{buildMatches(matchTree)}
 		</div>
 	)

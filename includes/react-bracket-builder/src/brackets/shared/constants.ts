@@ -77,3 +77,31 @@ export const bracketConstants = {
 	paginatedBracketWidth: 768,
 	roundWidth: 54,
 }
+
+export const flexBracketConstants = {
+	teamBreakpoints: [
+		24,
+		48,
+		999,
+	],
+	teamHeights: [
+		24,
+		12,
+		6,
+	],
+	teamGaps: [
+		8,
+		4,
+		4,
+	],
+	matchGapMin: [
+		24,
+		8,
+		4,
+	],
+	matchGapMax: [
+		24,
+		8,
+		8,
+	]
+}
