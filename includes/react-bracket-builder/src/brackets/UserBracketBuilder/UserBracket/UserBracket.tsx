@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import * as Sentry from '@sentry/react';
 import { bracketApi } from '../../shared/api/bracketApi';
 import { useWindowDimensions } from '../../../utils/hooks';
@@ -9,7 +9,7 @@ import { setNumPages } from '../../shared/features/bracketNavSlice'
 
 import { MatchTree } from '../../shared/models/MatchTree';
 import { bracketConstants } from '../../shared/constants';
-import { DarkModeContext } from '../../shared/context';
+import { BracketMetaContext, DarkModeContext } from '../../shared/context';
 import './UserBracket.scss'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
@@ -121,6 +121,8 @@ const UserBracket = (props: UserBracketProps) => {
 	// const [matchTree, setMatchTree] = useState<Nullable<MatchTree>>(null);
 	const [processingImage, setProcessingImage] = useState(false);
 	const [darkMode, setDarkMode] = useState(true);
+	const [bracketTitle, setBracketTitle] = useState('');
+	const [bracketDate, setBracketDate] = useState('');
 	const [showPaginated, setShowPaginated] = useState(false);
 	// const { width: windowWidth, height: windowHeight } = useWindowDimensions(); // custom hook to get window dimensions
 	// const rounds = useAppSelector((state) => state.matchTree.rounds);
@@ -132,6 +134,7 @@ const UserBracket = (props: UserBracketProps) => {
 			const template = tournament.bracketTemplate;
 			const numTeams = template.numTeams;
 			const matches = template.matches;
+			setBracketTitle(tournament.title)
 			const tree = MatchTree.fromMatchRes(numTeams, matches);
 			if (tree) {
 				dispatch(setMatchTree(tree.serialize()))
@@ -144,6 +147,7 @@ const UserBracket = (props: UserBracketProps) => {
 			const numTeams = template.numTeams;
 			const matches = template.matches;
 			const tree = MatchTree.fromMatchRes(numTeams, matches);
+			setBracketTitle(template.title)
 			console.log('tree', tree)
 			if (tree) {
 				dispatch(setMatchTree(tree.serialize()))
@@ -290,12 +294,14 @@ const UserBracket = (props: UserBracketProps) => {
 		const actionButtonMargin = bracketConstants.bracketActionsMarginTop[numRounds]
 
 		return (
-			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-gap-[${actionButtonMargin}px]`}>
+			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-gap-100`}>
 				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
-				<PickableBracket
-					matchTree={matchTree}
-					setMatchTree={(matchTree: MatchTree) => dispatch(setMatchTree(matchTree.serialize()))}
-				/>
+				<div className='tw-flex tw-flex-col tw-justify-center tw-items-center tw-min-h-[500px] tw-m-auto tw-z-10'>
+					<PickableBracket
+						matchTree={matchTree}
+						setMatchTree={(matchTree: MatchTree) => dispatch(setMatchTree(matchTree.serialize()))}
+					/>
+				</div>
 				<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
 			</div>
 		)
@@ -315,14 +321,16 @@ const UserBracket = (props: UserBracketProps) => {
 	}
 
 	return (
-		<DarkModeContext.Provider value={darkMode}>
-			{/* <div className='tw-h-[800px] tw-bg-[url("http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/bracket-bg-dark.png")]'> */}
-			<div className={`wpbb-reset tw-uppercase tw-relative tw-pt-[160px] tw-pb-[100px] tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
-				{renderPlayTournamentBracket(bracketProps)}
-				{/* {showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)} */}
+		<BracketMetaContext.Provider value={{ title: bracketTitle, date: bracketDate }}>
+			<DarkModeContext.Provider value={darkMode}>
+				{/* <div className='tw-h-[800px] tw-bg-[url("http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/bracket-bg-dark.png")]'> */}
+				<div className={`wpbb-reset tw-uppercase tw-relative tw-pt-[140px] tw-pb-[100px] tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
+					{renderPlayTournamentBracket(bracketProps)}
+					{/* {showPaginated ? renderPaginatedBracket(bracketProps) : renderPairedBracket(bracketProps)} */}
 
-			</div>
-		</DarkModeContext.Provider>
+				</div>
+			</DarkModeContext.Provider>
+		</BracketMetaContext.Provider>
 	)
 }
 
