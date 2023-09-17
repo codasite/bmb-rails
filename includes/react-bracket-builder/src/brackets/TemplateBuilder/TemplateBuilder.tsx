@@ -52,7 +52,8 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       title: bracketTitle,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
-      matches: matchTree.toMatchReq()
+      matches: matchTree.toMatchReq(),
+      status: 'publish',
     }
     console.log(req)
     console.log(JSON.stringify(req))

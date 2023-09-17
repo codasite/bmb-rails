@@ -14,6 +14,7 @@ interface WpbbAjaxObj {
 	nonce: string;
 	rest_url: string;
 	tournament: any;
+	template: any;
 	bracket_url_theme_map: OverlayUrlThemeMap;
 	css_url: string;
 	bracket_product_archive_url: string;
@@ -67,11 +68,14 @@ const TemplateBuilder = React.lazy(() => import('./brackets/TemplateBuilder/Temp
 // Get the wpbb_ajax_obj from the global scope
 
 renderSettings(wpbb_ajax_obj)
-renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderPreview(wpbb_ajax_obj)
-// renderOptionsTree()
+renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderTemplateBuilder(wpbb_ajax_obj)
+renderPlayTemplate(wpbb_ajax_obj)
 
+/**
+ * This renders the bracket builder admin page. DEPRECATED
+ */
 function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	const page = wpbb_ajax_obj.page
 
@@ -81,6 +85,9 @@ function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 	}
 }
 
+/**
+ * This renders the create template builder page
+ */
 function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	const templateBuilder = document.getElementById('wpbb-template-builder')
 	const {
@@ -99,13 +106,33 @@ function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	}
 }
 
-// function renderOptionsTree() {
-// 	const optionsBuilder = document.getElementById('wpbb-bracket-option-preview')
-// 	if (optionsBuilder) {
-// 		render(<App><Provider store={bracketBuilderStore}><Options /></Provider></App >, optionsBuilder);
-// 	}
-// }
+/**
+ * This renders the play template page
+ */
+function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
+	const builderDiv = document.getElementById('wpbb-play-template')
+	const {
+		template,
+		bracket_product_archive_url,
+		css_url,
+	} = wpbb_ajax_obj
 
+	const temp = camelCaseKeys(template)
+
+	if (builderDiv && temp) {
+		console.log('rendering play template')
+		render(
+			<App>
+				<Provider store={bracketBuilderStore}>
+					<UserBracket bracketStylesheetUrl={css_url} template={temp} apparelUrl={bracket_product_archive_url} />
+				</Provider>
+			</App>, builderDiv)
+	}
+}
+
+/**
+ * This renders the play tournament page
+ */
 function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-play-tournament-builder')
 	const {
@@ -127,6 +154,9 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	}
 }
 
+/**
+ * This loads the apparel preview component for the bracket product page.
+ */
 function renderPreview(wpbb_ajax_obj: WpbbAjaxObj) {
 	const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
 
@@ -144,7 +174,3 @@ function renderPreview(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(<App><Gallery overlayThemeMap={bracket_url_theme_map} galleryImages={gallery_images} colorOptions={color_options} /> </App>, previewDiv);
 	}
 }
-
-
-
-

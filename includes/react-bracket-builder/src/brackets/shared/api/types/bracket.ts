@@ -35,8 +35,8 @@ export interface MatchRes {
 	id: number;
 	roundIndex: number;
 	matchIndex: number;
-	team1?: TeamRes;
-	team2?: TeamRes;
+	team1?: Nullable<TeamRes>;
+	team2?: Nullable<TeamRes>;
 }
 
 export interface MatchReq {

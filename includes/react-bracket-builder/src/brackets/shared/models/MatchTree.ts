@@ -389,7 +389,7 @@ export class MatchTree {
 		const numRounds = getNumRounds(numTeams)
 
 		try {
-			const nestedMatches = getMatchRepr(numRounds, matches)
+			const nestedMatches = matchReprFromRes(numRounds, matches)
 			return MatchTree.deserialize({
 				rounds: nestedMatches,
 				wildcardPlacement,
@@ -509,7 +509,7 @@ export const getNumRounds = (numTeams: number): number => {
 }
 
 
-export const getMatchRepr = (numRounds: number, matches: MatchRepr[]) => {
+export const matchReprFromRes = (numRounds: number, matches: MatchRes[]) => {
 	const nullableMatches = getNullMatches(numRounds) as Nullable<MatchRepr>[][]
 	for (const match of matches) {
 		if (match.roundIndex >= nullableMatches.length) {
@@ -518,7 +518,17 @@ export const getMatchRepr = (numRounds: number, matches: MatchRepr[]) => {
 		if (match.matchIndex >= nullableMatches[match.roundIndex].length) {
 			throw new Error(`Invalid match index ${match.matchIndex} for match ${match.id}`)
 		}
-		nullableMatches[match.roundIndex][match.matchIndex] = match
+		// Filter out null teams
+		const repr = Object.entries(match).reduce((rep, [key, value]) => {
+			if (value === null) {
+				return rep
+			}
+			return {
+				...rep,
+				[key]: value
+			}
+		}, {} as MatchRepr)
+		nullableMatches[match.roundIndex][match.matchIndex] = repr
 	}
 	const filledMatches = fillInEmptyMatches(nullableMatches)
 
