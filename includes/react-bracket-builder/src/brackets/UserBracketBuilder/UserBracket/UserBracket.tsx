@@ -298,12 +298,10 @@ const UserBracket = (props: UserBracketProps) => {
 				<div className='tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center'>
 					<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
 				</div>
-				{/* <div className='tw-flex tw-flex-col tw-justify-center tw-items-center tw-min-h-[500px] tw-m-auto'> */}
 				<PickableBracket
 					matchTree={matchTree}
 					setMatchTree={(matchTree: MatchTree) => dispatch(setMatchTree(matchTree.serialize()))}
 				/>
-				{/* </div> */}
 				<div className='tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center'>
 					<ApparelButton disabled={disableActions} loading={processingImage} onClick={handleApparelClick} />
 				</div>
