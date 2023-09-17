@@ -66,6 +66,7 @@ tailwind.config = {
 			'50': '50px',
 			'60': '60px',
 			'80': '80px',
+			'100': '100px',
 			'section': '1160px',
 		},
 		minWidth: {
