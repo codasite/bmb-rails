@@ -22,7 +22,7 @@ function host_tournament_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function template_list_item($template) {
+function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 	$name = $template->title;
 	$id = $template->id;
 	$num_teams = $template->num_teams;
@@ -31,7 +31,8 @@ function template_list_item($template) {
 	// This link executes a POST request to delete the template. It should prompt the user to confirm the deletion
 	$delete_link = get_permalink() . 'templates/delete';
 	// This link leads to the Play Bracket page. It passes in the template_id as a query param
-	$template_play_link = get_permalink() . 'templates/play?template_id=' . $id;
+	// $template_play_link = get_permalink() . 'templates/play?template_id=' . $id;
+	$template_play_link = get_permalink($template->id);
 	// This link creates a tournamnent from the template. Instead of a link, it should be a button that makes a POST request
 	$template_host_link = get_permalink() . 'tournaments/host?template_id=' . $id;
 	ob_start();

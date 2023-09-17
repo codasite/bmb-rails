@@ -99,6 +99,7 @@ interface UserBracketProps {
 	apparelUrl: string;
 	bracketStylesheetUrl: string;
 	tournament?: any;
+	template?: any;
 }
 
 interface RenderBracketProps {
@@ -112,6 +113,7 @@ interface RenderBracketProps {
 const UserBracket = (props: UserBracketProps) => {
 	const {
 		tournament,
+		template,
 		apparelUrl,
 		bracketStylesheetUrl,
 	} = props;
@@ -126,9 +128,19 @@ const UserBracket = (props: UserBracketProps) => {
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		console.log('tournament', tournament)
 		if (tournament && tournament.bracketTemplate) {
 			const template = tournament.bracketTemplate;
+			const numTeams = template.numTeams;
+			const matches = template.matches;
+			const tree = MatchTree.fromMatchRes(numTeams, matches);
+			if (tree) {
+				dispatch(setMatchTree(tree.serialize()))
+			}
+			// Better to have separate components for template and tournament
+		} else if (template) {
+			console.log('rendering template')
+			console.log(template)
+			console.log(JSON.stringify(template))
 			const numTeams = template.numTeams;
 			const matches = template.matches;
 			const tree = MatchTree.fromMatchRes(numTeams, matches);
@@ -137,16 +149,7 @@ const UserBracket = (props: UserBracketProps) => {
 				dispatch(setMatchTree(tree.serialize()))
 			}
 		}
-		// if (bracketId) {
-		// 	bracketApi.getBracket(bracketId).then((res) => {
-		// 		// setMatchTree(MatchTree.fromRounds(res.rounds));
-		// 		dispatch(setMatchTree(res.rounds))
-		// 	});
-		// } else if (bracketRes) {
-		// 	// setMatchTree(MatchTree.fromRounds(bracketRes.rounds));
-		// 	dispatch(setMatchTree(bracketRes.rounds))
-		// }
-	}, [tournament]);
+	}, []);
 
 	useEffect(() => {
 		if (matchTree) {

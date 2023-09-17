@@ -282,7 +282,7 @@ class Wp_Bracket_Builder_Public {
 	?>
 		<div id="wpbb-bracket-manager-preview" style="width: 100%">
 		</div>
-<?php
+	<?php
 		return ob_get_clean();
 	}
 
@@ -356,6 +356,50 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_play_template() {
+		$post = get_post();
+		if (!$post || $post->post_type !== 'bracket_template') {
+			return
+				'<div class="alert alert-danger" role="alert">
+					Template not found.
+				</div>';
+		}
+		$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$template = $template_repo->get(post: $post);
+
+		$bracket_product_archive_url = $this->get_archive_url();
+		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
+
+		wp_localize_script(
+			'wpbb-bracket-builder-react',
+			'wpbb_ajax_obj',
+			array(
+				'template' => $template,
+				// 'sentry_env' => $sentry_env,
+				// 'sentry_dsn' => $sentry_dsn,
+				'nonce' => wp_create_nonce('wp_rest'),
+				// 'page' => 'user-bracket',
+				// 'ajax_url' => admin_url('admin-ajax.php'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+				// 'post' => $post,
+				// 'bracket' => $bracket,
+				'css_file' => $css_file,
+				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+
+				// // For product page
+				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
+				// 'gallery_images' => $gallery_images,
+				// 'color_options' => $color_options,
+			)
+		);
+		ob_start();
+	?>
+		<div id="wpbb-play-template">
+		</div>
+<?php
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -363,6 +407,7 @@ class Wp_Bracket_Builder_Public {
 	 */
 	public function add_shortcodes() {
 		add_shortcode('wpbb-play-tournament-builder', [$this, 'render_play_tourney_builder']);
+		add_shortcode('wpbb-play-template', [$this, 'render_play_template']);
 		add_shortcode('wpbb-template-builder', [$this, 'render_template_builder']);
 		// add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
 		// add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
