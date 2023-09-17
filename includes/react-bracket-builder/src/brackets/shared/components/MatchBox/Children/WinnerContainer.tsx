@@ -28,8 +28,8 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
 	const numRounds = matchTree.rounds.length
 
 	return (
-		<div className={`tw-flex tw-flex-col tw-gap-16 tw-absolute tw-bottom-[${bottom[numRounds]}px] tw-items-center tw-left-[50%] tw-translate-x-[-50%]`}>
-			<span className={`tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-whitespace-nowrap`}>{topText}</span>
+		<div className={`tw-flex tw-flex-col tw-gap-24 tw-items-center`}>
+			<span className={`tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-max-w-[700px] tw-text-center tw-leading-none`}>{topText}</span>
 			<TeamSlotComponent
 				match={match}
 				matchTree={matchTree}

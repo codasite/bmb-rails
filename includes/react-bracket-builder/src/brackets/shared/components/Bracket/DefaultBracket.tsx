@@ -9,12 +9,14 @@ import {
 } from '../../utils'
 import { Nullable } from '../../../../utils/types';
 import { BracketProps } from '../types';
-import { DarkModeContext } from '../../context';
+import { BracketMetaContext, DarkModeContext } from '../../context';
 import { DefaultMatchColumn } from '../MatchColumn/DefaultMatchColumn';
 import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox';
 import { DefaultTeamSlot } from '../TeamSlot';
 import { bracketConstants } from '../../constants';
 import { useWindowDimensions } from '../../../../utils/hooks';
+import { WinnerContainer } from '../MatchBox/Children/WinnerContainer';
+import { LogoContainer } from '../MatchBox/Children/LogoContainer';
 
 export const DefaultBracket = (props: BracketProps) => {
 	const {
@@ -26,7 +28,7 @@ export const DefaultBracket = (props: BracketProps) => {
 		setMatchTree,
 		MatchColumnComponent = DefaultMatchColumn,
 		MatchBoxComponent,
-		TeamSlotComponent,
+		TeamSlotComponent = DefaultTeamSlot,
 		MatchBoxChildComponent,
 		onTeamClick,
 		lineStyle,
@@ -89,9 +91,41 @@ export const DefaultBracket = (props: BracketProps) => {
 
 	const width = getWidth(matchTree.rounds.length)
 
+	const {
+		date: bracketDate,
+		title: bracketTitle
+	} = useContext(BracketMetaContext)
+
+	const rootMatch = matchTree.getRootMatch()
+
 	return (
-		<div className={`tw-flex tw-justify-between tw-relative tw-w-[${width}px]`}>
-			{buildMatches(matchTree.rounds)}
+		<div className='tw-flex tw-flex-col'>
+			{
+				rootMatch &&
+				<div className='tw-mb-[95px]'>
+
+					<WinnerContainer
+						match={rootMatch}
+						matchTree={matchTree}
+						matchPosition='center'
+						TeamSlotComponent={TeamSlotComponent}
+						topText={bracketTitle}
+					/>
+				</div>
+			}
+			<div className='tw-flex tw-flex-col tw-justify-center tw-h-100'>
+				<div className={`tw-flex tw-justify-between tw-relative tw-w-[${width}px]`}>
+					{buildMatches(matchTree.rounds)}
+				</div>
+			</div>
+			{
+				<div className='tw-mt-20'>
+					<LogoContainer
+						{...props}
+						bottomText={'March 2023'}
+					/>
+				</div>
+			}
 			<BracketLines
 				rounds={matchTree.rounds}
 				style={linesStyle}
