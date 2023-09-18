@@ -4,7 +4,7 @@ import LineTo, { SteppedLineTo } from 'react-lineto';
 import { useWindowDimensions } from '../../../../utils/hooks';
 //@ts-ignore
 import { MatchColumn } from '../../../shared/components/MatchColumn'
-import { Direction, bracketConstants } from '../../../shared/constants'
+import { Direction, defaultBracketConstants } from '../../../shared/constants'
 import { BracketContext, DarkModeContext } from '../../../shared/context';
 import {
 	getTargetHeight,
@@ -17,7 +17,7 @@ import {
 
 const {
 	teamHeight,
-} = bracketConstants
+} = defaultBracketConstants
 
 interface PairedBracketProps {
 	matchTree: MatchTree;

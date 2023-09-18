@@ -3,7 +3,7 @@ import { ActionButton } from '../../../shared/components/ActionButton'
 import LineTo, { SteppedLineTo } from 'react-lineto';
 import { MatchTree, Round, MatchNode, Team } from '../../../shared/models/MatchTree';
 import { MatchColumn } from '../../../shared/components/MatchColumn'
-import { Direction, bracketConstants } from '../../../shared/constants'
+import { Direction, defaultBracketConstants } from '../../../shared/constants'
 import { Nullable } from '../../../../utils/types';
 import { useAppSelector, useAppDispatch } from '../../../shared/app/hooks'
 import { nextPage, selectCurrentPage, selectNumPages } from '../../../shared/features/bracketNavSlice';
@@ -20,7 +20,7 @@ import { BracketContext, DarkModeContext } from '../../../shared/context';
 
 const {
 	teamHeight,
-} = bracketConstants
+} = defaultBracketConstants
 
 
 const PaginatedRoundHeader = (props) => {
@@ -182,19 +182,19 @@ const PaginatedMatchColumn = (props: PaginatedMatchColumnProps) => {
 	const matchHeight = getMatchBoxHeight(round.depth)
 	const matchSpacing = totalMatchHeight - matchHeight
 	return (
-		<BracketContext.Provider value={{numRounds:numRounds, canEdit: true}}>
-		<MatchColumn
-			round={round}
-			matchStartIndex={matchStart}
-			matches={matches}
-			direction={direction}
-			matchBoxHeight={matchHeight}
-			matchBoxSpacing={matchSpacing}
-			showBracketLogo={showBracketLogo}
-			showWinnerContainer={showWinnerContainer}
-			paddingBottom={paddingBottom}
-			pickTeam={pickTeam}
-		/>
+		<BracketContext.Provider value={{ numRounds: numRounds, canEdit: true }}>
+			<MatchColumn
+				round={round}
+				matchStartIndex={matchStart}
+				matches={matches}
+				direction={direction}
+				matchBoxHeight={matchHeight}
+				matchBoxSpacing={matchSpacing}
+				showBracketLogo={showBracketLogo}
+				showWinnerContainer={showWinnerContainer}
+				paddingBottom={paddingBottom}
+				pickTeam={pickTeam}
+			/>
 		</BracketContext.Provider>
 	)
 }
