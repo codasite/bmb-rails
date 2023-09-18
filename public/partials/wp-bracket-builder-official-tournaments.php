@@ -23,7 +23,7 @@ $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $the_query = new WP_Query([
 	'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
-	'tag' => 'bmb_official_tourney',
+	// 'tag' => 'bmb_official_tourney',
 	'posts_per_page' => 8,
 	'paged' => $paged,
 	'post_status' => $filter_status,

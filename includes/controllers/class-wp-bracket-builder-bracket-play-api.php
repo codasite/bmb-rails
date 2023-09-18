@@ -140,8 +140,12 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	 */
 	public function get_items($request) {
 		// $bracket_id = $request->get_param('bracket_id');
+		$the_query = new WP_Query([
+			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'post_status' => 'any'
+		]);
 
-		$brackets = $this->play_repo->get_all();
+		$brackets = $this->play_repo->get_all($the_query);
 		return new WP_REST_Response($brackets, 200);
 	}
 
