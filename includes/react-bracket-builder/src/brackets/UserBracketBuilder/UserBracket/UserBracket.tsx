@@ -288,10 +288,7 @@ const UserBracket = (props: UserBracketProps) => {
 		// const disableActions = matchTree === null || !matchTree.allPicked() || processingImage
 		const disableActions = false;
 		// const disableActions = processingImage
-		const numRounds = matchTree?.rounds.length;
 		// const pickedWinner = matchTree?.allPicked();
-		console.log('numRounds', numRounds)
-		const actionButtonMargin = defaultBracketConstants.bracketActionsMarginTop[numRounds]
 
 		return (
 			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}>

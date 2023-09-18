@@ -92,6 +92,16 @@ export const defaultBracketConstants = {
 	// Window breakpoints
 	paginatedBracketWidth: 768,
 	roundWidth: 54,
+
+	bracketActionsMarginTop: [
+		220, // 0 rounds
+		220, // 1 round
+		220, // 2 rounds
+		220, // 3 rounds
+		94, // 4 rounds
+		50, // 5 rounds
+		20, // 6 rounds
+	],
 }
 
 export const flexBracketConstants = {
