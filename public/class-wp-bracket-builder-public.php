@@ -406,17 +406,13 @@ class Wp_Bracket_Builder_Public {
 	 * @return void
 	 */
 	public function add_shortcodes() {
-		add_shortcode('wpbb-play-tournament-builder', [$this, 'render_play_tourney_builder']);
-		add_shortcode('wpbb-play-template', [$this, 'render_play_template']);
-		add_shortcode('wpbb-template-builder', [$this, 'render_template_builder']);
-		// add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_preview']);
-		// add_shortcode('wpbb-options-bracket', [$this, 'render_options_bracket_preview']);
-		// add_shortcode('wpbb-bracket-manager', [$this, 'render_bracket_manager']);
-		// add_shortcode('wpbb-tournament-leaderboard', [$this, 'render_tourney_leaderboard']);
-		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']);
-		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']);
-		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']);
-		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament']);
+		// add_shortcode('wpbb-play-tournament-builder', [$this, 'render_play_tourney_builder']); // This page is now included in the wpbb-bracket-tournament shortcode
+		add_shortcode('wpbb-play-template', [$this, 'render_play_template']); // This is a single post type template for bracket_template posts
+		add_shortcode('wpbb-template-builder', [$this, 'render_template_builder']); // This is a page with slug `bracket-template-builder
+		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']); // This is a page with slug `dashboard`
+		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']); // This is a page with slug `official-tournaments`
+		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']); // This is a page with slug `celebrity-picks`
+		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament']); // This is a single post type template for bracket_tournament posts
 	}
 
 	public function add_rewrite_tags() {
@@ -425,8 +421,7 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	public function add_rewrite_rules() {
-
-
+		// Be sure to flush the rewrite rules after adding new rules
 		add_rewrite_rule('^dashboard/profile/?', 'index.php?pagename=dashboard&tab=profile', 'top');
 		add_rewrite_rule('^dashboard/templates/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=templates&paged=$matches[1]', 'top');
 		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
