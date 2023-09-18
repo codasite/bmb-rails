@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { MatchNode, Round, Team, MatchTree } from '../../models/MatchTree';
-import { Direction, bracketConstants } from '../../constants'
+import { Direction, defaultBracketConstants } from '../../constants'
 import { MatchBoxProps, TeamSlotProps } from '../types';
 import { Nullable } from '../../../../utils/types';
 import { getUniqueTeamClass } from '../../utils';
@@ -19,9 +19,10 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		matchTree,
 		setMatchTree,
 		TeamSlotComponent = DefaultTeamSlot,
-		MatchBoxChildComponent = DefaultFinalMatchChildren,
 		teamGap = 20,
 		teamHeight = 28,
+		teamWidth = 115,
+		teamFontSize,
 		onTeamClick,
 	} = props
 
@@ -44,6 +45,8 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 				matchPosition={matchPosition}
 				teamPosition={teamPosition}
 				height={teamHeight}
+				width={teamWidth}
+				fontSize={teamFontSize}
 				onTeamClick={onTeamClick}
 			/>
 		)
@@ -54,12 +57,6 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 		<div className={`tw-flex tw-flex-col tw-gap-[${teamGap}px] tw-translate-y-[${center ? -offset : 0}px]`}>
 			{getTeamSlot(match.getTeam1(), 'left')}
 			{getTeamSlot(match.getTeam2(), 'right')}
-			{/* <MatchBoxChildComponent
-				match={match}
-				matchTree={matchTree}
-				matchPosition={matchPosition}
-				TeamSlotComponent={TeamSlotComponent}
-			/> */}
 		</div>
 	)
 }

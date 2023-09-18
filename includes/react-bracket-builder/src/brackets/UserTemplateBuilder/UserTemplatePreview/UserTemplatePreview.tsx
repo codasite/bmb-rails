@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { Form } from 'react-bootstrap';
 import { Nullable } from '../../../utils/types';
 import { MatchTree, Round, MatchNode, Team, WildcardPlacement } from '../../shared/models/MatchTree'
-import { bracketConstants } from '../../shared/constants';
+import { defaultBracketConstants } from '../../shared/constants';
 import { BracketContext } from '../../shared/context';
 // Direction enum
 enum Direction {
@@ -72,30 +72,30 @@ const MatchBox = (props: MatchBoxProps) => {
 
     const setColor = (round, match, className) => {
 
-		if(!bracket?.numRounds){
-			return bracketConstants.color2;
-		}
-		if (round?.depth === (bracket?.numRounds - 1)) {
-			return bracketConstants.color2;
-		}
-		else if (round?.depth === (bracket?.numRounds - 2)) {
-			if (match.left == null && className == bracketConstants.team1) {
-				return bracketConstants.color2;
-			}
-			else if (match.right == null && className == bracketConstants.team2) {
-				return bracketConstants.color2;
-			}
-			else {
-				return bracketConstants.color1;
-			}
-		}
-		return bracketConstants.color1;
-	}
+        if (!bracket?.numRounds) {
+            return defaultBracketConstants.color2;
+        }
+        if (round?.depth === (bracket?.numRounds - 1)) {
+            return defaultBracketConstants.color2;
+        }
+        else if (round?.depth === (bracket?.numRounds - 2)) {
+            if (match.left == null && className == defaultBracketConstants.team1) {
+                return defaultBracketConstants.color2;
+            }
+            else if (match.right == null && className == defaultBracketConstants.team2) {
+                return defaultBracketConstants.color2;
+            }
+            else {
+                return defaultBracketConstants.color1;
+            }
+        }
+        return defaultBracketConstants.color1;
+    }
 
     return (
         <div className={className} style={{ height: height, marginBottom: spacing, bottom: bottom, width: width }}>
-            <div className='wpbb-team1' style={{ minWidth: width, background: setColor(round,match,'wpbb-team1') }} > </div>
-            <div className='wpbb-team2' style={{ minWidth: width, background: setColor(round,match,'wpbb-team2') }} > </div>
+            <div className='wpbb-team1' style={{ minWidth: width, background: setColor(round, match, 'wpbb-team1') }} > </div>
+            <div className='wpbb-team2' style={{ minWidth: width, background: setColor(round, match, 'wpbb-team2') }} > </div>
         </div>
     )
 }
@@ -167,14 +167,14 @@ export const UserTemplatePreview = (props: BracketProps) => {
             ...rounds.slice(1).reverse().map((round, idx) => {
                 // Get the first half of matches for this column
                 const colMatches = round.matches.slice(0, round.matches.length / 2)
-                
+
                 return <BracketContext.Provider value={{ numRounds: rounds.length }}>
                     <MatchColumn
                         matches={colMatches}
                         round={round} direction={Direction.TopLeft}
                         numDirections={numDirections}
-                        matchHeight={bracketConstants.previewBracketHeight}
-                        matchWidth={bracketConstants.previewBracketWidth}
+                        matchHeight={defaultBracketConstants.previewBracketHeight}
+                        matchWidth={defaultBracketConstants.previewBracketWidth}
                     />
                 </BracketContext.Provider>
             }),
@@ -185,8 +185,8 @@ export const UserTemplatePreview = (props: BracketProps) => {
                     round={rounds[0]}
                     direction={Direction.Center}
                     numDirections={numDirections}
-                    matchHeight={bracketConstants.previewBracketHeight}
-                    matchWidth={bracketConstants.previewBracketWidth}
+                    matchHeight={defaultBracketConstants.previewBracketHeight}
+                    matchWidth={defaultBracketConstants.previewBracketWidth}
                 /></BracketContext.Provider>,
             ...rounds.slice(1).map((round, idx, arr) => {
                 const colMatches = round.matches.slice(round.matches.length / 2)
@@ -196,8 +196,8 @@ export const UserTemplatePreview = (props: BracketProps) => {
                     matches={colMatches}
                     direction={Direction.TopRight}
                     numDirections={numDirections}
-                    matchHeight={bracketConstants.previewBracketHeight}
-                    matchWidth={bracketConstants.previewBracketWidth}
+                    matchHeight={defaultBracketConstants.previewBracketHeight}
+                    matchWidth={defaultBracketConstants.previewBracketWidth}
                 /></BracketContext.Provider>
             })
         ]

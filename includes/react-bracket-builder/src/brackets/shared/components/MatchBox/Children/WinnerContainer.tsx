@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { bracketConstants } from '../../../constants'
+import { defaultBracketConstants } from '../../../constants'
 import { MatchBoxChildProps } from '../../types';
 //@ts-ignore
 import { DefaultTeamSlot } from '../../TeamSlot';
@@ -17,7 +17,7 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
 	const {
 		match,
 		matchTree,
-		bottom = bracketConstants.winnerContainerBottom,
+		bottom = defaultBracketConstants.winnerContainerBottom,
 		TeamSlotComponent = DefaultTeamSlot,
 		topText = 'Winner',
 		topTextFontSize = 64,

@@ -8,7 +8,7 @@ import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSl
 import { setNumPages } from '../../shared/features/bracketNavSlice'
 
 import { MatchTree } from '../../shared/models/MatchTree';
-import { bracketConstants } from '../../shared/constants';
+import { defaultBracketConstants } from '../../shared/constants';
 import { BracketMetaContext, DarkModeContext } from '../../shared/context';
 import './UserBracket.scss'
 //@ts-ignore
@@ -164,7 +164,7 @@ const UserBracket = (props: UserBracketProps) => {
 	}, [matchTree])
 
 	// useEffect(() => {
-	// 	if (windowWidth < bracketConstants.paginatedBracketWidth) {
+	// 	if (windowWidth < defaultBracketConstants.paginatedBracketWidth) {
 	// 		if (!showPaginated) {
 	// 			setShowPaginated(true)
 	// 		}
@@ -291,7 +291,7 @@ const UserBracket = (props: UserBracketProps) => {
 		const numRounds = matchTree?.rounds.length;
 		// const pickedWinner = matchTree?.allPicked();
 		console.log('numRounds', numRounds)
-		const actionButtonMargin = bracketConstants.bracketActionsMarginTop[numRounds]
+		const actionButtonMargin = defaultBracketConstants.bracketActionsMarginTop[numRounds]
 
 		return (
 			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}>
