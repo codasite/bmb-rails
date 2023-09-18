@@ -37,9 +37,9 @@ class Wp_Bracket_Builder_Activator {
 
 		self::delete_tables($prefix);
 
-		self::create_teams_table($prefix);
-		self::create_matches_table($prefix);
-		self::create_match_picks_table($prefix);
+		self::create_teams_table($prefix); // associated with matches
+		self::create_matches_table($prefix); // associated with bracket templates
+		self::create_match_picks_table($prefix); // associated with bracket plays
 	}
 
 	private static function delete_tables(string $prefix) {
@@ -48,8 +48,6 @@ class Wp_Bracket_Builder_Activator {
 			$prefix . 'match_picks',
 			$prefix . 'matches',
 			$prefix . 'teams',
-			$prefix . 'rounds',
-			$prefix . 'max_teams'
 		];
 
 		foreach ($tables as $table) {

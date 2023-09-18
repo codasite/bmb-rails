@@ -28,6 +28,8 @@ export interface MatchBoxProps {
 	matchTree: MatchTree;
 	teamGap?: number;
 	teamHeight?: number;
+	teamWidth?: number;
+	teamFontSize?: number;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
@@ -39,6 +41,8 @@ export interface MatchColumnProps {
 	matchPosition: string;
 	teamGap?: number;
 	teamHeight?: number;
+	teamWidth?: number;
+	teamFontSize?: number;
 	matchGap?: number;
 	matchTree: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
@@ -49,11 +53,14 @@ export interface MatchColumnProps {
 }
 
 export interface BracketProps {
-	getHeight?: (numRounds: number) => number;
-	getWidth?: (numRounds: number) => number;
-	getMatchBoxHeight?: (depth: number) => number;
+	getBracketHeight?: (numRounds: number) => number;
+	getBracketWidth?: (numRounds: number) => number;
 	getTeamGap?: (depth: number) => number;
-	getTeamHeight?: (depth: number) => number;
+	getTeamHeight?: (numRounds: number) => number;
+	getTeamWidth?: (numRounds: number) => number;
+	getTeamFontSize?: (numRounds: number) => number;
+	getFirstRoundMatchGap?: (numRounds: number) => number;
+	getSubsequentMatchGap?: (numRounds: number) => number;
 	matchTree: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	MatchColumnComponent?: React.FC<MatchColumnProps>;

@@ -15,8 +15,10 @@ export const DefaultMatchColumn = (props: MatchColumnProps) => {
 		MatchBoxChildComponent,
 		TeamSlotComponent,
 		matchGap,
-		teamGap = 20,
-		teamHeight = 28,
+		teamGap,
+		teamHeight,
+		teamWidth,
+		teamFontSize,
 		onTeamClick,
 	} = props
 
@@ -34,6 +36,8 @@ export const DefaultMatchColumn = (props: MatchColumnProps) => {
 						MatchBoxChildComponent={MatchBoxChildComponent}
 						teamGap={teamGap}
 						teamHeight={teamHeight}
+						teamWidth={teamWidth}
+						teamFontSize={teamFontSize}
 						onTeamClick={onTeamClick}
 					/>
 				)
