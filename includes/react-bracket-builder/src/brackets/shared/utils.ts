@@ -1,48 +1,46 @@
-import { bracketConstants } from "./constants"
+import { defaultBracketConstants } from "./constants"
 // import { BracketRes, TeamRes, MatchRes, RoundRes } from "./api/types/bracket"
 
 const {
-	teamHeight,
-	defaultMatchGap,
-	depth4MatchGap,
-	depth5MatchGap,
-	twoRoundHeight,
-	threeRoundHeight,
-	fourRoundHeight,
-	fiveRoundHeight,
-	sixRoundHeight,
+	bracketHeights,
+	teamHeights,
+	teamWidths,
+	teamGaps,
 	bracketWidths,
-} = bracketConstants
-
-const targetRoundHeights = [
-	fourRoundHeight,
-	twoRoundHeight,
-	threeRoundHeight,
-	fourRoundHeight,
-	fiveRoundHeight,
-	sixRoundHeight,
-]
+	firstRoundsMatchGaps,
+} = defaultBracketConstants
 
 export const getBracketHeight = (numRounds: number) => {
-	return targetRoundHeights[numRounds - 1]
+	return bracketHeights[numRounds]
 }
 
 export const getBracketWidth = (numRounds: number) => {
 	return bracketWidths[numRounds]
 }
 
-
-export const getMatchBoxHeight = (depth: number) => {
-	let gap = teamHeight
-	if (depth === 4) {
-		gap += depth4MatchGap
-	} else if (depth === 5) {
-		gap += depth5MatchGap
-	} else {
-		gap += defaultMatchGap
-	}
-	return gap
+export const getTeamHeight = (numRounds: number) => {
+	return teamHeights[numRounds]
 }
+
+export const getTeamWidth = (numRounds: number) => {
+	return teamWidths[numRounds]
+}
+
+export const getTeamGap = (depth: number) => {
+	return teamGaps[depth]
+}
+
+export const getTeamFontSize = (numRounds: number) => {
+	if (numRounds > 4) {
+		return 12
+	}
+	return 16
+}
+
+export const getFirstRoundMatchGap = (numRounds: number) => {
+	return firstRoundsMatchGaps[numRounds]
+}
+
 
 export const getTeamClasses = (roundIndex: number, matchIndex: number, left: boolean) => {
 	const uniqueClass = getUniqueTeamClass(roundIndex, matchIndex, left ? 'left' : 'right')
@@ -62,37 +60,37 @@ export const getUniqueTeamClass = (roundIndex: number, matchIndex: number, posit
 }
 
 
-/**
- * Get the match height for the first round of a bracket given a target height
- */
-export const getFirstRoundMatchHeight = (targetHeight, numDirections, numRounds, teamHeight) => {
-	const maxMatchesPerRound = 2 ** (numRounds - 1)
-	const maxMatchesPerColumn = maxMatchesPerRound / numDirections
-	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
-	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
-	return firstRoundMatchHeight
-}
+// /**
+//  * Get the match height for the first round of a bracket given a target height
+//  */
+// export const getFirstRoundMatchHeight = (targetHeight, numDirections, numRounds, teamHeight) => {
+// 	const maxMatchesPerRound = 2 ** (numRounds - 1)
+// 	const maxMatchesPerColumn = maxMatchesPerRound / numDirections
+// 	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
+// 	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
+// 	return firstRoundMatchHeight
+// }
 
 /**
  * Get the match gap for the first round of a bracket given a target height
  * 
  */
-export const getFirstRoundMatchGap = (targetHeight: number, numRounds: number, matchHeight: number) => {
-	const numDirections = 2
-	const firstRoundMatches = 2 ** (numRounds - 1) / numDirections
-	const firstRoundGaps = firstRoundMatches - 1
-	const firstRoundMatchGap = (targetHeight - firstRoundMatches * matchHeight) / firstRoundGaps
-	return firstRoundMatchGap
-}
+// export const getFirstRoundMatchGap = (targetHeight: number, numRounds: number, matchHeight: number) => {
+// 	const numDirections = 2
+// 	const firstRoundMatches = 2 ** (numRounds - 1) / numDirections
+// 	const firstRoundGaps = firstRoundMatches - 1
+// 	const firstRoundMatchGap = (targetHeight - firstRoundMatches * matchHeight) / firstRoundGaps
+// 	return firstRoundMatchGap
+// }
 
-/**
- * Get the match height for a subsequent round of a bracket given the first round match height
- * @param {number} firstRoundMatchHeight The match height for the first round of a bracket
- * @param {number} i The index of the round when building up from the first round
- */
-export const getTargetMatchHeight = (firstRoundMatchHeight, i) => {
-	return firstRoundMatchHeight * (2 ** i)
-}
+// /**
+//  * Get the match height for a subsequent round of a bracket given the first round match height
+//  * @param {number} firstRoundMatchHeight The match height for the first round of a bracket
+//  * @param {number} i The index of the round when building up from the first round
+//  */
+// export const getTargetMatchHeight = (firstRoundMatchHeight, i) => {
+// 	return firstRoundMatchHeight * (2 ** i)
+// }
 
 /**
  * Get the match gap for a subsequent round of a bracket given the first round match gap
@@ -111,3 +109,12 @@ export const getMatchGap = (firstRoundMatchGap: number, matchHeight: number, i: 
 export const isPowerOfTwo = (num: number) => {
 	return (num & (num - 1)) === 0
 }
+
+/**
+ * Return the current round's match gap given the previous round's match height and gap
+ */
+export const getSubsequentMatchGap = (prevMatchHeight: number, prevMatchGap: number, matchHeight: number) => {
+	return 2 * (prevMatchHeight + prevMatchGap) - matchHeight
+}
+
+// export const

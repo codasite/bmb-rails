@@ -1,6 +1,6 @@
 import React from 'react';
 import { MatchNode, Round, Team, MatchTree } from '../../models/MatchTree';
-import { Direction, bracketConstants } from '../../constants'
+import { Direction, defaultBracketConstants } from '../../constants'
 import { MatchBoxProps, TeamSlotProps } from '../types';
 import { Nullable } from '../../../../utils/types';
 import { getUniqueTeamClass } from '../../utils';

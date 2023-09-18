@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { MatchNode, Round, Team } from '../../models/MatchTree';
 //@ts-ignore
 import { getTeamClasses } from '../../utils';
-import { bracketConstants } from '../../constants';
+import { defaultBracketConstants } from '../../constants';
 import { BracketContext } from '../../context';
 
 interface TeamSlotProps {
@@ -100,7 +100,7 @@ export const TeamSlot = (props: TeamSlotProps) => {
 		let backgroundColor = isReadOnly(round, match, left)
 		if (bracket?.canEdit) {
 			if (!backgroundColor) {
-				return bracketConstants.color3
+				return defaultBracketConstants.color3
 			}
 		}
 	}

@@ -19,20 +19,7 @@ export enum Direction {
 	BottomRight = 4,
 }
 
-export const bracketConstants = {
-	teamHeight: 28,
-	teamGap: 20,
-
-	defaultMatchGap: 20,
-	depth4MatchGap: 12,
-	depth5MatchGap: 4,
-
-	twoRoundHeight: 300,
-	threeRoundHeight: 300,
-	fourRoundHeight: 544,
-	fiveRoundHeight: 806,
-	sixRoundHeight: 1100,
-
+export const defaultBracketConstants = {
 	bracketWidths: [
 		800, // 0 rounds
 		800, // 1 rounds
@@ -43,34 +30,63 @@ export const bracketConstants = {
 		1137, // 6 rounds
 	],
 
-	bracketLogoBottom: [
-		-250, // 0 rounds
-		-250, // 1 round
-		-250, // 2 rounds
-		-300, // 3 rounds
-		-300, // 4 rounds
-		-270, // 5 rounds
-		-320, // 6 rounds
+	bracketHeights: [
+		300, // 0 rounds
+		300, // 1 round
+		300, // 2 rounds
+		300, // 3 rounds
+		544, // 4 rounds
+		806, // 5 rounds
+		1100, // 6 rounds
 	],
 
-	winnerContainerBottom: [
-		100, // 0 rounds
-		100, // 1 round
-		100, // 2 rounds
-		100, // 3 rounds
-		150, // 4 rounds
-		190, // 5 rounds
-		320, // 6 rounds
-	],
-
-	bracketActionsMarginTop: [
-		220, // 0 rounds
-		220, // 1 round
-		220, // 2 rounds
-		220, // 3 rounds
-		94, // 4 rounds
-		50, // 5 rounds
+	teamHeights: [
+		28, // 0 rounds
+		28, // 1 round
+		28, // 2 rounds
+		28, // 3 rounds
+		28, // 4 rounds
+		20, // 5 rounds
 		20, // 6 rounds
+	],
+
+	teamWidths: [
+		115, // 0 rounds
+		115, // 1 round
+		115, // 2 rounds
+		115, // 3 rounds
+		115, // 4 rounds
+		87, // 5 rounds
+		87, // 6 rounds
+	],
+
+	teamGaps: [
+		20, // depth 0
+		20, // depth 1
+		20, // depth 2
+		20, // depth 3
+		10, // depth 4
+		4, // depth 5
+	],
+
+	firstRoundsMatchGaps: [
+		80, // 0 rounds
+		80, // 1 round
+		80, // 2 rounds
+		80, // 3 rounds
+		80, // 4 rounds
+		58, // 5 rounds
+		10, // 6 rounds
+	],
+
+	winnerContainerBottomMargin: [
+		95, // 0 rounds
+		95, // 1 round
+		95, // 2 rounds
+		95, // 3 rounds
+		95, // 4 rounds
+		250, // 5 rounds
+		250, // 6 rounds
 	],
 
 	// Window breakpoints
