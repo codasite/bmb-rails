@@ -7,10 +7,10 @@ $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 $the_query = new WP_Query([
 	'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
-	'posts_per_page' => 6,
+	'posts_per_page' => 1,
 	'paged' => $paged,
 	'post_status' => 'any',
-	'tag' => 'bmb_vip_tourney'
+	'tag' => 'bmb_vip_play'
 ]);
 
 $plays = $play_repo->get_all($the_query);
