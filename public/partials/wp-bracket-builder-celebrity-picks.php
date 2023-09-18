@@ -2,18 +2,23 @@
 require_once('shared/wp-bracket-builder-tournaments-common.php');
 require_once('shared/wp-bracket-builder-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wp-bracket-builder-pagination-widget.php';
+
 
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
 $the_query = new WP_Query([
 	'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
-	'posts_per_page' => 1,
+	'posts_per_page' => 6,
 	'paged' => $paged,
 	'post_status' => 'any',
 	'tag' => 'bmb_vip_play'
 ]);
 
 $plays = $play_repo->get_all($the_query);
+
+$paged_plays = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+$num_plays_pages = $the_query->max_num_pages;
 
 $tournaments = array(
 	array(
@@ -108,6 +113,7 @@ function wpbb_celebrity_play_list_item($play) {
 						<?php echo wpbb_celebrity_play_list_item($play); ?>
 					<?php endforeach; ?>
 				</div>
+				<?php wpbb_pagination($paged_plays, $num_plays_pages); ?>
 			</div>
 
 		</div>
