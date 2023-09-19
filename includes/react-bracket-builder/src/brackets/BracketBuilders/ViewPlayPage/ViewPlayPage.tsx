@@ -3,7 +3,7 @@ import { ThemeSelector } from '../../shared/components';
 import { MatchTree } from '../../shared/models/MatchTree';
 import { PickableBracket } from '../../shared/components/Bracket';
 import { ActionButton } from '../../shared/components/ActionButtons';
-import { WithDarkMode, WithMatchTree, WithBracketMeta } from '../../shared/components/HigherOrder'
+import { WithDarkMode, WithMatchTree, WithBracketMeta, WithProvider } from '../../shared/components/HigherOrder'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
@@ -77,6 +77,6 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 	)
 }
 
-const WrappedViewPlayPage = WithMatchTree(WithBracketMeta(WithDarkMode(ViewPlayPage)))
+const WrappedViewPlayPage = WithProvider(WithMatchTree(WithBracketMeta(WithDarkMode(ViewPlayPage))))
 // export { WrappedViewPlayPage as ViewPlayPage }
 export default WrappedViewPlayPage
