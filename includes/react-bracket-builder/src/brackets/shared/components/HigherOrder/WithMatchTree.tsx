@@ -5,9 +5,8 @@ import { setMatchTree, selectMatchTree } from '../../features/matchTreeSlice';
 import { bracketBuilderStore } from '../../app/store';
 import { Provider } from 'react-redux';
 import WithProvider from './WithProvider';
-import { HOC } from '../types';
 
-export const WithMatchTree: HOC = (Component: React.FC<any>) => {
+export const WithMatchTree = (Component: React.FC<any>) => {
 	return (props: any) => {
 		const matchTree = useAppSelector(selectMatchTree);
 		const dispatch = useAppDispatch();
@@ -24,6 +23,5 @@ export const WithMatchTree: HOC = (Component: React.FC<any>) => {
 	}
 }
 
-const WithProvidedMatchTree = WithProvider(WithMatchTree);
 
-export default WithProvidedMatchTree
+export default WithMatchTree
