@@ -6,6 +6,8 @@ interface ActionButtonProps {
 	children?: React.ReactNode
 	backgroundColor?: string
 	textColor?: string
+	fontSize?: number
+	fontWeight?: number
 	padding?: number
 	paddingX?: number
 	paddingY?: number
@@ -23,6 +25,8 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 		children,
 		backgroundColor,
 		textColor,
+		fontSize = 20,
+		fontWeight = 500,
 		padding,
 		paddingX,
 		paddingY,
@@ -40,13 +44,16 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 		'tw-flex-row',
 		'tw-items-center',
 		'tw-justify-center',
+		'tw-font-sans',
+		'tw-uppercase',
 	]
 
 	if (!disabled) baseStyles.push('tw-cursor-pointer')
 	if (backgroundColor) baseStyles.push(`tw-bg-${backgroundColor}`)
 	if (textColor) baseStyles.push(`tw-text-${textColor}`)
 	if (gap) baseStyles.push(`tw-gap-${gap}`)
-
+	if (fontSize) baseStyles.push(`tw-text-${fontSize}`)
+	if (fontWeight) baseStyles.push(`tw-font-${fontWeight}`)
 	if (paddingX || paddingY) {
 		if (paddingX) baseStyles.push(`tw-px-${paddingX}`)
 		if (paddingY) baseStyles.push(`tw-py-${paddingY}`)
@@ -114,6 +121,31 @@ export const BlueButton = (props: ActionButtonProps) => {
 	)
 }
 
+export const BigYellowButton = (props: ActionButtonProps) => {
+	const {
+		disabled
+	} = props
+	const background = disabled ? 'transparent' : 'yellow/15'
+	const border = disabled ? 'white/50' : 'yellow'
+	const textColor = disabled ? 'white/50' : 'yellow'
+
+	return (
+		<ActionButtonBase
+			{...props}
+			backgroundColor={background}
+			paddingX={30}
+			paddingY={16}
+			fontSize={36}
+			fontWeight={700}
+			textColor={textColor}
+			borderRadius={8}
+			borderColor={border}
+			borderWidth={4}
+		/>
+	)
+}
+
+
 export const ActionButton = (props: ActionButtonProps) => {
 	const {
 		variant
@@ -124,6 +156,8 @@ export const ActionButton = (props: ActionButtonProps) => {
 			return <GreenButton {...props} />
 		case 'blue':
 			return <BlueButton {...props} />
+		case 'big-yellow':
+			return <BigYellowButton {...props} />
 		default:
 			return <ActionButtonBase {...props} />
 	}

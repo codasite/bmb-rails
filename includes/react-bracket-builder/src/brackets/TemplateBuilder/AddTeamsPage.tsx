@@ -7,7 +7,7 @@ import iconBackground from '../shared/assets/bmb_icon_white_02.png'
 import { DefaultBracket } from '../shared/components'
 import { BracketMetaContext, DarkModeContext } from '../shared/context'
 import { AddTeamsBracket } from '../shared/components/Bracket'
-import { ActionButton } from './ActionButtons'
+import { ActionButton } from '../shared/components/ActionButtons'
 //@ts-ignore
 import { ReactComponent as ShuffleIcon } from '../shared/assets/shuffle.svg'
 //@ts-ignore

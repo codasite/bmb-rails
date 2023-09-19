@@ -63,6 +63,7 @@ const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserB
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 // const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
 const TemplateBuilder = React.lazy(() => import('./brackets/TemplateBuilder/TemplateBuilder'))
+const TournamentResultsBuilder = React.lazy(() => import('./brackets/TournamentResultsBuilder/TournamentResultsBuilder'))
 // const WithMatchTree = React.lazy(() => import('./brackets/shared/components/WithMatchTree'))
 
 // Get the wpbb_ajax_obj from the global scope
@@ -72,6 +73,7 @@ renderPreview(wpbb_ajax_obj)
 renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderTemplateBuilder(wpbb_ajax_obj)
 renderPlayTemplate(wpbb_ajax_obj)
+renderTournamentResultsBuilder(wpbb_ajax_obj)
 
 /**
  * This renders the bracket builder admin page. DEPRECATED
@@ -151,6 +153,30 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 					<UserBracket bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
 				</Provider>
 			</App>, builderDiv)
+	}
+}
+
+/**
+ * This renders the update tournament results page
+ */
+function renderTournamentResultsBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
+	const builderDiv = document.getElementById('wpbb-tournament-results-builder')
+	const {
+		tournament,
+		my_tournaments_url,
+	} = wpbb_ajax_obj
+
+	const tourney = camelCaseKeys(tournament)
+
+	if (builderDiv && tourney) {
+		const TournamentResultsBuilderWithMatchTree = withMatchTree(TournamentResultsBuilder)
+		render(
+			<App>
+				<Provider store={bracketBuilderStore}>
+					<TournamentResultsBuilderWithMatchTree tournament={tourney} saveTournamentLink={my_tournaments_url} />
+				</Provider>
+			</App>, builderDiv)
+
 	}
 }
 

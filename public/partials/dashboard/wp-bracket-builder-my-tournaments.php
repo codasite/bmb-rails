@@ -49,16 +49,16 @@ function score_tournament_btn($endpoint, $tournament) {
 ?>
 	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/trophy_24.svg', __FILE__)); ?>
-		<span class="tw-font-500">Score Tournament</span>
+		<span class="tw-font-500">Update Results</span>
 	</a>
 <?php
 	return ob_get_clean();
 }
 
 function active_tournament_buttons($tournament) {
-	$tournament_play_link = get_permalink($tournament->id) . '/play';
-	$tournament_score_link = get_permalink($tournament->id) . '/score';
-	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
+	$tournament_play_link = get_permalink($tournament->id) . 'play';
+	$tournament_score_link = get_permalink($tournament->id) . 'results';
+	$leaderboard_link = get_permalink($tournament->id) . 'leaderboard';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
@@ -77,8 +77,8 @@ function active_tournament_buttons($tournament) {
 }
 
 function completed_tournament_buttons($tournament) {
-	$play_link = get_permalink() . 'tournaments/' . $tournament->id . '/play';
-	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
+	$play_link = get_permalink($tournament->id) . 'play';
+	$leaderboard_link = get_permalink($tournament->id) . 'leaderboard';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-end tw-gap-8">
@@ -149,8 +149,6 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 	$completed = $tournament->status === 'complete';
 	$share_link = get_permalink() . 'tournaments/' . $id . '/share';
 	$delete_link = get_permalink() . 'tournaments/';
-	$play_link = get_permalink($tournament->id) . '/play';
-	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 	$archive_link = get_permalink() . 'tournaments/';
 	ob_start();
 ?>

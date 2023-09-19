@@ -10,7 +10,6 @@ import { setNumPages } from '../../shared/features/bracketNavSlice'
 import { MatchTree } from '../../shared/models/MatchTree';
 import { defaultBracketConstants } from '../../shared/constants';
 import { BracketMetaContext, DarkModeContext } from '../../shared/context';
-import './UserBracket.scss'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
