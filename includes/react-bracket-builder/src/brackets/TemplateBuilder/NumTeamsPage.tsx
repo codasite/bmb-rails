@@ -6,7 +6,7 @@ import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
 import { BracketTemplatePreview } from './BracketTemplatePreview'
 import { isPowerOfTwo } from '../shared/utils'
 import { WildcardPicker } from './WildcardPicker'
-import { ActionButton } from './ActionButtons'
+import { ActionButton } from '../shared/components/ActionButtons'
 
 
 
