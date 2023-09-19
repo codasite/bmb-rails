@@ -89,6 +89,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 	}, []);
 
 	const darkMode = true
+	const complete = matchTree && matchTree.allPicked()
 
 	return (
 		<BracketMetaContext.Provider value={{ title: bracketTitle, date: bracketDate }}>
@@ -104,14 +105,13 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 								/>
 
 							</div>
-							<div className='tw-flex tw-flex-col tw-items-center tw-gap-24'>
+							<div className={`tw-flex tw-flex-col tw-gap-24${!complete ? ' tw-max-w-[470px] tw-w-full' : ''}`}>
 								<ActionButton
 									variant='big-yellow'
-									className='tw-min-w-[470px]'
 								>
-									Update Picks
+									{complete ? 'Complete Tournament' : 'Update Picks'}
 								</ActionButton>
-								<div className='tw-flex tw-gap-20 tw-items-center'>
+								<div className='tw-flex tw-gap-20 tw-items-center tw-self-center tw-hidden'>
 									<CustomCheckbox
 										id='notify-participants-check'
 										checked={notifyParticipants}
