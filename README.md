@@ -5,9 +5,10 @@
 ### MAC
 1. Install MAMP and WordPress according to [these instructions](https://codex.wordpress.org/Installing_WordPress_Locally_on_Your_Mac_With_MAMP)
 2. Clone this repository in the `/wordpress/wp-content/plugins` directory
+  - Ensure branch is `dev/2.0`
   - Optional: clone the repo anywhere on your system and create a symlink: `ln -s path/to/plugins path/to/repo`
 3. From the plugin root `wp-bracket-builder`, install composer dependencies `composer install`
-4. In `wp-bracket-builder/includes/react-bracket-builder` run `npm install`
+4. In `wp-bracket-builder/includes/react-bracket-builder` run `npm install` and `npm run start`
 5. Install and activate Oxygen Builder 4.5
 6. Install and activate the Woocommerce Oxygen integration
 7. Install and activate the WooCommerce Plugin
