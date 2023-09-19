@@ -1,26 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
-import * as Sentry from '@sentry/react';
-import { bracketApi } from '../shared/api/bracketApi';
-import { useWindowDimensions } from '../../utils/hooks';
-import Spinner from 'react-bootstrap/Spinner'
-import { useAppSelector, useAppDispatch } from '../shared/app/hooks'
-import { setMatchTree, selectMatchTree } from '../shared/features/matchTreeSlice'
-import { setNumPages } from '../shared/features/bracketNavSlice'
+import React, { useState, useEffect } from 'react';
 
-import { MatchTree } from '../shared/models/MatchTree';
-import { defaultBracketConstants } from '../shared/constants';
-import { BracketMetaContext, DarkModeContext } from '../shared/context';
+import { MatchTree } from '../../shared/models/MatchTree';
+import { BracketMetaContext, DarkModeContext } from '../../shared/context';
 //@ts-ignore
-import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
+import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
-import lightBracketBg from '../shared/assets/bracket-bg-light.png'
-import { PickableBracket } from '../shared/components/Bracket/PickableBracket';
-import { ResultsBracket } from '../shared/components/Bracket';
-import { ActionButton, BigYellowButton } from '../shared/components/ActionButtons';
+import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
+import { ResultsBracket } from '../../shared/components/Bracket';
+import { ActionButton } from '../../shared/components/ActionButtons';
 //@ts-ignore
-import { ReactComponent as CheckIcon } from '../shared/assets/check.svg'
-//@ts-ignore
-import checkIcon from '../shared/assets/check.svg'
+import checkIcon from '../../shared/assets/check.svg'
 
 const CustomCheckbox = (props: any) => {
 	const {

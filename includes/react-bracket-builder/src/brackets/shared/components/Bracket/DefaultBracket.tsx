@@ -172,7 +172,7 @@ export const DefaultBracket = (props: BracketProps) => {
 				<div className={`tw-mt-${numRounds > 5 ? 50 : 20}`}>
 					<LogoContainer
 						{...props}
-						bottomText={'March 2023'}
+						bottomText={bracketDate}
 					/>
 				</div>
 			}

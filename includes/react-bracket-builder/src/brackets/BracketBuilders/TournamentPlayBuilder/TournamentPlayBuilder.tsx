@@ -1,43 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import * as Sentry from '@sentry/react';
-import { bracketApi } from '../shared/api/bracketApi';
-import { useWindowDimensions } from '../../utils/hooks';
+import { bracketApi } from '../../shared/api/bracketApi';
 import Spinner from 'react-bootstrap/Spinner'
-import { useAppSelector, useAppDispatch } from '../shared/app/hooks'
-import { setMatchTree, selectMatchTree } from '../shared/features/matchTreeSlice'
-import { setNumPages } from '../shared/features/bracketNavSlice'
+import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
+import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSlice'
+import { setNumPages } from '../../shared/features/bracketNavSlice'
 
-import { MatchTree } from '../shared/models/MatchTree';
-import { defaultBracketConstants } from '../shared/constants';
-import { BracketMetaContext, DarkModeContext } from '../shared/context';
+import { MatchTree } from '../../shared/models/MatchTree';
+import { BracketMetaContext, DarkModeContext } from '../../shared/context';
 //@ts-ignore
-import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
+import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
-import lightBracketBg from '../shared/assets/bracket-bg-light.png'
-import { PickableBracket } from '../shared/components/Bracket/PickableBracket';
+import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
+import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
+import { ThemeSelector } from '../../shared/components';
 
 
-interface ThemeSelectorProps {
-	darkMode: boolean;
-	setDarkMode: (darkMode: boolean) => void;
-}
-
-const ThemeSelector = (props: ThemeSelectorProps) => {
-	const {
-		darkMode,
-		setDarkMode,
-	} = props;
-	return (
-		<div className='tw-flex tw-items-center tw-font-600 tw-gap-14'>
-			<span className='tw-text-dd-blue dark:tw-text-white'>Theme</span>
-			<button onClick={() => setDarkMode(!darkMode)} className='tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none'>
-				<div className='tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center'>
-					<span className='tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase'>{darkMode ? 'dark' : 'light'}</span>
-				</div>
-			</button>
-		</div>
-	)
-}
 
 
 interface BuyApparelBtnProps {
