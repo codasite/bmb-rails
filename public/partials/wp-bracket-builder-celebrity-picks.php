@@ -1,38 +1,24 @@
 <?php
 require_once('shared/wp-bracket-builder-tournaments-common.php');
 require_once('shared/wp-bracket-builder-partials-common.php');
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wp-bracket-builder-pagination-widget.php';
 
-$plays = array(
-	array(
-		"play_title" => "Terrell Owen's March Maddress Picks",
-		"play_id" => 1,
-		"tournament_id" => 1,
-		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Terrell.png",
-	),
-	array(
-		"play_title" => "Aaron Rodgers' NCAA NIT Bracket",
-		"play_id" => 2,
-		"tournament_id" => 2,
-		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Aaron.png",
-	),
-	array(
-		"play_title" => "Aaron Rodgers' NCAA NIT Bracket",
-		"play_id" => 2,
-		"tournament_id" => 2,
-		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Aaron.png",
-	),
-	array(
-		"play_title" => "Aaron Rodgers' NCAA NIT Bracket",
-		"play_id" => 2,
-		"tournament_id" => 2,
-		"thumbnail" => "http://localhost:8888/wordpress-new/wp-content/uploads/2023/09/Aaron.png",
-	),
-	// array(
-	// 	"play_title" => "NCAA Womens World Series 2024",
-	// 	"play_id" => 3,
-	// 	"tournament_id" => 3,
-	// ),
-);
+
+$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+
+$the_query = new WP_Query([
+	'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+	'posts_per_page' => 6,
+	'paged' => $paged,
+	'post_status' => 'any',
+	'tag' => 'bmb_vip_play'
+]);
+
+$plays = $play_repo->get_all($the_query);
+
+$paged_plays = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+$num_plays_pages = $the_query->max_num_pages;
 
 $tournaments = array(
 	array(
@@ -89,13 +75,12 @@ function wpbb_bust_bracket_btn($endpoint) {
 }
 
 function wpbb_celebrity_play_list_item($play) {
-	$title = $play['play_title'];
-	$id = $play['play_id'];
-	$tournament_id = $play['tournament_id'];
-	// $thumbnail = get_the_post_thumbnail_url($tournament_id);
-	$thumbnail = $play['thumbnail'];
-	$play_link = get_permalink() . 'tournaments/' . $tournament_id . '/plays/' . $id;
-	$bust_link = get_permalink() . 'tournaments/' . $tournament_id . '/bust/' . $id;
+	$title = $play->title;
+	$id = $play->id;
+	$tournament_id = $play->tournament_id;
+	$thumbnail = get_the_post_thumbnail_url($id);
+	$play_link = get_permalink($tournament_id) . '/play';
+	$bust_link = get_permalink($tournament_id) . '/bust';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col">
@@ -128,6 +113,7 @@ function wpbb_celebrity_play_list_item($play) {
 						<?php echo wpbb_celebrity_play_list_item($play); ?>
 					<?php endforeach; ?>
 				</div>
+				<?php wpbb_pagination($paged_plays, $num_plays_pages); ?>
 			</div>
 
 		</div>
