@@ -60,7 +60,7 @@ if (sentryDsn) {
 
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
-const TournamentPlayBuilder = React.lazy(() => import('./brackets/BracketBuilders/TournamentPlayBuilder/TournamentPlayBuilder'))
+const PlayTournamentBuilder = React.lazy(() => import('./brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentBuilder'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 // const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
 const TemplateBuilder = React.lazy(() => import('./brackets/BracketBuilders/TemplateBuilder/TemplateBuilder'))
@@ -129,7 +129,7 @@ function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(
 			<App>
 				<Provider store={bracketBuilderStore}>
-					<TournamentPlayBuilder bracketStylesheetUrl={css_url} template={temp} apparelUrl={bracket_product_archive_url} />
+					<PlayTournamentBuilder bracketStylesheetUrl={css_url} template={temp} apparelUrl={bracket_product_archive_url} />
 				</Provider>
 			</App>, builderDiv)
 	}
@@ -152,9 +152,7 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering play tournament builder')
 		render(
 			<App>
-				<Provider store={bracketBuilderStore}>
-					<TournamentPlayBuilder bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
-				</Provider>
+				<PlayTournamentBuilder bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
 			</App>, builderDiv)
 	}
 }
@@ -196,7 +194,6 @@ function renderViewBracketPlay(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering view play')
 		render(
 			<App>
-
 				<ViewPlayPage bracketPlay={playObj} apparelUrl={bracket_product_archive_url} />
 			</App>, builderDiv)
 	}
