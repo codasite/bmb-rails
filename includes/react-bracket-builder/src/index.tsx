@@ -63,7 +63,7 @@ const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settin
 const TournamentPlayBuilder = React.lazy(() => import('./brackets/TournamentPlayBuilder/TournamentPlayBuilder'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 // const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
-const TemplateBuilder = React.lazy(() => import('./brackets/TemplateBuilder/TemplateBuilder'))
+const TemplateBuilder = React.lazy(() => import('./brackets/BracketBuilders/TemplateBuilder/TemplateBuilder'))
 const TournamentResultsBuilder = React.lazy(() => import('./brackets/TournamentResultsBuilder/TournamentResultsBuilder'))
 // const WithMatchTree = React.lazy(() => import('./brackets/shared/components/WithMatchTree'))
 
