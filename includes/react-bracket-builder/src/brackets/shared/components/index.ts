@@ -7,4 +7,5 @@ export { DefaultTeamSlot } from './TeamSlot'
 export { DefaultBracket } from './Bracket/DefaultBracket'
 export { RoundHeader } from './RoundHeader'
 export { TeamSlot } from './TeamSlot'
+export { ThemeSelector } from './ThemeSelector'
 

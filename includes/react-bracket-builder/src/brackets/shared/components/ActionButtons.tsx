@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 interface ActionButtonProps {
 	disabled?: boolean
 	onClick?: () => void
@@ -17,6 +18,7 @@ interface ActionButtonProps {
 	borderRadius?: number
 	variant?: string
 	className?: string
+	darkMode?: boolean
 }
 
 export const ActionButtonBase = (props: ActionButtonProps) => {
@@ -54,17 +56,19 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 	if (gap) baseStyles.push(`tw-gap-${gap}`)
 	if (fontSize) baseStyles.push(`tw-text-${fontSize}`)
 	if (fontWeight) baseStyles.push(`tw-font-${fontWeight}`)
+	if (borderRadius) baseStyles.push(`tw-rounded-${borderRadius}`)
 	if (paddingX || paddingY) {
 		if (paddingX) baseStyles.push(`tw-px-${paddingX}`)
 		if (paddingY) baseStyles.push(`tw-py-${paddingY}`)
 	}
 	else if (padding) baseStyles.push(`tw-py-${padding}`)
 
-	if (borderColor || borderWidth || borderRadius) {
+	if (borderColor && borderWidth) {
 		baseStyles.push('tw-border-solid')
 		if (borderWidth) baseStyles.push(`tw-border${borderWidth > 1 ? '-' + borderWidth : ''}`)
 		if (borderColor) baseStyles.push(`tw-border-${borderColor}`)
-		if (borderRadius) baseStyles.push(`tw-rounded-${borderRadius}`)
+	} else {
+		baseStyles.push('tw-border-none')
 	}
 
 	const extra = className ? className.split(' ') : []
@@ -84,19 +88,23 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 
 export const GreenButton = (props: ActionButtonProps) => {
 	const {
-		disabled
+		disabled,
+		darkMode,
 	} = props
-	const background = disabled ? 'transparent' : 'green/15'
-	const border = disabled ? 'white/50' : 'green'
-	const textColor = disabled ? 'white/50' : 'white'
+	const background = disabled ? 'transparent' : 'green'
+	const darkModeBackground = disabled ? 'transparent' : 'green/15'
+	const border = disabled ? 'black/20' : undefined
+	const darkModeBorder = disabled ? 'white/20' : 'green'
+	const textColor = disabled ? 'black/20' : 'dd-blue'
+	const darkModeTextColor = disabled ? 'white/20' : 'white'
 	return (
 		<ActionButtonBase
-			{...props}
-			backgroundColor={background}
+			backgroundColor={darkMode ? darkModeBackground : background}
 			padding={16}
-			textColor={textColor}
+			textColor={darkMode ? darkModeTextColor : textColor}
 			borderRadius={8}
-			borderColor={border}
+			borderColor={darkMode ? darkModeBorder : border}
+			{...props}
 		/>
 	)
 }
@@ -145,6 +153,19 @@ export const BigYellowButton = (props: ActionButtonProps) => {
 	)
 }
 
+const BigGreenButton = (props: ActionButtonProps) => {
+	return (
+		<GreenButton
+			paddingX={30}
+			paddingY={16}
+			fontSize={36}
+			fontWeight={700}
+			borderWidth={4}
+			{...props}
+		/>
+	)
+}
+
 
 export const ActionButton = (props: ActionButtonProps) => {
 	const {
@@ -158,6 +179,8 @@ export const ActionButton = (props: ActionButtonProps) => {
 			return <BlueButton {...props} />
 		case 'big-yellow':
 			return <BigYellowButton {...props} />
+		case 'big-green':
+			return <BigGreenButton {...props} />
 		default:
 			return <ActionButtonBase {...props} />
 	}
