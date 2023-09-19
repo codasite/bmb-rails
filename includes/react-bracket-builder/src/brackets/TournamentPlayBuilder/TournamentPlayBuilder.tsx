@@ -1,20 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import * as Sentry from '@sentry/react';
-import { bracketApi } from '../../shared/api/bracketApi';
-import { useWindowDimensions } from '../../../utils/hooks';
+import { bracketApi } from '../shared/api/bracketApi';
+import { useWindowDimensions } from '../../utils/hooks';
 import Spinner from 'react-bootstrap/Spinner'
-import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
-import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSlice'
-import { setNumPages } from '../../shared/features/bracketNavSlice'
+import { useAppSelector, useAppDispatch } from '../shared/app/hooks'
+import { setMatchTree, selectMatchTree } from '../shared/features/matchTreeSlice'
+import { setNumPages } from '../shared/features/bracketNavSlice'
 
-import { MatchTree } from '../../shared/models/MatchTree';
-import { defaultBracketConstants } from '../../shared/constants';
-import { BracketMetaContext, DarkModeContext } from '../../shared/context';
+import { MatchTree } from '../shared/models/MatchTree';
+import { defaultBracketConstants } from '../shared/constants';
+import { BracketMetaContext, DarkModeContext } from '../shared/context';
 //@ts-ignore
-import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
+import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
-import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
+import lightBracketBg from '../shared/assets/bracket-bg-light.png'
+import { PickableBracket } from '../shared/components/Bracket/PickableBracket';
 
 
 interface ThemeSelectorProps {
@@ -109,7 +109,7 @@ interface RenderBracketProps {
 }
 
 
-const UserBracket = (props: UserBracketProps) => {
+const TournamentPlayBuilder = (props: UserBracketProps) => {
 	const {
 		tournament,
 		template,
@@ -332,4 +332,4 @@ const UserBracket = (props: UserBracketProps) => {
 	)
 }
 
-export default UserBracket
+export default TournamentPlayBuilder
