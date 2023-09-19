@@ -9,6 +9,7 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context';
+import { bracketApi } from '../../shared/api/bracketApi';
 
 interface ViewPlayPageProps {
 	bracketMeta: BracketMeta
