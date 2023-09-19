@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { DarkModeContext } from '../context';
 
 
 interface ActionButtonProps {
@@ -171,6 +172,10 @@ export const ActionButton = (props: ActionButtonProps) => {
 	const {
 		variant
 	} = props
+
+	if (!props.darkMode) {
+		props.darkMode = true
+	}
 
 	switch (variant) {
 		case 'green':

@@ -17,6 +17,7 @@ import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
 import { ThemeSelector } from '../../shared/components';
 import { ActionButton } from '../../shared/components/ActionButtons';
+import { PlayReq } from '../../shared/api/types/bracket';
 
 interface UserBracketProps {
 	apparelUrl: string;
@@ -122,6 +123,40 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 	}
 
 	const handleApparelClick = () => {
+		const picks = matchTree?.toMatchPicks()
+		const tournamentId = tournament?.id
+		if (!picks) {
+			console.error('no picks')
+			return;
+		}
+		if (!tournamentId) {
+			console.error('no tournament id')
+			return;
+		}
+		const playReq: PlayReq = {
+			tournamentId: tournament?.id,
+			picks: picks,
+		}
+		console.log('playReq')
+		console.log(playReq)
+
+		setProcessing(true)
+		bracketApi.createPlay(playReq)
+			.then((res) => {
+				console.log('res')
+				console.log(res)
+				setProcessing(false)
+			})
+			.catch((err) => {
+				setProcessing(false)
+				console.error(err)
+				Sentry.captureException(err)
+			})
+
+
+	}
+
+	const handleApparelClickPrint = () => {
 		// const id = bracketId || bracketRes?.id;
 		// if (!id || !matchTree) {
 		// 	console.error('no bracket id or match tree')
