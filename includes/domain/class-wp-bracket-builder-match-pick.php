@@ -58,4 +58,14 @@ class Wp_Bracket_Builder_Match_Pick {
 
 		return $pick;
 	}
+
+	public function to_array(): array {
+		return [
+			'id' => $this->id,
+			'round_index' => $this->round_index,
+			'match_index' => $this->match_index,
+			'winning_team_id' => $this->winning_team_id,
+			'winning_team' => $this->winning_team ? $this->winning_team->to_array() : null,
+		];
+	}
 }

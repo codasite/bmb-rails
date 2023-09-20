@@ -39,7 +39,15 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $tournament;
 	}
 
-	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true, bool $fetch_results = true): ?Wp_Bracket_Builder_Bracket_Tournament {
+	public function get(int|WP_Post|Wp_Bracket_Builder_Bracket_Tournament|null $post = null, bool $fetch_matches = true, bool $fetch_results = true): ?Wp_Bracket_Builder_Bracket_Tournament {
+		if ($post === null) {
+			return null;
+		}
+
+		if ($post instanceof Wp_Bracket_Builder_Bracket_Tournament && $post->id !== null) {
+			$post = $post->id;
+		}
+
 		$tournament_post = get_post($post);
 
 		if ($tournament_post === null) {
@@ -122,7 +130,25 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $this->delete_post($id, $force);
 	}
 
-	public function update(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
+	public function update(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament, array|null $data = null): ?Wp_Bracket_Builder_Bracket_Tournament {
+		if (!$tournament || !$data) {
+			return null;
+		}
+
+		if (!($tournament instanceof Wp_Bracket_Builder_Bracket_Tournament)) {
+			$tournament = $this->get($tournament);
+		}
+
+		if (!$tournament) {
+			return null;
+		}
+
+		$array = $tournament->to_array();
+		$updated_array = array_merge($array, $data);
+		print_r($updated_array);
+
+		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($updated_array);
+
 		$tournament_id = $this->update_post($tournament);
 
 		if (is_wp_error($tournament_id)) {

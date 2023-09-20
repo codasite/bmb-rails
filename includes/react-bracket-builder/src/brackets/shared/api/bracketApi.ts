@@ -50,9 +50,9 @@ class BracketApi {
 		return res;
 	}
 
-	async updateTournament(tournament: TournamentReq): Promise<TournamentRes> {
-		const options: RequestOptions = { method: 'POST', body: tournament };
-		const res = await this.performRequest(this.tournamentsPath, options);
+	async updateTournament(tournamentId: number, tournament: TournamentReq): Promise<TournamentRes> {
+		const options: RequestOptions = { method: 'PATCH', body: tournament };
+		const res = await this.performRequest(this.tournamentsPath + '/' + tournamentId, options);
 		return res;
 	}
 

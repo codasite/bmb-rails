@@ -86,29 +86,6 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 				),
 			),
 		));
-		// register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/activate', array(
-		// 	'methods' => 'POST',
-		// 	'callback' => array($this, 'activate_bracket'),
-		// 	'permission_callback' => array($this, 'admin_permission_check'),
-		// 	'args' => array(
-		// 		'id' => array(
-		// 			'description' => __('Unique identifier for the object.'),
-		// 			'type'        => 'integer',
-		// 		),
-		// 	),
-		// ));
-
-		// register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/deactivate', array(
-		// 	'methods' => 'POST',
-		// 	'callback' => array($this, 'deactivate_bracket'),
-		// 	'permission_callback' => array($this, 'admin_permission_check'),
-		// 	'args' => array(
-		// 		'id' => array(
-		// 			'description' => __('Unique identifier for the object.'),
-		// 			'type'        => 'integer',
-		// 		),
-		// 	),
-		// ));
 	}
 
 	/**
@@ -156,10 +133,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item($request) {
-		// if id does not match item_id, return error
-		// if ($request->get_param('id') != $request->get_param('item_id')) {
-		return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
-		// }
+		$data = $request->get_params();
+		$updated = $this->tournament_repo->update($request->get_param('item_id'), $data);
+
+		return new WP_REST_Response($updated, 200);
+
 
 		// // get the update id 
 		// $update_id = $request->get_param('item_id');
@@ -185,39 +163,6 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$deleted = $this->tournament_repo->delete($id);
 		return new WP_REST_Response($deleted, 200);
 	}
-
-	// /**
-	//  * Activates a single bracket.
-	//  *
-	//  * @param WP_REST_Request $request Full details about the request.
-	//  * @return WP_Error|WP_REST_Response
-	//  */
-	// public function activate_bracket($request) {
-	// 	// get id from request
-	// 	$id = $request->get_param('id');
-	// 	$activated = $this->template_repo->set_active($id, true);
-	// 	if ($activated) {
-	// 		return new WP_REST_Response(true, 200);
-	// 	}
-	// 	return new WP_Error('cant-activate', __('message', 'text-domain'), array('status' => 500));
-	// }
-
-	// /**
-	//  * Deactivates a single bracket.
-	//  *
-	//  * @param WP_REST_Request $request Full details about the request.
-	//  * @return WP_Error|WP_REST_Response
-	//  */
-	// public function deactivate_bracket($request) {
-	// 	// get id from request
-	// 	$id = $request->get_param('id');
-	// 	$deactivated = $this->template_repo->set_active($id, false);
-	// 	if ($deactivated) {
-	// 		return new WP_REST_Response(false, 200);
-	// 	}
-	// 	return new WP_Error('cant-deactivate', __('message', 'text-domain'), array('status' => 500));
-	// }
-
 
 	/**
 	 * Check if a given request has admin access to this plugin

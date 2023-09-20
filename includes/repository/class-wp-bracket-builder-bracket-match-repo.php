@@ -111,26 +111,56 @@ class Wp_Bracket_Builder_Bracket_Match_Repository {
 	}
 
 	public function insert_picks(int $post_id, array $picks): void {
-		$table_name = $this->match_pick_table();
 		foreach ($picks as $pick) {
-			$this->wpdb->insert(
-				$table_name,
-				[
-					'bracket_play_id' => $post_id,
-					'round_index' => $pick->round_index,
-					'match_index' => $pick->match_index,
-					'winning_team_id' => $pick->winning_team_id,
-				]
-			);
+			$this->insert_pick($post_id, $pick);
 		}
 	}
 
-	public function update_picks(int $id, array $picks): void {
-		// TODO: implement this method
-		// For each pick:
-		// - find pick with same round_index and match_index for this bracket_play_id
-		// - if it exists, update it
-		// - if it doesn't exist, insert it
+	public function insert_pick(int $post_id, Wp_Bracket_Builder_Match_Pick $pick): void {
+		$table_name = $this->match_pick_table();
+		$this->wpdb->insert(
+			$table_name,
+			[
+				'bracket_play_id' => $post_id,
+				'round_index' => $pick->round_index,
+				'match_index' => $pick->match_index,
+				'winning_team_id' => $pick->winning_team_id,
+			]
+		);
+	}
+
+	public function update_picks(int $post_id, array|null $new_picks): void {
+		if ($new_picks === null) {
+			return;
+		}
+
+		$old_picks = $this->get_picks($post_id);
+
+		if (empty($old_picks)) {
+			$this->insert_picks($post_id, $new_picks);
+			return;
+		}
+
+		foreach ($new_picks as $new_pick) {
+			$pick_exists = false;
+			foreach ($old_picks as $old_pick) {
+				if ($new_pick->round_index === $old_pick->round_index && $new_pick->match_index === $old_pick->match_index) {
+					$pick_exists = true;
+					$this->wpdb->update(
+						$this->match_pick_table(),
+						[
+							'winning_team_id' => $new_pick->winning_team_id,
+						],
+						[
+							'id' => $old_pick->id,
+						]
+					);
+				}
+			}
+			if (!$pick_exists) {
+				$this->insert_picks($post_id, [$new_pick]);
+			}
+		}
 	}
 
 	/**

@@ -57,4 +57,14 @@ class Wp_Bracket_Builder_Match {
 
 		return $match;
 	}
+
+	public function to_array(): array {
+		return [
+			'id' => $this->id,
+			'round_index' => $this->round_index,
+			'match_index' => $this->match_index,
+			'team1' => $this->team1 ? $this->team1->to_array() : null,
+			'team2' => $this->team2 ? $this->team2->to_array() : null,
+		];
+	}
 }

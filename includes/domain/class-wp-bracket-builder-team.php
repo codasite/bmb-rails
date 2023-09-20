@@ -29,13 +29,10 @@ class Wp_Bracket_Builder_Team {
 		return $team;
 	}
 
-	public function equals(Wp_Bracket_Builder_Team $team): bool {
-		if ($this->id !== $team->id) {
-			return false;
-		}
-		// if ($this->name !== $team->name) {
-		// 	return false;
-		// }
-		return true;
+	public function to_array(): array {
+		return [
+			'id' => $this->id,
+			'name' => $this->name,
+		];
 	}
 }

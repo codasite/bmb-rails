@@ -2,15 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import { MatchTree } from '../../shared/models/MatchTree';
 import { BracketMetaContext, DarkModeContext } from '../../shared/context';
-//@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-//@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ResultsBracket } from '../../shared/components/Bracket';
 import { ActionButton } from '../../shared/components/ActionButtons';
-//@ts-ignore
 import checkIcon from '../../shared/assets/check.svg'
 import { bracketApi } from '../../shared/api/bracketApi';
+import { TournamentReq } from '../../shared/api/types/bracket';
 
 const CustomCheckbox = (props: any) => {
 	const {
@@ -61,8 +59,8 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 
 	const [bracketTitle, setBracketTitle] = useState('');
 	const [bracketDate, setBracketDate] = useState('');
-	const [showPaginated, setShowPaginated] = useState(false);
 	const [notifyParticipants, setNotifyParticipants] = useState(false);
+	const [tournamentId, setTournamentId] = useState(0);
 
 	useEffect(() => {
 		if (tournament && tournament.bracketTemplate) {
@@ -72,6 +70,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 			const results = tournament.results;
 			setBracketTitle(tournament.title)
 			setBracketDate('JAN 1, 2021')
+			setTournamentId(tournament.id)
 			let tree: MatchTree | null;
 			if (results && results.length > 0) {
 				tree = MatchTree.fromPicks(numTeams, matches, results)
@@ -90,7 +89,14 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 	const handleUpdatePicks = () => {
 		if (matchTree) {
 			const picks = matchTree.toMatchPicks();
-			console.log(picks);
+			const data: TournamentReq = {
+				results: picks,
+			}
+			bracketApi.updateTournament(tournamentId, data).then((res) => {
+				console.log(res);
+			}).catch((err) => {
+				console.log(err);
+			})
 		}
 	}
 

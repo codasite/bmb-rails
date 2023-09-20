@@ -98,7 +98,7 @@ export interface TournamentReq {
 	title?: string;
 	status?: string;
 	bracketTemplateId?: number;
-	resultes?: MatchPicks[];
+	results?: MatchPicks[];
 }
 
 export interface TournamentRes {

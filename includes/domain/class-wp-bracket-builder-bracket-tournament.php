@@ -71,6 +71,8 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		if (isset($data['results'])) {
 			$results = [];
 			foreach ($data['results'] as $result) {
+				echo 'result: ';
+				var_dump($result);
 				$results[] = Wp_Bracket_Builder_Match_Pick::from_array($result);
 			}
 			$data['results'] = $results;
@@ -84,6 +86,19 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			}
 		}
 
+		return $tournament;
+	}
+
+	public function to_array(): array {
+		$tournament = parent::to_array();
+		$tournament['bracket_template_id'] = $this->bracket_template_id;
+		if ($this->results) {
+			$results = [];
+			foreach ($this->results as $result) {
+				$results[] = $result->to_array();
+			}
+			$tournament['results'] = $results;
+		}
 		return $tournament;
 	}
 }

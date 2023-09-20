@@ -31,6 +31,7 @@ abstract class Wp_Bracket_Builder_Custom_Post_Repository_Base {
 		return $post_id;
 	}
 
+
 	public function delete_post(int $id, $force = false): bool {
 		$result = wp_delete_post($id, $force);
 		return $result !== false;

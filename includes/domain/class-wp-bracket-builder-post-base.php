@@ -76,4 +76,16 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 			'post_status' => $this->status,
 		];
 	}
+
+
+	public function to_array(): array {
+		return [
+			'id' => $this->id,
+			'title' => $this->title,
+			'author' => $this->author,
+			'status' => $this->status,
+			'date' => $this->date,
+			'date_gmt' => $this->date_gmt,
+		];
+	}
 }
