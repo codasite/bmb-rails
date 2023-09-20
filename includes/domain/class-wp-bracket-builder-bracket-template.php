@@ -36,7 +36,7 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		int $id = null,
 		string $title = '',
 		int $author = null,
-		string $status = 'draft',
+		string $status = 'publish',
 		int $num_teams = null,
 		int $wildcard_placement = null,
 		DateTimeImmutable|false $date = false,
@@ -80,14 +80,32 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
 		$template = new Wp_Bracket_Builder_Bracket_Template();
+		if (!isset($data['author'])) {
+			throw new Exception('author is required');
+		}
+
+		if (!isset($data['num_teams'])) {
+			throw new Exception('num_teams is required');
+		}
+
+		if (!isset($data['wildcard_placement'])) {
+			throw new Exception('wildcard_placement is required');
+		}
+
+		if (!isset($data['author'])) {
+			throw new Exception('author is required');
+		}
+
+		if (!isset($data['title'])) {
+			throw new Exception('title is required');
+		}
+
 		$matches = [];
 
-		if (isset($data['matches'])) {
-			foreach ($data['matches'] as $match) {
-				$matches[] = Wp_Bracket_Builder_Match::from_array($match);
-			}
-			$data['matches'] = $matches;
+		foreach ($data['matches'] as $match) {
+			$matches[] = Wp_Bracket_Builder_Match::from_array($match);
 		}
+		$data['matches'] = $matches;
 
 		foreach ($data as $key => $value) {
 			if (property_exists($template, $key)) {

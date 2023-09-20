@@ -10,8 +10,8 @@ switch ($view) {
     case 'play':
         echo '<div id="wpbb-play-tournament-builder"></div>';
         break;
-    case 'score':
-        echo 'Error: Score Tournament page not implemented yet.';
+    case 'results':
+        echo '<div id="wpbb-tournament-results-builder"></div>';
         break;
     default:
         echo '<div id="wpbb-play-tournament-builder"></div>';

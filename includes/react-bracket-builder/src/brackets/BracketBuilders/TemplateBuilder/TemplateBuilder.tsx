@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
-import { bracketApi } from '../shared/api/bracketApi'
-import { MatchTree, WildcardPlacement } from '../shared/models/MatchTree'
-//@ts-ignore
+import { bracketApi } from '../../shared/api/bracketApi'
+import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
 import { AddTeamsPage } from './AddTeamsPage'
 import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
-import { TemplateReq } from '../shared/api/types/bracket'
+import { TemplateReq } from '../../shared/api/types/bracket'
 
 const defaultBracketName = "MY BRACKET NAME"
 

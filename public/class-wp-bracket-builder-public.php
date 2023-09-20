@@ -1,7 +1,9 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-template.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-aws-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-pdf-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-config.php';
@@ -314,49 +316,8 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
-	public function render_bracket_tournament() {
-		$post = get_post();
-		if (!$post || $post->post_type !== 'bracket_tournament') {
-			return
-				'<div class="alert alert-danger" role="alert">
-					Tournament not found.
-				</div>';
-		}
-		$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-		$tournament  = $tournament_repo->get(post: $post);
 
-		$bracket_product_archive_url = $this->get_archive_url();
-		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
-
-		wp_localize_script(
-			'wpbb-bracket-builder-react',
-			'wpbb_ajax_obj',
-			array(
-				'tournament' => $tournament,
-				// 'sentry_env' => $sentry_env,
-				// 'sentry_dsn' => $sentry_dsn,
-				'nonce' => wp_create_nonce('wp_rest'),
-				// 'page' => 'user-bracket',
-				// 'ajax_url' => admin_url('admin-ajax.php'),
-				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-				// 'post' => $post,
-				// 'bracket' => $bracket,
-				'css_file' => $css_file,
-				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
-
-				// // For product page
-				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
-				// 'gallery_images' => $gallery_images,
-				// 'color_options' => $color_options,
-			)
-		);
-		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-tournament.php';
-
-		return ob_get_clean();
-	}
-
-	public function render_play_template() {
+	public function render_bracket_template_page() {
 		$post = get_post();
 		if (!$post || $post->post_type !== 'bracket_template') {
 			return
@@ -400,6 +361,84 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function render_bracket_tournament_page() {
+		$post = get_post();
+		if (!$post || $post->post_type !== 'bracket_tournament') {
+			return
+				'<div class="alert alert-danger" role="alert">
+					Tournament not found.
+				</div>';
+		}
+		$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+		$tournament  = $tournament_repo->get(post: $post);
+		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
+
+		$bracket_product_archive_url = $this->get_archive_url();
+		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
+
+		wp_localize_script(
+			'wpbb-bracket-builder-react',
+			'wpbb_ajax_obj',
+			array(
+				'tournament' => $tournament,
+				// 'sentry_env' => $sentry_env,
+				// 'sentry_dsn' => $sentry_dsn,
+				'nonce' => wp_create_nonce('wp_rest'),
+				// 'page' => 'user-bracket',
+				// 'ajax_url' => admin_url('admin-ajax.php'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+				// 'post' => $post,
+				// 'bracket' => $bracket,
+				'css_file' => $css_file,
+				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+				'bracket_product_archive_url' => $play_history_url, // used to redirect to bracket-ready category page
+
+				// // For product page
+				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
+				// 'gallery_images' => $gallery_images,
+				// 'color_options' => $color_options,
+			)
+		);
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-tournament-page.php';
+
+		return ob_get_clean();
+	}
+
+	public function render_bracket_play_page() {
+		$post = get_post();
+		if (!$post || $post->post_type !== 'bracket_play') {
+			return
+				'<div class="alert alert-danger" role="alert">
+					Play not found.
+				</div>';
+		}
+		$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+		$play = $play_repo->get(post: $post);
+		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
+
+		$bracket_product_archive_url = $this->get_archive_url();
+		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
+
+		wp_localize_script(
+			'wpbb-bracket-builder-react',
+			'wpbb_ajax_obj',
+			array(
+				'play' => $play,
+				'play_history_url' => $play_history_url,
+				'nonce' => wp_create_nonce('wp_rest'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+				'css_file' => $css_file,
+				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+				'bracket_product_archive_url' => $play_history_url
+			)
+		);
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-play-page.php';
+
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -407,12 +446,13 @@ class Wp_Bracket_Builder_Public {
 	 */
 	public function add_shortcodes() {
 		// add_shortcode('wpbb-play-tournament-builder', [$this, 'render_play_tourney_builder']); // This page is now included in the wpbb-bracket-tournament shortcode
-		add_shortcode('wpbb-play-template', [$this, 'render_play_template']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-template-builder', [$this, 'render_template_builder']); // This is a page with slug `bracket-template-builder
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']); // This is a page with slug `dashboard`
 		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']); // This is a page with slug `official-tournaments`
 		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']); // This is a page with slug `celebrity-picks`
-		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament']); // This is a single post type template for bracket_tournament posts
+		add_shortcode('wpbb-bracket-template', [$this, 'render_bracket_template_page']); // This is a single post type template for bracket_template posts
+		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament_page']); // This is a single post type template for bracket_tournament posts
+		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
 	}
 
 	public function add_rewrite_tags() {
@@ -430,6 +470,7 @@ class Wp_Bracket_Builder_Public {
 		add_rewrite_rule('^dashboard/play-history/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=play-history&paged=$matches[1]', 'top');
 		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
 		add_rewrite_rule('^bracket_tournament/([^/]+)/([^/]+)', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
+		add_rewrite_rule('^bracket_play/([^/]+)/([^/]+)', 'index.php?bracket_play=$matches[1]&view=$matches[2]', 'top');
 	}
 
 	public function add_query_vars($vars) {

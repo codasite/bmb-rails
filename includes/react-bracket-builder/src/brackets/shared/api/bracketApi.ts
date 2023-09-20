@@ -9,6 +9,10 @@ import {
 	TeamRes,
 	TemplateReq,
 	TemplateRes,
+	TournamentReq,
+	TournamentRes,
+	PlayReq,
+	PlayRes,
 } from './types/bracket';
 
 
@@ -22,10 +26,10 @@ interface RequestOptions {
 
 class BracketApi {
 	private baseUrl: string;
-	private bracketPath: string = 'brackets';
-	private submissionPath: string = 'bracket-picks';
+	private templatesPath: string = 'templates';
+	private playsPath: string = 'plays';
+	private tournamentsPath: string = 'tournaments';
 	private nonce: string = '';
-	private getUserBracketsPath = 'get-user-brackets';
 
 	constructor() {
 		// @ts-ignore
@@ -34,37 +38,17 @@ class BracketApi {
 		this.nonce = wpbb_ajax_obj.nonce;
 	}
 
-	// async getBrackets(): Promise<BracketRes[]> {
-	// 	return await this.performRequest(this.bracketPath);
-	// }
-	// async getUserBrackets(): Promise<BracketRes[]> {
-	// 	return await this.performRequest(`${this.bracketPath}/${this.getUserBracketsPath}`);
-	// }
-
-	// async getBracket(id: number): Promise<BracketRes> {
-	// 	return await this.performRequest(`${this.bracketPath}/${id}`);
-	// }
-
-	// async getSubmissions(id?: number | null): Promise<SubmissionRes[]> {
-	// 	const options: RequestOptions = { method: 'GET', body: { bracketId: id } };
-	// 	return await this.performRequest(`${this.submissionPath}`, options);
-	// }
-
-	// async getSubmission(id: number): Promise<SubmissionRes> {
-	// 	return await this.performRequest(`${this.submissionPath}/${id}`);
-	// }
-
 	async createTemplate(template: TemplateReq): Promise<TemplateRes> {
 		const options: RequestOptions = { method: 'POST', body: template };
-		const res = await this.performRequest('templates', options);
+		const res = await this.performRequest(this.templatesPath, options);
 		return res;
 	}
 
-	// async submitBracket(submission: SubmissionReq): Promise<SubmissionRes> {
-	// 	const options: RequestOptions = { method: 'POST', body: submission };
-	// 	const res = await this.performRequest(this.submissionPath, options);
-	// 	return res;
-	// }
+	async createPlay(play: PlayReq): Promise<PlayRes> {
+		const options: RequestOptions = { method: 'POST', body: play };
+		const res = await this.performRequest(this.playsPath, options);
+		return res;
+	}
 
 	async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
 		const options: RequestOptions = { method: 'POST', body: req, snakeCaseBody: false };
@@ -72,22 +56,6 @@ class BracketApi {
 		return res;
 	}
 
-	// async createBracket(bracket: BracketReq): Promise<BracketRes> {
-	// 	const options: RequestOptions = { method: 'POST', body: bracket };
-	// 	const res = await this.performRequest(this.bracketPath, options);
-	// 	return res;
-	// }
-
-	// async deleteBracket(id: number): Promise<boolean> {
-	// 	return await this.performRequest(`${this.bracketPath}/${id}`, { method: 'DELETE', camelCaseResponse: false });
-	// }
-
-	// async setActive(id: number, active: boolean): Promise<boolean> {
-	// 	const path = `${this.bracketPath}/${id}/${active ? 'activate' : 'deactivate'}`;
-	// 	const options: RequestOptions = { method: 'POST', camelCaseResponse: false };
-	// 	const res = await this.performRequest(path, options);
-	// 	return res;
-	// }
 	async performRequest(path: string, options: RequestOptions = {}): Promise<any> {
 		let {
 			method = 'GET',

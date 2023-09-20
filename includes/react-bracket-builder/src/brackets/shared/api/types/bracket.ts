@@ -93,4 +93,39 @@ export interface TemplateRes {
 	matches?: MatchRes[];
 }
 
+export interface TournamentReq {
+	title: string;
+	status?: string;
+	bracketTemplateId: number;
+}
 
+export interface TournamentRes {
+	id: number;
+	title: string;
+	status: string;
+	author: number;
+	date: phpDate;
+	dateGmt: phpDate;
+	bracketTemplateId: number;
+	bracketTemplate?: TemplateRes;
+}
+
+export interface PlayReq {
+	tournamentId: number;
+	title?: string;
+	status?: string;
+	picks: MatchPicks[];
+}
+
+export interface PlayRes {
+	id: number;
+	tournamentId: number;
+	title: string;
+	author: number;
+	status: string;
+	date: phpDate;
+	dateGmt: phpDate;
+	imgUrl: string;
+	picks: MatchPicks[];
+	tournament?: TournamentRes;
+}

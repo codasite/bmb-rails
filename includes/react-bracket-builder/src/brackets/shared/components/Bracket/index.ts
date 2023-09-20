@@ -5,3 +5,4 @@ export { FlexBracket } from './FlexBracket';
 export { BracketLines } from './BracketLines';
 export { PreviewBracket } from './PreviewBracket';
 export { AddTeamsBracket } from './AddTeamsBracket';
+export { ResultsBracket } from './ResultsBracket';

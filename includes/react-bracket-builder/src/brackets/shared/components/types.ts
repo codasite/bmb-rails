@@ -79,3 +79,4 @@ export interface MatchBoxChildProps {
 }
 
 
+export type HOC = (Component: React.FC<any>) => React.FC<any>;

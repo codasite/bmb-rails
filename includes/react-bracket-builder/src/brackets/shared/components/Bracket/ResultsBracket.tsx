@@ -1,12 +1,12 @@
 import React from 'react';
 import { MatchNode, Team } from '../../models/MatchTree';
 import { BracketProps } from '../types';
-import { DefaultBracket } from '../Bracket/DefaultBracket';
-import { TeamSlotToggle } from '../TeamSlot';
+import { DefaultBracket } from './DefaultBracket';
+import { ResultsTeamSlotToggle } from '../TeamSlot';
 import { Nullable } from '../../../../utils/types';
 
 
-export const PickableBracket = (props: BracketProps) => {
+export const ResultsBracket = (props: BracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
@@ -29,8 +29,8 @@ export const PickableBracket = (props: BracketProps) => {
 	return (
 		<DefaultBracket
 			{...props}
-			TeamSlotComponent={TeamSlotToggle}
-			onTeamClick={setMatchTree ? handleTeamClick : undefined}
+			TeamSlotComponent={ResultsTeamSlotToggle}
+			onTeamClick={handleTeamClick}
 		/>
 	)
 };

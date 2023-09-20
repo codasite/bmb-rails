@@ -23,40 +23,25 @@ $num_pages = $the_query->max_num_pages;
 $plays = $play_repo->get_all($the_query);
 
 function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
-	$tournament_name = $play->title;
+	$tournament_name = $play->tournament->title;
 	$user_rank = 99999;
 	$complete = $play->tournament->status === 'complete';
 	$play_id = $play->id;
 	$tournament_id = $play->tournament_id;
-	// $play_link = get_permalink() . 'tournaments/' . $tournament_id . '/play/' . $play_id;
-	$play_link = get_permalink($tournament_id) . '/play';
-	$leaderboard_link = get_permalink($tournament_id) . '/leaderboard';
+	$view_link = get_permalink($play_id) . 'view';
+	$leaderboard_link = get_permalink($tournament_id) . 'leaderboard';
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
 	$user_score_percent = 99; // $user_score * 100;
 	ob_start();
-
-	// $tournament_name = $play['tournament_name'];
-	// $user_rank = number_format($play['user_rank']);
-	// $user_score = $play['user_score'];
-	// $complete = $play['complete'];
-	// $play_id = $play['play_id'];
-	// $tournament_id = $play['tournament_id'];
-	// $play_link = get_permalink() . 'tournaments/' . $tournament_id . '/play/' . $play_id;
-	// $leaderboard_link = get_permalink() . 'tournaments/' . $tournament_id . '/leaderboard';
-	// $trend_up = $play['trend_up'];
-	// $trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
-	// $leaderboard_variant = $complete ? 'final' : 'primary';
-	// $user_score_percent = $user_score * 100;
-	// ob_start();
 ?>
 	<div class="tw-flex tw-justify-between tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
 		<div class="tw-flex tw-flex-col tw-gap-20">
 			<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($tournament_name) ?></h2>
 			<div class="tw-flex tw-gap-16">
-				<!-- Play this tournament again -->
-				<?php echo view_play_btn($play_link); ?>
+				<!-- View this play and add to apparel -->
+				<?php echo view_play_btn($view_link); ?>
 				<!-- View the leaderboard for this tournament -->
 				<?php echo view_leaderboard_btn($leaderboard_link, $leaderboard_variant); ?>
 			</div>
