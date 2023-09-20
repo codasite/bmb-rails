@@ -169,7 +169,11 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item($request) {
-		$play = Wp_Bracket_Builder_Bracket_Play::from_array($request->get_params());
+		$params = $request->get_params();
+		if (!isset($params['author'])) {
+			$params['author'] = get_current_user_id();
+		}
+		$play = Wp_Bracket_Builder_Bracket_Play::from_array($params);
 		$saved = $this->play_repo->add($play);
 
 		return new WP_REST_Response($saved, 201);

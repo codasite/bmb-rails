@@ -89,13 +89,15 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 			throw new Exception('author is required');
 		}
 
-		if (isset($data['picks'])) {
-			$picks = [];
-			foreach ($data['picks'] as $pick) {
-				$picks[] = Wp_Bracket_Builder_Match_Pick::from_array($pick);
-			}
-			$data['picks'] = $picks;
+		if (!isset($data['picks'])) {
+			throw new Exception('picks is required');
 		}
+
+		$picks = [];
+		foreach ($data['picks'] as $pick) {
+			$picks[] = Wp_Bracket_Builder_Match_Pick::from_array($pick);
+		}
+		$data['picks'] = $picks;
 
 		$play = new Wp_Bracket_Builder_Bracket_Play($data['tournament_id'], $data['author']);
 

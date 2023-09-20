@@ -146,6 +146,7 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 				console.log('res')
 				console.log(res)
 				setProcessing(false)
+				window.location.href = apparelUrl
 			})
 			.catch((err) => {
 				setProcessing(false)
