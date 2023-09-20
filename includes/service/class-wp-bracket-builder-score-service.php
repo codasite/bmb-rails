@@ -16,6 +16,7 @@ class Wp_Bracket_Builder_Score_Service {
 		$this->tournament = $tournament;
 	}
 
-	public function score_tournament_plays(Wp_Bracket_Builder_Bracket_Play|int|null $tournament) {
+	public function score_tournament_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
+		//TODO: score plays in SQL
 	}
 }
