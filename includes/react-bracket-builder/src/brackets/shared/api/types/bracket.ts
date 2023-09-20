@@ -94,9 +94,11 @@ export interface TemplateRes {
 }
 
 export interface TournamentReq {
-	title: string;
+	id?: number;
+	title?: string;
 	status?: string;
-	bracketTemplateId: number;
+	bracketTemplateId?: number;
+	resultes?: MatchPicks[];
 }
 
 export interface TournamentRes {

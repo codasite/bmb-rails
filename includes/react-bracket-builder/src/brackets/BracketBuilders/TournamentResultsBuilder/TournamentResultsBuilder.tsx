@@ -10,6 +10,7 @@ import { ResultsBracket } from '../../shared/components/Bracket';
 import { ActionButton } from '../../shared/components/ActionButtons';
 //@ts-ignore
 import checkIcon from '../../shared/assets/check.svg'
+import { bracketApi } from '../../shared/api/bracketApi';
 
 const CustomCheckbox = (props: any) => {
 	const {
@@ -68,9 +69,15 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 			const template = tournament.bracketTemplate;
 			const numTeams = template.numTeams;
 			const matches = template.matches;
+			const results = tournament.results;
 			setBracketTitle(tournament.title)
 			setBracketDate('JAN 1, 2021')
-			const tree = MatchTree.fromMatchRes(numTeams, matches);
+			let tree: MatchTree | null;
+			if (results && results.length > 0) {
+				tree = MatchTree.fromPicks(numTeams, matches, results)
+			} else {
+				tree = MatchTree.fromMatchRes(numTeams, matches);
+			}
 			if (tree) {
 				setMatchTree?.(tree);
 			}
@@ -79,6 +86,13 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 
 	const darkMode = true
 	const complete = matchTree && matchTree.allPicked()
+
+	const handleUpdatePicks = () => {
+		if (matchTree) {
+			const picks = matchTree.toMatchPicks();
+			console.log(picks);
+		}
+	}
 
 	return (
 		<BracketMetaContext.Provider value={{ title: bracketTitle, date: bracketDate }}>
@@ -97,6 +111,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 							<div className={`tw-flex tw-flex-col tw-gap-24${!complete ? ' tw-max-w-[470px] tw-w-full' : ''}`}>
 								<ActionButton
 									variant='big-yellow'
+									onClick={handleUpdatePicks}
 								>
 									{complete ? 'Complete Tournament' : 'Update Picks'}
 								</ActionButton>

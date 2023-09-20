@@ -50,6 +50,12 @@ class BracketApi {
 		return res;
 	}
 
+	async updateTournament(tournament: TournamentReq): Promise<TournamentRes> {
+		const options: RequestOptions = { method: 'POST', body: tournament };
+		const res = await this.performRequest(this.tournamentsPath, options);
+		return res;
+	}
+
 	async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
 		const options: RequestOptions = { method: 'POST', body: req, snakeCaseBody: false };
 		const res = await this.performRequest('html-to-image', options);
