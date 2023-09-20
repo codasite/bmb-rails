@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import App from "./App";
 import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
@@ -8,6 +8,12 @@ import { bracketBuilderStore } from './brackets/shared/app/store';
 import { Provider } from 'react-redux';
 import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
+import {CreateTournamentButtonAndModal} from './modals/CreateTournamentButtonAndModal';
+/**
+ * Import the stylesheet for the plugin.
+ */
+import './style/main.scss';
+
 
 interface WpbbAjaxObj {
 	page: string;
@@ -26,15 +32,12 @@ interface WpbbAjaxObj {
 	post: any;
 	my_templates_url: string;
 	my_tournaments_url: string;
+	bracket_template_builder_url: string;
 }
 
 declare var wpbb_ajax_obj: WpbbAjaxObj;
 console.log('wpbb_ajax_obj', wpbb_ajax_obj)
 
-/**
- * Import the stylesheet for the plugin.
- */
-import './style/main.scss';
 const sentryEnv = wpbb_ajax_obj.sentry_env
 const sentryDsn = wpbb_ajax_obj.sentry_dsn
 
@@ -77,6 +80,7 @@ renderTemplateBuilder(wpbb_ajax_obj)
 renderPlayTemplate(wpbb_ajax_obj)
 renderTournamentResultsBuilder(wpbb_ajax_obj)
 renderViewBracketPlay(wpbb_ajax_obj)
+renderCreateTournamentModal(wpbb_ajax_obj)
 
 /**
  * This renders the bracket builder admin page. DEPRECATED
@@ -219,5 +223,19 @@ function renderPreview(wpbb_ajax_obj: WpbbAjaxObj) {
 		// Render the preview component into the DOM
 		// Find the location to render the gallery component, and render the gallery component.
 		render(<App><Gallery overlayThemeMap={bracket_url_theme_map} galleryImages={gallery_images} colorOptions={color_options} /> </App>, previewDiv);
+	}
+}
+
+/**
+ * This loads the apparel preview component for the bracket product page.
+ */
+function renderCreateTournamentModal(wpbb_ajax_obj: WpbbAjaxObj) {
+	const div = document.getElementById('wpbb-create-tournament-button-and-modal')
+	if (div) {
+		const {
+			my_templates_url,
+			bracket_template_builder_url
+		} = wpbb_ajax_obj
+		render(<CreateTournamentButtonAndModal myTemplatesUrl={my_templates_url} bracketTemplateBuilderUrl={bracket_template_builder_url}></CreateTournamentButtonAndModal>, div);
 	}
 }
