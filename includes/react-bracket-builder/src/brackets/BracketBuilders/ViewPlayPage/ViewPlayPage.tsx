@@ -36,7 +36,6 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 	} = props
 
 	useEffect(() => {
-		console.log('play', play)
 		const picks = play?.picks
 		const title = play?.tournament?.title
 		const date = 'Sept 2094'
@@ -44,10 +43,8 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 		const template = play?.tournament?.bracketTemplate
 		const matches = template?.matches
 		const numTeams = template?.numTeams
-		// if (picks && matches) {
-		if (matches) {
-			// const tree = MatchTree.fromPicks(numTeams, matches, picks)
-			const tree = MatchTree.fromMatchRes(numTeams, matches)
+		if (picks && matches) {
+			const tree = MatchTree.fromPicks(numTeams, matches, picks)
 
 			if (tree) {
 				setMatchTree(tree)
