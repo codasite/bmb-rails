@@ -1,6 +1,6 @@
 import React from 'react';
-import { MatchTree } from '../shared/models/MatchTree';
-import { FlexBracket } from '../shared/components/Bracket/FlexBracket';
+import { MatchTree } from '../../shared/models/MatchTree';
+import { FlexBracket } from '../../shared/components/Bracket/FlexBracket';
 
 interface BracketPreviewProps {
 	matchTree: MatchTree

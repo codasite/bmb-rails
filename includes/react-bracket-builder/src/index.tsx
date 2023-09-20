@@ -7,7 +7,7 @@ import { OverlayUrlThemeMap } from './preview/Gallery';
 import { bracketBuilderStore } from './brackets/shared/app/store';
 import { Provider } from 'react-redux';
 import { camelCaseKeys } from './brackets/shared/api/bracketApi';
-import withMatchTree from './brackets/shared/components/WithMatchTree';
+import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
 
 interface WpbbAjaxObj {
 	page: string;
@@ -15,6 +15,7 @@ interface WpbbAjaxObj {
 	rest_url: string;
 	tournament: any;
 	template: any;
+	play: any;
 	bracket_url_theme_map: OverlayUrlThemeMap;
 	css_url: string;
 	bracket_product_archive_url: string;
@@ -59,10 +60,12 @@ if (sentryDsn) {
 
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
-const UserBracket = React.lazy(() => import('./brackets/UserBracketBuilder/UserBracket/UserBracket'))
+const PlayTournamentBuilder = React.lazy(() => import('./brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentBuilder'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 // const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
-const TemplateBuilder = React.lazy(() => import('./brackets/TemplateBuilder/TemplateBuilder'))
+const TemplateBuilder = React.lazy(() => import('./brackets/BracketBuilders/TemplateBuilder/TemplateBuilder'))
+const TournamentResultsBuilder = React.lazy(() => import('./brackets/BracketBuilders/TournamentResultsBuilder/TournamentResultsBuilder'))
+const ViewPlayPage = React.lazy(() => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage'))
 // const WithMatchTree = React.lazy(() => import('./brackets/shared/components/WithMatchTree'))
 
 // Get the wpbb_ajax_obj from the global scope
@@ -72,6 +75,8 @@ renderPreview(wpbb_ajax_obj)
 renderPlayTournamentBuilder(wpbb_ajax_obj)
 renderTemplateBuilder(wpbb_ajax_obj)
 renderPlayTemplate(wpbb_ajax_obj)
+renderTournamentResultsBuilder(wpbb_ajax_obj)
+renderViewBracketPlay(wpbb_ajax_obj)
 
 /**
  * This renders the bracket builder admin page. DEPRECATED
@@ -124,7 +129,7 @@ function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(
 			<App>
 				<Provider store={bracketBuilderStore}>
-					<UserBracket bracketStylesheetUrl={css_url} template={temp} apparelUrl={bracket_product_archive_url} />
+					<PlayTournamentBuilder bracketStylesheetUrl={css_url} template={temp} apparelUrl={bracket_product_archive_url} />
 				</Provider>
 			</App>, builderDiv)
 	}
@@ -147,12 +152,54 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering play tournament builder')
 		render(
 			<App>
-				<Provider store={bracketBuilderStore}>
-					<UserBracket bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
-				</Provider>
+				<PlayTournamentBuilder bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
 			</App>, builderDiv)
 	}
 }
+
+/**
+ * This renders the update tournament results page
+ */
+function renderTournamentResultsBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
+	const builderDiv = document.getElementById('wpbb-tournament-results-builder')
+	const {
+		tournament,
+		my_tournaments_url,
+	} = wpbb_ajax_obj
+
+	const tourney = camelCaseKeys(tournament)
+
+	if (builderDiv && tourney) {
+		const TournamentResultsBuilderWithMatchTree = withMatchTree(TournamentResultsBuilder)
+		render(
+			<App>
+				<Provider store={bracketBuilderStore}>
+					<TournamentResultsBuilderWithMatchTree tournament={tourney} saveTournamentLink={my_tournaments_url} />
+				</Provider>
+			</App>, builderDiv)
+
+	}
+}
+
+function renderViewBracketPlay(wpbb_ajax_obj: WpbbAjaxObj) {
+	const builderDiv = document.getElementById('wpbb-view-play')
+	const {
+		play,
+		bracket_product_archive_url,
+	} = wpbb_ajax_obj
+
+	const playObj = camelCaseKeys(play)
+
+	if (builderDiv && playObj) {
+		console.log('rendering view play')
+		render(
+			<App>
+				<ViewPlayPage bracketPlay={playObj} apparelUrl={bracket_product_archive_url} />
+			</App>, builderDiv)
+	}
+
+}
+
 
 /**
  * This loads the apparel preview component for the bracket product page.

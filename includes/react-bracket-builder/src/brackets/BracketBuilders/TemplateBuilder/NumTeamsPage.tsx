@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { NumTeamsPicker } from './NumTeamsPicker'
-import { MatchTree, WildcardPlacement } from '../shared/models/MatchTree'
+import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
 //@ts-ignore
-import darkBracketBg from '../shared/assets/bracket-bg-dark.png'
+import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import { BracketTemplatePreview } from './BracketTemplatePreview'
-import { isPowerOfTwo } from '../shared/utils'
+import { isPowerOfTwo } from '../../shared/utils'
 import { WildcardPicker } from './WildcardPicker'
-import { ActionButton } from './ActionButtons'
+import { ActionButton } from '../../shared/components/ActionButtons'
 
 
 

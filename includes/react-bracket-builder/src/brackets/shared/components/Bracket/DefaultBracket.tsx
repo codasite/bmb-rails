@@ -47,9 +47,7 @@ export const DefaultBracket = (props: BracketProps) => {
 	const getBracketMeasurements = (roundIndex: number, numRounds: number) => {
 		const teamHeight = getTeamHeight(numRounds)
 		const teamWidth = getTeamWidth(numRounds)
-		console.log('get team gap', { roundIndex, numRounds })
 		const teamGap = getTeamGap(numRounds - roundIndex - 1)
-		console.log('team gap', teamGap)
 		const matchHeight = teamHeight * 2 + teamGap
 		let matchGap: number
 		if (roundIndex === 0) {
@@ -172,7 +170,7 @@ export const DefaultBracket = (props: BracketProps) => {
 				<div className={`tw-mt-${numRounds > 5 ? 50 : 20}`}>
 					<LogoContainer
 						{...props}
-						bottomText={'March 2023'}
+						bottomText={bracketDate}
 					/>
 				</div>
 			}

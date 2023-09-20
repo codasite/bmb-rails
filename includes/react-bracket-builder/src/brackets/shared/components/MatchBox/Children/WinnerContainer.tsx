@@ -17,10 +17,9 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
 	const {
 		match,
 		matchTree,
-		bottom = defaultBracketConstants.winnerContainerBottom,
 		TeamSlotComponent = DefaultTeamSlot,
 		topText = 'Winner',
-		topTextFontSize = 64,
+		topTextFontSize = 48,
 		topTextColor = 'dd-blue',
 		topTextColorDark = 'white',
 	} = props
