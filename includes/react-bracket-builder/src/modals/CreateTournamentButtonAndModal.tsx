@@ -1,6 +1,7 @@
 import {ReactComponent as SignalIcon} from "../brackets/shared/assets/signal.svg";
 import {ReactComponent as FileIcon} from "../brackets/shared/assets/file.svg";
 import {ReactComponent as PlusIcon} from "../brackets/shared/assets/plus.svg";
+import * as React from 'react';
 import {useState} from 'react';
 
 export const CreateTournamentButtonAndModal = (props: {
