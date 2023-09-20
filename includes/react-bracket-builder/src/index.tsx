@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import App from "./App";
 import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
@@ -8,7 +8,7 @@ import { bracketBuilderStore } from './brackets/shared/app/store';
 import { Provider } from 'react-redux';
 import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
-import {CreateTournamentButtonAndModal} from './modals/CreateTournamentButtonAndModal';
+import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonAndModal';
 /**
  * Import the stylesheet for the plugin.
  */
@@ -178,7 +178,7 @@ function renderTournamentResultsBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(
 			<App>
 				<Provider store={bracketBuilderStore}>
-					<TournamentResultsBuilderWithMatchTree tournament={tourney} saveTournamentLink={my_tournaments_url} />
+					<TournamentResultsBuilderWithMatchTree tournament={tourney} myTournamentsUrl={my_tournaments_url} />
 				</Provider>
 			</App>, builderDiv)
 

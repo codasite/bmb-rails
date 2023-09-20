@@ -299,12 +299,12 @@ class Wp_Bracket_Builder_Public {
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/dashboard/wp-bracket-builder-dashboard.php';
 
-    wp_localize_script(
+		wp_localize_script(
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
-          'my_templates_url' => get_permalink() . 'templates',
-          'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
+				'my_templates_url' => get_permalink() . 'templates',
+				'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
 			)
 		);
 
@@ -381,6 +381,7 @@ class Wp_Bracket_Builder_Public {
 		$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 		$tournament  = $tournament_repo->get(post: $post);
 		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
+		$my_tournaments_url = get_permalink(get_page_by_path('dashboard')) . '?tab=tournaments';
 
 		$bracket_product_archive_url = $this->get_archive_url();
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
@@ -401,6 +402,7 @@ class Wp_Bracket_Builder_Public {
 				'css_file' => $css_file,
 				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 				'bracket_product_archive_url' => $play_history_url, // used to redirect to bracket-ready category page
+				'my_tournaments_url' => $my_tournaments_url, // used to redirect back to my tournaments page
 
 				// // For product page
 				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url

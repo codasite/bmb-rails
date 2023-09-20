@@ -48,6 +48,7 @@ interface TournamentResultsBuilderProps {
 	matchTree?: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
 	tournament?: any;
+	myTournamentsUrl?: string;
 }
 
 const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
@@ -55,6 +56,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 		matchTree,
 		setMatchTree,
 		tournament,
+		myTournamentsUrl,
 	} = props;
 
 	const [bracketTitle, setBracketTitle] = useState('');
@@ -96,6 +98,8 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 				console.log(res);
 			}).catch((err) => {
 				console.log(err);
+			}).finally(() => {
+				if (myTournamentsUrl) window.location.href = myTournamentsUrl || '';
 			})
 		}
 	}
