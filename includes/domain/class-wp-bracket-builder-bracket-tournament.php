@@ -56,6 +56,10 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			throw new Exception('bracket_template_id is required');
 		}
 
+		if (!isset($data['author'])) {
+			throw new Exception('author is required');
+		}
+
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data['bracket_template_id']);
 
 		foreach ($data as $key => $value) {

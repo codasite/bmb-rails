@@ -23,7 +23,7 @@ $num_pages = $the_query->max_num_pages;
 $plays = $play_repo->get_all($the_query);
 
 function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
-	$tournament_name = $play->title;
+	$tournament_name = $play->tournament->title;
 	$user_rank = 99999;
 	$complete = $play->tournament->status === 'complete';
 	$play_id = $play->id;

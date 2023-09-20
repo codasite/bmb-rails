@@ -371,6 +371,7 @@ class Wp_Bracket_Builder_Public {
 		}
 		$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 		$tournament  = $tournament_repo->get(post: $post);
+		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
 
 		$bracket_product_archive_url = $this->get_archive_url();
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
@@ -389,7 +390,8 @@ class Wp_Bracket_Builder_Public {
 				// 'post' => $post,
 				// 'bracket' => $bracket,
 				'css_file' => $css_file,
-				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+				'bracket_product_archive_url' => $play_history_url, // used to redirect to bracket-ready category page
 
 				// // For product page
 				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
@@ -413,6 +415,7 @@ class Wp_Bracket_Builder_Public {
 		}
 		$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 		$play = $play_repo->get(post: $post);
+		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
 
 		$bracket_product_archive_url = $this->get_archive_url();
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
@@ -422,10 +425,12 @@ class Wp_Bracket_Builder_Public {
 			'wpbb_ajax_obj',
 			array(
 				'play' => $play,
+				'play_history_url' => $play_history_url,
 				'nonce' => wp_create_nonce('wp_rest'),
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 				'css_file' => $css_file,
-				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+				'bracket_product_archive_url' => $play_history_url
 			)
 		);
 		ob_start();

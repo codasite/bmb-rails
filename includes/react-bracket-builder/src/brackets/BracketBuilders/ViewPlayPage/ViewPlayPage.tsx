@@ -32,6 +32,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 		matchTree,
 		setMatchTree,
 		bracketPlay: play,
+		apparelUrl,
 	} = props
 
 	useEffect(() => {
@@ -52,8 +53,13 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 				setMatchTree(tree)
 			}
 		}
-
 	}, [play])
+
+	const handleAddToApparel = () => {
+		window.location.href = props.apparelUrl
+	}
+
+
 	return (
 		<div className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
 			<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}>
@@ -69,6 +75,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 							<ActionButton
 								variant='big-green'
 								darkMode={darkMode}
+								onClick={handleAddToApparel}
 							>Add to Apparel</ActionButton>
 						</div>
 					</>
