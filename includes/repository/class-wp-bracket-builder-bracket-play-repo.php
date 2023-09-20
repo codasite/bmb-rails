@@ -3,6 +3,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-match-picks-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
@@ -19,27 +20,21 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 	private $wpdb;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Pick_Service
-	 */
-	private $bracket_pick_service;
-
-	/**
 	 * @var Wp_Bracket_Builder_Bracket_Tournament_Repository
 	 */
 	private $tournament_repo;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Template_Repository
+	 * @var Wp_Bracket_Builder_Bracket_Match_Picks_Repository
 	 */
-	private $template_repo;
+	private $pick_repo;
 
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 		$this->utils = new Wp_Bracket_Builder_Utils();
-		$this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
+		$this->pick_repo = new Wp_Bracket_Builder_Bracket_Match_Picks_Repository();
 	}
 
 	public function get(int|WP_Post|null $post = null, bool $fetch_picks = true, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Play {
@@ -71,23 +66,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 	}
 
 	private function get_picks(int $play_id): array {
-		$table_name = $this->match_pick_table();
-		$sql = "SELECT * FROM $table_name WHERE bracket_play_id = $play_id ORDER BY round_index, match_index ASC";
-		$results = $this->wpdb->get_results($sql, ARRAY_A);
-
-		$picks = [];
-		foreach ($results as $result) {
-			$winning_team_id = $result['winning_team_id'];
-			$winning_team = $this->template_repo->get_team($winning_team_id);
-			$picks[] = new Wp_Bracket_Builder_Match_Pick(
-				$result['round_index'],
-				$result['match_index'],
-				$winning_team_id,
-				$result['id'],
-				$winning_team,
-			);
-		}
-		return $picks;
+		return $this->pick_repo->get_picks($play_id);
 	}
 
 	public function get_all(array|WP_Query $query): array {
@@ -175,21 +154,6 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 	}
 
 	private function insert_match_picks(int $play_id, array $picks): void {
-		$table_name = $this->match_pick_table();
-		foreach ($picks as $pick) {
-			$this->wpdb->insert(
-				$table_name,
-				[
-					'bracket_play_id' => $play_id,
-					'round_index' => $pick->round_index,
-					'match_index' => $pick->match_index,
-					'winning_team_id' => $pick->winning_team_id,
-				]
-			);
-		}
-	}
-
-	private function match_pick_table(): string {
-		return $this->wpdb->prefix . 'bracket_builder_match_picks';
+		$this->pick_repo->insert_match_picks($play_id, $picks);
 	}
 }

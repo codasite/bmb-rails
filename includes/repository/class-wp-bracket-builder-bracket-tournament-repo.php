@@ -3,18 +3,32 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-match-picks-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
 class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builder_Custom_Post_Repository_Base {
+
+	/**
+	 * @var wpdb
+	 */
 	private $wpdb;
 
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Template_Repository
+	 */
 	private $template_repo;
+
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Match_Picks_Repository
+	 */
+	private $pick_repo;
 
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$this->pick_repo = new Wp_Bracket_Builder_Bracket_Match_Picks_Repository();
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
@@ -25,12 +39,14 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			return null;
 		}
 
+		$this->pick_repo->insert_match_picks($tournament_id, $tournament->results);
+
 		# refresh from db
 		$tournament = $this->get($tournament_id);
 		return $tournament;
 	}
 
-	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Tournament {
+	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true, bool $fetch_results = true): ?Wp_Bracket_Builder_Bracket_Tournament {
 		$tournament_post = get_post($post);
 
 		if ($tournament_post === null) {
@@ -48,6 +64,8 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			return null;
 		}
 
+		$results = $fetch_results ? $this->pick_repo->get_picks($tournament_post->ID) : [];
+
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament(
 			(int)$template_id,
 			$tournament_post->ID,
@@ -57,6 +75,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			get_post_datetime($tournament_post->ID, 'date', 'local'),
 			get_post_datetime($tournament_post->ID, 'date_gmt', 'gmt'),
 			$this->template_repo->get($template_id, $fetch_matches),
+			$results,
 		);
 
 		return $tournament;
@@ -116,6 +135,8 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		if (is_wp_error($tournament_id)) {
 			return null;
 		}
+
+		$this->pick_repo->update_match_picks($tournament_id, $tournament->results);
 
 		# refresh from db
 		$tournament = $this->get($tournament_id);
