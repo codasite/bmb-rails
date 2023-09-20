@@ -8,6 +8,12 @@ import { bracketBuilderStore } from './brackets/shared/app/store';
 import { Provider } from 'react-redux';
 import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
+import {CreateTournamentButtonAndModal} from './modals/CreateTournamentButtonAndModal';
+/**
+ * Import the stylesheet for the plugin.
+ */
+import './style/main.scss';
+
 
 interface WpbbAjaxObj {
 	page: string;
@@ -32,11 +38,6 @@ interface WpbbAjaxObj {
 declare var wpbb_ajax_obj: WpbbAjaxObj;
 console.log('wpbb_ajax_obj', wpbb_ajax_obj)
 
-/**
- * Import the stylesheet for the plugin.
- */
-import './style/main.scss';
-import {CreateTournamentButtonAndModal, CreateTournamentModal} from './modals/CreateTournamentButtonAndModal';
 const sentryEnv = wpbb_ajax_obj.sentry_env
 const sentryDsn = wpbb_ajax_obj.sentry_dsn
 
