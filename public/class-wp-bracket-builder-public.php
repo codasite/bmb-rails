@@ -299,6 +299,15 @@ class Wp_Bracket_Builder_Public {
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/dashboard/wp-bracket-builder-dashboard.php';
 
+    wp_localize_script(
+			'wpbb-bracket-builder-react',
+			'wpbb_ajax_obj',
+			array(
+          'my_templates_url' => get_permalink() . 'templates',
+          'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
+			)
+		);
+
 		return ob_get_clean();
 	}
 

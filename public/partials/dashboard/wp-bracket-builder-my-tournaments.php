@@ -186,10 +186,7 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 
 <div class="tw-flex tw-flex-col tw-gap-15">
 	<h1 class="tw-mb-8">My Tournaments</h1>
-	<a href="#" class="tw-border-solid tw-border tw-border-white tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-16 hover:tw-bg-white hover:tw-text-black">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
-		<span class="tw-font-700 tw-text-24">Create Tournament</span>
-	</a>
+  <div id="wpbb-create-tournament-button-and-modal"></div>
 	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
 		<!-- <?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?> -->
 		<?php echo wpbb_sort_button('Live', get_permalink() . "tournaments/?status=publish", $status === 'publish'); ?>
