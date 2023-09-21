@@ -16,11 +16,6 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	private $template_repo;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Match_Repository
-	 */
-	private $match_repo;
-
-	/**
 	 * @var Wp_Bracket_Builder_Bracket_Team_Repository
 	 */
 	private $team_repo;
@@ -36,7 +31,6 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
-		$this->match_repo = new Wp_Bracket_Builder_Bracket_Match_Repository();
 		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 	}
 

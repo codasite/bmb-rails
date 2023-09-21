@@ -122,8 +122,9 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		$template_data = $this->wpdb->get_row(
 			$this->wpdb->prepare(
 				"SELECT * FROM $table_name WHERE post_id = %d",
-				$template_post
-			)
+				$template_post,
+			),
+			ARRAY_A
 		);
 
 		return $template_data;

@@ -33,6 +33,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 		$this->utils = new Wp_Bracket_Builder_Utils();
 	}
 
@@ -54,7 +55,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		$play_id = $play_data['id'];
 		$tournament_post_id = $play_data['bracket_tournament_post_id'];
 		$tournament = $tournament_post_id && $fetch_tournament ? $this->tournament_repo->get($tournament_post_id, $fetch_results, $fetch_template, $fetch_matches) : null;
-		$picks = $fetch_picks && $play_id ? $this->get_picks($play_post->ID) : [];
+		$picks = $fetch_picks && $play_id ? $this->get_picks($play_id) : [];
 
 		$play = new Wp_Bracket_Builder_Bracket_Play(
 			$tournament_post_id,
@@ -109,7 +110,8 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			$this->wpdb->prepare(
 				"SELECT * FROM $table_name WHERE post_id = %d",
 				$play_post
-			)
+			),
+			ARRAY_A
 		);
 
 		return $play_data;
