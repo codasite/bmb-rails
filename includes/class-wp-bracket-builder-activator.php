@@ -136,10 +136,10 @@ class Wp_Bracket_Builder_Activator {
 
 		) $charset_collate;";
 
-		// import dbDelta
-		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-		dbDelta($sql);
-	}
+	// 	// import dbDelta
+	// 	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	// 	dbDelta($sql);
+	// }
 
 	private static function create_matches_table(string $prefix) {
 		/**
@@ -153,7 +153,12 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	 		bracket_template_id bigint(20) UNSIGNED NOT NULL,
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+	 		bracket_template_id bigint(20) UNSIGNED NOT NULL,
 			round_index tinyint(4) NOT NULL,
+			match_index tinyint(4) NOT NULL,
+			team1_id bigint(20) UNSIGNED,
+			team2_id bigint(20) UNSIGNED,
 			match_index tinyint(4) NOT NULL,
 			team1_id bigint(20) UNSIGNED,
 			team2_id bigint(20) UNSIGNED,
@@ -179,9 +184,12 @@ class Wp_Bracket_Builder_Activator {
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
 			bracket_template_id bigint(20) UNSIGNED NOT NULL,
+			bracket_template_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
+			FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
 			FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
 		) $charset_collate;";
 
@@ -191,16 +199,25 @@ class Wp_Bracket_Builder_Activator {
 	}
 
 	private static function create_match_picks_table(string $prefix) {
+	private static function create_match_picks_table(string $prefix) {
 		/**
+		 * Create the match picks table. Rows in this table represent a user's pick for a match.
+		 * Holds a pointer to the bracket play this pick belongs to.
 		 * Create the match picks table. Rows in this table represent a user's pick for a match.
 		 * Holds a pointer to the bracket play this pick belongs to.
 		 */
 
 		global $wpdb;
 		$table_name = $prefix . 'match_picks';
+		$table_name = $prefix . 'match_picks';
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			bracket_play_id bigint(20) UNSIGNED NOT NULL,
+			round_index tinyint(4) NOT NULL,
+			match_index tinyint(4) NOT NULL,
+			winning_team_id bigint(20) UNSIGNED NOT NULL,
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			bracket_play_id bigint(20) UNSIGNED NOT NULL,
 			round_index tinyint(4) NOT NULL,
