@@ -37,6 +37,9 @@ class Wp_Bracket_Builder_Activator {
 
 		self::delete_tables($prefix);
 
+		self::create_bracket_templates_table($prefix);
+		self::create_tournaments_table($prefix); // associated with bracket templates
+		self::create_play_table($prefix); // associated with tournaments
 		self::create_teams_table($prefix); // associated with matches
 		self::create_matches_table($prefix); // associated with bracket templates
 		self::create_match_picks_table($prefix); // associated with bracket plays
@@ -48,6 +51,9 @@ class Wp_Bracket_Builder_Activator {
 			$prefix . 'match_picks',
 			$prefix . 'matches',
 			$prefix . 'teams',
+			$prefix . 'bracket_play',
+			$prefix . 'bracket_tournaments',
+			$prefix . 'bracket_templates',
 		];
 
 		foreach ($tables as $table) {
@@ -80,6 +86,82 @@ class Wp_Bracket_Builder_Activator {
 	// 	dbDelta($sql);
 	// }
 
+	private static function create_bracket_templates_table(string $prefix) {
+		/**
+		 * Create the bracket templates table
+		 */
+
+		global $wpdb;
+		$table_name = $prefix . 'bracket_templates';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			name varchar(255) NOT NULL,
+			bracket_template_post_id bigint(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			UNIQUE KEY (bracket_template_post_id),
+			FOREIGN KEY (bracket_template_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+		) $charset_collate;";
+
+		// import dbDelta
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		dbDelta($sql);
+	}
+
+	private static function create_tournaments_table(string $prefix) {
+		/**
+		 * Create the tournaments table
+		 */
+
+		global $wpdb;
+		$table_name = $prefix . 'bracket_tournaments';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			bracket_tournament_post_id bigint(20) UNSIGNED NOT NULL,
+			bracket_template_post_id bigint(20) UNSIGNED NOT NULL,
+			bracket_template_id bigint(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			UNIQUE KEY (bracket_tournament_post_id),
+			FOREIGN KEY (bracket_tournament_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_template_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}bracket_templates(id) ON DELETE CASCADE
+		) $charset_collate;";
+
+		// import dbDelta
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		dbDelta($sql);
+	}
+
+	private static function create_play_table(string $prefix) {
+		/**
+		 * Create the play meta table
+		 */
+
+		global $wpdb;
+		$table_name = $prefix . 'bracket_play';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			bracket_play_post_id bigint(20) UNSIGNED NOT NULL,
+			bracket_tournament_post_id bigint(20) UNSIGNED NOT NULL,
+			bracket_tournament_id bigint(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			UNIQUE KEY (bracket_play_post_id),
+			FOREIGN KEY (bracket_play_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_tournament_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_tournament_id) REFERENCES {$prefix}bracket_tournaments(id) ON DELETE CASCADE
+
+		) $charset_collate;";
+
+		// import dbDelta
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		dbDelta($sql);
+	}
+
 	private static function create_matches_table(string $prefix) {
 		/**
 		 * Create the matches table
@@ -97,7 +179,7 @@ class Wp_Bracket_Builder_Activator {
 			team1_id bigint(20) UNSIGNED,
 			team2_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
-	 		FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}bracket_templates(id) ON DELETE CASCADE,
 			FOREIGN KEY (team1_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL,
 			FOREIGN KEY (team2_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL
 		) $charset_collate;";
@@ -146,7 +228,7 @@ class Wp_Bracket_Builder_Activator {
 			match_index tinyint(4) NOT NULL,
 			winning_team_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_play_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_play_id) REFERENCES {$prefix}bracket_play(id) ON DELETE CASCADE,
 			FOREIGN KEY (winning_team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
 		) $charset_collate;";
 

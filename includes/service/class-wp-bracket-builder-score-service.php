@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__)) . '/repository/class-wp-bracket-builder-bracket-play-repo.php';
 
 class Wp_Bracket_Builder_Score_Service {
 	/**
@@ -17,6 +18,6 @@ class Wp_Bracket_Builder_Score_Service {
 	}
 
 	public function score_tournament_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
-		//TODO: score plays in SQL
+		echo "Scoring tournament plays";
 	}
 }

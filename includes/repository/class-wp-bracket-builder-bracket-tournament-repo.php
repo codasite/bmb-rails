@@ -145,7 +145,6 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 		$array = $tournament->to_array();
 		$updated_array = array_merge($array, $data);
-		print_r($updated_array);
 
 		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($updated_array);
 

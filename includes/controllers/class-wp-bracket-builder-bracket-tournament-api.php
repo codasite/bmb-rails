@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 
 class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
@@ -21,10 +22,15 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	protected $rest_base;
 
 	/**
+	 * @var Wp_Bracket_Builder_score_service
+	 */
+	private $score_service;
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+		$this->score_service = new Wp_Bracket_Builder_Score_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
 		// $this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
@@ -135,6 +141,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	public function update_item($request) {
 		$data = $request->get_params();
 		$updated = $this->tournament_repo->update($request->get_param('item_id'), $data);
+		$this->score_service->score_tournament_plays($updated);
 
 		return new WP_REST_Response($updated, 200);
 

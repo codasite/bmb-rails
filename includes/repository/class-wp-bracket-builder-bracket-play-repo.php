@@ -30,7 +30,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		$this->match_repo = new Wp_Bracket_Builder_Bracket_Match_Repository();
 	}
 
-	public function get(int|WP_Post|null $post = null, bool $fetch_picks = true, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Play {
+	public function get(int|WP_Post|null $post = null, bool $fetch_picks = true, bool $fetch_tournament = true, bool $fetch_matches = true,): ?Wp_Bracket_Builder_Bracket_Play {
 		$play_post = get_post($post);
 
 		if (!$play_post || $play_post->post_type !== Wp_Bracket_Builder_Bracket_Play::get_post_type()) {
@@ -52,7 +52,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			get_post_datetime($play_post->ID, 'date', 'local'),
 			get_post_datetime($play_post->ID, 'date_gmt', 'gmt'),
 			$picks,
-			$this->tournament_repo->get($tournament_id, $fetch_matches),
+			$fetch_tournament ? $this->tournament_repo->get($tournament_id, $fetch_matches) : null,
 		);
 
 		return $play;
@@ -62,9 +62,9 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		return $this->match_repo->get_picks($play_id);
 	}
 
-	public function get_all(array|WP_Query $query): array {
+	public function get_all(array|WP_Query $query, $fetch_picks = false, $fetch_tournament = false, $fetch_matches = false,): array {
 		if ($query instanceof WP_Query) {
-			return $this->plays_from_query($query);
+			return $this->plays_from_query($query, $fetch_picks, $fetch_tournament, $fetch_matches);
 		}
 
 		$default_args = [
@@ -77,13 +77,13 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 
 		$query = new WP_Query($args);
 
-		return $this->plays_from_query($query);
+		return $this->plays_from_query($query, $fetch_picks, $fetch_tournament, $fetch_matches);
 	}
 
-	public function plays_from_query(WP_Query $query): array {
+	public function plays_from_query(WP_Query $query, $fetch_picks = false, $fetch_tournament = false, $fetch_matches = false,): array {
 		$plays = [];
 		foreach ($query->posts as $post) {
-			$plays[] = $this->get($post, false, false);
+			$plays[] = $this->get($post, $fetch_picks, $fetch_tournament, $fetch_matches);
 		}
 		return $plays;
 	}
