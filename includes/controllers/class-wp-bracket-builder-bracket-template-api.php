@@ -105,8 +105,8 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 				),
 			),
 		));
-		
-		register_rest_route($namespace, '/' . $base .'/matches', array(
+
+		register_rest_route($namespace, '/' . $base . '/matches', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array($this, 'get_matches'),
@@ -115,7 +115,7 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 			),
 		));
 
-		register_rest_route($namespace, '/' . $base .'/teams', array(
+		register_rest_route($namespace, '/' . $base . '/teams', array(
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array($this, 'get_teams'),
@@ -156,7 +156,11 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item($request) {
-		$template = Wp_Bracket_Builder_Bracket_Template::from_array($request->get_params());
+		$params = $request->get_params();
+		if (!isset($params['author'])) {
+			$params['author'] = get_current_user_id();
+		}
+		$template = Wp_Bracket_Builder_Bracket_Template::from_array($params);
 
 		//checking validation for requested data
 		// $validated = $this->bracket_validate->validate_bracket_api($template);

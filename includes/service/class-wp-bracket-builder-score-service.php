@@ -38,6 +38,7 @@ class Wp_Bracket_Builder_Score_Service {
 	}
 
 	public function score_tournament_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
+		$point_values = [1, 2, 4, 8, 16, 32];
 		echo "Scoring tournament plays";
 		$tournament_data = $this->tournament_repo->get_tournament_data($tournament->id);
 		$tournament_id = $tournament_data['id'];
@@ -45,9 +46,11 @@ class Wp_Bracket_Builder_Score_Service {
 		if (!$tournament_id) {
 			return;
 		}
+		echo "Tournament id: $tournament_id";
 		$plays_table = $this->play_repo->plays_table();
+		$num_rounds = 4;
 
-		$sql = "UPDATE $plays_table SET score = 10 WHERE bracket_tournament_id = $tournament_id";
+		$sql = "UPDATE $plays_table SET total_score = 10 WHERE bracket_tournament_id = $tournament_id";
 		$results = $this->wpdb->get_results($sql, ARRAY_A);
 		print_r($results);
 	}

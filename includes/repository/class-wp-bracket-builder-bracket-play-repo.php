@@ -72,6 +72,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			get_post_datetime($play_post->ID, 'date_gmt', 'gmt'),
 			$picks,
 			$tournament,
+			$play_data['total_score'] ?? 0,
 		);
 
 		return $play;

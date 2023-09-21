@@ -36,6 +36,11 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	 */
 	public $picks;
 
+	/**
+	 * @var int
+	 */
+	public $total_score;
+
 	public function __construct(
 		int $tournament_id,
 		int $author,
@@ -48,6 +53,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		DateTimeImmutable|false $date_gmt = false,
 		array $picks = [],
 		Wp_Bracket_Builder_Bracket_Tournament $tournament = null,
+		int $total_score = 0,
 	) {
 		parent::__construct(
 			$id,
@@ -62,6 +68,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		$this->html = $html;
 		$this->img_url = $img_url;
 		$this->picks = $picks;
+		$this->total_score = $total_score;
 	}
 
 	static public function get_post_type(): string {
