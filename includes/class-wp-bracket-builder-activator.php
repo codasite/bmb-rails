@@ -39,7 +39,7 @@ class Wp_Bracket_Builder_Activator {
 
 		self::create_bracket_templates_table($prefix); // one-to-one table for bracket templates
 		self::create_tournaments_table($prefix); // one-to-one table for bracket tournaments
-		self::create_play_table($prefix); // one-to-one table for bracket plays
+		self::create_plays_table($prefix); // one-to-one table for bracket plays
 		self::create_teams_table($prefix); // associated with matches
 		self::create_matches_table($prefix); // associated with bracket templates
 		self::create_match_picks_table($prefix); // associated with bracket plays
@@ -112,7 +112,7 @@ class Wp_Bracket_Builder_Activator {
 		dbDelta($sql);
 	}
 
-	private static function create_play_table(string $prefix) {
+	private static function create_plays_table(string $prefix) {
 		/**
 		 * Create the play meta table
 		 */
@@ -124,6 +124,8 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			post_id bigint(20) UNSIGNED NOT NULL,
+			total_score int(11) NOT NULL DEFAULT 0,
+			accuracy_score float NOT NULL DEFAULT 0,
 			bracket_tournament_post_id bigint(20) UNSIGNED NOT NULL,
 			bracket_tournament_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),

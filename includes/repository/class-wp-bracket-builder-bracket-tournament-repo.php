@@ -162,7 +162,12 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			"SELECT * FROM $table_name WHERE post_id = %d",
 			$post
 		);
-		return $this->wpdb->get_row($query, ARRAY_A);
+
+		$data = $this->wpdb->get_row($query, ARRAY_A);
+		if (!$data) {
+			return [];
+		}
+		return $data;
 	}
 
 	public function get_all(array|WP_Query $query = []): array {

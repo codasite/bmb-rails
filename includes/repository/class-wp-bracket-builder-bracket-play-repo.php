@@ -53,6 +53,9 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 
 		$play_data = $this->get_play_data($play_post);
 		$play_id = $play_data['id'];
+		if (!$play_id) {
+			return null;
+		}
 		$tournament_post_id = $play_data['bracket_tournament_post_id'];
 		$tournament = $tournament_post_id && $fetch_tournament ? $this->tournament_repo->get($tournament_post_id, $fetch_results, $fetch_template, $fetch_matches) : null;
 		$picks = $fetch_picks && $play_id ? $this->get_picks($play_id) : [];
@@ -113,7 +116,9 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			),
 			ARRAY_A
 		);
-
+		if (!$play_data) {
+			return [];
+		}
 		return $play_data;
 	}
 
