@@ -143,7 +143,10 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 	public function plays_from_query(WP_Query $query): array {
 		$plays = [];
 		foreach ($query->posts as $post) {
-			$plays[] = $this->get($post, false, false);
+			$play = $this->get($post, false, false);
+			if ($play) {
+				$plays[] = $play;
+			}
 		}
 		return $plays;
 	}

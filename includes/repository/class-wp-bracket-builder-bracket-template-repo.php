@@ -90,6 +90,10 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		$template_data = $this->get_template_data($template_post);
 		$template_id = $template_data['id'];
 
+		if (!$template_id) {
+			return null;
+		}
+
 		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
 
 		$template = new Wp_Bracket_Builder_Bracket_Template(
@@ -126,6 +130,10 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			),
 			ARRAY_A
 		);
+
+		if (!$template_data) {
+			return [];
+		}
 
 		return $template_data;
 	}
@@ -178,7 +186,10 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 	public function templates_from_query(WP_Query $query): array {
 		$templates = [];
 		foreach ($query->posts as $post) {
-			$templates[] = $this->get($post, false);
+			$template = $this->get($post, false);
+			if ($template) {
+				$templates[] = $template;
+			}
 		}
 		return $templates;
 	}

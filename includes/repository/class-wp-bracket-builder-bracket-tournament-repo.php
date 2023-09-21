@@ -108,6 +108,9 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 		$tournament_data = $this->get_tournament_data($tournament_post);
 		$tournament_id = $tournament_data['id'];
+		if (!$tournament_id) {
+			return null;
+		}
 		$template_post_id = $tournament_data['bracket_template_post_id'];
 		$template = $template_post_id && $fetch_template ? $this->template_repo->get($template_post_id, $fetch_matches) : null;
 		$results = $fetch_results ? $this->get_tournament_results($tournament_id) : [];
@@ -189,7 +192,10 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	public function tournaments_from_query(WP_Query $query) {
 		$tournaments = [];
 		foreach ($query->posts as $post) {
-			$tournaments[] = $this->get($post, false, false, false);
+			$tournament = $this->get($post, false, false, false);
+			if ($tournament) {
+				$tournaments[] = $tournament;
+			}
 		}
 		return $tournaments;
 	}
