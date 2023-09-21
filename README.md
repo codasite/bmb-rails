@@ -22,60 +22,104 @@
 - "bracket_tournament" posts: [wpbb-bracket-tournament]
 - TODO: add template for bracket play
 
-## Testing
-### Setting up testing infrastructure
-Refer to the official documentation [here](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/)
 
-1. Install WP-CLI using [these instructions](https://make.wordpress.org/cli/handbook/guides/installing/)
-    - Download wp-cli.phar:
-        ```
-        curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-        ```
-    - Check if it works:
-        ```
-        php wp-cli.phar --info
-        ```
-    - Make it executable and put it somewhere on your path to run using `wp`:
-        ```
-        chmod +x wp-cli.phar
-        sudo mv wp-cli.phar /usr/local/bin/wp
-        ```
+## Testing Setup
+Testing is performed using PHPUnit and the Wordpress Testing Library. Testing infrastructure is set up according to instructions from [codetab.org](https://www.codetab.org/tutorial/wordpress-plugin-development/unit-test/plugin-unit-testing/).
 
-2. Include PHPUnit as a dev dependency in composer.json:
+The following subset of instructions from the link above are used to set up the testing infrastructure (I don't think they need to be repeated).
+
+### Instructions
+1. Install the Wordpress testing library. From the plugin root directory:
     ```
-    {
-        ...
-        "require-dev": {
-            ...
-            "phpunit/phpunit": "^9.5"
-        }
-        ...
-    }
+    mkdir -p tests/phpunit/tests
+    cd tests/phpunit
+    svn co https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/
     ```
-3. Run `composer update`
-4. Generate plugin test files:
+
+2. Add `.svn` to the `.gitignore` file
+3. Create a PHPUnit configuration in the plugin root `phpunit.xml`
     ```
-    bash
-    wp scaffold plugin-tests my-plugin
-    ```
-5. Configure PHPUnit. Make sure the following code is in `phpunit.xml`, in the root of the plugin, making sure to swap out values for `DB_HOST`, `DB_NAME`, `DB_USERNAME`, and `DB_PASSWORD`, with your own values.
-    ```
-    <?xml version="1.0" encoding="UTF-8"?>
-    <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="vendor/autoload.php" colors="true" stopOnFailure="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd" cacheDirectory=".phpunit.cache">
-      <php>
-        <server name="DB_HOST" value="localhost"/>
-        <server name="DB_NAME" value="bracket-builder"/>
-        <server name="DB_USERNAME" value="root"/>
-        <server name="DB_PASSWORD" value=""/>
-      </php>
+    <phpunit bootstrap="tests/phpunit/bootstrap.php" backupGlobals="false"
+      colors="false" convertErrorsToExceptions="true"
+      convertNoticesToExceptions="true" convertWarningsToExceptions="true">
       <testsuites>
-        <testsuite name="My Test Suite">
-          <directory>tests</directory>
+        <testsuite>
+          <file>tests/phpunit/tests/test-wp-bracket-builder.php</file>
         </testsuite>
       </testsuites>
     </phpunit>
     ```
-6. Run tests using
+4. Create the wordpress test configuration file at `tests/phpunit/wp-tests-config.php`
     ```
-    ./vendor/bin/phpunit
+    <?php
+
+    // change the next line to points to your wordpress dir
+    define( 'ABSPATH', '/opt/lampp/htdocs/bracket-builder' );
+
+    define( 'WP_DEBUG', false );
+
+    // WARNING WARNING WARNING!
+    // tests DROPS ALL TABLES in the database. DO NOT use a production database
+
+    define( 'DB_NAME', 'wptest' );
+    define( 'DB_USER', 'wptest' );
+    define( 'DB_PASSWORD', 'wptest' );
+    define( 'DB_HOST', 'localhost.localdomain' );
+    define( 'DB_CHARSET', 'utf8' );
+    define( 'DB_COLLATE', '' );
+
+    $table_prefix = 'wptests_'; // Only numbers, letters, and underscores please!
+
+    define( 'WP_TESTS_DOMAIN', 'localhost' );
+    define( 'WP_TESTS_EMAIL', 'admin@example.org' );
+    define( 'WP_TESTS_TITLE', 'Test Blog' );
+
+    define( 'WP_PHP_BINARY', 'php' );
+
+    define( 'WPLANG', '' );
     ```
+5. Create the bootstrap test file at `tests/phpunit/bootstrap.php`
+    ```
+    <?php
+
+    // path to test lib bootstrap.php
+    $test_lib_bootstrap_file = dirname( __FILE__ ) . '/includes/bootstrap.php';
+
+    if ( ! file_exists( $test_lib_bootstrap_file ) ) {
+        echo PHP_EOL . "Error : unable to find " . $test_lib_bootstrap_file . PHP_EOL;
+        exit( '' . PHP_EOL );
+    }
+
+    // set plugin and options for activation
+    $GLOBALS[ 'wp_tests_options' ] = array(
+            'active_plugins' => array(
+                    'wp-bracket-builder/wp-bracket-builder.php',
+            ),
+            'wpsp_test' => true
+    );
+
+    // call test-lib's bootstrap.php
+    require_once $test_lib_bootstrap_file;
+
+    $current_user = new WP_User( 1 );
+    $current_user->set_role( 'administrator' );
+
+    echo PHP_EOL;
+    echo 'Using Wordpress core : ' . ABSPATH . PHP_EOL;
+    echo PHP_EOL;
+    ```
+
+6. Create the test database, test database users, and grant permissions.
+    ```
+    cd /opt/lampp
+    bin/mysql -u root
+    create database wptest;
+    GRANT ALL PRIVILEGES ON wptest.* TO wptest@localhost IDENTIFIED BY 'wptest';
+    flush privileges;
+    exit
+    ```
+7. Create the test file `tests/phpunit/tests/test-wp-bracket-builder.php`, the test file indicated in the configuration file, and import tests there.
+
+9. Run test from the plugin root directory using `vendor/bin/phpunit`.
+
+Note: Before going into production, testing should be configured to use a seperate wordpress installation. _"if wp-tests-config.php is missing from tests/phpunit directory, then WordPress Test Library will use wp-config.php of the WordPress folder and drops the WP tables defined by it."_
