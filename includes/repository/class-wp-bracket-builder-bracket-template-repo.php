@@ -1,56 +1,96 @@
 <?php
 
-use function PHPUnit\Framework\isInstanceOf;
-
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-match-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
 class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_Custom_Post_Repository_Base {
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Match_Repository
+	 * @var Wp_Bracket_Builder_Bracket_Team_Repository
 	 */
-	private $match_repo;
+	private $team_repo;
+
+	/**
+	 * @var wpdb
+	 */
+	private $wpdb;
 
 	public function __construct() {
 		global $wpdb;
-		$this->match_repo = new Wp_Bracket_Builder_Bracket_Match_Repository();
+		$this->wpdb = $wpdb;
+		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Template $template): ?Wp_Bracket_Builder_Bracket_Template {
 
-		$template_id = $this->insert_post($template, true);
+		$post_id = $this->insert_post($template, true);
 
-		if (is_wp_error($template_id)) {
+		if (is_wp_error($post_id)) {
 			return null;
 		}
 
+		$template_id = $this->insert_template_data([
+			'post_id' => $post_id,
+		]);
+
 		if ($template->matches) {
-			$this->insert_matches_for_template($template_id, $template->matches);
+			$this->insert_matches($template_id, $template->matches);
 		}
 
 		# refresh from db
-		$template = $this->get($template_id);
+		$template = $this->get($post_id);
 		return $template;
 	}
 
-	private function insert_matches_for_template(int $template_id, array $matches): void {
-		$this->match_repo->insert_matches($template_id, $matches);
+	private function insert_template_data(array $data): int {
+		$table_name = $this->templates_table();
+		$this->wpdb->insert(
+			$table_name,
+			$data
+		);
+		return $this->wpdb->insert_id;
 	}
 
-	public function get(int|WP_Post|null|string $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
+	private function insert_matches(int $template_id, array $matches): void {
+		$table_name = $this->match_table();
+		foreach ($matches as $match) {
+			// Skip if match is null
+			if ($match === null) {
+				continue;
+			}
+			// First, insert teams
+			$team1 = $this->team_repo->insert_team($template_id, $match->team1);
+			$team2 = $this->team_repo->insert_team($template_id, $match->team2);
+
+			$this->wpdb->insert(
+				$table_name,
+				[
+					'bracket_template_id' => $template_id,
+					'round_index' => $match->round_index,
+					'match_index' => $match->match_index,
+					'team1_id' => $team1->id,
+					'team2_id' => $team2->id,
+				]
+			);
+			$match->id = $this->wpdb->insert_id;
+		}
+	}
+
+	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
 		$template_post = get_post($post);
 
-		if ($template_post === null) {
+
+		if (!$template_post || $template_post->post_type !== Wp_Bracket_Builder_Bracket_Template::get_post_type()) {
 			return null;
 		}
 
-		if ($template_post->post_type !== Wp_Bracket_Builder_Bracket_Template::get_post_type()) {
-			return null;
-		}
+		$template_data = $this->get_template_data($template_post);
+		$template_id = $template_data['id'];
 
-		$matches = $fetch_matches ? $this->get_matches_for_template($template_post->ID) : [];
+		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
 
 		$template = new Wp_Bracket_Builder_Bracket_Template(
 			$template_post->ID,
@@ -69,9 +109,53 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $template;
 	}
 
+	public function get_template_data(int|WP_Post|null $template_post): array {
+		if (!$template_post || $template_post instanceof WP_Post && $template_post->post_type !== Wp_Bracket_Builder_Bracket_Template::get_post_type()) {
+			return [];
+		}
 
-	private function get_matches_for_template(int $template_id): array {
-		return $this->match_repo->get_matches($template_id);
+		if ($template_post instanceof WP_Post) {
+			$template_post = $template_post->ID;
+		}
+
+		$table_name = $this->templates_table();
+		$template_data = $this->wpdb->get_row(
+			$this->wpdb->prepare(
+				"SELECT * FROM $table_name WHERE post_id = %d",
+				$template_post
+			)
+		);
+
+		return $template_data;
+	}
+
+
+	private function get_matches(int $template_id): array {
+		$table_name = $this->match_table();
+		$where = $template_id ? "WHERE bracket_template_id = $template_id" : '';
+		$match_results = $this->wpdb->get_results(
+			$this->wpdb->prepare(
+				"SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
+				$template_id
+			),
+			ARRAY_A
+		);
+		$matches = [];
+		foreach ($match_results as $match) {
+			$team1 = $this->team_repo->get_team($match['team1_id']);
+			$team2 = $this->team_repo->get_team($match['team2_id']);
+
+			// $matches[$match['round_index']][$match['match_index']] = new Wp_Bracket_Builder_Match(
+			$matches[] = new Wp_Bracket_Builder_Match(
+				$match['round_index'],
+				$match['match_index'],
+				$team1,
+				$team2,
+				$match['id'],
+			);
+		}
+
+		return $matches;
 	}
 
 	public function get_all(array|WP_Query $query = []): array {
@@ -100,5 +184,17 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 
 	public function delete(int $id, $force = false): bool {
 		return $this->delete_post($id, $force);
+	}
+
+	public function match_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_matches';
+	}
+
+	public function team_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_teams';
+	}
+
+	public function templates_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_templates';
 	}
 }

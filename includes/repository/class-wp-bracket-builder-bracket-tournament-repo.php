@@ -4,6 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-match-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
@@ -19,67 +20,155 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	 */
 	private $match_repo;
 
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Team_Repository
+	 */
+	private $team_repo;
+
+	/**
+	 * @var wpdb
+	 */
+	private $wpdb;
+
+
+
 	public function __construct() {
+		global $wpdb;
+		$this->wpdb = $wpdb;
 		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 		$this->match_repo = new Wp_Bracket_Builder_Bracket_Match_Repository();
+		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
 
-		$tournament_id = $this->insert_post($tournament, true);
+		$post_id = $this->insert_post($tournament, true);
 
-		if (is_wp_error($tournament_id)) {
+		if (is_wp_error($post_id)) {
 			return null;
 		}
 
-		$this->match_repo->insert_picks($tournament_id, $tournament->results);
+		$template_post_id = $tournament->bracket_template_id;
+
+		if (!$template_post_id) {
+			return null;
+		}
+
+		$template = $this->template_repo->get_template_data($template_post_id);
+		$template_id = $template['id'];
+
+		if (!$template_id) {
+			return null;
+		}
+
+		$tournament_id = $this->insert_tournament_data([
+			'post_id' => $post_id,
+			'bracket_template_post_id' => $template_post_id,
+			'bracket_template_id' => $template_id,
+		]);
+
+		if ($tournament_id && $tournament->results) {
+			$this->insert_results($tournament_id, $tournament->results);
+		}
 
 		# refresh from db
-		$tournament = $this->get($tournament_id);
+		$tournament = $this->get($post_id);
 		return $tournament;
 	}
 
-	public function get(int|WP_Post|Wp_Bracket_Builder_Bracket_Tournament|null $post = null, bool $fetch_matches = true, bool $fetch_results = true): ?Wp_Bracket_Builder_Bracket_Tournament {
-		if ($post === null) {
-			return null;
-		}
+	private function insert_tournament_data(array $data): int {
+		$table_name = $this->tournament_table();
+		$this->wpdb->insert(
+			$table_name,
+			$data
+		);
+		return $this->wpdb->insert_id;
+	}
 
-		if ($post instanceof Wp_Bracket_Builder_Bracket_Tournament && $post->id !== null) {
-			$post = $post->id;
+	private function insert_results(int $tournament_id, array $results): void {
+		foreach ($results as $result) {
+			$this->insert_result($tournament_id, $result);
 		}
+	}
 
+	private function insert_result(int $tournament_id, Wp_Bracket_Builder_Match_Pick $pick): void {
+		$table_name = $this->results_table();
+		$this->wpdb->insert(
+			$table_name,
+			[
+				'bracket_tournament_id' => $tournament_id,
+				'round_index' => $pick->round_index,
+				'match_index' => $pick->match_index,
+				'winning_team_id' => $pick->winning_team_id,
+			]
+		);
+	}
+
+
+	public function get(int|WP_Post|null $post = null, bool $fetch_results = true, bool $fetch_template = true, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Tournament {
 		$tournament_post = get_post($post);
 
-		if ($tournament_post === null) {
+		if (!$tournament_post || $tournament_post->post_type !== Wp_Bracket_Builder_Bracket_Tournament::get_post_type()) {
 			return null;
 		}
 
-		if ($tournament_post->post_type !== Wp_Bracket_Builder_Bracket_Tournament::get_post_type()) {
-			return null;
-		}
-
-		$template_id = get_post_meta($tournament_post->ID, 'bracket_template_id', true);
-
-		// This is to avoid "Argument #1 ($bracket_template_id) must be of type int, string given" error
-		if ($template_id === '') {
-			return null;
-		}
-
-		$results = $fetch_results ? $this->match_repo->get_picks($tournament_post->ID) : [];
+		$tournament_data = $this->get_tournament_data($tournament_post);
+		$tournament_id = $tournament_data['id'];
+		$template_post_id = $tournament_data['bracket_template_post_id'];
+		$template = $template_post_id && $fetch_template ? $this->template_repo->get($template_post_id, $fetch_matches) : null;
+		$results = $fetch_results ? $this->get_tournament_results($tournament_id) : [];
 
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament(
-			(int)$template_id,
+			$template_post_id,
 			$tournament_post->ID,
 			$tournament_post->post_title,
 			$tournament_post->post_author,
 			$tournament_post->post_status,
 			get_post_datetime($tournament_post->ID, 'date', 'local'),
 			get_post_datetime($tournament_post->ID, 'date_gmt', 'gmt'),
-			$this->template_repo->get($template_id, $fetch_matches),
+			$template,
 			$results,
 		);
 
 		return $tournament;
+	}
+
+	public function get_tournament_results(int|null $tournament_id): array {
+		$table_name = $this->results_table();
+		$where = $tournament_id ? "WHERE bracket_tournament_id = $tournament_id" : '';
+		$sql = "SELECT * FROM $table_name $where ORDER BY round_index, match_index ASC";
+		$data = $this->wpdb->get_results($sql, ARRAY_A);
+
+		$tournament_results = [];
+		foreach ($data as $result) {
+			$winning_team_id = $result['winning_team_id'];
+			$winning_team = $this->team_repo->get_team($winning_team_id);
+			$tournament_results[] = new Wp_Bracket_Builder_Match_Pick(
+				$result['round_index'],
+				$result['match_index'],
+				$winning_team_id,
+				$result['id'],
+				$winning_team,
+			);
+		}
+		return $tournament_results;
+	}
+
+	public function get_tournament_data(int|WP_Post|null $post): array {
+		if (!$post || $post instanceof WP_Post && $post->post_type !== Wp_Bracket_Builder_Bracket_Tournament::get_post_type()) {
+			return [];
+		}
+
+		if ($post instanceof WP_Post) {
+			$post = $post->ID;
+		}
+
+		$table_name = $this->tournament_table();
+		$query = $this->wpdb->prepare(
+			"SELECT * FROM $table_name WHERE post_id = %d",
+			$post
+		);
+		return $this->wpdb->get_row($query, ARRAY_A);
 	}
 
 	public function get_all(array|WP_Query $query = []): array {
@@ -101,7 +190,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	public function tournaments_from_query(WP_Query $query) {
 		$tournaments = [];
 		foreach ($query->posts as $post) {
-			$tournaments[] = $this->get($post, false);
+			$tournaments[] = $this->get($post, false, false, false);
 		}
 		return $tournaments;
 	}
@@ -148,16 +237,63 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($updated_array);
 
-		$tournament_id = $this->update_post($tournament);
+		$post_id = $this->update_post($tournament);
 
-		if (is_wp_error($tournament_id)) {
+		if (is_wp_error($post_id)) {
 			return null;
 		}
 
-		$this->match_repo->update_picks($tournament_id, $tournament->results);
+		$tournament_data = $this->get_tournament_data($post_id);
+		$tournament_id = $tournament_data['id'];
+
+		if ($tournament_id && $tournament->results) {
+			$this->update_results($tournament_id, $tournament->results);
+		}
 
 		# refresh from db
-		$tournament = $this->get($tournament_id);
+		$tournament = $this->get($post_id);
 		return $tournament;
+	}
+
+	public function update_results(int $tournament_id, array|null $new_results): void {
+		if ($new_results === null) {
+			return;
+		}
+
+		$old_results = $this->get_tournament_results($tournament_id);
+
+		if (empty($old_results)) {
+			$this->insert_results($tournament_id, $new_results);
+			return;
+		}
+
+		foreach ($new_results as $new_result) {
+			$pick_exists = false;
+			foreach ($old_results as $old_result) {
+				if ($new_result->round_index === $old_result->round_index && $new_result->match_index === $old_result->match_index) {
+					$pick_exists = true;
+					$this->wpdb->update(
+						$this->results_table(),
+						[
+							'winning_team_id' => $new_result->winning_team_id,
+						],
+						[
+							'id' => $old_result->id,
+						]
+					);
+				}
+			}
+			if (!$pick_exists) {
+				$this->insert_result($tournament_id, $new_result);
+			}
+		}
+	}
+
+	public function tournament_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_tournaments';
+	}
+
+	public function results_table(): string {
+		return $this->wpdb->prefix . 'bracket_builder_tournament_results';
 	}
 }
