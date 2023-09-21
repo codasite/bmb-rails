@@ -20,7 +20,10 @@ $the_query = new WP_Query([
 
 $num_pages = $the_query->max_num_pages;
 
-$plays = $play_repo->get_all($the_query);
+$plays = $play_repo->get_all(
+	$the_query,
+	['fetch_tournament' => true]
+);
 
 function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	$tournament_name = $play->tournament->title;

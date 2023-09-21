@@ -48,10 +48,14 @@ class Wp_Bracket_Builder_Score_Service {
 		}
 		echo "Tournament id: $tournament_id";
 		$plays_table = $this->play_repo->plays_table();
+		$picks_table = $this->play_repo->picks_table();
 		$num_rounds = 4;
 
-		$sql = "UPDATE $plays_table SET total_score = 10 WHERE bracket_tournament_id = $tournament_id";
-		$results = $this->wpdb->get_results($sql, ARRAY_A);
+		$select = "SELECT count(*) as num_picks from $picks_table where bracket_play_id = (select id from $plays_table where bracket_tournament_id = $tournament_id)";
+		$results = $this->wpdb->get_results($select, ARRAY_A);
+
+		// $sql = "UPDATE $plays_table SET total_score = 10 WHERE bracket_tournament_id = $tournament_id";
+		// $results = $this->wpdb->get_results($sql, ARRAY_A);
 		print_r($results);
 	}
 }
