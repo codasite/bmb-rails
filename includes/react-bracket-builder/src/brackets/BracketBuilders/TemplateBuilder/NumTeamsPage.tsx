@@ -112,17 +112,6 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     }
   }, [teamPickerState, wildcardPlacement])
 
-  useEffect(() => {
-    if (bracketMeta) {
-      setBracketMeta({
-        ...bracketMeta,
-        title: 'My Bracket Name',
-        date: '2025'
-      })
-    }
-  }, [])
-
-
   const updateTeamPicker = (index: number, newPicker: NumTeamsPickerState) => {
     const newPickers = teamPickerState.map((picker, i) => {
       if (i === index) {

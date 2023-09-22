@@ -10,7 +10,7 @@ import { setPage } from '../../shared/features/bracketNavSlice'
 
 const defaultBracketName = "MY BRACKET NAME"
 
-const initialPickerIndex = 0
+const defaultInitialPickerIndex = 0
 const teamPickerDefaults = [16, 32, 64]
 const teamPickerMin = [1, 17, 33]
 const teamPickerMax = [31, 63, 64]
@@ -38,14 +38,21 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   } = props
 
   const [currentPage, setCurrentPage] = useState('num-teams')
-  const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
+  const [numTeams, setNumTeams] = useState(teamPickerDefaults[defaultInitialPickerIndex])
   const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Split)
   const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
     teamPickerDefaults.map((val, i) => ({
       currentValue: val,
-      selected: i === initialPickerIndex
+      selected: i === defaultInitialPickerIndex
     }))
   )
+
+  useEffect(() => {
+    setBracketMeta?.({
+      title: bracketMeta?.title || defaultBracketName,
+      date: bracketMeta?.date || '2025',
+    })
+  }, [])
 
   useEffect(() => {
     if (template) {
@@ -60,6 +67,9 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
         title: title || defaultBracketName,
         date: '2021',
       })
+      setNumTeams(numTeams)
+      setWildcardPlacement(wildcardPlacement)
+      pickerStateFromNumTeams(numTeams)
 
       if (matches && matches.length > 0) {
         console.log('matches found', matches)
@@ -69,8 +79,6 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           team1: { name: match.team1?.name },
           team2: { name: match.team2?.name },
         }))
-        setNumTeams(numTeams)
-        setWildcardPlacement(wildcardPlacement)
         setMatchTree?.(MatchTree.fromMatchRes(numTeams, newMatches, wildcardPlacement))
         setCurrentPage('add-teams')
       }
@@ -82,6 +90,28 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       // })))
     }
   }, [template])
+
+  const pickerStateFromNumTeams = (numTeams: number) => {
+    const initialPickerIndex = teamPickerMax.findIndex(max => numTeams <= max)
+    if (initialPickerIndex >= 0) {
+      const picker = teamPickerState[initialPickerIndex]
+      const newPicker = {
+        ...picker,
+        currentValue: numTeams,
+        selected: true,
+      }
+      const newPickers = teamPickerState.map((picker, i) => {
+        if (i === initialPickerIndex) {
+          return newPicker
+        }
+        return {
+          ...picker,
+          selected: false,
+        }
+      })
+      setTeamPickerState(newPickers)
+    }
+  }
 
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
@@ -99,14 +129,11 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       matches: matchTree.toMatchReq(),
       status: 'publish',
     }
-    console.log(req)
-    console.log(JSON.stringify(req))
 
     bracketApi.createTemplate(req)
       .then((res) => {
-        console.log(res)
         if (saveTemplateLink) {
-          // window.location.href = saveTemplateLink
+          window.location.href = saveTemplateLink
         }
       })
       .catch((err) => {
