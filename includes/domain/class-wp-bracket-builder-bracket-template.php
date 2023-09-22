@@ -61,6 +61,10 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		$this->matches = $matches;
 	}
 
+	public function get_num_rounds(): int {
+		return ceil(log($this->num_teams, 2));
+	}
+
 	static public function get_post_type(): string {
 		return 'bracket_template';
 	}

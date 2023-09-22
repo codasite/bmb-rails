@@ -99,4 +99,20 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		}
 		return $tournament;
 	}
+
+	public function get_num_rounds(): int {
+		return $this->bracket_template->get_num_rounds();
+	}
+
+	public function highest_possible_score() {
+		$point_values = [1, 2, 4, 8, 16, 32];
+
+		$score = 0;
+
+		foreach ($this->results as $result) {
+			$score += $point_values[$result->round_index];
+		}
+
+		return $score;
+	}
 }

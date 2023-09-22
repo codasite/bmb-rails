@@ -356,6 +356,7 @@ class Wp_Bracket_Builder_Public {
 				'css_file' => $css_file,
 				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 
+
 				// // For product page
 				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
 				// 'gallery_images' => $gallery_images,
