@@ -3,7 +3,7 @@ import { bracketApi } from '../../shared/api/bracketApi'
 import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
 import { AddTeamsPage } from './AddTeamsPage'
 import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
-import { TemplateReq, TemplateRes } from '../../shared/api/types/bracket'
+import { TemplateReq, TemplateRes, TournamentReq } from '../../shared/api/types/bracket'
 import { WithBracketMeta, WithDarkMode, WithProvider, WithMatchTree } from '../../shared/components/HigherOrder'
 import { BracketMeta } from '../../shared/context'
 import { setPage } from '../../shared/features/bracketNavSlice'
@@ -12,7 +12,7 @@ const defaultBracketName = "MY BRACKET NAME"
 
 const defaultInitialPickerIndex = 0
 const teamPickerDefaults = [16, 32, 64]
-const teamPickerMin = [1, 17, 33]
+const teamPickerMin = [2, 17, 33]
 const teamPickerMax = [31, 63, 64]
 
 interface TemplateBuilderProps {
@@ -82,12 +82,6 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
         setMatchTree?.(MatchTree.fromMatchRes(numTeams, newMatches, wildcardPlacement))
         setCurrentPage('add-teams')
       }
-
-      // setTeamPickerState(teamPickerState.map((picker, i) => ({
-      //   ...picker,
-      //   currentValue: template.numTeams,
-      //   selected: i === initialPickerIndex
-      // })))
     }
   }, [template])
 
@@ -142,7 +136,29 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   }
 
   const handleSaveTournamentClick = () => {
-    console.log('save tournament')
+    const templateReq: TemplateReq = {
+      title: bracketMeta.title,
+      numTeams: numTeams,
+      wildcardPlacement: wildcardPlacement,
+      matches: matchTree?.toMatchReq(),
+      status: 'publish',
+    }
+    const tournamentReq: TournamentReq = {
+      title: bracketMeta.title,
+      status: 'publish',
+      bracketTemplate: templateReq,
+    }
+
+    bracketApi.createTournament(tournamentReq)
+      .then((res) => {
+        console.log(res)
+        if (saveTournamentLink) {
+          // window.location.href = saveTournamentLink
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 
   return (

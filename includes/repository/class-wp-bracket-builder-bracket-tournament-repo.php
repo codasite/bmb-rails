@@ -25,8 +25,6 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	 */
 	private $wpdb;
 
-
-
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
@@ -38,21 +36,28 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 		$post_id = $this->insert_post($tournament, true);
 
-		if (is_wp_error($post_id)) {
-			return null;
+		if ($post_id instanceof WP_Error) {
+			throw new Exception($post_id->get_error_message());
 		}
 
 		$template_post_id = $tournament->bracket_template_id;
+		$template = $tournament->bracket_template;
 
+		// Either a template post id or a template object must be provided to create a tournament
 		if (!$template_post_id) {
-			return null;
+			if ($template) {
+				$template = $this->template_repo->add($template);
+				$template_post_id = $template->id;
+			} else {
+				throw new Exception('bracket_template_id or bracket_template is required');
+			}
 		}
 
-		$template = $this->template_repo->get_template_data($template_post_id);
-		$template_id = $template['id'];
+		$template_data = $this->template_repo->get_template_data($template_post_id);
+		$template_id = $template_data['id'];
 
 		if (!$template_id) {
-			return null;
+			throw new Exception('Bracket template data id not found');
 		}
 
 		$tournament_id = $this->insert_tournament_data([

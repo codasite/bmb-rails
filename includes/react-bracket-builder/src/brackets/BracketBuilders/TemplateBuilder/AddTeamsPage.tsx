@@ -58,7 +58,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 						<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Save As Template</span>
 					</ActionButton>
 					{/* <ActionButton variant='green' gap={16} disabled={createDisabled} onClick={handleSaveTournament}> */}
-					<ActionButton variant='green' gap={16} disabled={true} onClick={handleSaveTournament}>
+					<ActionButton variant='green' gap={16} disabled={createDisabled} onClick={handleSaveTournament}>
 						<PlayIcon />
 						<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Create Tournament</span>
 					</ActionButton>

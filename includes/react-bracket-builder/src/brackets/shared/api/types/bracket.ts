@@ -99,6 +99,7 @@ export interface TournamentReq {
 	status?: string;
 	bracketTemplateId?: number;
 	results?: MatchPicks[];
+	bracketTemplate?: TemplateReq;
 }
 
 export interface TournamentRes {

@@ -21,7 +21,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	public $results;
 
 	public function __construct(
-		int $bracket_template_id,
+		int $bracket_template_id = null,
 		int $id = null,
 		string $title = '',
 		int $author = null,
@@ -60,12 +60,12 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 
 	static public function from_array($data) {
 
-		if (!isset($data['bracket_template_id'])) {
-			throw new Exception('bracket_template_id is required');
+		if (!isset($data['bracket_template_id']) && !isset($data['bracket_template'])) {
+			throw new Exception('bracket_template_id or bracket_template is required');
 		}
 
 		if (!isset($data['author'])) {
-			throw new Exception('author is required');
+			throw new Exception('author id is required');
 		}
 
 		if (isset($data['results'])) {
@@ -76,7 +76,11 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			$data['results'] = $results;
 		}
 
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data['bracket_template_id']);
+		if (isset($data['bracket_template'])) {
+			$data['bracket_template'] = Wp_Bracket_Builder_Bracket_Template::from_array($data['bracket_template']);
+		}
+
+		$tournament = new Wp_Bracket_Builder_Bracket_Tournament();
 
 		foreach ($data as $key => $value) {
 			if (property_exists($tournament, $key)) {

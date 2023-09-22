@@ -44,6 +44,12 @@ class BracketApi {
 		return res;
 	}
 
+	async createTournament(tournament: TournamentReq): Promise<TournamentRes> {
+		const options: RequestOptions = { method: 'POST', body: tournament };
+		const res = await this.performRequest(this.tournamentsPath, options);
+		return res;
+	}
+
 	async createPlay(play: PlayReq): Promise<PlayRes> {
 		const options: RequestOptions = { method: 'POST', body: play };
 		const res = await this.performRequest(this.playsPath, options);
