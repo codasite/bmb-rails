@@ -31,7 +31,7 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 
 	if (!match) {
 		return (
-			<div className={`tw-h-[${teamHeight * 2 + teamGap}px]`} />
+			<div className={`tw-h-[${teamHeight * 2 + teamGap}px] tw-w-[${teamWidth}px]`} />
 		)
 	}
 

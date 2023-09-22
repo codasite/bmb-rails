@@ -24,24 +24,25 @@ export const DefaultMatchColumn = (props: MatchColumnProps) => {
 
 	return (
 		<div className={`tw-flex tw-flex-col tw-justify-center tw-gap-[${matchGap}px]`}>
-			{matches.map((match, index) => {
-				return (
-					<MatchBoxComponent
-						key={index}
-						match={match}
-						matchPosition={matchPosition}
-						matchTree={matchTree}
-						setMatchTree={setMatchTree}
-						TeamSlotComponent={TeamSlotComponent}
-						MatchBoxChildComponent={MatchBoxChildComponent}
-						teamGap={teamGap}
-						teamHeight={teamHeight}
-						teamWidth={teamWidth}
-						teamFontSize={teamFontSize}
-						onTeamClick={onTeamClick}
-					/>
-				)
-			})}
+			{
+				matches.map((match, index) => {
+					return (
+						<MatchBoxComponent
+							key={index}
+							match={match}
+							matchPosition={matchPosition}
+							matchTree={matchTree}
+							setMatchTree={setMatchTree}
+							TeamSlotComponent={TeamSlotComponent}
+							MatchBoxChildComponent={MatchBoxChildComponent}
+							teamGap={teamGap}
+							teamHeight={teamHeight}
+							teamWidth={teamWidth}
+							teamFontSize={teamFontSize}
+							onTeamClick={onTeamClick}
+						/>
+					)
+				})}
 		</div>
 	)
 }
