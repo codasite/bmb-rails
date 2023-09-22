@@ -27,7 +27,7 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 	$id = $template->id;
 	$num_teams = $template->num_teams;
 	// This link leads to the Create Template page. It passes in the original template_id as a query param
-	$duplicate_link = get_permalink() . 'templates/create?template_id=' . $id;
+	$duplicate_link = get_permalink($template->id) . 'copy';
 	// This link executes a POST request to delete the template. It should prompt the user to confirm the deletion
 	$delete_link = get_permalink() . 'templates/delete';
 	// This link leads to the Play Bracket page. It passes in the template_id as a query param

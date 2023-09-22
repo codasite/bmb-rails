@@ -284,7 +284,7 @@ class Wp_Bracket_Builder_Public {
 	?>
 		<div id="wpbb-bracket-manager-preview" style="width: 100%">
 		</div>
-	<?php
+<?php
 		return ob_get_clean();
 	}
 
@@ -347,27 +347,16 @@ class Wp_Bracket_Builder_Public {
 				'template' => $template,
 				// 'sentry_env' => $sentry_env,
 				// 'sentry_dsn' => $sentry_dsn,
+				'my_templates_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=templates',
+				'my_tournaments_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=tournaments',
 				'nonce' => wp_create_nonce('wp_rest'),
-				// 'page' => 'user-bracket',
-				// 'ajax_url' => admin_url('admin-ajax.php'),
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-				// 'post' => $post,
-				// 'bracket' => $bracket,
 				'css_file' => $css_file,
 				'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
-
-
-				// // For product page
-				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
-				// 'gallery_images' => $gallery_images,
-				// 'color_options' => $color_options,
 			)
 		);
 		ob_start();
-	?>
-		<div id="wpbb-play-template">
-		</div>
-<?php
+		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-template-page.php';
 		return ob_get_clean();
 	}
 
@@ -395,20 +384,10 @@ class Wp_Bracket_Builder_Public {
 				// 'sentry_env' => $sentry_env,
 				// 'sentry_dsn' => $sentry_dsn,
 				'nonce' => wp_create_nonce('wp_rest'),
-				// 'page' => 'user-bracket',
-				// 'ajax_url' => admin_url('admin-ajax.php'),
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-				// 'post' => $post,
-				// 'bracket' => $bracket,
 				'css_file' => $css_file,
-				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 				'bracket_product_archive_url' => $play_history_url, // used to redirect to bracket-ready category page
 				'my_tournaments_url' => $my_tournaments_url, // used to redirect back to my tournaments page
-
-				// // For product page
-				// 'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
-				// 'gallery_images' => $gallery_images,
-				// 'color_options' => $color_options,
 			)
 		);
 		ob_start();
@@ -483,6 +462,7 @@ class Wp_Bracket_Builder_Public {
 		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
 		add_rewrite_rule('^bracket_tournament/([^/]+)/([^/]+)', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
 		add_rewrite_rule('^bracket_play/([^/]+)/([^/]+)', 'index.php?bracket_play=$matches[1]&view=$matches[2]', 'top');
+		add_rewrite_rule('^bracket_template/([^/]+)/([^/]+)', 'index.php?bracket_template=$matches[1]&view=$matches[2]', 'top');
 	}
 
 	public function add_query_vars($vars) {

@@ -182,7 +182,7 @@ class Wp_Bracket_Builder_Activator {
 			name varchar(255) NOT NULL,
 			bracket_template_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_template_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}templates(id) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta

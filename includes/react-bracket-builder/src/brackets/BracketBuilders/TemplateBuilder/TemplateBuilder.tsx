@@ -1,22 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
 import { AddTeamsPage } from './AddTeamsPage'
 import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
-import { TemplateReq } from '../../shared/api/types/bracket'
+import { TemplateReq, TemplateRes } from '../../shared/api/types/bracket'
+import { WithBracketMeta, WithDarkMode, WithProvider, WithMatchTree } from '../../shared/components/HigherOrder'
+import { BracketMeta } from '../../shared/context'
+import { setPage } from '../../shared/features/bracketNavSlice'
 
 const defaultBracketName = "MY BRACKET NAME"
 
-const initialPickerIndex = 0
+const defaultInitialPickerIndex = 0
 const teamPickerDefaults = [16, 32, 64]
 const teamPickerMin = [1, 17, 33]
 const teamPickerMax = [31, 63, 64]
 
 interface TemplateBuilderProps {
+  template?: TemplateRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   saveTemplateLink?: string
   saveTournamentLink?: string
+  bracketMeta?: BracketMeta
+  setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
 const TemplateBuilder = (props: TemplateBuilderProps) => {
@@ -24,19 +30,88 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
     matchTree,
     setMatchTree,
     saveTemplateLink,
-    saveTournamentLink
+    saveTournamentLink,
+    template,
+    bracketMeta,
+    setBracketMeta,
+
   } = props
 
   const [currentPage, setCurrentPage] = useState('num-teams')
-  const [bracketTitle, setBracketTitle] = useState(defaultBracketName)
-  const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
+  const [numTeams, setNumTeams] = useState(teamPickerDefaults[defaultInitialPickerIndex])
   const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Split)
   const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
     teamPickerDefaults.map((val, i) => ({
       currentValue: val,
-      selected: i === initialPickerIndex
+      selected: i === defaultInitialPickerIndex
     }))
   )
+
+  useEffect(() => {
+    setBracketMeta?.({
+      title: bracketMeta?.title || defaultBracketName,
+      date: bracketMeta?.date || '2025',
+    })
+  }, [])
+
+  useEffect(() => {
+    if (template) {
+      const {
+        title,
+        numTeams,
+        wildcardPlacement,
+        matches,
+      } = template
+      console.log('template found', template)
+      setBracketMeta?.({
+        title: title || defaultBracketName,
+        date: '2021',
+      })
+      setNumTeams(numTeams)
+      setWildcardPlacement(wildcardPlacement)
+      pickerStateFromNumTeams(numTeams)
+
+      if (matches && matches.length > 0) {
+        console.log('matches found', matches)
+        const newMatches = matches.map(match => ({
+          roundIndex: match.roundIndex,
+          matchIndex: match.matchIndex,
+          team1: { name: match.team1?.name },
+          team2: { name: match.team2?.name },
+        }))
+        setMatchTree?.(MatchTree.fromMatchRes(numTeams, newMatches, wildcardPlacement))
+        setCurrentPage('add-teams')
+      }
+
+      // setTeamPickerState(teamPickerState.map((picker, i) => ({
+      //   ...picker,
+      //   currentValue: template.numTeams,
+      //   selected: i === initialPickerIndex
+      // })))
+    }
+  }, [template])
+
+  const pickerStateFromNumTeams = (numTeams: number) => {
+    const initialPickerIndex = teamPickerMax.findIndex(max => numTeams <= max)
+    if (initialPickerIndex >= 0) {
+      const picker = teamPickerState[initialPickerIndex]
+      const newPicker = {
+        ...picker,
+        currentValue: numTeams,
+        selected: true,
+      }
+      const newPickers = teamPickerState.map((picker, i) => {
+        if (i === initialPickerIndex) {
+          return newPicker
+        }
+        return {
+          ...picker,
+          selected: false,
+        }
+      })
+      setTeamPickerState(newPickers)
+    }
+  }
 
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
@@ -48,18 +123,15 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
     }
 
     const req: TemplateReq = {
-      title: bracketTitle,
+      title: bracketMeta.title,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),
       status: 'publish',
     }
-    console.log(req)
-    console.log(JSON.stringify(req))
 
     bracketApi.createTemplate(req)
       .then((res) => {
-        console.log(res)
         if (saveTemplateLink) {
           window.location.href = saveTemplateLink
         }
@@ -80,8 +152,6 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onAddTeamsClick={handleAddTeamsClick}
-          bracketTitle={bracketTitle}
-          setBracketTitle={setBracketTitle}
           numTeams={numTeams}
           setNumTeams={setNumTeams}
           teamPickerDefaults={teamPickerDefaults}
@@ -91,13 +161,14 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           setWildcardPlacement={setWildcardPlacement}
           teamPickerState={teamPickerState}
           setTeamPickerState={setTeamPickerState}
+          bracketMeta={bracketMeta}
+          setBracketMeta={setBracketMeta}
         />
       }
       {currentPage === 'add-teams' &&
         <AddTeamsPage
           matchTree={matchTree}
           setMatchTree={setMatchTree}
-          bracketTitle={bracketTitle}
           handleBack={() => setCurrentPage('num-teams')}
           handleSaveTemplate={handleSaveTemplateClick}
           handleSaveTournament={handleSaveTournamentClick}
@@ -107,4 +178,5 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   )
 }
 
-export default TemplateBuilder
+const WrappedTemplateBuilder = WithProvider(WithDarkMode(WithMatchTree(WithBracketMeta(TemplateBuilder))))
+export default WrappedTemplateBuilder
