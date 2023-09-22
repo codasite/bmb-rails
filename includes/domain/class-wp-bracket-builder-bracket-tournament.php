@@ -2,6 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
 
 class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base {
 	/**
@@ -14,6 +15,11 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	 */
 	public $bracket_template;
 
+	/**
+	 * @var Wp_Bracket_Builder_Match_Pick[]
+	 */
+	public $results;
+
 	public function __construct(
 		int $bracket_template_id,
 		int $id = null,
@@ -22,7 +28,8 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		string $status = 'publish',
 		DateTimeImmutable|false $date = false,
 		DateTimeImmutable|false $date_gmt = false,
-		Wp_Bracket_Builder_Bracket_Template $bracket_template = null
+		Wp_Bracket_Builder_Bracket_Template $bracket_template = null,
+		array $results = [],
 	) {
 		parent::__construct(
 			$id,
@@ -34,6 +41,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		);
 		$this->bracket_template_id = $bracket_template_id;
 		$this->bracket_template = $bracket_template;
+		$this->results = $results;
 	}
 
 	static public function get_post_type(): string {
@@ -60,6 +68,14 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			throw new Exception('author is required');
 		}
 
+		if (isset($data['results'])) {
+			$results = [];
+			foreach ($data['results'] as $result) {
+				$results[] = Wp_Bracket_Builder_Match_Pick::from_array($result);
+			}
+			$data['results'] = $results;
+		}
+
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data['bracket_template_id']);
 
 		foreach ($data as $key => $value) {
@@ -68,6 +84,19 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			}
 		}
 
+		return $tournament;
+	}
+
+	public function to_array(): array {
+		$tournament = parent::to_array();
+		$tournament['bracket_template_id'] = $this->bracket_template_id;
+		if ($this->results) {
+			$results = [];
+			foreach ($this->results as $result) {
+				$results[] = $result->to_array();
+			}
+			$tournament['results'] = $results;
+		}
 		return $tournament;
 	}
 }
