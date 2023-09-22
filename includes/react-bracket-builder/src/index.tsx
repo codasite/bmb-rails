@@ -105,12 +105,9 @@ function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	} = wpbb_ajax_obj
 	if (templateBuilder) {
 		console.log('rendering template builder')
-		const TemplateBuilderWithMatchTree = withMatchTree(TemplateBuilder)
 		render(
 			<App>
-				<Provider store={bracketBuilderStore}>
-					<TemplateBuilderWithMatchTree saveTemplateLink={my_templates_url} saveTournamentLink={my_tournaments_url} />
-				</Provider>
+				<TemplateBuilder saveTemplateLink={my_templates_url} saveTournamentLink={my_tournaments_url} />
 			</App >, templateBuilder);
 	}
 }
