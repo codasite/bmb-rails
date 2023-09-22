@@ -106,7 +106,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       .then((res) => {
         console.log(res)
         if (saveTemplateLink) {
-          window.location.href = saveTemplateLink
+          // window.location.href = saveTemplateLink
         }
       })
       .catch((err) => {
