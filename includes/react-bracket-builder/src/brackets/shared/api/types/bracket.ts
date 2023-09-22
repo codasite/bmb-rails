@@ -23,7 +23,7 @@ export interface HTMLtoImageRes {
 }
 
 export interface TeamRes {
-	id: number;
+	id?: number;
 	name: string;
 }
 
@@ -32,7 +32,7 @@ export interface TeamReq {
 }
 
 export interface MatchRes {
-	id: number;
+	id?: number;
 	roundIndex: number;
 	matchIndex: number;
 	team1?: Nullable<TeamRes>;

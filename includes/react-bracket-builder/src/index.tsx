@@ -102,12 +102,16 @@ function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	const {
 		my_templates_url,
 		my_tournaments_url,
+		template,
 	} = wpbb_ajax_obj
+
+	const temp = camelCaseKeys(template)
+
 	if (templateBuilder) {
 		console.log('rendering template builder')
 		render(
 			<App>
-				<TemplateBuilder saveTemplateLink={my_templates_url} saveTournamentLink={my_tournaments_url} />
+				<TemplateBuilder template={temp} saveTemplateLink={my_templates_url} saveTournamentLink={my_tournaments_url} />
 			</App >, templateBuilder);
 	}
 }
