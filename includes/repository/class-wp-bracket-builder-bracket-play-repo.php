@@ -73,6 +73,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			$picks,
 			$tournament,
 			$play_data['total_score'] ?? 0,
+			$play_data['accuracy_score'] ?? 0.00,
 		);
 
 		return $play;

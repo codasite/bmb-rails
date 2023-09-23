@@ -9,8 +9,8 @@ $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $tournament = $tournament_repo->get(get_the_ID());
 // This is just temporary. Don't do this
-// $complete = false;
-$complete = get_post_status() === 'complete';
+$complete = true;
+// $complete = get_post_status() === 'complete';
 
 $plays = $play_repo->get_all(
 	[
@@ -21,8 +21,8 @@ $plays = $play_repo->get_all(
 				'value' => get_the_ID(),
 			],
 		],
-		// 'orderby' => 'score',
-		// 'order' => 'DESC',
+		'orderby' => 'accuracy_score',
+		'order' => 'DESC',
 	]
 );
 
@@ -55,7 +55,7 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 	$play_author = $play->author;
 	$author_name = get_the_author_meta('display_name', $play_author);
 	$time_ago = human_time_diff(get_the_time('U', $play_id), current_time('timestamp')) . ' ago';
-	$score = $winner ? .95 : .25;
+	$score = $play->accuracy_score;
 
 	ob_start();
 ?>
@@ -63,7 +63,7 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 		<div class="tw-flex tw-flex-col tw-gap-16">
 			<?php if ($winner) : ?>
 				<div class="tw-flex tw-flex-col">
-					<span class="tw-text-60 tw-font-700 tw-text-green"><?php echo $score * 100; ?>%</span>
+					<span class="tw-text-60 tw-font-700 tw-text-green"><?php echo round($score * 100); ?>%</span>
 					<span class="tw-text-16 tw-font-500 tw-text-white/50">Accuracy Score</span>
 				</div>
 			<?php endif; ?>
@@ -116,7 +116,8 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 			<div class="tw-flex tw-flex-col tw-gap-16">
 				<?php
 				foreach ($plays as $i => $play) {
-					echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $complete);
+					// echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $complete);
+					echo wpbb_leaderboard_play_list_item($play, true, $complete);
 				}
 				?>
 			</div>
