@@ -153,7 +153,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       .then((res) => {
         console.log(res)
         if (saveTournamentLink) {
-          // window.location.href = saveTournamentLink
+          window.location.href = saveTournamentLink
         }
       })
       .catch((err) => {

@@ -41,7 +41,7 @@ $the_query = new WP_Query([
 
 $num_pages = $the_query->max_num_pages;
 
-$tournaments = $tournament_repo->get_all($the_query);
+$tournaments = $tournament_repo->get_all($the_query, ['fetch_template' => true]);
 
 function score_tournament_btn($endpoint, $tournament) {
 
@@ -186,7 +186,7 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 
 <div class="tw-flex tw-flex-col tw-gap-15">
 	<h1 class="tw-mb-8">My Tournaments</h1>
-  <div id="wpbb-create-tournament-button-and-modal"></div>
+	<div id="wpbb-create-tournament-button-and-modal"></div>
 	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
 		<!-- <?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?> -->
 		<?php echo wpbb_sort_button('Live', get_permalink() . "tournaments/?status=publish", $status === 'publish'); ?>

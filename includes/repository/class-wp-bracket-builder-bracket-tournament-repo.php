@@ -178,9 +178,13 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $data;
 	}
 
-	public function get_all(array|WP_Query $query = []): array {
+	public function get_all(array|WP_Query $query = [], array $options = [
+		'fetch_results' => false,
+		'fetch_template' => false,
+		'fetch_matches' => false,
+	]): array {
 		if ($query instanceof WP_Query) {
-			return $this->tournaments_from_query($query);
+			return $this->tournaments_from_query($query, $options);
 		}
 
 		$default_args = [
@@ -191,13 +195,16 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		$args = array_merge($default_args, $query);
 
 		$query = new WP_Query($args);
-		return $this->tournaments_from_query($query);
+		return $this->tournaments_from_query($query, $options);
 	}
 
-	public function tournaments_from_query(WP_Query $query) {
+	public function tournaments_from_query(WP_Query $query, array $options = []) {
 		$tournaments = [];
 		foreach ($query->posts as $post) {
-			$tournament = $this->get($post, false, false, false);
+			$fetch_results = isset($options['fetch_results']) ? $options['fetch_results'] : false;
+			$fetch_template = isset($options['fetch_template']) ? $options['fetch_template'] : false;
+			$fetch_matches = isset($options['fetch_matches']) ? $options['fetch_matches'] : false;
+			$tournament = $this->get($post, $fetch_results, $fetch_template, $fetch_matches);
 			if ($tournament) {
 				$tournaments[] = $tournament;
 			}
