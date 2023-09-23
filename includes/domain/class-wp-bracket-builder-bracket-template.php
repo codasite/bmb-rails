@@ -85,10 +85,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
 		$template = new Wp_Bracket_Builder_Bracket_Template();
-		if (!isset($data['author'])) {
-			throw new Exception('author is required');
-		}
-
 		if (!isset($data['num_teams'])) {
 			throw new Exception('num_teams is required');
 		}
@@ -98,7 +94,7 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		}
 
 		if (!isset($data['author'])) {
-			throw new Exception('author is required');
+			throw new Exception('author id is required');
 		}
 
 		if (!isset($data['title'])) {

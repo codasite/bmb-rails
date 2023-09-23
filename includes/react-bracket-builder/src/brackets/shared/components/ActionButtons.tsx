@@ -115,8 +115,8 @@ export const BlueButton = (props: ActionButtonProps) => {
 		disabled
 	} = props
 	const background = disabled ? 'transparent' : 'blue/15'
-	const border = disabled ? 'white/50' : 'blue'
-	const textColor = disabled ? 'white/50' : 'white'
+	const border = disabled ? 'white/20' : 'blue'
+	const textColor = disabled ? 'white/20' : 'white'
 
 	return (
 		<ActionButtonBase

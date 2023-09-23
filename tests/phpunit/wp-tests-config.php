@@ -1,7 +1,7 @@
 <?php
 
 // change the next line to points to your wordpress dir
-define( 'ABSPATH', '/opt/lampp/htdocs/bracket-builder/' );
+define( 'ABSPATH', '/Users/barrymolina/Sites/wordpress-new' . '/');
 
 define( 'WP_DEBUG', false );
 
