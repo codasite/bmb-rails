@@ -12,7 +12,7 @@ switch ($current_tab) {
 	case 'templates':
 		$template = 'wp-bracket-builder-my-templates.php';
 		break;
-	case 'tournaments':
+	case 'my-tournaments':
 		$template = 'wp-bracket-builder-my-tournaments.php';
 		break;
 	case 'play-history':

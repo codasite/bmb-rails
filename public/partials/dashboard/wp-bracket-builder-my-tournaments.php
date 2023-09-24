@@ -98,7 +98,7 @@ function archive_tournament_btn($endpoint, $tournament_id) {
 	ob_start();
 ?>
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
-		<input type="hidden" name="archive_tournament_id" value="<?php echo esc_attr($tournament_id) ?>">
+		<input type="hidden" name="archive_tournament_id" value="<?php echo esc_attr($tournament_id) ?>"/>
 		<?php wp_nonce_field('archive_tournament_action', 'archive_tournament_nonce'); ?>
 		<?php echo icon_btn('../../assets/icons/archive.svg', 'submit'); ?>
 	</form>
