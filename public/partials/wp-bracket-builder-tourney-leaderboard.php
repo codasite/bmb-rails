@@ -36,7 +36,7 @@ $plays = $play_repo->get_all(
 function wpbb_score_tournament_btn($endpoint) {
 	ob_start();
 ?>
-	<a href="<?php echo $endpoint; ?>" class="tw-flex tw-justify-center tw-items-center tw-text-off-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-yellow tw-font-500 tw-mt-16">
+	<a href="<?php echo $endpoint; ?>" class="tw-flex tw-justify-center tw-items-center !tw-text-off-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-yellow tw-font-500 tw-mt-16">
 		<?php echo file_get_contents(plugins_url('../assets/icons/trophy_small.svg', __FILE__)); ?>
 		<span>Score Tournament</span>
 	</a>
@@ -126,7 +126,7 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 			<?php echo $complete ? '' : wpbb_score_tournament_btn(get_permalink() . 'results'); ?>
 		</div>
 		<div class="tw-flex tw-flex-col tw-gap-16">
-			<h2 class="!tw-text-white/50 tw-text-24 tw-font-500">Plays by Tournament Participants</h2>
+		<h2 class="!tw-text-white/50 tw-text-24 tw-font-500"><?php echo count($plays) > 0 ? "Tournament Plays" : "No Players in this Tournament"?></h2>
 			<div class="tw-flex tw-flex-col tw-gap-16">
 				<?php
 				foreach ($plays as $i => $play) {
