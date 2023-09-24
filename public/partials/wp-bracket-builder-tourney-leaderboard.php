@@ -8,9 +8,13 @@ $page = get_query_var('paged');
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 $tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 $tournament = $tournament_repo->get(get_the_ID());
+$tournament_winner = $tournament->get_winning_team();
 // This is just temporary. Don't do this
-$complete = true;
-// $complete = get_post_status() === 'complete';
+// $complete = true;
+$complete = get_post_status() === 'complete';
+$scored = count($tournament->results) > 0;
+// $scored = true;
+$show_scores = $complete || $scored;
 
 $plays = $play_repo->get_all(
 	[
@@ -23,15 +27,16 @@ $plays = $play_repo->get_all(
 		],
 		'orderby' => 'accuracy_score',
 		'order' => 'DESC',
+	],
+	[
+		'fetch_picks' => true,
 	]
 );
-
-$winner = 'Milwaukee';
 
 function wpbb_score_tournament_btn($endpoint) {
 	ob_start();
 ?>
-	<a href="#" class="tw-flex tw-justify-center tw-items-center tw-text-off-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-yellow tw-font-500 tw-mt-16">
+	<a href="<?php echo $endpoint; ?>" class="tw-flex tw-justify-center tw-items-center tw-text-off-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-yellow tw-font-500 tw-mt-16">
 		<?php echo file_get_contents(plugins_url('../assets/icons/trophy_small.svg', __FILE__)); ?>
 		<span>Score Tournament</span>
 	</a>
@@ -50,27 +55,34 @@ function wpbb_share_tournament_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, $winner = false, $complete = false) {
+function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, $winner = false, $show_score = false) {
 	$play_id = $play->id;
 	$play_author = $play->author;
 	$author_name = get_the_author_meta('display_name', $play_author);
 	$time_ago = human_time_diff(get_the_time('U', $play_id), current_time('timestamp')) . ' ago';
+	$winning_team = $play->get_winning_team();
+	$winning_team_name = $winning_team ? $winning_team->name : '';
 	$score = $play->accuracy_score;
+	$winner = $winner && $show_score;
 
 	ob_start();
 ?>
 	<div class="tw-flex tw-justify-between tw-px-30<?php echo $winner ? ' tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-py-30' : '' ?>">
 		<div class="tw-flex tw-flex-col tw-gap-16">
-			<?php if ($winner) : ?>
+			<?php if ($show_score) : ?>
 				<div class="tw-flex tw-flex-col">
-					<span class="tw-text-60 tw-font-700 tw-text-green"><?php echo round($score * 100); ?>%</span>
-					<span class="tw-text-16 tw-font-500 tw-text-white/50">Accuracy Score</span>
+					<?php if ($winner) : ?>
+						<span class="tw-text-60 tw-font-700 tw-text-green"><?php echo round($score * 100); ?>%</span>
+						<span class="tw-text-16 tw-font-500 tw-text-white/50">Accuracy Score</span>
+					<?php else : ?>
+						<span class="tw-text-32 tw-font-700 tw-text-white/50"><?php echo round($score * 100); ?>%</span>
+					<?php endif; ?>
 				</div>
 			<?php endif; ?>
 			<div class="tw-flex tw-gap-<?php echo $winner ? '20' : '16' ?>">
 				<div class="tw-flex tw-flex-col tw-items-center tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
 					<span class="tw-px-16 tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>">
-						milwaukee
+						<?php echo esc_html($winning_team_name); ?>
 					</span>
 					<span class="tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500<?php echo $winner ? ' tw-text-white/50' : '' ?>">
 						winning team
@@ -102,22 +114,22 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 		<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 tw-pb-<?php echo $complete ? '30' : '[53px]' ?>">
 			<?php echo file_get_contents(plugins_url('../assets/icons/trophy.svg', __FILE__)); ?>
 			<h1 class="tw-mt-16 tw-mb-12">
-				<?php echo $complete ? "$winner Wins" : esc_html(get_the_title()); ?>
+				<?php echo $complete && $tournament_winner ? "{$tournament_winner->name} Wins" : esc_html(get_the_title()); ?>
 			</h1>
 			<?php if ($complete) : ?>
 				<h3 class="tw-text-20 tw-font-400 ">
 					<?php echo esc_html(get_the_title()); ?>
 				</h3>
 			<?php endif; ?>
-			<?php echo $complete ? wpbb_share_tournament_btn(get_permalink()) : wpbb_score_tournament_btn(get_permalink()); ?>
+			<?php echo $complete ? wpbb_share_tournament_btn(get_permalink()) : wpbb_score_tournament_btn(get_permalink() . 'results'); ?>
 		</div>
 		<div class="tw-flex tw-flex-col tw-gap-16">
 			<h2 class="!tw-text-white/50 tw-text-24 tw-font-500">Plays by Tournament Participants</h2>
 			<div class="tw-flex tw-flex-col tw-gap-16">
 				<?php
 				foreach ($plays as $i => $play) {
-					// echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $complete);
-					echo wpbb_leaderboard_play_list_item($play, true, $complete);
+					echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $show_scores);
+					// echo wpbb_leaderboard_play_list_item($play, true, $complete);
 				}
 				?>
 			</div>

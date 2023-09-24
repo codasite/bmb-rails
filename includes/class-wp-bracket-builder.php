@@ -351,6 +351,15 @@ class Wp_Bracket_Builder {
 			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Complete <span class="count">(%s)</span>'),
 		));
 
+		register_post_status("score", array(
+			'label' => 'Scored',
+			'public' => true,
+			'exclude_from_search' => false,
+			'show_in_admin_all_list' => true,
+			'show_in_admin_status_list' => true,
+			'label_count' => _n_noop('Scored <span class="count">(%s)</span>', 'Scored <span class="count">(%s)</span>'),
+		));
+
 		register_post_status("archive", array(
 			'label' => 'Archive',
 			'public' => true,
