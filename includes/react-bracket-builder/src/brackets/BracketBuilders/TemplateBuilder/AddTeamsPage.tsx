@@ -48,10 +48,10 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 				}
 			</div>
 			<div className='tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full'>
-				<ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
+				{/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />
 					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
-				</ActionButton>
+				</ActionButton> */}
 				<div className='tw-flex tw-flex-col tw-gap-16'>
 					<ActionButton variant='blue' gap={16} disabled={createDisabled} onClick={handleSaveTemplate}>
 						<SaveIcon />
