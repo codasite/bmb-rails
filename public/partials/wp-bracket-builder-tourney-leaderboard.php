@@ -64,6 +64,7 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 	$winning_team_name = $winning_team ? $winning_team->name : '';
 	$score = $play->accuracy_score;
 	$winner = $winner && $show_score;
+	$view_play_link = get_permalink($play_id);
 
 	ob_start();
 ?>
@@ -98,7 +99,7 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 				</div>
 			</div>
 		</div>
-		<a href="#" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-<?php echo $winner ? 'end' : 'center' ?> tw-text-white tw-text-16 tw-font-500 hover:tw-text-<?php echo $complete ? 'green' : 'yellow' ?>">
+		<a href="<?php echo $view_play_link ?>" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-<?php echo $winner ? 'end' : 'center' ?> tw-text-white tw-text-16 tw-font-500 hover:tw-text-<?php echo $complete ? 'green' : 'yellow' ?>">
 			<?php echo file_get_contents(plugins_url('../assets/icons/arrow_up_right.svg', __FILE__)); ?>
 			<span>View Play</span>
 		</a>
@@ -121,7 +122,8 @@ function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, 
 					<?php echo esc_html(get_the_title()); ?>
 				</h3>
 			<?php endif; ?>
-			<?php echo $complete ? wpbb_share_tournament_btn(get_permalink()) : wpbb_score_tournament_btn(get_permalink() . 'results'); ?>
+			<!-- <?php echo $complete ? wpbb_share_tournament_btn(get_permalink()) : wpbb_score_tournament_btn(get_permalink() . 'results'); ?> -->
+			<?php echo $complete ? '' : wpbb_score_tournament_btn(get_permalink() . 'results'); ?>
 		</div>
 		<div class="tw-flex tw-flex-col tw-gap-16">
 			<h2 class="!tw-text-white/50 tw-text-24 tw-font-500">Plays by Tournament Participants</h2>

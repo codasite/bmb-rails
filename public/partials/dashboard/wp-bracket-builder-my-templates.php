@@ -49,7 +49,7 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 		<div class="tw-flex tw-gap-16">
 			<!-- <div class="tw-flex tw-flex-col lg:tw-flex-row tw-gap-16"> -->
 			<?php echo add_to_apparel_btn($template_play_link); ?>
-			<?php echo host_tournament_btn($template_host_link); ?>
+			<!-- <?php echo host_tournament_btn($template_host_link); ?> -->
 		</div>
 	</div>
 <?php

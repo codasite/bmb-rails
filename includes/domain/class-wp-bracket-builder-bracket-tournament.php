@@ -54,6 +54,10 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		return $winning_pick->winning_team;
 	}
 
+	public function has_results(): bool {
+		return count($this->results) > 0;
+	}
+
 	static public function get_post_type(): string {
 		return 'bracket_tournament';
 	}

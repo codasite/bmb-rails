@@ -166,9 +166,9 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 			<div class="tw-flex tw-gap-10 tw-items-center">
 				<!-- The share button should execute an AJAX request to generate a shareable link -->
-				<?php echo share_tournament_btn($share_link, $id); ?>
+				<!-- <?php echo share_tournament_btn($share_link, $id); ?> -->
 				<!-- The duplicate button opens up the "Host a Tournamnet" modal -->
-				<?php echo duplicate_bracket_btn($share_link, $id); ?>
+				<!-- <?php echo duplicate_bracket_btn($share_link, $id); ?> -->
 				<?php echo archive_tournament_btn($archive_link, $id); ?>
 				<!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
 				<?php echo delete_post_btn($delete_link, $id, 'delete_tournament_id', 'delete_tournament_action', 'delete_tournament_nonce'); ?>
