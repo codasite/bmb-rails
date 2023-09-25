@@ -1,7 +1,11 @@
 <?php
+
+use PHPUnit\Util\Log\TeamCity;
+
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
 
 /**
  * This class creates a bracket pick object by submitting 
@@ -41,6 +45,11 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	 */
 	public $total_score;
 
+	/**
+	 * @var float
+	 */
+	public $accuracy_score;
+
 	public function __construct(
 		int $tournament_id,
 		int $author,
@@ -54,6 +63,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		array $picks = [],
 		Wp_Bracket_Builder_Bracket_Tournament $tournament = null,
 		int $total_score = 0,
+		float $accuracy_score = 0.00,
 	) {
 		parent::__construct(
 			$id,
@@ -69,10 +79,18 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		$this->img_url = $img_url;
 		$this->picks = $picks;
 		$this->total_score = $total_score;
+		$this->accuracy_score = $accuracy_score;
 	}
 
 	static public function get_post_type(): string {
 		return 'bracket_play';
+	}
+
+	public function get_winning_team(): ?Wp_Bracket_Builder_Team {
+		if (count($this->picks) === 0) {
+			return null;
+		}
+		return $this->picks[count($this->picks) - 1]->winning_team;
 	}
 
 	public function get_post_meta(): array {

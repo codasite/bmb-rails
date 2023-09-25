@@ -25,8 +25,6 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	 */
 	private $wpdb;
 
-
-
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
@@ -38,21 +36,28 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 		$post_id = $this->insert_post($tournament, true);
 
-		if (is_wp_error($post_id)) {
-			return null;
+		if ($post_id instanceof WP_Error) {
+			throw new Exception($post_id->get_error_message());
 		}
 
 		$template_post_id = $tournament->bracket_template_id;
+		$template = $tournament->bracket_template;
 
+		// Either a template post id or a template object must be provided to create a tournament
 		if (!$template_post_id) {
-			return null;
+			if ($template) {
+				$template = $this->template_repo->add($template);
+				$template_post_id = $template->id;
+			} else {
+				throw new Exception('bracket_template_id or bracket_template is required');
+			}
 		}
 
-		$template = $this->template_repo->get_template_data($template_post_id);
-		$template_id = $template['id'];
+		$template_data = $this->template_repo->get_template_data($template_post_id);
+		$template_id = $template_data['id'];
 
 		if (!$template_id) {
-			return null;
+			throw new Exception('Bracket template data id not found');
 		}
 
 		$tournament_id = $this->insert_tournament_data([
@@ -173,9 +178,13 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $data;
 	}
 
-	public function get_all(array|WP_Query $query = []): array {
+	public function get_all(array|WP_Query $query = [], array $options = [
+		'fetch_results' => false,
+		'fetch_template' => false,
+		'fetch_matches' => false,
+	]): array {
 		if ($query instanceof WP_Query) {
-			return $this->tournaments_from_query($query);
+			return $this->tournaments_from_query($query, $options);
 		}
 
 		$default_args = [
@@ -186,13 +195,16 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		$args = array_merge($default_args, $query);
 
 		$query = new WP_Query($args);
-		return $this->tournaments_from_query($query);
+		return $this->tournaments_from_query($query, $options);
 	}
 
-	public function tournaments_from_query(WP_Query $query) {
+	public function tournaments_from_query(WP_Query $query, array $options = []) {
 		$tournaments = [];
 		foreach ($query->posts as $post) {
-			$tournament = $this->get($post, false, false, false);
+			$fetch_results = isset($options['fetch_results']) ? $options['fetch_results'] : false;
+			$fetch_template = isset($options['fetch_template']) ? $options['fetch_template'] : false;
+			$fetch_matches = isset($options['fetch_matches']) ? $options['fetch_matches'] : false;
+			$tournament = $this->get($post, $fetch_results, $fetch_template, $fetch_matches);
 			if ($tournament) {
 				$tournaments[] = $tournament;
 			}

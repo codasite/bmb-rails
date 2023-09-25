@@ -141,6 +141,11 @@ class Wp_Bracket_Builder {
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-convert-api.php';
 
+		/**
+		 * Callbacks for hooks and filters
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/wp-bracket-builder-public-hooks.php';
+
 		$this->loader = new Wp_Bracket_Builder_Loader();
 	}
 
@@ -216,6 +221,7 @@ class Wp_Bracket_Builder {
 	private function define_public_hooks() {
 
 		$plugin_public = new Wp_Bracket_Builder_Public($this->get_plugin_name(), $this->get_version());
+		$public_hooks = new Wp_Bracket_Builder_Public_Hooks();
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
@@ -231,6 +237,8 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('woocommerce_before_checkout_process', $plugin_public, 'handle_before_checkout_process');
 		$this->loader->add_action('woocommerce_payment_complete', $plugin_public, 'handle_payment_complete');
 		$this->loader->add_filter('woocommerce_available_variation', $plugin_public, 'filter_variation_availability', 10, 3);
+
+		$this->loader->add_filter('posts_clauses', $public_hooks, 'sort_plays', 10, 2);
 	}
 
 	/**
@@ -278,8 +286,8 @@ class Wp_Bracket_Builder {
 			'bracket_template',
 			array(
 				'labels' => array(
-					'name' => __('Bracket Templates'),
-					'singular_name' => __('Bracket Template'),
+					'name' => __('Templates'),
+					'singular_name' => __('Template'),
 				),
 				'description' => 'Bracket templates for the WP Bracket Builder plugin',
 				'public' => true,
@@ -297,8 +305,8 @@ class Wp_Bracket_Builder {
 			'bracket_play',
 			array(
 				'labels' => array(
-					'name' => __('Bracket Plays'),
-					'singular_name' => __('Bracket Play'),
+					'name' => __('Plays'),
+					'singular_name' => __('Play'),
 				),
 				'description' => 'Bracket plays for the WP Bracket Builder plugin',
 				'public' => true,
@@ -315,8 +323,8 @@ class Wp_Bracket_Builder {
 			'bracket_tournament',
 			array(
 				'labels' => array(
-					'name' => __('Bracket Tournaments'),
-					'singular_name' => __('Bracket Tournament'),
+					'name' => __('Tournaments'),
+					'singular_name' => __('Tournament'),
 				),
 				'description' => 'Tournaments for the WP Bracket Builder plugin',
 				'public' => true,
@@ -343,6 +351,15 @@ class Wp_Bracket_Builder {
 			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Complete <span class="count">(%s)</span>'),
 		));
 
+		register_post_status("score", array(
+			'label' => 'Scored',
+			'public' => true,
+			'exclude_from_search' => false,
+			'show_in_admin_all_list' => true,
+			'show_in_admin_status_list' => true,
+			'label_count' => _n_noop('Scored <span class="count">(%s)</span>', 'Scored <span class="count">(%s)</span>'),
+		));
+
 		register_post_status("archive", array(
 			'label' => 'Archive',
 			'public' => true,
@@ -351,5 +368,10 @@ class Wp_Bracket_Builder {
 			'show_in_admin_status_list' => true,
 			'label_count' => _n_noop('Completed <span class="count">(%s)</span>', 'Archive <span class="count">(%s)</span>'),
 		));
+	}
+	public function sort_plays($clauses, $query_object) {
+		print_r($clauses);
+		echo 'HIIII';
+		error_log('HIIII');
 	}
 }

@@ -22,7 +22,10 @@ $num_pages = $the_query->max_num_pages;
 
 $plays = $play_repo->get_all(
 	$the_query,
-	['fetch_tournament' => true]
+	[
+		'fetch_tournament' => true,
+		'fetch_results' => true
+	]
 );
 
 function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
@@ -36,7 +39,8 @@ function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
-	$user_score_percent = 99; // $user_score * 100;
+	$accuracy_score = round($play->accuracy_score * 100);
+	$show_score = $play->tournament->has_results();
 	ob_start();
 ?>
 	<div class="tw-flex tw-justify-between tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
@@ -50,15 +54,17 @@ function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 			</div>
 		</div>
 		<div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
-			<div class="tw-flex tw-gap-4 tw-items-center">
+			<!-- <div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo file_get_contents(plugins_url("../../assets/icons/$trend_icon", __FILE__)); ?>
 				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html($user_rank) ?></span>
 				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
-			</div>
-			<div class="tw-flex tw-flex-col tw-items-end">
-				<h2 class="tw-font-700 tw-text-48 tw-text-white"><?php echo esc_html($user_score_percent) ?>%</h2>
-				<span class="tw-font-500 tw-text-12 tw-text-white">My Score</span>
-			</div>
+			</div> -->
+			<?php if ($show_score) : ?>
+				<div class="tw-flex tw-flex-col tw-items-end">
+					<h2 class="tw-font-700 tw-text-48 tw-text-white"><?php echo esc_html($accuracy_score) ?>%</h2>
+					<span class="tw-font-500 tw-text-12 tw-text-white">My Score</span>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 <?php

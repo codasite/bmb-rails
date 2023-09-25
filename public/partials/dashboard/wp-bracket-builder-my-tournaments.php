@@ -41,7 +41,7 @@ $the_query = new WP_Query([
 
 $num_pages = $the_query->max_num_pages;
 
-$tournaments = $tournament_repo->get_all($the_query);
+$tournaments = $tournament_repo->get_all($the_query, ['fetch_template' => true]);
 
 function score_tournament_btn($endpoint, $tournament) {
 
@@ -98,7 +98,7 @@ function archive_tournament_btn($endpoint, $tournament_id) {
 	ob_start();
 ?>
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
-		<input type="hidden" name="archive_tournament_id" value="<?php echo esc_attr($tournament_id) ?>">
+		<input type="hidden" name="archive_tournament_id" value="<?php echo esc_attr($tournament_id) ?>"/>
 		<?php wp_nonce_field('archive_tournament_action', 'archive_tournament_nonce'); ?>
 		<?php echo icon_btn('../../assets/icons/archive.svg', 'submit'); ?>
 	</form>
@@ -166,9 +166,9 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 			<div class="tw-flex tw-gap-10 tw-items-center">
 				<!-- The share button should execute an AJAX request to generate a shareable link -->
-				<?php echo share_tournament_btn($share_link, $id); ?>
+				<!-- <?php echo share_tournament_btn($share_link, $id); ?> -->
 				<!-- The duplicate button opens up the "Host a Tournamnet" modal -->
-				<?php echo duplicate_bracket_btn($share_link, $id); ?>
+				<!-- <?php echo duplicate_bracket_btn($share_link, $id); ?> -->
 				<?php echo archive_tournament_btn($archive_link, $id); ?>
 				<!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
 				<?php echo delete_post_btn($delete_link, $id, 'delete_tournament_id', 'delete_tournament_action', 'delete_tournament_nonce'); ?>
@@ -186,7 +186,7 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 
 <div class="tw-flex tw-flex-col tw-gap-15">
 	<h1 class="tw-mb-8">My Tournaments</h1>
-  <div id="wpbb-create-tournament-button-and-modal"></div>
+	<div id="wpbb-create-tournament-button-and-modal"></div>
 	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
 		<!-- <?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?> -->
 		<?php echo wpbb_sort_button('Live', get_permalink() . "tournaments/?status=publish", $status === 'publish'); ?>

@@ -126,9 +126,14 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	 */
 	public function create_item($request) {
 		$params = $request->get_params();
+
 		if (!isset($params['author'])) {
 			$params['author'] = get_current_user_id();
 		}
+		if (isset($params['bracket_template']) && !isset($params['bracket_template']['author'])) {
+			$params['bracket_template']['author'] = get_current_user_id();
+		}
+
 		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($params);
 
 		$saved = $this->tournament_repo->add($tournament);

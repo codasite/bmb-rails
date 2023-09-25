@@ -7,10 +7,15 @@ import { BracketTemplatePreview } from './BracketTemplatePreview'
 import { isPowerOfTwo } from '../../shared/utils'
 import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
+import { BracketMeta } from '../../shared/context'
 
 
+interface BracketTitleProps {
+  title: string
+  setTitle: (title: string) => void
+}
 
-const BracketTitle = (props) => {
+const BracketTitle = (props: BracketTitleProps) => {
   const {
     title,
     setTitle
@@ -62,8 +67,6 @@ interface NumTeamsPageProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   onAddTeamsClick: () => void
-  bracketTitle: string
-  setBracketTitle: (title: string) => void
   numTeams: number
   setNumTeams: (numTeams: number) => void
   teamPickerDefaults: number[]
@@ -73,6 +76,8 @@ interface NumTeamsPageProps {
   setWildcardPlacement: (placement: WildcardPlacement) => void
   teamPickerState: NumTeamsPickerState[]
   setTeamPickerState: (state: NumTeamsPickerState[]) => void
+  bracketMeta?: BracketMeta
+  setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
 export const NumTeamsPage = (props: NumTeamsPageProps) => {
@@ -80,8 +85,8 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     matchTree,
     setMatchTree,
     onAddTeamsClick,
-    bracketTitle,
-    setBracketTitle,
+    bracketMeta,
+    setBracketMeta,
     numTeams,
     setNumTeams,
     teamPickerDefaults,
@@ -106,7 +111,6 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
       }
     }
   }, [teamPickerState, wildcardPlacement])
-
 
   const updateTeamPicker = (index: number, newPicker: NumTeamsPickerState) => {
     const newPickers = teamPickerState.map((picker, i) => {
@@ -220,7 +224,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
   return (
     <div className='tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'backgroundImage': `url(${darkBracketBg})` }}>
       <div className="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
-        <BracketTitle title={bracketTitle} setTitle={setBracketTitle} />
+        <BracketTitle title={bracketMeta.title} setTitle={(title => setBracketMeta({ ...bracketMeta, title }))} />
         {
           matchTree &&
           <div>

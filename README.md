@@ -18,9 +18,9 @@
 - "Celebrity Picks" [wpbb-celebrity-picks]
 - "Bracket Template Builder" [wpbb-template-builder]
 9. Create Oxygen templates for the following post types and add the shortcodes
-- "bracket_template" posts: [wpbb-play-template]
+- "bracket_template" posts: [wpbb-bracket-template]
 - "bracket_tournament" posts: [wpbb-bracket-tournament]
-- TODO: add template for bracket play
+- "bracket_player" posts: [wpbb-bracket-play]
 
 
 ## Testing Setup

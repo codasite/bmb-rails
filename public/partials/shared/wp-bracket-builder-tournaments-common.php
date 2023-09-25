@@ -24,7 +24,7 @@ function wpbb_sort_button($label, $endpoint, $active = false) {
 	];
 	$active_cls = [
 		'tw-bg-white',
-		'tw-text-dark-blue',
+		'!tw-text-dark-blue',
 	];
 
 	$cls_list = array_merge($base_cls, $active ? $active_cls : $inactive_cls);

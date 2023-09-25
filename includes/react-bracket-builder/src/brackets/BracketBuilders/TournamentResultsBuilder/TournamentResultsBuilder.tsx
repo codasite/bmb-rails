@@ -91,8 +91,11 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 	const handleUpdatePicks = () => {
 		if (matchTree) {
 			const picks = matchTree.toMatchPicks();
+			if (!picks || picks.length === 0) return;
+			const complete = matchTree.allPicked();
 			const data: TournamentReq = {
 				results: picks,
+				status: complete ? 'complete' : undefined,
 			}
 			bracketApi.updateTournament(tournamentId, data).then((res) => {
 				console.log(res);

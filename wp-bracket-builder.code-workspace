@@ -13,6 +13,9 @@
 		},
 		{
 			"path": "../bracket-export"
+		},
+		{
+			"path": "tests/phpunit/tests"
 		}
 	],
 	"settings": {},
