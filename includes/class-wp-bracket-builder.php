@@ -286,8 +286,8 @@ class Wp_Bracket_Builder {
 			'bracket_template',
 			array(
 				'labels' => array(
-					'name' => __('Bracket Templates'),
-					'singular_name' => __('Bracket Template'),
+					'name' => __('Templates'),
+					'singular_name' => __('Template'),
 				),
 				'description' => 'Bracket templates for the WP Bracket Builder plugin',
 				'public' => true,
@@ -305,8 +305,8 @@ class Wp_Bracket_Builder {
 			'bracket_play',
 			array(
 				'labels' => array(
-					'name' => __('Bracket Plays'),
-					'singular_name' => __('Bracket Play'),
+					'name' => __('Plays'),
+					'singular_name' => __('Play'),
 				),
 				'description' => 'Bracket plays for the WP Bracket Builder plugin',
 				'public' => true,
@@ -323,8 +323,8 @@ class Wp_Bracket_Builder {
 			'bracket_tournament',
 			array(
 				'labels' => array(
-					'name' => __('Bracket Tournaments'),
-					'singular_name' => __('Bracket Tournament'),
+					'name' => __('Tournaments'),
+					'singular_name' => __('Tournament'),
 				),
 				'description' => 'Tournaments for the WP Bracket Builder plugin',
 				'public' => true,

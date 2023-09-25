@@ -11,6 +11,7 @@ function icon_btn($icon_path, $type = '') {
 		<?php echo file_get_contents(plugins_url($icon_path, __FILE__)); ?>
 	</button>
 <?php
+	return ob_get_clean();
 }
 
 /**
