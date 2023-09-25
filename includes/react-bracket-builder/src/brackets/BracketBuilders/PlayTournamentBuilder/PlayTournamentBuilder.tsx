@@ -19,7 +19,7 @@ import { ThemeSelector } from '../../shared/components';
 import { ActionButton } from '../../shared/components/ActionButtons';
 import { PlayReq } from '../../shared/api/types/bracket';
 import { useWindowDimensions } from '../../../utils/hooks';
-import { DefaultPaginatedBracket } from '../../shared/components/Bracket/DefaultPaginatedBracket';
+import { PaginatedPickableBracket } from '../../shared/components/Bracket';
 
 interface UserBracketProps {
 	apparelUrl: string;
@@ -209,7 +209,7 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 		return (
 			<div className={`wpbb-reset tw-uppercase tw-bg-dd-blue`}>
 				{matchTree &&
-					<DefaultPaginatedBracket
+					<PaginatedPickableBracket
 						matchTree={matchTree}
 						setMatchTree={setMatchTree}
 					/>

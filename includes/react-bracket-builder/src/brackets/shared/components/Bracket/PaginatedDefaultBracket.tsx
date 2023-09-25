@@ -15,15 +15,16 @@ import { DefaultMatchColumn } from '../MatchColumn';
 import { DefaultTeamSlot } from '../TeamSlot';
 import { BracketLines } from './BracketLines';
 import { DarkModeContext } from '../../context';
+import { ActionButton } from '../ActionButtons';
 
 
-export const DefaultPaginatedBracket = (props: BracketProps) => {
+export const PaginatedDefaultBracket = (props: BracketProps) => {
 	const {
 		getBracketHeight = getDefaultBracketHeight,
-		getBracketWidth = getDefaultBracketWidth,
+		getBracketWidth = () => 260,
 		getTeamHeight = () => getDefaultTeamHeight(4),
 		getTeamGap = () => getDefaultTeamGap(0),
-		getFirstRoundMatchGap = () => getDefaultFirstRoundMatchGap(4),
+		getFirstRoundMatchGap = () => getDefaultFirstRoundMatchGap(5),
 		getSubsequentMatchGap = getDefaultSubsequentMatchGap,
 		getTeamFontSize = () => getDefaultTeamFontSize(4),
 		matchTree,
@@ -38,9 +39,10 @@ export const DefaultPaginatedBracket = (props: BracketProps) => {
 
 	const [page, setPage] = useState(0)
 
+	const darkMode = useContext(DarkModeContext);
 
 	const linesStyle = lineStyle || {
-		className: `!tw-border-t-white'`,
+		className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
 	}
 
 	const roundIndex = 0
@@ -106,14 +108,22 @@ export const DefaultPaginatedBracket = (props: BracketProps) => {
 			teamFontSize={teamFontSize}
 		/>
 
+	const maxW = getBracketWidth(numRounds)
+
 	return (
-		<div className='tw-flex tw-justify-between'>
-			{leftSide ? matchCol1 : matchCol2}
-			{leftSide ? matchCol2 : matchCol1}
-			<BracketLines
-				rounds={matchTree.rounds}
-				style={linesStyle}
-			/>
+		<div className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}>
+			<div className='tw-flex tw-justify-center'>
+				<h2 className='tw-text-24 tw-font-700 tw-text-white'>{`Round ${roundIndex + 1}`}</h2>
+			</div>
+			<div className={`tw-flex tw-justify-between tw-flex-grow`}>
+				{leftSide ? matchCol1 : matchCol2}
+				{leftSide ? matchCol2 : matchCol1}
+				<BracketLines
+					rounds={matchTree.rounds}
+					style={linesStyle}
+				/>
+			</div>
+			<ActionButton variant='white'>Next</ActionButton>
 		</div>
 	)
 }
