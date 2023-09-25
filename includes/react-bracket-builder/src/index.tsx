@@ -33,6 +33,8 @@ interface WpbbAjaxObj {
 	my_templates_url: string;
 	my_tournaments_url: string;
 	bracket_template_builder_url: string;
+	user_can_create_tournament: boolean;
+	home_url: string;
 }
 
 declare var wpbb_ajax_obj: WpbbAjaxObj;
@@ -235,8 +237,11 @@ function renderCreateTournamentModal(wpbb_ajax_obj: WpbbAjaxObj) {
 	if (div) {
 		const {
 			my_templates_url,
-			bracket_template_builder_url
+			bracket_template_builder_url,
+			user_can_create_tournament,
+			home_url,
 		} = wpbb_ajax_obj
-		render(<CreateTournamentButtonAndModal myTemplatesUrl={my_templates_url} bracketTemplateBuilderUrl={bracket_template_builder_url}></CreateTournamentButtonAndModal>, div);
+		render(<CreateTournamentButtonAndModal myTemplatesUrl={my_templates_url} bracketTemplateBuilderUrl={bracket_template_builder_url}
+																					 canCreateTournament={user_can_create_tournament} upgradeAccountUrl={home_url}></CreateTournamentButtonAndModal>, div);
 	}
 }
