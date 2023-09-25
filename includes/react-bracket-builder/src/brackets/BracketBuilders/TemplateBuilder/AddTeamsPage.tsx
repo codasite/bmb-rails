@@ -8,6 +8,8 @@ import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as ShuffleIcon } from '../../shared/assets/shuffle.svg'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
 import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
+import { useWindowDimensions } from '../../../utils/hooks'
+import { DefaultPaginatedBracket } from '../../shared/components/Bracket/DefaultPaginatedBracket'
 
 interface AddTeamsPageProps {
 	matchTree?: MatchTree
@@ -27,6 +29,18 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
 	} = props
 
 	const createDisabled = !matchTree || !matchTree.allTeamsAdded()
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+	const showPaginated = windowWidth < 768
+
+	if (showPaginated) {
+		return (
+			<div className='tw-bg-dd-blue'>
+				<DefaultPaginatedBracket
+					matchTree={matchTree}
+					setMatchTree={setMatchTree}
+				/></div>
+		)
+	}
 
 	return (
 		<div className='tw-flex tw-flex-col tw-gap-60 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'background': `url(${iconBackground}), #000225` }}>

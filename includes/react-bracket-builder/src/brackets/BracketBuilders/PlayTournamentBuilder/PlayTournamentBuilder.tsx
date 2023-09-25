@@ -18,6 +18,8 @@ import { PickableBracket } from '../../shared/components/Bracket/PickableBracket
 import { ThemeSelector } from '../../shared/components';
 import { ActionButton } from '../../shared/components/ActionButtons';
 import { PlayReq } from '../../shared/api/types/bracket';
+import { useWindowDimensions } from '../../../utils/hooks';
+import { DefaultPaginatedBracket } from '../../shared/components/Bracket/DefaultPaginatedBracket';
 
 interface UserBracketProps {
 	apparelUrl: string;
@@ -55,6 +57,8 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 	} = props;
 
 	const [processing, setProcessing] = useState(false);
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+	const showPaginated = windowWidth < 768
 
 	useEffect(() => {
 		let tree: Nullable<MatchTree> = null
@@ -199,6 +203,19 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 			console.error(err)
 			Sentry.captureException(err)
 		})
+	}
+
+	if (showPaginated) {
+		return (
+			<div className={`wpbb-reset tw-uppercase tw-bg-dd-blue`}>
+				{matchTree &&
+					<DefaultPaginatedBracket
+						matchTree={matchTree}
+						setMatchTree={setMatchTree}
+					/>
+				}
+			</div>
+		)
 	}
 
 	return (

@@ -67,6 +67,7 @@ export interface BracketProps {
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
 	MatchBoxChildComponent?: React.FC<MatchBoxChildProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
+	BracketComponent?: React.FC<BracketProps>; // for nesting brackets
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
 	lineStyle?: object;
 }
