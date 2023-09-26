@@ -6,9 +6,7 @@ import { Nullable } from '../../../utils/types';
 import { MatchTree } from '../../shared/models/MatchTree';
 import { BracketMeta } from '../../shared/context';
 import { WithDarkMode, WithMatchTree, WithBracketMeta, WithProvider } from '../../shared/components/HigherOrder'
-//@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-//@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
 import { ThemeSelector } from '../../shared/components';

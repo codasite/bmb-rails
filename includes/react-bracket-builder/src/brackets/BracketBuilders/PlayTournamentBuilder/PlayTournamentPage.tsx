@@ -8,7 +8,7 @@ import { BracketMeta } from '../../shared/context';
 import { WithDarkMode, WithMatchTree, WithBracketMeta, WithProvider } from '../../shared/components/HigherOrder'
 import { PlayReq } from '../../shared/api/types/bracket';
 import { useWindowDimensions } from '../../../utils/hooks';
-import { PaginatedPlayBuilder } from './PaginatedPlayBuilder';
+import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder';
 import { PlayBuilder } from './PlayBuilder';
 
 interface PlayPageProps {
