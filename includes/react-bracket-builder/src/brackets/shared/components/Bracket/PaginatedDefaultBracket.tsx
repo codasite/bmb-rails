@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { BracketProps } from '../types';
 import {
 	getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
@@ -16,11 +16,11 @@ import { DefaultTeamSlot } from '../TeamSlot';
 import { BracketLines } from './BracketLines';
 import { DarkModeContext } from '../../context';
 import { ActionButton } from '../ActionButtons';
+import { Nullable } from '../../../../utils/types';
 
 
 export const PaginatedDefaultBracket = (props: BracketProps) => {
 	const {
-		getBracketHeight = getDefaultBracketHeight,
 		getBracketWidth = () => 260,
 		getTeamHeight = () => getDefaultTeamHeight(4),
 		getTeamGap = () => getDefaultTeamGap(0),
@@ -32,20 +32,43 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 		MatchColumnComponent = DefaultMatchColumn,
 		MatchBoxComponent,
 		TeamSlotComponent = DefaultTeamSlot,
-		MatchBoxChildComponent,
 		onTeamClick,
 		lineStyle,
 	} = props
 
 	const [page, setPage] = useState(0)
 
-	const darkMode = useContext(DarkModeContext);
+	useEffect(() => {
+		console.log('useEffect')
+		// try to determine page from matchTree
+		if (!matchTree.anyPicked()) {
+			console.log('no matches picked')
+			return
+		}
+		if (matchTree.allPicked()) {
+			console.log('all matches picked')
+			return setPage((matchTree.rounds.length - 1) * 2)
+		}
+		// find first unpicked match
+		const firstUnpickedMatch = matchTree.findMatch(match => !match.isPicked())
+		if (!firstUnpickedMatch) {
+			console.log('no unpicked matches')
+			return
+		}
+		console.log('first unpicked match', firstUnpickedMatch)
+		const { roundIndex, matchIndex } = firstUnpickedMatch
+		const numMatches = matchTree.rounds[roundIndex].matches.length
+		let pageNum = roundIndex * 2
+		if (matchIndex >= numMatches / 2) {
+			pageNum++
+		}
+		console.log('setting page', pageNum)
+		setPage(pageNum)
+	}, [])
 
-	const linesStyle = lineStyle || {
-		className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
-	}
 
-	const roundIndex = 0
+	const roundIndex = Math.floor(page / 2)
+	const leftSide = page % 2 === 0
 
 	if (roundIndex === matchTree.rounds.length - 1) {
 		// last round, handle differently
@@ -55,7 +78,6 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 	let matches1 = matchTree.rounds[roundIndex].matches
 	let matches2 = matchTree.rounds[roundIndex + 1].matches
 
-	const leftSide = true
 
 	if (leftSide) {
 		// if left side, get first half of matches
@@ -108,7 +130,23 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 			teamFontSize={teamFontSize}
 		/>
 
+	const darkMode = useContext(DarkModeContext);
+
+	const linesStyle = lineStyle || {
+		className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
+	}
+
 	const maxW = getBracketWidth(numRounds)
+
+	const handleNext = () => {
+		const maxPages = (matchTree.rounds.length - 1) * 2
+		const newPage = page + 1
+		if (newPage <= maxPages) {
+			setPage(newPage)
+		}
+	}
+
+	const disableNext = matches1.some(match => !match.isPicked())
 
 	return (
 		<div className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}>
@@ -123,7 +161,11 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 					style={linesStyle}
 				/>
 			</div>
-			<ActionButton variant='white'>Next</ActionButton>
+			<ActionButton
+				variant='white'
+				disabled={disableNext}
+				onClick={handleNext}
+			>Next</ActionButton>
 		</div>
 	)
 }

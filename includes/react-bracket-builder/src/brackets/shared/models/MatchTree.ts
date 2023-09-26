@@ -167,6 +167,9 @@ export class MatchNode {
 			this.team2Wins = true;
 		}
 	}
+	isPicked(): boolean {
+		return this.team1Wins || this.team2Wins;
+	}
 }
 
 export class Round {
@@ -284,6 +287,17 @@ export class MatchTree {
 		}
 	}
 
+	anyPicked = (): boolean => {
+		return this.rounds.some((round) => {
+			return round.matches.some((match) => {
+				if (!match) {
+					return false
+				}
+				return match.team1Wins || match.team2Wins
+			})
+		})
+	}
+
 	allPicked = (): boolean => {
 		return this.rounds.every((round) => {
 			return round.allPicked()
@@ -375,6 +389,23 @@ export class MatchTree {
 				return callback(match, matchIndex, roundIndex)
 			})
 		})
+	}
+
+	findMatch = (callback: (match: MatchNode, matchIndex: number, roundIndex: number) => boolean): Nullable<MatchNode> => {
+		let foundMatch: Nullable<MatchNode> = null
+		this.rounds.some((round, roundIndex) => {
+			return round.matches.some((match, matchIndex) => {
+				if (!match) {
+					return false
+				}
+				if (callback(match, matchIndex, roundIndex)) {
+					foundMatch = match
+					return true
+				}
+				return false
+			})
+		})
+		return foundMatch
 	}
 
 	static fromNumTeams(numTeams: number, wildcardPlacement: WildcardPlacement = WildcardPlacement.Top): MatchTree {
