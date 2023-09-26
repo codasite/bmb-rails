@@ -113,16 +113,6 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         return $response;
     }
 
-    /**
-     * Delete all lists from the mailchimp account. This is important
-     * because the account is limited to only 5 lists, and a list is
-     * required to send a campaign.
-     * 
-     * The list should be deleted after the campaign is sent, but
-     * this can be used as a failsafe.
-     * 
-     * The mailchimp server returns 403 when the limit is reached.
-     */
     public function delete_all_lists() {
         $list_ids = $this->client->lists->getAllLists([
             'fields' => 'lists.id'
@@ -133,18 +123,7 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         }
     }
 
-    public function create_campaign($list_id, $segment_id, $subject_line, $from_name, $reply_to) {// $campaign = $mailchimp->campaigns->create([
-        //     'type' => 'regular',
-        //     'recipients' => [
-        //         'list_id' => $list_id
-        //     ],
-        //     'settings' => [
-        //         'subject_line' => 'Test Subject',
-        //         'from_name' => 'Test Company',
-        //         'reply_to' => 'amchi81@gmail.com'
-        //     ]
-        // ]);
-
+    public function create_campaign($list_id, $segment_id, $subject_line, $from_name, $reply_to) {
         $response = $this->client->campaigns->create([
             'type' => 'regular',
             'recipients' => [
@@ -174,84 +153,3 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         return $response;
     }
 }
-
-// $mailchimp = new \MailchimpMarketing\ApiClient();
-// $mailchimp->setConfig([
-//     'apiKey' => $api_key,
-//     'server' => 'us13'
-// ]);
-
-// // Ping mailchimp
-// // $response = $mailchimp->ping->get();
-// // print_r($response);
-
-// // Create a new list
-// $list = $mailchimp->lists->createList([
-//     'name' => 'Test Audience',
-//     'contact' => [
-//         'company' => 'Test Company',
-//         'address1' => '2900 Bedford Ave',
-//         'city' => 'Brooklyn',
-//         'state' => 'NY',
-//         'zip' => '11210',
-//         'country' => 'US'
-//     ],
-//     'permission_reminder' => 'You signed up for updates on our website.',
-//     'campaign_defaults' => [
-//         'from_name' => 'Test Company',
-//         'from_email' => 'amchi81@gmail.com',
-//         'subject' => 'Test Subject',
-//         'language' => 'EN_US',
-//     ],
-//     'email_type_option' => false
-// ]);
-
-// // Add a member to the list
-// $list_id = $list->id;
-// $member = $mailchimp->lists->addListMember($list_id, [
-//     // 'email_address' => 'mark.maceachen@gmail.com',
-//     'email_address' => 'mark@frontrunnerapp.io',
-//     // 'email_address' => 'markmaceachen@live.com',
-//     'status' => 'subscribed',
-//     'merge_fields' => [
-//         'FNAME' => 'Mark',
-//         'LNAME' => 'FrontRunner'
-//     ]
-// ]);
-
-// // Create a new campaign
-// $campaign = $mailchimp->campaigns->create([
-//     'type' => 'regular',
-//     'recipients' => [
-//         'list_id' => $list_id
-//     ],
-//     'settings' => [
-//         'subject_line' => 'Test Subject',
-//         'from_name' => 'Test Company',
-//         'reply_to' => 'amchi81@gmail.com'
-//     ]
-// ]);
-
-// // Add content to the campaign
-// $campaign_id = $campaign->id;
-// $mailchimp->campaigns->setContent($campaign_id, [
-//     'html' => '<h1>Test Content</h1>'
-// ]);
-
-// // Send the campaign
-// $campaign_id = $campaign->id;
-// $response = $mailchimp->campaigns->send($campaign_id);
-
-// // Delete the list
-// $mailchimp->lists->deleteList($list_id);
-
-
-// // // Get the id of each list
-// // $list_ids = $mailchimp->lists->getAllLists([
-// //     'fields' => 'lists.id'
-// // ])->lists;
-
-// // // Delete each list
-// // foreach ($list_ids as $list_id) {
-// //     $mailchimp->lists->deleteList($list_id->id);
-// // }
