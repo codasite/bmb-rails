@@ -13,7 +13,7 @@ import {
 } from '../../utils'
 import { DefaultMatchColumn } from '../MatchColumn';
 import { DefaultTeamSlot } from '../TeamSlot';
-import { BracketLines } from './BracketLines';
+import { BracketLines, RootMatchLines } from './BracketLines';
 import { DarkModeContext } from '../../context';
 import { ActionButton } from '../ActionButtons';
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer';
@@ -163,31 +163,41 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 			<div className='tw-flex tw-justify-center'>
 				<h2 className='tw-text-24 tw-font-700 tw-text-white'>{`Round ${roundIndex + 1}`}</h2>
 			</div>
-			{thisRoundIsLast &&
-				<WinnerContainer
-					match={matchTree.rounds[roundIndex].matches[0]}
-					matchTree={matchTree}
-					topText='Winner'
-					TeamSlotComponent={TeamSlotComponent}
-					gap={20}
-					topTextFontSize={64}
-				// topTextColor='dd-blue'
-				// topTextColorDark='white'
-				/>
-			}
-			<div className={`tw-flex tw-justify-${thisRoundIsLast ? 'center' : 'between'} tw-flex-grow`}>
-				{leftSide ? matchCol1 : matchCol2}
-				{leftSide ? matchCol2 : matchCol1}
-				<BracketLines
-					rounds={matchTree.rounds}
-					style={linesStyle}
-				/>
+			<div className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${thisRoundIsLast ? ' tw-pb-0' : ''}`}>
+				{thisRoundIsLast &&
+					<WinnerContainer
+						match={matchTree.rounds[roundIndex].matches[0]}
+						matchTree={matchTree}
+						topText='Winner'
+						TeamSlotComponent={TeamSlotComponent}
+						gap={16}
+						topTextFontSize={64}
+					/>
+				}
+
+				<div className={`tw-flex tw-justify-${thisRoundIsLast ? 'center' : 'between'}`}>
+					{leftSide ? matchCol1 : matchCol2}
+					{leftSide ? matchCol2 : matchCol1}
+					{thisRoundIsLast ?
+						<RootMatchLines
+							rounds={matchTree.rounds}
+							style={linesStyle}
+						/>
+						:
+						<BracketLines
+							rounds={matchTree.rounds}
+							style={linesStyle}
+						/>
+					}
+				</div>
 			</div>
-			<ActionButton
-				variant='white'
-				disabled={disableNext}
-				onClick={handleNext}
-			>Next</ActionButton>
+			<div className={`tw-flex tw-flex-col tw-justify-end${thisRoundIsLast ? ' tw-flex-grow' : ''}`}>
+				<ActionButton
+					variant='white'
+					disabled={disableNext}
+					onClick={handleNext}
+				>Next</ActionButton>
+			</div>
 		</div>
 	)
 }
