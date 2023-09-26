@@ -3,11 +3,29 @@ require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-
 // require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-transactional-service.php');
 
 $mailchimp_service = new Wp_Bracket_Builder_Mailchimp_Marketing_Service();
-$mailchimp_service->delete_all_lists();
-$list = $mailchimp_service->create_list();
+
+// $mailchimp_service->delete_all_lists();
+// $list = $mailchimp_service->create_list('My Segmented Audience');
+// $list_id = $list->id;
+// $mailchimp_service->add_list_member($list_id, 'eipbbiiutvicertaen@cazlp.com', 'subscribed', 'A', 'A');
+// $mailchimp_service->add_list_member($list_id, 'dqdwqobmxcznyegeks@cazlp.com', 'subscribed', 'B', 'B');
+
+$list = $mailchimp_service->get_first_list();
 $list_id = $list->id;
-$mailchimp_service->add_list_member($list_id, 'mark.maceachen@gmail.com', 'subscribed', 'Mark', 'MacEachen');
-$mailchimp_service->delete_list($list_id);
+
+$mailchimp_service->delete_all_list_segments($list_id);
+$segment = $mailchimp_service->create_list_segment($list_id, "slug", ['dqdwqobmxcznyegeks@cazlp.com'], 'slug','tourney');
+$segment_id = $segment->id;
+
+// Send the campaign
+$campaign = $mailchimp_service->create_campaign($list_id, $segment_id, 'Test Campaign', 'Test Subject', 'BMB', 'amchi81@gmail.com');
+$campaign_id = $campaign->id;
+$campaign_html = '<h1>Test Campaign</h1>';
+$mailchimp_service->set_campaign_content($campaign_id, $campaign_html);
+$mailchimp_service->send_campaign($campaign_id);
+
+
+// $mailchimp_service->delete_list($list_id);
 
 $current_tab = get_query_var('tab');
 

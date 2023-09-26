@@ -38,6 +38,13 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         ]);
     }
 
+    public function get_first_list() {
+        $response = $this->client->lists->getAllLists([
+            'fields' => 'lists.id'
+        ])->lists;
+        return $response[0];
+    }
+
     public function create_list($name=null, $permission_reminder=null, $email_type_option=null, $contact=null, $campaign_defaults=null) {
         $response = $this->client->lists->createList([
             'name' => $name? $name: $this->name,
@@ -55,7 +62,8 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
             'status' => $status,
             'merge_fields' => [
                 'FNAME' => $first_name,
-                'LNAME' => $last_name
+                'LNAME' => $last_name,
+                'ARBITRARY_FIELD' => 'Test'
             ]
         ]);
         return $response;
@@ -66,6 +74,61 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         return $response;
     }
 
+    public function create_list_segment($list_id, $segment_name, $emails, $tag_name, $tag_value) {
+        $response = $this->client->lists->createSegment($list_id, [
+            'name' => $segment_name,
+            'static_segment' => $emails,
+            // 'conditions' => [
+            //     [
+            //         'condition_type' => 'StaticSegment',
+            //         'field' => $tag_name,
+            //         'op' => 'eq',
+            //         'value' => $tag_value
+            //     ],
+            // ],
+        ]);
+        return $response;
+    }
+
+    public function delete_list_segment($list_id, $segment_id) {
+        $response = $this->client->lists->deleteSegment($list_id, $segment_id);
+        return $response;
+    }
+
+    public function delete_all_list_segments($list_id) {
+        $segment_ids = $this->client->lists->listSegments($list_id, [
+            'fields' => 'segments.id'
+        ])->segments;
+
+        foreach ($segment_ids as $segment_id) {
+            $this->client->lists->deleteSegment($list_id, $segment_id->id);
+        }
+    }
+
+    public function add_list_segment_member($list_id, $segment_id, $email_address) {
+        $response = $this->client->lists->createSegmentMember($list_id, $segment_id, [
+            'email_address' => $email_address
+        ]);
+        return $response;
+    }
+
+    public function add_list_segment_members($list_id, $segment_it, $email_addresses) {
+        $response = $this->client->lists->createSegmentMembers($list_id, $segment_id, [
+            'members_to_add' => $email_addresses
+        ]);
+        return $response;
+    }
+
+    /**
+     * Delete all lists from the mailchimp account. This is important
+     * because the account is limited to only 5 lists, and a list is
+     * required to send a campaign.
+     * 
+     * The list should be deleted after the campaign is sent, but
+     * this can be used as a failsafe.
+     * 
+     * The mailchimp server returns 403 when the limit is reached.
+     */
     public function delete_all_lists() {
         $list_ids = $this->client->lists->getAllLists([
             'fields' => 'lists.id'
@@ -76,17 +139,38 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         }
     }
 
-    public function create_campaign($list_id, $subject_line, $from_name, $reply_to) {
+    public function create_campaign($list_id, $segment_id, $subject_line, $from_name, $reply_to) {// $campaign = $mailchimp->campaigns->create([
+        //     'type' => 'regular',
+        //     'recipients' => [
+        //         'list_id' => $list_id
+        //     ],
+        //     'settings' => [
+        //         'subject_line' => 'Test Subject',
+        //         'from_name' => 'Test Company',
+        //         'reply_to' => 'amchi81@gmail.com'
+        //     ]
+        // ]);
+
         $response = $this->client->campaigns->create([
             'type' => 'regular',
             'recipients' => [
-                'list_id' => $list_id
+                'list_id' => $list_id,
+                'segment_opts' => [
+                    'saved_segment_id' => $segment_id
+                ]
             ],
             'settings' => [
-                'subject_line' => $subject_line,
-                'from_name' => $from_name,
-                'reply_to' => $reply_to
+                'subject_line' => 'Test subject',
+                'from_name' => 'Test Company',
+                'reply_to' => 'amchi81@gmail.com',
             ]
+        ]);
+        return $response;
+    }
+
+    public function set_campaign_content($campaign_id, $html) {
+        $response = $this->client->campaigns->setContent($campaign_id, [
+            'html' => $html
         ]);
         return $response;
     }
