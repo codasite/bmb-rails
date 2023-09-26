@@ -1,4 +1,14 @@
 <?php
+require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-marketing-service.php');
+// require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-transactional-service.php');
+
+$mailchimp_service = new Wp_Bracket_Builder_Mailchimp_Marketing_Service();
+$mailchimp_service->delete_all_lists();
+$list = $mailchimp_service->create_list();
+$list_id = $list->id;
+$mailchimp_service->add_list_member($list_id, 'mark.maceachen@gmail.com', 'subscribed', 'Mark', 'MacEachen');
+$mailchimp_service->delete_list($list_id);
+
 $current_tab = get_query_var('tab');
 
 if (empty($current_tab)) {
