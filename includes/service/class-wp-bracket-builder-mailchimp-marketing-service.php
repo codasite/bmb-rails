@@ -56,15 +56,11 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         return $response;
     }
 
-    public function add_list_member($list_id, $email_address, $status, $first_name, $last_name) {
+    public function add_list_member($list_id, $email_address, $status, $merge_fields) {
         $response = $this->client->lists->addListMember($list_id, [
             'email_address' => $email_address,
             'status' => $status,
-            'merge_fields' => [
-                'FNAME' => $first_name,
-                'LNAME' => $last_name,
-                'ARBITRARY_FIELD' => 'Test'
-            ]
+            'merge_fields' => $merge_fields
         ]);
         return $response;
     }
@@ -74,19 +70,17 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         return $response;
     }
 
-    public function create_list_segment($list_id, $segment_name, $emails, $tag_name, $tag_value) {
+
+    public function create_list_segment($list_id, $segment_name, $emails) {
         $response = $this->client->lists->createSegment($list_id, [
             'name' => $segment_name,
             'static_segment' => $emails,
-            // 'conditions' => [
-            //     [
-            //         'condition_type' => 'StaticSegment',
-            //         'field' => $tag_name,
-            //         'op' => 'eq',
-            //         'value' => $tag_value
-            //     ],
-            // ],
         ]);
+        return $response;
+    }
+
+    public function get_list_segment($list_id, $segment_id) {
+        $response = $this->client->lists->getSegment($list_id, $segment_id);
         return $response;
     }
 
@@ -160,9 +154,9 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
                 ]
             ],
             'settings' => [
-                'subject_line' => 'Test subject',
-                'from_name' => 'Test Company',
-                'reply_to' => 'amchi81@gmail.com',
+                'subject_line' => $subject_line,
+                'from_name' => $from_name,
+                'reply_to' => $reply_to,
             ]
         ]);
         return $response;
