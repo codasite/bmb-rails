@@ -75,8 +75,8 @@ export interface BracketProps {
 export interface MatchBoxChildProps {
 	match: MatchNode
 	matchTree: MatchTree
-	matchPosition: string
-	TeamSlotComponent: React.FC<TeamSlotProps>
+	matchPosition?: string
+	TeamSlotComponent?: React.FC<TeamSlotProps>
 }
 
 

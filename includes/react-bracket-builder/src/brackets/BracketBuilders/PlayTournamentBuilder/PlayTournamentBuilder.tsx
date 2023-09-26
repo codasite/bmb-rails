@@ -207,7 +207,7 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 
 	if (showPaginated) {
 		return (
-			<div className={`wpbb-reset tw-uppercase tw-bg-dd-blue`}>
+			<div className={`wpbb-reset tw-uppercase tw-bg-dd-blue tw-dark`}>
 				{matchTree &&
 					<PaginatedPickableBracket
 						matchTree={matchTree}

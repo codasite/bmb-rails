@@ -16,7 +16,7 @@ import { DefaultTeamSlot } from '../TeamSlot';
 import { BracketLines } from './BracketLines';
 import { DarkModeContext } from '../../context';
 import { ActionButton } from '../ActionButtons';
-import { Nullable } from '../../../../utils/types';
+import { WinnerContainer } from '../MatchBox/Children/WinnerContainer';
 
 
 export const PaginatedDefaultBracket = (props: BracketProps) => {
@@ -67,29 +67,36 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 	}, [])
 
 
+	const numRounds = matchTree.rounds.length
 	const roundIndex = Math.floor(page / 2)
+	const nextRoundIndex = roundIndex + 1
+	const thisRoundIsLast = roundIndex === numRounds - 1
+	const nextRoundIsLast = nextRoundIndex === numRounds - 1
 	const leftSide = page % 2 === 0
 
-	if (roundIndex === matchTree.rounds.length - 1) {
-		// last round, handle differently
-		return null
-	}
-
 	let matches1 = matchTree.rounds[roundIndex].matches
-	let matches2 = matchTree.rounds[roundIndex + 1].matches
+	let matches2 = thisRoundIsLast ? null : matchTree.rounds[nextRoundIndex].matches
 
 
-	if (leftSide) {
-		// if left side, get first half of matches
-		matches1 = matches1.slice(0, matches1.length / 2)
-		matches2 = matches2.slice(0, matches2.length / 2)
-	} else {
-		// if right side, get second half of matches
-		matches1 = matches1.slice(matches1.length / 2)
-		matches2 = matches2.slice(matches2.length / 2)
+	if (!thisRoundIsLast) {
+		const mid1 = matches1.length / 2
+		const mid2 = matches2.length / 2
+		console.log('mid1', mid1)
+		console.log('mid2', mid2)
+
+		if (leftSide) {
+			// if left side, get first half of matches
+			matches1 = matches1.slice(0, mid1)
+			matches2 = nextRoundIsLast ? matches2 : matches2.slice(0, mid2)
+		} else {
+			// if right side, get second half of matches
+			matches1 = matches1.slice(mid1)
+			matches2 = nextRoundIsLast ? matches2 : matches2.slice(mid2)
+		}
+		console.log('matches1', matches1)
+		console.log('matches2', matches2)
 	}
 
-	const numRounds = matchTree.rounds.length
 	const depth = numRounds - roundIndex - 1
 	const matchGap1 = getFirstRoundMatchGap(numRounds)
 	const teamGap = getTeamGap(depth)
@@ -100,10 +107,13 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 	const matchHeight = teamHeight * 2 + teamGap
 	const matchGap2 = getSubsequentMatchGap(matchHeight, matchGap1, matchHeight)
 
+	const thisMatchPosition = leftSide ? 'left' : 'right'
+	const nextMatchPosition = nextRoundIsLast ? 'center' : leftSide ? 'left' : 'right'
+
 	const matchCol1 =
 		<MatchColumnComponent
 			matches={matches1}
-			matchPosition={leftSide ? 'left' : 'right'}
+			matchPosition={thisMatchPosition}
 			matchTree={matchTree}
 			setMatchTree={setMatchTree}
 			MatchBoxComponent={MatchBoxComponent}
@@ -116,10 +126,10 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 			onTeamClick={onTeamClick}
 		/>
 
-	const matchCol2 =
+	const matchCol2 = thisRoundIsLast ? null :
 		<MatchColumnComponent
 			matches={matches2}
-			matchPosition={leftSide ? 'left' : 'right'}
+			matchPosition={nextMatchPosition}
 			matchTree={matchTree}
 			MatchBoxComponent={MatchBoxComponent}
 			TeamSlotComponent={TeamSlotComponent}
@@ -153,7 +163,19 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 			<div className='tw-flex tw-justify-center'>
 				<h2 className='tw-text-24 tw-font-700 tw-text-white'>{`Round ${roundIndex + 1}`}</h2>
 			</div>
-			<div className={`tw-flex tw-justify-between tw-flex-grow`}>
+			{thisRoundIsLast &&
+				<WinnerContainer
+					match={matchTree.rounds[roundIndex].matches[0]}
+					matchTree={matchTree}
+					topText='Winner'
+					TeamSlotComponent={TeamSlotComponent}
+					gap={20}
+					topTextFontSize={64}
+				// topTextColor='dd-blue'
+				// topTextColorDark='white'
+				/>
+			}
+			<div className={`tw-flex tw-justify-${thisRoundIsLast ? 'center' : 'between'} tw-flex-grow`}>
 				{leftSide ? matchCol1 : matchCol2}
 				{leftSide ? matchCol2 : matchCol1}
 				<BracketLines
