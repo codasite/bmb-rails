@@ -430,6 +430,14 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
+	public function add_roles() {
+		add_role(
+			'bmb_plus',
+			'BMB Plus',
+			array('wpbb_create_tournament' => true),
+		);
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
