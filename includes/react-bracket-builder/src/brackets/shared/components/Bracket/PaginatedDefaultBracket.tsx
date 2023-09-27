@@ -201,7 +201,6 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 						<FinalButtonComponent
 							disabled={disableNext}
 							onClick={handleNext}
-							width={300}
 						/>
 						:
 						<NextButtonComponent
