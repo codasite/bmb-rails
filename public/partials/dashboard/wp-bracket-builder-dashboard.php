@@ -1,15 +1,15 @@
 <?php
 
-require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-marketing-service.php');
+// require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-marketing-service.php');
 
-$mailchimp = new Wp_Bracket_Builder_Mailchimp_Marketing_Service();
-$list = $mailchimp->get_first_list();
-$list_id = $list->id;
+// $mailchimp = new Wp_Bracket_Builder_Mailchimp_Marketing_Service();
+// $list = $mailchimp->get_first_list();
+// $list_id = $list->id;
 
-$tag = 'blood';
-$segment = $mailchimp->get_list_segment_by_tag($list_id, $tag);
-print_r($segment);
-$mailchimp->delete_all_list_segments($list_id);
+// $tag = 'blood';
+// $segment = $mailchimp->get_list_segment_by_tag($list_id, $tag);
+// print_r($segment);
+// $mailchimp->delete_all_list_segments($list_id);
 
 $current_tab = get_query_var('tab');
 
