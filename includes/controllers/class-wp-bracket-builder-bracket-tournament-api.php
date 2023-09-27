@@ -3,6 +3,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-b
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-marketing-service.php';
 
 class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 
@@ -151,8 +152,28 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$updated = $this->tournament_repo->update($request->get_param('item_id'), $data);
 		$this->score_service->score_tournament_plays($updated);
 
-		return new WP_REST_Response($updated, 200);
 
+		$mailchimp = new Wp_Bracket_Builder_Mailchimp_Marketing_Service();
+		$list = $mailchimp->get_first_list();
+		$list_id = $list->id;
+		$tournament_id = $request->get_param('item_id');
+		$tag = strval($tournament_id);
+		$segment = $mailchimp->get_list_segment_by_tag($list_id, $tag);
+
+		if (!$segment) {
+			$response = $this->tournament_repo->get_author_emails_by_tournament_id($tag);
+			foreach($response as $obj) {
+				$emails[] = $obj->author_email;
+				// $emails[] = 'battyboylindsey@gmail.com';
+			}
+			$segment = $mailchimp->create_list_segment($list_id, $tag, $emails);
+		}
+		$html = '<h1>Bracket Updated</h1>';
+		$campaign = $mailchimp->create_campaign($list_id, $segment->id, 'Tournament Updated', 'Back My Bracket', 'bmb@gmail.com');
+		$mailchimp->set_campaign_content($campaign->id, $html);
+		$mailchimp->send_campaign($campaign->id);
+		
+		return new WP_REST_Response($updated, 200);
 
 		// // get the update id 
 		// $update_id = $request->get_param('item_id');

@@ -313,4 +313,21 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	public function results_table(): string {
 		return $this->wpdb->prefix . 'bracket_builder_tournament_results';
 	}
+
+	function get_author_emails_by_tournament_id($tournament_post_id) {
+		global $wpdb;
+	
+		$query = "
+			SELECT DISTINCT u.ID AS author_id, u.user_email AS author_email
+			FROM {$wpdb->prefix}bracket_builder_plays p
+			JOIN {$wpdb->prefix}posts po ON p.post_id = po.ID
+			JOIN {$wpdb->prefix}posts t ON p.bracket_tournament_post_id = t.ID
+			JOIN {$wpdb->prefix}users u ON po.post_author = u.ID
+			WHERE t.ID = %d;
+		";
+	
+		$results = $wpdb->get_results($wpdb->prepare($query, $tournament_post_id));
+	
+		return $results;
+	}
 }

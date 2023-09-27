@@ -84,6 +84,16 @@ class Wp_Bracket_Builder_Mailchimp_Marketing_Service {
         return $response;
     }
 
+    public function get_list_segment_by_tag($list_id, $segment_tag) {
+        $response = $this->client->lists->listSegments($list_id);
+        $segments = $response->segments;
+        foreach ($segments as $segment) {
+            if ($segment->name == $segment_tag) {
+                return $segment;
+            }
+        }
+    }
+
     public function delete_list_segment($list_id, $segment_id) {
         $response = $this->client->lists->deleteSegment($list_id, $segment_id);
         return $response;
