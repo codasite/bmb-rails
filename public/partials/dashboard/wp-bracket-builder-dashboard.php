@@ -11,6 +11,11 @@
 // print_r($segment);
 // $mailchimp->delete_all_list_segments($list_id);
 
+require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-transactional-service.php');
+$mailchimp = new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
+$response = $mailchimp->ping_server();
+print_r($response);
+
 $current_tab = get_query_var('tab');
 
 if (empty($current_tab)) {

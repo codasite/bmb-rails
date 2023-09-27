@@ -1,12 +1,19 @@
 <?php
 
-// import mailchimp marketing api
 require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php');
 
-$api_key = 'c178900b763625797a00371a7de439d9-us13';
+class Wp_Bracket_Builder_Mailchimp_Transactional_Service {
+    protected MailchimpTransactional\ApiClient $client;
 
-$mailchimp = new MailchimpTransactional\ApiClient();
-$mailchimp->setApiKey($api_key);
+    public function __construct() {
+        $api_key = 'c178900b763625797a00371a7de439d9-us13';
 
-$response = $mailchimp->users->ping();
-print_r($response);
+        $this->client = new \MailchimpTransactional\ApiClient();
+        $this->client->setApiKey($api_key);
+    }
+
+    public function ping_server() {
+        $response = $this->client->users->ping();
+        return $response;
+    }
+}
