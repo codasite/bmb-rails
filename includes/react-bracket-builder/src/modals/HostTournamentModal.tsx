@@ -1,17 +1,26 @@
-import {ReactComponent as SignalIcon} from "../brackets/shared/assets/signal.svg";
 import * as React from 'react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Modal} from './Modal';
 import {bracketApi} from '../brackets/shared/api/bracketApi';
 
-export const HostTournamentButtonAndModal = (props: {
+export const HostTournamentModal = (props: {
   templateId: string,
+  buttonId: string,
   tournamentsUrl: string,
 }) => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tournamentName, setTournamentName] = useState('');
   const [hasError, setHasError] = useState(false);
+  useEffect(() => {
+    function handleClick() {
+      setShowModal(true)
+    }
+    document.getElementById(props.buttonId).addEventListener('click', handleClick);
+    return () => {
+      document.getElementById(props.buttonId).removeEventListener('click', handleClick);
+    }
+  })
   const cancelButton =
     <button
       onClick={() => setShowModal(false)}
@@ -19,12 +28,6 @@ export const HostTournamentButtonAndModal = (props: {
       Cancel
     </button>;
   return <>
-    <button
-      className="tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-white hover:tw-text-black tw-font-sans tw-text-white tw-uppercase tw-w-full tw-cursor-pointer"
-      onClick={() => setShowModal(true)}>
-      <SignalIcon/>
-      <span className="tw-font-700">Host Tournament</span>
-    </button>
     <Modal show={showModal} setShow={setShowModal}>
       <h1 className="tw-text-32 tw-leading-10 tw-font-white tw-whitespace-pre-line tw-mb-30">Host tournament</h1>
       <input

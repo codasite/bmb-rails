@@ -13,7 +13,7 @@ import {CreateTournamentButtonAndModal} from './modals/CreateTournamentButtonAnd
  * Import the stylesheet for the plugin.
  */
 import './style/main.scss';
-import {HostTournamentButtonAndModal} from './modals/HostTournamentButtonAndModal';
+import {HostTournamentModal} from './modals/HostTournamentModal';
 
 interface WpbbAjaxObj {
 	page: string;
@@ -243,7 +243,7 @@ function renderCreateTournamentModal(wpbb_ajax_obj: WpbbAjaxObj) {
 	}
 }
 function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
-	const divs = document.getElementsByClassName('wpbb-host-tournament-button-and-modal')
+	const divs = document.getElementsByClassName('wpbb-host-tournament-modal')
 	for (const div of divs) {
 		if (!(div instanceof HTMLElement)) {
 			continue
@@ -251,6 +251,6 @@ function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
 		const {
 			my_tournaments_url
 		} = wpbb_ajax_obj
-		render(<HostTournamentButtonAndModal templateId={div.dataset.templateId} tournamentsUrl={my_tournaments_url}/>, div);
+		render(<HostTournamentModal templateId={div.dataset.templateId} buttonId={div.dataset.buttonId} tournamentsUrl={my_tournaments_url}/>, div);
 	}
 }

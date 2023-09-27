@@ -10,6 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])
 		$template_repo->delete($_POST['delete_template_id']);
 	}
 }
+function host_tournament_btn(string $id) {
+	ob_start();
+	?>
+  <button
+      id="<?php echo $id; ?>"
+      class="tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-white hover:tw-text-black tw-font-sans tw-text-white tw-uppercase tw-cursor-pointer">
+		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
+    <span class="tw-font-700">Host Tournament</span>
+  </button>
+	<?php
+	return ob_get_clean();
+}
 
 function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 	$name = $template->title;
@@ -22,7 +34,7 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 	// This link leads to the Play Bracket page. It passes in the template_id as a query param
 	// $template_play_link = get_permalink() . 'templates/play?template_id=' . $id;
 	$template_play_link = get_permalink($template->id);
-	// This link creates a tournamnent from the template. Instead of a link, it should be a button that makes a POST request
+	$button_id = 'wpbb-host-tournament-button-' . $id;
 	ob_start();
 	?>
   <div class="tw-border-2 tw-border-white/15 tw-border-solid tw-p-30 tw-flex tw-flex-col tw-gap-10 tw-rounded-16">
@@ -36,7 +48,8 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
     </div>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 			<?php echo add_to_apparel_btn($template_play_link); ?>
-      <div class="wpbb-host-tournament-button-and-modal" data-template-id="<?php echo $id; ?>"></div>
+			<?php echo host_tournament_btn($button_id); ?>
+      <div class="wpbb-host-tournament-modal" data-template-id="<?php echo $id; ?>" data-button-id="<?php echo $button_id; ?>"></div>
     </div>
   </div>
 	<?php
