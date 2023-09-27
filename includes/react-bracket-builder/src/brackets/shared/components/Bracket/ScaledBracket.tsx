@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BracketProps, ScaledBracketProps } from '../types';
+import { DarkModeContext } from '../../context';
 
 export const ScaledBracket = (props: ScaledBracketProps) => {
 	const {
 		BracketComponent,
 		getBracketHeight = () => 350,
 		matchTree,
-		scale = .3
+		scale = .3,
+		lineStyle,
 	} = props
 
 	delete props.BracketComponent
@@ -14,10 +16,15 @@ export const ScaledBracket = (props: ScaledBracketProps) => {
 	const height = getBracketHeight(matchTree.rounds.length)
 	console.log('ScaledBracket', height, scale)
 
+	const darkMode = useContext(DarkModeContext)
+
 	return (
 		<div className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-[${height}px]`}>
 			<div className={`tw-scale-${scale * 100}`}>
-				<BracketComponent {...props} />
+				<BracketComponent
+					lineWidth={scale}
+					{...props}
+				/>
 			</div>
 		</div>
 	)

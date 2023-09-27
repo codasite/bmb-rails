@@ -71,6 +71,9 @@ export interface BracketProps {
 	BracketComponent?: React.FC<BracketProps>; // for nesting brackets
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
 	lineStyle?: object;
+	lineColor?: string;
+	lineWidth?: number;
+	darkLineColor?: string;
 }
 
 export interface BracketActionButtonProps extends ActionButtonProps {

@@ -21,10 +21,12 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
 		if (!matchTree) {
 			return
 		}
-		if (matchTree.anyPicked()) {
-			setPage('bracket')
-		} else if (matchTree.allPicked()) {
+		if (matchTree.allPicked()) {
+			console.log('all picked')
 			setPage('final')
+		}
+		else if (matchTree.anyPicked()) {
+			setPage('bracket')
 		}
 	}, [])
 

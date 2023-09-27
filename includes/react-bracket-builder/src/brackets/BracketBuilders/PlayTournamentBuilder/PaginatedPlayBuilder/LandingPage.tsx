@@ -32,13 +32,6 @@ export const LandingPage = (props: LandingPageProps) => {
 					variant='small-green'
 					onClick={onStart}
 				>Start</ActionButton>
-				{/* <div className={'wpbb-slogan-container'}>
-				<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
-			</div>
-			<div className='wpbb-bracket-image-container'>
-				<img src='https://wpbb-bracket-images.s3.amazonaws.com/bracket-m7g1t-dark-center-cropped.png'></img>
-			</div>
-			<ActionButton label='START' onClick={onStart} /> */}
 			</div>
 		</div>
 	)
