@@ -64,7 +64,7 @@ function delete_post_btn($endpoint, $post_id, $post_id_field, $nonce_action, $no
 function add_to_apparel_btn($endpoint) {
 	ob_start();
 	?>
-  <a class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-max-h-[48px] hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black"
+  <a class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black tw-leading-[1.15]"
      href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/plus.svg', __FILE__)); ?>
     <span class="tw-font-700">Add to Apparel</span>

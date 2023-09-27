@@ -34,8 +34,7 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 				<?php echo delete_post_btn($delete_link, $id, 'delete_template_id', 'delete_template_action', 'delete_template_nonce'); ?>
       </div>
     </div>
-    <div class="tw-flex tw-gap-16">
-      <!-- <div class="tw-flex tw-flex-col lg:tw-flex-row tw-gap-16"> -->
+    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 			<?php echo add_to_apparel_btn($template_play_link); ?>
       <div class="wpbb-host-tournament-button-and-modal" data-template-id="<?php echo $id; ?>"></div>
     </div>

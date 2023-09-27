@@ -20,7 +20,7 @@ export const HostTournamentButtonAndModal = (props: {
     </button>;
   return <>
     <button
-      className="tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-white hover:tw-text-black tw-font-sans tw-text-white tw-uppercase tw-w-full tw-cursor-pointer tw-max-h-[48px]"
+      className="tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-white hover:tw-text-black tw-font-sans tw-text-white tw-uppercase tw-w-full tw-cursor-pointer"
       onClick={() => setShowModal(true)}>
       <SignalIcon/>
       <span className="tw-font-700">Host Tournament</span>
