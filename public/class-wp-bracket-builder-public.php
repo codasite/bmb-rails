@@ -303,9 +303,11 @@ class Wp_Bracket_Builder_Public {
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
-				'my_templates_url' => get_permalink() . 'templates',
-				'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
-			)
+          'my_templates_url' => get_permalink() . 'templates',
+          'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
+          'home_url' => get_home_url(),
+          'user_can_create_tournament' => current_user_can('wpbb_create_tournament'),
+      )
 		);
 
 		return ob_get_clean();
@@ -428,6 +430,14 @@ class Wp_Bracket_Builder_Public {
 		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-play-page.php';
 
 		return ob_get_clean();
+	}
+
+	public function add_roles() {
+		add_role(
+			'bmb_plus',
+			'BMB Plus',
+			array('wpbb_create_tournament' => true),
+		);
 	}
 
 	/**
