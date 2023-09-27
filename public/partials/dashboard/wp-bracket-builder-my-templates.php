@@ -11,17 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])
 	}
 }
 
-function host_tournament_btn($endpoint) {
-	ob_start();
-?>
-	<a class="tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-rounded-8" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
-		<span class="tw-font-500 tw-text-white">Host Tournament</span>
-	</a>
-<?php
-	return ob_get_clean();
-}
-
 function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 	$name = $template->title;
 	$id = $template->id;
@@ -34,25 +23,24 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 	// $template_play_link = get_permalink() . 'templates/play?template_id=' . $id;
 	$template_play_link = get_permalink($template->id);
 	// This link creates a tournamnent from the template. Instead of a link, it should be a button that makes a POST request
-	$template_host_link = get_permalink() . 'tournaments/host?template_id=' . $id;
 	ob_start();
-?>
-	<div class="tw-border-2 tw-border-white/15 tw-border-solid tw-p-30 tw-flex tw-flex-col tw-gap-10 tw-rounded-16">
-		<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
-		<div class="tw-flex tw-gap-10 tw-items-center tw-justify-between md:tw-justify-start">
-			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
-			<div class="tw-flex tw-gap-10">
+	?>
+  <div class="tw-border-2 tw-border-white/15 tw-border-solid tw-p-30 tw-flex tw-flex-col tw-gap-10 tw-rounded-16">
+    <span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
+    <div class="tw-flex tw-gap-10 tw-items-center tw-justify-between md:tw-justify-start">
+      <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
+      <div class="tw-flex tw-gap-10">
 				<?php echo duplicate_bracket_btn($duplicate_link, $id); ?>
 				<?php echo delete_post_btn($delete_link, $id, 'delete_template_id', 'delete_template_action', 'delete_template_nonce'); ?>
-			</div>
-		</div>
-		<div class="tw-flex tw-gap-16">
-			<!-- <div class="tw-flex tw-flex-col lg:tw-flex-row tw-gap-16"> -->
+      </div>
+    </div>
+    <div class="tw-flex tw-gap-16">
+      <!-- <div class="tw-flex tw-flex-col lg:tw-flex-row tw-gap-16"> -->
 			<?php echo add_to_apparel_btn($template_play_link); ?>
-			<!-- <?php echo host_tournament_btn($template_host_link); ?> -->
-		</div>
-	</div>
-<?php
+      <div class="wpbb-host-tournament-button-and-modal" data-template-id="<?php echo $id; ?>"></div>
+    </div>
+  </div>
+	<?php
 	return ob_get_clean();
 }
 

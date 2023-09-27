@@ -303,11 +303,14 @@ class Wp_Bracket_Builder_Public {
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
-          'my_templates_url' => get_permalink() . 'templates',
-          'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
-          'home_url' => get_home_url(),
-          'user_can_create_tournament' => current_user_can('wpbb_create_tournament'),
-      )
+				'my_templates_url' => get_permalink() . 'templates',
+				'my_tournaments_url' => get_permalink() . 'tournaments',
+				'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
+				'home_url' => get_home_url(),
+				'user_can_create_tournament' => current_user_can('wpbb_create_tournament'),
+				'nonce' => wp_create_nonce('wp_rest'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+			)
 		);
 
 		return ob_get_clean();
