@@ -6,6 +6,7 @@ import { ActionButton } from '../../../shared/components/ActionButtons';
 import { PickableBracket } from '../../../shared/components/Bracket';
 import { DarkModeContext } from '../../../shared/context';
 import { ThemeSelector } from '../../../shared/components';
+import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket';
 
 interface FullBracketPageProps {
 	onApparelClick: () => void;
@@ -22,34 +23,24 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
 		setDarkMode,
 	} = props;
 
+	console.log('darkMode', darkMode)
 
 	return (
-		<div className={`wpbb-reset tw-flex tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
-			<div className='tw-flex tw-flex-col tw-justify-center px-60 tw-max-w-[268px] tw-m-auto'>
+		<div className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
+			<div className='tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60'>
 				<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
 				{matchTree &&
-					<div className='tw-flex tw-flex-col tw-justify-center tw-items-center tw-pb-60 tw-h-[350px]'>
-						<div className='tw-scale-30'>
-							<PickableBracket
-								matchTree={matchTree}
-								lineStyle={{
-									className: `!tw-border-t-white !tw-border-t-[.4px]`,
-								}}
-							/>
-						</div>
-					</div>
+					<ScaledBracket
+						BracketComponent={PickableBracket}
+						matchTree={matchTree}
+					/>
 				}
 				<ActionButton
-					height={48}
-					borderColor='green'
-					borderWidth={4}
-					backgroundColor='green/15'
-					fontSize={24}
-					fontWeight={700}
+					variant='small-green'
+					darkMode={darkMode}
 					onClick={onApparelClick}
-					textColor='white'
-					borderRadius={8}
-				>Start</ActionButton>
+					disabled={!matchTree?.allPicked()}
+				>Add to Apparel</ActionButton>
 				{/* <div className={'wpbb-slogan-container'}>
 				<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
 			</div>

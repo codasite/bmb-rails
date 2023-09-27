@@ -83,6 +83,10 @@ export interface PaginatedBracketProps extends BracketProps {
 	FinalButtonComponent?: React.FC<ActionButtonProps>;
 }
 
+export interface ScaledBracketProps extends BracketProps {
+	scale?: number;
+}
+
 export interface MatchBoxChildProps {
 	match: MatchNode
 	matchTree: MatchTree

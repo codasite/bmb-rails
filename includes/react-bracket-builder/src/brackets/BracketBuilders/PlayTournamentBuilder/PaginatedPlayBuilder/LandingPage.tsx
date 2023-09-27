@@ -3,6 +3,7 @@ import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../../shared/models/MatchTree';
 import { ActionButton } from '../../../shared/components/ActionButtons';
 import { PickableBracket } from '../../../shared/components/Bracket';
+import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket';
 
 interface LandingPageProps {
 	onStart: () => void;
@@ -21,27 +22,15 @@ export const LandingPage = (props: LandingPageProps) => {
 			<div className='tw-flex tw-flex-col tw-justify-center px-60 tw-max-w-[268px] tw-m-auto'>
 				<h1 className='tw-text-center tw-text-48 tw-font-700 tw-w-'>Who You Got?</h1>
 				{matchTree &&
-					<div className='tw-flex tw-flex-col tw-justify-center tw-items-center tw-pb-60 tw-h-[350px]'>
-						<div className='tw-scale-30'>
-							<PickableBracket
-								matchTree={matchTree}
-								lineStyle={{
-									className: `!tw-border-t-white !tw-border-t-[.4px]`,
-								}}
-							/>
-						</div>
-					</div>
+					<ScaledBracket
+						BracketComponent={PickableBracket}
+						matchTree={matchTree}
+					/>
 				}
 				<ActionButton
-					height={48}
-					borderColor='green'
-					borderWidth={4}
-					backgroundColor='green/15'
-					fontSize={24}
-					fontWeight={700}
+					darkMode={true}
+					variant='small-green'
 					onClick={onStart}
-					textColor='white'
-					borderRadius={8}
 				>Start</ActionButton>
 				{/* <div className={'wpbb-slogan-container'}>
 				<span className={'wpbb-slogan-text'}>WHO YOU GOT?</span>
