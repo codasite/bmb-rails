@@ -3,12 +3,16 @@ import { PlayBuilderProps } from '../types';
 import { PaginatedPickableBracket } from '../../../shared/components/Bracket';
 import { LandingPage } from './LandingPage';
 import { PickableBracketPage } from './PickableBracketPage';
+import { FullBracketPage } from './FullBracketPage';
 
 
 export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
 	const {
 		matchTree,
 		setMatchTree,
+		darkMode,
+		setDarkMode,
+		handleApparelClick,
 	} = props
 
 	const [page, setPage] = useState('landing')
@@ -49,7 +53,12 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
 			/>
 			break
 		case 'final':
-			element = <div>Final</div>
+			element = <FullBracketPage
+				matchTree={matchTree}
+				darkMode={darkMode}
+				setDarkMode={setDarkMode}
+				onApparelClick={handleApparelClick}
+			/>
 			break
 	}
 

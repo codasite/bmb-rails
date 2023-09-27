@@ -200,12 +200,12 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 					thisRoundIsLast ?
 						<FinalButtonComponent
 							disabled={disableNext}
-							onClick={handleNext}
+							onClick={onFinished}
 						/>
 						:
 						<NextButtonComponent
 							disabled={disableNext}
-							onClick={onFinished}
+							onClick={handleNext}
 						/>
 				}
 			</div>
