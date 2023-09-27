@@ -17,7 +17,7 @@ import { BracketLines, RootMatchLines } from './BracketLines';
 import { DarkModeContext } from '../../context';
 import { ActionButton } from '../ActionButtons';
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer';
-import { NextButton } from './PaginatedActionButtons';
+import { DefaultNextButton, DefaultFinalButton } from './BracketActionButtons';
 
 
 export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
@@ -36,7 +36,8 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 		onTeamClick,
 		lineStyle,
 		onFinished,
-		ActionButtonComponent = NextButton,
+		NextButtonComponent = DefaultNextButton,
+		FinalButtonComponent = DefaultFinalButton,
 	} = props
 
 	const [page, setPage] = useState(0)
@@ -152,10 +153,6 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 	const maxW = getBracketWidth(numRounds)
 
 	const handleNext = () => {
-		if (onFinished && thisRoundIsLast && matchTree.allPicked()) {
-			onFinished()
-			return
-		}
 		const maxPages = (matchTree.rounds.length - 1) * 2
 		const newPage = page + 1
 		if (newPage <= maxPages) {
@@ -198,11 +195,20 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 					}
 				</div>
 			</div>
-			<div className={`tw-flex tw-flex-col tw-justify-end${thisRoundIsLast ? ' tw-flex-grow' : ''}`}>
-				<ActionButtonComponent
-					disabled={disableNext}
-					onClick={handleNext}
-				/>
+			<div className={`tw-flex tw-flex-col tw-justify-end tw-items-${thisRoundIsLast ? 'center' : 'stretch'}${thisRoundIsLast ? ' tw-flex-grow' : ''}`}>
+				{
+					thisRoundIsLast ?
+						<FinalButtonComponent
+							disabled={disableNext}
+							onClick={handleNext}
+							width={300}
+						/>
+						:
+						<NextButtonComponent
+							disabled={disableNext}
+							onClick={onFinished}
+						/>
+				}
 			</div>
 		</div>
 	)

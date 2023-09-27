@@ -2,6 +2,7 @@ import { Round, MatchNode, Team } from '../models/MatchTree';
 import { Nullable } from '../../../utils/types';
 import { MatchTree } from '../models/MatchTree';
 import { Match } from '@sentry/react/types/reactrouterv3';
+import { ActionButtonProps } from './ActionButtons';
 
 export interface TeamSlotProps {
 	team?: Nullable<Team>;
@@ -72,9 +73,14 @@ export interface BracketProps {
 	lineStyle?: object;
 }
 
+export interface BracketActionButtonProps extends ActionButtonProps {
+	matchTree?: MatchTree;
+}
+
 export interface PaginatedBracketProps extends BracketProps {
 	onFinished?: () => void;
-	ActionButtonComponent?: React.FC<any>;
+	NextButtonComponent?: React.FC<ActionButtonProps>;
+	FinalButtonComponent?: React.FC<ActionButtonProps>;
 }
 
 export interface MatchBoxChildProps {

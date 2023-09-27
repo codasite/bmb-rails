@@ -62,8 +62,8 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 	if (fontSize) baseStyles.push(`tw-text-${fontSize}`)
 	if (fontWeight) baseStyles.push(`tw-font-${fontWeight}`)
 	if (borderRadius) baseStyles.push(`tw-rounded-${borderRadius}`)
-	if (height) baseStyles.push(`tw-h-${height}`)
-	if (width) baseStyles.push(`tw-w-${width}`)
+	if (height) baseStyles.push(`tw-h-[${height}px]`)
+	if (width) baseStyles.push(`tw-w-[${width}px]`)
 	if (paddingX || paddingY) {
 		if (paddingX) baseStyles.push(`tw-px-${paddingX}`)
 		if (paddingY) baseStyles.push(`tw-py-${paddingY}`)
