@@ -40,7 +40,6 @@ class Test_Wp_Bracket_Builder_Score_Service extends WP_UnitTestCase {
         $response = $play_api->create_item($request);
     }
 
-
     function test_tournament_in_db() {
         // while (true) {};
         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
@@ -66,5 +65,35 @@ class Test_Wp_Bracket_Builder_Score_Service extends WP_UnitTestCase {
 
         $play = $plays[0];
         $this->assertEquals(5, $play->tournament_id);
+        $this->assertEquals(0, $play->total_score);
+    }
+
+    /**
+     * There is a problem with this test. I commented out the line $this->assertEquals(200, $response->get_status());
+     * because when this line is not commented out, an assertion that an array is empty fails, even though
+     * no such assertion exists in my code.
+     */
+    function test_score_play() {
+        // while (true) {};
+        require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
+
+        $tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
+        $request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/tournaments/5');
+        $request->set_query_params(array('item_id' => 5));
+        $response = $tournament_api->update_item($request);
+        $this->assertEquals(200, $response->get_status());
+
+        require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-play-api.php';
+
+        $plays_api = new Wp_Bracket_Builder_Bracket_Play_Api();
+        $response = $plays_api->get_items([]);
+        $this->assertEquals(200, $response->get_status());
+
+        $plays = $response->get_data();
+        $this->assertCount(1, $plays);
+
+        $play = $plays[0];
+        print_r($play);
+        $this->assertNotEquals(0, $play->total_score);
     }
 }
