@@ -72,6 +72,11 @@ export interface BracketProps {
 	lineStyle?: object;
 }
 
+export interface PaginatedBracketProps extends BracketProps {
+	onFinished?: () => void;
+	ActionButtonComponent?: React.FC<any>;
+}
+
 export interface MatchBoxChildProps {
 	match: MatchNode
 	matchTree: MatchTree

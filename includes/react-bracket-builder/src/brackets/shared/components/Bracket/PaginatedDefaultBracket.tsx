@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { BracketProps } from '../types';
+import { BracketProps, PaginatedBracketProps } from '../types';
 import {
 	getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
 	getMatchGap,
@@ -17,9 +17,10 @@ import { BracketLines, RootMatchLines } from './BracketLines';
 import { DarkModeContext } from '../../context';
 import { ActionButton } from '../ActionButtons';
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer';
+import { NextButton } from './PaginatedActionButtons';
 
 
-export const PaginatedDefaultBracket = (props: BracketProps) => {
+export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 	const {
 		getBracketWidth = () => 260,
 		getTeamHeight = () => getDefaultTeamHeight(4),
@@ -34,6 +35,8 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 		TeamSlotComponent = DefaultTeamSlot,
 		onTeamClick,
 		lineStyle,
+		onFinished,
+		ActionButtonComponent = NextButton,
 	} = props
 
 	const [page, setPage] = useState(0)
@@ -149,6 +152,10 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 	const maxW = getBracketWidth(numRounds)
 
 	const handleNext = () => {
+		if (onFinished && thisRoundIsLast && matchTree.allPicked()) {
+			onFinished()
+			return
+		}
 		const maxPages = (matchTree.rounds.length - 1) * 2
 		const newPage = page + 1
 		if (newPage <= maxPages) {
@@ -192,11 +199,10 @@ export const PaginatedDefaultBracket = (props: BracketProps) => {
 				</div>
 			</div>
 			<div className={`tw-flex tw-flex-col tw-justify-end${thisRoundIsLast ? ' tw-flex-grow' : ''}`}>
-				<ActionButton
-					variant='white'
+				<ActionButtonComponent
 					disabled={disableNext}
 					onClick={handleNext}
-				>Next</ActionButton>
+				/>
 			</div>
 		</div>
 	)

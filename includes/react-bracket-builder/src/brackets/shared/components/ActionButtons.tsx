@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { DarkModeContext } from '../context';
 
 
-interface ActionButtonProps {
+export interface ActionButtonProps {
 	disabled?: boolean
 	onClick?: () => void
 	children?: React.ReactNode
