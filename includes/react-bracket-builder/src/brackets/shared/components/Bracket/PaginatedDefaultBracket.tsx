@@ -9,7 +9,7 @@ import {
 	getTeamGap as getDefaultTeamGap,
 	getTeamHeight as getDefaultTeamHeight,
 	getTeamFontSize as getDefaultTeamFontSize,
-	getTeamWidth,
+	getTeamWidth as getDefaultTeamWidth,
 } from '../../utils'
 import { DefaultMatchColumn } from '../MatchColumn';
 import { DefaultTeamSlot } from '../TeamSlot';
@@ -18,6 +18,7 @@ import { DarkModeContext } from '../../context';
 import { ActionButton } from '../ActionButtons';
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer';
 import { DefaultNextButton, DefaultFinalButton } from './BracketActionButtons';
+import { MatchNode } from '../../models/MatchTree';
 
 
 export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
@@ -28,6 +29,7 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 		getFirstRoundMatchGap = () => getDefaultFirstRoundMatchGap(5),
 		getSubsequentMatchGap = getDefaultSubsequentMatchGap,
 		getTeamFontSize = () => getDefaultTeamFontSize(4),
+		getTeamWidth = () => getDefaultTeamWidth(4),
 		matchTree,
 		setMatchTree,
 		MatchColumnComponent = DefaultMatchColumn,
@@ -43,30 +45,24 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 	const [page, setPage] = useState(0)
 
 	useEffect(() => {
-		console.log('useEffect')
 		// try to determine page from matchTree
 		if (!matchTree.anyPicked()) {
-			console.log('no matches picked')
 			return
 		}
 		if (matchTree.allPicked()) {
-			console.log('all matches picked')
 			return setPage((matchTree.rounds.length - 1) * 2)
 		}
 		// find first unpicked match
-		const firstUnpickedMatch = matchTree.findMatch(match => !match.isPicked())
+		const firstUnpickedMatch = matchTree.findMatch(match => match && !match.isPicked())
 		if (!firstUnpickedMatch) {
-			console.log('no unpicked matches')
 			return
 		}
-		console.log('first unpicked match', firstUnpickedMatch)
 		const { roundIndex, matchIndex } = firstUnpickedMatch
 		const numMatches = matchTree.rounds[roundIndex].matches.length
 		let pageNum = roundIndex * 2
 		if (matchIndex >= numMatches / 2) {
 			pageNum++
 		}
-		console.log('setting page', pageNum)
 		setPage(pageNum)
 	}, [])
 
@@ -81,12 +77,24 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 	let matches1 = matchTree.rounds[roundIndex].matches
 	let matches2 = thisRoundIsLast ? null : matchTree.rounds[nextRoundIndex].matches
 
+	if (matches2) {
+		// remove nulls from col 1 whose parent match has no children
+		matches1 = matches1.reduce((acc, match, i) => {
+			const parentMatchIndex = Math.floor(i / 2)
+			const parentMatch = matches2[parentMatchIndex]
+			if (parentMatch.left || parentMatch.right) {
+				acc = [...acc, match]
+			}
+			return acc
+		}, [])
+		// remove matches from col 2 with no children
+		matches2 = matches2.filter(match => match.left || match.right)
+
+	}
 
 	if (!thisRoundIsLast) {
 		const mid1 = matches1.length / 2
 		const mid2 = matches2.length / 2
-		console.log('mid1', mid1)
-		console.log('mid2', mid2)
 
 		if (leftSide) {
 			// if left side, get first half of matches
@@ -97,8 +105,6 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 			matches1 = matches1.slice(mid1)
 			matches2 = nextRoundIsLast ? matches2 : matches2.slice(mid2)
 		}
-		console.log('matches1', matches1)
-		console.log('matches2', matches2)
 	}
 
 	const depth = numRounds - roundIndex - 1
@@ -160,7 +166,7 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 		}
 	}
 
-	const disableNext = matches1.some(match => !match.isPicked())
+	const disableNext = matches1.some(match => match && !match.isPicked())
 
 	return (
 		<div className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}>

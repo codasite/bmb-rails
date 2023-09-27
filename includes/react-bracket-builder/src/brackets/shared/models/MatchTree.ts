@@ -391,14 +391,11 @@ export class MatchTree {
 		})
 	}
 
-	findMatch = (callback: (match: MatchNode, matchIndex: number, roundIndex: number) => boolean): Nullable<MatchNode> => {
+	findMatch = (callback: (match: Nullable<MatchNode>) => boolean): Nullable<MatchNode> => {
 		let foundMatch: Nullable<MatchNode> = null
-		this.rounds.some((round, roundIndex) => {
-			return round.matches.some((match, matchIndex) => {
-				if (!match) {
-					return false
-				}
-				if (callback(match, matchIndex, roundIndex)) {
+		this.rounds.some((round) => {
+			return round.matches.some((match) => {
+				if (callback(match)) {
 					foundMatch = match
 					return true
 				}
