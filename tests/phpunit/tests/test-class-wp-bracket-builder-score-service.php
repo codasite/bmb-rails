@@ -93,7 +93,7 @@ class Test_Wp_Bracket_Builder_Score_Service extends WP_UnitTestCase {
         $this->assertCount(1, $plays);
 
         $play = $plays[0];
-        print_r($play);
+        // print_r($play);
         $this->assertNotEquals(0, $play->total_score);
     }
 }
