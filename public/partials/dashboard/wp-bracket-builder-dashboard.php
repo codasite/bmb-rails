@@ -13,7 +13,8 @@
 
 require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-transactional-service.php');
 $mailchimp = new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
-$response = $mailchimp->ping_server();
+// $response = $mailchimp->ping_server();
+$response = $mailchimp->send_message("ahmad@backmybracket.com","ahmad@backmybracket.com","Ahmad","Test","This is a test message.");
 print_r($response);
 
 $current_tab = get_query_var('tab');
