@@ -3,6 +3,7 @@ import { BracketMeta, DarkModeContext } from '../../shared/context';
 import { MatchTree } from '../../shared/models/MatchTree';
 import { PlayRes } from '../../shared/api/types/bracket';
 import { PickableBracket } from '../../shared/components/Bracket';
+import { WithBracketMeta, WithMatchTree, WithProvider } from '../../shared/components/HigherOrder';
 
 interface PrintPlayPageProps {
 	bracketMeta: BracketMeta
@@ -19,14 +20,15 @@ interface PrintPlayPageProps {
 }
 const PrintPlayPage = (props: PrintPlayPageProps) => {
 	const {
+		bracketMeta,
 		setBracketMeta,
 		darkMode,
 		matchTree,
 		setMatchTree,
 		bracketPlay: play,
-		position,
-		inchHeight,
-		inchWidth,
+		position = 'top',
+		inchHeight = 16,
+		inchWidth = 12,
 	} = props
 
 	useEffect(() => {
@@ -54,15 +56,23 @@ const PrintPlayPage = (props: PrintPlayPageProps) => {
 
 	const heightPx = inchHeight * 96
 	const widthPx = inchWidth * 96
+	const { title: bracketTitle, date: bracketDate } = bracketMeta
 
 	return (
-		<DarkModeContext.Provider value={darkMode}>
-			<div className={`wpbb-reset tw-bg-none tw-flex tw-flex-col tw-items-center tw-justify-${justify} tw-h-[${heightPx}px] tw-w-[${widthPx}px]${darkMode ? ' tw-dark' : ''}`}>
+		<div className={`wpbb-reset tw-py-[200px] tw-mx-auto tw-bg-${darkMode ? 'black' : 'white'} tw-flex tw-flex-col tw-items-center tw-justify-${justify} tw-h-[${heightPx}px] tw-w-[${widthPx}px]${darkMode ? ' tw-dark' : ''}`}>
+			{matchTree && bracketTitle && bracketDate &&
 				<PickableBracket
 					matchTree={matchTree}
+					darkMode={darkMode}
+					title={bracketTitle}
+					date={bracketDate}
 				/>
-			</div>
-		</DarkModeContext.Provider>
+			}
+		</div>
 	)
 
 }
+
+const WrappedPrintPlayPage = WithProvider(WithBracketMeta(WithMatchTree(PrintPlayPage)))
+
+export default WrappedPrintPlayPage

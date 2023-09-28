@@ -1,19 +1,19 @@
 import React from 'react';
 import App from "./App";
-import {render} from '@wordpress/element';
+import { render } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
-import {OverlayUrlThemeMap} from './preview/Gallery';
+import { OverlayUrlThemeMap } from './preview/Gallery';
 // import { BracketRes } from './brackets/shared/api/types/bracket';
-import {bracketBuilderStore} from './brackets/shared/app/store';
-import {Provider} from 'react-redux';
-import {camelCaseKeys} from './brackets/shared/api/bracketApi';
+import { bracketBuilderStore } from './brackets/shared/app/store';
+import { Provider } from 'react-redux';
+import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
-import {CreateTournamentButtonAndModal} from './modals/CreateTournamentButtonAndModal';
+import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonAndModal';
 /**
  * Import the stylesheet for the plugin.
  */
 import './style/main.scss';
-import {HostTournamentButtonAndModal} from './modals/HostTournamentButtonAndModal';
+import { HostTournamentButtonAndModal } from './modals/HostTournamentButtonAndModal';
 
 interface WpbbAjaxObj {
 	page: string;
@@ -24,7 +24,7 @@ interface WpbbAjaxObj {
 	play: any;
 	bracket_url_theme_map: OverlayUrlThemeMap;
 	css_url: string;
-	bracket_product_archive_url: string;
+	redirect_url: string;
 	gallery_images: any;
 	color_options: any;
 	sentry_env: string;
@@ -67,11 +67,12 @@ if (sentryDsn) {
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
 const PlayTournamentBuilder = React.lazy(() => import('./brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentPage'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
-// const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
 const TemplateBuilder = React.lazy(() => import('./brackets/BracketBuilders/TemplateBuilder/TemplateBuilder'))
 const TournamentResultsBuilder = React.lazy(() => import('./brackets/BracketBuilders/TournamentResultsBuilder/TournamentResultsBuilder'))
 const ViewPlayPage = React.lazy(() => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage'))
-// const WithMatchTree = React.lazy(() => import('./brackets/shared/components/WithMatchTree'))
+const PrintPlayPage = React.lazy(() => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage'))
+
+
 
 // Get the wpbb_ajax_obj from the global scope
 
@@ -82,6 +83,7 @@ renderTemplateBuilder(wpbb_ajax_obj)
 renderPlayTemplate(wpbb_ajax_obj)
 renderTournamentResultsBuilder(wpbb_ajax_obj)
 renderViewBracketPlay(wpbb_ajax_obj)
+renderPrintBracketPage(wpbb_ajax_obj)
 renderCreateTournamentModal(wpbb_ajax_obj)
 renderHostTournamentButtonsAndModals(wpbb_ajax_obj)
 
@@ -126,7 +128,7 @@ function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-play-template')
 	const {
 		template,
-		bracket_product_archive_url,
+		redirect_url,
 		css_url,
 	} = wpbb_ajax_obj
 
@@ -137,7 +139,7 @@ function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(
 			<App>
 				<Provider store={bracketBuilderStore}>
-					<PlayTournamentBuilder bracketStylesheetUrl={css_url} template={temp} apparelUrl={bracket_product_archive_url} />
+					<PlayTournamentBuilder bracketStylesheetUrl={css_url} template={temp} apparelUrl={redirect_url} />
 				</Provider>
 			</App>, builderDiv)
 	}
@@ -150,7 +152,7 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-play-tournament-builder')
 	const {
 		tournament,
-		bracket_product_archive_url,
+		redirect_url,
 		css_url,
 	} = wpbb_ajax_obj
 
@@ -160,7 +162,7 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering play tournament builder')
 		render(
 			<App>
-				<PlayTournamentBuilder bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
+				<PlayTournamentBuilder bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={redirect_url} />
 			</App>, builderDiv)
 	}
 }
@@ -193,7 +195,7 @@ function renderViewBracketPlay(wpbb_ajax_obj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-view-play')
 	const {
 		play,
-		bracket_product_archive_url,
+		redirect_url,
 	} = wpbb_ajax_obj
 
 	const playObj = camelCaseKeys(play)
@@ -202,10 +204,27 @@ function renderViewBracketPlay(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering view play')
 		render(
 			<App>
-				<ViewPlayPage bracketPlay={playObj} apparelUrl={bracket_product_archive_url} />
+				<ViewPlayPage bracketPlay={playObj} apparelUrl={redirect_url} />
 			</App>, builderDiv)
 	}
 
+}
+
+function renderPrintBracketPage(wpbb_ajax_obj: WpbbAjaxObj) {
+	const builderDiv = document.getElementById('wpbb-print-play')
+	const {
+		play,
+	} = wpbb_ajax_obj
+
+	const playObj = camelCaseKeys(play)
+
+	if (builderDiv && playObj) {
+		console.log('rendering print play')
+		render(
+			<App>
+				<PrintPlayPage bracketPlay={playObj} />
+			</App>, builderDiv)
+	}
 }
 
 
@@ -239,7 +258,7 @@ function renderCreateTournamentModal(wpbb_ajax_obj: WpbbAjaxObj) {
 			home_url,
 		} = wpbb_ajax_obj
 		render(<CreateTournamentButtonAndModal myTemplatesUrl={my_templates_url} bracketTemplateBuilderUrl={bracket_template_builder_url}
-																					 canCreateTournament={user_can_create_tournament} upgradeAccountUrl={home_url}/>, div);
+			canCreateTournament={user_can_create_tournament} upgradeAccountUrl={home_url} />, div);
 	}
 }
 function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
@@ -251,6 +270,6 @@ function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
 		const {
 			my_tournaments_url
 		} = wpbb_ajax_obj
-		render(<HostTournamentButtonAndModal templateId={div.dataset.templateId} tournamentsUrl={my_tournaments_url}/>, div);
+		render(<HostTournamentButtonAndModal templateId={div.dataset.templateId} tournamentsUrl={my_tournaments_url} />, div);
 	}
 }

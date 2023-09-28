@@ -402,36 +402,8 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	public function render_bracket_play_page() {
-		$post = get_post();
-		if (!$post || $post->post_type !== 'bracket_play') {
-			return
-				'<div class="alert alert-danger" role="alert">
-					Play not found.
-				</div>';
-		}
-		$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
-		$play = $play_repo->get(post: $post);
-		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
-
-		$bracket_product_archive_url = $this->get_archive_url();
-		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
-
-		wp_localize_script(
-			'wpbb-bracket-builder-react',
-			'wpbb_ajax_obj',
-			array(
-				'play' => $play,
-				'play_history_url' => $play_history_url,
-				'nonce' => wp_create_nonce('wp_rest'),
-				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-				'css_file' => $css_file,
-				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
-				'bracket_product_archive_url' => $play_history_url
-			)
-		);
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-play-page.php';
-
+		include plugin_dir_path(__FILE__) . 'partials/play_page/wp-bracket-builder-bracket-play-page.php';
 		return ob_get_clean();
 	}
 
