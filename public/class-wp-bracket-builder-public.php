@@ -432,8 +432,7 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	public function add_rewrite_tags() {
-		add_rewrite_tag('%tab%', '([^&]+)');
-		add_rewrite_tag('%pagename%', '([^&]+)');
+		add_rewrite_tag('%tab%', '([^&]+)'); // This is used on the dashboard page to determine which tab to show
 	}
 
 	public function add_rewrite_rules() {
@@ -451,9 +450,15 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	public function add_query_vars($vars) {
-		$vars[] = 'tab';
-		$vars[] = 'status';
-		$vars[] = 'view';
+		$vars[] = 'tab'; // This is used on the dashboard page to determine which tab to show
+		$vars[] = 'status'; // This is used on various pages to filter by post status
+		$vars[] = 'view'; // This is used on single post pages to determine what to render (view play, print play, play tournament, etc.)
+
+		// Print play query vars
+		$vars[] = 'theme'; // This determines the bracket theme. Options are 'dark' and 'light'. Defaults to 'light'
+		$vars[] = 'position'; // This determines how to position the bracket on the page. Options are 'top', 'center', and 'bottom'. Defaults to 'top'
+		$vars[] = 'inch_height'; // The height of the page in inches. Defaults to 16
+		$vars[] = 'inch_width'; // The width of the page in inches. Defaults to 12
 		return $vars;
 	}
 

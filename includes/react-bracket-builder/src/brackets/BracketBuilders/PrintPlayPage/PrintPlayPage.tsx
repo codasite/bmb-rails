@@ -14,7 +14,6 @@ interface PrintPlayPageProps {
 	position: string // top, center, bottom. Default is top
 	inchHeight: number // height of the bracket in inches. Default is 16
 	inchWidth: number // width of the bracket in inches. Default is 12
-	scaleFactor: number // scale factor for the bracket. Default is 1
 	darkMode: boolean // whether to use dark mode. Default is false
 
 }
@@ -59,7 +58,7 @@ const PrintPlayPage = (props: PrintPlayPageProps) => {
 	const { title: bracketTitle, date: bracketDate } = bracketMeta
 
 	return (
-		<div className={`wpbb-reset tw-py-[200px] tw-mx-auto tw-bg-${darkMode ? 'black' : 'white'} tw-flex tw-flex-col tw-items-center tw-justify-${justify} tw-h-[${heightPx}px] tw-w-[${widthPx}px]${darkMode ? ' tw-dark' : ''}`}>
+		<div className={`wpbb-reset tw-py-60 tw-mx-auto tw-bg-${darkMode ? 'black' : 'white'} tw-flex tw-flex-col tw-items-center tw-justify-${justify} tw-h-[${heightPx}px] tw-w-[${widthPx}px]${darkMode ? ' tw-dark' : ''}`}>
 			{matchTree && bracketTitle && bracketDate &&
 				<PickableBracket
 					matchTree={matchTree}

@@ -11,12 +11,23 @@ if (!$post || $post->post_type !== 'bracket_play') {
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 $play = $play_repo->get($post);
 
+$theme = get_query_var('theme') ? get_query_var('theme') : 'light';
+$position = get_query_var('position') ? get_query_var('position') : 'top';
+$inch_height = get_query_var('inch_height') ? get_query_var('inch_height') : 16;
+$inch_width = get_query_var('inch_width') ? get_query_var('inch_width') : 12;
+
 wp_localize_script(
     'wpbb-bracket-builder-react',
     'wpbb_ajax_obj',
     array(
         'play' => $play,
         'nonce' => wp_create_nonce('wp_rest'),
+        'print_options' => [
+            'theme' => $theme,
+            'position' => $position,
+            'inch_height' => $inch_height,
+            'inch_width' => $inch_width,
+        ]
     )
 );
 
