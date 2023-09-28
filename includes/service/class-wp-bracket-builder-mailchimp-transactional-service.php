@@ -6,10 +6,11 @@ class Wp_Bracket_Builder_Mailchimp_Transactional_Service {
     protected MailchimpTransactional\ApiClient $client;
 
     public function __construct() {
-        $api_key = 'c178900b763625797a00371a7de439d9-us13';
+        // $api_key = 'c178900b763625797a00371a7de439d9-us13';
+        $mandrill_api_key = 'md-p0ty53RPtFBaLQ-K1fhGcg';
 
         $this->client = new \MailchimpTransactional\ApiClient();
-        $this->client->setApiKey($api_key);
+        $this->client->setApiKey($mandrill_api_key);
     }
 
     public function ping_server() {
