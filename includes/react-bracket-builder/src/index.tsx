@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import App from "./App";
-import { render } from '@wordpress/element';
+import {render} from '@wordpress/element';
 import * as Sentry from '@sentry/react';
-import { OverlayUrlThemeMap } from './preview/Gallery';
+import {OverlayUrlThemeMap} from './preview/Gallery';
 // import { BracketRes } from './brackets/shared/api/types/bracket';
-import { bracketBuilderStore } from './brackets/shared/app/store';
-import { Provider } from 'react-redux';
-import { camelCaseKeys } from './brackets/shared/api/bracketApi';
+import {bracketBuilderStore} from './brackets/shared/app/store';
+import {Provider} from 'react-redux';
+import {camelCaseKeys} from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
-import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonAndModal';
+import {CreateTournamentButtonAndModal} from './modals/CreateTournamentButtonAndModal';
 /**
  * Import the stylesheet for the plugin.
  */
 import './style/main.scss';
-
+import {HostTournamentButtonAndModal} from './modals/HostTournamentButtonAndModal';
 
 interface WpbbAjaxObj {
 	page: string;
@@ -65,7 +65,7 @@ if (sentryDsn) {
 
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
-const PlayTournamentBuilder = React.lazy(() => import('./brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentBuilder'))
+const PlayTournamentBuilder = React.lazy(() => import('./brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentPage'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 // const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
 const TemplateBuilder = React.lazy(() => import('./brackets/BracketBuilders/TemplateBuilder/TemplateBuilder'))
@@ -83,6 +83,7 @@ renderPlayTemplate(wpbb_ajax_obj)
 renderTournamentResultsBuilder(wpbb_ajax_obj)
 renderViewBracketPlay(wpbb_ajax_obj)
 renderCreateTournamentModal(wpbb_ajax_obj)
+renderHostTournamentButtonsAndModals(wpbb_ajax_obj)
 
 /**
  * This renders the bracket builder admin page. DEPRECATED
@@ -228,10 +229,6 @@ function renderPreview(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(<App><Gallery overlayThemeMap={bracket_url_theme_map} galleryImages={gallery_images} colorOptions={color_options} /> </App>, previewDiv);
 	}
 }
-
-/**
- * This loads the apparel preview component for the bracket product page.
- */
 function renderCreateTournamentModal(wpbb_ajax_obj: WpbbAjaxObj) {
 	const div = document.getElementById('wpbb-create-tournament-button-and-modal')
 	if (div) {
@@ -242,6 +239,18 @@ function renderCreateTournamentModal(wpbb_ajax_obj: WpbbAjaxObj) {
 			home_url,
 		} = wpbb_ajax_obj
 		render(<CreateTournamentButtonAndModal myTemplatesUrl={my_templates_url} bracketTemplateBuilderUrl={bracket_template_builder_url}
-																					 canCreateTournament={user_can_create_tournament} upgradeAccountUrl={home_url}></CreateTournamentButtonAndModal>, div);
+																					 canCreateTournament={user_can_create_tournament} upgradeAccountUrl={home_url}/>, div);
+	}
+}
+function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
+	const divs = document.getElementsByClassName('wpbb-host-tournament-button-and-modal')
+	for (const div of divs) {
+		if (!(div instanceof HTMLElement)) {
+			continue
+		}
+		const {
+			my_tournaments_url
+		} = wpbb_ajax_obj
+		render(<HostTournamentButtonAndModal templateId={div.dataset.templateId} tournamentsUrl={my_tournaments_url}/>, div);
 	}
 }

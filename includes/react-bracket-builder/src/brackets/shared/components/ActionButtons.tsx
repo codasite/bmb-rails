@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { DarkModeContext } from '../context';
 
 
-interface ActionButtonProps {
+export interface ActionButtonProps {
 	disabled?: boolean
 	onClick?: () => void
 	children?: React.ReactNode
@@ -20,6 +20,8 @@ interface ActionButtonProps {
 	variant?: string
 	className?: string
 	darkMode?: boolean
+	height?: number
+	width?: number
 }
 
 export const ActionButtonBase = (props: ActionButtonProps) => {
@@ -39,6 +41,8 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 		borderRadius,
 		className,
 		disabled,
+		height,
+		width,
 
 	} = props
 
@@ -58,6 +62,8 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
 	if (fontSize) baseStyles.push(`tw-text-${fontSize}`)
 	if (fontWeight) baseStyles.push(`tw-font-${fontWeight}`)
 	if (borderRadius) baseStyles.push(`tw-rounded-${borderRadius}`)
+	if (height) baseStyles.push(`tw-h-[${height}px]`)
+	if (width) baseStyles.push(`tw-w-[${width}px]`)
 	if (paddingX || paddingY) {
 		if (paddingX) baseStyles.push(`tw-px-${paddingX}`)
 		if (paddingY) baseStyles.push(`tw-py-${paddingY}`)
@@ -98,6 +104,8 @@ export const GreenButton = (props: ActionButtonProps) => {
 	const darkModeBorder = disabled ? 'white/20' : 'green'
 	const textColor = disabled ? 'black/20' : 'dd-blue'
 	const darkModeTextColor = disabled ? 'white/20' : 'white'
+	console.log('green button')
+	console.log('darkMode', darkMode)
 	return (
 		<ActionButtonBase
 			backgroundColor={darkMode ? darkModeBackground : background}
@@ -167,25 +175,66 @@ const BigGreenButton = (props: ActionButtonProps) => {
 	)
 }
 
+const SmallGreenButton = (props: ActionButtonProps) => {
+	return (
+		<GreenButton
+			height={48}
+			fontSize={24}
+			fontWeight={700}
+			borderWidth={4}
+			{...props}
+		/>
+	)
+}
+
+const WhiteButton = (props: ActionButtonProps) => {
+	const {
+		disabled
+	} = props
+	const background = 'transparent'
+	const border = disabled ? 'white/20' : 'white'
+	const textColor = disabled ? 'white/20' : 'white'
+
+	return (
+		<ActionButtonBase
+			backgroundColor={background}
+			textColor={textColor}
+			borderRadius={8}
+			fontWeight={700}
+			fontSize={24}
+			borderColor={border}
+			height={48}
+			borderWidth={4}
+			{...props}
+		/>
+	)
+}
+
+
+
 
 export const ActionButton = (props: ActionButtonProps) => {
 	const {
 		variant
 	} = props
 
-	if (!props.darkMode) {
+	if (props.darkMode === undefined) {
 		props.darkMode = true
 	}
 
 	switch (variant) {
 		case 'green':
 			return <GreenButton {...props} />
+		case 'big-green':
+			return <BigGreenButton {...props} />
+		case 'small-green':
+			return <SmallGreenButton {...props} />
 		case 'blue':
 			return <BlueButton {...props} />
 		case 'big-yellow':
 			return <BigYellowButton {...props} />
-		case 'big-green':
-			return <BigGreenButton {...props} />
+		case 'white':
+			return <WhiteButton {...props} />
 		default:
 			return <ActionButtonBase {...props} />
 	}
