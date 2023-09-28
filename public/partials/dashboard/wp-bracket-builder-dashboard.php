@@ -1,22 +1,5 @@
 <?php
 
-// require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-marketing-service.php');
-
-// $mailchimp = new Wp_Bracket_Builder_Mailchimp_Marketing_Service();
-// $list = $mailchimp->get_first_list();
-// $list_id = $list->id;
-
-// $tag = 'blood';
-// $segment = $mailchimp->get_list_segment_by_tag($list_id, $tag);
-// print_r($segment);
-// $mailchimp->delete_all_list_segments($list_id);
-
-require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-transactional-service.php');
-$mailchimp = new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
-// $response = $mailchimp->ping_server();
-$response = $mailchimp->send_message("ahmad@backmybracket.com","ahmad@backmybracket.com","Ahmad","Test","This is a test message.");
-print_r($response);
-
 $current_tab = get_query_var('tab');
 
 if (empty($current_tab)) {
