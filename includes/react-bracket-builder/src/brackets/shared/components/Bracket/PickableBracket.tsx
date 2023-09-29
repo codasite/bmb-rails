@@ -10,6 +10,7 @@ export const PickableBracket = (props: BracketProps) => {
 	const {
 		matchTree,
 		setMatchTree,
+		BracketComponent = DefaultBracket,
 	} = props
 
 	const handleTeamClick = (match: MatchNode, team?: Nullable<Team>) => {
@@ -27,10 +28,10 @@ export const PickableBracket = (props: BracketProps) => {
 	}
 
 	return (
-		<DefaultBracket
-			{...props}
+		<BracketComponent
 			TeamSlotComponent={TeamSlotToggle}
 			onTeamClick={setMatchTree ? handleTeamClick : undefined}
+			{...props}
 		/>
 	)
 };

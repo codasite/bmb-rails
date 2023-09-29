@@ -1,25 +1,17 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as Sentry from '@sentry/react';
 import { bracketApi } from '../../shared/api/bracketApi';
-import Spinner from 'react-bootstrap/Spinner'
-import { useAppSelector, useAppDispatch } from '../../shared/app/hooks'
-import { setMatchTree, selectMatchTree } from '../../shared/features/matchTreeSlice'
-import { setNumPages } from '../../shared/features/bracketNavSlice'
 import { Nullable } from '../../../utils/types';
 
 import { MatchTree } from '../../shared/models/MatchTree';
-import { BracketMeta, BracketMetaContext, DarkModeContext } from '../../shared/context';
+import { BracketMeta } from '../../shared/context';
 import { WithDarkMode, WithMatchTree, WithBracketMeta, WithProvider } from '../../shared/components/HigherOrder'
-//@ts-ignore
-import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-//@ts-ignore
-import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { PickableBracket } from '../../shared/components/Bracket/PickableBracket';
-import { ThemeSelector } from '../../shared/components';
-import { ActionButton } from '../../shared/components/ActionButtons';
 import { PlayReq } from '../../shared/api/types/bracket';
+import { useWindowDimensions } from '../../../utils/hooks';
+import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder';
+import { PlayBuilder } from './PlayBuilder';
 
-interface UserBracketProps {
+interface PlayPageProps {
 	apparelUrl: string;
 	bracketStylesheetUrl: string;
 	tournament?: any;
@@ -32,15 +24,7 @@ interface UserBracketProps {
 	setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
-interface RenderBracketProps {
-	matchTree: MatchTree | null;
-	setMatchTree: (matchTree: MatchTree) => void;
-	canPick: boolean;
-	bracketTitle?: string;
-}
-
-
-const PlayTournamentBuilder = (props: UserBracketProps) => {
+const PlayPage = (props: PlayPageProps) => {
 	const {
 		tournament,
 		template,
@@ -55,6 +39,8 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 	} = props;
 
 	const [processing, setProcessing] = useState(false);
+	const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+	const showPaginated = windowWidth < 768
 
 	useEffect(() => {
 		let tree: Nullable<MatchTree> = null
@@ -75,14 +61,6 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 			setMatchTree(tree)
 		}
 	}, []);
-
-	// useEffect(() => {
-	// 	if (matchTree) {
-	// 		// For a paginated bracket there are two pages for all but the last round, plus a landing page and a final page
-	// 		const numPages = matchTree.rounds.length * 2 + 1;
-	// 		dispatch(setNumPages(numPages))
-	// 	}
-	// }, [matchTree])
 
 	const buildPrintHTML = (innerHTML: string, styleUrl: string, inchHeight: number, inchWidth: number,) => {
 		const printArea = buildPrintArea(innerHTML, inchHeight, inchWidth)
@@ -201,32 +179,24 @@ const PlayTournamentBuilder = (props: UserBracketProps) => {
 		})
 	}
 
-	return (
-		<div className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${darkMode ? ' tw-dark' : ''}`} style={{ 'backgroundImage': `url(${darkMode ? darkBracketBg : lightBracketBg})` }}>
-			{matchTree &&
-				<div className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}>
-					<div className='tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center'>
-						<ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
-					</div>
-					<PickableBracket
-						matchTree={matchTree}
-						setMatchTree={setMatchTree}
-					/>
-					<div className='tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center'>
-						<ActionButton
-							variant='big-green'
-							darkMode={darkMode}
-							onClick={handleApparelClick}
-							disabled={processing || !matchTree.allPicked()}
-						>Add to Apparel</ActionButton>
-					</div>
-				</div>
-			}
+	const playBuilderProps = {
+		matchTree,
+		setMatchTree,
+		handleApparelClick,
+		processing,
+		darkMode,
+		setDarkMode,
+		bracketMeta,
+		setBracketMeta,
+	}
 
-		</div>
-	)
+	if (showPaginated) {
+		return <PaginatedPlayBuilder {...playBuilderProps} />
+	}
+
+	return <PlayBuilder {...playBuilderProps} />
 }
 
-const WrappedPlayBuilder = WithProvider(WithDarkMode(WithMatchTree(WithBracketMeta(PlayTournamentBuilder))))
+const WrappedPlayPage = WithProvider(WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage))))
 
-export default WrappedPlayBuilder
+export default WrappedPlayPage

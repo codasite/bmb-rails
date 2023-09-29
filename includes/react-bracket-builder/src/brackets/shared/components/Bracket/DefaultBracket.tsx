@@ -39,6 +39,9 @@ export const DefaultBracket = (props: BracketProps) => {
 		MatchBoxChildComponent,
 		onTeamClick,
 		lineStyle,
+		lineColor = 'dd-blue',
+		darkLineColor = 'white',
+		lineWidth = 1,
 	} = props
 
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -132,7 +135,7 @@ export const DefaultBracket = (props: BracketProps) => {
 		]
 	}
 	const linesStyle = lineStyle || {
-		className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
+		className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${darkMode ? darkLineColor : lineColor}`,
 	}
 
 	const width = getBracketWidth(matchTree.rounds.length)
@@ -162,7 +165,7 @@ export const DefaultBracket = (props: BracketProps) => {
 				</div>
 			}
 			<div className='tw-flex tw-flex-col tw-justify-center tw-h-100'>
-				<div className={`tw-flex tw-justify-between tw-relative tw-w-[${width}px]`}>
+				<div className={`tw-flex tw-justify-${numRounds > 1 ? 'between' : 'center'} tw-relative tw-w-[${width}px]`}>
 					{buildMatches(matchTree.rounds)}
 				</div>
 			</div>

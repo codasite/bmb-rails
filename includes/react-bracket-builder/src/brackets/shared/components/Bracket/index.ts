@@ -6,3 +6,5 @@ export { BracketLines } from './BracketLines';
 export { PreviewBracket } from './PreviewBracket';
 export { AddTeamsBracket } from './AddTeamsBracket';
 export { ResultsBracket } from './ResultsBracket';
+export { PaginatedDefaultBracket } from './PaginatedDefaultBracket';
+export { PaginatedPickableBracket } from './PaginatedPickableBracket';
