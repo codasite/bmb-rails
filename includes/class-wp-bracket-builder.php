@@ -239,6 +239,8 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('woocommerce_before_checkout_process', $plugin_public, 'handle_before_checkout_process');
 		$this->loader->add_action('woocommerce_payment_complete', $plugin_public, 'handle_payment_complete');
 		$this->loader->add_filter('woocommerce_available_variation', $plugin_public, 'filter_variation_availability', 10, 3);
+		$this->loader->add_filter('post_type_link', $plugin_public, 'hash_tournament_slug',10,2);
+		$this->loader->add_action('parse_query', $plugin_public, 'unhash_tournament_slug',10,1);
 
 		$this->loader->add_filter('posts_clauses', $public_hooks, 'sort_plays', 10, 2);
 	}

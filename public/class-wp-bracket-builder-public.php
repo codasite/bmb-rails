@@ -238,7 +238,7 @@ class Wp_Bracket_Builder_Public {
 
 	/**
 	 * Render the bracket preview
-	 * 
+	 *
 	 * @return void
 	 */
 	public function render_bracket_preview() {
@@ -748,7 +748,7 @@ class Wp_Bracket_Builder_Public {
 						$s3_url = $item->get_meta('s3_url');
 
 						if (empty($s3_url)) {
-							// If S3 url is not found, log an error and continue to the next item. 
+							// If S3 url is not found, log an error and continue to the next item.
 							// Can't do anything else because the order has already been processed at this point.
 							$error_msg = 'ACTION NEEDED: S3 URL not found for completed order: ' . $order_id . ' item: ' . $item->get_id();
 							$this->utils->log_sentry_message($error_msg, \Sentry\Severity::error());
@@ -826,7 +826,7 @@ class Wp_Bracket_Builder_Public {
 	}
 	/**
 	 * Get all gallery images for the product
-	 * 
+	 *
 	 * @param WC_Product $product
 	 * @return array
 	 */
@@ -852,5 +852,32 @@ class Wp_Bracket_Builder_Public {
 		}
 
 		return $images;
+	}
+
+	private function hash_slug($slug) {
+		// $hashed_slug = md5($slug);
+		$hashed_slug = 'hashed-slug';
+		return $hashed_slug;}
+
+	private function unhash_slug($slug) {
+		$slug = 'official-tournament';
+		return $slug;
+	}
+
+	public function hash_tournament_slug($permalink, $post) {
+		if ($post->post_type === 'bracket_tournament') {
+			$slug = $post->post_name;
+			$hashed_slug = $this->hash_slug($slug);
+			$permalink = home_url('/bracket-tournament/' . $hashed_slug . '/');//. $post->post_name);
+		}
+		return $permalink;
+	}
+
+	public function unhash_tournament_slug($query) {
+		if ($query->is_main_query() && $query->is_single() && $query->is_singular('bracket_tournament')) {
+			$hashed_slug = get_query_var('bracket_tournament');
+			$slug = $this->unhash_slug($hashed_slug);
+			$query->set('bracket_tournament', $slug);
+		}
 	}
 }
