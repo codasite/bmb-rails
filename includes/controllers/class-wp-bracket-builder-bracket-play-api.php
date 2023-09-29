@@ -4,7 +4,6 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
-// require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-marketing-service.php';
 
 
 // require vendor/autoload.php' from the root directory
@@ -177,41 +176,6 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 		}
 		$play = Wp_Bracket_Builder_Bracket_Play::from_array($params);
 		$saved = $this->play_repo->add($play);
-
-
-		// NOTE: Using Mailchimp Transactional API instead of Marketing API
-		// // We must add the author's email to the mailchimp list/audience
-		// // then add it to the segment for the tournament.
-		// if (!empty($params['author'])) {
-		// 	$author = get_user_by('id', $params['author']);
-		// 	$author_email = $author->user_email;
-
-		// 	$mailchimp = new Wp_Bracket_Builder_Mailchimp_Marketing_Service();
-		// 	$list = $mailchimp->get_first_list();
-		// 	$list_id = $list->id;
-
-		// 	// Add the user to the list
-		// 	// Using try statement to catch errors if user already in list
-		// 	try {
-		// 		$mailchimp->add_list_member($list_id, 'maluma@gmail.com', 'subscribed', [
-		// 			'FNAME' => $author->first_name,
-		// 			'LNAME' => $author->last_name
-		// 		]);
-		// 	} catch (Exception $e) {}
-
-		// 	// Get or create the segment for the tournament, and add the author to it
-		// 	$segment_tag = $params['tournament_id'];
-		// 	$segment = $mailchimp->get_list_segment_by_tag($list_id, $segment_tag);
-
-		// 	if (!$segment) {
-		// 		// Using try statement to catch errors
-		// 		try {
-		// 			$segment = $mailchimp->create_list_segment($list_id, $segment_tag, [$author_email]);
-		// 		} catch (Exception $e) {}
-		// 	} else {
-		// 		$segment = $mailchimp->add_list_segment_member($list_id, $segment->id, $author_email);
-		// 	}
-		// }
 
 		return new WP_REST_Response($saved, 201);
 	}
