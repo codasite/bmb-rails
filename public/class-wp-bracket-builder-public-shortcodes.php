@@ -158,7 +158,13 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 
 	public function render_bracket_play_page() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/play_page/wp-bracket-builder-bracket-play-page.php';
+		include plugin_dir_path(__FILE__) . 'partials/play-page/wp-bracket-builder-bracket-play-page.php';
+		return ob_get_clean();
+	}
+
+	public function render_print_page() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/print-page/wp-bracket-builder-bracket-print-page.php';
 		return ob_get_clean();
 	}
 
@@ -175,5 +181,6 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 		add_shortcode('wpbb-bracket-template', [$this, 'render_bracket_template_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament_page']); // This is a single post type template for bracket_tournament posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
+		add_shortcode('wpbb-print-page', [$this, 'render_bracket_print_page']); // This is a page with slug `print` used to generate bracket images
 	}
 }

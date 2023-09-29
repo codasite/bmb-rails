@@ -5,7 +5,7 @@ class Wp_Bracket_Builder_Public_Hooks {
 
 	public function add_rewrite_tags() {
 		add_rewrite_tag('%tab%', '([^&]+)');
-		add_rewrite_tag('%pagename%', '([^&]+)');
+		add_rewrite_tag('%post_type%', '([^&]+)');
 	}
 
 	public function add_rewrite_rules() {
@@ -20,6 +20,7 @@ class Wp_Bracket_Builder_Public_Hooks {
 		add_rewrite_rule('^tournaments/([^/]+)/([^/]+)', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
 		add_rewrite_rule('^plays/([^/]+)/([^/]+)', 'index.php?bracket_play=$matches[1]&view=$matches[2]', 'top');
 		add_rewrite_rule('^templates/([^/]+)/([^/]+)', 'index.php?bracket_template=$matches[1]&view=$matches[2]', 'top');
+		add_rewrite_rule('^print/([^/]+)/([^/]+)/?', 'index.php?pagename=print&post_type=$matches[1]&postname=$matches[2]', 'top');
 	}
 
 	public function add_query_vars($vars) {
@@ -30,6 +31,8 @@ class Wp_Bracket_Builder_Public_Hooks {
 	}
 
 	public function add_roles() {
+		global $wp_rewrite;
+		var_dump($wp_rewrite->rewritecode);
 		add_role(
 			'bmb_plus',
 			'BMB Plus',

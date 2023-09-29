@@ -17,6 +17,7 @@
 - "Official Tournaments" [wpbb-official-tournaments]
 - "Celebrity Picks" [wpbb-celebrity-picks]
 - "Bracket Template Builder" [wpbb-template-builder]
+- "Print Page" (slug: print) [wpbb-print-page]
 9. Create Oxygen templates for the following post types and add the shortcodes
 - "bracket_template" posts: [wpbb-bracket-template]
 - "bracket_tournament" posts: [wpbb-bracket-tournament]
