@@ -144,7 +144,12 @@ class Wp_Bracket_Builder {
 		/**
 		 * Callbacks for hooks and filters
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/wp-bracket-builder-public-hooks.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public-hooks.php';
+
+		/**
+		 * Shortcodes for the public side of the site
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public-shortcodes.php';
 
 		$this->loader = new Wp_Bracket_Builder_Loader();
 	}
@@ -222,12 +227,10 @@ class Wp_Bracket_Builder {
 
 		$plugin_public = new Wp_Bracket_Builder_Public($this->get_plugin_name(), $this->get_version());
 		$public_hooks = new Wp_Bracket_Builder_Public_Hooks();
+		$shortcodes = new Wp_Bracket_Builder_Public_Shortcodes();
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
-
-		$this->loader->add_action('init', $plugin_public, 'add_shortcodes');
-
 
 		$this->loader->add_filter('woocommerce_add_to_cart_validation', $plugin_public, 'bracket_product_add_to_cart_validation', 10, 5);
 		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data', 10, 3);
@@ -241,6 +244,8 @@ class Wp_Bracket_Builder {
 		$this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
 		$this->loader->add_action('init', $public_hooks, 'add_roles');
 		$this->loader->add_filter('posts_clauses', $public_hooks, 'sort_plays', 10, 2);
+
+		$this->loader->add_action('init', $shortcodes, 'add_shortcodes');
 	}
 
 	/**
