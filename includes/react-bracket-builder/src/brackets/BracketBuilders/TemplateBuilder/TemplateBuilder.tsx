@@ -37,7 +37,8 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
 
   } = props
 
-  const [currentPage, setCurrentPage] = useState('num-teams')
+  const [currentPage, setCurrentPage] = useState('add-teams')
+  // const [currentPage, setCurrentPage] = useState('num-teams')
   const [numTeams, setNumTeams] = useState(teamPickerDefaults[defaultInitialPickerIndex])
   const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Split)
   const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(

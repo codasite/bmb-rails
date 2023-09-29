@@ -2,6 +2,7 @@ import { Round, MatchNode, Team } from '../models/MatchTree';
 import { Nullable } from '../../../utils/types';
 import { MatchTree } from '../models/MatchTree';
 import { Match } from '@sentry/react/types/reactrouterv3';
+import { ActionButtonProps } from './ActionButtons';
 
 export interface TeamSlotProps {
 	team?: Nullable<Team>;
@@ -67,15 +68,33 @@ export interface BracketProps {
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
 	MatchBoxChildComponent?: React.FC<MatchBoxChildProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
+	BracketComponent?: React.FC<BracketProps>; // for nesting brackets
 	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
 	lineStyle?: object;
+	lineColor?: string;
+	lineWidth?: number;
+	darkLineColor?: string;
+}
+
+export interface BracketActionButtonProps extends ActionButtonProps {
+	matchTree?: MatchTree;
+}
+
+export interface PaginatedBracketProps extends BracketProps {
+	onFinished?: () => void;
+	NextButtonComponent?: React.FC<ActionButtonProps>;
+	FinalButtonComponent?: React.FC<ActionButtonProps>;
+}
+
+export interface ScaledBracketProps extends BracketProps {
+	scale?: number;
 }
 
 export interface MatchBoxChildProps {
 	match: MatchNode
 	matchTree: MatchTree
-	matchPosition: string
-	TeamSlotComponent: React.FC<TeamSlotProps>
+	matchPosition?: string
+	TeamSlotComponent?: React.FC<TeamSlotProps>
 }
 
 
