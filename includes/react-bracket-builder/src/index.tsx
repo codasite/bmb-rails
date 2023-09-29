@@ -284,12 +284,12 @@ function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
 }
 function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
 	const {
-		my_tournaments_url
+		myTournamentsUrl
 	} = wpbb_ajax_obj
 
 	const modalDiv = document.getElementById('wpbb-host-tournament-modal')
 
 	if (modalDiv) {
-		hydrate(<HostTournamentModal tournamentsUrl={my_tournaments_url} />, modalDiv);
+		hydrate(<HostTournamentModal tournamentsUrl={myTournamentsUrl} />, modalDiv);
 	}
 }
