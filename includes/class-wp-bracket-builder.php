@@ -227,11 +227,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
 		$this->loader->add_action('init', $plugin_public, 'add_shortcodes');
-		$this->loader->add_action('init', $plugin_public, 'add_roles');
 
-		$this->loader->add_action('init', $plugin_public, 'add_rewrite_tags', 10, 0);
-		$this->loader->add_action('init', $plugin_public, 'add_rewrite_rules', 10, 0);
-		$this->loader->add_filter('query_vars', $plugin_public, 'add_query_vars');
 
 		$this->loader->add_filter('woocommerce_add_to_cart_validation', $plugin_public, 'bracket_product_add_to_cart_validation', 10, 5);
 		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data', 10, 3);
@@ -239,9 +235,11 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('woocommerce_before_checkout_process', $plugin_public, 'handle_before_checkout_process');
 		$this->loader->add_action('woocommerce_payment_complete', $plugin_public, 'handle_payment_complete');
 		$this->loader->add_filter('woocommerce_available_variation', $plugin_public, 'filter_variation_availability', 10, 3);
-		$this->loader->add_filter('post_type_link', $plugin_public, 'hash_tournament_slug',10,2);
-		$this->loader->add_action('parse_query', $plugin_public, 'unhash_tournament_slug',10,1);
 
+		$this->loader->add_action('init', $public_hooks, 'add_rewrite_tags', 10, 0);
+		$this->loader->add_action('init', $public_hooks, 'add_rewrite_rules', 10, 0);
+		$this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
+		$this->loader->add_action('init', $public_hooks, 'add_roles');
 		$this->loader->add_filter('posts_clauses', $public_hooks, 'sort_plays', 10, 2);
 	}
 
@@ -302,6 +300,7 @@ class Wp_Bracket_Builder {
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
+				'rewrite' => array('slug' => 'templates'),
 			)
 		);
 
@@ -321,6 +320,7 @@ class Wp_Bracket_Builder {
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
+				'rewrite' => array('slug' => 'plays'),
 			)
 		);
 		register_post_type(
@@ -339,6 +339,7 @@ class Wp_Bracket_Builder {
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
+				'rewrite' => array('slug' => 'tournaments'),
 			)
 		);
 	}

@@ -44,7 +44,8 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		DateTimeImmutable|false $date_gmt = false,
 		string $html = '',
 		string $img_url = '',
-		array $matches = []
+		array $matches = [],
+		string $slug = '',
 	) {
 		parent::__construct(
 			$id,
@@ -53,6 +54,7 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 			$status,
 			$date,
 			$date_gmt,
+			$slug,
 		);
 		$this->num_teams = $num_teams;
 		$this->wildcard_placement = $wildcard_placement;
