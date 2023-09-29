@@ -458,7 +458,6 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament_page']); // This is a single post type template for bracket_tournament posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
 	}
-
 	public function add_rewrite_tags() {
 		add_rewrite_tag('%tab%', '([^&]+)');
 		add_rewrite_tag('%pagename%', '([^&]+)');
@@ -855,8 +854,8 @@ class Wp_Bracket_Builder_Public {
 	}
 
 	private function hash_slug($slug) {
-		// $hashed_slug = md5($slug);
-		$hashed_slug = 'hashed-slug';
+		$hashed_slug = md5($slug);
+		// $hashed_slug = 'hashed-slug';
 		return $hashed_slug;}
 
 	private function unhash_slug($slug) {
@@ -868,15 +867,18 @@ class Wp_Bracket_Builder_Public {
 		if ($post->post_type === 'bracket_tournament') {
 			$slug = $post->post_name;
 			$hashed_slug = $this->hash_slug($slug);
-			$permalink = home_url('/bracket-tournament/' . $hashed_slug . '/');//. $post->post_name);
+			$permalink = home_url('/bracket_tournament/' . $hashed_slug . '/');//. $post->post_name);
 		}
 		return $permalink;
 	}
 
 	public function unhash_tournament_slug($query) {
-		if ($query->is_main_query() && $query->is_single() && $query->is_singular('bracket_tournament')) {
+		// if ($query->is_main_query() && $query->is_single() && $query->is_singular('bracket_tournament')) {
+		// echo 'unhashing';
+		if ($query->is_main_query()) { //} && $query->is_post_type_archive('bracket_tournament')) {
 			$hashed_slug = get_query_var('bracket_tournament');
 			$slug = $this->unhash_slug($hashed_slug);
+			$slug = 'official-tournament';
 			$query->set('bracket_tournament', $slug);
 		}
 	}
