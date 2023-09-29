@@ -853,13 +853,19 @@ class Wp_Bracket_Builder_Public {
 		return $images;
 	}
 
+	private $key = 'my_secret_key';
+	private $iv = 'my_secret_iv';
+	
 	private function hash_slug($slug) {
-		$hashed_slug = md5($slug);
-		// $hashed_slug = 'hashed-slug';
-		return $hashed_slug;}
+		$hashed_slug = openssl_encrypt($data, 'AES-256-CBC', $key, 0, $iv);
+		$base64_encoded_slug = base64_encode($hashed_slug);
+		return $base64_encoded_slug;
+	}
 
 	private function unhash_slug($slug) {
-		$slug = 'official-tournament';
+		// $slug = 'official-tournament';
+		$decoded_slug = base64_decode($slug);
+		$slug = openssl_decrypt($decoded_slug, 'AES-256-CBC', $key, 0, $iv);
 		return $slug;
 	}
 
