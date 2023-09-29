@@ -35,6 +35,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 		$this->utils = new Wp_Bracket_Builder_Utils();
+		parent::__construct();
 	}
 
 	public function get(
@@ -74,6 +75,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			$tournament,
 			$play_data['total_score'] ?? 0,
 			$play_data['accuracy_score'] ?? 0.00,
+			$play_post->post_name,
 		);
 
 		return $play;
@@ -211,7 +213,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Play $play): ?Wp_Bracket_Builder_Bracket_Play {
-		$post_id = $this->insert_post($play, true);
+		$post_id = $this->insert_post($play, true, true);
 
 		if (is_wp_error($post_id)) {
 			return null;

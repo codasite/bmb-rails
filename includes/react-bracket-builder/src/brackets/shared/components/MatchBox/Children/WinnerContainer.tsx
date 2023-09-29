@@ -10,7 +10,7 @@ interface WinnerContainerProps extends MatchBoxChildProps {
 	topTextFontSize?: number,
 	topTextColor?: string,
 	topTextColorDark?: string,
-	bottom?: number[],
+	gap?: number,
 }
 
 export const WinnerContainer = (props: WinnerContainerProps) => {
@@ -22,12 +22,11 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
 		topTextFontSize = 48,
 		topTextColor = 'dd-blue',
 		topTextColorDark = 'white',
+		gap = 24,
 	} = props
 
-	const numRounds = matchTree.rounds.length
-
 	return (
-		<div className={`tw-flex tw-flex-col tw-gap-24 tw-items-center`}>
+		<div className={`tw-flex tw-flex-col tw-gap-${gap} tw-items-center`}>
 			<span className={`tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-max-w-[700px] tw-text-center tw-leading-none`}>{topText}</span>
 			<TeamSlotComponent
 				match={match}

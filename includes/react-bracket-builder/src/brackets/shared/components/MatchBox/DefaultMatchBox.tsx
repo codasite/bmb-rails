@@ -9,7 +9,6 @@ import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg
 import { DefaultTeamSlot } from '../TeamSlot';
 import { Bracket } from '../Bracket/Bracket';
 import { BracketMetaContext } from '../../context';
-import { FinalTeamSlot } from '../TeamSlot/FinalTeamSlot';
 import { DefaultFinalMatchChildren } from './Children/DefaultFinalMatchChildren';
 
 export const DefaultMatchBox = (props: MatchBoxProps) => {
