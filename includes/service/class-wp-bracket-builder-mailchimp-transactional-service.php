@@ -1,12 +1,14 @@
 <?php
 
 require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php');
+require_once('class-wp-bracket-builder-email-service-interface.php');
+    
 
-class Wp_Bracket_Builder_Mailchimp_Transactional_Service {
+class Wp_Bracket_Builder_Mailchimp_Transactional_Service  implements Wp_Bracket_Builder_Email_Service_Interface{
     protected MailchimpTransactional\ApiClient $client;
 
-    public function __construct() {
-        $mandrill_api_key = MAILCHIMP_API_KEY;
+    public function __construct($api_key) {
+        $mandrill_api_key = $api_key;
 
         $this->client = new \MailchimpTransactional\ApiClient();
         $this->client->setApiKey($mandrill_api_key);
@@ -17,7 +19,7 @@ class Wp_Bracket_Builder_Mailchimp_Transactional_Service {
         return $response;
     }
 
-    public function send_message($from_email, $recipient_email, $recipient_name, $subject, $message) {
+    public function send_message($from_email, $to_email, $to_name, $subject, $message) {
         $response = $this->client->messages->send([
             'message' => [
                 'text' => $message,
@@ -25,8 +27,8 @@ class Wp_Bracket_Builder_Mailchimp_Transactional_Service {
                 'from_email' => $from_email,
                 'to' => [
                     [
-                        'email' => $recipient_email,
-                        'name' => $recipient_name,
+                        'email' => $to_email,
+                        'name' => $to_name,
                     ]
                 ],
                 'preserve_recipients' => false,
