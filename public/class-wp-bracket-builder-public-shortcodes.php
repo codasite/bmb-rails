@@ -181,6 +181,6 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 		add_shortcode('wpbb-bracket-template', [$this, 'render_bracket_template_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament_page']); // This is a single post type template for bracket_tournament posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
-		add_shortcode('wpbb-print-page', [$this, 'render_bracket_print_page']); // This is a page with slug `print` used to generate bracket images
+		add_shortcode('wpbb-print-page', [$this, 'render_print_page']); // This is a page with slug `print` used to generate bracket images
 	}
 }

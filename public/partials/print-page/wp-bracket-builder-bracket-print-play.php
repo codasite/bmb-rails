@@ -1,7 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 
-$slug = get_query_var('post_name');
+$slug = get_query_var('slug');
 $post = get_page_by_path($slug, OBJECT, 'bracket_play');
 if (!$post || $post->post_type !== 'bracket_play') {
     // should be a 404
