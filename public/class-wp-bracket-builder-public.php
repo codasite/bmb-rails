@@ -435,14 +435,6 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
-	public function add_roles() {
-		add_role(
-			'bmb_plus',
-			'BMB Plus',
-			array('wpbb_create_tournament' => true),
-		);
-	}
-
 	/**
 	 * Add shortcode to render events
 	 *
@@ -457,31 +449,6 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-template', [$this, 'render_bracket_template_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament_page']); // This is a single post type template for bracket_tournament posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
-	}
-	public function add_rewrite_tags() {
-		add_rewrite_tag('%tab%', '([^&]+)');
-		add_rewrite_tag('%pagename%', '([^&]+)');
-	}
-
-	public function add_rewrite_rules() {
-		// Be sure to flush the rewrite rules after adding new rules
-		add_rewrite_rule('^dashboard/profile/?', 'index.php?pagename=dashboard&tab=profile', 'top');
-		add_rewrite_rule('^dashboard/templates/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=templates&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
-		add_rewrite_rule('^dashboard/tournaments/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=tournaments&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/tournaments/?', 'index.php?pagename=dashboard&tab=tournaments', 'top');
-		add_rewrite_rule('^dashboard/play-history/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=play-history&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
-		add_rewrite_rule('^bracket_tournament/([^/]+)/([^/]+)', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
-		add_rewrite_rule('^bracket_play/([^/]+)/([^/]+)', 'index.php?bracket_play=$matches[1]&view=$matches[2]', 'top');
-		add_rewrite_rule('^bracket_template/([^/]+)/([^/]+)', 'index.php?bracket_template=$matches[1]&view=$matches[2]', 'top');
-	}
-
-	public function add_query_vars($vars) {
-		$vars[] = 'tab';
-		$vars[] = 'status';
-		$vars[] = 'view';
-		return $vars;
 	}
 
 	public function get_archive_url() {
@@ -851,41 +818,5 @@ class Wp_Bracket_Builder_Public {
 		}
 
 		return $images;
-	}
-
-	private $key = 'my_secret_key';
-	private $iv = 'my_secret_iv';
-	
-	private function hash_slug($slug) {
-		$hashed_slug = openssl_encrypt($data, 'AES-256-CBC', $key, 0, $iv);
-		$base64_encoded_slug = base64_encode($hashed_slug);
-		return $base64_encoded_slug;
-	}
-
-	private function unhash_slug($slug) {
-		// $slug = 'official-tournament';
-		$decoded_slug = base64_decode($slug);
-		$slug = openssl_decrypt($decoded_slug, 'AES-256-CBC', $key, 0, $iv);
-		return $slug;
-	}
-
-	public function hash_tournament_slug($permalink, $post) {
-		if ($post->post_type === 'bracket_tournament') {
-			$slug = $post->post_name;
-			$hashed_slug = $this->hash_slug($slug);
-			$permalink = home_url('/bracket_tournament/' . $hashed_slug . '/');//. $post->post_name);
-		}
-		return $permalink;
-	}
-
-	public function unhash_tournament_slug($query) {
-		// if ($query->is_main_query() && $query->is_single() && $query->is_singular('bracket_tournament')) {
-		// echo 'unhashing';
-		if ($query->is_main_query()) { //} && $query->is_post_type_archive('bracket_tournament')) {
-			$hashed_slug = get_query_var('bracket_tournament');
-			$slug = $this->unhash_slug($hashed_slug);
-			$slug = 'official-tournament';
-			$query->set('bracket_tournament', $slug);
-		}
 	}
 }
