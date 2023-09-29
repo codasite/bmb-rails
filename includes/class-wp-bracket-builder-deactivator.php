@@ -31,5 +31,6 @@ class Wp_Bracket_Builder_Deactivator {
 	 */
 	public static function deactivate() {
         remove_role('bmb_plus');
+				remove_role('private_reader')
     }
 }

@@ -44,6 +44,16 @@ class Wp_Bracket_Builder_Public_Hooks {
 			'BMB Plus',
 			array('wpbb_create_tournament' => true),
 		);
+
+		// This role is to be used by the service user to generate bracket images
+		add_role(
+			'private_reader',
+			'Private Reader',
+			array(
+				'read' => true,
+				'read_private_posts' => true,
+			)
+		);
 	}
 
 	/**
@@ -71,5 +81,58 @@ class Wp_Bracket_Builder_Public_Hooks {
 			$orderby = "plays.{$query_object->get('orderby')} {$query_object->get('order')}";
 		}
 		return $clauses;
+	}
+
+	public function print_redirect() {
+		if (is_user_logged_in()) {
+			return;
+		}
+
+		$uri = $_SERVER['REQUEST_URI'];
+		$path = parse_url($uri, PHP_URL_PATH);
+
+		$service_paths = [
+			'redirect-test',
+			'print',
+		];
+
+		$matching_page = null;
+
+		foreach ($service_paths as $path) {
+			if (strpos($path, $path) !== false) {
+				$matching_page = $path;
+				break;
+			}
+		}
+
+		if ($matching_page === null) {
+			return;
+		}
+
+		$service_user = get_user_by('login', SERVICE_LOGIN);
+
+		if (!$service_user) {
+			return;
+		}
+
+		wp_clear_auth_cookie();
+		wp_set_current_user($service_user->ID);
+		wp_set_auth_cookie($service_user->ID);
+
+		$redirect_to = get_permalink(get_page_by_path($matching_page));
+
+		if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
+			$redirect_to = add_query_arg($this->esc_query_args($_SERVER['QUERY_STRING']), $redirect_to);
+		}
+
+		if ($redirect_to) {
+			wp_safe_redirect($redirect_to);
+			exit;
+		}
+	}
+
+	private function esc_query_args($query_string) {
+		parse_str($query_string, $query_args);
+		return array_map('esc_attr', $query_args);
 	}
 }
