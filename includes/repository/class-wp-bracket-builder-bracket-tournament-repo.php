@@ -34,7 +34,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 	public function add(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
 
-		$post_id = $this->insert_post($tournament, true);
+		$post_id = $this->insert_post($tournament, true, true);
 
 		if ($post_id instanceof WP_Error) {
 			throw new Exception($post_id->get_error_message());
