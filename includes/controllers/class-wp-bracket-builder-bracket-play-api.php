@@ -5,6 +5,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-buil
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
 
+
 // require vendor/autoload.php' from the root directory
 // require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 // use lambda
