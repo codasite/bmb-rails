@@ -225,16 +225,16 @@ function renderPrintBracketPage(ajaxObj: WpbbAjaxObj) {
 		printOptions,
 	} = ajaxObj
 
-	const {
-		theme,
-		position,
-		inchHeight,
-		inchWidth,
-	} = printOptions
-
 	const playObj = camelCaseKeys(play)
 
 	if (builderDiv && playObj) {
+
+		const {
+			theme,
+			position,
+			inchHeight,
+			inchWidth,
+		} = printOptions
 		console.log('rendering print play')
 		render(
 			<App>
