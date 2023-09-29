@@ -241,8 +241,6 @@ class Wp_Bracket_Builder {
 		$this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
 		$this->loader->add_action('init', $public_hooks, 'add_roles');
 		$this->loader->add_filter('posts_clauses', $public_hooks, 'sort_plays', 10, 2);
-		$this->loader->add_filter('post_type_link', $public_hooks, 'hash_tournament_slug', 10, 2);
-		$this->loader->add_action('parse_query', $public_hooks, 'unhash_tournament_slug', 10, 1);
 	}
 
 	/**
@@ -302,6 +300,7 @@ class Wp_Bracket_Builder {
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
+				'rewrite' => array('slug' => 'templates'),
 			)
 		);
 
@@ -321,6 +320,7 @@ class Wp_Bracket_Builder {
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
+				'rewrite' => array('slug' => 'plays'),
 			)
 		);
 		register_post_type(
@@ -339,6 +339,7 @@ class Wp_Bracket_Builder {
 				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
+				'rewrite' => array('slug' => 'tournaments'),
 			)
 		);
 	}

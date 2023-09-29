@@ -64,6 +64,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		Wp_Bracket_Builder_Bracket_Tournament $tournament = null,
 		int $total_score = 0,
 		float $accuracy_score = 0.00,
+		string $slug = '',
 	) {
 		parent::__construct(
 			$id,
@@ -72,6 +73,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 			$status,
 			$date,
 			$date_gmt,
+			$slug,
 		);
 		$this->tournament_id = $tournament_id;
 		$this->tournament = $tournament;

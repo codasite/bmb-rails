@@ -22,11 +22,12 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		global $wpdb;
 		$this->wpdb = $wpdb;
 		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
+		parent::__construct();
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Template $template): ?Wp_Bracket_Builder_Bracket_Template {
 
-		$post_id = $this->insert_post($template, true);
+		$post_id = $this->insert_post($template, true, true);
 
 		if (is_wp_error($post_id)) {
 			return null;
@@ -108,6 +109,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			get_post_meta($template_post->ID, 'html', true),
 			get_post_meta($template_post->ID, 'img_url', true),
 			$matches,
+			$template_post->post_name,
 		);
 
 		return $template;

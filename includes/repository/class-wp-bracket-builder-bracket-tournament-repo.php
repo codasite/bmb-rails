@@ -30,6 +30,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		$this->wpdb = $wpdb;
 		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
+		parent::__construct();
 	}
 
 	public function add(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
@@ -130,6 +131,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			get_post_datetime($tournament_post->ID, 'date_gmt', 'gmt'),
 			$template,
 			$results,
+			$tournament_post->post_name,
 		);
 
 		return $tournament;
