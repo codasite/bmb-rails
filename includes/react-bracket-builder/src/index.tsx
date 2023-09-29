@@ -1,6 +1,6 @@
 import React from 'react';
 import App from "./App";
-import { render } from '@wordpress/element';
+import { render, hydrate } from '@wordpress/element';
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
 // import { BracketRes } from './brackets/shared/api/types/bracket';
@@ -13,7 +13,7 @@ import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonA
  * Import the stylesheet for the plugin.
  */
 import './style/main.scss';
-import { HostTournamentButtonAndModal } from './modals/HostTournamentButtonAndModal';
+import { HostTournamentModal } from './modals/HostTournamentModal';
 
 interface WpbbAjaxObj {
 	page: string;
@@ -282,15 +282,14 @@ function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
 			canCreateTournament={userCanCreateTournament} upgradeAccountUrl={homeUrl} />, div);
 	}
 }
-function renderHostTournamentButtonsAndModals(ajaxObj: WpbbAjaxObj) {
-	const divs = document.getElementsByClassName('wpbb-host-tournament-button-and-modal')
-	for (const div of divs) {
-		if (!(div instanceof HTMLElement)) {
-			continue
-		}
-		const {
-			myTournamentsUrl
-		} = ajaxObj
-		render(<HostTournamentButtonAndModal templateId={div.dataset.templateId} tournamentsUrl={myTournamentsUrl} />, div);
+function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
+	const {
+		my_tournaments_url
+	} = wpbb_ajax_obj
+
+	const modalDiv = document.getElementById('wpbb-host-tournament-modal')
+
+	if (modalDiv) {
+		hydrate(<HostTournamentModal tournamentsUrl={my_tournaments_url} />, modalDiv);
 	}
 }

@@ -30,6 +30,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		DateTimeImmutable|false $date_gmt = false,
 		Wp_Bracket_Builder_Bracket_Template $bracket_template = null,
 		array $results = [],
+		string $slug = '',
 	) {
 		parent::__construct(
 			$id,
@@ -38,6 +39,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			$status,
 			$date,
 			$date_gmt,
+			$slug,
 		);
 		$this->bracket_template_id = $bracket_template_id;
 		$this->bracket_template = $bracket_template;
