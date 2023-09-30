@@ -97,7 +97,7 @@ class Wp_Bracket_Builder_Public {
 
 		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
 		// wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css', array(), null, 'all');
-		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), null, 'all');
+		// wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css', array(), null, 'all');
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Wp_Bracket_Builder_Public {
 		$post = get_post();
 		$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 		$bracket = $template_repo->get(post: $post);
-		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
+		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.css';
 
 
 		// For product page
@@ -131,7 +131,7 @@ class Wp_Bracket_Builder_Public {
 		$color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
 		$overlay_map = $is_bracket_product ? $this->build_overlay_map($bracket_placement) : array();
 
-		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.js', array('wp-element'), $this->version, true);
+		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.js', array('wp-element'), $this->version, true);
 
 		// wp_localize_script(
 		// 	'wpbb-bracket-builder-react',

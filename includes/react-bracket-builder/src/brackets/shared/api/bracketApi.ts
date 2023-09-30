@@ -23,19 +23,20 @@ interface RequestOptions {
 	camelCaseResponse?: boolean;
 }
 
+declare var wpbb_ajax_obj: any;
 
 class BracketApi {
-	private baseUrl: string;
+	private baseUrl: string = '';
 	private templatesPath: string = 'templates';
 	private playsPath: string = 'plays';
 	private tournamentsPath: string = 'tournaments';
 	private nonce: string = '';
 
 	constructor() {
-		// @ts-ignore
-		this.baseUrl = wpbb_ajax_obj.rest_url;
-		// @ts-ignore
-		this.nonce = wpbb_ajax_obj.nonce;
+		if (typeof wpbb_ajax_obj !== 'undefined') {
+			this.baseUrl = wpbb_ajax_obj.rest_url;
+			this.nonce = wpbb_ajax_obj.nonce;
+		}
 	}
 
 	async createTemplate(template: TemplateReq): Promise<TemplateRes> {

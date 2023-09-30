@@ -1,6 +1,7 @@
 import React from 'react';
 import App from "./App";
-import { render, hydrate } from '@wordpress/element';
+// import { render, hydrate } from '@wordpress/element';
+import { render, hydrate } from 'react-dom'
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
 // import { BracketRes } from './brackets/shared/api/types/bracket';
@@ -12,9 +13,9 @@ import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonA
 /**
  * Import the stylesheet for the plugin.
  */
-import './style/main.scss';
 import { HostTournamentModal } from './modals/HostTournamentModal';
 
+console.log('index.tsx')
 interface WpbbAjaxObj {
 	page: string;
 	nonce: string;
@@ -45,32 +46,6 @@ interface PrintOptions {
 	inchWidth: number;
 }
 
-declare var wpbb_ajax_obj: any;
-const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
-console.log('ajaxObj', ajaxObj)
-
-const { sentryEnv, sentryDsn } = ajaxObj
-
-if (sentryDsn) {
-	// Init Sentry
-	Sentry.init({
-		environment: sentryEnv || 'production',
-		dsn: sentryDsn,
-		integrations: [
-			new Sentry.BrowserTracing({
-				// Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-				tracePropagationTargets: ["localhost", /^https:\/\/backmybracket\.com/],
-			}),
-			new Sentry.Replay(),
-		],
-		// Performance Monitoring
-		tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
-		// Session Replay
-		replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-		replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-	});
-}
-
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
 const PlayTournamentBuilder = React.lazy(() => import('./brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentPage'))
@@ -81,19 +56,49 @@ const ViewPlayPage = React.lazy(() => import('./brackets/BracketBuilders/ViewPla
 const PrintPlayPage = React.lazy(() => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage'))
 
 
+declare var wpbb_ajax_obj: any;
+// Try to get the wpbb_ajax_obj from the global scope
+if (window.hasOwnProperty('wpbb_ajax_obj')) {
+	const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
+	console.log('ajaxObj', ajaxObj)
+	initializeSentry(ajaxObj)
+	renderSettings(ajaxObj)
+	renderPreview(ajaxObj)
+	renderPlayTournamentBuilder(ajaxObj)
+	renderTemplateBuilder(ajaxObj)
+	renderPlayTemplate(ajaxObj)
+	renderTournamentResultsBuilder(ajaxObj)
+	renderViewBracketPlay(ajaxObj)
+	renderPrintBracketPage(ajaxObj)
+	renderCreateTournamentModal(ajaxObj)
+	renderHostTournamentButtonsAndModals(ajaxObj)
+}
 
-// Get the wpbb_ajax_obj from the global scope
 
-renderSettings(ajaxObj)
-renderPreview(ajaxObj)
-renderPlayTournamentBuilder(ajaxObj)
-renderTemplateBuilder(ajaxObj)
-renderPlayTemplate(ajaxObj)
-renderTournamentResultsBuilder(ajaxObj)
-renderViewBracketPlay(ajaxObj)
-renderPrintBracketPage(ajaxObj)
-renderCreateTournamentModal(ajaxObj)
-renderHostTournamentButtonsAndModals(ajaxObj)
+function initializeSentry(ajaxObj: WpbbAjaxObj) {
+	const { sentryEnv, sentryDsn } = ajaxObj
+
+	if (sentryDsn) {
+		// Init Sentry
+		Sentry.init({
+			environment: sentryEnv || 'production',
+			dsn: sentryDsn,
+			integrations: [
+				new Sentry.BrowserTracing({
+					// Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+					tracePropagationTargets: ["localhost", /^https:\/\/backmybracket\.com/],
+				}),
+				new Sentry.Replay(),
+			],
+			// Performance Monitoring
+			tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+			// Session Replay
+			replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+			replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+		});
+	}
+}
+
 
 /**
  * This renders the bracket builder admin page. DEPRECATED
@@ -220,6 +225,7 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
 
 function renderPrintBracketPage(ajaxObj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-print-play')
+	console.log('print bracket play')
 	const {
 		play,
 		printOptions,
