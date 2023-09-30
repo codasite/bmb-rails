@@ -109,7 +109,7 @@ class Wp_Bracket_Builder_Public_Hooks {
 			return;
 		}
 
-		$service_user = get_user_by('login', SERVICE_LOGIN);
+		$service_user = get_user_by('login', WPBB_SERVICE_USER);
 
 		if (!$service_user) {
 			return;

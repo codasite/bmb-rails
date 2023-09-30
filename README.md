@@ -2,8 +2,10 @@
 
 ## Installation
 
-### MAC
-1. Install MAMP and WordPress according to [these instructions](https://codex.wordpress.org/Installing_WordPress_Locally_on_Your_Mac_With_MAMP)
+1. Install Wordpress locally
+  - MAC: Install MAMP and WordPress according to [these instructions](https://codex.wordpress.org/Installing_WordPress_Locally_on_Your_Mac_With_MAMP)
+  - Linux: idk
+  - Windows: get out
 2. Clone this repository in the `/wordpress/wp-content/plugins` directory
   - Optional: clone the repo anywhere on your system and create a symlink: `ln -s path/to/plugins path/to/repo`
 3. From the plugin root `wp-bracket-builder`, install composer dependencies `composer install`
@@ -11,17 +13,23 @@
 5. Install and activate Oxygen Builder 4.5
 6. Install and activate the Woocommerce Oxygen integration
 7. Install and activate the WooCommerce Plugin
-7. Activate WP Bracket Builder
-8. Create the following _Pages_ from the wordpress admin dashboard and add the corresponding shortcode
+8. Activate WP Bracket Builder
+9. Create the following _Pages_ from the wordpress admin dashboard and add the corresponding shortcode
 - "Dashboard" [wpbb-dashboard]
 - "Official Tournaments" [wpbb-official-tournaments]
 - "Celebrity Picks" [wpbb-celebrity-picks]
 - "Bracket Template Builder" [wpbb-template-builder]
-- "Print Page" (slug: print) [wpbb-print-page]
-9. Create Oxygen templates for the following post types and add the shortcodes
+- "Print Page" (slug: print) [wpbb-print-page] CAN BE PRIVATE
+10. Create Oxygen templates for the following post types and add the shortcodes
 - "bracket_template" posts: [wpbb-bracket-template]
 - "bracket_tournament" posts: [wpbb-bracket-tournament]
 - "bracket_player" posts: [wpbb-bracket-play]
+11. Create a service user to give the image generator node api access to the print page. 
+- Create a new user with the role "private_reader"
+- Add the user's login name to wp-config.php as the value of the constant `WPBB_SERVICE_USER`
+- TODO: add the service user token
+
+
 
 
 ## Testing Setup
