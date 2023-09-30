@@ -1,4 +1,10 @@
 const defaults = require('@wordpress/scripts/config/webpack.config');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const htmlPlugin = new HtmlWebpackPlugin({
+	template: './src/index.html',
+	filename: './index.html',
+});
 
 module.exports = {
 	...defaults,
@@ -6,6 +12,10 @@ module.exports = {
 		react: 'React',
 		'react-dom': 'ReactDOM',
 	},
+	plugins: [
+		...defaults.plugins,
+		htmlPlugin,
+	],
 	// module: {
 	// 	...defaults.module,
 	// 	rules: [

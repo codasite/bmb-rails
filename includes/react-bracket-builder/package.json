@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "build": "wp-scripts build",
-    "start": "wp-scripts start"
+    "start": "wp-scripts start",
+    "dev": "webpack serve --mode development"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@sentry/react": "^7.53.1",
+    "html-webpack-plugin": "^5.5.3",
     "react-bootstrap": "^2.7.4",
     "react-image-gallery": "^1.2.11",
     "react-lineto": "^3.3.0",
