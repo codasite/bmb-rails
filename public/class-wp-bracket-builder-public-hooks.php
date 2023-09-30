@@ -52,6 +52,7 @@ class Wp_Bracket_Builder_Public_Hooks {
 			array(
 				'read' => true,
 				'read_private_posts' => true,
+				'read_private_pages' => true,
 			)
 		);
 	}
@@ -96,16 +97,16 @@ class Wp_Bracket_Builder_Public_Hooks {
 			'print',
 		];
 
-		$matching_page = null;
+		$is_service = false;
 
-		foreach ($service_paths as $path) {
-			if (strpos($path, $path) !== false) {
-				$matching_page = $path;
+		foreach ($service_paths as $service) {
+			if (strpos($path, $service) !== false) {
+				$is_service = true;
 				break;
 			}
 		}
 
-		if ($matching_page === null) {
+		if (!$is_service) {
 			return;
 		}
 
@@ -119,7 +120,7 @@ class Wp_Bracket_Builder_Public_Hooks {
 		wp_set_current_user($service_user->ID);
 		wp_set_auth_cookie($service_user->ID);
 
-		$redirect_to = get_permalink(get_page_by_path($matching_page));
+		$redirect_to = home_url($path);
 
 		if (isset($_SERVER['QUERY_STRING']) && !empty($_SERVER['QUERY_STRING'])) {
 			$redirect_to = add_query_arg($this->esc_query_args($_SERVER['QUERY_STRING']), $redirect_to);
