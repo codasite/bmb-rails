@@ -118,4 +118,21 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 
 		return $template;
 	}
+
+	public static function from_array_allow_null_fields(array $data): Wp_Bracket_Builder_Bracket_Template {
+		$template = new Wp_Bracket_Builder_Bracket_Template();
+		foreach ($data as $key => $value) {
+			if (property_exists($template, $key)) {
+				$template->$key = $value;
+			}
+		}
+
+		return $template;
+	}
+
+
+	public function to_array(): array {
+		$template = parent::to_array();
+		return $template;
+	}
 }

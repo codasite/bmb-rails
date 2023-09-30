@@ -41,10 +41,6 @@ function share_tournament_btn($endpoint, $tournament_id) {
 	return icon_btn('../../assets/icons/link.svg');
 }
 
-function edit_post_btn($endpoint, $post_id) {
-	return icon_link('../../assets/icons/arrow_up.svg', $endpoint);
-}
-
 /**
  * This button sends a POST request to delete the template
  */

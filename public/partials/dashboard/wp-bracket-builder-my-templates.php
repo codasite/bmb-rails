@@ -38,7 +38,7 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 		<div class="tw-flex tw-gap-10 tw-items-center tw-justify-between md:tw-justify-start">
 			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 			<div class="tw-flex tw-gap-10">
-				<?php echo edit_post_btn($template_play_link, $id); ?>
+				<div id="wpbb-create-template-button-and-modal" data-template-id=<?php echo '"'. $id . '"'?> ></div>
 				<?php echo duplicate_bracket_btn($duplicate_link, $id); ?>
 				<?php echo delete_post_btn($delete_link, $id, 'delete_template_id', 'delete_template_action', 'delete_template_nonce'); ?>
 			</div>
