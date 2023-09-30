@@ -57,7 +57,7 @@ const PrintPlayPage = React.lazy(() => import('./brackets/BracketBuilders/PrintP
 
 
 declare var wpbb_ajax_obj: any;
-// Try to get the wpbb_ajax_obj from the global scope
+// Try to get the wpbb_ajax_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 if (window.hasOwnProperty('wpbb_ajax_obj')) {
 	const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
 	console.log('ajaxObj', ajaxObj)
@@ -69,9 +69,10 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
 	renderPlayTemplate(ajaxObj)
 	renderTournamentResultsBuilder(ajaxObj)
 	renderViewBracketPlay(ajaxObj)
-	renderPrintBracketPage(ajaxObj)
 	renderCreateTournamentModal(ajaxObj)
 	renderHostTournamentButtonsAndModals(ajaxObj)
+} else {
+	renderPrintBracketPage()
 }
 
 
@@ -223,36 +224,12 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
 
 }
 
-function renderPrintBracketPage(ajaxObj: WpbbAjaxObj) {
+function renderPrintBracketPage() {
 	const builderDiv = document.getElementById('wpbb-print-play')
+	if (!builderDiv) return
 	console.log('print bracket play')
-	const {
-		play,
-		printOptions,
-	} = ajaxObj
-
-	const playObj = camelCaseKeys(play)
-
-	if (builderDiv && playObj) {
-
-		const {
-			theme,
-			position,
-			inchHeight,
-			inchWidth,
-		} = printOptions
-		console.log('rendering print play')
-		render(
-			<App>
-				<PrintPlayPage
-					bracketPlay={playObj}
-					darkMode={theme === 'dark'}
-					inchHeight={inchHeight}
-					inchWidth={inchWidth}
-					position={position}
-				/>
-			</App>, builderDiv)
-	}
+	render(
+		<App> <PrintPlayPage /> </App>, builderDiv)
 }
 
 /**

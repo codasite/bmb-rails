@@ -60,11 +60,8 @@ export const DefaultBracket = (props: BracketProps) => {
 	let bracketDate = date
 	if (!bracketTitle || !bracketDate) {
 		const meta = useContext(BracketMetaContext)
-		if (!meta || !meta.title || !meta.date) {
-			throw new Error('title, date, or BracketMetaContext is required')
-		}
-		bracketTitle = title ?? meta.title
-		bracketDate = date ?? meta.date
+		bracketTitle = title ?? meta?.title
+		bracketDate = date ?? meta?.date
 	}
 	const linesStyle = lineStyle || {
 		className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${dark ? darkLineColor : lineColor}`,
