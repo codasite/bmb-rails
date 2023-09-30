@@ -72,13 +72,13 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
 		const urlParams = new URLSearchParams(window.location.search)
 		const theme = urlParams.get('theme') || 'light'
 		const position = urlParams.get('position') || 'top'
-		const inchHeight = Number(urlParams.get('inchHeight')) || 16
-		const inchWidth = Number(urlParams.get('inchWidth')) || 11
+		const inchHeight = Number(urlParams.get('inch_height')) || 16
+		const inchWidth = Number(urlParams.get('inch_width')) || 11
 		const title = urlParams.get('title') || 'Winner'
 		const date = urlParams.get('date') || ''
 		const picks = camelCaseKeys(JSON.parse(decodeURIComponent(urlParams.get('picks'))))
 		const matches = camelCaseKeys(JSON.parse(decodeURIComponent(urlParams.get('matches'))))
-		const numTeams = Number(urlParams.get('numTeams'))
+		const numTeams = Number(urlParams.get('num_teams'))
 
 		return {
 			theme,
