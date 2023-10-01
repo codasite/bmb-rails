@@ -50,6 +50,7 @@
 	text-transform: uppercase;
 	color: #fff;
 	line-height: normal;
+	box-sizing: border-box;
 }
 
 .wpbb-reset h1,

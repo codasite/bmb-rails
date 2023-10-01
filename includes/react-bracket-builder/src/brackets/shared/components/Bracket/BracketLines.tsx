@@ -57,6 +57,7 @@ export const BracketLines = (props: BracketLinesProps) => {
 				lines = [
 					...lines,
 					<SteppedLineTo
+						key={`${line1FromClass}-${line1ToClass}`}
 						from={line1FromClass}
 						to={line1ToClass}
 						fromAnchor={fromAnchor}
@@ -66,6 +67,7 @@ export const BracketLines = (props: BracketLinesProps) => {
 						{...style}
 					/>,
 					<SteppedLineTo
+						key={`${line2FromClass}-${line2ToClass}`}
 						from={line2FromClass}
 						to={line2ToClass}
 						fromAnchor={fromAnchor}

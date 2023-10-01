@@ -540,6 +540,7 @@ export const getNumRounds = (numTeams: number): number => {
 export const matchReprFromRes = (numRounds: number, matches: MatchRes[]) => {
 	const nullableMatches = getNullMatches(numRounds) as Nullable<MatchRepr>[][]
 	for (const match of matches) {
+		console.log('match', match)
 		if (match.roundIndex >= nullableMatches.length) {
 			throw new Error(`Invalid round index ${match.roundIndex} for match ${match.id}`)
 		}

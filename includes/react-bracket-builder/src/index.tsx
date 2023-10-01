@@ -1,6 +1,8 @@
+require('../../../public/js/wp-bracket-builder-public.js')
 import React from 'react';
 import App from "./App";
-import { render, hydrate } from '@wordpress/element';
+// import { render, hydrate } from '@wordpress/element';
+import { render, hydrate } from 'react-dom'
 import * as Sentry from '@sentry/react';
 import { OverlayUrlThemeMap } from './preview/Gallery';
 // import { BracketRes } from './brackets/shared/api/types/bracket';
@@ -10,12 +12,13 @@ import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
 import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonAndModal';
 import { CreateTemplateButtonAndModal } from './modals/CreateTemplateButtonAndModal';
+import { HostTournamentModal } from './modals/HostTournamentModal';
 /**
  * Import the stylesheet for the plugin.
  */
-import './style/main.scss';
-import { HostTournamentModal } from './modals/HostTournamentModal';
+import './styles/main.css'
 
+console.log('index.tsx')
 interface WpbbAjaxObj {
 	page: string;
 	nonce: string;
@@ -23,75 +26,89 @@ interface WpbbAjaxObj {
 	tournament: any;
 	template: any;
 	play: any;
-	bracket_url_theme_map: OverlayUrlThemeMap;
-	css_url: string;
-	bracket_product_archive_url: string;
-	gallery_images: any;
-	color_options: any;
-	sentry_env: string;
-	sentry_dsn: string;
+	bracketUrlThemeMap: OverlayUrlThemeMap;
+	cssUrl: string;
+	redirectUrl: string;
+	galleryImages: any;
+	colorOptions: any;
+	sentryEnv: string;
+	sentryDsn: string;
 	post: any;
-	my_templates_url: string;
-	my_tournaments_url: string;
-	bracket_template_builder_url: string;
-	user_can_create_tournament: boolean;
-	home_url: string;
+	myTemplatesUrl: string;
+	myTournamentsUrl: string;
+	bracketTemplateBuilderUrl: string;
+	userCanCreateTournament: boolean;
+	homeUrl: string;
+	printOptions: PrintOptions;
 }
 
-declare var wpbb_ajax_obj: WpbbAjaxObj;
-console.log('wpbb_ajax_obj', wpbb_ajax_obj)
-
-const sentryEnv = wpbb_ajax_obj.sentry_env
-const sentryDsn = wpbb_ajax_obj.sentry_dsn
-
-if (sentryDsn) {
-	// Init Sentry
-	Sentry.init({
-		environment: sentryEnv || 'production',
-		dsn: sentryDsn,
-		integrations: [
-			new Sentry.BrowserTracing({
-				// Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
-				tracePropagationTargets: ["localhost", /^https:\/\/backmybracket\.com/],
-			}),
-			new Sentry.Replay(),
-		],
-		// Performance Monitoring
-		tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
-		// Session Replay
-		replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-		replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-	});
+interface PrintOptions {
+	theme: string;
+	position: string;
+	inchHeight: number;
+	inchWidth: number;
 }
 
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(() => import('./brackets/AdminTemplateBuilder/Settings'))
 const PlayTournamentBuilder = React.lazy(() => import('./brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentPage'))
 const Gallery = React.lazy(() => import('./preview/Gallery'))
-// const Options = React.lazy(() => import('./brackets/UserTemplateBuilder/UserTemplateBuilder'))
 const TemplateBuilder = React.lazy(() => import('./brackets/BracketBuilders/TemplateBuilder/TemplateBuilder'))
 const TournamentResultsBuilder = React.lazy(() => import('./brackets/BracketBuilders/TournamentResultsBuilder/TournamentResultsBuilder'))
 const ViewPlayPage = React.lazy(() => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage'))
-// const WithMatchTree = React.lazy(() => import('./brackets/shared/components/WithMatchTree'))
+const PrintPlayPage = React.lazy(() => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage'))
 
-// Get the wpbb_ajax_obj from the global scope
 
-renderSettings(wpbb_ajax_obj)
-renderPreview(wpbb_ajax_obj)
-renderPlayTournamentBuilder(wpbb_ajax_obj)
-renderTemplateBuilder(wpbb_ajax_obj)
-renderPlayTemplate(wpbb_ajax_obj)
-renderTournamentResultsBuilder(wpbb_ajax_obj)
-renderViewBracketPlay(wpbb_ajax_obj)
-renderCreateTournamentModal(wpbb_ajax_obj)
-renderHostTournamentButtonsAndModals(wpbb_ajax_obj)
-renderCreateTemplateModal(wpbb_ajax_obj)
+declare var wpbb_ajax_obj: any;
+// Try to get the wpbb_ajax_obj from the global scope. If it exists, then we know we are rendering in wordpress.
+if (window.hasOwnProperty('wpbb_ajax_obj')) {
+	const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
+	console.log('ajaxObj', ajaxObj)
+	initializeSentry(ajaxObj)
+	renderSettings(ajaxObj)
+	renderPreview(ajaxObj)
+	renderPlayTournamentBuilder(ajaxObj)
+	renderTemplateBuilder(ajaxObj)
+	renderPlayTemplate(ajaxObj)
+	renderTournamentResultsBuilder(ajaxObj)
+	renderViewBracketPlay(ajaxObj)
+	renderCreateTournamentModal(ajaxObj)
+	renderHostTournamentButtonsAndModals(ajaxObj)
+} else {
+	renderPrintBracketPage()
+}
+
+
+function initializeSentry(ajaxObj: WpbbAjaxObj) {
+	const { sentryEnv, sentryDsn } = ajaxObj
+
+	if (sentryDsn) {
+		// Init Sentry
+		Sentry.init({
+			environment: sentryEnv || 'production',
+			dsn: sentryDsn,
+			integrations: [
+				new Sentry.BrowserTracing({
+					// Set `tracePropagationTargets` to control for which URLs distributed tracing should be enabled
+					tracePropagationTargets: ["localhost", /^https:\/\/backmybracket\.com/],
+				}),
+				new Sentry.Replay(),
+			],
+			// Performance Monitoring
+			tracesSampleRate: 1.0, // Capture 100% of the transactions, reduce in production!
+			// Session Replay
+			replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+			replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+		});
+	}
+}
+
 
 /**
  * This renders the bracket builder admin page. DEPRECATED
  */
-function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
-	const page = wpbb_ajax_obj.page
+function renderSettings(ajaxObj: WpbbAjaxObj) {
+	const page = ajaxObj.page
 
 	if (page === 'settings') {
 		// Render the App component into the DOM
@@ -102,13 +119,13 @@ function renderSettings(wpbb_ajax_obj: WpbbAjaxObj) {
 /**
  * This renders the create template builder page
  */
-function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
 	const templateBuilder = document.getElementById('wpbb-template-builder')
 	const {
-		my_templates_url,
-		my_tournaments_url,
+		myTemplatesUrl,
+		myTournamentsUrl,
 		template,
-	} = wpbb_ajax_obj
+	} = ajaxObj
 
 	const temp = camelCaseKeys(template)
 
@@ -116,7 +133,7 @@ function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering template builder')
 		render(
 			<App>
-				<TemplateBuilder template={temp} saveTemplateLink={my_templates_url} saveTournamentLink={my_tournaments_url} />
+				<TemplateBuilder template={temp} saveTemplateLink={myTemplatesUrl} saveTournamentLink={myTournamentsUrl} />
 			</App >, templateBuilder);
 	}
 }
@@ -124,13 +141,13 @@ function renderTemplateBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 /**
  * This renders the play template page
  */
-function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-play-template')
 	const {
 		template,
-		bracket_product_archive_url,
-		css_url,
-	} = wpbb_ajax_obj
+		redirectUrl,
+		cssUrl,
+	} = ajaxObj
 
 	const temp = camelCaseKeys(template)
 
@@ -139,7 +156,7 @@ function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(
 			<App>
 				<Provider store={bracketBuilderStore}>
-					<PlayTournamentBuilder bracketStylesheetUrl={css_url} template={temp} apparelUrl={bracket_product_archive_url} />
+					<PlayTournamentBuilder bracketStylesheetUrl={cssUrl} template={temp} apparelUrl={redirectUrl} />
 				</Provider>
 			</App>, builderDiv)
 	}
@@ -148,13 +165,13 @@ function renderPlayTemplate(wpbb_ajax_obj: WpbbAjaxObj) {
 /**
  * This renders the play tournament page
  */
-function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-play-tournament-builder')
 	const {
 		tournament,
-		bracket_product_archive_url,
-		css_url,
-	} = wpbb_ajax_obj
+		redirectUrl,
+		cssUrl,
+	} = ajaxObj
 
 	const tourney = camelCaseKeys(tournament)
 
@@ -162,7 +179,7 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering play tournament builder')
 		render(
 			<App>
-				<PlayTournamentBuilder bracketStylesheetUrl={css_url} tournament={tourney} apparelUrl={bracket_product_archive_url} />
+				<PlayTournamentBuilder bracketStylesheetUrl={cssUrl} tournament={tourney} apparelUrl={redirectUrl} />
 			</App>, builderDiv)
 	}
 }
@@ -170,12 +187,12 @@ function renderPlayTournamentBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 /**
  * This renders the update tournament results page
  */
-function renderTournamentResultsBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderTournamentResultsBuilder(ajaxObj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-tournament-results-builder')
 	const {
 		tournament,
-		my_tournaments_url,
-	} = wpbb_ajax_obj
+		myTournamentsUrl,
+	} = ajaxObj
 
 	const tourney = camelCaseKeys(tournament)
 
@@ -184,19 +201,19 @@ function renderTournamentResultsBuilder(wpbb_ajax_obj: WpbbAjaxObj) {
 		render(
 			<App>
 				<Provider store={bracketBuilderStore}>
-					<TournamentResultsBuilderWithMatchTree tournament={tourney} myTournamentsUrl={my_tournaments_url} />
+					<TournamentResultsBuilderWithMatchTree tournament={tourney} myTournamentsUrl={myTournamentsUrl} />
 				</Provider>
 			</App>, builderDiv)
 
 	}
 }
 
-function renderViewBracketPlay(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
 	const builderDiv = document.getElementById('wpbb-view-play')
 	const {
 		play,
-		bracket_product_archive_url,
-	} = wpbb_ajax_obj
+		redirectUrl,
+	} = ajaxObj
 
 	const playObj = camelCaseKeys(play)
 
@@ -204,17 +221,24 @@ function renderViewBracketPlay(wpbb_ajax_obj: WpbbAjaxObj) {
 		console.log('rendering view play')
 		render(
 			<App>
-				<ViewPlayPage bracketPlay={playObj} apparelUrl={bracket_product_archive_url} />
+				<ViewPlayPage bracketPlay={playObj} apparelUrl={redirectUrl} />
 			</App>, builderDiv)
 	}
 
 }
 
+function renderPrintBracketPage() {
+	const builderDiv = document.getElementById('wpbb-print-play')
+	if (!builderDiv) return
+	console.log('print bracket play')
+	render(
+		<App> <PrintPlayPage /> </App>, builderDiv)
+}
 
 /**
  * This loads the apparel preview component for the bracket product page.
  */
-function renderPreview(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderPreview(ajaxObj: WpbbAjaxObj) {
 	const previewDiv = document.getElementById('wpbb-bracket-preview-controller')
 
 	if (previewDiv) {
@@ -222,49 +246,49 @@ function renderPreview(wpbb_ajax_obj: WpbbAjaxObj) {
 		// There must exist an element of class 'wpbb-bracket-preview-controller' to the 
 		// product page for the component to be rendered.
 		const {
-			bracket_url_theme_map,
-			gallery_images,
-			color_options,
-		} = wpbb_ajax_obj
+			bracketUrlThemeMap,
+			galleryImages,
+			colorOptions,
+		} = ajaxObj
 		// Render the preview component into the DOM
 		// Find the location to render the gallery component, and render the gallery component.
-		render(<App><Gallery overlayThemeMap={bracket_url_theme_map} galleryImages={gallery_images} colorOptions={color_options} /> </App>, previewDiv);
+		render(<App><Gallery overlayThemeMap={bracketUrlThemeMap} galleryImages={galleryImages} colorOptions={colorOptions} /> </App>, previewDiv);
 	}
 }
-function renderCreateTournamentModal(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
 	const div = document.getElementById('wpbb-create-tournament-button-and-modal')
 	if (div) {
 		const {
-			my_templates_url,
-			bracket_template_builder_url,
-			user_can_create_tournament,
-			home_url,
-		} = wpbb_ajax_obj
-		render(<CreateTournamentButtonAndModal myTemplatesUrl={my_templates_url} bracketTemplateBuilderUrl={bracket_template_builder_url}
-			canCreateTournament={user_can_create_tournament} upgradeAccountUrl={home_url} />, div);
+			myTemplatesUrl,
+			bracketTemplateBuilderUrl,
+			userCanCreateTournament,
+			homeUrl,
+		} = ajaxObj
+		render(<CreateTournamentButtonAndModal myTemplatesUrl={myTemplatesUrl} bracketTemplateBuilderUrl={bracketTemplateBuilderUrl}
+			canCreateTournament={userCanCreateTournament} upgradeAccountUrl={homeUrl} />, div);
 	}
 }
-function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderHostTournamentButtonsAndModals(ajaxObj: WpbbAjaxObj) {
 	const {
-		my_tournaments_url
-	} = wpbb_ajax_obj
+		myTournamentsUrl
+	} = ajaxObj
 
 	const modalDiv = document.getElementById('wpbb-host-tournament-modal')
 
 	if (modalDiv) {
-		hydrate(<HostTournamentModal tournamentsUrl={my_tournaments_url} />, modalDiv);
+		hydrate(<HostTournamentModal tournamentsUrl={myTournamentsUrl} />, modalDiv);
 	}
 }
-function renderCreateTemplateModal(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderCreateTemplateModal(ajaxObj: WpbbAjaxObj) {
 	const div = document.getElementById('wpbb-create-template-button-and-modal')
 	const templateId = div.getAttribute('data-template-id');
 	if (div) {
 		const {
-			home_url,
-		} = wpbb_ajax_obj
+			homeUrl,
+		} = ajaxObj
 
 		const templatePath = `/wp-json/wp-bracket-builder/v1/templates/${templateId}`;
-		const templateUrl = home_url + templatePath;
+		const templateUrl = homeUrl + templatePath;
 		render(<CreateTemplateButtonAndModal templateUrl={templateUrl} />, div);
-	}	
+	}
 }

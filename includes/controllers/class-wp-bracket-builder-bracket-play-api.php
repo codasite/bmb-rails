@@ -1,16 +1,8 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/image-generator/class-wp-bracket-builder-local-node-generator.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
-
-
-// require vendor/autoload.php' from the root directory
-// require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
-// use lambda
-// use Aws\Lambda\LambdaClient;
-
 
 
 class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
@@ -41,6 +33,11 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	protected $rest_base;
 
 	/**
+	 * @var Wp_Bracket_Builder_Post_Image_Generator_Interface
+	 */
+	private $image_generator;
+
+	/**
 	 * Constructor.
 	 */
 	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $play_repo = null) {
@@ -49,7 +46,7 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 		// $this->play_repo = $play_repo != null ? $play_repo : new Wp_Bracket_Builder_Bracket_Repository();
 		$this->utils = new Wp_Bracket_Builder_Utils();
 		$this->play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
-		// $this->bracket_pick_service = new Wp_Bracket_Builder_Bracket_Pick_Service();
+		$this->image_generator = new Wp_Bracket_Builder_Local_Node_Generator();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'plays';
 	}
@@ -175,67 +172,12 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 			$params['author'] = get_current_user_id();
 		}
 		$play = Wp_Bracket_Builder_Bracket_Play::from_array($params);
-		$saved = $this->play_repo->add($play);
+		// $saved = $this->play_repo->add($play);
+		$img_url = $this->image_generator->generate_image($play->id);
 
-		return new WP_REST_Response($saved, 201);
+		// return new WP_REST_Response($saved, 201);
+		return new WP_REST_Response($img_url, 201);
 	}
-
-	/**
-	 * Converts html to image.
-	 * 
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-
-	public function html_to_image($request) {
-		$html = $request->get_param('html');
-
-		if (!$html) {
-			return new WP_Error('no-html', __('No html was passed in the request', 'text-domain'), array('status' => 400));
-		}
-
-		return new WP_REST_Response($html, 200);
-	}
-
-
-	// /**
-	//  * Updates a single bracket.
-	//  *
-	//  * @param WP_REST_Request $request Full details about the request.
-	//  * @return WP_Error|WP_REST_Response
-	//  */
-	// public function update_item($request) {
-	// 	// if id does not match item_id, return error
-	// 	// if ($request->get_param('id') != $request->get_param('item_id')) {
-	// 	// 	return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
-	// 	// }
-	// 	// get the update id 
-	// 	$update_id = $request->get_param('item_id');
-	// 	// create an array copy of the request params
-	// 	$bracket_params = $request->get_params();
-	// 	// remove the item_id from the array
-	// 	unset($bracket_params['item_id']);
-
-	// 	$bracket = Wp_Bracket_Builder_Bracket_Pick::from_array($bracket_params);
-	// 	$updated = $this->play_repo->update($bracket);
-	// 	return new WP_REST_Response($updated, 200);
-	// }
-
-	// /**
-	//  * Deletes a single bracket.
-	//  *
-	//  * @param WP_REST_Request $request Full details about the request.
-	//  * @return WP_Error|WP_REST_Response
-	//  */
-	// public function delete_item($request) {
-	// 	// get id from request
-	// 	$id = $request->get_param('item_id');
-	// 	$deleted = $this->play_repo->delete($id);
-	// 	if ($deleted) {
-	// 		return new WP_REST_Response(null, 204);
-	// 	}
-	// 	return new WP_Error('cant-delete', __('message', 'text-domain'), array('status' => 500));
-	// }
 
 	/**
 	 * Check if a given request has admin access to this plugin

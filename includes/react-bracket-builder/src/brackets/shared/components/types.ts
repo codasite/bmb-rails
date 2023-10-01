@@ -62,14 +62,17 @@ export interface BracketProps {
 	getTeamFontSize?: (numRounds: number) => number;
 	getFirstRoundMatchGap?: (numRounds: number) => number;
 	getSubsequentMatchGap?: (numRounds: number) => number;
-	matchTree: MatchTree;
 	setMatchTree?: (matchTree: MatchTree) => void;
+	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
+	matchTree: MatchTree;
 	MatchColumnComponent?: React.FC<MatchColumnProps>;
 	MatchBoxComponent?: React.FC<MatchBoxProps>;
 	MatchBoxChildComponent?: React.FC<MatchBoxChildProps>;
 	TeamSlotComponent?: React.FC<TeamSlotProps>;
 	BracketComponent?: React.FC<BracketProps>; // for nesting brackets
-	onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void;
+	title?: string;
+	date?: string;
+	darkMode?: boolean;
 	lineStyle?: object;
 	lineColor?: string;
 	lineWidth?: number;

@@ -16,6 +16,9 @@
 		},
 		{
 			"path": "tests/phpunit/tests"
+		},
+		{
+			"path": "../web-to-image"
 		}
 	],
 	"settings": {},

@@ -42,10 +42,30 @@ export const DefaultBracket = (props: BracketProps) => {
 		lineColor = 'dd-blue',
 		darkLineColor = 'white',
 		lineWidth = 1,
+		title,
+		date,
+		darkMode,
 	} = props
 
 	const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-	const darkMode = useContext(DarkModeContext);
+	let dark = darkMode
+	if (dark === undefined) {
+		const darkContext = useContext(DarkModeContext)
+		if (darkContext === undefined) {
+			throw new Error('darkMode or DarkModeContext is required')
+		}
+		dark = darkContext
+	}
+	let bracketTitle = title
+	let bracketDate = date
+	if (!bracketTitle || !bracketDate) {
+		const meta = useContext(BracketMetaContext)
+		bracketTitle = title ?? meta?.title
+		bracketDate = date ?? meta?.date
+	}
+	const linesStyle = lineStyle || {
+		className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${dark ? darkLineColor : lineColor}`,
+	}
 
 	const getBracketMeasurements = (roundIndex: number, numRounds: number) => {
 		const teamHeight = getTeamHeight(numRounds)
@@ -87,6 +107,7 @@ export const DefaultBracket = (props: BracketProps) => {
 
 			return (
 				<MatchColumnComponent
+					key={`${position}-${i}`}
 					matches={matches}
 					matchPosition={position}
 					matchTree={matchTree}
@@ -118,12 +139,6 @@ export const DefaultBracket = (props: BracketProps) => {
 		const rightMatches = sideMatches.map((round) => round.matches.slice(round.matches.length / 2))
 		const finalMatch = rounds[numRounds - 1].matches
 
-		// const bracketHeight = getBracketHeight(numRounds)
-		// const teamHeight = getTeamHeight(numRounds)
-		// const firstRoundTeamGap = getTeamGap(0)
-		// const firstRoundsMatchHeight = teamHeight * 2 + firstRoundTeamGap
-		// const firstRoundMatchGap = getFirstRoundMatchGap(numRounds)
-
 		const leftMatchColumns = getMatchColumns(leftMatches, 'left', numRounds)
 		const rightMatchColumns = getMatchColumns(rightMatches, 'right', numRounds)
 		const finalMatchColumn = getMatchColumns([finalMatch], 'center', numRounds)
@@ -134,57 +149,50 @@ export const DefaultBracket = (props: BracketProps) => {
 			...rightMatchColumns
 		]
 	}
-	const linesStyle = lineStyle || {
-		className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${darkMode ? darkLineColor : lineColor}`,
-	}
 
 	const width = getBracketWidth(matchTree.rounds.length)
-
-	const {
-		date: bracketDate,
-		title: bracketTitle
-	} = useContext(BracketMetaContext)
 
 	const rootMatch = matchTree.getRootMatch()
 	const numRounds = matchTree.rounds.length
 	const winnerContainerMB = defaultBracketConstants.winnerContainerBottomMargin[numRounds]
 
 	return (
-		<div className='tw-flex tw-flex-col'>
-			{
-				rootMatch &&
-				<div className={`tw-mb-[${winnerContainerMB}px]`}>
-
-					<WinnerContainer
-						match={rootMatch}
-						matchTree={matchTree}
-						matchPosition='center'
-						TeamSlotComponent={TeamSlotComponent}
-						topText={bracketTitle}
-					/>
+		<DarkModeContext.Provider value={dark}>
+			<div className='tw-flex tw-flex-col'>
+				{
+					rootMatch &&
+					<div className={`tw-mb-[${winnerContainerMB}px]`}>
+						<WinnerContainer
+							match={rootMatch}
+							matchTree={matchTree}
+							matchPosition='center'
+							TeamSlotComponent={TeamSlotComponent}
+							topText={bracketTitle}
+						/>
+					</div>
+				}
+				<div className='tw-flex tw-flex-col tw-justify-center tw-h-100'>
+					<div className={`tw-flex tw-justify-${numRounds > 1 ? 'between' : 'center'} tw-relative tw-w-[${width}px]`}>
+						{buildMatches(matchTree.rounds)}
+					</div>
 				</div>
-			}
-			<div className='tw-flex tw-flex-col tw-justify-center tw-h-100'>
-				<div className={`tw-flex tw-justify-${numRounds > 1 ? 'between' : 'center'} tw-relative tw-w-[${width}px]`}>
-					{buildMatches(matchTree.rounds)}
-				</div>
+				{
+					<div className={`tw-mt-${numRounds > 5 ? 50 : 20}`}>
+						<LogoContainer
+							{...props}
+							bottomText={bracketDate}
+						/>
+					</div>
+				}
+				<BracketLines
+					rounds={matchTree.rounds}
+					style={linesStyle}
+				/>
+				<RootMatchLines
+					rounds={matchTree.rounds}
+					style={linesStyle}
+				/>
 			</div>
-			{
-				<div className={`tw-mt-${numRounds > 5 ? 50 : 20}`}>
-					<LogoContainer
-						{...props}
-						bottomText={bracketDate}
-					/>
-				</div>
-			}
-			<BracketLines
-				rounds={matchTree.rounds}
-				style={linesStyle}
-			/>
-			<RootMatchLines
-				rounds={matchTree.rounds}
-				style={linesStyle}
-			/>
-		</div>
+		</DarkModeContext.Provider>
 	)
 };
