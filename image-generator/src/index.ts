@@ -2,6 +2,7 @@ import express from 'express';
 import puppeteer from 'puppeteer';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
+
 const app = express();
 app.use(express.json());
 const port = 3000;
@@ -40,7 +41,7 @@ app.post('/encode', async (req, res) => {
 })
 
 app.get('/', async (req, res) => {
-	res.send('Hello World!');
+	res.send('Hello World!!!!');
 })
 
 
@@ -101,7 +102,13 @@ app.post('/', async (req, res) => {
 		console.log('url')
 		const queryString = Object.keys(queryParams).map(key => key + '=' + queryParams[key]).join('&');
 		const path = url + (queryString ? '?' + queryString : '')
-		await page.goto(path, { waitUntil: 'networkidle0' });
+		try {
+			await page.goto(path, { waitUntil: 'networkidle0' });
+		}
+		catch (err) {
+			console.log(err)
+			return res.status(400).send('invalid url');
+		}
 	} else {
 		return res.status(400).send('html or url is required');
 	}

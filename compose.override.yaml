@@ -1,0 +1,8 @@
+version: '3.9'
+
+services:
+  image-generator:
+    tty: true
+    command: npm run dev
+    volumes:
+      - ./image-generator/src:/usr/src/app/src
