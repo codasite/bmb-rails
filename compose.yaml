@@ -9,3 +9,11 @@ services:
       - 3000:3000
     cap_add:
       - SYS_ADMIN
+    depends_on:
+      - react-app
+
+  react-app:
+    build:
+      context: standalone-react
+      dockerfile: Dockerfile
+    

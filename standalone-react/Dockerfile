@@ -1,8 +1,7 @@
-FROM ghcr.io/puppeteer/puppeteer:latest
+FROM node:18
 # Create app directory
 WORKDIR /usr/src/app
 # Install app dependencies
-# RUN chown -R node:node /usr/src/app
 COPY package.json ./
 # COPY package-lock.json ./
 RUN npm install
@@ -11,5 +10,5 @@ RUN npm install
 # Bundle app source
 COPY . .
 # Build app
-EXPOSE 3000
+EXPOSE 3001
 CMD ["npm", "start"]

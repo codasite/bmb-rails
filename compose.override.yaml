@@ -6,3 +6,12 @@ services:
     command: npm run dev
     volumes:
       - ./image-generator/src:/usr/src/app/src
+
+  react-app:
+    tty: true
+    command: npm run dev
+    volumes:
+      - ./standalone-react/src:/usr/src/app/src
+      # - ./react-app/public:/usr/src/app/public
+    ports:
+      - 3001:3001
