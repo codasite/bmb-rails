@@ -238,7 +238,7 @@ class Wp_Bracket_Builder_Public {
 
 	/**
 	 * Render the bracket preview
-	 * 
+	 *
 	 * @return void
 	 */
 	public function render_bracket_preview() {
@@ -303,11 +303,14 @@ class Wp_Bracket_Builder_Public {
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
 			array(
-          'my_templates_url' => get_permalink() . 'templates',
-          'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
-          'home_url' => get_home_url(),
-          'user_can_create_tournament' => current_user_can('wpbb_create_tournament'),
-      )
+				'my_templates_url' => get_permalink() . 'templates',
+				'my_tournaments_url' => get_permalink() . 'tournaments',
+				'bracket_template_builder_url' => get_permalink(get_page_by_path('bracket-template-builder')),
+				'home_url' => get_home_url(),
+				'user_can_create_tournament' => current_user_can('wpbb_create_tournament'),
+				'nonce' => wp_create_nonce('wp_rest'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+			)
 		);
 
 		return ob_get_clean();
@@ -432,14 +435,6 @@ class Wp_Bracket_Builder_Public {
 		return ob_get_clean();
 	}
 
-	public function add_roles() {
-		add_role(
-			'bmb_plus',
-			'BMB Plus',
-			array('wpbb_create_tournament' => true),
-		);
-	}
-
 	/**
 	 * Add shortcode to render events
 	 *
@@ -454,32 +449,6 @@ class Wp_Bracket_Builder_Public {
 		add_shortcode('wpbb-bracket-template', [$this, 'render_bracket_template_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament_page']); // This is a single post type template for bracket_tournament posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
-	}
-
-	public function add_rewrite_tags() {
-		add_rewrite_tag('%tab%', '([^&]+)');
-		add_rewrite_tag('%pagename%', '([^&]+)');
-	}
-
-	public function add_rewrite_rules() {
-		// Be sure to flush the rewrite rules after adding new rules
-		add_rewrite_rule('^dashboard/profile/?', 'index.php?pagename=dashboard&tab=profile', 'top');
-		add_rewrite_rule('^dashboard/templates/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=templates&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
-		add_rewrite_rule('^dashboard/tournaments/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=tournaments&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/tournaments/?', 'index.php?pagename=dashboard&tab=tournaments', 'top');
-		add_rewrite_rule('^dashboard/play-history/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=play-history&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
-		add_rewrite_rule('^bracket_tournament/([^/]+)/([^/]+)', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
-		add_rewrite_rule('^bracket_play/([^/]+)/([^/]+)', 'index.php?bracket_play=$matches[1]&view=$matches[2]', 'top');
-		add_rewrite_rule('^bracket_template/([^/]+)/([^/]+)', 'index.php?bracket_template=$matches[1]&view=$matches[2]', 'top');
-	}
-
-	public function add_query_vars($vars) {
-		$vars[] = 'tab';
-		$vars[] = 'status';
-		$vars[] = 'view';
-		return $vars;
 	}
 
 	public function get_archive_url() {
@@ -745,7 +714,7 @@ class Wp_Bracket_Builder_Public {
 						$s3_url = $item->get_meta('s3_url');
 
 						if (empty($s3_url)) {
-							// If S3 url is not found, log an error and continue to the next item. 
+							// If S3 url is not found, log an error and continue to the next item.
 							// Can't do anything else because the order has already been processed at this point.
 							$error_msg = 'ACTION NEEDED: S3 URL not found for completed order: ' . $order_id . ' item: ' . $item->get_id();
 							$this->utils->log_sentry_message($error_msg, \Sentry\Severity::error());
@@ -823,7 +792,7 @@ class Wp_Bracket_Builder_Public {
 	}
 	/**
 	 * Get all gallery images for the product
-	 * 
+	 *
 	 * @param WC_Product $product
 	 * @return array
 	 */

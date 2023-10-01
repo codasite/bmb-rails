@@ -1,4 +1,5 @@
 <?php
+
 $current_tab = get_query_var('tab');
 
 if (empty($current_tab)) {

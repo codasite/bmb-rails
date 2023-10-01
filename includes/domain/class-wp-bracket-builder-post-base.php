@@ -38,6 +38,13 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 	 */
 	public $date_gmt;
 
+	/**
+	 * @var string
+	 * 
+	 * Slug of the bracket
+	 */
+	public $slug;
+
 	public function __construct(
 		int $id = null,
 		string $title = '',
@@ -45,6 +52,7 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 		string $status = 'draft',
 		DateTimeImmutable|false $date = false,
 		DateTimeImmutable|false $date_gmt = false,
+		string $slug = '',
 	) {
 		$this->id = $id;
 		$this->title = $title;
@@ -52,6 +60,7 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 		$this->status = $status;
 		$this->date = $date;
 		$this->date_gmt = $date_gmt;
+		$this->slug = $slug;
 	}
 
 	abstract static public function get_post_type(): string;
@@ -86,6 +95,7 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 			'status' => $this->status,
 			'date' => $this->date,
 			'date_gmt' => $this->date_gmt,
+			'slug' => $this->slug,
 		];
 	}
 }

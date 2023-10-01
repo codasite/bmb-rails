@@ -3,6 +3,9 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-b
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-transactional-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-email-service-interface.php';
+
 
 class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 
@@ -28,11 +31,15 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	/**
 	 * Constructor.
 	 */
+
+	private Wp_Bracket_Builder_Email_Service_Interface $email_service;
+
 	public function __construct() {
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 		$this->score_service = new Wp_Bracket_Builder_Score_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
+		$this->email_service = new Wp_Bracket_Builder_Mailchimp_Transactional_Service(MAILCHIMP_API_KEY);
 		// $this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
 	}
 
@@ -151,19 +158,27 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$updated = $this->tournament_repo->update($request->get_param('item_id'), $data);
 		$this->score_service->score_tournament_plays($updated);
 
+		// Get the email of the author of each play in the tournament
+		$tournament_id = $request->get_param('item_id');
+		$tag = strval($tournament_id);
+		$response = $this->tournament_repo->get_author_emails_by_tournament_id($tag);
+		foreach($response as $obj) {
+			$emails[] = $obj->author_email;
+		}
+
+		// Send each email individually
+		foreach ($emails as $email) {
+			$response = $this->email_service->send_message(
+				MAILCHIMP_FROM_EMAIL,
+				$email,
+				"",
+				"Tournament Update from Back My Bracket",
+				"Tournament Updated"
+			);
+			// print_r($response);
+		}
+		
 		return new WP_REST_Response($updated, 200);
-
-
-		// // get the update id 
-		// $update_id = $request->get_param('item_id');
-		// // create an array copy of the request params
-		// $bracket_params = $request->get_params();
-		// // remove the item_id from the array
-		// unset($bracket_params['item_id']);
-
-		// $bracket = Wp_Bracket_Builder_Bracket::from_array($bracket_params);
-		// $updated = $this->template_repo->update($bracket);
-		// return new WP_REST_Response($updated, 200);
 	}
 
 	/**
