@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-console.log('loading non-wordpress webpack config');
+const FontPreloadPlugin = require('webpack-font-preload-plugin');
+console.log('loading standalone webpack config');
 
 const htmlPlugin = new HtmlWebpackPlugin({
 	template: './src/index.html',
@@ -14,7 +15,13 @@ module.exports = {
 		filename: 'index.js',
 	},
 	plugins: [
-		htmlPlugin,
+		new HtmlWebpackPlugin({
+			template: './src/index.html',
+			filename: './index.html',
+		}),
+		new FontPreloadPlugin({
+			index: 'index.html',
+		}),
 	],
 	module: {
 		rules: [
@@ -36,6 +43,21 @@ module.exports = {
 					filename: 'images/[name].[hash:8][ext]',
 				},
 			},
+			{
+				test: /\.(woff|woff2|eot|ttf|otf)$/i,
+				type: 'asset/resource',
+				generator: {
+					filename: 'fonts/[name].[hash:8][ext]',
+				},
+			},
+			{
+				test: /\.css$/i,
+				use: [
+					'style-loader',
+					'css-loader',
+					// 'postcss-loader',
+				],
+			}
 		]
 	},
 	resolve: {

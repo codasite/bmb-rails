@@ -1,3 +1,4 @@
+require('./tailwind-script.js')
 import React from 'react';
 import App from "./App";
 // import { render, hydrate } from '@wordpress/element';
@@ -10,10 +11,11 @@ import { Provider } from 'react-redux';
 import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
 import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonAndModal';
+import { HostTournamentModal } from './modals/HostTournamentModal';
 /**
  * Import the stylesheet for the plugin.
  */
-import { HostTournamentModal } from './modals/HostTournamentModal';
+import './styles/main.css'
 
 console.log('index.tsx')
 interface WpbbAjaxObj {

@@ -1,0 +1,15 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+/* @import 'https://api.fontshare.com/css?f[]=clash-display@500,600,700&display=swap'; */
+
+/* @import "~react-image-gallery/styles/scss/image-gallery.scss"; */
+@import url('clash-display.css');
+
+.wpbb-reset {
+	font-family: 'Clash Display', sans-serif;
+	text-transform: uppercase;
+	color: #fff;
+	line-height: normal;
+	box-sizing: border-box;
+}
