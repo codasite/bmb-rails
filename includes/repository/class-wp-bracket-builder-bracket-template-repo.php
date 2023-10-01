@@ -115,6 +115,41 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $template;
 	}
 
+	public function update(Wp_Bracket_Builder_Bracket_Template|int|null $template, array|null $data = null): ?Wp_Bracket_Builder_Bracket_Template {
+		if (!$template || !$data) {
+			return null;
+		}
+
+		if (!($template instanceof Wp_Bracket_Builder_Bracket_Template)) {
+			$template = $this->get($template);
+		}
+
+		if (!$template) {
+			return null;
+		}
+		$array = $template->to_array();
+		$updated_array = array_merge($array, $data);
+
+		$template = Wp_Bracket_Builder_Bracket_Template::from_array_allow_null_fields($updated_array);
+
+		$post_id = $this->update_post($template);
+
+		if (is_wp_error($post_id)) {
+			return null;
+		}
+
+		$template_data = $this->get_template_data($post_id);
+		$template_id = $template_data['id'];
+
+		if ($template_id && $template->results) {
+			$this->update_results($template_id, $template->results);
+		}
+
+		# refresh from db
+		$template = $this->get($post_id);
+		return $template;
+	}
+
 	public function get_template_data(int|WP_Post|null $template_post): array {
 		if (!$template_post || $template_post instanceof WP_Post && $template_post->post_type !== Wp_Bracket_Builder_Bracket_Template::get_post_type()) {
 			return [];

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4192cd721332949a7868f15690716df6",
+    "content-hash": "c8f1b1767a73f4b305c5200926bf3b6a",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.281.12",
+            "version": "3.281.13",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "22a92f08758db2b152843ea0875eeee5a467d8ff"
+                "reference": "5547757d891495713aa7d5770bf04124d48a6ab5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/22a92f08758db2b152843ea0875eeee5a467d8ff",
-                "reference": "22a92f08758db2b152843ea0875eeee5a467d8ff",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5547757d891495713aa7d5770bf04124d48a6ab5",
+                "reference": "5547757d891495713aa7d5770bf04124d48a6ab5",
                 "shasum": ""
             },
             "require": {
@@ -151,9 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.281.12"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.281.13"
             },
-            "time": "2023-09-22T18:12:27+00:00"
+            "time": "2023-09-25T18:07:38+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -479,6 +479,115 @@
                 }
             ],
             "time": "2023-08-27T10:13:57+00:00"
+        },
+        {
+            "name": "mailchimp/marketing",
+            "version": "3.0.80",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailchimp/mailchimp-marketing-php.git",
+                "reference": "c1a38f7248d8de7de412418fed8dae759b9e4b97"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailchimp/mailchimp-marketing-php/zipball/c1a38f7248d8de7de412418fed8dae759b9e4b97",
+                "reference": "c1a38f7248d8de7de412418fed8dae759b9e4b97",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.4 || ^7.2",
+                "guzzlehttp/psr7": "^1.7 || ^2.0",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.12",
+                "phpunit/phpunit": "^7",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MailchimpMarketing\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mailchimp",
+                    "homepage": "https://github.com/mailchimp/mailchimp-marketing-php"
+                }
+            ],
+            "homepage": "http://swagger.io",
+            "keywords": [
+                "api",
+                "php",
+                "sdk",
+                "swagger"
+            ],
+            "support": {
+                "source": "https://github.com/mailchimp/mailchimp-marketing-php/tree/v3.0.80"
+            },
+            "time": "2022-11-02T19:19:48+00:00"
+        },
+        {
+            "name": "mailchimp/transactional",
+            "version": "1.0.50",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mailchimp/mailchimp-transactional-php.git",
+                "reference": "701b00f538f36a2a5b138f880ab5eebbfeff4b7d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mailchimp/mailchimp-transactional-php/zipball/701b00f538f36a2a5b138f880ab5eebbfeff4b7d",
+                "reference": "701b00f538f36a2a5b138f880ab5eebbfeff4b7d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "guzzlehttp/guzzle": "^6.4 || ^7.2",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "~2.12",
+                "phpunit/phpunit": "^7",
+                "squizlabs/php_codesniffer": "~2.6"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MailchimpTransactional\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mailchimp",
+                    "homepage": "https://github.com/mailchimp/mailchimp-transactional-php"
+                }
+            ],
+            "homepage": "http://swagger.io",
+            "keywords": [
+                "api",
+                "php",
+                "sdk",
+                "swagger"
+            ],
+            "support": {
+                "source": "https://github.com/mailchimp/mailchimp-transactional-php/tree/v1.0.50"
+            },
+            "time": "2022-11-07T20:12:03+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",

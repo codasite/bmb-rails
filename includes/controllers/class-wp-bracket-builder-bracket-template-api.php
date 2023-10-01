@@ -183,9 +183,13 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item($request) {
+		$data = $request->get_params();
+		$updated = $this->template_repo->update($request->get_param('item_id'), $data);
+		return new WP_REST_Response($updated, 200);
+
 		// if id does not match item_id, return error
 		// if ($request->get_param('id') != $request->get_param('item_id')) {
-		return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
+		// return new WP_Error('cant-update', __('Id passed in url and in request must match', 'text-domain'), array('status' => 400));
 		// }
 
 		// // get the update id 
