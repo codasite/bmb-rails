@@ -3,7 +3,7 @@ import { MatchNode, Round, Team } from '../../models/MatchTree';
 //@ts-ignore
 import { getTeamClasses } from '../../utils';
 import { defaultBracketConstants } from '../../constants';
-import { BracketContext } from '../../context';
+// import { BracketContext } from '../../context';
 
 interface TeamSlotProps {
 	className?: string;

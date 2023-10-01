@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
 import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonAndModal';
+import { CreateTemplateButtonAndModal } from './modals/CreateTemplateButtonAndModal';
 /**
  * Import the stylesheet for the plugin.
  */
@@ -84,6 +85,7 @@ renderTournamentResultsBuilder(wpbb_ajax_obj)
 renderViewBracketPlay(wpbb_ajax_obj)
 renderCreateTournamentModal(wpbb_ajax_obj)
 renderHostTournamentButtonsAndModals(wpbb_ajax_obj)
+renderCreateTemplateModal(wpbb_ajax_obj)
 
 /**
  * This renders the bracket builder admin page. DEPRECATED
@@ -252,4 +254,17 @@ function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
 	if (modalDiv) {
 		hydrate(<HostTournamentModal tournamentsUrl={my_tournaments_url} />, modalDiv);
 	}
+}
+function renderCreateTemplateModal(wpbb_ajax_obj: WpbbAjaxObj) {
+	const div = document.getElementById('wpbb-create-template-button-and-modal')
+	const templateId = div.getAttribute('data-template-id');
+	if (div) {
+		const {
+			home_url,
+		} = wpbb_ajax_obj
+
+		const templatePath = `/wp-json/wp-bracket-builder/v1/templates/${templateId}`;
+		const templateUrl = home_url + templatePath;
+		render(<CreateTemplateButtonAndModal templateUrl={templateUrl} />, div);
+	}	
 }
