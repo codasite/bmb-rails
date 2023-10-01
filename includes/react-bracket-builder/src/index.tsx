@@ -12,6 +12,7 @@ import { camelCaseKeys } from './brackets/shared/api/bracketApi';
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree';
 import { CreateTournamentButtonAndModal } from './modals/CreateTournamentButtonAndModal';
 import { CreateTemplateButtonAndModal } from './modals/CreateTemplateButtonAndModal';
+import { HostTournamentModal } from './modals/HostTournamentModal';
 /**
  * Import the stylesheet for the plugin.
  */
@@ -267,10 +268,10 @@ function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
 			canCreateTournament={userCanCreateTournament} upgradeAccountUrl={homeUrl} />, div);
 	}
 }
-function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderHostTournamentButtonsAndModals(ajaxObj: WpbbAjaxObj) {
 	const {
 		myTournamentsUrl
-	} = wpbb_ajax_obj
+	} = ajaxObj
 
 	const modalDiv = document.getElementById('wpbb-host-tournament-modal')
 
@@ -278,16 +279,16 @@ function renderHostTournamentButtonsAndModals(wpbb_ajax_obj: WpbbAjaxObj) {
 		hydrate(<HostTournamentModal tournamentsUrl={myTournamentsUrl} />, modalDiv);
 	}
 }
-function renderCreateTemplateModal(wpbb_ajax_obj: WpbbAjaxObj) {
+function renderCreateTemplateModal(ajaxObj: WpbbAjaxObj) {
 	const div = document.getElementById('wpbb-create-template-button-and-modal')
 	const templateId = div.getAttribute('data-template-id');
 	if (div) {
 		const {
-			home_url,
-		} = wpbb_ajax_obj
+			homeUrl,
+		} = ajaxObj
 
 		const templatePath = `/wp-json/wp-bracket-builder/v1/templates/${templateId}`;
-		const templateUrl = home_url + templatePath;
+		const templateUrl = homeUrl + templatePath;
 		render(<CreateTemplateButtonAndModal templateUrl={templateUrl} />, div);
 	}
 }
