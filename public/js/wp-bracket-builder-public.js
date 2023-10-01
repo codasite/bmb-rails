@@ -1,45 +1,17 @@
-// (function ($) {
-// 	'use strict';
-
-/**
- * All of the code for your public-facing JavaScript source
- * should reside in this file.
- *
- * Note: It has been assumed you will write jQuery code here, so the
- * $ function reference has been prepared for usage within the scope
- * of this function.
- *
- * This enables you to define handlers, for when the DOM is ready:
- *
- * $(function() {
- *
- * });
- *
- * When the window is loaded:
- *
- * $( window ).load(function() {
- *
- * });
- *
- * ...and/or other possibilities.
- *
- * Ideally, it is not considered best practise to attach more than a
- * single DOM-ready or window-load handler for a particular page.
- * Although scripts in the WordPress core, Plugins and Themes may be
- * practising this, we should strive to set a better example in our own work.
- */
-
-// })(jQuery);
-
-// const plugin = require('tailwindcss/plugin')
 // The Tailwind configuration
 // Most of the values are overrides to narrow the styling options
 // Add new values here
+
+let preflight = false;
+// If not running in a wordpress environment, set preflight to true
+if (typeof wp === 'undefined') {
+	preflight = true;
+}
 tailwind.config = {
 	prefix: 'tw-',
 	darkMode: 'class',
 	corePlugins: {
-		preflight: false,
+		preflight: preflight,
 	},
 	theme: {
 		extend: {

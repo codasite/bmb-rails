@@ -107,6 +107,7 @@ export const DefaultBracket = (props: BracketProps) => {
 
 			return (
 				<MatchColumnComponent
+					key={`${position}-${i}`}
 					matches={matches}
 					matchPosition={position}
 					matchTree={matchTree}

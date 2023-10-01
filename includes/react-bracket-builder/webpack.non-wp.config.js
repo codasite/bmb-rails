@@ -3,11 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FontPreloadPlugin = require('webpack-font-preload-plugin');
 console.log('loading standalone webpack config');
 
-const htmlPlugin = new HtmlWebpackPlugin({
-	template: './src/index.html',
-	filename: './index.html',
-});
-
 module.exports = {
 	entry: './src/index.tsx',
 	output: {
