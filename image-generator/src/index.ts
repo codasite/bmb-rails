@@ -137,11 +137,11 @@ app.post('/', async (req, res) => {
 	try {
 		console.time('uploadToS3')
 		const imgUrl = await uploadToS3(file, extension, contentType, s3Bucket, s3Key);
-		console.timeEnd('uploadToS3')
 		res.send(imgUrl);
 	} catch (err: any) {
 		res.status(500).send(err);
 	} finally {
+		console.timeEnd('uploadToS3')
 		console.timeEnd('start')
 		await browser.close();
 	}

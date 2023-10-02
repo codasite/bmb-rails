@@ -12,3 +12,9 @@ services:
     command: npm run dev
     volumes:
       - ./standalone-react/src:/usr/src/app/src # To serve the react server code in development
+
+  react-client:
+    tty: true
+    command: npm run start:standalone
+    volumes:
+      - ./plugin/includes/react-bracket-builder:/usr/src/app/src # To serve the react client code in development

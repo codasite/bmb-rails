@@ -1,4 +1,5 @@
 // require('../../../public/js/wp-bracket-builder-public.js')
+require('./wp-bracket-builder-public.js')
 import React from 'react';
 import App from "./App";
 // import { render, hydrate } from '@wordpress/element';
