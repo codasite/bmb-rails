@@ -146,7 +146,6 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 
 	$id = $tournament->id;
 	$completed = $tournament->status === 'complete';
-	$completed = $tournament->status === 'complete';
 	$share_link = get_permalink() . 'tournaments/' . $id . '/share';
 	$delete_link = get_permalink() . 'tournaments/';
 	$archive_link = get_permalink() . 'tournaments/';
