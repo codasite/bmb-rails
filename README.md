@@ -3,40 +3,76 @@
 ## Installation
 
 1. Install Wordpress locally
-  - MAC: Install MAMP and WordPress according to [these instructions](https://codex.wordpress.org/Installing_WordPress_Locally_on_Your_Mac_With_MAMP)
-  - Linux: idk
-  - Windows: get out
-2. Clone the repo anywhere on your system and create a symlink to the `plugin` folder: `ln -s path/to/plugins path/to/repo/plugin`
+
+- Install the Local dev tool: https://localwp.com/
+- Create a new site in Local: https://wpengine.com/resources/local-wordpress-development-environment-how-to/
+   - Use the latest php version and mysql version
+
+2. Clone the repo anywhere on your system and create a symlink to the `plugin` folder:
+
+```sh
+cd <path to wordpress plugins>
+ln -s <path to repo>/plugin wp-bracket-builder
+```
+
+For example
+
+```sh
+cd /Users/karl/Local Sites/bracket-builder/app/public/wp-content/plugins
+ln -s /Users/karl/Documents/repos/wp-bracket-builder/plugin wp-bracket-builder
+```
+
 3. From the plugin root `wp-bracket-builder/plugin`, install composer dependencies `composer install`
 4. In `wp-bracket-builder/plugin/includes/react-bracket-builder` run `npm install`
 5. Install and activate Oxygen Builder 4.5
-6. Install and activate the Woocommerce Oxygen integration
-7. Install and activate the WooCommerce Plugin
-8. Activate WP Bracket Builder
-9. Create the following _Pages_ from the wordpress admin dashboard and add the corresponding shortcode
+6. Install and activate the WooCommerce Plugin
+7. Activate the WP Bracket Builder Plugin
+8. Create the following _Pages_ from the wordpress admin dashboard and add the corresponding shortcode
+
 - "Dashboard" [wpbb-dashboard]
 - "Official Tournaments" [wpbb-official-tournaments]
 - "Celebrity Picks" [wpbb-celebrity-picks]
 - "Bracket Template Builder" [wpbb-template-builder]
 - "Print Page" (slug: print) [wpbb-print-page] CAN BE PRIVATE
-10. Create Oxygen templates for the following post types and add the shortcodes
+
+9. Create Oxygen templates for the following post types and add the shortcodes
+
 - "bracket_template" posts: [wpbb-bracket-template]
 - "bracket_tournament" posts: [wpbb-bracket-tournament]
 - "bracket_player" posts: [wpbb-bracket-play]
-11. Create a service user to give the image generator node api access to the print page. 
+
+10. Create a service user to give the image generator node api access to the print page.
+
 - Create a new user with the role "private_reader"
 - Add the user's login name to wp-config.php as the value of the constant `WPBB_SERVICE_USER`
 - TODO: add the service user token
 
+11. Add mailchimp api keys to `wp-config.php`
 
+```
+define('MAILCHIMP_API_KEY','<mailchimpapikey>');
+define('MAILCHIMP_FROM_EMAIL','barry@wstrategies.co');
+```
 
+Make sure you add it before these lines:
+
+```
+if ( ! defined( 'ABSPATH' ) ) {
+    define( 'ABSPATH', __DIR__ . '/' );
+}
+```
+
+12. Enable debugging in `wp-config.php` https://wordpress.org/documentation/article/debugging-in-wordpress/
 
 ## Testing Setup
-Testing is performed using PHPUnit and the Wordpress Testing Library. Testing infrastructure is set up according to instructions from [codetab.org](https://www.codetab.org/tutorial/wordpress-plugin-development/unit-test/plugin-unit-testing/).
+
+Testing is performed using PHPUnit and the Wordpress Testing Library. Testing infrastructure is set up according to instructions
+from [codetab.org](https://www.codetab.org/tutorial/wordpress-plugin-development/unit-test/plugin-unit-testing/).
 
 The following subset of instructions from the link above are used to set up the testing infrastructure (I don't think they need to be repeated).
 
 ### Instructions
+
 1. Install the Wordpress testing library. From the plugin root directory:
     ```
     mkdir -p tests/phpunit/tests
