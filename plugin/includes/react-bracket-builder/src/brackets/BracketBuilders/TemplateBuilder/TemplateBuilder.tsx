@@ -1,28 +1,34 @@
-import React, { useState, useEffect } from 'react'
-import { bracketApi } from '../../shared/api/bracketApi'
-import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
-import { AddTeamsPage } from './AddTeamsPage'
-import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
-import { TemplateReq, TemplateRes, TournamentReq } from '../../shared/api/types/bracket'
-import { WithBracketMeta, WithDarkMode, WithProvider, WithMatchTree } from '../../shared/components/HigherOrder'
-import { BracketMeta } from '../../shared/context'
-import { setPage } from '../../shared/features/bracketNavSlice'
+import React, { useEffect, useState } from "react";
+import { bracketApi } from "../../shared/api/bracketApi";
+import { MatchTree, WildcardPlacement } from "../../shared/models/MatchTree";
+import { AddTeamsPage } from "./AddTeamsPage";
+import { NumTeamsPage, NumTeamsPickerState } from "./NumTeamsPage";
+import {
+  TemplateReq,
+  TemplateRes,
+  TournamentReq,
+} from "../../shared/api/types/bracket";
+import {
+  WithBracketMeta,
+  WithDarkMode,
+  WithMatchTree,
+  WithProvider,
+} from "../../shared/components/HigherOrder";
+import { BracketMeta } from "../../shared/context";
 
-const defaultBracketName = "MY BRACKET NAME"
-
-const defaultInitialPickerIndex = 0
-const teamPickerDefaults = [16, 32, 64]
-const teamPickerMin = [2, 17, 33]
-const teamPickerMax = [31, 63, 64]
-
+const defaultBracketName = "MY BRACKET NAME";
+const defaultInitialPickerIndex = 0;
+const teamPickerDefaults = [16, 32, 64];
+const teamPickerMin = [2, 17, 33];
+const teamPickerMax = [31, 63, 64];
 interface TemplateBuilderProps {
-  template?: TemplateRes
-  matchTree?: MatchTree
-  setMatchTree?: (matchTree: MatchTree) => void
-  saveTemplateLink?: string
-  saveTournamentLink?: string
-  bracketMeta?: BracketMeta
-  setBracketMeta?: (bracketMeta: BracketMeta) => void
+  template?: TemplateRes;
+  matchTree?: MatchTree;
+  setMatchTree?: (matchTree: MatchTree) => void;
+  saveTemplateLink?: string;
+  saveTournamentLink?: string;
+  bracketMeta?: BracketMeta;
+  setBracketMeta?: (bracketMeta: BracketMeta) => void;
 }
 
 const TemplateBuilder = (props: TemplateBuilderProps) => {
@@ -34,107 +40,103 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
     template,
     bracketMeta,
     setBracketMeta,
-
-  } = props
-
-  const [currentPage, setCurrentPage] = useState('add-teams')
-  // const [currentPage, setCurrentPage] = useState('num-teams')
-  const [numTeams, setNumTeams] = useState(teamPickerDefaults[defaultInitialPickerIndex])
-  const [wildcardPlacement, setWildcardPlacement] = useState(WildcardPlacement.Split)
+  } = props;
+  const [currentPage, setCurrentPage] = useState("num-teams");
+  const [numTeams, setNumTeams] = useState(
+    teamPickerDefaults[defaultInitialPickerIndex],
+  );
+  const [wildcardPlacement, setWildcardPlacement] = useState(
+    WildcardPlacement.Split,
+  );
   const [teamPickerState, setTeamPickerState] = useState<NumTeamsPickerState[]>(
     teamPickerDefaults.map((val, i) => ({
       currentValue: val,
-      selected: i === defaultInitialPickerIndex
-    }))
-  )
-
+      selected: i === defaultInitialPickerIndex,
+    })),
+  );
   useEffect(() => {
     setBracketMeta?.({
       title: bracketMeta?.title || defaultBracketName,
-      date: bracketMeta?.date || '2025',
-    })
-  }, [])
+      date: bracketMeta?.date || "2025",
+    });
+  }, []);
 
   useEffect(() => {
     if (template) {
-      const {
-        title,
-        numTeams,
-        wildcardPlacement,
-        matches,
-      } = template
-      console.log('template found', template)
+      const { title, numTeams, wildcardPlacement, matches } = template;
+      console.log("template found", template);
       setBracketMeta?.({
         title: title || defaultBracketName,
-        date: '2021',
-      })
-      setNumTeams(numTeams)
-      setWildcardPlacement(wildcardPlacement)
-      pickerStateFromNumTeams(numTeams)
-
+        date: "2021",
+      });
+      setNumTeams(numTeams);
+      setWildcardPlacement(wildcardPlacement);
+      pickerStateFromNumTeams(numTeams);
       if (matches && matches.length > 0) {
-        console.log('matches found', matches)
-        const newMatches = matches.map(match => ({
+        console.log("matches found", matches);
+        const newMatches = matches.map((match) => ({
           roundIndex: match.roundIndex,
           matchIndex: match.matchIndex,
           team1: { name: match.team1?.name },
           team2: { name: match.team2?.name },
-        }))
-        setMatchTree?.(MatchTree.fromMatchRes(numTeams, newMatches, wildcardPlacement))
-        setCurrentPage('add-teams')
+        }));
+        setMatchTree?.(
+          MatchTree.fromMatchRes(numTeams, newMatches, wildcardPlacement),
+        );
+        setCurrentPage("add-teams");
       }
     }
-  }, [template])
+  }, [template]);
 
   const pickerStateFromNumTeams = (numTeams: number) => {
-    const initialPickerIndex = teamPickerMax.findIndex(max => numTeams <= max)
+    const initialPickerIndex = teamPickerMax.findIndex(
+      (max) => numTeams <= max,
+    );
     if (initialPickerIndex >= 0) {
-      const picker = teamPickerState[initialPickerIndex]
+      const picker = teamPickerState[initialPickerIndex];
       const newPicker = {
         ...picker,
         currentValue: numTeams,
         selected: true,
-      }
+      };
       const newPickers = teamPickerState.map((picker, i) => {
         if (i === initialPickerIndex) {
-          return newPicker
+          return newPicker;
         }
         return {
           ...picker,
           selected: false,
-        }
-      })
-      setTeamPickerState(newPickers)
+        };
+      });
+      setTeamPickerState(newPickers);
     }
-  }
-
+  };
   const handleAddTeamsClick = () => {
-    setCurrentPage('add-teams')
-  }
+    setCurrentPage("add-teams");
+  };
 
   const handleSaveTemplateClick = () => {
     if (!matchTree || !matchTree.allTeamsAdded()) {
-      return
+      return;
     }
-
     const req: TemplateReq = {
       title: bracketMeta.title,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),
-      status: 'publish',
-    }
-
-    bracketApi.createTemplate(req)
+      status: "publish",
+    };
+    bracketApi
+      .createTemplate(req)
       .then((res) => {
         if (saveTemplateLink) {
-          window.location.href = saveTemplateLink
+          window.location.href = saveTemplateLink;
         }
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   const handleSaveTournamentClick = () => {
     const templateReq: TemplateReq = {
@@ -142,29 +144,29 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree?.toMatchReq(),
-      status: 'publish',
-    }
+      status: "publish",
+    };
     const tournamentReq: TournamentReq = {
       title: bracketMeta.title,
-      status: 'publish',
+      status: "publish",
       bracketTemplate: templateReq,
-    }
-
-    bracketApi.createTournament(tournamentReq)
+    };
+    bracketApi
+      .createTournament(tournamentReq)
       .then((res) => {
-        console.log(res)
+        console.log(res);
         if (saveTournamentLink) {
-          window.location.href = saveTournamentLink
+          window.location.href = saveTournamentLink;
         }
       })
       .catch((err) => {
-        console.log(err)
-      })
-  }
+        console.log(err);
+      });
+  };
 
   return (
-    <div className='wpbb-reset tw-uppercase'>
-      {currentPage === 'num-teams' &&
+    <div className="wpbb-reset tw-uppercase">
+      {currentPage === "num-teams" && (
         <NumTeamsPage
           matchTree={matchTree}
           setMatchTree={setMatchTree}
@@ -181,19 +183,20 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           bracketMeta={bracketMeta}
           setBracketMeta={setBracketMeta}
         />
-      }
-      {currentPage === 'add-teams' &&
+      )}
+      {currentPage === "add-teams" && (
         <AddTeamsPage
           matchTree={matchTree}
           setMatchTree={setMatchTree}
-          handleBack={() => setCurrentPage('num-teams')}
+          handleBack={() => setCurrentPage("num-teams")}
           handleSaveTemplate={handleSaveTemplateClick}
           handleSaveTournament={handleSaveTournamentClick}
         />
-      }
+      )}
     </div>
-  )
-}
-
-const WrappedTemplateBuilder = WithProvider(WithDarkMode(WithMatchTree(WithBracketMeta(TemplateBuilder))))
-export default WrappedTemplateBuilder
+  );
+};
+const WrappedTemplateBuilder = WithProvider(
+  WithDarkMode(WithMatchTree(WithBracketMeta(TemplateBuilder))),
+);
+export default WrappedTemplateBuilder;
