@@ -63,6 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ```
 
 12. Enable debugging in `wp-config.php` https://wordpress.org/documentation/article/debugging-in-wordpress/
+13. Run `npm start` in `plugin/includes/react-bracket-builder` to start the react app.
 
 ## Testing Setup
 
