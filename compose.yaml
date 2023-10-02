@@ -6,6 +6,7 @@ services:
       context: image-generator
       dockerfile: Dockerfile
     command: npm run start
+    # command: tail -f /dev/null
     ports:
       - 3000:3000
     cap_add:
@@ -37,6 +38,8 @@ services:
     # command: npm run start:standalone
     volumes:
       - react_dist:/usr/src/app/build/standalone
+    # profiles:
+    #   - donotstart
 
 volumes:
   react_dist:

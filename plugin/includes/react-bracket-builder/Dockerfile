@@ -1,8 +1,8 @@
-FROM node:20
+FROM node:18
 # Create react app directory
 WORKDIR /usr/src/app
 # Install dependencies
-COPY package.json .
+COPY package*.json .
 RUN npm install
 # Bundle app source
 COPY . .
