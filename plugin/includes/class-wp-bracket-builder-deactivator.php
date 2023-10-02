@@ -30,7 +30,7 @@ class Wp_Bracket_Builder_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-        remove_role('bmb_plus');
-				remove_role('private_reader')
-    }
+		remove_role('bmb_plus');
+		remove_role('private_reader');
+	}
 }
