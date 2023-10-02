@@ -15,7 +15,7 @@ services:
 
   react-client:
     tty: true
-    command: npm run start:standalone
+    command: npm run dev:standalone
     volumes:
       - ./plugin/includes/react-bracket-builder/src:/usr/src/app/src # To serve the react client code in development
     ports:

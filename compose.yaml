@@ -31,7 +31,7 @@ services:
     build:
       context: plugin/includes/react-bracket-builder
       dockerfile: Dockerfile
-    command: npm run start:standalone
+    command: npm run build:standalone
     volumes:
       - react_dist:/usr/src/app/build/standalone
 
