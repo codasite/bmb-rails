@@ -1,37 +1,32 @@
-import { ReactComponent as SignalIcon } from '../brackets/shared/assets/signal.svg'
-import { ReactComponent as FileIcon } from '../brackets/shared/assets/file.svg'
-import { ReactComponent as PlusIcon } from '../brackets/shared/assets/plus.svg'
-import { ReactComponent as LogoDark } from '../brackets/shared/assets/logo_dark.svg'
-import { ReactComponent as CheckIcon } from '../brackets/shared/assets/check.svg'
-import { ReactComponent as PencilIcon } from '../brackets/shared/assets/pencil-01.svg'
-import * as React from 'react'
-import { useState } from 'react'
-import { Modal } from './Modal'
+import { ReactComponent as PencilIcon } from "../../../../public/assets/icons/pencil.svg";
+import * as React from "react";
+import { useState } from "react";
+import { Modal } from "./Modal";
 
 const EditTemplateForm = (props: {
-  templateUrl: string
-  onClose: () => void
+  templateUrl: string;
+  onClose: () => void;
 }) => {
-  const [name, setName] = useState('')
+  const [name, setName] = useState("");
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+    event.preventDefault();
 
     const response = await fetch(props.templateUrl, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         // 'X-WP-Nonce': wpbb_ajax_obj.nonce,
       },
       body: JSON.stringify({
         title: name,
       }),
-    })
+    });
     if (!response.ok) {
-      throw new Error('Failed to edit template')
+      throw new Error("Failed to edit template");
     }
-    props.onClose()
-    window.location.reload()
-  }
+    props.onClose();
+    window.location.reload();
+  };
 
   return (
     <form onSubmit={handleSubmit}>
@@ -49,13 +44,13 @@ const EditTemplateForm = (props: {
         Save
       </button>
     </form>
-  )
-}
+  );
+};
 
 export const CreateTemplateButtonAndModal = (props: {
-  templateUrl: string
+  templateUrl: string;
 }) => {
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
   const cancelButton = (
     <button
       onClick={() => setShow(false)}
@@ -63,7 +58,7 @@ export const CreateTemplateButtonAndModal = (props: {
     >
       Cancel
     </button>
-  )
+  );
 
   return (
     <>
@@ -84,5 +79,5 @@ export const CreateTemplateButtonAndModal = (props: {
         </div>
       </Modal>
     </>
-  )
-}
+  );
+};
