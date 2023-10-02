@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import { ActionButton } from "../../brackets/shared/components/ActionButtons";
-import { ListItemModal } from "../ListItemModal";
+import { ModalWithClickHandlers } from "../ModalWithClickHandlers";
 
 export const MyTemplatesModal = (props: {
   loading: boolean;
@@ -19,7 +19,7 @@ export const MyTemplatesModal = (props: {
 }) => {
   const [showModal, setShowModal] = useState(false);
   return (
-    <ListItemModal
+    <ModalWithClickHandlers
       show={showModal}
       setShow={setShowModal}
       buttonClassName={props.buttonClassName}
@@ -64,6 +64,6 @@ export const MyTemplatesModal = (props: {
           </button>
         </div>
       </div>
-    </ListItemModal>
+    </ModalWithClickHandlers>
   );
 };

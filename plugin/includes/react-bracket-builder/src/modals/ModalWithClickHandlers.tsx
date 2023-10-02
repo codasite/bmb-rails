@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Modal } from "./Modal";
 
-export const ListItemModal = (props: {
+export const ModalWithClickHandlers = (props: {
   buttonClassName: string;
   onButtonClick: (e: HTMLButtonElement) => void;
   show: boolean;
