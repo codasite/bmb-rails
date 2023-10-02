@@ -1,9 +1,9 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FontPreloadPlugin = require('webpack-font-preload-plugin');
 console.log('loading standalone webpack config');
 
 module.exports = {
+	mode: 'production',
 	devServer: {
 		allowedHosts: 'all',
 	},
@@ -16,9 +16,9 @@ module.exports = {
 		new HtmlWebpackPlugin({
 			template: './src/index.html',
 			filename: './index.html',
-		}),
-		new FontPreloadPlugin({
-			index: 'index.html',
+			inject: 'head',
+			preload: ['src/assets/fonts/ClashDisplay-Variable.woff2'],
+
 		}),
 	],
 	module: {
