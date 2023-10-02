@@ -243,72 +243,48 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
 }
 
 function renderPrintBracketPage() {
-  const builderDiv = document.getElementById("wpbb-print-play");
-  if (!builderDiv) return;
-  console.log("print bracket play");
-  render(
+  renderDiv(
     <App>
-      {" "}
-      <PrintPlayPage />{" "}
+      <PrintPlayPage />
     </App>,
-    builderDiv,
+    "wpbb-print-play",
   );
 }
-
-/**
- * This loads the apparel preview component for the bracket product page.
- */
 function renderPreview(ajaxObj: WpbbAjaxObj) {
-  const previewDiv = document.getElementById("wpbb-bracket-preview-controller");
-  if (previewDiv) {
-    // ---------- Start Preview Page Logic ----------------
-    // There must exist an element of class 'wpbb-bracket-preview-controller' to the
-    // product page for the component to be rendered.
-    const { bracketUrlThemeMap, galleryImages, colorOptions } = ajaxObj;
-    // Render the preview component into the DOM
-    // Find the location to render the gallery component, and render the gallery component.
-    render(
-      <App>
-        <Gallery
-          overlayThemeMap={bracketUrlThemeMap}
-          galleryImages={galleryImages}
-          colorOptions={colorOptions}
-        />{" "}
-      </App>,
-      previewDiv,
-    );
-  }
+  renderDiv(
+    <App>
+      <Gallery
+        overlayThemeMap={ajaxObj.bracketUrlThemeMap}
+        galleryImages={ajaxObj.galleryImages}
+        colorOptions={ajaxObj.colorOptions}
+      />{" "}
+    </App>,
+    "wpbb-bracket-preview-controller",
+  );
 }
 function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
-  const div = document.getElementById("wpbb-create-tournament-modal");
-  if (div) {
-    const {
-      myTemplatesUrl,
-      bracketTemplateBuilderUrl,
-      userCanCreateTournament,
-      homeUrl,
-    } = ajaxObj;
-    render(
-      <CreateTournamentModal
-        myTemplatesUrl={myTemplatesUrl}
-        bracketTemplateBuilderUrl={bracketTemplateBuilderUrl}
-        canCreateTournament={userCanCreateTournament}
-        upgradeAccountUrl={homeUrl}
-      />,
-      div,
-    );
-  }
+  renderDiv(
+    <CreateTournamentModal
+      myTemplatesUrl={ajaxObj.myTemplatesUrl}
+      bracketTemplateBuilderUrl={ajaxObj.bracketTemplateBuilderUrl}
+      canCreateTournament={ajaxObj.userCanCreateTournament}
+      upgradeAccountUrl={ajaxObj.homeUrl}
+    />,
+    "wpbb-create-tournament-modal",
+  );
 }
 function renderMyTemplatesModals(ajaxObj: WpbbAjaxObj) {
-  const { myTournamentsUrl } = ajaxObj;
-  const modalDiv = document.getElementById("wpbb-my-templates-modals");
-  if (modalDiv) {
-    render(
-      <>
-        <HostTournamentModal tournamentsUrl={myTournamentsUrl} />
-        <EditTemplateModal />
-      </>,
-      modalDiv,
-    );
+  renderDiv(
+    <>
+      <HostTournamentModal tournamentsUrl={ajaxObj.myTournamentsUrl} />
+      <EditTemplateModal />
+    </>,
+    "wpbb-my-templates-modals",
+  );
+}
+function renderDiv(element: React.FunctionComponentElement<any>, id: string) {
+  const div = document.getElementById(id);
+  if (div) {
+    render(element, div);
   }
 }
