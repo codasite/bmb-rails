@@ -1,0 +1,9 @@
+<phpunit bootstrap="tests/phpunit/bootstrap.php" backupGlobals="false"
+    colors="false" convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true" convertWarningsToExceptions="true">
+    <testsuites>
+        <testsuite  name="Test Suite">
+            <file>tests/phpunit/tests/test-wp-bracket-builder.php</file>
+        </testsuite>
+    </testsuites>
+</phpunit>

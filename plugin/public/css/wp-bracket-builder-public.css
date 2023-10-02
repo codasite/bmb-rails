@@ -1,0 +1,91 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+
+/** TOURNAMENT LEADERBOARD START */
+
+
+.wpbb-leaderboard-header {
+	background-size: cover;
+	background-position: center left;
+	background-image:
+		linear-gradient(rgba(248, 225, 26, .7) 0%, rgba(255, 108, 76, 0.5) 66.67%, rgba(255, 31, 79, 0.15) 100%),
+		url('../assets/images/bmb_icon_white_05.png');
+	/* color: #fff; */
+}
+
+.wpbb-leaderboard-header.wpbb-tourney-complete {
+	background-image:
+		linear-gradient(151deg, rgba(248, 225, 26, 0.40) 0%, rgba(64, 255, 106, 0.40) 67.82%),
+		url('../assets/images/bmb_icon_white_05.png');
+
+}
+
+/** TOURNAMENT LEADERBOARD END */
+
+/** DASHBOARD START */
+
+.wpbb-dashboard h1 {
+	color: #fff;
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-dashboard h1,
+.wpbb-dashboard h2,
+.wpbb-dashboard h3,
+.wpbb-dashboard h4,
+.wpbb-dashboard h5,
+.wpbb-dashboard h6 {
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-dashboard a {
+	text-decoration: none;
+	color: white;
+}
+
+.wpbb-reset {
+	font-family: 'Clash Display', sans-serif;
+	text-transform: uppercase;
+	color: #fff;
+	line-height: normal;
+	box-sizing: border-box;
+}
+
+.wpbb-reset h1,
+.wpbb-reset h2,
+.wpbb-reset h3,
+.wpbb-reset h4,
+.wpbb-reset h5,
+.wpbb-reset h6 {
+	color: #fff;
+	font-family: 'Clash Display', sans-serif;
+}
+
+.wpbb-reset a {
+	text-decoration: none;
+	color: white;
+}
+
+.wpbb-add-apparel-btn {
+	background: linear-gradient(rgba(248, 225, 26, 0.20) 0%, rgba(64, 255, 106, 0.20) 100%), #010433;
+}
+
+.wpbb-add-apparel-gradient-border {
+	background: linear-gradient(178deg, rgb(248, 225, 26) 0%, rgb(64, 255, 106) 100%);
+}
+
+.wpbb-leaderboard-gradient-border {
+	background: linear-gradient(rgb(238, 254, 232) 0%, rgba(248, 225, 26) 33.33%, rgba(255, 108, 76) 66.67%, rgba(255, 31, 79) 100%), #010433;
+}
+
+.wpbb-view-final-leaderboard-btn {
+	background: linear-gradient(rgba(238, 254, 232, 0.15) 0%, rgba(248, 225, 26, 0.15) 33.33%, rgba(255, 108, 76, 0.15) 66.67%, rgba(255, 31, 79, 0.15) 100%), #010433;
+}
+
+/** DASHBOARD END */
+
+.wpbb-celeb-plays {
+	background: linear-gradient(236deg, rgba(5, 9, 73, 0.40) 0%, #010433 100%), url('../assets/images/bracket_bg.png'), lightgray 50% / cover no-repeat;
+}

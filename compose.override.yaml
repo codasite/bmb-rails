@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  image-generator:
+    tty: true
+    command: npm run dev
+    volumes:
+      - ./image-generator/src:/usr/src/app/src # To serve the image generator code in development
+
+  react-server:
+    tty: true
+    command: npm run dev
+    volumes:
+      - ./standalone-react/src:/usr/src/app/src # To serve the react server code in development
+
+  react-client:
+    tty: true
+    command: npm run dev:standalone
+    volumes:
+      - ./plugin/includes/react-bracket-builder/src:/usr/src/app/src # To serve the react client code in development
+    ports:
+      - 8080:8080

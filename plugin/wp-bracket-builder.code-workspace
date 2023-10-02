@@ -1,0 +1,47 @@
+{
+	"folders": [
+		{
+			"name": "wp-bracket-builder",
+			"path": "."
+		},
+		{
+			"name": "react-bracket-builder",
+			"path": "includes/react-bracket-builder"
+		},
+		{
+			"path": "../HTML-to-PDF2"
+		},
+		{
+			"path": "../bracket-export"
+		},
+		{
+			"path": "tests/phpunit/tests"
+		},
+		{
+			"path": "../web-to-image"
+		}
+	],
+	"settings": {},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"runOptions": {
+					"runOn": "folderOpen"
+				},
+				"label": "NPM Start",
+				"type": "shell",
+				"command": "npm",
+				"args": [
+					"run",
+					"start"
+				],
+				"problemMatcher": [],
+				"options": {
+					"cwd": "${workspaceFolder}/includes/react-bracket-builder"
+				},
+				"group": "build"
+			}
+		]
+	}
+}

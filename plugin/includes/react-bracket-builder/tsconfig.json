@@ -1,0 +1,13 @@
+{
+  "include": ["./**/*.tsx", "./src/index.d.ts"],
+  "exclude": [
+    "node_modules/**/*"
+  ],
+  "compilerOptions": {
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "target": "ESNext",
+    "moduleResolution": "Node",
+    "module": "ESNext"
+  }
+}
