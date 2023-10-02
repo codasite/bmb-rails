@@ -1,5 +1,9 @@
 # wp-bracket-builder
 
+## Dev setup
+
+1. Run prettier on save with your editor: https://prettier.io/docs/en/editors
+
 ## Installation
 
 1. Install Wordpress locally
