@@ -19,7 +19,8 @@ import { HostTournamentModal } from './modals/HostTournamentModal';
  */
 import './styles/main.css'
 
-console.log('index.tsx')
+console.log('index.tsx hiii')
+console.log('index.tsx hiii')
 interface WpbbAjaxObj {
 	page: string;
 	nonce: string;

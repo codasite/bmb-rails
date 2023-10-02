@@ -17,4 +17,6 @@ services:
     tty: true
     command: npm run start:standalone
     volumes:
-      - ./plugin/includes/react-bracket-builder:/usr/src/app/src # To serve the react client code in development
+      - ./plugin/includes/react-bracket-builder/src:/usr/src/app/src # To serve the react client code in development
+    ports:
+      - 8080:8080

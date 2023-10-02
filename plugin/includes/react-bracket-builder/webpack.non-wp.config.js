@@ -4,6 +4,9 @@ const FontPreloadPlugin = require('webpack-font-preload-plugin');
 console.log('loading standalone webpack config');
 
 module.exports = {
+	devServer: {
+		allowedHosts: 'all',
+	},
 	entry: './src/index.tsx',
 	output: {
 		path: path.resolve(__dirname, 'build', 'standalone'),
