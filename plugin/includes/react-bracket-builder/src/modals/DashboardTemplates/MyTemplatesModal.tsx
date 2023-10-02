@@ -14,24 +14,20 @@ export const MyTemplatesModal = (props: MyTemplatesModalProps) => {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
   const [hasError, setHasError] = useState(false);
-  const [editFormHeader, setEditFormHeader] = useState("");
-  const [submitButtonText, setSubmitButtonText] = useState("");
-  const [submitFunction, setSubmitFunction] = useState<() => void>();
+  const [modalType, setModalType] = useState<
+    "host tournament" | "edit template"
+  >("host tournament");
   const handleHostTournamentClick = (e: any) => {
     const templateId = e.currentTarget.dataset.templateId;
     setTemplateId(templateId);
-    setEditFormHeader("Host tournament");
-    setSubmitButtonText("Host");
-    setSubmitFunction(() => onHostTournament);
+    setModalType("host tournament");
     setShowModal(true);
   };
   const handleEditTemplateClick = (e: any) => {
     const templateId = e.currentTarget.dataset.templateId;
     setInput(e.currentTarget.dataset.templateName);
-    setEditFormHeader("Edit info");
-    setSubmitButtonText("Save");
     setTemplateId(templateId);
-    setSubmitFunction(() => onEditTemplate);
+    setModalType("edit template");
     setShowModal(true);
   };
 
@@ -97,14 +93,14 @@ export const MyTemplatesModal = (props: MyTemplatesModalProps) => {
   };
 
   const onEditTemplate = () => {
+    console.log(input);
     if (!input) {
       setHasError(true);
       return;
     }
     setLoading(true);
     bracketApi
-      .editTemplate({
-        bracketTemplateId: templateId,
+      .updateTemplate(templateId, {
         title: input,
       })
       .then((res) => {
@@ -120,7 +116,7 @@ export const MyTemplatesModal = (props: MyTemplatesModalProps) => {
     <Modal show={showModal} setShow={setShowModal}>
       <div className="tw-flex tw-flex-col">
         <h1 className="tw-text-32 tw-leading-10 tw-font-white tw-whitespace-pre-line tw-mb-30">
-          {editFormHeader}
+          {modalType == "host tournament" ? "Host tournament" : "Edit info"}
         </h1>
         <input
           className={`${
@@ -146,10 +142,12 @@ export const MyTemplatesModal = (props: MyTemplatesModalProps) => {
             fontSize={16}
             fontWeight={700}
             disabled={loading}
-            onClick={submitFunction}
+            onClick={
+              modalType == "host tournament" ? onHostTournament : onEditTemplate
+            }
             className="hover:tw-text-white/75"
           >
-            {submitButtonText}
+            {modalType == "host tournament" ? "Host" : "Save"}
           </ActionButton>
           {cancelButton}
         </div>
