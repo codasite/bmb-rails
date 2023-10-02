@@ -7,7 +7,7 @@ services:
     volumes:
       - ./image-generator/src:/usr/src/app/src
 
-  react-app:
+  react-server:
     tty: true
     command: npm run dev
     volumes:

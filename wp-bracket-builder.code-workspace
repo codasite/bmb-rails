@@ -3,6 +3,9 @@
 		{
 			"path": "."
 		},
+		{
+			"path": "plugin/includes/react-bracket-builder"
+		}
 	],
 	"settings": {}
 }
