@@ -8,21 +8,6 @@ app.use(express.json());
 const port = 3000;
 const host = '0.0.0.0'
 
-interface ConvertParams {
-	html: string;
-	inchHeight: number;
-	inchWidth: number;
-	s3Bucket: string;
-	s3Key: string;
-	pdf?: boolean;
-	deviceScaleFactor?: number;
-}
-
-interface ConvertResponse {
-	imageUrl?: string;
-	error?: string;
-}
-
 app.post('/encode', async (req, res) => {
 	const {
 		picks,
@@ -48,7 +33,6 @@ app.get('/', async (req, res) => {
 app.post('/', async (req, res) => {
 	const {
 		html,
-		url,
 		queryParams,
 		s3Bucket,
 		s3Key,
@@ -64,6 +48,7 @@ app.post('/', async (req, res) => {
 	// 	inch_width,
 	// } = queryParams;
 
+	const clientUrl = process.env.CLIENT_URL;
 
 
 	if (inchHeight && !Number.isInteger(inchHeight)) {
@@ -98,10 +83,10 @@ app.post('/', async (req, res) => {
 	if (html) {
 		console.log('html')
 		await page.setContent(html, { waitUntil: 'networkidle0' });
-	} else if (url) {
-		console.log('url')
+	} else if (clientUrl) {
+		console.log('clientUrl')
 		const queryString = Object.keys(queryParams).map(key => key + '=' + queryParams[key]).join('&');
-		const path = url + (queryString ? '?' + queryString : '')
+		const path = clientUrl + (queryString ? '?' + queryString : '')
 		try {
 			await page.goto(path, { waitUntil: 'networkidle0' });
 		}

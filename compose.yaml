@@ -6,15 +6,14 @@ services:
       context: image-generator
       dockerfile: Dockerfile
     command: npm run start
-    # command: tail -f /dev/null
     ports:
       - 3000:3000
     cap_add:
       - SYS_ADMIN
     depends_on:
       - react-server
-    # profiles:
-    #   - donotstart
+    environment:
+      - CLIENT_URL=http://react-server:3001
 
   react-server:
     build:
@@ -27,19 +26,14 @@ services:
       - react_dist:/usr/src/app/client/dist
     ports:
       - 3001:3001
-    # profiles:
-    #   - donotstart
 
   react-client:
     build:
       context: plugin/includes/react-bracket-builder
       dockerfile: Dockerfile
-    command: sh -c "npm run build:standalone && tail -f /dev/null"
-    # command: npm run start:standalone
+    command: npm run start:standalone
     volumes:
       - react_dist:/usr/src/app/build/standalone
-    # profiles:
-    #   - donotstart
 
 volumes:
   react_dist:
