@@ -1,137 +1,46 @@
 import * as React from "react";
-import { useEffect, useState } from "react";
-import { Modal } from "../Modal";
-import { bracketApi } from "../../brackets/shared/api/bracketApi";
+import { useState } from "react";
 import { ActionButton } from "../../brackets/shared/components/ActionButtons";
+import { ListItemModal } from "../ListItemModal";
 
-interface MyTemplatesModalProps {
-  tournamentsUrl: string;
-}
-export const MyTemplatesModal = (props: MyTemplatesModalProps) => {
-  const { tournamentsUrl } = props;
+export const MyTemplatesModal = (props: {
+  loading: boolean;
+  submitButtonText: string;
+  onSubmit: () => void;
+  errorText: string;
+  placeholderText: string;
+  header: string;
+  input: string;
+  setInput: (input: string) => void;
+  buttonClassName: string;
+  onButtonClick: (e: HTMLButtonElement) => void;
+  hasError: boolean;
+  setHasError: (hasError: boolean) => void;
+}) => {
   const [showModal, setShowModal] = useState(false);
-  const [templateId, setTemplateId] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [input, setInput] = useState("");
-  const [hasError, setHasError] = useState(false);
-  const [modalType, setModalType] = useState<
-    "host tournament" | "edit template"
-  >("host tournament");
-  const handleHostTournamentClick = (e: any) => {
-    const templateId = e.currentTarget.dataset.templateId;
-    setTemplateId(templateId);
-    setModalType("host tournament");
-    setShowModal(true);
-  };
-  const handleEditTemplateClick = (e: any) => {
-    const templateId = e.currentTarget.dataset.templateId;
-    setInput(e.currentTarget.dataset.templateName);
-    setTemplateId(templateId);
-    setModalType("edit template");
-    setShowModal(true);
-  };
-
-  useEffect(() => {
-    const buttons = document.getElementsByClassName(
-      "wpbb-host-tournament-button",
-    );
-    if (buttons.length === 0) {
-      return;
-    }
-    for (const button of buttons) {
-      button.addEventListener("click", handleHostTournamentClick);
-    }
-    return () => {
-      for (const button of buttons) {
-        button.removeEventListener("click", handleHostTournamentClick);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const buttons = document.getElementsByClassName(
-      "wpbb-edit-template-button",
-    );
-    if (buttons.length === 0) {
-      return;
-    }
-    for (const button of buttons) {
-      button.addEventListener("click", handleEditTemplateClick);
-    }
-    return () => {
-      for (const button of buttons) {
-        button.removeEventListener("click", handleEditTemplateClick);
-      }
-    };
-  }, []);
-  const cancelButton = (
-    <button
-      onClick={() => setShowModal(false)}
-      className="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer"
-    >
-      Cancel
-    </button>
-  );
-  const onHostTournament = () => {
-    if (!input) {
-      setHasError(true);
-      return;
-    }
-    setLoading(true);
-    bracketApi
-      .createTournament({
-        bracketTemplateId: templateId,
-        title: input,
-      })
-      .then((res) => {
-        window.location.href = tournamentsUrl;
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  };
-
-  const onEditTemplate = () => {
-    console.log(input);
-    if (!input) {
-      setHasError(true);
-      return;
-    }
-    setLoading(true);
-    bracketApi
-      .updateTemplate(templateId, {
-        title: input,
-      })
-      .then((res) => {
-        window.location.reload();
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  };
-
   return (
-    <Modal show={showModal} setShow={setShowModal}>
+    <ListItemModal
+      show={showModal}
+      setShow={setShowModal}
+      buttonClassName={props.buttonClassName}
+      onButtonClick={props.onButtonClick}
+    >
       <div className="tw-flex tw-flex-col">
         <h1 className="tw-text-32 tw-leading-10 tw-font-white tw-whitespace-pre-line tw-mb-30">
-          {modalType == "host tournament" ? "Host tournament" : "Edit info"}
+          {props.header}
         </h1>
         <input
           className={`${
-            hasError
+            props.hasError
               ? "tw-placeholder-red/60 tw-border-red tw-text-red"
               : "tw-placeholder-white/60"
           } tw-border-0 tw-border-b tw-border-white tw-mb-30 tw-border-solid tw-p-15 tw-outline-none tw-bg-transparent tw-text-16 tw-text-white tw-font-sans tw-w-full tw-uppercase`}
           type="text"
-          placeholder={
-            hasError ? "Tournament name is required" : "My tournament name..."
-          }
-          value={input}
+          placeholder={props.hasError ? props.errorText : props.placeholderText}
+          value={props.input}
           onChange={(e) => {
-            setInput(e.target.value);
-            setHasError(false);
+            props.setInput(e.target.value);
+            props.setHasError(!e.target.value);
           }}
         />
         <div className="tw-flex tw-flex-col tw-gap-10">
@@ -141,17 +50,20 @@ export const MyTemplatesModal = (props: MyTemplatesModalProps) => {
             paddingX={16}
             fontSize={16}
             fontWeight={700}
-            disabled={loading}
-            onClick={
-              modalType == "host tournament" ? onHostTournament : onEditTemplate
-            }
+            disabled={props.loading || props.hasError}
+            onClick={props.onSubmit}
             className="hover:tw-text-white/75"
           >
-            {modalType == "host tournament" ? "Host" : "Save"}
+            {props.submitButtonText}
           </ActionButton>
-          {cancelButton}
+          <button
+            onClick={() => setShowModal(false)}
+            className="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer"
+          >
+            Cancel
+          </button>
         </div>
       </div>
-    </Modal>
+    </ListItemModal>
   );
 };

@@ -71,7 +71,7 @@ $templates = $template_repo->get_all($the_query);
 $create_template_link = get_permalink(get_page_by_path('bracket-template-builder'));
 
 ?>
-<div id="wpbb-my-templates-modal" class="tw-absolute"></div>
+<div id="wpbb-my-templates-modals"></div>
 <div class="tw-flex tw-flex-col tw-gap-30">
   <h1>My Templates</h1>
   <!-- this link leads to the Create Template page to create a new bracket from scratch -->
