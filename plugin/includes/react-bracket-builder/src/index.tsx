@@ -12,7 +12,6 @@ import { Provider } from "react-redux";
 import { camelCaseKeys } from "./brackets/shared/api/bracketApi";
 import withMatchTree from "./brackets/shared/components/HigherOrder/WithMatchTree";
 import { CreateTournamentButtonAndModal } from "./modals/CreateTournamentButtonAndModal";
-import { CreateTemplateButtonAndModal } from "./modals/CreateTemplateButtonAndModal";
 /**
  * Import the stylesheet for the plugin.
  */
@@ -313,15 +312,5 @@ function renderMyTemplatesModals(ajaxObj: WpbbAjaxObj) {
       </>,
       modalDiv,
     );
-  }
-}
-function renderCreateTemplateModal(ajaxObj: WpbbAjaxObj) {
-  const div = document.getElementById("wpbb-create-template-button-and-modal");
-  const templateId = div.getAttribute("data-template-id");
-  if (div) {
-    const { homeUrl } = ajaxObj;
-    const templatePath = `/wp-json/wp-bracket-builder/v1/templates/${templateId}`;
-    const templateUrl = homeUrl + templatePath;
-    render(<CreateTemplateButtonAndModal templateUrl={templateUrl} />, div);
   }
 }
