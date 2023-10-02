@@ -1,15 +1,9 @@
-import React, { useContext } from 'react';
-import { MatchNode, Round, Team, MatchTree } from '../../models/MatchTree';
-import { Direction, defaultBracketConstants } from '../../constants'
-import { MatchBoxProps, TeamSlotProps } from '../types';
+import React from 'react';
+import { Team } from '../../models/MatchTree';
+import { MatchBoxProps } from '../types';
 import { Nullable } from '../../../../utils/types';
-import { getUniqueTeamClass } from '../../utils';
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg'
 import { DefaultTeamSlot } from '../TeamSlot';
-import { Bracket } from '../Bracket/Bracket';
-import { BracketMetaContext } from '../../context';
-import { DefaultFinalMatchChildren } from './Children/DefaultFinalMatchChildren';
 
 export const DefaultMatchBox = (props: MatchBoxProps) => {
 	const {

@@ -5,13 +5,10 @@ services:
     tty: true
     command: npm run dev
     volumes:
-      - ./image-generator/src:/usr/src/app/src
+      - ./image-generator/src:/usr/src/app/src # To serve the image generator code in development
 
   react-server:
     tty: true
     command: npm run dev
     volumes:
-      - ./standalone-react/src:/usr/src/app/src
-      # - ./react-app/public:/usr/src/app/public
-    ports:
-      - 3001:3001
+      - ./standalone-react/src:/usr/src/app/src # To serve the react server code in development

@@ -1,9 +1,6 @@
-import React, { useContext } from 'react';
-import { defaultBracketConstants } from '../../../constants'
-import { MatchBoxChildProps } from '../../types';
+import React from 'react';
 //@ts-ignore
 import { ReactComponent as BracketLogo } from '../../../assets/BMB-ICON-CURRENT.svg'
-import { BracketMetaContext } from '../../../context';
 
 interface LogoContainerProps {
 	topText?: string,

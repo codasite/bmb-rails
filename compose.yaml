@@ -12,6 +12,8 @@ services:
       - SYS_ADMIN
     depends_on:
       - react-server
+    # profiles:
+    #   - donotstart
 
   react-server:
     build:
@@ -22,14 +24,19 @@ services:
       - react-client
     volumes:
       - react_dist:/usr/src/app/client/dist
+    ports:
+      - 3001:3001
+    # profiles:
+    #   - donotstart
 
   react-client:
     build:
       context: plugin/includes/react-bracket-builder
       dockerfile: Dockerfile
-    command: npm run build:standalone
+    command: sh -c "npm run build:standalone && tail -f /dev/null"
+    # command: npm run start:standalone
     volumes:
-      - react_dist:/usr/src/app/dist
+      - react_dist:/usr/src/app/build/standalone
 
 volumes:
   react_dist:

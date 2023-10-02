@@ -1,12 +1,9 @@
 import React from 'react';
-import { MatchNode, Round, Team, MatchTree } from '../../models/MatchTree';
-import { Direction, defaultBracketConstants } from '../../constants'
-import { MatchBoxProps, TeamSlotProps } from '../types';
+import { Team } from '../../models/MatchTree';
+import { MatchBoxProps } from '../types';
 import { Nullable } from '../../../../utils/types';
-import { getUniqueTeamClass } from '../../utils';
 //@ts-ignore
-import { ReactComponent as BracketLogo } from '../../assets/BMB-ICON-CURRENT.svg'
-import { DefaultTeamSlot, FlexTeamSlot } from '../TeamSlot';
+import { FlexTeamSlot } from '../TeamSlot';
 
 const FlexMatchGap = (props: any) => {
 	return (
