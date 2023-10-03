@@ -1,2 +1,2 @@
-export { DefaultMatchBox } from './DefaultMatchBox';
-export { FlexMatchBox } from './FlexMatchBox';
+export { DefaultMatchBox } from './DefaultMatchBox'
+export { FlexMatchBox } from './FlexMatchBox'

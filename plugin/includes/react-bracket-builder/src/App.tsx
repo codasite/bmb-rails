@@ -1,13 +1,11 @@
-import React, { Suspense } from 'react';
+import React, { Suspense } from 'react'
 
 const App = (props) => {
-	return (
-		// Suspense is used to allow for lazy loading of components
-		// <Suspense fallback={<div>Loading...</div>}>
-		<Suspense>
-			{props.children}
-		</Suspense>
-	);
+  return (
+    // Suspense is used to allow for lazy loading of components
+    // <Suspense fallback={<div>Loading...</div>}>
+    <Suspense>{props.children}</Suspense>
+  )
 }
 
-export default App; 
+export default App

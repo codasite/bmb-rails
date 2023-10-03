@@ -11,7 +11,6 @@
  *
 */
 
-
 /**
 * This is a variable font
 * You can controll variable axes as shown below:
@@ -25,7 +24,8 @@
 
 @font-face {
   font-family: 'Clash Display';
-  src: url('../assets/fonts/ClashDisplay-Variable.woff2') format('woff2'),
+  src:
+    url('../assets/fonts/ClashDisplay-Variable.woff2') format('woff2'),
     url('../assets/fonts/ClashDisplay-Variable.woff') format('woff'),
     url('../assets/fonts/ClashDisplay-Variable.ttf') format('truetype');
   font-weight: 200 700;

@@ -1,27 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import Spinner from 'react-bootstrap/Spinner'
-import ImageGallery from 'react-image-gallery';
-import * as Sentry from '@sentry/react';
+import ImageGallery from 'react-image-gallery'
+import * as Sentry from '@sentry/react'
 
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
   // [key: string]: string;
-  light: string;
-  dark: string;
+  light: string
+  dark: string
 }
 
 interface GalleryImage {
-  src: string;
-  title: string;
+  src: string
+  title: string
 }
 
 interface GalleryProps {
-  overlayThemeMap: OverlayUrlThemeMap;
-  galleryImages: GalleryImage[];
-  colorOptions: string[];
+  overlayThemeMap: OverlayUrlThemeMap
+  galleryImages: GalleryImage[]
+  colorOptions: string[]
 }
 
-// An enum called ProductImageOrientation 
+// An enum called ProductImageOrientation
 enum ProductImageOrientation {
   FRONT = 'front',
   BACK = 'back',
@@ -33,239 +33,279 @@ enum ProductImageThemeMode {
 }
 
 interface ProductImageConfig {
-  url: string;
-  variationColor?: string;
-  variationTheme?: ProductImageThemeMode;
+  url: string
+  variationColor?: string
+  variationTheme?: ProductImageThemeMode
 }
 
 interface ProductImageParams {
-  variationColor?: string;
-  orientation?: ProductImageOrientation;
-  overlayParams?: ImageOverlayParams;
-  themeMode?: ProductImageThemeMode;
+  variationColor?: string
+  orientation?: ProductImageOrientation
+  overlayParams?: ImageOverlayParams
+  themeMode?: ProductImageThemeMode
 }
 
 interface ImageOverlayParams {
-  width: number;
-  xCenter: number;
-  yCenter: number;
+  width: number
+  xCenter: number
+  yCenter: number
 }
 
-
-const Gallery: React.FC<GalleryProps> = ({ overlayThemeMap, galleryImages, colorOptions }) => {
+const Gallery: React.FC<GalleryProps> = ({
+  overlayThemeMap,
+  galleryImages,
+  colorOptions,
+}) => {
   // URLs of images to display in the gallery. This is updated
   // when the select listener is triggered.
-  const [currentColor, setCurrentColor] = useState<string>('');
-  const [currentTheme, setCurrentTheme] = useState<string>('');
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([]);
-  const [loadingImages, setLoadingImages] = useState<boolean>(true);
+  const [currentColor, setCurrentColor] = useState<string>('')
+  const [currentTheme, setCurrentTheme] = useState<string>('')
+  const [imageUrls, setImageUrls] = useState<string[]>([])
+  const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([])
+  const [loadingImages, setLoadingImages] = useState<boolean>(true)
   // const [loadingImages, setLoadingImages] = useState<boolean>(false);
 
   useEffect(() => {
-    const imageConfigsPromise = buildImageConfigs();
-    const domContentLoadedPromise = createDomContentLoadedPromise();
+    const imageConfigsPromise = buildImageConfigs()
+    const domContentLoadedPromise = createDomContentLoadedPromise()
 
     // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
-        setImageConfigs(imageConfigs);
-        initChangeHandlers();
-        setLoadingImages(false);
+        setImageConfigs(imageConfigs)
+        initChangeHandlers()
+        setLoadingImages(false)
       })
-      .catch(error => {
-        console.error('An error occurred:', error);
-        Sentry.captureException(error);
-      });
-  }, []);
+      .catch((error) => {
+        console.error('An error occurred:', error)
+        Sentry.captureException(error)
+      })
+  }, [])
 
   // useEffect hook that runs whenever currentColor or currentTheme changes
   useEffect(() => {
-    const filtered = filterImageConfigs(imageConfigs, currentColor, currentTheme);
+    const filtered = filterImageConfigs(
+      imageConfigs,
+      currentColor,
+      currentTheme
+    )
     if (filtered.length > 0) {
-      setImageUrls(filtered.map(config => {
-        return config.url
-      }))
+      setImageUrls(
+        filtered.map((config) => {
+          return config.url
+        })
+      )
     } else {
-      setImageUrls(imageConfigs.map(config => {
-        return config.url
-      }))
+      setImageUrls(
+        imageConfigs.map((config) => {
+          return config.url
+        })
+      )
     }
-  }, [currentColor, currentTheme, imageConfigs]);
+  }, [currentColor, currentTheme, imageConfigs])
 
-  const filterImageConfigs = (imageConfigs: ProductImageConfig[], color: string, theme: string): ProductImageConfig[] => {
+  const filterImageConfigs = (
+    imageConfigs: ProductImageConfig[],
+    color: string,
+    theme: string
+  ): ProductImageConfig[] => {
     return imageConfigs.filter((config) => {
       // if (config.variationColor === color && config.variationTheme === theme) {
       if (config.variationColor === color) {
-        return true;
+        return true
       }
-      return false;
-    }
-    )
+      return false
+    })
   }
 
   const initChangeHandlers = () => {
-    const colorSelectChangeHandler = selectChangeHandler(setCurrentColor);
-    const themeSelectChangeHandler = selectChangeHandler(setCurrentTheme);
-    initSelectHandler('color', setCurrentColor, colorSelectChangeHandler);
-    initSelectHandler('pa_bracket-theme', setCurrentTheme, themeSelectChangeHandler);
+    const colorSelectChangeHandler = selectChangeHandler(setCurrentColor)
+    const themeSelectChangeHandler = selectChangeHandler(setCurrentTheme)
+    initSelectHandler('color', setCurrentColor, colorSelectChangeHandler)
+    initSelectHandler(
+      'pa_bracket-theme',
+      setCurrentTheme,
+      themeSelectChangeHandler
+    )
   }
 
-  const initSelectHandler = (selector: string, setFunction: (value: string) => void, handler: (event: Event) => void) => {
-    const selectElement = document.querySelector(`select#${selector}`) as HTMLSelectElement | null;
+  const initSelectHandler = (
+    selector: string,
+    setFunction: (value: string) => void,
+    handler: (event: Event) => void
+  ) => {
+    const selectElement = document.querySelector(
+      `select#${selector}`
+    ) as HTMLSelectElement | null
 
     if (!selectElement) {
-      return;
+      return
     }
 
-    const value = selectElement.value;
+    const value = selectElement.value
     if (value) {
-      setFunction(value);
+      setFunction(value)
     }
-    selectElement.addEventListener('change', handler);
-  };
+    selectElement.addEventListener('change', handler)
+  }
 
   const selectChangeHandler = (setFunction: (value: string) => void) => {
     return (event: Event) => {
-      const target = event.target as HTMLSelectElement;
+      const target = event.target as HTMLSelectElement
       if (target?.value) {
-        let value = target.value;
-        setFunction(value);
+        let value = target.value
+        setFunction(value)
       } else {
-        setFunction('');
+        setFunction('')
       }
-    };
-  };
+    }
+  }
 
   const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
     const promises = galleryImages.map((image) => {
-      return buildProductImageConfig(image, overlayThemeMap);
-    });
+      return buildProductImageConfig(image, overlayThemeMap)
+    })
 
-    const configs = await Promise.allSettled(promises).then(res => {
-      // get data urls where status is fulfilled
-      const fulfilledConfigs = res.filter((promise) => {
-        return promise.status === 'fulfilled'
-      }).map((promise) => {
-        return (promise as PromiseFulfilledResult<ProductImageConfig>).value;
+    const configs = await Promise.allSettled(promises)
+      .then((res) => {
+        // get data urls where status is fulfilled
+        const fulfilledConfigs = res
+          .filter((promise) => {
+            return promise.status === 'fulfilled'
+          })
+          .map((promise) => {
+            return (promise as PromiseFulfilledResult<ProductImageConfig>).value
+          })
+        // get promisses that failed
+        const rejectedPromises = res.filter((promise) => {
+          return promise.status === 'rejected'
+        })
+        // log rejected promises
+        rejectedPromises.forEach((promise) => {
+          console.error(promise)
+        })
+        return fulfilledConfigs
       })
-      // get promisses that failed
-      const rejectedPromises = res.filter((promise) => {
-        return promise.status === 'rejected'
+      .catch((error) => {
+        console.error(error)
       })
-      // log rejected promises
-      rejectedPromises.forEach((promise) => {
-        console.error(promise);
-      })
-      return fulfilledConfigs
-    }).catch(error => {
-      console.error(error);
-    });
-    return configs ? configs : [];
+    return configs ? configs : []
   }
 
-  const buildProductImageConfig = async (image: GalleryImage, overlayMap: OverlayUrlThemeMap): Promise<ProductImageConfig> => {
-    const {
-      src: backgroundImageUrl,
-      title: backgroundImageTitle,
-    } = image;
+  const buildProductImageConfig = async (
+    image: GalleryImage,
+    overlayMap: OverlayUrlThemeMap
+  ): Promise<ProductImageConfig> => {
+    const { src: backgroundImageUrl, title: backgroundImageTitle } = image
 
-    const {
-      variationColor,
-      orientation,
-      overlayParams,
-      themeMode,
-    } = parseImageParams(backgroundImageTitle, colorOptions);
+    const { variationColor, orientation, overlayParams, themeMode } =
+      parseImageParams(backgroundImageTitle, colorOptions)
 
-    const overlayUrl = getOverlayUrl(overlayMap, themeMode);
+    const overlayUrl = getOverlayUrl(overlayMap, themeMode)
 
-    const url = orientation === ProductImageOrientation.BACK && overlayParams && overlayUrl
-      ? await addOverlay(backgroundImageUrl, overlayUrl, overlayParams)
-      : backgroundImageUrl;
+    const url =
+      orientation === ProductImageOrientation.BACK &&
+      overlayParams &&
+      overlayUrl
+        ? await addOverlay(backgroundImageUrl, overlayUrl, overlayParams)
+        : backgroundImageUrl
 
     const config: ProductImageConfig = {
       url,
       variationColor,
-    };
+    }
 
-    return config;
+    return config
   }
 
   const images = imageUrls.map((image) => {
     return {
       original: image,
-      thumbnail: image
+      thumbnail: image,
     }
   })
 
   return (
     //@ts-ignore
     <>
-      {
-        loadingImages ?
-          <div className='wpbb-gallery-spinner-container'>
-            <Spinner variant='dark' animation="border" role="status" style={{ borderWidth: '4px' }} />
-          </div>
-          :
-          <div className='wpbb-gallery-container'>
-            <ImageGallery items={images} showPlayButton={false} />
-          </div>
-      }
+      {loadingImages ? (
+        <div className="wpbb-gallery-spinner-container">
+          <Spinner
+            variant="dark"
+            animation="border"
+            role="status"
+            style={{ borderWidth: '4px' }}
+          />
+        </div>
+      ) : (
+        <div className="wpbb-gallery-container">
+          <ImageGallery items={images} showPlayButton={false} />
+        </div>
+      )}
     </>
   )
-};
+}
 
-const getOverlayUrl = (overlayMap: OverlayUrlThemeMap, theme?: string): string => {
+const getOverlayUrl = (
+  overlayMap: OverlayUrlThemeMap,
+  theme?: string
+): string => {
   if (theme === ProductImageThemeMode.DARK) {
     return overlayMap.dark
   } else if (theme === ProductImageThemeMode.LIGHT) {
     return overlayMap.light
   }
-  return '';
+  return ''
 }
 
 const normalizeString = (str: string): string => {
   // Normalize a string by removing whitespace, underscores, and hyphens, and converting to lowercase.
-  return str.trim().toLowerCase().replace(/[-_\s]/g, '');
+  return str
+    .trim()
+    .toLowerCase()
+    .replace(/[-_\s]/g, '')
 }
 
-const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductImageParams => {
+const parseImageParams = (
+  imageTitle: string,
+  colorOptions: string[]
+): ProductImageParams => {
   // extract a matching value in the colorOptions array from the image title
-  const normalizedTitle = normalizeString(imageTitle);
+  const normalizedTitle = normalizeString(imageTitle)
   const normalizedColors = colorOptions.map((color) => {
-    return normalizeString(color);
-  });
+    return normalizeString(color)
+  })
 
   // get the colorOption where the corresponding normalizedColor is included in the normalizedTitle
   const variationColor = colorOptions.find((colorOption, index) => {
-    return normalizedTitle.includes(normalizedColors[index]);
-  });
+    return normalizedTitle.includes(normalizedColors[index])
+  })
 
-  let orientation: ProductImageOrientation | undefined;
+  let orientation: ProductImageOrientation | undefined
   if (normalizedTitle.includes('back')) {
-    orientation = ProductImageOrientation.BACK;
+    orientation = ProductImageOrientation.BACK
   } else if (normalizedTitle.includes('front')) {
-    orientation = ProductImageOrientation.FRONT;
+    orientation = ProductImageOrientation.FRONT
   }
 
-  let themeMode: ProductImageThemeMode | undefined;
+  let themeMode: ProductImageThemeMode | undefined
   if (normalizedTitle.includes('darktheme')) {
-    themeMode = ProductImageThemeMode.DARK;
+    themeMode = ProductImageThemeMode.DARK
   } else if (normalizedTitle.includes('lighttheme')) {
-    themeMode = ProductImageThemeMode.LIGHT;
+    themeMode = ProductImageThemeMode.LIGHT
   }
 
-  const widthRegex = /w\d+/;
-  const widthMatch = normalizedTitle.match(widthRegex);
-  const width = widthMatch ? widthMatch[0] : null;
+  const widthRegex = /w\d+/
+  const widthMatch = normalizedTitle.match(widthRegex)
+  const width = widthMatch ? widthMatch[0] : null
 
-  const xCenterRegex = /x\d+/;
-  const xCenterMatch = normalizedTitle.match(xCenterRegex);
-  const xCenter = xCenterMatch ? xCenterMatch[0] : null;
+  const xCenterRegex = /x\d+/
+  const xCenterMatch = normalizedTitle.match(xCenterRegex)
+  const xCenter = xCenterMatch ? xCenterMatch[0] : null
 
-  const yCenterRegex = /y\d+/;
-  const yCenterMatch = normalizedTitle.match(yCenterRegex);
-  const yCenter = yCenterMatch ? yCenterMatch[0] : null;
+  const yCenterRegex = /y\d+/
+  const yCenterMatch = normalizedTitle.match(yCenterRegex)
+  const yCenter = yCenterMatch ? yCenterMatch[0] : null
 
   const imageParams: ProductImageParams = {
     variationColor,
@@ -279,95 +319,100 @@ const parseImageParams = (imageTitle: string, colorOptions: string[]): ProductIm
       yCenter: parseInt(yCenter.substring(1), 10),
     }
   }
-  return imageParams;
+  return imageParams
 }
 
 // This is the big function that overlays the bracket on the image.
-async function addOverlay(backgroundUrl: string, overlayUrl: string, overlayParams: ImageOverlayParams) {
-  const {
-    width,
-    xCenter,
-    yCenter,
-  } = overlayParams;
+async function addOverlay(
+  backgroundUrl: string,
+  overlayUrl: string,
+  overlayParams: ImageOverlayParams
+) {
+  const { width, xCenter, yCenter } = overlayParams
 
-  const bracketWidth = width;
-  const bracketCenter = [xCenter, yCenter];
+  const bracketWidth = width
+  const bracketCenter = [xCenter, yCenter]
 
   // Create a new image element for the background image
   // The background image comes from the product so no worries
   // about cross-origin properties.
-  const backgroundImage = new Image();
-  //backgroundImage.crossOrigin = "anonymous";  
+  const backgroundImage = new Image()
+  //backgroundImage.crossOrigin = "anonymous";
 
   // Set the source URL for the background image
-  backgroundImage.src = backgroundUrl;
+  backgroundImage.src = backgroundUrl
 
   // Create a new image element for the bracket image
   // Because the bracket image is hosted on a different domain (while I'm developing),
   // must set the crossOrigin attribute to anonymous. This will likely be unecessary in
   // production.
-  const bracketImage = new Image();
-  bracketImage.crossOrigin = "anonymous";
+  const bracketImage = new Image()
+  bracketImage.crossOrigin = 'anonymous'
 
   // Set the source URL for the logo image
-  bracketImage.src = overlayUrl;
+  bracketImage.src = overlayUrl
   // await loadImage(bracketImage).catch((error) => {
   //   console.error(error);
   // });
-  await Promise.all([loadImage(backgroundImage), loadImage(bracketImage)]).catch((error) => {
-    console.error(error);
-  });
+  await Promise.all([
+    loadImage(backgroundImage),
+    loadImage(bracketImage),
+  ]).catch((error) => {
+    console.error(error)
+  })
 
   // Scale the bracket image to the correct size
-  const aspectRatio = bracketImage.width / bracketImage.height;
-  const bracketHeight = bracketWidth / aspectRatio;
+  const aspectRatio = bracketImage.width / bracketImage.height
+  const bracketHeight = bracketWidth / aspectRatio
 
   // Create a canvas element
-  const canvas = document.createElement('canvas');
-  const context = canvas.getContext('2d');
+  const canvas = document.createElement('canvas')
+  const context = canvas.getContext('2d')
 
   // Set canvas dimensions to match the background image
-  canvas.width = backgroundImage.width;
-  canvas.height = backgroundImage.height;
+  canvas.width = backgroundImage.width
+  canvas.height = backgroundImage.height
 
   // Draw the background image on the canvas
-  context?.drawImage(backgroundImage, 0, 0);
+  context?.drawImage(backgroundImage, 0, 0)
 
   // Calculate the position to place the logo on the canvas
   //const [x, y] = logoPosition;
-  var [x, y] = bracketCenter;
-  x -= bracketWidth / 2;
-  y -= bracketHeight / 2;
+  var [x, y] = bracketCenter
+  x -= bracketWidth / 2
+  y -= bracketHeight / 2
 
   // Draw the logo image on the canvas at the specified position and size
-  context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight);
+  context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight)
 
   // Convert the canvas image to a data URL
-  const outputImageUrl = canvas.toDataURL();
-  return outputImageUrl;
+  const outputImageUrl = canvas.toDataURL()
+  return outputImageUrl
 }
-
 
 function loadImage(imageElement: HTMLImageElement): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    imageElement.addEventListener('load', () => resolve(), false);
-    imageElement.addEventListener('error', (error) => reject(error), false);
-  });
+    imageElement.addEventListener('load', () => resolve(), false)
+    imageElement.addEventListener('error', (error) => reject(error), false)
+  })
 }
 
 function createDomContentLoadedPromise(): Promise<void> {
   return new Promise<void>((resolve) => {
     const handleDOMContentLoaded = () => {
-      resolve();
-      document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded);
-    };
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-      resolve();
-    } else {
-      document.addEventListener('DOMContentLoaded', handleDOMContentLoaded);
+      resolve()
+      document.removeEventListener('DOMContentLoaded', handleDOMContentLoaded)
     }
-  });
+
+    if (
+      document.readyState === 'complete' ||
+      document.readyState === 'interactive'
+    ) {
+      resolve()
+    } else {
+      document.addEventListener('DOMContentLoaded', handleDOMContentLoaded)
+    }
+  })
 }
 
-export default Gallery;
+export default Gallery
