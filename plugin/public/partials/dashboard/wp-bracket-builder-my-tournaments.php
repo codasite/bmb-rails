@@ -164,6 +164,7 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
       <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
       <div class="tw-flex tw-gap-10 tw-items-center">
+				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-tournament-button", attributes: "data-tournament-id='$id' data-tournament-name='$name'"); ?>
         <!-- The share button should execute an AJAX request to generate a shareable link -->
         <!-- <?php echo share_tournament_btn($share_link, $id); ?> -->
         <!-- The duplicate button opens up the "Host a Tournamnet" modal -->
@@ -183,7 +184,7 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 
 ?>
 
-<div id="wpbb-create-tournament-modal"></div>
+<div id="wpbb-my-tournaments-modals"></div>
 <div class="tw-flex tw-flex-col tw-gap-15">
   <h1 class="tw-mb-8">My Tournaments</h1>
   <button

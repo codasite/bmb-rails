@@ -11,6 +11,7 @@ import { CreateTournamentModal } from './modals/dashboard/tournaments/CreateTour
 import './styles/main.css'
 import { EditTemplateModal } from './modals/dashboard/templates/EditTemplateModal'
 import { WpbbAjaxObj } from './wpbbAjaxObj'
+import { EditTournamentModal } from './modals/dashboard/tournaments/EditTournamentModal'
 
 require('./wp-bracket-builder-public.js')
 // Dynamically render components to avoid loading unused modules
@@ -52,7 +53,7 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   renderPlayTemplate(ajaxObj)
   renderTournamentResultsBuilder(ajaxObj)
   renderViewBracketPlay(ajaxObj)
-  renderCreateTournamentModal(ajaxObj)
+  renderMyTournamentsModals(ajaxObj)
   renderMyTemplatesModals(ajaxObj)
 } else {
   renderPrintBracketPage()
@@ -206,15 +207,18 @@ function renderPreview(ajaxObj: WpbbAjaxObj) {
     'wpbb-bracket-preview-controller'
   )
 }
-function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
+function renderMyTournamentsModals(ajaxObj: WpbbAjaxObj) {
   renderDiv(
-    <CreateTournamentModal
-      myTemplatesUrl={ajaxObj.myTemplatesUrl}
-      bracketTemplateBuilderUrl={ajaxObj.bracketTemplateBuilderUrl}
-      canCreateTournament={ajaxObj.userCanCreateTournament}
-      upgradeAccountUrl={ajaxObj.homeUrl}
-    />,
-    'wpbb-create-tournament-modal'
+    <>
+      <CreateTournamentModal
+        myTemplatesUrl={ajaxObj.myTemplatesUrl}
+        bracketTemplateBuilderUrl={ajaxObj.bracketTemplateBuilderUrl}
+        canCreateTournament={ajaxObj.userCanCreateTournament}
+        upgradeAccountUrl={ajaxObj.homeUrl}
+      />
+      <EditTournamentModal />
+    </>,
+    'wpbb-my-tournaments-modals'
   )
 }
 function renderMyTemplatesModals(ajaxObj: WpbbAjaxObj) {
