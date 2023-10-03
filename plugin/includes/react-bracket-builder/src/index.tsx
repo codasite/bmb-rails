@@ -1,5 +1,5 @@
+// require('../../../public/js/wp-bracket-builder-public.js')
 require('./wp-bracket-builder-public.js')
-// import './assets/fonts/ClashDisplay-Variable.woff2'
 import React from 'react';
 import App from "./App";
 // import { render, hydrate } from '@wordpress/element';
@@ -18,9 +18,6 @@ import { MyTemplatesModal } from './modals/DashboardTemplates/MyTemplatesModal';
  * Import the stylesheet for the plugin.
  */
 import './styles/main.css'
-const font = require('./assets/fonts/ClashDisplay-Variable.woff2')
-console.log('font', font)
-// import('./assets/fonts/ClashDisplay-Variable.woff2')
 
 interface WpbbAjaxObj {
 	page: string;
