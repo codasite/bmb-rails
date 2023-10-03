@@ -69,6 +69,7 @@ const TournamentResultsBuilder = React.lazy(
       './brackets/BracketBuilders/TournamentResultsBuilder/TournamentResultsBuilder'
     )
 )
+
 const ViewPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage')
 )
@@ -260,11 +261,19 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
 function renderPrintBracketPage() {
   const builderDiv = document.getElementById('wpbb-print-play')
   if (!builderDiv) return
+  const fontPath = require('./assets/fonts/ClashDisplay-Variable.woff2')
+  const link = document.createElement('link')
+  link.rel = 'preload'
+  link.href = fontPath
+  link.as = 'font'
+  link.type = 'font/woff2'
+  link.crossOrigin = 'anonymous'
+  document.head.appendChild(link)
+
   console.log('print bracket play')
   render(
     <App>
-      {' '}
-      <PrintPlayPage />{' '}
+      <PrintPlayPage />
     </App>,
     builderDiv
   )

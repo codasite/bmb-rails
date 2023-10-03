@@ -2,6 +2,8 @@ import express from 'express'
 import puppeteer from 'puppeteer'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
+import os from 'os'
+
 const app = express()
 app.use(express.json())
 const port = 3000
@@ -22,7 +24,8 @@ app.post('/encode', async (req, res) => {
 })
 
 app.get('/', async (req, res) => {
-  res.send('Hello World!!!!')
+  const user = os.userInfo()
+  res.send(`Hello World! ${user.username}`)
 })
 
 app.post('/', async (req, res) => {
@@ -123,6 +126,7 @@ app.post('/', async (req, res) => {
     )
     res.send(imgUrl)
   } catch (err: any) {
+    console.error(err)
     res.status(500).send(err)
   } finally {
     console.timeEnd('uploadToS3')
@@ -138,7 +142,7 @@ const uploadToS3 = async (
   bucket: string,
   fileName: string
 ): Promise<string> => {
-  const s3 = new S3Client()
+  const s3 = new S3Client({ region: process.env.AWS_REGION })
   const command = new PutObjectCommand({
     Bucket: bucket,
     Key: fileName,

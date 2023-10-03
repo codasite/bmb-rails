@@ -1,11 +1,30 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "plugin/includes/react-bracket-builder"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": "."
+    },
+    {
+      "path": "plugin/includes/react-bracket-builder"
+    }
+  ],
+  "settings": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "runOptions": {},
+        "label": "compose up dev",
+        "type": "shell",
+        "command": "docker",
+        "args": ["compose", "up", "--build"],
+        "problemMatcher": [],
+        "options": {
+          "cwd": "${workspaceFolder}"
+        },
+        "group": "build"
+      }
+    ]
+  }
 }
