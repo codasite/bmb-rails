@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
-import { DashboardModal } from '../DashboardModal'
+import { TextFieldModal } from '../../TextFieldModal'
 import addClickHandlers from '../../addClickHandlers'
 
 export const EditTemplateModal = () => {
@@ -37,7 +37,7 @@ export const EditTemplateModal = () => {
       })
   }
   return (
-    <DashboardModal
+    <TextFieldModal
       submitButtonText={'Save'}
       onSubmit={onEditTemplate}
       header={'Edit info'}

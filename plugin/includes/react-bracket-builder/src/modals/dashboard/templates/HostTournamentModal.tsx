@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
-import { DashboardModal } from '../DashboardModal'
+import { TextFieldModal } from '../../TextFieldModal'
 import addClickHandlers from '../../addClickHandlers'
 
 export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
@@ -37,7 +37,7 @@ export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
       })
   }
   return (
-    <DashboardModal
+    <TextFieldModal
       submitButtonText={'Host'}
       onSubmit={onHostTournament}
       header={'Host tournament'}

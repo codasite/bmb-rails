@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { ActionButton } from '../../brackets/shared/components/ActionButtons'
-import { Modal } from '../Modal'
+import { ActionButton } from '../brackets/shared/components/ActionButtons'
+import { Modal } from './Modal'
 
-export const DashboardModal = (props: {
+export const TextFieldModal = (props: {
   show: boolean
   setShow: (show: boolean) => void
   loading: boolean
