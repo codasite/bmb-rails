@@ -2,16 +2,21 @@ import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
 import { DashboardModal } from '../DashboardModal'
+import addClickHandlers from '../../addClickHandlers'
 
 export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
   const [templateId, setTemplateId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
   const [hasError, setHasError] = useState(false)
-  const handleHostTournamentClick = (e: HTMLButtonElement) => {
-    const templateId = e.dataset.templateId
-    setTemplateId(parseInt(templateId))
-  }
+  const [show, setShow] = useState(false)
+  addClickHandlers({
+    buttonClassName: 'wpbb-host-tournament-button',
+    onButtonClick: (b) => {
+      setTemplateId(parseInt(b.dataset.templateId))
+      setShow(true)
+    },
+  })
   const onHostTournament = () => {
     if (!input) {
       setHasError(true)
@@ -38,13 +43,13 @@ export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
       header={'Host tournament'}
       input={input}
       setInput={setInput}
-      buttonClassName={'wpbb-host-tournament-button'}
-      onButtonClick={handleHostTournamentClick}
       hasError={hasError}
       setHasError={setHasError}
       loading={loading}
       errorText={'Tournament name is required'}
       placeholderText={'Tournament name...'}
+      setShow={setShow}
+      show={show}
     />
   )
 }

@@ -2,17 +2,22 @@ import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
 import { DashboardModal } from '../DashboardModal'
+import addClickHandlers from '../../addClickHandlers'
 
 export const EditTemplateModal = () => {
   const [templateId, setTemplateId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
   const [hasError, setHasError] = useState(false)
-  const handleEditTemplateClick = (e: HTMLButtonElement) => {
-    const templateId = e.dataset.templateId
-    setInput(e.dataset.templateName)
-    setTemplateId(parseInt(templateId))
-  }
+  const [show, setShow] = useState(false)
+  addClickHandlers({
+    buttonClassName: 'wpbb-edit-template-button',
+    onButtonClick: (b) => {
+      setInput(b.dataset.templateName)
+      setTemplateId(parseInt(b.dataset.templateId))
+      setShow(true)
+    },
+  })
   const onEditTemplate = () => {
     if (!input) {
       setHasError(true)
@@ -38,13 +43,13 @@ export const EditTemplateModal = () => {
       header={'Edit info'}
       input={input}
       setInput={setInput}
-      buttonClassName={'wpbb-edit-template-button'}
-      onButtonClick={handleEditTemplateClick}
       hasError={hasError}
       setHasError={setHasError}
       loading={loading}
       errorText={'Template name is required'}
       placeholderText={'Template name...'}
+      setShow={setShow}
+      show={show}
     />
   )
 }

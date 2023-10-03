@@ -1,10 +1,10 @@
 import * as React from 'react'
-import { useState } from 'react'
 import { ActionButton } from '../../brackets/shared/components/ActionButtons'
-import addClickHandlers from '../addClickHandlers'
 import { Modal } from '../Modal'
 
 export const DashboardModal = (props: {
+  show: boolean
+  setShow: (show: boolean) => void
   loading: boolean
   submitButtonText: string
   onSubmit: () => void
@@ -13,21 +13,11 @@ export const DashboardModal = (props: {
   header: string
   input: string
   setInput: (input: string) => void
-  buttonClassName: string
-  onButtonClick: (e: HTMLButtonElement) => void
   hasError: boolean
   setHasError: (hasError: boolean) => void
 }) => {
-  const [showModal, setShowModal] = useState(false)
-  addClickHandlers({
-    buttonClassName: props.buttonClassName,
-    onButtonClick: (b) => {
-      props.onButtonClick(b)
-      setShowModal(true)
-    },
-  })
   return (
-    <Modal show={showModal} setShow={setShowModal}>
+    <Modal show={props.show} setShow={props.setShow}>
       <div className="tw-flex tw-flex-col">
         <h1 className="tw-text-32 tw-leading-10 tw-font-white tw-whitespace-pre-line tw-mb-30">
           {props.header}
@@ -60,7 +50,7 @@ export const DashboardModal = (props: {
             {props.submitButtonText}
           </ActionButton>
           <button
-            onClick={() => setShowModal(false)}
+            onClick={() => props.setShow(false)}
             className="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer"
           >
             Cancel
