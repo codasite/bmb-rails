@@ -11,7 +11,7 @@ import { bracketBuilderStore } from "./brackets/shared/app/store";
 import { Provider } from "react-redux";
 import { camelCaseKeys } from "./brackets/shared/api/bracketApi";
 import withMatchTree from "./brackets/shared/components/HigherOrder/WithMatchTree";
-import { CreateTournamentButtonAndModal } from "./modals/CreateTournamentButtonAndModal";
+import { CreateTournamentModal } from "./modals/CreateTournamentModal";
 /**
  * Import the stylesheet for the plugin.
  */
@@ -280,9 +280,7 @@ function renderPreview(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
-  const div = document.getElementById(
-    "wpbb-create-tournament-button-and-modal",
-  );
+  const div = document.getElementById("wpbb-create-tournament-modal");
   if (div) {
     const {
       myTemplatesUrl,
@@ -291,7 +289,7 @@ function renderCreateTournamentModal(ajaxObj: WpbbAjaxObj) {
       homeUrl,
     } = ajaxObj;
     render(
-      <CreateTournamentButtonAndModal
+      <CreateTournamentModal
         myTemplatesUrl={myTemplatesUrl}
         bracketTemplateBuilderUrl={bracketTemplateBuilderUrl}
         canCreateTournament={userCanCreateTournament}

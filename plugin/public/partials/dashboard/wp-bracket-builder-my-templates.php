@@ -76,7 +76,7 @@ $create_template_link = get_permalink(get_page_by_path('bracket-template-builder
   <h1>My Templates</h1>
   <!-- this link leads to the Create Template page to create a new bracket from scratch -->
   <a href="<?php echo $create_template_link ?>"
-     class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 hover:tw-text-black hover:tw-bg-white">
+     class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 hover:tw-text-black hover:tw-bg-white">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/file_plus.svg', __FILE__)); ?>
     <span class="tw-font-700 tw-text-24">Create Bracket Template</span>
   </a>
