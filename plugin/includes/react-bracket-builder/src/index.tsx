@@ -3,7 +3,6 @@ import React from "react";
 import App from "./App";
 import { render } from "react-dom";
 import * as Sentry from "@sentry/react";
-import { OverlayUrlThemeMap } from "./preview/Gallery";
 import { bracketBuilderStore } from "./brackets/shared/app/store";
 import { Provider } from "react-redux";
 import { camelCaseKeys } from "./brackets/shared/api/bracketApi";
@@ -11,36 +10,9 @@ import withMatchTree from "./brackets/shared/components/HigherOrder/WithMatchTre
 import { CreateTournamentModal } from "./modals/CreateTournamentModal";
 import "./styles/main.css";
 import { EditTemplateModal } from "./modals/DashboardTemplates/EditTemplateModal";
+import { WpbbAjaxObj } from "./wpbbAjaxObj";
 
 require("./wp-bracket-builder-public.js");
-interface WpbbAjaxObj {
-  page: string;
-  nonce: string;
-  rest_url: string;
-  tournament: any;
-  template: any;
-  play: any;
-  bracketUrlThemeMap: OverlayUrlThemeMap;
-  cssUrl: string;
-  redirectUrl: string;
-  galleryImages: any;
-  colorOptions: any;
-  sentryEnv: string;
-  sentryDsn: string;
-  post: any;
-  myTemplatesUrl: string;
-  myTournamentsUrl: string;
-  bracketTemplateBuilderUrl: string;
-  userCanCreateTournament: boolean;
-  homeUrl: string;
-  printOptions: PrintOptions;
-}
-interface PrintOptions {
-  theme: string;
-  position: string;
-  inchHeight: number;
-  inchWidth: number;
-}
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(
   () => import("./brackets/AdminTemplateBuilder/Settings"),
