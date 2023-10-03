@@ -70,15 +70,14 @@ class Wp_Bracket_Builder_Notification_Service {
             SELECT mp.winning_team_id AS pick_winning_team_id, tr.winning_team_id AS result_winning_team_id
             FROM {$wpdb->prefix}bracket_builder_tournament_plays play
             JOIN {$wpdb->prefix}posts post ON play.post_id = post.id
-            WHERE post.post_author = %d
             JOIN {$wpdb->prefix}bracket_builder_match_picks mp ON play.id = mp.bracket_play_id
             JOIN {$wpdb->prefix}bracket_builder_tournament_results tr ON mp.round_index = tr.round_index
             AND mp.match_index = tr.match_index
             AND mp.winning_team_id != tr.winning_team_id;
         ";
 
-        $prepared_query = $wpdb->prepare($query, $user_id);
-        $results = $wpdb->get_results($prepared_query);
+        // $prepared_query = $wpdb->prepare($query, $user_id);
+        $results = $wpdb->get_results($results);
         return $results;
     }
 
