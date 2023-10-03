@@ -45,7 +45,9 @@ export const TextFieldModal = (props: {
             fontWeight={700}
             disabled={props.loading || props.hasError}
             onClick={props.onSubmit}
-            className="hover:tw-text-white/75"
+            className={
+              props.loading || props.hasError ? '' : 'hover:tw-text-white/75'
+            }
           >
             {props.submitButtonText}
           </ActionButton>
