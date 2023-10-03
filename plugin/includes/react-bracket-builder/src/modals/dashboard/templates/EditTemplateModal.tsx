@@ -3,8 +3,7 @@ import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
 import { DashboardModal } from '../DashboardModal'
 
-export const EditTemplateModal = (props: {}) => {
-  const [showModal, setShowModal] = useState(false)
+export const EditTemplateModal = () => {
   const [templateId, setTemplateId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
