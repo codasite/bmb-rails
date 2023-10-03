@@ -24,10 +24,10 @@ class Wp_Bracket_Builder_Notification_Service {
 
         // Get picks for plays
         $query = "
-            SELECT *
+            SELECT 
             FROM {$wpdb->prefix}bracket_builder_match_picks mp
             JOIN ( " . $subquery . " ) AS subquery
-            ON mp.bracket_play_id = subquery.id
+            ON mp.bracket_play_id = subquery.play_id
         ";
 
         // Get results for picks
@@ -64,25 +64,22 @@ class Wp_Bracket_Builder_Notification_Service {
     }
 
     public function get_wrong_picks_by_author($user_id) {
-        $response = $this->get_all_picks_by_author($user_id);
-        $picks = $response['picks'];
-        $results = $response['results'];
+        global $wpdb;
 
-        $wrong_picks = array();
+        $query = "
+            SELECT mp.winning_team_id AS pick_winning_team_id, tr.winning_team_id AS result_winning_team_id
+            FROM {$wpdb->prefix}bracket_builder_tournament_plays play
+            JOIN {$wpdb->prefix}posts post ON play.post_id = post.id
+            WHERE post.post_author = %d
+            JOIN {$wpdb->prefix}bracket_builder_match_picks mp ON play.id = mp.bracket_play_id
+            JOIN {$wpdb->prefix}bracket_builder_tournament_results tr ON mp.round_index = tr.round_index
+            AND mp.match_index = tr.match_index
+            AND mp.winning_team_id != tr.winning_team_id;
+        ";
 
-        for ($i = 0; $i < count($picks); $i++) {
-            if ($picks[$i]->round_index == $results[$i]->round_index &&
-                $picks[$i]->match_index == $results[$i]->match_index &&
-                $picks[$i]->winning_team_id != $results[$i]->winning_team_id) {
-
-                echo 'pick winning team id: ' . $picks[$i]->winning_team_id . '<br>';
-                echo 'result winning team id: ' . $results[$i]->winning_team_id . '<br>';
-                $wrong_picks[] = $picks[$i];
-            }
-        }
-
-        return $wrong_picks;
-
+        $prepared_query = $wpdb->prepare($query, $user_id);
+        $results = $wpdb->get_results($prepared_query);
+        return $results;
     }
 
     public function send_incorrect_pick_notification($user_id) {
