@@ -11,90 +11,102 @@ class Wp_Bracket_Builder_Notification_Service {
         $this->email_service = $email_service;
     }
 
-    public function get_all_picks_by_author($user_id) {
+    private function get_team($team_id) {
         global $wpdb;
 
-        // Get plays for author
-        $subquery = "
-            SELECT p.*
-            FROM {$wpdb->prefix}bracket_builder_plays p
-            JOIN wp_posts post ON p.post_id = post.id
-            WHERE post.post_author = %d
-        ";
-
-        // Get picks for plays
         $query = "
-            SELECT 
-            FROM {$wpdb->prefix}bracket_builder_match_picks mp
-            JOIN ( " . $subquery . " ) AS subquery
-            ON mp.bracket_play_id = subquery.play_id
+            SELECT team.name as name FROM wp_bracket_builder_teams team
+            WHERE team.id = %d;
         ";
 
-        // Get results for picks
-        $query2 = "
-            SELECT *
-            FROM {$wpdb->prefix}bracket_builder_tournament_results tr
-            JOIN ( " . $subquery . " ) AS subquery
-            ON tr.bracket_tournament_id = subquery.bracket_tournament_id;
-        ";
-
-        // Get incorrect picks
-        // This is not working
-        // $outerquery = "
-        //     SELECT result.*, pick.winning_team_id AS pick_winning_team_id
-        //     FROM ( " . $query2 . " ) result
-        //     JOIN ( " . $query . " ) pick
-        //     ON result.round_index = pick.round_index
-        //     AND result.match_index = pick.match_index
-        //     AND result.bracket_tournament_id = pick.bracket_tournament_id
-        //     WHERE result.winning_team_id != pick.winning_team_id;
-        // ";
-
-        $prepared_query = $wpdb->prepare($query, $user_id);
-        $picks = $wpdb->get_results($prepared_query);
-
-        $prepared_query2 = $wpdb->prepare($query2, $user_id);
-        $results = $wpdb->get_results($prepared_query2);
-
-
-        return array(
-            'picks' => $picks,
-            'results' => $results
-        );
+        $prepared_query = $wpdb->prepare($query, $team_id);
+        $result = $wpdb->get_results($prepared_query);
+        return $result;
     }
 
-    public function get_wrong_picks_by_author($user_id) {
+    public function get_picks_for_tournament($tournament_id) {
         global $wpdb;
 
+        /**
+         * @var $query string
+         * Sorts picks for tournament by round index and
+         * returns the author's email, display name, the
+         * winning pick and the winning result.
+         */
         $query = "
-            SELECT mp.winning_team_id AS pick_winning_team_id, tr.winning_team_id AS result_winning_team_id
-            FROM {$wpdb->prefix}bracket_builder_tournament_plays play
-            JOIN {$wpdb->prefix}posts post ON play.post_id = post.id
-            JOIN {$wpdb->prefix}bracket_builder_match_picks mp ON play.id = mp.bracket_play_id
-            JOIN {$wpdb->prefix}bracket_builder_tournament_results tr ON mp.round_index = tr.round_index
-            AND mp.match_index = tr.match_index
-            AND mp.winning_team_id != tr.winning_team_id;
+            SELECT author.user_email, author.display_name, tournament.post_id as tournament_id, pick.round_index, pick.winning_team_id as user_pick, result.winning_team_id as winner
+            FROM wp_bracket_builder_tournaments tournament
+            JOIN wp_bracket_builder_plays play
+            ON tournament.id = play.bracket_tournament_id
+            JOIN wp_bracket_builder_match_picks pick
+            ON pick.bracket_play_id = play.id
+            JOIN wp_bracket_builder_tournament_results result
+            ON pick.round_index = result.round_index
+            AND pick.match_index = result.match_index
+            AND result.bracket_tournament_id = tournament.id
+            JOIN wp_posts post
+            ON post.ID = play.post_id
+            JOIN wp_users author
+            ON author.ID = post.post_author
+            WHERE tournament.post_id = %d
+            ORDER BY result.round_index;
         ";
 
-        // $prepared_query = $wpdb->prepare($query, $user_id);
-        $results = $wpdb->get_results($results);
+        $prepared_query = $wpdb->prepare($query, $tournament_id);
+        $results = $wpdb->get_results($prepared_query);
         return $results;
+
     }
 
-    public function send_incorrect_pick_notification($user_id) {
-        $play_repo = new Wp_Bracket_Builder_Play_Repo();
+    public function get_last_round_picks_for_tournament($tournament_id) {
+        $picks = $this->get_picks_for_tournament($tournament_id);
+        $last_round_index = $picks[count($picks) - 1]->round_index;
+        $last_round_picks = array_filter($picks, function($pick) use ($last_round_index) {
+            return $pick->round_index === $last_round_index;
+        });
+        return $last_round_picks;
+    }
 
-        $plays = $play_repo->get_all_by_author($user_id);
+    public function send_tournament_result_email_update($tournament_id) {
+        $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
-        $random_index = rand(0, count($plays) - 1);
+        $picks = $this->get_last_round_picks_for_tournament($tournament_id);
 
 
+        foreach($picks as $pick) {
+            $to_email = $pick->user_email;
+            $to_name = $pick->display_name;
+            $from_email = MAILCHIMP_FROM_EMAIL;
+            $subject = 'Back My Bracket Notification';
+            $user_pick = $this->get_team($pick->user_pick);
+            $winner = $this->get_team($pick->winner);
+            $tournament_id = $pick->tournament_id;
 
+            $background_image_url = 'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
+            $logo_url = 'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
+            $heading = ' Hello ' . $to_name;
+            $message = "Your pick: " . $user_pick[0]->name . ". Winner: " . $winner[0]->name . ".";
+            $subtext = $message;
+            $button_url = get_permalink($tournament_id) . '/leaderboard';
+            $button_text = 'click me';
 
-        $to_name = get_user_meta($user_id, 'first_name', true);
-        $to_email = get_user_meta($user_id, 'email', true);
-        $from_email = MAILCHIMP_FROM_EMAIL;
-        $subject = 'Back My Bracket Notification';
+            ob_start();
+            include plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/templates/play-scored.php';
+            $html = ob_get_clean();
+
+            // file_put_contents(plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/demo.html', $html);
+            
+            $response = $this->email_service->send_message(
+                $from_email,
+                $to_email,
+                $to_name,
+                $subject,
+                $message,
+                $html,
+            );
+
+            print_r($response);
+        }
     }
 }
 
