@@ -4,7 +4,8 @@ import { ReactComponent as LogoDark } from '../../../brackets/shared/assets/logo
 import { ReactComponent as CheckIcon } from '../../../brackets/shared/assets/check.svg'
 import * as React from 'react'
 import { useState } from 'react'
-import { ModalWithClickHandlers } from '../../ModalWithClickHandlers'
+import addClickHandlers from '../../addClickHandlers'
+import { Modal } from '../../Modal'
 
 export const CreateTournamentModal = (props: {
   myTemplatesUrl: string
@@ -13,6 +14,12 @@ export const CreateTournamentModal = (props: {
   canCreateTournament: boolean
 }) => {
   const [show, setShow] = useState(false)
+  addClickHandlers({
+    buttonClassName: 'wpbb-create-tournament-button',
+    onButtonClick: (b) => {
+      setShow(true)
+    },
+  })
   const cancelButton = (
     <button
       onClick={() => setShow(false)}
@@ -22,11 +29,7 @@ export const CreateTournamentModal = (props: {
     </button>
   )
   return (
-    <ModalWithClickHandlers
-      show={show}
-      setShow={setShow}
-      buttonClassName={'wpbb-create-tournament-button'}
-    >
+    <Modal show={show} setShow={setShow}>
       {props.canCreateTournament && (
         <div>
           <h1 className="tw-text-32 tw-leading-10 tw-text-center tw-font-white tw-whitespace-pre-line tw-mb-50">{`Host a tournament.
@@ -75,6 +78,6 @@ export const CreateTournamentModal = (props: {
           {cancelButton}
         </div>
       )}
-    </ModalWithClickHandlers>
+    </Modal>
   )
 }

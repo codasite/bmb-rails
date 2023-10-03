@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { ActionButton } from '../../brackets/shared/components/ActionButtons'
-import { ModalWithClickHandlers } from '../ModalWithClickHandlers'
+import addClickHandlers from '../addClickHandlers'
+import { Modal } from '../Modal'
 
 export const DashboardModal = (props: {
   loading: boolean
@@ -18,13 +19,15 @@ export const DashboardModal = (props: {
   setHasError: (hasError: boolean) => void
 }) => {
   const [showModal, setShowModal] = useState(false)
+  addClickHandlers({
+    buttonClassName: props.buttonClassName,
+    onButtonClick: (b) => {
+      props.onButtonClick(b)
+      setShowModal(true)
+    },
+  })
   return (
-    <ModalWithClickHandlers
-      show={showModal}
-      setShow={setShowModal}
-      buttonClassName={props.buttonClassName}
-      onButtonClick={props.onButtonClick}
-    >
+    <Modal show={showModal} setShow={setShowModal}>
       <div className="tw-flex tw-flex-col">
         <h1 className="tw-text-32 tw-leading-10 tw-font-white tw-whitespace-pre-line tw-mb-30">
           {props.header}
@@ -64,6 +67,6 @@ export const DashboardModal = (props: {
           </button>
         </div>
       </div>
-    </ModalWithClickHandlers>
+    </Modal>
   )
 }
