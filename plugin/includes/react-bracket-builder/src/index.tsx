@@ -1,20 +1,14 @@
-// require('../../../public/js/wp-bracket-builder-public.js')
 import { HostTournamentModal } from "./modals/DashboardTemplates/HostTournamentModal";
 import React from "react";
 import App from "./App";
-// import { render, hydrate } from '@wordpress/element';
 import { render } from "react-dom";
 import * as Sentry from "@sentry/react";
 import { OverlayUrlThemeMap } from "./preview/Gallery";
-// import { BracketRes } from './brackets/shared/api/types/bracket';
 import { bracketBuilderStore } from "./brackets/shared/app/store";
 import { Provider } from "react-redux";
 import { camelCaseKeys } from "./brackets/shared/api/bracketApi";
 import withMatchTree from "./brackets/shared/components/HigherOrder/WithMatchTree";
 import { CreateTournamentModal } from "./modals/CreateTournamentModal";
-/**
- * Import the stylesheet for the plugin.
- */
 import "./styles/main.css";
 import { EditTemplateModal } from "./modals/DashboardTemplates/EditTemplateModal";
 
@@ -117,10 +111,6 @@ function initializeSentry(ajaxObj: WpbbAjaxObj) {
     });
   }
 }
-
-/**
- * This renders the bracket builder admin page. DEPRECATED
- */
 function renderSettings(ajaxObj: WpbbAjaxObj) {
   const page = ajaxObj.page;
   if (page === "settings") {
@@ -133,10 +123,6 @@ function renderSettings(ajaxObj: WpbbAjaxObj) {
     );
   }
 }
-
-/**
- * This renders the create template builder page
- */
 function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
   const templateBuilder = document.getElementById("wpbb-template-builder");
   const { myTemplatesUrl, myTournamentsUrl, template } = ajaxObj;
@@ -155,10 +141,6 @@ function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
     );
   }
 }
-
-/**
- * This renders the play template page
- */
 function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
   const builderDiv = document.getElementById("wpbb-play-template");
   const { template, redirectUrl, cssUrl } = ajaxObj;
@@ -179,10 +161,6 @@ function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
     );
   }
 }
-
-/**
- * This renders the play tournament page
- */
 function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
   const builderDiv = document.getElementById("wpbb-play-tournament-builder");
   const { tournament, redirectUrl, cssUrl } = ajaxObj;
@@ -201,10 +179,6 @@ function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
     );
   }
 }
-
-/**
- * This renders the update tournament results page
- */
 function renderTournamentResultsBuilder(ajaxObj: WpbbAjaxObj) {
   const builderDiv = document.getElementById("wpbb-tournament-results-builder");
   const { tournament, myTournamentsUrl } = ajaxObj;
@@ -226,7 +200,6 @@ function renderTournamentResultsBuilder(ajaxObj: WpbbAjaxObj) {
     );
   }
 }
-
 function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
   const builderDiv = document.getElementById("wpbb-view-play");
   const { play, redirectUrl } = ajaxObj;
@@ -241,7 +214,6 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
     );
   }
 }
-
 function renderPrintBracketPage() {
   renderDiv(
     <App>
