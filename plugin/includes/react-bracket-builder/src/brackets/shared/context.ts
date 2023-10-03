@@ -1,10 +1,9 @@
-import { createContext } from 'react';
+import { createContext } from 'react'
 
 export interface BracketMeta {
-	title?: string,
-	date?: string,
+  title?: string
+  date?: string
 }
 
 export const DarkModeContext = createContext(false)
 export const BracketMetaContext = createContext<BracketMeta>({})
-

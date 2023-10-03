@@ -5,4 +5,3 @@ export { DefaultTeamSlot } from './TeamSlot'
 export { DefaultBracket } from './Bracket/DefaultBracket'
 export { RoundHeader } from './RoundHeader'
 export { ThemeSelector } from './ThemeSelector'
-

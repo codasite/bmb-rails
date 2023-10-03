@@ -1,2 +1,2 @@
-export { DefaultMatchColumn } from './DefaultMatchColumn';
-export { FlexMatchColumn } from './FlexMatchColumn';
+export { DefaultMatchColumn } from './DefaultMatchColumn'
+export { FlexMatchColumn } from './FlexMatchColumn'

@@ -1,44 +1,47 @@
-import React, { useContext } from 'react';
+import React, { useContext } from 'react'
 import { defaultBracketConstants } from '../../../constants'
-import { MatchBoxChildProps } from '../../types';
+import { MatchBoxChildProps } from '../../types'
 //@ts-ignore
-import { DefaultTeamSlot } from '../../TeamSlot';
-import { BracketMetaContext } from '../../../context';
+import { DefaultTeamSlot } from '../../TeamSlot'
+import { BracketMetaContext } from '../../../context'
 
 interface WinnerContainerProps extends MatchBoxChildProps {
-	topText?: string,
-	topTextFontSize?: number,
-	topTextColor?: string,
-	topTextColorDark?: string,
-	gap?: number,
+  topText?: string
+  topTextFontSize?: number
+  topTextColor?: string
+  topTextColorDark?: string
+  gap?: number
 }
 
 export const WinnerContainer = (props: WinnerContainerProps) => {
-	const {
-		match,
-		matchTree,
-		TeamSlotComponent = DefaultTeamSlot,
-		topText = 'Winner',
-		topTextFontSize = 48,
-		topTextColor = 'dd-blue',
-		topTextColorDark = 'white',
-		gap = 24,
-	} = props
+  const {
+    match,
+    matchTree,
+    TeamSlotComponent = DefaultTeamSlot,
+    topText = 'Winner',
+    topTextFontSize = 48,
+    topTextColor = 'dd-blue',
+    topTextColorDark = 'white',
+    gap = 24,
+  } = props
 
-	return (
-		<div className={`tw-flex tw-flex-col tw-gap-${gap} tw-items-center`}>
-			<span className={`tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-max-w-[700px] tw-text-center tw-leading-none`}>{topText}</span>
-			<TeamSlotComponent
-				match={match}
-				matchTree={matchTree}
-				team={match.getWinner()}
-				teamPosition={'winner'}
-				height={52}
-				width={257}
-				fontSize={36}
-				fontWeight={700}
-			/>
-		</div>
-	)
-
+  return (
+    <div className={`tw-flex tw-flex-col tw-gap-${gap} tw-items-center`}>
+      <span
+        className={`tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-max-w-[700px] tw-text-center tw-leading-none`}
+      >
+        {topText}
+      </span>
+      <TeamSlotComponent
+        match={match}
+        matchTree={matchTree}
+        team={match.getWinner()}
+        teamPosition={'winner'}
+        height={52}
+        width={257}
+        fontSize={36}
+        fontWeight={700}
+      />
+    </div>
+  )
 }

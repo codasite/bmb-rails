@@ -9,17 +9,13 @@ import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { BracketMeta } from '../../shared/context'
 
-
 interface BracketTitleProps {
   title: string
   setTitle: (title: string) => void
 }
 
 const BracketTitle = (props: BracketTitleProps) => {
-  const {
-    title,
-    setTitle
-  } = props
+  const { title, setTitle } = props
 
   const [editing, setEditing] = useState(false)
   const [textBuffer, setTextBuffer] = useState(title)
@@ -34,13 +30,16 @@ const BracketTitle = (props: BracketTitleProps) => {
   }
 
   return (
-    <div className='tw-flex tw-justify-center tw-border-b-solid tw-border-white/30 tw-p-16 ' onClick={startEditing}>
-      {editing ?
+    <div
+      className="tw-flex tw-justify-center tw-border-b-solid tw-border-white/30 tw-p-16 "
+      onClick={startEditing}
+    >
+      {editing ? (
         <input
-          className='tw-py-0 tw-outline-none tw-border-none tw-bg-transparent tw-text-32 tw-text-white tw-text-center tw-font-sans tw-w-full tw-uppercase'
+          className="tw-py-0 tw-outline-none tw-border-none tw-bg-transparent tw-text-32 tw-text-white tw-text-center tw-font-sans tw-w-full tw-uppercase"
           autoFocus
           onFocus={(e) => e.target.select()}
-          type='text'
+          type="text"
           value={textBuffer}
           onChange={(e) => setTextBuffer(e.target.value)}
           onBlur={doneEditing}
@@ -50,13 +49,14 @@ const BracketTitle = (props: BracketTitleProps) => {
             }
           }}
         />
-        :
-        <h1 className='tw-font-500 tw-text-32 !tw-text-white/20 tw-text-center'>{title}</h1>
-      }
+      ) : (
+        <h1 className="tw-font-500 tw-text-32 !tw-text-white/20 tw-text-center">
+          {title}
+        </h1>
+      )}
     </div>
   )
 }
-
 
 export interface NumTeamsPickerState {
   currentValue: number
@@ -102,7 +102,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
 
   // Update the global `numTeams` variable whenever picker state changes
   useEffect(() => {
-    const picker = teamPickerState.find(picker => picker.selected)
+    const picker = teamPickerState.find((picker) => picker.selected)
     if (picker) {
       const numTeams = picker.currentValue
       setNumTeams(numTeams)
@@ -126,7 +126,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     const picker = teamPickerState[index]
     const newPicker = {
       ...picker,
-      currentValue: picker.currentValue + value
+      currentValue: picker.currentValue + value,
     }
     updateTeamPicker(index, newPicker)
   }
@@ -143,23 +143,28 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     const picker = teamPickerState[index]
     const newPicker = {
       ...picker,
-      currentValue: value
+      currentValue: value,
     }
     updateTeamPicker(index, newPicker)
   }
 
-  const setTeamPickerSelected = (index: number, resetValue: boolean = false) => {
+  const setTeamPickerSelected = (
+    index: number,
+    resetValue: boolean = false
+  ) => {
     const newPickers = teamPickerState.map((picker, i) => {
       if (i === index) {
         return {
           ...picker,
-          currentValue: resetValue ? teamPickerDefaults[index] : picker.currentValue,
-          selected: true
+          currentValue: resetValue
+            ? teamPickerDefaults[index]
+            : picker.currentValue,
+          selected: true,
         }
       }
       return {
         ...picker,
-        selected: false
+        selected: false,
       }
     })
     setTeamPickerState(newPickers)
@@ -186,7 +191,6 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     }
     return undefined
   }
-
 
   // Show wild card options if numTeams is a power of 2
   const showWildCardOptions = !isPowerOfTwo(numTeams)
@@ -222,20 +226,29 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
   // }
 
   return (
-    <div className='tw-bg-no-repeat tw-bg-top tw-bg-cover' style={{ 'backgroundImage': `url(${darkBracketBg})` }}>
+    <div
+      className="tw-bg-no-repeat tw-bg-top tw-bg-cover"
+      style={{ backgroundImage: `url(${darkBracketBg})` }}
+    >
       <div className="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
-        <BracketTitle title={bracketMeta.title} setTitle={(title => setBracketMeta({ ...bracketMeta, title }))} />
-        {
-          matchTree &&
+        <BracketTitle
+          title={bracketMeta.title}
+          setTitle={(title) => setBracketMeta({ ...bracketMeta, title })}
+        />
+        {matchTree && (
           <div>
             <BracketTemplatePreview matchTree={matchTree} />
           </div>
-        }
-        <div className={`tw-flex tw-flex-col tw-gap-24${showWildCardOptions ? '' : ' tw-pb-24'}`}>
-          <span className='tw-text-white/50 tw-text-center tw-font-500 tw-text-24'>
+        )}
+        <div
+          className={`tw-flex tw-flex-col tw-gap-24${
+            showWildCardOptions ? '' : ' tw-pb-24'
+          }`}
+        >
+          <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-24">
             How Many total teams in Your Bracket
           </span>
-          <div className='tw-flex tw-flex-col md:tw-flex-row tw-gap-24'>
+          <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-24">
             {teamPickerState.map((pickerState, i) => {
               return (
                 <NumTeamsPicker
@@ -254,22 +267,20 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
               )
             })}
           </div>
-          {
-            showWildCardOptions &&
+          {showWildCardOptions && (
             <WildcardPicker
               wildcardPlacement={wildcardPlacement}
               onWildcardPlacementChanged={handleWildcardPlacement}
             />
-          }
+          )}
         </div>
         {/* <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
           <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans '>Add Your Teams</span>
         </button> */}
-        <ActionButton
-          variant='green'
-          onClick={onAddTeamsClick}
-        >
-          <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Add Your Teams</span>
+        <ActionButton variant="green" onClick={onAddTeamsClick}>
+          <span className="tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+            Add Your Teams
+          </span>
         </ActionButton>
       </div>
     </div>

@@ -1,4 +1,6 @@
 # Ignore artifacts:
 build
+dist
 coverage
 composer.lock
+*.md
