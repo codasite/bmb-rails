@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
-import { MyTemplatesModal } from '../MyTemplatesModal'
+import { DashboardModal } from '../DashboardModal'
 
 export const EditTemplateModal = (props: {}) => {
   const [showModal, setShowModal] = useState(false)
@@ -33,7 +33,7 @@ export const EditTemplateModal = (props: {}) => {
       })
   }
   return (
-    <MyTemplatesModal
+    <DashboardModal
       submitButtonText={'Save'}
       onSubmit={onEditTemplate}
       header={'Edit info'}

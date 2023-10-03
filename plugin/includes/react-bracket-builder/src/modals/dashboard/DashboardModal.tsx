@@ -1,23 +1,23 @@
-import * as React from "react";
-import { useState } from "react";
-import { ActionButton } from "../../brackets/shared/components/ActionButtons";
-import { ModalWithClickHandlers } from "../ModalWithClickHandlers";
+import * as React from 'react'
+import { useState } from 'react'
+import { ActionButton } from '../../brackets/shared/components/ActionButtons'
+import { ModalWithClickHandlers } from '../ModalWithClickHandlers'
 
-export const MyTemplatesModal = (props: {
-  loading: boolean;
-  submitButtonText: string;
-  onSubmit: () => void;
-  errorText: string;
-  placeholderText: string;
-  header: string;
-  input: string;
-  setInput: (input: string) => void;
-  buttonClassName: string;
-  onButtonClick: (e: HTMLButtonElement) => void;
-  hasError: boolean;
-  setHasError: (hasError: boolean) => void;
+export const DashboardModal = (props: {
+  loading: boolean
+  submitButtonText: string
+  onSubmit: () => void
+  errorText: string
+  placeholderText: string
+  header: string
+  input: string
+  setInput: (input: string) => void
+  buttonClassName: string
+  onButtonClick: (e: HTMLButtonElement) => void
+  hasError: boolean
+  setHasError: (hasError: boolean) => void
 }) => {
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false)
   return (
     <ModalWithClickHandlers
       show={showModal}
@@ -32,15 +32,15 @@ export const MyTemplatesModal = (props: {
         <input
           className={`${
             props.hasError
-              ? "tw-placeholder-red/60 tw-border-red tw-text-red"
-              : "tw-placeholder-white/60"
+              ? 'tw-placeholder-red/60 tw-border-red tw-text-red'
+              : 'tw-placeholder-white/60'
           } tw-border-0 tw-border-b tw-border-white tw-mb-30 tw-border-solid tw-p-15 tw-outline-none tw-bg-transparent tw-text-16 tw-text-white tw-font-sans tw-w-full tw-uppercase`}
           type="text"
           placeholder={props.hasError ? props.errorText : props.placeholderText}
           value={props.input}
           onChange={(e) => {
-            props.setInput(e.target.value);
-            props.setHasError(!e.target.value);
+            props.setInput(e.target.value)
+            props.setHasError(!e.target.value)
           }}
         />
         <div className="tw-flex tw-flex-col tw-gap-10">
@@ -65,5 +65,5 @@ export const MyTemplatesModal = (props: {
         </div>
       </div>
     </ModalWithClickHandlers>
-  );
-};
+  )
+}

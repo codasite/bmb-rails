@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
-import { MyTemplatesModal } from '../MyTemplatesModal'
+import { DashboardModal } from '../DashboardModal'
 
 export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
   const [templateId, setTemplateId] = useState<number | null>(null)
@@ -32,7 +32,7 @@ export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
       })
   }
   return (
-    <MyTemplatesModal
+    <DashboardModal
       submitButtonText={'Host'}
       onSubmit={onHostTournament}
       header={'Host tournament'}
