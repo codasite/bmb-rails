@@ -1,5 +1,9 @@
 # wp-bracket-builder
 
+## Dev setup
+
+1. Run prettier on save with your editor: https://prettier.io/docs/en/editors
+
 ## Installation
 
 1. Install Wordpress locally
@@ -35,7 +39,7 @@ ln -s /Users/karl/Documents/repos/wp-bracket-builder/plugin wp-bracket-builder
 - "Bracket Template Builder" [wpbb-template-builder]
 - "Print Page" (slug: print) [wpbb-print-page] CAN BE PRIVATE
 
-9. Create Oxygen templates for the following post types and add the shortcodes
+9. Create Oxygen templates for the following post types and add the shortcodes. Under `Where does this template apply?` Select the corresponding post type.
 
 - "bracket_template" posts: [wpbb-bracket-template]
 - "bracket_tournament" posts: [wpbb-bracket-tournament]

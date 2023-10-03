@@ -1,220 +1,230 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { BracketProps, PaginatedBracketProps } from '../types';
+import React, { useState, useContext, useEffect } from 'react'
+import { BracketProps, PaginatedBracketProps } from '../types'
 import {
-	getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
-	getMatchGap,
-	getSubsequentMatchGap as getDefaultSubsequentMatchGap,
-	getBracketHeight as getDefaultBracketHeight,
-	getBracketWidth as getDefaultBracketWidth,
-	getTeamGap as getDefaultTeamGap,
-	getTeamHeight as getDefaultTeamHeight,
-	getTeamFontSize as getDefaultTeamFontSize,
-	getTeamWidth as getDefaultTeamWidth,
+  getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
+  getMatchGap,
+  getSubsequentMatchGap as getDefaultSubsequentMatchGap,
+  getBracketHeight as getDefaultBracketHeight,
+  getBracketWidth as getDefaultBracketWidth,
+  getTeamGap as getDefaultTeamGap,
+  getTeamHeight as getDefaultTeamHeight,
+  getTeamFontSize as getDefaultTeamFontSize,
+  getTeamWidth as getDefaultTeamWidth,
 } from '../../utils'
-import { DefaultMatchColumn } from '../MatchColumn';
-import { DefaultTeamSlot } from '../TeamSlot';
-import { BracketLines, RootMatchLines } from './BracketLines';
-import { DarkModeContext } from '../../context';
-import { ActionButton } from '../ActionButtons';
-import { WinnerContainer } from '../MatchBox/Children/WinnerContainer';
-import { DefaultNextButton, DefaultFinalButton } from './BracketActionButtons';
-import { MatchNode } from '../../models/MatchTree';
-
+import { DefaultMatchColumn } from '../MatchColumn'
+import { DefaultTeamSlot } from '../TeamSlot'
+import { BracketLines, RootMatchLines } from './BracketLines'
+import { DarkModeContext } from '../../context'
+import { ActionButton } from '../ActionButtons'
+import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
+import { DefaultNextButton, DefaultFinalButton } from './BracketActionButtons'
+import { MatchNode } from '../../models/MatchTree'
 
 export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
-	const {
-		getBracketWidth = () => 260,
-		getTeamHeight = () => getDefaultTeamHeight(4),
-		getTeamGap = () => getDefaultTeamGap(0),
-		getFirstRoundMatchGap = () => getDefaultFirstRoundMatchGap(5),
-		getSubsequentMatchGap = getDefaultSubsequentMatchGap,
-		getTeamFontSize = () => getDefaultTeamFontSize(4),
-		getTeamWidth = () => getDefaultTeamWidth(4),
-		matchTree,
-		setMatchTree,
-		MatchColumnComponent = DefaultMatchColumn,
-		MatchBoxComponent,
-		TeamSlotComponent = DefaultTeamSlot,
-		onTeamClick,
-		lineStyle,
-		onFinished,
-		NextButtonComponent = DefaultNextButton,
-		FinalButtonComponent = DefaultFinalButton,
-	} = props
+  const {
+    getBracketWidth = () => 260,
+    getTeamHeight = () => getDefaultTeamHeight(4),
+    getTeamGap = () => getDefaultTeamGap(0),
+    getFirstRoundMatchGap = () => getDefaultFirstRoundMatchGap(5),
+    getSubsequentMatchGap = getDefaultSubsequentMatchGap,
+    getTeamFontSize = () => getDefaultTeamFontSize(4),
+    getTeamWidth = () => getDefaultTeamWidth(4),
+    matchTree,
+    setMatchTree,
+    MatchColumnComponent = DefaultMatchColumn,
+    MatchBoxComponent,
+    TeamSlotComponent = DefaultTeamSlot,
+    onTeamClick,
+    lineStyle,
+    onFinished,
+    NextButtonComponent = DefaultNextButton,
+    FinalButtonComponent = DefaultFinalButton,
+  } = props
 
-	const [page, setPage] = useState(0)
+  const [page, setPage] = useState(0)
 
-	useEffect(() => {
-		// try to determine page from matchTree
-		if (!matchTree.anyPicked()) {
-			return
-		}
-		if (matchTree.allPicked()) {
-			return setPage((matchTree.rounds.length - 1) * 2)
-		}
-		// find first unpicked match
-		const firstUnpickedMatch = matchTree.findMatch(match => match && !match.isPicked())
-		if (!firstUnpickedMatch) {
-			return
-		}
-		const { roundIndex, matchIndex } = firstUnpickedMatch
-		const numMatches = matchTree.rounds[roundIndex].matches.length
-		let pageNum = roundIndex * 2
-		if (matchIndex >= numMatches / 2) {
-			pageNum++
-		}
-		setPage(pageNum)
-	}, [])
+  useEffect(() => {
+    // try to determine page from matchTree
+    if (!matchTree.anyPicked()) {
+      return
+    }
+    if (matchTree.allPicked()) {
+      return setPage((matchTree.rounds.length - 1) * 2)
+    }
+    // find first unpicked match
+    const firstUnpickedMatch = matchTree.findMatch(
+      (match) => match && !match.isPicked()
+    )
+    if (!firstUnpickedMatch) {
+      return
+    }
+    const { roundIndex, matchIndex } = firstUnpickedMatch
+    const numMatches = matchTree.rounds[roundIndex].matches.length
+    let pageNum = roundIndex * 2
+    if (matchIndex >= numMatches / 2) {
+      pageNum++
+    }
+    setPage(pageNum)
+  }, [])
 
+  const numRounds = matchTree.rounds.length
+  const roundIndex = Math.floor(page / 2)
+  const nextRoundIndex = roundIndex + 1
+  const thisRoundIsLast = roundIndex === numRounds - 1
+  const nextRoundIsLast = nextRoundIndex === numRounds - 1
+  const leftSide = page % 2 === 0
 
-	const numRounds = matchTree.rounds.length
-	const roundIndex = Math.floor(page / 2)
-	const nextRoundIndex = roundIndex + 1
-	const thisRoundIsLast = roundIndex === numRounds - 1
-	const nextRoundIsLast = nextRoundIndex === numRounds - 1
-	const leftSide = page % 2 === 0
+  let matches1 = matchTree.rounds[roundIndex].matches
+  let matches2 = thisRoundIsLast
+    ? null
+    : matchTree.rounds[nextRoundIndex].matches
 
-	let matches1 = matchTree.rounds[roundIndex].matches
-	let matches2 = thisRoundIsLast ? null : matchTree.rounds[nextRoundIndex].matches
+  if (matches2) {
+    // remove nulls from col 1 whose parent match has no children
+    matches1 = matches1.reduce((acc, match, i) => {
+      const parentMatchIndex = Math.floor(i / 2)
+      const parentMatch = matches2[parentMatchIndex]
+      if (parentMatch.left || parentMatch.right) {
+        acc = [...acc, match]
+      }
+      return acc
+    }, [])
+    // remove matches from col 2 with no children
+    matches2 = matches2.filter((match) => match.left || match.right)
+  }
 
-	if (matches2) {
-		// remove nulls from col 1 whose parent match has no children
-		matches1 = matches1.reduce((acc, match, i) => {
-			const parentMatchIndex = Math.floor(i / 2)
-			const parentMatch = matches2[parentMatchIndex]
-			if (parentMatch.left || parentMatch.right) {
-				acc = [...acc, match]
-			}
-			return acc
-		}, [])
-		// remove matches from col 2 with no children
-		matches2 = matches2.filter(match => match.left || match.right)
+  if (!thisRoundIsLast) {
+    const mid1 = matches1.length / 2
+    const mid2 = matches2.length / 2
 
-	}
+    if (leftSide) {
+      // if left side, get first half of matches
+      matches1 = matches1.slice(0, mid1)
+      matches2 = nextRoundIsLast ? matches2 : matches2.slice(0, mid2)
+    } else {
+      // if right side, get second half of matches
+      matches1 = matches1.slice(mid1)
+      matches2 = nextRoundIsLast ? matches2 : matches2.slice(mid2)
+    }
+  }
 
-	if (!thisRoundIsLast) {
-		const mid1 = matches1.length / 2
-		const mid2 = matches2.length / 2
+  const depth = numRounds - roundIndex - 1
+  const matchGap1 = getFirstRoundMatchGap(numRounds)
+  const teamGap = getTeamGap(depth)
+  const teamHeight = getTeamHeight(numRounds)
+  const teamWidth = getTeamWidth(numRounds)
+  const teamFontSize = getTeamFontSize(numRounds)
 
-		if (leftSide) {
-			// if left side, get first half of matches
-			matches1 = matches1.slice(0, mid1)
-			matches2 = nextRoundIsLast ? matches2 : matches2.slice(0, mid2)
-		} else {
-			// if right side, get second half of matches
-			matches1 = matches1.slice(mid1)
-			matches2 = nextRoundIsLast ? matches2 : matches2.slice(mid2)
-		}
-	}
+  const matchHeight = teamHeight * 2 + teamGap
+  const matchGap2 = getSubsequentMatchGap(matchHeight, matchGap1, matchHeight)
 
-	const depth = numRounds - roundIndex - 1
-	const matchGap1 = getFirstRoundMatchGap(numRounds)
-	const teamGap = getTeamGap(depth)
-	const teamHeight = getTeamHeight(numRounds)
-	const teamWidth = getTeamWidth(numRounds)
-	const teamFontSize = getTeamFontSize(numRounds)
+  const thisMatchPosition = leftSide ? 'left' : 'right'
+  const nextMatchPosition = nextRoundIsLast
+    ? 'center'
+    : leftSide
+    ? 'left'
+    : 'right'
 
-	const matchHeight = teamHeight * 2 + teamGap
-	const matchGap2 = getSubsequentMatchGap(matchHeight, matchGap1, matchHeight)
+  const matchCol1 = (
+    <MatchColumnComponent
+      matches={matches1}
+      matchPosition={thisMatchPosition}
+      matchTree={matchTree}
+      setMatchTree={setMatchTree}
+      MatchBoxComponent={MatchBoxComponent}
+      TeamSlotComponent={TeamSlotComponent}
+      matchGap={matchGap1}
+      teamGap={teamGap}
+      teamHeight={teamHeight}
+      teamWidth={teamWidth}
+      teamFontSize={teamFontSize}
+      onTeamClick={onTeamClick}
+    />
+  )
 
-	const thisMatchPosition = leftSide ? 'left' : 'right'
-	const nextMatchPosition = nextRoundIsLast ? 'center' : leftSide ? 'left' : 'right'
+  const matchCol2 = thisRoundIsLast ? null : (
+    <MatchColumnComponent
+      matches={matches2}
+      matchPosition={nextMatchPosition}
+      matchTree={matchTree}
+      MatchBoxComponent={MatchBoxComponent}
+      TeamSlotComponent={TeamSlotComponent}
+      matchGap={matchGap2}
+      teamGap={teamGap}
+      teamHeight={teamHeight}
+      teamWidth={teamWidth}
+      teamFontSize={teamFontSize}
+    />
+  )
 
-	const matchCol1 =
-		<MatchColumnComponent
-			matches={matches1}
-			matchPosition={thisMatchPosition}
-			matchTree={matchTree}
-			setMatchTree={setMatchTree}
-			MatchBoxComponent={MatchBoxComponent}
-			TeamSlotComponent={TeamSlotComponent}
-			matchGap={matchGap1}
-			teamGap={teamGap}
-			teamHeight={teamHeight}
-			teamWidth={teamWidth}
-			teamFontSize={teamFontSize}
-			onTeamClick={onTeamClick}
-		/>
+  const darkMode = useContext(DarkModeContext)
 
-	const matchCol2 = thisRoundIsLast ? null :
-		<MatchColumnComponent
-			matches={matches2}
-			matchPosition={nextMatchPosition}
-			matchTree={matchTree}
-			MatchBoxComponent={MatchBoxComponent}
-			TeamSlotComponent={TeamSlotComponent}
-			matchGap={matchGap2}
-			teamGap={teamGap}
-			teamHeight={teamHeight}
-			teamWidth={teamWidth}
-			teamFontSize={teamFontSize}
-		/>
+  const linesStyle = lineStyle || {
+    className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
+  }
 
-	const darkMode = useContext(DarkModeContext);
+  const maxW = getBracketWidth(numRounds)
 
-	const linesStyle = lineStyle || {
-		className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
-	}
+  const handleNext = () => {
+    const maxPages = (matchTree.rounds.length - 1) * 2
+    const newPage = page + 1
+    if (newPage <= maxPages) {
+      setPage(newPage)
+    }
+  }
 
-	const maxW = getBracketWidth(numRounds)
+  const disableNext = matches1.some((match) => match && !match.isPicked())
 
-	const handleNext = () => {
-		const maxPages = (matchTree.rounds.length - 1) * 2
-		const newPage = page + 1
-		if (newPage <= maxPages) {
-			setPage(newPage)
-		}
-	}
+  return (
+    <div
+      className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}
+    >
+      <div className="tw-flex tw-justify-center">
+        <h2 className="tw-text-24 tw-font-700 tw-text-white">{`Round ${
+          roundIndex + 1
+        }`}</h2>
+      </div>
+      <div
+        className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${
+          thisRoundIsLast ? ' tw-pb-0' : ''
+        }`}
+      >
+        {thisRoundIsLast && (
+          <WinnerContainer
+            match={matchTree.rounds[roundIndex].matches[0]}
+            matchTree={matchTree}
+            topText="Winner"
+            TeamSlotComponent={TeamSlotComponent}
+            gap={16}
+            topTextFontSize={64}
+          />
+        )}
 
-	const disableNext = matches1.some(match => match && !match.isPicked())
-
-	return (
-		<div className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}>
-			<div className='tw-flex tw-justify-center'>
-				<h2 className='tw-text-24 tw-font-700 tw-text-white'>{`Round ${roundIndex + 1}`}</h2>
-			</div>
-			<div className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${thisRoundIsLast ? ' tw-pb-0' : ''}`}>
-				{thisRoundIsLast &&
-					<WinnerContainer
-						match={matchTree.rounds[roundIndex].matches[0]}
-						matchTree={matchTree}
-						topText='Winner'
-						TeamSlotComponent={TeamSlotComponent}
-						gap={16}
-						topTextFontSize={64}
-					/>
-				}
-
-				<div className={`tw-flex tw-justify-${thisRoundIsLast ? 'center' : 'between'}`}>
-					{leftSide ? matchCol1 : matchCol2}
-					{leftSide ? matchCol2 : matchCol1}
-					{thisRoundIsLast ?
-						<RootMatchLines
-							rounds={matchTree.rounds}
-							style={linesStyle}
-						/>
-						:
-						<BracketLines
-							rounds={matchTree.rounds}
-							style={linesStyle}
-						/>
-					}
-				</div>
-			</div>
-			<div className={`tw-flex tw-flex-col tw-justify-end tw-items-${thisRoundIsLast ? 'center' : 'stretch'}${thisRoundIsLast ? ' tw-flex-grow' : ''}`}>
-				{
-					thisRoundIsLast ?
-						<FinalButtonComponent
-							disabled={disableNext}
-							onClick={onFinished}
-						/>
-						:
-						<NextButtonComponent
-							disabled={disableNext}
-							onClick={handleNext}
-						/>
-				}
-			</div>
-		</div>
-	)
+        <div
+          className={`tw-flex tw-justify-${
+            thisRoundIsLast ? 'center' : 'between'
+          }`}
+        >
+          {leftSide ? matchCol1 : matchCol2}
+          {leftSide ? matchCol2 : matchCol1}
+          {thisRoundIsLast ? (
+            <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
+          ) : (
+            <BracketLines rounds={matchTree.rounds} style={linesStyle} />
+          )}
+        </div>
+      </div>
+      <div
+        className={`tw-flex tw-flex-col tw-justify-end tw-items-${
+          thisRoundIsLast ? 'center' : 'stretch'
+        }${thisRoundIsLast ? ' tw-flex-grow' : ''}`}
+      >
+        {thisRoundIsLast ? (
+          <FinalButtonComponent disabled={disableNext} onClick={onFinished} />
+        ) : (
+          <NextButtonComponent disabled={disableNext} onClick={handleNext} />
+        )}
+      </div>
+    </div>
+  )
 }

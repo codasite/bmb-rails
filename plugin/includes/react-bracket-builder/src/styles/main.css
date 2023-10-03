@@ -7,9 +7,9 @@
 @import url('clash-display.css');
 
 .wpbb-reset {
-	font-family: 'Clash Display', sans-serif;
-	text-transform: uppercase;
-	color: #fff;
-	line-height: normal;
-	box-sizing: border-box;
+  font-family: 'Clash Display', sans-serif;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: normal;
+  box-sizing: border-box;
 }
