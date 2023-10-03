@@ -1,10 +1,10 @@
-import { ReactComponent as FileIcon } from '../brackets/shared/assets/file.svg'
-import { ReactComponent as PlusIcon } from '../brackets/shared/assets/plus.svg'
-import { ReactComponent as LogoDark } from '../brackets/shared/assets/logo_dark.svg'
-import { ReactComponent as CheckIcon } from '../brackets/shared/assets/check.svg'
+import { ReactComponent as FileIcon } from '../../../brackets/shared/assets/file.svg'
+import { ReactComponent as PlusIcon } from '../../../brackets/shared/assets/plus.svg'
+import { ReactComponent as LogoDark } from '../../../brackets/shared/assets/logo_dark.svg'
+import { ReactComponent as CheckIcon } from '../../../brackets/shared/assets/check.svg'
 import * as React from 'react'
 import { useState } from 'react'
-import { ModalWithClickHandlers } from './ModalWithClickHandlers'
+import { ModalWithClickHandlers } from '../../ModalWithClickHandlers'
 
 export const CreateTournamentModal = (props: {
   myTemplatesUrl: string
