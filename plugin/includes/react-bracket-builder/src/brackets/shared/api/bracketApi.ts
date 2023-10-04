@@ -2,17 +2,12 @@ import * as Sentry from '@sentry/react'
 import {
   HTMLtoImageReq,
   HTMLtoImageRes,
-  MatchReq,
-  MatchRes,
-  MatchPicks,
-  TeamReq,
-  TeamRes,
+  PlayReq,
+  PlayRes,
   TemplateReq,
   TemplateRes,
   TournamentReq,
   TournamentRes,
-  PlayReq,
-  PlayRes,
 } from './types/bracket'
 
 interface RequestOptions {
@@ -21,53 +16,55 @@ interface RequestOptions {
   snakeCaseBody?: boolean
   camelCaseResponse?: boolean
 }
-
 declare var wpbb_ajax_obj: any
-
 class BracketApi {
   private baseUrl: string = ''
   private templatesPath: string = 'templates'
   private playsPath: string = 'plays'
   private tournamentsPath: string = 'tournaments'
   private nonce: string = ''
-
   constructor() {
     if (typeof wpbb_ajax_obj !== 'undefined') {
       this.baseUrl = wpbb_ajax_obj.rest_url
       this.nonce = wpbb_ajax_obj.nonce
     }
   }
-
   async createTemplate(template: TemplateReq): Promise<TemplateRes> {
     const options: RequestOptions = { method: 'POST', body: template }
     const res = await this.performRequest(this.templatesPath, options)
     return res
   }
-
+  async updateTemplate(
+    templateId: number,
+    template: Partial<TemplateReq>
+  ): Promise<TemplateRes> {
+    const options: RequestOptions = { method: 'PATCH', body: template }
+    return await this.performRequest(
+      `${this.templatesPath}/${templateId}`,
+      options
+    )
+  }
   async createTournament(tournament: TournamentReq): Promise<TournamentRes> {
     const options: RequestOptions = { method: 'POST', body: tournament }
     const res = await this.performRequest(this.tournamentsPath, options)
     return res
   }
-
   async createPlay(play: PlayReq): Promise<PlayRes> {
     const options: RequestOptions = { method: 'POST', body: play }
     const res = await this.performRequest(this.playsPath, options)
     return res
   }
-
   async updateTournament(
     tournamentId: number,
     tournament: TournamentReq
   ): Promise<TournamentRes> {
     const options: RequestOptions = { method: 'PATCH', body: tournament }
     const res = await this.performRequest(
-      this.tournamentsPath + '/' + tournamentId,
+      `${this.tournamentsPath}/${tournamentId}`,
       options
     )
     return res
   }
-
   async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
     const options: RequestOptions = {
       method: 'POST',
@@ -77,7 +74,6 @@ class BracketApi {
     const res = await this.performRequest('html-to-image', options)
     return res
   }
-
   async performRequest(
     path: string,
     options: RequestOptions = {}
@@ -88,7 +84,6 @@ class BracketApi {
       snakeCaseBody = true,
       camelCaseResponse = true,
     } = options
-
     if (snakeCaseBody) {
       body = snakeCaseKeys(body)
     }
@@ -111,20 +106,16 @@ class BracketApi {
     }
     try {
       const response = await fetch(`${this.baseUrl}${path}`, request)
-
       if (!response.ok) {
         const text = await response.text()
         throw new Error(
           `HTTP Error ${response.status}: ${response.statusText} - ${text}`
         )
       }
-
       let responseData = await response.json()
-
       if (camelCaseResponse) {
         responseData = camelCaseKeys(responseData)
       }
-
       return responseData
     } catch (error) {
       Sentry.captureException(error)
@@ -169,5 +160,4 @@ function snakeCaseKeys(obj: any): any {
   }
   return obj
 }
-
 export const bracketApi = new BracketApi()

@@ -4,13 +4,15 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'shared/wp-bracket-builder-par
 /**
  * Icon Buttons DO something (make post request, execute JS, etc.)
  */
-function icon_btn($icon_path, $type = '') {
+function icon_btn($icon_path, $type = '', $id = '', $classes = '', $attributes = '') {
 	ob_start();
-?>
-	<button <?php echo !empty($type) ? "type=$type" : '' ?> class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-items-center tw-justify-center tw-rounded-8 hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
+	?>
+  <button <?php echo !empty($type) ? "type=$type" : '' ?> <?php echo !empty($id) ? "id=$id" : '' ?>
+      class="<?php echo $classes ?> tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-items-center tw-justify-center tw-rounded-8 hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black"
+		<?php echo $attributes ?>>
 		<?php echo file_get_contents(plugins_url($icon_path, __FILE__)); ?>
-	</button>
-<?php
+  </button>
+	<?php
 	return ob_get_clean();
 }
 

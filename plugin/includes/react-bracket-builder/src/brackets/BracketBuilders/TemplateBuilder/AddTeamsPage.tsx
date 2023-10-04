@@ -1,43 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ReactComponent as ArrowNarrowLeft } from '../../shared/assets/arrow-narrow-left.svg'
 import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
-import {
-  BracketMeta,
-  BracketMetaContext,
-  DarkModeContext,
-} from '../../shared/context'
 import {
   AddTeamsBracket,
   PaginatedDefaultBracket,
 } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import { ReactComponent as ShuffleIcon } from '../../shared/assets/shuffle.svg'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
 import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { useWindowDimensions } from '../../../utils/hooks'
+import { TextFieldModal } from '../../../modals/TextFieldModal'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   handleSaveTemplate: () => void
-  handleSaveTournament: () => void
+  handleCreateTournament: (tournamentName: string) => Promise<void>
   handleBack: () => void
 }
-
 export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const {
     matchTree,
     setMatchTree,
     handleSaveTemplate,
-    handleSaveTournament,
+    handleCreateTournament,
     handleBack,
   } = props
-
   const createDisabled = !matchTree || !matchTree.allTeamsAdded()
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+  const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < 768
-
   if (showPaginated) {
     return (
       <div className="tw-bg-dd-blue">
@@ -48,7 +40,22 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
       </div>
     )
   }
-
+  const [showModal, setShowModal] = useState(false)
+  const [input, setInput] = useState('')
+  const [hasError, setHasError] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const handleSubmit = () => {
+    if (!input) {
+      setHasError(true)
+      return
+    }
+    setLoading(true)
+    handleCreateTournament(input).catch((err) => {
+      console.error(err)
+      setLoading(false)
+      setHasError(true)
+    })
+  }
   return (
     <div
       className="tw-flex tw-flex-col tw-gap-60 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover"
@@ -92,18 +99,33 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
               Save As Template
             </span>
           </ActionButton>
-          {/* <ActionButton variant='green' gap={16} disabled={createDisabled} onClick={handleSaveTournament}> */}
           <ActionButton
             variant="green"
             gap={16}
             disabled={createDisabled}
-            onClick={handleSaveTournament}
+            onClick={() => setShowModal(true)}
           >
             <PlayIcon />
             <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
               Create Tournament
             </span>
           </ActionButton>
+          {showModal && (
+            <TextFieldModal
+              submitButtonText={'Create'}
+              onSubmit={handleSubmit}
+              header={'Create Tournament'}
+              input={input}
+              setInput={setInput}
+              hasError={hasError}
+              setHasError={setHasError}
+              loading={loading}
+              errorText={'Tournament name is required'}
+              placeholderText={'Tournament name...'}
+              setShow={setShowModal}
+              show={showModal}
+            />
+          )}
         </div>
       </div>
     </div>
