@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { DarkModeContext } from '../context'
+import React from 'react'
 
 export interface ActionButtonProps {
   disabled?: boolean
@@ -95,8 +94,6 @@ export const GreenButton = (props: ActionButtonProps) => {
   const darkModeBorder = disabled ? 'white/20' : 'green'
   const textColor = disabled ? 'black/20' : 'dd-blue'
   const darkModeTextColor = disabled ? 'white/20' : 'white'
-  console.log('green button')
-  console.log('darkMode', darkMode)
   return (
     <ActionButtonBase
       backgroundColor={darkMode ? darkModeBackground : background}
