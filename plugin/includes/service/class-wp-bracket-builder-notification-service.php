@@ -75,7 +75,7 @@ class Wp_Bracket_Builder_Notification_Service {
 
         foreach($picks as $pick) {
             $to_email = $pick->user_email;
-            $to_email = 'test@wstrategies.co';
+            // $to_email = 'test@wstrategies.co';
             $to_name = $pick->display_name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
@@ -86,7 +86,7 @@ class Wp_Bracket_Builder_Notification_Service {
             $message = array(
                 'to'=>array(
                     array(
-                        'email'=>'test@wstrategies.co',
+                        'email'=>$to_email,
                         'name'=>$to_name,
                     ),
                 ),
@@ -96,13 +96,13 @@ class Wp_Bracket_Builder_Notification_Service {
             $background_image_url = 'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
             $logo_url = 'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
             if ($user_pick[0]->name == $winner[0]->name) {
-                $heading = 'You predicted correct. ' . $user_pick[0]->name . ' won!';
+                $heading = 'You picked ' . $user_pick[0]->name . ' ... and they won!';
             } else {
                 $heading = 'You picked ' . $user_pick[0]->name . ', but ' . $winner[0]->name . ' won the round...';
             }
-            $subtext = 'blah blah blah';
+            $subtext = 'Click the button below to view the tournament leaderboard.';
             $button_url = get_permalink($tournament_id) . '/leaderboard';
-            $button_text = 'click me';
+            $button_text = 'View Tournament';
 
             ob_start();
             include plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/templates/play-scored.php';
