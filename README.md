@@ -10,7 +10,7 @@
 
 - Install the Local dev tool: https://localwp.com/
 - Create a new site in Local: https://wpengine.com/resources/local-wordpress-development-environment-how-to/
-   - Use the latest php version and mysql version
+  - Use the latest php version and mysql version
 
 2. Clone the repo anywhere on your system and create a symlink to the `plugin` folder:
 
@@ -74,19 +74,48 @@ if ( ! defined( 'ABSPATH' ) ) {
 Image generation is handled by a series of docker containers managed by docker compose
 
 ### TL;DR
+
 - Production: `docker-compose -f docker-compose.prod.yml up -d --build`
 - Development: `docker-compose up --build`
 
 ### image-generator
-| service name | image-generator | |
-| -------- | ------------------ | - |
-| root dir | `/image-generator` | |
-| port     | :3000              | |
-| dev script | `npm run dev`    | launch the express api with hot reloading |
-| prod script | `npm run start`  | launch the express api |
+
+|             |                    |                                           |
+| ----------- | ------------------ | ----------------------------------------- |
+| root dir    | `/image-generator` |                                           |
+| port        | :3000              |                                           |
+| dev script  | `npm run dev`      | launch the express api with hot reloading |
+| prod script | `npm run start`    | launch the express api                    |
 
 #### What it does
+
 The purpose of the image-generator service is to provide the localhost endpoint that Wordpress calls to generate bracket images and pdfs. This is the only endpoint that Wordpress calls directly. Internally, image-generator depends on the react-server service to provide a url that puppeteer can take a screenshot of.
+
+### react-server
+
+|             |                 |                                |
+| ----------- | --------------- | ------------------------------ |
+| root dir    | `/react-server` |                                |
+| port        | :3001           |                                |
+| dev script  | `npm run dev`   | express api with hot reloading |
+| prod script | `npm run start` | express api no reloading       |
+
+#### what it does
+
+Serves an express api that image-generator can query to generate the screenshot. In production mode, the react app is pulled from a shared volume with react-client that contains the bundled JavaScript code. In dev mode, acts as a proxy server to react-client’s development port
+
+### react-client
+
+|             |                                          |     |
+| ----------- | ---------------------------------------- | --- |
+| root dir    | `/plugin/includes/react-bracket-builder` |     |
+| port        | :8080                                    |     |
+| dev script  | `npm run dev:standalone`                 |     |
+| prod script | `npm run build:standalone`               |     |
+
+#### what it does
+
+This container serves just the react part of the plugin outside the context of Wordpress. To do this, there is a separate webpack config file with no dependencies on a global ‘wp’ object. In production, the source code simply gets compiled to a ‘dist’ folder and served statically by react-server. In development, the webpack server is used and exposed on port 8080. In this case, the app can be accessed from either react-server on port 3001 or react-client on port 8080.
 
 ## Testing Setup
 
@@ -98,96 +127,100 @@ The following subset of instructions from the link above are used to set up the 
 ### Instructions
 
 1. Install the Wordpress testing library. From the plugin root directory:
-    ```
-    mkdir -p tests/phpunit/tests
-    cd tests/phpunit
-    svn co https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/
-    ```
+
+   ```
+   mkdir -p tests/phpunit/tests
+   cd tests/phpunit
+   svn co https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/
+   ```
 
 2. Add `.svn` to the `.gitignore` file
 3. Create a PHPUnit configuration in the plugin root `phpunit.xml`
-    ```
-    <phpunit bootstrap="tests/phpunit/bootstrap.php" backupGlobals="false"
-      colors="false" convertErrorsToExceptions="true"
-      convertNoticesToExceptions="true" convertWarningsToExceptions="true">
-      <testsuites>
-        <testsuite>
-          <file>tests/phpunit/tests/test-wp-bracket-builder.php</file>
-        </testsuite>
-      </testsuites>
-    </phpunit>
-    ```
+   ```
+   <phpunit bootstrap="tests/phpunit/bootstrap.php" backupGlobals="false"
+     colors="false" convertErrorsToExceptions="true"
+     convertNoticesToExceptions="true" convertWarningsToExceptions="true">
+     <testsuites>
+       <testsuite>
+         <file>tests/phpunit/tests/test-wp-bracket-builder.php</file>
+       </testsuite>
+     </testsuites>
+   </phpunit>
+   ```
 4. Create the wordpress test configuration file at `tests/phpunit/wp-tests-config.php`
-    ```
-    <?php
 
-    // change the next line to points to your wordpress dir
-    define( 'ABSPATH', '/opt/lampp/htdocs/bracket-builder' );
+   ```
+   <?php
 
-    define( 'WP_DEBUG', false );
+   // change the next line to points to your wordpress dir
+   define( 'ABSPATH', '/opt/lampp/htdocs/bracket-builder' );
 
-    // WARNING WARNING WARNING!
-    // tests DROPS ALL TABLES in the database. DO NOT use a production database
+   define( 'WP_DEBUG', false );
 
-    define( 'DB_NAME', 'wptest' );
-    define( 'DB_USER', 'wptest' );
-    define( 'DB_PASSWORD', 'wptest' );
-    define( 'DB_HOST', 'localhost.localdomain' );
-    define( 'DB_CHARSET', 'utf8' );
-    define( 'DB_COLLATE', '' );
+   // WARNING WARNING WARNING!
+   // tests DROPS ALL TABLES in the database. DO NOT use a production database
 
-    $table_prefix = 'wptests_'; // Only numbers, letters, and underscores please!
+   define( 'DB_NAME', 'wptest' );
+   define( 'DB_USER', 'wptest' );
+   define( 'DB_PASSWORD', 'wptest' );
+   define( 'DB_HOST', 'localhost.localdomain' );
+   define( 'DB_CHARSET', 'utf8' );
+   define( 'DB_COLLATE', '' );
 
-    define( 'WP_TESTS_DOMAIN', 'localhost' );
-    define( 'WP_TESTS_EMAIL', 'admin@example.org' );
-    define( 'WP_TESTS_TITLE', 'Test Blog' );
+   $table_prefix = 'wptests_'; // Only numbers, letters, and underscores please!
 
-    define( 'WP_PHP_BINARY', 'php' );
+   define( 'WP_TESTS_DOMAIN', 'localhost' );
+   define( 'WP_TESTS_EMAIL', 'admin@example.org' );
+   define( 'WP_TESTS_TITLE', 'Test Blog' );
 
-    define( 'WPLANG', '' );
-    ```
+   define( 'WP_PHP_BINARY', 'php' );
+
+   define( 'WPLANG', '' );
+   ```
+
 5. Create the bootstrap test file at `tests/phpunit/bootstrap.php`
-    ```
-    <?php
 
-    // path to test lib bootstrap.php
-    $test_lib_bootstrap_file = dirname( __FILE__ ) . '/includes/bootstrap.php';
+   ```
+   <?php
 
-    if ( ! file_exists( $test_lib_bootstrap_file ) ) {
-        echo PHP_EOL . "Error : unable to find " . $test_lib_bootstrap_file . PHP_EOL;
-        exit( '' . PHP_EOL );
-    }
+   // path to test lib bootstrap.php
+   $test_lib_bootstrap_file = dirname( __FILE__ ) . '/includes/bootstrap.php';
 
-    // set plugin and options for activation
-    $GLOBALS[ 'wp_tests_options' ] = array(
-            'active_plugins' => array(
-                    'wp-bracket-builder/wp-bracket-builder.php',
-            ),
-            'wpsp_test' => true
-    );
+   if ( ! file_exists( $test_lib_bootstrap_file ) ) {
+       echo PHP_EOL . "Error : unable to find " . $test_lib_bootstrap_file . PHP_EOL;
+       exit( '' . PHP_EOL );
+   }
 
-    // call test-lib's bootstrap.php
-    require_once $test_lib_bootstrap_file;
+   // set plugin and options for activation
+   $GLOBALS[ 'wp_tests_options' ] = array(
+           'active_plugins' => array(
+                   'wp-bracket-builder/wp-bracket-builder.php',
+           ),
+           'wpsp_test' => true
+   );
 
-    $current_user = new WP_User( 1 );
-    $current_user->set_role( 'administrator' );
+   // call test-lib's bootstrap.php
+   require_once $test_lib_bootstrap_file;
 
-    echo PHP_EOL;
-    echo 'Using Wordpress core : ' . ABSPATH . PHP_EOL;
-    echo PHP_EOL;
-    ```
+   $current_user = new WP_User( 1 );
+   $current_user->set_role( 'administrator' );
+
+   echo PHP_EOL;
+   echo 'Using Wordpress core : ' . ABSPATH . PHP_EOL;
+   echo PHP_EOL;
+   ```
 
 6. Create the test database, test database users, and grant permissions.
-    ```
-    cd /opt/lampp
-    bin/mysql -u root
-    create database wptest;
-    GRANT ALL PRIVILEGES ON wptest.* TO wptest@localhost IDENTIFIED BY 'wptest';
-    flush privileges;
-    exit
-    ```
+   ```
+   cd /opt/lampp
+   bin/mysql -u root
+   create database wptest;
+   GRANT ALL PRIVILEGES ON wptest.* TO wptest@localhost IDENTIFIED BY 'wptest';
+   flush privileges;
+   exit
+   ```
 7. Create the test file `tests/phpunit/tests/test-wp-bracket-builder.php`, the test file indicated in the configuration file, and import tests there.
 
-9. Run test from the plugin root directory using `vendor/bin/phpunit`.
+8. Run test from the plugin root directory using `vendor/bin/phpunit`.
 
 Note: Before going into production, testing should be configured to use a seperate wordpress installation. _"if wp-tests-config.php is missing from tests/phpunit directory, then WordPress Test Library will use wp-config.php of the WordPress folder and drops the WP tables defined by it."_

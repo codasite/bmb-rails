@@ -3,4 +3,3 @@ build
 dist
 coverage
 composer.lock
-*.md
