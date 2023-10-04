@@ -111,7 +111,7 @@ class Wp_Bracket_Builder_Notification_Service {
 
         foreach($picks as $pick) {
             $to_email = $pick->user_email;
-            $to_email = 'barry@wstrategies.co';
+            $to_email = 'test@wstrategies.co';
             $to_name = $pick->display_name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
