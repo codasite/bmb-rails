@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { ActionButton } from '../brackets/shared/components/ActionButtons'
 import { Modal } from './Modal'
+import { CancelButton, ConfirmButton } from './ModalButtons'
+import { ModalHeader } from './ModalHeader'
 
 export const TextFieldModal = (props: {
   show: boolean
@@ -19,9 +20,7 @@ export const TextFieldModal = (props: {
   return (
     <Modal show={props.show} setShow={props.setShow}>
       <div className="tw-flex tw-flex-col">
-        <h1 className="tw-text-32 tw-leading-10 tw-font-white tw-whitespace-pre-line tw-mb-30">
-          {props.header}
-        </h1>
+        <ModalHeader text={props.header} />
         <input
           className={`${
             props.hasError
@@ -37,26 +36,13 @@ export const TextFieldModal = (props: {
           }}
         />
         <div className="tw-flex tw-flex-col tw-gap-10">
-          <ActionButton
-            variant="green"
-            paddingY={12}
-            paddingX={16}
-            fontSize={16}
-            fontWeight={700}
+          <ConfirmButton
             disabled={props.loading || props.hasError}
             onClick={props.onSubmit}
-            className={
-              props.loading || props.hasError ? '' : 'hover:tw-text-white/75'
-            }
           >
             {props.submitButtonText}
-          </ActionButton>
-          <button
-            onClick={() => props.setShow(false)}
-            className="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer"
-          >
-            Cancel
-          </button>
+          </ConfirmButton>
+          <CancelButton onClick={() => props.setShow(false)} />
         </div>
       </div>
     </Modal>

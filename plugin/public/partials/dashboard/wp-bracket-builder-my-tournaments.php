@@ -146,7 +146,7 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 
 	$id = $tournament->id;
 	$completed = $tournament->status === 'complete';
-	$share_link = get_permalink() . 'tournaments/' . $id . '/share';
+	$play_link = get_permalink($id) . 'play';
 	$delete_link = get_permalink() . 'tournaments/';
 	$archive_link = get_permalink() . 'tournaments/';
 	ob_start();
@@ -165,10 +165,9 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
       <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
       <div class="tw-flex tw-gap-10 tw-items-center">
 				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-tournament-button", attributes: "data-tournament-id='$id' data-tournament-name='$name'"); ?>
-        <!-- The share button should execute an AJAX request to generate a shareable link -->
-        <!-- <?php echo share_tournament_btn($share_link, $id); ?> -->
+				<?php echo icon_btn('../../assets/icons/link.svg', 'submit', classes: "wpbb-share-tournament-button", attributes: "data-play-tournament-url=$play_link"); ?>
         <!-- The duplicate button opens up the "Host a Tournamnet" modal -->
-        <!-- <?php echo duplicate_bracket_btn($share_link, $id); ?> -->
+        <!-- <?php echo duplicate_bracket_btn($play_link, $id); ?> -->
 				<?php echo archive_tournament_btn($archive_link, $id); ?>
         <!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
 				<?php echo delete_post_btn($delete_link, $id, 'delete_tournament_id', 'delete_tournament_action', 'delete_tournament_nonce'); ?>

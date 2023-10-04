@@ -6,6 +6,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
+import { CancelButton } from '../../ModalButtons'
 
 export const CreateTournamentModal = (props: {
   myTemplatesUrl: string
@@ -20,14 +21,6 @@ export const CreateTournamentModal = (props: {
       setShow(true)
     },
   })
-  const cancelButton = (
-    <button
-      onClick={() => setShow(false)}
-      className="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer"
-    >
-      Cancel
-    </button>
-  )
   return (
     <Modal show={show} setShow={setShow}>
       {props.canCreateTournament && (
@@ -48,7 +41,7 @@ export const CreateTournamentModal = (props: {
             <PlusIcon />
             <span>Start from scratch</span>
           </a>
-          {cancelButton}
+          <CancelButton onClick={() => setShow(false)} />
         </div>
       )}
       {!props.canCreateTournament && (
@@ -75,7 +68,7 @@ export const CreateTournamentModal = (props: {
           >
             Upgrade account
           </a>
-          {cancelButton}
+          <CancelButton onClick={() => setShow(false)} />
         </div>
       )}
     </Modal>

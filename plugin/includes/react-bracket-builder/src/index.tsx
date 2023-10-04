@@ -12,6 +12,7 @@ import './styles/main.css'
 import { EditTemplateModal } from './modals/dashboard/templates/EditTemplateModal'
 import { WpbbAjaxObj } from './wpbbAjaxObj'
 import { EditTournamentModal } from './modals/dashboard/tournaments/EditTournamentModal'
+import ShareTournamentModal from './modals/dashboard/tournaments/ShareTournamentModal'
 
 require('./wp-bracket-builder-public.js')
 // Dynamically render components to avoid loading unused modules
@@ -217,6 +218,7 @@ function renderMyTournamentsModals(ajaxObj: WpbbAjaxObj) {
         upgradeAccountUrl={ajaxObj.homeUrl}
       />
       <EditTournamentModal />
+      <ShareTournamentModal />
     </>,
     'wpbb-my-tournaments-modals'
   )
