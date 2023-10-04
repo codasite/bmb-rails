@@ -1,10 +1,11 @@
 <?php
 require_once 'class-wp-bracket-builder-post-image-generator-interface.php';
-require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wp-bracket-builder-object-storage-interface.php';
-require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wp-bracket-builder-s3-storage.php';
-require_once plugin_dir_path(dirname(__FILE__), 3) . 'domain/class-wp-bracket-builder-bracket-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'object-storage/class-wp-bracket-builder-object-storage-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'object-storage/class-wp-bracket-builder-s3-storage.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'domain/class-wp-bracket-builder-bracket-interface.php';
 
 class Wp_Bracket_Builder_Local_Node_Generator implements Wp_Bracket_Builder_Post_Image_Generator_Interface {
+
 
 	/**
 	 * @param int|Wp_Post|null $post The post to generate an image for
@@ -23,7 +24,7 @@ class Wp_Bracket_Builder_Local_Node_Generator implements Wp_Bracket_Builder_Post
 	 * 
 	 * @return string|WP_Error The URL of the generated image or a WP_Error if there was an error
 	 */
-	public function generate_image(Wp_Bracket_Builder_Bracket_Interface $bracket, array $args = []): string {
+	public function generate_image(Wp_Bracket_Builder_Bracket_Interface $bracket, array $args = []): string | WP_Error {
 		$upload_params = [
 			'upload_service' => 's3',
 			's3_bucket' => 'wpbb-bracket-images',
@@ -65,7 +66,8 @@ class Wp_Bracket_Builder_Local_Node_Generator implements Wp_Bracket_Builder_Post
 		));
 
 		if (is_wp_error($res) || wp_remote_retrieve_response_code($res) !== 200) {
-			return new WP_Error('error', __('There was an error generating the image', 'text-domain'), array('status' => 500));
+			// return new WP_Error('error', __('There was an error generating the image', 'text-domain'), array('status' => 500));
+			return $res;
 		}
 
 		// get the response body as json

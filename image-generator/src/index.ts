@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
 
 app.post('/test', async (req, res) => {
   console.log(req.body)
-  res.send('ok')
+  res.send(req.body)
 })
 
 app.post('/generate', async (req, res) => {

@@ -18,5 +18,5 @@ interface Wp_Bracket_Builder_Post_Image_Generator_Interface {
 	 * 
 	 * @return string|WP_Error The URL of the generated image or a WP_Error if there was an error
 	 */
-	public function generate_image(Wp_Bracket_Builder_Bracket_Interface $bracket, array $args = []): string;
+	public function generate_image(Wp_Bracket_Builder_Bracket_Interface $bracket, array $args = []): string | WP_Error;
 }
