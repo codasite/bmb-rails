@@ -74,11 +74,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 Image generation is handled by a series of docker containers managed by docker compose
 
 ### TL;DR
-Production: `docker-compose -f docker-compose.prod.yml up -d --build`
-Development: `docker-compose up --build`
+- Production: `docker-compose -f docker-compose.prod.yml up -d --build`
+- Development: `docker-compose up --build`
 
 ### image-generator
+| service name | image-generator | |
+| -------- | ------------------ | - |
+| root dir | `/image-generator` | |
+| port     | :3000              | |
+| dev script | `npm run dev`    | launch the express api with hot reloading |
+| prod script | `npm run start`  | launch the express api |
 
+#### What it does
+The purpose of the image-generator service is to provide the localhost endpoint that Wordpress calls to generate bracket images and pdfs. This is the only endpoint that Wordpress calls directly. Internally, image-generator depends on the react-server service to provide a url that puppeteer can take a screenshot of.
 
 ## Testing Setup
 
