@@ -28,7 +28,12 @@ app.get('/', async (req, res) => {
   res.send(`Hello World! ${user.username}`)
 })
 
-app.post('/', async (req, res) => {
+app.post('/test', async (req, res) => {
+  console.log(req.body)
+  res.send('ok')
+})
+
+app.post('/generate', async (req, res) => {
   const {
     html,
     queryParams,
