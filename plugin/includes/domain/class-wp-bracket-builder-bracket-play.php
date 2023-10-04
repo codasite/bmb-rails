@@ -1,11 +1,10 @@
 <?php
 
-use PHPUnit\Util\Log\TeamCity;
-
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-interface.php';
 
 /**
  * This class creates a bracket pick object by submitting 
@@ -13,7 +12,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 // class Wp_Bracket_Builder_Bracket_Pick_Factory extends Wp_Bracket_Builder_Bracket_Base {
 
 
-class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
+class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Bracket_Interface {
 
 	/**
 	 * @var int
@@ -135,5 +134,25 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		}
 
 		return $play;
+	}
+
+	public function get_matches(): array {
+		return $this->tournament->get_matches();
+	}
+
+	public function get_picks(): array {
+		return $this->picks;
+	}
+
+	public function get_title(): string {
+		return $this->tournament->title;
+	}
+
+	public function get_date(): string {
+		return '1993';
+	}
+
+	public function get_num_teams(): int {
+		return $this->tournament->get_num_teams();
 	}
 }

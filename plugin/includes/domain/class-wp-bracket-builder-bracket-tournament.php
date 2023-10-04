@@ -3,6 +3,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-interface.php';
 
 class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base {
 	/**
@@ -134,5 +135,25 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		}
 
 		return $score;
+	}
+
+	public function get_matches(): array {
+		return $this->bracket_template->get_matches();
+	}
+
+	public function get_picks(): array {
+		return $this->results;
+	}
+
+	public function get_title(): string {
+		return $this->title;
+	}
+
+	public function get_date(): string {
+		return '1992';
+	}
+
+	public function get_num_teams(): int {
+		return $this->bracket_template->num_teams;
 	}
 }
