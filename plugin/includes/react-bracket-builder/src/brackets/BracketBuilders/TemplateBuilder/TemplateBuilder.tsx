@@ -136,7 +136,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       })
   }
 
-  const handleSaveTournamentClick = () => {
+  const handleSaveTournamentClick = (tournamentName: string) => {
     const templateReq: TemplateReq = {
       title: bracketMeta.title,
       numTeams: numTeams,
@@ -145,21 +145,15 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       status: 'publish',
     }
     const tournamentReq: TournamentReq = {
-      title: bracketMeta.title,
+      title: tournamentName,
       status: 'publish',
       bracketTemplate: templateReq,
     }
-    bracketApi
-      .createTournament(tournamentReq)
-      .then((res) => {
-        console.log(res)
-        if (saveTournamentLink) {
-          window.location.href = saveTournamentLink
-        }
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    return bracketApi.createTournament(tournamentReq).then((res) => {
+      if (saveTournamentLink) {
+        window.location.href = saveTournamentLink
+      }
+    })
   }
 
   return (
@@ -188,7 +182,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           setMatchTree={setMatchTree}
           handleBack={() => setCurrentPage('num-teams')}
           handleSaveTemplate={handleSaveTemplateClick}
-          handleSaveTournament={handleSaveTournamentClick}
+          handleCreateTournament={handleSaveTournamentClick}
         />
       )}
     </div>
