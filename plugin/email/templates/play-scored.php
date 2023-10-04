@@ -161,7 +161,7 @@
 <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #171620; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href="https://backmybracket.com/shop/" style="text-decoration: underline; color: #3c3d90;">Shop</a></p>
+<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href=<?php echo "\"" . get_site_url() . "/shop/\"" ?> style="text-decoration: underline; color: #3c3d90;">Shop</a></p>
 </div>
 </div>
 </td>
@@ -172,7 +172,7 @@
 <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #171620; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href="https://backmybracket.com/tournaments/" style="text-decoration: underline; color: #3c3d90;">Tournaments</a></p>
+<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href=<?php echo "\"" . get_site_url() . "/tournaments/\"" ?> style="text-decoration: underline; color: #3c3d90;">Tournaments</a></p>
 </div>
 </div>
 </td>
@@ -183,7 +183,7 @@
 <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #171620; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href="https://backmybracket.com/sweepstakes/" style="text-decoration: underline; color: #3c3d90;">Sweepstakes</a></p>
+<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href=<?php echo "\"" . get_site_url() . "/sweepstakes/\"" ?> style="text-decoration: underline; color: #3c3d90;">Sweepstakes</a></p>
 </div>
 </div>
 </td>
@@ -194,7 +194,7 @@
 <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #171620; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href="http://www.example.com" rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">Unsubscribe</a></p>
+<!-- <p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href=<a href=<?php echo "\"" . get_site_url() . "\"" ?> rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">Unsubscribe</a></p> -->
 </div>
 </div>
 </td>
@@ -214,7 +214,7 @@
 <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #171620; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href="http://www.example.com" rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">My Dashboard</a></p>
+<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href=<?php echo "\"" . get_site_url() . "/dashboard/\"" ?> rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">My Dashboard</a></p>
 </div>
 </div>
 </td>
@@ -225,7 +225,7 @@
 <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #171620; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href="http://www.example.com" rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">My Account</a></p>
+<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href=<?php echo "\"" . get_site_url() . "/my-account/\"" ?> rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">My Account</a></p>
 </div>
 </div>
 </td>
@@ -236,7 +236,7 @@
 <td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 <div style="font-family: sans-serif">
 <div class="" style="font-size: 12px; font-family: Arial, Helvetica, sans-serif; mso-line-height-alt: 14.399999999999999px; color: #171620; line-height: 1.2;">
-<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href="http://www.example.com" rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">Orders</a></p>
+<p style="margin: 0; font-size: 14px; mso-line-height-alt: 16.8px;"><a href=<?php echo "\"" . get_site_url() . "/my-account/orders/\"" ?> rel="noopener" style="text-decoration: none; color: #3c3d90;" target="_blank">Orders</a></p>
 </div>
 </div>
 </td>
