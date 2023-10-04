@@ -100,7 +100,7 @@ The purpose of the image-generator service is to provide the localhost endpoint 
 | dev script  | `npm run dev`   | express api with hot reloading |
 | prod script | `npm run start` | express api no reloading       |
 
-#### what it does
+#### What it does
 
 Serves an express api that image-generator can query to generate the screenshot. In production mode, the react app is pulled from a shared volume with react-client that contains the bundled JavaScript code. In dev mode, acts as a proxy server to react-client’s development port
 
@@ -113,7 +113,7 @@ Serves an express api that image-generator can query to generate the screenshot.
 | dev script  | `npm run dev:standalone`                 |     |
 | prod script | `npm run build:standalone`               |     |
 
-#### what it does
+#### What it does
 
 This container serves just the react part of the plugin outside the context of Wordpress. To do this, there is a separate webpack config file with no dependencies on a global ‘wp’ object. In production, the source code simply gets compiled to a ‘dist’ folder and served statically by react-server. In development, the webpack server is used and exposed on port 8080. In this case, the app can be accessed from either react-server on port 3001 or react-client on port 8080.
 
