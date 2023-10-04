@@ -1,11 +1,7 @@
 <?php
 
-// require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-notification-service.php');
+require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-notification-service.php');
 // require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-transactional-service.php');
-
-// $email_service = new Wp_Bracket_Builder_Mailchimp_Transactional_Service(MAILCHIMP_API_KEY);
-// $notification_service = new Wp_Bracket_Builder_Notification_Service($email_service);
-// $notification_service->send_tournament_result_email_update(1);
 
 $current_tab = get_query_var('tab');
 

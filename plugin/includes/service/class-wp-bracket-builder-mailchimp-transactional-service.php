@@ -39,6 +39,16 @@ class Wp_Bracket_Builder_Mailchimp_Transactional_Service  implements Wp_Bracket_
         return $response;
     }
 
+    public function send_template(string $template_name, array $template_content, $message) {
+        $response = $this->client->messages->sendTemplate([
+            "template_name" => $template_name,
+            "template_content" => $template_content,
+            "message" => $message,
+        ]);
+
+        return $response;
+    }
+
     public function create_template(string $name, string $from_email, string $from_name, string $subject, string $code, string $text, bool $publish, array $labels) {
         $response = $this->client->templates->add([
             'name' => $name,
@@ -59,9 +69,23 @@ class Wp_Bracket_Builder_Mailchimp_Transactional_Service  implements Wp_Bracket_
             'name' => $name,
         ]);
 
-        if ($response->status == 'error') {
+        if ($response->status == 'error' && $response->slug != $template_name) {
             $response = $this->create_template($name, $from_email, $from_name, $subject, $code, $text, $publish, $labels);
         }
+
+        return $response;
+    }
+
+    public function list_templates() {
+        $response = $this->client->templates->list();
+
+        return $response;
+    }
+
+    public function delete_template(string $name) {
+        $response = $this->client->templates->delete([
+            'name' => $name,
+        ]);
 
         return $response;
     }
