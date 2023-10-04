@@ -112,7 +112,7 @@
 <table border="0" cellpadding="10" cellspacing="0" class="heading_block block-4" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
 <tr>
 <td class="pad">
-<h1 style="margin: 0; color: #ffffff; direction: ltr; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;" mc:edit="header"><?php echo $heading ?></h1>
+<h1 style="margin: 0; color: #ffffff; direction: ltr; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><?php echo $heading ?></h1>
 </td>
 </tr>
 </table>
@@ -120,7 +120,7 @@
 <tr>
 <td class="pad" style="padding-bottom:20px;padding-left:10px;padding-right:10px;padding-top:10px;">
 <div style="color:#7d7da9;direction:ltr;font-family:Arial, Helvetica, sans-serif;font-size:16px;font-weight:400;letter-spacing:0px;line-height:150%;text-align:center;mso-line-height-alt:24px;">
-<p style="margin: 0;" mc:edit="subtext"><?php echo $subtext ?></p>
+<p style="margin: 0;"><?php echo $subtext ?></p>
 </div>
 </td>
 </tr>
@@ -128,7 +128,7 @@
 <table border="0" cellpadding="10" cellspacing="0" class="button_block block-6" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;" width="100%">
 <tr>
 <td class="pad">
-<div align="center" class="alignment"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="www.example.com" style="height:44px;width:207px;v-text-anchor:middle;" arcsize="10%" strokeweight="0.75pt" strokecolor="#05FF3C" fillcolor="#005013"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:16px"><![endif]--><a href=<?php echo "\"" . $button_url . "\"" ?> style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#005013;border-radius:4px;width:auto;border-top:1px solid #05FF3C;font-weight:400;border-right:1px solid #05FF3C;border-bottom:1px solid #05FF3C;border-left:1px solid #05FF3C;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:40px;padding-right:40px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 32px;" mc:edit="button_text"><?php echo $button_text ?></span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
+<div align="center" class="alignment"><!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="www.example.com" style="height:44px;width:207px;v-text-anchor:middle;" arcsize="10%" strokeweight="0.75pt" strokecolor="#05FF3C" fillcolor="#005013"><w:anchorlock/><v:textbox inset="0px,0px,0px,0px"><center style="color:#ffffff; font-family:Arial, sans-serif; font-size:16px"><![endif]--><a href=<?php echo "\"" . $button_url . "\"" ?> style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#005013;border-radius:4px;width:auto;border-top:1px solid #05FF3C;font-weight:400;border-right:1px solid #05FF3C;border-bottom:1px solid #05FF3C;border-left:1px solid #05FF3C;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica, sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span style="padding-left:40px;padding-right:40px;font-size:16px;display:inline-block;letter-spacing:normal;"><span style="word-break: break-word; line-height: 32px;"><?php echo $button_text ?></span></span></a><!--[if mso]></center></v:textbox></v:roundrect><![endif]--></div>
 </td>
 </tr>
 </table>

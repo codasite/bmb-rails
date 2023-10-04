@@ -70,42 +70,6 @@ class Wp_Bracket_Builder_Notification_Service {
     public function send_tournament_result_email_update($tournament_id) {
         $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 
-        
-        // create mailchimp message template (fails if template already exists)
-        $background_image_url = 'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
-        $logo_url = 'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
-        $heading = 'Back My Bracket Update';
-        $message = 'Back My Bracket Update';
-        $subtext = $message;
-        $button_url = get_permalink($tournament_id) . '/leaderboard';
-        $button_text = 'click me';
-
-        ob_start();
-        include plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/templates/play-scored.php';
-        $html = ob_get_clean();
-
-        // file_put_contents(plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/demo.html', $html);
-
-        $template_name = 'tournament-update';
-        $from_email = MAILCHIMP_FROM_EMAIL;
-        $from_name = 'Back My Bracket';
-        $subject = 'Update from Back My Bracket';
-        $code = $html;
-        $text = 'tournament update';
-        $publish = true;
-        $labels = ['tournament', 'update'];
-
-        $response1 = $this->email_service->create_template(
-            $template_name, // name
-            $from_email, // from_email
-            $from_name, // from_name
-            $subject, // subject
-            $code, // code
-            $text, // text
-            $publish, // publish
-            $labels // labels
-        );
-
         // get last round picks for the tournament
         $picks = $this->get_last_round_picks_for_tournament($tournament_id);
 
@@ -118,41 +82,41 @@ class Wp_Bracket_Builder_Notification_Service {
             $user_pick = $this->get_team($pick->user_pick);
             $winner = $this->get_team($pick->winner);
             $tournament_id = $pick->tournament_id;
-
-            $template_content = array(
-                array(
-                    'header' => 'You picked ' . $user_pick . '. Winner: ' . $winner . '.',
-                    'subtext' => 'Click below to see the leaderboard.',
-                    'button_text' => 'View Leaderboard',
-                ),
-            );
+            $tournament_url = get_permalink($tournament_id) . '/leaderboard';
             $message = array(
                 'to'=>array(
                     array(
-                        'email'=>$to_email,
+                        'email'=>'test@wstrategies.co',
                         'name'=>$to_name,
                     ),
                 ),
             );
-            // send template
-            $response2 = $this->email_service->send_template(
-                $template_name, // template_name
-                $template_content, // template_content
-                $message // message
-            );
 
-            print_r($response2);
+            // Generate html content for email
+            $background_image_url = 'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
+            $logo_url = 'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
+            if ($user_pick[0]->name == $winner[0]->name) {
+                $heading = 'You predicted correct. ' . $user_pick[0]->name . ' won!';
+            } else {
+                $heading = 'You picked ' . $user_pick[0]->name . ', but ' . $winner[0]->name . ' won the round...';
+            }
+            $subtext = 'blah blah blah';
+            $button_url = get_permalink($tournament_id) . '/leaderboard';
+            $button_text = 'click me';
+
+            ob_start();
+            include plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/templates/play-scored.php';
+            $html = ob_get_clean();
             
-            // $response = $this->email_service->send_message(
-            //     $from_email,
-            //     $to_email,
-            //     $to_name,
-            //     $subject,
-            //     $message,
-            //     $html,
-            // );
-
-            // print_r($response);
+            // send the email
+            $response = $this->email_service->send_message(
+                $from_email,
+                $to_email,
+                $to_name,
+                $subject,
+                $message,
+                $html,
+            );
         }
     }
 }
