@@ -69,6 +69,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 12. Enable debugging in `wp-config.php` https://wordpress.org/documentation/article/debugging-in-wordpress/
 13. Run `npm start` in `plugin/includes/react-bracket-builder` to start the react app.
 
+## Image Generation
+
+Image generation is handled by a series of docker containers managed by docker compose
+
+### TL;DR
+Production: `docker-compose -f docker-compose.prod.yml up -d --build`
+Development: `docker-compose up --build`
+
+### image-generator
+
+
 ## Testing Setup
 
 Testing is performed using PHPUnit and the Wordpress Testing Library. Testing infrastructure is set up according to instructions
