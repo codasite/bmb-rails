@@ -1,15 +1,19 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-bust.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php';
 
 class Wp_Bracket_Builder_Bracket_Bust_Repository {
     private $wpdb;
 
+    private Wp_Bracket_Builder_Bracket_Play_Repository $play_repo;
+
     public function __construct() {
         global $wpdb;
         $this->wpdb = $wpdb;
+        $this->play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
     }
 
-    public function get_many() {
+    public function get_all() {
         $query = "SELECT * FROM {$this->wpdb->prefix}bracket_builder_bracket_bust";
         $results = $this->wpdb->get_results($query, ARRAY_A);
         $busts = array();
@@ -25,7 +29,7 @@ class Wp_Bracket_Builder_Bracket_Bust_Repository {
         return $busts;
     }
 
-    public function get_single($bust_id) {
+    public function get($bust_id) {
         $query = "SELECT * FROM {$this->wpdb->prefix}bracket_builder_bracket_bust WHERE id = %d";
         $prepared_query = $this->wpdb->prepare($query, $bust_id);
         $results = $this->wpdb->get_results($prepared_query, ARRAY_A);
@@ -34,19 +38,15 @@ class Wp_Bracket_Builder_Bracket_Bust_Repository {
             return null;
         }
 
+        $busted_play = $this->play_repo->get($results[0]['busted_play_id']);
+        $buster_play = $this->play_repo->get($results[0]['buster_play_id']);
+
         $bust = new Wp_Bracket_Builder_Bracket_Bust(
             $results[0]['id'],
-            $results[0]['busted_play_id'],
-            $results[0]['buster_play_id'],
+            $busted_play,
+            $buster_play,
         );
         return $bust;
-    }
-
-    public function get($bust_id = null) {
-        if ($bust_id) {
-            return $this->get_single($bust_id);
-        }
-        return $this->get_many();
     }
 
     public function add(int $busted_id, int $buster_id) {
@@ -55,6 +55,6 @@ class Wp_Bracket_Builder_Bracket_Bust_Repository {
         $this->wpdb->query($prepared_query);
 
         $id = $this->wpdb->insert_id;
-        return $this->get_single($id);
+        return $this->get($id);
     }
 }
