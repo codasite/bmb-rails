@@ -1,11 +1,8 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'domain/class-wp-bracket-builder-bracket-interface.php';
-require_once 'class-wp-bracket-builder-print-integration-interface.php';
 
-class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_Print_Integration_Interface {
+class Wp_Bracket_Builder_Gelato_Public_Hooks {
 
-
-	private function build_overlay_map($placement): array {
+	public function build_overlay_map($placement): array {
 		$dark = $this->bracket_config_repo->get('dark', $placement);
 		$light = $this->bracket_config_repo->get('light', $placement);
 
@@ -36,7 +33,7 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 
 	// Validate bracket product data before adding to cart
 	// Hooks into woocommerce_add_to_cart_validation
-	public function bracket_product_add_to_cart_validation($passed, $product_id, $quantity, $variation_id = null, $variations = null) {
+	public function bracket_product_add_to_cart_validation($passed, $product_id, $quantity, $variation_id = null, $variations = null): bool {
 		$product = wc_get_product($product_id);
 
 		if (!$this->is_bracket_product($product) || $this->bracket_config_repo->is_empty()) {
@@ -109,7 +106,7 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 	}
 
 	// Helper method to check if product is a bracket product
-	private function is_bracket_product($product) {
+	public function is_bracket_product($product) {
 		if (!$product) {
 			return false;
 		}
@@ -117,12 +114,12 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 	}
 
 	// Helper method to get the bracket theme
-	private function get_bracket_theme($variation_id) {
+	public function get_bracket_theme($variation_id) {
 		return get_post_meta($variation_id, 'wpbb_bracket_theme', true);
 	}
 
 	// Helper method to get the bracket placement
-	private function get_bracket_placement($product) {
+	public function get_bracket_placement($product) {
 		// return get_post_meta($variation_id, 'wpbb_bracket_placement', true);
 		if ($product && $this->product_has_category($product, BRACKET_PLACEMENT_CENTER_CAT)) {
 			return 'center';
@@ -131,7 +128,7 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 	}
 
 	// Helper method to log error and show notice
-	private function handle_add_to_cart_error($product, $variation_id, $product_id, $error_message) {
+	public function handle_add_to_cart_error($product, $variation_id, $product_id, $error_message) {
 		$product_name = $product->get_name();
 		$msg = 'Error adding ' . $product_name . ' to cart. ' . $error_message . '. Variation ID: ' . $variation_id . ' Product ID: ' . $product_id;
 		$this->log($msg, 'warning');
@@ -165,7 +162,7 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 	}
 
 
-	private function process_bracket_product_item($cart_item) {
+	public function process_bracket_product_item($cart_item) {
 		// get the url for the front design
 		$front_url = get_post_meta($cart_item['variation_id'], 'wpbb_front_design', true);
 
@@ -196,15 +193,15 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 		return $cart_item;
 	}
 
-	private function log_error($message) {
+	public function log_error($message) {
 		$this->log($message, 'error');
 	}
 
-	private function log($message, $log_level = 'debug') {
+	public function log($message, $log_level = 'debug') {
 		$this->utils->log($message, $log_level);
 	}
 
-	private function handle_front_design_only($front_url, $temp_filename, $back_width, $back_height) {
+	public function handle_front_design_only($front_url, $temp_filename, $back_width, $back_height) {
 		// If no config was found, use only the front design
 		// However, Gelato still requires a two page PDF so we append a blank page to the front design
 		// $result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
@@ -222,7 +219,7 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 		return $result;
 	}
 
-	private function handle_front_and_back_design($front_url, $bracket_config, $temp_filename) {
+	public function handle_front_and_back_design($front_url, $bracket_config, $temp_filename) {
 		// Use config to generate the back design and merge it with the front design in a two-page PDF
 		$html = $bracket_config->html;
 
@@ -301,7 +298,7 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 		}
 	}
 
-	// private function handle_bracket_product_item($order, $item) {
+	// public function handle_bracket_product_item($order, $item) {
 	// 	$item_arr = array();
 
 	// 	// Once the order has processed, we need to rename the s3 file to include the order ID and item ID
@@ -311,7 +308,7 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 	// 	$this->utils->log_sentry_message(json_encode($item_arr));
 	// }
 
-	private function get_variation_attribute_value($variation, $attribute_name) {
+	public function get_variation_attribute_value($variation, $attribute_name) {
 		$attributes = $variation->get_attributes();
 		if (!array_key_exists($attribute_name, $attributes)) {
 			return null;
@@ -321,14 +318,14 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 		return $attribute_value;
 	}
 
-	private function get_gelato_order_filename($order, $item) {
+	public function get_gelato_order_filename($order, $item) {
 		$order_id = $order->get_id();
 		$item_id = $item->get_id();
 		$filename = $order_id . '_' . $item_id . '.pdf';
 		return $filename;
 	}
 
-	private function product_has_category($product, $category_slug) {
+	public function product_has_category($product, $category_slug) {
 		if ($product->is_type('variation')) {
 			return has_term($category_slug, 'product_cat', $product->get_parent_id());
 		} else {
@@ -363,13 +360,13 @@ class Wp_Bracket_Builder_Gelato_Print_Integration implements Wp_Bracket_Builder_
 	 * @return array
 	 */
 
-	private function get_product_gallery($product) {
+	public function get_product_gallery($product) {
 		// get all gallery images for the product
 		$attachment_ids = $product->get_gallery_image_ids();
 		$gallery_images = $this->get_images($attachment_ids);
 		return $gallery_images;
 	}
-	private function get_images($image_ids) {
+	public function get_images($image_ids) {
 		$images = array();
 
 		foreach ($image_ids as $imageId) {

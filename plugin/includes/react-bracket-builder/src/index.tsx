@@ -49,7 +49,7 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   console.log('ajaxObj', ajaxObj)
   initializeSentry(ajaxObj)
   renderSettings(ajaxObj)
-  renderPreview(ajaxObj)
+  renderProductPreview(ajaxObj)
   renderPlayTournamentBuilder(ajaxObj)
   renderTemplateBuilder(ajaxObj)
   renderPlayTemplate(ajaxObj)
@@ -189,6 +189,7 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
     )
   }
 }
+
 function renderPrintBracketPage() {
   const builderDiv = document.getElementById('wpbb-print-play')
   if (!builderDiv) return
@@ -209,16 +210,16 @@ function renderPrintBracketPage() {
     'wpbb-print-play'
   )
 }
-function renderPreview(ajaxObj: WpbbAjaxObj) {
+function renderProductPreview(ajaxObj: WpbbAjaxObj) {
   renderDiv(
     <App>
       <Gallery
         overlayThemeMap={ajaxObj.bracketUrlThemeMap}
         galleryImages={ajaxObj.galleryImages}
         colorOptions={ajaxObj.colorOptions}
-      />{' '}
+      />
     </App>,
-    'wpbb-bracket-preview-controller'
+    'wpbb-product-preview'
   )
 }
 function renderMyTournamentsModals(ajaxObj: WpbbAjaxObj) {

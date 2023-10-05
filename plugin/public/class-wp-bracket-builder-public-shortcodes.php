@@ -162,9 +162,9 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 		return ob_get_clean();
 	}
 
-	public function render_print_page() {
+	public function render_product_preview() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/print-page/wp-bracket-builder-bracket-print-page.php';
+		include plugin_dir_path(__FILE__) . 'partials/product-preview/wp-bracket-builder-bracket-product-preview.php';
 		return ob_get_clean();
 	}
 
@@ -181,6 +181,6 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 		add_shortcode('wpbb-bracket-template', [$this, 'render_bracket_template_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-tournament', [$this, 'render_bracket_tournament_page']); // This is a single post type template for bracket_tournament posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
-		add_shortcode('wpbb-print-page', [$this, 'render_print_page']); // This is a page with slug `print` used to generate bracket images
+		add_shortcode('wpbb-product-preview', [$this, 'render_product_preview']); // This is a page with slug `print` used to generate bracket images
 	}
 }

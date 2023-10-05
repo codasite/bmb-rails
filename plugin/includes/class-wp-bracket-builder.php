@@ -227,15 +227,17 @@ class Wp_Bracket_Builder {
 		$public_hooks = new Wp_Bracket_Builder_Public_Hooks();
 		$shortcodes = new Wp_Bracket_Builder_Public_Shortcodes();
 
+		$gelato_product_integration = new Wp_Bracket_Builder_Gelato_Product_Integration();
+
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
-		$this->loader->add_filter('woocommerce_add_to_cart_validation', $plugin_public, 'bracket_product_add_to_cart_validation', 10, 5);
-		$this->loader->add_action('woocommerce_add_cart_item_data', $plugin_public, 'add_bracket_to_cart_item_data', 10, 3);
-		$this->loader->add_action('woocommerce_checkout_create_order_line_item', $plugin_public, 'add_bracket_to_order_item', 10, 4);
-		$this->loader->add_action('woocommerce_before_checkout_process', $plugin_public, 'handle_before_checkout_process');
-		$this->loader->add_action('woocommerce_payment_complete', $plugin_public, 'handle_payment_complete');
-		$this->loader->add_filter('woocommerce_available_variation', $plugin_public, 'filter_variation_availability', 10, 3);
+		$this->loader->add_filter('woocommerce_add_to_cart_validation', $gelato_product_integration, 'add_to_cart_validation', 10, 5);
+		$this->loader->add_action('woocommerce_add_cart_item_data', $gelato_product_integration, 'add_to_cart_item_data', 10, 3);
+		$this->loader->add_action('woocommerce_checkout_create_order_line_item', $gelato_product_integration, 'checkout_create_order_line_item', 10, 4);
+		$this->loader->add_action('woocommerce_before_checkout_process', $gelato_product_integration, 'before_checkout_process');
+		$this->loader->add_action('woocommerce_payment_complete', $gelato_product_integration, 'payment_complete');
+		$this->loader->add_filter('woocommerce_available_variation', $gelato_product_integration, 'available_variation', 10, 3);
 
 		$this->loader->add_action('init', $public_hooks, 'add_rewrite_tags', 10, 0);
 		$this->loader->add_action('init', $public_hooks, 'add_rewrite_rules', 10, 0);

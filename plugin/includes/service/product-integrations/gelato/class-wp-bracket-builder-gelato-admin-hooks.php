@@ -1,24 +1,10 @@
 <?php
-require_once 'class-wp-bracket-builder-product-integration-interface.php';
 
-class Wp_Bracket_Builder_Gelato_Product_Integration implements Wp_Bracket_Builder_Product_Integration_Interface {
-
-	public function after_variable_attributes($loop, $variation_data, $variation): void {
-		$this->variation_settings_fields($loop, $variation_data, $variation);
-	}
-
-	public function save_product_variation($variation_id, $i): void {
-		$this->validate_variation_fields($variation_id, $i);
-		$this->save_variation_settings_fields($variation_id, $i);
-	}
-
-	public function admin_notices(): void {
-		$this->display_custom_admin_error();
-	}
+class Wp_Bracket_Builder_Gelato_Admin_Hooks {
 
 	//  add a custom text field for the bmb-logo-theme in the admin product variation settings
 	// Attach to `woocommerce_product_after_variable_attributes` hook
-	private function variation_settings_fields($loop, $variation_data, $variation) {
+	public function variation_settings_fields($loop, $variation_data, $variation) {
 		// Get the parent product
 		$parent_product_id = wp_get_post_parent_id($variation->ID);
 
@@ -57,7 +43,7 @@ class Wp_Bracket_Builder_Gelato_Product_Integration implements Wp_Bracket_Builde
 
 	// save the value of this field when the product variation is saved
 	// Attach to `woocommerce_save_product_variation` hook
-	private function save_variation_settings_fields($variation_id, $i) {
+	public function save_variation_settings_fields($variation_id, $i) {
 		if (isset($_POST['wpbb_front_design'][$variation_id])) {
 			$front_design = $_POST['wpbb_front_design'][$variation_id];
 			update_post_meta($variation_id, 'wpbb_front_design', esc_attr($front_design));
@@ -68,7 +54,7 @@ class Wp_Bracket_Builder_Gelato_Product_Integration implements Wp_Bracket_Builde
 		}
 	}
 
-	private function validate_variation_fields($variation_id, $i) {
+	public function validate_variation_fields($variation_id, $i) {
 		// Check for Front Design URL
 		if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
 			update_option('custom_admin_error', 'WARNING: Front Design URL is blank for variation ID ' . $variation_id . '. Customer will be unable to add this product to their cart.');
@@ -82,7 +68,7 @@ class Wp_Bracket_Builder_Gelato_Product_Integration implements Wp_Bracket_Builde
 
 	// Display the custom error message
 	// hooked to `admin_notices` action hook
-	private function display_custom_admin_error() {
+	public function display_custom_admin_error() {
 		$message = get_option('custom_admin_error');
 		if ($message) {
 			echo '<div class="error notice">
