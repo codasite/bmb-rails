@@ -2,6 +2,7 @@
 
 require_once('class-wp-bracket-builder-email-service-interface.php');
 require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-play-repo.php' );
+require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-team-repo.php' );
 
 class Wp_Bracket_Builder_Notification_Service {
 
@@ -9,19 +10,6 @@ class Wp_Bracket_Builder_Notification_Service {
 
     public function __construct(Wp_Bracket_Builder_Email_Service_Interface $email_service) {
         $this->email_service = $email_service;
-    }
-
-    private function get_team($team_id) {
-        global $wpdb;
-
-        $query = "
-            SELECT team.name as name FROM wp_bracket_builder_teams team
-            WHERE team.id = %d;
-        ";
-
-        $prepared_query = $wpdb->prepare($query, $team_id);
-        $result = $wpdb->get_results($prepared_query);
-        return $result;
     }
 
     public function get_picks_for_tournament($tournament_id) {
@@ -69,6 +57,7 @@ class Wp_Bracket_Builder_Notification_Service {
 
     public function send_tournament_result_email_update($tournament_id) {
         $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+        $team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 
         // get last round picks for the tournament
         $picks = $this->get_last_round_picks_for_tournament($tournament_id);
@@ -79,8 +68,8 @@ class Wp_Bracket_Builder_Notification_Service {
             $to_name = $pick->display_name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
-            $user_pick = $this->get_team($pick->user_pick);
-            $winner = $this->get_team($pick->winner);
+            $user_pick = $team_repo->get_team($pick->user_pick);
+            $winner = $team_repo->get_team($pick->winner);
             $tournament_id = $pick->tournament_id;
             $tournament_url = get_permalink($tournament_id) . '/leaderboard';
             $message = array(
@@ -95,10 +84,10 @@ class Wp_Bracket_Builder_Notification_Service {
             // Generate html content for email
             $background_image_url = 'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
             $logo_url = 'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
-            if ($user_pick[0]->name == $winner[0]->name) {
-                $heading = 'You picked ' . $user_pick[0]->name . ' ... and they won!';
+            if ($user_pick->name == $winner->name) {
+                $heading = 'You picked ' . $user_pick->name . ' ... and they won!';
             } else {
-                $heading = 'You picked ' . $user_pick[0]->name . ', but ' . $winner[0]->name . ' won the round...';
+                $heading = 'You picked ' . $user_pick->name . ', but ' . $winner->name . ' won the round...';
             }
             $subtext = 'Click the button below to view the tournament leaderboard.';
             $button_url = get_permalink($tournament_id) . '/leaderboard';
