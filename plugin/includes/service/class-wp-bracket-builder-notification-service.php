@@ -76,7 +76,7 @@ class Wp_Bracket_Builder_Notification_Service {
             $background_image_url = 'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
             $logo_url = 'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
             if ($user_pick->name == $winner->name) {
-                $heading = 'You picked ' . $user_pick->name . ' ... and they won!';
+                $heading = 'You picked ' . $user_pick->name . '... and they won!';
             } else {
                 $heading = 'You picked ' . $user_pick->name . ', but ' . $winner->name . ' won the round...';
             }
