@@ -28,6 +28,27 @@ app.get('/', async (req, res) => {
   res.send(`Hello World! ${user.username}`)
 })
 
+// Options to generate bracket image. Can be used to generate multiple images
+// by passing in an array of options to the imageOptions property.
+// Any property not specified will use the default value.
+interface BracketImageOptions {
+  uploadService?: string
+  s3Bucket?: string
+  s3Key?: string
+  pdf?: boolean
+  deviceScaleFactor?: number
+  theme?: string
+  inchHeight?: number
+  inchWidth?: number
+  position?: string
+  numTeams?: number
+  title?: string
+  date?: string
+  picks?: any
+  matches?: any
+  imageOptions?: Array<BracketImageOptions>
+}
+
 app.post('/test', async (req, res) => {
   console.log(req.body)
   res.send(req.body)

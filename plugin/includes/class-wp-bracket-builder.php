@@ -151,6 +151,12 @@ class Wp_Bracket_Builder {
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public-shortcodes.php';
 
+		/**
+		 * Bracket Product Integrations
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/product-integrations/class-wp-bracket-builder-product-integration-interface.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/product-integrations/class-wp-bracket-builder-gelato-product-integration.php';
+
 		$this->loader = new Wp_Bracket_Builder_Loader();
 	}
 
@@ -185,6 +191,8 @@ class Wp_Bracket_Builder {
 		$play_api = new Wp_Bracket_Builder_Bracket_Play_Api();
 		$convert_api = new Wp_Bracket_Builder_Convert_Api();
 
+		$gelato_product_integration = new Wp_Bracket_Builder_Gelato_Product_Integration();
+
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
 
@@ -200,20 +208,10 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('init', $this, 'register_custom_post_types');
 		$this->loader->add_action('init', $this, 'register_custom_post_status');
 
-		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_meta_box');
-		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'add_bracket_pick_img_urls_meta_box');
-
-		$this->loader->add_filter('manage_bracket_pick_posts_columns', $plugin_admin, 'add_bracket_pick_columns');
-		$this->loader->add_filter('manage_bracket_pick_posts_custom_column', $plugin_admin, 'show_bracket_pick_data', 10, 2);
-
-		$this->loader->add_action('save_post', $plugin_admin, 'save_bracket_pick_html_meta_box');
-
-		// custom meta for bracket product variations
-		$this->loader->add_action('woocommerce_product_after_variable_attributes', $plugin_admin, 'variation_settings_fields', 10, 3);
-		$this->loader->add_action('woocommerce_save_product_variation', $plugin_admin, 'save_variation_settings_fields', 10, 2);
-
-		$this->loader->add_action('woocommerce_save_product_variation', $plugin_admin, 'validate_variation_fields', 10, 2);
-		$this->loader->add_action('admin_notices', $plugin_admin, 'display_custom_admin_error');
+		// custom meta for Gelato bracket product variations
+		$this->loader->add_action('woocommerce_product_after_variable_attributes', $gelato_product_integration, 'after_variable_attributes', 10, 3);
+		$this->loader->add_action('woocommerce_save_product_variation', $gelato_product_integration, 'save_product_variation', 10, 2);
+		$this->loader->add_action('admin_notices', $gelato_product_integration, 'admin_notices');
 	}
 
 	/**
@@ -244,7 +242,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
 		$this->loader->add_action('init', $public_hooks, 'add_roles');
 		$this->loader->add_filter('posts_clauses', $public_hooks, 'sort_plays', 10, 2);
-		$this->loader->add_filter('template_redirect', $public_hooks, 'print_redirect', 10);
+		// $this->loader->add_filter('template_redirect', $public_hooks, 'print_redirect', 10);
 
 		$this->loader->add_action('init', $shortcodes, 'add_shortcodes');
 	}

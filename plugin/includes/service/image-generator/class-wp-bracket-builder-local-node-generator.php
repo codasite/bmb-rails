@@ -25,11 +25,6 @@ class Wp_Bracket_Builder_Local_Node_Generator implements Wp_Bracket_Builder_Post
 	 * @return string|WP_Error The URL of the generated image or a WP_Error if there was an error
 	 */
 	public function generate_image(Wp_Bracket_Builder_Bracket_Interface $bracket, array $args = []): string | WP_Error {
-		$upload_params = [
-			'upload_service' => 's3',
-			's3_bucket' => 'wpbb-bracket-images',
-			's3_key' => 'test-image'
-		];
 		$theme = $args['theme'] ?? 'light';
 		$position = $args['position'] ?? 'top';
 		$inch_height = $args['inch_height'] ?? 16;
@@ -41,6 +36,9 @@ class Wp_Bracket_Builder_Local_Node_Generator implements Wp_Bracket_Builder_Post
 		$num_teams = $bracket->get_num_teams();
 
 		$data = [
+			'upload_service' => 's3',
+			's3_bucket' => 'wpbb-bracket-images',
+			's3_key' => 'test-image',
 			'matches' => $matches,
 			'picks' => $picks,
 			'title' => $title,
@@ -73,5 +71,15 @@ class Wp_Bracket_Builder_Local_Node_Generator implements Wp_Bracket_Builder_Post
 		// get the response body as json
 		$res_body = json_decode(wp_remote_retrieve_body($res), true);
 		return $res_body;
+	}
+
+	private function get_image_args(Wp_Bracket_Builder_Bracket_Interface $bracket, string $theme, string $position, int $inch_height, int $inch_width): array {
+
+		return [
+			'theme' => $theme,
+			'position' => $position,
+			'inch_height' => $inch_height,
+			'inch_width' => $inch_width,
+		];
 	}
 }
