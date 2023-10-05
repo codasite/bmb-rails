@@ -3,16 +3,20 @@
 require_once('class-wp-bracket-builder-email-service-interface.php');
 require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-play-repo.php' );
 require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-team-repo.php' );
+require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php' );
 
 class Wp_Bracket_Builder_Notification_Service {
 
     protected Wp_Bracket_Builder_Email_Service_Interface $email_service;
 
+    protected Wp_Bracket_Builder_Bracket_Tournament_Repository $tournament_repo;
+
     public function __construct(Wp_Bracket_Builder_Email_Service_Interface $email_service) {
         $this->email_service = $email_service;
+        $this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
     }
 
-    public function get_picks_for_tournament($tournament_id) {
+    public function get_last_round_picks_for_tournament($tournament_id, $final_round_pick) {
         global $wpdb;
 
         /**
@@ -21,56 +25,45 @@ class Wp_Bracket_Builder_Notification_Service {
          * returns the author's email, display name, the
          * winning pick and the winning result.
          */
+
         $query = "
-            SELECT author.user_email, author.display_name, tournament.post_id as tournament_id, pick.round_index, pick.winning_team_id as user_pick, result.winning_team_id as winner
-            FROM wp_bracket_builder_tournaments tournament
-            JOIN wp_bracket_builder_plays play
-            ON tournament.id = play.bracket_tournament_id
-            JOIN wp_bracket_builder_match_picks pick
-            ON pick.bracket_play_id = play.id
-            JOIN wp_bracket_builder_tournament_results result
-            ON pick.round_index = result.round_index
-            AND pick.match_index = result.match_index
-            AND result.bracket_tournament_id = tournament.id
-            JOIN wp_posts post
-            ON post.ID = play.post_id
-            JOIN wp_users author
-            ON author.ID = post.post_author
-            WHERE tournament.post_id = %d
-            ORDER BY result.round_index;
+        SELECT author.user_email as email, author.display_name as name, pick.winning_team_id as winning_team_id
+        FROM wp_bracket_builder_tournaments tournament
+        JOIN wp_bracket_builder_plays play
+        ON tournament.id = play.bracket_tournament_id
+        JOIN wp_bracket_builder_match_picks pick 
+        ON pick.bracket_play_id = play.id
+        AND pick.round_index = %d
+        AND pick.match_index = %d
+        JOIN wp_posts post
+        ON post.ID = play.post_id
+        JOIN wp_users author
+        ON author.ID = post.post_author
+        WHERE tournament.post_id = %d
+        GROUP BY post.post_author;
         ";
 
-        $prepared_query = $wpdb->prepare($query, $tournament_id);
+        $prepared_query = $wpdb->prepare($query, $final_round_pick->round_index, $final_round_pick->match_index, $tournament_id);
         $results = $wpdb->get_results($prepared_query);
         return $results;
-
-    }
-
-    public function get_last_round_picks_for_tournament($tournament_id) {
-        $picks = $this->get_picks_for_tournament($tournament_id);
-        $last_round_index = $picks[count($picks) - 1]->round_index;
-        $last_round_picks = array_filter($picks, function($pick) use ($last_round_index) {
-            return $pick->round_index === $last_round_index;
-        });
-        return $last_round_picks;
     }
 
     public function send_tournament_result_email_update($tournament_id) {
         $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
         $team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 
-        // get last round picks for the tournament
-        $picks = $this->get_last_round_picks_for_tournament($tournament_id);
+        $tournament = $this->tournament_repo->get($tournament_id);
+        $final_round_pick = end($tournament->results);
+        $user_picks = $this->get_last_round_picks_for_tournament($tournament_id, $final_round_pick);
 
-        foreach($picks as $pick) {
-            $to_email = $pick->user_email;
-            // $to_email = 'test@wstrategies.co';
-            $to_name = $pick->display_name;
+        foreach($user_picks as $pick) {
+            $to_email = $pick->email;
+            $to_email = 'test@wstrategies.co';
+            $to_name = $pick->name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
-            $user_pick = $team_repo->get_team($pick->user_pick);
-            $winner = $team_repo->get_team($pick->winner);
-            $tournament_id = $pick->tournament_id;
+            $user_pick = $team_repo->get_team($pick->winning_team_id);
+            $winner = $team_repo->get_team($final_round_pick->winning_team_id);
             $tournament_url = get_permalink($tournament_id) . '/leaderboard';
             $message = array(
                 'to'=>array(
