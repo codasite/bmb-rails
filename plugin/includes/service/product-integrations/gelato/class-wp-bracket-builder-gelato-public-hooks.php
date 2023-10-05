@@ -1,34 +1,29 @@
 <?php
 
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'bracket-product/class-wp-bracket-builder-bracket-product-utils.php';
+
 class Wp_Bracket_Builder_Gelato_Public_Hooks {
 
-	public function build_overlay_map($placement): array {
-		$dark = $this->bracket_config_repo->get('dark', $placement);
-		$light = $this->bracket_config_repo->get('light', $placement);
+	/**
+	 * @var Wp_Bracket_Builder_Bracket_Product_Utils
+	 */
+	private $bracket_product_utils;
 
-		$overlay_map = array(
-			'dark' => $dark->img_url,
-			'light' => $light->img_url,
-		);
+	public function __construct() {
+		$this->bracket_product_utils = new Wp_Bracket_Builder_Bracket_Product_Utils();
 
-		return $overlay_map;
 	}
 
-	public function get_archive_url() {
-		$category_slug = 'bracket-ready';
-		$redirect_url = get_term_link($category_slug, 'product_cat');
-		return $redirect_url;
+	private function is_bracket_product($product) {
+		return $this->bracket_product_utils->is_bracket_product($product);
 	}
 
-	// get all attribute options for a product
-	public function get_attribute_options(mixed $product, string $attribute_name) {
-		$attributes = $product->get_attributes();
-		if (!array_key_exists($attribute_name, $attributes)) {
-			return array();
-		}
-		$attribute = $attributes[$attribute_name];
-		$attribute_options = $attribute->get_options();
-		return $attribute_options;
+	private function get_bracket_theme($variation_id) {
+		return $this->bracket_product_utils->get_bracket_theme($variation_id);
+	}
+
+	private function get_bracket_placement($product) {
+		return $this->bracket_product_utils->get_bracket_placement($product);
 	}
 
 	// Validate bracket product data before adding to cart
@@ -105,27 +100,6 @@ class Wp_Bracket_Builder_Gelato_Public_Hooks {
 		}
 	}
 
-	// Helper method to check if product is a bracket product
-	public function is_bracket_product($product) {
-		if (!$product) {
-			return false;
-		}
-		return $this->product_has_category($product, BRACKET_PRODUCT_CATEGORY);
-	}
-
-	// Helper method to get the bracket theme
-	public function get_bracket_theme($variation_id) {
-		return get_post_meta($variation_id, 'wpbb_bracket_theme', true);
-	}
-
-	// Helper method to get the bracket placement
-	public function get_bracket_placement($product) {
-		// return get_post_meta($variation_id, 'wpbb_bracket_placement', true);
-		if ($product && $this->product_has_category($product, BRACKET_PLACEMENT_CENTER_CAT)) {
-			return 'center';
-		}
-		return 'top';
-	}
 
 	// Helper method to log error and show notice
 	public function handle_add_to_cart_error($product, $variation_id, $product_id, $error_message) {
@@ -308,16 +282,6 @@ class Wp_Bracket_Builder_Gelato_Public_Hooks {
 	// 	$this->utils->log_sentry_message(json_encode($item_arr));
 	// }
 
-	public function get_variation_attribute_value($variation, $attribute_name) {
-		$attributes = $variation->get_attributes();
-		if (!array_key_exists($attribute_name, $attributes)) {
-			return null;
-		}
-		$attribute = $attributes[$attribute_name];
-		$attribute_value = $attribute;
-		return $attribute_value;
-	}
-
 	public function get_gelato_order_filename($order, $item) {
 		$order_id = $order->get_id();
 		$item_id = $item->get_id();
@@ -325,13 +289,6 @@ class Wp_Bracket_Builder_Gelato_Public_Hooks {
 		return $filename;
 	}
 
-	public function product_has_category($product, $category_slug) {
-		if ($product->is_type('variation')) {
-			return has_term($category_slug, 'product_cat', $product->get_parent_id());
-		} else {
-			return has_term($category_slug, 'product_cat', $product->get_id());
-		}
-	}
 
 	// Disallow purchase of variations that don't have a front design
 	// hooks into filter `woocommerce_available_variation`
@@ -352,34 +309,5 @@ class Wp_Bracket_Builder_Gelato_Public_Hooks {
 		}
 
 		return $available_array;
-	}
-	/**
-	 * Get all gallery images for the product
-	 *
-	 * @param WC_Product $product
-	 * @return array
-	 */
-
-	public function get_product_gallery($product) {
-		// get all gallery images for the product
-		$attachment_ids = $product->get_gallery_image_ids();
-		$gallery_images = $this->get_images($attachment_ids);
-		return $gallery_images;
-	}
-	public function get_images($image_ids) {
-		$images = array();
-
-		foreach ($image_ids as $imageId) {
-			// $imageSrc = wp_get_attachment_image_src($imageId, 'full');
-			// $imageUrl = $imageSrc[0];
-			// $image_urls[] = $imageUrl;
-			$image_attrs = array(
-				'src' => wp_get_attachment_url($imageId),
-				'title' => get_the_title($imageId),
-			);
-			$images[] = $image_attrs;
-		}
-
-		return $images;
 	}
 }

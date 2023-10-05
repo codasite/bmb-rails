@@ -107,53 +107,10 @@ class Wp_Bracket_Builder_Public {
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script('tailwind', 'https://cdn.tailwindcss.com', array(), $this->version, false);
-		// wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/wp-bracket-builder-public.js', array('jquery'), $this->version, false);
+		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.js', array('wp-element'), $this->version, true);
 
 		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
-
-		$post = get_post();
-		$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
-		$bracket = $template_repo->get(post: $post);
-		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.css';
-
-
-		// For product page
-		// $product = wc_get_product($post->ID);
-		$product = wc_get_product(0);
-		$bracket_product_archive_url = $this->get_archive_url();
-
-		$bracket_placement = $this->get_bracket_placement($product);
-
-		$is_bracket_product = $this->is_bracket_product($product);
-		// Only get product details on product pages.
-		$gallery_images = $is_bracket_product ? $this->get_product_gallery($product) : array();
-		$color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
-		$overlay_map = $is_bracket_product ? $this->build_overlay_map($bracket_placement) : array();
-
-		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.js', array('wp-element'), $this->version, true);
-
-		// wp_localize_script(
-		// 	'wpbb-bracket-builder-react',
-		// 	'wpbb_ajax_obj',
-		// 	array(
-		// 		'sentry_env' => $sentry_env,
-		// 		'sentry_dsn' => $sentry_dsn,
-		// 		'nonce' => wp_create_nonce('wp_rest'),
-		// 		'page' => 'user-bracket',
-		// 		'ajax_url' => admin_url('admin-ajax.php'),
-		// 		'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-		// 		'post' => $post,
-		// 		'bracket' => $bracket,
-		// 		'css_file' => $css_file,
-		// 		'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
-
-		// 		// For product page
-		// 		'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
-		// 		'gallery_images' => $gallery_images,
-		// 		'color_options' => $color_options,
-		// 	)
-		// );
 	}
 
 	private function build_overlay_map($placement): array {
@@ -167,25 +124,6 @@ class Wp_Bracket_Builder_Public {
 
 		return $overlay_map;
 	}
-	// private function build_overlay_map(): array {
-	// 	$dark_top = $this->bracket_config_repo->get('dark', 'top');
-	// 	$dark_center = $this->bracket_config_repo->get('dark', 'center');
-	// 	$light_top = $this->bracket_config_repo->get('light', 'top');
-	// 	$light_center = $this->bracket_config_repo->get('light', 'center');
-
-	// 	$bracket_url_theme_map = array(
-	// 		'dark' => array(
-	// 			'top' => $dark_top->img_url,
-	// 			'center' => $dark_center->img_url,
-	// 		),
-	// 		'light' => array(
-	// 			'top' => $light_top->img_url,
-	// 			'center' => $light_center->img_url,
-	// 		),
-	// 	);
-
-	// 	return $bracket_url_theme_map;
-	// }
 
 	public function get_archive_url() {
 		$category_slug = 'bracket-ready';
