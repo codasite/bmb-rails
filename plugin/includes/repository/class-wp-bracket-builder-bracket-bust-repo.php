@@ -49,26 +49,7 @@ class Wp_Bracket_Builder_Bracket_Bust_Repository {
         return $this->get_many();
     }
 
-    public function get_bracket_busts($bracket_id) {
-        $sql = "SELECT * FROM {$this->wpdb->prefix}bracket_builder_bracket_bust WHERE bracket_id = %d";
-        $sql = $this->wpdb->prepare($sql, $bracket_id);
-        $results = $this->wpdb->get_results($sql, ARRAY_A);
-        $bracket_busts = array();
-        foreach ($results as $result) {
-            $bracket_bust = new Wp_Bracket_Builder_Bracket_Bust();
-            $bracket_bust->set_id($result['id']);
-            $bracket_bust->set_bracket_id($result['bracket_id']);
-            $bracket_bust->set_team_id($result['team_id']);
-            $bracket_bust->set_round($result['round']);
-            $bracket_bust->set_game($result['game']);
-            $bracket_bust->set_user_id($result['user_id']);
-            $bracket_busts[] = $bracket_bust;
-        }
-        return $bracket_busts;
-    }
-
     public function add(int $busted_id, int $buster_id) {
-        echo 'adding bust';
         $query = "INSERT INTO {$this->wpdb->prefix}bracket_builder_busts (busted_play_id, buster_play_id) VALUES (%d, %d)";
         $prepared_query = $this->wpdb->prepare($query, $busted_id, $buster_id);
         $this->wpdb->query($prepared_query);
