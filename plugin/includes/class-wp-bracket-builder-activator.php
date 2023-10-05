@@ -44,6 +44,7 @@ class Wp_Bracket_Builder_Activator {
 		self::create_matches_table($prefix); // associated with bracket templates
 		self::create_match_picks_table($prefix); // associated with bracket plays
 		self::create_tournament_results_table($prefix); // associated with bracket tournaments
+		self::create_bust_table($prefix); // associated with bracket plays
 	}
 
 	private static function delete_tables(string $prefix) {
@@ -56,6 +57,7 @@ class Wp_Bracket_Builder_Activator {
 			$prefix . 'plays',
 			$prefix . 'tournaments',
 			$prefix . 'templates',
+			$prefix . 'busts',
 		];
 
 		foreach ($tables as $table) {
@@ -235,6 +237,25 @@ class Wp_Bracket_Builder_Activator {
 			PRIMARY KEY (id),
 			FOREIGN KEY (bracket_tournament_id) REFERENCES {$prefix}tournaments(id) ON DELETE CASCADE,
 			FOREIGN KEY (winning_team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
+		) $charset_collate;";
+
+		// import dbDelta
+		require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+		dbDelta($sql);
+	}
+
+	private static function create_bust_table(string $prefix) {
+		global $wpdb;
+		$table_name = $prefix . 'busts';
+		$charset_collate = $wpdb->get_charset_collate();
+
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			busted_play_id bigint(20) UNSIGNED NOT NULL,
+			buster_play_id bigint(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			FOREIGN KEY (busted_play_id) REFERENCES {$prefix}plays(id) ON DELETE CASCADE,
+			FOREIGN KEY (buster_play_id) REFERENCES {$prefix}plays(id) ON DELETE CASCADE,
 		) $charset_collate;";
 
 		// import dbDelta
