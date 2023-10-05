@@ -28,9 +28,7 @@ class Wp_Bracket_Builder_Notification_Service {
 
         $query = "
         SELECT author.user_email as email, author.display_name as name, pick.winning_team_id as winning_team_id
-        FROM wp_bracket_builder_tournaments tournament
-        JOIN wp_bracket_builder_plays play
-        ON tournament.id = play.bracket_tournament_id
+        FROM wp_bracket_builder_plays play
         JOIN wp_bracket_builder_match_picks pick 
         ON pick.bracket_play_id = play.id
         AND pick.round_index = %d
@@ -39,7 +37,7 @@ class Wp_Bracket_Builder_Notification_Service {
         ON post.ID = play.post_id
         JOIN wp_users author
         ON author.ID = post.post_author
-        WHERE tournament.post_id = %d
+        WHERE play.bracket_tournament_post_id = %d
         GROUP BY post.post_author;
         ";
 
@@ -58,7 +56,7 @@ class Wp_Bracket_Builder_Notification_Service {
 
         foreach($user_picks as $pick) {
             $to_email = $pick->email;
-            $to_email = 'test@wstrategies.co';
+            // $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
