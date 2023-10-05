@@ -12,7 +12,7 @@ interface Wp_Bracket_Builder_Product_Integration_Interface {
 	// public hooks
 	public function add_to_cart_validation($passed, $product_id, $quantity, $variation_id = null, $variations = null): bool;
 
-	public function add_to_cart_item_data($cart_item_data, $product_id, $variation_id): array;
+	public function add_cart_item_data($cart_item_data, $product_id, $variation_id): array;
 
 	public function checkout_create_order_line_item($item, $cart_item_key, $values, $order): void;
 
