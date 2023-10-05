@@ -68,6 +68,7 @@ class Wp_Bracket_Builder_Bracket_Bust_Repository {
     }
 
     public function add(int $busted_id, int $buster_id) {
+        echo 'adding bust';
         $query = "INSERT INTO {$this->wpdb->prefix}bracket_builder_busts (busted_play_id, buster_play_id) VALUES (%d, %d)";
         $prepared_query = $this->wpdb->prepare($query, $busted_id, $buster_id);
         $this->wpdb->query($prepared_query);
