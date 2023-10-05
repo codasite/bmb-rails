@@ -1,9 +1,7 @@
 <?php
 
 require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-notification-service.php');
-// require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/service/class-wp-bracket-builder-mailchimp-transactional-service.php');
-
-$current_tab = get_query_var('tab');
+require_once(plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-bust-repo.php');
 
 if (empty($current_tab)) {
 	$current_tab = 'profile';
