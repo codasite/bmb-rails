@@ -13,14 +13,13 @@ import {
 import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 //@ts-ignore
 import { bracketApi } from '../../shared/api/bracketApi'
-import { MatchRes, PlayRes } from '../../shared/api/types/bracket'
+import { MatchRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { DarkModeContext } from '../../shared/context'
 import {
   BusterMatchTreeContext,
   BusteeMatchTreeContext,
 } from '../../shared/context'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
-
 
 interface BustPlayBuilderProps {
   matchTree: MatchTree
@@ -32,7 +31,14 @@ interface BustPlayBuilderProps {
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const { matchTree, setMatchTree, busteePlay, redirectUrl, thumbnailUrl, celebrityDisplayName } = props
+  const {
+    matchTree,
+    setMatchTree,
+    busteePlay,
+    redirectUrl,
+    thumbnailUrl,
+    celebrityDisplayName,
+  } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
@@ -47,7 +53,39 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   }, [])
 
   const handleSubmit = () => {
-    // window.location.href = props.apparelUrl
+    const picks = busterMatchTree?.toMatchPicks()
+    const tournamentId = busteePlay?.tournament?.id
+
+    if (!tournamentId || !picks) {
+      return
+    }
+
+    bracketApi.createPlay
+
+    const playReq: PlayReq = {
+      tournamentId: tournamentId,
+      picks: picks,
+      title: title,
+    }
+    console.log('playReq')
+    console.log(playReq)
+
+    setProcessing(true)
+    bracketApi
+      .createPlay(playReq)
+      .then((res) => {
+        console.log('res')
+        console.log(res)
+        setProcessing(false)
+        window.location.href = apparelUrl
+      })
+      .catch((err) => {
+        setProcessing(false)
+        console.error(err)
+        Sentry.captureException(err)
+      })
+
+    window.location.href = redirectUrl
     console.log('handleSubmit')
   }
 
@@ -65,7 +103,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
       >
-        
         {matchTree && busterMatchTree && (
           <BusteeMatchTreeContext.Provider
             value={{
@@ -103,7 +140,9 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                       backgroundColor="redLight"
                       shadow={false}
                     />
-                    <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">You</span>
+                    <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">
+                      You
+                    </span>
                   </div>
                 </div>
               </div>
@@ -112,7 +151,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                 setMatchTree={setMatchTree}
               />
               <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                {busterMatchTree.allPicked()? 
+                {busterMatchTree.allPicked() ? (
                   <ActionButton
                     variant="big-red"
                     darkMode={true}
@@ -120,16 +159,16 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                   >
                     Submit
                   </ActionButton>
-                :
+                ) : (
                   <ActionButton
                     variant="big-red"
                     darkMode={true}
                     disabled={true}
                     onClick={() => {}}
-                    >
-                      Submit
-                    </ActionButton>
-                }
+                  >
+                    Submit
+                  </ActionButton>
+                )}
               </div>
             </BusterMatchTreeContext.Provider>
           </BusteeMatchTreeContext.Provider>
