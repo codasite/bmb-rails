@@ -234,6 +234,27 @@ export class MatchTree {
     return MatchTree.deserialize(this.serialize())
   }
 
+  syncPick(otherMatch?: Nullable<MatchNode>): void {
+    if (!otherMatch) {
+      return
+    }
+
+    let thisMatch =
+      this.rounds[otherMatch.roundIndex].matches[otherMatch.matchIndex]
+    if (!thisMatch) {
+      return
+    }
+
+    thisMatch.team1Wins = otherMatch.team1Wins
+    thisMatch.team2Wins = otherMatch.team2Wins
+
+    if (otherMatch.team1Wins) {
+      this.syncPick(otherMatch.left)
+    } else if (otherMatch.team2Wins) {
+      this.syncPick(otherMatch.right)
+    }
+  }
+
   /**
    * Returns the total number of POSSIBLE teams in the tournament.
    * This should reflect the number of teams that would be used to create the same structure with MatchTree.fromNumTeams()
