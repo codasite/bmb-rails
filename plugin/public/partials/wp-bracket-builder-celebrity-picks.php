@@ -2,6 +2,7 @@
 require_once('shared/wp-bracket-builder-tournaments-common.php');
 require_once('shared/wp-bracket-builder-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wp-bracket-builder-pagination-widget.php';
 
 
@@ -20,22 +21,14 @@ $plays = $play_repo->get_all($the_query);
 $paged_plays = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $num_plays_pages = $the_query->max_num_pages;
 
-$tournaments = array(
-	array(
-		"name" => "NCAA College Football 2024 Hosted by Ahmad Merritt",
-		"id" => 1,
-		"num_teams" => 16,
-		"num_plays" => 3,
-		"completed" => false,
-	),
-	array(
-		"name" => "NCAA Womens World Series 2024 Hosted by Johnny Manziel",
-		"id" => 2,
-		"num_teams" => 16,
-		"num_plays" => 999,
-		"completed" => true,
-	)
-);
+$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+// Get all tournaments with the bmb_vip_tourney tag
+$tournaments = $tournament_repo->get_all([
+	'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+	'posts_per_page' => -1,
+	'post_status' => 'any',
+	'tag' => 'bmb_vip_tourney'
+]);
 
 $page = get_query_var('paged');
 function wpbb_get_official_tournaments() {
@@ -80,7 +73,7 @@ function wpbb_celebrity_play_list_item($play) {
 	$tournament_id = $play->tournament_id;
 	$thumbnail = get_the_post_thumbnail_url($id);
 	$play_link = get_permalink($tournament_id) . '/play';
-	$bust_link = get_permalink($tournament_id) . '/bust';
+	$bust_link = get_permalink($id) . 'bust';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col">
