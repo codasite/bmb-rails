@@ -88,7 +88,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                       backgroundColor="blueLight"
                       shadow={true}
                     />
-                    <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">
+                    <span className="tw-text-white tw-font-700 tw-text-12 tw-mb-8 tw-mt-8">
                       {celebrityDisplayName}
                     </span>
                   </div>

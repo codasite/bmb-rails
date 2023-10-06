@@ -25,6 +25,7 @@ export interface WpbbAjaxObj {
   celebrityDisplayName: string;
   authorFirstName: string;
   authorLastName: string;
+  tournamentTitle: string;
 }
 interface PrintOptions {
   theme: string;
