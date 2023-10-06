@@ -16,6 +16,8 @@ import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { BustPlayBuilder } from './BustPlayBuilder'
+import { ReactComponent as UserIcon } from '../../shared/assets/user.svg'
+
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -95,9 +97,17 @@ const BustPlayPage = (props: BustPlayPageProps) => {
             <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
             </div>
-            <div className="tw-mb-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
-              <img className="tw-h-50 tw-w-50 tw-rounded-full" src={thumbnailUrl} alt="celebrity-photo" />
-            </div>
+            {thumbnailUrl? (
+              <div className="tw-mb-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+                <img className="tw-h-50 tw-w-50 tw-rounded-full" src={thumbnailUrl} alt="celebrity-photo" />
+              </div>
+            ): (
+              <div className="tw-mb-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+                <div className='tw-h-50 tw-w-50 tw-flex tw-rounded-full tw-border-solid tw-border-4 tw-border-blue tw-justify-center tw-items-center tw-h-full"'>
+                  <UserIcon />
+                </div>
+              </div>
+            )}
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
