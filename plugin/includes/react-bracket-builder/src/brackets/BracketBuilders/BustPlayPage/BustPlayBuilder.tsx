@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
@@ -14,6 +14,7 @@ import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 //@ts-ignore
 import { bracketApi } from '../../shared/api/bracketApi'
 import { PlayRes } from '../../shared/api/types/bracket'
+import { DarkModeContext } from '../../shared/context'
 
 interface BustPlayBuilderProps {
   matchTree: MatchTree
@@ -29,6 +30,9 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     bracketPlay: play,
     redirectUrl,
   } = props
+
+  const dark = useContext(DarkModeContext)
+  console.log('dark', dark)
 
   const handleSubmit = () => {
     // window.location.href = props.apparelUrl

@@ -42,7 +42,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     thumbnailUrl,
   } = props
 
-  const [page, setPage] = useState('view')
+  const [page, setPage] = useState('bust')
 
   useEffect(() => {
     const picks = play?.picks
