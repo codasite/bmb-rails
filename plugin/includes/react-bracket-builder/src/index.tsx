@@ -183,7 +183,7 @@ function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
   if (play) {
     renderDiv(
       <App>
-        <BustBracketPage bracketPlay={play} apparelUrl={redirectUrl} />
+        <BustBracketPage bracketPlay={play} redirectUrl={redirectUrl} />
       </App>,
       'wpbb-bust-bracket'
     )
