@@ -35,7 +35,7 @@ class Wp_Bracket_Builder_Activator {
 		$plugin_prefix = 'bracket_builder_';
 		$prefix = $wp_prefix . $plugin_prefix;
 
-		self::delete_tables($prefix);
+		// self::delete_tables($prefix);
 
 		self::create_bracket_templates_table($prefix); // one-to-one table for bracket templates
 		self::create_tournaments_table($prefix); // one-to-one table for bracket tournaments
@@ -54,10 +54,10 @@ class Wp_Bracket_Builder_Activator {
 			$prefix . 'match_picks',
 			$prefix . 'matches',
 			$prefix . 'teams',
+			$prefix . 'busts',
 			$prefix . 'plays',
 			$prefix . 'tournaments',
 			$prefix . 'templates',
-			$prefix . 'busts',
 		];
 
 		foreach ($tables as $table) {
@@ -252,10 +252,14 @@ class Wp_Bracket_Builder_Activator {
 		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			busted_play_id bigint(20) UNSIGNED NOT NULL,
+			busted_play_post_id bigint(20) UNSIGNED NOT NULL,
 			buster_play_id bigint(20) UNSIGNED NOT NULL,
+			buster_play_post_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			FOREIGN KEY (busted_play_id) REFERENCES {$prefix}plays(id) ON DELETE CASCADE,
-			FOREIGN KEY (buster_play_id) REFERENCES {$prefix}plays(id) ON DELETE CASCADE
+			FOREIGN KEY (buster_play_id) REFERENCES {$prefix}plays(id) ON DELETE CASCADE,
+			FOREIGN KEY (busted_play_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (buster_play_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
 		) $charset_collate;";
 
 		// import dbDelta

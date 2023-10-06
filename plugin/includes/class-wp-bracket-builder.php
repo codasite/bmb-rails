@@ -137,6 +137,11 @@ class Wp_Bracket_Builder {
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-play-api.php';
 
 		/**
+		 * The bracket busts api controller class
+		 */
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-bust-api.php';
+
+		/**
 		 * The html to image converter api controller class
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-convert-api.php';
@@ -184,6 +189,7 @@ class Wp_Bracket_Builder {
 		$tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
 		$play_api = new Wp_Bracket_Builder_Bracket_Play_Api();
 		$convert_api = new Wp_Bracket_Builder_Convert_Api();
+		$bust_api = new Wp_Bracket_Builder_Bracket_Bust_Api();
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
@@ -196,6 +202,7 @@ class Wp_Bracket_Builder {
 		$this->loader->add_action('rest_api_init', $tournament_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 		$this->loader->add_action('rest_api_init', $convert_api, 'register_routes');
+		$this->loader->add_action('rest_api_init', $bust_api, 'register_routes');
 
 		$this->loader->add_action('init', $this, 'register_custom_post_types');
 		$this->loader->add_action('init', $this, 'register_custom_post_status');

@@ -273,33 +273,50 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		);
 	}
 
-	public function add_bust(int $buster_id, int $busted_id) {
-			$query = "INSERT INTO {$this->busts_table()} (busted_play_id, buster_play_id) VALUES (%d, %d)";
-			$prepared_query = $this->wpdb->prepare($query, $busted_id, $buster_id);
-			$this->wpdb->query($prepared_query);
+	public function add_bust(int $buster_post_id, int $busted_post_id) {
+		$buster_data = $this->get_play_data($buster_post_id);
+		$busted_data = $this->get_play_data($busted_post_id);
 
-			$id = $this->wpdb->insert_id;
-			return $this->get($id);
+		$buster_play_id = $buster_data['id'];
+		$busted_play_id = $busted_data['id'];
+
+		if (!$buster_play_id || !$busted_play_id) {
+			throw new Exception('Could not find play data for one or both of the plays.');
+		}
+
+		$buster_tournament_id = $buster_data['bracket_tournament_id'];
+		$busted_tournament_id = $busted_data['bracket_tournament_id'];
+
+		if ($buster_tournament_id !== $busted_tournament_id) {
+			throw new Exception('Buster and busted plays must belong to the same tournament.');
+		}
+
+		$query = "INSERT INTO {$this->busts_table()} (buster_play_id, buster_play_post_id, busted_play_id, busted_play_post_id) VALUES (%d, %d, %d, %d)";
+		$prepared_query = $this->wpdb->prepare($query, $buster_play_id, $buster_post_id, $busted_play_id, $busted_post_id);
+		$this->wpdb->query($prepared_query);
+
+		$id = $this->wpdb->insert_id;
+		return $this->get($id);
 	}
 
 	public function get_bust($bust_id) {
-			$query = "SELECT * FROM {$this->busts_table()} WHERE id = %d";
-			$prepared_query = $this->wpdb->prepare($query, $bust_id);
-			$results = $this->wpdb->get_row($prepared_query, ARRAY_A);
+		$query = "SELECT * FROM {$this->busts_table()} WHERE id = %d";
+		$prepared_query = $this->wpdb->prepare($query, $bust_id);
+		$results = $this->wpdb->get_row($prepared_query, ARRAY_A);
 
-			if (!$results) {
-					return null;
-			}
+		if (!$results) {
+				return null;
+		}
 
-			$busted_play = $this->get($results['busted_play_id']);
-			$buster_play = $this->get($results['buster_play_id']);
+		$busted_play = $this->get($results['busted_play_id']);
+		$buster_play = $this->get($results['buster_play_id']);
 
-			$bust = new Wp_Bracket_Builder_Bracket_Bust(
-					$results['id'],
-					$busted_play,
-					$buster_play,
-			);
-			return $bust;
+		$bust = new Wp_Bracket_Builder_Bracket_Bust(
+				$results['id'],
+				$busted_play,
+				$buster_play,
+		);
+		return $bust;
 	}
 
 	public function busts_table() {
