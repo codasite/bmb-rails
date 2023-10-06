@@ -1,7 +1,10 @@
 import React, { useEffect, useContext } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { PickableBracket } from '../../shared/components/Bracket'
+import {
+  BustableBracket,
+  PickableBracket,
+} from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import {
   WithDarkMode,
@@ -24,12 +27,7 @@ interface BustPlayBuilderProps {
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    bracketPlay: play,
-    redirectUrl,
-  } = props
+  const { matchTree, setMatchTree, bracketPlay: play, redirectUrl } = props
 
   const dark = useContext(DarkModeContext)
   console.log('dark', dark)
@@ -41,7 +39,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark-mode`}
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark`}
       style={{
         backgroundImage: `url(${redBracketBg})`,
       }}
@@ -51,16 +49,18 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       >
         {matchTree && (
           <>
-            <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-            </div>
-            <PickableBracket matchTree={matchTree} />
+            <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"></div>
+            <BustableBracket
+              matchTree={matchTree}
+              setMatchTree={setMatchTree}
+            />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="big-green"
                 darkMode={true}
                 onClick={handleSubmit}
               >
-                Add to Apparel
+                Submit
               </ActionButton>
             </div>
           </>

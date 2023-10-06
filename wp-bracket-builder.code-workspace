@@ -7,5 +7,8 @@
 			"path": "plugin/includes/react-bracket-builder"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"editor.formatOnSave": true,
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	}
 }
