@@ -192,6 +192,39 @@ const WhiteButton = (props: ActionButtonProps) => {
   )
 }
 
+export const RedButton = (props: ActionButtonProps) => {
+  const { disabled, darkMode } = props
+  const background = disabled ? 'transparent' : 'red'
+  const darkModeBackground = disabled ? 'transparent' : 'red/15'
+  const border = disabled ? 'black/20' : undefined
+  const darkModeBorder = disabled ? 'white/20' : 'red'
+  const textColor = disabled ? 'black/20' : 'dd-red'
+  const darkModeTextColor = disabled ? 'white/20' : 'white'
+  return (
+    <ActionButtonBase
+      backgroundColor={darkMode ? darkModeBackground : background}
+      padding={16}
+      textColor={darkMode ? darkModeTextColor : textColor}
+      borderRadius={8}
+      borderColor={darkMode ? darkModeBorder : border}
+      {...props}
+    />
+  )
+}
+
+const BigRedButton = (props: ActionButtonProps) => {
+  return (
+    <RedButton
+      paddingX={30}
+      paddingY={16}
+      fontSize={36}
+      fontWeight={700}
+      borderWidth={4}
+      {...props}
+    />
+  )
+}
+
 export const ActionButton = (props: ActionButtonProps) => {
   const { variant } = props
 
@@ -212,6 +245,8 @@ export const ActionButton = (props: ActionButtonProps) => {
       return <BigYellowButton {...props} />
     case 'white':
       return <WhiteButton {...props} />
+    case 'big-red':
+      return <BigRedButton {...props} />
     default:
       return <ActionButtonBase {...props} />
   }

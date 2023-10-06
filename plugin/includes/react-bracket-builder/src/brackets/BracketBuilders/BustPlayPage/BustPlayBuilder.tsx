@@ -80,7 +80,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
               />
               <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
                 <ActionButton
-                  variant="big-green"
+                  variant="big-red"
                   darkMode={true}
                   onClick={handleSubmit}
                 >

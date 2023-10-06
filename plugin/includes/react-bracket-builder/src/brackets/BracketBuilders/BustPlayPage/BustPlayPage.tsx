@@ -114,7 +114,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
-                variant="big-green"
+                variant="big-red"
                 darkMode={darkMode}
                 onClick={actionButtonCallback}
               >
