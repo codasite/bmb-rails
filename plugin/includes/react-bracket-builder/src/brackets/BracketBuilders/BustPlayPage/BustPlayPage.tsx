@@ -17,7 +17,7 @@ import { BracketMeta } from '../../shared/context'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { BustPlayBuilder } from './BustPlayBuilder'
 
-interface ViewPlayPageProps {
+interface BustPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   matchTree: MatchTree
@@ -26,9 +26,10 @@ interface ViewPlayPageProps {
   apparelUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
+  thumbnailUrl: string
 }
 
-const ViewPlayPage = (props: ViewPlayPageProps) => {
+const BustPlayPage = (props: BustPlayPageProps) => {
   const {
     bracketMeta,
     setBracketMeta,
@@ -38,6 +39,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
     setMatchTree,
     bracketPlay: play,
     apparelUrl,
+    thumbnailUrl,
   } = props
 
   const [page, setPage] = useState('bust')
@@ -73,6 +75,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   const handleAddToApparel = () => {
     window.location.href = props.apparelUrl
   }
+  const bustBracket = async () => {}
 
   return (
     <div
@@ -91,14 +94,17 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
             <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
             </div>
+            <div className="tw-flex tw-flex-col tw-justify-center tw-items-center">
+              <img className="tw-h-50 tw-rounded-" src={thumbnailUrl} alt="celebrity-photo" />
+            </div>
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="big-green"
                 darkMode={darkMode}
-                onClick={handleAddToApparel}
+                onClick={bustBracket}
               >
-                Add to Apparel
+                Bust Bracket
               </ActionButton>
             </div>
           </>
@@ -108,8 +114,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   )
 }
 
-const WrappedViewPlayPage = WithProvider(
-  WithMatchTree(WithBracketMeta(WithDarkMode(ViewPlayPage)))
+const WrappedBustPlayPage = WithProvider(
+  WithMatchTree(WithBracketMeta(WithDarkMode(BustPlayPage)))
 )
-// export { WrappedViewPlayPage as ViewPlayPage }
-export default WrappedViewPlayPage
+export default WrappedBustPlayPage
