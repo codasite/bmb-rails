@@ -72,7 +72,7 @@ function wpbb_celebrity_play_list_item($play) {
 	$id = $play->id;
 	$tournament_id = $play->tournament_id;
 	$thumbnail = get_the_post_thumbnail_url($id);
-	$play_link = get_permalink($tournament_id) . '/play';
+	$play_link = get_permalink($id) . 'play';
 	$bust_link = get_permalink($id) . 'bust';
 	ob_start();
 ?>
