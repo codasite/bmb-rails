@@ -28,10 +28,11 @@ interface BustPlayBuilderProps {
   busteePlay: PlayRes
   redirectUrl: string
   thumbnailUrl: string
+  celebrityDisplayName: string
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const { matchTree, setMatchTree, busteePlay, redirectUrl, thumbnailUrl } = props
+  const { matchTree, setMatchTree, busteePlay, redirectUrl, thumbnailUrl, celebrityDisplayName } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
@@ -88,7 +89,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                       shadow={true}
                     />
                     <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">
-                      Terrel
+                      {celebrityDisplayName}
                     </span>
                   </div>
                   <span className="tw-text-white tw-font-700 tw-text-48 tw-m-18 tw-mt-40 tw-mb-40">

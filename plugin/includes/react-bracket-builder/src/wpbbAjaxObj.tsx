@@ -22,6 +22,7 @@ export interface WpbbAjaxObj {
   homeUrl: string;
   printOptions: PrintOptions;
   thumbnailUrl: string;
+  celebrityDisplayName: string;
 }
 interface PrintOptions {
   theme: string;

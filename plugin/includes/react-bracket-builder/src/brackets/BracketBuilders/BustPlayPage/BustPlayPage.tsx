@@ -32,6 +32,7 @@ interface BustPlayPageProps {
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
   thumbnailUrl: string
+  celebrityDisplayName: string
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
@@ -45,6 +46,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     bracketPlay: play,
     apparelUrl,
     thumbnailUrl,
+    celebrityDisplayName,
   } = props
 
   const [page, setPage] = useState('view')
@@ -79,6 +81,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         redirectUrl={apparelUrl}
         busteePlay={play}
         thumbnailUrl={thumbnailUrl}
+        celebrityDisplayName={celebrityDisplayName}
       />
     )
   }
