@@ -37,6 +37,7 @@ tailwind.config = {
       14: '14px',
       15: '15px',
       16: '16px',
+      18: '18px',
       20: '20px',
       24: '24px',
       30: '30px',
@@ -65,6 +66,10 @@ tailwind.config = {
       'dd-blue': '#010433',
       yellow: '#F8E11A',
       red: '#FF456D',
+      redLight: '#FF1F4F26',
+    },
+    borderWidth: {
+      1: '1px',
     },
     borderRadius: {
       4: '4px',

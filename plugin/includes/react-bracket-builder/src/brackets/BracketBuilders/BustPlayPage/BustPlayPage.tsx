@@ -69,13 +69,14 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     }
   }, [play])
 
-  if (false && page === 'bust' && matchTree) {
+  if (page === 'bust' && matchTree) {
     return (
       <BustPlayBuilder
         matchTree={matchTree}
         setMatchTree={setMatchTree}
         redirectUrl={apparelUrl}
         busteePlay={play}
+        thumbnailUrl={thumbnailUrl}
       />
     )
   }

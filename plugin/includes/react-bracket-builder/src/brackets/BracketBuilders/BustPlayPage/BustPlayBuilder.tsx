@@ -19,16 +19,19 @@ import {
   BusterMatchTreeContext,
   BusteeMatchTreeContext,
 } from '../../shared/context'
+import { ProfilePicture } from '../../shared/components/ProfilePicture'
+
 
 interface BustPlayBuilderProps {
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
   busteePlay: PlayRes
   redirectUrl: string
+  thumbnailUrl: string
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const { matchTree, setMatchTree, busteePlay, redirectUrl } = props
+  const { matchTree, setMatchTree, busteePlay, redirectUrl, thumbnailUrl } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
@@ -61,6 +64,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
       >
+        
         {matchTree && busterMatchTree && (
           <BusteeMatchTreeContext.Provider
             value={{
@@ -73,7 +77,25 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                 setMatchTree: setBusterTree,
               }}
             >
-              <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"></div>
+              <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+                <div className="tw-text-2xl tw-font-bold tw-text-white tw-flex tw-flex-row">
+                  <ProfilePicture
+                    src={thumbnailUrl}
+                    alt="celebrity-photo"
+                    color="red"
+                    backgroundColor="redLight"
+                  />
+                  <span className="tw-text-white tw-font-700 tw-text-48 tw-m-18 tw-mt-40 tw-mb-40">
+                    VS
+                  </span>
+                  <ProfilePicture
+                    src=""
+                    alt="celebrity-photo"
+                    color="red"
+                    backgroundColor="redLight"
+                  />
+                </div>
+              </div>
               <BusterBracket
                 matchTree={matchTree}
                 setMatchTree={setMatchTree}
