@@ -38,6 +38,9 @@ const TournamentResultsBuilder = React.lazy(
 const ViewPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage')
 )
+const BustPlayPage = React.lazy(
+  () => import('./brackets/BracketBuilders/BustPlayPage/BustPlayPage')
+)
 const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
@@ -56,6 +59,7 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   renderViewBracketPlay(ajaxObj)
   renderMyTournamentsModals(ajaxObj)
   renderMyTemplatesModals(ajaxObj)
+  renderBustBracketPlay(ajaxObj)
 } else {
   renderPrintBracketPage()
 }
@@ -179,13 +183,13 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const { play, redirectUrl } = ajaxObj
+  const { play, redirectUrl, thumbnailUrl } = ajaxObj
   if (play) {
     renderDiv(
       <App>
-        <BustBracketPage bracketPlay={play} redirectUrl={redirectUrl} />
+        <BustPlayPage bracketPlay={play} redirectUrl={redirectUrl} thumbnailUrl={thumbnailUrl} />
       </App>,
-      'wpbb-bust-bracket'
+      'wpbb-bust-play'
     )
   }
 }

@@ -21,6 +21,7 @@ export interface WpbbAjaxObj {
   userCanCreateTournament: boolean;
   homeUrl: string;
   printOptions: PrintOptions;
+  thumbnailUrl: string;
 }
 interface PrintOptions {
   theme: string;
