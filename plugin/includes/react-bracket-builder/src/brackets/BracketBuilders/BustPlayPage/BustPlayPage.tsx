@@ -58,7 +58,8 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 
   useEffect(() => {
     const picks = play?.picks
-    const title = play?.tournament?.title
+    // const title = play?.tournament?.title
+    const title = `${play.title}'s ${play?.tournament?.title} picks`
     const date = 'Sept 2094'
     setBracketMeta({ title, date })
     const template = play?.tournament?.bracketTemplate
