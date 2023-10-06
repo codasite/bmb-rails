@@ -6,7 +6,7 @@ import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
 import { BusteeMatchTreeContext, BusterMatchTreeContext } from '../../context'
 
-export const BustableTeamSlotToggle = (props: TeamSlotProps) => {
+export const BusterTeamSlotToggle = (props: TeamSlotProps) => {
   const { team, match, teamPosition } = props
 
   const { matchTree: busteeMatchTree } = useContext(BusteeMatchTreeContext)

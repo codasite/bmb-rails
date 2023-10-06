@@ -1,10 +1,7 @@
 import React, { useEffect, useContext, useState, createContext } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
-import {
-  BustableBracket,
-  PickableBracket,
-} from '../../shared/components/Bracket'
+import { BusterBracket, PickableBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import {
   WithDarkMode,
@@ -77,7 +74,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
               }}
             >
               <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"></div>
-              <BustableBracket
+              <BusterBracket
                 matchTree={matchTree}
                 setMatchTree={setMatchTree}
               />
