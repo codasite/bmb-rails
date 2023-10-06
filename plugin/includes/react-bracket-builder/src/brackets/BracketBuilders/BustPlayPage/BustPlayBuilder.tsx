@@ -44,6 +44,12 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     console.log('handleSubmit')
   }
 
+  const setBusterTree = (matchTree: MatchTree) => {
+    const tree = matchTree.serialize()
+    const newTree = MatchTree.deserialize(tree)
+    setBusterMatchTree(newTree)
+  }
+
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark`}
@@ -57,12 +63,14 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
         {busteeMatchTree && busterMatchTree && (
           <MatchTreeContext.Provider
             value={{
-              matchTree: busterMatchTree,
-              setMatchTree: setBusterMatchTree,
+              matchTree: busteeMatchTree,
             }}
           >
             <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"></div>
-            <BustableBracket matchTree={busteeMatchTree} />
+            <BustableBracket
+              matchTree={busterMatchTree}
+              setMatchTree={setBusterTree}
+            />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="big-green"
