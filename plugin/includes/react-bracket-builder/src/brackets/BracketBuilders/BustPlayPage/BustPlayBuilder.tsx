@@ -79,13 +79,24 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                 setMatchTree={setMatchTree}
               />
               <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                <ActionButton
-                  variant="big-red"
-                  darkMode={true}
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </ActionButton>
+                {busterMatchTree.allPicked()? 
+                  <ActionButton
+                    variant="big-red"
+                    darkMode={true}
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </ActionButton>
+                :
+                  <ActionButton
+                    variant="big-red"
+                    darkMode={true}
+                    disabled={true}
+                    onClick={() => {}}
+                    >
+                      Submit
+                    </ActionButton>
+                }
               </div>
             </BusterMatchTreeContext.Provider>
           </BusteeMatchTreeContext.Provider>
