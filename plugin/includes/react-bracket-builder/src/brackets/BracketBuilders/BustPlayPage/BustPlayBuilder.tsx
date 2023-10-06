@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useEffect, useContext, useState, createContext } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import {
@@ -17,7 +17,11 @@ import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 //@ts-ignore
 import { bracketApi } from '../../shared/api/bracketApi'
 import { MatchRes, PlayRes } from '../../shared/api/types/bracket'
-import { DarkModeContext, MatchTreeContext } from '../../shared/context'
+import { DarkModeContext } from '../../shared/context'
+import {
+  BusterMatchTreeContext,
+  BusteeMatchTreeContext,
+} from '../../shared/context'
 
 interface BustPlayBuilderProps {
   matchTree: MatchTree
@@ -27,16 +31,18 @@ interface BustPlayBuilderProps {
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const { matchTree: busteeMatchTree, busteePlay, redirectUrl } = props
+  const { matchTree, setMatchTree, busteePlay, redirectUrl } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
+  const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
 
   useEffect(() => {
     const template = busteePlay?.tournament?.bracketTemplate
     const matches = template?.matches
     const numTeams = template?.numTeams
-    const busterMatchTree = MatchTree.fromMatchRes(numTeams, matches)
-    setBusterMatchTree(busterMatchTree)
+    const tree = MatchTree.fromMatchRes(numTeams, matches)
+    setBusterMatchTree(tree)
+    setBusteeMatchTree(matchTree.clone())
   }, [])
 
   const handleSubmit = () => {
@@ -44,10 +50,8 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     console.log('handleSubmit')
   }
 
-  const setBusterTree = (matchTree: MatchTree) => {
-    const tree = matchTree.serialize()
-    const newTree = MatchTree.deserialize(tree)
-    setBusterMatchTree(newTree)
+  const setBusterTree = (tree: MatchTree) => {
+    setBusterMatchTree(tree.clone())
   }
 
   return (
@@ -60,27 +64,34 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
       >
-        {busteeMatchTree && busterMatchTree && (
-          <MatchTreeContext.Provider
+        {matchTree && busterMatchTree && (
+          <BusteeMatchTreeContext.Provider
             value={{
               matchTree: busteeMatchTree,
             }}
           >
-            <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"></div>
-            <BustableBracket
-              matchTree={busterMatchTree}
-              setMatchTree={setBusterTree}
-            />
-            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-              <ActionButton
-                variant="big-green"
-                darkMode={true}
-                onClick={handleSubmit}
-              >
-                Submit
-              </ActionButton>
-            </div>
-          </MatchTreeContext.Provider>
+            <BusterMatchTreeContext.Provider
+              value={{
+                matchTree: busterMatchTree,
+                setMatchTree: setBusterTree,
+              }}
+            >
+              <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"></div>
+              <BustableBracket
+                matchTree={matchTree}
+                setMatchTree={setMatchTree}
+              />
+              <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+                <ActionButton
+                  variant="big-green"
+                  darkMode={true}
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </ActionButton>
+              </div>
+            </BusterMatchTreeContext.Provider>
+          </BusteeMatchTreeContext.Provider>
         )}
       </div>
     </div>
