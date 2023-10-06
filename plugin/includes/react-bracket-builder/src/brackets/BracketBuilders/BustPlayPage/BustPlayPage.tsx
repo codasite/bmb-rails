@@ -17,14 +17,14 @@ import { BracketMeta } from '../../shared/context'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { BustPlayBuilder } from './BustPlayBuilder'
 import { ReactComponent as UserIcon } from '../../shared/assets/user.svg'
-
+import { MatchRes, PlayRes } from '../../shared/api/types/bracket'
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
-  bracketPlay: any
+  bracketPlay: PlayRes
   apparelUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
@@ -45,7 +45,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   } = props
 
   const [page, setPage] = useState('bust')
-
 
   const actionButtonCallback = async () => {
     // set page state to "bust"
@@ -74,9 +73,9 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       <BustPlayBuilder
         matchTree={matchTree}
         setMatchTree={setMatchTree}
-        bracketPlay={play}
         redirectUrl={apparelUrl}
-        />
+        busteePlay={play}
+      />
     )
   }
 
@@ -97,11 +96,15 @@ const BustPlayPage = (props: BustPlayPageProps) => {
             <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
             </div>
-            {thumbnailUrl? (
+            {thumbnailUrl ? (
               <div className="tw-mb-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
-                <img className="tw-h-50 tw-w-50 tw-rounded-full" src={thumbnailUrl} alt="celebrity-photo" />
+                <img
+                  className="tw-h-50 tw-w-50 tw-rounded-full"
+                  src={thumbnailUrl}
+                  alt="celebrity-photo"
+                />
               </div>
-            ): (
+            ) : (
               <div className="tw-mb-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
                 <div className='tw-h-50 tw-w-50 tw-flex tw-rounded-full tw-border-solid tw-border-4 tw-border-blue tw-justify-center tw-items-center tw-h-full"'>
                   <UserIcon />
