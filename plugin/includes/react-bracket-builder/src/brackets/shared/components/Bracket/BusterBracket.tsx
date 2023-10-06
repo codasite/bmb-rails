@@ -36,14 +36,15 @@ export const BusterBracket = (props: BracketProps) => {
     const busterTeam =
       position === 'left' ? busterMatch.getTeam1() : busterMatch.getTeam2()
 
-    if (!busterMatch || !busterTeam) {
-      return
+    match.pick(team)
+    if (!busterTeam) {
+      // allow buster to pick teams that don't yet exist in the buster bracket
+      busterMatchTree.syncPick(match)
+    } else {
+      busterMatch.pick(busterTeam)
     }
 
-    busterMatch.pick(busterTeam)
     setBusterMatchTree(busterMatchTree)
-
-    match.pick(team)
     setMatchTree(matchTree)
   }
 
