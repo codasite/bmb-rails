@@ -44,6 +44,12 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 
   const [page, setPage] = useState('view')
 
+
+  const actionButtonCallback = async () => {
+    // set page state to "bust"
+    setPage('bust')
+  }
+
   useEffect(() => {
     const picks = play?.picks
     const title = play?.tournament?.title
@@ -82,7 +88,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         />
     )
   }
-
 
   return (
     <div
