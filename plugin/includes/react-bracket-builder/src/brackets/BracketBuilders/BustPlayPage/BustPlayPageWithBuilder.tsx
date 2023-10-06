@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
@@ -15,7 +15,6 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
 import { bracketApi } from '../../shared/api/bracketApi'
-import { BustPlayBuilder } from './BustPlayBuilder'
 
 interface ViewPlayPageProps {
   bracketMeta: BracketMeta
@@ -40,8 +39,6 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
     apparelUrl,
   } = props
 
-  const [page, setPage] = useState('bust')
-
   useEffect(() => {
     const picks = play?.picks
     const title = play?.tournament?.title
@@ -58,17 +55,6 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
       }
     }
   }, [play])
-
-  if (page === 'bust' && matchTree) {
-    return (
-      <BustPlayBuilder
-        matchTree={matchTree}
-        setMatchTree={setMatchTree}
-        bracketPlay={play}
-        redirectUrl={apparelUrl}
-        />
-    )
-  }
 
   const handleAddToApparel = () => {
     window.location.href = props.apparelUrl
