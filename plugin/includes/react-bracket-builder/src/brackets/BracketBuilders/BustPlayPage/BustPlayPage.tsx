@@ -72,9 +72,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     )
   }
 
-  const handleAddToApparel = () => {
-    window.location.href = props.apparelUrl
-  }
   const bustBracket = async () => {}
 
   return (
