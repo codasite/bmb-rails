@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
@@ -15,9 +15,8 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
 import { bracketApi } from '../../shared/api/bracketApi'
-import { BustPlayBuilder } from './BustPlayBuilder'
 
-interface BustPlayPageProps {
+interface ViewPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   matchTree: MatchTree
@@ -26,10 +25,9 @@ interface BustPlayPageProps {
   apparelUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
-  thumbnailUrl: string
 }
 
-const BustPlayPage = (props: BustPlayPageProps) => {
+const ViewPlayPage = (props: ViewPlayPageProps) => {
   const {
     bracketMeta,
     setBracketMeta,
@@ -39,10 +37,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     setMatchTree,
     bracketPlay: play,
     apparelUrl,
-    thumbnailUrl,
   } = props
-
-  const [page, setPage] = useState('bust')
 
   useEffect(() => {
     const picks = play?.picks
@@ -61,18 +56,9 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     }
   }, [play])
 
-  if (page === 'bust' && matchTree) {
-    return (
-      <BustPlayBuilder
-        matchTree={matchTree}
-        setMatchTree={setMatchTree}
-        bracketPlay={play}
-        redirectUrl={apparelUrl}
-        />
-    )
+  const handleAddToApparel = () => {
+    window.location.href = props.apparelUrl
   }
-
-  const bustBracket = async () => {}
 
   return (
     <div
@@ -91,17 +77,14 @@ const BustPlayPage = (props: BustPlayPageProps) => {
             <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
             </div>
-            <div className="tw-flex tw-flex-col tw-justify-center tw-items-center">
-              <img className="tw-h-50 tw-rounded-" src={thumbnailUrl} alt="celebrity-photo" />
-            </div>
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="big-green"
                 darkMode={darkMode}
-                onClick={bustBracket}
+                onClick={handleAddToApparel}
               >
-                Bust Bracket
+                Add to Apparel
               </ActionButton>
             </div>
           </>
@@ -111,7 +94,8 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   )
 }
 
-const WrappedBustPlayPage = WithProvider(
-  WithMatchTree(WithBracketMeta(WithDarkMode(BustPlayPage)))
+const WrappedViewPlayPage = WithProvider(
+  WithMatchTree(WithBracketMeta(WithDarkMode(ViewPlayPage)))
 )
-export default WrappedBustPlayPage
+// export { WrappedViewPlayPage as ViewPlayPage }
+export default WrappedViewPlayPage
