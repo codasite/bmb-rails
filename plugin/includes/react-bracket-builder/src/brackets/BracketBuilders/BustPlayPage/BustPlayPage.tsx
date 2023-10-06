@@ -44,6 +44,12 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 
   const [page, setPage] = useState('bust')
 
+
+  const actionButtonCallback = async () => {
+    // set page state to "bust"
+    setPage('bust')
+  }
+
   useEffect(() => {
     const picks = play?.picks
     const title = play?.tournament?.title
@@ -72,7 +78,16 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     )
   }
 
-  const bustBracket = async () => {}
+  if (page === 'bust' && matchTree) {
+    return (
+      <BustPlayBuilder
+        matchTree={matchTree}
+        setMatchTree={setMatchTree}
+        bracketPlay={play}
+        redirectUrl={apparelUrl}
+        />
+    )
+  }
 
   return (
     <div
@@ -91,15 +106,15 @@ const BustPlayPage = (props: BustPlayPageProps) => {
             <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
             </div>
-            <div className="tw-flex tw-flex-col tw-justify-center tw-items-center">
-              <img className="tw-h-50 tw-rounded-" src={thumbnailUrl} alt="celebrity-photo" />
+            <div className="tw-mb-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+              <img className="tw-h-50 tw-w-50 tw-rounded-full" src={thumbnailUrl} alt="celebrity-photo" />
             </div>
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="big-green"
                 darkMode={darkMode}
-                onClick={bustBracket}
+                onClick={actionButtonCallback}
               >
                 Bust Bracket
               </ActionButton>

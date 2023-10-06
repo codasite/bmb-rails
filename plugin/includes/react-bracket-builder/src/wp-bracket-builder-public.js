@@ -70,6 +70,7 @@ tailwind.config = {
       4: '4px',
       8: '8px',
       16: '16px',
+      "full": '50%',
     },
     fontSize: {
       10: '10px',
