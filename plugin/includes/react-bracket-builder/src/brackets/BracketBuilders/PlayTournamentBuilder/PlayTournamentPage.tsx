@@ -27,6 +27,7 @@ interface PlayPageProps {
   setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
+  title?: string
 }
 
 const PlayPage = (props: PlayPageProps) => {
@@ -41,6 +42,7 @@ const PlayPage = (props: PlayPageProps) => {
     setBracketMeta,
     darkMode,
     setDarkMode,
+    title,
   } = props
 
   const [processing, setProcessing] = useState(false)
@@ -128,6 +130,7 @@ const PlayPage = (props: PlayPageProps) => {
     const playReq: PlayReq = {
       tournamentId: tournament?.id,
       picks: picks,
+      title: title,
     }
     console.log('playReq')
     console.log(playReq)

@@ -119,7 +119,7 @@ function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
 }
 
 function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
-  const { template, redirectUrl, cssUrl } = ajaxObj
+  const { template, redirectUrl, cssUrl, authorFirstName, authorLastName } = ajaxObj
   if (template) {
     renderDiv(
       <App>
@@ -127,6 +127,7 @@ function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
           bracketStylesheetUrl={cssUrl}
           template={template}
           apparelUrl={redirectUrl}
+          title = {`${authorFirstName} ${authorLastName}`}
         />
       </App>,
       'wpbb-play-template'
@@ -135,7 +136,7 @@ function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
 }
 
 function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
-  const { tournament, redirectUrl, cssUrl } = ajaxObj
+  const { tournament, redirectUrl, cssUrl, authorFirstName, authorLastName} = ajaxObj
   if (tournament) {
     renderDiv(
       <App>
@@ -143,6 +144,7 @@ function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
           bracketStylesheetUrl={cssUrl}
           tournament={tournament}
           apparelUrl={redirectUrl}
+          title = {`${authorFirstName} ${authorLastName}`}
         />
       </App>,
       'wpbb-play-tournament-builder'
@@ -184,7 +186,6 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
 }
 function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
   const { play, redirectUrl, thumbnailUrl, celebrityDisplayName } = ajaxObj
-  console.log('celebrity display name: ', celebrityDisplayName);
   if (play) {
     renderDiv(
       <App>
