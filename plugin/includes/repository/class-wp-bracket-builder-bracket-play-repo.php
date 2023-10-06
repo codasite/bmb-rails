@@ -273,6 +273,39 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		);
 	}
 
+	public function add_bust(int $buster_id, int $busted_id) {
+			$query = "INSERT INTO {$this->busts_table()} (busted_play_id, buster_play_id) VALUES (%d, %d)";
+			$prepared_query = $this->wpdb->prepare($query, $busted_id, $buster_id);
+			$this->wpdb->query($prepared_query);
+
+			$id = $this->wpdb->insert_id;
+			return $this->get($id);
+	}
+
+	public function get_bust($bust_id) {
+			$query = "SELECT * FROM {$this->busts_table()} WHERE id = %d";
+			$prepared_query = $this->wpdb->prepare($query, $bust_id);
+			$results = $this->wpdb->get_row($prepared_query, ARRAY_A);
+
+			if (!$results) {
+					return null;
+			}
+
+			$busted_play = $this->get($results['busted_play_id']);
+			$buster_play = $this->get($results['buster_play_id']);
+
+			$bust = new Wp_Bracket_Builder_Bracket_Bust(
+					$results['id'],
+					$busted_play,
+					$buster_play,
+			);
+			return $bust;
+	}
+
+	public function busts_table() {
+		return $this->wpdb->prefix . 'bracket_builder_busts';
+	}
+
 	public function picks_table() {
 		return $this->wpdb->prefix . 'bracket_builder_match_picks';
 	}

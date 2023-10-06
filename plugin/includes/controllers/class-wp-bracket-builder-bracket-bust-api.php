@@ -48,7 +48,7 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 		$this->play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 		$this->image_generator = new Wp_Bracket_Builder_Local_Node_Generator();
 		$this->namespace = 'wp-bracket-builder/v1';
-		$this->rest_base = 'plays';
+		$this->rest_base = 'plays/busts';
 	}
 
 	/**
@@ -117,34 +117,6 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 				),
 			),
 		));
-		register_rest_route($namespace, '/' . $base . '/html-to-image', array(
-			'methods' => 'POST',
-			'callback' => array($this, 'html_to_image'),
-			'permission_callback' => array($this, 'customer_permission_check'),
-			'args' => array(
-				'id' => array(
-					'description' => __('Unique identifier for the object.'),
-					'type'        => 'integer',
-				),
-			),
-		));
-	}
-
-	/**
-	 * Retrieves a collection of brackets.
-	 *
-	 * @param WP_REST_Request $request Full details about the request.
-	 * @return WP_Error|WP_REST_Response
-	 */
-	public function get_items($request) {
-		// $bracket_id = $request->get_param('bracket_id');
-		$the_query = new WP_Query([
-			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
-			'post_status' => 'any'
-		]);
-
-		$brackets = $this->play_repo->get_all($the_query);
-		return new WP_REST_Response($brackets, 200);
 	}
 
 	/**
@@ -156,8 +128,8 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	public function get_item($request) {
 		// get id from request
 		$id = $request->get_param('item_id');
-		$bracket = $this->play_repo->get($id);
-		return new WP_REST_Response($bracket, 200);
+		$bust = $this->play_repo->get_bust($id);
+		return new WP_REST_Response($bust, 200);
 	}
 
 	/**
@@ -168,19 +140,11 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	 */
 	public function create_item($request) {
 		$params = $request->get_params();
-		if (!isset($params['author'])) {
-			$params['author'] = get_current_user_id();
-		}
-		$play = Wp_Bracket_Builder_Bracket_Play::from_array($params);
-		$saved = $this->play_repo->add($play);
-
-		if (isset($params['busted_id'])) {
-			$this->play_repo->add_bust($saved->id, $params['busted_id']);
-		}
-		// $img_url = $this->image_generator->generate_image($play->id);
+		$buster_id = $params['buster_id'];
+		$busted_id = $params['busted_id'];
+		$saved = $this->play_repo->add_bust($buster_id, $busted_id);
 
 		return new WP_REST_Response($saved, 201);
-		// return new WP_REST_Response($img_url, 201);
 	}
 
 	/**
