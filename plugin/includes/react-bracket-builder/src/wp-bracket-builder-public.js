@@ -64,6 +64,7 @@ tailwind.config = {
       blue: '#2137ff',
       'dark-blue': '#0D1454',
       'dd-blue': '#010433',
+      blueLight: '#3B1FFF26',
       yellow: '#F8E11A',
       red: '#FF456D',
       redLight: '#FF1F4F26',

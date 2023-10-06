@@ -19,6 +19,8 @@ import { BustPlayBuilder } from './BustPlayBuilder'
 // import { ReactComponent as UserIcon } from '../../shared/assets/user.svg'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { MatchRes, PlayRes } from '../../shared/api/types/bracket'
+import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
+
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -95,11 +97,14 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       >
         {matchTree && (
           <>
-            <ProfilePicture
-              src={thumbnailUrl}
-              alt="celebrity-photo"
-              color="blue"
-            />
+            <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">        
+              <ProfilePicture
+                src={thumbnailUrl}
+                alt="celebrity-photo"
+                color="blue"
+                shadow={false}
+              />
+            </div>
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
@@ -107,6 +112,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
                 darkMode={darkMode}
                 onClick={actionButtonCallback}
               >
+                <LightningIcon />
                 Bust Bracket
               </ActionButton>
             </div>

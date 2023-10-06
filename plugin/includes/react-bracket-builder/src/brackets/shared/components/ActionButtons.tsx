@@ -194,7 +194,7 @@ const WhiteButton = (props: ActionButtonProps) => {
 
 export const RedButton = (props: ActionButtonProps) => {
   const { disabled, darkMode } = props
-  const background = disabled ? 'red/5' : 'red'
+  const background = disabled ? 'red/5' : 'red/20'
   const border = disabled ? 'red/20' : 'red'
   const textColor = disabled ? 'white/20' : 'white'
   return (
