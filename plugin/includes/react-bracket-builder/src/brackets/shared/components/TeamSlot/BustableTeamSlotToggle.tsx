@@ -25,17 +25,15 @@ export const BustableTeamSlotToggle = (props: TeamSlotProps) => {
   const busteePicked =
     busteeTeam && busteeMatch.getWinner() === busteeTeam ? true : false
 
-  const inactiveSlot = <InactiveTeamSlot {...props} />
-  const busteePickedSlot = <InactiveTeamSlot borderColor="blue" {...props} />
-  const busterPickedSlot = (
-    <BaseTeamSlot textColor={'white'} backgroundColor={'red'} {...props} />
-  )
+  props.team = team ? team : busteeTeam
 
   if (busterPicked) {
-    return busterPickedSlot
-  } else if (busteePicked) {
-    return busteePickedSlot
+    return (
+      <BaseTeamSlot textColor={'white'} backgroundColor={'red'} {...props} />
+    )
+  } else if (busteePicked && (team ? team?.id === busteeTeam?.id : true)) {
+    return <InactiveTeamSlot borderColor="blue" {...props} />
   }
 
-  return inactiveSlot
+  return <InactiveTeamSlot {...props} />
 }
