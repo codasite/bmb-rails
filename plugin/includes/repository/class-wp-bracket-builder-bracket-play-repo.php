@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-bust.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
@@ -304,19 +305,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		$prepared_query = $this->wpdb->prepare($query, $bust_id);
 		$results = $this->wpdb->get_row($prepared_query, ARRAY_A);
 
-		if (!$results) {
-				return null;
-		}
-
-		$busted_play = $this->get($results['busted_play_id']);
-		$buster_play = $this->get($results['buster_play_id']);
-
-		$bust = new Wp_Bracket_Builder_Bracket_Bust(
-				$results['id'],
-				$busted_play,
-				$buster_play,
-		);
-		return $bust;
+		return $results;
 	}
 
 	public function busts_table() {
