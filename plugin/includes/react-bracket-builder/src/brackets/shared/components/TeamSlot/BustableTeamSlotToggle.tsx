@@ -4,38 +4,36 @@ import { TeamSlotProps } from '../types'
 import { InactiveTeamSlot } from './InactiveTeamSlot'
 import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
-import { MatchTreeContext } from '../../context'
+import { BusteeMatchTreeContext, BusterMatchTreeContext } from '../../context'
 
 export const BustableTeamSlotToggle = (props: TeamSlotProps) => {
   const { team, match, teamPosition } = props
 
-  const { matchTree: busterMatchTree, setMatchTree: setBusterMatchTree } =
-    useContext(MatchTreeContext)
+  const { matchTree: busteeMatchTree } = useContext(BusteeMatchTreeContext)
+  const { matchTree: busterMatchTree } = useContext(BusterMatchTreeContext)
 
-  const busteePicked = team && match.getWinner() === team ? true : false
-  const busteeRoundIndex = match.roundIndex
-  const busteeMatchIndex = match.matchIndex
+  const picked = team && match.getWinner() === team ? true : false
+  const roundIndex = match.roundIndex
+  const matchIndex = match.matchIndex
 
-  const busterMatch =
-    busterMatchTree.rounds[busteeRoundIndex].matches[busteeMatchIndex]
+  const busterMatch = busterMatchTree.rounds[roundIndex].matches[matchIndex]
+  const busteeMatch = busteeMatchTree.rounds[roundIndex].matches[matchIndex]
 
   const busterTeam =
     teamPosition === 'left' ? busterMatch.getTeam1() : busterMatch.getTeam2()
+  const busteeTeam =
+    teamPosition === 'left' ? busteeMatch.getTeam1() : busteeMatch.getTeam2()
 
-  const busterPicked =
-    busterTeam && busterMatch.getWinner() === busterTeam ? true : false
+  const busterPicked = busterTeam && busterMatch.getWinner() === busterTeam
+  const busteePicked = busteeTeam && busteeMatch.getWinner() === busteeTeam
 
-  const inactiveSlot = <InactiveTeamSlot {...props} />
-  const busteePickedSlot = <InactiveTeamSlot borderColor="blue" {...props} />
-  const busterPickedSlot = (
-    <BaseTeamSlot textColor={'white'} backgroundColor={'red'} {...props} />
-  )
-
-  if (busteePicked) {
-    return busteePickedSlot
-  } else if (busterPicked) {
-    return busterPickedSlot
+  if (busterPicked) {
+    return (
+      <BaseTeamSlot textColor={'white'} backgroundColor={'red'} {...props} />
+    )
+  } else if (busteePicked && team.equals(busteeTeam)) {
+    return <InactiveTeamSlot borderColor="blue" {...props} />
   }
 
-  return inactiveSlot
+  return <InactiveTeamSlot {...props} />
 }

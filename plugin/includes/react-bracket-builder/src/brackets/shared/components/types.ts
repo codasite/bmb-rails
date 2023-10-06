@@ -4,6 +4,12 @@ import { MatchTree } from '../models/MatchTree'
 import { Match } from '@sentry/react/types/reactrouterv3'
 import { ActionButtonProps } from './ActionButtons'
 
+type TeamClickCallback = (
+  match: MatchNode,
+  position: string,
+  team?: Nullable<Team>
+) => void
+
 export interface TeamSlotProps {
   team?: Nullable<Team>
   match: MatchNode
@@ -17,7 +23,7 @@ export interface TeamSlotProps {
   backgroundColor?: string
   borderColor?: string
   matchTree: MatchTree
-  onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void
+  onTeamClick?: TeamClickCallback
   setMatchTree?: (matchTree: MatchTree) => void
   getTeamClass?: (
     roundIndex: number,
@@ -37,7 +43,7 @@ export interface MatchBoxProps {
   teamFontSize?: number
   setMatchTree?: (matchTree: MatchTree) => void
   TeamSlotComponent?: React.FC<TeamSlotProps>
-  onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void
+  onTeamClick?: TeamClickCallback
   MatchBoxChildComponent?: React.FC<MatchBoxChildProps>
 }
 
@@ -54,7 +60,7 @@ export interface MatchColumnProps {
   MatchBoxComponent?: React.FC<MatchBoxProps>
   MatchBoxChildComponent?: React.FC<MatchBoxChildProps>
   TeamSlotComponent?: React.FC<TeamSlotProps>
-  onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void
+  onTeamClick?: TeamClickCallback
 }
 
 export interface BracketProps {
@@ -67,7 +73,7 @@ export interface BracketProps {
   getFirstRoundMatchGap?: (numRounds: number) => number
   getSubsequentMatchGap?: (numRounds: number) => number
   setMatchTree?: (matchTree: MatchTree) => void
-  onTeamClick?: (match: MatchNode, team?: Nullable<Team>) => void
+  onTeamClick?: TeamClickCallback
   matchTree: MatchTree
   MatchColumnComponent?: React.FC<MatchColumnProps>
   MatchBoxComponent?: React.FC<MatchBoxProps>

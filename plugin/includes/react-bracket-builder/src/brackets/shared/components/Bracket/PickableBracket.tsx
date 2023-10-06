@@ -13,7 +13,12 @@ export const PickableBracket = (props: BracketProps) => {
     TeamSlotComponent = TeamSlotToggle,
   } = props
 
-  const handleTeamClick = (match: MatchNode, team?: Nullable<Team>) => {
+  const handleTeamClick = (
+    match: MatchNode,
+    position: string,
+    team?: Nullable<Team>
+  ) => {
+    console.log('handleTeamClick', match, team)
     if (!match) {
       return
     }
