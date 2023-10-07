@@ -27,7 +27,7 @@ interface PlayPageProps {
   setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  title?: string
+  authorName?: string
 }
 
 const PlayPage = (props: PlayPageProps) => {
@@ -42,7 +42,7 @@ const PlayPage = (props: PlayPageProps) => {
     setBracketMeta,
     darkMode,
     setDarkMode,
-    title,
+    authorName,
   } = props
 
   const [processing, setProcessing] = useState(false)
@@ -127,13 +127,14 @@ const PlayPage = (props: PlayPageProps) => {
       console.error('no tournament id')
       return
     }
+    const tournamentTitle = tournament?.title || 'Tournament'
+    const authorExp = authorName ? `$authorName's` : `My`
+    const title = `${authorExp} ${tournamentTitle} picks`
     const playReq: PlayReq = {
       tournamentId: tournament?.id,
       picks: picks,
       title: title,
     }
-    console.log('playReq')
-    console.log(playReq)
 
     setProcessing(true)
     bracketApi
