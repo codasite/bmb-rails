@@ -146,7 +146,7 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 				'nonce' => wp_create_nonce('wp_rest'),
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 				'css_file' => $css_file,
-				'bracket_product_archive_url' => $play_history_url, // used to redirect to bracket-ready category page
+				'redirect_url' => $play_history_url, // used to redirect to bracket-ready category page
 				'my_tournaments_url' => $my_tournaments_url, // used to redirect back to my tournaments page
 				'author_first_name' => get_the_author_meta('first_name', $post->post_author),
 				'author_last_name' => get_the_author_meta('last_name', $post->post_author),
