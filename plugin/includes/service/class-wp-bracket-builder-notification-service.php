@@ -56,12 +56,14 @@ class Wp_Bracket_Builder_Notification_Service {
 
         foreach($user_picks as $pick) {
             $to_email = $pick->email;
-            // $to_email = 'test@wstrategies.co';
+            $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
-            $user_pick = $team_repo->get_team($pick->winning_team_id);
-            $winner = $team_repo->get_team($final_round_pick->winning_team_id);
+            $user_bracket_pick = $team_repo->get_team($pick->winning_team_id);
+            $user_pick = strtoupper($user_bracket_pick->name);
+            $winner_bracket_pick = $team_repo->get_team($final_round_pick->winning_team_id);
+            $winner = strtoupper($winner_bracket_pick->name);
             $tournament_url = get_permalink($tournament_id) . '/leaderboard';
             $message = array(
                 'to'=>array(
@@ -75,10 +77,10 @@ class Wp_Bracket_Builder_Notification_Service {
             // Generate html content for email
             $background_image_url = 'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
             $logo_url = 'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
-            if ($user_pick->name == $winner->name) {
-                $heading = 'You picked ' . $user_pick->name . '... and they won!';
+            if ($user_pick == $winner) {
+                $heading = 'You picked ' . $user_pick . '... and they won!';
             } else {
-                $heading = 'You picked ' . $user_pick->name . ', but ' . $winner->name . ' won the round...';
+                $heading = 'You picked ' . $user_pick . ', but ' . $winner . ' won the round...';
             }
             $subtext = 'Click the button below to view the tournament leaderboard.';
             $button_url = get_permalink($tournament_id) . '/leaderboard';
@@ -86,7 +88,19 @@ class Wp_Bracket_Builder_Notification_Service {
 
             ob_start();
             include plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/templates/play-scored.php';
-            $html = ob_get_clean();
+            $html = ob_get_clean();            
+            
+            // // Convert text to uppercase
+            // $doc = new DOMDocument();
+            // $doc->loadHTML($html);
+            // $xpath = new DOMXPath($doc);
+            // $text_nodes = $xpath->query('//text()');
+            // foreach ($text_nodes as $text_node) {
+            //     $text_node->nodeValue = strtoupper($text_node->nodeValue);
+            // }
+            // $formattedHtml = $doc->saveHTML();
+
+
             
             // send the email
             $response = $this->email_service->send_message(
@@ -96,6 +110,7 @@ class Wp_Bracket_Builder_Notification_Service {
                 $subject,
                 $message,
                 $html,
+                // $formattedHtml,
             );
         }
     }
