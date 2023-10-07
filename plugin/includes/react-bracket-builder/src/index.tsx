@@ -102,20 +102,17 @@ function renderSettings(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
-  const templateBuilder = document.getElementById('wpbb-template-builder')
   const { myTemplatesUrl, myTournamentsUrl, template } = ajaxObj
-  if (template) {
-    renderDiv(
-      <App>
-        <TemplateBuilder
-          template={template}
-          saveTemplateLink={myTemplatesUrl}
-          saveTournamentLink={myTournamentsUrl}
-        />
-      </App>,
-      'wpbb-template-builder'
-    )
-  }
+  renderDiv(
+    <App>
+      <TemplateBuilder
+        template={template}
+        saveTemplateLink={myTemplatesUrl}
+        saveTournamentLink={myTournamentsUrl}
+      />
+    </App>,
+    'wpbb-template-builder'
+  )
 }
 
 function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {

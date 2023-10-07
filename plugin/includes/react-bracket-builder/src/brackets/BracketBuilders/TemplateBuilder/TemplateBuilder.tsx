@@ -41,6 +41,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
     bracketMeta,
     setBracketMeta,
   } = props
+  console.log('template builder')
   const [currentPage, setCurrentPage] = useState('num-teams')
   const [numTeams, setNumTeams] = useState(
     teamPickerDefaults[defaultInitialPickerIndex]

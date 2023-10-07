@@ -56,7 +56,7 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 		$this->id = isset($data['id']) ? $data['id'] : null;
 		$this->title = isset($data['title']) ? $data['title'] : '';
 		$this->author = isset($data['author']) ? $data['author'] : null;
-		$this->status = isset($data['status']) ? $data['status'] : 'draft';
+		$this->status = isset($data['status']) ? $data['status'] : 'publish';
 		$this->date = isset($data['date']) ? $data['date'] : false;
 		$this->date_gmt = isset($data['date_gmt']) ? $data['date_gmt'] : false;
 		$this->slug = isset($data['slug']) ? $data['slug'] : '';

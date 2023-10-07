@@ -27,7 +27,7 @@ interface BustPlayPageProps {
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
   bracketPlay: PlayRes
-  apparelUrl: string
+  redirectUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
   thumbnailUrl: string
@@ -42,7 +42,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     matchTree,
     setMatchTree,
     bracketPlay: play,
-    apparelUrl,
+    redirectUrl,
     thumbnailUrl,
   } = props
 
@@ -80,7 +80,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       <BustPlayBuilder
         matchTree={matchTree}
         setMatchTree={setMatchTree}
-        redirectUrl={apparelUrl}
+        redirectUrl={redirectUrl}
         busteePlay={play}
         thumbnailUrl={thumbnailUrl}
       />
