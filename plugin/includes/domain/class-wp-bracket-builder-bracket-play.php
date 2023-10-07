@@ -41,9 +41,9 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	public $accuracy_score;
 
 	/**
-	 * @var bool
+	 * @var int
 	 */
-	public $buster;
+	public $busted_id;
 
 	public function __construct(array $data) {
 		parent::__construct($data);
@@ -58,7 +58,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		$this->picks = isset($data['picks']) ? $data['picks'] : [];
 		$this->total_score = isset($data['total_score']) ? $data['total_score'] : null;
 		$this->accuracy_score = isset($data['accuracy_score']) ? $data['accuracy_score'] : null;
-		$this->buster = isset($data['buster']) ? $data['buster'] : false;
+		$this->busted_id = isset($data['busted_id']) ? $data['busted_id'] : null;
 	}
 
 	static public function get_post_type(): string {
