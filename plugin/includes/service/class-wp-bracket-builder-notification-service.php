@@ -56,7 +56,7 @@ class Wp_Bracket_Builder_Notification_Service {
 
         foreach($user_picks as $pick) {
             $to_email = $pick->email;
-            // $to_email = 'test@wstrategies.co';
+            $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
@@ -82,25 +82,12 @@ class Wp_Bracket_Builder_Notification_Service {
             } else {
                 $heading = 'You picked ' . $user_pick . ', but ' . $winner . ' won the round...';
             }
-            $subtext = 'Click the button below to view the tournament leaderboard.';
             $button_url = get_permalink($tournament_id) . '/leaderboard';
             $button_text = 'View Tournament';
 
             ob_start();
             include plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/templates/play-scored.php';
             $html = ob_get_clean();            
-            
-            // // Convert text to uppercase
-            // $doc = new DOMDocument();
-            // $doc->loadHTML($html);
-            // $xpath = new DOMXPath($doc);
-            // $text_nodes = $xpath->query('//text()');
-            // foreach ($text_nodes as $text_node) {
-            //     $text_node->nodeValue = strtoupper($text_node->nodeValue);
-            // }
-            // $formattedHtml = $doc->saveHTML();
-
-            file_put_contents($)
             
             // send the email
             $response = $this->email_service->send_message(
@@ -110,7 +97,6 @@ class Wp_Bracket_Builder_Notification_Service {
                 $subject,
                 $message,
                 $html,
-                // $formattedHtml,
             );
         }
     }

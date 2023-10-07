@@ -163,7 +163,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 
 		$tournament_id = $request->get_param('item_id');
 		$response = $this->notification_service->send_tournament_result_email_update($tournament_id);
-		print_r($response);
+		// print_r($response);
 		
 		return new WP_REST_Response($updated, 200);
 	}
