@@ -42,6 +42,8 @@ const PlayPage = (props: PlayPageProps) => {
     darkMode,
     setDarkMode,
   } = props
+  console.log('apparelUrl')
+  console.log(apparelUrl)
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
