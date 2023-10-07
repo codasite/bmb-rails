@@ -20,30 +20,11 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	 */
 	public $results;
 
-	public function __construct(
-		int $bracket_template_id = null,
-		int $id = null,
-		string $title = '',
-		int $author = null,
-		string $status = 'publish',
-		DateTimeImmutable|false $date = false,
-		DateTimeImmutable|false $date_gmt = false,
-		Wp_Bracket_Builder_Bracket_Template $bracket_template = null,
-		array $results = [],
-		string $slug = '',
-	) {
-		parent::__construct(
-			$id,
-			$title,
-			$author,
-			$status,
-			$date,
-			$date_gmt,
-			$slug,
-		);
-		$this->bracket_template_id = $bracket_template_id;
-		$this->bracket_template = $bracket_template;
-		$this->results = $results;
+	public function __construct(array $data = []) {
+		parent::__construct($data);
+		$this->bracket_template_id = isset($data['bracket_template_id']) ? $data['bracket_template_id'] : null;
+		$this->bracket_template = isset($data['bracket_template']) ? $data['bracket_template'] : null;
+		$this->results = isset($data['results']) ? $data['results'] : [];
 	}
 
 	public function get_winning_team(): ?Wp_Bracket_Builder_Team {
@@ -65,9 +46,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	}
 
 	public function get_post_meta(): array {
-		return [
-			'bracket_template_id' => $this->bracket_template_id,
-		];
+		return [];
 	}
 
 	public function get_update_post_meta(): array {
@@ -96,13 +75,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			$data['bracket_template'] = Wp_Bracket_Builder_Bracket_Template::from_array($data['bracket_template']);
 		}
 
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament();
-
-		foreach ($data as $key => $value) {
-			if (property_exists($tournament, $key)) {
-				$tournament->$key = $value;
-			}
-		}
+		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data);
 
 		return $tournament;
 	}

@@ -1,0 +1,182 @@
+import React, { useEffect, useContext, useState, createContext } from 'react'
+import * as Sentry from '@sentry/react'
+import { ThemeSelector } from '../../shared/components'
+import { MatchTree } from '../../shared/models/MatchTree'
+import { BusterBracket, PickableBracket } from '../../shared/components/Bracket'
+import { ActionButton } from '../../shared/components/ActionButtons'
+import {
+  WithDarkMode,
+  WithMatchTree,
+  WithBracketMeta,
+  WithProvider,
+} from '../../shared/components/HigherOrder'
+//@ts-ignore
+import redBracketBg from '../../shared/assets/bracket-bg-red.png'
+//@ts-ignore
+import { bracketApi } from '../../shared/api/bracketApi'
+import { MatchRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
+import { DarkModeContext } from '../../shared/context'
+import {
+  BusterMatchTreeContext,
+  BusteeMatchTreeContext,
+} from '../../shared/context'
+import { ProfilePicture } from '../../shared/components/ProfilePicture'
+
+interface BustPlayBuilderProps {
+  matchTree: MatchTree
+  setMatchTree: (matchTree: MatchTree) => void
+  busteePlay: PlayRes
+  redirectUrl: string
+  thumbnailUrl?: string
+  busteeDisplayName?: string
+}
+
+export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
+  const {
+    matchTree,
+    setMatchTree,
+    busteePlay,
+    redirectUrl,
+    thumbnailUrl,
+    busteeDisplayName,
+  } = props
+
+  const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
+  const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
+  const [processing, setProcessing] = useState(false)
+
+  useEffect(() => {
+    const template = busteePlay?.tournament?.bracketTemplate
+    const matches = template?.matches
+    const numTeams = template?.numTeams
+    const tree = MatchTree.fromMatchRes(numTeams, matches)
+    setBusterMatchTree(tree)
+    setBusteeMatchTree(matchTree.clone())
+  }, [])
+
+  const handleSubmit = () => {
+    const picks = busterMatchTree?.toMatchPicks()
+    const tournamentId = busteePlay?.tournament?.id
+    const busteeId = busteePlay?.id
+
+    if (!tournamentId || !busteeId || !picks) {
+      const msg =
+        'Cannot create play. Missing one of tournamentId, busteeId, or picks'
+      console.error(msg)
+      Sentry.captureException(msg)
+      return
+    }
+
+    bracketApi.createPlay
+
+    const playReq: PlayReq = {
+      tournamentId: tournamentId,
+      picks: picks,
+      bustedId: busteeId,
+    }
+
+    setProcessing(true)
+    bracketApi
+      .createPlay(playReq)
+      .then((res) => {
+        window.location.href = redirectUrl
+      })
+      .catch((err) => {
+        console.error(err)
+        Sentry.captureException(err)
+      })
+      .finally(() => {
+        setProcessing(false)
+      })
+
+    window.location.href = redirectUrl
+  }
+
+  const setBusterTree = (tree: MatchTree) => {
+    setBusterMatchTree(tree.clone())
+  }
+
+  return (
+    <div
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark`}
+      style={{
+        backgroundImage: `url(${redBracketBg})`,
+      }}
+    >
+      <div
+        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
+      >
+        {matchTree && busterMatchTree && (
+          <BusteeMatchTreeContext.Provider
+            value={{
+              matchTree: busteeMatchTree,
+            }}
+          >
+            <BusterMatchTreeContext.Provider
+              value={{
+                matchTree: busterMatchTree,
+                setMatchTree: setBusterTree,
+              }}
+            >
+              <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+                <div className="tw-text-2xl tw-font-bold tw-text-white tw-flex tw-flex-row">
+                  <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+                    <ProfilePicture
+                      src={thumbnailUrl}
+                      alt="celebrity-photo"
+                      color="blue"
+                      backgroundColor="blueLight"
+                      shadow={true}
+                    />
+                    <span className="tw-text-white tw-font-700 tw-text-12 tw-mb-8 tw-mt-8">
+                      {busteeDisplayName}
+                    </span>
+                  </div>
+                  <span className="tw-text-white tw-font-700 tw-text-48 tw-m-18 tw-mt-40 tw-mb-40">
+                    VS
+                  </span>
+                  <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+                    <ProfilePicture
+                      src=""
+                      alt="celebrity-photo"
+                      color="red"
+                      backgroundColor="redLight"
+                      shadow={false}
+                    />
+                    <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">
+                      You
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <BusterBracket
+                matchTree={matchTree}
+                setMatchTree={setMatchTree}
+              />
+              <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+                {busterMatchTree.allPicked() ? (
+                  <ActionButton
+                    variant="big-red"
+                    darkMode={true}
+                    onClick={handleSubmit}
+                  >
+                    Submit
+                  </ActionButton>
+                ) : (
+                  <ActionButton
+                    variant="big-red"
+                    darkMode={true}
+                    disabled={true}
+                    onClick={() => {}}
+                  >
+                    Submit
+                  </ActionButton>
+                )}
+              </div>
+            </BusterMatchTreeContext.Provider>
+          </BusteeMatchTreeContext.Provider>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -10,10 +10,10 @@ export const InactiveTeamSlot = (props: TeamSlotProps) => {
 
   return (
     <BaseTeamSlot
-      {...props}
       textColor={darkMode ? 'white' : 'dd-blue'}
       borderColor={darkMode ? 'white/50' : 'dd-blue/50'}
       onTeamClick={team ? onTeamClick : undefined}
+      {...props}
     />
   )
 }

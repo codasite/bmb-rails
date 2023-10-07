@@ -29,7 +29,8 @@ $plays = $play_repo->get_all(
 );
 
 function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
-	$tournament_name = $play->tournament->title;
+	$title = $play->tournament->title;
+	// $title = $tourney_title ? "$tourney_title Picks" : 'My Tournament Picks';
 	$user_rank = 99999;
 	$complete = $play->tournament->status === 'complete';
 	$play_id = $play->id;
@@ -41,11 +42,20 @@ function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	$leaderboard_variant = $complete ? 'final' : 'primary';
 	$accuracy_score = round($play->accuracy_score * 100);
 	$show_score = $play->tournament->has_results();
+	$buster_play = $play->busted_id !== null;
 	ob_start();
 ?>
+
 	<div class="tw-flex tw-justify-between tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
 		<div class="tw-flex tw-flex-col tw-gap-20">
-			<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($tournament_name) ?></h2>
+			<div class="tw-flex tw-gap-10 tw-flex-wrap">
+				<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
+				<div class="tw-flex tw-gap-10 tw-flex-wrap">
+					<?php echo $buster_play ? tournament_tag('buster', 'red') : '' ?>
+					<!-- <?php echo tournament_tag('printed', 'green') ?>
+					<?php echo tournament_tag('not printed', 'yellow', false) ?> -->
+				</div>
+			</div>
 			<div class="tw-flex tw-gap-16">
 				<!-- View this play and add to apparel -->
 				<?php echo view_play_btn($view_link); ?>

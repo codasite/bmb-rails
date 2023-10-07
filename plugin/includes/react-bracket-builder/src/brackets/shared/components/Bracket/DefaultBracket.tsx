@@ -162,7 +162,7 @@ export const DefaultBracket = (props: BracketProps) => {
 
   return (
     <DarkModeContext.Provider value={dark}>
-      <div className="tw-flex tw-flex-col">
+      <div className={`tw-flex tw-flex-col${dark ? ' tw-dark' : ''}`}>
         {rootMatch && (
           <div className={`tw-mb-[${winnerContainerMB}px]`}>
             <WinnerContainer

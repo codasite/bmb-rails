@@ -45,22 +45,22 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 	 */
 	public $slug;
 
-	public function __construct(
-		int $id = null,
-		string $title = '',
-		int $author = null,
-		string $status = 'draft',
-		DateTimeImmutable|false $date = false,
-		DateTimeImmutable|false $date_gmt = false,
-		string $slug = '',
-	) {
-		$this->id = $id;
-		$this->title = $title;
-		$this->author = $author;
-		$this->status = $status;
-		$this->date = $date;
-		$this->date_gmt = $date_gmt;
-		$this->slug = $slug;
+	/**
+	 * @var string
+	 * 
+	 * Display name of the author
+	 */
+	public $author_display_name;
+
+	public function __construct(array $data) {
+		$this->id = isset($data['id']) ? $data['id'] : null;
+		$this->title = isset($data['title']) ? $data['title'] : '';
+		$this->author = isset($data['author']) ? $data['author'] : null;
+		$this->status = isset($data['status']) ? $data['status'] : 'publish';
+		$this->date = isset($data['date']) ? $data['date'] : false;
+		$this->date_gmt = isset($data['date_gmt']) ? $data['date_gmt'] : false;
+		$this->slug = isset($data['slug']) ? $data['slug'] : '';
+		$this->author_display_name = isset($data['author_display_name']) ? $data['author_display_name'] : '';
 	}
 
 	abstract static public function get_post_type(): string;
@@ -96,6 +96,7 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 			'date' => $this->date,
 			'date_gmt' => $this->date_gmt,
 			'slug' => $this->slug,
+			'author_display_name' => $this->author_display_name,
 		];
 	}
 }

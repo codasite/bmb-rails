@@ -117,34 +117,29 @@ const PlayPage = (props: PlayPageProps) => {
   const handleApparelClick = () => {
     const picks = matchTree?.toMatchPicks()
     const tournamentId = tournament?.id
-    if (!picks) {
-      console.error('no picks')
-      return
-    }
-    if (!tournamentId) {
-      console.error('no tournament id')
+    if (!picks || !tournamentId) {
+      const msg = 'Cannot create play. Missing one of tournamentId or picks'
+      console.error(msg)
+      Sentry.captureException(msg)
       return
     }
     const playReq: PlayReq = {
       tournamentId: tournament?.id,
       picks: picks,
     }
-    console.log('playReq')
-    console.log(playReq)
 
     setProcessing(true)
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        console.log('res')
-        console.log(res)
-        setProcessing(false)
         window.location.href = apparelUrl
       })
       .catch((err) => {
-        setProcessing(false)
         console.error(err)
         Sentry.captureException(err)
+      })
+      .finally(() => {
+        setProcessing(false)
       })
   }
 

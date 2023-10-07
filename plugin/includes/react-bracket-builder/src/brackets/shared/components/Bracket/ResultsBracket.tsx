@@ -8,7 +8,11 @@ import { Nullable } from '../../../../utils/types'
 export const ResultsBracket = (props: BracketProps) => {
   const { matchTree, setMatchTree } = props
 
-  const handleTeamClick = (match: MatchNode, team?: Nullable<Team>) => {
+  const handleTeamClick = (
+    match: MatchNode,
+    position: string,
+    team?: Nullable<Team>
+  ) => {
     if (!match) {
       return
     }

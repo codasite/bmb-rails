@@ -118,6 +118,7 @@ export interface PlayReq {
   title?: string
   status?: string
   picks: MatchPicks[]
+  bustedId?: number
 }
 
 export interface PlayRes {
@@ -125,10 +126,10 @@ export interface PlayRes {
   tournamentId: number
   title: string
   author: number
+  authorDisplayName: string
   status: string
   date: phpDate
   dateGmt: phpDate
-  imgUrl: string
   picks: MatchPicks[]
   tournament?: TournamentRes
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
@@ -15,19 +15,25 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
 import { bracketApi } from '../../shared/api/bracketApi'
+import { BustPlayBuilder } from './BustPlayBuilder'
+// import { ReactComponent as UserIcon } from '../../shared/assets/user.svg'
+import { ProfilePicture } from '../../shared/components/ProfilePicture'
+import { MatchRes, PlayRes } from '../../shared/api/types/bracket'
+import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
 
-interface ViewPlayPageProps {
+interface BustPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
-  bracketPlay: any
-  apparelUrl: string
+  bracketPlay: PlayRes
+  redirectUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
+  thumbnailUrl: string
 }
 
-const ViewPlayPage = (props: ViewPlayPageProps) => {
+const BustPlayPage = (props: BustPlayPageProps) => {
   const {
     bracketMeta,
     setBracketMeta,
@@ -36,13 +42,25 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
     matchTree,
     setMatchTree,
     bracketPlay: play,
-    apparelUrl,
+    redirectUrl,
+    thumbnailUrl,
   } = props
+
   console.log('play', play)
+
+  const [page, setPage] = useState('view')
+
+  const actionButtonCallback = async () => {
+    setPage('bust')
+  }
 
   useEffect(() => {
     const picks = play?.picks
-    const title = play?.tournament?.title
+    const tournamentTitle = play?.tournament?.title
+    const authorDisplayName = play?.authorDisplayName
+    const title = authorDisplayName
+      ? `${authorDisplayName}'s ${tournamentTitle} picks`
+      : tournamentTitle
     const date = 'Sept 2094'
     setBracketMeta({ title, date })
     const template = play?.tournament?.bracketTemplate
@@ -57,8 +75,16 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
     }
   }, [play])
 
-  const handleAddToApparel = () => {
-    window.location.href = props.apparelUrl
+  if (page === 'bust' && matchTree) {
+    return (
+      <BustPlayBuilder
+        matchTree={matchTree}
+        setMatchTree={setMatchTree}
+        redirectUrl={redirectUrl}
+        busteePlay={play}
+        thumbnailUrl={thumbnailUrl}
+      />
+    )
   }
 
   return (
@@ -75,17 +101,23 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
       >
         {matchTree && (
           <>
-            <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-              <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
+            <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+              <ProfilePicture
+                src={thumbnailUrl}
+                alt="celebrity-photo"
+                color="blue"
+                shadow={false}
+              />
             </div>
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
-                variant="big-green"
+                variant="big-red"
                 darkMode={darkMode}
-                onClick={handleAddToApparel}
+                onClick={actionButtonCallback}
               >
-                Add to Apparel
+                <LightningIcon />
+                Bust Bracket
               </ActionButton>
             </div>
           </>
@@ -95,8 +127,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   )
 }
 
-const WrappedViewPlayPage = WithProvider(
-  WithMatchTree(WithBracketMeta(WithDarkMode(ViewPlayPage)))
+const WrappedBustPlayPage = WithProvider(
+  WithMatchTree(WithBracketMeta(WithDarkMode(BustPlayPage)))
 )
-// export { WrappedViewPlayPage as ViewPlayPage }
-export default WrappedViewPlayPage
+export default WrappedBustPlayPage

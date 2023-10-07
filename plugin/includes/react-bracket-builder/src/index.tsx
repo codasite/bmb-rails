@@ -38,6 +38,9 @@ const TournamentResultsBuilder = React.lazy(
 const ViewPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage')
 )
+const BustPlayPage = React.lazy(
+  () => import('./brackets/BracketBuilders/BustPlayPage/BustPlayPage')
+)
 const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
@@ -56,6 +59,7 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   renderViewBracketPlay(ajaxObj)
   renderMyTournamentsModals(ajaxObj)
   renderMyTemplatesModals(ajaxObj)
+  renderBustBracketPlay(ajaxObj)
 } else {
   renderPrintBracketPage()
 }
@@ -98,58 +102,47 @@ function renderSettings(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
-  const templateBuilder = document.getElementById('wpbb-template-builder')
   const { myTemplatesUrl, myTournamentsUrl, template } = ajaxObj
-  const temp = camelCaseKeys(template)
-  if (templateBuilder) {
-    console.log('rendering template builder')
-    render(
-      <App>
-        <TemplateBuilder
-          template={temp}
-          saveTemplateLink={myTemplatesUrl}
-          saveTournamentLink={myTournamentsUrl}
-        />
-      </App>,
-      templateBuilder
-    )
-  }
+  renderDiv(
+    <App>
+      <TemplateBuilder
+        template={template}
+        saveTemplateLink={myTemplatesUrl}
+        saveTournamentLink={myTournamentsUrl}
+      />
+    </App>,
+    'wpbb-template-builder'
+  )
 }
+
 function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
-  const builderDiv = document.getElementById('wpbb-play-template')
-  const { template, redirectUrl, cssUrl } = ajaxObj
-  const temp = camelCaseKeys(template)
-  if (builderDiv && temp) {
-    console.log('rendering play template')
-    render(
-      <App>
-        <Provider store={bracketBuilderStore}>
-          <PlayTournamentBuilder
-            bracketStylesheetUrl={cssUrl}
-            template={temp}
-            apparelUrl={redirectUrl}
-          />
-        </Provider>
-      </App>,
-      builderDiv
-    )
-  }
-}
-function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
-  const builderDiv = document.getElementById('wpbb-play-tournament-builder')
-  const { tournament, redirectUrl, cssUrl } = ajaxObj
-  const tourney = camelCaseKeys(tournament)
-  if (builderDiv && tournament) {
-    console.log('rendering play tournament builder')
-    render(
+  const { template, redirectUrl, cssUrl, userDisplayName } = ajaxObj
+  if (template) {
+    renderDiv(
       <App>
         <PlayTournamentBuilder
           bracketStylesheetUrl={cssUrl}
-          tournament={tourney}
+          template={template}
           apparelUrl={redirectUrl}
         />
       </App>,
-      builderDiv
+      'wpbb-play-template'
+    )
+  }
+}
+
+function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
+  const { tournament, redirectUrl, cssUrl, userDisplayName } = ajaxObj
+  if (tournament) {
+    renderDiv(
+      <App>
+        <PlayTournamentBuilder
+          bracketStylesheetUrl={cssUrl}
+          tournament={tournament}
+          apparelUrl={redirectUrl}
+        />
+      </App>,
+      'wpbb-play-tournament-builder'
     )
   }
 }
@@ -175,16 +168,29 @@ function renderTournamentResultsBuilder(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const builderDiv = document.getElementById('wpbb-view-play')
   const { play, redirectUrl } = ajaxObj
-  const playObj = camelCaseKeys(play)
-  if (builderDiv && playObj) {
-    console.log('rendering view play')
-    render(
+  if (play) {
+    renderDiv(
       <App>
-        <ViewPlayPage bracketPlay={playObj} apparelUrl={redirectUrl} />
+        <ViewPlayPage bracketPlay={play} apparelUrl={redirectUrl} />
       </App>,
-      builderDiv
+      'wpbb-view-play'
+    )
+  }
+}
+function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
+  const { play, redirectUrl, thumbnailUrl, authorDisplayName } = ajaxObj
+  if (play) {
+    renderDiv(
+      <App>
+        <BustPlayPage
+          bracketPlay={play}
+          redirectUrl={redirectUrl}
+          thumbnailUrl={thumbnailUrl}
+          authorDisplayName={authorDisplayName}
+        />
+      </App>,
+      'wpbb-bust-play'
     )
   }
 }

@@ -58,25 +58,29 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 			return null;
 		}
 		$tournament_post_id = $play_data['bracket_tournament_post_id'];
+		$busted_id = $play_data['busted_play_post_id'];
 		$tournament = $tournament_post_id && $fetch_tournament ? $this->tournament_repo->get($tournament_post_id, $fetch_results, $fetch_template, $fetch_matches) : null;
 		$picks = $fetch_picks && $play_id ? $this->get_picks($play_id) : [];
+		$author_id = (int) $play_post->post_author;
 
-		$play = new Wp_Bracket_Builder_Bracket_Play(
-			$tournament_post_id,
-			$play_post->post_author,
-			$play_post->ID,
-			$play_post->post_title,
-			$play_post->post_status,
-			get_post_meta($play_post->ID, 'html', true),
-			get_post_meta($play_post->ID, 'img_url', true),
-			get_post_datetime($play_post->ID, 'date', 'local'),
-			get_post_datetime($play_post->ID, 'date_gmt', 'gmt'),
-			$picks,
-			$tournament,
-			$play_data['total_score'] ?? 0,
-			$play_data['accuracy_score'] ?? 0.00,
-			$play_post->post_name,
-		);
+		$data = [
+			'tournament_id' => $tournament_post_id,
+			'author' => $author_id,
+			'id' => $play_post->ID,
+			'title' => $play_post->post_title,
+			'status' => $play_post->post_status,
+			'date' => get_post_datetime($play_post->ID, 'date', 'local'),
+			'date_gmt' => get_post_datetime($play_post->ID, 'date_gmt', 'gmt'),
+			'picks' => $picks,
+			'tournament' => $tournament,
+			'total_score' => $play_data['total_score'] ?? null,
+			'accuracy_score' => $play_data['accuracy_score'] ?? null,
+			'slug' => $play_post->post_name,
+			'author_display_name' => $author_id ? get_the_author_meta('display_name', $author_id) : '',
+			'busted_id' => $busted_id,
+		];
+
+		$play = new Wp_Bracket_Builder_Bracket_Play($data);
 
 		return $play;
 	}
@@ -216,26 +220,34 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		$post_id = $this->insert_post($play, true, true);
 
 		if (is_wp_error($post_id)) {
-			return null;
+			throw new Exception('Error creating play post');
 		}
 
 		$tournament_post_id = $play->tournament_id;
 
 		if (!$tournament_post_id) {
-			return null;
+			throw new Exception('tournament_post_id is required');
 		}
 
 		$tournament = $this->tournament_repo->get_tournament_data($tournament_post_id);
 		$tournament_id = $tournament['id'];
 
 		if (!$tournament_id) {
-			return null;
+			throw new Exception('tournament_id not found');
+		}
+
+		$busted_post_id = $play->busted_id;
+		if ($busted_post_id !== null) {
+			$busted_play_data = $this->get_play_data($busted_post_id);
+			$busted_play_id = $busted_play_data['id'];
 		}
 
 		$play_id = $this->insert_play_data([
 			'post_id' => $post_id,
 			'bracket_tournament_post_id' => $play->tournament_id,
 			'bracket_tournament_id' => $tournament_id,
+			'busted_play_post_id' => $busted_post_id ?? null,
+			'busted_play_id' => $busted_play_id ?? null,
 		]);
 
 		if ($play_id && $play->picks) {

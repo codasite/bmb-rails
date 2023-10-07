@@ -25,6 +25,13 @@ export class Team {
     this.id = id
   }
 
+  equals(team: Team): boolean {
+    if (team.id && this.id) {
+      return this.name === team.name && this.id === team.id
+    }
+    return this.name === team.name
+  }
+
   clone(): Team {
     return new Team(this.name, this.id)
   }
@@ -221,6 +228,31 @@ export class MatchTree {
       return null
     }
     return lastRound.matches[0]
+  }
+
+  clone(): MatchTree {
+    return MatchTree.deserialize(this.serialize())
+  }
+
+  syncPick(otherMatch?: Nullable<MatchNode>): void {
+    if (!otherMatch) {
+      return
+    }
+
+    let thisMatch =
+      this.rounds[otherMatch.roundIndex].matches[otherMatch.matchIndex]
+    if (!thisMatch) {
+      return
+    }
+
+    thisMatch.team1Wins = otherMatch.team1Wins
+    thisMatch.team2Wins = otherMatch.team2Wins
+
+    if (otherMatch.team1Wins) {
+      this.syncPick(otherMatch.left)
+    } else if (otherMatch.team2Wins) {
+      this.syncPick(otherMatch.right)
+    }
   }
 
   /**
