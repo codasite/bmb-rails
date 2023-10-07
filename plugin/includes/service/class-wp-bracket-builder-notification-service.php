@@ -56,7 +56,7 @@ class Wp_Bracket_Builder_Notification_Service {
 
         foreach($user_picks as $pick) {
             $to_email = $pick->email;
-            $to_email = 'test@wstrategies.co';
+            // $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
             $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
@@ -100,7 +100,7 @@ class Wp_Bracket_Builder_Notification_Service {
             // }
             // $formattedHtml = $doc->saveHTML();
 
-
+            file_put_contents($)
             
             // send the email
             $response = $this->email_service->send_message(
