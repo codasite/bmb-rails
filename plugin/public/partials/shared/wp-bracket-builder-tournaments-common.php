@@ -38,11 +38,13 @@ function wpbb_sort_button($label, $endpoint, $active = false) {
 }
 
 
-function tournament_tag($label, $color) {
+function tournament_tag($label, $color, $filled = true) {
+	$filled_path = plugins_url('../../assets/icons/ellipse.svg', __FILE__);
+	$empty_path = plugins_url('../../assets/icons/ellipse_empty.svg', __FILE__);
 	ob_start();
 ?>
 	<div class="tw-text-<?php echo $color ?> tw-bg-<?php echo $color; ?>/15 tw-border tw-border-solid tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/ellipse.svg', __FILE__)); ?>
+		<?php echo $filled ? file_get_contents($filled_path) : file_get_contents(($empty_path)); ?>
 		<span class="tw-font-500 tw-text-12"><?php echo $label ?></span>
 	</div>
 <?php

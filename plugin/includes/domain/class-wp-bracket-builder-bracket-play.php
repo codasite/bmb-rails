@@ -40,12 +40,17 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	 */
 	public $accuracy_score;
 
+	/**
+	 * @var bool
+	 */
+	public $buster;
+
 	public function __construct(array $data) {
 		parent::__construct($data);
 
 		if (!isset($data['tournament_id'])) {
 			throw new Exception('tournament_id is required');
-		} 
+		}
 
 		parent::__construct($data);
 		$this->tournament_id = $data['tournament_id'];
@@ -53,6 +58,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		$this->picks = isset($data['picks']) ? $data['picks'] : [];
 		$this->total_score = isset($data['total_score']) ? $data['total_score'] : null;
 		$this->accuracy_score = isset($data['accuracy_score']) ? $data['accuracy_score'] : null;
+		$this->buster = isset($data['buster']) ? $data['buster'] : false;
 	}
 
 	static public function get_post_type(): string {
