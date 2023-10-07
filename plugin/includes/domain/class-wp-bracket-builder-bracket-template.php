@@ -33,34 +33,13 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 	 */
 	public $matches;
 
-	public function __construct(
-		int $id = null,
-		string $title = '',
-		int $author = null,
-		string $status = 'publish',
-		int $num_teams = null,
-		int $wildcard_placement = null,
-		DateTimeImmutable|false $date = false,
-		DateTimeImmutable|false $date_gmt = false,
-		string $html = '',
-		string $img_url = '',
-		array $matches = [],
-		string $slug = '',
-	) {
-		parent::__construct(
-			$id,
-			$title,
-			$author,
-			$status,
-			$date,
-			$date_gmt,
-			$slug,
-		);
-		$this->num_teams = $num_teams;
-		$this->wildcard_placement = $wildcard_placement;
-		$this->html = $html;
-		$this->img_url = $img_url;
-		$this->matches = $matches;
+	public function __construct(array $data = []) {
+
+		parent::__construct($data);
+		$this->num_teams = isset($data['num_teams']) ? $data['num_teams'] : null;
+		$this->wildcard_placement = isset($data['wildcard_placement']) ? $data['wildcard_placement'] : null;
+		$this->matches = isset($data['matches']) ? $data['matches'] : [];
+
 	}
 
 	public function get_num_rounds(): int {
@@ -76,8 +55,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		return [
 			'num_teams' => $this->num_teams,
 			'wildcard_placement' => $this->wildcard_placement,
-			'html' => $this->html,
-			'img_url' => $this->img_url,
 		];
 	}
 

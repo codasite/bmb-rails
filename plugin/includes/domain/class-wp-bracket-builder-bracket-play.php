@@ -50,38 +50,19 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	 */
 	public $accuracy_score;
 
-	public function __construct(
-		int $tournament_id,
-		int $author,
-		int $id = null,
-		string $title = '',
-		string $status = 'publish',
-		string $html = '',
-		string $img_url = '',
-		DateTimeImmutable|false $date = false,
-		DateTimeImmutable|false $date_gmt = false,
-		array $picks = [],
-		Wp_Bracket_Builder_Bracket_Tournament $tournament = null,
-		int $total_score = 0,
-		float $accuracy_score = 0.00,
-		string $slug = '',
-	) {
-		parent::__construct(
-			$id,
-			$title,
-			$author,
-			$status,
-			$date,
-			$date_gmt,
-			$slug,
-		);
-		$this->tournament_id = $tournament_id;
-		$this->tournament = $tournament;
-		$this->html = $html;
-		$this->img_url = $img_url;
-		$this->picks = $picks;
-		$this->total_score = $total_score;
-		$this->accuracy_score = $accuracy_score;
+	public function __construct(array $data) {
+		parent::__construct($data);
+
+		if (!isset($data['tournament_id'])) {
+			throw new Exception('tournament_id is required');
+		} 
+
+		parent::__construct($data);
+		$this->tournament_id = $data['tournament_id'];
+		$this->tournament = isset($data['tournament']) ? $data['tournament'] : null;
+		$this->picks = isset($data['picks']) ? $data['picks'] : [];
+		$this->total_score = isset($data['total_score']) ? $data['total_score'] : null;
+		$this->accuracy_score = isset($data['accuracy_score']) ? $data['accuracy_score'] : null;
 	}
 
 	static public function get_post_type(): string {
@@ -96,11 +77,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	}
 
 	public function get_post_meta(): array {
-		return [
-			'html' => $this->html,
-			'img_url' => $this->img_url,
-			'bracket_tournament_id' => $this->tournament_id,
-		];
+		return [];
 	}
 
 	public function get_update_post_meta(): array {

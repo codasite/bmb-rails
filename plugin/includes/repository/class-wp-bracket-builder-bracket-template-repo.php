@@ -97,20 +97,20 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 
 		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
 
-		$template = new Wp_Bracket_Builder_Bracket_Template(
-			$template_post->ID,
-			$template_post->post_title,
-			$template_post->post_author,
-			$template_post->post_status,
-			get_post_meta($template_post->ID, 'num_teams', true),
-			get_post_meta($template_post->ID, 'wildcard_placement', true),
-			get_post_datetime($template_post->ID, 'date', 'local'),
-			get_post_datetime($template_post->ID, 'date_gmt', 'gmt'),
-			get_post_meta($template_post->ID, 'html', true),
-			get_post_meta($template_post->ID, 'img_url', true),
-			$matches,
-			$template_post->post_name,
-		);
+		$data = [
+			'id' => $template_post->ID,
+			'title' => $template_post->post_title,
+			'author' => $template_post->post_author,
+			'status' => $template_post->post_status,
+			'num_teams' => get_post_meta($template_post->ID, 'num_teams', true),
+			'wildcard_placement' => get_post_meta($template_post->ID, 'wildcard_placement', true),
+			'date' => get_post_datetime($template_post->ID, 'date', 'local'),
+			'date_gmt' => get_post_datetime($template_post->ID, 'date_gmt', 'gmt'),
+			'matches' => $matches,
+			'slug' => $template_post->post_name,
+		];
+
+		$template = new Wp_Bracket_Builder_Bracket_Template($data);
 
 		return $template;
 	}
@@ -136,13 +136,6 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 
 		if (is_wp_error($post_id)) {
 			return null;
-		}
-
-		$template_data = $this->get_template_data($post_id);
-		$template_id = $template_data['id'];
-
-		if ($template_id && $template->results) {
-			$this->update_results($template_id, $template->results);
 		}
 
 		# refresh from db
