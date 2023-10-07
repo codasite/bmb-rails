@@ -24,9 +24,6 @@ wp_localize_script(
         'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
         'redirect_url' => $play_history_url,
         'thumbnailUrl' => get_the_post_thumbnail_url($post->ID, 'thumbnail'),
-        // 'celebrityDisplayName' => get_the_author_meta('display_name', $post->post_author),
-        'celebrityDisplayName' => get_the_author_meta('first_name', $post->post_author),
-        // 'celebrityDisplayName' => 'TEST',
     )
 );
 

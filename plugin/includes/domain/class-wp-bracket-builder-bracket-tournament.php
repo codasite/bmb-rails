@@ -75,13 +75,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			$data['bracket_template'] = Wp_Bracket_Builder_Bracket_Template::from_array($data['bracket_template']);
 		}
 
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament();
-
-		foreach ($data as $key => $value) {
-			if (property_exists($tournament, $key)) {
-				$tournament->$key = $value;
-			}
-		}
+		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data);
 
 		return $tournament;
 	}

@@ -31,7 +31,6 @@ interface BustPlayPageProps {
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
   thumbnailUrl: string
-  authorDisplayName: string
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
@@ -45,8 +44,9 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     bracketPlay: play,
     apparelUrl,
     thumbnailUrl,
-    authorDisplayName,
   } = props
+
+  console.log('play', play)
 
   const [page, setPage] = useState('view')
 
@@ -57,6 +57,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   useEffect(() => {
     const picks = play?.picks
     const tournamentTitle = play?.tournament?.title
+    const authorDisplayName = play?.authorDisplayName
     const title = authorDisplayName
       ? `${authorDisplayName}'s ${tournamentTitle} picks`
       : tournamentTitle

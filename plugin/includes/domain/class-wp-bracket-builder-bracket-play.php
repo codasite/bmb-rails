@@ -26,16 +26,6 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	public $tournament;
 
 	/**
-	 * @var string
-	 */
-	public $img_url;
-
-	/**
-	 * @var string
-	 */
-	public $html;
-
-	/**
 	 * @var Wp_Bracket_Builder_Match_Pick[]
 	 */
 	public $picks;
@@ -103,13 +93,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		}
 		$data['picks'] = $picks;
 
-		$play = new Wp_Bracket_Builder_Bracket_Play($data['tournament_id'], $data['author']);
-
-		foreach ($data as $key => $value) {
-			if (property_exists($play, $key)) {
-				$play->$key = $value;
-			}
-		}
+		$play = new Wp_Bracket_Builder_Bracket_Play($data);
 
 		return $play;
 	}

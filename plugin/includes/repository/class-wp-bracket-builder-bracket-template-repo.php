@@ -96,11 +96,12 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		}
 
 		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
+		$author_id = (int) $template_post->post_author;
 
 		$data = [
 			'id' => $template_post->ID,
 			'title' => $template_post->post_title,
-			'author' => $template_post->post_author,
+			'author' => $author_id,
 			'status' => $template_post->post_status,
 			'num_teams' => get_post_meta($template_post->ID, 'num_teams', true),
 			'wildcard_placement' => get_post_meta($template_post->ID, 'wildcard_placement', true),
@@ -108,6 +109,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			'date_gmt' => get_post_datetime($template_post->ID, 'date_gmt', 'gmt'),
 			'matches' => $matches,
 			'slug' => $template_post->post_name,
+			'author_display_name' => $author_id ? get_the_author_meta('display_name', $author_id) : '',
 		];
 
 		$template = new Wp_Bracket_Builder_Bracket_Template($data);
@@ -130,7 +132,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		$array = $template->to_array();
 		$updated_array = array_merge($array, $data);
 
-		$template = Wp_Bracket_Builder_Bracket_Template::from_array_allow_null_fields($updated_array);
+		$template = Wp_Bracket_Builder_Bracket_Template::from_array($updated_array);
 
 		$post_id = $this->update_post($template);
 

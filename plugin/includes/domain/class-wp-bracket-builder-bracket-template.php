@@ -63,7 +63,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
-		$template = new Wp_Bracket_Builder_Bracket_Template();
 		if (!isset($data['num_teams'])) {
 			throw new Exception('num_teams is required');
 		}
@@ -80,6 +79,10 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 			throw new Exception('title is required');
 		}
 
+		if (!isset($data['matches'])) {
+			throw new Exception('matches is required');
+		}
+
 		$matches = [];
 
 		foreach ($data['matches'] as $match) {
@@ -87,29 +90,26 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		}
 		$data['matches'] = $matches;
 
-		foreach ($data as $key => $value) {
-			if (property_exists($template, $key)) {
-				$template->$key = $value;
-			}
-		}
+		$template = new Wp_Bracket_Builder_Bracket_Template($data);
 
 		return $template;
 	}
-
-	public static function from_array_allow_null_fields(array $data): Wp_Bracket_Builder_Bracket_Template {
-		$template = new Wp_Bracket_Builder_Bracket_Template();
-		foreach ($data as $key => $value) {
-			if (property_exists($template, $key)) {
-				$template->$key = $value;
-			}
-		}
-
-		return $template;
-	}
-
 
 	public function to_array(): array {
 		$template = parent::to_array();
+		$template['num_teams'] = $this->num_teams;
+		$template['wildcard_placement'] = $this->wildcard_placement;
+		$template['author'] = $this->author;
+		$template['title'] = $this->title;
+
+		if ($this->matches) {
+			$matches = [];
+			foreach ($this->matches as $match) {
+				$matches[] = $match->to_array();
+			}
+			$template['matches'] = $matches;
+		}
+
 		return $template;
 	}
 }
