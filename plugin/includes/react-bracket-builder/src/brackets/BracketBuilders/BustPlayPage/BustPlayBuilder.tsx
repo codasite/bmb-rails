@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState, createContext } from 'react'
+import * as Sentry from '@sentry/react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { BusterBracket, PickableBracket } from '../../shared/components/Bracket'
@@ -26,8 +27,8 @@ interface BustPlayBuilderProps {
   setMatchTree: (matchTree: MatchTree) => void
   busteePlay: PlayRes
   redirectUrl: string
-  thumbnailUrl: string
-  celebrityDisplayName: string
+  thumbnailUrl?: string
+  busteeDisplayName?: string
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
@@ -37,11 +38,12 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     busteePlay,
     redirectUrl,
     thumbnailUrl,
-    celebrityDisplayName,
+    busteeDisplayName,
   } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
+  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
     const template = busteePlay?.tournament?.bracketTemplate
@@ -55,8 +57,13 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const handleSubmit = () => {
     const picks = busterMatchTree?.toMatchPicks()
     const tournamentId = busteePlay?.tournament?.id
+    const busteeId = busteePlay?.id
 
-    if (!tournamentId || !picks) {
+    if (!tournamentId || !busteeId || !picks) {
+      const msg =
+        'Cannot create play. Missing one of tournamentId, busteeId, or picks'
+      console.error(msg)
+      Sentry.captureException(msg)
       return
     }
 
@@ -65,28 +72,24 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     const playReq: PlayReq = {
       tournamentId: tournamentId,
       picks: picks,
-      title: title,
+      bustedId: busteeId,
     }
-    console.log('playReq')
-    console.log(playReq)
 
     setProcessing(true)
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        console.log('res')
-        console.log(res)
-        setProcessing(false)
-        window.location.href = apparelUrl
+        window.location.href = redirectUrl
       })
       .catch((err) => {
-        setProcessing(false)
         console.error(err)
         Sentry.captureException(err)
       })
+      .finally(() => {
+        setProcessing(false)
+      })
 
     window.location.href = redirectUrl
-    console.log('handleSubmit')
   }
 
   const setBusterTree = (tree: MatchTree) => {
@@ -126,7 +129,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                       shadow={true}
                     />
                     <span className="tw-text-white tw-font-700 tw-text-12 tw-mb-8 tw-mt-8">
-                      {celebrityDisplayName}
+                      {busteeDisplayName}
                     </span>
                   </div>
                   <span className="tw-text-white tw-font-700 tw-text-48 tw-m-18 tw-mt-40 tw-mb-40">

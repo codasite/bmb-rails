@@ -22,8 +22,8 @@ export interface WpbbAjaxObj {
   homeUrl: string
   printOptions: PrintOptions
   thumbnailUrl: string
-  celebrityDisplayName: string
   authorDisplayName: string
+  userDisplayName: string
   tournamentTitle: string
 }
 interface PrintOptions {

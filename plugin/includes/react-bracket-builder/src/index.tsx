@@ -119,7 +119,7 @@ function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
 }
 
 function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
-  const { template, redirectUrl, cssUrl, authorDisplayName } = ajaxObj
+  const { template, redirectUrl, cssUrl, userDisplayName } = ajaxObj
   if (template) {
     renderDiv(
       <App>
@@ -127,7 +127,6 @@ function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
           bracketStylesheetUrl={cssUrl}
           template={template}
           apparelUrl={redirectUrl}
-          authorName={authorDisplayName}
         />
       </App>,
       'wpbb-play-template'
@@ -136,7 +135,7 @@ function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
 }
 
 function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
-  const { tournament, redirectUrl, cssUrl, authorDisplayName } = ajaxObj
+  const { tournament, redirectUrl, cssUrl, userDisplayName } = ajaxObj
   if (tournament) {
     renderDiv(
       <App>
@@ -144,7 +143,6 @@ function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
           bracketStylesheetUrl={cssUrl}
           tournament={tournament}
           apparelUrl={redirectUrl}
-          authorName={authorDisplayName}
         />
       </App>,
       'wpbb-play-tournament-builder'
@@ -173,7 +171,6 @@ function renderTournamentResultsBuilder(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const builderDiv = document.getElementById('wpbb-view-play')
   const { play, redirectUrl } = ajaxObj
   if (play) {
     renderDiv(
@@ -185,7 +182,7 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const { play, redirectUrl, thumbnailUrl, celebrityDisplayName } = ajaxObj
+  const { play, redirectUrl, thumbnailUrl, authorDisplayName } = ajaxObj
   if (play) {
     renderDiv(
       <App>
@@ -193,7 +190,7 @@ function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
           bracketPlay={play}
           redirectUrl={redirectUrl}
           thumbnailUrl={thumbnailUrl}
-          celebrityDisplayName={celebrityDisplayName}
+          authorDisplayName={authorDisplayName}
         />
       </App>,
       'wpbb-bust-play'

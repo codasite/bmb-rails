@@ -118,6 +118,7 @@ export interface PlayReq {
   title?: string
   status?: string
   picks: MatchPicks[]
+  bustedId?: number
 }
 
 export interface PlayRes {

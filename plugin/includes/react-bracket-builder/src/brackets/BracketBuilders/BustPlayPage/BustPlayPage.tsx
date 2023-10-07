@@ -21,7 +21,6 @@ import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { MatchRes, PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
 
-
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
@@ -32,7 +31,7 @@ interface BustPlayPageProps {
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
   thumbnailUrl: string
-  celebrityDisplayName: string
+  authorDisplayName: string
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
@@ -46,21 +45,21 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     bracketPlay: play,
     apparelUrl,
     thumbnailUrl,
-    celebrityDisplayName,
+    authorDisplayName,
   } = props
 
   const [page, setPage] = useState('view')
 
   const actionButtonCallback = async () => {
-    // set page state to "bust"
     setPage('bust')
   }
 
   useEffect(() => {
     const picks = play?.picks
-    // const title = play?.tournament?.title
-    // const title = `${play.title}'s ${play?.tournament?.title} picks`
-    const title = play.title
+    const tournamentTitle = play?.tournament?.title
+    const title = authorDisplayName
+      ? `${authorDisplayName}'s ${tournamentTitle} picks`
+      : tournamentTitle
     const date = 'Sept 2094'
     setBracketMeta({ title, date })
     const template = play?.tournament?.bracketTemplate
@@ -83,7 +82,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         redirectUrl={apparelUrl}
         busteePlay={play}
         thumbnailUrl={thumbnailUrl}
-        celebrityDisplayName={celebrityDisplayName}
       />
     )
   }
@@ -102,7 +100,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       >
         {matchTree && (
           <>
-            <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">        
+            <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ProfilePicture
                 src={thumbnailUrl}
                 alt="celebrity-photo"

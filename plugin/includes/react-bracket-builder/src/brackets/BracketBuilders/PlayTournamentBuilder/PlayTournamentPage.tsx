@@ -27,7 +27,6 @@ interface PlayPageProps {
   setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  authorName?: string
 }
 
 const PlayPage = (props: PlayPageProps) => {
@@ -42,10 +41,7 @@ const PlayPage = (props: PlayPageProps) => {
     setBracketMeta,
     darkMode,
     setDarkMode,
-    authorName,
   } = props
-  console.log('apparelUrl')
-  console.log(apparelUrl)
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -121,36 +117,29 @@ const PlayPage = (props: PlayPageProps) => {
   const handleApparelClick = () => {
     const picks = matchTree?.toMatchPicks()
     const tournamentId = tournament?.id
-    if (!picks) {
-      console.error('no picks')
+    if (!picks || !tournamentId) {
+      const msg = 'Cannot create play. Missing one of tournamentId or picks'
+      console.error(msg)
+      Sentry.captureException(msg)
       return
     }
-    if (!tournamentId) {
-      console.error('no tournament id')
-      return
-    }
-    const tournamentTitle = tournament?.title || 'Tournament'
-    const authorExp = authorName ? `$authorName's` : `My`
-    const title = `${authorExp} ${tournamentTitle} picks`
     const playReq: PlayReq = {
       tournamentId: tournament?.id,
       picks: picks,
-      title: title,
     }
 
     setProcessing(true)
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        console.log('res')
-        console.log(res)
-        setProcessing(false)
         window.location.href = apparelUrl
       })
       .catch((err) => {
-        setProcessing(false)
         console.error(err)
         Sentry.captureException(err)
+      })
+      .finally(() => {
+        setProcessing(false)
       })
   }
 

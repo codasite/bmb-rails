@@ -148,9 +148,6 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 				'css_file' => $css_file,
 				'redirect_url' => $play_history_url, // used to redirect to bracket-ready category page
 				'my_tournaments_url' => $my_tournaments_url, // used to redirect back to my tournaments page
-				'author_first_name' => get_the_author_meta('first_name', $post->post_author),
-				'author_last_name' => get_the_author_meta('last_name', $post->post_author),
-				'tournament_title' => $tournament->title,
 			)
 		);
 		ob_start();

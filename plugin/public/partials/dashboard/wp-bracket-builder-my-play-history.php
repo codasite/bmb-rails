@@ -29,10 +29,8 @@ $plays = $play_repo->get_all(
 );
 
 function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
-	$title = $play->title;
-	if (empty($title)) {
-		$title = $play->tournament->title;
-	}
+	$title = $play->tournament->title;
+	// $title = $tourney_title ? "$tourney_title Picks" : 'My Tournament Picks';
 	$user_rank = 99999;
 	$complete = $play->tournament->status === 'complete';
 	$play_id = $play->id;
