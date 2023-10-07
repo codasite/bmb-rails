@@ -42,6 +42,7 @@ function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 	$leaderboard_variant = $complete ? 'final' : 'primary';
 	$accuracy_score = round($play->accuracy_score * 100);
 	$show_score = $play->tournament->has_results();
+	$buster_play = $play->busted_id !== null;
 	ob_start();
 ?>
 
@@ -50,7 +51,7 @@ function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
 			<div class="tw-flex tw-gap-10 tw-flex-wrap">
 				<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
 				<div class="tw-flex tw-gap-10 tw-flex-wrap">
-					<?php echo tournament_tag('buster', 'red') ?>
+					<?php echo $buster_play ? tournament_tag('buster', 'red') : '' ?>
 					<?php echo tournament_tag('printed', 'green') ?>
 					<?php echo tournament_tag('not printed', 'yellow', false) ?>
 				</div>
