@@ -34,7 +34,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     container_name: wordpress-test-app
-    command:  /bin/bash -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true && docker-entrypoint.sh apache2-foreground"
+    # command:  /bin/bash -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true && docker-entrypoint.sh apache2-foreground"
     environment:
       WORDPRESS_DB_HOST: wordpress-test-db
       WORDPRESS_DB_USER: wordpress-test
