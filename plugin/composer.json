@@ -16,5 +16,8 @@
     "setasign/fpdi": "^2.3",
     "mailchimp/marketing": "^3.0",
     "mailchimp/transactional": "^1.0"
+  },
+  "scripts": {
+    "test": "phpunit"
   }
 }
