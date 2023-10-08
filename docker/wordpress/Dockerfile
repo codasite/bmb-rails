@@ -1,7 +1,8 @@
 # https://marioyepes.com/wordpress-plugin-tdd-with-docker-phpunit/
 FROM wordpress:php8.2
 
-arg PLUGIN_NAME=wp-bracket-builder
+ARG PLUGIN_NAME
+ARG OXYGEN_URL
 
 # Set up the os
 RUN apt-get -qq update ; apt-get -y install unzip curl sudo subversion mariadb-client \
@@ -26,10 +27,21 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
         && echo "*** composer command installed"
 
 # Create testing environment
-COPY --chmod=755 bin/install-wp-tests.sh /usr/local/bin/
+COPY --chmod=755 bin/* /usr/local/bin/
 
+# Create a script to install the testing environment
 RUN echo "#!/bin/bash" > /usr/local/bin/install-wp-tests \
         && echo "su www-data -c \"install-wp-tests.sh \${WORDPRESS_DB_NAME}_test root root \${WORDPRESS_DB_HOST} latest\"" >> /usr/local/bin/install-wp-tests \
         && chmod ugo+x /usr/local/bin/install-wp-test* \
         && su www-data -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true" \
         && echo "*** install-wp-tests installed"
+
+# download oxygen from google drive
+# USER www-data
+# RUN curl -L -o /tmp/oxygen.zip "https://drive.google.com/uc?export=download&id=19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2"
+# RUN curl -L -o /tmp/oxygen-woo.zip https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing
+
+# USER root
+
+
+
