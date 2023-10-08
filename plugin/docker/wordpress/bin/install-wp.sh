@@ -1,4 +1,5 @@
 #!/bin/bash
+echo "install wordpress..."
 wp-cli core install \
 	--url=${WORDPRESS_URL} \
 	--title=${WORDPRESS_TITLE} \
@@ -8,4 +9,12 @@ wp-cli core install \
 
 # wp-cli plugin install /tmp/oxygen.zip --activate
 # wp-cli plugin install /tmp/oxygen-woo.zip --activate
+echo "activate plugin ${PLUGIN_NAME}..."
 wp-cli plugin activate ${PLUGIN_NAME}
+
+# install test directory
+echo "install test directory..."
+su www-data -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root ${WORDPRESS_DB_HOST} latest"
+
+echo "done"
+
