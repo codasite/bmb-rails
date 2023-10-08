@@ -6,12 +6,16 @@ services:
     command: npm run dev
     volumes:
       - ./image-generator/src:/usr/src/app/src # To serve the image generator code in development
+    profiles:
+      - images
 
   react-server:
     tty: true
     command: npm run dev
     volumes:
       - ./standalone-react/src:/usr/src/app/src # To serve the react server code in development
+    profiles:
+      - images
 
   react-client:
     tty: true
@@ -20,3 +24,77 @@ services:
       - ./plugin/includes/react-bracket-builder/src:/usr/src/app/src # To serve the react client code in development
     ports:
       - 8080:8080
+    profiles:
+      - images
+
+  wp-test:
+    tty: true
+    build: 
+      context: ./plugin
+      dockerfile: ./docker/wordpress/Dockerfile
+      args:
+        PLUGIN_NAME: wp-bracket-builder
+    restart: unless-stopped
+    container_name: wordpress-test-app
+    # command:  /bin/bash -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true && docker-entrypoint.sh apache2-foreground"
+    # command:  /bin/bash -c "install-wp-tests && docker-entrypoint.sh apache2-foreground"
+    environment:
+      WORDPRESS_DB_HOST: wordpress-test-db
+      WORDPRESS_DB_USER: wordpress-test
+      WORDPRESS_DB_PASSWORD: wordpress-test
+      WORDPRESS_DB_NAME: wordpress-test
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG_LOG', true );
+        define( 'WP_DEBUG_DISPLAY', false );
+        define('BRACKET_BUILDER_S3_IMAGE_BUCKET', 'wpbb-bracket-images-test1');
+        define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
+        define('BRACKET_PRODUCT_CATEGORY', 'bracket-ready');
+        define('BRACKET_PLACEMENT_CENTER_CAT', 'wpbb-placement-center');
+        define('AWS_ACCESS_KEY', '${AWS_ACCESS_KEY}');
+        define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
+        define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
+        define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
+      PLUGIN_NAME: wp-bracket-builder
+      WORDPRESS_URL: http://localhost:8008
+      WORDPRESS_TITLE: Wordpress
+      WORDPRESS_ADMIN_USER: admin
+      WORDPRESS_ADMIN_PASSWORD: admin
+      WORDPRESS_ADMIN_EMAIL: barry@wstrategies.co
+      OXYGEN_URL: https://drive.google.com/file/d/19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2/view?usp=sharing
+      OXYGEN_WOO_URL: https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing
+
+    volumes:
+      - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
+      - wp-test-data:/var/www/html
+    ports:
+      - 8008:80
+    depends_on:
+      - db-test
+    profiles:
+      - test
+
+  db-test:
+    tty: true
+    image: mariadb
+    restart: unless-stopped
+    container_name: wordpress-test-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress-test
+      MYSQL_USER: wordpress-test
+      MYSQL_PASSWORD: wordpress-test
+    volumes:
+      - db-test-data:/var/lib/mysql
+    ports:
+      - 3308:3306
+    profiles:
+      - test
+
+networks:
+  default:
+    name: wp-bracket-builder
+
+volumes:
+  wp-test-data:
+  db-test-data:
