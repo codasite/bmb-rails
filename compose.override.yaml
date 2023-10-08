@@ -35,6 +35,7 @@ services:
     restart: unless-stopped
     container_name: wordpress-test-app
     # command:  /bin/bash -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true && docker-entrypoint.sh apache2-foreground"
+    # command:  /bin/bash -c "install-wp-tests && docker-entrypoint.sh apache2-foreground"
     environment:
       WORDPRESS_DB_HOST: wordpress-test-db
       WORDPRESS_DB_USER: wordpress-test
@@ -53,7 +54,6 @@ services:
         define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
         define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
-        
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
       - wp-test-data:/var/www/html

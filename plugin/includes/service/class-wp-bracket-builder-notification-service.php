@@ -58,7 +58,6 @@ class Wp_Bracket_Builder_Notification_Service {
             $to_email = $pick->email;
             // $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
-            $from_email = MAILCHIMP_FROM_EMAIL;
             $subject = 'Back My Bracket Notification';
             $user_pick = $team_repo->get_team($pick->winning_team_id);
             $winner = $team_repo->get_team($final_round_pick->winning_team_id);
@@ -90,7 +89,6 @@ class Wp_Bracket_Builder_Notification_Service {
             
             // send the email
             $response = $this->email_service->send_message(
-                $from_email,
                 $to_email,
                 $to_name,
                 $subject,
@@ -100,5 +98,3 @@ class Wp_Bracket_Builder_Notification_Service {
         }
     }
 }
-
-?>

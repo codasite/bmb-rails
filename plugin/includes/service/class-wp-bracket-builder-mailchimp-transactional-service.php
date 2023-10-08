@@ -2,13 +2,19 @@
 
 require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php');
 require_once('class-wp-bracket-builder-email-service-interface.php');
-    
 
-class Wp_Bracket_Builder_Mailchimp_Transactional_Service  implements Wp_Bracket_Builder_Email_Service_Interface{
+
+class Wp_Bracket_Builder_Mailchimp_Transactional_Service  implements Wp_Bracket_Builder_Email_Service_Interface {
     protected MailchimpTransactional\ApiClient $client;
 
-    public function __construct($api_key) {
-        $mandrill_api_key = $api_key;
+    public $from_email;
+
+    public function __construct() {
+        if (!defined('MAILCHIMP_API_KEY') || !defined('MAILCHIMP_FROM_EMAIL')) {
+            throw new Exception('Mailchimp API Key and From Email must be defined');
+        }
+        $mandrill_api_key = MAILCHIMP_API_KEY;
+        $this->from_email = MAILCHIMP_FROM_EMAIL;
 
         $this->client = new \MailchimpTransactional\ApiClient();
         $this->client->setApiKey($mandrill_api_key);
@@ -19,13 +25,13 @@ class Wp_Bracket_Builder_Mailchimp_Transactional_Service  implements Wp_Bracket_
         return $response;
     }
 
-    public function send_message($from_email, $to_email, $to_name, $subject, $message, $html) {
+    public function send_message($to_email, $to_name, $subject, $message, $html) {
         $response = $this->client->messages->send([
             'message' => [
                 'text' => $message,
                 'html' => $html,
                 'subject' => $subject,
-                'from_email' => $from_email,
+                'from_email' => $this->from_email,
                 'to' => [
                     [
                         'email' => $to_email,

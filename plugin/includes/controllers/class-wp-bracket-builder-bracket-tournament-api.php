@@ -29,20 +29,29 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	 * @var Wp_Bracket_Builder_score_service
 	 */
 	private $score_service;
-	/**
-	 * Constructor.
-	 */
 
-	private Wp_Bracket_Builder_Email_Service_Interface $email_service;
-	private Wp_Bracket_Builder_Notification_Service $notification_service;
+	/**
+	 * @var Wp_Bracket_Builder_Email_Service_Interface
+	 */
+	private ?Wp_Bracket_Builder_Email_Service_Interface $email_service;
+
+	/**
+	 * @var Wp_Bracket_Builder_Notification_Service
+	 */
+	private ?Wp_Bracket_Builder_Notification_Service $notification_service;
 
 	public function __construct() {
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 		$this->score_service = new Wp_Bracket_Builder_Score_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
-		$this->email_service = new Wp_Bracket_Builder_Mailchimp_Transactional_Service(MAILCHIMP_API_KEY);
-		$this->notification_service = new Wp_Bracket_Builder_Notification_Service($this->email_service);
+		try {
+			$this->email_service = new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
+			$this->notification_service = new Wp_Bracket_Builder_Notification_Service($this->email_service);
+		} catch (Exception $e) {
+			$this->email_service = null;
+			$this->notification_service = null;
+		}
 		// $this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
 	}
 
@@ -162,9 +171,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$this->score_service->score_tournament_plays($updated);
 
 		$tournament_id = $request->get_param('item_id');
-		$response = $this->notification_service->send_tournament_result_email_update($tournament_id);
-		print_r($response);
-		
+		$notify = $request->get_param('notify');
+		if ($this->notification_service && $notify) {
+			$this->notification_service->send_tournament_result_email_update($tournament_id);
+		}
+
 		return new WP_REST_Response($updated, 200);
 	}
 

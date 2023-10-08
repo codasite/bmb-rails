@@ -1,7 +1,7 @@
 # https://marioyepes.com/wordpress-plugin-tdd-with-docker-phpunit/
 FROM wordpress:php8.2
 
-arg PLUGIN_NAME=wp-bracket-buider
+arg PLUGIN_NAME=wp-bracket-builder
 
 # Set up the os
 RUN apt-get -qq update ; apt-get -y install unzip curl sudo subversion mariadb-client \
