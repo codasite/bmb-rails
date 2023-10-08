@@ -45,7 +45,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 	 */
 	public $busted_id;
 
-	public function __construct(array $data) {
+	public function __construct(array $data = []) {
 		parent::__construct($data);
 
 		if (!isset($data['tournament_id'])) {
@@ -54,11 +54,11 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 
 		parent::__construct($data);
 		$this->tournament_id = $data['tournament_id'];
-		$this->tournament = isset($data['tournament']) ? $data['tournament'] : null;
-		$this->picks = isset($data['picks']) ? $data['picks'] : [];
-		$this->total_score = isset($data['total_score']) ? $data['total_score'] : null;
-		$this->accuracy_score = isset($data['accuracy_score']) ? $data['accuracy_score'] : null;
-		$this->busted_id = isset($data['busted_id']) ? $data['busted_id'] : null;
+		$this->tournament = $data['tournament'] ?? null;
+		$this->picks = $data['picks'] ?? [];
+		$this->total_score = $data['total_score'] ?? 0;
+		$this->accuracy_score = $data['accuracy_score'] ?? 0;
+		$this->busted_id = $data['busted_id'] ?? null;
 	}
 
 	static public function get_post_type(): string {
