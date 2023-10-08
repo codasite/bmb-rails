@@ -29,7 +29,9 @@ services:
 
   wp-test:
     tty: true
-    build: ./docker/wordpress
+    build: 
+      context: ./plugin
+      dockerfile: ./docker/wordpress/Dockerfile
     restart: unless-stopped
     container_name: wordpress-test-app
     # command:  /bin/bash -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true && docker-entrypoint.sh apache2-foreground"

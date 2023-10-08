@@ -27,7 +27,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
         && echo "*** composer command installed"
 
 # Create testing environment
-COPY --chmod=755 bin/* /usr/local/bin/
+COPY --chmod=755 docker/wordpress/bin /usr/local/bin/
 
 # Create a script to install the testing environment
 RUN echo "#!/bin/bash" > /usr/local/bin/install-wp-tests \
