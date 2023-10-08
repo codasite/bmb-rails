@@ -2,7 +2,6 @@
 FROM wordpress:php8.2
 
 ARG PLUGIN_NAME
-ARG OXYGEN_URL
 
 # Set up the os
 RUN apt-get -qq update ; apt-get -y install unzip curl sudo subversion mariadb-client \
