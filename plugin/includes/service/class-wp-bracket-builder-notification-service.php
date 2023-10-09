@@ -1,11 +1,11 @@
 <?php
 
 require_once('class-wp-bracket-builder-email-service-interface.php');
-require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-play-repo.php' );
-require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-team-repo.php' );
-require_once( plugin_dir_path( dirname( __FILE__, 1 ) ) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php' );
+require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php');
+require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php');
+require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php');
 
-class Wp_Bracket_Builder_Notification_Service {
+class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Notification_Service_Interface {
 
     protected Wp_Bracket_Builder_Email_Service_Interface $email_service;
 
@@ -46,7 +46,7 @@ class Wp_Bracket_Builder_Notification_Service {
         return $results;
     }
 
-    public function send_tournament_result_email_update($tournament_id) {
+    public function send_tournament_result_email_update($tournament_id): void {
         $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
         $team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 
@@ -54,7 +54,7 @@ class Wp_Bracket_Builder_Notification_Service {
         $final_round_pick = end($tournament->results);
         $user_picks = $this->get_last_round_picks_for_tournament($tournament_id, $final_round_pick);
 
-        foreach($user_picks as $pick) {
+        foreach ($user_picks as $pick) {
             $to_email = $pick->email;
             $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
@@ -65,10 +65,10 @@ class Wp_Bracket_Builder_Notification_Service {
             $winner = strtoupper($winner_bracket_pick->name);
             $tournament_url = get_permalink($tournament_id) . '/leaderboard';
             $message = array(
-                'to'=>array(
+                'to' => array(
                     array(
-                        'email'=>$to_email,
-                        'name'=>$to_name,
+                        'email' => $to_email,
+                        'name' => $to_name,
                     ),
                 ),
             );
@@ -85,9 +85,9 @@ class Wp_Bracket_Builder_Notification_Service {
             $button_text = 'View Tournament';
 
             ob_start();
-            include plugin_dir_path( dirname( __FILE__, 2 ) ) . 'email/templates/play-scored.php';
-            $html = ob_get_clean();            
-            
+            include plugin_dir_path(dirname(__FILE__, 2)) . 'email/templates/play-scored.php';
+            $html = ob_get_clean();
+
             // send the email
             $response = $this->email_service->send_message(
                 $to_email,
