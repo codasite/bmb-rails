@@ -47,11 +47,8 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
 		try {
-			echo 'trying';
 			// $this->email_service = $args['email_service'] ?? new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
-			echo 'email service';
 			$this->notification_service = $args['notification_service'] ?? new Wp_Bracket_Builder_Notification_Service();
-			echo 'notification service';
 		} catch (Exception $e) {
 			$this->email_service = null;
 			$this->notification_service = null;
@@ -170,11 +167,13 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item($request) {
+		$tournament_id = $request->get_param('item_id');
 		$data = $request->get_params();
-		$updated = $this->tournament_repo->update($request->get_param('item_id'), $data);
+		$updated = $this->tournament_repo->update($tournament_id, $data);
+		var_dump($updated);
 		$this->score_service->score_tournament_plays($updated);
 
-		$tournament_id = $request->get_param('item_id');
+		echo 'tournament id' . $tournament_id;
 		$notify = $request->get_param('update_notify_participants');
 		echo 'notify' . $notify;
 		if (!$this->notification_service) {
@@ -184,8 +183,9 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 			echo 'no notify';
 		}
 		if ($this->notification_service && $notify) {
-			echo 'notifying';
-			$this->notification_service->notify_participants($tournament_id);
+			echo 'notifying notification';
+			echo 'tournament id' . $tournament_id;
+			$this->notification_service->notify_participants(8);
 		}
 
 		return new WP_REST_Response($updated, 200);

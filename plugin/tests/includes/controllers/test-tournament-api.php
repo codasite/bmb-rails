@@ -77,6 +77,7 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 			->disableOriginalConstructor()
 			->getMock();
 
+
 		$api = new Wp_Bracket_Builder_Bracket_Tournament_API(['notification_service' => $notification_service]);
 
 		$template = self::factory()->template->create_and_get();

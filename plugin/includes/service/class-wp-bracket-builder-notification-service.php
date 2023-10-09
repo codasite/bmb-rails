@@ -1,6 +1,7 @@
 <?php
 
 require_once('class-wp-bracket-builder-email-service-interface.php');
+require_once('class-wp-bracket-builder-mailchimp-transactional-service.php');
 require_once('class-wp-bracket-builder-notification-service-interface.php');
 require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php');
 require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php');
@@ -12,8 +13,8 @@ class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Noti
 
     protected Wp_Bracket_Builder_Bracket_Tournament_Repository $tournament_repo;
 
-    public function __construct(Wp_Bracket_Builder_Email_Service_Interface $email_service) {
-        $this->email_service = $email_service;
+    public function __construct() {
+        $this->email_service = new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
         $this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
     }
 
