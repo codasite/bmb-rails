@@ -230,7 +230,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		}
 
 		$tournament = $this->tournament_repo->get_tournament_data($tournament_post_id);
-		$tournament_id = $tournament['id'];
+		$tournament_id = $tournament['id'] ?? null;
 
 		if (!$tournament_id) {
 			throw new Exception('tournament_id not found');

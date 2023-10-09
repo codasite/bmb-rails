@@ -46,7 +46,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $template;
 	}
 
-	private function insert_template_data(array $data): int {
+	public function insert_template_data(array $data): int {
 		$table_name = $this->templates_table();
 		$this->wpdb->insert(
 			$table_name,
@@ -55,7 +55,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $this->wpdb->insert_id;
 	}
 
-	private function insert_matches(int $template_id, array $matches): void {
+	public function insert_matches(int $template_id, array $matches): void {
 		$table_name = $this->match_table();
 		foreach ($matches as $match) {
 			// Skip if match is null
@@ -171,14 +171,11 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 	}
 
 
-	private function get_matches(int $template_id): array {
+	public function get_matches(int $template_id): array {
 		$table_name = $this->match_table();
 		$where = $template_id ? "WHERE bracket_template_id = $template_id" : '';
 		$match_results = $this->wpdb->get_results(
-			$this->wpdb->prepare(
-				"SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
-				$template_id
-			),
+			"SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
 			ARRAY_A
 		);
 		$matches = [];

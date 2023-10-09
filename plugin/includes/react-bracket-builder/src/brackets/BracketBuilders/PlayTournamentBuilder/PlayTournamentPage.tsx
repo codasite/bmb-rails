@@ -116,7 +116,9 @@ const PlayPage = (props: PlayPageProps) => {
 
   const handleApparelClick = () => {
     const picks = matchTree?.toMatchPicks()
+    console.log(picks)
     const tournamentId = tournament?.id
+    console.log(tournamentId)
     if (!picks || !tournamentId) {
       const msg = 'Cannot create play. Missing one of tournamentId or picks'
       console.error(msg)

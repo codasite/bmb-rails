@@ -77,3 +77,7 @@ Tests should be run via docker-compose. To run the tests:
 
 1. `make wp-up` to start the local wordpress services and install wordpress
 2. `make wp-test` to run the tests
+
+Resources:
+https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/
+https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/

@@ -34,17 +34,6 @@ class Wp_Bracket_Builder_Public_Hooks {
 			'BMB Plus',
 			array('wpbb_create_tournament' => true),
 		);
-
-		// This role is to be used by the service user to generate bracket images
-		add_role(
-			'private_reader',
-			'Private Reader',
-			array(
-				'read' => true,
-				'read_private_posts' => true,
-				'read_private_pages' => true,
-			)
-		);
 	}
 
 	/**
