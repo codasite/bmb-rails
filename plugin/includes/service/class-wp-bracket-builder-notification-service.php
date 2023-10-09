@@ -1,6 +1,7 @@
 <?php
 
 require_once('class-wp-bracket-builder-email-service-interface.php');
+require_once('class-wp-bracket-builder-notification-service-interface.php');
 require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php');
 require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php');
 require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php');
@@ -46,7 +47,7 @@ class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Noti
         return $results;
     }
 
-    public function send_tournament_result_email_update($tournament_id): void {
+    public function notify_participants($tournament_id): void {
         $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
         $team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 

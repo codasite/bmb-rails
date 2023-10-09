@@ -5,6 +5,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-buil
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-transactional-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-notification-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-notification-service-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-email-service-interface.php';
 
 
@@ -36,9 +37,9 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	private ?Wp_Bracket_Builder_Email_Service_Interface $email_service;
 
 	/**
-	 * @var Wp_Bracket_Builder_Notification_Service
+	 * @var Wp_Bracket_Builder_Notification_Service_Interface
 	 */
-	private ?Wp_Bracket_Builder_Notification_Service $notification_service;
+	private ?Wp_Bracket_Builder_Notification_Service_Interface $notification_service;
 
 	public function __construct($args = array()) {
 		$this->tournament_repo = $args['tournament_repo'] ?? new Wp_Bracket_Builder_Bracket_Tournament_Repository();
@@ -46,8 +47,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
 		try {
-			$this->email_service = $args['email_service'] ?? new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
-			$this->notification_service = $args['notification_service'] ?? new Wp_Bracket_Builder_Notification_Service($this->email_service);
+			echo 'trying';
+			// $this->email_service = $args['email_service'] ?? new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
+			echo 'email service';
+			$this->notification_service = $args['notification_service'] ?? new Wp_Bracket_Builder_Notification_Service();
+			echo 'notification service';
 		} catch (Exception $e) {
 			$this->email_service = null;
 			$this->notification_service = null;
@@ -172,8 +176,16 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 
 		$tournament_id = $request->get_param('item_id');
 		$notify = $request->get_param('update_notify_participants');
+		echo 'notify' . $notify;
+		if (!$this->notification_service) {
+			echo 'no notification service';
+		}
+		if (!$notify) {
+			echo 'no notify';
+		}
 		if ($this->notification_service && $notify) {
-			$this->notification_service->send_tournament_result_email_update($tournament_id);
+			echo 'notifying';
+			$this->notification_service->notify_participants($tournament_id);
 		}
 
 		return new WP_REST_Response($updated, 200);
