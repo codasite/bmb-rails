@@ -45,6 +45,14 @@ class Wp_Bracket_Builder_Score_Service {
 	}
 
 	public function score_tournament_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
+		try {
+			$this->score_plays($tournament);
+		} catch (Exception $e) {
+			// do nothing
+		}
+	}
+
+	private function score_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
 		$point_values = [1, 2, 4, 8, 16, 32];
 
 		if (is_int($tournament)) {
