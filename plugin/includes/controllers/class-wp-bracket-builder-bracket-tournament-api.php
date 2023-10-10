@@ -173,6 +173,10 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$this->score_service->score_tournament_plays($updated);
 
 		$notify = $request->get_param('update_notify_participants');
+		$status = $request->get_param('status');
+		echo $status;
+		echo $notify;
+		// echo true;
 		if ($this->notification_service && $notify) {
 			$this->notification_service->notify_tournament_results_updated($tournament_id);
 		}
