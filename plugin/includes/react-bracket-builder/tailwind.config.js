@@ -63,9 +63,6 @@ module.exports = {
       red: '#FF456D',
       redLight: '#FF1F4F26',
     },
-    borderWidth: {
-      1: '1px',
-    },
     borderRadius: {
       4: '4px',
       8: '8px',
