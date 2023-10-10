@@ -95,6 +95,11 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			return null;
 		}
 
+		// only get template if template author is current user
+		if (!current_user_can('edit_post', $template_post->ID)) {
+			return null;
+		}
+
 		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
 		$author_id = (int) $template_post->post_author;
 
