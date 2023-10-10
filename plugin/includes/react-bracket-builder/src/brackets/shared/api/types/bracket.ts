@@ -61,7 +61,6 @@ export interface MatchTreeRepr {
   rounds: Nullable<MatchRepr>[][]
   wildcardPlacement?: WildcardPlacement
 }
-
 export interface MatchRepr {
   id?: number
   roundIndex: number
@@ -71,7 +70,14 @@ export interface MatchRepr {
   team1Wins?: boolean
   team2Wins?: boolean
 }
-
+interface PostBase {
+  id: number
+  title: string
+  status: string
+  author: number
+  authorDisplayName: string
+  publishedDate: phpDate
+}
 export interface TemplateReq {
   title: string
   date: string
@@ -80,20 +86,13 @@ export interface TemplateReq {
   wildcardPlacement: WildcardPlacement
   matches: MatchReq[]
 }
-
-export interface TemplateRes {
-  id: number
-  title: string
+export interface TemplateRes extends PostBase {
   numTeams: number
-  status: string
-  date: phpDate
-  dateGmt: phpDate
   wildcardPlacement: WildcardPlacement
   html: string
   imgUrl: string
   matches?: MatchRes[]
 }
-
 export interface TournamentReq {
   id?: number
   title?: string
@@ -103,18 +102,10 @@ export interface TournamentReq {
   results?: MatchPicks[]
   bracketTemplate?: TemplateReq
 }
-
-export interface TournamentRes {
-  id: number
-  title: string
-  status: string
-  author: number
-  date: phpDate
-  dateGmt: phpDate
+export interface TournamentRes extends PostBase {
   bracketTemplateId: number
   bracketTemplate?: TemplateRes
 }
-
 export interface PlayReq {
   tournamentId: number
   title?: string
@@ -122,16 +113,8 @@ export interface PlayReq {
   picks: MatchPicks[]
   bustedId?: number
 }
-
-export interface PlayRes {
-  id: number
+export interface PlayRes extends PostBase {
   tournamentId: number
-  title: string
-  author: number
-  authorDisplayName: string
-  status: string
-  date: phpDate
-  dateGmt: phpDate
   picks: MatchPicks[]
   tournament?: TournamentRes
 }

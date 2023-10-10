@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-
+import React, { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { BracketMetaContext, DarkModeContext } from '../../shared/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
@@ -8,7 +7,6 @@ import { ResultsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import checkIcon from '../../shared/assets/check.svg'
 import { bracketApi } from '../../shared/api/bracketApi'
-import { TournamentReq } from '../../shared/api/types/bracket'
 
 const CustomCheckbox = (props: any) => {
   const { id, checked, onChange } = props
@@ -85,7 +83,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
       const picks = matchTree.toMatchPicks()
       if (!picks || picks.length === 0) return
       const complete = matchTree.allPicked()
-      const data: TournamentReq = {
+      const data = {
         results: picks,
         status: complete ? 'complete' : undefined,
       }

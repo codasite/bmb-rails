@@ -12,8 +12,8 @@ import {
 } from '../../shared/components/HigherOrder'
 import {
   PlayReq,
-  TemplateReq,
-  TournamentReq,
+  TemplateRes,
+  TournamentRes,
 } from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
@@ -22,8 +22,8 @@ import { PlayBuilder } from './PlayBuilder'
 interface PlayPageProps {
   apparelUrl: string
   bracketStylesheetUrl: string
-  tournament?: TournamentReq
-  template?: TemplateReq
+  tournament?: TournamentRes
+  template?: TemplateRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   darkMode?: boolean

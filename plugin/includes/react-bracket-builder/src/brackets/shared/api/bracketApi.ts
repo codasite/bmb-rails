@@ -53,7 +53,7 @@ class BracketApi {
   }
   async updateTournament(
     tournamentId: number,
-    tournament: TournamentReq
+    tournament: Partial<TournamentReq>
   ): Promise<TournamentRes> {
     const options: RequestOptions = { method: 'PATCH', body: tournament }
     return await this.performRequest(
