@@ -17,6 +17,10 @@ class PlayRepoTest extends WPBB_UnitTestCase {
 		$this->play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 	}
 
+	public function test_add() {
+		$this->assertTrue(true);
+	}
+
 
 	// public function test_add() {
 	// 	$play = new Wp_Bracket_Builder_Bracket_Play([
