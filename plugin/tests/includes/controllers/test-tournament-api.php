@@ -4,6 +4,7 @@ require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wp-bracket-builder-bracket
 require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
 require_once WPBB_PLUGIN_DIR . 'includes/controllers/class-wp-bracket-builder-bracket-tournament-api.php';
 require_once WPBB_PLUGIN_DIR . 'includes/service/class-wp-bracket-builder-notification-service-interface.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wp-bracket-builder-score-service-interface.php';
 
 //namespace phpunit
 
@@ -92,11 +93,40 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 
 		$request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/tournaments/' . $tournament->id);
 
+
 		$request->set_body_params($data);
+		$request->set_param('item_id', $tournament->id);
 
 		$notification_service->expects($this->once())
-			->method('notify_participants')
+			->method('notify_tournament_results_updated')
 			->with($tournament->id);
+
+		$api->update_item($request);
+	}
+
+	public function test_tournament_is_scored_on_update_results() {
+		$score_service = $this->getMockBuilder('Wp_Bracket_Builder_Score_Service_Interface')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$api = new Wp_Bracket_Builder_Bracket_Tournament_API(['score_service' => $score_service]);
+
+		$template = self::factory()->template->create_and_get();
+		$tournament = self::factory()->tournament->create_and_get([
+			'bracket_template_id' => $template->id
+		]);
+
+		$data = [
+			'title' => 'Test Tournament',
+		];
+
+		$request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/tournaments/' . $tournament->id);
+
+		$request->set_body_params($data);
+		$request->set_param('item_id', $tournament->id);
+
+		$score_service->expects($this->once())
+			->method('score_tournament_plays');
 
 		$api->update_item($request);
 	}

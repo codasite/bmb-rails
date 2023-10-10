@@ -3,7 +3,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-b
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-transactional-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-email-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-notification-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-notification-service-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-email-service-interface.php';
@@ -47,7 +47,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
 		try {
-			// $this->email_service = $args['email_service'] ?? new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
+			// $this->email_service = $args['email_service'] ?? new Wp_Bracket_Builder_Mailchimp_Email_Service();
 			$this->notification_service = $args['notification_service'] ?? new Wp_Bracket_Builder_Notification_Service();
 		} catch (Exception $e) {
 			$this->email_service = null;
@@ -170,22 +170,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$tournament_id = $request->get_param('item_id');
 		$data = $request->get_params();
 		$updated = $this->tournament_repo->update($tournament_id, $data);
-		var_dump($updated);
 		$this->score_service->score_tournament_plays($updated);
 
-		echo 'tournament id' . $tournament_id;
 		$notify = $request->get_param('update_notify_participants');
-		echo 'notify' . $notify;
-		if (!$this->notification_service) {
-			echo 'no notification service';
-		}
-		if (!$notify) {
-			echo 'no notify';
-		}
 		if ($this->notification_service && $notify) {
-			echo 'notifying notification';
-			echo 'tournament id' . $tournament_id;
-			$this->notification_service->notify_participants(8);
+			$this->notification_service->notify_tournament_results_updated($tournament_id);
 		}
 
 		return new WP_REST_Response($updated, 200);
