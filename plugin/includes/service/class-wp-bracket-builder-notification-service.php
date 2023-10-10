@@ -14,7 +14,12 @@ class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Noti
     protected Wp_Bracket_Builder_Bracket_Tournament_Repository $tournament_repo;
 
     public function __construct() {
-        $this->email_service = new Wp_Bracket_Builder_Mailchimp_Email_Service();
+        $this->email_service = new Wp_Bracket_Builder_Mailchimp_Email_Service(
+            array(
+                'api_key' => MAILCHIMP_API_KEY,
+                'from_email' => MAILCHIMP_FROM_EMAIL,
+            )
+        );
         $this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
     }
 
@@ -49,6 +54,7 @@ class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Noti
     }
 
     public function notify_tournament_results_updated($tournament_id): void {
+        echo "fuck";
         $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
         $team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
 
@@ -58,7 +64,7 @@ class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Noti
 
         foreach ($user_picks as $pick) {
             $to_email = $pick->email;
-            $to_email = 'test@wstrategies.co';
+            // $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
             $subject = 'Back My Bracket Notification';
             $user_bracket_pick = $team_repo->get_team($pick->winning_team_id);
