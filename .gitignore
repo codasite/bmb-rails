@@ -135,3 +135,4 @@ vendor/
 build/
 .svn/
 .phpunit.result.cache
+.DS_Store
