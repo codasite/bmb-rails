@@ -100,6 +100,7 @@ export interface TournamentReq {
   bracketTemplateId?: number
   results?: MatchPicks[]
   bracketTemplate?: TemplateReq
+  updateNotifyParticipants?: boolean
 }
 
 export interface TournamentRes {
