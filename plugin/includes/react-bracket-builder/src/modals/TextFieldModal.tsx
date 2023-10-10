@@ -31,6 +31,7 @@ export const TextFieldModal = (props: {
             setInput={props.setInput}
             setHasError={props.setHasError}
           />
+          <div className={'tw-mb-30'}></div>
           <ConfirmButton
             disabled={props.loading || props.hasError}
             onClick={props.onSubmit}

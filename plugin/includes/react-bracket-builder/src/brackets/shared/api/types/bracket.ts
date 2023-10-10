@@ -74,6 +74,7 @@ export interface MatchRepr {
 
 export interface TemplateReq {
   title: string
+  date: string
   numTeams: number
   status?: string
   wildcardPlacement: WildcardPlacement
@@ -96,6 +97,7 @@ export interface TemplateRes {
 export interface TournamentReq {
   id?: number
   title?: string
+  date: string
   status?: string
   bracketTemplateId?: number
   results?: MatchPicks[]

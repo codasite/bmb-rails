@@ -88,7 +88,6 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       }
     }
   }, [template])
-
   const pickerStateFromNumTeams = (numTeams: number) => {
     const initialPickerIndex = teamPickerMax.findIndex((max) => numTeams <= max)
     if (initialPickerIndex >= 0) {
@@ -113,42 +112,37 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
   }
-
-  const handleSaveTemplateClick = () => {
-    if (!matchTree || !matchTree.allTeamsAdded()) {
-      return
-    }
+  const getTemplateReq = () => {
     const req: TemplateReq = {
       title: bracketMeta.title,
+      date: bracketMeta.date,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),
       status: 'publish',
     }
+    return req
+  }
+  const handleSaveTemplateClick = () => {
+    if (!matchTree || !matchTree.allTeamsAdded()) {
+      return
+    }
     bracketApi
-      .createTemplate(req)
+      .createTemplate(getTemplateReq())
       .then((res) => {
         if (saveTemplateLink) {
           window.location.href = saveTemplateLink
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.error(err)
       })
   }
-
   const handleSaveTournamentClick = (tournamentName: string) => {
-    const templateReq: TemplateReq = {
-      title: bracketMeta.title,
-      numTeams: numTeams,
-      wildcardPlacement: wildcardPlacement,
-      matches: matchTree?.toMatchReq(),
-      status: 'publish',
-    }
     const tournamentReq: TournamentReq = {
       title: tournamentName,
       status: 'publish',
-      bracketTemplate: templateReq,
+      bracketTemplate: getTemplateReq(),
     }
     return bracketApi.createTournament(tournamentReq).then((res) => {
       if (saveTournamentLink) {
@@ -156,7 +150,6 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       }
     })
   }
-
   return (
     <div className="wpbb-reset tw-uppercase">
       {currentPage === 'num-teams' && (

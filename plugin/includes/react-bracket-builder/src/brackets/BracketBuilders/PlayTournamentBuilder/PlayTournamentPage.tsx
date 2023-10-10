@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as Sentry from '@sentry/react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
-
 import { MatchTree } from '../../shared/models/MatchTree'
 import { BracketMeta } from '../../shared/context'
 import {
+  WithBracketMeta,
   WithDarkMode,
   WithMatchTree,
-  WithBracketMeta,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import { PlayReq } from '../../shared/api/types/bracket'
+import {
+  PlayReq,
+  TemplateReq,
+  TournamentReq,
+} from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
@@ -19,8 +22,8 @@ import { PlayBuilder } from './PlayBuilder'
 interface PlayPageProps {
   apparelUrl: string
   bracketStylesheetUrl: string
-  tournament?: any
-  template?: any
+  tournament?: TournamentReq
+  template?: TemplateReq
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   darkMode?: boolean
@@ -60,7 +63,7 @@ const PlayPage = (props: PlayPageProps) => {
       const numTeams = template.numTeams
       const matches = template.matches
       tree = MatchTree.fromMatchRes(numTeams, matches)
-      setBracketMeta?.({ title: template.title, date: '2021' })
+      setBracketMeta?.({ title: template.title, date: template.date })
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
