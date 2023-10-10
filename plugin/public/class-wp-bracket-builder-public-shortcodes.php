@@ -30,6 +30,10 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 	}
 
 	public function render_template_builder() {
+		header('HTTP/1.0 404 Not Found');
+		include( '404.php');
+		exit();
+
 		wp_localize_script(
 			'wpbb-bracket-builder-react',
 			'wpbb_ajax_obj',
