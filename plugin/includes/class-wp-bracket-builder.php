@@ -155,7 +155,7 @@ class Wp_Bracket_Builder {
 		 * Bracket Product Integrations
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/product-integrations/class-wp-bracket-builder-product-integration-interface.php';
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/product-integrations/class-wp-bracket-builder-gelato-product-integration.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/product-integrations/gelato/class-wp-bracket-builder-gelato-product-integration.php';
 
 		$this->loader = new Wp_Bracket_Builder_Loader();
 	}
