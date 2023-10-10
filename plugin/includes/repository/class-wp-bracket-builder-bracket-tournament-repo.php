@@ -72,8 +72,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		}
 
 		# refresh from db
-		$tournament = $this->get($post_id);
-		return $tournament;
+		return $this->get($post_id);
 	}
 
 	private function insert_tournament_data(array $data): int {
@@ -113,14 +112,14 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		}
 
 		$tournament_data = $this->get_tournament_data($tournament_post);
-		$tournament_id = $tournament_data['id'];
-		if (!$tournament_id) {
+		if (!isset($tournament_data['id'])) {
 			return null;
 		}
+		$tournament_id = $tournament_data['id'];
 		$template_post_id = $tournament_data['bracket_template_post_id'];
 		$template = $template_post_id && $fetch_template ? $this->template_repo->get($template_post_id, $fetch_matches) : null;
 		$results = $fetch_results ? $this->get_tournament_results($tournament_id) : [];
-		$author_id = (int) $tournament_post->post_author;
+		$author_id = (int)$tournament_post->post_author;
 
 		$data = [
 			'bracket_template_id' => $template_post_id,
@@ -128,6 +127,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			'title' => $tournament_post->post_title,
 			'author' => $author_id,
 			'status' => $tournament_post->post_status,
+			'date' => get_post_meta($tournament_post->ID, 'date', true),
 			'published_date' => get_post_datetime($tournament_post->ID, 'date', 'gmt'),
 			'bracket_template' => $template,
 			'results' => $results,

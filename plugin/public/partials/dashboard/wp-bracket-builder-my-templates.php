@@ -25,7 +25,7 @@ function host_tournament_btn(string $id) {
 
 function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 	$title = $template->title;
-	error_log($template->date->format('F j, Y, g:i a'));
+	$date = $template->date;
 	$id = $template->id;
 	$num_teams = $template->num_teams;
 	// This link leads to the Create Template page. It passes in the original template_id as a query param
@@ -41,7 +41,7 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
     <div class="tw-flex tw-gap-10 tw-items-center tw-justify-between md:tw-justify-start">
       <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($title) ?></h2>
       <div class="tw-flex tw-gap-10">
-				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-template-button", attributes: "data-template-id='$id' data-template-title='$title' data-template-date='2020'"); ?>
+				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-template-button", attributes: "data-template-id='$id' data-template-title='$title' data-template-date='$date'"); ?>
 				<?php echo duplicate_bracket_btn($duplicate_link, $id); ?>
 				<?php echo delete_post_btn($delete_link, $id, 'delete_template_id', 'delete_template_action', 'delete_template_nonce'); ?>
       </div>

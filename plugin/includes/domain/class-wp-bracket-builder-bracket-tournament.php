@@ -4,7 +4,13 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
 
-class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base {
+class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
+{
+	/**
+	 * @var string
+	 */
+	public $date;
+
 	/**
 	 * @var ?int
 	 */
@@ -25,6 +31,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		$this->bracket_template_id = isset($data['bracket_template_id']) ? $data['bracket_template_id'] : null;
 		$this->bracket_template = isset($data['bracket_template']) ? $data['bracket_template'] : null;
 		$this->results = isset($data['results']) ? $data['results'] : [];
+		$this->date = isset($data['date']) ? $data['date'] : [];
 	}
 
 	public function get_winning_team(): ?Wp_Bracket_Builder_Team {
@@ -48,21 +55,27 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	public function get_post_meta(): array {
 		return [
 			'bracket_template_id' => $this->bracket_template_id,
+			'date' => $this->date,
 		];
 	}
 
 	public function get_update_post_meta(): array {
-		return [];
+		return [
+			'date' => $this->date,
+		];
 	}
 
 	static public function from_array($data) {
-
 		if (!isset($data['bracket_template_id']) && !isset($data['bracket_template'])) {
 			throw new Exception('bracket_template_id or bracket_template is required');
 		}
 
 		if (!isset($data['author'])) {
 			throw new Exception('author id is required');
+		}
+
+		if (!isset($data['date'])) {
+			throw new Exception('date is required');
 		}
 
 		if (isset($data['results'])) {
@@ -85,6 +98,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	public function to_array(): array {
 		$tournament = parent::to_array();
 		$tournament['bracket_template_id'] = $this->bracket_template_id;
+		$tournament['date'] = $this->date;
 		if ($this->results) {
 			$results = [];
 			foreach ($this->results as $result) {

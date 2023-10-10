@@ -68,7 +68,7 @@ export const EditTemplateModal = () => {
             setInput={setDate}
             setHasError={setDateHasError}
           />
-          <div class={'tw-mb-30'}></div>
+          <div className={'tw-mb-30'}></div>
           <ConfirmButton
             disabled={loading || titleHasError}
             onClick={onEditTemplate}
