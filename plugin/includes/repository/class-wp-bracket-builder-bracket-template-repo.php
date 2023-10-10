@@ -80,7 +80,11 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		}
 	}
 
-	public function get(int|WP_Post|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
+	public function get(int|WP_Post|Wp_Bracket_Builder_Bracket_Template|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
+		if ($post instanceof Wp_Bracket_Builder_Bracket_Template) {
+			$post = $post->id;
+		}
+
 		$template_post = get_post($post);
 
 

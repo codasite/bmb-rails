@@ -123,7 +123,8 @@ Tests are stored in `plugin/tests` and follow the directory structure of the plu
 
 Tests should be run via docker-compose. To run the tests:
 
-1. `make wp-up` to start the local wordpress services and install wordpress
+1. `make wp-up` to start the local wordpress services
+2. `make wp-install` installs wordpress and the test directory
 2. `make wp-test` to run the tests
 
 Resources:

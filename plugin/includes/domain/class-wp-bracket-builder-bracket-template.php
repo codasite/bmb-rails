@@ -37,12 +37,15 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base i
 	public function __construct(array $data = []) {
 
 		parent::__construct($data);
-		$this->num_teams = isset($data['num_teams']) ? $data['num_teams'] : null;
-		$this->wildcard_placement = isset($data['wildcard_placement']) ? $data['wildcard_placement'] : null;
-		$this->matches = isset($data['matches']) ? $data['matches'] : [];
+		$this->num_teams = isset($data['num_teams']) ? (int) $data['num_teams'] : null;
+		$this->wildcard_placement = isset($data['wildcard_placement']) ? (int) $data['wildcard_placement'] : null;
+		$this->matches = $data['matches'] ?? [];
 	}
 
 	public function get_num_rounds(): int {
+		if (!$this->num_teams) {
+			return 0;
+		}
 		return ceil(log($this->num_teams, 2));
 	}
 

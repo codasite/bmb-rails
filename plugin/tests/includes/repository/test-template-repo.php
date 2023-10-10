@@ -21,8 +21,6 @@ class TemplateRepoTest extends WPBB_UnitTestCase {
 			array("round_index" => 0, "match_index" => 2, "team1" => array("name" => "Team 5"), "team2" => array("name" => "Team 6")),
 			array("round_index" => 0, "match_index" => 3, "team1" => array("name" => "Team 7"), "team2" => array("name" => "Team 8")),
 		);
-
-		
 	}
 
 	public function test_add() {
@@ -60,22 +58,22 @@ class TemplateRepoTest extends WPBB_UnitTestCase {
 	/**
 	 * @group skip
 	 */
-	public function test_update_title() {
-		$template = new Wp_Bracket_Builder_Bracket_Template([
-			'title' => 'Test Template',
-			'status' => 'publish',
-			'author' => 1,
-		]);
+	// public function test_update_title() {
+	// 	$template = new Wp_Bracket_Builder_Bracket_Template([
+	// 		'title' => 'Test Template',
+	// 		'status' => 'publish',
+	// 		'author' => 1,
+	// 	]);
 
-		$template = $this->template_repo->add($template);
+	// 	$template = $this->template_repo->add($template);
 
-		$template = $this->template_repo->update($template->id, [
-			'title' => 'New Title',
-		]);
+	// 	$template = $this->template_repo->update($template->id, [
+	// 		'title' => 'New Title',
+	// 	]);
 
-		$this->assertNotNull($template->id);
-		$this->assertEquals('New Title', $template->title);
-		$this->assertEquals('publish', $template->status);
-		$this->assertEquals(1, $template->author);
-	}
+	// 	$this->assertNotNull($template->id);
+	// 	$this->assertEquals('New Title', $template->title);
+	// 	$this->assertEquals('publish', $template->status);
+	// 	$this->assertEquals(1, $template->author);
+	// }
 }

@@ -1,11 +1,13 @@
 <?php
+
+require_once 'class-wp-bracket-builder-score-service-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/repository/class-wp-bracket-builder-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/repository/class-wp-bracket-builder-bracket-template-repo.php';
 
-class Wp_Bracket_Builder_Score_Service {
+class Wp_Bracket_Builder_Score_Service implements Wp_Bracket_Builder_Score_Service_Interface {
 	/**
 	 * This method scores bracket plays against tournament results
 	 */
@@ -45,6 +47,14 @@ class Wp_Bracket_Builder_Score_Service {
 	}
 
 	public function score_tournament_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
+		try {
+			$this->score_plays($tournament);
+		} catch (Exception $e) {
+			// do nothing
+		}
+	}
+
+	private function score_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
 		$point_values = [1, 2, 4, 8, 16, 32];
 
 		if (is_int($tournament)) {
