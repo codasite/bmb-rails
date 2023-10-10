@@ -25,16 +25,6 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base imple
 	public $tournament;
 
 	/**
-	 * @var string
-	 */
-	public $img_url;
-
-	/**
-	 * @var string
-	 */
-	public $html;
-
-	/**
 	 * @var Wp_Bracket_Builder_Match_Pick[]
 	 */
 	public $picks;
@@ -49,38 +39,25 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base imple
 	 */
 	public $accuracy_score;
 
-	public function __construct(
-		int $tournament_id,
-		int $author,
-		int $id = null,
-		string $title = '',
-		string $status = 'publish',
-		string $html = '',
-		string $img_url = '',
-		DateTimeImmutable|false $date = false,
-		DateTimeImmutable|false $date_gmt = false,
-		array $picks = [],
-		Wp_Bracket_Builder_Bracket_Tournament $tournament = null,
-		int $total_score = 0,
-		float $accuracy_score = 0.00,
-		string $slug = '',
-	) {
-		parent::__construct(
-			$id,
-			$title,
-			$author,
-			$status,
-			$date,
-			$date_gmt,
-			$slug,
-		);
-		$this->tournament_id = $tournament_id;
-		$this->tournament = $tournament;
-		$this->html = $html;
-		$this->img_url = $img_url;
-		$this->picks = $picks;
-		$this->total_score = $total_score;
-		$this->accuracy_score = $accuracy_score;
+	/**
+	 * @var int
+	 */
+	public $busted_id;
+
+	public function __construct(array $data = []) {
+		parent::__construct($data);
+
+		if (!isset($data['tournament_id'])) {
+			throw new Exception('tournament_id is required');
+		}
+
+		parent::__construct($data);
+		$this->tournament_id = $data['tournament_id'];
+		$this->tournament = $data['tournament'] ?? null;
+		$this->picks = $data['picks'] ?? [];
+		$this->total_score = $data['total_score'] ?? 0;
+		$this->accuracy_score = $data['accuracy_score'] ?? 0;
+		$this->busted_id = $data['busted_id'] ?? null;
 	}
 
 	static public function get_post_type(): string {
@@ -96,8 +73,6 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base imple
 
 	public function get_post_meta(): array {
 		return [
-			'html' => $this->html,
-			'img_url' => $this->img_url,
 			'bracket_tournament_id' => $this->tournament_id,
 		];
 	}
@@ -125,13 +100,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base imple
 		}
 		$data['picks'] = $picks;
 
-		$play = new Wp_Bracket_Builder_Bracket_Play($data['tournament_id'], $data['author']);
-
-		foreach ($data as $key => $value) {
-			if (property_exists($play, $key)) {
-				$play->$key = $value;
-			}
-		}
+		$play = new Wp_Bracket_Builder_Bracket_Play($data);
 
 		return $play;
 	}

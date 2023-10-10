@@ -120,19 +120,23 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		$template_post_id = $tournament_data['bracket_template_post_id'];
 		$template = $template_post_id && $fetch_template ? $this->template_repo->get($template_post_id, $fetch_matches) : null;
 		$results = $fetch_results ? $this->get_tournament_results($tournament_id) : [];
+		$author_id = (int) $tournament_post->post_author;
 
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament(
-			$template_post_id,
-			$tournament_post->ID,
-			$tournament_post->post_title,
-			$tournament_post->post_author,
-			$tournament_post->post_status,
-			get_post_datetime($tournament_post->ID, 'date', 'local'),
-			get_post_datetime($tournament_post->ID, 'date_gmt', 'gmt'),
-			$template,
-			$results,
-			$tournament_post->post_name,
-		);
+		$data = [
+			'bracket_template_id' => $template_post_id,
+			'id' => $tournament_post->ID,
+			'title' => $tournament_post->post_title,
+			'author' => $author_id,
+			'status' => $tournament_post->post_status,
+			'date' => get_post_datetime($tournament_post->ID, 'date', 'local'),
+			'date_gmt' => get_post_datetime($tournament_post->ID, 'date_gmt', 'gmt'),
+			'bracket_template' => $template,
+			'results' => $results,
+			'slug' => $tournament_post->post_name,
+			'author_display_name' => $author_id ? get_the_author_meta('display_name', $tournament_post->author_id) : '',
+		];
+
+		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data);
 
 		return $tournament;
 	}

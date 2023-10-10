@@ -38,6 +38,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
     bracketPlay: play,
     apparelUrl,
   } = props
+  console.log('play', play)
 
   useEffect(() => {
     const picks = play?.picks

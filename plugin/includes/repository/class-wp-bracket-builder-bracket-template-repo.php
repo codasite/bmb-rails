@@ -46,7 +46,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $template;
 	}
 
-	private function insert_template_data(array $data): int {
+	public function insert_template_data(array $data): int {
 		$table_name = $this->templates_table();
 		$this->wpdb->insert(
 			$table_name,
@@ -55,7 +55,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		return $this->wpdb->insert_id;
 	}
 
-	private function insert_matches(int $template_id, array $matches): void {
+	public function insert_matches(int $template_id, array $matches): void {
 		$table_name = $this->match_table();
 		foreach ($matches as $match) {
 			// Skip if match is null
@@ -96,21 +96,23 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		}
 
 		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
+		$author_id = (int) $template_post->post_author;
 
-		$template = new Wp_Bracket_Builder_Bracket_Template(
-			$template_post->ID,
-			$template_post->post_title,
-			$template_post->post_author,
-			$template_post->post_status,
-			get_post_meta($template_post->ID, 'num_teams', true),
-			get_post_meta($template_post->ID, 'wildcard_placement', true),
-			get_post_datetime($template_post->ID, 'date', 'local'),
-			get_post_datetime($template_post->ID, 'date_gmt', 'gmt'),
-			get_post_meta($template_post->ID, 'html', true),
-			get_post_meta($template_post->ID, 'img_url', true),
-			$matches,
-			$template_post->post_name,
-		);
+		$data = [
+			'id' => $template_post->ID,
+			'title' => $template_post->post_title,
+			'author' => $author_id,
+			'status' => $template_post->post_status,
+			'num_teams' => get_post_meta($template_post->ID, 'num_teams', true),
+			'wildcard_placement' => get_post_meta($template_post->ID, 'wildcard_placement', true),
+			'date' => get_post_datetime($template_post->ID, 'date', 'local'),
+			'date_gmt' => get_post_datetime($template_post->ID, 'date_gmt', 'gmt'),
+			'matches' => $matches,
+			'slug' => $template_post->post_name,
+			'author_display_name' => $author_id ? get_the_author_meta('display_name', $author_id) : '',
+		];
+
+		$template = new Wp_Bracket_Builder_Bracket_Template($data);
 
 		return $template;
 	}
@@ -130,19 +132,12 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		$array = $template->to_array();
 		$updated_array = array_merge($array, $data);
 
-		$template = Wp_Bracket_Builder_Bracket_Template::from_array_allow_null_fields($updated_array);
+		$template = Wp_Bracket_Builder_Bracket_Template::from_array($updated_array);
 
 		$post_id = $this->update_post($template);
 
 		if (is_wp_error($post_id)) {
 			return null;
-		}
-
-		$template_data = $this->get_template_data($post_id);
-		$template_id = $template_data['id'];
-
-		if ($template_id && $template->results) {
-			$this->update_results($template_id, $template->results);
 		}
 
 		# refresh from db
@@ -176,14 +171,11 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 	}
 
 
-	private function get_matches(int $template_id): array {
+	public function get_matches(int $template_id): array {
 		$table_name = $this->match_table();
 		$where = $template_id ? "WHERE bracket_template_id = $template_id" : '';
 		$match_results = $this->wpdb->get_results(
-			$this->wpdb->prepare(
-				"SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
-				$template_id
-			),
+			"SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
 			ARRAY_A
 		);
 		$matches = [];

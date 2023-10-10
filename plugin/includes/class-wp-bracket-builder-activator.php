@@ -35,7 +35,7 @@ class Wp_Bracket_Builder_Activator {
 		$plugin_prefix = 'bracket_builder_';
 		$prefix = $wp_prefix . $plugin_prefix;
 
-		self::delete_tables($prefix);
+		// self::delete_tables($prefix);
 
 		self::create_bracket_templates_table($prefix); // one-to-one table for bracket templates
 		self::create_tournaments_table($prefix); // one-to-one table for bracket tournaments
@@ -128,11 +128,15 @@ class Wp_Bracket_Builder_Activator {
 			accuracy_score float NOT NULL DEFAULT 0,
 			bracket_tournament_post_id bigint(20) UNSIGNED NOT NULL,
 			bracket_tournament_id bigint(20) UNSIGNED NOT NULL,
+			busted_play_post_id bigint(20) UNSIGNED,
+			busted_play_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
 			FOREIGN KEY (bracket_tournament_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (bracket_tournament_id) REFERENCES {$prefix}tournaments(id) ON DELETE CASCADE
+			FOREIGN KEY (bracket_tournament_id) REFERENCES {$prefix}tournaments(id) ON DELETE CASCADE,
+			FOREIGN KEY (busted_play_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE SET NULL,
+			FOREIGN KEY (busted_play_id) REFERENCES {$prefix}plays(id) ON DELETE SET NULL
 
 		) $charset_collate;";
 

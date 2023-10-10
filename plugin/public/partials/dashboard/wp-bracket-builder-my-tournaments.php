@@ -98,7 +98,7 @@ function archive_tournament_btn($endpoint, $tournament_id) {
 	ob_start();
 ?>
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
-		<input type="hidden" name="archive_tournament_id" value="<?php echo esc_attr($tournament_id) ?>"/>
+		<input type="hidden" name="archive_tournament_id" value="<?php echo esc_attr($tournament_id) ?>" />
 		<?php wp_nonce_field('archive_tournament_action', 'archive_tournament_nonce'); ?>
 		<?php echo icon_btn('../../assets/icons/archive.svg', 'submit'); ?>
 	</form>
@@ -150,34 +150,34 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 	$delete_link = get_permalink() . 'tournaments/';
 	$archive_link = get_permalink() . 'tournaments/';
 	ob_start();
-	?>
-  <div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
-      <span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
-      <div class="tw-flex tw-gap-4 tw-items-center">
+?>
+	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
+		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
+			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
+			<div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo get_tournament_tag($tournament->status); ?>
 				<?php echo file_get_contents(plugins_url('../../assets/icons/bar_chart.svg', __FILE__)); ?>
-        <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
-        <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
-      </div>
-    </div>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
-      <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
-      <div class="tw-flex tw-gap-10 tw-items-center">
+				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
+				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
+			</div>
+		</div>
+		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
+			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
+			<div class="tw-flex tw-gap-10 tw-items-center">
 				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-tournament-button", attributes: "data-tournament-id='$id' data-tournament-name='$name'"); ?>
 				<?php echo icon_btn('../../assets/icons/link.svg', 'submit', classes: "wpbb-share-tournament-button", attributes: "data-play-tournament-url=$play_link"); ?>
-        <!-- The duplicate button opens up the "Host a Tournamnet" modal -->
-        <!-- <?php echo duplicate_bracket_btn($play_link, $id); ?> -->
+				<!-- The duplicate button opens up the "Host a Tournamnet" modal -->
+				<!-- <?php echo duplicate_bracket_btn($play_link, $id); ?> -->
 				<?php echo archive_tournament_btn($archive_link, $id); ?>
-        <!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
+				<!-- The delete button submits a POST request to delete the tournament after confirming with the user-->
 				<?php echo delete_post_btn($delete_link, $id, 'delete_tournament_id', 'delete_tournament_action', 'delete_tournament_nonce'); ?>
-      </div>
-    </div>
-    <div class="tw-mt-10">
-			<?php echo $completed ? completed_tournament_buttons($tournament) : active_tournament_buttons($tournament); ?>
-    </div>
-  </div>
-	<?php
+			</div>
+		</div>
+		<div class="tw-mt-10">
+			<?php echo active_tournament_buttons($tournament); ?>
+		</div>
+	</div>
+<?php
 	return ob_get_clean();
 }
 
@@ -185,20 +185,19 @@ function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repos
 
 <div id="wpbb-my-tournaments-modals"></div>
 <div class="tw-flex tw-flex-col tw-gap-15">
-  <h1 class="tw-mb-8">My Tournaments</h1>
-  <button
-    class="wpbb-create-tournament-button tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white">
+	<h1 class="tw-mb-8">My Tournaments</h1>
+	<button class="wpbb-create-tournament-button tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
-    <span class="tw-font-700 tw-text-24">Create Tournament</span>
-  </button>
-  <div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
-    <!-- <?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?> -->
+		<span class="tw-font-700 tw-text-24">Create Tournament</span>
+	</button>
+	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
+		<!-- <?php echo wpbb_sort_button('All', get_permalink() . "tournaments/", $status === null); ?> -->
 		<?php echo wpbb_sort_button('Live', get_permalink() . "tournaments/?status=publish", $status === 'publish'); ?>
 		<?php echo wpbb_sort_button('Scored', get_permalink() . "tournaments/?status=complete", $status === 'complete'); ?>
 		<?php echo wpbb_sort_button('Archive', get_permalink() . "tournaments/?status=archive", $status === 'archive'); ?>
 		<?php echo wpbb_sort_button('Trash', get_permalink() . "tournaments/?status=trash", $status === 'trash'); ?>
-  </div>
-  <div class="tw-flex tw-flex-col tw-gap-15">
+	</div>
+	<div class="tw-flex tw-flex-col tw-gap-15">
 		<?php foreach ($tournaments as $tournament) {
 			echo tournament_list_item($tournament, $play_repo);
 		} ?>

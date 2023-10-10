@@ -8,23 +8,10 @@
     }
   ],
   "settings": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "tasks": {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "runOptions": {},
-        "label": "compose up dev",
-        "type": "shell",
-        "command": "docker",
-        "args": ["compose", "up", "--build"],
-        "problemMatcher": [],
-        "options": {
-          "cwd": "${workspaceFolder}"
-        },
-        "group": "build"
-      }
-    ]
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[php]": {
+      "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+    }
   }
 }

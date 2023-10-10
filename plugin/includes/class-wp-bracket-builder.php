@@ -244,7 +244,6 @@ class Wp_Bracket_Builder {
 		$this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
 		$this->loader->add_action('init', $public_hooks, 'add_roles');
 		$this->loader->add_filter('posts_clauses', $public_hooks, 'sort_plays', 10, 2);
-		// $this->loader->add_filter('template_redirect', $public_hooks, 'print_redirect', 10);
 
 		$this->loader->add_action('init', $shortcodes, 'add_shortcodes');
 	}

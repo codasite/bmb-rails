@@ -4,6 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-transactional-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-notification-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-email-service-interface.php';
 
 
@@ -28,18 +29,29 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	 * @var Wp_Bracket_Builder_score_service
 	 */
 	private $score_service;
-	/**
-	 * Constructor.
-	 */
 
-	private Wp_Bracket_Builder_Email_Service_Interface $email_service;
+	/**
+	 * @var Wp_Bracket_Builder_Email_Service_Interface
+	 */
+	private ?Wp_Bracket_Builder_Email_Service_Interface $email_service;
+
+	/**
+	 * @var Wp_Bracket_Builder_Notification_Service
+	 */
+	private ?Wp_Bracket_Builder_Notification_Service $notification_service;
 
 	public function __construct() {
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 		$this->score_service = new Wp_Bracket_Builder_Score_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
-		$this->email_service = new Wp_Bracket_Builder_Mailchimp_Transactional_Service(MAILCHIMP_API_KEY);
+		try {
+			$this->email_service = new Wp_Bracket_Builder_Mailchimp_Transactional_Service();
+			$this->notification_service = new Wp_Bracket_Builder_Notification_Service($this->email_service);
+		} catch (Exception $e) {
+			$this->email_service = null;
+			$this->notification_service = null;
+		}
 		// $this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
 	}
 
@@ -158,26 +170,12 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 		$updated = $this->tournament_repo->update($request->get_param('item_id'), $data);
 		$this->score_service->score_tournament_plays($updated);
 
-		// Get the email of the author of each play in the tournament
 		$tournament_id = $request->get_param('item_id');
-		$tag = strval($tournament_id);
-		$response = $this->tournament_repo->get_author_emails_by_tournament_id($tag);
-		foreach($response as $obj) {
-			$emails[] = $obj->author_email;
+		$notify = $request->get_param('notify');
+		if ($this->notification_service && $notify) {
+			$this->notification_service->send_tournament_result_email_update($tournament_id);
 		}
 
-		// Send each email individually
-		foreach ($emails as $email) {
-			$response = $this->email_service->send_message(
-				MAILCHIMP_FROM_EMAIL,
-				$email,
-				"",
-				"Tournament Update from Back My Bracket",
-				"Tournament Updated"
-			);
-			// print_r($response);
-		}
-		
 		return new WP_REST_Response($updated, 200);
 	}
 

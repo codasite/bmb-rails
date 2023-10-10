@@ -143,7 +143,7 @@ class Wp_Bracket_Builder_Admin {
 
 	public function add_capabilities() {
 		$role = get_role('administrator');
-		$role->add_cap('manage_bracket_builder');
+		$role->add_cap('wpbb_create_tournament');
 	}
 }
 ?>
