@@ -13,6 +13,7 @@ class BracketTournamentTest extends WPBB_UnitTestCase {
 			'title' => 'Test Tournament',
 			'status' => 'publish',
 			'author' => 1,
+			'date' => 'test date',
 		];
 		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($args);
 		$this->assertInstanceOf(Wp_Bracket_Builder_Bracket_Tournament::class, $tournament);
@@ -24,6 +25,7 @@ class BracketTournamentTest extends WPBB_UnitTestCase {
 			"status" => "publish",
 			"author" => 1,
 			"bracket_template_id" => 684,
+			"date" => "test date",
 		];
 
 		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($args);

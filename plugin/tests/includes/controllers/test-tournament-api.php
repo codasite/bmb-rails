@@ -26,6 +26,7 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 			'status' => 'publish',
 			'author' => 1,
 			'bracket_template_id' => $template->id,
+			'date' => 'test date',
 		];
 
 		$request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/tournaments');
@@ -40,6 +41,7 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 		$this->assertEquals('Test Tournament', $response->get_data()->title);
 		$this->assertEquals('publish', $response->get_data()->status);
 		$this->assertEquals(1, $response->get_data()->author);
+		$this->assertEquals('test date', $response->get_data()->date);
 
 		$tournament = $this->tournament_repo->get($response->get_data()->id);
 		$this->assertNotNull($tournament);
