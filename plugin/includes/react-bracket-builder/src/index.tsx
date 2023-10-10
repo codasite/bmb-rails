@@ -14,7 +14,9 @@ import { WpbbAjaxObj } from './wpbbAjaxObj'
 import { EditTournamentModal } from './modals/dashboard/tournaments/EditTournamentModal'
 import ShareTournamentModal from './modals/dashboard/tournaments/ShareTournamentModal'
 
-require('./wp-bracket-builder-public.js')
+declare var wp, tailwind: any
+tailwind.config = require('../tailwind.config.js')
+tailwind.config.corePlugins.preflight = typeof wp === 'undefined'
 // Dynamically render components to avoid loading unused modules
 const Settings = React.lazy(
   () => import('./brackets/AdminTemplateBuilder/Settings')
