@@ -2,11 +2,26 @@
 <?php
 
 require_once WPBB_PLUGIN_DIR . 'includes/service/class-wp-bracket-builder-mailchimp-email-service.php';
+require_once WPBB_PLUGIN_DIR . 'tests/mock/MailchimpApiClientMock.php';
 require_once WPBB_PLUGIN_DIR . 'vendor/autoload.php';
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
 	public function test_client_send_is_called() {
-		$client = $this->createMock(MailchimpTransactional\ApiClient::class);
+
+		$messagesMock = $this->getMockBuilder(stdClass::class) // Use stdClass just as a generic object.
+			->setMethods(['send']) // Mock the 'send' method.
+			->getMock();
+
+		$messagesMock->expects($this->once())
+			->method('send')
+			->willReturn([
+				'status' => 'sent',
+				'id' => '123',
+			]);
+
+		$client = $this->createMock(MailchimpApiClientMock::class);
+
+		$client->messages = $messagesMock;
 
 		$mailchimp = new Wp_Bracket_Builder_Mailchimp_Email_Service([
 			'api_client' => $client,
