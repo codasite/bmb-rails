@@ -28,10 +28,10 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 
 	public function __construct(array $data = []) {
 		parent::__construct($data);
-		$this->bracket_template_id = isset($data['bracket_template_id']) ? $data['bracket_template_id'] : null;
-		$this->bracket_template = isset($data['bracket_template']) ? $data['bracket_template'] : null;
-		$this->results = isset($data['results']) ? $data['results'] : [];
-		$this->date = isset($data['date']) ? $data['date'] : [];
+		$this->date = $data['date'] ?? null;
+		$this->bracket_template_id = $data['bracket_template_id'] ?? null;
+		$this->bracket_template = $data['bracket_template'] ?? null;
+		$this->results = $data['results'] ?? [];
 	}
 
 	public function get_winning_team(): ?Wp_Bracket_Builder_Team {

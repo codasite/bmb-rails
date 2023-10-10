@@ -72,7 +72,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 					'bracket_template_id' => $template_id,
 					'round_index' => $match->round_index,
 					'match_index' => $match->match_index,
-					'team1_id' => $team1->id,
+					'team1_id' => $team1?->id,
 					'team2_id' => $team2->id,
 				]
 			);

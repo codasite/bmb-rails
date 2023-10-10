@@ -46,13 +46,13 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 	public $author_display_name;
 
 	public function __construct(array $data) {
-		$this->id = isset($data['id']) ? $data['id'] : null;
-		$this->title = isset($data['title']) ? $data['title'] : '';
-		$this->author = isset($data['author']) ? $data['author'] : null;
-		$this->status = isset($data['status']) ? $data['status'] : 'publish';
-		$this->published_date = isset($data['published_date']) ? $data['published_date'] : false;
-		$this->slug = isset($data['slug']) ? $data['slug'] : '';
-		$this->author_display_name = isset($data['author_display_name']) ? $data['author_display_name'] : '';
+		$this->id = $data['id'] ?? null;
+		$this->title = $data['title'] ?? '';
+		$this->author = $data['author'] ?? null;
+		$this->status = $data['status'] ?? 'publish';
+		$this->published_date = $data['published_date'] ?? false;
+		$this->slug = $data['slug'] ?? '';
+		$this->author_display_name = $data['author_display_name'] ?? '';
 	}
 
 	abstract static public function get_post_type(): string;

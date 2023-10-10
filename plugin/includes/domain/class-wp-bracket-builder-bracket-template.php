@@ -39,13 +39,11 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
 	public $matches;
 
 	public function __construct(array $data = []) {
-
 		parent::__construct($data);
-		$this->date = isset($data['date']) ? $data['date'] : null;
-		$this->num_teams = isset($data['num_teams']) ? $data['num_teams'] : null;
-		$this->wildcard_placement = isset($data['wildcard_placement']) ? $data['wildcard_placement'] : null;
-		$this->matches = isset($data['matches']) ? $data['matches'] : [];
-
+		$this->date = $data['date'] ?? null;
+		$this->num_teams = $data['num_teams'] ?? null;
+		$this->wildcard_placement = $data['wildcard_placement'] ?? null;
+		$this->matches = $data['matches'] ?? [];
 	}
 
 	public function get_num_rounds(): int {
