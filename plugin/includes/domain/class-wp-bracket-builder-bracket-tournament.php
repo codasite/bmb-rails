@@ -29,7 +29,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	public function __construct(array $data = []) {
 		parent::__construct($data);
 		$this->date = $data['date'] ?? null;
-		$this->bracket_template_id = $data['bracket_template_id'] ?? null;
+		$this->bracket_template_id = (int)($data['bracket_template_id'] ?? null);
 		$this->bracket_template = $data['bracket_template'] ?? null;
 		$this->results = $data['results'] ?? [];
 	}
