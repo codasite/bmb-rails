@@ -63,7 +63,6 @@ class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Noti
 
         foreach ($user_picks as $pick) {
             $to_email = $pick->email;
-            $to_email = 'test@wstrategies.co';
             $to_name = $pick->name;
             $subject = 'Back My Bracket Notification';
             $user_bracket_pick = $team_repo->get_team($pick->winning_team_id);
