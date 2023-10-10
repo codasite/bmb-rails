@@ -51,7 +51,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
 
   const [bracketTitle, setBracketTitle] = useState('')
   const [bracketDate, setBracketDate] = useState('')
-  const [notifyParticipants, setNotifyParticipants] = useState(false)
+  const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [tournamentId, setTournamentId] = useState(0)
 
   useEffect(() => {
@@ -86,6 +86,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
       const data = {
         results: picks,
         status: complete ? 'complete' : undefined,
+        updateNotifyParticipants: notifyParticipants,
       }
       bracketApi
         .updateTournament(tournamentId, data)
@@ -134,7 +135,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
                 <ActionButton variant="big-yellow" onClick={handleUpdatePicks}>
                   {complete ? 'Complete Tournament' : 'Update Picks'}
                 </ActionButton>
-                <div className="tw-flex tw-gap-20 tw-items-center tw-self-center tw-hidden">
+                <div className="tw-flex tw-gap-20 tw-items-center tw-self-center">
                   <CustomCheckbox
                     id="notify-participants-check"
                     checked={notifyParticipants}

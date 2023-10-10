@@ -47,6 +47,9 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
 	}
 
 	public function get_num_rounds(): int {
+		if (!$this->num_teams) {
+			return 0;
+		}
 		return ceil(log($this->num_teams, 2));
 	}
 

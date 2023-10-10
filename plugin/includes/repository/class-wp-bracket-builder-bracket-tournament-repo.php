@@ -50,15 +50,15 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 				$template = $this->template_repo->add($template);
 				$template_post_id = $template->id;
 			} else {
-				throw new Exception('bracket_template_id or bracket_template is required');
+				return null;
 			}
 		}
 
 		$template_data = $this->template_repo->get_template_data($template_post_id);
-		$template_id = $template_data['id'];
+		$template_id = $template_data['id'] ?? null;
 
 		if (!$template_id) {
-			throw new Exception('Bracket template data id not found');
+			return null;
 		}
 
 		$tournament_id = $this->insert_tournament_data([
@@ -75,7 +75,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $this->get($post_id);
 	}
 
-	private function insert_tournament_data(array $data): int {
+	public function insert_tournament_data(array $data): int {
 		$table_name = $this->tournament_table();
 		$this->wpdb->insert(
 			$table_name,
@@ -84,13 +84,13 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 		return $this->wpdb->insert_id;
 	}
 
-	private function insert_results(int $tournament_id, array $results): void {
+	public function insert_results(int $tournament_id, array $results): void {
 		foreach ($results as $result) {
 			$this->insert_result($tournament_id, $result);
 		}
 	}
 
-	private function insert_result(int $tournament_id, Wp_Bracket_Builder_Match_Pick $pick): void {
+	public function insert_result(int $tournament_id, Wp_Bracket_Builder_Match_Pick $pick): void {
 		$table_name = $this->results_table();
 		$this->wpdb->insert(
 			$table_name,
@@ -104,7 +104,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	}
 
 
-	public function get(int|WP_Post|null $post = null, bool $fetch_results = true, bool $fetch_template = true, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Tournament {
+	public function get(int|WP_Post|null|Wp_Bracket_Builder_Bracket_Tournament $post = null, bool $fetch_results = true, bool $fetch_template = true, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Tournament {
+		if ($post instanceof Wp_Bracket_Builder_Bracket_Tournament) {
+			$post = $post->id;
+		}
+
 		$tournament_post = get_post($post);
 
 		if (!$tournament_post || $tournament_post->post_type !== Wp_Bracket_Builder_Bracket_Tournament::get_post_type()) {
@@ -321,7 +325,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 
 	function get_author_emails_by_tournament_id($tournament_post_id) {
 		global $wpdb;
-	
+
 		$query = "
 			SELECT DISTINCT u.ID AS author_id, u.user_email AS author_email
 			FROM {$wpdb->prefix}bracket_builder_plays p
@@ -330,9 +334,9 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 			JOIN {$wpdb->prefix}users u ON po.post_author = u.ID
 			WHERE t.ID = %d;
 		";
-	
+
 		$results = $wpdb->get_results($wpdb->prepare($query, $tournament_post_id));
-	
+
 		return $results;
 	}
 }
