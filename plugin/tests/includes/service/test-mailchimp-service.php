@@ -9,7 +9,7 @@ class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
 	public function test_client_send_is_called() {
 
 		$messagesMock = $this->getMockBuilder(stdClass::class) // Use stdClass just as a generic object.
-			->setMethods(['send']) // Mock the 'send' method.
+			->addMethods(['send']) // Mock the 'send' method.
 			->getMock();
 
 		$messagesMock->expects($this->once())

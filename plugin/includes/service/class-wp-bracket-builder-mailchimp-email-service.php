@@ -10,10 +10,8 @@ class Wp_Bracket_Builder_Mailchimp_Email_Service  implements Wp_Bracket_Builder_
     public $from_email;
 
     public function __construct($args = []) {
-        // $api_key = $args['api_key'] ?? defined('MAILCHIMP_API_KEY') ? MAILCHIMP_API_KEY : null;
-        // $this->from_email = $args['from_email'] ?? defined('MAILCHIMP_FROM_EMAIL') ? MAILCHIMP_FROM_EMAIL : null;
-        $api_key = $args['api_key'] ?? null;
-        $this->from_email = $args['from_email'] ?? null;
+        $api_key = $args['api_key'] ?? (defined('MAILCHIMP_API_KEY') ? MAILCHIMP_API_KEY : null);
+        $this->from_email = $args['from_email'] ?? (defined('MAILCHIMP_FROM_EMAIL') ? MAILCHIMP_FROM_EMAIL : null);
         if (!$api_key || !$this->from_email) {
             throw new Exception('API Key and From Email must be defined');
         }

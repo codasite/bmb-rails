@@ -13,14 +13,9 @@ class Wp_Bracket_Builder_Notification_Service implements Wp_Bracket_Builder_Noti
 
     protected Wp_Bracket_Builder_Bracket_Tournament_Repository $tournament_repo;
 
-    public function __construct() {
-        $this->email_service = new Wp_Bracket_Builder_Mailchimp_Email_Service(
-            array(
-                'api_key' => MAILCHIMP_API_KEY,
-                'from_email' => MAILCHIMP_FROM_EMAIL,
-            )
-        );
-        $this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+    public function __construct($args = []) {
+        $this->email_service = $args['email_service'] ?? new Wp_Bracket_Builder_Mailchimp_Email_Service();
+        $this->tournament_repo = $args['tournament_repo'] ?? new Wp_Bracket_Builder_Bracket_Tournament_Repository();
     }
 
     public function get_last_round_picks_for_tournament($tournament_id, $final_round_pick) {
