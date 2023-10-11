@@ -110,7 +110,8 @@ export interface TournamentRes extends PostBase {
   bracketTemplate?: TemplateRes
 }
 export interface PlayReq {
-  tournamentId: number
+  tournamentId?: number
+  templateId?: number
   title?: string
   status?: string
   picks: MatchPicks[]

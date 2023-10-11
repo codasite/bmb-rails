@@ -21,6 +21,11 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 	private $tournament_repo;
 
 	/**
+	 * @var Wpbb_BracketTemplateRepo
+	 */
+	private $template_repo;
+
+	/**
 	 * @var Wpbb_BracketTeamRepo
 	 */
 	private $team_repo;
@@ -35,6 +40,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		$this->wpdb = $wpdb;
 		$this->tournament_repo = new Wpbb_BracketTournamentRepo();
 		$this->team_repo = new Wpbb_BracketTeamRepo();
+		$this->template_repo = new Wpbb_BracketTemplateRepo();
 		$this->utils = new Wpbb_Utils();
 		parent::__construct();
 	}
@@ -54,18 +60,21 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		}
 
 		$play_data = $this->get_play_data($play_post);
-		$play_id = $play_data['id'];
-		if (!$play_id) {
+		if (!isset($play_data['id'])) {
 			return null;
 		}
+		$play_id = $play_data['id'];
 		$tournament_post_id = $play_data['bracket_tournament_post_id'];
 		$busted_id = $play_data['busted_play_post_id'];
 		$tournament = $tournament_post_id && $fetch_tournament ? $this->tournament_repo->get($tournament_post_id, $fetch_results, $fetch_template, $fetch_matches) : null;
+		$template_post_id = $play_data['bracket_template_post_id'];
+		$template = $template_post_id && $fetch_template ? $this->template_repo->get($template_post_id, $fetch_matches) : null;
 		$picks = $fetch_picks && $play_id ? $this->get_picks($play_id) : [];
-		$author_id = (int) $play_post->post_author;
+		$author_id = (int)$play_post->post_author;
 
 		$data = [
 			'tournament_id' => $tournament_post_id,
+			'template_id' => $template_post_id,
 			'author' => $author_id,
 			'id' => $play_post->ID,
 			'title' => $play_post->post_title,
@@ -73,6 +82,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 			'published_date' => get_post_datetime($play_post->ID, 'date', 'gmt'),
 			'picks' => $picks,
 			'tournament' => $tournament,
+			'template' => $template,
 			'total_score' => $play_data['total_score'] ?? null,
 			'accuracy_score' => $play_data['accuracy_score'] ?? null,
 			'slug' => $play_post->post_name,
@@ -80,9 +90,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 			'busted_id' => $busted_id,
 		];
 
-		$play = new Wpbb_BracketPlay($data);
-
-		return $play;
+		return new Wpbb_BracketPlay($data);
 	}
 
 	private function get_picks(int $play_id): array {
@@ -216,6 +224,9 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		return $plays;
 	}
 
+	/**
+	 * @throws Wpbb_ValidationException
+	 */
 	public function add(Wpbb_BracketPlay $play): ?Wpbb_BracketPlay {
 		$post_id = $this->insert_post($play, true, true);
 
@@ -224,16 +235,18 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		}
 
 		$tournament_post_id = $play->tournament_id;
+		$template_post_id = $play->template_id;
 
-		if (!$tournament_post_id) {
-			throw new Exception('tournament_post_id is required');
+		if (!($tournament_post_id || $template_post_id)) {
+			throw new Wpbb_ValidationException('tournament_id or template_id is required');
 		}
 
-		$tournament = $this->tournament_repo->get_tournament_data($tournament_post_id);
-		$tournament_id = $tournament['id'] ?? null;
-
-		if (!$tournament_id) {
-			throw new Exception('tournament_id not found');
+		if ($tournament_post_id) {
+			$tournament = $this->tournament_repo->get_tournament_data($tournament_post_id);
+			$tournament_id = $tournament['id'] ?? null;
+			if (!$tournament_id) {
+				throw new Exception('tournament_id not found');
+			}
 		}
 
 		$busted_post_id = $play->busted_id;
@@ -244,8 +257,9 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 
 		$play_id = $this->insert_play_data([
 			'post_id' => $post_id,
-			'bracket_tournament_post_id' => $play->tournament_id,
-			'bracket_tournament_id' => $tournament_id,
+			'bracket_tournament_post_id' => $tournament_post_id ?? null,
+			'bracket_tournament_id' => $tournament_id ?? null,
+			'bracket_template_post_id' => $template_post_id ?? null,
 			'busted_play_post_id' => $busted_post_id ?? null,
 			'busted_play_id' => $busted_play_id ?? null,
 		]);
