@@ -38,10 +38,10 @@ abstract class Wp_Bracket_Builder_Custom_Post_Repository_Base {
 			return $post_id;
 		}
 
-		// // update post metadata
-		// foreach ($post->get_update_post_meta() as $key => $value) {
-		// 	update_post_meta($post_id, $key, $value);
-		// }
+		// update post metadata
+		foreach ($post->get_update_post_meta() as $key => $value) {
+			update_post_meta($post_id, $key, $value);
+		}
 		return $post_id;
 	}
 

@@ -21,6 +21,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase {
 			array("round_index" => 0, "match_index" => 2, "team1" => array("name" => "Team 5"), "team2" => array("name" => "Team 6")),
 			array("round_index" => 0, "match_index" => 3, "team1" => array("name" => "Team 7"), "team2" => array("name" => "Team 8")),
 		);
+		$this->assertTrue(true);
 	}
 
 	public function test_add() {

@@ -26,17 +26,10 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 
 	/**
 	 * @var DateTimeImmutable|false
-	 * 
-	 * Date the bracket was created
+	 *
+	 * Date the bracket was published in UTC
 	 */
-	public $date;
-
-	/**
-	 * @var DateTimeImmutable|false
-	 * 
-	 * Date the bracket was created in GMT
-	 */
-	public $date_gmt;
+	public $published_date;
 
 	/**
 	 * @var string
@@ -53,12 +46,11 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 	public $author_display_name;
 
 	public function __construct(array $data) {
-		$this->id = isset($data['id']) ? (int) $data['id'] : 0;
+		$this->id = $data['id'] ?? null;
 		$this->title = $data['title'] ?? '';
-		$this->author = $data['author'] ?? 0;
+		$this->author = $data['author'] ?? null;
 		$this->status = $data['status'] ?? 'publish';
-		$this->date = $data['date'] ?? false;
-		$this->date_gmt = $data['date_gmt'] ?? false;
+		$this->published_date = $data['published_date'] ?? false;
 		$this->slug = $data['slug'] ?? '';
 		$this->author_display_name = $data['author_display_name'] ?? '';
 	}
@@ -93,8 +85,7 @@ abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom
 			'title' => $this->title,
 			'author' => $this->author,
 			'status' => $this->status,
-			'date' => $this->date,
-			'date_gmt' => $this->date_gmt,
+			'published_date' => $this->published_date,
 			'slug' => $this->slug,
 			'author_display_name' => $this->author_display_name,
 		];

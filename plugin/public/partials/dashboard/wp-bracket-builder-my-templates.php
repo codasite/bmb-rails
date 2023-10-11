@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])
 	}
 }
 
-function host_tournament_btn(string $id) {
+function host_tournament_btn(string $id, string $date) {
 	ob_start();
 	?>
-  <button data-template-id="<?php echo $id ?>"
+  <button data-template-id="<?php echo $id ?>" data-template-date="<?php echo $date ?>"
           class="wpbb-host-tournament-button tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-blue tw-font-sans tw-text-white tw-uppercase tw-cursor-pointer">
 		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
     <span class="tw-font-700">Host Tournament</span>
@@ -24,7 +24,8 @@ function host_tournament_btn(string $id) {
 }
 
 function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
-	$name = $template->title;
+	$title = $template->title;
+	$date = $template->date;
 	$id = $template->id;
 	$num_teams = $template->num_teams;
 	// This link leads to the Create Template page. It passes in the original template_id as a query param
@@ -38,16 +39,16 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
   <div class="tw-border-2 tw-border-white/15 tw-border-solid tw-p-30 tw-flex tw-flex-col tw-gap-10 tw-rounded-16">
     <span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
     <div class="tw-flex tw-gap-10 tw-items-center tw-justify-between md:tw-justify-start">
-      <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
+      <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($title) ?></h2>
       <div class="tw-flex tw-gap-10">
-				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-template-button", attributes: "data-template-id='$id' data-template-name='$name'"); ?>
+				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-template-button", attributes: "data-template-id='$id' data-template-title='$title' data-template-date='$date'"); ?>
 				<?php echo duplicate_bracket_btn($duplicate_link, $id); ?>
 				<?php echo delete_post_btn($delete_link, $id, 'delete_template_id', 'delete_template_action', 'delete_template_nonce'); ?>
       </div>
     </div>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 			<?php echo add_to_apparel_btn($template_play_link); ?>
-			<?php echo host_tournament_btn($id); ?>
+			<?php echo host_tournament_btn($id, $date); ?>
     </div>
   </div>
 	<?php

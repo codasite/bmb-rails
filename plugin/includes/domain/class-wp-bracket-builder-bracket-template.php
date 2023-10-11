@@ -3,7 +3,12 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match.php';
 
-class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
+class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
+{
+	/**
+	 * @var string
+	 */
+	public $date;
 	/**
 	 * @var int
 	 */
@@ -34,10 +39,10 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 	public $matches;
 
 	public function __construct(array $data = []) {
-
 		parent::__construct($data);
-		$this->num_teams = isset($data['num_teams']) ? (int) $data['num_teams'] : null;
-		$this->wildcard_placement = isset($data['wildcard_placement']) ? (int) $data['wildcard_placement'] : null;
+		$this->date = $data['date'] ?? null;
+		$this->num_teams = (int)($data['num_teams'] ?? null);
+		$this->wildcard_placement = (int)($data['wildcard_placement'] ?? null);
 		$this->matches = $data['matches'] ?? [];
 	}
 
@@ -52,16 +57,18 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		return 'bracket_template';
 	}
 
-
 	public function get_post_meta(): array {
 		return [
 			'num_teams' => $this->num_teams,
 			'wildcard_placement' => $this->wildcard_placement,
+			'date' => $this->date,
 		];
 	}
 
 	public function get_update_post_meta(): array {
-		return [];
+		return [
+			'date' => $this->date,
+		];
 	}
 
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
@@ -71,6 +78,10 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 
 		if (!isset($data['wildcard_placement'])) {
 			throw new Exception('wildcard_placement is required');
+		}
+
+		if (!isset($data['date'])) {
+			throw new Exception('date is required');
 		}
 
 		if (!isset($data['author'])) {
@@ -101,9 +112,7 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 		$template = parent::to_array();
 		$template['num_teams'] = $this->num_teams;
 		$template['wildcard_placement'] = $this->wildcard_placement;
-		$template['author'] = $this->author;
-		$template['title'] = $this->title;
-
+		$template['date'] = $this->date;
 		if ($this->matches) {
 			$matches = [];
 			foreach ($this->matches as $match) {
@@ -111,7 +120,6 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base {
 			}
 			$template['matches'] = $matches;
 		}
-
 		return $template;
 	}
 }

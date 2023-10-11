@@ -6,6 +6,7 @@ import addClickHandlers from '../../addClickHandlers'
 
 export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
   const [templateId, setTemplateId] = useState<number | null>(null)
+  const [templateDate, setTemplateDate] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
   const [hasError, setHasError] = useState(false)
@@ -14,6 +15,7 @@ export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
     buttonClassName: 'wpbb-host-tournament-button',
     onButtonClick: (b) => {
       setTemplateId(parseInt(b.dataset.templateId))
+      setTemplateDate(b.dataset.templateDate)
       setShow(true)
     },
   })
@@ -27,6 +29,7 @@ export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
       .createTournament({
         bracketTemplateId: templateId,
         title: input,
+        date: templateDate,
       })
       .then((res) => {
         window.location.href = props.tournamentsUrl

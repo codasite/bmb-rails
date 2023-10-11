@@ -72,7 +72,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 					'bracket_template_id' => $template_id,
 					'round_index' => $match->round_index,
 					'match_index' => $match->match_index,
-					'team1_id' => $team1->id,
+					'team1_id' => $team1?->id,
 					'team2_id' => $team2->id,
 				]
 			);
@@ -93,49 +93,41 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 		}
 
 		$template_data = $this->get_template_data($template_post);
-		$template_id = $template_data['id'];
-
-		if (!$template_id) {
+		if (!isset($template_data['id'])) {
 			return null;
 		}
+		$template_id = $template_data['id'];
 
 		if (!current_user_can('administrator') && intval(get_current_user_id()) !== intval($template_post->post_author)) {
 			return null;
 		}
 	
 		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
-		$author_id = (int) $template_post->post_author;
+		$author_id = (int)$template_post->post_author;
 
 		$data = [
 			'id' => $template_post->ID,
 			'title' => $template_post->post_title,
 			'author' => $author_id,
 			'status' => $template_post->post_status,
+			'date' => get_post_meta($template_post->ID, 'date', true),
 			'num_teams' => get_post_meta($template_post->ID, 'num_teams', true),
 			'wildcard_placement' => get_post_meta($template_post->ID, 'wildcard_placement', true),
-			'date' => get_post_datetime($template_post->ID, 'date', 'local'),
-			'date_gmt' => get_post_datetime($template_post->ID, 'date_gmt', 'gmt'),
+			'published_date' => get_post_datetime($template_post->ID, 'date', 'gmt'),
 			'matches' => $matches,
 			'slug' => $template_post->post_name,
 			'author_display_name' => $author_id ? get_the_author_meta('display_name', $author_id) : '',
 		];
 
-		$template = new Wp_Bracket_Builder_Bracket_Template($data);
-
-		return $template;
+		return new Wp_Bracket_Builder_Bracket_Template($data);
 	}
 
 	public function update(Wp_Bracket_Builder_Bracket_Template|int|null $template, array|null $data = null): ?Wp_Bracket_Builder_Bracket_Template {
 		if (!$template || !$data) {
 			return null;
 		}
-
 		if (!($template instanceof Wp_Bracket_Builder_Bracket_Template)) {
 			$template = $this->get($template);
-		}
-
-		if (!$template) {
-			return null;
 		}
 		$array = $template->to_array();
 		$updated_array = array_merge($array, $data);
