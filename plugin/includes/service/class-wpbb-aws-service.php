@@ -136,7 +136,7 @@ class Wpbb_S3_Service
 	}
 }
 
-class Wp_Bracket_Builder_Lambda_Service {
+class Wpbb_Lambda_Service {
 	protected LambdaClient $lambdaClient;
 
 	public function __construct(

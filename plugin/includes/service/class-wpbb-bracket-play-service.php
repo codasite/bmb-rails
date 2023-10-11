@@ -12,18 +12,18 @@ class Wpbb_Bracket_Pick_Service
 	private $utils;
 
 	/**
-	 * @var Wp_Bracket_Builder_Lambda_Service
+	 * @var Wpbb_Lambda_Service
 	 */
 	private $lamda_service;
 
 	// /**
-	//  * @var Wp_Bracket_Builder_Bracket_Pick
+	//  * @var Wpbb_Bracket_Pick
 	//  */
 	// private $bracket_pick;
 
 	public function __construct($bracket_pick = null) {
 		$this->utils = new Wpbb_Utils();
-		$this->lamda_service = new Wp_Bracket_Builder_Lambda_Service();
+		$this->lamda_service = new Wpbb_Lambda_Service();
 		// $this->bracket_pick = $bracket_pick;
 	}
 

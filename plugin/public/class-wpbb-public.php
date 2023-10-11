@@ -72,7 +72,7 @@ class Wpbb_Public
 		$this->utils = new Wpbb_Utils();
 		$this->bracket_config_repo = new Wpbb_BracketConfigRepo();
 		$this->s3 = new Wpbb_S3_Service();
-		$this->lambda_service = new Wp_Bracket_Builder_Lambda_Service();
+		$this->lambda_service = new Wpbb_Lambda_Service();
 		$this->pdf_service = new Wpbb_PDF_Service();
 		$this->tournament_repo = new Wpbb_BracketTournamentRepo();
 	}

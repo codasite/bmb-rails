@@ -69,7 +69,7 @@ class Wpbb_ConvertApi extends WP_REST_Controller
 			return new WP_Error('error', __('Bracket placement is required', 'text-domain'), array('status' => 400));
 		}
 
-		$lambda_service = new Wp_Bracket_Builder_Lambda_Service();
+		$lambda_service = new Wpbb_Lambda_Service();
 		$res = $lambda_service->html_to_image($body);
 
 		if (!is_wp_error($res) && isset($res['imageUrl'])) {

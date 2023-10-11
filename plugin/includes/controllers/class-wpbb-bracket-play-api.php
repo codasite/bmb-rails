@@ -41,10 +41,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
 	/**
 	 * Constructor.
 	 */
-	// public function __construct(Wp_Bracket_Builder_Bracket_Repository_Interface $play_repo = null) {
 	public function __construct() {
-		// echo $play_repo;
-		// $this->play_repo = $play_repo != null ? $play_repo : new Wp_Bracket_Builder_Bracket_Repository();
 		$this->utils = new Wpbb_Utils();
 		$this->play_repo = new Wpbb_BracketPlayRepo();
 		$this->image_generator = new Wpbb_Local_Node_Generator();

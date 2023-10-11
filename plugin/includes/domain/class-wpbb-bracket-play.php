@@ -5,12 +5,6 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-tou
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-match-pick.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
-/**
- * This class creates a bracket pick object by submitting
- */
-// class Wp_Bracket_Builder_Bracket_Pick_Factory extends Wp_Bracket_Builder_Bracket_Base {
-
-
 class Wpbb_BracketPlay extends Wpbb_PostBase
 {
 

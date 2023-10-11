@@ -7,12 +7,12 @@ class Wpbb_Local_Node_Generator implements Wpbb_PostImageGeneratorInterface
 {
 
 	/**
-	 * @param Wp_Bracket_Builder_Object_Storage_Interface
+	 * @param Wpbb_Object_Storage_Interface
 	 */
 	private $storage_service;
 
 	public function __construct() {
-		$this->storage_service = new Wp_Bracket_Builder_S3_Storage();
+		$this->storage_service = new Wpbb_S3_Storage();
 	}
 
 	/**

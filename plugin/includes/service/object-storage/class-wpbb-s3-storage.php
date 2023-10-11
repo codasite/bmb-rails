@@ -1,6 +1,6 @@
 <?php
 require_once 'class-wpbb-object-storage-interface.php';
-class Wp_Bracket_Builder_S3_Storage {
+class Wpbb_S3_Storage {
 
 	/**
 	 * Upload a file to the object storage.

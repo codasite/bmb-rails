@@ -301,8 +301,8 @@ class Wp_Bracket_Builder {
 				'has_archive' => true,
 				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
 				'show_ui' => true,
-				'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wp_Bracket_Builder_Bracket_Api
-				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wpbb_Bracket_Api
+				// 'rest_controller_class' => 'Wpbb_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
 				'rewrite' => array('slug' => 'templates'),
@@ -322,7 +322,7 @@ class Wp_Bracket_Builder {
 				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
 				'show_ui' => true,
 				'show_in_rest' => true,
-				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => 'Wpbb_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
 				'rewrite' => array('slug' => 'plays'),
@@ -341,7 +341,7 @@ class Wp_Bracket_Builder {
 				'supports' => array('title', 'author', 'thumbnail', 'custom-fields'),
 				'show_ui' => true,
 				'show_in_rest' => true,
-				// 'rest_controller_class' => 'Wp_Bracket_Builder_Bracket_Api',
+				// 'rest_controller_class' => 'Wpbb_Bracket_Api',
 				// 'rest_controller_class' => array($bracket_api, 'register_routes'),
 				'taxonomies' => array('post_tag'),
 				'rewrite' => array('slug' => 'tournaments'),

@@ -5,7 +5,7 @@
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-tournament-api.php';
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
 
-// class Test_Wp_Bracket_Builder_Score_Service extends WP_UnitTestCase {
+// class Test_Wpbb_Score_Service extends WP_UnitTestCase {
 
 //     public static function set_up_before_class() {
 //         // Set up DB tables
