@@ -26,7 +26,6 @@ export class ShuffleTeam {
     while (currentIndex != 0) {
       randomIndex = Math.floor(Math.random() * currentIndex)
       currentIndex--
-
       ;[teams[currentIndex], teams[randomIndex]] = [
         teams[randomIndex],
         teams[currentIndex],

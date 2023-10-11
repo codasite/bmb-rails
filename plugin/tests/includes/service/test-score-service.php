@@ -31,7 +31,7 @@
 //         $request->set_query_params($tournament_14);
 //         $response = $tournament_api->create_item($request);
 //         $tournament = $response->get_data();
-        
+
 //         // // Create bracket play
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/plays.php';
 
