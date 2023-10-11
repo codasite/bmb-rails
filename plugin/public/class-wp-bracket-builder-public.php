@@ -107,27 +107,27 @@ class Wp_Bracket_Builder_Public {
 	public function enqueue_scripts() {
 		wp_enqueue_script('tailwind', 'https://cdn.tailwindcss.com', array(), $this->version, false);
 
-		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
-		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
+		// $sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
+		// $sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
 
-		$post = get_post();
-		$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
-		$bracket = $template_repo->get(post: $post);
-		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.css';
+		// $post = get_post();
+		// $template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		// $bracket = $template_repo->get(post: $post);
+		// $css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.css';
 
 
 		// For product page
 		// $product = wc_get_product($post->ID);
-		$product = wc_get_product(0);
-		$bracket_product_archive_url = $this->get_archive_url();
+		// $product = wc_get_product(0);
+		// $bracket_product_archive_url = $this->get_archive_url();
 
-		$bracket_placement = $this->get_bracket_placement($product);
+		// $bracket_placement = $this->get_bracket_placement($product);
 
-		$is_bracket_product = $this->is_bracket_product($product);
-		// Only get product details on product pages.
-		$gallery_images = $is_bracket_product ? $this->get_product_gallery($product) : array();
-		$color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
-		$overlay_map = $is_bracket_product ? $this->build_overlay_map($bracket_placement) : array();
+		// $is_bracket_product = $this->is_bracket_product($product);
+		// // Only get product details on product pages.
+		// $gallery_images = $is_bracket_product ? $this->get_product_gallery($product) : array();
+		// $color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
+		// $overlay_map = $is_bracket_product ? $this->build_overlay_map($bracket_placement) : array();
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.js', array('wp-element'), $this->version, true);
 

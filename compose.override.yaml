@@ -30,14 +30,12 @@ services:
   wp-test:
     tty: true
     build: 
-      context: ./plugin
+      context: .
       dockerfile: ./docker/wordpress/Dockerfile
       args:
         PLUGIN_NAME: wp-bracket-builder
     restart: unless-stopped
     container_name: wordpress-test-app
-    # command:  /bin/bash -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true && docker-entrypoint.sh apache2-foreground"
-    # command:  /bin/bash -c "install-wp-tests && docker-entrypoint.sh apache2-foreground"
     environment:
       WORDPRESS_DB_HOST: wordpress-test-db
       WORDPRESS_DB_USER: wordpress-test
@@ -61,8 +59,6 @@ services:
       WORDPRESS_ADMIN_USER: admin
       WORDPRESS_ADMIN_PASSWORD: admin
       WORDPRESS_ADMIN_EMAIL: barry@wstrategies.co
-      OXYGEN_URL: https://drive.google.com/file/d/19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2/view?usp=sharing
-      OXYGEN_WOO_URL: https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing
 
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
@@ -85,7 +81,7 @@ services:
       MYSQL_USER: wordpress-test
       MYSQL_PASSWORD: wordpress-test
     volumes:
-      - ./db:/docker-entrypoint-initdb.d
+      - ./docker/db/scripts:/docker-entrypoint-initdb.d
       - db-test-data:/var/lib/mysql
     ports:
       - 3308:3306
