@@ -64,10 +64,10 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
 
   useEffect(() => {
     if (template) {
-      const { title, numTeams, wildcardPlacement, matches } = template
+      const { numTeams, wildcardPlacement, matches } = template
       console.log('template found', template)
       setBracketMeta?.({
-        title: title || defaultBracketName,
+        title: `${template.title} Copy` || defaultBracketName,
         date: '2021',
       })
       setNumTeams(numTeams)
