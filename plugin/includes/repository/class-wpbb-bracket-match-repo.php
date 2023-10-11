@@ -3,16 +3,17 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-bracket-play-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 /**
  * Repository for Matches, Match Picks, and Teams
  */
-class Wp_Bracket_Builder_Bracket_Match_Repository {
+class Wpbb_BracketMatchRepo
+{
 	/**
 	 * @var Wpbb_Utils
 	 */

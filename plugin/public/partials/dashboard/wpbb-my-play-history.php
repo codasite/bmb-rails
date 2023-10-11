@@ -4,9 +4,9 @@ $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
 require_once $shared_dir . 'wpbb-partials-common.php';
 require_once $shared_dir . 'wpbb-tournaments-common.php';
 require_once $shared_dir . 'wpbb-paginatino-widget.php';
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
-$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+$play_repo = new Wpbb_BracketPlayRepo();
 
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 

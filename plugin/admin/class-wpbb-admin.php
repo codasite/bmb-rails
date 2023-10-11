@@ -1,6 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpbb-utils.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-config-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-config-repo.php';
 
 /**
  * The admin-specific functionality of the plugin.
@@ -56,7 +56,7 @@ class Wpbb_Admin
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		$this->config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+		$this->config_repo = new Wpbb_BracketConfigRepo();
 	}
 
 	/**

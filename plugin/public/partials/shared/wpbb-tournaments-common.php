@@ -2,7 +2,7 @@
 require_once('wpbb-partials-common.php');
 require_once('wpbb-partials-constants.php');
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
 
 function wpbb_sort_button($label, $endpoint, $active = false) {
@@ -135,7 +135,7 @@ function public_tournament_completed_buttons(Wp_Bracket_Builder_Bracket_Tourname
 	return ob_get_clean();
 }
 
-function public_tournament_list_item(Wp_Bracket_Builder_Bracket_Tournament $tournament, Wp_Bracket_Builder_Bracket_Play_Repository $play_repo = null) {
+function public_tournament_list_item(Wp_Bracket_Builder_Bracket_Tournament $tournament, Wpbb_BracketPlayRepo $play_repo = null) {
 	$name = $tournament->title;
 	$num_teams = $tournament->bracket_template->num_teams;
 	$num_plays = $play_repo ? $play_repo->get_count([

@@ -1,6 +1,7 @@
 <?php
 
-class Wp_Bracket_Builder_Bracket_Config {
+class Wpbb_BracketConfig
+{
 	/**
 	 * @var string
 	 */

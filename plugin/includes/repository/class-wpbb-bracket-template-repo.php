@@ -3,13 +3,14 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-team-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_Custom_Post_Repository_Base {
+class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
+{
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Team_Repository
+	 * @var Wpbb_BracketTeamRepo
 	 */
 	private $team_repo;
 
@@ -21,7 +22,7 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
+		$this->team_repo = new Wpbb_BracketTeamRepo();
 		parent::__construct();
 	}
 

@@ -51,8 +51,8 @@ class Wpbb_Public_Hooks
 		// Only affect queries for bracket_play post type and sorting by a valid option
 		if ($query_object->get('post_type') === 'bracket_play' && in_array($query_object->get('orderby'), $play_sort_options)) {
 			global $wpdb;
-			require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
-			$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+			require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
+			$play_repo = new Wpbb_BracketPlayRepo();
 
 			$join = &$clauses['join'];
 			if (!empty($join)) $join .= ' '; // Add space only if we need to

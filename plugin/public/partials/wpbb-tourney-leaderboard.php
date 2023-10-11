@@ -1,12 +1,12 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
 
 $page = get_query_var('paged');
-$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
-$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+$play_repo = new Wpbb_BracketPlayRepo();
+$tournament_repo = new Wpbb_BracketTournamentRepo();
 $tournament = $tournament_repo->get(get_the_ID());
 $tournament_winner = $tournament->get_winning_team();
 // This is just temporary. Don't do this

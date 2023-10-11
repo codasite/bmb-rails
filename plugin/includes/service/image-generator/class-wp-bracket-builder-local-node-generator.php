@@ -1,9 +1,10 @@
 <?php
-require_once 'class-wp-bracket-builder-post-image-generator-interface.php';
+require_once 'class-wpbb-post-image-generator-interface.php';
 require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wp-bracket-builder-object-storage-interface.php';
 require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wp-bracket-builder-s3-storage.php';
 
-class Wp_Bracket_Builder_Local_Node_Generator implements Wp_Bracket_Builder_Post_Image_Generator_Interface {
+class Wpbb_Local_Node_Generator implements Wpbb_PostImageGeneratorInterface
+{
 
 	/**
 	 * @param Wp_Bracket_Builder_Object_Storage_Interface

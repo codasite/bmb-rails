@@ -2,7 +2,8 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-slug-service.php';
 
-abstract class Wp_Bracket_Builder_Custom_Post_Repository_Base {
+abstract class Wpbb_CustomPostRepoBase
+{
 
 	/**
 	 * @var Wpbb_Slug_Service

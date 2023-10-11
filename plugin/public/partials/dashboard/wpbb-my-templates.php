@@ -1,9 +1,9 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-template-repo.php';
 require_once 'wpbb-dashboard-common.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'public/partials/shared/wpbb-paginatino-widget.php';
 
-$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+$template_repo = new Wpbb_BracketTemplateRepo();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_template_id'])) {
 	if (wp_verify_nonce($_POST['delete_template_nonce'], 'delete_template_action')) {

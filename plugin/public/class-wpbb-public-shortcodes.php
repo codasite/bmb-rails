@@ -1,7 +1,7 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
 
 class Wpbb_Public_Shortcodes
@@ -95,7 +95,7 @@ class Wpbb_Public_Shortcodes
 					Template not found.
 				</div>';
 		}
-		$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$template_repo = new Wpbb_BracketTemplateRepo();
 		$template = $template_repo->get(post: $post);
 
 		// $bracket_product_archive_url = $this->get_archive_url();
@@ -129,8 +129,8 @@ class Wpbb_Public_Shortcodes
 					Tournament not found.
 				</div>';
 		}
-		$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-		$tournament  = $tournament_repo->get(post: $post);
+		$tournament_repo = new Wpbb_BracketTournamentRepo();
+		$tournament = $tournament_repo->get(post: $post);
 		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
 		$my_tournaments_url = get_permalink(get_page_by_path('dashboard')) . '?tab=tournaments';
 

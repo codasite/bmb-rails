@@ -1,26 +1,27 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-team-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-bracket-play-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Custom_Post_Repository_Base {
+class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
+{
 	/**
 	 * @var Wpbb_Utils
 	 */
 	private $utils;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Tournament_Repository
+	 * @var Wpbb_BracketTournamentRepo
 	 */
 	private $tournament_repo;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Team_Repository
+	 * @var Wpbb_BracketTeamRepo
 	 */
 	private $team_repo;
 
@@ -32,8 +33,8 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
+		$this->tournament_repo = new Wpbb_BracketTournamentRepo();
+		$this->team_repo = new Wpbb_BracketTeamRepo();
 		$this->utils = new Wpbb_Utils();
 		parent::__construct();
 	}

@@ -4,11 +4,11 @@ $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
 require_once $shared_dir . 'wpbb-partials-common.php';
 require_once $shared_dir . 'wpbb-tournaments-common.php';
 require_once $shared_dir . 'wpbb-paginatino-widget.php';
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
-$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+$tournament_repo = new Wpbb_BracketTournamentRepo();
+$play_repo = new Wpbb_BracketPlayRepo();
 
 $status = get_query_var('status');
 if (empty($status)) {
@@ -129,7 +129,7 @@ function get_tournament_tag($status) {
 	}
 }
 
-function tournament_list_item($tournament, Wp_Bracket_Builder_Bracket_Play_Repository $play_repo) {
+function tournament_list_item($tournament, Wpbb_BracketPlayRepo $play_repo) {
 	// TODO: fix play_repo->get_all_by_tournament
 	// $play_repo->get_all_by_tournament($tournament->id);
 

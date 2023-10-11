@@ -1,14 +1,14 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once('shared/wpbb-partials-constants.php');
 require_once('shared/wpbb-tournaments-common.php');
 require_once('shared/wpbb-paginatino-widget.php');
 
-$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+$tournament_repo = new Wpbb_BracketTournamentRepo();
+$play_repo = new Wpbb_BracketPlayRepo();
 
 $status = get_query_var('status');
 

@@ -1,13 +1,13 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-config.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-config.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 // // a constant for the session key
 // define('WPBB_BRACKET_CONFIG_SESSION_KEY', 'wpbb_bracket_config');
 
-// class Wp_Bracket_Builder_Bracket_Config_Repository {
+// class Wpbb_BracketConfigRepo {
 
-// 	public function add(Wp_Bracket_Builder_Bracket_Config $config, string $theme_mode = '', string $bracket_placement = ''): Wp_Bracket_Builder_Bracket_Config {
+// 	public function add(Wpbb_BracketConfig $config, string $theme_mode = '', string $bracket_placement = ''): Wpbb_BracketConfig {
 // 		$utils = new Wpbb_Utils();
 // 		// get the current configs
 // 		$configs = $this->get_all();
@@ -34,7 +34,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 // 		return empty($configs);
 // 	}
 
-// 	public function get(string $theme_mode = '', $bracket_placement = ''): Wp_Bracket_Builder_Bracket_Config | null {
+// 	public function get(string $theme_mode = '', $bracket_placement = ''): Wpbb_BracketConfig | null {
 // 		if (empty($theme_mode) || empty($bracket_placement)) {
 // 			return null;
 // 		}
@@ -52,7 +52,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 define('WPBB_BRACKET_CONFIG_SESSION_KEY', 'wpbb_bracket_config');
 
-class Wp_Bracket_Builder_Bracket_Config_Repository {
+class Wpbb_BracketConfigRepo
+{
 
 	private $utils;
 
@@ -60,7 +61,7 @@ class Wp_Bracket_Builder_Bracket_Config_Repository {
 		$this->utils = new Wpbb_Utils();
 	}
 
-	public function add(Wp_Bracket_Builder_Bracket_Config $config): Wp_Bracket_Builder_Bracket_Config {
+	public function add(Wpbb_BracketConfig $config): Wpbb_BracketConfig {
 		$configs = $this->get_all();
 		$theme_mode = $config->theme_mode;
 		$bracket_placement = $config->bracket_placement;
@@ -80,7 +81,7 @@ class Wp_Bracket_Builder_Bracket_Config_Repository {
 		return empty($this->get_all());
 	}
 
-	public function get(string $theme_mode, string $bracket_placement): ?Wp_Bracket_Builder_Bracket_Config {
+	public function get(string $theme_mode, string $bracket_placement): ?Wpbb_BracketConfig {
 		$configs = $this->get_all();
 		return $configs[$theme_mode][$bracket_placement] ?? null;
 	}

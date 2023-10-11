@@ -5,7 +5,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 /**
  * Repository for Matches, Match Picks, and Teams
  */
-class Wp_Bracket_Builder_Bracket_Team_Repository {
+class Wpbb_BracketTeamRepo
+{
 	/**
 	 * @var Wpbb_Utils
 	 */

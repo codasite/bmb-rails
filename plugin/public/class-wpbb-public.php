@@ -1,13 +1,13 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-template-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-aws-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-pdf-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-config.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-config-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket-config.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-config-repo.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -70,11 +70,11 @@ class Wpbb_Public
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->utils = new Wpbb_Utils();
-		$this->bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+		$this->bracket_config_repo = new Wpbb_BracketConfigRepo();
 		$this->s3 = new Wpbb_S3_Service();
 		$this->lambda_service = new Wp_Bracket_Builder_Lambda_Service();
 		$this->pdf_service = new Wpbb_PDF_Service();
-		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+		$this->tournament_repo = new Wpbb_BracketTournamentRepo();
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Wpbb_Public
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
 
 		$post = get_post();
-		$template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$template_repo = new Wpbb_BracketTemplateRepo();
 		$bracket = $template_repo->get(post: $post);
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.css';
 

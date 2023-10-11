@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
@@ -13,7 +13,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller
 {
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Tournament_Repo
+	 * @var Wpbb_BracketTournamentRepo
 	 */
 	private $tournament_repo;
 
@@ -43,7 +43,7 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller
 	private ?Wpbb_Notification_Service_Interface $notification_service;
 
 	public function __construct($args = array()) {
-		$this->tournament_repo = $args['tournament_repo'] ?? new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+		$this->tournament_repo = $args['tournament_repo'] ?? new Wpbb_BracketTournamentRepo();
 		$this->score_service = $args['score_service'] ?? new Wpbb_Score_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';

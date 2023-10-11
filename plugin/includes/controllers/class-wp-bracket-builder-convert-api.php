@@ -1,11 +1,12 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-aws-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-config.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-config-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-config.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-config-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 
-class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
+class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller
+{
 	/**
 	 * @var string
 	 */
@@ -73,9 +74,9 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 
 		if (!is_wp_error($res) && isset($res['imageUrl'])) {
 			// build a config object
-			$config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res['imageUrl'], $bracket_placement);
+			$config = new Wpbb_BracketConfig($body['html'], $theme_mode, $res['imageUrl'], $bracket_placement);
 			// Add the image url to the user's session
-			$config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+			$config_repo = new Wpbb_BracketConfigRepo();
 			$config_repo->add($config);
 
 			return new WP_REST_Response($res, 200);

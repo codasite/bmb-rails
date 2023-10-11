@@ -52,9 +52,9 @@ class Wpbb_Bracket_Pick_Service
 		if (!is_wp_error($res) && isset($res['imageUrl'])) {
 			$bracket_pick->img_url = $res['imageUrl'];
 			// build a config object
-			// $config = new Wp_Bracket_Builder_Bracket_Config($body['html'], $theme_mode, $res['imageUrl'], $bracket_placement);
+			// $config = new Wpbb_BracketConfig($body['html'], $theme_mode, $res['imageUrl'], $bracket_placement);
 			// // Add the image url to the user's session
-			// $config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
+			// $config_repo = new Wpbb_BracketConfigRepo();
 			// $config_repo->add($config);
 
 			return $bracket_pick;

@@ -3,20 +3,20 @@
 require_once('class-wpbb-email-service-interface.php');
 require_once('class-wpbb-mailchimp-email-service.php');
 require_once('class-wpbb-notification-service-interface.php');
-require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php');
-require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php');
-require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php');
+require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wpbb-bracket-play-repo.php');
+require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wpbb-bracket-team-repo.php');
+require_once(plugin_dir_path(dirname(__FILE__, 1)) . 'repository/class-wpbb-bracket-tournament-repo.php');
 
 class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface
 {
 
 	protected Wpbb_Email_Service_Interface $email_service;
 
-	protected Wp_Bracket_Builder_Bracket_Tournament_Repository $tournament_repo;
+	protected Wpbb_BracketTournamentRepo $tournament_repo;
 
 	public function __construct($args = []) {
 		$this->email_service = $args['email_service'] ?? new Wpbb_Mailchimp_Email_Service();
-		$this->tournament_repo = $args['tournament_repo'] ?? new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+		$this->tournament_repo = $args['tournament_repo'] ?? new Wpbb_BracketTournamentRepo();
 	}
 
 	public function get_last_round_picks_for_tournament($tournament_id, $final_round_pick) {
@@ -50,28 +50,28 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface
     }
 
     public function notify_tournament_results_updated($tournament_id): void {
-        $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
-        $team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
+			$play_repo = new Wpbb_BracketPlayRepo();
+			$team_repo = new Wpbb_BracketTeamRepo();
 
-        $tournament = $this->tournament_repo->get($tournament_id);
-        $final_round_pick = end($tournament->results);
-        $user_picks = $this->get_last_round_picks_for_tournament($tournament_id, $final_round_pick);
+			$tournament = $this->tournament_repo->get($tournament_id);
+			$final_round_pick = end($tournament->results);
+			$user_picks = $this->get_last_round_picks_for_tournament($tournament_id, $final_round_pick);
 
-        foreach ($user_picks as $pick) {
-            $to_email = $pick->email;
-            $to_name = $pick->name;
-            $subject = 'Back My Bracket Notification';
-            $user_bracket_pick = $team_repo->get_team($pick->winning_team_id);
-            $user_pick = strtoupper($user_bracket_pick->name);
-            $winner_bracket_pick = $team_repo->get_team($final_round_pick->winning_team_id);
-            $winner = strtoupper($winner_bracket_pick->name);
-            $tournament_url = get_permalink($tournament_id) . '/leaderboard';
-            $message = array(
-                'to' => array(
-                    array(
-                        'email' => $to_email,
-                        'name' => $to_name,
-                    ),
+			foreach ($user_picks as $pick) {
+				$to_email = $pick->email;
+				$to_name = $pick->name;
+				$subject = 'Back My Bracket Notification';
+				$user_bracket_pick = $team_repo->get_team($pick->winning_team_id);
+				$user_pick = strtoupper($user_bracket_pick->name);
+				$winner_bracket_pick = $team_repo->get_team($final_round_pick->winning_team_id);
+				$winner = strtoupper($winner_bracket_pick->name);
+				$tournament_url = get_permalink($tournament_id) . '/leaderboard';
+				$message = array(
+					'to' => array(
+						array(
+							'email' => $to_email,
+							'name' => $to_name,
+						),
                 ),
             );
 

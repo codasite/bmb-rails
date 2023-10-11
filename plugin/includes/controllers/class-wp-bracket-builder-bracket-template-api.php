@@ -1,12 +1,12 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 
 class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Template_Repo
+	 * @var Wpbb_BracketTemplateRepo
 	 */
 	private $template_repo;
 
@@ -32,7 +32,7 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 	public function __construct() {
 		// echo $bracket_repo;
 		// $this->bracket_repo = $bracket_repo != null ? $bracket_repo : new Wp_Bracket_Builder_Bracket_Repository();
-		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$this->template_repo = new Wpbb_BracketTemplateRepo();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'templates';
 		// $this->bracket_validate = new Wpbb_ApiValidation();

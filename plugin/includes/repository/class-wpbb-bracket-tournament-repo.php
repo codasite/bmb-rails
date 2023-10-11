@@ -2,21 +2,22 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-match-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-template-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-match-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-team-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builder_Custom_Post_Repository_Base {
+class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
+{
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Template_Repository
+	 * @var Wpbb_BracketTemplateRepo
 	 */
 	private $template_repo;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Team_Repository
+	 * @var Wpbb_BracketTeamRepo
 	 */
 	private $team_repo;
 
@@ -28,8 +29,8 @@ class Wp_Bracket_Builder_Bracket_Tournament_Repository extends Wp_Bracket_Builde
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
-		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
+		$this->template_repo = new Wpbb_BracketTemplateRepo();
+		$this->team_repo = new Wpbb_BracketTeamRepo();
 		parent::__construct();
 	}
 

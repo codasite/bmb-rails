@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
 $slug = get_query_var('slug');
 $post = get_page_by_path($slug, OBJECT, 'bracket_play');
@@ -10,7 +10,7 @@ if (!$post || $post->post_type !== 'bracket_play') {
 					Play not found.
 				</div>';
 }
-$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+$play_repo = new Wpbb_BracketPlayRepo();
 $play = $play_repo->get($post);
 
 $theme = get_query_var('theme') ? get_query_var('theme') : 'light';

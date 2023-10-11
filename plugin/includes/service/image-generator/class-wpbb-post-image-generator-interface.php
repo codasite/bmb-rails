@@ -1,15 +1,16 @@
 <?php
-interface Wp_Bracket_Builder_Post_Image_Generator_Interface {
+interface Wpbb_PostImageGeneratorInterface
+{
 
 	/**
 	 * @param int|Wp_Post|null $post The post to generate an image for
-	 * 
+	 *
 	 * @param array $args An array of optional arguments that will be used to generate the image {
-	 * 		Array of arguments for generating and image
-	 * 
-	 * 		@type string $theme The theme mode to use for the image. Default is 'light'
-	 * 
-	 * 		@type string $position The position of the play in the tournament. Default is 'top'
+	 *    Array of arguments for generating and image
+	 *
+	 * @type string $theme The theme mode to use for the image. Default is 'light'
+	 *
+	 * @type string $position The position of the play in the tournament. Default is 'top'
 	 * 
 	 * 		@type int $inch_height The height of the image in inches. Default is 16
 	 * 

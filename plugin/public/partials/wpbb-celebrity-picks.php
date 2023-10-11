@@ -1,12 +1,12 @@
 <?php
 require_once('shared/wpbb-tournaments-common.php');
 require_once('shared/wpbb-partials-common.php');
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
-require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php');
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpbb-paginatino-widget.php';
 
 
-$play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
+$play_repo = new Wpbb_BracketPlayRepo();
 
 $the_query = new WP_Query([
 	'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
@@ -21,7 +21,7 @@ $plays = $play_repo->get_all($the_query);
 $paged_plays = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $num_plays_pages = $the_query->max_num_pages;
 
-$tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
+$tournament_repo = new Wpbb_BracketTournamentRepo();
 // Get all tournaments with the bmb_vip_tourney tag
 $tournaments = $tournament_repo->get_all([
 	'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
