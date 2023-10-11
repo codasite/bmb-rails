@@ -40,20 +40,20 @@ define('WPBB_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wp-bracket-builder-activator.php
+ * This action is documented in includes/class-wpbb-activator.php
  */
 function activate_wp_bracket_builder() {
-	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-bracket-builder-activator.php';
-	Wp_Bracket_Builder_Activator::activate();
+	require_once plugin_dir_path(__FILE__) . 'includes/class-wpbb-activator.php';
+	Wpbb_Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wp-bracket-builder-deactivator.php
+ * This action is documented in includes/class-wpbb-deactivator.php
  */
 function deactivate_wp_bracket_builder() {
-	require_once plugin_dir_path(__FILE__) . 'includes/class-wp-bracket-builder-deactivator.php';
-	Wp_Bracket_Builder_Deactivator::deactivate();
+	require_once plugin_dir_path(__FILE__) . 'includes/class-wpbb-deactivator.php';
+	Wpbb_Deactivator::deactivate();
 }
 
 register_activation_hook(__FILE__, 'activate_wp_bracket_builder');

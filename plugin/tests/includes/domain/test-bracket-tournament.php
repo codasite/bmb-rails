@@ -1,11 +1,11 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-tournament.php';
 
 class BracketTournamentTest extends WPBB_UnitTestCase {
 
 	public function test_get_post_type() {
-		$this->assertEquals('bracket_tournament', Wp_Bracket_Builder_Bracket_Tournament::get_post_type());
+		$this->assertEquals('bracket_tournament', Wpbb_BracketTournament::get_post_type());
 	}
 
 	public function test_constructor() {
@@ -15,8 +15,8 @@ class BracketTournamentTest extends WPBB_UnitTestCase {
 			'author' => 1,
 			'date' => 'test date',
 		];
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($args);
-		$this->assertInstanceOf(Wp_Bracket_Builder_Bracket_Tournament::class, $tournament);
+		$tournament = new Wpbb_BracketTournament($args);
+		$this->assertInstanceOf(Wpbb_BracketTournament::class, $tournament);
 	}
 
 	public function test_from_array() {
@@ -28,8 +28,8 @@ class BracketTournamentTest extends WPBB_UnitTestCase {
 			"date" => "test date",
 		];
 
-		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($args);
-		$this->assertInstanceOf(Wp_Bracket_Builder_Bracket_Tournament::class, $tournament);
+		$tournament = Wpbb_BracketTournament::from_array($args);
+		$this->assertInstanceOf(Wpbb_BracketTournament::class, $tournament);
 		$this->assertEquals(684, $tournament->bracket_template_id);
 		$this->assertEquals(1, $tournament->author);
 		$this->assertEquals('publish', $tournament->status);
@@ -44,7 +44,7 @@ class BracketTournamentTest extends WPBB_UnitTestCase {
 			"author" => 1,
 		];
 
-		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($args);
+		$tournament = Wpbb_BracketTournament::from_array($args);
 	}
 
 	public function test_from_array_no_author() {
@@ -55,6 +55,6 @@ class BracketTournamentTest extends WPBB_UnitTestCase {
 			"bracket_template_id" => 684,
 		];
 
-		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($args);
+		$tournament = Wpbb_BracketTournament::from_array($args);
 	}
 }

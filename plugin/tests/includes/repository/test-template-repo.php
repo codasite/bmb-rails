@@ -1,17 +1,18 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
-require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
-require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-play.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-tournament.php';
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
-class TemplateRepoTest extends WPBB_UnitTestCase {
+class TemplateRepoTest extends WPBB_UnitTestCase
+{
 	private $template_repo;
 
 	public function set_up() {
 		parent::set_up();
 
-		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
+		$this->template_repo = new Wpbb_BracketTemplateRepo();
 	}
 
 	public function test_add_matches() {
@@ -25,7 +26,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase {
 	}
 
 	public function test_add() {
-		$template = new Wp_Bracket_Builder_Bracket_Template([
+		$template = new Wpbb_BracketTemplate([
 			'title' => 'Test Template',
 			'status' => 'publish',
 			'author' => 1,
@@ -40,7 +41,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase {
 	}
 
 	public function test_get_by_id() {
-		$template = new Wp_Bracket_Builder_Bracket_Template([
+		$template = new Wpbb_BracketTemplate([
 			'title' => 'Test Template',
 			'status' => 'publish',
 			'author' => 1,
@@ -60,7 +61,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase {
 	 * @group skip
 	 */
 	// public function test_update_title() {
-	// 	$template = new Wp_Bracket_Builder_Bracket_Template([
+	// 	$template = new Wpbb_BracketTemplate([
 	// 		'title' => 'Test Template',
 	// 		'status' => 'publish',
 	// 		'author' => 1,
