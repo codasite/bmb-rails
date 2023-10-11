@@ -97,6 +97,7 @@ class Wpbb_Public_Shortcodes
 		}
 		$template_repo = new Wpbb_BracketTemplateRepo();
 		$template = $template_repo->get(post: $post);
+		$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
 
 		// $bracket_product_archive_url = $this->get_archive_url();
 		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
@@ -113,6 +114,7 @@ class Wpbb_Public_Shortcodes
 				'nonce' => wp_create_nonce('wp_rest'),
 				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 				'css_file' => $css_file,
+				'redirect_url' => $play_history_url, // used to redirect to bracket-ready category page
 				// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 			)
 		);

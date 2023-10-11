@@ -122,17 +122,17 @@ const PlayPage = (props: PlayPageProps) => {
     console.log(picks)
     const tournamentId = tournament?.id
     console.log(tournamentId)
-    if (!picks || !tournamentId) {
-      const msg = 'Cannot create play. Missing one of tournamentId or picks'
+    if (!picks) {
+      const msg = 'Cannot create play. Missing picks'
       console.error(msg)
       Sentry.captureException(msg)
       return
     }
     const playReq: PlayReq = {
       tournamentId: tournament?.id,
+      templateId: tournamentId ? undefined : template?.id,
       picks: picks,
     }
-
     setProcessing(true)
     bracketApi
       .createPlay(playReq)

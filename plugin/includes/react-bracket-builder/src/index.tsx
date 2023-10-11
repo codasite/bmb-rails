@@ -21,7 +21,7 @@ tailwind.config.corePlugins.preflight = typeof wp === 'undefined'
 const Settings = React.lazy(
   () => import('./brackets/AdminTemplateBuilder/Settings')
 )
-const PlayTournamentBuilder = React.lazy(
+const PlayTournamentPage = React.lazy(
   () =>
     import(
       './brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentPage'
@@ -122,7 +122,7 @@ function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
   if (template) {
     renderDiv(
       <App>
-        <PlayTournamentBuilder
+        <PlayTournamentPage
           bracketStylesheetUrl={cssUrl}
           template={template}
           apparelUrl={redirectUrl}
@@ -138,7 +138,7 @@ function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
   if (tournament) {
     renderDiv(
       <App>
-        <PlayTournamentBuilder
+        <PlayTournamentPage
           bracketStylesheetUrl={cssUrl}
           tournament={tournament}
           apparelUrl={redirectUrl}
