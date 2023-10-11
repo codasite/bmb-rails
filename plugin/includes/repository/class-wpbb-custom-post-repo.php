@@ -14,7 +14,7 @@ abstract class Wpbb_CustomPostRepoBase
 		$this->slug_service = new Wpbb_Slug_Service();
 	}
 
-	protected function insert_post(Wp_Bracket_Builder_Custom_Post_Interface $post,  $wp_error = false, $random_slug = false): int {
+	protected function insert_post(Wpbb_CustomPostInterface $post, $wp_error = false, $random_slug = false): int {
 		$post_data = $post->get_post_data();
 		if ($random_slug) {
 			$post_data['post_name'] = $this->slug_service->generate();
@@ -32,7 +32,7 @@ abstract class Wpbb_CustomPostRepoBase
 		return $post_id;
 	}
 
-	protected function update_post(Wp_Bracket_Builder_Custom_Post_Interface $post, $wp_error = false): int {
+	protected function update_post(Wpbb_CustomPostInterface $post, $wp_error = false): int {
 		$post_id = wp_update_post($post->get_update_post_data(), $wp_error);
 
 		if (0 === $post_id || $post_id instanceof WP_Error) {

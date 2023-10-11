@@ -34,7 +34,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 		parent::__construct();
 	}
 
-	public function add(Wp_Bracket_Builder_Bracket_Tournament $tournament): ?Wp_Bracket_Builder_Bracket_Tournament {
+	public function add(Wpbb_BracketTournament $tournament): ?Wpbb_BracketTournament {
 
 		$post_id = $this->insert_post($tournament, true, true);
 
@@ -91,7 +91,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 		}
 	}
 
-	public function insert_result(int $tournament_id, Wp_Bracket_Builder_Match_Pick $pick): void {
+	public function insert_result(int $tournament_id, Wpbb_MatchPick $pick): void {
 		$table_name = $this->results_table();
 		$this->wpdb->insert(
 			$table_name,
@@ -105,14 +105,14 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 	}
 
 
-	public function get(int|WP_Post|null|Wp_Bracket_Builder_Bracket_Tournament $post = null, bool $fetch_results = true, bool $fetch_template = true, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Tournament {
-		if ($post instanceof Wp_Bracket_Builder_Bracket_Tournament) {
+	public function get(int|WP_Post|null|Wpbb_BracketTournament $post = null, bool $fetch_results = true, bool $fetch_template = true, bool $fetch_matches = true): ?Wpbb_BracketTournament {
+		if ($post instanceof Wpbb_BracketTournament) {
 			$post = $post->id;
 		}
 
 		$tournament_post = get_post($post);
 
-		if (!$tournament_post || $tournament_post->post_type !== Wp_Bracket_Builder_Bracket_Tournament::get_post_type()) {
+		if (!$tournament_post || $tournament_post->post_type !== Wpbb_BracketTournament::get_post_type()) {
 			return null;
 		}
 
@@ -140,7 +140,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 			'author_display_name' => $author_id ? get_the_author_meta('display_name', $tournament_post->author_id) : '',
 		];
 
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data);
+		$tournament = new Wpbb_BracketTournament($data);
 
 		return $tournament;
 	}
@@ -155,7 +155,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 		foreach ($data as $result) {
 			$winning_team_id = $result['winning_team_id'];
 			$winning_team = $this->team_repo->get_team($winning_team_id);
-			$tournament_results[] = new Wp_Bracket_Builder_Match_Pick(
+			$tournament_results[] = new Wpbb_MatchPick(
 				$result['round_index'],
 				$result['match_index'],
 				$winning_team_id,
@@ -167,7 +167,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 	}
 
 	public function get_tournament_data(int|WP_Post|null $post): array {
-		if (!$post || $post instanceof WP_Post && $post->post_type !== Wp_Bracket_Builder_Bracket_Tournament::get_post_type()) {
+		if (!$post || $post instanceof WP_Post && $post->post_type !== Wpbb_BracketTournament::get_post_type()) {
 			return [];
 		}
 
@@ -198,7 +198,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 		}
 
 		$default_args = [
-			'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+			'post_type' => Wpbb_BracketTournament::get_post_type(),
 			'post_status' => 'any',
 		];
 
@@ -227,7 +227,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 		$status = isset($args['status']) ? $args['status'] : null;
 
 		$filter_args = [
-			'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+			'post_type' => Wpbb_BracketTournament::get_post_type(),
 			'post_status' => $status === null ? 'any' : $status,
 			'author' => $author,
 		];
@@ -246,12 +246,12 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 		return $this->delete_post($id, $force);
 	}
 
-	public function update(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament, array|null $data = null): ?Wp_Bracket_Builder_Bracket_Tournament {
+	public function update(Wpbb_BracketTournament|int|null $tournament, array|null $data = null): ?Wpbb_BracketTournament {
 		if (!$tournament || !$data) {
 			return null;
 		}
 
-		if (!($tournament instanceof Wp_Bracket_Builder_Bracket_Tournament)) {
+		if (!($tournament instanceof Wpbb_BracketTournament)) {
 			$tournament = $this->get($tournament);
 		}
 
@@ -262,7 +262,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
 		$array = $tournament->to_array();
 		$updated_array = array_merge($array, $data);
 
-		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($updated_array);
+		$tournament = Wpbb_BracketTournament::from_array($updated_array);
 
 		$post_id = $this->update_post($tournament);
 

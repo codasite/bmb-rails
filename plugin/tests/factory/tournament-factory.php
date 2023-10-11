@@ -27,7 +27,7 @@ class WPBB_UnitTest_Factory_For_Tournament extends WP_UnitTest_Factory_For_Thing
 	}
 
 	function create_object($args) {
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($args);
+		$tournament = new Wpbb_BracketTournament($args);
 		$tournament = $this->tournament_repo->add($tournament);
 		return $tournament;
 	}

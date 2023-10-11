@@ -1,10 +1,11 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-play.php';
-class Wp_Bracket_Builder_User_Profile {
+class Wpbb_UserProfile
+{
 
 	/**
 	 * The user object.
-	 * 
+	 *
 	 * @var WP_User
 	 */
 	private $wp_user;

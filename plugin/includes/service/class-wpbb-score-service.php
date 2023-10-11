@@ -14,7 +14,7 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface
 	 */
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Tournament
+	 * @var Wpbb_BracketTournament
 	 */
 	public $tournament;
 
@@ -47,7 +47,7 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface
 		$this->template_repo = new Wpbb_BracketTemplateRepo();
 	}
 
-	public function score_tournament_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
+	public function score_tournament_plays(Wpbb_BracketTournament|int|null $tournament) {
 		try {
 			$this->score_plays($tournament);
 		} catch (Exception $e) {
@@ -55,13 +55,13 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface
 		}
 	}
 
-	private function score_plays(Wp_Bracket_Builder_Bracket_Tournament|int|null $tournament) {
+	private function score_plays(Wpbb_BracketTournament|int|null $tournament) {
 		$point_values = [1, 2, 4, 8, 16, 32];
 
 		if (is_int($tournament)) {
 			$tournament = $this->tournament_repo->get($tournament);
 		}
-		if (!$tournament instanceof Wp_Bracket_Builder_Bracket_Tournament) {
+		if (!$tournament instanceof Wpbb_BracketTournament) {
 			throw new Exception('Cannot find tournament');
 		}
 

@@ -26,7 +26,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase
 	}
 
 	public function test_add() {
-		$template = new Wp_Bracket_Builder_Bracket_Template([
+		$template = new Wpbb_BracketTemplate([
 			'title' => 'Test Template',
 			'status' => 'publish',
 			'author' => 1,
@@ -41,7 +41,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase
 	}
 
 	public function test_get_by_id() {
-		$template = new Wp_Bracket_Builder_Bracket_Template([
+		$template = new Wpbb_BracketTemplate([
 			'title' => 'Test Template',
 			'status' => 'publish',
 			'author' => 1,
@@ -61,7 +61,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase
 	 * @group skip
 	 */
 	// public function test_update_title() {
-	// 	$template = new Wp_Bracket_Builder_Bracket_Template([
+	// 	$template = new Wpbb_BracketTemplate([
 	// 		'title' => 'Test Template',
 	// 		'status' => 'publish',
 	// 		'author' => 1,

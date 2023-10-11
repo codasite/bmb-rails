@@ -28,7 +28,7 @@ class Wpbb_BracketTeamRepo
 	 * TEAMS
 	 */
 
-	public function get_team(int|null $id): ?Wp_Bracket_Builder_Team {
+	public function get_team(int|null $id): ?Wpbb_Team {
 		if ($id === null) {
 			return null;
 		}
@@ -41,7 +41,7 @@ class Wpbb_BracketTeamRepo
 			),
 			ARRAY_A
 		);
-		return new Wp_Bracket_Builder_Team($team['name'], $team['id']);
+		return new Wpbb_Team($team['name'], $team['id']);
 	}
 
 	public function get_teams(): array {
@@ -52,12 +52,12 @@ class Wpbb_BracketTeamRepo
 		);
 		$teams = [];
 		foreach ($team_results as $team) {
-			$teams[] = new Wp_Bracket_Builder_Team($team['name'], $team['id']);
+			$teams[] = new Wpbb_Team($team['name'], $team['id']);
 		}
 		return $teams;
 	}
 
-	public function insert_team(int $post_id, ?Wp_Bracket_Builder_Team $team): ?Wp_Bracket_Builder_Team {
+	public function insert_team(int $post_id, ?Wpbb_Team $team): ?Wpbb_Team {
 		if (empty($team)) {
 			return $team;
 		}

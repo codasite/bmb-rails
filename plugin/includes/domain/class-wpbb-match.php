@@ -1,7 +1,8 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
-class Wp_Bracket_Builder_Match {
+class Wpbb_Match
+{
 	/**
 	 * @var int
 	 */
@@ -18,16 +19,16 @@ class Wp_Bracket_Builder_Match {
 	public $match_index;
 
 	/**
-	 * @var Wp_Bracket_Builder_Team
+	 * @var Wpbb_Team
 	 */
 	public $team1;
 
 	/**
-	 * @var Wp_Bracket_Builder_Team
+	 * @var Wpbb_Team
 	 */
 	public $team2;
 
-	public function __construct(int $round_index, int $match_index, Wp_Bracket_Builder_Team $team1 = null, Wp_Bracket_Builder_Team $team2 = null, int $id = null) {
+	public function __construct(int $round_index, int $match_index, Wpbb_Team $team1 = null, Wpbb_Team $team2 = null, int $id = null) {
 		$this->round_index = $round_index;
 		$this->match_index = $match_index;
 		$this->team1 = $team1;
@@ -35,24 +36,24 @@ class Wp_Bracket_Builder_Match {
 		$this->id = $id;
 	}
 
-	static public function from_array(array $data): Wp_Bracket_Builder_Match {
+	static public function from_array(array $data): Wpbb_Match {
 		if (!isset($data['round_index']) || !isset($data['match_index'])) {
 			throw new InvalidArgumentException('round_index and match_index are required');
 		}
 
-		$match = new Wp_Bracket_Builder_Match($data['round_index'], $data['match_index']);
+		$match = new Wpbb_Match($data['round_index'], $data['match_index']);
 
 
 		if (isset($data['id'])) {
-			$match->id = (int) $data['id'];
+			$match->id = (int)$data['id'];
 		}
 
 		if (isset($data['team1'])) {
-			$match->team1 = Wp_Bracket_Builder_Team::from_array($data['team1']);
+			$match->team1 = Wpbb_Team::from_array($data['team1']);
 		}
 
 		if (isset($data['team2'])) {
-			$match->team2 = Wp_Bracket_Builder_Team::from_array($data['team2']);
+			$match->team2 = Wpbb_Team::from_array($data['team2']);
 		}
 
 		return $match;

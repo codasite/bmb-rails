@@ -1,6 +1,6 @@
 <?php
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/service/class-wpbb-score-service.php';
-// require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/class-wp-bracket-builder-activator.php';
+// require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/class-wpbb-activator.php';
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-template-api.php';
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-tournament-api.php';
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
@@ -9,7 +9,7 @@
 
 //     public static function set_up_before_class() {
 //         // Set up DB tables
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/class-wp-bracket-builder-activator.php';
+//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/class-wpbb-activator.php';
 
 //         $activator = new Wpbb_Activator();
 //         $activator->activate();

@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_tournament_id'
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $the_query = new WP_Query([
-	'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+	'post_type' => Wpbb_BracketTournament::get_post_type(),
 	'author' => get_current_user_id(),
 	'posts_per_page' => 6,
 	'paged' => $paged,

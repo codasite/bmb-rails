@@ -1,7 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-template.php';
-// require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
+// require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wpbb-bracket-api-validation.php';
 
 class Wpbb_BracketTemplateApi extends WP_REST_Controller
 {
@@ -162,7 +162,7 @@ class Wpbb_BracketTemplateApi extends WP_REST_Controller
 			$params['author'] = get_current_user_id();
 		}
 		try {
-			$template = Wp_Bracket_Builder_Bracket_Template::from_array($params);
+			$template = Wpbb_BracketTemplate::from_array($params);
 		} catch (Wpbb_ValidationException $e) {
 			return new WP_Error('validation-error', $e->getMessage(), array('status' => 400));
 		}

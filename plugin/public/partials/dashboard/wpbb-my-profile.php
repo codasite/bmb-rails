@@ -9,7 +9,7 @@ require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb
 // // Exit if accessed directly.
 // defined('ABSPATH') || exit;
 
-$user = Wp_Bracket_Builder_User_Profile::get_current();
+$user = Wpbb_UserProfile::get_current();
 $num_plays = $user->get_num_plays();
 $wins = $user->get_tournament_wins();
 $accuracy = $user->get_total_accuracy() * 100;

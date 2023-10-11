@@ -5,7 +5,7 @@ require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-template.php'
 class BracketTemplateTest extends WPBB_UnitTestCase {
 
 	public function test_get_post_type() {
-		$this->assertEquals('bracket_template', Wp_Bracket_Builder_Bracket_Template::get_post_type());
+		$this->assertEquals('bracket_template', Wpbb_BracketTemplate::get_post_type());
 	}
 
 	public function test_constructor() {
@@ -14,7 +14,7 @@ class BracketTemplateTest extends WPBB_UnitTestCase {
 			'status' => 'publish',
 			'author' => 1,
 		];
-		$template = new Wp_Bracket_Builder_Bracket_Template($args);
-		$this->assertInstanceOf(Wp_Bracket_Builder_Bracket_Template::class, $template);
+		$template = new Wpbb_BracketTemplate($args);
+		$this->assertInstanceOf(Wpbb_BracketTemplate::class, $template);
 	}
 }

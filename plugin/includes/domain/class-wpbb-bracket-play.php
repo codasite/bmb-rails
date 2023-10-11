@@ -11,7 +11,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 // class Wp_Bracket_Builder_Bracket_Pick_Factory extends Wp_Bracket_Builder_Bracket_Base {
 
 
-class Wpbb_BracketPlay extends Wp_Bracket_Builder_Post_Base
+class Wpbb_BracketPlay extends Wpbb_PostBase
 {
 
 	/**
@@ -20,12 +20,12 @@ class Wpbb_BracketPlay extends Wp_Bracket_Builder_Post_Base
 	public $tournament_id;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Tournament
+	 * @var Wpbb_BracketTournament
 	 */
 	public $tournament;
 
 	/**
-	 * @var Wp_Bracket_Builder_Match_Pick[]
+	 * @var Wpbb_MatchPick[]
 	 */
 	public $picks;
 
@@ -64,7 +64,7 @@ class Wpbb_BracketPlay extends Wp_Bracket_Builder_Post_Base
 		return 'bracket_play';
 	}
 
-	public function get_winning_team(): ?Wp_Bracket_Builder_Team {
+	public function get_winning_team(): ?Wpbb_Team {
 		if (count($this->picks) === 0) {
 			return null;
 		}
@@ -88,7 +88,7 @@ class Wpbb_BracketPlay extends Wp_Bracket_Builder_Post_Base
 		validateRequiredFields($data, ['tournament_id', 'author', 'picks']);
 		$picks = [];
 		foreach ($data['picks'] as $pick) {
-			$picks[] = Wp_Bracket_Builder_Match_Pick::from_array($pick);
+			$picks[] = Wpbb_MatchPick::from_array($pick);
 		}
 		$data['picks'] = $picks;
 

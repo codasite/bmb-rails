@@ -1,7 +1,8 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
-class Wp_Bracket_Builder_Match_Pick {
+class Wpbb_MatchPick
+{
 	/**
 	 * @var int
 	 */
@@ -17,8 +18,8 @@ class Wp_Bracket_Builder_Match_Pick {
 	 */
 	public $match_index;
 
-	/** 
-	 * @var Wp_Bracket_Builder_Team
+	/**
+	 * @var Wpbb_Team
 	 */
 	public $winning_team;
 
@@ -28,11 +29,11 @@ class Wp_Bracket_Builder_Match_Pick {
 	public $winning_team_id;
 
 	public function __construct(
-		int $round_index,
-		int $match_index,
-		int $winning_team_id,
-		int $id = null,
-		Wp_Bracket_Builder_Team $winning_team = null,
+		int       $round_index,
+		int       $match_index,
+		int       $winning_team_id,
+		int       $id = null,
+		Wpbb_Team $winning_team = null,
 	) {
 		$this->round_index = $round_index;
 		$this->match_index = $match_index;
@@ -42,7 +43,7 @@ class Wp_Bracket_Builder_Match_Pick {
 	}
 
 	static public function from_array($data) {
-		$pick = new Wp_Bracket_Builder_Match_Pick(
+		$pick = new Wpbb_MatchPick(
 			$data['round_index'],
 			$data['match_index'],
 			$data['winning_team_id'],
@@ -53,7 +54,7 @@ class Wp_Bracket_Builder_Match_Pick {
 		}
 
 		if (isset($data['winning_team'])) {
-			$pick->winning_team = Wp_Bracket_Builder_Team::from_array($data['winning_team']);
+			$pick->winning_team = Wpbb_Team::from_array($data['winning_team']);
 		}
 
 		return $pick;

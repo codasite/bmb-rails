@@ -107,35 +107,35 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border tw-rounded-8')) : $btn;
 }
 
-function public_tournament_active_buttons(Wp_Bracket_Builder_Bracket_Tournament $tournament) {
+function public_tournament_active_buttons(Wpbb_BracketTournament $tournament) {
 	$tournament_play_link = get_permalink($tournament->id) . '/play';
 	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 	ob_start();
-?>
-	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-		<!-- This goes to the Play Bracket page -->
+	?>
+  <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
+    <!-- This goes to the Play Bracket page -->
 		<?php echo play_tournament_btn($tournament_play_link, $tournament); ?>
-		<!-- This goes to the Score Tournament page -->
+    <!-- This goes to the Score Tournament page -->
 		<?php echo view_leaderboard_btn($leaderboard_link); ?>
-	</div>
+  </div>
 <?php
 	return ob_get_clean();
 }
 
-function public_tournament_completed_buttons(Wp_Bracket_Builder_Bracket_Tournament $tournament) {
+function public_tournament_completed_buttons(Wpbb_BracketTournament $tournament) {
 	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
 
 	ob_start();
-?>
-	<div class="tw-flex">
-		<!-- This goes to the Leaderboard page -->
+	?>
+  <div class="tw-flex">
+    <!-- This goes to the Leaderboard page -->
 		<?php echo view_leaderboard_btn($leaderboard_link, 'final'); ?>
-	</div>
-<?php
+  </div>
+	<?php
 	return ob_get_clean();
 }
 
-function public_tournament_list_item(Wp_Bracket_Builder_Bracket_Tournament $tournament, Wpbb_BracketPlayRepo $play_repo = null) {
+function public_tournament_list_item(Wpbb_BracketTournament $tournament, Wpbb_BracketPlayRepo $play_repo = null) {
 	$name = $tournament->title;
 	$num_teams = $tournament->bracket_template->num_teams;
 	$num_plays = $play_repo ? $play_repo->get_count([

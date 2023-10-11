@@ -6,7 +6,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-match-pick.
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-validation-exception.php';
 
 
-class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
+class Wpbb_BracketTournament extends Wpbb_PostBase
 {
 	/**
 	 * @var string
@@ -19,12 +19,12 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	public $bracket_template_id;
 
 	/**
-	 * @var ?Wp_Bracket_Builder_Bracket_Template
+	 * @var ?Wpbb_BracketTemplate
 	 */
 	public $bracket_template;
 
 	/**
-	 * @var Wp_Bracket_Builder_Match_Pick[]
+	 * @var Wpbb_MatchPick[]
 	 */
 	public $results;
 
@@ -36,7 +36,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		$this->results = $data['results'] ?? [];
 	}
 
-	public function get_winning_team(): ?Wp_Bracket_Builder_Team {
+	public function get_winning_team(): ?Wpbb_Team {
 		if (!$this->results) {
 			return null;
 		}
@@ -70,7 +70,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 	/**
 	 * @throws Wpbb_ValidationException
 	 */
-	static public function from_array($data): Wp_Bracket_Builder_Bracket_Tournament {
+	static public function from_array($data): Wpbb_BracketTournament {
 		if (!isset($data['bracket_template_id']) && !isset($data['bracket_template'])) {
 			throw new Wpbb_ValidationException('bracket_template_id or bracket_template is required');
 		}
@@ -80,16 +80,16 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		if (isset($data['results'])) {
 			$results = [];
 			foreach ($data['results'] as $result) {
-				$results[] = Wp_Bracket_Builder_Match_Pick::from_array($result);
+				$results[] = Wpbb_MatchPick::from_array($result);
 			}
 			$data['results'] = $results;
 		}
 
 		if (isset($data['bracket_template'])) {
-			$data['bracket_template'] = Wp_Bracket_Builder_Bracket_Template::from_array($data['bracket_template']);
+			$data['bracket_template'] = Wpbb_BracketTemplate::from_array($data['bracket_template']);
 		}
 
-		return new Wp_Bracket_Builder_Bracket_Tournament($data);
+		return new Wpbb_BracketTournament($data);
 	}
 
 	public function to_array(): array {

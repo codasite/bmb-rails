@@ -27,7 +27,7 @@ class WPBB_UnitTest_Factory_For_Template extends WP_UnitTest_Factory_For_Thing
 	}
 
 	function create_object($args) {
-		$template = new Wp_Bracket_Builder_Bracket_Template($args);
+		$template = new Wpbb_BracketTemplate($args);
 		$template = $this->template_repo->add($template);
 		return $template;
 	}

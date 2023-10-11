@@ -1,6 +1,7 @@
 <?php
 
-class Wp_Bracket_Builder_Team {
+class Wpbb_Team
+{
 	/**
 	 * @var int
 	 */
@@ -17,8 +18,8 @@ class Wp_Bracket_Builder_Team {
 		$this->name = $name;
 	}
 
-	static public function from_array(array $data): Wp_Bracket_Builder_Team {
-		$team = new Wp_Bracket_Builder_Team();
+	static public function from_array(array $data): Wpbb_Team {
+		$team = new Wpbb_Team();
 
 		foreach ($data as $key => $value) {
 			if (property_exists($team, $key)) {

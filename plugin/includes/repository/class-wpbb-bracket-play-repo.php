@@ -95,7 +95,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		foreach ($data as $pick) {
 			$winning_team_id = $pick['winning_team_id'];
 			$winning_team = $this->team_repo->get_team($winning_team_id);
-			$picks[] = new Wp_Bracket_Builder_Match_Pick(
+			$picks[] = new Wpbb_MatchPick(
 				$pick['round_index'],
 				$pick['match_index'],
 				$winning_team_id,
@@ -272,7 +272,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		}
 	}
 
-	private function insert_pick(int $play_id, Wp_Bracket_Builder_Match_Pick $pick): void {
+	private function insert_pick(int $play_id, Wpbb_MatchPick $pick): void {
 		$table_name = $this->picks_table();
 		$this->wpdb->insert(
 			$table_name,

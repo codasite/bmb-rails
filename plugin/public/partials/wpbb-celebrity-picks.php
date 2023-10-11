@@ -24,7 +24,7 @@ $num_plays_pages = $the_query->max_num_pages;
 $tournament_repo = new Wpbb_BracketTournamentRepo();
 // Get all tournaments with the bmb_vip_tourney tag
 $tournaments = $tournament_repo->get_all([
-	'post_type' => Wp_Bracket_Builder_Bracket_Tournament::get_post_type(),
+	'post_type' => Wpbb_BracketTournament::get_post_type(),
 	'posts_per_page' => -1,
 	'post_status' => 'any',
 	'tag' => 'bmb_vip_tourney'

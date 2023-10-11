@@ -21,7 +21,7 @@ class TournamentRepoTest extends WPBB_UnitTestCase
 
 	public function test_add_tournament() {
 		$template = self::factory()->template->create_and_get();
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament([
+		$tournament = new Wpbb_BracketTournament([
 			'title' => 'Test Tournament',
 			'status' => 'publish',
 			'author' => 1,

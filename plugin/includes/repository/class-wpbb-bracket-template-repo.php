@@ -26,7 +26,7 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
 		parent::__construct();
 	}
 
-	public function add(Wp_Bracket_Builder_Bracket_Template $template): ?Wp_Bracket_Builder_Bracket_Template {
+	public function add(Wpbb_BracketTemplate $template): ?Wpbb_BracketTemplate {
 
 		$post_id = $this->insert_post($template, true, true);
 
@@ -81,15 +81,15 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
 		}
 	}
 
-	public function get(int|WP_Post|Wp_Bracket_Builder_Bracket_Template|null $post = null, bool $fetch_matches = true): ?Wp_Bracket_Builder_Bracket_Template {
-		if ($post instanceof Wp_Bracket_Builder_Bracket_Template) {
+	public function get(int|WP_Post|Wpbb_BracketTemplate|null $post = null, bool $fetch_matches = true): ?Wpbb_BracketTemplate {
+		if ($post instanceof Wpbb_BracketTemplate) {
 			$post = $post->id;
 		}
 
 		$template_post = get_post($post);
 
 
-		if (!$template_post || $template_post->post_type !== Wp_Bracket_Builder_Bracket_Template::get_post_type()) {
+		if (!$template_post || $template_post->post_type !== Wpbb_BracketTemplate::get_post_type()) {
 			return null;
 		}
 
@@ -116,20 +116,20 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
 			'author_display_name' => $author_id ? get_the_author_meta('display_name', $author_id) : '',
 		];
 
-		return new Wp_Bracket_Builder_Bracket_Template($data);
+		return new Wpbb_BracketTemplate($data);
 	}
 
-	public function update(Wp_Bracket_Builder_Bracket_Template|int|null $template, array|null $data = null): ?Wp_Bracket_Builder_Bracket_Template {
+	public function update(Wpbb_BracketTemplate|int|null $template, array|null $data = null): ?Wpbb_BracketTemplate {
 		if (!$template || !$data) {
 			return null;
 		}
-		if (!($template instanceof Wp_Bracket_Builder_Bracket_Template)) {
+		if (!($template instanceof Wpbb_BracketTemplate)) {
 			$template = $this->get($template);
 		}
 		$array = $template->to_array();
 		$updated_array = array_merge($array, $data);
 
-		$template = Wp_Bracket_Builder_Bracket_Template::from_array($updated_array);
+		$template = Wpbb_BracketTemplate::from_array($updated_array);
 
 		$post_id = $this->update_post($template);
 
@@ -143,7 +143,7 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
 	}
 
 	public function get_template_data(int|WP_Post|null $template_post): array {
-		if (!$template_post || $template_post instanceof WP_Post && $template_post->post_type !== Wp_Bracket_Builder_Bracket_Template::get_post_type()) {
+		if (!$template_post || $template_post instanceof WP_Post && $template_post->post_type !== Wpbb_BracketTemplate::get_post_type()) {
 			return [];
 		}
 
@@ -180,8 +180,8 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
 			$team1 = $this->team_repo->get_team($match['team1_id']);
 			$team2 = $this->team_repo->get_team($match['team2_id']);
 
-			// $matches[$match['round_index']][$match['match_index']] = new Wp_Bracket_Builder_Match(
-			$matches[] = new Wp_Bracket_Builder_Match(
+			// $matches[$match['round_index']][$match['match_index']] = new Wpbb_Match(
+			$matches[] = new Wpbb_Match(
 				$match['round_index'],
 				$match['match_index'],
 				$team1,
@@ -199,7 +199,7 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
 		}
 
 		$default_args = [
-			'post_type' => Wp_Bracket_Builder_Bracket_Template::get_post_type(),
+			'post_type' => Wpbb_BracketTemplate::get_post_type(),
 			'post_status' => 'any',
 		];
 

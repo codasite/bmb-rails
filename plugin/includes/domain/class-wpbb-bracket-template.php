@@ -4,7 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-custom-post
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-match.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-validation-exception.php';
 
-class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
+class Wpbb_BracketTemplate extends Wpbb_PostBase
 {
 	/**
 	 * @var string
@@ -35,7 +35,7 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
 	public $img_url;
 
 	/**
-	 * @var Wp_Bracket_Builder_Match[] Array of Wp_Bracket_Builder_Match objects
+	 * @var Wpbb_Match[] Array of Wpbb_Match objects
 	 */
 	public $matches;
 
@@ -75,15 +75,15 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
 	/**
 	 * @throws Wpbb_ValidationException
 	 */
-	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
+	public static function from_array(array $data): Wpbb_BracketTemplate {
 		$requiredFields = ['num_teams', 'wildcard_placement', 'date', 'author', 'title', 'matches'];
 		validateRequiredFields($data, $requiredFields);
 		$matches = [];
 		foreach ($data['matches'] as $match) {
-			$matches[] = Wp_Bracket_Builder_Match::from_array($match);
+			$matches[] = Wpbb_Match::from_array($match);
 		}
 		$data['matches'] = $matches;
-		return new Wp_Bracket_Builder_Bracket_Template($data);
+		return new Wpbb_BracketTemplate($data);
 	}
 
 	public function to_array(): array {

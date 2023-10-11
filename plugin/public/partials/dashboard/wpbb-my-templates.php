@@ -23,7 +23,7 @@ function host_tournament_btn(string $id, string $date) {
 	return ob_get_clean();
 }
 
-function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
+function template_list_item(Wpbb_BracketTemplate $template) {
 	$title = $template->title;
 	$date = $template->date;
 	$id = $template->id;
@@ -58,7 +58,7 @@ function template_list_item(Wp_Bracket_Builder_Bracket_Template $template) {
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $the_query = new WP_Query([
-	'post_type' => Wp_Bracket_Builder_Bracket_Template::get_post_type(),
+	'post_type' => Wpbb_BracketTemplate::get_post_type(),
 	'author' => get_current_user_id(),
 	'posts_per_page' => 6,
 	'paged' => $paged,
