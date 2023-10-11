@@ -52,7 +52,7 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 
 	public function render_dashboard() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/dashboard/wp-bracket-builder-dashboard.php';
+		include plugin_dir_path(__FILE__) . 'partials/dashboard/wpbb-dashboard.php';
 
 		wp_localize_script(
 			'wpbb-bracket-builder-react',

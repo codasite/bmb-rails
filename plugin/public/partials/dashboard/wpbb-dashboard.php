@@ -8,19 +8,19 @@ if (empty($current_tab)) {
 
 switch ($current_tab) {
 	case 'profile':
-		$template = 'wp-bracket-builder-my-profile.php';
+		$template = 'wpbb-my-profile.php';
 		break;
 	case 'templates':
-		$template = 'wp-bracket-builder-my-templates.php';
+		$template = 'wpbb-my-templates.php';
 		break;
 	case 'tournaments':
-		$template = 'wp-bracket-builder-my-tournaments.php';
+		$template = 'wpbb-my-tournaments.php';
 		break;
 	case 'play-history':
-		$template = 'wp-bracket-builder-my-play-history.php';
+		$template = 'wpbb-my-play-history.php';
 		break;
 	default:
-		$template = 'wp-bracket-builder-my-profile.php';
+		$template = 'wpbb-my-profile.php';
 		break;
 }
 
