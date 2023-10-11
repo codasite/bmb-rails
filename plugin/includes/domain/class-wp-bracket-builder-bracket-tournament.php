@@ -3,6 +3,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-build
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-validation-exception.php';
+
 
 class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 {
@@ -65,18 +67,15 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 		];
 	}
 
-	static public function from_array($data) {
+	/**
+	 * @throws Wpbb_ValidationException
+	 */
+	static public function from_array($data): Wp_Bracket_Builder_Bracket_Tournament {
 		if (!isset($data['bracket_template_id']) && !isset($data['bracket_template'])) {
-			throw new Exception('bracket_template_id or bracket_template is required');
+			throw new Wpbb_ValidationException('bracket_template_id or bracket_template is required');
 		}
-
-		if (!isset($data['author'])) {
-			throw new Exception('author id is required');
-		}
-
-		if (!isset($data['date'])) {
-			throw new Exception('date is required');
-		}
+		$requiredFields = ['author', 'date', 'title'];
+		validateRequiredFields($data, $requiredFields);
 
 		if (isset($data['results'])) {
 			$results = [];
@@ -90,9 +89,7 @@ class Wp_Bracket_Builder_Bracket_Tournament extends Wp_Bracket_Builder_Post_Base
 			$data['bracket_template'] = Wp_Bracket_Builder_Bracket_Template::from_array($data['bracket_template']);
 		}
 
-		$tournament = new Wp_Bracket_Builder_Bracket_Tournament($data);
-
-		return $tournament;
+		return new Wp_Bracket_Builder_Bracket_Tournament($data);
 	}
 
 	public function to_array(): array {

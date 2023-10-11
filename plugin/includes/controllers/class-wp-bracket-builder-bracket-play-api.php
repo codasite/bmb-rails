@@ -171,11 +171,14 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 		if (!isset($params['author'])) {
 			$params['author'] = get_current_user_id();
 		}
-		$play = Wp_Bracket_Builder_Bracket_Play::from_array($params);
+		try {
+			$play = Wp_Bracket_Builder_Bracket_Play::from_array($params);
+		} catch (Wpbb_ValidationException $e) {
+			return new WP_Error('validation-error', $e->getMessage(), array('status' => 400));
+		}
 		$saved = $this->play_repo->add($play);
 
 		return new WP_REST_Response($saved, 201);
-		// return new WP_REST_Response($img_url, 201);
 	}
 
 	/**

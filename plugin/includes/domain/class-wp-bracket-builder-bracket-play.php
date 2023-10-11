@@ -1,7 +1,5 @@
 <?php
 
-use PHPUnit\Util\Log\TeamCity;
-
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
@@ -82,19 +80,11 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
 		return [];
 	}
 
+	/**
+	 * @throws Wpbb_ValidationException
+	 */
 	static public function from_array($data): Wp_Bracket_Builder_Bracket_Play {
-		if (!isset($data['tournament_id'])) {
-			throw new Exception('tournament_id is required');
-		}
-
-		if (!isset($data['author'])) {
-			throw new Exception('author is required');
-		}
-
-		if (!isset($data['picks'])) {
-			throw new Exception('picks is required');
-		}
-
+		validateRequiredFields($data, ['tournament_id', 'author', 'picks']);
 		$picks = [];
 		foreach ($data['picks'] as $pick) {
 			$picks[] = Wp_Bracket_Builder_Match_Pick::from_array($pick);
