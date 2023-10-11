@@ -87,6 +87,7 @@ export interface TemplateReq {
   matches: MatchReq[]
 }
 export interface TemplateRes extends PostBase {
+  date: string
   numTeams: number
   wildcardPlacement: WildcardPlacement
   html: string
@@ -104,6 +105,7 @@ export interface TournamentReq {
   updateNotifyParticipants?: boolean
 }
 export interface TournamentRes extends PostBase {
+  date: string
   bracketTemplateId: number
   bracketTemplate?: TemplateRes
 }

@@ -61,7 +61,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
       const matches = template.matches
       const results = tournament.results
       setBracketTitle(tournament.title)
-      setBracketDate('JAN 1, 2021')
+      setBracketDate(tournament.date)
       setTournamentId(tournament.id)
       let tree: MatchTree | null
       if (results && results.length > 0) {

@@ -4,9 +4,9 @@ import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import {
+  WithBracketMeta,
   WithDarkMode,
   WithMatchTree,
-  WithBracketMeta,
   WithProvider,
 } from '../../shared/components/HigherOrder'
 //@ts-ignore
@@ -14,7 +14,6 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
-import { bracketApi } from '../../shared/api/bracketApi'
 
 interface ViewPlayPageProps {
   bracketMeta: BracketMeta
@@ -43,7 +42,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   useEffect(() => {
     const picks = play?.picks
     const title = play?.tournament?.title
-    const date = 'Sept 2094'
+    const date = play?.tournament?.date
     setBracketMeta({ title, date })
     const template = play?.tournament?.bracketTemplate
     const matches = template?.matches

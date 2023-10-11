@@ -58,7 +58,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   useEffect(() => {
     setBracketMeta?.({
       title: bracketMeta?.title || defaultBracketName,
-      date: bracketMeta?.date || '2025',
+      date: bracketMeta?.date || new Date().getFullYear().toString(),
     })
   }, [])
 
@@ -68,7 +68,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       console.log('template found', template)
       setBracketMeta?.({
         title: title || defaultBracketName,
-        date: '2021',
+        date: template.date,
       })
       setNumTeams(numTeams)
       setWildcardPlacement(wildcardPlacement)

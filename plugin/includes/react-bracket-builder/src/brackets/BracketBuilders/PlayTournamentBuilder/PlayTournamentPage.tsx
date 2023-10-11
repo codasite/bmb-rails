@@ -56,7 +56,7 @@ const PlayPage = (props: PlayPageProps) => {
       const template = tournament.bracketTemplate
       const numTeams = template.numTeams
       const matches = template.matches
-      setBracketMeta?.({ title: tournament.title, date: '2021' })
+      setBracketMeta?.({ title: tournament.title, date: tournament.date })
       tree = MatchTree.fromMatchRes(numTeams, matches)
       // Better to have separate components for template and tournament
     } else if (template) {
