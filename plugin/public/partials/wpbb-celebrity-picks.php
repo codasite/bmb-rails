@@ -1,9 +1,9 @@
 <?php
-require_once('shared/wp-bracket-builder-tournaments-common.php');
-require_once('shared/wp-bracket-builder-partials-common.php');
+require_once('shared/wpbb-tournaments-common.php');
+require_once('shared/wpbb-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php');
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wp-bracket-builder-pagination-widget.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpbb-paginatino-widget.php';
 
 
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();

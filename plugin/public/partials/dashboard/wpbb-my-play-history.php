@@ -1,9 +1,9 @@
 <?php
 require_once 'wpbb-dashboard-common.php';
 $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
-require_once $shared_dir . 'wp-bracket-builder-partials-common.php';
-require_once $shared_dir . 'wp-bracket-builder-tournaments-common.php';
-require_once $shared_dir . 'wp-bracket-builder-pagination-widget.php';
+require_once $shared_dir . 'wpbb-partials-common.php';
+require_once $shared_dir . 'wpbb-tournaments-common.php';
+require_once $shared_dir . 'wpbb-paginatino-widget.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 
 $play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();

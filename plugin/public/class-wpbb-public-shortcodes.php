@@ -159,13 +159,13 @@ class Wpbb_Public_Shortcodes
 
 	public function render_bracket_play_page() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/play-page/wp-bracket-builder-bracket-play-page.php';
+		include plugin_dir_path(__FILE__) . 'partials/play-page/wpbb-play-page.php';
 		return ob_get_clean();
 	}
 
 	public function render_print_page() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/print-page/wp-bracket-builder-bracket-print-page.php';
+		include plugin_dir_path(__FILE__) . 'partials/print-page/wpbb-print-page.php';
 		return ob_get_clean();
 	}
 

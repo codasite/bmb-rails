@@ -1,6 +1,6 @@
 <?php
-require_once('wp-bracket-builder-partials-common.php');
-require_once('wp-bracket-builder-partials-constants.php');
+require_once('wpbb-partials-common.php');
+require_once('wpbb-partials-constants.php');
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';

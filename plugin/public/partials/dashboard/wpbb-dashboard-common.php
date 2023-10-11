@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'shared/wp-bracket-builder-partials-common.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'shared/wpbb-partials-common.php';
 
 /**
  * Icon Buttons DO something (make post request, execute JS, etc.)
