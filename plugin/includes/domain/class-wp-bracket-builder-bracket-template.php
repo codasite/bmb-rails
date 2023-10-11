@@ -2,6 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-validation-exception.php';
 
 class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
 {
@@ -71,41 +72,18 @@ class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base
 		];
 	}
 
+	/**
+	 * @throws Wpbb_ValidationException
+	 */
 	public static function from_array(array $data): Wp_Bracket_Builder_Bracket_Template {
-		if (!isset($data['num_teams'])) {
-			throw new Exception('num_teams is required');
-		}
-
-		if (!isset($data['wildcard_placement'])) {
-			throw new Exception('wildcard_placement is required');
-		}
-
-		if (!isset($data['date'])) {
-			throw new Exception('date is required');
-		}
-
-		if (!isset($data['author'])) {
-			throw new Exception('author id is required');
-		}
-
-		if (!isset($data['title'])) {
-			throw new Exception('title is required');
-		}
-
-		if (!isset($data['matches'])) {
-			throw new Exception('matches is required');
-		}
-
+		$requiredFields = ['num_teams', 'wildcard_placement', 'date', 'author', 'title', 'matches'];
+		validateRequiredFields($data, $requiredFields);
 		$matches = [];
-
 		foreach ($data['matches'] as $match) {
 			$matches[] = Wp_Bracket_Builder_Match::from_array($match);
 		}
 		$data['matches'] = $matches;
-
-		$template = new Wp_Bracket_Builder_Bracket_Template($data);
-
-		return $template;
+		return new Wp_Bracket_Builder_Bracket_Template($data);
 	}
 
 	public function to_array(): array {

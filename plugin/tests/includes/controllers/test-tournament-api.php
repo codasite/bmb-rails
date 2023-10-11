@@ -47,6 +47,20 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 		$this->assertNotNull($tournament);
 	}
 
+	public function test_create_tournament_validation_exception() {
+		$data = [
+			'bracket_template_id' => 1,
+		];
+		$request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/tournaments');
+
+		$request->set_body_params($data);
+		$request->set_header('Content-Type', 'application/json');
+		$request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+		$response = rest_do_request($request);
+		$this->assertEquals(400, $response->get_status());
+		$this->assertEquals('date, title is required', $response->get_data()['message']);
+	}
 
 	public function test_update_tournament() {
 

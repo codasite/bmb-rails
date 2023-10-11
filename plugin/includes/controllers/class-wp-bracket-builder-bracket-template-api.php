@@ -160,20 +160,14 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 		if (!isset($params['author'])) {
 			$params['author'] = get_current_user_id();
 		}
-		$template = Wp_Bracket_Builder_Bracket_Template::from_array($params);
-
-		//checking validation for requested data
-		// $validated = $this->bracket_validate->validate_bracket_api($template);
-		// if (!isset($validated)) {
+		try {
+			$template = Wp_Bracket_Builder_Bracket_Template::from_array($params);
+		} catch (Wpbb_ValidationException $e) {
+			return new WP_Error('validation-error', $e->getMessage(), array('status' => 400));
+		}
 
 		$saved = $this->template_repo->add($template);
 		return new WP_REST_Response($saved, 201);
-		// return new WP_REST_Response($template, 201);
-
-		// }
-		// return $validated;
-		// return new WP_Error('cant-create', __('message', 'text-domain'), array('status' => 500));
-
 	}
 
 	/**

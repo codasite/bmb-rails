@@ -153,7 +153,11 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 			$params['bracket_template']['author'] = get_current_user_id();
 		}
 
-		$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($params);
+		try {
+			$tournament = Wp_Bracket_Builder_Bracket_Tournament::from_array($params);
+		} catch (Wpbb_ValidationException $e) {
+			return new WP_Error('validation-error', $e->getMessage(), array('status' => 400));
+		}
 
 		$saved = $this->tournament_repo->add($tournament);
 		return new WP_REST_Response($saved, 201);
