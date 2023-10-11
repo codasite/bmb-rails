@@ -1,6 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-mailchimp-email-service.php';

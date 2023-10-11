@@ -1,5 +1,5 @@
 <?php
-require_once 'class-wp-bracket-builder-object-storage-interface.php';
+require_once 'class-wpbb-object-storage-interface.php';
 class Wp_Bracket_Builder_S3_Storage {
 
 	/**

@@ -1,9 +1,9 @@
 <?php
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/service/class-wpbb-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/class-wp-bracket-builder-activator.php';
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-template-api.php';
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-tournament-api.php';
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-play-api.php';
+// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-template-api.php';
+// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-tournament-api.php';
+// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
 
 // class Test_Wp_Bracket_Builder_Score_Service extends WP_UnitTestCase {
 
@@ -54,7 +54,7 @@
 //     }
 
 //     function test_play_for_tournament_in_db() {
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-play-api.php';
+//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
 
 //         $api = new Wp_Bracket_Builder_Bracket_Play_Api();
 //         $response = $api->get_items([]);
@@ -84,7 +84,7 @@
 //         $response = $tournament_api->update_item($request);
 //         $this->assertEquals(200, $response->get_status());
 
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-play-api.php';
+//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
 
 //         $plays_api = new Wp_Bracket_Builder_Bracket_Play_Api();
 //         $response = $plays_api->get_items([]);

@@ -1,8 +1,8 @@
 <?php
 
 require_once 'class-wpbb-score-service-interface.php';
-require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wpbb-bracket-play.php';
+require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wpbb-bracket-tournament.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/repository/class-wpbb-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/repository/class-wpbb-bracket-template-repo.php';

@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-custom-post-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-slug-service.php';
 
 abstract class Wpbb_CustomPostRepoBase

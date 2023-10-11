@@ -1,6 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
-require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-play.php';
+require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wpbb-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php';
 
 class Wpbb_Bracket_Pick_Service

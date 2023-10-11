@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
 class Wp_Bracket_Builder_Match {
 	/**

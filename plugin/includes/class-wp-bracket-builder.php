@@ -124,22 +124,22 @@ class Wp_Bracket_Builder {
 		/**
 		 * The bracket template api controller class
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-template-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wpbb-bracket-template-api.php';
 
 		/**
 		 * The bracket tournament api controller class
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-tournament-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wpbb-bracket-tournament-api.php';
 
 		/**
 		 * The bracket picks api controller class
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-bracket-play-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
 
 		/**
 		 * The html to image converter api controller class
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wp-bracket-builder-convert-api.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/controllers/class-wpbb-convert-api.php';
 
 		/**
 		 * Callbacks for hooks and filters

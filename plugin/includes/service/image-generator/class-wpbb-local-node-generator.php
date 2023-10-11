@@ -1,7 +1,7 @@
 <?php
 require_once 'class-wpbb-post-image-generator-interface.php';
-require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wp-bracket-builder-object-storage-interface.php';
-require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wp-bracket-builder-s3-storage.php';
+require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wpbb-object-storage-interface.php';
+require_once plugin_dir_path(dirname(__FILE__), 2) . 'object-storage/class-wpbb-s3-storage.php';
 
 class Wpbb_Local_Node_Generator implements Wpbb_PostImageGeneratorInterface
 {

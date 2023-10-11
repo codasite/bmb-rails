@@ -1,6 +1,6 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-play.php';
 
 class BracketPlayTest extends WPBB_UnitTestCase {
 

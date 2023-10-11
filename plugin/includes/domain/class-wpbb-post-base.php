@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-custom-post-interface.php';
 
 abstract class Wp_Bracket_Builder_Post_Base implements Wp_Bracket_Builder_Custom_Post_Interface {
 	/**

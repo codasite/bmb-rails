@@ -1,11 +1,12 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-play-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/image-generator/class-wp-bracket-builder-local-node-generator.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-play.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/image-generator/class-wpbb-local-node-generator.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 
-class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
+class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller
+{
 
 	/**
 	 * @var Wpbb_BracketPlayRepo

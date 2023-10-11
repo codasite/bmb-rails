@@ -1,7 +1,7 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-template.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-template.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-match-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket-team-repo.php';

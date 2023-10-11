@@ -1,7 +1,7 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-post-base.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-custom-post-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-match.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-validation-exception.php';
 
 class Wp_Bracket_Builder_Bracket_Template extends Wp_Bracket_Builder_Post_Base

@@ -1,17 +1,18 @@
 <?php
 
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-post-base.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-match-pick.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-post-base.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-match-pick.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
 /**
- * This class creates a bracket pick object by submitting 
+ * This class creates a bracket pick object by submitting
  */
 // class Wp_Bracket_Builder_Bracket_Pick_Factory extends Wp_Bracket_Builder_Bracket_Base {
 
 
-class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base {
+class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base
+{
 
 	/**
 	 * @var int
