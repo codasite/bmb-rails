@@ -1,7 +1,8 @@
 <?php
 
 
-class Wp_Bracket_Builder_Public_Hooks {
+class Wpbb_Public_Hooks
+{
 
 	public function add_rewrite_tags() {
 		add_rewrite_tag('%tab%', '([^&]+)');

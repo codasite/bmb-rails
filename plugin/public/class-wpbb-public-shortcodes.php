@@ -4,7 +4,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 
 
-class Wp_Bracket_Builder_Public_Shortcodes {
+class Wpbb_Public_Shortcodes
+{
 
 	/**
 	 * Render the bracket preview
@@ -13,8 +14,8 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 	 */
 	public function render_bracket_preview() {
 		ob_start();
-?>
-		<div id="wpbb-bracket-preview-controller" style="width: 100%">
+		?>
+    <div id="wpbb-bracket-preview-controller" style="width: 100%">
 		</div>
 	<?php
 		return ob_get_clean();
@@ -73,14 +74,14 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 
 	public function render_official_tournamnets() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-official-tournaments.php';
+		include plugin_dir_path(__FILE__) . 'partials/wpbb-official-tournaments.php';
 
 		return ob_get_clean();
 	}
 
 	public function render_celebrity_picks() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-celebrity-picks.php';
+		include plugin_dir_path(__FILE__) . 'partials/wpbb-celebrity-picks.php';
 
 		return ob_get_clean();
 	}
@@ -116,7 +117,7 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 			)
 		);
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-template-page.php';
+		include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-template-page.php';
 		return ob_get_clean();
 	}
 
@@ -151,7 +152,7 @@ class Wp_Bracket_Builder_Public_Shortcodes {
 			)
 		);
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wp-bracket-builder-bracket-tournament-page.php';
+		include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-tournament-page.php';
 
 		return ob_get_clean();
 	}

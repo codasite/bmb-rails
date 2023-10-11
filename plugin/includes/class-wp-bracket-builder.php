@@ -119,7 +119,7 @@ class Wp_Bracket_Builder {
 		 * The class responsible for defining all actions that occur in the public-facing
 		 * side of the site.
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wpbb-public.php';
 
 		/**
 		 * The bracket template api controller class
@@ -144,12 +144,12 @@ class Wp_Bracket_Builder {
 		/**
 		 * Callbacks for hooks and filters
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public-hooks.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wpbb-public-hooks.php';
 
 		/**
 		 * Shortcodes for the public side of the site
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-bracket-builder-public-shortcodes.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wpbb-public-shortcodes.php';
 
 		$this->loader = new Wp_Bracket_Builder_Loader();
 	}
@@ -225,9 +225,9 @@ class Wp_Bracket_Builder {
 	 */
 	private function define_public_hooks() {
 
-		$plugin_public = new Wp_Bracket_Builder_Public($this->get_plugin_name(), $this->get_version());
-		$public_hooks = new Wp_Bracket_Builder_Public_Hooks();
-		$shortcodes = new Wp_Bracket_Builder_Public_Shortcodes();
+		$plugin_public = new Wpbb_Public($this->get_plugin_name(), $this->get_version());
+		$public_hooks = new Wpbb_Public_Hooks();
+		$shortcodes = new Wpbb_Public_Shortcodes();
 
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
 		$this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');

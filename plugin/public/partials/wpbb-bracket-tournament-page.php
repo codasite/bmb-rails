@@ -5,7 +5,7 @@ Template Name: Bracket Builder Tournament
 $view = get_query_var('view');
 switch ($view) {
     case 'leaderboard':
-        include 'wp-bracket-builder-tourney-leaderboard.php';
+        include 'wpbb-tourney-leaderboard.php';
         break;
     case 'play':
         echo '<div id="wpbb-play-tournament-builder"></div>';
