@@ -4,8 +4,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-aws-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wp-bracket-builder-pdf-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-aws-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-pdf-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wp-bracket-builder-bracket-config.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-config-repo.php';
 
@@ -71,9 +71,9 @@ class Wpbb_Public
 		$this->version = $version;
 		$this->utils = new Wpbb_Utils();
 		$this->bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
-		$this->s3 = new Wp_Bracket_Builder_S3_Service();
+		$this->s3 = new Wpbb_S3_Service();
 		$this->lambda_service = new Wp_Bracket_Builder_Lambda_Service();
-		$this->pdf_service = new Wp_Bracket_Builder_Pdf_Service();
+		$this->pdf_service = new Wpbb_PDF_Service();
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 	}
 

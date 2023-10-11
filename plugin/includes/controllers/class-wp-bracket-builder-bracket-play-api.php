@@ -18,7 +18,7 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	private $utils;
 
 	// /**
-	//  * @var Wp_Bracket_Builder_Bracket_Pick_Service
+	//  * @var Wpbb_Bracket_Pick_Service
 	//  */
 	// private $bracket_pick_service;
 

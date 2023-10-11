@@ -3,8 +3,8 @@ require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
 require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wp-bracket-builder-bracket-tournament.php';
 require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wp-bracket-builder-bracket-tournament-repo.php';
 require_once WPBB_PLUGIN_DIR . 'includes/controllers/class-wp-bracket-builder-bracket-tournament-api.php';
-require_once WPBB_PLUGIN_DIR . 'includes/service/class-wp-bracket-builder-notification-service-interface.php';
-require_once WPBB_PLUGIN_DIR . 'includes/service/class-wp-bracket-builder-score-service-interface.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-notification-service-interface.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-score-service-interface.php';
 
 //namespace phpunit
 

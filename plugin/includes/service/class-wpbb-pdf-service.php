@@ -4,17 +4,18 @@ require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
 
-class Wp_Bracket_Builder_PDF_Service {
+class Wpbb_PDF_Service
+{
 
 	/**
 	 * @param array $pdfParams - array of arrays
 	 * @return string
-	 * 
+	 *
 	 * $pdfParams = [
-	 * 	[
-	 * 		'content' => 'https://wpbb-static-designs.s3.amazonaws.com/12x16_bmb_cmyk_corner_light.pdf',
-	 * 	],
-	 * 	[
+	 *  [
+	 *    'content' => 'https://wpbb-static-designs.s3.amazonaws.com/12x16_bmb_cmyk_corner_light.pdf',
+	 *  ],
+	 *  [
 	 * 		'content' => '',
 	 * 		'orientation' => 'P',
 	 * 		'size' => [12, 16]

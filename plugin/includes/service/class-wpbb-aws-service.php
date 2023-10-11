@@ -11,7 +11,8 @@ use Aws\S3\S3UriParser;
 
 #snippet-start:[php.example_code.lambda.service]
 
-class Wp_Bracket_Builder_S3_Service {
+class Wpbb_S3_Service
+{
 	protected S3Client $s3Client;
 
 	public function __construct(

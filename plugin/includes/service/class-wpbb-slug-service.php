@@ -1,6 +1,7 @@
 <?php
 
-class Wp_Bracket_Builder_Slug_Service {
+class Wpbb_Slug_Service
+{
 
 	public function generate() {
 		do {

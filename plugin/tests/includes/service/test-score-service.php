@@ -1,5 +1,5 @@
 <?php
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/service/class-wp-bracket-builder-score-service.php';
+// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/service/class-wpbb-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/class-wp-bracket-builder-activator.php';
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-template-api.php';
 // require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wp-bracket-builder-bracket-tournament-api.php';

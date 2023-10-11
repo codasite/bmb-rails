@@ -1,16 +1,16 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-custom-post-interface.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-slug-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-slug-service.php';
 
 abstract class Wp_Bracket_Builder_Custom_Post_Repository_Base {
 
 	/**
-	 * @var Wp_Bracket_Builder_Slug_Service
+	 * @var Wpbb_Slug_Service
 	 */
 	private $slug_service;
 
 	public function __construct() {
-		$this->slug_service = new Wp_Bracket_Builder_Slug_Service();
+		$this->slug_service = new Wpbb_Slug_Service();
 	}
 
 	protected function insert_post(Wp_Bracket_Builder_Custom_Post_Interface $post,  $wp_error = false, $random_slug = false): int {

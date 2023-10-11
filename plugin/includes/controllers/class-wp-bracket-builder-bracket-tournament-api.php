@@ -1,15 +1,16 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-tournament.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-score-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-score-service.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-mailchimp-email-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-notification-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-notification-service-interface.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-email-service-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-mailchimp-email-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-notification-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-notification-service-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-email-service-interface.php';
 
 
-class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
+class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller
+{
 
 	/**
 	 * @var Wp_Bracket_Builder_Bracket_Tournament_Repo
@@ -27,28 +28,28 @@ class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller {
 	protected $rest_base;
 
 	/**
-	 * @var Wp_Bracket_Builder_score_service
+	 * @var Wpbb_Score_Service
 	 */
 	private $score_service;
 
 	/**
-	 * @var Wp_Bracket_Builder_Email_Service_Interface
+	 * @var Wpbb_Email_Service_Interface
 	 */
-	private ?Wp_Bracket_Builder_Email_Service_Interface $email_service;
+	private ?Wpbb_Email_Service_Interface $email_service;
 
 	/**
-	 * @var Wp_Bracket_Builder_Notification_Service_Interface
+	 * @var Wpbb_Notification_Service_Interface
 	 */
-	private ?Wp_Bracket_Builder_Notification_Service_Interface $notification_service;
+	private ?Wpbb_Notification_Service_Interface $notification_service;
 
 	public function __construct($args = array()) {
 		$this->tournament_repo = $args['tournament_repo'] ?? new Wp_Bracket_Builder_Bracket_Tournament_Repository();
-		$this->score_service = $args['score_service'] ?? new Wp_Bracket_Builder_Score_Service();
+		$this->score_service = $args['score_service'] ?? new Wpbb_Score_Service();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'tournaments';
 		try {
-			// $this->email_service = $args['email_service'] ?? new Wp_Bracket_Builder_Mailchimp_Email_Service();
-			$this->notification_service = $args['notification_service'] ?? new Wp_Bracket_Builder_Notification_Service();
+			// $this->email_service = $args['email_service'] ?? new Wpbb_Mailchimp_Email_Service();
+			$this->notification_service = $args['notification_service'] ?? new Wpbb_Notification_Service();
 		} catch (Exception $e) {
 			$this->email_service = null;
 			$this->notification_service = null;
