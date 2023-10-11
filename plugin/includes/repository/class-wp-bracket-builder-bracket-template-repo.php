@@ -99,6 +99,10 @@ class Wp_Bracket_Builder_Bracket_Template_Repository extends Wp_Bracket_Builder_
 			return null;
 		}
 
+		if (!current_user_can('administrator') && intval(get_current_user_id()) !== intval($template_post->post_author)) {
+			return null;
+		}
+	
 		$matches = $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
 		$author_id = (int) $template_post->post_author;
 
