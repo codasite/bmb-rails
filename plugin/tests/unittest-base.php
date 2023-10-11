@@ -25,4 +25,8 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
 		$activator = new Wpbb_Activator();
 		$activator->activate();
 	}
+
+	public function set_up() {
+		wp_set_current_user(1);
+	}
 }
