@@ -2,7 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/image-generator/class-wp-bracket-builder-local-node-generator.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 
 class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
@@ -13,7 +13,7 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	private $play_repo;
 
 	/**
-	 * @var Wp_Bracket_Builder_Utils
+	 * @var Wpbb_Utils
 	 */
 	private $utils;
 
@@ -44,7 +44,7 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller {
 	public function __construct() {
 		// echo $play_repo;
 		// $this->play_repo = $play_repo != null ? $play_repo : new Wp_Bracket_Builder_Bracket_Repository();
-		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->utils = new Wpbb_Utils();
 		$this->play_repo = new Wp_Bracket_Builder_Bracket_Play_Repository();
 		$this->image_generator = new Wp_Bracket_Builder_Local_Node_Generator();
 		$this->namespace = 'wp-bracket-builder/v1';

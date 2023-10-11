@@ -6,11 +6,11 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-b
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-team-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Custom_Post_Repository_Base {
 	/**
-	 * @var Wp_Bracket_Builder_Utils
+	 * @var Wpbb_Utils
 	 */
 	private $utils;
 
@@ -34,7 +34,7 @@ class Wp_Bracket_Builder_Bracket_Play_Repository extends Wp_Bracket_Builder_Cust
 		$this->wpdb = $wpdb;
 		$this->tournament_repo = new Wp_Bracket_Builder_Bracket_Tournament_Repository();
 		$this->team_repo = new Wp_Bracket_Builder_Bracket_Team_Repository();
-		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->utils = new Wpbb_Utils();
 		parent::__construct();
 	}
 

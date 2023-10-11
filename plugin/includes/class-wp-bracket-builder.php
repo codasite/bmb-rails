@@ -35,7 +35,7 @@ class Wp_Bracket_Builder {
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      Wp_Bracket_Builder_Loader    $loader    Maintains and registers all hooks for the plugin.
+	 * @var      Wpbb_Loader $loader Maintains and registers all hooks for the plugin.
 	 */
 	protected $loader;
 
@@ -85,9 +85,9 @@ class Wp_Bracket_Builder {
 	 *
 	 * Include the following files that make up the plugin:
 	 *
-	 * - Wp_Bracket_Builder_Loader. Orchestrates the hooks of the plugin.
-	 * - Wp_Bracket_Builder_i18n. Defines internationalization functionality.
-	 * - Wp_Bracket_Builder_Admin. Defines all hooks for the admin area.
+	 * - Wpbb_Loader. Orchestrates the hooks of the plugin.
+	 * - Wpbb_i18n. Defines internationalization functionality.
+	 * - Wpbb_Admin. Defines all hooks for the admin area.
 	 * - Wp_Bracket_Builder_Public. Defines all hooks for the public side of the site.
 	 *
 	 * Create an instance of the loader which will be used to register the hooks
@@ -102,18 +102,18 @@ class Wp_Bracket_Builder {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-loader.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpbb-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
 		 * of the plugin.
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-i18n.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpbb-i18n.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
-		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wp-bracket-builder-admin.php';
+		require_once plugin_dir_path(dirname(__FILE__)) . 'admin/class-wpbb-admin.php';
 
 		/**
 		 * The class responsible for defining all actions that occur in the public-facing
@@ -151,13 +151,13 @@ class Wp_Bracket_Builder {
 		 */
 		require_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wpbb-public-shortcodes.php';
 
-		$this->loader = new Wp_Bracket_Builder_Loader();
+		$this->loader = new Wpbb_Loader();
 	}
 
 	/**
 	 * Define the locale for this plugin for internationalization.
 	 *
-	 * Uses the Wp_Bracket_Builder_i18n class in order to set the domain and to register the hook
+	 * Uses the Wpbb_i18n class in order to set the domain and to register the hook
 	 * with WordPress.
 	 *
 	 * @since    1.0.0
@@ -165,7 +165,7 @@ class Wp_Bracket_Builder {
 	 */
 	private function set_locale() {
 
-		$plugin_i18n = new Wp_Bracket_Builder_i18n();
+		$plugin_i18n = new Wpbb_i18n();
 
 		$this->loader->add_action('plugins_loaded', $plugin_i18n, 'load_plugin_textdomain');
 	}
@@ -179,7 +179,7 @@ class Wp_Bracket_Builder {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Wp_Bracket_Builder_Admin($this->get_plugin_name(), $this->get_version());
+		$plugin_admin = new Wpbb_Admin($this->get_plugin_name(), $this->get_version());
 		$template_api = new Wp_Bracket_Builder_Bracket_Template_Api();
 		$tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
 		$play_api = new Wp_Bracket_Builder_Bracket_Play_Api();
@@ -271,8 +271,8 @@ class Wp_Bracket_Builder {
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
+	 * @return    Wpbb_Loader    Orchestrates the hooks of the plugin.
 	 * @since     1.0.0
-	 * @return    Wp_Bracket_Builder_Loader    Orchestrates the hooks of the plugin.
 	 */
 	public function get_loader() {
 		return $this->loader;

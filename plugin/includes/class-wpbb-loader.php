@@ -21,14 +21,15 @@
  * @subpackage Wp_Bracket_Builder/includes
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wp_Bracket_Builder_Loader {
+class Wpbb_Loader
+{
 
 	/**
 	 * The array of actions registered with WordPress.
 	 *
 	 * @since    1.0.0
 	 * @access   protected
-	 * @var      array    $actions    The actions registered with WordPress to fire when the plugin loads.
+	 * @var      array $actions The actions registered with WordPress to fire when the plugin loads.
 	 */
 	protected $actions;
 

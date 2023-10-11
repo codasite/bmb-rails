@@ -24,7 +24,8 @@
  * @subpackage Wp_Bracket_Builder/includes
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wp_Bracket_Builder_i18n {
+class Wpbb_i18n
+{
 
 
 	/**

@@ -1,13 +1,13 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-team.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 /**
  * Repository for Matches, Match Picks, and Teams
  */
 class Wp_Bracket_Builder_Bracket_Team_Repository {
 	/**
-	 * @var Wp_Bracket_Builder_Utils
+	 * @var Wpbb_Utils
 	 */
 	private $utils;
 
@@ -20,7 +20,7 @@ class Wp_Bracket_Builder_Bracket_Team_Repository {
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->utils = new Wpbb_Utils();
 	}
 
 	/**

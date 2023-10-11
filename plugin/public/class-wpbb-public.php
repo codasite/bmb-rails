@@ -69,7 +69,7 @@ class Wpbb_Public
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->utils = new Wpbb_Utils();
 		$this->bracket_config_repo = new Wp_Bracket_Builder_Bracket_Config_Repository();
 		$this->s3 = new Wp_Bracket_Builder_S3_Service();
 		$this->lambda_service = new Wp_Bracket_Builder_Lambda_Service();
@@ -88,15 +88,15 @@ class Wpbb_Public
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Wp_Bracket_Builder_Loader as all of the hooks are defined
+		 * defined in Wpbb_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Wp_Bracket_Builder_Loader will then create the relationship
+		 * The Wpbb_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
 
-		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wp-bracket-builder-public.css', array(), $this->version, 'all');
+		wp_enqueue_style($this->plugin_name, plugin_dir_url(__FILE__) . 'css/wpbb-public.css', array(), $this->version, 'all');
 		wp_enqueue_style('index.css', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.css', array(), null, 'all');
 	}
 

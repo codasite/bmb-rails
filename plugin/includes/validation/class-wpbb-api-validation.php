@@ -2,17 +2,17 @@
 require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket.php';
 
 
-class Wp_Bracket_Builder_Bracket_Api_Validation
+class Wpbb_ApiValidation
 {
-    private $total_rounds;
+	private $total_rounds;
 
-    private $wildcards;
+	private $wildcards;
 
-    private $bracket;
-    private $wpdb;
+	private $bracket;
+	private $wpdb;
 
 
-    public function validate_bracket_api($bracket)
+	public function validate_bracket_api($bracket)
     {
         $this->bracket = $bracket;
         $this->total_rounds = $this->bracket->num_rounds;

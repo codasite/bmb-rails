@@ -11,7 +11,7 @@
 //         // Set up DB tables
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/class-wp-bracket-builder-activator.php';
 
-//         $activator = new Wp_Bracket_Builder_Activator();
+//         $activator = new Wpbb_Activator();
 //         $activator->activate();
 
 //         // Create bracket template

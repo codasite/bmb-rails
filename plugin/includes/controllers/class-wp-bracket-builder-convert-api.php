@@ -2,7 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-aws-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wp-bracket-builder-bracket-config.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-config-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 
 class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
@@ -52,7 +52,7 @@ class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller {
 	 */
 
 	public function html_to_image($request) {
-		$utils = new Wp_Bracket_Builder_Utils();
+		$utils = new Wpbb_Utils();
 		// get the entire request body
 		$body = json_decode($request->get_body(), true);
 		$theme_mode = $body['themeMode'] ?? null;

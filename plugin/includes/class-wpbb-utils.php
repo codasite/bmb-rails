@@ -1,5 +1,6 @@
 <?php
-class Wp_Bracket_Builder_Utils {
+class Wpbb_Utils
+{
 	public function set_session_value($key, $value) {
 		if (!session_id()) {
 			session_start();

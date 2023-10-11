@@ -1,12 +1,12 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 require_once plugin_dir_path(dirname(__FILE__)) . '/domain/class-wp-bracket-builder-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php';
 
 class Wp_Bracket_Builder_Bracket_Pick_Service {
 
 	/**
-	 * @var Wp_Bracket_Builder_Utils
+	 * @var Wpbb_Utils
 	 */
 	private $utils;
 
@@ -21,7 +21,7 @@ class Wp_Bracket_Builder_Bracket_Pick_Service {
 	// private $bracket_pick;
 
 	public function __construct($bracket_pick = null) {
-		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->utils = new Wpbb_Utils();
 		$this->lamda_service = new Wp_Bracket_Builder_Lambda_Service();
 		// $this->bracket_pick = $bracket_pick;
 	}

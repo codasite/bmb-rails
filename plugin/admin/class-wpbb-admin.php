@@ -1,5 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wpbb-utils.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-bracket-builder-bracket-config-repo.php';
 
 /**
@@ -22,14 +22,15 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wp-
  * @subpackage Wp_Bracket_Builder/admin
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wp_Bracket_Builder_Admin {
+class Wpbb_Admin
+{
 
 	/**
 	 * The ID of this plugin.
 	 *
 	 * @since    1.0.0
 	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
+	 * @var      string $plugin_name The ID of this plugin.
 	 */
 	private $plugin_name;
 
@@ -69,10 +70,10 @@ class Wp_Bracket_Builder_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Wp_Bracket_Builder_Loader as all of the hooks are defined
+		 * defined in Wpbb_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Wp_Bracket_Builder_Loader will then create the relationship
+		 * The Wpbb_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
@@ -94,10 +95,10 @@ class Wp_Bracket_Builder_Admin {
 		 * This function is provided for demonstration purposes only.
 		 *
 		 * An instance of this class should be passed to the run() function
-		 * defined in Wp_Bracket_Builder_Loader as all of the hooks are defined
+		 * defined in Wpbb_Loader as all of the hooks are defined
 		 * in that particular class.
 		 *
-		 * The Wp_Bracket_Builder_Loader will then create the relationship
+		 * The Wpbb_Loader will then create the relationship
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */

@@ -22,7 +22,7 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
 		parent::set_up_before_class();
 
 		require_once plugin_dir_path(dirname(__FILE__)) . 'includes/class-wp-bracket-builder-activator.php';
-		$activator = new Wp_Bracket_Builder_Activator();
+		$activator = new Wpbb_Activator();
 		$activator->activate();
 	}
 }

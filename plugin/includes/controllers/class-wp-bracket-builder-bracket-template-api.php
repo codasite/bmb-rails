@@ -11,7 +11,7 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 	private $template_repo;
 
 	/**
-	 * @var Wp_Bracket_Builder_Bracket_Api_Validation
+	 * @var Wpbb_ApiValidation
 	 */
 	private $bracket_validate;
 
@@ -35,7 +35,7 @@ class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
 		$this->template_repo = new Wp_Bracket_Builder_Bracket_Template_Repository();
 		$this->namespace = 'wp-bracket-builder/v1';
 		$this->rest_base = 'templates';
-		// $this->bracket_validate = new Wp_Bracket_Builder_Bracket_Api_Validation();
+		// $this->bracket_validate = new Wpbb_ApiValidation();
 	}
 
 	/**

@@ -7,14 +7,14 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-b
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wp-bracket-builder-bracket-play-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wp-bracket-builder-custom-post-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wp-bracket-builder-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 /**
  * Repository for Matches, Match Picks, and Teams
  */
 class Wp_Bracket_Builder_Bracket_Match_Repository {
 	/**
-	 * @var Wp_Bracket_Builder_Utils
+	 * @var Wpbb_Utils
 	 */
 	private $utils;
 
@@ -27,7 +27,7 @@ class Wp_Bracket_Builder_Bracket_Match_Repository {
 	public function __construct() {
 		global $wpdb;
 		$this->wpdb = $wpdb;
-		$this->utils = new Wp_Bracket_Builder_Utils();
+		$this->utils = new Wpbb_Utils();
 	}
 
 	/**
