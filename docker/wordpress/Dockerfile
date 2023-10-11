@@ -48,12 +48,12 @@ COPY --chmod=755 docker/wordpress/downloads /tmp/downloads
         # fi \
 
 # the default docker image will copy files from /usr/src/wordpress to /var/www/html
-RUN unzip -qq /tmp/downloads/wordpress.zip -d /tmp/wordpress \
-        && rm -f /tmp/wordpress/wp-config.php \
+RUN unzip -qq /tmp/downloads/wordpress.zip -d /tmp/wordpress
+RUN rm -f /tmp/wordpress/wp-config.php \
         && cp -r /tmp/wordpress/* /usr/src/wordpress \
         && rm -rf /tmp/wordpress \
-        && rm -rf /tmp/downloads \
-        && echo "*** wordpress downloaded"
+        # && rm -rf /tmp/downloads \
+        # && echo "*** wordpress downloaded"
 # download oxygen from google drive
 # USER www-data
 # RUN curl -L -o /tmp/oxygen.zip "https://drive.google.com/uc?export=download&id=19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2"
