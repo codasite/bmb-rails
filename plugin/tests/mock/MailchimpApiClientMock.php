@@ -2,6 +2,7 @@
 
 use MailchimpTransactional\ApiClient;
 
-class MailchimpApiClientMock extends ApiClient {
-	public $messages;
+class MailchimpApiClientMock extends ApiClient
+{
+  public $messages;
 }

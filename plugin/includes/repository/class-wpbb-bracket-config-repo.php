@@ -1,5 +1,6 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-config.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'domain/class-wpbb-bracket-config.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 // // a constant for the session key
@@ -54,35 +55,41 @@ define('WPBB_BRACKET_CONFIG_SESSION_KEY', 'wpbb_bracket_config');
 
 class Wpbb_BracketConfigRepo
 {
+  private $utils;
 
-	private $utils;
+  public function __construct()
+  {
+    $this->utils = new Wpbb_Utils();
+  }
 
-	public function __construct() {
-		$this->utils = new Wpbb_Utils();
-	}
+  public function add(Wpbb_BracketConfig $config): Wpbb_BracketConfig
+  {
+    $configs = $this->get_all();
+    $theme_mode = $config->theme_mode;
+    $bracket_placement = $config->bracket_placement;
+    $configs[$theme_mode][$bracket_placement] = $config;
+    $session_key = WPBB_BRACKET_CONFIG_SESSION_KEY;
+    $this->utils->set_session_value($session_key, $configs);
+    return $configs[$theme_mode][$bracket_placement];
+  }
 
-	public function add(Wpbb_BracketConfig $config): Wpbb_BracketConfig {
-		$configs = $this->get_all();
-		$theme_mode = $config->theme_mode;
-		$bracket_placement = $config->bracket_placement;
-		$configs[$theme_mode][$bracket_placement] = $config;
-		$session_key = WPBB_BRACKET_CONFIG_SESSION_KEY;
-		$this->utils->set_session_value($session_key, $configs);
-		return $configs[$theme_mode][$bracket_placement];
-	}
+  public function get_all(): array
+  {
+    $session_key = WPBB_BRACKET_CONFIG_SESSION_KEY;
+    $configs = $this->utils->get_session_value($session_key);
+    return $configs ? $configs : [];
+  }
 
-	public function get_all(): array {
-		$session_key = WPBB_BRACKET_CONFIG_SESSION_KEY;
-		$configs = $this->utils->get_session_value($session_key);
-		return $configs ? $configs : [];
-	}
+  public function is_empty(): bool
+  {
+    return empty($this->get_all());
+  }
 
-	public function is_empty(): bool {
-		return empty($this->get_all());
-	}
-
-	public function get(string $theme_mode, string $bracket_placement): ?Wpbb_BracketConfig {
-		$configs = $this->get_all();
-		return $configs[$theme_mode][$bracket_placement] ?? null;
-	}
+  public function get(
+    string $theme_mode,
+    string $bracket_placement
+  ): ?Wpbb_BracketConfig {
+    $configs = $this->get_all();
+    return $configs[$theme_mode][$bracket_placement] ?? null;
+  }
 }

@@ -3,69 +3,78 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
 class Wpbb_Match
 {
-	/**
-	 * @var int
-	 */
-	public $id;
+  /**
+   * @var int
+   */
+  public $id;
 
-	/**
-	 * @var int
-	 */
-	public $round_index;
+  /**
+   * @var int
+   */
+  public $round_index;
 
-	/**
-	 * @var int
-	 */
-	public $match_index;
+  /**
+   * @var int
+   */
+  public $match_index;
 
-	/**
-	 * @var Wpbb_Team
-	 */
-	public $team1;
+  /**
+   * @var Wpbb_Team
+   */
+  public $team1;
 
-	/**
-	 * @var Wpbb_Team
-	 */
-	public $team2;
+  /**
+   * @var Wpbb_Team
+   */
+  public $team2;
 
-	public function __construct(int $round_index, int $match_index, Wpbb_Team $team1 = null, Wpbb_Team $team2 = null, int $id = null) {
-		$this->round_index = $round_index;
-		$this->match_index = $match_index;
-		$this->team1 = $team1;
-		$this->team2 = $team2;
-		$this->id = $id;
-	}
+  public function __construct(
+    int $round_index,
+    int $match_index,
+    Wpbb_Team $team1 = null,
+    Wpbb_Team $team2 = null,
+    int $id = null
+  ) {
+    $this->round_index = $round_index;
+    $this->match_index = $match_index;
+    $this->team1 = $team1;
+    $this->team2 = $team2;
+    $this->id = $id;
+  }
 
-	static public function from_array(array $data): Wpbb_Match {
-		if (!isset($data['round_index']) || !isset($data['match_index'])) {
-			throw new InvalidArgumentException('round_index and match_index are required');
-		}
+  public static function from_array(array $data): Wpbb_Match
+  {
+    if (!isset($data['round_index']) || !isset($data['match_index'])) {
+      throw new InvalidArgumentException(
+        'round_index and match_index are required'
+      );
+    }
 
-		$match = new Wpbb_Match($data['round_index'], $data['match_index']);
+    $match = new Wpbb_Match($data['round_index'], $data['match_index']);
 
+    if (isset($data['id'])) {
+      $match->id = (int) $data['id'];
+    }
 
-		if (isset($data['id'])) {
-			$match->id = (int)$data['id'];
-		}
+    if (isset($data['team1'])) {
+      $match->team1 = Wpbb_Team::from_array($data['team1']);
+    }
 
-		if (isset($data['team1'])) {
-			$match->team1 = Wpbb_Team::from_array($data['team1']);
-		}
+    if (isset($data['team2'])) {
+      $match->team2 = Wpbb_Team::from_array($data['team2']);
+    }
 
-		if (isset($data['team2'])) {
-			$match->team2 = Wpbb_Team::from_array($data['team2']);
-		}
+    return $match;
+  }
 
-		return $match;
-	}
-
-	public function to_array(): array {
-		return [
-			'id' => $this->id,
-			'round_index' => $this->round_index,
-			'match_index' => $this->match_index,
-			'team1' => $this->team1 ? $this->team1->to_array() : null,
-			'team2' => $this->team2 ? $this->team2->to_array() : null,
-		];
-	}
+  public function to_array(): array
+  {
+    return [
+      'id' => $this->id,
+      'round_index' => $this->round_index,
+      'match_index' => $this->match_index,
+      'team1' => $this->team1 ? $this->team1->to_array() : null,
+      'team2' => $this->team2 ? $this->team2->to_array() : null,
+    ];
+  }
 }

@@ -22,16 +22,16 @@
  */
 class Wpbb_Deactivator
 {
-
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function deactivate() {
-		remove_role('bmb_plus');
-		remove_role('private_reader');
-	}
+  /**
+   * Short Description. (use period)
+   *
+   * Long Description.
+   *
+   * @since    1.0.0
+   */
+  public static function deactivate()
+  {
+    remove_role('bmb_plus');
+    remove_role('private_reader');
+  }
 }
