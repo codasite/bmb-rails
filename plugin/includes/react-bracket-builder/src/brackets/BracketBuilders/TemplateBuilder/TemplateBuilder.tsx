@@ -143,6 +143,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
       title: tournamentName,
       status: 'publish',
       bracketTemplate: getTemplateReq(),
+      date: bracketMeta.date,
     }
     return bracketApi.createTournament(tournamentReq).then((res) => {
       if (saveTournamentLink) {
