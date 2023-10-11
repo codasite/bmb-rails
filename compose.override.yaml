@@ -54,7 +54,7 @@ services:
         define('AWS_ACCESS_KEY', '${AWS_ACCESS_KEY}');
         define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
-        efine('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
+        define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
       PLUGIN_NAME: wp-bracket-builder
       WORDPRESS_URL: http://localhost:8008
       WORDPRESS_TITLE: Wordpress
