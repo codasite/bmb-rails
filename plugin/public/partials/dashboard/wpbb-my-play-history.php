@@ -11,7 +11,7 @@ $play_repo = new Wpbb_BracketPlayRepo();
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $the_query = new WP_Query([
-	'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+	'post_type' => Wpbb_BracketPlay::get_post_type(),
 	'author' => get_current_user_id(),
 	'posts_per_page' => 6,
 	'paged' => $paged,
@@ -28,7 +28,7 @@ $plays = $play_repo->get_all(
 	]
 );
 
-function play_list_item(Wp_Bracket_Builder_Bracket_Play $play) {
+function play_list_item(Wpbb_BracketPlay $play) {
 	$title = $play->tournament->title;
 	// $title = $tourney_title ? "$tourney_title Picks" : 'My Tournament Picks';
 	$user_rank = 99999;

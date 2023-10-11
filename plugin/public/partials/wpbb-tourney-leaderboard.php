@@ -55,7 +55,7 @@ function wpbb_share_tournament_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function wpbb_leaderboard_play_list_item(Wp_Bracket_Builder_Bracket_Play $play, $winner = false, $show_score = false) {
+function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false, $show_score = false) {
 	$play_id = $play->id;
 	$play_author = $play->author;
 	$author_name = get_the_author_meta('display_name', $play_author);

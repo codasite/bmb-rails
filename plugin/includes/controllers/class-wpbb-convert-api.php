@@ -5,7 +5,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 
-class Wp_Bracket_Builder_Convert_Api extends WP_REST_Controller
+class Wpbb_ConvertApi extends WP_REST_Controller
 {
 	/**
 	 * @var string

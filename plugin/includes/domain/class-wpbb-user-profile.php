@@ -25,7 +25,7 @@ class Wp_Bracket_Builder_User_Profile {
 	public function get_num_plays() {
 		$query = new WP_Query(
 			[
-				'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+				'post_type' => Wpbb_BracketPlay::get_post_type(),
 				'author' => $this->wp_user->ID,
 				'posts_per_page' => -1,
 			]

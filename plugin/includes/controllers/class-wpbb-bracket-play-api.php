@@ -5,7 +5,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'service/image-generator/class
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 
-class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller
+class Wpbb_BracketPlayApi extends WP_REST_Controller
 {
 
 	/**
@@ -140,7 +140,7 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller
 	public function get_items($request) {
 		// $bracket_id = $request->get_param('bracket_id');
 		$the_query = new WP_Query([
-			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'post_type' => Wpbb_BracketPlay::get_post_type(),
 			'post_status' => 'any'
 		]);
 
@@ -173,7 +173,7 @@ class Wp_Bracket_Builder_Bracket_Play_Api extends WP_REST_Controller
 			$params['author'] = get_current_user_id();
 		}
 		try {
-			$play = Wp_Bracket_Builder_Bracket_Play::from_array($params);
+			$play = Wpbb_BracketPlay::from_array($params);
 		} catch (Wpbb_ValidationException $e) {
 			return new WP_Error('validation-error', $e->getMessage(), array('status' => 400));
 		}

@@ -9,7 +9,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-notificati
 require_once plugin_dir_path(dirname(__FILE__)) . 'service/class-wpbb-email-service-interface.php';
 
 
-class Wp_Bracket_Builder_Bracket_Tournament_Api extends WP_REST_Controller
+class Wpbb_BracketTournamentApi extends WP_REST_Controller
 {
 
 	/**

@@ -9,7 +9,7 @@ require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpb
 $play_repo = new Wpbb_BracketPlayRepo();
 
 $the_query = new WP_Query([
-	'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+	'post_type' => Wpbb_BracketPlay::get_post_type(),
 	'posts_per_page' => 6,
 	'paged' => $paged,
 	'post_status' => 'any',

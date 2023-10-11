@@ -41,15 +41,15 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 
 	public function get(
 		int|WP_Post|null $post = null,
-		bool $fetch_picks = true,
-		bool $fetch_tournament = true,
-		bool $fetch_results = true,
-		bool $fetch_template = true,
-		bool $fetch_matches = true,
-	): ?Wp_Bracket_Builder_Bracket_Play {
+		bool             $fetch_picks = true,
+		bool             $fetch_tournament = true,
+		bool             $fetch_results = true,
+		bool             $fetch_template = true,
+		bool             $fetch_matches = true,
+	): ?Wpbb_BracketPlay {
 		$play_post = get_post($post);
 
-		if (!$play_post || $play_post->post_type !== Wp_Bracket_Builder_Bracket_Play::get_post_type()) {
+		if (!$play_post || $play_post->post_type !== Wpbb_BracketPlay::get_post_type()) {
 			return null;
 		}
 
@@ -80,7 +80,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 			'busted_id' => $busted_id,
 		];
 
-		$play = new Wp_Bracket_Builder_Bracket_Play($data);
+		$play = new Wpbb_BracketPlay($data);
 
 		return $play;
 	}
@@ -108,7 +108,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 
 	public function get_play_data(int|WP_Post|null $play_post): array {
 
-		if (!$play_post || $play_post instanceof WP_Post && $play_post->post_type !== Wp_Bracket_Builder_Bracket_Play::get_post_type()) {
+		if (!$play_post || $play_post instanceof WP_Post && $play_post->post_type !== Wpbb_BracketPlay::get_post_type()) {
 			return [];
 		}
 
@@ -142,7 +142,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		}
 
 		$default_args = [
-			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'post_type' => Wpbb_BracketPlay::get_post_type(),
 			'posts_per_page' => -1,
 			'post_status' => 'any',
 		];
@@ -173,7 +173,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 
 	public function get_count(array $query_args): int {
 		$default_args = [
-			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'post_type' => Wpbb_BracketPlay::get_post_type(),
 			'posts_per_page' => -1,
 			'post_status' => 'publish'
 		];
@@ -188,7 +188,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 	// get all plays for a specific tournament
 	public function get_all_by_tournament(int $tournament_id): array {
 		$query = new WP_Query([
-			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'post_type' => Wpbb_BracketPlay::get_post_type(),
 			'posts_per_page' => -1,
 			'post_status' => 'any',
 			'tournament_id' => $tournament_id,
@@ -203,7 +203,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 	// get plays made by a specific author
 	public function get_all_by_author(int $tournament_id): array {
 		$query = new WP_Query([
-			'post_type' => Wp_Bracket_Builder_Bracket_Play::get_post_type(),
+			'post_type' => Wpbb_BracketPlay::get_post_type(),
 			'posts_per_page' => -1,
 			'post_status' => 'any',
 			'author' => get_current_user_id(),
@@ -216,7 +216,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
 		return $plays;
 	}
 
-	public function add(Wp_Bracket_Builder_Bracket_Play $play): ?Wp_Bracket_Builder_Bracket_Play {
+	public function add(Wpbb_BracketPlay $play): ?Wpbb_BracketPlay {
 		$post_id = $this->insert_post($play, true, true);
 
 		if (is_wp_error($post_id)) {

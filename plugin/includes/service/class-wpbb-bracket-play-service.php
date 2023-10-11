@@ -31,7 +31,7 @@ class Wpbb_Bracket_Pick_Service
 	// 	$this->bracket_pick = $bracket_pick;
 	// }
 
-	public function generate_images(Wp_Bracket_Builder_Bracket_Play $bracket_pick) {
+	public function generate_images(Wpbb_BracketPlay $bracket_pick) {
 		// if ($this->bracket_pick == null) {
 		// 	return new WP_Error('error', __('Bracket pick object is null.', 'text-domain'), array('status' => 500));
 		// }

@@ -24,7 +24,7 @@ class PlayRepoTest extends WPBB_UnitTestCase
 
 
 	// public function test_add() {
-	// 	$play = new Wp_Bracket_Builder_Bracket_Play([
+	// 	$play = new Wpbb_BracketPlay([
 	// 		'tournament_id' => 1,
 	// 		'author' => 1,
 	// 		'picks' => [
@@ -42,7 +42,7 @@ class PlayRepoTest extends WPBB_UnitTestCase
 	// }
 
 	// public function test_add_invalid_tournament_id() {
-	// 	$play = new Wp_Bracket_Builder_Bracket_Play([
+	// 	$play = new Wpbb_BracketPlay([
 	// 		'tournament_id' => 1,
 	// 		'author' => 1,
 	// 		'picks' => [

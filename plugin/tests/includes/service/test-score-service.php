@@ -17,7 +17,7 @@
 //         // Create bracket template
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/templates.php';
 
-//         $template_api = new Wp_Bracket_Builder_Bracket_Template_Api();
+//         $template_api = new Wpbb_BracketTemplateApi();
 //         $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/templates');
 //         $request->set_query_params($template_14);
 //         $response = $template_api->create_item($request);
@@ -26,7 +26,7 @@
 //         // Create bracket tournament
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
 
-//         $tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
+//         $tournament_api = new Wpbb_BracketTournamentApi();
 //         $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/tournaments');
 //         $request->set_query_params($tournament_14);
 //         $response = $tournament_api->create_item($request);
@@ -35,7 +35,7 @@
 //         // // Create bracket play
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/plays.php';
 
-//         $play_api = new Wp_Bracket_Builder_Bracket_Play_Api();
+//         $play_api = new Wpbb_BracketPlayApi();
 //         $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
 //         $request->set_query_params($play_14);
 //         $response = $play_api->create_item($request);
@@ -45,7 +45,7 @@
 //         // while (true) {};
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
 
-//         $api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
+//         $api = new Wpbb_BracketTournamentApi();
 //         $response = $api->get_items([]);
 //         $this->assertEquals(200, $response->get_status());
 //         $tournaments = $response->get_data();
@@ -56,7 +56,7 @@
 //     function test_play_for_tournament_in_db() {
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
 
-//         $api = new Wp_Bracket_Builder_Bracket_Play_Api();
+//         $api = new Wpbb_BracketPlayApi();
 //         $response = $api->get_items([]);
 //         $this->assertEquals(200, $response->get_status());
 
@@ -78,7 +78,7 @@
 //         // while (true) {};
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
 
-//         $tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
+//         $tournament_api = new Wpbb_BracketTournamentApi();
 //         $request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/tournaments/5');
 //         $request->set_query_params(array('item_id' => 5));
 //         $response = $tournament_api->update_item($request);
@@ -86,7 +86,7 @@
 
 //         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
 
-//         $plays_api = new Wp_Bracket_Builder_Bracket_Play_Api();
+//         $plays_api = new Wpbb_BracketPlayApi();
 //         $response = $plays_api->get_items([]);
 //         $this->assertEquals(200, $response->get_status());
 

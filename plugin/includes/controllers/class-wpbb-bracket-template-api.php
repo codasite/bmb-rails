@@ -3,7 +3,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'repository/class-wpbb-bracket
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-bracket-template.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wp-bracket-builder-bracket-api-validation.php';
 
-class Wp_Bracket_Builder_Bracket_Template_Api extends WP_REST_Controller {
+class Wpbb_BracketTemplateApi extends WP_REST_Controller
+{
 
 	/**
 	 * @var Wpbb_BracketTemplateRepo

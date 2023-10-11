@@ -180,10 +180,10 @@ class Wp_Bracket_Builder {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Wpbb_Admin($this->get_plugin_name(), $this->get_version());
-		$template_api = new Wp_Bracket_Builder_Bracket_Template_Api();
-		$tournament_api = new Wp_Bracket_Builder_Bracket_Tournament_Api();
-		$play_api = new Wp_Bracket_Builder_Bracket_Play_Api();
-		$convert_api = new Wp_Bracket_Builder_Convert_Api();
+		$template_api = new Wpbb_BracketTemplateApi();
+		$tournament_api = new Wpbb_BracketTournamentApi();
+		$play_api = new Wpbb_BracketPlayApi();
+		$convert_api = new Wpbb_ConvertApi();
 
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
 		$this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');

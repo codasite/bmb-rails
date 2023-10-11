@@ -11,7 +11,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 // class Wp_Bracket_Builder_Bracket_Pick_Factory extends Wp_Bracket_Builder_Bracket_Base {
 
 
-class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base
+class Wpbb_BracketPlay extends Wp_Bracket_Builder_Post_Base
 {
 
 	/**
@@ -84,7 +84,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base
 	/**
 	 * @throws Wpbb_ValidationException
 	 */
-	static public function from_array($data): Wp_Bracket_Builder_Bracket_Play {
+	static public function from_array($data): Wpbb_BracketPlay {
 		validateRequiredFields($data, ['tournament_id', 'author', 'picks']);
 		$picks = [];
 		foreach ($data['picks'] as $pick) {
@@ -92,7 +92,7 @@ class Wp_Bracket_Builder_Bracket_Play extends Wp_Bracket_Builder_Post_Base
 		}
 		$data['picks'] = $picks;
 
-		$play = new Wp_Bracket_Builder_Bracket_Play($data);
+		$play = new Wpbb_BracketPlay($data);
 
 		return $play;
 	}

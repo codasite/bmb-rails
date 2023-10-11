@@ -98,7 +98,7 @@ class TournamentAPITest extends WPBB_UnitTestCase
 			->getMock();
 
 
-		$api = new Wp_Bracket_Builder_Bracket_Tournament_API(['notification_service' => $notification_service]);
+		$api = new Wpbb_BracketTournamentApi(['notification_service' => $notification_service]);
 
 		$template = self::factory()->template->create_and_get();
 		$tournament = self::factory()->tournament->create_and_get([
@@ -128,7 +128,7 @@ class TournamentAPITest extends WPBB_UnitTestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$api = new Wp_Bracket_Builder_Bracket_Tournament_API(['score_service' => $score_service]);
+		$api = new Wpbb_BracketTournamentApi(['score_service' => $score_service]);
 
 		$template = self::factory()->template->create_and_get();
 		$tournament = self::factory()->tournament->create_and_get([
