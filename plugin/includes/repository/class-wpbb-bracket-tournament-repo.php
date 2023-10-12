@@ -176,13 +176,13 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase {
     foreach ($data as $result) {
       $winning_team_id = $result['winning_team_id'];
       $winning_team = $this->team_repo->get($winning_team_id);
-      $tournament_results[] = new Wpbb_MatchPick(
-        $result['round_index'],
-        $result['match_index'],
-        $winning_team_id,
-        $result['id'],
-        $winning_team
-      );
+      $tournament_results[] = new Wpbb_MatchPick([
+        'round_index' => $result['round_index'],
+        'match_index' => $result['match_index'],
+        'winning_team_id' => $winning_team_id,
+        'id' => $result['id'],
+        'winning_team' => $winning_team,
+      ]);
     }
     return $tournament_results;
   }

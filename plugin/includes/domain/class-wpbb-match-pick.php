@@ -27,36 +27,20 @@ class Wpbb_MatchPick {
    */
   public $winning_team_id;
 
-  public function __construct(
-    int $round_index,
-    int $match_index,
-    int $winning_team_id,
-    int $id = null,
-    Wpbb_Team $winning_team = null
-  ) {
-    $this->round_index = $round_index;
-    $this->match_index = $match_index;
-    $this->winning_team_id = $winning_team_id;
-    $this->winning_team = $winning_team;
-    $this->id = $id;
+  public function __construct($data = []) {
+    $this->round_index = $data['round_index'];
+    $this->match_index = $data['match_index'];
+    $this->winning_team_id = $data['winning_team_id'];
+    $this->winning_team = $data['winning_team'] ?? null;
+    $this->id = $data['id'] ?? null;
   }
 
   public static function from_array($data) {
-    $pick = new Wpbb_MatchPick(
-      $data['round_index'],
-      $data['match_index'],
-      $data['winning_team_id']
-    );
-
-    if (isset($data['id'])) {
-      $pick->id = (int) $data['id'];
-    }
-
     if (isset($data['winning_team'])) {
-      $pick->winning_team = Wpbb_Team::from_array($data['winning_team']);
+      $data['winning_team'] = Wpbb_Team::from_array($data['winning_team']);
     }
 
-    return $pick;
+    return new Wpbb_MatchPick($data);
   }
 
   public function to_array(): array {

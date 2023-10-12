@@ -52,13 +52,17 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
   }
 
   public function get(
-    int|WP_Post|null $post = null,
+    int|WP_Post|null|Wpbb_BracketPlay $post = null,
     bool $fetch_picks = true,
     bool $fetch_tournament = true,
     bool $fetch_results = true,
     bool $fetch_template = true,
     bool $fetch_matches = true
   ): ?Wpbb_BracketPlay {
+    if ($post instanceof Wpbb_BracketPlay) {
+      $post = $post->id;
+    }
+
     $play_post = get_post($post);
 
     if (
@@ -125,13 +129,13 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     foreach ($data as $pick) {
       $winning_team_id = $pick['winning_team_id'];
       $winning_team = $this->team_repo->get($winning_team_id);
-      $picks[] = new Wpbb_MatchPick(
-        $pick['round_index'],
-        $pick['match_index'],
-        $winning_team_id,
-        $pick['id'],
-        $winning_team
-      );
+      $picks[] = new Wpbb_MatchPick([
+        'round_index' => $pick['round_index'],
+        'match_index' => $pick['match_index'],
+        'winning_team_id' => $winning_team_id,
+        'id' => $pick['id'],
+        'winning_team' => $winning_team,
+      ]);
     }
     return $picks;
   }
@@ -330,6 +334,10 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
       'match_index' => $pick->match_index,
       'winning_team_id' => $pick->winning_team_id,
     ]);
+  }
+
+  public function update($play_id, $data) {
+    throw new Exception('Not implemented');
   }
 
   public function picks_table() {
