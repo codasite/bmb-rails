@@ -20,8 +20,7 @@
  * @subpackage Wp_Bracket_Builder/includes
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wpbb_Activator
-{
+class Wpbb_Activator {
   /**
    * Short Description. (use period)
    *
@@ -29,8 +28,7 @@ class Wpbb_Activator
    *
    * @since    1.0.0
    */
-  public static function activate()
-  {
+  public static function activate() {
     global $wpdb;
     $wp_prefix = $wpdb->prefix;
     $plugin_prefix = 'bracket_builder_';
@@ -47,8 +45,7 @@ class Wpbb_Activator
     self::create_tournament_results_table($prefix); // associated with bracket tournaments
   }
 
-  private static function delete_tables(string $prefix)
-  {
+  private static function delete_tables(string $prefix) {
     global $wpdb;
     $tables = [
       $prefix . 'tournament_results',
@@ -65,8 +62,7 @@ class Wpbb_Activator
     }
   }
 
-  private static function create_bracket_templates_table(string $prefix)
-  {
+  private static function create_bracket_templates_table(string $prefix) {
     /**
      * Create the bracket templates table
      */
@@ -89,8 +85,7 @@ class Wpbb_Activator
     dbDelta($sql);
   }
 
-  private static function create_tournaments_table(string $prefix)
-  {
+  private static function create_tournaments_table(string $prefix) {
     /**
      * Create the tournaments table
      */
@@ -116,8 +111,7 @@ class Wpbb_Activator
     dbDelta($sql);
   }
 
-  private static function create_plays_table(string $prefix)
-  {
+  private static function create_plays_table(string $prefix) {
     /**
      * Create the play meta table
      */
@@ -152,8 +146,7 @@ class Wpbb_Activator
     dbDelta($sql);
   }
 
-  private static function create_matches_table(string $prefix)
-  {
+  private static function create_matches_table(string $prefix) {
     /**
      * Create the matches table
      */
@@ -180,8 +173,7 @@ class Wpbb_Activator
     dbDelta($sql);
   }
 
-  private static function create_teams_table(string $prefix)
-  {
+  private static function create_teams_table(string $prefix) {
     /**
      * Create the teams table
      */
@@ -203,8 +195,7 @@ class Wpbb_Activator
     dbDelta($sql);
   }
 
-  private static function create_match_picks_table(string $prefix)
-  {
+  private static function create_match_picks_table(string $prefix) {
     /**
      * Create the match picks table. Rows in this table represent a user's pick for a match.
      * Holds a pointer to the bracket play this pick belongs to.
@@ -230,8 +221,7 @@ class Wpbb_Activator
     dbDelta($sql);
   }
 
-  private static function create_tournament_results_table(string $prefix)
-  {
+  private static function create_tournament_results_table(string $prefix) {
     /**
      * Create the match picks table. Rows in this table represent a user's pick for a match.
      * Holds a pointer to the bracket play this pick belongs to.

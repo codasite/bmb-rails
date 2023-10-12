@@ -4,8 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   '/domain/class-wpbb-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php';
 
-class Wpbb_Bracket_Pick_Service
-{
+class Wpbb_Bracket_Pick_Service {
   /**
    * @var Wpbb_Utils
    */
@@ -21,8 +20,7 @@ class Wpbb_Bracket_Pick_Service
   //  */
   // private $bracket_pick;
 
-  public function __construct($bracket_pick = null)
-  {
+  public function __construct($bracket_pick = null) {
     $this->utils = new Wpbb_Utils();
     $this->lamda_service = new Wpbb_Lambda_Service();
     // $this->bracket_pick = $bracket_pick;
@@ -32,8 +30,7 @@ class Wpbb_Bracket_Pick_Service
   // 	$this->bracket_pick = $bracket_pick;
   // }
 
-  public function generate_images(Wpbb_BracketPlay $bracket_pick)
-  {
+  public function generate_images(Wpbb_BracketPlay $bracket_pick) {
     // if ($this->bracket_pick == null) {
     // 	return new WP_Error('error', __('Bracket pick object is null.', 'text-domain'), array('status' => 500));
     // }

@@ -1,8 +1,6 @@
 <?php
-class Wpbb_Utils
-{
-  public function set_session_value($key, $value)
-  {
+class Wpbb_Utils {
+  public function set_session_value($key, $value) {
     if (!session_id()) {
       session_start();
     }
@@ -10,8 +8,7 @@ class Wpbb_Utils
   }
 
   // Get value from user session
-  public function get_session_value($key)
-  {
+  public function get_session_value($key) {
     if (!session_id()) {
       session_start();
     }
@@ -21,8 +18,7 @@ class Wpbb_Utils
     return null;
   }
 
-  public function log_sentry_error($error)
-  {
+  public function log_sentry_error($error) {
     if (function_exists('wp_sentry_safe')) {
       wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
         $error
@@ -32,8 +28,7 @@ class Wpbb_Utils
     }
   }
 
-  public function log_sentry_message($msg, $level = null)
-  {
+  public function log_sentry_message($msg, $level = null) {
     if (function_exists('wp_sentry_safe')) {
       return wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
         $msg,
@@ -47,8 +42,7 @@ class Wpbb_Utils
     }
   }
 
-  public function log($msg, $level = 'debug')
-  {
+  public function log($msg, $level = 'debug') {
     switch ($level) {
       case 'debug':
         $severity = \Sentry\Severity::debug();

@@ -3,14 +3,12 @@
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php';
 require_once 'class-wpbb-email-service-interface.php';
 
-class Wpbb_Mailchimp_Email_Service implements Wpbb_Email_Service_Interface
-{
+class Wpbb_Mailchimp_Email_Service implements Wpbb_Email_Service_Interface {
   protected MailchimpTransactional\ApiClient $client;
 
   public $from_email;
 
-  public function __construct($args = [])
-  {
+  public function __construct($args = []) {
     $api_key =
       $args['api_key'] ??
       (defined('MAILCHIMP_API_KEY') ? MAILCHIMP_API_KEY : null);
@@ -25,14 +23,12 @@ class Wpbb_Mailchimp_Email_Service implements Wpbb_Email_Service_Interface
     $this->client->setApiKey($api_key);
   }
 
-  public function ping_server()
-  {
+  public function ping_server() {
     $response = $this->client->users->ping();
     return $response;
   }
 
-  public function send($to_email, $to_name, $subject, $message, $html)
-  {
+  public function send($to_email, $to_name, $subject, $message, $html) {
     $response = $this->client->messages->send([
       'message' => [
         'text' => $message,

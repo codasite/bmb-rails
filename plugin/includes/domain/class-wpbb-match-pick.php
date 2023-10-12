@@ -1,8 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
-class Wpbb_MatchPick
-{
+class Wpbb_MatchPick {
   /**
    * @var int
    */
@@ -42,8 +41,7 @@ class Wpbb_MatchPick
     $this->id = $id;
   }
 
-  public static function from_array($data)
-  {
+  public static function from_array($data) {
     $pick = new Wpbb_MatchPick(
       $data['round_index'],
       $data['match_index'],
@@ -61,8 +59,7 @@ class Wpbb_MatchPick
     return $pick;
   }
 
-  public function to_array(): array
-  {
+  public function to_array(): array {
     return [
       'id' => $this->id,
       'round_index' => $this->round_index,

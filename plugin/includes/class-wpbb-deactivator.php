@@ -20,8 +20,7 @@
  * @subpackage Wp_Bracket_Builder/includes
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wpbb_Deactivator
-{
+class Wpbb_Deactivator {
   /**
    * Short Description. (use period)
    *
@@ -29,8 +28,7 @@ class Wpbb_Deactivator
    *
    * @since    1.0.0
    */
-  public static function deactivate()
-  {
+  public static function deactivate() {
     remove_role('bmb_plus');
     remove_role('private_reader');
   }

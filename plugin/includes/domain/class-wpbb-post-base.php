@@ -2,8 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-custom-post-interface.php';
 
-abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface
-{
+abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface {
   /**
    * @var int
    */
@@ -47,8 +46,7 @@ abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface
    */
   public $author_display_name;
 
-  public function __construct(array $data)
-  {
+  public function __construct(array $data) {
     $this->id = $data['id'] ?? null;
     $this->title = $data['title'] ?? '';
     $this->author = $data['author'] ?? null;
@@ -61,8 +59,7 @@ abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface
   abstract public static function get_post_type(): string;
   abstract public function get_post_meta(): array;
 
-  public function get_post_data(): array
-  {
+  public function get_post_data(): array {
     return [
       'post_title' => $this->title,
       'post_author' => $this->author,
@@ -74,8 +71,7 @@ abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface
   /**
    * Only allow certain fields to be updated
    */
-  public function get_update_post_data(): array
-  {
+  public function get_update_post_data(): array {
     return [
       'ID' => $this->id,
       'post_title' => $this->title,
@@ -83,8 +79,7 @@ abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface
     ];
   }
 
-  public function to_array(): array
-  {
+  public function to_array(): array {
     return [
       'id' => $this->id,
       'title' => $this->title,

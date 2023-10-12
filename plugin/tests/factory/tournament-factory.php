@@ -16,12 +16,11 @@ require_once WPBB_PLUGIN_DIR .
  *
  * This class is used to create template objects for unit testing
  */
-class WPBB_UnitTest_Factory_For_Tournament extends WP_UnitTest_Factory_For_Thing
-{
+class WPBB_UnitTest_Factory_For_Tournament extends
+  WP_UnitTest_Factory_For_Thing {
   private $tournament_repo;
 
-  function __construct($factory = null)
-  {
+  function __construct($factory = null) {
     parent::__construct($factory);
     $this->tournament_repo = new Wpbb_BracketTournamentRepo();
 
@@ -31,21 +30,18 @@ class WPBB_UnitTest_Factory_For_Tournament extends WP_UnitTest_Factory_For_Thing
     ];
   }
 
-  function create_object($args)
-  {
+  function create_object($args) {
     $tournament = new Wpbb_BracketTournament($args);
     $tournament = $this->tournament_repo->add($tournament);
     return $tournament;
   }
 
-  function update_object($tournament_id, $fields)
-  {
+  function update_object($tournament_id, $fields) {
     $tournament = $this->tournament_repo->update($tournament_id, $fields);
     return $tournament;
   }
 
-  function get_object_by_id($tournament_id)
-  {
+  function get_object_by_id($tournament_id) {
     return $this->tournament_repo->get($tournament_id);
   }
 }

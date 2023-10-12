@@ -42,8 +42,7 @@ define('WPBB_PLUGIN_DIR', plugin_dir_path(__FILE__));
  * The code that runs during plugin activation.
  * This action is documented in includes/class-wpbb-activator.php
  */
-function activate_wp_bracket_builder()
-{
+function activate_wp_bracket_builder() {
   require_once plugin_dir_path(__FILE__) . 'includes/class-wpbb-activator.php';
   Wpbb_Activator::activate();
 }
@@ -52,8 +51,7 @@ function activate_wp_bracket_builder()
  * The code that runs during plugin deactivation.
  * This action is documented in includes/class-wpbb-deactivator.php
  */
-function deactivate_wp_bracket_builder()
-{
+function deactivate_wp_bracket_builder() {
   require_once plugin_dir_path(__FILE__) .
     'includes/class-wpbb-deactivator.php';
   Wpbb_Deactivator::deactivate();
@@ -77,8 +75,7 @@ require plugin_dir_path(__FILE__) . 'includes/class-wp-bracket-builder.php';
  *
  * @since    1.0.0
  */
-function run_wp_bracket_builder()
-{
+function run_wp_bracket_builder() {
   $plugin = new Wp_Bracket_Builder();
   $plugin->run();
 }

@@ -2,8 +2,7 @@
 require_once plugin_dir_path(dirname(__FILE__)) .
   '/domain/class-wpbb-bracket.php';
 
-class Wpbb_ApiValidation
-{
+class Wpbb_ApiValidation {
   private $total_rounds;
 
   private $wildcards;
@@ -11,8 +10,7 @@ class Wpbb_ApiValidation
   private $bracket;
   private $wpdb;
 
-  public function validate_bracket_api($bracket)
-  {
+  public function validate_bracket_api($bracket) {
     $this->bracket = $bracket;
     $this->total_rounds = $this->bracket->num_rounds;
     $this->wildcards = $this->bracket->num_wildcards;
@@ -37,8 +35,7 @@ class Wpbb_ApiValidation
   }
 
   //Method to check team names at initial level
-  private function check_team_names()
-  {
+  private function check_team_names() {
     $total_no_of_teams = $this->get_team_count(
       $this->total_rounds,
       $this->wildcards
@@ -78,8 +75,7 @@ class Wpbb_ApiValidation
 
   //Method to check if any team names are given in inner most rounds will throw error
   //Accepts team names only in initial level of rounds (in case of wild cards acccepts till round2)
-  public function check_inner_round_teams()
-  {
+  public function check_inner_round_teams() {
     $second_round = $this->bracket->rounds[$this->total_rounds - 2];
 
     if ($this->wildcards != 0) {
@@ -113,24 +109,21 @@ class Wpbb_ApiValidation
   }
 
   //Checks whether the given number of wildcards matches with the number of teams
-  public function is_valid_wildcard()
-  {
+  public function is_valid_wildcard() {
     $total_teams = 2 ** $this->total_rounds;
     return $this->wildcards >= 0 &&
       $this->wildcards <= $total_teams / 2 &&
       $this->wildcards % 2 === 0;
   }
 
-  private function createError($message)
-  {
+  private function createError($message) {
     return new WP_Error('cant-create', __($message, 'text-domain'), [
       'status' => 400,
     ]);
   }
 
   // To get the total of teams count in bracket
-  public function get_team_count($rounds, $wildcards)
-  {
+  public function get_team_count($rounds, $wildcards) {
     $total_no_of_teams = 2 ** $rounds;
 
     if ($wildcards != 0) {

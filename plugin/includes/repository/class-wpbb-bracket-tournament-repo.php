@@ -15,8 +15,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
-{
+class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase {
   /**
    * @var Wpbb_BracketTemplateRepo
    */
@@ -32,8 +31,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
    */
   private $wpdb;
 
-  public function __construct()
-  {
+  public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->template_repo = new Wpbb_BracketTemplateRepo();
@@ -84,22 +82,22 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
     return $this->get($post_id);
   }
 
-  public function insert_tournament_data(array $data): int
-  {
+  public function insert_tournament_data(array $data): int {
     $table_name = $this->tournament_table();
     $this->wpdb->insert($table_name, $data);
     return $this->wpdb->insert_id;
   }
 
-  public function insert_results(int $tournament_id, array $results): void
-  {
+  public function insert_results(int $tournament_id, array $results): void {
     foreach ($results as $result) {
       $this->insert_result($tournament_id, $result);
     }
   }
 
-  public function insert_result(int $tournament_id, Wpbb_MatchPick $pick): void
-  {
+  public function insert_result(
+    int $tournament_id,
+    Wpbb_MatchPick $pick
+  ): void {
     $table_name = $this->results_table();
     $this->wpdb->insert($table_name, [
       'bracket_tournament_id' => $tournament_id,
@@ -168,8 +166,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
     return $tournament;
   }
 
-  public function get_tournament_results(int|null $tournament_id): array
-  {
+  public function get_tournament_results(int|null $tournament_id): array {
     $table_name = $this->results_table();
     $where = $tournament_id
       ? "WHERE bracket_tournament_id = $tournament_id"
@@ -192,8 +189,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
     return $tournament_results;
   }
 
-  public function get_tournament_data(int|WP_Post|null $post): array
-  {
+  public function get_tournament_data(int|WP_Post|null $post): array {
     if (
       !$post ||
       ($post instanceof WP_Post &&
@@ -242,8 +238,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
     return $this->tournaments_from_query($query, $options);
   }
 
-  public function tournaments_from_query(WP_Query $query, array $options = [])
-  {
+  public function tournaments_from_query(WP_Query $query, array $options = []) {
     $tournaments = [];
     foreach ($query->posts as $post) {
       $fetch_results = isset($options['fetch_results'])
@@ -268,8 +263,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
     return $tournaments;
   }
 
-  public function filter($args)
-  {
+  public function filter($args) {
     $author = isset($args['author']) ? $args['author'] : null;
     $status = isset($args['status']) ? $args['status'] : null;
 
@@ -289,8 +283,7 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
     return $tournaments;
   }
 
-  public function delete(int $id, $force = false): bool
-  {
+  public function delete(int $id, $force = false): bool {
     return $this->delete_post($id, $force);
   }
 
@@ -373,18 +366,15 @@ class Wpbb_BracketTournamentRepo extends Wpbb_CustomPostRepoBase
     }
   }
 
-  public function tournament_table(): string
-  {
+  public function tournament_table(): string {
     return $this->wpdb->prefix . 'bracket_builder_tournaments';
   }
 
-  public function results_table(): string
-  {
+  public function results_table(): string {
     return $this->wpdb->prefix . 'bracket_builder_tournament_results';
   }
 
-  function get_author_emails_by_tournament_id($tournament_post_id)
-  {
+  function get_author_emails_by_tournament_id($tournament_post_id) {
     global $wpdb;
 
     $query = "

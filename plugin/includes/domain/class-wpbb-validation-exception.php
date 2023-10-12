@@ -1,14 +1,12 @@
 <?php
 
-class Wpbb_ValidationException extends Exception
-{
+class Wpbb_ValidationException extends Exception {
 }
 
 /**
  * @throws Wpbb_ValidationException
  */
-function validateRequiredFields(array $data, array $requiredFields): void
-{
+function validateRequiredFields(array $data, array $requiredFields): void {
   $missingFields = [];
 
   foreach ($requiredFields as $field) {

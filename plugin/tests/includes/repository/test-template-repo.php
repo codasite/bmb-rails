@@ -8,19 +8,16 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
 
-class TemplateRepoTest extends WPBB_UnitTestCase
-{
+class TemplateRepoTest extends WPBB_UnitTestCase {
   private $template_repo;
 
-  public function set_up()
-  {
+  public function set_up() {
     parent::set_up();
 
     $this->template_repo = new Wpbb_BracketTemplateRepo();
   }
 
-  public function test_add_matches()
-  {
+  public function test_add_matches() {
     $match_arr = [
       [
         'round_index' => 0,
@@ -50,8 +47,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase
     $this->assertTrue(true);
   }
 
-  public function test_add()
-  {
+  public function test_add() {
     $template = new Wpbb_BracketTemplate([
       'title' => 'Test Template',
       'status' => 'publish',
@@ -66,8 +62,7 @@ class TemplateRepoTest extends WPBB_UnitTestCase
     $this->assertEquals(1, $template->author);
   }
 
-  public function test_get_by_id()
-  {
+  public function test_get_by_id() {
     $template = new Wpbb_BracketTemplate([
       'title' => 'Test Template',
       'status' => 'publish',

@@ -4,8 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
 
-class Wpbb_PDF_Service
-{
+class Wpbb_PDF_Service {
   /**
    * @param array $pdfParams - array of arrays
    * @return string
@@ -21,8 +20,7 @@ class Wpbb_PDF_Service
    * 	]
    * ]
    */
-  public function merge_pdfs(array $pdfParams)
-  {
+  public function merge_pdfs(array $pdfParams) {
     // Initiate FPDI
     $pdf = new Fpdi('P', 'in');
 

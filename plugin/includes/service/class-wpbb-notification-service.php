@@ -10,14 +10,12 @@ require_once plugin_dir_path(dirname(__FILE__, 1)) .
 require_once plugin_dir_path(dirname(__FILE__, 1)) .
   'repository/class-wpbb-bracket-tournament-repo.php';
 
-class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface
-{
+class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
   protected Wpbb_Email_Service_Interface $email_service;
 
   protected Wpbb_BracketTournamentRepo $tournament_repo;
 
-  public function __construct($args = [])
-  {
+  public function __construct($args = []) {
     $this->email_service =
       $args['email_service'] ?? new Wpbb_Mailchimp_Email_Service();
     $this->tournament_repo =
@@ -62,8 +60,7 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface
     return $results;
   }
 
-  public function notify_tournament_results_updated($tournament_id): void
-  {
+  public function notify_tournament_results_updated($tournament_id): void {
     $play_repo = new Wpbb_BracketPlayRepo();
     $team_repo = new Wpbb_BracketTeamRepo();
 

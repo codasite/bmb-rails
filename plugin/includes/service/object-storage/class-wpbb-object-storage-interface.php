@@ -1,6 +1,5 @@
 <?php
-interface Wpbb_Object_Storage_Interface
-{
+interface Wpbb_Object_Storage_Interface {
   /**
    * Upload a file to the object storage.
    * @param  string $file The path to the file to upload.

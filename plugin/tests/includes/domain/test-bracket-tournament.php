@@ -3,18 +3,15 @@ require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/domain/class-wpbb-bracket-tournament.php';
 
-class BracketTournamentTest extends WPBB_UnitTestCase
-{
-  public function test_get_post_type()
-  {
+class BracketTournamentTest extends WPBB_UnitTestCase {
+  public function test_get_post_type() {
     $this->assertEquals(
       'bracket_tournament',
       Wpbb_BracketTournament::get_post_type()
     );
   }
 
-  public function test_constructor()
-  {
+  public function test_constructor() {
     $args = [
       'title' => 'Test Tournament',
       'status' => 'publish',
@@ -25,8 +22,7 @@ class BracketTournamentTest extends WPBB_UnitTestCase
     $this->assertInstanceOf(Wpbb_BracketTournament::class, $tournament);
   }
 
-  public function test_from_array()
-  {
+  public function test_from_array() {
     $args = [
       'title' => 'Test Tournament',
       'status' => 'publish',
@@ -43,8 +39,7 @@ class BracketTournamentTest extends WPBB_UnitTestCase
     $this->assertEquals('Test Tournament', $tournament->title);
   }
 
-  public function test_from_array_no_template_id()
-  {
+  public function test_from_array_no_template_id() {
     $this->expectException(Exception::class);
     $args = [
       'title' => 'Test Tournament',
@@ -55,8 +50,7 @@ class BracketTournamentTest extends WPBB_UnitTestCase
     $tournament = Wpbb_BracketTournament::from_array($args);
   }
 
-  public function test_from_array_no_author()
-  {
+  public function test_from_array_no_author() {
     $this->expectException(Exception::class);
     $args = [
       'title' => 'Test Tournament',

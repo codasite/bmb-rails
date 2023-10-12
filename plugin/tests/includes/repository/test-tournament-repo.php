@@ -10,21 +10,18 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
 
-class TournamentRepoTest extends WPBB_UnitTestCase
-{
+class TournamentRepoTest extends WPBB_UnitTestCase {
   private $tournament_repo;
   private $template_repo;
 
-  public function set_up()
-  {
+  public function set_up() {
     parent::set_up();
 
     $this->tournament_repo = new Wpbb_BracketTournamentRepo();
     $this->template_repo = new Wpbb_BracketTemplateRepo();
   }
 
-  public function test_add_tournament()
-  {
+  public function test_add_tournament() {
     $template = self::factory()->template->create_and_get();
     $tournament = new Wpbb_BracketTournament([
       'title' => 'Test Tournament',
