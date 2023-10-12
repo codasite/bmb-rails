@@ -100,12 +100,6 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
     $template_id = $template_data['id'];
 
     $user = wp_get_current_user();
-    if (
-      !in_array('administrator', (array) $user->roles) &&
-      intval(get_current_user_id()) !== intval($template_post->post_author)
-    ) {
-      throw new Exception('Unauthorized');
-    }
 
     $matches =
       $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
