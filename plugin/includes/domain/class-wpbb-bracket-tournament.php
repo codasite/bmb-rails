@@ -9,9 +9,13 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-match-pick.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-validation-exception.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'domain/class-wpbb-post-base.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'domain/class-wpbb-bracket-interface.php';
 
-class Wpbb_BracketTournament extends Wpbb_PostBase
-{
+class Wpbb_BracketTournament extends Wpbb_PostBase implements
+  Wpbb_BracketInterface {
   /**
    * @var string
    */
@@ -32,8 +36,7 @@ class Wpbb_BracketTournament extends Wpbb_PostBase
    */
   public $results;
 
-  public function __construct(array $data = [])
-  {
+  public function __construct(array $data = []) {
     parent::__construct($data);
     $this->date = $data['date'] ?? null;
     $this->bracket_template_id = (int) ($data['bracket_template_id'] ?? null);
@@ -41,8 +44,7 @@ class Wpbb_BracketTournament extends Wpbb_PostBase
     $this->results = $data['results'] ?? [];
   }
 
-  public function get_winning_team(): ?Wpbb_Team
-  {
+  public function get_winning_team(): ?Wpbb_Team {
     if (!$this->results) {
       return null;
     }
@@ -52,26 +54,22 @@ class Wpbb_BracketTournament extends Wpbb_PostBase
     return $winning_pick->winning_team;
   }
 
-  public function has_results(): bool
-  {
+  public function has_results(): bool {
     return count($this->results) > 0;
   }
 
-  public static function get_post_type(): string
-  {
+  public static function get_post_type(): string {
     return 'bracket_tournament';
   }
 
-  public function get_post_meta(): array
-  {
+  public function get_post_meta(): array {
     return [
       'bracket_template_id' => $this->bracket_template_id,
       'date' => $this->date,
     ];
   }
 
-  public function get_update_post_meta(): array
-  {
+  public function get_update_post_meta(): array {
     return [
       'date' => $this->date,
     ];
@@ -80,8 +78,7 @@ class Wpbb_BracketTournament extends Wpbb_PostBase
   /**
    * @throws Wpbb_ValidationException
    */
-  public static function from_array($data): Wpbb_BracketTournament
-  {
+  public static function from_array($data): Wpbb_BracketTournament {
     if (
       !isset($data['bracket_template_id']) &&
       !isset($data['bracket_template'])
@@ -110,8 +107,7 @@ class Wpbb_BracketTournament extends Wpbb_PostBase
     return new Wpbb_BracketTournament($data);
   }
 
-  public function to_array(): array
-  {
+  public function to_array(): array {
     $tournament = parent::to_array();
     $tournament['bracket_template_id'] = $this->bracket_template_id;
     $tournament['date'] = $this->date;
@@ -125,13 +121,11 @@ class Wpbb_BracketTournament extends Wpbb_PostBase
     return $tournament;
   }
 
-  public function get_num_rounds(): int
-  {
+  public function get_num_rounds(): int {
     return $this->bracket_template->get_num_rounds();
   }
 
-  public function highest_possible_score()
-  {
+  public function highest_possible_score() {
     $point_values = [1, 2, 4, 8, 16, 32];
 
     $score = 0;
@@ -141,5 +135,25 @@ class Wpbb_BracketTournament extends Wpbb_PostBase
     }
 
     return $score;
+  }
+
+  public function get_matches(): array {
+    return $this->bracket_template->get_matches();
+  }
+
+  public function get_picks(): array {
+    return $this->results;
+  }
+
+  public function get_title(): string {
+    return $this->title;
+  }
+
+  public function get_date(): string {
+    return '1992';
+  }
+
+  public function get_num_teams(): int {
+    return $this->bracket_template->num_teams;
   }
 }

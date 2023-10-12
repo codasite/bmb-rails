@@ -2,6 +2,8 @@ import express from 'express'
 import puppeteer from 'puppeteer'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
+import os from 'os'
+
 const app = express()
 app.use(express.json())
 const port = 3000
@@ -22,10 +24,37 @@ app.post('/encode', async (req, res) => {
 })
 
 app.get('/', async (req, res) => {
-  res.send('Hello World!!!!')
+  const user = os.userInfo()
+  res.send(`Hello World! ${user.username}`)
 })
 
-app.post('/', async (req, res) => {
+// Options to generate bracket image. Can be used to generate multiple images
+// by passing in an array of options to the imageOptions property.
+// Any property not specified will use the default value.
+interface BracketImageOptions {
+  uploadService?: string
+  s3Bucket?: string
+  s3Key?: string
+  pdf?: boolean
+  deviceScaleFactor?: number
+  theme?: string
+  inchHeight?: number
+  inchWidth?: number
+  position?: string
+  numTeams?: number
+  title?: string
+  date?: string
+  picks?: any
+  matches?: any
+  imageOptions?: Array<BracketImageOptions>
+}
+
+app.post('/test', async (req, res) => {
+  console.log(req.body)
+  res.send(req.body)
+})
+
+app.post('/generate', async (req, res) => {
   const {
     html,
     queryParams,
@@ -123,6 +152,7 @@ app.post('/', async (req, res) => {
     )
     res.send(imgUrl)
   } catch (err: any) {
+    console.error(err)
     res.status(500).send(err)
   } finally {
     console.timeEnd('uploadToS3')
@@ -138,7 +168,7 @@ const uploadToS3 = async (
   bucket: string,
   fileName: string
 ): Promise<string> => {
-  const s3 = new S3Client()
+  const s3 = new S3Client({ region: process.env.AWS_REGION })
   const command = new PutObjectCommand({
     Bucket: bucket,
     Key: fileName,

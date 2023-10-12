@@ -7,8 +7,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'service/image-generator/class-wpbb-local-node-generator.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wpbb_BracketPlayApi extends WP_REST_Controller
-{
+class Wpbb_BracketPlayApi extends WP_REST_Controller {
   /**
    * @var Wpbb_BracketPlayRepo
    */
@@ -35,18 +34,17 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
   protected $rest_base;
 
   /**
-   * @var Wpbb_PostImageGeneratorInterface
+   * @var Wpbb_BracketImageGeneratorInterface
    */
   private $image_generator;
 
   /**
    * Constructor.
    */
-  public function __construct()
-  {
+  public function __construct() {
     $this->utils = new Wpbb_Utils();
     $this->play_repo = new Wpbb_BracketPlayRepo();
-    $this->image_generator = new Wpbb_Local_Node_Generator();
+    $this->image_generator = new Wpbb_LocalNodeGenerator();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
   }
@@ -55,8 +53,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
    * Register the routes for bracket objects.
    * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
    */
-  public function register_routes()
-  {
+  public function register_routes() {
     $namespace = $this->namespace;
     $base = $this->rest_base;
     register_rest_route($namespace, '/' . $base, [
@@ -143,8 +140,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_items($request)
-  {
+  public function get_items($request) {
     // $bracket_id = $request->get_param('bracket_id');
     $the_query = new WP_Query([
       'post_type' => Wpbb_BracketPlay::get_post_type(),
@@ -161,8 +157,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_item($request)
-  {
+  public function get_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
     $bracket = $this->play_repo->get($id);
@@ -175,8 +170,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function create_item($request)
-  {
+  public function create_item($request) {
     $params = $request->get_params();
     if (!isset($params['author'])) {
       $params['author'] = get_current_user_id();
@@ -199,8 +193,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|bool
    */
-  public function admin_permission_check($request)
-  {
+  public function admin_permission_check($request) {
     return true; // TODO: Disable this for production
     // return current_user_can('manage_options');
   }
@@ -211,8 +204,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|bool
    */
-  public function customer_permission_check($request)
-  {
+  public function customer_permission_check($request) {
     return true; // TODO: Disable this for production
     // return current_user_can('read');
   }

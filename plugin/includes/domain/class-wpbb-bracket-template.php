@@ -6,9 +6,11 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-match.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-validation-exception.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'domain/class-wpbb-bracket-interface.php';
 
-class Wpbb_BracketTemplate extends Wpbb_PostBase
-{
+class Wpbb_BracketTemplate extends Wpbb_PostBase implements
+  Wpbb_BracketInterface {
   /**
    * @var string
    */
@@ -42,8 +44,7 @@ class Wpbb_BracketTemplate extends Wpbb_PostBase
    */
   public $matches;
 
-  public function __construct(array $data = [])
-  {
+  public function __construct(array $data = []) {
     parent::__construct($data);
     $this->date = $data['date'] ?? null;
     $this->num_teams = (int) ($data['num_teams'] ?? null);
@@ -51,21 +52,18 @@ class Wpbb_BracketTemplate extends Wpbb_PostBase
     $this->matches = $data['matches'] ?? [];
   }
 
-  public function get_num_rounds(): int
-  {
+  public function get_num_rounds(): int {
     if (!$this->num_teams) {
       return 0;
     }
     return ceil(log($this->num_teams, 2));
   }
 
-  public static function get_post_type(): string
-  {
+  public static function get_post_type(): string {
     return 'bracket_template';
   }
 
-  public function get_post_meta(): array
-  {
+  public function get_post_meta(): array {
     return [
       'num_teams' => $this->num_teams,
       'wildcard_placement' => $this->wildcard_placement,
@@ -73,8 +71,7 @@ class Wpbb_BracketTemplate extends Wpbb_PostBase
     ];
   }
 
-  public function get_update_post_meta(): array
-  {
+  public function get_update_post_meta(): array {
     return [
       'date' => $this->date,
     ];
@@ -83,8 +80,7 @@ class Wpbb_BracketTemplate extends Wpbb_PostBase
   /**
    * @throws Wpbb_ValidationException
    */
-  public static function from_array(array $data): Wpbb_BracketTemplate
-  {
+  public static function from_array(array $data): Wpbb_BracketTemplate {
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
@@ -102,8 +98,7 @@ class Wpbb_BracketTemplate extends Wpbb_PostBase
     return new Wpbb_BracketTemplate($data);
   }
 
-  public function to_array(): array
-  {
+  public function to_array(): array {
     $template = parent::to_array();
     $template['num_teams'] = $this->num_teams;
     $template['wildcard_placement'] = $this->wildcard_placement;
@@ -116,5 +111,25 @@ class Wpbb_BracketTemplate extends Wpbb_PostBase
       $template['matches'] = $matches;
     }
     return $template;
+  }
+
+  public function get_matches(): array {
+    return $this->matches;
+  }
+
+  public function get_picks(): array {
+    return [];
+  }
+
+  public function get_title(): string {
+    return $this->title;
+  }
+
+  public function get_date(): string {
+    return '1991';
+  }
+
+  public function get_num_teams(): int {
+    return $this->num_teams;
   }
 }

@@ -7,9 +7,10 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-match-pick.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'domain/class-wpbb-bracket-interface.php';
 
-class Wpbb_BracketPlay extends Wpbb_PostBase
-{
+class Wpbb_BracketPlay extends Wpbb_PostBase implements Wpbb_BracketInterface {
   /**
    * @var int
    */
@@ -50,8 +51,7 @@ class Wpbb_BracketPlay extends Wpbb_PostBase
    */
   public $busted_id;
 
-  public function __construct(array $data = [])
-  {
+  public function __construct(array $data = []) {
     parent::__construct($data);
 
     if (!(isset($data['tournament_id']) || isset($data['template_id']))) {
@@ -69,37 +69,32 @@ class Wpbb_BracketPlay extends Wpbb_PostBase
     $this->busted_id = $data['busted_id'] ?? null;
   }
 
-  public static function get_post_type(): string
-  {
+  public static function get_post_type(): string {
     return 'bracket_play';
   }
 
-  public function get_winning_team(): ?Wpbb_Team
-  {
+  public function get_winning_team(): ?Wpbb_Team {
     if (count($this->picks) === 0) {
       return null;
     }
     return $this->picks[count($this->picks) - 1]->winning_team;
   }
 
-  public function get_post_meta(): array
-  {
+  public function get_post_meta(): array {
     return [
       'bracket_tournament_id' => $this->tournament_id,
       'bracket_template_id' => $this->template_id,
     ];
   }
 
-  public function get_update_post_meta(): array
-  {
+  public function get_update_post_meta(): array {
     return [];
   }
 
   /**
    * @throws Wpbb_ValidationException
    */
-  public static function from_array($data): Wpbb_BracketPlay
-  {
+  public static function from_array($data): Wpbb_BracketPlay {
     if (!(isset($data['tournament_id']) || isset($data['template_id']))) {
       throw new Wpbb_ValidationException(
         'tournament_id or template_id is required'
@@ -113,5 +108,25 @@ class Wpbb_BracketPlay extends Wpbb_PostBase
     $data['picks'] = $picks;
 
     return new Wpbb_BracketPlay($data);
+  }
+
+  public function get_matches(): array {
+    return $this->tournament->get_matches();
+  }
+
+  public function get_picks(): array {
+    return $this->picks;
+  }
+
+  public function get_title(): string {
+    return $this->tournament->title;
+  }
+
+  public function get_date(): string {
+    return '1993';
+  }
+
+  public function get_num_teams(): int {
+    return $this->tournament->get_num_teams();
   }
 }

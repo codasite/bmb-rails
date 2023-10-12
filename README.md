@@ -10,7 +10,7 @@
 
 - Install the Local dev tool: https://localwp.com/
 - Create a new site in Local: https://wpengine.com/resources/local-wordpress-development-environment-how-to/
-   - Use the latest php version and mysql version
+  - Use the latest php version and mysql version
 
 2. Clone the repo anywhere on your system and create a symlink to the `plugin` folder:
 
@@ -68,6 +68,54 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 12. Enable debugging in `wp-config.php` https://wordpress.org/documentation/article/debugging-in-wordpress/
 13. Run `npm start` in `plugin/includes/react-bracket-builder` to start the react app.
+
+## Image Generation
+
+Image generation is handled by a series of docker containers managed by docker compose
+
+### TL;DR
+
+- Production: `docker-compose -f docker-compose.prod.yml up -d --build`
+- Development: `docker-compose up --build`
+
+### image-generator
+
+|             |                    |                                           |
+| ----------- | ------------------ | ----------------------------------------- |
+| root dir    | `/image-generator` |                                           |
+| port        | :3000              |                                           |
+| dev script  | `npm run dev`      | launch the express api with hot reloading |
+| prod script | `npm run start`    | launch the express api                    |
+
+#### What it does
+
+The purpose of the image-generator service is to provide the localhost endpoint that Wordpress calls to generate bracket images and pdfs. This is the only endpoint that Wordpress calls directly. Internally, image-generator depends on the react-server service to provide a url that puppeteer can take a screenshot of.
+
+### react-server
+
+|             |                 |                                |
+| ----------- | --------------- | ------------------------------ |
+| root dir    | `/react-server` |                                |
+| port        | :3001           |                                |
+| dev script  | `npm run dev`   | express api with hot reloading |
+| prod script | `npm run start` | express api no reloading       |
+
+#### What it does
+
+Serves an express api that image-generator can query to generate the screenshot. In production mode, the react app is pulled from a shared volume with react-client that contains the bundled JavaScript code. In dev mode, acts as a proxy server to react-client’s development port
+
+### react-client
+
+|             |                                          |     |
+| ----------- | ---------------------------------------- | --- |
+| root dir    | `/plugin/includes/react-bracket-builder` |     |
+| port        | :8080                                    |     |
+| dev script  | `npm run dev:standalone`                 |     |
+| prod script | `npm run build:standalone`               |     |
+
+#### What it does
+
+This container serves just the react part of the plugin outside the context of Wordpress. To do this, there is a separate webpack config file with no dependencies on a global ‘wp’ object. In production, the source code simply gets compiled to a ‘dist’ folder and served statically by react-server. In development, the webpack server is used and exposed on port 8080. In this case, the app can be accessed from either react-server on port 3001 or react-client on port 8080.
 
 ## Testing
 

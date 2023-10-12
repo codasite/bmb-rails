@@ -1,19 +1,19 @@
 <?php
 
 include_once 'factory/unittest-factory.php';
-include_once 'phpunit/includes/bootstrap.php';
+// @karlmolina What does this do? Throwing warnings for me
+// include_once 'phpunit/includes/bootstrap.php';
 
 /**
  * Class WPBB_UnitTestCase
  *
+ *
  * This class is used to set up the plugin's custom tables for unit testing
  */
-abstract class WPBB_UnitTestCase extends WP_UnitTestCase
-{
+abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   protected $plugin_path = '/var/www/html/wp-content/plugins/wp-bracket-builder/';
 
-  protected static function factory()
-  {
+  protected static function factory() {
     static $factory = null;
     if (!$factory) {
       $factory = new WPBB_UnitTest_Factory();
@@ -21,8 +21,7 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase
     return $factory;
   }
 
-  public static function set_up_before_class()
-  {
+  public static function set_up_before_class() {
     parent::set_up_before_class();
 
     require_once plugin_dir_path(dirname(__FILE__)) .
@@ -31,8 +30,11 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase
     $activator->activate();
   }
 
-  public function set_up()
-  {
-    wp_set_current_user(1);
+  public function set_up() {
+    parent::set_up();
+    $admin_user = self::factory()->user->create([
+      'role' => 'administrator',
+    ]);
+    wp_set_current_user($admin_user);
   }
 }

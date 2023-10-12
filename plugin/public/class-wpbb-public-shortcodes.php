@@ -4,8 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpb
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
 
-class Wpbb_Public_Shortcodes
-{
+class Wpbb_Public_Shortcodes {
 
 	/**
 	 * Render the bracket preview
@@ -107,7 +106,7 @@ class Wpbb_Public_Shortcodes
 			}
 			$template_repo = new Wpbb_BracketTemplateRepo();
 			$template = $template_repo->get(post: $post);
-      $play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
+			$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
 
 
 			// $bracket_product_archive_url = $this->get_archive_url();
@@ -125,7 +124,7 @@ class Wpbb_Public_Shortcodes
 					'nonce' => wp_create_nonce('wp_rest'),
 					'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
 					'css_file' => $css_file,
-          'redirect_url' => $play_history_url, // used to redirect to bracket-ready category page
+					'redirect_url' => $play_history_url, // used to redirect to bracket-ready category page
 
 					// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
 				)

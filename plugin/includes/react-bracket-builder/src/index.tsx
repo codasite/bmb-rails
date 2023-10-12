@@ -37,6 +37,7 @@ const TournamentResultsBuilder = React.lazy(
       './brackets/BracketBuilders/TournamentResultsBuilder/TournamentResultsBuilder'
     )
 )
+
 const ViewPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage')
 )
@@ -53,7 +54,7 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   console.log('ajaxObj', ajaxObj)
   initializeSentry(ajaxObj)
   renderSettings(ajaxObj)
-  renderPreview(ajaxObj)
+  renderProductPreview(ajaxObj)
   renderPlayTournamentBuilder(ajaxObj)
   renderTemplateBuilder(ajaxObj)
   renderPlayTemplate(ajaxObj)
@@ -196,24 +197,37 @@ function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
     )
   }
 }
+
 function renderPrintBracketPage() {
-  renderDiv(
+  const builderDiv = document.getElementById('wpbb-print-play')
+  if (!builderDiv) return
+  const fontPath = require('./assets/fonts/ClashDisplay-Variable.woff2')
+  const link = document.createElement('link')
+  link.rel = 'preload'
+  link.href = fontPath
+  link.as = 'font'
+  link.type = 'font/woff2'
+  link.crossOrigin = 'anonymous'
+  document.head.appendChild(link)
+
+  console.log('print bracket play')
+  render(
     <App>
       <PrintPlayPage />
     </App>,
     'wpbb-print-play'
   )
 }
-function renderPreview(ajaxObj: WpbbAjaxObj) {
+function renderProductPreview(ajaxObj: WpbbAjaxObj) {
   renderDiv(
     <App>
       <Gallery
         overlayThemeMap={ajaxObj.bracketUrlThemeMap}
         galleryImages={ajaxObj.galleryImages}
         colorOptions={ajaxObj.colorOptions}
-      />{' '}
+      />
     </App>,
-    'wpbb-bracket-preview-controller'
+    'wpbb-product-preview'
   )
 }
 function renderMyTournamentsModals(ajaxObj: WpbbAjaxObj) {

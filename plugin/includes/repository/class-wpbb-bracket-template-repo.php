@@ -10,8 +10,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
-{
+class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
   /**
    * @var Wpbb_BracketTeamRepo
    */
@@ -22,16 +21,14 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
    */
   private $wpdb;
 
-  public function __construct()
-  {
+  public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = new Wpbb_BracketTeamRepo();
     parent::__construct();
   }
 
-  public function add(Wpbb_BracketTemplate $template): ?Wpbb_BracketTemplate
-  {
+  public function add(Wpbb_BracketTemplate $template): ?Wpbb_BracketTemplate {
     $post_id = $this->insert_post($template, true, true);
 
     if (is_wp_error($post_id)) {
@@ -51,15 +48,13 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
     return $template;
   }
 
-  public function insert_template_data(array $data): int
-  {
+  public function insert_template_data(array $data): int {
     $table_name = $this->templates_table();
     $this->wpdb->insert($table_name, $data);
     return $this->wpdb->insert_id;
   }
 
-  public function insert_matches(int $template_id, array $matches): void
-  {
+  public function insert_matches(int $template_id, array $matches): void {
     $table_name = $this->match_table();
     foreach ($matches as $match) {
       // Skip if match is null
@@ -104,11 +99,12 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
     }
     $template_id = $template_data['id'];
 
+    $user = wp_get_current_user();
     if (
-      !current_user_can('administrator') &&
+      !in_array('administrator', (array) $user->roles) &&
       intval(get_current_user_id()) !== intval($template_post->post_author)
     ) {
-      return null;
+      throw new Exception('Unauthorized');
     }
 
     $matches =
@@ -164,8 +160,7 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
     return $template;
   }
 
-  public function get_template_data(int|WP_Post|null $template_post): array
-  {
+  public function get_template_data(int|WP_Post|null $template_post): array {
     if (
       !$template_post ||
       ($template_post instanceof WP_Post &&
@@ -194,8 +189,7 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
     return $template_data;
   }
 
-  public function get_matches(int $template_id): array
-  {
+  public function get_matches(int $template_id): array {
     $table_name = $this->match_table();
     $where = $template_id ? "WHERE bracket_template_id = $template_id" : '';
     $match_results = $this->wpdb->get_results(
@@ -220,8 +214,7 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
     return $matches;
   }
 
-  public function get_all(array|WP_Query $query = []): array
-  {
+  public function get_all(array|WP_Query $query = []): array {
     if ($query instanceof WP_Query) {
       return $this->templates_from_query($query);
     }
@@ -237,8 +230,7 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
     return $this->templates_from_query($query);
   }
 
-  public function templates_from_query(WP_Query $query): array
-  {
+  public function templates_from_query(WP_Query $query): array {
     $templates = [];
     foreach ($query->posts as $post) {
       $template = $this->get($post, false);
@@ -249,23 +241,19 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase
     return $templates;
   }
 
-  public function delete(int $id, $force = false): bool
-  {
+  public function delete(int $id, $force = false): bool {
     return $this->delete_post($id, $force);
   }
 
-  public function match_table(): string
-  {
+  public function match_table(): string {
     return $this->wpdb->prefix . 'bracket_builder_matches';
   }
 
-  public function team_table(): string
-  {
+  public function team_table(): string {
     return $this->wpdb->prefix . 'bracket_builder_teams';
   }
 
-  public function templates_table(): string
-  {
+  public function templates_table(): string {
     return $this->wpdb->prefix . 'bracket_builder_templates';
   }
 }
