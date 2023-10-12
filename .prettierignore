@@ -3,3 +3,7 @@ build
 dist
 coverage
 composer.lock
+*.md
+plugin/public/
+plugin/admin/
+plugin/email/

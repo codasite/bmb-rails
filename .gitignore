@@ -136,3 +136,4 @@ build/
 .svn/
 .phpunit.result.cache
 .DS_Store
+docker/wordpress/downloads/

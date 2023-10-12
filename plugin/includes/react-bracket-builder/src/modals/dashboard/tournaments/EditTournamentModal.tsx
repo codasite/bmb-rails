@@ -1,32 +1,43 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
-import { TextFieldModal } from '../../TextFieldModal'
 import addClickHandlers from '../../addClickHandlers'
+import { Modal } from '../../Modal'
+import { ModalHeader } from '../../ModalHeader'
+import { ModalTextField } from '../../ModalTextFields'
+import { CancelButton, ConfirmButton } from '../../ModalButtons'
 
 export const EditTournamentModal = () => {
   const [tournamentId, setTournamentId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
-  const [input, setInput] = useState('')
-  const [hasError, setHasError] = useState(false)
+  const [title, setTitle] = useState('')
+  const [titleHasError, setTitleHasError] = useState(false)
+  const [date, setDate] = useState('')
+  const [dateHasError, setDateHasError] = useState(false)
   const [show, setShow] = useState(false)
   addClickHandlers({
     buttonClassName: 'wpbb-edit-tournament-button',
     onButtonClick: (b) => {
-      setInput(b.dataset.tournamentName)
+      setTitle(b.dataset.tournamentTitle)
+      setDate(b.dataset.tournamentDate)
       setTournamentId(parseInt(b.dataset.tournamentId))
       setShow(true)
     },
   })
   const onEditTournament = () => {
-    if (!input) {
-      setHasError(true)
+    if (!title) {
+      setTitleHasError(true)
+      return
+    }
+    if (!date) {
+      setDateHasError(true)
       return
     }
     setLoading(true)
     bracketApi
       .updateTournament(tournamentId, {
-        title: input,
+        title: title,
+        date: date,
       })
       .then((res) => {
         window.location.reload()
@@ -37,19 +48,36 @@ export const EditTournamentModal = () => {
       })
   }
   return (
-    <TextFieldModal
-      submitButtonText={'Save'}
-      onSubmit={onEditTournament}
-      header={'Edit info'}
-      input={input}
-      setInput={setInput}
-      hasError={hasError}
-      setHasError={setHasError}
-      loading={loading}
-      errorText={'Tournament name is required'}
-      placeholderText={'Tournament name...'}
-      setShow={setShow}
-      show={show}
-    />
+    <Modal show={show} setShow={setShow}>
+      <div className="tw-flex tw-flex-col">
+        <ModalHeader text={'Edit info'} />
+        <div className="tw-flex tw-flex-col tw-gap-10">
+          <ModalTextField
+            hasError={titleHasError}
+            errorText={'Tournament name is required'}
+            placeholderText={'Tournament name...'}
+            input={title}
+            setInput={setTitle}
+            setHasError={setTitleHasError}
+          />
+          <ModalTextField
+            hasError={dateHasError}
+            errorText={'Date is required'}
+            placeholderText={'Date...'}
+            input={date}
+            setInput={setDate}
+            setHasError={setDateHasError}
+          />
+          <div className={'tw-mb-30'}></div>
+          <ConfirmButton
+            disabled={loading || titleHasError}
+            onClick={onEditTournament}
+          >
+            {'Save'}
+          </ConfirmButton>
+          <CancelButton onClick={() => setShow(false)} />
+        </div>
+      </div>
+    </Modal>
   )
 }

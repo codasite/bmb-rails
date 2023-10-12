@@ -11,7 +11,7 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[php]": {
-      "editor.defaultFormatter": "bmewburn.vscode-intelephense-client"
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
   }
 }

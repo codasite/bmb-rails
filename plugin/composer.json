@@ -18,6 +18,6 @@
     "mailchimp/transactional": "^1.0"
   },
   "scripts": {
-    "test": "phpunit"
+    "test": "phpunit --colors=always"
   }
 }

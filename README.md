@@ -119,7 +119,7 @@ This container serves just the react part of the plugin outside the context of W
 
 ## Testing
 
-Tests are stored in `plugin/tests` and follow the directory structure of the plugin. For example, the tests for `plugin/includes/domain/class-wp-bracket-builder-bracket-template.php` are in `plugin/tests/includes/domain/test-bracket-template.php`. All tests must inherit from `WPBB_UnitTestCase` in `plugin/tests/unittest-base.php` if they use custom database tables. All test methods should start with `test_`.
+Tests are stored in `plugin/tests` and follow the directory structure of the plugin. For example, the tests for `plugin/includes/domain/class-wpbb-bracket-template.php` are in `plugin/tests/includes/domain/test-bracket-template.php`. All tests must inherit from `WPBB_UnitTestCase` in `plugin/tests/unittest-base.php` if they use custom database tables. All test methods should start with `test_`.
 
 Tests should be run via docker-compose. To run the tests:
 
@@ -130,3 +130,25 @@ Tests should be run via docker-compose. To run the tests:
 Resources:
 https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/
 https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/
+
+## Docker
+
+Docker can be used to run a local clone of an existing site. This is useful for testing with "live" data.
+
+1. Pull the latest site backup (requires ssh access to the server):
+    
+    ```
+    make wp-pull
+    ```
+
+2. Start the local site:
+
+    ```
+    make wp-up
+    ```
+
+3. Add the test installation and create the admin user (existing credentials can be used as well):
+    
+    ```
+    make wp-init
+    ```

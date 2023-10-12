@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as Sentry from '@sentry/react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
-
 import { MatchTree } from '../../shared/models/MatchTree'
 import { BracketMeta } from '../../shared/context'
 import {
+  WithBracketMeta,
   WithDarkMode,
   WithMatchTree,
-  WithBracketMeta,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import { PlayReq } from '../../shared/api/types/bracket'
+import {
+  PlayReq,
+  TemplateRes,
+  TournamentRes,
+} from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
@@ -19,8 +22,8 @@ import { PlayBuilder } from './PlayBuilder'
 interface PlayPageProps {
   apparelUrl: string
   bracketStylesheetUrl: string
-  tournament?: any
-  template?: any
+  tournament?: TournamentRes
+  template?: TemplateRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   darkMode?: boolean
@@ -53,14 +56,14 @@ const PlayPage = (props: PlayPageProps) => {
       const template = tournament.bracketTemplate
       const numTeams = template.numTeams
       const matches = template.matches
-      setBracketMeta?.({ title: tournament.title, date: '2021' })
+      setBracketMeta?.({ title: tournament.title, date: tournament.date })
       tree = MatchTree.fromMatchRes(numTeams, matches)
       // Better to have separate components for template and tournament
     } else if (template) {
       const numTeams = template.numTeams
       const matches = template.matches
       tree = MatchTree.fromMatchRes(numTeams, matches)
-      setBracketMeta?.({ title: template.title, date: '2021' })
+      setBracketMeta?.({ title: template.title, date: template.date })
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
@@ -119,17 +122,17 @@ const PlayPage = (props: PlayPageProps) => {
     console.log(picks)
     const tournamentId = tournament?.id
     console.log(tournamentId)
-    if (!picks || !tournamentId) {
-      const msg = 'Cannot create play. Missing one of tournamentId or picks'
+    if (!picks) {
+      const msg = 'Cannot create play. Missing picks'
       console.error(msg)
       Sentry.captureException(msg)
       return
     }
     const playReq: PlayReq = {
       tournamentId: tournament?.id,
+      templateId: tournamentId ? undefined : template?.id,
       picks: picks,
     }
-
     setProcessing(true)
     bracketApi
       .createPlay(playReq)

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import {
+  WithBracketMeta,
   WithDarkMode,
   WithMatchTree,
-  WithBracketMeta,
   WithProvider,
 } from '../../shared/components/HigherOrder'
 //@ts-ignore
@@ -14,11 +13,10 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
-import { bracketApi } from '../../shared/api/bracketApi'
 import { BustPlayBuilder } from './BustPlayBuilder'
 // import { ReactComponent as UserIcon } from '../../shared/assets/user.svg'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
-import { MatchRes, PlayRes } from '../../shared/api/types/bracket'
+import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
 
 interface BustPlayPageProps {
@@ -61,8 +59,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     const title = authorDisplayName
       ? `${authorDisplayName}'s ${tournamentTitle} picks`
       : tournamentTitle
-    const date = 'Sept 2094'
-    setBracketMeta({ title, date })
+    setBracketMeta({ title, date: play?.tournament?.date })
     const template = play?.tournament?.bracketTemplate
     const matches = template?.matches
     const numTeams = template?.numTeams
