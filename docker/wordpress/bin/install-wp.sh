@@ -10,9 +10,6 @@ wp-cli core install \
 # wp-cli plugin install /tmp/plugins/oxygen4.5.zip --activate
 # wp-cli plugin install /tmp/plugins/oxygen-woocommerce.zip --activate
 
-# install test directory
-echo "install test directory..."
-su www-data -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root ${WORDPRESS_DB_HOST} latest"
 
 echo "done"
 

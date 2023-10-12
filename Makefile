@@ -13,6 +13,11 @@ wp-down:
 # Install wordpress and the test installation
 wp-install:
 	docker exec wordpress-test-app install-wp.sh
+	docker exec wordpress-test-app install-wp-tests
+
+# Install the test installation
+wp-install-test:
+	docker exec wordpress-test-app install-wp-tests
 
 # Run tests
 wp-test:

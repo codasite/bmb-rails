@@ -29,7 +29,7 @@ services:
 
   wp-test:
     tty: true
-    build: 
+    build:
       context: .
       dockerfile: ./docker/wordpress/Dockerfile
       args:
