@@ -28,8 +28,8 @@ class Wpbb_Match {
   public $team2;
 
   public function __construct($args) {
-    $this->round_index = $args['round_index'];
-    $this->match_index = $args['match_index'];
+    $this->round_index = (int) $args['round_index'];
+    $this->match_index = (int) $args['match_index'];
     $this->team1 = $args['team1'] ?? null;
     $this->team2 = $args['team2'] ?? null;
     $this->id = $args['id'] ?? null;

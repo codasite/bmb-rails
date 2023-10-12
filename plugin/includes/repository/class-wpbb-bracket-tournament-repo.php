@@ -8,8 +8,6 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
-  'repository/class-wpbb-bracket-match-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-team-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-custom-post-repo.php';

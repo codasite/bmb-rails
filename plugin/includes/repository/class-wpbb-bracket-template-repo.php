@@ -7,8 +7,6 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-team-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
-  'repository/class-wpbb-bracket-match-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
@@ -19,11 +17,6 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
   private $team_repo;
 
   /**
-   * @var Wpbb_BracketMatchRepo
-   */
-  private $match_repo;
-
-  /**
    * @var wpdb
    */
   private $wpdb;
@@ -32,7 +25,6 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = new Wpbb_BracketTeamRepo();
-    $this->match_repo = new Wpbb_BracketMatchRepo();
     parent::__construct();
   }
 
@@ -63,7 +55,25 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
   }
 
   public function insert_matches(int $template_id, array $matches): void {
-    $this->match_repo->insert_matches($template_id, $matches);
+    $table_name = $this->match_table();
+    foreach ($matches as $match) {
+      // Skip if match is null
+      if ($match === null) {
+        continue;
+      }
+      // First, insert teams
+      $team1 = $this->team_repo->add($template_id, $match->team1);
+      $team2 = $this->team_repo->add($template_id, $match->team2);
+
+      $this->wpdb->insert($table_name, [
+        'bracket_template_id' => $template_id,
+        'round_index' => $match->round_index,
+        'match_index' => $match->match_index,
+        'team1_id' => $team1?->id,
+        'team2_id' => $team2->id,
+      ]);
+      $match->id = $this->wpdb->insert_id;
+    }
   }
 
   public function get(
@@ -172,7 +182,27 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
   }
 
   public function get_matches(int $template_id): array {
-    return $this->match_repo->get_matches($template_id);
+    $table_name = $this->match_table();
+    $where = $template_id ? "WHERE bracket_template_id = $template_id" : '';
+    $match_results = $this->wpdb->get_results(
+      "SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
+      ARRAY_A
+    );
+    $matches = [];
+    foreach ($match_results as $match) {
+      $team1 = $this->team_repo->get($match['team1_id']);
+      $team2 = $this->team_repo->get($match['team2_id']);
+
+      $matches[] = new Wpbb_Match([
+        'round_index' => $match['round_index'],
+        'match_index' => $match['match_index'],
+        'team1' => $team1,
+        'team2' => $team2,
+        'id' => $match['id'],
+      ]);
+    }
+
+    return $matches;
   }
 
   public function get_all(array|WP_Query $query = []): array {
@@ -204,6 +234,10 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
 
   public function delete(int $id, $force = false): bool {
     return $this->delete_post($id, $force);
+  }
+
+  public function match_table(): string {
+    return $this->wpdb->prefix . 'bracket_builder_matches';
   }
 
   public function templates_table(): string {

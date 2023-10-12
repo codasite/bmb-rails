@@ -18,33 +18,46 @@ class TemplateRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_add_matches() {
-    $match_arr = [
-      [
+    $template = self::factory()->template->create_and_get();
+    $matches = [
+      new Wpbb_Match([
         'round_index' => 0,
         'match_index' => 0,
-        'team1' => ['name' => 'Team 1'],
-        'team2' => ['name' => 'Team 2'],
-      ],
-      [
+        'team1' => new Wpbb_Team([
+          'name' => 'Team 1',
+        ]),
+        'team2' => new Wpbb_Team([
+          'name' => 'Team 2',
+        ]),
+      ]),
+      new Wpbb_Match([
         'round_index' => 0,
         'match_index' => 1,
-        'team1' => ['name' => 'Team 3'],
-        'team2' => ['name' => 'Team 4'],
-      ],
-      [
-        'round_index' => 0,
-        'match_index' => 2,
-        'team1' => ['name' => 'Team 5'],
-        'team2' => ['name' => 'Team 6'],
-      ],
-      [
-        'round_index' => 0,
-        'match_index' => 3,
-        'team1' => ['name' => 'Team 7'],
-        'team2' => ['name' => 'Team 8'],
-      ],
+        'team1' => new Wpbb_Team([
+          'name' => 'Team 3',
+        ]),
+        'team2' => new Wpbb_Team([
+          'name' => 'Team 4',
+        ]),
+      ]),
     ];
-    $this->assertTrue(true);
+
+    $template_data = $this->template_repo->get_template_data($template->id);
+
+    $this->template_repo->insert_matches($template_data['id'], $matches);
+
+    $matches = $this->template_repo->get_matches($template_data['id']);
+
+    $this->assertEquals(2, count($matches));
+    $this->assertEquals(0, $matches[0]->round_index);
+    $this->assertEquals(0, $matches[0]->match_index);
+    $this->assertEquals('Team 1', $matches[0]->team1->name);
+    $this->assertEquals('Team 2', $matches[0]->team2->name);
+    $this->assertEquals(0, $matches[1]->round_index);
+
+    $this->assertEquals(1, $matches[1]->match_index);
+    $this->assertEquals('Team 3', $matches[1]->team1->name);
+    $this->assertEquals('Team 4', $matches[1]->team2->name);
   }
 
   public function test_add() {
