@@ -1,5 +1,6 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-bracket-product-utils.php';
 
 $post = get_post();
 if (!$post || $post->post_type !== 'bracket_play') {
@@ -9,19 +10,18 @@ if (!$post || $post->post_type !== 'bracket_play') {
 				</div>';
 }
 $play_repo = new Wpbb_BracketPlayRepo();
+$product_utils = new Wpbb_BracketProductUtils();
 $play = $play_repo->get($post);
-$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
-// $bracket_product_archive_url = $this->get_archive_url();
+$bracket_product_archive_url = $product_utils->get_bracket_product_archive_url();
 
 wp_localize_script(
     'wpbb-bracket-builder-react',
     'wpbb_ajax_obj',
     array(
         'play' => $play,
-        'play_history_url' => $play_history_url,
         'nonce' => wp_create_nonce('wp_rest'),
         'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-        'redirect_url' => $play_history_url
+        'redirect_url' => $bracket_product_archive_url
     )
 );
 

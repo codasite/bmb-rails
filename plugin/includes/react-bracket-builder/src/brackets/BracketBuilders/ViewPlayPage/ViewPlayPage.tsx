@@ -15,6 +15,8 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
 
+console.log('view play page')
+
 interface ViewPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
@@ -56,6 +58,8 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   }, [play])
 
   const handleAddToApparel = () => {
+    console.log('handleAddToApparel')
+    console.log('apparelUrl', apparelUrl)
     window.location.href = props.apparelUrl
   }
 

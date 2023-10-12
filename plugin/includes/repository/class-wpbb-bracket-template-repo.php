@@ -62,8 +62,8 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
         continue;
       }
       // First, insert teams
-      $team1 = $this->team_repo->insert_team($template_id, $match->team1);
-      $team2 = $this->team_repo->insert_team($template_id, $match->team2);
+      $team1 = $this->team_repo->add($template_id, $match->team1);
+      $team2 = $this->team_repo->add($template_id, $match->team2);
 
       $this->wpdb->insert($table_name, [
         'bracket_template_id' => $template_id,
@@ -98,8 +98,6 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
       return null;
     }
     $template_id = $template_data['id'];
-
-    $user = wp_get_current_user();
 
     $matches =
       $fetch_matches && $template_id ? $this->get_matches($template_id) : [];
@@ -192,17 +190,16 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
     );
     $matches = [];
     foreach ($match_results as $match) {
-      $team1 = $this->team_repo->get_team($match['team1_id']);
-      $team2 = $this->team_repo->get_team($match['team2_id']);
+      $team1 = $this->team_repo->get($match['team1_id']);
+      $team2 = $this->team_repo->get($match['team2_id']);
 
-      // $matches[$match['round_index']][$match['match_index']] = new Wpbb_Match(
-      $matches[] = new Wpbb_Match(
-        $match['round_index'],
-        $match['match_index'],
-        $team1,
-        $team2,
-        $match['id']
-      );
+      $matches[] = new Wpbb_Match([
+        'round_index' => $match['round_index'],
+        'match_index' => $match['match_index'],
+        'team1' => $team1,
+        'team2' => $team2,
+        'id' => $match['id'],
+      ]);
     }
 
     return $matches;
@@ -241,10 +238,6 @@ class Wpbb_BracketTemplateRepo extends Wpbb_CustomPostRepoBase {
 
   public function match_table(): string {
     return $this->wpdb->prefix . 'bracket_builder_matches';
-  }
-
-  public function team_table(): string {
-    return $this->wpdb->prefix . 'bracket_builder_teams';
   }
 
   public function templates_table(): string {

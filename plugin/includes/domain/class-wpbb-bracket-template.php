@@ -84,7 +84,7 @@ class Wpbb_BracketTemplate extends Wpbb_PostBase implements
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
-      'date',
+      // 'date',
       'author',
       'title',
       'matches',

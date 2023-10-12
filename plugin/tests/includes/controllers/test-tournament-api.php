@@ -69,10 +69,7 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 
     $response = rest_do_request($request);
     $this->assertEquals(400, $response->get_status());
-    $this->assertEquals(
-      'date, title is required',
-      $response->get_data()['message']
-    );
+    $this->assertEquals('title is required', $response->get_data()['message']);
   }
 
   public function test_update_tournament() {
