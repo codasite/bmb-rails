@@ -1,9 +1,7 @@
 <?php
 
-class Wpbb_Slug_Service
-{
-  public function generate()
-  {
+class Wpbb_Slug_Service {
+  public function generate() {
     do {
       $slug = wp_generate_password(8, false);
     } while ($this->slug_exists($slug));
@@ -11,8 +9,7 @@ class Wpbb_Slug_Service
     return $slug;
   }
 
-  private function slug_exists($slug)
-  {
+  private function slug_exists($slug) {
     global $wpdb;
     $query = "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_name = %s";
     $count = $wpdb->get_var($wpdb->prepare($query, $slug));

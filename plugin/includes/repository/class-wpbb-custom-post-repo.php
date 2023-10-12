@@ -4,15 +4,13 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-slug-service.php';
 
-abstract class Wpbb_CustomPostRepoBase
-{
+abstract class Wpbb_CustomPostRepoBase {
   /**
    * @var Wpbb_Slug_Service
    */
   private $slug_service;
 
-  public function __construct()
-  {
+  public function __construct() {
     $this->slug_service = new Wpbb_Slug_Service();
   }
 
@@ -55,8 +53,7 @@ abstract class Wpbb_CustomPostRepoBase
     return $post_id;
   }
 
-  public function delete_post(int $id, $force = false): bool
-  {
+  public function delete_post(int $id, $force = false): bool {
     $result = wp_delete_post($id, $force);
     return $result !== false;
   }

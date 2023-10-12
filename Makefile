@@ -33,3 +33,6 @@ up:
 # Stop and remove all containers
 down:
 	docker compose down -v
+
+pretty:
+	npm run pretty

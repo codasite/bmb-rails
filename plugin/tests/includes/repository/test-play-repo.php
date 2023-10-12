@@ -8,21 +8,18 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
 
-class PlayRepoTest extends WPBB_UnitTestCase
-{
+class PlayRepoTest extends WPBB_UnitTestCase {
   private $tournament_repo;
   private $play_repo;
 
-  public function set_up()
-  {
+  public function set_up() {
     parent::set_up();
 
     $this->tournament_repo = new Wpbb_BracketTournamentRepo();
     $this->play_repo = new Wpbb_BracketPlayRepo();
   }
 
-  public function test_add()
-  {
+  public function test_add() {
     $this->assertTrue(true);
   }
 

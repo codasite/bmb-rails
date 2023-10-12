@@ -7,8 +7,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-config-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wpbb_ConvertApi extends WP_REST_Controller
-{
+class Wpbb_ConvertApi extends WP_REST_Controller {
   /**
    * @var string
    */
@@ -22,8 +21,7 @@ class Wpbb_ConvertApi extends WP_REST_Controller
   /**
    * Constructor.
    */
-  public function __construct()
-  {
+  public function __construct() {
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'html-to-image';
   }
@@ -32,8 +30,7 @@ class Wpbb_ConvertApi extends WP_REST_Controller
    * Register the routes for bracket objects.
    * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
    */
-  public function register_routes()
-  {
+  public function register_routes() {
     $namespace = $this->namespace;
     $base = $this->rest_base;
     register_rest_route($namespace, '/' . $base, [
@@ -56,8 +53,7 @@ class Wpbb_ConvertApi extends WP_REST_Controller
    * @return WP_Error|WP_REST_Response
    */
 
-  public function html_to_image($request)
-  {
+  public function html_to_image($request) {
     $utils = new Wpbb_Utils();
     // get the entire request body
     $body = json_decode($request->get_body(), true);
@@ -129,8 +125,7 @@ class Wpbb_ConvertApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|bool
    */
-  public function admin_permission_check($request)
-  {
+  public function admin_permission_check($request) {
     // return true; // TODO: Disable this for production
     return current_user_can('manage_options');
   }
@@ -141,8 +136,7 @@ class Wpbb_ConvertApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|bool
    */
-  public function customer_permission_check($request)
-  {
+  public function customer_permission_check($request) {
     // return true; // TODO: Disable this for production
     return current_user_can('read');
   }

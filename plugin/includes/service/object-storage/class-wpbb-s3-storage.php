@@ -1,7 +1,6 @@
 <?php
 require_once 'class-wpbb-object-storage-interface.php';
-class Wpbb_S3_Storage
-{
+class Wpbb_S3_Storage {
   /**
    * Upload a file to the object storage.
    * @param  string $file The path to the file to upload.
@@ -10,8 +9,7 @@ class Wpbb_S3_Storage
    *
    * @return string The URL to the file in the object storage.
    */
-  public function upload($file, $name, $args = []): string
-  {
+  public function upload($file, $name, $args = []): string {
     return 'hello';
   }
 }

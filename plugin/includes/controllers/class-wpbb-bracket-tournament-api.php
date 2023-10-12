@@ -15,8 +15,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-email-service-interface.php';
 
-class Wpbb_BracketTournamentApi extends WP_REST_Controller
-{
+class Wpbb_BracketTournamentApi extends WP_REST_Controller {
   /**
    * @var Wpbb_BracketTournamentRepo
    */
@@ -47,8 +46,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    */
   private ?Wpbb_Notification_Service_Interface $notification_service;
 
-  public function __construct($args = [])
-  {
+  public function __construct($args = []) {
     $this->tournament_repo =
       $args['tournament_repo'] ?? new Wpbb_BracketTournamentRepo();
     $this->score_service = $args['score_service'] ?? new Wpbb_Score_Service();
@@ -68,8 +66,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * Register the routes for bracket objects.
    * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
    */
-  public function register_routes()
-  {
+  public function register_routes() {
     $namespace = $this->namespace;
     $base = $this->rest_base;
     register_rest_route($namespace, '/' . $base, [
@@ -135,8 +132,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_items($request)
-  {
+  public function get_items($request) {
     $tournaments = $this->tournament_repo->get_all();
     return new WP_REST_Response($tournaments, 200);
   }
@@ -147,8 +143,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_item($request)
-  {
+  public function get_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
     $tournament = $this->tournament_repo->get($id);
@@ -161,8 +156,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function create_item($request)
-  {
+  public function create_item($request) {
     $params = $request->get_params();
 
     if (!isset($params['author'])) {
@@ -193,8 +187,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function update_item($request)
-  {
+  public function update_item($request) {
     $tournament_id = $request->get_param('item_id');
     $data = $request->get_params();
     $updated = $this->tournament_repo->update($tournament_id, $data);
@@ -216,8 +209,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function delete_item($request)
-  {
+  public function delete_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
     $deleted = $this->tournament_repo->delete($id);
@@ -230,8 +222,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|bool
    */
-  public function admin_permission_check($request)
-  {
+  public function admin_permission_check($request) {
     return true;
     // return current_user_can('edit_others_posts');
   }
@@ -242,8 +233,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|bool
    */
-  public function customer_permission_check($request)
-  {
+  public function customer_permission_check($request) {
     return true;
     // return current_user_can('read');
   }

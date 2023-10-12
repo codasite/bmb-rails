@@ -11,12 +11,10 @@ use Aws\S3\S3UriParser;
 
 #snippet-start:[php.example_code.lambda.service]
 
-class Wpbb_S3_Service
-{
+class Wpbb_S3_Service {
   protected S3Client $s3Client;
 
-  public function __construct($region = 'us-east-1', $version = 'latest')
-  {
+  public function __construct($region = 'us-east-1', $version = 'latest') {
     if (!defined('AWS_ACCESS_KEY') || !defined('AWS_SECRET_KEY')) {
       return;
     }
@@ -38,8 +36,7 @@ class Wpbb_S3_Service
    *
    * @return string URI of the object
    */
-  public function put($bucket, $key, $body): string
-  {
+  public function put($bucket, $key, $body): string {
     $result = $this->s3Client->putObject([
       'Bucket' => $bucket,
       'Key' => $key,
@@ -55,8 +52,7 @@ class Wpbb_S3_Service
    *
    * @return string object body
    */
-  public function get($bucket, $key): string
-  {
+  public function get($bucket, $key): string {
     $result = $this->s3Client->getObject([
       'Bucket' => $bucket,
       'Key' => $key,
@@ -70,8 +66,7 @@ class Wpbb_S3_Service
    *
    * @return string object body
    */
-  public function get_from_url($url)
-  {
+  public function get_from_url($url) {
     $parser = new S3UriParser();
     $parsed = $parser->parse($url);
     $result = $this->get($parsed['bucket'], $parsed['key']);
@@ -116,8 +111,7 @@ class Wpbb_S3_Service
    *
    * @return string new object URL
    */
-  public function rename_from_url($url, $newKey): string
-  {
+  public function rename_from_url($url, $newKey): string {
     // Parse the bucket and key from the url
     $parser = new S3UriParser();
     $parsed = $parser->parse($url);
@@ -142,8 +136,7 @@ class Wpbb_S3_Service
   }
 }
 
-class Wpbb_Lambda_Service
-{
+class Wpbb_Lambda_Service {
   protected LambdaClient $lambdaClient;
 
   public function __construct(
@@ -176,8 +169,7 @@ class Wpbb_Lambda_Service
    *
    * @return array response from the function
    */
-  public function html_to_image($body): array|WP_Error
-  {
+  public function html_to_image($body): array|WP_Error {
     // $res = $this->image_from_api($body);
     $res = $this->image_from_invocation($body);
     return $res;
@@ -189,8 +181,7 @@ class Wpbb_Lambda_Service
    *
    * @return array response from the function
    */
-  private function image_from_api($body): array|WP_Error
-  {
+  private function image_from_api($body): array|WP_Error {
     $convert_url = 'http://localhost:8080/convert';
     // Make a request to the convert url using POST, content type application/json, and the html as the body, and accept *
 
@@ -223,8 +214,7 @@ class Wpbb_Lambda_Service
    *
    * @return array response from the function
    */
-  private function image_from_invocation($params): array|WP_Error
-  {
+  private function image_from_invocation($params): array|WP_Error {
     if (!defined('HTML_TO_IMAGE_FUNCTION_NAME')) {
       return new WP_Error(
         'error',
@@ -263,8 +253,7 @@ class Wpbb_Lambda_Service
     return json_decode($result['Payload']->getContents(), true);
   }
 
-  private function invoke($functionName, $params, $logType = 'None')
-  {
+  private function invoke($functionName, $params, $logType = 'None') {
     // check if lambda client is initialized
     if (!isset($this->lambdaClient)) {
       return new WP_Error(
@@ -301,8 +290,7 @@ class Wpbb_Lambda_Service
    *
    * @throws \GuzzleHttp\Promise\RejectionException If any of the promises are rejected.
    */
-  private function invoke_all(array $functions)
-  {
+  private function invoke_all(array $functions) {
     if (!isset($this->lambdaClient)) {
       return new WP_Error(
         'error',

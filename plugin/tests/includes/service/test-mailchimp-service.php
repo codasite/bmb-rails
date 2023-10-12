@@ -5,10 +5,8 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR . 'tests/mock/MailchimpApiClientMock.php';
 require_once WPBB_PLUGIN_DIR . 'vendor/autoload.php';
 
-class MailchimpEmailServiceTest extends WPBB_UnitTestCase
-{
-  public function test_client_send_is_called()
-  {
+class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
+  public function test_client_send_is_called() {
     $messagesMock = $this->getMockBuilder(stdClass::class) // Use stdClass just as a generic object.
       ->addMethods(['send']) // Mock the 'send' method.
       ->getMock();

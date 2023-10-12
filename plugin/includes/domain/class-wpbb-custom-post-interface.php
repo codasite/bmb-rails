@@ -1,7 +1,6 @@
 <?php
 
-interface Wpbb_CustomPostInterface
-{
+interface Wpbb_CustomPostInterface {
   public static function get_post_type(): string;
 
   /**

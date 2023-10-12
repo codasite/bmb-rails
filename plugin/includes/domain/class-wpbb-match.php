@@ -1,8 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 
-class Wpbb_Match
-{
+class Wpbb_Match {
   /**
    * @var int
    */
@@ -42,8 +41,7 @@ class Wpbb_Match
     $this->id = $id;
   }
 
-  public static function from_array(array $data): Wpbb_Match
-  {
+  public static function from_array(array $data): Wpbb_Match {
     if (!isset($data['round_index']) || !isset($data['match_index'])) {
       throw new InvalidArgumentException(
         'round_index and match_index are required'
@@ -67,8 +65,7 @@ class Wpbb_Match
     return $match;
   }
 
-  public function to_array(): array
-  {
+  public function to_array(): array {
     return [
       'id' => $this->id,
       'round_index' => $this->round_index,

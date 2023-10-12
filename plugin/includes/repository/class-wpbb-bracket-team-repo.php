@@ -5,8 +5,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 /**
  * Repository for Matches, Match Picks, and Teams
  */
-class Wpbb_BracketTeamRepo
-{
+class Wpbb_BracketTeamRepo {
   /**
    * @var Wpbb_Utils
    */
@@ -17,8 +16,7 @@ class Wpbb_BracketTeamRepo
    */
   private $wpdb;
 
-  public function __construct()
-  {
+  public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->utils = new Wpbb_Utils();
@@ -28,8 +26,7 @@ class Wpbb_BracketTeamRepo
    * TEAMS
    */
 
-  public function get_team(int|null $id): ?Wpbb_Team
-  {
+  public function get_team(int|null $id): ?Wpbb_Team {
     if ($id === null) {
       return null;
     }
@@ -42,8 +39,7 @@ class Wpbb_BracketTeamRepo
     return new Wpbb_Team($team['name'], $team['id']);
   }
 
-  public function get_teams(): array
-  {
+  public function get_teams(): array {
     $table_name = $this->team_table();
     $team_results = $this->wpdb->get_results(
       "SELECT * FROM {$table_name}",
@@ -56,8 +52,7 @@ class Wpbb_BracketTeamRepo
     return $teams;
   }
 
-  public function insert_team(int $post_id, ?Wpbb_Team $team): ?Wpbb_Team
-  {
+  public function insert_team(int $post_id, ?Wpbb_Team $team): ?Wpbb_Team {
     if (empty($team)) {
       return $team;
     }
@@ -70,8 +65,7 @@ class Wpbb_BracketTeamRepo
     return $team;
   }
 
-  public function team_table(): string
-  {
+  public function team_table(): string {
     return $this->wpdb->prefix . 'bracket_builder_teams';
   }
 }

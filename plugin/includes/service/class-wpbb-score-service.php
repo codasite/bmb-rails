@@ -12,8 +12,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   '/repository/class-wpbb-bracket-template-repo.php';
 
-class Wpbb_Score_Service implements Wpbb_Score_Service_Interface
-{
+class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
   /**
    * This method scores bracket plays against tournament results
    */
@@ -43,8 +42,7 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface
    */
   private $wpdb;
 
-  public function __construct($tournament = null)
-  {
+  public function __construct($tournament = null) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->tournament = $tournament;
@@ -63,8 +61,7 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface
     }
   }
 
-  private function score_plays(Wpbb_BracketTournament|int|null $tournament)
-  {
+  private function score_plays(Wpbb_BracketTournament|int|null $tournament) {
     $point_values = [1, 2, 4, 8, 16, 32];
 
     if (is_int($tournament)) {

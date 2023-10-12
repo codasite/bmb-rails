@@ -13,19 +13,16 @@ require_once WPBB_PLUGIN_DIR .
 
 //namespace phpunit
 
-class TournamentAPITest extends WPBB_UnitTestCase
-{
+class TournamentAPITest extends WPBB_UnitTestCase {
   private $tournament_repo;
 
-  public function set_up()
-  {
+  public function set_up() {
     parent::set_up();
 
     $this->tournament_repo = new Wpbb_BracketTournamentRepo();
   }
 
-  public function test_create_tournament()
-  {
+  public function test_create_tournament() {
     $template = self::factory()->template->create_and_get();
 
     $data = [
@@ -57,8 +54,7 @@ class TournamentAPITest extends WPBB_UnitTestCase
     $this->assertNotNull($tournament);
   }
 
-  public function test_create_tournament_validation_exception()
-  {
+  public function test_create_tournament_validation_exception() {
     $data = [
       'bracket_template_id' => 1,
     ];
@@ -79,8 +75,7 @@ class TournamentAPITest extends WPBB_UnitTestCase
     );
   }
 
-  public function test_update_tournament()
-  {
+  public function test_update_tournament() {
     $template = self::factory()->template->create_and_get();
     $tournament = self::factory()->tournament->create_and_get([
       'bracket_template_id' => $template->id,
@@ -111,8 +106,7 @@ class TournamentAPITest extends WPBB_UnitTestCase
     $this->assertEquals('Test Tournament', $tournament->title);
   }
 
-  public function test_notification_is_sent_when_results_are_updated()
-  {
+  public function test_notification_is_sent_when_results_are_updated() {
     $notification_service = $this->getMockBuilder(
       'Wpbb_Notification_Service_Interface'
     )
@@ -149,8 +143,7 @@ class TournamentAPITest extends WPBB_UnitTestCase
     $api->update_item($request);
   }
 
-  public function test_tournament_is_scored_on_update_results()
-  {
+  public function test_tournament_is_scored_on_update_results() {
     $score_service = $this->getMockBuilder('Wpbb_Score_Service_Interface')
       ->disableOriginalConstructor()
       ->getMock();

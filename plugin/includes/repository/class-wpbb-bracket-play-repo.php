@@ -15,8 +15,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
-class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
-{
+class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
   /**
    * @var Wpbb_Utils
    */
@@ -42,8 +41,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
    */
   private $wpdb;
 
-  public function __construct()
-  {
+  public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->tournament_repo = new Wpbb_BracketTournamentRepo();
@@ -117,8 +115,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
     return new Wpbb_BracketPlay($data);
   }
 
-  private function get_picks(int $play_id): array
-  {
+  private function get_picks(int $play_id): array {
     $table_name = $this->picks_table();
     $where = $play_id ? "WHERE bracket_play_id = $play_id" : '';
     $sql = "SELECT * FROM $table_name $where ORDER BY round_index, match_index ASC";
@@ -139,8 +136,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
     return $picks;
   }
 
-  public function get_play_data(int|WP_Post|null $play_post): array
-  {
+  public function get_play_data(int|WP_Post|null $play_post): array {
     if (
       !$play_post ||
       ($play_post instanceof WP_Post &&
@@ -194,8 +190,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
     return $this->plays_from_query($query, $options);
   }
 
-  public function plays_from_query(WP_Query $query, $options): array
-  {
+  public function plays_from_query(WP_Query $query, $options): array {
     $plays = [];
     foreach ($query->posts as $post) {
       $fetch_picks = $options['fetch_picks'] ?? false;
@@ -219,8 +214,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
     return $plays;
   }
 
-  public function get_count(array $query_args): int
-  {
+  public function get_count(array $query_args): int {
     $default_args = [
       'post_type' => Wpbb_BracketPlay::get_post_type(),
       'posts_per_page' => -1,
@@ -235,8 +229,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
   }
 
   // get all plays for a specific tournament
-  public function get_all_by_tournament(int $tournament_id): array
-  {
+  public function get_all_by_tournament(int $tournament_id): array {
     $query = new WP_Query([
       'post_type' => Wpbb_BracketPlay::get_post_type(),
       'posts_per_page' => -1,
@@ -251,8 +244,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
   }
 
   // get plays made by a specific author
-  public function get_all_by_author(int $tournament_id): array
-  {
+  public function get_all_by_author(int $tournament_id): array {
     $query = new WP_Query([
       'post_type' => Wpbb_BracketPlay::get_post_type(),
       'posts_per_page' => -1,
@@ -270,8 +262,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
   /**
    * @throws Wpbb_ValidationException
    */
-  public function add(Wpbb_BracketPlay $play): ?Wpbb_BracketPlay
-  {
+  public function add(Wpbb_BracketPlay $play): ?Wpbb_BracketPlay {
     $post_id = $this->insert_post($play, true, true);
 
     if (is_wp_error($post_id)) {
@@ -319,22 +310,19 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
     return $this->get($post_id);
   }
 
-  private function insert_play_data(array $data): int
-  {
+  private function insert_play_data(array $data): int {
     $table_name = $this->plays_table();
     $this->wpdb->insert($table_name, $data);
     return $this->wpdb->insert_id;
   }
 
-  private function insert_picks(int $play_id, array $picks): void
-  {
+  private function insert_picks(int $play_id, array $picks): void {
     foreach ($picks as $pick) {
       $this->insert_pick($play_id, $pick);
     }
   }
 
-  private function insert_pick(int $play_id, Wpbb_MatchPick $pick): void
-  {
+  private function insert_pick(int $play_id, Wpbb_MatchPick $pick): void {
     $table_name = $this->picks_table();
     $this->wpdb->insert($table_name, [
       'bracket_play_id' => $play_id,
@@ -344,13 +332,11 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase
     ]);
   }
 
-  public function picks_table()
-  {
+  public function picks_table() {
     return $this->wpdb->prefix . 'bracket_builder_match_picks';
   }
 
-  public function plays_table()
-  {
+  public function plays_table() {
     return $this->wpdb->prefix . 'bracket_builder_plays';
   }
 }

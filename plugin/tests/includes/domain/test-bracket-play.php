@@ -2,15 +2,12 @@
 require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
 require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-play.php';
 
-class BracketPlayTest extends WPBB_UnitTestCase
-{
-  public function test_get_post_type()
-  {
+class BracketPlayTest extends WPBB_UnitTestCase {
+  public function test_get_post_type() {
     $this->assertEquals('bracket_play', Wpbb_BracketPlay::get_post_type());
   }
 
-  public function test_constructor()
-  {
+  public function test_constructor() {
     $args = [
       'tournament_id' => 2,
     ];
@@ -18,14 +15,12 @@ class BracketPlayTest extends WPBB_UnitTestCase
     $this->assertInstanceOf(Wpbb_BracketPlay::class, $play);
   }
 
-  public function test_tournament_id_is_required()
-  {
+  public function test_tournament_id_is_required() {
     $this->expectException(Exception::class);
     $play = new Wpbb_BracketPlay([]);
   }
 
-  public function test_from_array()
-  {
+  public function test_from_array() {
     $args = [
       'tournament_id' => 716,
       'title' => "Barry's Picks",
@@ -48,8 +43,7 @@ class BracketPlayTest extends WPBB_UnitTestCase
     $this->assertCount(4, $play->picks);
   }
 
-  public function test_from_array_tournament_id_is_required()
-  {
+  public function test_from_array_tournament_id_is_required() {
     $this->expectException(Exception::class);
     $args = [
       'author' => 1,
@@ -62,8 +56,7 @@ class BracketPlayTest extends WPBB_UnitTestCase
     $play = Wpbb_BracketPlay::from_array($args);
   }
 
-  public function test_from_array_author_is_required()
-  {
+  public function test_from_array_author_is_required() {
     $this->expectException(Exception::class);
     $args = [
       'tournament_id' => 716,
@@ -76,8 +69,7 @@ class BracketPlayTest extends WPBB_UnitTestCase
     $play = Wpbb_BracketPlay::from_array($args);
   }
 
-  public function test_from_array_picks_is_required()
-  {
+  public function test_from_array_picks_is_required() {
     $this->expectException(Exception::class);
     $args = [
       'tournament_id' => 716,

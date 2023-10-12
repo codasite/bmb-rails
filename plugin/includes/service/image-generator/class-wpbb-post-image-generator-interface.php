@@ -1,6 +1,5 @@
 <?php
-interface Wpbb_PostImageGeneratorInterface
-{
+interface Wpbb_PostImageGeneratorInterface {
   /**
    * @param int|Wp_Post|null $post The post to generate an image for
    *

@@ -32,8 +32,7 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 
 delete_tables();
 
-function delete_tables()
-{
+function delete_tables() {
   global $wpdb;
   $wp_prefix = $wpdb->prefix;
   $plugin_prefix = 'bracket_builder_';

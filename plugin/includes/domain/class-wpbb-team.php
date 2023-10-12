@@ -1,7 +1,6 @@
 <?php
 
-class Wpbb_Team
-{
+class Wpbb_Team {
   /**
    * @var int
    */
@@ -12,14 +11,12 @@ class Wpbb_Team
    */
   public $name;
 
-  public function __construct(string $name = null, int $id = null)
-  {
+  public function __construct(string $name = null, int $id = null) {
     $this->id = $id;
     $this->name = $name;
   }
 
-  public static function from_array(array $data): Wpbb_Team
-  {
+  public static function from_array(array $data): Wpbb_Team {
     $team = new Wpbb_Team();
 
     foreach ($data as $key => $value) {
@@ -31,8 +28,7 @@ class Wpbb_Team
     return $team;
   }
 
-  public function to_array(): array
-  {
+  public function to_array(): array {
     return [
       'id' => $this->id,
       'name' => $this->name,
