@@ -6,6 +6,10 @@ wp-pull:
 wp-up:
 	docker compose --profile test up --build
 
+# Start all wordpress containers in detached mode for ci
+wp-up-detach:
+	docker compose --profile test up --build --detach
+
 # Stop and remove all wordpress containers
 wp-down:
 	docker compose --profile test down -v

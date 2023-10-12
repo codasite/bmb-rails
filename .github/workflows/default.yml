@@ -18,3 +18,11 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run pretty:check
+  wordpress-test:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v3
+      - run: make wp-up-detach
+      - run: make wp-install
+      - run: make wp-test
+      - run: make wp-down
