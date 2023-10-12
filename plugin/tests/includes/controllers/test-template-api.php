@@ -13,20 +13,17 @@ require_once WPBB_PLUGIN_DIR .
 
 //namespace phpunit
 
-class TemplateAPITest extends WPBB_UnitTestCase
-{
+class TemplateAPITest extends WPBB_UnitTestCase {
   private Wpbb_BracketTemplateRepo $template_repo;
   const TEMPLATE_API_ENDPOINT = '/wp-bracket-builder/v1/templates';
 
-  public function set_up()
-  {
+  public function set_up() {
     parent::set_up();
 
     $this->template_repo = new Wpbb_BracketTemplateRepo();
   }
 
-  public function test_create_template()
-  {
+  public function test_create_template() {
     $data = [
       'title' => 'Test Template',
       'status' => 'publish',
@@ -53,8 +50,7 @@ class TemplateAPITest extends WPBB_UnitTestCase
     $this->assertNotNull($template);
   }
 
-  public function test_update_template()
-  {
+  public function test_update_template() {
     $template = self::factory()->template->create_and_get();
 
     $data = [

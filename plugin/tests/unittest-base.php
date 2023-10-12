@@ -31,6 +31,10 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   }
 
   public function set_up() {
-    wp_set_current_user(1);
+    parent::set_up();
+    $admin_user = self::factory()->user->create([
+      'role' => 'administrator',
+    ]);
+    wp_set_current_user($admin_user);
   }
 }
