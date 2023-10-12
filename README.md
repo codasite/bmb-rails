@@ -84,3 +84,22 @@ https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpun
 
 ## Docker
 
+Docker can be used to run a local clone of an existing site. This is useful for testing with "live" data.
+
+1. Pull the latest site backup (requires ssh access to the server):
+    
+    ```
+    make wp-pull
+    ```
+
+2. Start the local site:
+
+    ```
+    make wp-up
+    ```
+
+3. Add the test installation and create the admin user (existing credentials can be used as well):
+    
+    ```
+    make wp-init
+    ```
