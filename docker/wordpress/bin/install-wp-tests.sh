@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# this script is meant to be called from inside a docker container
 
 if [ $# -lt 3 ]; then
 	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [skip-database-creation]"
@@ -168,8 +169,9 @@ install_db() {
 	# create database
 	if [ $(mysql --user="$DB_USER" --password="$DB_PASS"$EXTRA --execute='show databases;' | grep ^$DB_NAME$) ]
 	then
-		echo "Reinstalling will delete the existing test database ($DB_NAME)"
-		read -p 'Are you sure you want to proceed? [y/N]: ' DELETE_EXISTING_DB
+		# echo "Reinstalling will delete the existing test database ($DB_NAME)"
+		# read -p 'Are you sure you want to proceed? [y/N]: ' DELETE_EXISTING_DB
+		DELETE_EXISTING_DB="N"
 		recreate_db $DELETE_EXISTING_DB
 	else
 		create_db

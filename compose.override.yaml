@@ -53,12 +53,13 @@ services:
         define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
         define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
+        define('WP_MEMORY_LIMIT', '512M');
       PLUGIN_NAME: wp-bracket-builder
       WORDPRESS_URL: http://localhost:8008
       WORDPRESS_TITLE: Wordpress
       WORDPRESS_ADMIN_USER: admin
       WORDPRESS_ADMIN_PASSWORD: admin
-      WORDPRESS_ADMIN_EMAIL: barry@wstrategies.co
+      WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
 
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder

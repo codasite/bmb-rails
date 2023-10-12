@@ -1,4 +1,5 @@
 #!/bin/bash
+# this script is meant to be called from inside a docker container
 echo "install wordpress..."
 wp-cli core install \
 	--url=${WORDPRESS_URL} \
@@ -9,7 +10,6 @@ wp-cli core install \
 
 # wp-cli plugin install /tmp/plugins/oxygen4.5.zip --activate
 # wp-cli plugin install /tmp/plugins/oxygen-woocommerce.zip --activate
-
 
 echo "done"
 

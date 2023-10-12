@@ -11,13 +11,16 @@ wp-down:
 	docker compose --profile test down -v
 
 # Install wordpress and the test installation
+# This command can be used when building from scratch
 wp-install:
 	docker exec wordpress-test-app install-wp.sh
 	docker exec wordpress-test-app install-wp-tests
 
-# Install the test installation
-wp-install-test:
+# Initialize the test installation and add admin user without installing
+# This command can be used when building from a site backup or db dump
+wp-init:
 	docker exec wordpress-test-app install-wp-tests
+	docker exec wordpress-test-app create-admin-user.sh
 
 # Run tests
 wp-test:

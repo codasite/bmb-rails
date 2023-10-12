@@ -81,3 +81,6 @@ Tests should be run via docker-compose. To run the tests:
 Resources:
 https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/
 https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/
+
+## Docker
+

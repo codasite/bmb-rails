@@ -27,8 +27,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
         && echo "*** composer command installed"
 
 # Create testing environment
-COPY --chmod=755 docker/wordpress/bin/install-wp-tests.sh /usr/local/bin/
-COPY --chmod=755 docker/wordpress/bin/install-wp.sh /usr/local/bin/
+COPY --chmod=755 docker/wordpress/bin/* /usr/local/bin/
 
 # Create a script to install the testing environment
 RUN echo "#!/bin/bash" > /usr/local/bin/install-wp-tests \
@@ -39,27 +38,23 @@ RUN echo "#!/bin/bash" > /usr/local/bin/install-wp-tests \
 
 COPY --chmod=755 docker/wordpress/downloads /tmp/downloads
 
-        # check if wordpres.zip exists
-        # if if it does, continue
-        # if [ ! -f /tmp/downloads/wordpress.zip ]; then \
-        #         echo "wordpress.zip not found"; \
-        #         echo "using default image";
-        #         exit 1; \
-        # fi \
-
 # the default docker image will copy files from /usr/src/wordpress to /var/www/html
-RUN unzip -qq /tmp/downloads/wordpress.zip -d /tmp/wordpress
-RUN rm -f /tmp/wordpress/wp-config.php \
-        && cp -r /tmp/wordpress/* /usr/src/wordpress \
-        && rm -rf /tmp/wordpress \
-        # && rm -rf /tmp/downloads \
-        # && echo "*** wordpress downloaded"
-# download oxygen from google drive
-# USER www-data
-# RUN curl -L -o /tmp/oxygen.zip "https://drive.google.com/uc?export=download&id=19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2"
-# RUN curl -L -o /tmp/oxygen-woo.zip https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing
+# we can copy an existing wordpress installation there and then delete wp-config.php so that the docker default is used
 
-# USER root
+# If the file exists, unzip it, else continue.
+RUN if [ -f /tmp/downloads/wordpress.zip ]; then \
+        echo "*** wordpress.zip exists. Unzipping"; \  
+        unzip -qq /tmp/downloads/wordpress.zip -d /tmp/from_site; \
+        rm -f /tmp/downloads/wordpress.zip; \
+    else \
+        echo "*** wordpress.zip does not exist. Using default image"; \
+    fi
 
-
-
+# Check if the directory exists before performing further operations.
+RUN if [ -d /tmp/from_site ]; then \
+        echo "*** Deleting wp-config.php and copying to /usr/src/wordpress"; \
+        rm -f /tmp/from_site/wp-config.php; \
+        cp -r /tmp/from_site/* /usr/src/wordpress; \
+        rm -rf /tmp/from_site; \
+    fi; \
+    echo "*** wordpress downloaded"
