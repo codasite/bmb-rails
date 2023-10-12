@@ -23,7 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: make wp-up-detach
-      - run: sleep 10 && make wp-install
+      - run: make wp-install
+      - run: docker exec wordpress-test-app composer install
       - run: make wp-test
       - run: make wp-down
         if: ${{ always() }}
