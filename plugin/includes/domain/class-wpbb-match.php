@@ -27,18 +27,12 @@ class Wpbb_Match {
    */
   public $team2;
 
-  public function __construct(
-    int $round_index,
-    int $match_index,
-    Wpbb_Team $team1 = null,
-    Wpbb_Team $team2 = null,
-    int $id = null
-  ) {
-    $this->round_index = $round_index;
-    $this->match_index = $match_index;
-    $this->team1 = $team1;
-    $this->team2 = $team2;
-    $this->id = $id;
+  public function __construct($args) {
+    $this->round_index = $args['round_index'];
+    $this->match_index = $args['match_index'];
+    $this->team1 = $args['team1'] ?? null;
+    $this->team2 = $args['team2'] ?? null;
+    $this->id = $args['id'] ?? null;
   }
 
   public static function from_array(array $data): Wpbb_Match {
@@ -48,19 +42,15 @@ class Wpbb_Match {
       );
     }
 
-    $match = new Wpbb_Match($data['round_index'], $data['match_index']);
-
-    if (isset($data['id'])) {
-      $match->id = (int) $data['id'];
-    }
-
     if (isset($data['team1'])) {
-      $match->team1 = Wpbb_Team::from_array($data['team1']);
+      $data['team1'] = Wpbb_Team::from_array($data['team1']);
     }
 
     if (isset($data['team2'])) {
-      $match->team2 = Wpbb_Team::from_array($data['team2']);
+      $data['team2'] = Wpbb_Team::from_array($data['team2']);
     }
+
+    $match = new Wpbb_Match($data);
 
     return $match;
   }

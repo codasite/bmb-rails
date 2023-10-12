@@ -87,7 +87,8 @@ class Wpbb_BracketTournament extends Wpbb_PostBase implements
         'bracket_template_id or bracket_template is required'
       );
     }
-    $requiredFields = ['author', 'date', 'title'];
+    // $requiredFields = ['author', 'date', 'title'];
+    $requiredFields = ['author', 'title'];
     validateRequiredFields($data, $requiredFields);
 
     if (isset($data['results'])) {

@@ -75,9 +75,9 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
       $to_email = $pick->email;
       $to_name = $pick->name;
       $subject = 'Back My Bracket Notification';
-      $user_bracket_pick = $team_repo->get_team($pick->winning_team_id);
+      $user_bracket_pick = $team_repo->get($pick->winning_team_id);
       $user_pick = strtoupper($user_bracket_pick->name);
-      $winner_bracket_pick = $team_repo->get_team(
+      $winner_bracket_pick = $team_repo->get(
         $final_round_pick->winning_team_id
       );
       $winner = strtoupper($winner_bracket_pick->name);

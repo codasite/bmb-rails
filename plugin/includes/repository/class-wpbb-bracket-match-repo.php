@@ -10,6 +10,8 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-template-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
+  'repository/class-wpbb-bracket-team-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-bracket-play-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-custom-post-repo.php';
@@ -29,23 +31,51 @@ class Wpbb_BracketMatchRepo {
    */
   private $wpdb;
 
+  /**
+   * @var Wpbb_BracketTeamRepo
+   */
+  private $team_repo;
+
   public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->utils = new Wpbb_Utils();
+    $this->team_repo = new Wpbb_BracketTeamRepo();
   }
 
   /**
    * MATCHES
    */
 
-  public function get_matches(int|null $post_id): array {
+  public function get_match(int $id): ?Wpbb_Match {
     $table_name = $this->match_table();
-    $where = $post_id ? "WHERE bracket_template_id = $post_id" : '';
+    $match = $this->wpdb->get_row(
+      $this->wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", $id),
+      ARRAY_A
+    );
+    if (!$match) {
+      return null;
+    }
+
+    $team1 = $this->get_team($match['team1_id']);
+    $team2 = $this->get_team($match['team2_id']);
+
+    return new Wpbb_Match([
+      $match['round_index'],
+      $match['match_index'],
+      $team1,
+      $team2,
+      $match['id'],
+    ]);
+  }
+
+  public function get_matches(int|null $template_id): array {
+    $table_name = $this->match_table();
+    $where = $template_id ? "WHERE bracket_template_id = $template_id" : '';
     $match_results = $this->wpdb->get_results(
       $this->wpdb->prepare(
         "SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
-        $post_id
+        $template_id
       ),
       ARRAY_A
     );
@@ -54,48 +84,52 @@ class Wpbb_BracketMatchRepo {
       $team1 = $this->get_team($match['team1_id']);
       $team2 = $this->get_team($match['team2_id']);
 
-      // $matches[$match['round_index']][$match['match_index']] = new Wpbb_Match(
-      $matches[] = new Wpbb_Match(
+      $matches[] = new Wpbb_Match([
         $match['round_index'],
         $match['match_index'],
         $team1,
         $team2,
-        $match['id']
-      );
+        $match['id'],
+      ]);
     }
 
     return $matches;
   }
 
-  public function insert_matches(int $post_id, array $matches): void {
+  public function insert_match(int $template_id, Wpbb_Match $match) {
     $table_name = $this->match_table();
+    // First, insert teams
+    $team1 = $this->insert_team($template_id, $match->team1);
+    $team2 = $this->insert_team($template_id, $match->team2);
+
+    $this->wpdb->insert($table_name, [
+      'bracket_template_id' => $template_id,
+      'round_index' => $match->round_index,
+      'match_index' => $match->match_index,
+      'team1_id' => $team1->id,
+      'team2_id' => $team2->id,
+    ]);
+    $match->id = $this->wpdb->insert_id;
+  }
+
+  public function insert_matches(int $template_id, array $matches): array {
     foreach ($matches as $match) {
       // Skip if match is null
       if ($match === null) {
         continue;
       }
-      // First, insert teams
-      $team1 = $this->insert_team($post_id, $match->team1);
-      $team2 = $this->insert_team($post_id, $match->team2);
-
-      $this->wpdb->insert($table_name, [
-        'bracket_template_id' => $post_id,
-        'round_index' => $match->round_index,
-        'match_index' => $match->match_index,
-        'team1_id' => $team1->id,
-        'team2_id' => $team2->id,
-      ]);
-      $match->id = $this->wpdb->insert_id;
+      $this->insert_match($template_id, $match);
     }
+    return $this->get_matches($template_id);
   }
 
   /**
    * MATCH PICKS
    */
 
-  public function get_picks(int|null $post_id): array {
+  public function get_picks(int|null $play_id): array {
     $table_name = $this->match_pick_table();
-    $where = $post_id ? "WHERE bracket_play_id = $post_id" : '';
+    $where = $play_id ? "WHERE bracket_play_id = $play_id" : '';
     $sql = "SELECT * FROM $table_name $where ORDER BY round_index, match_index ASC";
     $results = $this->wpdb->get_results($sql, ARRAY_A);
 
@@ -114,31 +148,31 @@ class Wpbb_BracketMatchRepo {
     return $picks;
   }
 
-  public function insert_picks(int $post_id, array $picks): void {
+  public function insert_picks(int $play_id, array $picks): void {
     foreach ($picks as $pick) {
-      $this->insert_pick($post_id, $pick);
+      $this->insert_pick($play_id, $pick);
     }
   }
 
-  public function insert_pick(int $post_id, Wpbb_MatchPick $pick): void {
+  public function insert_pick(int $play_id, Wpbb_MatchPick $pick): void {
     $table_name = $this->match_pick_table();
     $this->wpdb->insert($table_name, [
-      'bracket_play_id' => $post_id,
+      'bracket_play_id' => $play_id,
       'round_index' => $pick->round_index,
       'match_index' => $pick->match_index,
       'winning_team_id' => $pick->winning_team_id,
     ]);
   }
 
-  public function update_picks(int $post_id, array|null $new_picks): void {
+  public function update_picks(int $play_id, array|null $new_picks): void {
     if ($new_picks === null) {
       return;
     }
 
-    $old_picks = $this->get_picks($post_id);
+    $old_picks = $this->get_picks($play_id);
 
     if (empty($old_picks)) {
-      $this->insert_picks($post_id, $new_picks);
+      $this->insert_picks($play_id, $new_picks);
       return;
     }
 
@@ -162,7 +196,7 @@ class Wpbb_BracketMatchRepo {
         }
       }
       if (!$pick_exists) {
-        $this->insert_picks($post_id, [$new_pick]);
+        $this->insert_picks($play_id, [$new_pick]);
       }
     }
   }
@@ -172,46 +206,11 @@ class Wpbb_BracketMatchRepo {
    */
 
   public function get_team(int|null $id): ?Wpbb_Team {
-    if ($id === null) {
-      return null;
-    }
-
-    $table_name = $this->team_table();
-    $team = $this->wpdb->get_row(
-      $this->wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", $id),
-      ARRAY_A
-    );
-    return new Wpbb_Team($team['name'], $team['id']);
+    return $this->team_repo->get($id);
   }
 
-  public function get_teams(): array {
-    $table_name = $this->team_table();
-    $team_results = $this->wpdb->get_results(
-      "SELECT * FROM {$table_name}",
-      ARRAY_A
-    );
-    $teams = [];
-    foreach ($team_results as $team) {
-      $teams[] = new Wpbb_Team($team['name'], $team['id']);
-    }
-    return $teams;
-  }
-
-  public function insert_team(int $post_id, ?Wpbb_Team $team): ?Wpbb_Team {
-    if (empty($team)) {
-      return $team;
-    }
-    $table_name = $this->team_table();
-    $this->wpdb->insert($table_name, [
-      'name' => $team->name,
-      'bracket_template_id' => $post_id,
-    ]);
-    $team->id = $this->wpdb->insert_id;
-    return $team;
-  }
-
-  public function team_table(): string {
-    return $this->wpdb->prefix . 'bracket_builder_teams';
+  public function insert_team(int $template_id, ?Wpbb_Team $team): ?Wpbb_Team {
+    return $this->team_repo->add($template_id, $team);
   }
 
   public function match_table(): string {

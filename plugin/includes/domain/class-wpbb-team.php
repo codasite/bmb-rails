@@ -11,19 +11,13 @@ class Wpbb_Team {
    */
   public $name;
 
-  public function __construct(string $name = null, int $id = null) {
-    $this->id = $id;
-    $this->name = $name;
+  public function __construct($args = []) {
+    $this->id = $args['id'] ?? null;
+    $this->name = $args['name'] ?? null;
   }
 
   public static function from_array(array $data): Wpbb_Team {
-    $team = new Wpbb_Team();
-
-    foreach ($data as $key => $value) {
-      if (property_exists($team, $key)) {
-        $team->$key = $value;
-      }
-    }
+    $team = new Wpbb_Team($data);
 
     return $team;
   }

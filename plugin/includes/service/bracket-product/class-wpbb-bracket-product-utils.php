@@ -1,5 +1,10 @@
 <?php
 class Wpbb_BracketProductUtils {
+  public function get_bracket_product_archive_url() {
+    $category_slug = BRACKET_PRODUCT_CATEGORY;
+    $redirect_url = get_term_link($category_slug, 'product_cat');
+    return $redirect_url;
+  }
   // Helper method to check if product is a bracket product
   public function is_bracket_product($product) {
     if (!$product) {
@@ -15,7 +20,6 @@ class Wpbb_BracketProductUtils {
 
   // Helper method to get the bracket placement
   public function get_bracket_placement($product) {
-    // return get_post_meta($variation_id, 'wpbb_bracket_placement', true);
     if (
       $product &&
       $this->product_has_category($product, BRACKET_PLACEMENT_CENTER_CAT)

@@ -20,7 +20,19 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_add() {
-    $this->assertTrue(true);
+    $template = self::factory()->template->create_and_get();
+    $tournament = self::factory()->tournament->create_and_get([
+      'bracket_template_id' => $template->id,
+    ]);
+
+    $play = new Wpbb_BracketPlay([
+      'tournament_id' => $tournament->id,
+      'author' => 1,
+      'picks' => [
+        ['round_index' => 0, 'match_index' => 0, 'winning_team_id' => 1],
+        ['round_index' => 0, 'match_index' => 1, 'winning_team_id' => 2],
+      ],
+    ]);
   }
 
   // public function test_add() {

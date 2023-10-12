@@ -124,7 +124,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     $picks = [];
     foreach ($data as $pick) {
       $winning_team_id = $pick['winning_team_id'];
-      $winning_team = $this->team_repo->get_team($winning_team_id);
+      $winning_team = $this->team_repo->get($winning_team_id);
       $picks[] = new Wpbb_MatchPick(
         $pick['round_index'],
         $pick['match_index'],
