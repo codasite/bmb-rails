@@ -31,8 +31,7 @@ class BracketApi {
   }
   async createTemplate(template: TemplateReq): Promise<TemplateRes> {
     const options: RequestOptions = { method: 'POST', body: template }
-    const res = await this.performRequest(this.templatesPath, options)
-    return res
+    return await this.performRequest(this.templatesPath, options)
   }
   async updateTemplate(
     templateId: number,
@@ -46,24 +45,21 @@ class BracketApi {
   }
   async createTournament(tournament: TournamentReq): Promise<TournamentRes> {
     const options: RequestOptions = { method: 'POST', body: tournament }
-    const res = await this.performRequest(this.tournamentsPath, options)
-    return res
+    return await this.performRequest(this.tournamentsPath, options)
   }
   async createPlay(play: PlayReq): Promise<PlayRes> {
     const options: RequestOptions = { method: 'POST', body: play }
-    const res = await this.performRequest(this.playsPath, options)
-    return res
+    return await this.performRequest(this.playsPath, options)
   }
   async updateTournament(
     tournamentId: number,
-    tournament: TournamentReq
+    tournament: Partial<TournamentReq>
   ): Promise<TournamentRes> {
     const options: RequestOptions = { method: 'PATCH', body: tournament }
-    const res = await this.performRequest(
+    return await this.performRequest(
       `${this.tournamentsPath}/${tournamentId}`,
       options
     )
-    return res
   }
   async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
     const options: RequestOptions = {
@@ -71,8 +67,7 @@ class BracketApi {
       body: req,
       snakeCaseBody: false,
     }
-    const res = await this.performRequest('html-to-image', options)
-    return res
+    return await this.performRequest('html-to-image', options)
   }
   async performRequest(
     path: string,

@@ -71,11 +71,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 ## Testing
 
-Tests are stored in `plugin/tests` and follow the directory structure of the plugin. For example, the tests for `plugin/includes/domain/class-wp-bracket-builder-bracket-template.php` are in `plugin/tests/includes/domain/test-bracket-template.php`. All tests must inherit from `WPBB_UnitTestCase` in `plugin/tests/unittest-base.php` if they use custom database tables. All test methods should start with `test_`.
+Tests are stored in `plugin/tests` and follow the directory structure of the plugin. For example, the tests for `plugin/includes/domain/class-wpbb-bracket-template.php` are in `plugin/tests/includes/domain/test-bracket-template.php`. All tests must inherit from `WPBB_UnitTestCase` in `plugin/tests/unittest-base.php` if they use custom database tables. All test methods should start with `test_`.
 
 Tests should be run via docker-compose. To run the tests:
 
-1. `make wp-up` to start the local wordpress services and install wordpress
+1. `make wp-up` to start the local wordpress services
+2. `make wp-install` installs wordpress and the test directory
 2. `make wp-test` to run the tests
 
 Resources:
