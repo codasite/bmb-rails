@@ -56,6 +56,7 @@ class Wpbb_BracketTeamRepo {
     if (empty($team)) {
       return $team;
     }
+
     $table_name = $this->team_table();
     $this->wpdb->insert($table_name, [
       'name' => $team->name,
