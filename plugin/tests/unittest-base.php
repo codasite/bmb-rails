@@ -7,6 +7,7 @@ include_once 'factory/unittest-factory.php';
 /**
  * Class WPBB_UnitTestCase
  *
+ *
  * This class is used to set up the plugin's custom tables for unit testing
  */
 abstract class WPBB_UnitTestCase extends WP_UnitTestCase {

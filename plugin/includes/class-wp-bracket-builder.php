@@ -46,7 +46,23 @@ class Wp_Bracket_Builder {
    * @var      string    $plugin_name    The string used to uniquely identify this plugin.
    */
   protected $plugin_name;
+  /**
+   * The unique identifier of this plugin.
+   *
+   * @since    1.0.0
+   * @access   protected
+   * @var      string    $plugin_name    The string used to uniquely identify this plugin.
+   */
+  protected $plugin_name;
 
+  /**
+   * The current version of the plugin.
+   *
+   * @since    1.0.0
+   * @access   protected
+   * @var      string    $version    The current version of the plugin.
+   */
+  protected $version;
   /**
    * The current version of the plugin.
    *
@@ -73,6 +89,11 @@ class Wp_Bracket_Builder {
     }
     $this->plugin_name = 'wp-bracket-builder';
 
+    $this->load_dependencies();
+    $this->set_locale();
+    $this->define_admin_hooks();
+    $this->define_public_hooks();
+  }
     $this->load_dependencies();
     $this->set_locale();
     $this->define_admin_hooks();
@@ -109,7 +130,18 @@ class Wp_Bracket_Builder {
      */
     require_once plugin_dir_path(dirname(__FILE__)) .
       'includes/class-wpbb-i18n.php';
+    /**
+     * The class responsible for defining internationalization functionality
+     * of the plugin.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'includes/class-wpbb-i18n.php';
 
+    /**
+     * The class responsible for defining all actions that occur in the admin area.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'admin/class-wpbb-admin.php';
     /**
      * The class responsible for defining all actions that occur in the admin area.
      */
@@ -122,7 +154,18 @@ class Wp_Bracket_Builder {
      */
     require_once plugin_dir_path(dirname(__FILE__)) .
       'public/class-wpbb-public.php';
+    /**
+     * The class responsible for defining all actions that occur in the public-facing
+     * side of the site.
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'public/class-wpbb-public.php';
 
+    /**
+     * The bracket template api controller class
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'includes/controllers/class-wpbb-bracket-template-api.php';
     /**
      * The bracket template api controller class
      */
@@ -134,7 +177,17 @@ class Wp_Bracket_Builder {
      */
     require_once plugin_dir_path(dirname(__FILE__)) .
       'includes/controllers/class-wpbb-bracket-tournament-api.php';
+    /**
+     * The bracket tournament api controller class
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'includes/controllers/class-wpbb-bracket-tournament-api.php';
 
+    /**
+     * The bracket picks api controller class
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'includes/controllers/class-wpbb-bracket-play-api.php';
     /**
      * The bracket picks api controller class
      */
@@ -146,7 +199,17 @@ class Wp_Bracket_Builder {
      */
     require_once plugin_dir_path(dirname(__FILE__)) .
       'includes/controllers/class-wpbb-convert-api.php';
+    /**
+     * The html to image converter api controller class
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'includes/controllers/class-wpbb-convert-api.php';
 
+    /**
+     * Callbacks for hooks and filters
+     */
+    require_once plugin_dir_path(dirname(__FILE__)) .
+      'public/class-wpbb-public-hooks.php';
     /**
      * Callbacks for hooks and filters
      */
@@ -188,6 +251,12 @@ class Wp_Bracket_Builder {
       'load_plugin_textdomain'
     );
   }
+    $this->loader->add_action(
+      'plugins_loaded',
+      $plugin_i18n,
+      'load_plugin_textdomain'
+    );
+  }
 
   /**
    * Register all of the hooks related to the admin area functionality
@@ -217,7 +286,23 @@ class Wp_Bracket_Builder {
       $plugin_admin,
       'enqueue_scripts'
     );
+    $this->loader->add_action(
+      'admin_enqueue_scripts',
+      $plugin_admin,
+      'enqueue_styles'
+    );
+    $this->loader->add_action(
+      'admin_enqueue_scripts',
+      $plugin_admin,
+      'enqueue_scripts'
+    );
 
+    $this->loader->add_action(
+      'admin_menu',
+      $plugin_admin,
+      'bracket_builder_init_menu'
+    );
+    $this->loader->add_action('init', $plugin_admin, 'add_capabilities');
     $this->loader->add_action(
       'admin_menu',
       $plugin_admin,
@@ -237,6 +322,8 @@ class Wp_Bracket_Builder {
     );
     $this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 
+    $this->loader->add_action('init', $this, 'register_custom_post_types');
+    $this->loader->add_action('init', $this, 'register_custom_post_status');
     $this->loader->add_action('init', $this, 'register_custom_post_types');
     $this->loader->add_action('init', $this, 'register_custom_post_status');
 
@@ -346,7 +433,26 @@ class Wp_Bracket_Builder {
       10,
       2
     );
+    $this->loader->add_action('init', $public_hooks, 'add_rewrite_tags', 10, 0);
+    $this->loader->add_action(
+      'init',
+      $public_hooks,
+      'add_rewrite_rules',
+      10,
+      0
+    );
+    $this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
+    $this->loader->add_action('init', $public_hooks, 'add_roles');
+    $this->loader->add_filter(
+      'posts_clauses',
+      $public_hooks,
+      'sort_plays',
+      10,
+      2
+    );
 
+    $this->loader->add_action('init', $shortcodes, 'add_shortcodes');
+  }
     $this->loader->add_action('init', $shortcodes, 'add_shortcodes');
   }
 
@@ -441,6 +547,39 @@ class Wp_Bracket_Builder {
       'rewrite' => ['slug' => 'tournaments'],
     ]);
   }
+    register_post_type('bracket_play', [
+      'labels' => [
+        'name' => __('Plays'),
+        'singular_name' => __('Play'),
+      ],
+      'description' => 'Bracket plays for the WP Bracket Builder plugin',
+      'public' => true,
+      'has_archive' => true,
+      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
+      'show_ui' => true,
+      'show_in_rest' => true,
+      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
+      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
+      'taxonomies' => ['post_tag'],
+      'rewrite' => ['slug' => 'plays'],
+    ]);
+    register_post_type('bracket_tournament', [
+      'labels' => [
+        'name' => __('Tournaments'),
+        'singular_name' => __('Tournament'),
+      ],
+      'description' => 'Tournaments for the WP Bracket Builder plugin',
+      'public' => true,
+      'has_archive' => true,
+      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
+      'show_ui' => true,
+      'show_in_rest' => true,
+      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
+      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
+      'taxonomies' => ['post_tag'],
+      'rewrite' => ['slug' => 'tournaments'],
+    ]);
+  }
 
   public function register_custom_post_status() {
     // Custom post status for completed tournaments
@@ -456,6 +595,17 @@ class Wp_Bracket_Builder {
       ),
     ]);
 
+    register_post_status('score', [
+      'label' => 'Scored',
+      'public' => true,
+      'exclude_from_search' => false,
+      'show_in_admin_all_list' => true,
+      'show_in_admin_status_list' => true,
+      'label_count' => _n_noop(
+        'Scored <span class="count">(%s)</span>',
+        'Scored <span class="count">(%s)</span>'
+      ),
+    ]);
     register_post_status('score', [
       'label' => 'Scored',
       'public' => true,
