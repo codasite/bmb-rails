@@ -23,6 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: make wp-up-detach
-      - run: make wp-install
+      - run: sleep 10 && make wp-install
       - run: make wp-test
       - run: make wp-down
+        if: ${{ always() }}
