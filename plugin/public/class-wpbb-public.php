@@ -29,8 +29,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpb
  * @subpackage Wp_Bracket_Builder/public
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wpbb_Public
-{
+class Wpbb_Public {
 
 	/**
 	 * The ID of this plugin.
