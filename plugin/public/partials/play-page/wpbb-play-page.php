@@ -5,9 +5,9 @@ switch ($view) {
         include 'wpbb-view-play.php';
         break;
     case 'bust':
-			include 'wpbb-bust-play.php';
+        include 'wpbb-bust-play.php';
         break;
     default:
-			include 'wpbb-view-play.php';
+        include 'wpbb-view-play.php';
         break;
 }

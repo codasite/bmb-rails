@@ -47,6 +47,7 @@ const BustPlayPage = React.lazy(
 const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
+console.log('hey')
 declare var wpbb_ajax_obj: any
 // Try to get the wpbb_ajax_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 if (window.hasOwnProperty('wpbb_ajax_obj')) {

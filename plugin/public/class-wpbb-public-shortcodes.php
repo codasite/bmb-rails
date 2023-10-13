@@ -20,15 +20,6 @@ class Wpbb_Public_Shortcodes {
 		return ob_get_clean();
 	}
 
-	public function render_options_bracket_preview() {
-		ob_start();
-	?>
-		<div id="wpbb-bracket-option-preview" style="width: 100%">
-		</div>
-	<?php
-		return ob_get_clean();
-	}
-
 	public function render_template_builder() {
 		wp_localize_script(
 			'wpbb-bracket-builder-react',
