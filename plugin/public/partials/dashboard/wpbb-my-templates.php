@@ -16,7 +16,7 @@ function host_tournament_btn(string $id, string $date) {
 	?>
   <button data-template-id="<?php echo $id ?>" data-template-date="<?php echo $date ?>"
           class="wpbb-host-tournament-button tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-blue tw-font-sans tw-text-white tw-uppercase tw-cursor-pointer">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/signal.svg'); ?>
     <span class="tw-font-700">Host Tournament</span>
   </button>
 	<?php
@@ -78,7 +78,7 @@ $create_template_link = get_permalink(get_page_by_path('bracket-template-builder
   <!-- this link leads to the Create Template page to create a new bracket from scratch -->
   <a href="<?php echo $create_template_link ?>"
      class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 hover:tw-text-black hover:tw-bg-white">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/file_plus.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/file_plus.svg'); ?>
     <span class="tw-font-700 tw-text-24">Create Bracket Template</span>
   </a>
   <div class="tw-flex tw-flex-col tw-gap-16">

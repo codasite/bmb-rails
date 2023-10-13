@@ -65,7 +65,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
     </div>
     <div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
       <!-- <div class="tw-flex tw-gap-4 tw-items-center">
-				<?php echo file_get_contents(plugins_url("../../assets/icons/$trend_icon", __FILE__)); ?>
+				<?php echo file_get_contents(WPBB_PLUGIN_DIR . "public/assets/icons/$trend_icon"); ?>
 				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html($user_rank) ?></span>
 				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
 			</div> -->

@@ -37,7 +37,7 @@ function wpbb_score_tournament_btn($endpoint) {
 	ob_start();
 ?>
 	<a href="<?php echo $endpoint; ?>" class="tw-flex tw-justify-center tw-items-center !tw-text-off-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-yellow tw-font-500 tw-mt-16">
-		<?php echo file_get_contents(plugins_url('../assets/icons/trophy_small.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trophy_small.svg'); ?>
 		<span>Score Tournament</span>
 	</a>
 <?php
@@ -48,7 +48,7 @@ function wpbb_share_tournament_btn($endpoint) {
 	ob_start();
 ?>
 	<a href="#" class="tw-flex tw-justify-center tw-items-center tw-text-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-white tw-font-500 tw-mt-16">
-		<?php echo file_get_contents(plugins_url('../assets/icons/share.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/share.svg'); ?>
 		<span>Share with contestants</span>
 	</a>
 <?php
@@ -100,7 +100,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 			</div>
 		</div>
 		<a href="<?php echo $view_play_link ?>" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-<?php echo $winner ? 'end' : 'center' ?> tw-text-white tw-text-16 tw-font-500 hover:tw-text-<?php echo $complete ? 'green' : 'yellow' ?>">
-			<?php echo file_get_contents(plugins_url('../assets/icons/arrow_up_right.svg', __FILE__)); ?>
+			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/arrow_up_right.svg'); ?>
 			<span>View Play</span>
 		</a>
 	</div>
@@ -113,7 +113,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 	<div class="tw-max-w-screen-lg tw-flex tw-flex-grow tw-flex-col tw-gap-30 tw-px-20 lg:tw-px-0 tw-py-60">
 
 		<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 tw-pb-<?php echo $complete ? '30' : '[53px]' ?>">
-			<?php echo file_get_contents(plugins_url('../assets/icons/trophy.svg', __FILE__)); ?>
+			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trophy.svg'); ?>
 			<h1 class="tw-mt-16 tw-mb-12">
 				<?php echo $complete && $tournament_winner ? "{$tournament_winner->name} Wins" : esc_html(get_the_title()); ?>
 			</h1>

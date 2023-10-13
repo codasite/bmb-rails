@@ -48,7 +48,7 @@ function score_tournament_btn($endpoint, $tournament) {
 	ob_start();
 ?>
 	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/trophy_24.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trophy_24.svg'); ?>
 		<span class="tw-font-500">Update Results</span>
 	</a>
 <?php
@@ -156,7 +156,7 @@ function tournament_list_item($tournament, Wpbb_BracketPlayRepo $play_repo) {
       <span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
       <div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo get_tournament_tag($tournament->status); ?>
-				<?php echo file_get_contents(plugins_url('../../assets/icons/bar_chart.svg', __FILE__)); ?>
+				<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/bar_chart.svg'); ?>
         <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
         <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
       </div>
@@ -187,7 +187,7 @@ function tournament_list_item($tournament, Wpbb_BracketPlayRepo $play_repo) {
 <div class="tw-flex tw-flex-col tw-gap-15">
 	<h1 class="tw-mb-8">My Tournaments</h1>
 	<button class="wpbb-create-tournament-button tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/signal.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/signal.svg'); ?>
 		<span class="tw-font-700 tw-text-24">Create Tournament</span>
 	</button>
 	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
