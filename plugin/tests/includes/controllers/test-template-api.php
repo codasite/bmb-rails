@@ -31,7 +31,28 @@ class TemplateAPITest extends WPBB_UnitTestCase {
       'date' => 'test date',
       'num_teams' => 8,
       'wildcard_placement' => 0,
-      'matches' => [],
+      'matches' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => [
+            'name' => 'Team 1',
+          ],
+          'team2' => [
+            'name' => 'Team 2',
+          ],
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => [
+            'name' => 'Team 3',
+          ],
+          'team2' => [
+            'name' => 'Team 4',
+          ],
+        ],
+      ],
     ];
     $request = new WP_REST_Request('POST', self::TEMPLATE_API_ENDPOINT);
     $request->set_body_params($data);
@@ -45,7 +66,27 @@ class TemplateAPITest extends WPBB_UnitTestCase {
     $this->assertEquals('test date', $response->get_data()->date);
     $this->assertEquals(8, $response->get_data()->num_teams);
     $this->assertEquals(0, $response->get_data()->wildcard_placement);
-    $this->assertEquals([], $response->get_data()->matches);
+    $this->assertEquals(2, count($response->get_data()->matches));
+    $this->assertEquals(0, $response->get_data()->matches[0]->round_index);
+    $this->assertEquals(0, $response->get_data()->matches[0]->match_index);
+    $this->assertEquals(
+      'Team 1',
+      $response->get_data()->matches[0]->team1->name
+    );
+    $this->assertEquals(
+      'Team 2',
+      $response->get_data()->matches[0]->team2->name
+    );
+    $this->assertEquals(0, $response->get_data()->matches[1]->round_index);
+    $this->assertEquals(1, $response->get_data()->matches[1]->match_index);
+    $this->assertEquals(
+      'Team 3',
+      $response->get_data()->matches[1]->team1->name
+    );
+    $this->assertEquals(
+      'Team 4',
+      $response->get_data()->matches[1]->team2->name
+    );
     $template = $this->template_repo->get($response->get_data()->id);
     $this->assertNotNull($template);
   }
