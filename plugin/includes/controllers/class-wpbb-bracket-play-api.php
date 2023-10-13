@@ -4,8 +4,10 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
-  'service/image-generator/class-wpbb-local-node-generator.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
+  (require_once WPBB_PLUGIN_DIR .
+    'includes/service/product_integrations/gelato/class-wpbb-gelato-product-integration.php');
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product_integrations/class-wpbb-product-integration-interface.php';
 
 class Wpbb_BracketPlayApi extends WP_REST_Controller {
   /**
@@ -34,9 +36,9 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
   protected $rest_base;
 
   /**
-   * @var Wpbb_BracketImageGeneratorInterface
+   * @var Wpbb_ProductIntegrationInterface
    */
-  private $image_generator;
+  private $product_integration;
 
   /**
    * Constructor.
@@ -44,8 +46,8 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
   public function __construct($args = []) {
     $this->utils = $args['utils'] ?? new Wpbb_Utils();
     $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketPlayRepo();
-    $this->image_generator =
-      $args['image_generator'] ?? new Wpbb_LocalNodeGenerator();
+    $this->product_integration =
+      $args['product_integration'] ?? new Wpbb_GelatoProductIntegration();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
   }
@@ -184,6 +186,8 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
       ]);
     }
     $saved = $this->play_repo->add($play);
+    // Generate the bracket images
+    $this->product_integration->generate_images($saved);
 
     return new WP_REST_Response($saved, 201);
   }

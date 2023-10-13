@@ -115,6 +115,10 @@ class Wpbb_GelatoProductIntegration implements
 
   //implement this
   public function generate_images(Wpbb_PostBracketInterface $bracket): void {
+    // $this->image_generator->generate_image($bracket);
+    // $this->image_generator->generate_image($bracket);
+    // $this->image_generator->generate_image($bracket);
+    // $this->image_generator->generate_image($bracket);
     //Save to post meta
     $post = get_post($bracket->get_post_id());
     update_post_meta(
@@ -125,5 +129,18 @@ class Wpbb_GelatoProductIntegration implements
         'dark' => 'dark.png',
       ])
     );
+  }
+
+  public function get_image_configs(Wpbb_PostBracketInterface $bracket): array {
+    return [
+      [
+        'name' => 'light',
+        'url' => 'light.png',
+      ],
+      [
+        'name' => 'dark',
+        'url' => 'dark.png',
+      ],
+    ];
   }
 }
