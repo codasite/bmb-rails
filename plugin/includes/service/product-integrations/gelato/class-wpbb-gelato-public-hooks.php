@@ -2,6 +2,9 @@
 
 require_once plugin_dir_path(dirname(__FILE__, 2)) .
   'bracket-product/class-wpbb-bracket-product-utils.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/repository/class-wpbb-bracket-config-repo.php';
 
 class Wpbb_GelatoPublicHooks {
   /**
@@ -9,8 +12,21 @@ class Wpbb_GelatoPublicHooks {
    */
   private $bracket_product_utils;
 
+  /**
+   * @var Wpbb_Utils
+   */
+  private $utils;
+
+  /**
+   * @var Wpbb_BracketConfigRepo
+   * @deprecated We no longer use the bracket config repo. Config should be stored in play meta data
+   */
+  private $bracket_config_repo;
+
   public function __construct() {
     $this->bracket_product_utils = new Wpbb_BracketProductUtils();
+    $this->utils = new Wpbb_Utils();
+    $this->bracket_config_repo = new Wpbb_BracketConfigRepo();
   }
 
   private function is_bracket_product($product) {
