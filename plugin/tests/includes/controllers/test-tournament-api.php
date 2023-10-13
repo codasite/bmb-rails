@@ -73,14 +73,55 @@ class TournamentAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_tournament() {
-    $template = self::factory()->template->create_and_get();
+    $template = self::factory()->template->create_and_get([
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
     $tournament = self::factory()->tournament->create_and_get([
       'bracket_template_id' => $template->id,
+      'results' => [],
     ]);
 
     $data = [
       'title' => 'Test Tournament',
       'date' => 'Test Date',
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $template->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $template->matches[1]->team2->id,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $template->matches[0]->team1->id,
+        ],
+      ],
     ];
 
     $request = new WP_REST_Request(
@@ -101,6 +142,26 @@ class TournamentAPITest extends WPBB_UnitTestCase {
     $tournament = $this->tournament_repo->get($response->get_data()->id);
     $this->assertNotNull($tournament);
     $this->assertEquals('Test Tournament', $tournament->title);
+    $this->assertEquals('Test Date', $tournament->date);
+    $this->assertEquals(3, count($tournament->results));
+    $this->assertEquals(0, $tournament->results[0]->round_index);
+    $this->assertEquals(0, $tournament->results[0]->match_index);
+    $this->assertEquals(
+      $template->matches[0]->team1->id,
+      $tournament->results[0]->winning_team_id
+    );
+    $this->assertEquals(0, $tournament->results[1]->round_index);
+    $this->assertEquals(1, $tournament->results[1]->match_index);
+    $this->assertEquals(
+      $template->matches[1]->team2->id,
+      $tournament->results[1]->winning_team_id
+    );
+    $this->assertEquals(1, $tournament->results[2]->round_index);
+    $this->assertEquals(0, $tournament->results[2]->match_index);
+    $this->assertEquals(
+      $template->matches[0]->team1->id,
+      $tournament->results[2]->winning_team_id
+    );
   }
 
   public function test_notification_is_sent_when_results_are_updated() {
