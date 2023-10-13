@@ -68,7 +68,7 @@ function play_tournament_btn($endpoint, $tournament_id) {
 	ob_start();
 ?>
 	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/play.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/play.svg'); ?>
 		<span class="tw-font-500">Play Tournament</span>
 	</a>
 <?php
@@ -99,7 +99,7 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	ob_start();
 ?>
 	<a class="<?php echo implode(' ', $cls_list[$variant]) ?>" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/trend_up.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trend_up.svg'); ?>
 		<span class="tw-font-500 tw-text-16"><?php echo esc_html($label) ?></span>
 	</a>
 <?php
@@ -157,7 +157,7 @@ function public_tournament_list_item(Wpbb_BracketTournament $tournament, Wpbb_Br
 			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo $completed ? completed_tournament_tag() : live_tournament_tag(); ?>
-				<?php echo file_get_contents(plugins_url('../../assets/icons/bar_chart.svg', __FILE__)); ?>
+				<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/bar_chart.svg'); ?>
 				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
 				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
 			</div>

@@ -20,7 +20,7 @@ $accuracy = $user->get_total_accuracy() * 100;
 	<!-- <h3 class="tw-text-white/50">Overall Tournament Score</h3> -->
 	<div class="tw-flex tw-gap-10 tw-flex-wrap">
 		<!-- <div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-between tw-bg-green/15 ">
-			<?php echo file_get_contents(plugins_url('../../assets/icons/pie.svg', __FILE__)); ?>
+			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/pie.svg'); ?>
 			<div class="tw-flex tw-flex-col tw-gap-4">
 				<h1><?php echo $accuracy ?>%</h1>
 				<h3 class="tw-text-20 tw-text-white/50">Accuracy Score</h3>
@@ -34,7 +34,7 @@ $accuracy = $user->get_total_accuracy() * 100;
 		</div> -->
 		<div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-between">
 			<a href="<?php echo get_permalink() . 'play-history'; ?>" class="tw-flex tw-gap-16 tw-items-center hover:tw-text-blue">
-				<?php echo file_get_contents(plugins_url('../../assets/icons/arrow_up_right.svg', __FILE__)); ?>
+				<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/arrow_up_right.svg'); ?>
 				<span class="tw-font-500">View My Play History</span>
 			</a>
 			<div class="tw-flex tw-flex-col tw-gap-4">

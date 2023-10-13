@@ -13,8 +13,8 @@ function wpbb_pagination($page, $num_pages, $justify = 'start') {
     'type' => 'array',
     'current' => $page,
     'total' => $num_pages,
-    'prev_text' => '<div class="tw-flex tw-items-center">' . file_get_contents(plugins_url('../../assets/icons/chevron_left.svg', __FILE__)) . '</div>',
-    'next_text' => '<div class="tw-flex tw-items-center">' . file_get_contents(plugins_url('../../assets/icons/chevron_right.svg', __FILE__)) . '</div>',
+    'prev_text' => '<div class="tw-flex tw-items-center">' . file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/chevron_left.svg') . '</div>',
+    'next_text' => '<div class="tw-flex tw-items-center">' . file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/chevron_right.svg') . '</div>',
   ));
 ?>
   <div class="tw-flex tw-items-center tw-justify-<?php echo $justify; ?> tw-gap-10 tw-py-14 tw-px-12">
