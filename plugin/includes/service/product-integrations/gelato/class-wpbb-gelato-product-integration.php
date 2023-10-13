@@ -16,16 +16,9 @@ class Wpbb_GelatoProductIntegration implements
    */
   private $public_hooks;
 
-  /**
-   * @var Wpbb_BracketImageGeneratorInterface
-   */
-  private $image_generator;
-
   public function __construct($args = []) {
     $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
     $this->public_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoPublicHooks();
-    $this->image_generator =
-      $args['image_generator'] ?? new Wpbb_FullPageBracketImageGenerator();
   }
 
   // Admin hooks
@@ -121,26 +114,45 @@ class Wpbb_GelatoProductIntegration implements
     // $this->image_generator->generate_image($bracket);
     //Save to post meta
     $post = get_post($bracket->get_post_id());
-    update_post_meta(
-      $bracket->get_post_id(),
-      'gelato_integration',
-      json_encode([
-        'light' => 'light.png',
-        'dark' => 'dark.png',
-      ])
-    );
+
+    //something like this
+    // update_post_meta(
+    //   $bracket->get_post_id(),
+    //   'gelato_integration',
+    //   json_encode([
+    //     'top' => [
+    //       'light' => 'light-top.png',
+    //       'dark' => 'dark-top.png',
+    //     ],
+    //     'center' => [
+    //       'light' => 'light-center.png',
+    //       'dark' => 'dark-center.png',
+    //     ],
+    //   ])
+    // );
   }
 
-  public function get_image_configs(Wpbb_PostBracketInterface $bracket): array {
+  /**
+   * Given a placement ('top' or 'center') returns an overlay map that can get passed direcly to the bracket preview page
+   *
+   * @var Wpbb_PostBracketInterface $bracket
+   * @var string $placement - 'top' or 'center'
+   *
+   * @return array - an array of overlay maps
+   *
+   * @example
+   * [
+   * 'light' => 'someS3url',
+   * 'dark' => 'someS3url'
+   * ]
+   */
+  public function get_overlay_map(
+    Wpbb_PostBracketInterface $bracket,
+    string $placement
+  ): array {
     return [
-      [
-        'name' => 'light',
-        'url' => 'light.png',
-      ],
-      [
-        'name' => 'dark',
-        'url' => 'dark.png',
-      ],
+      'light' => 'someS3url',
+      'dark' => 'someS3url',
     ];
   }
 }

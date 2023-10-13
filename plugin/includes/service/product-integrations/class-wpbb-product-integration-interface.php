@@ -47,6 +47,23 @@ interface Wpbb_ProductIntegrationInterface {
   ): array;
 
   public function generate_images(Wpbb_PostBracketInterface $bracket): void;
-  public function get_image_configs(Wpbb_PostBracketInterface $bracket): array;
-  // product preview
+
+  /**
+   * Given a placement ('top' or 'center') returns an overlay map that can get passed direcly to the bracket preview page
+   *
+   * @var Wpbb_PostBracketInterface $bracket
+   * @var string $placement - 'top' or 'center'
+   *
+   * @return array - an array of overlay maps
+   *
+   * @example
+   * [
+   * 'light' => 'someS3url',
+   * 'dark' => 'someS3url'
+   * ]
+   */
+  public function get_overlay_map(
+    Wpbb_PostBracketInterface $bracket,
+    string $placement
+  ): array;
 }
