@@ -49,6 +49,9 @@ services:
         define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
         define('BRACKET_PRODUCT_CATEGORY', 'bracket-ready');
         define('BRACKET_PLACEMENT_CENTER_CAT', 'wpbb-placement-center');
+        define('WP_SENTRY_ENV', 'production');
+        define( 'WP_SENTRY_PHP_DSN', 'https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752' );
+        define( 'WP_SENTRY_ERROR_TYPES', E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_USER_DEPRECATED );
         define('AWS_ACCESS_KEY', '${AWS_ACCESS_KEY}');
         define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');

@@ -26,6 +26,10 @@ wp-init:
 wp-test:
 	docker exec wordpress-test-app composer test
 
+# Read out debug log (ignore deprecated warnings)
+wp-log:
+	docker exec wordpress-test-app tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
+
 # Start all containers in dev mode
 up:
 	docker compose up --build
