@@ -32,7 +32,7 @@ wp-log:
 
 # Start all containers in dev mode
 up:
-	docker compose up --build
+	docker compose --profile all up --build
 
 # Stop and remove all containers
 down:

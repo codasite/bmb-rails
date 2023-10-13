@@ -8,6 +8,7 @@ services:
       - ./image-generator/src:/usr/src/app/src # To serve the image generator code in development
     profiles:
       - images
+      - all
 
   react-server:
     tty: true
@@ -26,6 +27,7 @@ services:
       - 8080:8080
     profiles:
       - images
+      - all
 
   wp-test:
     tty: true
@@ -73,6 +75,7 @@ services:
       - db-test
     profiles:
       - test
+      - all
 
   db-test:
     tty: true
@@ -91,6 +94,7 @@ services:
       - 3308:3306
     profiles:
       - test
+      - all
 
   phpmyadmin:
     image: phpmyadmin
@@ -107,7 +111,7 @@ services:
       - db-test
     profiles:
       - test
-
+      - all
 
 networks:
   default:
