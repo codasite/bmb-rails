@@ -52,7 +52,9 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 // }
 
 define('WPBB_BRACKET_CONFIG_SESSION_KEY', 'wpbb_bracket_config');
-
+/**
+ * @deprecated
+ */
 class Wpbb_BracketConfigRepo {
   private $utils;
 
