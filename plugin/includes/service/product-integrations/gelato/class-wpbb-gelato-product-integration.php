@@ -112,4 +112,18 @@ class Wpbb_GelatoProductIntegration implements
       $variation
     );
   }
+
+  //implement this
+  public function generate_images(Wpbb_PostBracketInterface $bracket): void {
+    //Save to post meta
+    $post = get_post($bracket->get_post_id());
+    update_post_meta(
+      $bracket->get_post_id(),
+      'gelato_integration',
+      json_encode([
+        'light' => 'light.png',
+        'dark' => 'dark.png',
+      ])
+    );
+  }
 }

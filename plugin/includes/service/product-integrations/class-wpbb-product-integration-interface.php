@@ -46,6 +46,7 @@ interface Wpbb_ProductIntegrationInterface {
     $variation
   ): array;
 
-  public function generate_images(Wpbb_BracketInterface $bracket): void;
+  public function generate_images(Wpbb_PostBracketInterface $bracket): void;
+  public function get_image_config(Wpbb_PostBracketInterface $bracket): array;
   // product preview
 }

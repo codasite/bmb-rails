@@ -27,7 +27,7 @@ class Wpbb_FullPageBracketImageGenerator implements
    * @return string|WP_Error The URL of the generated image or a WP_Error if there was an error
    */
   public function generate_image(
-    Wpbb_BracketInterface $bracket,
+    Wpbb_PostBracketInterface $bracket,
     array $args = []
   ): string|WP_Error {
     $theme = $args['theme'] ?? 'light';

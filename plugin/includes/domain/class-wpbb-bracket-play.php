@@ -10,7 +10,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-team.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-bracket-interface.php';
 
-class Wpbb_BracketPlay extends Wpbb_PostBase implements Wpbb_BracketInterface {
+class Wpbb_BracketPlay extends Wpbb_PostBase implements
+  Wpbb_PostBracketInterface {
   /**
    * @var int
    */
@@ -108,6 +109,10 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements Wpbb_BracketInterface {
     $data['picks'] = $picks;
 
     return new Wpbb_BracketPlay($data);
+  }
+
+  public function get_post_id(): int {
+    return $this->id;
   }
 
   public function get_matches(): array {

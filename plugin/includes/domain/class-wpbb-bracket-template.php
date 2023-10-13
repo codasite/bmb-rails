@@ -10,7 +10,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-bracket-interface.php';
 
 class Wpbb_BracketTemplate extends Wpbb_PostBase implements
-  Wpbb_BracketInterface {
+  Wpbb_PostBracketInterface {
   /**
    * @var string
    */
