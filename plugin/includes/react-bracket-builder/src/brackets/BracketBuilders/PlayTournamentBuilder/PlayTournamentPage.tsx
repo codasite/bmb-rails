@@ -133,14 +133,17 @@ const PlayPage = (props: PlayPageProps) => {
       templateId: tournamentId ? undefined : template?.id,
       picks: picks,
     }
+
+    console.log(playReq)
     setProcessing(true)
     bracketApi
       .createPlay(playReq)
       .then((res) => {
+        console.log(res)
         window.location.href = apparelUrl
       })
       .catch((err) => {
-        console.error(err)
+        console.error('error: ', err)
         Sentry.captureException(err)
       })
       .finally(() => {

@@ -89,6 +89,23 @@ services:
     profiles:
       - test
 
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    container_name: phpmyadmin-test
+    environment:
+      PMA_HOST: db-test
+      PMA_PORT: 3306
+      PMA_USER: wordpress-test
+      PMA_PASSWORD: wordpress-test
+    ports:
+      - 8081:80
+    depends_on:
+      - db-test
+    profiles:
+      - test
+
+
 networks:
   default:
     name: wp-bracket-builder

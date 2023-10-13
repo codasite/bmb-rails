@@ -168,7 +168,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
   }
 
   public function get_all(
-    array|WP_Query $query,
+    array|WP_Query $query = [],
     array $options = [
       'fetch_picks' => false,
       'fetch_tournament' => false,

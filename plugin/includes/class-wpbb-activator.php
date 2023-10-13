@@ -128,6 +128,7 @@ class Wpbb_Activator {
 			bracket_tournament_post_id bigint(20) UNSIGNED,
 			bracket_tournament_id bigint(20) UNSIGNED,
 			bracket_template_post_id bigint(20) UNSIGNED,
+      bracket_template_id bigint(20) UNSIGNED,
 			busted_play_post_id bigint(20) UNSIGNED,
 			busted_play_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
@@ -136,6 +137,7 @@ class Wpbb_Activator {
 			FOREIGN KEY (bracket_tournament_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
 			FOREIGN KEY (bracket_tournament_id) REFERENCES {$prefix}tournaments(id) ON DELETE CASCADE,
 			FOREIGN KEY (bracket_template_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}templates(id) ON DELETE CASCADE,
 			FOREIGN KEY (busted_play_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE SET NULL,
 			FOREIGN KEY (busted_play_id) REFERENCES {$prefix}plays(id) ON DELETE SET NULL
 

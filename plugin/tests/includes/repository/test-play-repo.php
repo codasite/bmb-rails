@@ -175,4 +175,55 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       $new_picks[2]->winning_team_id
     );
   }
+
+  public function test_get_all() {
+    $template = self::factory()->template->create_and_get([
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $play1 = self::factory()->play->create_and_get([
+      'tournament_id' => self::factory()->tournament->create_and_get([
+        'bracket_template_id' => $template->id,
+      ])->id,
+      'author' => 1,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $template->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $play2 = self::factory()->play->create_and_get([
+      'tournament_id' => self::factory()->tournament->create_and_get([
+        'bracket_template_id' => $template->id,
+      ])->id,
+      'author' => 1,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $template->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $plays = $this->play_repo->get_all();
+
+    $this->assertEquals(2, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+  }
 }
