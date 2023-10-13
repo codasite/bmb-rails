@@ -1,4 +1,6 @@
 <?php
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 
 interface Wpbb_ProductIntegrationInterface {
   // admin hooks
@@ -44,5 +46,6 @@ interface Wpbb_ProductIntegrationInterface {
     $variation
   ): array;
 
+  public function generate_images(Wpbb_BracketInterface $bracket): void;
   // product preview
 }

@@ -7,7 +7,8 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__, 2)) .
   'domain/class-wpbb-bracket-interface.php';
 
-class Wpbb_LocalNodeGenerator implements Wpbb_BracketImageGeneratorInterface {
+class Wpbb_FullPageBracketImageGenerator implements
+  Wpbb_BracketImageGeneratorInterface {
   /**
    * @param int|Wp_Post|null $post The post to generate an image for
    *

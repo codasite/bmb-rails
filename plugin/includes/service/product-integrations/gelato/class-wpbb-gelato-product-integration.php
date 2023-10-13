@@ -16,9 +16,16 @@ class Wpbb_GelatoProductIntegration implements
    */
   private $public_hooks;
 
-  public function __construct() {
-    $this->admin_hooks = new Wpbb_GelatoAdminHooks();
-    $this->public_hooks = new Wpbb_GelatoPublicHooks();
+  /**
+   * @var Wpbb_BracketImageGeneratorInterface
+   */
+  private $image_generator;
+
+  public function __construct($args = []) {
+    $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
+    $this->public_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoPublicHooks();
+    $this->image_generator =
+      $args['image_generator'] ?? new Wpbb_FullPageBracketImageGenerator();
   }
 
   // Admin hooks

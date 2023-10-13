@@ -41,10 +41,11 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
   /**
    * Constructor.
    */
-  public function __construct() {
-    $this->utils = new Wpbb_Utils();
-    $this->play_repo = new Wpbb_BracketPlayRepo();
-    $this->image_generator = new Wpbb_LocalNodeGenerator();
+  public function __construct($args = []) {
+    $this->utils = $args['utils'] ?? new Wpbb_Utils();
+    $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketPlayRepo();
+    $this->image_generator =
+      $args['image_generator'] ?? new Wpbb_LocalNodeGenerator();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
   }
