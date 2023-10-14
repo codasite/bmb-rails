@@ -3,11 +3,10 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  (require_once WPBB_PLUGIN_DIR .
-    'includes/service/product_integrations/gelato/class-wpbb-gelato-product-integration.php');
 require_once WPBB_PLUGIN_DIR .
-  'includes/service/product_integrations/class-wpbb-product-integration-interface.php';
+  'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 
 class Wpbb_BracketPlayApi extends WP_REST_Controller {
   /**

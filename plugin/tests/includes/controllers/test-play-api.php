@@ -10,6 +10,8 @@ require_once WPBB_PLUGIN_DIR .
   'includes/service/class-wpbb-notification-service-interface.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/class-wpbb-score-service-interface.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 
 //namespace phpunit
 
@@ -153,5 +155,50 @@ class PlayAPITest extends WPBB_UnitTestCase {
 
     $this->assertNull($new_play->tournament_id);
     $this->assertEquals($data['author'], $new_play->author);
+  }
+
+  public function test_create_play_generate_images() {
+    $integration = $this->createMock(Wpbb_ProductIntegrationInterface::class);
+    $integration->expects($this->once())->method('generate_images');
+
+    $template = self::factory()->template->create_and_get([
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'template_id' => $template->id,
+      'author' => 1,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $template->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $api = new Wpbb_BracketPlayAPI([
+      'product_integration' => $integration,
+    ]);
+
+    $response = $api->create_item($request);
+
+    $this->assertEquals(201, $response->get_status());
   }
 }

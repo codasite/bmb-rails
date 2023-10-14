@@ -12,6 +12,10 @@ const host = '0.0.0.0'
 const devHost = 'react-client'
 const devPort = 8080
 
+app.get('/ping', async (req, res) => {
+  res.send('pong')
+})
+
 app.get('/hello', async (req, res) => {
   res.send('Hello from react server')
 })

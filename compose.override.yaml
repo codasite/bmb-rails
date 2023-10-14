@@ -18,6 +18,7 @@ services:
       - ./standalone-react/src:/usr/src/app/src # To serve the react server code in development
     profiles:
       - images
+      - all
 
   react-client:
     tty: true
@@ -29,6 +30,11 @@ services:
     profiles:
       - images
       - all
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   wp-test:
     tty: true
@@ -66,7 +72,6 @@ services:
       WORDPRESS_ADMIN_USER: admin
       WORDPRESS_ADMIN_PASSWORD: admin
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
-
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
       - wp-test-data:/var/www/html

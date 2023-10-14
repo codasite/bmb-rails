@@ -157,4 +157,8 @@ class Wpbb_BracketTournament extends Wpbb_PostBase implements
   public function get_num_teams(): int {
     return $this->bracket_template->num_teams;
   }
+
+  public function get_post_id(): int {
+    return $this->id;
+  }
 }

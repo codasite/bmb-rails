@@ -28,6 +28,10 @@ app.get('/', async (req, res) => {
   res.send(`Hello World! ${user.username}`)
 })
 
+app.get('/ping', async (req, res) => {
+  res.send('pong')
+})
+
 // Options to generate bracket image. Can be used to generate multiple images
 // by passing in an array of options to the imageOptions property.
 // Any property not specified will use the default value.
@@ -88,11 +92,6 @@ app.post('/generate', async (req, res) => {
     inchWidth = 11,
   } = req.body
 
-  // const {
-  // 	inch_height,
-  // 	inch_width,
-  // } = queryParams;
-
   const clientUrl = url ?? process.env.CLIENT_URL
 
   if (inchHeight && !Number.isInteger(inchHeight)) {
@@ -108,7 +107,7 @@ app.post('/generate', async (req, res) => {
 
   console.time('start')
   console.time('launch')
-  const browser = await puppeteer.launch({ headless: true })
+  const browser = await puppeteer.launch({ headless: 'new' })
   console.timeEnd('launch')
   console.time('newPage')
   const page = await browser.newPage()

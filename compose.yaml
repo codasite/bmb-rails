@@ -18,6 +18,11 @@ services:
       - AWS_REGION=us-east-1
     volumes:
       - ~/.aws/credentials:/home/pptruser/.aws/credentials:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   react-server:
     build:
@@ -31,6 +36,11 @@ services:
       - react_dist:/usr/src/app/client/dist
     ports:
       - 3001:3001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   react-client:
     build:
