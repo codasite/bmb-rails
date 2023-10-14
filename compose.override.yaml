@@ -9,6 +9,7 @@ services:
     profiles:
       - images
       - all
+      - generator
 
   react-server:
     tty: true

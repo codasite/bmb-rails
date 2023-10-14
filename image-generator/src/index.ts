@@ -56,6 +56,7 @@ app.post('/test', async (req, res) => {
 
 app.post('/generate', async (req, res) => {
   const {
+    url,
     html,
     queryParams,
     s3Bucket,
@@ -71,7 +72,7 @@ app.post('/generate', async (req, res) => {
   // 	inch_width,
   // } = queryParams;
 
-  const clientUrl = process.env.CLIENT_URL
+  const clientUrl = url ?? process.env.CLIENT_URL
 
   if (inchHeight && !Number.isInteger(inchHeight)) {
     return res.status(400).send('inch_height must be an integer')

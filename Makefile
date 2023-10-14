@@ -30,6 +30,9 @@ wp-test:
 wp-log:
 	docker exec wordpress-test-app tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
 
+images-up:
+	docker compose --profile images up --build
+
 # Start all containers in dev mode
 up:
 	docker compose --profile all up --build
