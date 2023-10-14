@@ -38,7 +38,8 @@ function wpbb_get_nav_link($tab, $current_tab, $label, $icon) {
 }
 
 ?>
-<div class="wpbb-dashboard tw-text-white tw-font-sans tw-flex tw-flex-col md:tw-flex-row tw-gap-30 lg:tw-gap-60 leading-none tw-uppercase">
+<div class="tw-bg-dd-blue tw-py-60">
+<div class="wpbb-dashboard tw-text-white tw-font-sans tw-flex tw-flex-col md:tw-flex-row tw-gap-30 lg:tw-gap-60 leading-none tw-uppercase tw-max-w-screen-lg tw-mx-auto">
 	<nav>
 		<h4 class="tw-text-white/50 tw-text-16 tw-text-500 tw-mb-15">Dashboard</h4>
 		<ul class="tw-flex tw-flex-col tw-gap-15 tw-p-0 tw-m-0">
@@ -51,4 +52,5 @@ function wpbb_get_nav_link($tab, $current_tab, $label, $icon) {
 	<div class="tw-flex-grow">
 		<?php include $template; ?>
 	</div>
+</div>
 </div>
