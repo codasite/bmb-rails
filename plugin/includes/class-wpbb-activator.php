@@ -36,18 +36,18 @@ class Wpbb_Activator {
 
     // self::delete_tables($prefix);
 
-    self::create_bracket_templates_table($prefix); // one-to-one table for bracket templates
-    self::create_tournaments_table($prefix); // one-to-one table for bracket tournaments
+    self::create_brackets_table($prefix);
     self::create_plays_table($prefix); // one-to-one table for bracket plays
     self::create_teams_table($prefix); // associated with matches
     self::create_matches_table($prefix); // associated with bracket templates
     self::create_match_picks_table($prefix); // associated with bracket plays
-    self::create_tournament_results_table($prefix); // associated with bracket tournaments
+    self::create_bracket_results_table($prefix); // associated with bracket tournaments
   }
 
   private static function delete_tables(string $prefix) {
     global $wpdb;
     $tables = [
+      $prefix . 'bracket_results',
       $prefix . 'tournament_results',
       $prefix . 'match_picks',
       $prefix . 'matches',
@@ -55,55 +55,28 @@ class Wpbb_Activator {
       $prefix . 'plays',
       $prefix . 'tournaments',
       $prefix . 'templates',
+      $prefix . 'brackets',
     ];
 
     foreach ($tables as $table) {
       $wpdb->query("DROP TABLE IF EXISTS $table");
     }
   }
-
-  private static function create_bracket_templates_table(string $prefix) {
+  private static function create_brackets_table(string $prefix) {
     /**
-     * Create the bracket templates table
+     * Create the bracket brackets table
      */
 
     global $wpdb;
-    $table_name = $prefix . 'templates';
+    $table_name = $prefix . 'brackets';
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			name varchar(255) NOT NULL,
 			post_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
-		) $charset_collate;";
-
-    // import dbDelta
-    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-    dbDelta($sql);
-  }
-
-  private static function create_tournaments_table(string $prefix) {
-    /**
-     * Create the tournaments table
-     */
-
-    global $wpdb;
-    $table_name = $prefix . 'tournaments';
-    $charset_collate = $wpdb->get_charset_collate();
-
-    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			post_id bigint(20) UNSIGNED NOT NULL,
-			bracket_template_post_id bigint(20) UNSIGNED NOT NULL,
-			bracket_template_id bigint(20) UNSIGNED NOT NULL,
-			PRIMARY KEY (id),
-			UNIQUE KEY (post_id),
-			FOREIGN KEY (post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (bracket_template_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}templates(id) ON DELETE CASCADE
 		) $charset_collate;";
 
     // import dbDelta
@@ -123,21 +96,17 @@ class Wpbb_Activator {
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			post_id bigint(20) UNSIGNED NOT NULL,
-			total_score int(11) NOT NULL DEFAULT 0,
-			accuracy_score float NOT NULL DEFAULT 0,
-			bracket_tournament_post_id bigint(20) UNSIGNED,
-			bracket_tournament_id bigint(20) UNSIGNED,
-			bracket_template_post_id bigint(20) UNSIGNED,
-      bracket_template_id bigint(20) UNSIGNED,
+			total_score int(11),
+			accuracy_score float,
+			bracket_post_id bigint(20) UNSIGNED,
+      bracket_id bigint(20) UNSIGNED,
 			busted_play_post_id bigint(20) UNSIGNED,
 			busted_play_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (bracket_tournament_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (bracket_tournament_id) REFERENCES {$prefix}tournaments(id) ON DELETE CASCADE,
-			FOREIGN KEY (bracket_template_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}templates(id) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE,
 			FOREIGN KEY (busted_play_post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE SET NULL,
 			FOREIGN KEY (busted_play_id) REFERENCES {$prefix}plays(id) ON DELETE SET NULL
 
@@ -159,13 +128,13 @@ class Wpbb_Activator {
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-	 		bracket_template_id bigint(20) UNSIGNED NOT NULL,
+	 		bracket_id bigint(20) UNSIGNED NOT NULL,
 			round_index tinyint(4) NOT NULL,
 			match_index tinyint(4) NOT NULL,
 			team1_id bigint(20) UNSIGNED,
 			team2_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}templates(id) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE,
 			FOREIGN KEY (team1_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL,
 			FOREIGN KEY (team2_id) REFERENCES {$prefix}teams(id) ON DELETE SET NULL
 		) $charset_collate;";
@@ -187,9 +156,9 @@ class Wpbb_Activator {
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			name varchar(255) NOT NULL,
-			bracket_template_id bigint(20) UNSIGNED NOT NULL,
+			bracket_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_template_id) REFERENCES {$prefix}templates(id) ON DELETE CASCADE
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE
 		) $charset_collate;";
 
     // import dbDelta
@@ -223,24 +192,24 @@ class Wpbb_Activator {
     dbDelta($sql);
   }
 
-  private static function create_tournament_results_table(string $prefix) {
+  private static function create_bracket_results_table(string $prefix) {
     /**
      * Create the match picks table. Rows in this table represent a user's pick for a match.
      * Holds a pointer to the bracket play this pick belongs to.
      */
 
     global $wpdb;
-    $table_name = $prefix . 'tournament_results';
+    $table_name = $prefix . 'bracket_results';
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			bracket_tournament_id bigint(20) UNSIGNED NOT NULL,
+			bracket_id bigint(20) UNSIGNED NOT NULL,
 			round_index tinyint(4) NOT NULL,
 			match_index tinyint(4) NOT NULL,
 			winning_team_id bigint(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_tournament_id) REFERENCES {$prefix}tournaments(id) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_id) REFERENCES {$prefix}brackets(id) ON DELETE CASCADE,
 			FOREIGN KEY (winning_team_id) REFERENCES {$prefix}teams(id) ON DELETE CASCADE
 		) $charset_collate;";
 

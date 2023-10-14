@@ -85,7 +85,7 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
   /**
    * @throws Wpbb_ValidationException
    */
-  public static function from_array(array $data): Wpbb_BracketTemplate {
+  public static function from_array(array $data): Wpbb_Bracket {
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
@@ -108,7 +108,7 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
       }
       $data['results'] = $results;
     }
-    return new Wpbb_BracketTemplate($data);
+    return new Wpbb_Bracket($data);
   }
 
   public function to_array(): array {
