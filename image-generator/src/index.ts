@@ -49,18 +49,39 @@ interface BracketImageOptions {
   imageOptions?: Array<BracketImageOptions>
 }
 
-app.post('/test', async (req, res) => {
-  console.log(req.body)
-  res.send(req.body)
-})
+interface ObjectStorageUploader {
+  upload: (buffer: Buffer, contentType: string, body: any) => Promise<string>
+}
+
+const s3Uploader: ObjectStorageUploader = {
+  upload: async (buffer, contentType, body) => {
+    const { s3Options } = body
+    if (!s3Options) {
+      throw new Error('s3Options is required')
+    }
+    const { s3Bucket, s3Key } = s3Options
+    if (!s3Bucket || !s3Key) {
+      throw new Error('s3Bucket and s3Key are required')
+    }
+
+    const s3 = new S3Client({ region: process.env.AWS_REGION })
+    const command = new PutObjectCommand({
+      Bucket: s3Bucket,
+      Key: s3Key,
+      Body: buffer,
+      ContentType: contentType,
+    })
+    return s3.send(command).then((data) => {
+      return `https://${s3Bucket}.s3.amazonaws.com/${s3Key}`
+    })
+  },
+}
 
 app.post('/generate', async (req, res) => {
   const {
     url,
-    html,
     queryParams,
-    s3Bucket,
-    s3Key,
+    s3Options,
     pdf,
     deviceScaleFactor = 1,
     inchHeight = 16,
@@ -102,11 +123,7 @@ app.post('/generate', async (req, res) => {
   console.timeEnd('setViewport')
 
   console.time('goto')
-  if (html) {
-    console.log('html')
-    await page.setContent(html, { waitUntil: 'networkidle0' })
-  } else if (clientUrl) {
-    console.log('clientUrl')
+  if (clientUrl) {
     const queryString = Object.keys(queryParams)
       .map((key) => key + '=' + queryParams[key])
       .join('&')
@@ -142,15 +159,16 @@ app.post('/generate', async (req, res) => {
   console.timeEnd('screenshot')
   const extension = pdf ? 'pdf' : 'png'
   const contentType = pdf ? 'application/pdf' : 'image/png'
+  let uploader: ObjectStorageUploader
+  if (s3Options) {
+    uploader = s3Uploader
+  }
+  if (!uploader) {
+    return res.status(400).send('uploadService is required')
+  }
   try {
     console.time('uploadToS3')
-    const imgUrl = await uploadToS3(
-      file,
-      extension,
-      contentType,
-      s3Bucket,
-      s3Key
-    )
+    const imgUrl = await uploader.upload(file, contentType, req.body)
     res.send(imgUrl)
   } catch (err: any) {
     console.error(err)
@@ -162,24 +180,10 @@ app.post('/generate', async (req, res) => {
   }
 })
 
-const uploadToS3 = async (
-  buffer: Buffer,
-  extension: string,
-  contentType: string,
-  bucket: string,
-  fileName: string
-): Promise<string> => {
-  const s3 = new S3Client({ region: process.env.AWS_REGION })
-  const command = new PutObjectCommand({
-    Bucket: bucket,
-    Key: fileName,
-    Body: buffer,
-    ContentType: contentType,
-  })
-  return s3.send(command).then((data) => {
-    return `https://${bucket}.s3.amazonaws.com/${fileName}`
-  })
-}
+app.post('/test', async (req, res) => {
+  console.log(req.body)
+  res.send(req.body)
+})
 
 app.listen(port, host, () => {
   console.log(`Example app listening at http://${host}:${port}`)
