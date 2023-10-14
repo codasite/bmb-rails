@@ -1,6 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-template-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
 

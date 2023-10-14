@@ -1,25 +1,15 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) .
-  'repository/class-wpbb-bracket-tournament-repo.php';
+  'repository/class-wpbb-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
-  'domain/class-wpbb-bracket-tournament.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'service/class-wpbb-score-service.php';
+  'domain/class-wpbb-bracket.php';
 // require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wpbb-bracket-api-validation.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'service/class-wpbb-mailchimp-email-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'service/class-wpbb-notification-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'service/class-wpbb-notification-service-interface.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'service/class-wpbb-email-service-interface.php';
 
-class Wpbb_BracketTournamentApi extends WP_REST_Controller {
+class Wpbb_BracketApi extends WP_REST_Controller {
   /**
-   * @var Wpbb_BracketTournamentRepo
+   * @var Wpbb_BracketRepo
    */
-  private $tournament_repo;
+  private $bracket_repo;
 
   /**
    * @var string
@@ -32,34 +22,12 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller {
   protected $rest_base;
 
   /**
-   * @var Wpbb_Score_Service
+   * Constructor.
    */
-  private $score_service;
-
-  /**
-   * @var Wpbb_Email_Service_Interface
-   */
-  private ?Wpbb_Email_Service_Interface $email_service;
-
-  /**
-   * @var Wpbb_Notification_Service_Interface
-   */
-  private ?Wpbb_Notification_Service_Interface $notification_service;
-
-  public function __construct($args = []) {
-    $this->tournament_repo =
-      $args['tournament_repo'] ?? new Wpbb_BracketTournamentRepo();
-    $this->score_service = $args['score_service'] ?? new Wpbb_Score_Service();
+  public function __construct() {
+    $this->bracket_repo = new Wpbb_BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
-    $this->rest_base = 'tournaments';
-    try {
-      // $this->email_service = $args['email_service'] ?? new Wpbb_Mailchimp_Email_Service();
-      $this->notification_service =
-        $args['notification_service'] ?? new Wpbb_Notification_Service();
-    } catch (Exception $e) {
-      $this->email_service = null;
-      $this->notification_service = null;
-    }
+    $this->rest_base = 'brackets';
   }
 
   /**
@@ -124,21 +92,50 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller {
         ],
       ],
     ]);
+    register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/activate', [
+      'methods' => 'POST',
+      'callback' => [$this, 'activate_bracket'],
+      'permission_callback' => [$this, 'admin_permission_check'],
+      'args' => [
+        'id' => [
+          'description' => __('Unique identifier for the object.'),
+          'type' => 'integer',
+        ],
+      ],
+    ]);
+
+    register_rest_route($namespace, '/' . $base . '/matches', [
+      [
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => [$this, 'get_matches'],
+        'permission_callback' => [$this, 'customer_permission_check'],
+        'args' => [],
+      ],
+    ]);
+
+    register_rest_route($namespace, '/' . $base . '/teams', [
+      [
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => [$this, 'get_teams'],
+        'permission_callback' => [$this, 'customer_permission_check'],
+        'args' => [],
+      ],
+    ]);
   }
 
   /**
-   * Retrieves a collection of tournaments.
+   * Retrieves a collection of brackets.
    *
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
   public function get_items($request) {
-    $tournaments = $this->tournament_repo->get_all();
-    return new WP_REST_Response($tournaments, 200);
+    $brackets = $this->bracket_repo->get_all();
+    return new WP_REST_Response($brackets, 200);
   }
 
   /**
-   * Retrieves a single tournament.
+   * Retrieves a single bracket.
    *
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
@@ -146,38 +143,30 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller {
   public function get_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
-    $tournament = $this->tournament_repo->get($id);
-    return new WP_REST_Response($tournament, 200);
+    $bracket = $this->bracket_repo->get($id);
+    return new WP_REST_Response($bracket, 200);
   }
 
   /**
-   * Creates a single tournament.
+   * Creates a single bracket.
    *
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
   public function create_item($request) {
     $params = $request->get_params();
-
     if (!isset($params['author'])) {
       $params['author'] = get_current_user_id();
     }
-    if (
-      isset($params['bracket_template']) &&
-      !isset($params['bracket_template']['author'])
-    ) {
-      $params['bracket_template']['author'] = get_current_user_id();
-    }
-
     try {
-      $tournament = Wpbb_BracketTournament::from_array($params);
+      $bracket = Wpbb_Bracket::from_array($params);
     } catch (Wpbb_ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,
       ]);
     }
 
-    $saved = $this->tournament_repo->add($tournament);
+    $saved = $this->bracket_repo->add($bracket);
     return new WP_REST_Response($saved, 201);
   }
 
@@ -188,18 +177,11 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller {
    * @return WP_Error|WP_REST_Response
    */
   public function update_item($request) {
-    $tournament_id = $request->get_param('item_id');
     $data = $request->get_params();
-    $updated = $this->tournament_repo->update($tournament_id, $data);
-    $this->score_service->score_tournament_plays($updated);
-
-    $notify = $request->get_param('update_notify_participants');
-    if ($this->notification_service && $notify) {
-      $this->notification_service->notify_tournament_results_updated(
-        $tournament_id
-      );
-    }
-
+    $updated = $this->bracket_repo->update(
+      $request->get_param('item_id'),
+      $data
+    );
     return new WP_REST_Response($updated, 200);
   }
 
@@ -212,7 +194,7 @@ class Wpbb_BracketTournamentApi extends WP_REST_Controller {
   public function delete_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
-    $deleted = $this->tournament_repo->delete($id);
+    $deleted = $this->bracket_repo->delete($id);
     return new WP_REST_Response($deleted, 200);
   }
 

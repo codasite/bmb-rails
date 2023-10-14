@@ -149,8 +149,8 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
       'post_status' => 'any',
     ]);
 
-    $brackets = $this->play_repo->get_all($the_query);
-    return new WP_REST_Response($brackets, 200);
+    $plays = $this->play_repo->get_all($the_query);
+    return new WP_REST_Response($plays, 200);
   }
 
   /**
@@ -162,8 +162,8 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
   public function get_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
-    $bracket = $this->play_repo->get($id);
-    return new WP_REST_Response($bracket, 200);
+    $play = $this->play_repo->get($id);
+    return new WP_REST_Response($play, 200);
   }
 
   /**
@@ -192,7 +192,6 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
     ) {
       $this->product_integration->generate_images($saved);
     }
-    // $this->product_integration->generate_images($saved);
 
     return new WP_REST_Response($saved, 201);
   }
