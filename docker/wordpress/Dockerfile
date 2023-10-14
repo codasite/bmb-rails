@@ -37,6 +37,7 @@ RUN echo "#!/bin/bash" > /usr/local/bin/install-wp-tests \
         && echo "*** install-wp-tests installed"
 
 # COPY --chmod=755 docker/wordpress/downloads /tmp/downloads
+COPY --chmod=755 docker/wordpress/plugins /tmp/plugins
 
 # the default docker image will copy files from /usr/src/wordpress to /var/www/html
 # we can copy an existing wordpress installation there and then delete wp-config.php so that the docker default is used

@@ -137,3 +137,4 @@ build/
 .phpunit.result.cache
 .DS_Store
 docker/wordpress/downloads/
+docker/wordpress/plugins/*
