@@ -355,21 +355,19 @@ class Wp_Bracket_Builder {
   }
 
   public function register_custom_post_types() {
-    register_post_type('bracket_template', [
+    register_post_type('bracket', [
       'labels' => [
-        'name' => __('Templates'),
-        'singular_name' => __('Template'),
+        'name' => __('Brackets'),
+        'singular_name' => __('Bracket'),
       ],
-      'description' => 'Bracket templates for the WP Bracket Builder plugin',
+      'description' => 'Brackets for the WP Bracket Builder plugin',
       'public' => true,
       'has_archive' => true,
       'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
       'show_ui' => true,
       'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wpbb_Bracket_Api
-      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
-      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
       'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'templates'],
+      'rewrite' => ['slug' => 'brackets'],
     ]);
 
     register_post_type('bracket_play', [
@@ -387,22 +385,6 @@ class Wp_Bracket_Builder {
       // 'rest_controller_class' => array($bracket_api, 'register_routes'),
       'taxonomies' => ['post_tag'],
       'rewrite' => ['slug' => 'plays'],
-    ]);
-    register_post_type('bracket_tournament', [
-      'labels' => [
-        'name' => __('Tournaments'),
-        'singular_name' => __('Tournament'),
-      ],
-      'description' => 'Tournaments for the WP Bracket Builder plugin',
-      'public' => true,
-      'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
-      'show_ui' => true,
-      'show_in_rest' => true,
-      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
-      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
-      'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'tournaments'],
     ]);
   }
 
