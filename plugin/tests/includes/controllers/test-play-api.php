@@ -54,6 +54,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
     ]);
 
     $data = [
+      'generate_images' => false,
       'tournament_id' => $tournament->id,
       'author' => 1,
       'picks' => [
@@ -130,6 +131,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
     ]);
 
     $data = [
+      'generate_images' => false,
       'template_id' => $template->id,
       'author' => 1,
       'picks' => [

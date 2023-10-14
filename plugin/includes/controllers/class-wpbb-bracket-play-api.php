@@ -186,7 +186,13 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
     }
     $saved = $this->play_repo->add($play);
     // Generate the bracket images
-    $this->product_integration->generate_images($saved);
+    if (
+      !isset($params['generate_images']) ||
+      $params['generate_images'] === true
+    ) {
+      $this->product_integration->generate_images($saved);
+    }
+    // $this->product_integration->generate_images($saved);
 
     return new WP_REST_Response($saved, 201);
   }
