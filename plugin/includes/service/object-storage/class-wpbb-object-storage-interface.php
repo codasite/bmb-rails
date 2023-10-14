@@ -9,4 +9,6 @@ interface Wpbb_Object_Storage_Interface {
    * @return string The URL to the file in the object storage.
    */
   public function upload($file, $name, $args = []): string;
+
+  public function get_service_name(): string;
 }

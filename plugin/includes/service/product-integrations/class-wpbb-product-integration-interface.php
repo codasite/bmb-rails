@@ -46,6 +46,8 @@ interface Wpbb_ProductIntegrationInterface {
     $variation
   ): array;
 
+  public function get_post_meta_key(): string;
+
   public function generate_images(Wpbb_PostBracketInterface $bracket): void;
 
   /**
