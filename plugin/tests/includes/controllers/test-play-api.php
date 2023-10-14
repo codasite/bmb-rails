@@ -13,8 +13,6 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 
-//namespace phpunit
-
 class PlayAPITest extends WPBB_UnitTestCase {
   private $play_repo;
 
