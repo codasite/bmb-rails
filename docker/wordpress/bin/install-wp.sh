@@ -9,7 +9,7 @@ wp-cli core install \
 	--admin_email=${WORDPRESS_ADMIN_EMAIL}
 
 wp-cli plugin install /tmp/plugins/oxygen4.5.zip --activate
-# wp-cli plugin install /tmp/plugins/oxygen-woocommerce.zip --activate
+wp-cli plugin install /tmp/plugins/oxygen-woocommerce.zip --activate
 wp-cli plugin activate wp-bracket-builder
 
 echo "done"

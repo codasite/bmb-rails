@@ -59,7 +59,7 @@ class Wpbb_Public_Shortcodes {
 		return ob_get_clean();
 	}
 
-	public function render_official_tournamnets() {
+	public function render_official_brackets() {
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/wpbb-official-tournaments.php';
 
@@ -141,7 +141,7 @@ class Wpbb_Public_Shortcodes {
 	public function add_shortcodes() {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']); // This is a page with slug `bracket-template-builder
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']); // This is a page with slug `dashboard`
-		add_shortcode('wpbb-official-tournaments', [$this, 'render_official_tournamnets']); // This is a page with slug `official-tournaments`
+		add_shortcode('wpbb-official-brackets', [$this, 'render_official_brackets']); // This is a page with slug `official-tournaments`
 		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']); // This is a page with slug `celebrity-picks`
 		add_shortcode('wpbb-bracket-page', [$this, 'render_bracket_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
