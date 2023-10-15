@@ -222,8 +222,16 @@ class Wpbb_BracketApi extends WP_REST_Controller {
   public function delete_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
-    $deleted = $this->bracket_repo->delete($id);
-    return new WP_REST_Response($deleted, 200);
+    if (current_user_can('wpbb_delete_bracket', $id)) {
+      $deleted = $this->bracket_repo->delete($id);
+      return new WP_REST_Response($deleted, 200);
+    } else {
+      return new WP_Error(
+        'not-authorized',
+        'You are not authorized to delete this bracket.',
+        ['status' => 403]
+      );
+    }
   }
 
   /**

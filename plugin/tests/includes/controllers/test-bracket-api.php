@@ -257,6 +257,78 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals('trash', $bracket->status);
   }
 
+  public function test_owner_can_delete_bracket() {
+    $user = self::factory()->user->create_and_get();
+    wp_set_current_user($user->ID);
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => $user->ID,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $request = new WP_REST_Request(
+      'DELETE',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(200, $response->get_status());
+
+    $bracket = $this->bracket_repo->get($bracket->id);
+    $this->assertNotNull($bracket);
+    $this->assertEquals('trash', $bracket->status);
+  }
+
+  public function test_non_owner_cannot_delete_bracket() {
+    $user = self::factory()->user->create_and_get();
+    wp_set_current_user($user->ID);
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => $user->ID + 1,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $request = new WP_REST_Request(
+      'DELETE',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(403, $response->get_status());
+
+    $bracket = $this->bracket_repo->get($bracket->id);
+    $this->assertNotNull($bracket);
+    $this->assertEquals('publish', $bracket->status);
+  }
+
   public function test_notification_is_sent_when_results_are_updated() {
     $notification_service = $this->getMockBuilder(
       'Wpbb_Notification_Service_Interface'

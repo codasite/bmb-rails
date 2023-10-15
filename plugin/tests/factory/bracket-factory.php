@@ -2,6 +2,8 @@
 require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-match.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-team.php';
 
 /**
  * Class WPBB_UnitTest_Factory_For_Play

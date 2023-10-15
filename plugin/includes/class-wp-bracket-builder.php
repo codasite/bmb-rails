@@ -310,6 +310,13 @@ class Wp_Bracket_Builder {
       10,
       2
     );
+    $this->loader->add_filter(
+      'user_has_cap',
+      $public_hooks,
+      'user_cap_filter',
+      10,
+      3
+    );
 
     $this->loader->add_action('init', $shortcodes, 'add_shortcodes');
   }

@@ -39,6 +39,32 @@ class Wpbb_Public_Hooks
 		);
 	}
 
+
+	public function user_cap_filter($allcaps, $cap, $args) {
+		// check if user is admin. if so, bail
+		$requested = $args[0];
+		if (!str_starts_with($requested, 'wpbb_')) {
+			return $allcaps;
+		}
+		if (isset($allcaps['administrator']) && $allcaps['administrator'] === true) {
+			return $allcaps;
+		}
+		$user_id = $args[1];
+		$post_id = $args[2];
+		switch ($requested) {
+			case 'wpbb_delete_bracket':
+			case 'wpbb_edit_bracket':
+				$post = get_post($post_id);
+				if ($post->post_type === 'bracket' && (int) $post->post_author === (int) $user_id) {
+					$allcaps[$cap[0]] = true;
+				}
+				break;
+			default:
+				break;
+		}
+		return $allcaps;
+	}
+
 	/**
 	 * Sort plays by a field in the plays table
 	 * 
