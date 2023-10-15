@@ -108,6 +108,48 @@ class PlayAPITest extends WPBB_UnitTestCase {
     );
   }
 
+  public function test_create_play_current_user_is_author() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'generate_images' => false,
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $response = rest_do_request($request);
+    $this->assertEquals(201, $response->get_status());
+    $this->assertEquals(get_current_user_id(), $response->get_data()->author);
+
+    $play = $this->play_repo->get($response->get_data()->id);
+    $this->assertNotNull($play);
+    $this->assertEquals(get_current_user_id(), $play->author);
+  }
+
   public function test_create_play_generate_images() {
     $integration = $this->createMock(Wpbb_ProductIntegrationInterface::class);
     $integration->expects($this->once())->method('generate_images');
