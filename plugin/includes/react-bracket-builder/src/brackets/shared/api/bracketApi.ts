@@ -1,14 +1,5 @@
 import * as Sentry from '@sentry/react'
-import {
-  HTMLtoImageReq,
-  HTMLtoImageRes,
-  PlayReq,
-  PlayRes,
-  TemplateReq,
-  TemplateRes,
-  TournamentReq,
-  TournamentRes,
-} from './types/bracket'
+import { PlayReq, PlayRes, BracketReq, BracketRes } from './types/bracket'
 
 interface RequestOptions {
   method?: string
@@ -19,9 +10,8 @@ interface RequestOptions {
 declare var wpbb_ajax_obj: any
 class BracketApi {
   private baseUrl: string = ''
-  private templatesPath: string = 'templates'
+  private bracketsPath: string = 'brackets'
   private playsPath: string = 'plays'
-  private tournamentsPath: string = 'tournaments'
   private nonce: string = ''
   constructor() {
     if (typeof wpbb_ajax_obj !== 'undefined') {
@@ -29,45 +19,23 @@ class BracketApi {
       this.nonce = wpbb_ajax_obj.nonce
     }
   }
-  async createTemplate(template: TemplateReq): Promise<TemplateRes> {
-    const options: RequestOptions = { method: 'POST', body: template }
-    return await this.performRequest(this.templatesPath, options)
+  async createBracket(bracket: BracketReq): Promise<BracketRes> {
+    const options: RequestOptions = { method: 'POST', body: bracket }
+    return await this.performRequest(this.bracketsPath, options)
   }
-  async updateTemplate(
-    templateId: number,
-    template: Partial<TemplateReq>
-  ): Promise<TemplateRes> {
-    const options: RequestOptions = { method: 'PATCH', body: template }
+  async updateBracket(
+    bracketId: number,
+    bracket: Partial<BracketReq>
+  ): Promise<BracketRes> {
+    const options: RequestOptions = { method: 'PATCH', body: bracket }
     return await this.performRequest(
-      `${this.templatesPath}/${templateId}`,
+      `${this.bracketsPath}/${bracketId}`,
       options
     )
-  }
-  async createTournament(tournament: TournamentReq): Promise<TournamentRes> {
-    const options: RequestOptions = { method: 'POST', body: tournament }
-    return await this.performRequest(this.tournamentsPath, options)
   }
   async createPlay(play: PlayReq): Promise<PlayRes> {
     const options: RequestOptions = { method: 'POST', body: play }
     return await this.performRequest(this.playsPath, options)
-  }
-  async updateTournament(
-    tournamentId: number,
-    tournament: Partial<TournamentReq>
-  ): Promise<TournamentRes> {
-    const options: RequestOptions = { method: 'PATCH', body: tournament }
-    return await this.performRequest(
-      `${this.tournamentsPath}/${tournamentId}`,
-      options
-    )
-  }
-  async htmlToImage(req: HTMLtoImageReq): Promise<HTMLtoImageRes> {
-    const options: RequestOptions = {
-      method: 'POST',
-      body: req,
-      snakeCaseBody: false,
-    }
-    return await this.performRequest('html-to-image', options)
   }
   async performRequest(
     path: string,

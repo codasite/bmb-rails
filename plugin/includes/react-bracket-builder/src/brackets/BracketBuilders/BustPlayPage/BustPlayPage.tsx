@@ -54,15 +54,15 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 
   useEffect(() => {
     const picks = play?.picks
-    const tournamentTitle = play?.tournament?.title
+    const bracketTitle = play?.bracket?.title
     const authorDisplayName = play?.authorDisplayName
     const title = authorDisplayName
-      ? `${authorDisplayName}'s ${tournamentTitle} picks`
-      : tournamentTitle
-    setBracketMeta({ title, date: play?.tournament?.date })
-    const template = play?.tournament?.bracketTemplate
-    const matches = template?.matches
-    const numTeams = template?.numTeams
+      ? `${authorDisplayName}'s ${bracketTitle} picks`
+      : bracketTitle
+    setBracketMeta({ title, date: play?.bracket?.date })
+    const bracket = play?.bracket?.bracketBracket
+    const matches = bracket?.matches
+    const numTeams = bracket?.numTeams
     if (picks && matches) {
       const tree = MatchTree.fromPicks(numTeams, matches, picks)
 

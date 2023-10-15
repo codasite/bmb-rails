@@ -7,6 +7,11 @@ import { ResultsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import checkIcon from '../../shared/assets/check.svg'
 import { bracketApi } from '../../shared/api/bracketApi'
+import {
+  WithBracketMeta,
+  WithMatchTree,
+  WithProvider,
+} from '../../shared/components/HigherOrder'
 
 const CustomCheckbox = (props: any) => {
   const { id, checked, onChange } = props
@@ -39,30 +44,30 @@ const CustomCheckbox = (props: any) => {
   )
 }
 
-interface TournamentResultsBuilderProps {
+interface BracketResultsBuilderProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
-  tournament?: any
-  myTournamentsUrl?: string
+  bracket?: any
+  myBracketsUrl?: string
 }
 
-const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
-  const { matchTree, setMatchTree, tournament, myTournamentsUrl } = props
+const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
+  const { matchTree, setMatchTree, bracket, myBracketsUrl } = props
 
   const [bracketTitle, setBracketTitle] = useState('')
   const [bracketDate, setBracketDate] = useState('')
   const [notifyParticipants, setNotifyParticipants] = useState(true)
-  const [tournamentId, setTournamentId] = useState(0)
+  const [bracketId, setBracketId] = useState(0)
 
   useEffect(() => {
-    if (tournament && tournament.bracketTemplate) {
-      const template = tournament.bracketTemplate
-      const numTeams = template.numTeams
-      const matches = template.matches
-      const results = tournament.results
-      setBracketTitle(tournament.title)
-      setBracketDate(tournament.date)
-      setTournamentId(tournament.id)
+    if (bracket && bracket.bracketBracket) {
+      const bracket = bracket.bracketBracket
+      const numTeams = bracket.numTeams
+      const matches = bracket.matches
+      const results = bracket.results
+      setBracketTitle(bracket.title)
+      setBracketDate(bracket.date)
+      setBracketId(bracket.id)
       let tree: MatchTree | null
       if (results && results.length > 0) {
         tree = MatchTree.fromPicks(numTeams, matches, results)
@@ -89,7 +94,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
         updateNotifyParticipants: notifyParticipants,
       }
       bracketApi
-        .updateTournament(tournamentId, data)
+        .updateBracket(bracketId, data)
         .then((res) => {
           console.log(res)
         })
@@ -97,7 +102,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
           console.log(err)
         })
         .finally(() => {
-          if (myTournamentsUrl) window.location.href = myTournamentsUrl || ''
+          if (myBracketsUrl) window.location.href = myBracketsUrl || ''
         })
     }
   }
@@ -133,7 +138,7 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
                 }`}
               >
                 <ActionButton variant="big-yellow" onClick={handleUpdatePicks}>
-                  {complete ? 'Complete Tournament' : 'Update Picks'}
+                  {complete ? 'Complete Bracket' : 'Update Picks'}
                 </ActionButton>
                 <div className="tw-flex tw-gap-20 tw-items-center tw-self-center">
                   <CustomCheckbox
@@ -157,4 +162,8 @@ const TournamentResultsBuilder = (props: TournamentResultsBuilderProps) => {
   )
 }
 
-export default TournamentResultsBuilder
+const Wrapped = WithProvider(
+  WithMatchTree(WithBracketMeta(BracketResultsBuilder))
+)
+
+export default Wrapped

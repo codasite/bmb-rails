@@ -3,11 +3,7 @@ import { bracketApi } from '../../shared/api/bracketApi'
 import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
 import { AddTeamsPage } from './AddTeamsPage'
 import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
-import {
-  TemplateReq,
-  TemplateRes,
-  TournamentReq,
-} from '../../shared/api/types/bracket'
+import { BracketReq, BracketRes } from '../../shared/api/types/bracket'
 import {
   WithBracketMeta,
   WithDarkMode,
@@ -21,27 +17,25 @@ const defaultInitialPickerIndex = 0
 const teamPickerDefaults = [16, 32, 64]
 const teamPickerMin = [2, 17, 33]
 const teamPickerMax = [31, 63, 64]
-interface TemplateBuilderProps {
-  template?: TemplateRes
+interface BracketBuilderProps {
+  bracket?: BracketRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
-  saveTemplateLink?: string
-  saveTournamentLink?: string
+  saveBracketLink?: string
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
-const TemplateBuilder = (props: TemplateBuilderProps) => {
+const BracketBuilder = (props: BracketBuilderProps) => {
   const {
     matchTree,
     setMatchTree,
-    saveTemplateLink,
-    saveTournamentLink,
-    template,
+    saveBracketLink,
+    bracket,
     bracketMeta,
     setBracketMeta,
   } = props
-  console.log('template builder')
+  console.log('bracket builder')
   const [currentPage, setCurrentPage] = useState('num-teams')
   const [numTeams, setNumTeams] = useState(
     teamPickerDefaults[defaultInitialPickerIndex]
@@ -63,12 +57,12 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   }, [])
 
   useEffect(() => {
-    if (template) {
-      const { numTeams, wildcardPlacement, matches } = template
-      console.log('template found', template)
+    if (bracket) {
+      const { numTeams, wildcardPlacement, matches } = bracket
+      console.log('bracket found', bracket)
       setBracketMeta?.({
-        title: `${template.title} Copy` || defaultBracketName,
-        date: template.date,
+        title: `${bracket.title} Copy` || defaultBracketName,
+        date: bracket.date,
       })
       setNumTeams(numTeams)
       setWildcardPlacement(wildcardPlacement)
@@ -87,7 +81,7 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
         setCurrentPage('add-teams')
       }
     }
-  }, [template])
+  }, [bracket])
   const pickerStateFromNumTeams = (numTeams: number) => {
     const initialPickerIndex = teamPickerMax.findIndex((max) => numTeams <= max)
     if (initialPickerIndex >= 0) {
@@ -112,8 +106,8 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
   }
-  const getTemplateReq = () => {
-    const req: TemplateReq = {
+  const getBracketReq = () => {
+    const req: BracketReq = {
       title: bracketMeta.title,
       date: bracketMeta.date,
       numTeams: numTeams,
@@ -123,33 +117,20 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
     }
     return req
   }
-  const handleSaveTemplateClick = () => {
+  const handleSaveBracketClick = () => {
     if (!matchTree || !matchTree.allTeamsAdded()) {
       return
     }
     bracketApi
-      .createTemplate(getTemplateReq())
+      .createBracket(getBracketReq())
       .then((res) => {
-        if (saveTemplateLink) {
-          window.location.href = saveTemplateLink
+        if (saveBracketLink) {
+          window.location.href = saveBracketLink
         }
       })
       .catch((err) => {
         console.error(err)
       })
-  }
-  const handleSaveTournamentClick = (tournamentName: string) => {
-    const tournamentReq: TournamentReq = {
-      title: tournamentName,
-      status: 'publish',
-      bracketTemplate: getTemplateReq(),
-      date: bracketMeta.date,
-    }
-    return bracketApi.createTournament(tournamentReq).then((res) => {
-      if (saveTournamentLink) {
-        window.location.href = saveTournamentLink
-      }
-    })
   }
   return (
     <div className="wpbb-reset tw-uppercase">
@@ -176,14 +157,13 @@ const TemplateBuilder = (props: TemplateBuilderProps) => {
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           handleBack={() => setCurrentPage('num-teams')}
-          handleSaveTemplate={handleSaveTemplateClick}
-          handleCreateTournament={handleSaveTournamentClick}
+          handleSaveBracket={handleSaveBracketClick}
         />
       )}
     </div>
   )
 }
-const WrappedTemplateBuilder = WithProvider(
-  WithDarkMode(WithMatchTree(WithBracketMeta(TemplateBuilder)))
+const WrappedBracketBuilder = WithProvider(
+  WithDarkMode(WithMatchTree(WithBracketMeta(BracketBuilder)))
 )
-export default WrappedTemplateBuilder
+export default WrappedBracketBuilder

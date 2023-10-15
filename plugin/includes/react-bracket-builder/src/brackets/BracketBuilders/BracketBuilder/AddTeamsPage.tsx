@@ -8,25 +8,16 @@ import {
 } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
-import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { useWindowDimensions } from '../../../utils/hooks'
-import { TextFieldModal } from '../../../modals/TextFieldModal'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
-  handleSaveTemplate: () => void
-  handleCreateTournament: (tournamentName: string) => Promise<void>
+  handleSaveBracket: () => void
   handleBack: () => void
 }
 export const AddTeamsPage = (props: AddTeamsPageProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    handleSaveTemplate,
-    handleCreateTournament,
-    handleBack,
-  } = props
+  const { matchTree, setMatchTree, handleSaveBracket, handleBack } = props
   const createDisabled = !matchTree || !matchTree.allTeamsAdded()
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < 768
@@ -39,22 +30,6 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         />
       </div>
     )
-  }
-  const [showModal, setShowModal] = useState(false)
-  const [input, setInput] = useState('')
-  const [hasError, setHasError] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const handleSubmit = () => {
-    if (!input) {
-      setHasError(true)
-      return
-    }
-    setLoading(true)
-    handleCreateTournament(input).catch((err) => {
-      console.error(err)
-      setLoading(false)
-      setHasError(true)
-    })
   }
   return (
     <div
@@ -70,7 +45,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
           >
             <ArrowNarrowLeft />
             <span className="tw-font-500 tw-text-20 tw-text-white ">
-              Create Template
+              Create Bracket
             </span>
           </a>
         </div>
@@ -92,40 +67,13 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
             variant="blue"
             gap={16}
             disabled={createDisabled}
-            onClick={handleSaveTemplate}
+            onClick={handleSaveBracket}
           >
             <SaveIcon />
             <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-              Save As Template
+              Save
             </span>
           </ActionButton>
-          <ActionButton
-            variant="green"
-            gap={16}
-            disabled={createDisabled}
-            onClick={() => setShowModal(true)}
-          >
-            <PlayIcon />
-            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-              Create Tournament
-            </span>
-          </ActionButton>
-          {showModal && (
-            <TextFieldModal
-              submitButtonText={'Create'}
-              onSubmit={handleSubmit}
-              header={'Create Tournament'}
-              input={input}
-              setInput={setInput}
-              hasError={hasError}
-              setHasError={setHasError}
-              loading={loading}
-              errorText={'Tournament name is required'}
-              placeholderText={'Tournament name...'}
-              setShow={setShowModal}
-              show={showModal}
-            />
-          )}
         </div>
       </div>
     </div>

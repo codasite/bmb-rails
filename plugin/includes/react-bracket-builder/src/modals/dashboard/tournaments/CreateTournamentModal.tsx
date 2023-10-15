@@ -8,34 +8,34 @@ import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
 import { CancelButton } from '../../ModalButtons'
 
-export const CreateTournamentModal = (props: {
-  myTemplatesUrl: string
-  bracketTemplateBuilderUrl: string
+export const CreateBracketModal = (props: {
+  myBracketsUrl: string
+  bracketBuilderUrl: string
   upgradeAccountUrl: string
-  canCreateTournament: boolean
+  canCreateBracket: boolean
 }) => {
   const [show, setShow] = useState(false)
   addClickHandlers({
-    buttonClassName: 'wpbb-create-tournament-button',
+    buttonClassName: 'wpbb-create-bracket-button',
     onButtonClick: (b) => {
       setShow(true)
     },
   })
   return (
     <Modal show={show} setShow={setShow}>
-      {props.canCreateTournament && (
+      {props.canCreateBracket && (
         <div>
-          <h1 className="tw-text-32 tw-leading-10 tw-text-center tw-font-white tw-whitespace-pre-line tw-mb-50">{`Host a tournament.
+          <h1 className="tw-text-32 tw-leading-10 tw-text-center tw-font-white tw-whitespace-pre-line tw-mb-50">{`Host a bracket.
  invite & compete with friends.`}</h1>
           <a
-            href={props.myTemplatesUrl}
+            href={props.myBracketsUrl}
             className="tw-border-solid tw-border tw-border-green tw-bg-green/20 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 md:tw-p-40 hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-20 tw-font-500 tw-mb-15 tw-p-20"
           >
             <FileIcon />
-            <span>Use a template</span>
+            <span>Use a bracket</span>
           </a>
           <a
-            href={props.bracketTemplateBuilderUrl}
+            href={props.bracketBuilderUrl}
             className="tw-border-solid tw-border tw-border-white tw-bg-white/20 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 md:tw-p-40 hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-20 tw-font-500 tw-mb-15 tw-p-20"
           >
             <PlusIcon />
@@ -44,7 +44,7 @@ export const CreateTournamentModal = (props: {
           <CancelButton onClick={() => setShow(false)} />
         </div>
       )}
-      {!props.canCreateTournament && (
+      {!props.canCreateBracket && (
         <div className="tw-text-center">
           <LogoDark />
           <div className="tw-flex tw-items-end tw-justify-center tw-mt-24">
@@ -55,7 +55,7 @@ export const CreateTournamentModal = (props: {
           <ul className="tw-list-none tw-p-0 tw-m-0 tw-text-16 tw-font-700">
             <li className="tw-flex tw-gap-10 tw-items-center tw-justify-center tw-py-4">
               <CheckIcon className="tw-text-red" />
-              <span>Host and score tournaments</span>
+              <span>Host and score brackets</span>
             </li>
             <li className="tw-flex tw-gap-10 tw-items-center tw-justify-center tw-py-4">
               <CheckIcon className="tw-text-red" />

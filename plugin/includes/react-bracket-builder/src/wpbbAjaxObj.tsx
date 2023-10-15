@@ -4,8 +4,7 @@ export interface WpbbAjaxObj {
   page: string
   nonce: string
   rest_url: string
-  tournament: any
-  template: any
+  bracket: any
   play: any
   bracketUrlThemeMap: OverlayUrlThemeMap
   cssUrl: string
@@ -15,16 +14,15 @@ export interface WpbbAjaxObj {
   sentryEnv: string
   sentryDsn: string
   post: any
-  myTemplatesUrl: string
-  myTournamentsUrl: string
-  bracketTemplateBuilderUrl: string
-  userCanCreateTournament: boolean
+  myBracketsUrl: string
+  bracketBuilderUrl: string
+  userCanCreateBracket: boolean
   homeUrl: string
   printOptions: PrintOptions
   thumbnailUrl: string
   authorDisplayName: string
   userDisplayName: string
-  tournamentTitle: string
+  bracketTitle: string
 }
 interface PrintOptions {
   theme: string

@@ -43,12 +43,12 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 
   useEffect(() => {
     const picks = play?.picks
-    const title = play?.tournament?.title ?? play.template?.title
-    const date = play?.tournament?.date ?? play.template?.date
+    const title = play?.bracket?.title ?? play.bracket?.title
+    const date = play?.bracket?.date ?? play.bracket?.date
     setBracketMeta({ title, date })
-    const template = play?.tournament?.bracketTemplate ?? play?.template
-    const matches = template?.matches
-    const numTeams = template?.numTeams
+    const bracket = play?.bracket?.bracketBracket ?? play?.bracket
+    const matches = bracket?.matches
+    const numTeams = bracket?.numTeams
     if (picks && matches) {
       const tree = MatchTree.fromPicks(numTeams, matches, picks)
       if (tree) {

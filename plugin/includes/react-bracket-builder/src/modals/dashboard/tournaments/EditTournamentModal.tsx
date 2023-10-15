@@ -7,8 +7,8 @@ import { ModalHeader } from '../../ModalHeader'
 import { ModalTextField } from '../../ModalTextFields'
 import { CancelButton, ConfirmButton } from '../../ModalButtons'
 
-export const EditTournamentModal = () => {
-  const [tournamentId, setTournamentId] = useState<number | null>(null)
+export const EditBracketModal = () => {
+  const [bracketId, setBracketId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [titleHasError, setTitleHasError] = useState(false)
@@ -16,15 +16,15 @@ export const EditTournamentModal = () => {
   const [dateHasError, setDateHasError] = useState(false)
   const [show, setShow] = useState(false)
   addClickHandlers({
-    buttonClassName: 'wpbb-edit-tournament-button',
+    buttonClassName: 'wpbb-edit-bracket-button',
     onButtonClick: (b) => {
-      setTitle(b.dataset.tournamentTitle)
-      setDate(b.dataset.tournamentDate)
-      setTournamentId(parseInt(b.dataset.tournamentId))
+      setTitle(b.dataset.bracketTitle)
+      setDate(b.dataset.bracketDate)
+      setBracketId(parseInt(b.dataset.bracketId))
       setShow(true)
     },
   })
-  const onEditTournament = () => {
+  const onEditBracket = () => {
     if (!title) {
       setTitleHasError(true)
       return
@@ -35,7 +35,7 @@ export const EditTournamentModal = () => {
     }
     setLoading(true)
     bracketApi
-      .updateTournament(tournamentId, {
+      .updateBracket(bracketId, {
         title: title,
         date: date,
       })
@@ -54,8 +54,8 @@ export const EditTournamentModal = () => {
         <div className="tw-flex tw-flex-col tw-gap-10">
           <ModalTextField
             hasError={titleHasError}
-            errorText={'Tournament name is required'}
-            placeholderText={'Tournament name...'}
+            errorText={'Bracket name is required'}
+            placeholderText={'Bracket name...'}
             input={title}
             setInput={setTitle}
             setHasError={setTitleHasError}
@@ -71,7 +71,7 @@ export const EditTournamentModal = () => {
           <div className={'tw-mb-30'}></div>
           <ConfirmButton
             disabled={loading || titleHasError}
-            onClick={onEditTournament}
+            onClick={onEditBracket}
           >
             {'Save'}
           </ConfirmButton>

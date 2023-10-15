@@ -4,35 +4,35 @@ import { bracketApi } from '../../../brackets/shared/api/bracketApi'
 import { TextFieldModal } from '../../TextFieldModal'
 import addClickHandlers from '../../addClickHandlers'
 
-export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
-  const [templateId, setTemplateId] = useState<number | null>(null)
-  const [templateDate, setTemplateDate] = useState<string>('')
+export const HostBracketModal = (props: { bracketsUrl: string }) => {
+  const [bracketId, setBracketId] = useState<number | null>(null)
+  const [bracketDate, setBracketDate] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [input, setInput] = useState('')
   const [hasError, setHasError] = useState(false)
   const [show, setShow] = useState(false)
   addClickHandlers({
-    buttonClassName: 'wpbb-host-tournament-button',
+    buttonClassName: 'wpbb-host-bracket-button',
     onButtonClick: (b) => {
-      setTemplateId(parseInt(b.dataset.templateId))
-      setTemplateDate(b.dataset.templateDate)
+      setBracketId(parseInt(b.dataset.bracketId))
+      setBracketDate(b.dataset.bracketDate)
       setShow(true)
     },
   })
-  const onHostTournament = () => {
+  const onHostBracket = () => {
     if (!input) {
       setHasError(true)
       return
     }
     setLoading(true)
     bracketApi
-      .createTournament({
-        bracketTemplateId: templateId,
+      .createBracket({
+        bracketBracketId: bracketId,
         title: input,
-        date: templateDate,
+        date: bracketDate,
       })
       .then((res) => {
-        window.location.href = props.tournamentsUrl
+        window.location.href = props.bracketsUrl
       })
       .catch((err) => {
         console.error(err)
@@ -42,15 +42,15 @@ export const HostTournamentModal = (props: { tournamentsUrl: string }) => {
   return (
     <TextFieldModal
       submitButtonText={'Host'}
-      onSubmit={onHostTournament}
-      header={'Host tournament'}
+      onSubmit={onHostBracket}
+      header={'Host bracket'}
       input={input}
       setInput={setInput}
       hasError={hasError}
       setHasError={setHasError}
       loading={loading}
-      errorText={'Tournament name is required'}
-      placeholderText={'Tournament name...'}
+      errorText={'Bracket name is required'}
+      placeholderText={'Bracket name...'}
       setShow={setShow}
       show={show}
     />

@@ -1,4 +1,4 @@
-import { HostTournamentModal } from './modals/dashboard/templates/HostTournamentModal'
+// import { HostBracketModal } from './modals/dashboard/brackets/HostBracketModal'
 import React from 'react'
 import App from './App'
 import { render } from 'react-dom'
@@ -7,34 +7,26 @@ import { bracketBuilderStore } from './brackets/shared/app/store'
 import { Provider } from 'react-redux'
 import { camelCaseKeys } from './brackets/shared/api/bracketApi'
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree'
-import { CreateTournamentModal } from './modals/dashboard/tournaments/CreateTournamentModal'
 import './styles/main.css'
-import { EditTemplateModal } from './modals/dashboard/templates/EditTemplateModal'
+import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
 import { WpbbAjaxObj } from './wpbbAjaxObj'
-import { EditTournamentModal } from './modals/dashboard/tournaments/EditTournamentModal'
-import ShareTournamentModal from './modals/dashboard/tournaments/ShareTournamentModal'
+import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
 tailwind.config.corePlugins.preflight = typeof wp === 'undefined'
 // Dynamically render components to avoid loading unused modules
-const Settings = React.lazy(
-  () => import('./brackets/AdminTemplateBuilder/Settings')
-)
-const PlayTournamentPage = React.lazy(
-  () =>
-    import(
-      './brackets/BracketBuilders/PlayTournamentBuilder/PlayTournamentPage'
-    )
+const PlayBracketPage = React.lazy(
+  () => import('./brackets/BracketBuilders/PlayBracketBuilder/PlayBracketPage')
 )
 const Gallery = React.lazy(() => import('./preview/Gallery'))
-const TemplateBuilder = React.lazy(
-  () => import('./brackets/BracketBuilders/TemplateBuilder/TemplateBuilder')
+const BracketBuilder = React.lazy(
+  () => import('./brackets/BracketBuilders/BracketBuilder/BracketBuilder')
 )
-const TournamentResultsBuilder = React.lazy(
+const BracketResultsBuilder = React.lazy(
   () =>
     import(
-      './brackets/BracketBuilders/TournamentResultsBuilder/TournamentResultsBuilder'
+      './brackets/BracketBuilders/BracketResultsBuilder/BracketResultsBuilder'
     )
 )
 
@@ -53,15 +45,13 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
   console.log('ajaxObj', ajaxObj)
   initializeSentry(ajaxObj)
-  renderSettings(ajaxObj)
   renderProductPreview(ajaxObj)
-  renderPlayTournamentBuilder(ajaxObj)
-  renderTemplateBuilder(ajaxObj)
-  renderPlayTemplate(ajaxObj)
-  renderTournamentResultsBuilder(ajaxObj)
+  renderBracketBuilder(ajaxObj)
+  renderPlayBracket(ajaxObj)
+  renderBracketResultsBuilder(ajaxObj)
   renderViewBracketPlay(ajaxObj)
-  renderMyTournamentsModals(ajaxObj)
-  renderMyTemplatesModals(ajaxObj)
+  renderMyBracketsModals(ajaxObj)
+  renderMyBracketsModals(ajaxObj)
   renderBustBracketPlay(ajaxObj)
 } else {
   renderPrintBracketPage()
@@ -92,81 +82,41 @@ function initializeSentry(ajaxObj: WpbbAjaxObj) {
     })
   }
 }
-function renderSettings(ajaxObj: WpbbAjaxObj) {
-  const page = ajaxObj.page
-  if (page === 'settings') {
-    // Render the App component into the DOM
-    render(
-      <App>
-        <Settings />
-      </App>,
-      document.getElementById('wpbb-admin-panel')
-    )
-  }
-}
-function renderTemplateBuilder(ajaxObj: WpbbAjaxObj) {
-  const { myTemplatesUrl, myTournamentsUrl, template } = ajaxObj
+function renderBracketBuilder(ajaxObj: WpbbAjaxObj) {
+  const { myBracketsUrl, bracket } = ajaxObj
   renderDiv(
     <App>
-      <TemplateBuilder
-        template={template}
-        saveTemplateLink={myTemplatesUrl}
-        saveTournamentLink={myTournamentsUrl}
-      />
+      <BracketBuilder bracket={bracket} saveBracketLink={myBracketsUrl} />
     </App>,
-    'wpbb-template-builder'
+    'wpbb-bracket-builder'
   )
 }
 
-function renderPlayTemplate(ajaxObj: WpbbAjaxObj) {
-  const { template, redirectUrl, cssUrl, userDisplayName } = ajaxObj
-  if (template) {
+function renderPlayBracket(ajaxObj: WpbbAjaxObj) {
+  const { bracket, redirectUrl, cssUrl, userDisplayName } = ajaxObj
+  if (bracket) {
     renderDiv(
       <App>
-        <PlayTournamentPage
-          bracketStylesheetUrl={cssUrl}
-          template={template}
-          apparelUrl={redirectUrl}
-        />
+        <PlayBracketPage bracket={bracket} apparelUrl={redirectUrl} />
       </App>,
-      'wpbb-play-template'
+      'wpbb-play-bracket'
     )
   }
 }
 
-function renderPlayTournamentBuilder(ajaxObj: WpbbAjaxObj) {
-  const { tournament, redirectUrl, cssUrl, userDisplayName } = ajaxObj
-  if (tournament) {
+function renderBracketResultsBuilder(ajaxObj: WpbbAjaxObj) {
+  const builderDiv = document.getElementById('wpbb-bracket-results-builder')
+  const { bracket, myBracketsUrl } = ajaxObj
+
+  if (bracket) {
     renderDiv(
       <App>
-        <PlayTournamentPage
-          bracketStylesheetUrl={cssUrl}
-          tournament={tournament}
-          apparelUrl={redirectUrl}
+        <BracketResultsBuilder
+          bracket={bracket}
+          myBracketsUrl={myBracketsUrl}
         />
       </App>,
-      'wpbb-play-tournament-builder'
-    )
-  }
-}
-function renderTournamentResultsBuilder(ajaxObj: WpbbAjaxObj) {
-  const builderDiv = document.getElementById('wpbb-tournament-results-builder')
-  const { tournament, myTournamentsUrl } = ajaxObj
-  const tourney = camelCaseKeys(tournament)
-  if (builderDiv && tourney) {
-    const TournamentResultsBuilderWithMatchTree = withMatchTree(
-      TournamentResultsBuilder
-    )
-    render(
-      <App>
-        <Provider store={bracketBuilderStore}>
-          <TournamentResultsBuilderWithMatchTree
-            tournament={tourney}
-            myTournamentsUrl={myTournamentsUrl}
-          />
-        </Provider>
-      </App>,
-      builderDiv
+      'wpbb-bracket-results-builder'
     )
   }
 }
@@ -198,6 +148,7 @@ function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
   }
 }
 
+// This function is used to render the print bracket page outside of wordpress
 function renderPrintBracketPage() {
   const builderDiv = document.getElementById('wpbb-print-play')
   if (!builderDiv) return
@@ -218,6 +169,7 @@ function renderPrintBracketPage() {
     'wpbb-print-play'
   )
 }
+// This renders the image gallery on the bracket product preview page
 function renderProductPreview(ajaxObj: WpbbAjaxObj) {
   renderDiv(
     <App>
@@ -230,28 +182,13 @@ function renderProductPreview(ajaxObj: WpbbAjaxObj) {
     'wpbb-product-preview'
   )
 }
-function renderMyTournamentsModals(ajaxObj: WpbbAjaxObj) {
+function renderMyBracketsModals(ajaxObj: WpbbAjaxObj) {
   renderDiv(
     <>
-      <CreateTournamentModal
-        myTemplatesUrl={ajaxObj.myTemplatesUrl}
-        bracketTemplateBuilderUrl={ajaxObj.bracketTemplateBuilderUrl}
-        canCreateTournament={ajaxObj.userCanCreateTournament}
-        upgradeAccountUrl={ajaxObj.homeUrl}
-      />
-      <EditTournamentModal />
-      <ShareTournamentModal />
+      <EditBracketModal />
+      <ShareBracketModal />
     </>,
-    'wpbb-my-tournaments-modals'
-  )
-}
-function renderMyTemplatesModals(ajaxObj: WpbbAjaxObj) {
-  renderDiv(
-    <>
-      <HostTournamentModal tournamentsUrl={ajaxObj.myTournamentsUrl} />
-      <EditTemplateModal />
-    </>,
-    'wpbb-my-templates-modals'
+    'wpbb-my-brackets-modals'
   )
 }
 function renderDiv(element: React.FunctionComponentElement<any>, id: string) {

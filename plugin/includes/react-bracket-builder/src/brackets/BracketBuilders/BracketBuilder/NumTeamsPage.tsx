@@ -3,7 +3,7 @@ import { NumTeamsPicker } from './NumTeamsPicker'
 import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-import { BracketTemplatePreview } from './BracketTemplatePreview'
+import { BracketPreview } from './BracketPreview'
 import { isPowerOfTwo } from '../../shared/utils'
 import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
@@ -237,7 +237,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
         />
         {matchTree && (
           <div>
-            <BracketTemplatePreview matchTree={matchTree} />
+            <BracketPreview matchTree={matchTree} />
           </div>
         )}
         <div

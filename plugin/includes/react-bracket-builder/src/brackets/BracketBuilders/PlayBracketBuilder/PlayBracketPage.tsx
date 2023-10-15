@@ -10,11 +10,7 @@ import {
   WithMatchTree,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import {
-  PlayReq,
-  TemplateRes,
-  TournamentRes,
-} from '../../shared/api/types/bracket'
+import { PlayReq, BracketRes } from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
@@ -22,8 +18,7 @@ import { PlayBuilder } from './PlayBuilder'
 interface PlayPageProps {
   apparelUrl: string
   bracketStylesheetUrl: string
-  tournament?: TournamentRes
-  template?: TemplateRes
+  bracket?: BracketRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   darkMode?: boolean
@@ -34,8 +29,7 @@ interface PlayPageProps {
 
 const PlayPage = (props: PlayPageProps) => {
   const {
-    tournament,
-    template,
+    bracket,
     apparelUrl,
     bracketStylesheetUrl,
     matchTree,
@@ -52,18 +46,11 @@ const PlayPage = (props: PlayPageProps) => {
 
   useEffect(() => {
     let tree: Nullable<MatchTree> = null
-    if (tournament && tournament.bracketTemplate) {
-      const template = tournament.bracketTemplate
-      const numTeams = template.numTeams
-      const matches = template.matches
-      setBracketMeta?.({ title: tournament.title, date: tournament.date })
+    if (bracket) {
+      const numTeams = bracket.numTeams
+      const matches = bracket.matches
       tree = MatchTree.fromMatchRes(numTeams, matches)
-      // Better to have separate components for template and tournament
-    } else if (template) {
-      const numTeams = template.numTeams
-      const matches = template.matches
-      tree = MatchTree.fromMatchRes(numTeams, matches)
-      setBracketMeta?.({ title: template.title, date: template.date })
+      setBracketMeta?.({ title: bracket.title, date: bracket.date })
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
@@ -120,8 +107,8 @@ const PlayPage = (props: PlayPageProps) => {
   const handleApparelClick = () => {
     const picks = matchTree?.toMatchPicks()
     console.log(picks)
-    const tournamentId = tournament?.id
-    console.log(tournamentId)
+    const bracketId = bracket?.id
+    console.log(bracketId)
     if (!picks) {
       const msg = 'Cannot create play. Missing picks'
       console.error(msg)
@@ -129,8 +116,7 @@ const PlayPage = (props: PlayPageProps) => {
       return
     }
     const playReq: PlayReq = {
-      tournamentId: tournament?.id,
-      templateId: tournamentId ? undefined : template?.id,
+      bracketId: bracket?.id,
       picks: picks,
     }
 
@@ -177,42 +163,42 @@ const PlayPage = (props: PlayPageProps) => {
     // Random key to link the two images together
     const key = Math.random().toString(36).substring(7)
     const promises = [
-      bracketApi.htmlToImage({
-        html: darkModeTopHTML,
-        inchHeight: 16,
-        inchWidth: 12,
-        deviceScaleFactor: 1,
-        themeMode: `dark`,
-        bracketPlacement: 'top',
-        s3Key: `bracket-${key}-dark-top.png`,
-      }),
-      bracketApi.htmlToImage({
-        html: lightModeTopHTML,
-        inchHeight: 16,
-        inchWidth: 12,
-        deviceScaleFactor: 1,
-        themeMode: `light`,
-        bracketPlacement: 'top',
-        s3Key: `bracket-${key}-light-top.png`,
-      }),
-      bracketApi.htmlToImage({
-        html: darkModeCenterHTML,
-        inchHeight: 16,
-        inchWidth: 12,
-        deviceScaleFactor: 1,
-        themeMode: `dark`,
-        bracketPlacement: 'center',
-        s3Key: `bracket-${key}-dark-center.png`,
-      }),
-      bracketApi.htmlToImage({
-        html: lightModeCenterHTML,
-        inchHeight: 16,
-        inchWidth: 12,
-        deviceScaleFactor: 1,
-        themeMode: `light`,
-        bracketPlacement: 'center',
-        s3Key: `bracket-${key}-light-center.png`,
-      }),
+      // bracketApi.htmlToImage({
+      //   html: darkModeTopHTML,
+      //   inchHeight: 16,
+      //   inchWidth: 12,
+      //   deviceScaleFactor: 1,
+      //   themeMode: `dark`,
+      //   bracketPlacement: 'top',
+      //   s3Key: `bracket-${key}-dark-top.png`,
+      // }),
+      // bracketApi.htmlToImage({
+      //   html: lightModeTopHTML,
+      //   inchHeight: 16,
+      //   inchWidth: 12,
+      //   deviceScaleFactor: 1,
+      //   themeMode: `light`,
+      //   bracketPlacement: 'top',
+      //   s3Key: `bracket-${key}-light-top.png`,
+      // }),
+      // bracketApi.htmlToImage({
+      //   html: darkModeCenterHTML,
+      //   inchHeight: 16,
+      //   inchWidth: 12,
+      //   deviceScaleFactor: 1,
+      //   themeMode: `dark`,
+      //   bracketPlacement: 'center',
+      //   s3Key: `bracket-${key}-dark-center.png`,
+      // }),
+      // bracketApi.htmlToImage({
+      //   html: lightModeCenterHTML,
+      //   inchHeight: 16,
+      //   inchWidth: 12,
+      //   deviceScaleFactor: 1,
+      //   themeMode: `light`,
+      //   bracketPlacement: 'center',
+      //   s3Key: `bracket-${key}-light-center.png`,
+      // }),
     ]
     setProcessing(true)
     Promise.all(promises)
