@@ -73,6 +73,7 @@ abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface {
    */
   public function get_update_post_data(): array {
     return [
+      'ID' => $this->id,
       'post_title' => $this->title,
       'post_status' => $this->status,
     ];

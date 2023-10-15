@@ -13,17 +13,12 @@ $play_repo = new Wpbb_BracketPlayRepo();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_bracket_id'])) {
 	if (wp_verify_nonce($_POST['archive_bracket_nonce'], 'archive_bracket_action')) {
-		$bracket = $bracket_repo->get($_POST['archive_bracket_id']);
-		$bracket->status = 'archive';
-		$bracket_repo->update($bracket);
+		$bracket_repo->update($_POST['archive_bracket_id'], [
+			'status' => 'archive',
+		]);
 	}
 }
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_bracket_id'])) {
-// 	if (wp_verify_nonce($_POST['delete_bracket_nonce'], 'delete_bracket_action')) {
-// 		$bracket_repo->delete($_POST['delete_bracket_id']);
-// 	}
-// }
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $paged_status = get_query_var('status');
@@ -230,7 +225,7 @@ function get_bracket_icon_buttons($bracket) {
 }
 
 function archived_bracket_tag() {
-	return bracket_tag('Archive', 'white/50');
+	return bracket_tag('Archive', 'white/50', false);
 }
 
 function private_bracket_tag() {
