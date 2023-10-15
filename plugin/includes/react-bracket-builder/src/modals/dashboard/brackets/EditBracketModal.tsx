@@ -24,6 +24,14 @@ export const EditBracketModal = () => {
       setShow(true)
     },
   })
+
+  const resetState = () => {
+    setBracketId(null)
+    setLoading(false)
+    setTitle('')
+    setShow(false)
+  }
+
   const onEditBracket = () => {
     if (!title) {
       setTitleHasError(true)
@@ -44,7 +52,9 @@ export const EditBracketModal = () => {
       })
       .catch((err) => {
         console.error(err)
-        setLoading(false)
+      })
+      .finally(() => {
+        resetState()
       })
   }
   return (

@@ -241,6 +241,8 @@ export const ActionButton = (props: ActionButtonProps) => {
       return <BigYellowButton {...props} />
     case 'white':
       return <WhiteButton {...props} />
+    case 'red':
+      return <RedButton {...props} />
     case 'big-red':
       return <BigRedButton {...props} />
     default:

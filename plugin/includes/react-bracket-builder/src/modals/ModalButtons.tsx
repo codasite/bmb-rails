@@ -1,6 +1,29 @@
 import { ActionButton } from '../brackets/shared/components/ActionButtons'
 import * as React from 'react'
 
+export const DangerButton = (props: {
+  disabled: boolean
+  onClick: () => void
+  children?: React.ReactNode
+}) => {
+  return (
+    <ActionButton
+      variant="red"
+      paddingY={12}
+      paddingX={16}
+      fontSize={16}
+      fontWeight={700}
+      disabled={props.disabled}
+      onClick={props.onClick}
+      className={
+        (props.disabled ? '' : 'hover:tw-text-white/75') + ' tw-w-full'
+      }
+    >
+      {props.children}
+    </ActionButton>
+  )
+}
+
 export const ConfirmButton = (props: {
   disabled: boolean
   onClick: () => void

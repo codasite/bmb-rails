@@ -11,6 +11,7 @@ import './styles/main.css'
 import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
 import { WpbbAjaxObj } from './wpbbAjaxObj'
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
+import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -50,7 +51,6 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   renderPlayBracket(ajaxObj)
   renderBracketResultsBuilder(ajaxObj)
   renderViewBracketPlay(ajaxObj)
-  renderMyBracketsModals(ajaxObj)
   renderMyBracketsModals(ajaxObj)
   renderBustBracketPlay(ajaxObj)
 } else {
@@ -187,6 +187,7 @@ function renderMyBracketsModals(ajaxObj: WpbbAjaxObj) {
     <>
       <EditBracketModal />
       <ShareBracketModal />
+      <DeleteBracketModal />
     </>,
     'wpbb-my-brackets-modals'
   )

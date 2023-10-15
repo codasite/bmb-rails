@@ -33,6 +33,13 @@ class BracketApi {
       options
     )
   }
+  async deleteBracket(bracketId: number): Promise<boolean> {
+    const options: RequestOptions = { method: 'DELETE' }
+    return await this.performRequest(
+      `${this.bracketsPath}/${bracketId}`,
+      options
+    )
+  }
   async createPlay(play: PlayReq): Promise<PlayRes> {
     const options: RequestOptions = { method: 'POST', body: play }
     return await this.performRequest(this.playsPath, options)
