@@ -1,7 +1,7 @@
 <?php
 require_once('wpbb-partials-common.php');
 require_once('wpbb-partials-constants.php');
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb-bracket.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb-bracket-play.php';
 
@@ -38,7 +38,7 @@ function wpbb_sort_button($label, $endpoint, $active = false) {
 }
 
 
-function tournament_tag($label, $color, $filled = true) {
+function bracket_tag($label, $color, $filled = true) {
 	$filled_path = plugins_url('../../assets/icons/ellipse.svg', __FILE__);
 	$empty_path = plugins_url('../../assets/icons/ellipse_empty.svg', __FILE__);
 	ob_start();
@@ -51,12 +51,12 @@ function tournament_tag($label, $color, $filled = true) {
 	return ob_get_clean();
 }
 
-function live_tournament_tag() {
-	return tournament_tag('Live', 'green');
+function live_bracket_tag() {
+	return bracket_tag('Live', 'green');
 }
 
-function completed_tournament_tag() {
-	return tournament_tag('Scored', 'yellow');
+function completed_bracket_tag() {
+	return bracket_tag('Scored', 'yellow');
 }
 
 
@@ -64,12 +64,12 @@ function completed_tournament_tag() {
 /**
  * This button goes to the Play Bracket page
  */
-function play_tournament_btn($endpoint, $tournament_id) {
+function play_bracket_btn($endpoint, $bracket_id) {
 	ob_start();
 ?>
 	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/play.svg'); ?>
-		<span class="tw-font-500">Play Tournament</span>
+		<span class="tw-font-500">Play Bracket</span>
 	</a>
 <?php
 	return ob_get_clean();
@@ -107,23 +107,23 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border tw-rounded-8')) : $btn;
 }
 
-function public_tournament_active_buttons(Wpbb_BracketTournament $tournament) {
-	$tournament_play_link = get_permalink($tournament->id) . '/play';
-	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
+function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
+	$bracket_play_link = get_permalink($bracket->id) . '/play';
+	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
 	ob_start();
 	?>
   <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
     <!-- This goes to the Play Bracket page -->
-		<?php echo play_tournament_btn($tournament_play_link, $tournament); ?>
-    <!-- This goes to the Score Tournament page -->
+		<?php echo play_bracket_btn($bracket_play_link, $bracket); ?>
+    <!-- This goes to the Score Bracket page -->
 		<?php echo view_leaderboard_btn($leaderboard_link); ?>
   </div>
 <?php
 	return ob_get_clean();
 }
 
-function public_tournament_completed_buttons(Wpbb_BracketTournament $tournament) {
-	$leaderboard_link = get_permalink($tournament->id) . '/leaderboard';
+function public_bracket_completed_buttons(Wpbb_Bracket $bracket) {
+	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
 
 	ob_start();
 	?>
@@ -135,20 +135,20 @@ function public_tournament_completed_buttons(Wpbb_BracketTournament $tournament)
 	return ob_get_clean();
 }
 
-function public_tournament_list_item(Wpbb_BracketTournament $tournament, Wpbb_BracketPlayRepo $play_repo = null) {
-	$name = $tournament->title;
-	$num_teams = $tournament->bracket_template->num_teams;
+function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $play_repo = null) {
+	$name = $bracket->title;
+	$num_teams = $bracket->num_teams;
 	$num_plays = $play_repo ? $play_repo->get_count([
 		'meta_query' => [
 			[
-				'key' => 'bracket_tournament_id',
-				'value' => $tournament->id,
+				'key' => 'bracket_id',
+				'value' => $bracket->id,
 			],
 		],
 	]) : 0;
 
-	$id = $tournament->id;
-	$completed = $tournament->status === 'complete';
+	$id = $bracket->id;
+	$completed = $bracket->status === 'complete';
 
 	ob_start();
 ?>
@@ -156,7 +156,7 @@ function public_tournament_list_item(Wpbb_BracketTournament $tournament, Wpbb_Br
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
 			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-4 tw-items-center">
-				<?php echo $completed ? completed_tournament_tag() : live_tournament_tag(); ?>
+				<?php echo $completed ? completed_bracket_tag() : live_bracket_tag(); ?>
 				<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/bar_chart.svg'); ?>
 				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
 				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
@@ -166,7 +166,7 @@ function public_tournament_list_item(Wpbb_BracketTournament $tournament, Wpbb_Br
 			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
 		</div>
 		<div class="tw-mt-10">
-			<?php echo $completed ? public_tournament_completed_buttons($tournament) : public_tournament_active_buttons($tournament); ?>
+			<?php echo $completed ? public_bracket_completed_buttons($bracket) : public_bracket_active_buttons($bracket); ?>
 		</div>
 	</div>
 <?php

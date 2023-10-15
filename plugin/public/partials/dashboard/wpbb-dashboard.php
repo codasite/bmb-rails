@@ -10,11 +10,8 @@ switch ($current_tab) {
 	case 'profile':
 		$template = 'wpbb-my-profile.php';
 		break;
-	case 'templates':
-		$template = 'wpbb-my-templates.php';
-		break;
-	case 'tournaments':
-		$template = 'wpbb-my-tournaments.php';
+	case 'brackets':
+		$template = 'wpbb-my-brackets.php';
 		break;
 	case 'play-history':
 		$template = 'wpbb-my-play-history.php';
@@ -41,11 +38,10 @@ function wpbb_get_nav_link($tab, $current_tab, $label, $icon) {
 <div class="tw-bg-dd-blue tw-py-60">
 <div class="wpbb-dashboard tw-text-white tw-font-sans tw-flex tw-flex-col md:tw-flex-row tw-gap-30 lg:tw-gap-60 leading-none tw-uppercase tw-max-w-screen-lg tw-mx-auto">
 	<nav>
-		<h4 class="tw-text-white/50 tw-text-16 tw-text-500 tw-mb-15">Dashboard</h4>
+		<h4 class="tw-text-white/50 tw-text-16 tw-font-500 tw-mb-15">Dashboard</h4>
 		<ul class="tw-flex tw-flex-col tw-gap-15 tw-p-0 tw-m-0">
 			<li class="tw-font-500 tw-text-20 tw-list-none"><?php echo wpbb_get_nav_link('profile', $current_tab, 'Profile', '../../assets/icons/user.svg'); ?></li>
-			<li class="tw-font-500 tw-text-20 tw-list-none"><?php echo wpbb_get_nav_link('templates', $current_tab, 'My Templates', '../../assets/icons/file.svg'); ?></li>
-			<li class="tw-font-500 tw-text-20 tw-list-none"><?php echo wpbb_get_nav_link('tournaments', $current_tab, 'My Tournaments', '../../assets/icons/signal.svg'); ?></li>
+			<li class="tw-font-500 tw-text-20 tw-list-none"><?php echo wpbb_get_nav_link('brackets', $current_tab, 'My Brackets', '../../assets/icons/signal.svg'); ?></li>
 			<li class="tw-font-500 tw-text-20 tw-list-none"><?php echo wpbb_get_nav_link('play-history', $current_tab, 'My Play History', '../../assets/icons/clock.svg'); ?></li>
 		</ul>
 	</nav>
