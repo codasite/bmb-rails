@@ -39,8 +39,8 @@ function wpbb_sort_button($label, $endpoint, $active = false) {
 
 
 function bracket_tag($label, $color, $filled = true) {
-	$filled_path = plugins_url('../../assets/icons/ellipse.svg', __FILE__);
-	$empty_path = plugins_url('../../assets/icons/ellipse_empty.svg', __FILE__);
+	$filled_path = WPBB_PLUGIN_DIR . 'public/assets/icons/ellipse.svg';
+	$empty_path = WPBB_PLUGIN_DIR . 'public/assets/icons/ellipse_empty.svg';
 	ob_start();
 ?>
 	<div class="tw-text-<?php echo $color ?> tw-bg-<?php echo $color; ?>/15 tw-border tw-border-solid tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
@@ -56,10 +56,12 @@ function live_bracket_tag() {
 }
 
 function completed_bracket_tag() {
-	return bracket_tag('Scored', 'yellow');
+	return bracket_tag('Complete', 'yellow');
 }
 
-
+function scored_bracket_tag() {
+	return bracket_tag('Scored', 'yellow');
+}
 
 /**
  * This button goes to the Play Bracket page

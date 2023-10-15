@@ -113,7 +113,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),
-      status: 'publish',
+      status: 'private',
     }
     return req
   }

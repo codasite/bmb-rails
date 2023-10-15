@@ -10,10 +10,6 @@ require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-
 $bracket_repo = new Wpbb_BracketRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
 
-$status = get_query_var('status');
-if (empty($status)) {
-	$status = 'publish';
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_bracket_id'])) {
 	if (wp_verify_nonce($_POST['archive_bracket_nonce'], 'archive_bracket_action')) {
@@ -23,20 +19,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_bracket_id'])
 	}
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_bracket_id'])) {
-	if (wp_verify_nonce($_POST['delete_bracket_nonce'], 'delete_bracket_action')) {
-		$bracket_repo->delete($_POST['delete_bracket_id']);
-	}
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_bracket_id'])) {
+// 	if (wp_verify_nonce($_POST['delete_bracket_nonce'], 'delete_bracket_action')) {
+// 		$bracket_repo->delete($_POST['delete_bracket_id']);
+// 	}
+// }
+$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+
+$paged_status = get_query_var('status');
+if (empty($paged_status)) {
+	$paged_status = 'active';
 }
 
-$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+$active_status = ['publish', 'private'];
+$scored_status = ['scored', 'complete'];
+
+if ($paged_status === 'active') {
+	$post_status = $active_status;
+} else if ($paged_status === 'scored') {
+	$post_status = $scored_status;
+} else if ($paged_status === 'archive') {
+	$post_status = 'archive';
+} else {
+	$post_status = $active_status;
+}
 
 $the_query = new WP_Query([
 	'post_type' => Wpbb_Bracket::get_post_type(),
 	'author' => get_current_user_id(),
 	'posts_per_page' => 6,
 	'paged' => $paged,
-	'post_status' => $status,
+	'post_status' => $post_status,
 ]);
 
 $num_pages = $the_query->max_num_pages;
@@ -55,7 +68,34 @@ function score_bracket_btn($endpoint, $bracket) {
 	return ob_get_clean();
 }
 
-function active_bracket_buttons($bracket) {
+function go_live_btn(string $id) {
+	ob_start();
+	?>
+  <button data-bracket-id="<?php echo $id ?>"
+          class="tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-min-w-[190px] tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-blue tw-font-sans tw-text-white tw-uppercase tw-cursor-pointer">
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/signal.svg'); ?>
+    <span class="tw-font-700">Go Live</span>
+  </button>
+	<?php
+	return ob_get_clean();
+}
+
+function private_bracket_buttons($bracket) {
+	$bracket_play_link = get_permalink($bracket->id) . 'play';
+	ob_start();
+?>
+	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
+		<!-- This goes to the Play Bracket page -->
+		<?php echo play_bracket_btn($bracket_play_link, $bracket); ?>
+		<!-- This goes to the Score Bracket page -->
+		<?php echo go_live_btn($bracket->id); ?>
+	</div>
+<?php
+
+	return ob_get_clean();
+}
+
+function live_bracket_buttons($bracket) {
 	$bracket_play_link = get_permalink($bracket->id) . 'play';
 	$bracket_score_link = get_permalink($bracket->id) . 'results';
 	$leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
@@ -91,39 +131,124 @@ function completed_bracket_buttons($bracket) {
 	return ob_get_clean();
 }
 
-/**
- * This button sends a POST request to archive the template
- */
-function archive_bracket_btn($endpoint, $bracket_id) {
+function get_bracket_buttons($bracket) {
+	switch ($bracket->status) {
+		case 'publish':
+			return live_bracket_buttons($bracket);
+		case 'private':
+			return private_bracket_buttons($bracket);
+		case 'scored':
+			return live_bracket_buttons($bracket);
+		case 'complete':
+			return completed_bracket_buttons($bracket);
+		case 'archive':
+			return private_bracket_buttons($bracket);
+		default:
+			return '';
+	}
+}
+
+function edit_bracket_btn($bracket) {
+	$id = $bracket->id;
+	$title = $bracket->title;
+	$date = $bracket->date;
+	return icon_btn('pencil.svg', 'submit', classes: "wpbb-edit-bracket-button", attributes: "data-bracket-id='$id' data-bracket-title='$title' data-bracket-date='$date'");
+}
+
+
+function share_bracket_btn($bracket) {
+	$play_link = get_permalink($bracket->id) . 'play';
+	return icon_btn('link.svg', 'submit', classes: "wpbb-share-bracket-button", attributes: "data-play-bracket-url=$play_link");
+}
+
+function duplicate_bracket_btn($bracket) {
+	$copy_link = get_permalink($bracket->id) . 'copy';
+	return icon_link('copy.svg', $copy_link);
+}
+
+function archive_bracket_btn($bracket) {
+	$endpoint = get_permalink() . 'brackets/';
+	$bracket_id = $bracket->id;
 	ob_start();
 ?>
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
 		<input type="hidden" name="archive_bracket_id" value="<?php echo esc_attr($bracket_id) ?>" />
 		<?php wp_nonce_field('archive_bracket_action', 'archive_bracket_nonce'); ?>
-		<?php echo icon_btn('../../assets/icons/archive.svg', 'submit'); ?>
+		<?php echo icon_btn('archive.svg', 'submit'); ?>
 	</form>
 <?php
 	return ob_get_clean();
+}
+
+function delete_bracket_btn($bracket) {
+	$bracket_id = $bracket->id;
+	return icon_btn('trash.svg', 'submit', classes: "wpbb-delete-bracket-button", attributes: "data-bracket-id='$bracket_id' data-bracket-title='$bracket->title'");
+}
+
+function private_bracket_icon_buttons($bracket) {
+	ob_start();
+	?>
+	<div class="tw-flex tw-gap-10 tw-items-center">
+		<?php echo edit_bracket_btn($bracket); ?>
+		<?php echo duplicate_bracket_btn($bracket); ?>
+		<?php echo archive_bracket_btn($bracket); ?>
+		<?php echo delete_bracket_btn($bracket); ?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+function live_bracket_icon_buttons($bracket) {
+	ob_start();
+	?>
+	<div class="tw-flex tw-gap-10 tw-items-center">
+		<?php echo edit_bracket_btn($bracket); ?>
+		<?php echo share_bracket_btn($bracket); ?>
+		<?php echo duplicate_bracket_btn($bracket); ?>
+		<?php echo archive_bracket_btn($bracket); ?>
+		<?php echo delete_bracket_btn($bracket); ?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+function get_bracket_icon_buttons($bracket) {
+	switch ($bracket->status) {
+		case 'publish':
+			return live_bracket_icon_buttons($bracket);
+		case 'private':
+			return private_bracket_icon_buttons($bracket);
+		case 'scored':
+			return live_bracket_icon_buttons($bracket);
+		case 'complete':
+			return live_bracket_icon_buttons($bracket);
+		case 'archive':
+			return private_bracket_icon_buttons($bracket);
+		default:
+			return '';
+	}
 }
 
 function archived_bracket_tag() {
 	return bracket_tag('Archive', 'white/50');
 }
 
-function trash_bracket_tag() {
-	return bracket_tag('Trash', 'red');
+function private_bracket_tag() {
+	return bracket_tag('Private', 'blue', false);
 }
 
 function get_bracket_tag($status) {
 	switch ($status) {
 		case 'publish':
 			return live_bracket_tag();
+		case 'private':
+			return private_bracket_tag();
+		case 'scored':
+			return scored_bracket_tag();
 		case 'complete':
 			return completed_bracket_tag();
 		case 'archive':
 			return archived_bracket_tag();
-		case 'trash':
-			return trash_bracket_tag();
 		default:
 			return '';
 	}
@@ -134,21 +259,17 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
 	// $play_repo->get_all_by_bracket($bracket->id);
 
 	$title = $bracket->title;
-	$date = $bracket->date;
-	$num_teams = $bracket->bracket_template->num_teams;
+	$num_teams = $bracket->num_teams;
 	$num_plays = $play_repo ? $play_repo->get_count([
 		'meta_query' => [
 			[
-				'key' => 'bracket_bracket_id',
+				'key' => 'bracket_id',
 				'value' => $bracket->id,
 			],
 		],
 	]) : 0;
 
 	$id = $bracket->id;
-	$play_link = get_permalink($id) . 'play';
-	$delete_link = get_permalink() . 'brackets/';
-	$archive_link = get_permalink() . 'brackets/';
 	ob_start();
 ?>
 	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
@@ -163,18 +284,10 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
     </div>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
       <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($title) ?></h2>
-      <div class="tw-flex tw-gap-10 tw-items-center">
-				<?php echo icon_btn('../../assets/icons/pencil.svg', 'submit', classes: "wpbb-edit-bracket-button", attributes: "data-bracket-id='$id' data-bracket-title='$title' data-bracket-date='$date'"); ?>
-				<?php echo icon_btn('../../assets/icons/link.svg', 'submit', classes: "wpbb-share-bracket-button", attributes: "data-play-bracket-url=$play_link"); ?>
-        <!-- The duplicate button opens up the "Host a Tournamnet" modal -->
-        <!-- <?php echo duplicate_bracket_btn($play_link, $id); ?> -->
-				<?php echo archive_bracket_btn($archive_link, $id); ?>
-        <!-- The delete button submits a POST request to delete the bracket after confirming with the user-->
-				<?php echo delete_post_btn($delete_link, $id, 'delete_bracket_id', 'delete_bracket_action', 'delete_bracket_nonce'); ?>
-      </div>
+			<?php echo get_bracket_icon_buttons($bracket); ?>
     </div>
     <div class="tw-mt-10">
-			<?php echo active_bracket_buttons($bracket); ?>
+			<?php echo get_bracket_buttons($bracket); ?>
 		</div>
 	</div>
 <?php
@@ -191,11 +304,9 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
 		<span class="tw-font-700 tw-text-24 tw-leading-none">Create Bracket</span>
 	</a>
 	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
-		<!-- <?php echo wpbb_sort_button('All', get_permalink() . "brackets/", $status === null); ?> -->
-		<?php echo wpbb_sort_button('Live', get_permalink() . "brackets/?status=publish", $status === 'publish'); ?>
-		<?php echo wpbb_sort_button('Scored', get_permalink() . "brackets/?status=complete", $status === 'complete'); ?>
-		<?php echo wpbb_sort_button('Archive', get_permalink() . "brackets/?status=archive", $status === 'archive'); ?>
-		<?php echo wpbb_sort_button('Trash', get_permalink() . "brackets/?status=trash", $status === 'trash'); ?>
+		<?php echo wpbb_sort_button('Active', get_permalink() . "brackets/?status=active", $paged_status === 'active'); ?>
+		<?php echo wpbb_sort_button('Scored', get_permalink() . "brackets/?status=scored", $paged_status === 'scored'); ?>
+		<?php echo wpbb_sort_button('Archive', get_permalink() . "brackets/?status=archive", $paged_status === 'archive'); ?>
 	</div>
 	<div class="tw-flex tw-flex-col tw-gap-15">
 		<?php foreach ($brackets as $bracket) {
