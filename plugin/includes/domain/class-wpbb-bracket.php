@@ -77,9 +77,9 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
   }
 
   public function get_update_post_meta(): array {
-    return [
+    return array_merge(parent::get_update_post_meta(), [
       'date' => $this->date,
-    ];
+    ]);
   }
 
   /**

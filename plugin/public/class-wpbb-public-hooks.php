@@ -6,6 +6,7 @@ class Wpbb_Public_Hooks
 
 	public function add_rewrite_tags() {
 		add_rewrite_tag('%tab%', '([^&]+)');
+		add_rewrite_tag('%view%', '([^&]+)');
 	}
 
 	public function add_rewrite_rules() {
@@ -16,7 +17,7 @@ class Wpbb_Public_Hooks
 		add_rewrite_rule('^dashboard/play-history/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=play-history&paged=$matches[1]', 'top');
 		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
 		add_rewrite_rule('^plays/([^/]+)/([^/]+)/?', 'index.php?bracket_play=$matches[1]&view=$matches[2]', 'top');
-		add_rewrite_rule('^brackets/([^/]+)/([^/]+)/?', 'index.php?bracket_template=$matches[1]&view=$matches[2]', 'top');
+		add_rewrite_rule('^brackets/([^/]+)/([^/]+)/?', 'index.php?bracket=$matches[1]&view=$matches[2]', 'top');
 	}
 
 	public function add_query_vars($vars) {

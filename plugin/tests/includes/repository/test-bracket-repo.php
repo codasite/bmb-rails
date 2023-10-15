@@ -107,12 +107,13 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $bracket = $this->bracket_repo->update($bracket->id, [
       'title' => 'New Title',
       'date' => '2019-01-01 00:00:00',
+      'status' => 'archive',
     ]);
 
     $this->assertNotNull($bracket->id);
     $this->assertEquals('New Title', $bracket->title);
     $this->assertEquals('2019-01-01 00:00:00', $bracket->date);
-    $this->assertEquals('publish', $bracket->status);
+    $this->assertEquals('archive', $bracket->status);
     $this->assertEquals(1, $bracket->author);
   }
 

@@ -21,9 +21,9 @@ export enum Direction {
 
 export const defaultBracketConstants = {
   bracketWidths: [
-    800, // 0 rounds
-    800, // 1 rounds
-    800, // 2 round
+    600, // 0 rounds
+    600, // 1 rounds
+    700, // 2 round
     800, // 3 rounds
     985, // 4 rounds
     1023, // 5 rounds

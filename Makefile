@@ -34,6 +34,10 @@ wp-test:
 wp-log:
 	docker exec wordpress-test-app tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
 
+# Dump the database into the mariadb init folder
+wp-dump:
+	docker exec wordpress-test-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress-test > /docker-entrypoint-initdb.d/dump.sql'
+
 images-up:
 	docker compose --profile images up --build
 
