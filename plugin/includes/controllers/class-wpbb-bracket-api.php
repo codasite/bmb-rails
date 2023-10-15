@@ -200,6 +200,13 @@ class Wpbb_BracketApi extends WP_REST_Controller {
    */
   public function update_item($request) {
     $bracket_id = $request->get_param('item_id');
+    if (!current_user_can('wpbb_edit_bracket', $bracket_id)) {
+      return new WP_Error(
+        'not-authorized',
+        'You are not authorized to edit this bracket.',
+        ['status' => 403]
+      );
+    }
     $data = $request->get_params();
     $updated = $this->bracket_repo->update($bracket_id, $data);
 

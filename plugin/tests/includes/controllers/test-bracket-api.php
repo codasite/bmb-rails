@@ -224,6 +224,92 @@ class BracketAPITest extends WPBB_UnitTestCase {
     );
   }
 
+  public function test_author_can_edit_bracket() {
+    $user = self::factory()->user->create_and_get();
+    wp_set_current_user($user->ID);
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => $user->ID,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'title' => 'Test Bracket',
+      'date' => 'Test Date',
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(200, $response->get_status());
+    $this->assertEquals('Test Bracket', $response->get_data()->title);
+    $this->assertEquals('Test Date', $response->get_data()->date);
+
+    $bracket = $this->bracket_repo->get($response->get_data()->id);
+    $this->assertNotNull($bracket);
+    $this->assertEquals('Test Bracket', $bracket->title);
+    $this->assertEquals('Test Date', $bracket->date);
+  }
+
+  public function test_non_author_cannot_edit_bracket() {
+    $user = self::factory()->user->create_and_get();
+    wp_set_current_user($user->ID);
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => $user->ID + 1,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'title' => 'Test Bracket',
+      'date' => 'Test Date',
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(403, $response->get_status());
+
+    $bracket = $this->bracket_repo->get($bracket->id);
+    $this->assertNotNull($bracket);
+    $this->assertNotEquals('Test Bracket', $bracket->title);
+    $this->assertNotEquals('Test Date', $bracket->date);
+  }
+
   public function test_delete_bracket_is_soft() {
     $bracket = self::factory()->bracket->create_and_get([
       'matches' => [
@@ -257,7 +343,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals('trash', $bracket->status);
   }
 
-  public function test_owner_can_delete_bracket() {
+  public function test_author_can_delete_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
     $bracket = self::factory()->bracket->create_and_get([
@@ -293,7 +379,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals('trash', $bracket->status);
   }
 
-  public function test_non_owner_cannot_delete_bracket() {
+  public function test_non_author_cannot_delete_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
     $bracket = self::factory()->bracket->create_and_get([
