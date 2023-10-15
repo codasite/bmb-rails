@@ -8,29 +8,28 @@ require_once plugin_dir_path(dirname(__FILE__, 1)) .
 require_once plugin_dir_path(dirname(__FILE__, 1)) .
   'repository/class-wpbb-bracket-team-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 1)) .
-  'repository/class-wpbb-bracket-tournament-repo.php';
+  'repository/class-wpbb-bracket-repo.php';
 
 class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
   protected Wpbb_Email_Service_Interface $email_service;
 
-  protected Wpbb_BracketTournamentRepo $tournament_repo;
+  protected Wpbb_BracketRepo $bracket_repo;
 
   public function __construct($args = []) {
     $this->email_service =
       $args['email_service'] ?? new Wpbb_Mailchimp_Email_Service();
-    $this->tournament_repo =
-      $args['tournament_repo'] ?? new Wpbb_BracketTournamentRepo();
+    $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
   }
 
-  public function get_last_round_picks_for_tournament(
-    $tournament_id,
+  public function get_last_round_picks_for_bracket(
+    $bracket_id,
     $final_round_pick
   ) {
     global $wpdb;
 
     /**
      * @var $query string
-     * Sorts picks for tournament by round index and
+     * Sorts picks for bracket by round index and
      * returns the author's email, display name, the
      * winning pick and the winning result.
      */
@@ -46,7 +45,7 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
         ON post.ID = play.post_id
         JOIN wp_users author
         ON author.ID = post.post_author
-        WHERE play.bracket_tournament_post_id = %d
+        WHERE play.bracket_post_id = %d
         GROUP BY post.post_author;
         ";
 
@@ -54,20 +53,20 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
       $query,
       $final_round_pick->round_index,
       $final_round_pick->match_index,
-      $tournament_id
+      $bracket_id
     );
     $results = $wpdb->get_results($prepared_query);
     return $results;
   }
 
-  public function notify_tournament_results_updated($tournament_id): void {
+  public function notify_bracket_results_updated($bracket_id): void {
     $play_repo = new Wpbb_BracketPlayRepo();
     $team_repo = new Wpbb_BracketTeamRepo();
 
-    $tournament = $this->tournament_repo->get($tournament_id);
-    $final_round_pick = end($tournament->results);
-    $user_picks = $this->get_last_round_picks_for_tournament(
-      $tournament_id,
+    $bracket = $this->bracket_repo->get($bracket_id);
+    $final_round_pick = end($bracket->results);
+    $user_picks = $this->get_last_round_picks_for_bracket(
+      $bracket_id,
       $final_round_pick
     );
 
@@ -81,7 +80,7 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
         $final_round_pick->winning_team_id
       );
       $winner = strtoupper($winner_bracket_pick->name);
-      $tournament_url = get_permalink($tournament_id) . '/leaderboard';
+      $bracket_url = get_permalink($bracket_id) . '/leaderboard';
       $message = [
         'to' => [
           [
@@ -102,8 +101,8 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
         $heading =
           'You picked ' . $user_pick . ', but ' . $winner . ' won the round...';
       }
-      $button_url = get_permalink($tournament_id) . '/leaderboard';
-      $button_text = 'View Tournament';
+      $button_url = get_permalink($bracket_id) . '/leaderboard';
+      $button_text = 'View Bracket';
 
       ob_start();
       include plugin_dir_path(dirname(__FILE__, 2)) .

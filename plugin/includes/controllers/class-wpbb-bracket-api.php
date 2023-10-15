@@ -3,7 +3,12 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-bracket.php';
-// require_once plugin_dir_path(dirname(__FILE__)) . 'validations/class-wpbb-bracket-api-validation.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'service/class-wpbb-score-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'service/class-wpbb-notification-service.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'service/class-wpbb-notification-service-interface.php';
 
 class Wpbb_BracketApi extends WP_REST_Controller {
   /**
@@ -22,12 +27,29 @@ class Wpbb_BracketApi extends WP_REST_Controller {
   protected $rest_base;
 
   /**
+   * @var Wpbb_Score_Service
+   */
+  private $score_service;
+
+  /**
+   * @var Wpbb_Notification_Service_Interface
+   */
+  private ?Wpbb_Notification_Service_Interface $notification_service;
+
+  /**
    * Constructor.
    */
-  public function __construct() {
+  public function __construct($args = []) {
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
+    $this->score_service = $args['score_service'] ?? new Wpbb_Score_Service();
+    try {
+      $this->notification_service =
+        $args['notification_service'] ?? new Wpbb_Notification_Service();
+    } catch (Exception $e) {
+      $this->notification_service = null;
+    }
   }
 
   /**
@@ -177,11 +199,17 @@ class Wpbb_BracketApi extends WP_REST_Controller {
    * @return WP_Error|WP_REST_Response
    */
   public function update_item($request) {
+    $bracket_id = $request->get_param('item_id');
     $data = $request->get_params();
-    $updated = $this->bracket_repo->update(
-      $request->get_param('item_id'),
-      $data
-    );
+    $updated = $this->bracket_repo->update($bracket_id, $data);
+
+    $this->score_service->score_bracket_plays($updated);
+
+    $notify = $request->get_param('update_notify_players');
+    if ($this->notification_service && $notify) {
+      $this->notification_service->notify_bracket_results_updated($bracket_id);
+    }
+
     return new WP_REST_Response($updated, 200);
   }
 

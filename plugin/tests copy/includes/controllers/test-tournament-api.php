@@ -182,7 +182,7 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 
     $data = [
       'title' => 'Test Tournament',
-      'update_notify_participants' => true,
+      'update_notify_players' => true,
     ];
 
     $request = new WP_REST_Request(
@@ -195,7 +195,7 @@ class TournamentAPITest extends WPBB_UnitTestCase {
 
     $notification_service
       ->expects($this->once())
-      ->method('notify_tournament_results_updated')
+      ->method('notify_bracket_results_updated')
       ->with($tournament->id);
 
     $api->update_item($request);
@@ -225,7 +225,7 @@ class TournamentAPITest extends WPBB_UnitTestCase {
     $request->set_body_params($data);
     $request->set_param('item_id', $tournament->id);
 
-    $score_service->expects($this->once())->method('score_tournament_plays');
+    $score_service->expects($this->once())->method('score_bracket_plays');
 
     $api->update_item($request);
   }

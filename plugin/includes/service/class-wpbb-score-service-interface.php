@@ -1,7 +1,5 @@
 <?php
 
 interface Wpbb_Score_Service_Interface {
-  public function score_tournament_plays(
-    Wpbb_BracketTournament|int|null $tournament
-  );
+  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket);
 }

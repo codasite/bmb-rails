@@ -4,23 +4,21 @@ require_once 'class-wpbb-score-service-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   '/domain/class-wpbb-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
-  '/domain/class-wpbb-bracket-tournament.php';
+  '/domain/class-wpbb-bracket.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   '/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
-  '/repository/class-wpbb-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  '/repository/class-wpbb-bracket-template-repo.php';
+  '/repository/class-wpbb-bracket-repo.php';
 
 class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
   /**
-   * This method scores bracket plays against tournament results
+   * This method scores bracket plays against bracket results
    */
 
   /**
-   * @var Wpbb_BracketTournament
+   * @var Wpbb_Bracket
    */
-  public $tournament;
+  public $bracket;
 
   /**
    * @var Wpbb_BracketPlayRepo
@@ -28,69 +26,60 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
   public $play_repo;
 
   /**
-   * @var Wpbb_BracketTournamentRepo
+   * @var Wpbb_BracketRepo
    */
-  public $tournament_repo;
-
-  /**
-   * @var Wpbb_BracketTemplateRepo
-   */
-  public $template_repo;
+  public $bracket_repo;
 
   /**
    * @var wpdb
    */
   private $wpdb;
 
-  public function __construct($tournament = null) {
+  public function __construct($bracket = null) {
     global $wpdb;
     $this->wpdb = $wpdb;
-    $this->tournament = $tournament;
+    $this->bracket = $bracket;
     $this->play_repo = new Wpbb_BracketPlayRepo();
-    $this->tournament_repo = new Wpbb_BracketTournamentRepo();
-    $this->template_repo = new Wpbb_BracketTemplateRepo();
+    $this->bracket_repo = new Wpbb_BracketRepo();
+    $this->bracket_repo = new Wpbb_BracketRepo();
   }
 
-  public function score_tournament_plays(
-    Wpbb_BracketTournament|int|null $tournament
-  ) {
+  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket) {
     try {
-      $this->score_plays($tournament);
+      $this->score_plays($bracket);
     } catch (Exception $e) {
       // do nothing
     }
   }
 
-  private function score_plays(Wpbb_BracketTournament|int|null $tournament) {
+  private function score_plays(Wpbb_Bracket|int|null $bracket) {
     $point_values = [1, 2, 4, 8, 16, 32];
 
-    if (is_int($tournament)) {
-      $tournament = $this->tournament_repo->get($tournament);
+    if (is_int($bracket)) {
+      $bracket = $this->bracket_repo->get($bracket);
     }
-    if (!$tournament instanceof Wpbb_BracketTournament) {
-      throw new Exception('Cannot find tournament');
-    }
-
-    $tournament_data = $this->tournament_repo->get_tournament_data(
-      $tournament->id
-    );
-    $tournament_id = $tournament_data['id'];
-
-    if (!$tournament_id) {
-      throw new Exception('Cannot find tournament id');
+    if (!$bracket instanceof Wpbb_Bracket) {
+      throw new Exception('Cannot find bracket');
     }
 
-    $num_rounds = $tournament->get_num_rounds();
+    $bracket_data = $this->bracket_repo->get_bracket_data($bracket->id);
+    $bracket_id = $bracket_data['id'];
+
+    if (!$bracket_id) {
+      throw new Exception('Cannot find bracket id');
+    }
+
+    $num_rounds = $bracket->get_num_rounds();
 
     if (!$num_rounds || $num_rounds < 1) {
       throw new Exception('Cannot find number of rounds');
     }
 
-    $high_score = $tournament->highest_possible_score();
+    $high_score = $bracket->highest_possible_score();
 
     $plays_table = $this->play_repo->plays_table();
     $picks_table = $this->play_repo->picks_table();
-    $results_table = $this->tournament_repo->results_table();
+    $results_table = $this->bracket_repo->results_table();
 
     $num_correct_arr = [];
 
@@ -117,7 +106,7 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
 				JOIN $results_table p2 ON p1.round_index = p2.round_index
 																										AND p1.match_index = p2.match_index
 																										AND p1.winning_team_id = p2.winning_team_id
-																										AND p2.bracket_tournament_id = $tournament_id
+																										AND p2.bracket_id = $bracket_id
 				GROUP BY p1.bracket_play_id
 		) agg ON p0.id = agg.bracket_play_id
 		SET p0.total_score = COALESCE($total_score_exp, 0),

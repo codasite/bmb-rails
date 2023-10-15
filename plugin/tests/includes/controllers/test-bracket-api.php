@@ -235,16 +235,29 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'notification_service' => $notification_service,
     ]);
 
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
 
     $data = [
       'title' => 'Test Bracket',
-      'update_notify_participants' => true,
+      'update_notify_players' => true,
     ];
 
     $request = new WP_REST_Request(
       'PATCH',
-      self::BRACKET_API_ENDPOINT . $bracket->id
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
     );
 
     $request->set_body_params($data);
@@ -255,7 +268,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
       ->method('notify_bracket_results_updated')
       ->with($bracket->id);
 
-    $api->update_item($request);
+    $res = $api->update_item($request);
   }
 
   public function test_bracket_is_scored_on_update_results() {
@@ -265,7 +278,20 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $api = new Wpbb_BracketApi(['score_service' => $score_service]);
 
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
 
     $data = [
       'title' => 'Test Bracket',
@@ -273,7 +299,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $request = new WP_REST_Request(
       'PATCH',
-      self::BRACKET_API_ENDPOINT . $bracket->id
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
     );
 
     $request->set_body_params($data);

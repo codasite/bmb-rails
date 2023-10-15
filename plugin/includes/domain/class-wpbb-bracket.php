@@ -64,6 +64,18 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     return ceil(log($this->num_teams, 2));
   }
 
+  public function highest_possible_score() {
+    $point_values = [1, 2, 4, 8, 16, 32];
+
+    $score = 0;
+
+    foreach ($this->results as $result) {
+      $score += $point_values[$result->round_index];
+    }
+
+    return $score;
+  }
+
   public static function get_post_type(): string {
     return 'bracket';
   }
