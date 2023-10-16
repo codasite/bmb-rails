@@ -142,18 +142,22 @@ class Wpbb_GelatoProductIntegration implements
     );
   }
 
-  public function get_request_data(Wpbb_PostBracketInterface $bracket): array {
-    $host = 'react-server';
-    $port = '8080';
-    $path = "http://$host:$port/test";
-    $method = 'POST';
-    $headers = [
+  public function get_request_data(
+    Wpbb_PostBracketInterface $bracket,
+    array $args = []
+  ): array {
+    // $host = $args['host'] ?? 'react-server'
+    // $port = $args['port'] ?? '8080'
+    // $endpoint = $args['endpoint'] ?? 'test'
+    $path = $arg['path'] ?? 'http://react-server:8080/test';
+    $method = $args['method'] ?? 'POST';
+    $headers = $args['method'] ?? [
       'Content-Type' => 'application/json',
       'Accept' => '*',
     ];
 
-    $inch_height = 16;
-    $inch_width = 11;
+    $inch_height = $args['inch_height'] ?? 16;
+    $inch_width = $args['inch_width'] ?? 11;
     $bracket_id = $bracket->get_post_id();
 
     $base_data = [
