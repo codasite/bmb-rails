@@ -13,7 +13,7 @@ export const EditableTeamSlotSwitch = (props: TeamSlotProps) => {
   let editable =
     teamPosition === 'left' ? match.left === null : match.right === null
   if (teamPosition === 'winner') {
-    editable = false;
+    editable = false
   }
 
   return editable ? (
