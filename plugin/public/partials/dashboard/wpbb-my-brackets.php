@@ -14,7 +14,7 @@ $play_repo = new Wpbb_BracketPlayRepo();
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_bracket_id'])) {
 	if (wp_verify_nonce($_POST['archive_bracket_nonce'], 'archive_bracket_action')) {
 		$bracket_repo->update($_POST['archive_bracket_id'], [
-			'status' => 'archive',
+			'status' => 'private',
 		]);
 	}
 }
@@ -23,20 +23,21 @@ $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $paged_status = get_query_var('status');
 if (empty($paged_status)) {
-	$paged_status = 'active';
+	$paged_status = 'all';
 }
 
+$all_status = ['publish', 'private', 'scored', 'complete'];
 $active_status = ['publish', 'private'];
 $scored_status = ['scored', 'complete'];
 
-if ($paged_status === 'active') {
+if ($paged_status === 'all') {
+	$post_status = $all_status;
+} else if ($paged_status === 'active') {
 	$post_status = $active_status;
 } else if ($paged_status === 'scored') {
 	$post_status = $scored_status;
-} else if ($paged_status === 'archive') {
-	$post_status = 'archive';
 } else {
-	$post_status = $active_status;
+	$post_status = $all_status;
 }
 
 $the_query = new WP_Query([
@@ -299,9 +300,9 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
 		<span class="tw-font-700 tw-text-24 tw-leading-none">Create Bracket</span>
 	</a>
 	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
+		<?php echo wpbb_sort_button('All', get_permalink() . "brackets/?status=all", $paged_status === 'all'); ?>
 		<?php echo wpbb_sort_button('Active', get_permalink() . "brackets/?status=active", $paged_status === 'active'); ?>
 		<?php echo wpbb_sort_button('Scored', get_permalink() . "brackets/?status=scored", $paged_status === 'scored'); ?>
-		<?php echo wpbb_sort_button('Archive', get_permalink() . "brackets/?status=archive", $paged_status === 'archive'); ?>
 	</div>
 	<div class="tw-flex tw-flex-col tw-gap-15">
 		<?php foreach ($brackets as $bracket) {
