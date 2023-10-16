@@ -21,6 +21,8 @@ function wpbb_sort_button($label, $endpoint, $active = false) {
 		'tw-border',
 		'tw-border-solid',
 		'tw-border-white/50',
+		'hover:tw-bg-white',
+		'hover:tw-text-dark-blue',
 	];
 	$active_cls = [
 		'tw-bg-white',

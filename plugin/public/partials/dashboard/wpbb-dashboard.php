@@ -26,7 +26,7 @@ function wpbb_get_nav_link($tab, $current_tab, $label, $icon) {
 	$active = $tab === $current_tab;
 	ob_start();
 ?>
-	<a class="tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap<?php echo $active ? ' tw-bg-blue' : ' tw-bg-white/10'; ?>" href="<?php echo get_permalink() . $tab; ?>" data-tab="<?php echo $tab; ?>">
+	<a class="tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue<?php echo $active ? ' tw-bg-blue' : ' tw-bg-white/10'; ?>" href="<?php echo get_permalink() . $tab; ?>" data-tab="<?php echo $tab; ?>">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . '/public/assets/icons/' . $icon); ?>
 		<span><?php echo $label; ?></span>
 	</a>
