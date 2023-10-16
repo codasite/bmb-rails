@@ -106,7 +106,6 @@ function renderPlayBracket(ajaxObj: WpbbAjaxObj) {
 }
 
 function renderBracketResultsBuilder(ajaxObj: WpbbAjaxObj) {
-  const builderDiv = document.getElementById('wpbb-bracket-results-builder')
   const { bracket, myBracketsUrl } = ajaxObj
 
   if (bracket) {

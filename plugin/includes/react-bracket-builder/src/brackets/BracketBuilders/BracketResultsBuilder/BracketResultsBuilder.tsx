@@ -58,10 +58,10 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   const [bracketDate, setBracketDate] = useState('')
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
+  console.log('bracket', bracket)
 
   useEffect(() => {
-    if (bracket && bracket.bracketBracket) {
-      const bracket = bracket.bracketBracket
+    if (bracket) {
       const numTeams = bracket.numTeams
       const matches = bracket.matches
       const results = bracket.results
@@ -90,7 +90,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       const complete = matchTree.allPicked()
       const data = {
         results: picks,
-        status: complete ? 'complete' : undefined,
         updateNotifyParticipants: notifyParticipants,
       }
       bracketApi

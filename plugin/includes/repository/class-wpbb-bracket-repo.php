@@ -74,7 +74,7 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
         'round_index' => $match->round_index,
         'match_index' => $match->match_index,
         'team1_id' => $team1?->id,
-        'team2_id' => $team2->id,
+        'team2_id' => $team2?->id,
       ]);
       $match->id = $this->wpdb->insert_id;
     }

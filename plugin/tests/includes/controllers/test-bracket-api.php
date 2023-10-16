@@ -444,6 +444,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $data = [
       'title' => 'Test Bracket',
       'update_notify_players' => true,
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
     ];
 
     $request = new WP_REST_Request(
@@ -486,6 +493,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $data = [
       'title' => 'Test Bracket',
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
     ];
 
     $request = new WP_REST_Request(
@@ -735,8 +749,120 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $response = rest_do_request($request);
     $this->assertEquals(200, $response->get_status());
-    // assert that results were not updated
     $updated = $this->bracket_repo->get($bracket->id);
     $this->assertEquals(0, count($updated->results));
+  }
+
+  public function test_update_some_results_sets_status_to_score() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    $updated = $this->bracket_repo->get($bracket->id);
+    $this->assertEquals('score', $updated->status);
+  }
+
+  public function test_update_all_results_sets_status_to_complete() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'num_teams' => 4,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    $updated = $this->bracket_repo->get($bracket->id);
+    $this->assertEquals('complete', $updated->status);
   }
 }
