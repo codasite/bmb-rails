@@ -13,7 +13,7 @@ class Wpbb_Public_Shortcodes {
 	public function render_bracket_preview() {
 		ob_start();
 		?>
-    <div id="wpbb-bracket-preview-controller" style="width: 100%">
+		<div id="wpbb-bracket-preview-controller" style="width: 100%">
 		</div>
 	<?php
 		return ob_get_clean();

@@ -238,7 +238,6 @@ class Wp_Bracket_Builder {
       $this->get_plugin_name(),
       $this->get_version()
     );
-    $public_hooks = new Wpbb_Public_Hooks();
     $shortcodes = new Wpbb_Public_Shortcodes();
 
     $gelato_product_integration = new Wpbb_GelatoProductIntegration();
@@ -292,7 +291,7 @@ class Wp_Bracket_Builder {
       10,
       3
     );
-
+    $public_hooks = new Wpbb_Public_Hooks();
     $this->loader->add_action('init', $public_hooks, 'add_rewrite_tags', 10, 0);
     $this->loader->add_action(
       'init',
@@ -301,8 +300,13 @@ class Wp_Bracket_Builder {
       10,
       0
     );
-    $this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
     $this->loader->add_action('init', $public_hooks, 'add_roles');
+    $this->loader->add_action(
+      'template_redirect',
+      $public_hooks,
+      'template_redirect'
+    );
+    $this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
     $this->loader->add_filter(
       'posts_clauses',
       $public_hooks,
