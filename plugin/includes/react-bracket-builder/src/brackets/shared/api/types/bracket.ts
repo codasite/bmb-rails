@@ -87,6 +87,7 @@ export interface PlayReq {
   status?: string
   picks: MatchPicks[]
   bustedId?: number
+  generateImages?: boolean
 }
 export interface PlayRes extends PostBase {
   bracketId: number

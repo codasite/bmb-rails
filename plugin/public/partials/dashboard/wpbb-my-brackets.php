@@ -206,7 +206,6 @@ function private_bracket_icon_buttons($bracket) {
 	?>
 		<?php echo edit_bracket_btn($bracket); ?>
 		<?php echo duplicate_bracket_btn($bracket); ?>
-		<?php echo archive_bracket_btn($bracket); ?>
 		<?php echo delete_bracket_btn($bracket); ?>
 	<?php
 	return ob_get_clean();
@@ -224,6 +223,17 @@ function live_bracket_icon_buttons($bracket) {
 	return ob_get_clean();
 }
 
+function scored_bracket_icon_buttons($bracket) {
+	ob_start();
+	?>
+		<?php echo edit_bracket_btn($bracket); ?>
+		<?php echo share_bracket_btn($bracket); ?>
+		<?php echo duplicate_bracket_btn($bracket); ?>
+		<?php echo delete_bracket_btn($bracket); ?>
+	<?php
+	return ob_get_clean();
+}
+
 function get_bracket_icon_buttons($bracket) {
 	switch ($bracket->status) {
 		case 'publish':
@@ -231,9 +241,8 @@ function get_bracket_icon_buttons($bracket) {
 		case 'private':
 			return private_bracket_icon_buttons($bracket);
 		case 'score':
-			return live_bracket_icon_buttons($bracket);
 		case 'complete':
-			return live_bracket_icon_buttons($bracket);
+			return scored_bracket_icon_buttons($bracket);
 		case 'archive':
 			return private_bracket_icon_buttons($bracket);
 		default:

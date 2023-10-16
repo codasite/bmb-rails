@@ -118,6 +118,7 @@ const PlayPage = (props: PlayPageProps) => {
     const playReq: PlayReq = {
       bracketId: bracket?.id,
       picks: picks,
+      generateImages: false,
     }
 
     console.log(playReq)
