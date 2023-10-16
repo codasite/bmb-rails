@@ -11,17 +11,20 @@ $bracket_repo = new Wpbb_BracketRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
 
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_bracket_id'])) {
-	if (wp_verify_nonce($_POST['archive_bracket_nonce'], 'archive_bracket_action')) {
-		$bracket_repo->update($_POST['archive_bracket_id'], [
-			'status' => 'private',
-		]);
-	}
-}
+// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_bracket_id'])) {
+// 	if (wp_verify_nonce($_POST['archive_bracket_nonce'], 'archive_bracket_action')) {
+// 		$bracket_repo->update($_POST['archive_bracket_id'], [
+// 			'status' => 'private',
+// 		]);
+// 	}
+
+// 	wp_redirect(get_permalink() . "brackets");
+// 	exit;
+// }
 
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
-
 $paged_status = get_query_var('status');
+
 if (empty($paged_status)) {
 	$paged_status = 'all';
 }
@@ -182,18 +185,8 @@ function duplicate_bracket_btn($bracket) {
 	return icon_link('copy.svg', $copy_link);
 }
 
-function archive_bracket_btn($bracket) {
-	$endpoint = get_permalink() . 'brackets/';
-	$bracket_id = $bracket->id;
-	ob_start();
-?>
-	<form method="post" action="<?php echo esc_url($endpoint) ?>">
-		<input type="hidden" name="archive_bracket_id" value="<?php echo esc_attr($bracket_id) ?>" />
-		<?php wp_nonce_field('archive_bracket_action', 'archive_bracket_nonce'); ?>
-		<?php echo icon_btn('archive.svg', 'submit'); ?>
-	</form>
-<?php
-	return ob_get_clean();
+function unpublish_bracket_btn($bracket) {
+	return icon_btn('archive.svg', 'submit', classes: "wpbb-unpublish-bracket-button", attributes: "data-bracket-id='$bracket->id'");
 }
 
 function delete_bracket_btn($bracket) {
@@ -217,7 +210,7 @@ function live_bracket_icon_buttons($bracket) {
 		<?php echo edit_bracket_btn($bracket); ?>
 		<?php echo share_bracket_btn($bracket); ?>
 		<?php echo duplicate_bracket_btn($bracket); ?>
-		<?php echo archive_bracket_btn($bracket); ?>
+		<?php echo unpublish_bracket_btn($bracket); ?>
 		<?php echo delete_bracket_btn($bracket); ?>
 	<?php
 	return ob_get_clean();
@@ -276,8 +269,6 @@ function get_bracket_tag($status) {
 }
 
 function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
-	// TODO: fix play_repo->get_all_by_bracket
-	// $play_repo->get_all_by_bracket($bracket->id);
 
 	$title = $bracket->title;
 	$num_teams = $bracket->num_teams;

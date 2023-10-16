@@ -219,9 +219,6 @@ class Wpbb_BracketApi extends WP_REST_Controller {
         unset($request['results']);
       }
     }
-    if (isset($request['results']) && count($request['results']) > 0) {
-      $request['status'] = 'score';
-    }
 
     $data = $request->get_params();
     $updated = $this->bracket_repo->update($bracket_id, $data);

@@ -49,9 +49,6 @@ export const PublishBracketModal = (props: {
   upgradeAccountUrl: string
   canCreateBracket: boolean
 }) => {
-  console.log(props)
-  console.log(props.canCreateBracket)
-
   const [show, setShow] = useState(false)
   addClickHandlers({
     buttonClassName: 'wpbb-publish-bracket-button',
@@ -60,7 +57,7 @@ export const PublishBracketModal = (props: {
         const bracketId = parseInt(b.dataset.bracketId)
         bracketApi
           .updateBracket(bracketId, { status: 'publish' })
-          .then(() => {
+          .then((res) => {
             window.location.reload()
           })
           .catch((err) => {

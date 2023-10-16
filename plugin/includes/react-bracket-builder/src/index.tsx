@@ -13,6 +13,7 @@ import { WpbbAjaxObj } from './wpbbAjaxObj'
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
+import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublishBracketHandler'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -41,6 +42,7 @@ const BustPlayPage = React.lazy(
 const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
+
 declare var wpbb_ajax_obj: any
 // Try to get the wpbb_ajax_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 if (window.hasOwnProperty('wpbb_ajax_obj')) {
@@ -54,6 +56,7 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   renderViewBracketPlay(ajaxObj)
   renderMyBracketsModals(ajaxObj)
   renderBustBracketPlay(ajaxObj)
+  addClickHandlers(ajaxObj)
 } else {
   renderPrintBracketPage()
 }
@@ -196,6 +199,10 @@ function renderMyBracketsModals(ajaxObj: WpbbAjaxObj) {
     'wpbb-my-brackets-modals'
   )
 }
+function addClickHandlers(ajaxObj: WpbbAjaxObj) {
+  unpublishBracketHandler()
+}
+
 function renderDiv(element: React.FunctionComponentElement<any>, id: string) {
   const div = document.getElementById(id)
   if (div) {

@@ -4,6 +4,7 @@ export default function addClickHandlers(props: {
   buttonClassName: string
   onButtonClick: (button: HTMLButtonElement) => void
 }) {
+  console.log('addClickHandlers')
   const handleButtonClick = (e: any) => {
     props.onButtonClick(e.currentTarget)
   }
