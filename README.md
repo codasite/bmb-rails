@@ -123,7 +123,7 @@ Resources:
 https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/
 https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/
 
-## Docker
+## Docker live site
 
 Docker can be used to run a local clone of an existing site. This is useful for testing with "live" data.
 
@@ -143,4 +143,26 @@ Docker can be used to run a local clone of an existing site. This is useful for 
     
     ```
     make wp-init
+    ```
+
+## Docker local development
+
+For development it's faster to use a slimmed down version of the site.
+
+1. Delete existing volumes
+    
+    ```
+    make wp-down
+    ```
+
+2. Reload containers, intitializing the database from the latest dump
+
+    ```
+    make wp-up
+    ```
+
+3. Install wordpress plugins
+    
+    ```
+    make wp-install
     ```
