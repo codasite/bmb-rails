@@ -180,6 +180,9 @@ class Wpbb_BracketApi extends WP_REST_Controller {
     if (!isset($params['author'])) {
       $params['author'] = get_current_user_id();
     }
+    if (!current_user_can('wpbb_share_bracket')) {
+      $params['status'] = 'private';
+    }
     try {
       $bracket = Wpbb_Bracket::from_array($params);
     } catch (Wpbb_ValidationException $e) {
@@ -206,6 +209,13 @@ class Wpbb_BracketApi extends WP_REST_Controller {
         'You are not authorized to edit this bracket.',
         ['status' => 403]
       );
+    }
+    if (
+      isset($request['status']) &&
+      $request['status'] === 'publish' &&
+      !current_user_can('wpbb_share_bracket')
+    ) {
+      $request['status'] = 'private';
     }
     $data = $request->get_params();
     $updated = $this->bracket_repo->update($bracket_id, $data);

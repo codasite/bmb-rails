@@ -49,6 +49,13 @@ class Wpbb_Public_Hooks
 		if (isset($allcaps['administrator']) && $allcaps['administrator'] === true) {
 			return $allcaps;
 		}
+		$dynamic_caps = [
+			'wpbb_delete_bracket',
+			'wpbb_edit_bracket',
+		];
+		if (!in_array($requested, $dynamic_caps)) {
+			return $allcaps;
+		}
 		$user_id = $args[1];
 		$post_id = $args[2];
 		switch ($requested) {
