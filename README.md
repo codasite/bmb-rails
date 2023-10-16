@@ -34,22 +34,14 @@ ln -s /Users/karl/Documents/repos/wp-bracket-builder/plugin wp-bracket-builder
 8. Create the following _Pages_ from the wordpress admin dashboard and add the corresponding shortcode
 
 - "Dashboard" [wpbb-dashboard]
-- "Official Tournaments" [wpbb-official-tournaments]
+- "Official Brackets" [wpbb-official-brackets]
 - "Celebrity Picks" [wpbb-celebrity-picks]
-- "Bracket Template Builder" [wpbb-template-builder]
-- "Print Page" (slug: print) [wpbb-print-page] CAN BE PRIVATE
+- "Bracket Builder" [wpbb-bracket-builder]
 
 9. Create Oxygen templates for the following post types and add the shortcodes. Under `Where does this template apply?` Select the corresponding post type.
 
-- "bracket_template" posts: [wpbb-bracket-template]
-- "bracket_tournament" posts: [wpbb-bracket-tournament]
-- "bracket_player" posts: [wpbb-bracket-play]
-
-10. Create a service user to give the image generator node api access to the print page.
-
-- Create a new user with the role "private_reader"
-- Add the user's login name to wp-config.php as the value of the constant `WPBB_SERVICE_USER`
-- TODO: add the service user token
+- "bracket" posts: [wpbb-bracket-page]
+- "bracket_play" posts: [wpbb-bracket-play]
 
 11. Add mailchimp api keys to `wp-config.php`
 

@@ -8,6 +8,8 @@ services:
       - ./image-generator/src:/usr/src/app/src # To serve the image generator code in development
     profiles:
       - images
+      - all
+      - generator
 
   react-server:
     tty: true
@@ -16,6 +18,7 @@ services:
       - ./standalone-react/src:/usr/src/app/src # To serve the react server code in development
     profiles:
       - images
+      - all
 
   react-client:
     tty: true
@@ -26,6 +29,12 @@ services:
       - 8080:8080
     profiles:
       - images
+      - all
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   wp-test:
     tty: true
@@ -49,6 +58,9 @@ services:
         define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
         define('BRACKET_PRODUCT_CATEGORY', 'bracket-ready');
         define('BRACKET_PLACEMENT_CENTER_CAT', 'wpbb-placement-center');
+        define('WP_SENTRY_ENV', 'production');
+        define( 'WP_SENTRY_PHP_DSN', 'https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752' );
+        define( 'WP_SENTRY_ERROR_TYPES', E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_USER_DEPRECATED );
         define('AWS_ACCESS_KEY', '${AWS_ACCESS_KEY}');
         define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
@@ -60,7 +72,6 @@ services:
       WORDPRESS_ADMIN_USER: admin
       WORDPRESS_ADMIN_PASSWORD: admin
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
-
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
       - wp-test-data:/var/www/html
@@ -70,6 +81,7 @@ services:
       - db-test
     profiles:
       - test
+      - all
 
   db-test:
     tty: true
@@ -88,6 +100,24 @@ services:
       - 3308:3306
     profiles:
       - test
+      - all
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: unless-stopped
+    container_name: phpmyadmin-test
+    environment:
+      PMA_HOST: db-test
+      PMA_PORT: 3306
+      PMA_USER: wordpress-test
+      PMA_PASSWORD: wordpress-test
+    ports:
+      - 8081:80
+    depends_on:
+      - db-test
+    profiles:
+      - test
+      - all
 
 networks:
   default:

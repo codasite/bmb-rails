@@ -8,7 +8,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'domain/class-wpbb-match.php';
  * This interface can be implemented by any class that defines a type of bracket.
  */
 
-interface Wpbb_BracketInterface {
+interface Wpbb_PostBracketInterface {
+  public function get_post_id(): int;
   /**
    * A series of matches representing the bracket's initial structure.
    *

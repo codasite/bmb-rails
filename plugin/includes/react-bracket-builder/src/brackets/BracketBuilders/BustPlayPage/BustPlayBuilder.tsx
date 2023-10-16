@@ -46,9 +46,9 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
-    const template = busteePlay?.tournament?.bracketTemplate
-    const matches = template?.matches
-    const numTeams = template?.numTeams
+    const bracket = busteePlay?.bracket?.bracketBracket
+    const matches = bracket?.matches
+    const numTeams = bracket?.numTeams
     const tree = MatchTree.fromMatchRes(numTeams, matches)
     setBusterMatchTree(tree)
     setBusteeMatchTree(matchTree.clone())
@@ -56,12 +56,12 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
   const handleSubmit = () => {
     const picks = busterMatchTree?.toMatchPicks()
-    const tournamentId = busteePlay?.tournament?.id
+    const bracketId = busteePlay?.bracket?.id
     const busteeId = busteePlay?.id
 
-    if (!tournamentId || !busteeId || !picks) {
+    if (!bracketId || !busteeId || !picks) {
       const msg =
-        'Cannot create play. Missing one of tournamentId, busteeId, or picks'
+        'Cannot create play. Missing one of bracketId, busteeId, or picks'
       console.error(msg)
       Sentry.captureException(msg)
       return
@@ -70,7 +70,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     bracketApi.createPlay
 
     const playReq: PlayReq = {
-      tournamentId: tournamentId,
+      bracketId: bracketId,
       picks: picks,
       bustedId: busteeId,
     }

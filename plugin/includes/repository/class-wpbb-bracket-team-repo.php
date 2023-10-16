@@ -52,14 +52,14 @@ class Wpbb_BracketTeamRepo {
     return $teams;
   }
 
-  public function add(int $template_id, ?Wpbb_Team $team): ?Wpbb_Team {
+  public function add(int $bracket_id, ?Wpbb_Team $team): ?Wpbb_Team {
     if (empty($team)) {
       return $team;
     }
     $table_name = $this->team_table();
     $this->wpdb->insert($table_name, [
       'name' => $team->name,
-      'bracket_template_id' => $template_id,
+      'bracket_id' => $bracket_id,
     ]);
     $team->id = $this->wpdb->insert_id;
     return $team;

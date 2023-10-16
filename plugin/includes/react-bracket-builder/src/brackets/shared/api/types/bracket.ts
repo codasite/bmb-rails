@@ -7,21 +7,6 @@ interface phpDate {
   timezone: string
 }
 
-export interface HTMLtoImageReq {
-  html: string
-  inchHeight: number
-  inchWidth: number
-  deviceScaleFactor?: number
-  themeMode?: string
-  bracketPlacement?: string
-  key?: string
-  s3Key?: string
-}
-
-export interface HTMLtoImageRes {
-  imageUrl: string
-}
-
 export interface TeamRes {
   id?: number
   name: string
@@ -78,15 +63,17 @@ interface PostBase {
   authorDisplayName: string
   publishedDate: phpDate
 }
-export interface TemplateReq {
+export interface BracketReq {
   title: string
   date: string
   numTeams: number
   status?: string
   wildcardPlacement: WildcardPlacement
   matches: MatchReq[]
+  results?: MatchPicks[]
+  updateNotifyParticipants?: boolean
 }
-export interface TemplateRes extends PostBase {
+export interface BracketRes extends PostBase {
   date: string
   numTeams: number
   wildcardPlacement: WildcardPlacement
@@ -94,31 +81,16 @@ export interface TemplateRes extends PostBase {
   imgUrl: string
   matches?: MatchRes[]
 }
-export interface TournamentReq {
-  id?: number
-  title?: string
-  date: string
-  status?: string
-  bracketTemplateId?: number
-  results?: MatchPicks[]
-  bracketTemplate?: TemplateReq
-  updateNotifyParticipants?: boolean
-}
-export interface TournamentRes extends PostBase {
-  date: string
-  bracketTemplateId: number
-  bracketTemplate?: TemplateRes
-}
 export interface PlayReq {
-  tournamentId?: number
-  templateId?: number
+  bracketId?: number
   title?: string
   status?: string
   picks: MatchPicks[]
   bustedId?: number
+  generateImages?: boolean
 }
 export interface PlayRes extends PostBase {
-  tournamentId: number
+  bracketId: number
   picks: MatchPicks[]
-  tournament?: TournamentRes
+  bracket?: BracketRes
 }

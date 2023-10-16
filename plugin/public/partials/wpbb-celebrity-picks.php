@@ -3,7 +3,7 @@ require_once('shared/wpbb-tournaments-common.php');
 require_once('shared/wpbb-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php');
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpbb-paginatino-widget.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpbb-pagination-widget.php';
 
 
 $play_repo = new Wpbb_BracketPlayRepo();
@@ -60,7 +60,7 @@ function wpbb_bust_bracket_btn($endpoint) {
 	ob_start();
 ?>
 	<a class="tw-flex tw-items-center tw-text-white tw-px-16 tw-py-11 tw-rounded-8 tw-border tw-border-solid tw-justify-center tw-gap-10 tw-bg-red/20 tw-border-red" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url('../assets/icons/lightning.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/lightning.svg'); ?>
 		<span class="tw-font-700">Bust Bracket</span>
 	</a>
 <?php
@@ -95,7 +95,7 @@ function wpbb_celebrity_play_list_item($play) {
 <div class="wpbb-reset tw-bg-dd-blue">
 	<div class="tw-flex tw-flex-col">
 		<div class="tw-flex tw-flex-col md:tw-flex-row-reverse tw-py-60 tw-gap-15 tw-items-center md:tw-justify-between tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
-			<?php echo file_get_contents(plugins_url('../assets/icons/logo_dark.svg', __FILE__)); ?>
+			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/logo_dark.svg'); ?>
 			<h1 class="tw-text-64 sm:tw-text-80 tw-font-700 tw-text-center md:tw-text-left">Celebrity Picks</h1>
 		</div>
 		<div class="wpbb-celeb-plays tw-py-60 tw-px-20 lg:tw-px-0">

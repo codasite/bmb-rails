@@ -3,9 +3,10 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'domain/class-wpbb-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'service/image-generator/class-wpbb-local-node-generator.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 
 class Wpbb_BracketPlayApi extends WP_REST_Controller {
   /**
@@ -34,17 +35,18 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
   protected $rest_base;
 
   /**
-   * @var Wpbb_BracketImageGeneratorInterface
+   * @var Wpbb_ProductIntegrationInterface
    */
-  private $image_generator;
+  private $product_integration;
 
   /**
    * Constructor.
    */
-  public function __construct() {
-    $this->utils = new Wpbb_Utils();
-    $this->play_repo = new Wpbb_BracketPlayRepo();
-    $this->image_generator = new Wpbb_LocalNodeGenerator();
+  public function __construct($args = []) {
+    $this->utils = $args['utils'] ?? new Wpbb_Utils();
+    $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketPlayRepo();
+    $this->product_integration =
+      $args['product_integration'] ?? new Wpbb_GelatoProductIntegration();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
   }
@@ -147,8 +149,8 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
       'post_status' => 'any',
     ]);
 
-    $brackets = $this->play_repo->get_all($the_query);
-    return new WP_REST_Response($brackets, 200);
+    $plays = $this->play_repo->get_all($the_query);
+    return new WP_REST_Response($plays, 200);
   }
 
   /**
@@ -160,8 +162,8 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
   public function get_item($request) {
     // get id from request
     $id = $request->get_param('item_id');
-    $bracket = $this->play_repo->get($id);
-    return new WP_REST_Response($bracket, 200);
+    $play = $this->play_repo->get($id);
+    return new WP_REST_Response($play, 200);
   }
 
   /**
@@ -183,6 +185,13 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
       ]);
     }
     $saved = $this->play_repo->add($play);
+    // Generate the bracket images
+    if (
+      !isset($params['generate_images']) ||
+      $params['generate_images'] === true
+    ) {
+      $this->product_integration->generate_images($saved);
+    }
 
     return new WP_REST_Response($saved, 201);
   }

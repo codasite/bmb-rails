@@ -1,6 +1,5 @@
 <?php
-require_once 'template-factory.php';
-require_once 'tournament-factory.php';
+require_once 'bracket-factory.php';
 require_once 'play-factory.php';
 
 /**
@@ -10,16 +9,12 @@ require_once 'play-factory.php';
  */
 
 class WPBB_UnitTest_Factory extends WP_UnitTest_Factory {
-  public $template;
-
-  public $tournament;
-
+  public $bracket;
   public $play;
 
   public function __construct() {
     parent::__construct();
-    $this->template = new WPBB_UnitTest_Factory_For_Template($this);
-    $this->tournament = new WPBB_UnitTest_Factory_For_Tournament($this);
     $this->play = new WPBB_UnitTest_Factory_For_Play($this);
+    $this->bracket = new WPBB_UnitTest_Factory_For_Bracket($this);
   }
 }

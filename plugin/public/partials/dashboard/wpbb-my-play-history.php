@@ -2,8 +2,8 @@
 require_once 'wpbb-dashboard-common.php';
 $shared_dir = plugin_dir_path(dirname(__FILE__)) . 'shared/';
 require_once $shared_dir . 'wpbb-partials-common.php';
-require_once $shared_dir . 'wpbb-tournaments-common.php';
-require_once $shared_dir . 'wpbb-paginatino-widget.php';
+require_once $shared_dir . 'wpbb-brackets-common.php';
+require_once $shared_dir . 'wpbb-pagination-widget.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
 $play_repo = new Wpbb_BracketPlayRepo();
@@ -15,7 +15,7 @@ $the_query = new WP_Query([
 	'author' => get_current_user_id(),
 	'posts_per_page' => 6,
 	'paged' => $paged,
-	'post_status' => 'any'
+	'post_status' => 'publish'
 ]);
 
 $num_pages = $the_query->max_num_pages;
@@ -23,25 +23,24 @@ $num_pages = $the_query->max_num_pages;
 $plays = $play_repo->get_all(
 	$the_query,
 	[
-		'fetch_tournament' => true,
-		'fetch_template' => true,
+		'fetch_bracket' => true,
 		'fetch_results' => true
 	]
 );
 
 function play_list_item(Wpbb_BracketPlay $play) {
-	$title = $play->tournament?->title ?? $play->template?->title;
+	$title = $play->bracket?->title ?? $play->bracket?->title;
 	$user_rank = 99999;
-	$complete = $play->tournament?->status === 'complete';
+	$complete = $play->bracket?->status === 'complete';
 	$play_id = $play->id;
-	$tournament_id = $play->tournament_id;
+	$bracket_id = $play->bracket_id;
 	$view_link = get_permalink($play_id) . 'view';
-	$leaderboard_link = get_permalink($tournament_id) . 'leaderboard';
+	$leaderboard_link = get_permalink($bracket_id) . 'leaderboard';
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
 	$accuracy_score = round($play->accuracy_score * 100);
-	$show_score = $play->tournament?->has_results();
+	$show_score = $play->bracket?->has_results();
 	$buster_play = $play->busted_id !== null;
 	ob_start();
 ?>
@@ -51,21 +50,19 @@ function play_list_item(Wpbb_BracketPlay $play) {
 			<div class="tw-flex tw-gap-10 tw-flex-wrap">
 				<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
         <div class="tw-flex tw-gap-10 tw-flex-wrap">
-					<?php echo $buster_play ? tournament_tag('buster', 'red') : '' ?>
-          <!-- <?php echo tournament_tag('printed', 'green') ?>
-					<?php echo tournament_tag('not printed', 'yellow', false) ?> -->
+					<?php echo $buster_play ? bracket_tag('buster', 'red') : '' ?>
+          <!-- <?php echo bracket_tag('printed', 'green') ?>
+					<?php echo bracket_tag('not printed', 'yellow', false) ?> -->
         </div>
       </div>
       <div class="tw-flex tw-gap-16">
-        <!-- View this play and add to apparel -->
 				<?php echo view_play_btn($view_link); ?>
-        <!-- View the leaderboard for this tournament -->
-				<?php echo $tournament_id ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant) : null; ?>
+				<?php echo $bracket_id ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant) : null; ?>
       </div>
     </div>
     <div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
       <!-- <div class="tw-flex tw-gap-4 tw-items-center">
-				<?php echo file_get_contents(plugins_url("../../assets/icons/$trend_icon", __FILE__)); ?>
+				<?php echo file_get_contents(WPBB_PLUGIN_DIR . "public/assets/icons/$trend_icon"); ?>
 				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html($user_rank) ?></span>
 				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
 			</div> -->

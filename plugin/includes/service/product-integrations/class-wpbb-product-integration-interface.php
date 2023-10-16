@@ -1,4 +1,6 @@
 <?php
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 
 interface Wpbb_ProductIntegrationInterface {
   // admin hooks
@@ -44,5 +46,26 @@ interface Wpbb_ProductIntegrationInterface {
     $variation
   ): array;
 
-  // product preview
+  public function get_post_meta_key(): string;
+
+  public function generate_images(Wpbb_PostBracketInterface $bracket): void;
+
+  /**
+   * Given a placement ('top' or 'center') returns an overlay map that can get passed direcly to the bracket preview page
+   *
+   * @var Wpbb_PostBracketInterface $bracket
+   * @var string $placement - 'top' or 'center'
+   *
+   * @return array - an array of overlay maps
+   *
+   * @example
+   * [
+   * 'light' => 'someS3url',
+   * 'dark' => 'someS3url'
+   * ]
+   */
+  public function get_overlay_map(
+    Wpbb_PostBracketInterface $bracket,
+    string $placement
+  ): array;
 }

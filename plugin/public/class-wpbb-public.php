@@ -1,8 +1,5 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-template-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket-template.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket-play.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-aws-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-pdf-service.php';
@@ -62,18 +59,12 @@ class Wpbb_Public {
 	private $s3;
 	private $pdf_service;
 	private $lambda_service;
-	private $tournament_repo;
 
 	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->utils = new Wpbb_Utils();
-		$this->bracket_config_repo = new Wpbb_BracketConfigRepo();
-		$this->s3 = new Wpbb_S3_Service();
-		$this->lambda_service = new Wpbb_Lambda_Service();
-		$this->pdf_service = new Wpbb_PDF_Service();
-		$this->tournament_repo = new Wpbb_BracketTournamentRepo();
 	}
 
 	/**
@@ -110,34 +101,30 @@ class Wpbb_Public {
 		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
 
-		$post = get_post();
-		$template_repo = new Wpbb_BracketTemplateRepo();
-		$bracket = $template_repo->get(post: $post);
-		$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.css';
-
-
-		// For product page
+		// // For product page
 		// $product = wc_get_product($post->ID);
-		$product = wc_get_product(0);
-		$bracket_product_archive_url = $this->get_archive_url();
+		// $product = wc_get_product(0);
+		// $bracket_product_archive_url = $this->get_archive_url();
 
-		$bracket_placement = $this->get_bracket_placement($product);
+		// $bracket_placement = $this->get_bracket_placement($product);
 
-		$is_bracket_product = $this->is_bracket_product($product);
-		// Only get product details on product pages.
-		$gallery_images = $is_bracket_product ? $this->get_product_gallery($product) : array();
-		$color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
-		$overlay_map = $is_bracket_product ? $this->build_overlay_map($bracket_placement) : array();
+		// $is_bracket_product = $this->is_bracket_product($product);
+		// // Only get product details on product pages.
+		// $gallery_images = $is_bracket_product ? $this->get_product_gallery($product) : array();
+		// $color_options = $is_bracket_product ? $this->get_attribute_options($product, 'color') : array();
+		// $overlay_map = $is_bracket_product ? $this->build_overlay_map($bracket_placement) : array();
 
 		wp_enqueue_script('wpbb-bracket-builder-react', plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/wordpress/index.js', array('wp-element'), $this->version, true);
 
-		// wp_localize_script(
-		// 	'wpbb-bracket-builder-react',
-		// 	'wpbb_ajax_obj',
-		// 	array(
-		// 		'sentry_env' => $sentry_env,
-		// 		'sentry_dsn' => $sentry_dsn,
-		// 		'nonce' => wp_create_nonce('wp_rest'),
+		wp_localize_script(
+			'wpbb-bracket-builder-react',
+			'wpbb_ajax_obj',
+			array(
+				'sentry_env' => $sentry_env,
+				'sentry_dsn' => $sentry_dsn,
+				'nonce' => wp_create_nonce('wp_rest'),
+				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
+			));
 		// 		'page' => 'user-bracket',
 		// 		'ajax_url' => admin_url('admin-ajax.php'),
 		// 		'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',

@@ -73,4 +73,8 @@ class Wpbb_Utils {
       });
     }
   }
+
+  public function log_error($msg) {
+    return $this->log($msg, 'error');
+  }
 }

@@ -10,7 +10,7 @@ function icon_btn($icon_path, $type = '', $id = '', $classes = '', $attributes =
   <button <?php echo !empty($type) ? "type=$type" : '' ?> <?php echo !empty($id) ? "id=$id" : '' ?>
       class="<?php echo $classes ?> tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-items-center tw-justify-center tw-rounded-8 hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black"
 		<?php echo $attributes ?>>
-		<?php echo file_get_contents(plugins_url($icon_path, __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . '/public/assets/icons/' . $icon_path); ?>
   </button>
 	<?php
 	return ob_get_clean();
@@ -23,7 +23,7 @@ function icon_link($icon_path, $endpoint) {
 	ob_start();
 ?>
 	<a class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black" href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url($icon_path, __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . '/public/assets/icons/' . $icon_path); ?>
 	</a>
 <?php
 	return ob_get_clean();
@@ -32,16 +32,16 @@ function icon_link($icon_path, $endpoint) {
 /**
  * This link will take the user to the Template Builder page
  */
-function duplicate_bracket_btn($endpoint, $post_id) {
-	return icon_link('../../assets/icons/copy.svg', $endpoint);
-}
+// function duplicate_bracket_btn($endpoint, $post_id) {
+// 	return icon_link('copy.svg', $endpoint);
+// }
 
 /**
  * This button will execute JS to open up the share dialog
  */
-function share_tournament_btn($endpoint, $tournament_id) {
-	return icon_btn('../../assets/icons/link.svg');
-}
+// function share_tournament_btn($endpoint, $tournament_id) {
+// 	return icon_btn('link.svg');
+// }
 
 /**
  * This button sends a POST request to delete the template
@@ -52,7 +52,7 @@ function delete_post_btn($endpoint, $post_id, $post_id_field, $nonce_action, $no
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
 		<input type="hidden" name="<?php echo $post_id_field ?>" value="<?php echo esc_attr($post_id) ?>">
 		<?php wp_nonce_field($nonce_action, $nonce_name); ?>
-		<?php echo icon_btn('../../assets/icons/trash.svg', 'submit'); ?>
+		<?php echo icon_btn('trash.svg', 'submit'); ?>
 	</form>
 <?php
 	return ob_get_clean();
@@ -66,9 +66,9 @@ function delete_post_btn($endpoint, $post_id, $post_id_field, $nonce_action, $no
 function add_to_apparel_btn($endpoint) {
 	ob_start();
 	?>
-  <a class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black tw-leading-[1.15]"
+  <a class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 hover:tw-cursor-pointer tw-leading-[1.15] tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
      href="<?php echo esc_url($endpoint) ?>">
-		<?php echo file_get_contents(plugins_url('../../assets/icons/plus.svg', __FILE__)); ?>
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/plus.svg'); ?>
     <span class="tw-font-700">Add to Apparel</span>
   </a>
 	<?php
@@ -84,9 +84,9 @@ function delete_tournament_btn($endpoint, $post_id) {
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
 		<input type="hidden" name="delete_tournament_id" value="<?php echo esc_attr($post_id) ?>">
 		<?php wp_nonce_field('delete_tournament_action', 'delete_tournament_nonce'); ?>
-		<?php echo icon_btn('../../assets/icons/trash.svg', 'submit'); ?>
+		<?php echo icon_btn('trash.svg', 'submit'); ?>
 		<!-- <button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
-			<?php echo file_get_contents(plugins_url('../../assets/icons/trash.svg', __FILE__)); ?>
+			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trash.svg'); ?>
 		</button> -->
 	</form>
 <?php
@@ -100,9 +100,9 @@ function restore_tournament_btn($endpoint, $post_id) {
 	<form method="post" action="<?php echo esc_url($endpoint) ?>">
 		<input type="hidden" name="restore_tournament_id" value="<?php echo esc_attr($post_id) ?>">
 		<?php wp_nonce_field('restore_tournament_action', 'restore_tournament_nonce'); ?>
-		<?php echo icon_btn('../../assets/icons/trash.svg', 'submit'); ?>
+		<?php echo icon_btn('trash.svg', 'submit'); ?>
 		<!-- <button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
-			<?php echo file_get_contents(plugins_url('../../assets/icons/trash.svg', __FILE__)); ?>
+			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trash.svg'); ?>
 		</button> -->
 	</form>
 <?php

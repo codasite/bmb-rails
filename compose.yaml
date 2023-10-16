@@ -6,6 +6,7 @@ services:
       context: image-generator
       dockerfile: Dockerfile
     command: npm run start
+    restart: always
     ports:
       - 3000:3000
     cap_add:
@@ -17,18 +18,29 @@ services:
       - AWS_REGION=us-east-1
     volumes:
       - ~/.aws/credentials:/home/pptruser/.aws/credentials:ro
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   react-server:
     build:
       context: standalone-react
       dockerfile: Dockerfile
     command: npm run start
+    restart: always
     depends_on:
       - react-client
     volumes:
       - react_dist:/usr/src/app/client/dist
     ports:
       - 3001:3001
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   react-client:
     build:

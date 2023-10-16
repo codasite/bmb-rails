@@ -8,8 +8,10 @@ wp-cli core install \
 	--admin_password=${WORDPRESS_ADMIN_PASSWORD} \
 	--admin_email=${WORDPRESS_ADMIN_EMAIL}
 
-# wp-cli plugin install /tmp/plugins/oxygen4.5.zip --activate
-# wp-cli plugin install /tmp/plugins/oxygen-woocommerce.zip --activate
+wp-cli plugin install /tmp/plugins/oxygen4.5.zip --activate
+wp-cli plugin install /tmp/plugins/oxygen-woocommerce.zip --activate
+wp-cli plugin install /tmp/plugins/woocommerce.8.2.0.zip --activate
+wp-cli plugin activate wp-bracket-builder
 
 echo "done"
 

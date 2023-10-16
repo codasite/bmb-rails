@@ -54,7 +54,11 @@ abstract class Wpbb_CustomPostRepoBase {
   }
 
   public function delete_post(int $id, $force = false): bool {
-    $result = wp_delete_post($id, $force);
+    if ($force) {
+      $result = wp_delete_post($id, $force);
+    } else {
+      $result = wp_trash_post($id);
+    }
     return $result !== false;
   }
 }

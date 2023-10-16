@@ -6,20 +6,18 @@ class Wpbb_Public_Hooks
 
 	public function add_rewrite_tags() {
 		add_rewrite_tag('%tab%', '([^&]+)');
+		add_rewrite_tag('%view%', '([^&]+)');
 	}
 
 	public function add_rewrite_rules() {
 		// Be sure to flush the rewrite rules after adding new rules
 		add_rewrite_rule('^dashboard/profile/?', 'index.php?pagename=dashboard&tab=profile', 'top');
-		add_rewrite_rule('^dashboard/templates/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=templates&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/templates/?', 'index.php?pagename=dashboard&tab=templates', 'top');
-		add_rewrite_rule('^dashboard/tournaments/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=tournaments&paged=$matches[1]', 'top');
-		add_rewrite_rule('^dashboard/tournaments/?', 'index.php?pagename=dashboard&tab=tournaments', 'top');
+		add_rewrite_rule('^dashboard/brackets/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=brackets&paged=$matches[1]', 'top');
+		add_rewrite_rule('^dashboard/brackets/?', 'index.php?pagename=dashboard&tab=brackets', 'top');
 		add_rewrite_rule('^dashboard/play-history/page/([0-9]+)/?', 'index.php?pagename=dashboard&tab=play-history&paged=$matches[1]', 'top');
 		add_rewrite_rule('^dashboard/play-history/?', 'index.php?pagename=dashboard&tab=play-history', 'top');
-		add_rewrite_rule('^tournaments/([^/]+)/([^/]+)/?', 'index.php?bracket_tournament=$matches[1]&view=$matches[2]', 'top');
 		add_rewrite_rule('^plays/([^/]+)/([^/]+)/?', 'index.php?bracket_play=$matches[1]&view=$matches[2]', 'top');
-		add_rewrite_rule('^templates/([^/]+)/([^/]+)/?', 'index.php?bracket_template=$matches[1]&view=$matches[2]', 'top');
+		add_rewrite_rule('^brackets/([^/]+)/([^/]+)/?', 'index.php?bracket=$matches[1]&view=$matches[2]', 'top');
 	}
 
 	public function add_query_vars($vars) {
@@ -33,8 +31,45 @@ class Wpbb_Public_Hooks
 		add_role(
 			'bmb_plus',
 			'BMB Plus',
-			array('wpbb_create_tournament' => true),
+			array(
+				'wpbb_share_bracket' => true,
+				'wpbb_bust_play' => true,
+				'wpbb_enable_chat' => true,
+			),
 		);
+	}
+
+
+	public function user_cap_filter($allcaps, $cap, $args) {
+		// check if user is admin. if so, bail
+		$requested = $args[0];
+		if (!str_starts_with($requested, 'wpbb_')) {
+			return $allcaps;
+		}
+		if (isset($allcaps['administrator']) && $allcaps['administrator'] === true) {
+			return $allcaps;
+		}
+		$dynamic_caps = [
+			'wpbb_delete_bracket',
+			'wpbb_edit_bracket',
+		];
+		if (!in_array($requested, $dynamic_caps)) {
+			return $allcaps;
+		}
+		$user_id = $args[1];
+		$post_id = $args[2];
+		switch ($requested) {
+			case 'wpbb_delete_bracket':
+			case 'wpbb_edit_bracket':
+				$post = get_post($post_id);
+				if ($post->post_type === 'bracket' && (int) $post->post_author === (int) $user_id) {
+					$allcaps[$cap[0]] = true;
+				}
+				break;
+			default:
+				break;
+		}
+		return $allcaps;
 	}
 
 	/**

@@ -14,4 +14,5 @@ COPY . .
 EXPOSE 3000
 RUN chown -R pptruser:pptruser /usr/src/app
 USER pptruser
+RUN node /usr/src/app/node_modules/puppeteer/install.mjs
 CMD ["npm", "start"]

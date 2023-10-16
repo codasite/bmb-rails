@@ -143,7 +143,11 @@ class Wpbb_Admin {
 
 	public function add_capabilities() {
 		$role = get_role('administrator');
-		$role->add_cap('wpbb_create_tournament');
+		$role->add_cap('wpbb_share_bracket');
+		$role->add_cap('wpbb_bust_play');
+		$role->add_cap('wpbb_enable_chat');
+		$role->add_cap('wpbb_delete_bracket');
+		$role->add_cap('wpbb_edit_bracket');
 	}
 
 	//  add a custom text field for the bmb-logo-theme in the admin product variation settings

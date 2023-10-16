@@ -138,3 +138,4 @@ build/
 .DS_Store
 docker/wordpress/downloads/*
 !docker/wordpress/downloads/.gitkeep
+docker/wordpress/plugins/*

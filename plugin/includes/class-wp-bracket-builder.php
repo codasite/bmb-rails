@@ -110,28 +110,16 @@ class Wp_Bracket_Builder {
       'public/class-wpbb-public.php';
 
     /**
-     * The bracket template api controller class
+     * The bracket api controller class
      */
     require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/controllers/class-wpbb-bracket-template-api.php';
-
-    /**
-     * The bracket tournament api controller class
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/controllers/class-wpbb-bracket-tournament-api.php';
+      'includes/controllers/class-wpbb-bracket-api.php';
 
     /**
      * The bracket picks api controller class
      */
     require_once plugin_dir_path(dirname(__FILE__)) .
       'includes/controllers/class-wpbb-bracket-play-api.php';
-
-    /**
-     * The html to image converter api controller class
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/controllers/class-wpbb-convert-api.php';
 
     /**
      * Callbacks for hooks and filters
@@ -187,8 +175,7 @@ class Wp_Bracket_Builder {
       $this->get_plugin_name(),
       $this->get_version()
     );
-    $template_api = new Wpbb_BracketTemplateApi();
-    $tournament_api = new Wpbb_BracketTournamentApi();
+    $bracket_api = new Wpbb_BracketApi();
     $play_api = new Wpbb_BracketPlayApi();
 
     $gelato_product_integration = new Wpbb_GelatoProductIntegration();
@@ -211,16 +198,7 @@ class Wp_Bracket_Builder {
     );
     $this->loader->add_action('init', $plugin_admin, 'add_capabilities');
 
-    $this->loader->add_action(
-      'rest_api_init',
-      $tournament_api,
-      'register_routes'
-    );
-    $this->loader->add_action(
-      'rest_api_init',
-      $template_api,
-      'register_routes'
-    );
+    $this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
     $this->loader->add_action('rest_api_init', $play_api, 'register_routes');
 
     $this->loader->add_action('init', $this, 'register_custom_post_types');
@@ -332,6 +310,13 @@ class Wp_Bracket_Builder {
       10,
       2
     );
+    $this->loader->add_filter(
+      'user_has_cap',
+      $public_hooks,
+      'user_cap_filter',
+      10,
+      3
+    );
 
     $this->loader->add_action('init', $shortcodes, 'add_shortcodes');
   }
@@ -377,21 +362,19 @@ class Wp_Bracket_Builder {
   }
 
   public function register_custom_post_types() {
-    register_post_type('bracket_template', [
+    register_post_type('bracket', [
       'labels' => [
-        'name' => __('Templates'),
-        'singular_name' => __('Template'),
+        'name' => __('Brackets'),
+        'singular_name' => __('Bracket'),
       ],
-      'description' => 'Bracket templates for the WP Bracket Builder plugin',
+      'description' => 'Brackets for the WP Bracket Builder plugin',
       'public' => true,
       'has_archive' => true,
       'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
       'show_ui' => true,
       'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wpbb_Bracket_Api
-      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
-      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
       'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'templates'],
+      'rewrite' => ['slug' => 'brackets'],
     ]);
 
     register_post_type('bracket_play', [
@@ -409,22 +392,6 @@ class Wp_Bracket_Builder {
       // 'rest_controller_class' => array($bracket_api, 'register_routes'),
       'taxonomies' => ['post_tag'],
       'rewrite' => ['slug' => 'plays'],
-    ]);
-    register_post_type('bracket_tournament', [
-      'labels' => [
-        'name' => __('Tournaments'),
-        'singular_name' => __('Tournament'),
-      ],
-      'description' => 'Tournaments for the WP Bracket Builder plugin',
-      'public' => true,
-      'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
-      'show_ui' => true,
-      'show_in_rest' => true,
-      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
-      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
-      'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'tournaments'],
     ]);
   }
 
