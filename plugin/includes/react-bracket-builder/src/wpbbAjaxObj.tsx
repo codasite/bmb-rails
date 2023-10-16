@@ -16,13 +16,14 @@ export interface WpbbAjaxObj {
   post: any
   myBracketsUrl: string
   bracketBuilderUrl: string
-  userCanCreateBracket: boolean
+  userCanShareBracket: boolean
   homeUrl: string
   printOptions: PrintOptions
   thumbnailUrl: string
   authorDisplayName: string
   userDisplayName: string
   bracketTitle: string
+  upgradeAccountUrl: string
 }
 interface PrintOptions {
   theme: string

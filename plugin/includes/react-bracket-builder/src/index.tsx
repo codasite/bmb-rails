@@ -12,6 +12,7 @@ import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
 import { WpbbAjaxObj } from './wpbbAjaxObj'
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
+import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -188,6 +189,10 @@ function renderMyBracketsModals(ajaxObj: WpbbAjaxObj) {
       <EditBracketModal />
       <ShareBracketModal />
       <DeleteBracketModal />
+      <PublishBracketModal
+        upgradeAccountUrl={ajaxObj.upgradeAccountUrl}
+        canCreateBracket={ajaxObj.userCanShareBracket}
+      />
     </>,
     'wpbb-my-brackets-modals'
   )
