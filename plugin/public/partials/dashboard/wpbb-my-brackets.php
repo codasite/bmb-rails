@@ -26,9 +26,9 @@ if (empty($paged_status)) {
 	$paged_status = 'all';
 }
 
-$all_status = ['publish', 'private', 'scored', 'complete'];
+$all_status = ['publish', 'private', 'score', 'complete'];
 $active_status = ['publish', 'private'];
-$scored_status = ['scored', 'complete'];
+$scored_status = ['score', 'complete'];
 
 if ($paged_status === 'all') {
 	$post_status = $all_status;
@@ -56,7 +56,7 @@ function score_bracket_btn($endpoint, $bracket) {
 
 	ob_start();
 ?>
-	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 hover:tw-bg-yellow hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trophy_24.svg'); ?>
 		<span class="tw-font-500">Update Results</span>
 	</a>
@@ -112,15 +112,35 @@ function live_bracket_buttons($bracket) {
 	return ob_get_clean();
 }
 
+function scored_bracket_buttons($bracket) {
+	$bracket_play_link = get_permalink($bracket->id) . 'play';
+	$bracket_score_link = get_permalink($bracket->id) . 'results';
+	$leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
+	ob_start();
+?>
+	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
+		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
+			<!-- This goes to the Play Bracket page -->
+			<?php echo add_to_apparel_btn($bracket_play_link); ?>
+			<!-- This goes to the Score Bracket page -->
+			<?php echo score_bracket_btn($bracket_score_link, $bracket); ?>
+		</div>
+		<!-- This goes to the Leaderboard page -->
+		<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
+	</div>
+<?php
+
+	return ob_get_clean();
+}
+
+
 function completed_bracket_buttons($bracket) {
 	$play_link = get_permalink($bracket->id) . 'play';
 	$leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-end tw-gap-8">
-		<!-- This goes to the Play Bracket page -->
 		<?php echo add_to_apparel_btn($play_link); ?>
-		<!-- This goes to the Leaderboard page -->
 		<?php echo view_leaderboard_btn($leaderboard_link, 'compact'); ?>
 	</div>
 <?php
@@ -133,8 +153,8 @@ function get_bracket_buttons($bracket) {
 			return live_bracket_buttons($bracket);
 		case 'private':
 			return private_bracket_buttons($bracket);
-		case 'scored':
-			return live_bracket_buttons($bracket);
+		case 'score':
+			return scored_bracket_buttons($bracket);
 		case 'complete':
 			return completed_bracket_buttons($bracket);
 		case 'archive':
@@ -184,12 +204,10 @@ function delete_bracket_btn($bracket) {
 function private_bracket_icon_buttons($bracket) {
 	ob_start();
 	?>
-	<div class="tw-flex tw-gap-10 tw-items-center">
 		<?php echo edit_bracket_btn($bracket); ?>
 		<?php echo duplicate_bracket_btn($bracket); ?>
 		<?php echo archive_bracket_btn($bracket); ?>
 		<?php echo delete_bracket_btn($bracket); ?>
-	</div>
 	<?php
 	return ob_get_clean();
 }
@@ -197,13 +215,11 @@ function private_bracket_icon_buttons($bracket) {
 function live_bracket_icon_buttons($bracket) {
 	ob_start();
 	?>
-	<div class="tw-flex tw-gap-10 tw-items-center">
 		<?php echo edit_bracket_btn($bracket); ?>
 		<?php echo share_bracket_btn($bracket); ?>
 		<?php echo duplicate_bracket_btn($bracket); ?>
 		<?php echo archive_bracket_btn($bracket); ?>
 		<?php echo delete_bracket_btn($bracket); ?>
-	</div>
 	<?php
 	return ob_get_clean();
 }
@@ -214,7 +230,7 @@ function get_bracket_icon_buttons($bracket) {
 			return live_bracket_icon_buttons($bracket);
 		case 'private':
 			return private_bracket_icon_buttons($bracket);
-		case 'scored':
+		case 'score':
 			return live_bracket_icon_buttons($bracket);
 		case 'complete':
 			return live_bracket_icon_buttons($bracket);
@@ -239,7 +255,7 @@ function get_bracket_tag($status) {
 			return live_bracket_tag();
 		case 'private':
 			return private_bracket_tag();
-		case 'scored':
+		case 'score':
 			return scored_bracket_tag();
 		case 'complete':
 			return completed_bracket_tag();
@@ -280,7 +296,9 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
     </div>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
       <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($title) ?></h2>
-			<?php echo get_bracket_icon_buttons($bracket); ?>
+			<div class="tw-flex tw-gap-10 tw-items-center">
+				<?php echo get_bracket_icon_buttons($bracket); ?>
+			</div>
     </div>
     <div class="tw-mt-10">
 			<?php echo get_bracket_buttons($bracket); ?>

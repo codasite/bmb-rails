@@ -69,7 +69,7 @@ function scored_bracket_tag() {
 function play_bracket_btn($endpoint, $bracket_id) {
 	ob_start();
 ?>
-	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/play.svg'); ?>
 		<span class="tw-font-500">Play Bracket</span>
 	</a>
@@ -88,8 +88,8 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	$base_cls = array('tw-flex', 'tw-justify-center', 'sm:tw-justify-start', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
 
 	$cls_list = array(
-		'primary' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12')),
-		'compact' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-4', 'sm:tw-px-8', 'sm:tw-py-4')),
+		'primary' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12', 'hover:tw-bg-white', 'hover:tw-text-black')),
+		'compact' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-4', 'sm:tw-px-8', 'sm:tw-py-4', 'hover:tw-bg-white', 'hover:tw-text-black')),
 		'final' => array_merge($base_cls, array('wpbb-view-final-leaderboard-btn', 'tw-border-transparent', 'tw-bg-clip-padding', 'tw-gap-10', 'tw-px-16', 'tw-py-12')),
 	);
 

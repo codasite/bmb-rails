@@ -72,14 +72,6 @@
   color: white;
 }
 
-.wpbb-add-apparel-btn {
-  background: linear-gradient(
-      rgba(248, 225, 26, 0.2) 0%,
-      rgba(64, 255, 106, 0.2) 100%
-    ),
-    #010433;
-}
-
 .wpbb-add-apparel-gradient-border {
   background: linear-gradient(
     178deg,
