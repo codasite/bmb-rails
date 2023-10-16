@@ -3,7 +3,7 @@ require_once('shared/wpbb-tournaments-common.php');
 require_once('shared/wpbb-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php');
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpbb-paginatino-widget.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpbb-pagination-widget.php';
 
 
 $play_repo = new Wpbb_BracketPlayRepo();

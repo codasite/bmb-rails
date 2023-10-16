@@ -5,7 +5,7 @@ require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket-tournament.php';
 require_once('shared/wpbb-partials-constants.php');
 require_once('shared/wpbb-tournaments-common.php');
-require_once('shared/wpbb-paginatino-widget.php');
+require_once('shared/wpbb-pagination-widget.php');
 
 $tournament_repo = new Wpbb_BracketTournamentRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
