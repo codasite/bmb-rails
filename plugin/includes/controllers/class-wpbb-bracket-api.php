@@ -210,21 +210,27 @@ class Wpbb_BracketApi extends WP_REST_Controller {
         ['status' => 403]
       );
     }
-    if (
-      isset($request['status']) &&
-      $request['status'] === 'publish' &&
-      !current_user_can('wpbb_share_bracket')
-    ) {
+    if (!current_user_can('wpbb_share_bracket')) {
       $request['status'] = 'private';
+      if (isset($request['status']) && $request['status'] === 'publish') {
+        $request['status'] = 'private';
+      }
+      if (isset($request['results'])) {
+        unset($request['results']);
+      }
     }
     $data = $request->get_params();
     $updated = $this->bracket_repo->update($bracket_id, $data);
 
-    $this->score_service->score_bracket_plays($updated);
+    if (current_user_can('wpbb_share_bracket')) {
+      $this->score_service->score_bracket_plays($updated);
 
-    $notify = $request->get_param('update_notify_players');
-    if ($this->notification_service && $notify) {
-      $this->notification_service->notify_bracket_results_updated($bracket_id);
+      $notify = $request->get_param('update_notify_players');
+      if ($this->notification_service && $notify) {
+        $this->notification_service->notify_bracket_results_updated(
+          $bracket_id
+        );
+      }
     }
 
     return new WP_REST_Response($updated, 200);

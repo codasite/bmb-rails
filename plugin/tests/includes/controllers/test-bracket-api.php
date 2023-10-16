@@ -644,4 +644,99 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals(200, $response->get_status());
     $this->assertEquals('private', $response->get_data()->status);
   }
+
+  public function test_user_with_permission_can_update_results() {
+    $user = self::factory()->user->create_and_get();
+    $user->add_cap('wpbb_share_bracket');
+    wp_set_current_user($user->ID);
+
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'author' => $user->ID,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    $this->assertEquals(
+      $bracket->matches[0]->team1->id,
+      $response->get_data()->results[0]->winning_team_id
+    );
+  }
+
+  public function test_user_without_permission_cannot_update_results() {
+    $user = self::factory()->user->create_and_get();
+    $user->remove_cap('wpbb_share_bracket');
+    wp_set_current_user($user->ID);
+
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'author' => $user->ID,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    // assert that results were not updated
+    $updated = $this->bracket_repo->get($bracket->id);
+    $this->assertEquals(0, count($updated->results));
+  }
 }
