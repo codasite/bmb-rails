@@ -56,9 +56,15 @@ class Wpbb_BracketTeamRepo {
     if (empty($team)) {
       return $team;
     }
+    // $sql_escaped_name = $this->wpdb->esc_like($team->name);
+    $sql_escaped_name = mysqli_real_escape_string(
+      $this->wpdb->dbh,
+      $team->name
+    );    
+
     $table_name = $this->team_table();
     $this->wpdb->insert($table_name, [
-      'name' => $team->name,
+      'name' => $sql_escaped_name,
       'bracket_id' => $bracket_id,
     ]);
     $team->id = $this->wpdb->insert_id;

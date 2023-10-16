@@ -15,6 +15,7 @@ import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
 import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublishBracketHandler'
 
+console.log('fuck');
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
 tailwind.config.corePlugins.preflight = typeof wp === 'undefined'
