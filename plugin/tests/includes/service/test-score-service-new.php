@@ -11,55 +11,73 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
   }
 
   public function test_score_bracket_plays() {
-    $team1 = self::factory()->play->create_object([
-      'name' => 'Team 1',
-    ]);
-
-    $team2 = self::factory()->play->create_object([
-      'name' => 'Team 2',
-    ]);
-    $team3 = self::factory()->play->create_object([
-      'name' => 'Team 3',
-    ]);
-    $team4 = self::factory()->play->create_object([
-      'name' => 'Team 4',
-    ]);
 
     $bracket = self::factory()->bracket->create_and_get([
       'matches' => [
         new Wpbb_Match([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => $team1,
-          'team2' => $team2,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
         ]),
         new Wpbb_Match([
           'round_index' => 0,
           'match_index' => 1,
-          'team1' => $team3,
-          'team2' => $team4,
+          'team1' => new Wpbb_team([
+            'name' => 'Team 3'
+          ]),
+          'team2' => new Wpbb_team([
+            'name' => 'Team 4'
+          ])
         ]),
       ],
       'results' => [
         new Wpbb_MatchPick([
           'round_index' => 0,
           'match_index' => 0,
-          'winning_team_id' => $team1->id,
+          'winning_team_id' => 1,
         ]),
         new Wpbb_MatchPick([
           'round_index' => 0,
           'match_index' => 1,
-          'winning_team_id' => $team4->id,
+          'winning_team_id' => 4,
         ]),
         new Wpbb_MatchPick([
           'round_index' => 1,
           'match_index' => 0,
-          'winning_team_id' => $team4->id,
+          'winning_team_id' => 4,
+        ]),
+      ],
+    ]);
+
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => 1,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => 4,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => 4,
         ]),
       ],
     ]);
 
     $this->service->score_bracket_plays($bracket);
-    $this->assertNotNull(1);
+    $play = self::factory()->play->get_object_by_id($play->id);
+    $this->assertNotNull($play->total_score);
+    echo $play->total_score;
   }
 }
