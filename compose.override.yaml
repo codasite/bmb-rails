@@ -45,7 +45,7 @@ services:
         PLUGIN_NAME: wp-bracket-builder
     restart: unless-stopped
     environment:
-      WORDPRESS_DB_HOST: wp-db
+      WORDPRESS_DB_HOST: wp-dev-db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
@@ -77,12 +77,12 @@ services:
     ports:
       - 8008:80
     depends_on:
-      - wp-db
+      - wp-dev-db
     profiles:
       - wp
       - all
 
-  wp-db:
+  wp-dev-db:
     tty: true
     image: mariadb
     restart: unless-stopped
@@ -93,7 +93,7 @@ services:
       MYSQL_PASSWORD: wordpress
     volumes:
       - ./docker/db/scripts:/docker-entrypoint-initdb.d
-      - wp-db-data:/var/lib/mysql
+      - wp-dev-db-data:/var/lib/mysql
     ports:
       - 3308:3306
     profiles:
@@ -104,17 +104,47 @@ services:
     image: phpmyadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: wp-db
+      PMA_HOST: wp-dev-db
       PMA_PORT: 3306
       PMA_USER: wordpress
       PMA_PASSWORD: wordpress
     ports:
       - 8081:80
     depends_on:
-      - wp-db
+      - wp-dev-db
     profiles:
       - wp
       - all
+
+  wp-test:
+    tty: true
+    build:
+      context: .
+      dockerfile: ./docker/wordpress/Dockerfile.test
+      args:
+        PLUGIN_NAME: wp-bracket-builder
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: wp-test-db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
+      PLUGIN_NAME: wp-bracket-builder
+      WORDPRESS_URL: http://localhost:8008
+      WORDPRESS_TITLE: Wordpress
+      WORDPRESS_ADMIN_USER: admin
+      WORDPRESS_ADMIN_PASSWORD: admin
+      WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
+    volumes:
+      - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
+      - wp-dev-data:/var/www/html
+    ports:
+      - 8008:80
+    depends_on:
+      - wp-dev-db
+    profiles:
+      - test
 
 networks:
   default:
@@ -122,4 +152,4 @@ networks:
 
 volumes:
   wp-dev-data:
-  wp-db-data:
+  wp-dev-db-data:

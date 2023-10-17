@@ -36,7 +36,7 @@ wp-log:
 
 # Dump the database into the mariadb init folder
 wp-dump:
-	docker exec wp-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
+	docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
 
 images-up:
 	docker compose --profile images up --build
