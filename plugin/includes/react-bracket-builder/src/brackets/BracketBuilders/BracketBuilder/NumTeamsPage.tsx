@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { NumTeamsPicker } from './NumTeamsPicker'
 import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
 //@ts-ignore

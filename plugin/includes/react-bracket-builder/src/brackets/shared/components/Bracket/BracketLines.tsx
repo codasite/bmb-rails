@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Round, MatchNode } from '../../models/MatchTree'
+import { Round } from '../../models/MatchTree'
 import LineTo, { SteppedLineTo } from 'react-lineto'
 import { DarkModeContext } from '../../context'
 import { getUniqueTeamClass } from '../../utils'
@@ -82,7 +82,7 @@ export const BracketLines = (props: BracketLinesProps) => {
     })
     return lines
   }
-  return <div className="tw-absolute">{renderLines(rounds)}</div>
+  return <div className="tw-relative">{renderLines(rounds)}</div>
 }
 
 export const RootMatchLines = (props: BracketLinesProps) => {
@@ -109,7 +109,7 @@ export const RootMatchLines = (props: BracketLinesProps) => {
   )
 
   return (
-    <div className="tw-absolute" key={'jaiefji'}>
+    <div className="tw-relative" key={'jaiefji'}>
       <LineTo
         from={rootWinnerClass}
         to={rootTeam1Class}

@@ -1,15 +1,13 @@
 import React, { useContext } from 'react'
-import { Round, MatchNode } from '../../models/MatchTree'
-import { BracketLines, RootMatchLines } from './BracketLines'
+import { MatchNode, Round } from '../../models/MatchTree'
 import {
-  getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
-  getMatchGap,
-  getSubsequentMatchGap as getDefaultSubsequentMatchGap,
   getBracketHeight as getDefaultBracketHeight,
   getBracketWidth as getDefaultBracketWidth,
+  getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
+  getSubsequentMatchGap as getDefaultSubsequentMatchGap,
+  getTeamFontSize as getDefaultTeamFontSize,
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
-  getTeamFontSize as getDefaultTeamFontSize,
   getTeamWidth,
 } from '../../utils'
 import { Nullable } from '../../../../utils/types'
@@ -21,6 +19,7 @@ import { defaultBracketConstants } from '../../constants'
 import { useWindowDimensions } from '../../../../utils/hooks'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { LogoContainer } from '../MatchBox/Children/LogoContainer'
+import { BracketLines, RootMatchLines } from './BracketLines'
 
 export const DefaultBracket = (props: BracketProps) => {
   const {
