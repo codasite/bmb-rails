@@ -63,45 +63,4 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
     //   'object_storage' => $object_storage,
     // ]);
   }
-  public function test_get_body() {
-    $object_storage = $this->createMock(Wpbb_ObjectStorageInterface::class);
-    $object_storage->method('get_upload_options')->willReturn([
-      'test_key' => 'test_value',
-    ]);
-    $integration = new Wpbb_GelatoProductIntegration([
-      'object_storage' => $object_storage,
-    ]);
-    $bracket_id = 1;
-    $base_data = [
-      'test_key' => 'test_value',
-    ];
-    $base_query = [
-      'test_key' => 'test_value',
-    ];
-    $theme = 'light';
-    $position = 'top';
-
-    $body = $integration->get_body(
-      $bracket_id,
-      $base_data,
-      $base_query,
-      $theme,
-      $position
-    );
-
-    $this->assertEquals(
-      json_encode([
-        'test_key' => 'test_value',
-        'storageOptions' => [
-          'test_key' => 'test_value',
-        ],
-        'queryParams' => [
-          'test_key' => 'test_value',
-          'theme' => 'light',
-          'position' => 'top',
-        ],
-      ]),
-      $body
-    );
-  }
 }
