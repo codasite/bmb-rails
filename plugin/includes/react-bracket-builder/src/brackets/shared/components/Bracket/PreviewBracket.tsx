@@ -1,8 +1,9 @@
 import React from 'react'
-import { MatchNode, Team } from '../../models/MatchTree'
 import { BracketProps } from '../types'
 import { DefaultBracket } from './DefaultBracket'
 import { TeamSlotToggle } from '../TeamSlot'
+import { Team } from '../../models/Team'
+import { MatchNode } from '../../models/operations/MatchNode'
 
 export const PreviewBracket = (props: BracketProps) => {
   const { matchTree } = props

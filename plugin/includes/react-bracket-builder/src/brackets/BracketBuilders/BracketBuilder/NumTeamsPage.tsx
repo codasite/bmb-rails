@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NumTeamsPicker } from './NumTeamsPicker'
-import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
+import { MatchTree } from '../../shared/models/MatchTree'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import { BracketPreview } from './BracketPreview'
@@ -8,6 +8,7 @@ import { isPowerOfTwo } from '../../shared/utils'
 import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { BracketMeta } from '../../shared/context'
+import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 
 interface BracketTitleProps {
   title: string

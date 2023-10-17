@@ -35,6 +35,9 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   // const moveOver = 0
   // draw a line in the middle of the screen
   // matchTree to columns that we care about
+  // find which matches have editable teams
+  // to do that check if the left or right of the match is null
+  //
 
   const columnsThatWeCareAbout = []
   const currentColumn = page

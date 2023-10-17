@@ -1,9 +1,10 @@
 import React from 'react'
-import { MatchNode, Team } from '../../models/MatchTree'
 import { BracketProps } from '../types'
 import { DefaultBracket } from './DefaultBracket'
 import { ResultsTeamSlotToggle } from '../TeamSlot'
 import { Nullable } from '../../../../utils/types'
+import { Team } from '../../models/Team'
+import { MatchNode } from '../../models/operations/MatchNode'
 
 export const ResultsBracket = (props: BracketProps) => {
   const { matchTree, setMatchTree } = props

@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import { MatchNode, Round } from '../../models/MatchTree'
 import {
   getBracketHeight as getDefaultBracketHeight,
   getBracketWidth as getDefaultBracketWidth,
@@ -20,6 +19,8 @@ import { useWindowDimensions } from '../../../../utils/hooks'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { LogoContainer } from '../MatchBox/Children/LogoContainer'
 import { BracketLines, RootMatchLines } from './BracketLines'
+import { MatchNode } from '../../models/operations/MatchNode'
+import { Round } from '../../models/Round'
 
 export const DefaultBracket = (props: BracketProps) => {
   const {

@@ -1,9 +1,9 @@
 import React from 'react'
-import { Team } from '../../models/MatchTree'
 import { MatchBoxProps } from '../types'
 import { Nullable } from '../../../../utils/types'
 //@ts-ignore
 import { FlexTeamSlot } from '../TeamSlot'
+import { Team } from '../../models/Team'
 
 const FlexMatchGap = (props: any) => {
   return (

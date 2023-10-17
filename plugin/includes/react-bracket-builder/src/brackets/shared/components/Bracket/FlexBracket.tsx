@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Round, MatchNode, MatchTree } from '../../models/MatchTree'
+import { MatchTree } from '../../models/MatchTree'
 import { BracketLines, RootMatchLines } from './BracketLines'
 import { getBracketHeight, getBracketWidth } from '../../utils'
 import { Nullable } from '../../../../utils/types'
@@ -9,6 +9,8 @@ import { FlexMatchColumn } from '../MatchColumn'
 import { FlexMatchBox } from '../MatchBox'
 import { FlexTeamSlot } from '../TeamSlot'
 import { flexBracketConstants } from '../../constants'
+import { MatchNode } from '../../models/operations/MatchNode'
+import { Round } from '../../models/Round'
 
 const {
   teamBreakpoints,

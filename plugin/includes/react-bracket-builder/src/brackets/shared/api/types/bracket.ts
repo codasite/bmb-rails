@@ -1,5 +1,5 @@
 import { Nullable } from '../../../../utils/types'
-import { WildcardPlacement } from '../../models/MatchTree'
+import { WildcardPlacement } from '../../models/WildcardPlacement'
 
 interface phpDate {
   date: string

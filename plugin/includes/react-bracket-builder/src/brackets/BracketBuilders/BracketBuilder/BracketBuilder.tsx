@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { bracketApi } from '../../shared/api/bracketApi'
-import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
+import { MatchTree } from '../../shared/models/MatchTree'
 import { AddTeamsPage } from './AddTeamsPage'
 import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
 import { BracketReq, BracketRes } from '../../shared/api/types/bracket'
@@ -11,6 +11,7 @@ import {
   WithProvider,
 } from '../../shared/components/HigherOrder'
 import { BracketMeta } from '../../shared/context'
+import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 
 const defaultBracketName = 'MY BRACKET NAME'
 const defaultInitialPickerIndex = 0

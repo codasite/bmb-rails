@@ -1,6 +1,8 @@
-import { MatchNode, MatchTree, Team } from '../models/MatchTree'
+import { MatchTree } from '../models/MatchTree'
 import { Nullable } from '../../../utils/types'
 import { ActionButtonProps } from './ActionButtons'
+import { Team } from '../models/Team'
+import { MatchNode } from '../models/operations/MatchNode'
 
 type TeamClickCallback = (
   match: MatchNode,
