@@ -36,7 +36,7 @@ services:
       timeout: 10s
       retries: 5
 
-  wordpress-test-app:
+  wp-app:
     tty: true
     build:
       context: .
@@ -45,10 +45,10 @@ services:
         PLUGIN_NAME: wp-bracket-builder
     restart: unless-stopped
     environment:
-      WORDPRESS_DB_HOST: wordpress-test-db
-      WORDPRESS_DB_USER: wordpress-test
-      WORDPRESS_DB_PASSWORD: wordpress-test
-      WORDPRESS_DB_NAME: wordpress-test
+      WORDPRESS_DB_HOST: wp-db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DEBUG: 1
       WORDPRESS_CONFIG_EXTRA: |
         define( 'WP_DEBUG_LOG', true );
@@ -73,47 +73,47 @@ services:
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
-      - wordpress-test-app-data:/var/www/html
+      - wp-app-data:/var/www/html
     ports:
       - 8008:80
     depends_on:
-      - wordpress-test-db
+      - wp-db
     profiles:
-      - test
+      - wp
       - all
 
-  wordpress-test-db:
+  wp-db:
     tty: true
     image: mariadb
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: wordpress-test
-      MYSQL_USER: wordpress-test
-      MYSQL_PASSWORD: wordpress-test
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
     volumes:
       - ./docker/db/scripts:/docker-entrypoint-initdb.d
-      - wordpress-test-db-data:/var/lib/mysql
+      - wp-db-data:/var/lib/mysql
     ports:
       - 3308:3306
     profiles:
-      - test
+      - wp
       - all
 
-  phpmyadmin-test:
+  phpmyadmin:
     image: phpmyadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: wordpress-test-db
+      PMA_HOST: wp-db
       PMA_PORT: 3306
-      PMA_USER: wordpress-test
-      PMA_PASSWORD: wordpress-test
+      PMA_USER: wordpress
+      PMA_PASSWORD: wordpress
     ports:
       - 8081:80
     depends_on:
-      - wordpress-test-db
+      - wp-db
     profiles:
-      - test
+      - wp
       - all
 
 networks:
@@ -121,5 +121,5 @@ networks:
     name: wp-bracket-builder
 
 volumes:
-  wordpress-test-app-data:
-  wordpress-test-db-data:
+  wp-app-data:
+  wp-db-data:
