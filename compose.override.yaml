@@ -36,7 +36,7 @@ services:
       timeout: 10s
       retries: 5
 
-  wp-test:
+  wordpress-test-app:
     tty: true
     build:
       context: .
@@ -44,7 +44,6 @@ services:
       args:
         PLUGIN_NAME: wp-bracket-builder
     restart: unless-stopped
-    container_name: wordpress-test-app
     environment:
       WORDPRESS_DB_HOST: wordpress-test-db
       WORDPRESS_DB_USER: wordpress-test
@@ -83,11 +82,10 @@ services:
       - test
       - all
 
-  db-test:
+  wordpress-test-db:
     tty: true
     image: mariadb
     restart: unless-stopped
-    container_name: wordpress-test-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wordpress-test
@@ -102,10 +100,9 @@ services:
       - test
       - all
 
-  phpmyadmin:
+  phpmyadmin-test:
     image: phpmyadmin
     restart: unless-stopped
-    container_name: phpmyadmin-test
     environment:
       PMA_HOST: db-test
       PMA_PORT: 3306
