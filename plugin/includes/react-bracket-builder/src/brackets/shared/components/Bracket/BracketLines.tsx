@@ -7,10 +7,11 @@ import { Round } from '../../models/Round'
 interface BracketLinesProps {
   rounds: Round[]
   style?: any
+  within: string
 }
 
 export const BracketLines = (props: BracketLinesProps) => {
-  const { rounds, style } = props
+  const { rounds, style, within } = props
   const darkMode = useContext(DarkModeContext)
   // Main function
   const renderLines = (rounds: Round[]): JSX.Element[] => {
@@ -65,6 +66,7 @@ export const BracketLines = (props: BracketLinesProps) => {
             toAnchor={toAnchor}
             orientation="h"
             delay={true}
+            within={within}
             {...style}
           />,
           <SteppedLineTo
@@ -75,6 +77,7 @@ export const BracketLines = (props: BracketLinesProps) => {
             toAnchor={toAnchor}
             orientation="h"
             delay={true}
+            within={within}
             {...style}
           />,
         ]
@@ -86,7 +89,7 @@ export const BracketLines = (props: BracketLinesProps) => {
 }
 
 export const RootMatchLines = (props: BracketLinesProps) => {
-  const { rounds, style } = props
+  const { rounds, style, within } = props
 
   const rootMatch = rounds[props.rounds.length - 1].matches[0]
   if (!rootMatch) {
@@ -116,6 +119,7 @@ export const RootMatchLines = (props: BracketLinesProps) => {
         fromAnchor="bottom"
         toAnchor="top"
         delay={true}
+        within={within}
         {...style}
       />
       <LineTo
@@ -124,6 +128,7 @@ export const RootMatchLines = (props: BracketLinesProps) => {
         fromAnchor="bottom"
         toAnchor="top"
         delay={true}
+        within={within}
         {...style}
       />
     </div>

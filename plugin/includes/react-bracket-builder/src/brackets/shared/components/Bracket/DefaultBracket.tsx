@@ -158,7 +158,11 @@ export const DefaultBracket = (props: BracketProps) => {
 
   return (
     <DarkModeContext.Provider value={dark}>
-      <div className={`tw-flex tw-flex-col${dark ? ' tw-dark' : ''}`}>
+      <div
+        className={`tw-flex tw-flex-col${
+          dark ? ' tw-dark' : ''
+        } wpbb-default-bracket`}
+      >
         {rootMatch && (
           <div className={`tw-mb-[${winnerContainerMB}px]`}>
             <WinnerContainer
@@ -184,8 +188,16 @@ export const DefaultBracket = (props: BracketProps) => {
             <LogoContainer {...props} bottomText={bracketDate} />
           </div>
         }
-        <BracketLines rounds={matchTree.rounds} style={linesStyle} />
-        <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
+        <BracketLines
+          rounds={matchTree.rounds}
+          style={linesStyle}
+          within={'wpbb-default-bracket'}
+        />
+        <RootMatchLines
+          rounds={matchTree.rounds}
+          style={linesStyle}
+          within={'wpbb-default-bracket'}
+        />
       </div>
     </DarkModeContext.Provider>
   )

@@ -181,14 +181,22 @@ export const PaginatedDefaultBracket = (
         <div
           className={`tw-flex tw-justify-${
             currentRoundIsLast ? 'center' : 'between'
-          }`}
+          } wpbb-paginated-default-bracket-columns`}
         >
           {leftSide ? currentRoundColumn : nextRoundColumn}
           {leftSide ? nextRoundColumn : currentRoundColumn}
           {currentRoundIsLast ? (
-            <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
+            <RootMatchLines
+              rounds={matchTree.rounds}
+              style={linesStyle}
+              within={'wpbb-paginated-default-bracket-columns'}
+            />
           ) : (
-            <BracketLines rounds={matchTree.rounds} style={linesStyle} />
+            <BracketLines
+              rounds={matchTree.rounds}
+              style={linesStyle}
+              within={'wpbb-paginated-default-bracket-columns'}
+            />
           )}
         </div>
       </div>
