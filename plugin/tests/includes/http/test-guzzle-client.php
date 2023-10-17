@@ -37,14 +37,15 @@ class GuzzleClientTest extends WPBB_UnitTestCase {
         200,
         ['X-Foo' => 'Bar'],
         json_encode([
-          'imgUrl' => 'https://wpbb-bracket-images.s3.amazonaws.com/light_top',
+          'image_url' =>
+            'https://wpbb-bracket-images.s3.amazonaws.com/light_top',
         ])
       ),
       new Response(
         200,
         ['X-Foo' => 'Bar'],
         json_encode([
-          'imgUrl' =>
+          'image_url' =>
             'https://wpbb-bracket-images.s3.amazonaws.com/light_center',
         ])
       ),
@@ -64,14 +65,15 @@ class GuzzleClientTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(
       [
-        'imgUrl' => 'https://wpbb-bracket-images.s3.amazonaws.com/light_top',
+        'image_url' => 'https://wpbb-bracket-images.s3.amazonaws.com/light_top',
       ],
       $responses['light_top']
     );
 
     $this->assertEquals(
       [
-        'imgUrl' => 'https://wpbb-bracket-images.s3.amazonaws.com/light_center',
+        'image_url' =>
+          'https://wpbb-bracket-images.s3.amazonaws.com/light_center',
       ],
       $responses['light_center']
     );

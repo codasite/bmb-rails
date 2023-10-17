@@ -76,7 +76,9 @@ const s3Uploader: ObjectStorageUploader = {
       ContentType: contentType,
     })
     return s3.send(command).then((data) => {
-      return `https://${s3Bucket}.s3.amazonaws.com/${s3Key}`
+      return JSON.stringify({
+        image_url: `https://${s3Bucket}.s3.amazonaws.com/${s3Key}`,
+      })
     })
   },
 }
@@ -167,8 +169,8 @@ app.post('/generate', async (req, res) => {
   }
   try {
     console.time('uploadToS3')
-    const imgUrl = await uploader.upload(file, contentType, req.body)
-    res.send(imgUrl)
+    const image_url = await uploader.upload(file, contentType, req.body)
+    res.send(image_url)
   } catch (err: any) {
     console.error(err)
     res.status(500).send(err)

@@ -149,7 +149,7 @@ class Wpbb_GelatoProductIntegration implements
     //Save to post meta
     update_post_meta(
       $bracket->get_post_id(),
-      'gelato_images',
+      $this->get_post_meta_key(),
       json_encode($responses)
     );
   }
