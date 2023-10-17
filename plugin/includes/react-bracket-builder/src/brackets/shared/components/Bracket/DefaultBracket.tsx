@@ -132,9 +132,6 @@ export const DefaultBracket = (props: BracketProps) => {
         />
       )
     })
-    if (position === 'right') {
-      matchColumns.reverse()
-    }
 
     return matchColumns
   }
@@ -142,7 +139,7 @@ export const DefaultBracket = (props: BracketProps) => {
   const buildMatches = (rounds: Round[]) => {
     // Build the left matches, right matches, and final match separately
     const leftMatches = getLeftMatches(rounds)
-    const rightMatches = getRightMatches(rounds)
+    const rightMatches = getRightMatches(rounds).reverse()
     const finalMatches = getFinalMatches(rounds)
 
     const leftMatchColumns = getMatchColumns(leftMatches, 'left', numRounds)
