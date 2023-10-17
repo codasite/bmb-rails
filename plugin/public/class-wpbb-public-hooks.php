@@ -27,6 +27,14 @@ class Wpbb_Public_Hooks
 		return $vars;
 	}
 
+	public function template_redirect() {
+		if (is_page('dashboard') && !is_user_logged_in()) {
+			global $wp;
+			wp_redirect(wp_login_url($wp->request));
+			exit;
+		}
+	}
+
 	public function add_roles() {
 		add_role(
 			'bmb_plus',

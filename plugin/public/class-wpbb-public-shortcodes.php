@@ -13,7 +13,7 @@ class Wpbb_Public_Shortcodes {
 	public function render_bracket_preview() {
 		ob_start();
 		?>
-    <div id="wpbb-bracket-preview-controller" style="width: 100%">
+		<div id="wpbb-bracket-preview-controller" style="width: 100%">
 		</div>
 	<?php
 		return ob_get_clean();
@@ -42,45 +42,18 @@ class Wpbb_Public_Shortcodes {
 	public function render_dashboard() {
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/dashboard/wpbb-dashboard.php';
-
-		// use wp query to get the post
-		$args = array(
-			'name'        => 'bmb',
-			'post_type'   => 'product',
-			'post_status' => 'publish',
-			'numberposts' => 1
-		);
-		$bmb_post = get_posts($args)[0];
-		$upgrade_account_url = get_permalink($bmb_post->ID);
-
-
-		wp_localize_script(
-			'wpbb-bracket-builder-react',
-			'wpbb_ajax_obj',
-			array(
-				'my_brackets_url' => get_permalink() . 'brackets',
-				'bracket_builder_url' => get_permalink(get_page_by_path('bracket-builder')),
-				'user_can_share_bracket' => current_user_can('wpbb_share_bracket') ? true : false,
-				'upgrade_account_url' => $upgrade_account_url,
-				'nonce' => wp_create_nonce('wp_rest'),
-				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-			)
-		);
-
 		return ob_get_clean();
 	}
 
 	public function render_official_brackets() {
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/wpbb-official-tournaments.php';
-
 		return ob_get_clean();
 	}
 
 	public function render_celebrity_picks() {
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/wpbb-celebrity-picks.php';
-
 		return ob_get_clean();
 	}
 
@@ -95,41 +68,10 @@ class Wpbb_Public_Shortcodes {
 			ob_start();
 			include('error/401.php');
 			return ob_get_clean();
-		} else {
-			$post = get_post();
-			if (!$post || $post->post_type !== 'bracket') {
-				return
-					'<div class="alert alert-danger" role="alert">
-						Bracket not found.
-					</div>';
-			}
-			$bracket_repo = new Wpbb_BracketRepo();
-			$bracket = $bracket_repo->get(post: $post);
-			$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
-
-
-			// $bracket_product_archive_url = $this->get_archive_url();
-			$css_file = plugin_dir_url(dirname(__FILE__)) . 'includes/react-bracket-builder/build/index.css';
-
-			wp_localize_script(
-				'wpbb-bracket-builder-react',
-				'wpbb_ajax_obj',
-				array(
-					'bracket' => $bracket,
-					// 'sentry_env' => $sentry_env,
-					// 'sentry_dsn' => $sentry_dsn,
-					'my_brackets_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=brackets',
-					'nonce' => wp_create_nonce('wp_rest'),
-					'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-					'redirect_url' => $play_history_url, // used to redirect to bracket-ready category page
-
-					// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
-				)
-			);
-			ob_start();
-			include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-page.php';
-			return ob_get_clean();
 		}
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-page.php';
+		return ob_get_clean();
 	}
 
 	public function render_bracket_play_page() {
