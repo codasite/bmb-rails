@@ -73,11 +73,11 @@ services:
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
-      - wp-test-data:/var/www/html
+      - wordpress-test-app-data:/var/www/html
     ports:
       - 8008:80
     depends_on:
-      - db-test
+      - wordpress-test-db
     profiles:
       - test
       - all
@@ -93,7 +93,7 @@ services:
       MYSQL_PASSWORD: wordpress-test
     volumes:
       - ./docker/db/scripts:/docker-entrypoint-initdb.d
-      - db-test-data:/var/lib/mysql
+      - wordpress-test-db-data:/var/lib/mysql
     ports:
       - 3308:3306
     profiles:
@@ -104,14 +104,14 @@ services:
     image: phpmyadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: db-test
+      PMA_HOST: wordpress-test-db
       PMA_PORT: 3306
       PMA_USER: wordpress-test
       PMA_PASSWORD: wordpress-test
     ports:
       - 8081:80
     depends_on:
-      - db-test
+      - wordpress-test-db
     profiles:
       - test
       - all
@@ -121,5 +121,5 @@ networks:
     name: wp-bracket-builder
 
 volumes:
-  wp-test-data:
-  db-test-data:
+  wordpress-test-app-data:
+  wordpress-test-db-data:
