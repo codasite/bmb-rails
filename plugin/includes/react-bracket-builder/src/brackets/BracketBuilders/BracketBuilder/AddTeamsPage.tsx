@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ReactComponent as ArrowNarrowLeft } from '../../shared/assets/arrow-narrow-left.svg'
 import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
@@ -9,6 +9,7 @@ import {
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
 import { useWindowDimensions } from '../../../utils/hooks'
+import { EditableTeamSlotSwitch } from '../../shared/components/TeamSlot'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -27,6 +28,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         <PaginatedDefaultBracket
           matchTree={matchTree}
           setMatchTree={setMatchTree}
+          TeamSlotComponent={EditableTeamSlotSwitch}
         />
       </div>
     )
