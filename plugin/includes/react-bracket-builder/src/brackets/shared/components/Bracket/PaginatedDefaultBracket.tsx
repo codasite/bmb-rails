@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { PaginatedBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
@@ -37,30 +37,6 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
     page,
     setPage,
   } = props
-
-  useEffect(() => {
-    // try to determine page from matchTree
-    if (!matchTree.anyPicked()) {
-      return
-    }
-    if (matchTree.allPicked()) {
-      return setPage((matchTree.rounds.length - 1) * 2)
-    }
-    // find first unpicked match
-    const firstUnpickedMatch = matchTree.findMatch(
-      (match) => match && !match.isPicked()
-    )
-    if (!firstUnpickedMatch) {
-      return
-    }
-    const { roundIndex, matchIndex } = firstUnpickedMatch
-    const numMatches = matchTree.rounds[roundIndex].matches.length
-    let pageNum = roundIndex * 2
-    if (matchIndex >= numMatches / 2) {
-      pageNum++
-    }
-    setPage(pageNum)
-  }, [])
 
   const numRounds = matchTree.rounds.length
   const roundIndex = Math.floor(page / 2)
