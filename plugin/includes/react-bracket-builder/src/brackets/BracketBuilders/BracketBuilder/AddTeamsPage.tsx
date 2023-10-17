@@ -51,11 +51,15 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         </div>
       </div>
       <div
-        className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-max-w-screen-xl tw-min-h-[500px] tw-m-auto tw-dark`}
-      >
-        {matchTree && (
-          <AddTeamsBracket matchTree={matchTree} setMatchTree={setMatchTree} />
-        )}
+          className={matchTree.rounds.length > 4? "tw-pb-80": ""}
+        >
+        <div
+          className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-max-w-screen-xl tw-min-h-[500px] tw-m-auto tw-dark`}
+        >
+          {matchTree && (
+            <AddTeamsBracket matchTree={matchTree} setMatchTree={setMatchTree} />
+          )}
+          </div>
       </div>
       <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full">
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
