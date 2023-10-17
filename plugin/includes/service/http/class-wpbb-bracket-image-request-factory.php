@@ -116,7 +116,7 @@ class Wpbb_BracketImageRequestFactory {
     $theme,
     $position
   ) {
-    $request_data = array_merge($base_data, [
+    $body = array_merge($base_data, [
       'storageOptions' => $this->object_storage->get_upload_options(
         $theme . '-' . $position . '-' . $bracket_id
       ),
@@ -125,8 +125,7 @@ class Wpbb_BracketImageRequestFactory {
         'position' => $position,
       ]),
     ]);
-
-    return json_encode($request_data);
+    return json_encode($body);
   }
 
   /**
