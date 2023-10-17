@@ -60,7 +60,7 @@ class Wpbb_BracketTeamRepo {
     $sql_escaped_name = mysqli_real_escape_string(
       $this->wpdb->dbh,
       $team->name
-    );    
+    );
 
     $table_name = $this->team_table();
     $this->wpdb->insert($table_name, [
