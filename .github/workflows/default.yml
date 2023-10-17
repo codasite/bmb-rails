@@ -8,7 +8,7 @@ on:
 
 env:
   PROJECT_NAME: github_runner
-  SERVICE_NAME: wp-dev
+  SERVICE_NAME: wp-test
 
 jobs:
   prettier-check:
@@ -25,7 +25,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
-      - run: docker compose -p $PROJECT_NAME  --profile wp up --build --detach --remove-orphans
+      - run: docker compose -p $PROJECT_NAME  --profile test up --build --detach --remove-orphans
       - run: docker exec  ${{ env.PROJECT_NAME }}_${{ env.SERVICE_NAME }} composer install
       - run: docker exec ${{ env.PROJECT_NAME }}_${{ env.SERVICE_NAME }} install-wp-tests
       - run: docker exec ${{ env.PROJECT_NAME }}_${{ env.SERVICE_NAME }} composer test
