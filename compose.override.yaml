@@ -124,7 +124,6 @@ services:
 
   wp-test:
     tty: true
-    container_name: wp-test
     build:
       context: .
       dockerfile: ./docker/wordpress/Dockerfile.test
@@ -152,14 +151,11 @@ services:
   wp-test-db:
     tty: true
     image: mariadb
-    container_name: wp-test-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
-    ports:
-      - 3308:3306
     profiles:
       - test
 
