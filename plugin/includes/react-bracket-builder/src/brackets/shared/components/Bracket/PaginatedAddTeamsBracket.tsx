@@ -12,7 +12,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
     <PaginatedDefaultBracket
       page={page}
       setPage={setPage}
-      disableNext={() => false}
+      disableNext={disableNext}
       TeamSlotComponent={EditableTeamSlotSwitch}
       {...props}
     />

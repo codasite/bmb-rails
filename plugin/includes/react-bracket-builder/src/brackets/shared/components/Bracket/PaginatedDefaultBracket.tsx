@@ -44,12 +44,12 @@ export const PaginatedDefaultBracket = (
   const numRounds = matchTree.rounds.length
   const roundIndex = Math.floor(page / 2)
   const nextRoundIndex = roundIndex + 1
-  const thisRoundIsLast = roundIndex === numRounds - 1
+  const currentRoundIsLast = roundIndex === numRounds - 1
   const nextRoundIsLast = nextRoundIndex === numRounds - 1
   const leftSide = page % 2 === 0
 
   let currentRoundMatches = matchTree.rounds[roundIndex].matches
-  let nextRoundMatches = thisRoundIsLast
+  let nextRoundMatches = currentRoundIsLast
     ? null
     : matchTree.rounds[nextRoundIndex].matches
 
@@ -69,7 +69,7 @@ export const PaginatedDefaultBracket = (
     )
   }
 
-  if (!thisRoundIsLast) {
+  if (!currentRoundIsLast) {
     const mid1 = currentRoundMatches.length / 2
     const mid2 = nextRoundMatches.length / 2
 
@@ -98,17 +98,17 @@ export const PaginatedDefaultBracket = (
   const matchHeight = teamHeight * 2 + teamGap
   const matchGap2 = getSubsequentMatchGap(matchHeight, matchGap1, matchHeight)
 
-  const thisMatchPosition = leftSide ? 'left' : 'right'
+  const currentMatchPosition = leftSide ? 'left' : 'right'
   const nextMatchPosition = nextRoundIsLast
     ? 'center'
     : leftSide
     ? 'left'
     : 'right'
 
-  const matchCol1 = (
+  const currentRoundColumn = (
     <MatchColumnComponent
       matches={currentRoundMatches}
-      matchPosition={thisMatchPosition}
+      matchPosition={currentMatchPosition}
       matchTree={matchTree}
       setMatchTree={setMatchTree}
       MatchBoxComponent={MatchBoxComponent}
@@ -122,7 +122,7 @@ export const PaginatedDefaultBracket = (
     />
   )
 
-  const matchCol2 = thisRoundIsLast ? null : (
+  const nextRoundColumn = currentRoundIsLast ? null : (
     <MatchColumnComponent
       matches={nextRoundMatches}
       matchPosition={nextMatchPosition}
@@ -164,10 +164,10 @@ export const PaginatedDefaultBracket = (
       </div>
       <div
         className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${
-          thisRoundIsLast ? ' tw-pb-0' : ''
+          currentRoundIsLast ? ' tw-pb-0' : ''
         }`}
       >
-        {thisRoundIsLast && (
+        {currentRoundIsLast && (
           <WinnerContainer
             match={matchTree.rounds[roundIndex].matches[0]}
             matchTree={matchTree}
@@ -180,12 +180,12 @@ export const PaginatedDefaultBracket = (
 
         <div
           className={`tw-flex tw-justify-${
-            thisRoundIsLast ? 'center' : 'between'
+            currentRoundIsLast ? 'center' : 'between'
           }`}
         >
-          {leftSide ? matchCol1 : matchCol2}
-          {leftSide ? matchCol2 : matchCol1}
-          {thisRoundIsLast ? (
+          {leftSide ? currentRoundColumn : nextRoundColumn}
+          {leftSide ? nextRoundColumn : currentRoundColumn}
+          {currentRoundIsLast ? (
             <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
           ) : (
             <BracketLines rounds={matchTree.rounds} style={linesStyle} />
@@ -194,10 +194,10 @@ export const PaginatedDefaultBracket = (
       </div>
       <div
         className={`tw-flex tw-flex-col tw-justify-end tw-items-${
-          thisRoundIsLast ? 'center' : 'stretch'
-        }${thisRoundIsLast ? ' tw-flex-grow' : ''}`}
+          currentRoundIsLast ? 'center' : 'stretch'
+        }${currentRoundIsLast ? ' tw-flex-grow' : ''}`}
       >
-        {thisRoundIsLast ? (
+        {currentRoundIsLast ? (
           <FinalButtonComponent
             disabled={disableNext(currentRoundMatches)}
             onClick={onFinished}
