@@ -1,7 +1,5 @@
-import { Round, MatchNode, Team } from '../models/MatchTree'
+import { MatchNode, MatchTree, Team } from '../models/MatchTree'
 import { Nullable } from '../../../utils/types'
-import { MatchTree } from '../models/MatchTree'
-import { Match } from '@sentry/react/types/reactrouterv3'
 import { ActionButtonProps } from './ActionButtons'
 
 type TeamClickCallback = (
@@ -97,6 +95,8 @@ export interface PaginatedBracketProps extends BracketProps {
   onFinished?: () => void
   NextButtonComponent?: React.FC<ActionButtonProps>
   FinalButtonComponent?: React.FC<ActionButtonProps>
+  page: number
+  setPage: (page: number) => void
 }
 
 export interface ScaledBracketProps extends BracketProps {

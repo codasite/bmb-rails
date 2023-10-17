@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { PaginatedBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
@@ -34,9 +34,9 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
     onFinished,
     NextButtonComponent = DefaultNextButton,
     FinalButtonComponent = DefaultFinalButton,
+    page,
+    setPage,
   } = props
-
-  const [page, setPage] = useState(0)
 
   useEffect(() => {
     // try to determine page from matchTree

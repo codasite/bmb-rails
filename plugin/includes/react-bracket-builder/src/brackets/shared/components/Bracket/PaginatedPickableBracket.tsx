@@ -4,7 +4,7 @@ import { PickableBracket } from './PickableBracket'
 import { PaginatedDefaultBracket } from './PaginatedDefaultBracket'
 
 export const PaginatedPickableBracket = (props: PaginatedBracketProps) => {
-  const { matchTree, setMatchTree } = props
+  const { matchTree } = props
 
   console.log('PaginatedPickableBracket', matchTree)
   return (

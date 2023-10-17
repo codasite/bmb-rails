@@ -23,12 +23,15 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < 768
   if (showPaginated) {
+    const [page, setPage] = React.useState(0)
     return (
       <div className="tw-bg-dd-blue">
         <PaginatedDefaultBracket
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           TeamSlotComponent={EditableTeamSlotSwitch}
+          page={page}
+          setPage={setPage}
         />
       </div>
     )
