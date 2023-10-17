@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   image-generator:
+    container_name: image-generator
     tty: true
     command: npm run dev
     volumes:
@@ -12,6 +13,7 @@ services:
       - generator
 
   react-server:
+    container_name: react-server
     tty: true
     command: npm run dev
     volumes:
@@ -22,6 +24,7 @@ services:
 
   react-client:
     tty: true
+    container_name: react-client
     command: npm run dev:standalone
     volumes:
       - ./plugin/includes/react-bracket-builder/src:/usr/src/app/src # To serve the react client code in development
@@ -38,6 +41,7 @@ services:
 
   wp-dev:
     tty: true
+    container_name: wp-dev
     build:
       context: .
       dockerfile: ./docker/wordpress/Dockerfile
@@ -86,6 +90,7 @@ services:
     tty: true
     image: mariadb
     restart: unless-stopped
+    container_name: wp-dev-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: wordpress
@@ -102,6 +107,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin
+    container_name: phpmyadmin
     restart: unless-stopped
     environment:
       PMA_HOST: wp-dev-db
