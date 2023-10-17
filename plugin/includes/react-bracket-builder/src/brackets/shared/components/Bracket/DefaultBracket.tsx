@@ -21,6 +21,11 @@ import { LogoContainer } from '../MatchBox/Children/LogoContainer'
 import { BracketLines, RootMatchLines } from './BracketLines'
 import { MatchNode } from '../../models/operations/MatchNode'
 import { Round } from '../../models/Round'
+import {
+  getFinalMatches,
+  getLeftMatches,
+  getRightMatches,
+} from '../../models/operations/GetMatchSections'
 
 export const DefaultBracket = (props: BracketProps) => {
   const {
@@ -136,19 +141,13 @@ export const DefaultBracket = (props: BracketProps) => {
 
   const buildMatches = (rounds: Round[]) => {
     // Build the left matches, right matches, and final match separately
-    const numRounds = rounds.length
-    const sideMatches = rounds.slice(0, numRounds - 1)
-    const leftMatches = sideMatches.map((round) =>
-      round.matches.slice(0, round.matches.length / 2)
-    )
-    const rightMatches = sideMatches.map((round) =>
-      round.matches.slice(round.matches.length / 2)
-    )
-    const finalMatch = rounds[numRounds - 1].matches
+    const leftMatches = getLeftMatches(rounds)
+    const rightMatches = getRightMatches(rounds)
+    const finalMatches = getFinalMatches(rounds)
 
     const leftMatchColumns = getMatchColumns(leftMatches, 'left', numRounds)
     const rightMatchColumns = getMatchColumns(rightMatches, 'right', numRounds)
-    const finalMatchColumn = getMatchColumns([finalMatch], 'center', numRounds)
+    const finalMatchColumn = getMatchColumns(finalMatches, 'center', numRounds)
 
     return [...leftMatchColumns, ...finalMatchColumn, ...rightMatchColumns]
   }
