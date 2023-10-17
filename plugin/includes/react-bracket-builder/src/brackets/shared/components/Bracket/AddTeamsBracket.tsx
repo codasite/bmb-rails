@@ -2,9 +2,7 @@ import React from 'react'
 import { BracketProps } from '../types'
 import { DefaultBracket } from './DefaultBracket'
 import { EditableTeamSlotSwitch } from '../TeamSlot'
-import { AddTeamsFinalMatchChildren } from '../MatchBox/Children/AddTeamsFinalMatchChildren'
-import { Team } from '../../models/Team'
-import { MatchNode } from '../../models/operations/MatchNode'
+import { AddTeamsFinalMatchChildren } from '../MatchBox/Children'
 
 export const AddTeamsBracket = (props: BracketProps) => {
   return (

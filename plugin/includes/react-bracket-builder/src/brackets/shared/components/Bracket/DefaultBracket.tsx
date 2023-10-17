@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import {
-  getBracketHeight as getDefaultBracketHeight,
   getBracketWidth as getDefaultBracketWidth,
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
   getSubsequentMatchGap as getDefaultSubsequentMatchGap,
@@ -12,7 +11,7 @@ import {
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
 import { BracketMetaContext, DarkModeContext } from '../../context'
-import { DefaultMatchColumn } from '../MatchColumn/DefaultMatchColumn'
+import { DefaultMatchColumn } from '../MatchColumn'
 import { DefaultTeamSlot } from '../TeamSlot'
 import { defaultBracketConstants } from '../../constants'
 import { useWindowDimensions } from '../../../../utils/hooks'
@@ -29,7 +28,6 @@ import {
 
 export const DefaultBracket = (props: BracketProps) => {
   const {
-    getBracketHeight = getDefaultBracketHeight,
     getBracketWidth = getDefaultBracketWidth,
     getTeamHeight = getDefaultTeamHeight,
     getTeamGap = getDefaultTeamGap,
