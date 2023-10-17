@@ -8,7 +8,7 @@ on:
 
 env:
   PROJECT_NAME: github_runner
-  SERVICE_NAME: wp-app
+  SERVICE_NAME: wp-dev
 
 jobs:
   prettier-check:

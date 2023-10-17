@@ -17,22 +17,22 @@ wp-down:
 # Install wordpress and the test installation
 # This command can be used when building from scratch
 wp-install:
-	docker exec wp-app install-wp.sh
-	docker exec wp-app install-wp-tests
+	docker exec wp-dev install-wp.sh
+	docker exec wp-dev install-wp-tests
 
 # Initialize the test installation and add admin user without installing
 # This command can be used when building from a site backup or db dump
 wp-init:
-	docker exec wp-app install-wp-tests
-	docker exec wp-app create-admin-user.sh
+	docker exec wp-dev install-wp-tests
+	docker exec wp-dev create-admin-user.sh
 
 # Run tests
 wp-test:
-	docker exec wp-app composer test
+	docker exec wp-dev composer test
 
 # Read out debug log (ignore deprecated warnings)
 wp-log:
-	docker exec wp-app tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
+	docker exec wp-dev tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
 
 # Dump the database into the mariadb init folder
 wp-dump:

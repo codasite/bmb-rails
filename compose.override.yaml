@@ -36,7 +36,7 @@ services:
       timeout: 10s
       retries: 5
 
-  wp-app:
+  wp-dev:
     tty: true
     build:
       context: .
@@ -73,7 +73,7 @@ services:
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
-      - wp-app-data:/var/www/html
+      - wp-dev-data:/var/www/html
     ports:
       - 8008:80
     depends_on:
@@ -118,8 +118,8 @@ services:
 
 networks:
   default:
-    name: wp-bracket-builder
+    name: wpbb
 
 volumes:
-  wp-app-data:
+  wp-dev-data:
   wp-db-data:
