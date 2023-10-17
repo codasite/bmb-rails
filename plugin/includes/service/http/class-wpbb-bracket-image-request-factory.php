@@ -109,7 +109,7 @@ class Wpbb_BracketImageRequestFactory {
     ];
   }
 
-  private function create_body(
+  public function create_body(
     $bracket_id,
     $base_data,
     $base_query,
