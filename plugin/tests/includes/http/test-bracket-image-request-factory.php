@@ -3,9 +3,9 @@ require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/object-storage/class-wpbb-object-storage-interface.php';
 require_once WPBB_PLUGIN_DIR .
-  'includes/service/http/class-wpbb-bracket-image-request.php';
+  'includes/service/http/class-wpbb-bracket-image-request-factory.php';
 
-class BracketImageRequestFactory extends WPBB_UnitTestCase {
+class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
   public function test_get_request_data() {
     $bracket_mock = $this->createMock(Wpbb_PostBracketInterface::class);
     $bracket_mock->method('get_post_id')->willReturn(1);

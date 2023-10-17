@@ -11,6 +11,8 @@ require_once WPBB_PLUGIN_DIR .
   'includes/service/object-storage/class-wpbb-object-storage-interface.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/object-storage/class-wpbb-s3-storage.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/http/class-wpbb-bracket-image-request-factory.php';
 
 class Wpbb_GelatoProductIntegration implements
   Wpbb_ProductIntegrationInterface {
@@ -46,7 +48,9 @@ class Wpbb_GelatoProductIntegration implements
     $this->object_storage = $args['object_storage'] ?? new Wpbb_S3Storage();
     $this->request_factory =
       $args['request_factory'] ??
-      new Wpbb_BracketImageRequestFactory($this->object_storage);
+      new Wpbb_BracketImageRequestFactory([
+        'object_storage' => $this->object_storage,
+      ]);
   }
 
   public function get_post_meta_key(): string {
