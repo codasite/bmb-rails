@@ -71,9 +71,13 @@ class Wpbb_GuzzleClient implements Wpbb_HttpClientInterface {
 
     $pool = new Pool($this->client, $get_requests(), [
       'concurrency' => 5,
-      'fulfilled' => function (Response $response, $index) use ($keys) {
+      'fulfilled' => function (Response $response, $index) use (
+        $keys,
+        &$responses
+      ) {
         // this is delivered each successful response
-        $responses[$keys[$index]] = $response;
+        $body = $response->getBody()->getContents();
+        $responses[$keys[$index]] = json_decode($body, true);
       },
       'rejected' => function (RequestException $reason, $index) {
         // this is delivered each failed request
