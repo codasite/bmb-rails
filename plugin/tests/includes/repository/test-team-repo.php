@@ -6,11 +6,13 @@ require_once WPBB_PLUGIN_DIR .
 
 class TeamRepoTest extends WPBB_UnitTestCase {
   private $team_repo;
+  private $bracket_repo;
 
   public function set_up() {
     parent::set_up();
 
     $this->team_repo = new Wpbb_BracketTeamRepo();
+    $this->bracket_repo = new Wpbb_BracketRepo();
   }
 
   public function test_add() {
@@ -26,16 +28,6 @@ class TeamRepoTest extends WPBB_UnitTestCase {
             'name' => 'Team 2',
           ]),
         ]),
-        new Wpbb_Match([
-          'round_index' => 0,
-          'match_index' => 1,
-          'team1' => new Wpbb_Team([
-            'name' => 'Team 3',
-          ]),
-          'team2' => new Wpbb_Team([
-            'name' => 'Team 4',
-          ]),
-        ]),
       ],
     ]);
 
@@ -45,7 +37,8 @@ class TeamRepoTest extends WPBB_UnitTestCase {
       'name' => $dirty_name,
     ]);
 
-    $team = $this->team_repo->add($bracket->id, $team);
+    $bracket_data = $this->bracket_repo->get_bracket_data($bracket->id);
+    $team = $this->team_repo->add($bracket_data['id'], $team);
 
     $this->assertNotNull($team->id);
     $this->assertEquals($dirty_name, $team->name);

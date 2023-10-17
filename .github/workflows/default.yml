@@ -6,9 +6,13 @@ on:
   pull_request:
     branches: ['main']
 
+env:
+  PROJECT_NAME: github_runner
+  SERVICE_NAME: wp-test-1
+
 jobs:
   prettier-check:
-    runs-on: self-hosted
+    runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v3
       - name: Setup node
@@ -17,13 +21,13 @@ jobs:
           node-version: 20
       - run: npm ci
       - run: npm run pretty:check
-  wordpress-test:
-    runs-on: self-hosted
+  wordpress:
+    runs-on: [self-hosted]
     steps:
       - uses: actions/checkout@v3
-      - run: make wp-up-detach
-      - run: make wp-install
-      - run: docker exec wordpress-test-app composer install
-      - run: make wp-test
-      - run: make wp-down
+      - run: docker compose -p $PROJECT_NAME  --profile test up --build --detach --remove-orphans
+      - run: docker exec  ${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} composer install
+      - run: docker exec ${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} install-wp-tests
+      - run: docker exec ${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} composer test
+      - run: docker compose -p $PROJECT_NAME down -v
         if: ${{ always() }}

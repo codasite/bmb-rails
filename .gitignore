@@ -139,3 +139,4 @@ build/
 docker/wordpress/downloads/*
 !docker/wordpress/downloads/.gitkeep
 docker/wordpress/plugins/*
+!docker/wordpress/plugins/.gitkeep
