@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { PaginatedBracketProps } from '../types'
+import { PaginatedDefaultBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
   getSubsequentMatchGap as getDefaultSubsequentMatchGap,
@@ -15,7 +15,9 @@ import { DarkModeContext } from '../../context'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { DefaultFinalButton, DefaultNextButton } from './BracketActionButtons'
 
-export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
+export const PaginatedDefaultBracket = (
+  props: PaginatedDefaultBracketProps
+) => {
   const {
     getBracketWidth = () => 260,
     getTeamHeight = () => getDefaultTeamHeight(4),
@@ -36,6 +38,7 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
     FinalButtonComponent = DefaultFinalButton,
     page,
     setPage,
+    disableNext,
   } = props
 
   const numRounds = matchTree.rounds.length
@@ -149,9 +152,6 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
       setPage(newPage)
     }
   }
-  const disableNext = currentRoundMatches.some(
-    (match) => match && !match.isPicked()
-  )
 
   return (
     <div
@@ -198,9 +198,15 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
         }${thisRoundIsLast ? ' tw-flex-grow' : ''}`}
       >
         {thisRoundIsLast ? (
-          <FinalButtonComponent disabled={disableNext} onClick={onFinished} />
+          <FinalButtonComponent
+            disabled={disableNext(currentRoundMatches)}
+            onClick={onFinished}
+          />
         ) : (
-          <NextButtonComponent disabled={disableNext} onClick={handleNext} />
+          <NextButtonComponent
+            disabled={disableNext(currentRoundMatches)}
+            onClick={handleNext}
+          />
         )}
       </div>
     </div>

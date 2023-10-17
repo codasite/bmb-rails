@@ -95,8 +95,12 @@ export interface PaginatedBracketProps extends BracketProps {
   onFinished?: () => void
   NextButtonComponent?: React.FC<ActionButtonProps>
   FinalButtonComponent?: React.FC<ActionButtonProps>
+}
+
+export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
   page: number
   setPage: (page: number) => void
+  disableNext: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
 }
 
 export interface ScaledBracketProps extends BracketProps {

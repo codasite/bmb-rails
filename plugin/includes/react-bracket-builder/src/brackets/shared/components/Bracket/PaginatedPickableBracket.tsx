@@ -1,10 +1,18 @@
 import React, { useEffect } from 'react'
-import { PaginatedBracketProps } from '../types'
+import { PaginatedBracketProps, PaginatedDefaultBracketProps } from '../types'
 import { PickableBracket } from './PickableBracket'
 import { PaginatedDefaultBracket } from './PaginatedDefaultBracket'
 
 export const PaginatedPickableBracket = (props: PaginatedBracketProps) => {
-  const { matchTree, setPage } = props
+  const { matchTree } = props
+  const [page, setPage] = React.useState(0)
+  const newProps: PaginatedDefaultBracketProps = {
+    ...props,
+    page,
+    setPage,
+    disableNext: (currentRoundMatches) =>
+      currentRoundMatches.some((match) => match && !match.isPicked()),
+  }
 
   console.log('PaginatedPickableBracket', matchTree)
   useEffect(() => {
@@ -32,6 +40,6 @@ export const PaginatedPickableBracket = (props: PaginatedBracketProps) => {
   }, [])
 
   return (
-    <PickableBracket BracketComponent={PaginatedDefaultBracket} {...props} />
+    <PickableBracket BracketComponent={PaginatedDefaultBracket} {...newProps} />
   )
 }

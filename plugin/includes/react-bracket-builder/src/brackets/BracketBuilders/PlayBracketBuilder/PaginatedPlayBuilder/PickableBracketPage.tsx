@@ -24,7 +24,6 @@ export const PickableBracketPage = (props: PickableBracketPageProps) => {
       backgroundPosition: 'center',
     }
   }
-  const [page, setPage] = React.useState(0)
   return (
     <div {...containerProps}>
       {matchTree && (
@@ -32,8 +31,6 @@ export const PickableBracketPage = (props: PickableBracketPageProps) => {
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onFinished={onFinished}
-          page={page}
-          setPage={setPage}
         />
       )}
     </div>

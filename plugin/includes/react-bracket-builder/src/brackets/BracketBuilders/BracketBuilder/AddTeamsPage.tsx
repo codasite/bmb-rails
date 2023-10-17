@@ -2,14 +2,11 @@ import React from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ReactComponent as ArrowNarrowLeft } from '../../shared/assets/arrow-narrow-left.svg'
 import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
-import {
-  AddTeamsBracket,
-  PaginatedDefaultBracket,
-} from '../../shared/components/Bracket'
+import { AddTeamsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
 import { useWindowDimensions } from '../../../utils/hooks'
-import { EditableTeamSlotSwitch } from '../../shared/components/TeamSlot'
+import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -23,15 +20,11 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < 768
   if (showPaginated) {
-    const [page, setPage] = React.useState(0)
     return (
       <div className="tw-bg-dd-blue">
-        <PaginatedDefaultBracket
+        <PaginatedAddTeamsBracket
           matchTree={matchTree}
           setMatchTree={setMatchTree}
-          TeamSlotComponent={EditableTeamSlotSwitch}
-          page={page}
-          setPage={setPage}
         />
       </div>
     )
