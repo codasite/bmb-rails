@@ -43,7 +43,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   const currentColumn = columnsToPaginate[page]
   const columnOffset = numRounds - 1 - currentColumn
   return (
-    <div className={'tw-relative tw-overflow-x-hidden tw-pt-4'}>
+    <div className={'tw-relative tw-pt-4 tw-max-w-100'}>
       {page > 0 && (
         <ActionButton
           className={'tw-fixed tw-top-1/2 tw-left-32 tw-z-50'}
