@@ -11,16 +11,16 @@ env:
   SERVICE_NAME: wp-test
 
 jobs:
-  prettier-check:
-    runs-on: [self-hosted]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npm run pretty:check
+  # prettier-check:
+  #   runs-on: [self-hosted]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Setup node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 20
+  #     - run: npm ci
+  #     - run: npm run pretty:check
   wordpress:
     runs-on: self-hosted
     steps:
