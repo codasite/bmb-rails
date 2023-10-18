@@ -22,10 +22,10 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
     <div
-      className="tw-flex tw-flex-col tw-gap-60 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-overflow-x-hidden tw-px-20"
+      className="tw-flex tw-flex-col tw-gap-1 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-overflow-x-hidden tw-px-20"
       style={{ background: `url(${iconBackground}), #000225` }}
     >
-      <div className="tw-px-60">
+      <div className="tw-px-30 sm:tw-px-60 tw-mb-16">
         <div className="tw-flex tw-p-16">
           <a
             href="#"
@@ -41,7 +41,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
       </div>
       <div className={matchTree.rounds.length > 4 ? 'tw-pb-80' : ''}>
         <div
-          className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-max-w-screen-xl tw-min-h-[500px] tw-m-auto tw-dark`}
+          className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-max-w-screen-xl tw-m-auto tw-dark`}
         >
           {matchTree && !showPaginated && (
             <AddTeamsBracket

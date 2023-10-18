@@ -31,16 +31,21 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   const columnOffset = numRounds - 1 - currentColumn
   const columnsToRender = [currentColumn - 1, currentColumn, currentColumn + 1]
   let offset = moveOver * columnOffset
-  if (currentColumn == 0) {
-    offset -= moveOver / 2
-  } else {
-    offset += moveOver / 2
+  if (numRounds > 1) {
+    if (currentColumn == 0) {
+      offset -= moveOver / 2
+    } else {
+      offset += moveOver / 2
+    }
   }
   let nextDisabled = false
   const leftMatches = getLeftMatches(rounds)
   if (leftMatches) {
     for (const matches of leftMatches.slice(0, 2)) {
       for (const match of matches) {
+        if (!match) {
+          continue
+        }
         if (!match.left && !match.getTeam1()) {
           nextDisabled = true
           break
@@ -55,7 +60,11 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   return (
     <>
       {!showFullBracket && (
-        <div className={`tw-relative tw-left-[${offset}px]`}>
+        <div
+          className={`tw-relative tw-left-[${offset}px] ${
+            numRounds < 3 ? 'tw-mt-60' : ''
+          }`}
+        >
           <AddTeamsBracket
             matchTree={props.matchTree}
             setMatchTree={props.setMatchTree}
@@ -79,25 +88,28 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
         />
       )}
       <div className="tw-flex tw-flex-col tw-gap-16 tw-w-full">
-        <div
-          className={`tw-flex tw-justify-center tw-gap-80 tw-text-white/70 tw-font-600 tw-my-8 ${
-            page == 0 ? '' : 'tw-flex-row-reverse'
-          }`}
-        >
-          <p>Round 1</p>
-          {numRounds > 1 && <p>Round 2</p>}
-        </div>
-        {page == 0 && (
-          <WhiteButton
-            borderWidth={1}
-            onClick={() => setPage(page + 1)}
-            disabled={nextDisabled}
+        {!showFullBracket && (
+          <div
+            className={`tw-flex tw-justify-center tw-gap-80 tw-text-white/70 tw-font-600 tw-my-8 ${
+              page == 0 ? '' : 'tw-flex-row-reverse'
+            }`}
           >
-            Next
-            <ChevronRight />
-          </WhiteButton>
+            <p>Round 1</p>
+            {numRounds > 1 && <p>Round 2</p>}
+          </div>
         )}
-        <div className={'tw-flex tw-gap-8'}>
+        <div className={'tw-flex tw-gap-8 tw-mb-12'}>
+          {page == 0 && (
+            <WhiteButton
+              borderWidth={1}
+              onClick={() => setPage(page + 1)}
+              disabled={nextDisabled}
+              className="tw-grow"
+            >
+              Next
+              <ChevronRight />
+            </WhiteButton>
+          )}
           {page == 1 && !showFullBracket && (
             <>
               <WhiteButton
