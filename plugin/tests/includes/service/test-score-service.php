@@ -1,100 +1,184 @@
 <?php
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/service/class-wpbb-score-service.php';
-// require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/class-wpbb-activator.php';
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-template-api.php';
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-tournament-api.php';
-// require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-score-service.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-match-pick.php';
 
-// class Test_Wpbb_Score_Service extends WP_UnitTestCase {
+class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
+  public function set_up() {
+    parent::set_up();
+  }
 
-//     public static function set_up_before_class() {
-//         // Set up DB tables
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/class-wpbb-activator.php';
+  public function test_round1_correct_pick_is_scored() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'id' => 1,
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'id' => 2,
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
 
-//         $activator = new Wpbb_Activator();
-//         $activator->activate();
+    self::factory()->bracket->update_object($bracket, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ]);
 
-//         // Create bracket template
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/templates.php';
+    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
-//         $template_api = new Wpbb_BracketTemplateApi();
-//         $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/templates');
-//         $request->set_query_params($template_14);
-//         $response = $template_api->create_item($request);
-//         $template = $response->get_data();
+    $play1 = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
 
-//         // Create bracket tournament
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
+    $score_service = new Wpbb_Score_Service();
+    $affected = $score_service->score_bracket_plays($update_bracket);
 
-//         $tournament_api = new Wpbb_BracketTournamentApi();
-//         $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/tournaments');
-//         $request->set_query_params($tournament_14);
-//         $response = $tournament_api->create_item($request);
-//         $tournament = $response->get_data();
+    $updated = $score_service->play_repo->get($play1->id);
 
-//         // // Create bracket play
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/plays.php';
+    $this->assertEquals(1, $updated->total_score);
+    $this->assertEquals(1, $updated->accuracy_score);
+    $this->assertEquals(1, $affected);
+  }
 
-//         $play_api = new Wpbb_BracketPlayApi();
-//         $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
-//         $request->set_query_params($play_14);
-//         $response = $play_api->create_item($request);
-//     }
+  public function test_round1_incorrect_pick_is_not_scored() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
 
-//     function test_tournament_in_db() {
-//         // while (true) {};
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
+    self::factory()->bracket->update_object($bracket, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ]);
 
-//         $api = new Wpbb_BracketTournamentApi();
-//         $response = $api->get_items([]);
-//         $this->assertEquals(200, $response->get_status());
-//         $tournaments = $response->get_data();
-//         $this->assertNotEmpty($tournaments);
-//         $this->assertCount(1, $tournaments);
-//     }
+    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
-//     function test_play_for_tournament_in_db() {
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
+    $play1 = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
 
-//         $api = new Wpbb_BracketPlayApi();
-//         $response = $api->get_items([]);
-//         $this->assertEquals(200, $response->get_status());
+    $score_service = new Wpbb_Score_Service();
+    $affected = $score_service->score_bracket_plays($update_bracket);
 
-//         $plays = $response->get_data();
-//         $this->assertNotEmpty($plays);
-//         $this->assertCount(1, $plays);
+    $updated = $score_service->play_repo->get($play1->id);
 
-//         $play = $plays[0];
-//         $this->assertEquals(5, $play->tournament_id);
-//         $this->assertEquals(0, $play->total_score);
-//     }
+    $this->assertEquals(0, $updated->total_score);
+    $this->assertEquals(0, $updated->accuracy_score);
+    $this->assertEquals(1, $affected);
+  }
 
-//     /**
-//      * There is a problem with this test. I commented out the line $this->assertEquals(200, $response->get_status());
-//      * because when this line is not commented out, an assertion that an array is empty fails, even though
-//      * no such assertion exists in my code.
-//      */
-//     function test_score_play() {
-//         // while (true) {};
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'tests/phpunit/data/tournaments.php';
+  public function test_play_for_different_bracket_is_not_scored() {
+    $bracket1 = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
 
-//         $tournament_api = new Wpbb_BracketTournamentApi();
-//         $request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/tournaments/5');
-//         $request->set_query_params(array('item_id' => 5));
-//         $response = $tournament_api->update_item($request);
-//         $this->assertEquals(200, $response->get_status());
+    self::factory()->bracket->update_object($bracket1, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket1->matches[0]->team1->id,
+        ],
+      ],
+    ]);
 
-//         require_once plugin_dir_path(dirname(__FILE__,3)) . 'includes/controllers/class-wpbb-bracket-play-api.php';
+    $bracket2 = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
 
-//         $plays_api = new Wpbb_BracketPlayApi();
-//         $response = $plays_api->get_items([]);
-//         $this->assertEquals(200, $response->get_status());
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket2->id,
+      'total_score' => 5,
+      'accuracy_score' => 0.5,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket2->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
 
-//         $plays = $response->get_data();
-//         $this->assertCount(1, $plays);
+    $score_service = new Wpbb_Score_Service();
+    $affected = $score_service->score_bracket_plays($bracket1);
 
-//         $play = $plays[0];
-//         // print_r($play);
-//         $this->assertNotEquals(0, $play->total_score);
-//     }
-// }
+    $updated = $score_service->play_repo->get($play->id);
+
+    $this->assertEquals(0, $affected);
+    $this->assertEquals(5, $updated->total_score);
+    $this->assertEquals(0.5, $updated->accuracy_score);
+  }
+
+  public function test_total_score() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 8,
+    ]);
+    print_r($bracket);
+  }
+}
