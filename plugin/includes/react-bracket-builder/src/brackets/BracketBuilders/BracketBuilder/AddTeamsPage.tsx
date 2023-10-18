@@ -39,7 +39,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
           </a>
         </div>
       </div>
-      <div className={matchTree.rounds.length > 4 ? 'tw-pb-80' : ''}>
+      <div>
         <div
           className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-max-w-screen-xl tw-m-auto tw-dark`}
         >

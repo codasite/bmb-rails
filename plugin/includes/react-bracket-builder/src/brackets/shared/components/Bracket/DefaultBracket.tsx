@@ -50,7 +50,7 @@ export const DefaultBracket = (props: BracketProps) => {
     darkMode,
     columnsToRender,
     renderWinnerAndLogo = true,
-  } = props
+  }: BracketProps = props
 
   let dark = darkMode
   if (dark === undefined) {

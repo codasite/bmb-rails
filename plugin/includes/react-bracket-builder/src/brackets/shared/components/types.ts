@@ -71,7 +71,11 @@ export interface BracketProps {
   getTeamWidth?: (numRounds: number) => number
   getTeamFontSize?: (numRounds: number) => number
   getFirstRoundMatchGap?: (numRounds: number) => number
-  getSubsequentMatchGap?: (numRounds: number) => number
+  getSubsequentMatchGap?: (
+    prevMatchHeight: number,
+    prevMatchGap: number,
+    matchHeight: number
+  ) => number
   setMatchTree?: (matchTree: MatchTree) => void
   onTeamClick?: TeamClickCallback
   matchTree: MatchTree
