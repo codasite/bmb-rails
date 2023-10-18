@@ -9,6 +9,7 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
 
   public function test_round1_correct_pick_is_scored() {
     $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 2,
       'matches' => [
         new Wpbb_Match([
           'round_index' => 0,
@@ -23,14 +24,19 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
           ]),
         ]),
       ],
+    ]);
+
+    self::factory()->bracket->update_object($bracket, [
       'results' => [
-        new Wpbb_MatchPick([
+        [
           'round_index' => 0,
           'match_index' => 0,
-          'winning_team_id' => 1,
-        ]),
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
       ],
     ]);
+
+    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
     $play1 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
@@ -38,53 +44,134 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
         new Wpbb_MatchPick([
           'round_index' => 0,
           'match_index' => 0,
-          'winning_team_id' => 1,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
       ],
     ]);
 
-    echo 'score test';
     $score_service = new Wpbb_Score_Service();
-    $score_service->score_bracket_plays($bracket);
+    $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play1->id);
-    $bracket_data = $score_service->bracket_repo->get_bracket_data(
-      $bracket->id
-    );
-    global $wpdb;
-    // echo 'bracket_data: ' . print_r($bracket_data, true);
-    $play_data = $score_service->play_repo->get_play_data($play1->id);
-    // echo 'play_data: ' . print_r($play_data, true);
-    $results_sql = "SELECT * FROM {$score_service->bracket_repo->results_table()}";
-    $results = $wpdb->get_results($results_sql, ARRAY_A);
-    $play_picks_sql = "SELECT * FROM {$score_service->play_repo->picks_table()}";
-    $play_picks = $wpdb->get_results($play_picks_sql, ARRAY_A);
-    // echo 'play_picks: ' . print_r($play_picks, true);
-    // echo 'results: ' . print_r($results, true);
-
-    $bracket_id = $bracket_data['id'];
-
-    // $score_sql = "
-    //     SELECT p1.bracket_play_id,
-    //     COALESCE(SUM(CASE WHEN p1.round_index = 0 THEN 1 ELSE 0 END), 0) AS round0correct, COALESCE(SUM(CASE WHEN p1.round_index = 1 THEN 1 ELSE 0 END), 0) AS round1correct
-    // FROM wptests_bracket_builder_match_picks p1
-    // JOIN wptests_bracket_builder_bracket_results p2 ON p1.round_index = p2.round_index
-    //                                                         AND p1.match_index = p2.match_index
-    //                                                         AND p1.winning_team_id = p2.winning_team_id
-    //                                                         AND p2.bracket_id = $bracket_id
-    // GROUP BY p1.bracket_play_id";
-    //     $score_sql = "
-    //     SELECT p1.bracket_play_id
-    // FROM wptests_bracket_builder_match_picks p1
-    // JOIN wptests_bracket_builder_bracket_results p2 ON p1.round_index = p2.round_index
-    //                                                         AND p1.match_index = p2.match_index
-    //                                                         AND p1.winning_team_id = p2.winning_team_id
-    //                                                         AND p2.bracket_id = $bracket_id;";
-    $score_sql = "SELECT * FROM {$score_service->play_repo->plays_table()}";
-
-    $score = $wpdb->get_results($score_sql, ARRAY_A);
-    echo 'score: ' . print_r($score, true);
 
     $this->assertEquals(1, $updated->total_score);
+    $this->assertEquals(1, $updated->accuracy_score);
+    $this->assertEquals(1, $affected);
+  }
+
+  public function test_round1_incorrect_pick_is_not_scored() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    self::factory()->bracket->update_object($bracket, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ]);
+
+    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $play1 = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $score_service = new Wpbb_Score_Service();
+    $affected = $score_service->score_bracket_plays($update_bracket);
+
+    $updated = $score_service->play_repo->get($play1->id);
+
+    $this->assertEquals(0, $updated->total_score);
+    $this->assertEquals(0, $updated->accuracy_score);
+    $this->assertEquals(1, $affected);
+  }
+
+  public function test_play_for_different_bracket_is_not_scored() {
+    $bracket1 = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    self::factory()->bracket->update_object($bracket1, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket1->matches[0]->team1->id,
+        ],
+      ],
+    ]);
+
+    $bracket2 = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket2->id,
+      'total_score' => 5,
+      'accuracy_score' => 0.5,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket2->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $score_service = new Wpbb_Score_Service();
+    $affected = $score_service->score_bracket_plays($bracket1);
+
+    $updated = $score_service->play_repo->get($play->id);
+
+    $this->assertEquals(0, $affected);
+    $this->assertEquals(5, $updated->total_score);
+    $this->assertEquals(0.5, $updated->accuracy_score);
   }
 }

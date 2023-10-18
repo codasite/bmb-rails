@@ -45,6 +45,8 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $play = new Wpbb_BracketPlay([
       'bracket_id' => $bracket->id,
       'author' => 1,
+      'total_score' => 5,
+      'accuracy_score' => 0.3,
       'picks' => [
         new Wpbb_MatchPick([
           'round_index' => 0,
@@ -91,6 +93,8 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       $bracket->matches[0]->team1->id,
       $new_picks[2]->winning_team_id
     );
+    $this->assertEquals(5, $play->total_score);
+    $this->assertEquals(0.3, $play->accuracy_score);
   }
 
   public function test_get() {

@@ -51,8 +51,8 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     $this->bracket_id = $data['bracket_id'];
     $this->bracket = $data['bracket'] ?? null;
     $this->picks = $data['picks'] ?? [];
-    $this->total_score = $data['total_score'] ?? 0;
-    $this->accuracy_score = $data['accuracy_score'] ?? 0;
+    $this->total_score = $data['total_score'] ?? null;
+    $this->accuracy_score = $data['accuracy_score'] ?? null;
     $this->busted_id = $data['busted_id'] ?? null;
   }
 
