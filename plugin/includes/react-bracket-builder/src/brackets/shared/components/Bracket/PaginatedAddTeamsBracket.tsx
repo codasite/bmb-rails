@@ -57,6 +57,28 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
       }
     }
   }
+  if (showFullBracket) {
+    return (
+      <>
+        <ScaledBracket
+          matchTree={props.matchTree}
+          BracketComponent={AddTeamsBracket}
+        />
+        <WhiteButton
+          className="tw-w-full tw-mb-12"
+          paddingX={10}
+          borderWidth={1}
+          onClick={() => {
+            setShowFullBracket(false)
+            setPage(0)
+          }}
+        >
+          <EditIcon />
+          Edit
+        </WhiteButton>
+      </>
+    )
+  }
   return (
     <>
       {!showFullBracket && (
@@ -81,23 +103,15 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           />
         </div>
       )}
-      {showFullBracket && (
-        <ScaledBracket
-          matchTree={props.matchTree}
-          BracketComponent={AddTeamsBracket}
-        />
-      )}
       <div className="tw-flex tw-flex-col tw-gap-16 tw-w-full">
-        {!showFullBracket && (
-          <div
-            className={`tw-flex tw-justify-center tw-gap-80 tw-text-white/70 tw-font-600 tw-my-8 ${
-              page == 0 ? '' : 'tw-flex-row-reverse'
-            }`}
-          >
-            <p>Round 1</p>
-            {numRounds > 1 && <p>Round 2</p>}
-          </div>
-        )}
+        <div
+          className={`tw-flex tw-justify-center tw-gap-80 tw-text-white/70 tw-font-600 tw-my-8 ${
+            page == 0 ? '' : 'tw-flex-row-reverse'
+          }`}
+        >
+          <p>Round 1</p>
+          {numRounds > 1 && <p>Round 2</p>}
+        </div>
         <div className={'tw-flex tw-gap-8 tw-mb-12'}>
           {page == 0 && (
             <WhiteButton
@@ -110,7 +124,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
               <ChevronRight />
             </WhiteButton>
           )}
-          {page == 1 && !showFullBracket && (
+          {page == 1 && (
             <>
               <WhiteButton
                 paddingX={10}
@@ -129,20 +143,6 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
                 View full bracket
               </WhiteButton>
             </>
-          )}
-          {showFullBracket && (
-            <WhiteButton
-              className="tw-grow"
-              paddingX={10}
-              borderWidth={1}
-              onClick={() => {
-                setShowFullBracket(false)
-                setPage(0)
-              }}
-            >
-              <EditIcon />
-              Edit
-            </WhiteButton>
           )}
         </div>
       </div>
