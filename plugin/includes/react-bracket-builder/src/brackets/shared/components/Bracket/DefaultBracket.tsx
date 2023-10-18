@@ -14,7 +14,6 @@ import { BracketMetaContext, DarkModeContext } from '../../context'
 import { DefaultMatchColumn } from '../MatchColumn'
 import { DefaultTeamSlot } from '../TeamSlot'
 import { defaultBracketConstants } from '../../constants'
-import { useWindowDimensions } from '../../../../utils/hooks'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { LogoContainer } from '../MatchBox/Children/LogoContainer'
 import { BracketLines, RootMatchLines } from './BracketLines'
@@ -51,7 +50,6 @@ export const DefaultBracket = (props: BracketProps) => {
     darkMode,
   } = props
 
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
   let dark = darkMode
   if (dark === undefined) {
     const darkContext = useContext(DarkModeContext)
@@ -105,13 +103,11 @@ export const DefaultBracket = (props: BracketProps) => {
     position: string,
     numRounds: number
   ): JSX.Element[] => {
-    const matchColumns = rounds.map((matches, i) => {
+    return rounds.map((matches, i) => {
       const roundIndex = matches.find((match) => match !== null)?.roundIndex
       const { teamHeight, teamWidth, teamGap, matchGap } =
         getBracketMeasurements(roundIndex ?? i, numRounds)
-
       const fontSize = getTeamFontSize(numRounds)
-
       return (
         <MatchColumnComponent
           key={`${position}-${i}`}
@@ -131,8 +127,6 @@ export const DefaultBracket = (props: BracketProps) => {
         />
       )
     })
-
-    return matchColumns
   }
 
   const buildMatches = (rounds: Round[]) => {
@@ -187,16 +181,8 @@ export const DefaultBracket = (props: BracketProps) => {
             <LogoContainer {...props} bottomText={bracketDate} />
           </div>
         }
-        <BracketLines
-          rounds={matchTree.rounds}
-          style={linesStyle}
-          within={'wpbb-default-bracket'}
-        />
-        <RootMatchLines
-          rounds={matchTree.rounds}
-          style={linesStyle}
-          within={'wpbb-default-bracket'}
-        />
+        <BracketLines rounds={matchTree.rounds} style={linesStyle} />
+        <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
       </div>
     </DarkModeContext.Provider>
   )

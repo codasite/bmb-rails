@@ -31,8 +31,7 @@ class Wpbb_Public_Shortcodes {
 		);
 		ob_start();
 	?>
-		<div id="wpbb-bracket-builder" class="tw-overflow-x-hidden">
-		</div>
+		<div id="wpbb-bracket-builder"></div>
 <?php
 
 		return ob_get_clean();
