@@ -95,4 +95,45 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       $meta->dark_top->image_url
     );
   }
+
+  public function test_get_overlay_map() {
+    $post = $this->factory()->post->create_and_get([
+      'post_type' => 'bracket_play',
+    ]);
+    $bracket_mock = $this->createMock(Wpbb_PostBracketInterface::class);
+    $bracket_mock->method('get_post_id')->willReturn($post->ID);
+
+    $integration = new Wpbb_GelatoProductIntegration();
+
+    $meta_key = $integration->get_post_meta_key();
+
+    $image_urls = [
+      'light_top' => 'https://test.com/light_top.png',
+      'light_center' => 'https://test.com/light_center.png',
+      'dark_top' => 'https://test.com/dark_top.png',
+      'dark_center' => 'https://test.com/dark_center.png',
+    ];
+
+    // save post meta
+    update_post_meta($post->ID, $meta_key, json_encode($image_urls));
+
+    $top_overlay = [
+      'light' => 'https://test.com/light_top.png',
+      'dark' => 'https://test.com/dark_top.png',
+    ];
+
+    $center_overlay = [
+      'light' => 'https://test.com/light_center.png',
+      'dark' => 'https://test.com/dark_center.png',
+    ];
+
+    $this->assertEquals(
+      $top_overlay,
+      $integration->get_overlay_map($bracket_mock, 'top')
+    );
+    $this->assertEquals(
+      $center_overlay,
+      $integration->get_overlay_map($bracket_mock, 'center')
+    );
+  }
 }

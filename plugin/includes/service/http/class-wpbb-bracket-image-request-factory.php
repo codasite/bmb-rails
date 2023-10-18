@@ -24,8 +24,8 @@ class Wpbb_BracketImageRequestFactory {
       $headers,
       $inch_height,
       $inch_width,
-      $themes,
       $positions,
+      $themes,
     ) = $this->default_parameters($args);
     $bracket_id = $bracket->get_post_id();
 
@@ -33,9 +33,9 @@ class Wpbb_BracketImageRequestFactory {
     $base_query = $this->create_base_query($bracket, $inch_height, $inch_width);
 
     $request_data = [];
-    foreach ($themes as $theme) {
-      foreach ($positions as $position) {
-        $key = "{$theme}_{$position}";
+    foreach ($positions as $position) {
+      foreach ($themes as $theme) {
+        $key = "{$position}_{$theme}";
         $request_data[$key] = $this->create_request(
           $path,
           $method,

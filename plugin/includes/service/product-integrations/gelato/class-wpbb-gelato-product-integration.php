@@ -172,6 +172,19 @@ class Wpbb_GelatoProductIntegration implements
     Wpbb_PostBracketInterface $bracket,
     string $placement
   ): array {
+    $meta = json_decode(
+      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true)
+    );
+    if (!$meta) {
+      return [];
+    }
+    $overlay_map = [];
+    foreach ($meta as $key => $value) {
+      if (strpos($key, $placement) !== false) {
+        $overlay_map[str_replace($placement . '_', '', $key)] =
+          $value->image_url;
+      }
+    }
     return [
       'light' => 'someS3url',
       'dark' => 'someS3url',
