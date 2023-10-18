@@ -113,7 +113,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           {numRounds > 1 && <p>Round 2</p>}
         </div>
         <div className={'tw-flex tw-gap-8 tw-mb-12'}>
-          {page == 0 && (
+          {page == 0 && numRounds > 1 && (
             <WhiteButton
               borderWidth={1}
               onClick={() => setPage(page + 1)}
@@ -124,15 +124,17 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
               <ChevronRight />
             </WhiteButton>
           )}
-          {page == 1 && (
+          {(page == 1 || numRounds == 1) && (
             <>
-              <WhiteButton
-                paddingX={10}
-                borderWidth={1}
-                onClick={() => setPage(page - 1)}
-              >
-                <ChevronLeft />
-              </WhiteButton>
+              {numRounds > 1 && (
+                <WhiteButton
+                  paddingX={10}
+                  borderWidth={1}
+                  onClick={() => setPage(page - 1)}
+                >
+                  <ChevronLeft />
+                </WhiteButton>
+              )}
               <WhiteButton
                 fontSize={14}
                 className="tw-grow"
