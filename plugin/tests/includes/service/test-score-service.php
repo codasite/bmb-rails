@@ -175,10 +175,171 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
     $this->assertEquals(0.5, $updated->accuracy_score);
   }
 
-  public function test_total_score() {
+  public function test_score_all_picked() {
     $bracket = self::factory()->bracket->create_object([
       'num_teams' => 8,
     ]);
-    print_r($bracket);
+
+    $point_values = [1, 2, 4, 8, 16, 32];
+
+    $picks = [
+      [
+        'round_index' => 0,
+        'match_index' => 0,
+        'winning_team_id' => $bracket->matches[0]->team1->id,
+      ],
+      [
+        'round_index' => 0,
+        'match_index' => 1,
+        'winning_team_id' => $bracket->matches[1]->team1->id,
+      ],
+      [
+        'round_index' => 0,
+        'match_index' => 2,
+        'winning_team_id' => $bracket->matches[2]->team1->id,
+      ],
+      [
+        'round_index' => 0,
+        'match_index' => 3,
+        'winning_team_id' => $bracket->matches[3]->team1->id,
+      ],
+      [
+        'round_index' => 1,
+        'match_index' => 0,
+        'winning_team_id' => $bracket->matches[0]->team1->id,
+      ],
+      [
+        'round_index' => 1,
+        'match_index' => 1,
+        'winning_team_id' => $bracket->matches[2]->team1->id,
+      ],
+      [
+        'round_index' => 2,
+        'match_index' => 0,
+        'winning_team_id' => $bracket->matches[0]->team1->id,
+      ],
+    ];
+
+    self::factory()->bracket->update_object($bracket, [
+      'results' => $picks,
+    ]);
+
+    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $play_picks = array_map(function ($pick) {
+      return new Wpbb_MatchPick($pick);
+    }, $picks);
+
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => $play_picks,
+    ]);
+
+    $score_service = new Wpbb_Score_Service();
+    $affected = $score_service->score_bracket_plays($update_bracket);
+
+    $updated = $score_service->play_repo->get($play->id);
+
+    $this->assertEquals(12, $updated->total_score);
+    $this->assertEquals(1, $updated->accuracy_score);
+  }
+
+  public function test_score_third_picked() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 8,
+    ]);
+
+    $point_values = [1, 2, 4, 8, 16, 32];
+
+    self::factory()->bracket->update_object($bracket, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 2,
+          'winning_team_id' => $bracket->matches[2]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 3,
+          'winning_team_id' => $bracket->matches[3]->team1->id,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[2]->team1->id,
+        ],
+        [
+          'round_index' => 2,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ]);
+
+    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 2,
+          'winning_team_id' => $bracket->matches[2]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 3,
+          'winning_team_id' => $bracket->matches[3]->team2->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[2]->team2->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 1,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[2]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 2,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[2]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $score_service = new Wpbb_Score_Service();
+    $affected = $score_service->score_bracket_plays($update_bracket);
+
+    $updated = $score_service->play_repo->get($play->id);
+
+    $this->assertEquals(4, $updated->total_score);
+    $this->assertEquals(0.333333, $updated->accuracy_score);
   }
 }
