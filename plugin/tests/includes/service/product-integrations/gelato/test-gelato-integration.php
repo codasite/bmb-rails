@@ -67,11 +67,11 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       ->willReturn(['test' => 'test']);
     $client = $this->createMock(Wpbb_HttpClientInterface::class);
     $client->method('send_many')->willReturn([
-      'light_top' => [
-        'image_url' => 'https://test.com/light_top.png',
+      'top_light' => [
+        'image_url' => 'https://test.com/top_light.png',
       ],
-      'dark_top' => [
-        'image_url' => 'https://test.com/dark_top.png',
+      'top_dark' => [
+        'image_url' => 'https://test.com/top_dark.png',
       ],
     ]);
 
@@ -87,12 +87,12 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
     $meta = json_decode(get_post_meta($post->ID, $meta_key, true));
 
     $this->assertEquals(
-      'https://test.com/light_top.png',
-      $meta->light_top->image_url
+      'https://test.com/top_light.png',
+      $meta->top_light->image_url
     );
     $this->assertEquals(
-      'https://test.com/dark_top.png',
-      $meta->dark_top->image_url
+      'https://test.com/top_dark.png',
+      $meta->top_dark->image_url
     );
   }
 
@@ -108,23 +108,31 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
     $meta_key = $integration->get_post_meta_key();
 
     $image_urls = [
-      'light_top' => 'https://test.com/light_top.png',
-      'light_center' => 'https://test.com/light_center.png',
-      'dark_top' => 'https://test.com/dark_top.png',
-      'dark_center' => 'https://test.com/dark_center.png',
+      'top_light' => [
+        'image_url' => 'https://test.com/top_light.png',
+      ],
+      'top_dark' => [
+        'image_url' => 'https://test.com/top_dark.png',
+      ],
+      'center_light' => [
+        'image_url' => 'https://test.com/center_light.png',
+      ],
+      'center_dark' => [
+        'image_url' => 'https://test.com/center_dark.png',
+      ],
     ];
 
     // save post meta
     update_post_meta($post->ID, $meta_key, json_encode($image_urls));
 
     $top_overlay = [
-      'light' => 'https://test.com/light_top.png',
-      'dark' => 'https://test.com/dark_top.png',
+      'light' => 'https://test.com/top_light.png',
+      'dark' => 'https://test.com/top_dark.png',
     ];
 
     $center_overlay = [
-      'light' => 'https://test.com/light_center.png',
-      'dark' => 'https://test.com/dark_center.png',
+      'light' => 'https://test.com/center_light.png',
+      'dark' => 'https://test.com/center_dark.png',
     ];
 
     $this->assertEquals(

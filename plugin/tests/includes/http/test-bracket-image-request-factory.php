@@ -150,7 +150,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
     ]);
 
     $expected = [
-      'light_top' => [
+      'top_light' => [
         'url' => 'http://react-server:8080/test',
         'method' => 'POST',
         'headers' => [
@@ -219,7 +219,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
     ]);
 
     $expected = [
-      'light_top' => [
+      'top_light' => [
         'url' => 'http://react-server:8080/test',
         'method' => 'POST',
         'headers' => [
@@ -227,7 +227,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
         ],
         'body' => 'testBody',
       ],
-      'light_center' => [
+      'center_light' => [
         'url' => 'http://react-server:8080/test',
         'method' => 'POST',
         'headers' => [
@@ -235,7 +235,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
         ],
         'body' => 'testBody',
       ],
-      'dark_top' => [
+      'top_dark' => [
         'url' => 'http://react-server:8080/test',
         'method' => 'POST',
         'headers' => [
@@ -243,7 +243,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
         ],
         'body' => 'testBody',
       ],
-      'dark_center' => [
+      'center_dark' => [
         'url' => 'http://react-server:8080/test',
         'method' => 'POST',
         'headers' => [

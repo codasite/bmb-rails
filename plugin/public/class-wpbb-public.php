@@ -153,19 +153,19 @@ class Wpbb_Public {
 		return $overlay_map;
 	}
 	// private function build_overlay_map(): array {
-	// 	$dark_top = $this->bracket_config_repo->get('dark', 'top');
-	// 	$dark_center = $this->bracket_config_repo->get('dark', 'center');
-	// 	$light_top = $this->bracket_config_repo->get('light', 'top');
-	// 	$light_center = $this->bracket_config_repo->get('light', 'center');
+	// 	$top_dark = $this->bracket_config_repo->get('dark', 'top');
+	// 	$center_dark = $this->bracket_config_repo->get('dark', 'center');
+	// 	$top_light = $this->bracket_config_repo->get('light', 'top');
+	// 	$center_light = $this->bracket_config_repo->get('light', 'center');
 
 	// 	$bracket_url_theme_map = array(
 	// 		'dark' => array(
-	// 			'top' => $dark_top->img_url,
-	// 			'center' => $dark_center->img_url,
+	// 			'top' => $top_dark->img_url,
+	// 			'center' => $center_dark->img_url,
 	// 		),
 	// 		'light' => array(
-	// 			'top' => $light_top->img_url,
-	// 			'center' => $light_center->img_url,
+	// 			'top' => $top_light->img_url,
+	// 			'center' => $center_light->img_url,
 	// 		),
 	// 	);
 

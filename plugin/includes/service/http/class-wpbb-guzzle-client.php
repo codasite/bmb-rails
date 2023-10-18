@@ -34,7 +34,7 @@ class Wpbb_GuzzleClient implements Wpbb_HttpClientInterface {
    * @param string $url
    * @param array $requests
    * @example $requests = [
-   * 	'light_top' => [
+   * 	'top_light' => [
    * 		'url' => 'http://localhost:8080/',
    *  	'method' => 'POST',
    * 		'headers' => [
@@ -42,7 +42,7 @@ class Wpbb_GuzzleClient implements Wpbb_HttpClientInterface {
    * 		],
    * 		'body' => json_encode($data),
    * 	],
-   * 	'light_center' => [
+   * 	'center_light' => [
    * 		'url' => 'http://localhost:8080/',
    * 		'method' => 'POST',
    * 		'headers' => [

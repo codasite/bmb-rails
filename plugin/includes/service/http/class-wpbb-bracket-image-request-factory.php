@@ -24,8 +24,8 @@ class Wpbb_BracketImageRequestFactory {
       $headers,
       $inch_height,
       $inch_width,
-      $positions,
       $themes,
+      $positions,
     ) = $this->default_parameters($args);
     $bracket_id = $bracket->get_post_id();
 
@@ -118,7 +118,7 @@ class Wpbb_BracketImageRequestFactory {
   ) {
     $body = array_merge($base_data, [
       'storageOptions' => $this->object_storage->get_upload_options(
-        $theme . '-' . $position . '-' . $bracket_id
+        $position . '-' . $theme . '-' . $bracket_id
       ),
       'queryParams' => array_merge($base_query, [
         'theme' => $theme,

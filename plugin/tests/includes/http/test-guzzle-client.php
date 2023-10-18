@@ -14,7 +14,7 @@ use GuzzleHttp\Middleware;
 class GuzzleClientTest extends WPBB_UnitTestCase {
   public function test_send_many() {
     $requests = [
-      'light_top' => [
+      'top_light' => [
         'url' => 'http://localhost:8080/',
         'method' => 'POST',
         'headers' => [
@@ -22,7 +22,7 @@ class GuzzleClientTest extends WPBB_UnitTestCase {
         ],
         'body' => '{"test": "test"}',
       ],
-      'light_center' => [
+      'center_light' => [
         'url' => 'http://localhost:8080/',
         'method' => 'POST',
         'headers' => [
@@ -38,7 +38,7 @@ class GuzzleClientTest extends WPBB_UnitTestCase {
         ['X-Foo' => 'Bar'],
         json_encode([
           'image_url' =>
-            'https://wpbb-bracket-images.s3.amazonaws.com/light_top',
+            'https://wpbb-bracket-images.s3.amazonaws.com/top_light',
         ])
       ),
       new Response(
@@ -46,7 +46,7 @@ class GuzzleClientTest extends WPBB_UnitTestCase {
         ['X-Foo' => 'Bar'],
         json_encode([
           'image_url' =>
-            'https://wpbb-bracket-images.s3.amazonaws.com/light_center',
+            'https://wpbb-bracket-images.s3.amazonaws.com/center_light',
         ])
       ),
     ]);
@@ -65,17 +65,17 @@ class GuzzleClientTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(
       [
-        'image_url' => 'https://wpbb-bracket-images.s3.amazonaws.com/light_top',
+        'image_url' => 'https://wpbb-bracket-images.s3.amazonaws.com/top_light',
       ],
-      $responses['light_top']
+      $responses['top_light']
     );
 
     $this->assertEquals(
       [
         'image_url' =>
-          'https://wpbb-bracket-images.s3.amazonaws.com/light_center',
+          'https://wpbb-bracket-images.s3.amazonaws.com/center_light',
       ],
-      $responses['light_center']
+      $responses['center_light']
     );
   }
 }

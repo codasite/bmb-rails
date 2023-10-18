@@ -181,13 +181,10 @@ class Wpbb_GelatoProductIntegration implements
     $overlay_map = [];
     foreach ($meta as $key => $value) {
       if (strpos($key, $placement) !== false) {
-        $overlay_map[str_replace($placement . '_', '', $key)] =
-          $value->image_url;
+        list($placement, $theme) = explode('_', $key);
+        $overlay_map[$theme] = $value->image_url;
       }
     }
-    return [
-      'light' => 'someS3url',
-      'dark' => 'someS3url',
-    ];
+    return $overlay_map;
   }
 }
