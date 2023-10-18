@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Select, { components, OptionProps, GroupBase, DropdownIndicatorProps } from 'react-select';
+import { ReactComponent as CalendarIcon } from '../assets/calendar.svg';
 
 const MonthOption: React.FC<OptionProps<{value: string; label: string; }, false, GroupBase<{value: string; label: string; }>>> = ({ data, innerProps, isSelected }) => {
     const { value, label } = data;
@@ -8,7 +9,7 @@ const MonthOption: React.FC<OptionProps<{value: string; label: string; }, false,
     return (
         <div
             {...restInnerProps}
-            className='tw-flex tw-justify-center tw-items-center tw-p-16'
+            className='tw-flex tw-justify-center tw-items-center tw-p-16 tw-bg-bgd-blue'
         >
             <span
                 className="tw-text-center tw-text-24 tw-font-600 tw-text-white-50"
@@ -41,13 +42,13 @@ const MonthPicker: React.FC = () => {
 
     return (
         <Select
-            placeholder="Month"
+            placeholder={<><CalendarIcon /> Month</>}
             value={month}
             onChange={handleChange}
             options={options}
-            components={{ Option: MonthOption }}
+            components={{ Option: MonthOption, DropdownIndicator: () => null }}
             unstyled
-            className="tw-flex tw-justify-center tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50"
+            className="tw-flex tw-justify-center tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-344 tw-h-62"
         />
     )
 }
@@ -67,20 +68,27 @@ export const YearInput: React.FC = () => {
     return (
         <input
             type="text"
-            placeholder="Year"
+            placeholder="YEAR"
             value={year}
             onChange={handleChange}
             maxLength={4}
-            className="tw-flex tw-justify-center tw-bg-transparent tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50"
+            className="tw-flex tw-justify-center tw-bg-transparent tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-150 tw-h-62"
         />
     )
 }
 
 export const DatePicker: React.FC = () => {
     return (
-        <div className="tw-flex tw-gap-16">
-            <MonthPicker />
-            <YearInput />
+        <div className="tw-flex tw-flex-col tw-justify-center tw-text-center tw-gap-16">
+            <span
+                className="tw-text-white/50 tw-text-24 tw-font-500"
+            >
+                Your Bracket's Date
+            </span>
+            <div className="tw-flex tw-justify-center tw-items-start tw-gap-16 tw-min-w-150 tw-h-62">
+                <MonthPicker />
+                <YearInput />
+            </div>
         </div>
     )
 }
