@@ -9,6 +9,13 @@ app.use(express.json())
 const port = 3000
 const host = '0.0.0.0'
 
+class ValidationError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ValidationError'
+  }
+}
+
 app.post('/encode', async (req, res) => {
   const { picks, matches } = req.body
 
@@ -39,11 +46,11 @@ interface ObjectStorageUploader {
 const s3Uploader: ObjectStorageUploader = {
   upload: async (buffer, contentType, storageOptions) => {
     if (!storageOptions) {
-      throw new Error('storageOptions is required')
+      throw new ValidationError('storageOptions is required')
     }
     const { bucket, key } = storageOptions
     if (!bucket || !key) {
-      throw new Error('bucket and key are required')
+      throw new ValidationError('bucket and key are required')
     }
 
     const s3 = new S3Client({ region: process.env.AWS_REGION })
@@ -72,7 +79,34 @@ interface GenerateRequest {
   inchWidth?: number
 }
 
-const generateBracketImage = async (req: GenerateRequest, res: any) => {
+const validateParams = (req: GenerateRequest) => {
+  const validStorages = ['s3']
+  const errors = []
+  const { inchHeight, inchWidth, url, storageOptions, storageService } = req
+  if (inchHeight && !Number.isInteger(inchHeight)) {
+    errors.push('inch_height must be an integer')
+  }
+  if (inchWidth && !Number.isInteger(inchWidth)) {
+    errors.push('inch_width must be an integer')
+  }
+  if (!url) {
+    errors.push('url is required')
+  }
+  if (!storageService || !validStorages.includes(storageService)) {
+    errors.push('storageService is required. Valid options: ' + validStorages)
+  }
+  if (errors.length) {
+    throw new ValidationError(errors.join(', '))
+  }
+}
+
+const generateBracketImage = async (req: GenerateRequest) => {
+  if (!req.url) {
+    req.url = process.env.CLIENT_URL
+  }
+
+  validateParams(req)
+
   const {
     url,
     queryParams,
@@ -82,17 +116,7 @@ const generateBracketImage = async (req: GenerateRequest, res: any) => {
     deviceScaleFactor = 1,
     inchHeight = 16,
     inchWidth = 11,
-  } = req.body
-
-  const clientUrl = url ?? process.env.CLIENT_URL
-
-  if (inchHeight && !Number.isInteger(inchHeight)) {
-    return res.status(400).send('inch_height must be an integer')
-  }
-
-  if (inchWidth && !Number.isInteger(inchWidth)) {
-    return res.status(400).send('inch_width must be an integer')
-  }
+  } = req
 
   const pxHeight = inchHeight * 96
   const pxWidth = inchWidth * 96
@@ -114,19 +138,16 @@ const generateBracketImage = async (req: GenerateRequest, res: any) => {
   console.timeEnd('setViewport')
 
   console.time('goto')
-  if (clientUrl) {
-    const queryString = Object.keys(queryParams)
-      .map((key) => key + '=' + queryParams[key])
-      .join('&')
-    const path = clientUrl + (queryString ? '?' + queryString : '')
-    try {
-      await page.goto(path, { waitUntil: 'networkidle0' })
-    } catch (err) {
-      console.log(err)
-      return res.status(400).send('invalid url')
-    }
-  } else {
-    return res.status(400).send('html or url is required')
+  const queryString = Object.keys(queryParams)
+    .map((key) => key + '=' + queryParams[key])
+    .join('&')
+  const path = url + (queryString ? '?' + queryString : '')
+  try {
+    await page.goto(path, { waitUntil: 'networkidle0' })
+  } catch (err) {
+    console.log(err)
+    browser.close()
+    throw new Error(`Error loading ${path}`)
   }
   console.timeEnd('goto')
 
@@ -154,24 +175,34 @@ const generateBracketImage = async (req: GenerateRequest, res: any) => {
   if (storageService === 's3') {
     uploader = s3Uploader
   }
-  if (!uploader) {
-    return res.status(400).send('storageService is required')
-  }
+  let image_url
   try {
     console.time('uploadToS3')
-    const image_url = await uploader.upload(file, contentType, storageOptions)
-    res.send(image_url)
+    image_url = await uploader.upload(file, contentType, storageOptions)
   } catch (err: any) {
     console.error(err)
-    res.status(500).send(err)
+    throw new Error('Error uploading to S3')
   } finally {
     console.timeEnd('uploadToS3')
     console.timeEnd('start')
     await browser.close()
   }
+  return image_url
 }
 
-app.post('/generate', async (req, res) => {})
+app.post('/generate', async (req, res) => {
+  try {
+    const image_url = await generateBracketImage(req.body)
+    res.send(image_url)
+  } catch (err: any) {
+    if (err.name === 'ValidationError') {
+      res.status(400).send('ValidationError: ' + err.message)
+      return
+    }
+    console.error(err)
+    res.status(500).send('Error generating image: ' + err.message)
+  }
+})
 
 app.post('/test', async (req, res) => {
   console.log(req.body)
