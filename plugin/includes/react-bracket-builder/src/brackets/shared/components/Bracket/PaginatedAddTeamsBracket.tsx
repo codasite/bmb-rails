@@ -2,7 +2,10 @@ import React from 'react'
 import { PaginatedBracketProps } from '../types'
 import { AddTeamsBracket } from './AddTeamsBracket'
 import {
-  getBracketWidth as getDefaultBracketWidth,
+  getFirstRoundMatchGap,
+  getTeamFontSize,
+  getTeamGap,
+  getTeamHeight,
   getTeamWidth,
 } from '../../utils'
 import { ActionButton } from '../ActionButtons'
@@ -15,9 +18,9 @@ import {
 export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   const [page, setPage] = React.useState(0)
   const numRounds = props.matchTree.rounds.length
-  const bracketWidth = getDefaultBracketWidth(props.matchTree.rounds.length)
   const numColumns = numRounds * 2 - 1
-  const columnWidth = getTeamWidth(numRounds)
+  const bracketWidth = numColumns * getTeamWidth(0) + (numColumns - 1) * 30
+  const columnWidth = getTeamWidth(0)
   const totalColumnWidth = columnWidth * numColumns
   const spaceBetweenColumns = bracketWidth - totalColumnWidth
   const numberOfSpaces = numColumns - 1
@@ -76,6 +79,12 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           setMatchTree={props.setMatchTree}
           page={page}
           setPage={setPage}
+          getBracketWidth={() => bracketWidth}
+          getTeamWidth={() => getTeamWidth(0)}
+          getTeamHeight={() => getTeamHeight(0)}
+          getTeamGap={() => getTeamGap(0)}
+          getFirstRoundMatchGap={() => getFirstRoundMatchGap(0)}
+          getTeamFontSize={() => getTeamFontSize(0)}
         />
       </div>
     </div>

@@ -6,7 +6,7 @@ import {
   getTeamFontSize as getDefaultTeamFontSize,
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
-  getTeamWidth,
+  getTeamWidth as getDefaultTeamWidth,
 } from '../../utils'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
@@ -30,6 +30,7 @@ export const DefaultBracket = (props: BracketProps) => {
   const {
     getBracketWidth = getDefaultBracketWidth,
     getTeamHeight = getDefaultTeamHeight,
+    getTeamWidth = getDefaultTeamWidth,
     getTeamGap = getDefaultTeamGap,
     getFirstRoundMatchGap = getDefaultFirstRoundMatchGap,
     getSubsequentMatchGap = getDefaultSubsequentMatchGap,
@@ -159,7 +160,7 @@ export const DefaultBracket = (props: BracketProps) => {
       <div
         className={`tw-flex tw-flex-col${
           dark ? ' tw-dark' : ''
-        } wpbb-default-bracket`}
+        } wpbb-default-bracket tw-relative`}
       >
         {rootMatch && (
           <div className={`tw-mb-[${winnerContainerMB}px]`}>

@@ -7,7 +7,7 @@ import { Round } from '../../models/Round'
 interface BracketLinesProps {
   rounds: Round[]
   style?: any
-  within: string
+  within?: string
 }
 
 export const BracketLines = (props: BracketLinesProps) => {
