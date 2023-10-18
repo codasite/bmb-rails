@@ -77,6 +77,8 @@ services:
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
+      - ./docker/wordpress/downloads:/tmp/downloads
+      - ./docker/wordpress/plugins:/tmp/plugins
       - wp-dev-data:/var/www/html
     ports:
       - 8008:80

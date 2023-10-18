@@ -187,7 +187,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
     $saved = $this->play_repo->add($play);
     // Generate the bracket images
     if (
-      !isset($params['generate_images']) ||
+      isset($params['generate_images']) &&
       $params['generate_images'] === true
     ) {
       $this->product_integration->generate_images($saved);

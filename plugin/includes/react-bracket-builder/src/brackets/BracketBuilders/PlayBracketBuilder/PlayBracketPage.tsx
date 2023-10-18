@@ -28,6 +28,7 @@ interface PlayPageProps {
 }
 
 const PlayPage = (props: PlayPageProps) => {
+  console.log('PlayPage')
   const {
     bracket,
     apparelUrl,
@@ -105,6 +106,7 @@ const PlayPage = (props: PlayPageProps) => {
   }
 
   const handleApparelClick = () => {
+    console.log('handleApparelClick')
     const picks = matchTree?.toMatchPicks()
     console.log(picks)
     const bracketId = bracket?.id
@@ -118,7 +120,7 @@ const PlayPage = (props: PlayPageProps) => {
     const playReq: PlayReq = {
       bracketId: bracket?.id,
       picks: picks,
-      generateImages: false,
+      generateImages: true,
     }
 
     console.log(playReq)
@@ -127,7 +129,7 @@ const PlayPage = (props: PlayPageProps) => {
       .createPlay(playReq)
       .then((res) => {
         console.log(res)
-        window.location.href = apparelUrl
+        // window.location.href = apparelUrl
       })
       .catch((err) => {
         console.error('error: ', err)
@@ -135,84 +137,6 @@ const PlayPage = (props: PlayPageProps) => {
       })
       .finally(() => {
         setProcessing(false)
-      })
-  }
-
-  const handleApparelClickPrint = () => {
-    // const id = bracketId || bracketRes?.id;
-    // if (!id || !matchTree) {
-    // 	console.error('no bracket id or match tree')
-    // 	return;
-    // }
-    const html = getHTML()
-
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
-    const bracketEl = doc.getElementsByClassName('wpbb-bracket')[0]
-    const printArea = doc.getElementsByClassName('wpbb-bracket-print-area')[0]
-
-    // if we were in dark mode, remove it to get the light mode version
-    bracketEl.classList.remove('wpbb-dark-mode')
-    const lightModeTopHTML = minify(doc.documentElement.outerHTML)
-    printArea.classList.add('wpbb-print-center')
-    const lightModeCenterHTML = minify(doc.documentElement.outerHTML)
-    bracketEl.classList.add('wpbb-dark-mode')
-    const darkModeCenterHTML = minify(doc.documentElement.outerHTML)
-    printArea.classList.remove('wpbb-print-center')
-    const darkModeTopHTML = minify(doc.documentElement.outerHTML)
-
-    // Random key to link the two images together
-    const key = Math.random().toString(36).substring(7)
-    const promises = [
-      // bracketApi.htmlToImage({
-      //   html: darkModeTopHTML,
-      //   inchHeight: 16,
-      //   inchWidth: 12,
-      //   deviceScaleFactor: 1,
-      //   themeMode: `dark`,
-      //   bracketPlacement: 'top',
-      //   s3Key: `bracket-${key}-dark-top.png`,
-      // }),
-      // bracketApi.htmlToImage({
-      //   html: lightModeTopHTML,
-      //   inchHeight: 16,
-      //   inchWidth: 12,
-      //   deviceScaleFactor: 1,
-      //   themeMode: `light`,
-      //   bracketPlacement: 'top',
-      //   s3Key: `bracket-${key}-light-top.png`,
-      // }),
-      // bracketApi.htmlToImage({
-      //   html: darkModeCenterHTML,
-      //   inchHeight: 16,
-      //   inchWidth: 12,
-      //   deviceScaleFactor: 1,
-      //   themeMode: `dark`,
-      //   bracketPlacement: 'center',
-      //   s3Key: `bracket-${key}-dark-center.png`,
-      // }),
-      // bracketApi.htmlToImage({
-      //   html: lightModeCenterHTML,
-      //   inchHeight: 16,
-      //   inchWidth: 12,
-      //   deviceScaleFactor: 1,
-      //   themeMode: `light`,
-      //   bracketPlacement: 'center',
-      //   s3Key: `bracket-${key}-light-center.png`,
-      // }),
-    ]
-    setProcessing(true)
-    Promise.all(promises)
-      .then((res) => {
-        // console.log('res')
-        // console.log(res)
-        // setProcessing(false)
-        window.location.href = apparelUrl
-      })
-      .catch((err) => {
-        setProcessing(false)
-        console.error(err)
-        Sentry.captureException(err)
       })
   }
 
