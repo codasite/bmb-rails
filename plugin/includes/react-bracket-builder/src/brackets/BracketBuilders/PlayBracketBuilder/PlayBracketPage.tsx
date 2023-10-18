@@ -10,10 +10,12 @@ import {
   WithMatchTree,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import { PlayReq, BracketRes } from '../../shared/api/types/bracket'
+import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
+import { getBracketWidth } from '../../shared/utils'
+import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 
 interface PlayPageProps {
   apparelUrl: string
@@ -42,7 +44,8 @@ const PlayPage = (props: PlayPageProps) => {
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-  const showPaginated = windowWidth < 768
+  const showPaginated =
+    windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
   useEffect(() => {
     let tree: Nullable<MatchTree> = null

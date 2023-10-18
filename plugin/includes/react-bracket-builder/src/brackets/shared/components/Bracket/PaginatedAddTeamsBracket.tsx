@@ -11,10 +11,13 @@ import {
 import { WhiteButton } from '../ActionButtons'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
+import { ReactComponent as EditIcon } from '../../assets/edit-icon.svg'
 import { getLeftMatches } from '../../models/operations/GetMatchSections'
+import { ScaledBracket } from './ScaledBracket'
 
 export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   const [page, setPage] = React.useState(0)
+  const [showFullBracket, setShowFullBracket] = React.useState(false)
   const numRounds = props.matchTree.rounds.length
   const numColumns = numRounds * 2 - 1
   const columnWidth = getTeamWidth(0)
@@ -51,22 +54,30 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   }
   return (
     <>
-      <div className={`tw-relative tw-left-[${offset}px]`}>
-        <AddTeamsBracket
+      {!showFullBracket && (
+        <div className={`tw-relative tw-left-[${offset}px]`}>
+          <AddTeamsBracket
+            matchTree={props.matchTree}
+            setMatchTree={props.setMatchTree}
+            page={page}
+            setPage={setPage}
+            getBracketWidth={() => bracketWidth}
+            getTeamWidth={() => getTeamWidth(0)}
+            getTeamHeight={() => getTeamHeight(0)}
+            getTeamGap={() => getTeamGap(0)}
+            getFirstRoundMatchGap={() => getFirstRoundMatchGap(0)}
+            getTeamFontSize={() => getTeamFontSize(0)}
+            columnsToRender={columnsToRender}
+            renderWinnerAndLogo={false}
+          />
+        </div>
+      )}
+      {showFullBracket && (
+        <ScaledBracket
           matchTree={props.matchTree}
-          setMatchTree={props.setMatchTree}
-          page={page}
-          setPage={setPage}
-          getBracketWidth={() => bracketWidth}
-          getTeamWidth={() => getTeamWidth(0)}
-          getTeamHeight={() => getTeamHeight(0)}
-          getTeamGap={() => getTeamGap(0)}
-          getFirstRoundMatchGap={() => getFirstRoundMatchGap(0)}
-          getTeamFontSize={() => getTeamFontSize(0)}
-          columnsToRender={columnsToRender}
-          renderWinnerAndLogo={false}
+          BracketComponent={AddTeamsBracket}
         />
-      </div>
+      )}
       <div className="tw-flex tw-flex-col tw-gap-16 tw-w-full">
         <div
           className={`tw-flex tw-justify-center tw-gap-80 tw-text-white/70 tw-font-600 tw-my-8 ${
@@ -86,25 +97,42 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
             <ChevronRight />
           </WhiteButton>
         )}
-        {page == 1 && (
-          <div className={'tw-flex tw-gap-8'}>
+        <div className={'tw-flex tw-gap-8'}>
+          {page == 1 && !showFullBracket && (
+            <>
+              <WhiteButton
+                paddingX={10}
+                borderWidth={1}
+                onClick={() => setPage(page - 1)}
+              >
+                <ChevronLeft />
+              </WhiteButton>
+              <WhiteButton
+                fontSize={14}
+                className="tw-grow"
+                borderWidth={1}
+                disabled={!props.matchTree.allTeamsAdded()}
+                onClick={() => setShowFullBracket(true)}
+              >
+                View full bracket
+              </WhiteButton>
+            </>
+          )}
+          {showFullBracket && (
             <WhiteButton
+              className="tw-grow"
               paddingX={10}
               borderWidth={1}
-              onClick={() => setPage(page - 1)}
+              onClick={() => {
+                setShowFullBracket(false)
+                setPage(0)
+              }}
             >
-              <ChevronLeft />
+              <EditIcon />
+              Edit
             </WhiteButton>
-            <WhiteButton
-              fontSize={14}
-              className="tw-grow"
-              borderWidth={1}
-              disabled={!props.matchTree.allTeamsAdded()}
-            >
-              View full bracket
-            </WhiteButton>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </>
   )
