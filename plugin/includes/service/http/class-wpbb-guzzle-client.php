@@ -79,7 +79,7 @@ class Wpbb_GuzzleClient implements Wpbb_HttpClientInterface {
         $body = $response->getBody()->getContents();
         $responses[$keys[$index]] = json_decode($body, true);
       },
-      'rejected' => function (RequestException $reason, $index) {
+      'rejected' => function ($reason, $index) {
         // this is delivered each failed request
         $this->utils->log_error($reason->getMessage());
       },

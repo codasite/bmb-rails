@@ -55,7 +55,7 @@ class Wpbb_BracketImageRequestFactory {
   }
 
   private function default_parameters(array $args): array {
-    $path = $args['path'] ?? 'http://react-server:8080/test';
+    $path = $args['path'] ?? 'http://localhost:3000/generate';
     $method = $args['method'] ?? 'POST';
     $headers = $args['headers'] ?? [
       'Content-Type' => 'application/json',
