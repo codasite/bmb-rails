@@ -9,6 +9,7 @@ import {
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
 import { useWindowDimensions } from '../../../utils/hooks'
+import { MonthPicker } from '../../shared/components/DatePicker'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -63,6 +64,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         </div>
       </div>
       <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full">
+        <MonthPicker />
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />
 					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
