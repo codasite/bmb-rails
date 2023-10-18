@@ -35,6 +35,11 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
    */
   private $wpdb;
 
+  /**
+   * @var Wpbb_Utils
+   */
+  private $utils;
+
   public function __construct($bracket = null) {
     global $wpdb;
     $this->wpdb = $wpdb;
@@ -42,13 +47,19 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
     $this->play_repo = new Wpbb_BracketPlayRepo();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->bracket_repo = new Wpbb_BracketRepo();
+    $this->utils = new Wpbb_Utils();
   }
 
-  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket) {
+  /**
+   * @param Wpbb_Bracket|int|null $bracket
+   * @return int returns the number of plays scored
+   */
+  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket): int {
     try {
-      $this->score_plays($bracket);
+      $affected_rows = $this->score_plays($bracket);
+      return $affected_rows;
     } catch (Exception $e) {
-      // do nothing
+      return 0;
     }
   }
 
@@ -98,21 +109,23 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
     $total_score_exp = implode(' + ', $total_score_arr);
 
     $sql = "
-		UPDATE $plays_table p0
-		LEFT JOIN (
-				SELECT p1.bracket_play_id,
-								$num_correct_select
-				FROM $picks_table p1
-				JOIN $results_table p2 ON p1.round_index = p2.round_index
-																										AND p1.match_index = p2.match_index
-																										AND p1.winning_team_id = p2.winning_team_id
-																										AND p2.bracket_id = $bracket_id
-				GROUP BY p1.bracket_play_id
-		) agg ON p0.id = agg.bracket_play_id
-		SET p0.total_score = COALESCE($total_score_exp, 0),
-				p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score;
-		";
+    UPDATE $plays_table p0
+    LEFT JOIN (
+    		SELECT p1.bracket_play_id,
+    						$num_correct_select
+    		FROM $picks_table p1
+    		JOIN $results_table p2 ON p1.round_index = p2.round_index
+    																								AND p1.match_index = p2.match_index
+    																								AND p1.winning_team_id = p2.winning_team_id
+    																								AND p2.bracket_id = $bracket_id
+    		GROUP BY p1.bracket_play_id
+    ) agg ON p0.id = agg.bracket_play_id
+    SET p0.total_score = COALESCE($total_score_exp, 0),
+    		p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
+    WHERE p0.bracket_id = $bracket_id
+    ";
 
-    $results = $this->wpdb->get_results($sql, ARRAY_A);
+    $this->wpdb->query($sql);
+    return $this->wpdb->rows_affected;
   }
 }
