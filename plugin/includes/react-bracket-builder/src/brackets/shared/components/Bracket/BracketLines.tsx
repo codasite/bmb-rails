@@ -1,17 +1,16 @@
 import React, { useContext } from 'react'
+import { Round, MatchNode } from '../../models/MatchTree'
 import LineTo, { SteppedLineTo } from 'react-lineto'
 import { DarkModeContext } from '../../context'
 import { getUniqueTeamClass } from '../../utils'
-import { Round } from '../../models/Round'
 
 interface BracketLinesProps {
   rounds: Round[]
   style?: any
-  within?: string
 }
 
 export const BracketLines = (props: BracketLinesProps) => {
-  const { rounds, style, within } = props
+  const { rounds, style } = props
   const darkMode = useContext(DarkModeContext)
   // Main function
   const renderLines = (rounds: Round[]): JSX.Element[] => {
@@ -66,7 +65,6 @@ export const BracketLines = (props: BracketLinesProps) => {
             toAnchor={toAnchor}
             orientation="h"
             delay={true}
-            within={within}
             {...style}
           />,
           <SteppedLineTo
@@ -77,7 +75,6 @@ export const BracketLines = (props: BracketLinesProps) => {
             toAnchor={toAnchor}
             orientation="h"
             delay={true}
-            within={within}
             {...style}
           />,
         ]
@@ -85,11 +82,11 @@ export const BracketLines = (props: BracketLinesProps) => {
     })
     return lines
   }
-  return <div className="tw-relative">{renderLines(rounds)}</div>
+  return <div className="tw-absolute">{renderLines(rounds)}</div>
 }
 
 export const RootMatchLines = (props: BracketLinesProps) => {
-  const { rounds, style, within } = props
+  const { rounds, style } = props
 
   const rootMatch = rounds[props.rounds.length - 1].matches[0]
   if (!rootMatch) {
@@ -112,14 +109,13 @@ export const RootMatchLines = (props: BracketLinesProps) => {
   )
 
   return (
-    <div className="tw-relative" key={'jaiefji'}>
+    <div className="tw-absolute" key={'jaiefji'}>
       <LineTo
         from={rootWinnerClass}
         to={rootTeam1Class}
         fromAnchor="bottom"
         toAnchor="top"
         delay={true}
-        within={within}
         {...style}
       />
       <LineTo
@@ -128,7 +124,6 @@ export const RootMatchLines = (props: BracketLinesProps) => {
         fromAnchor="bottom"
         toAnchor="top"
         delay={true}
-        within={within}
         {...style}
       />
     </div>
