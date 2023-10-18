@@ -32,62 +32,52 @@ app.get('/ping', async (req, res) => {
   res.send('pong')
 })
 
-// Options to generate bracket image. Can be used to generate multiple images
-// by passing in an array of options to the imageOptions property.
-// Any property not specified will use the default value.
-interface BracketImageOptions {
-  uploadService?: string
-  s3Bucket?: string
-  s3Key?: string
-  pdf?: boolean
-  deviceScaleFactor?: number
-  theme?: string
-  inchHeight?: number
-  inchWidth?: number
-  position?: string
-  numTeams?: number
-  title?: string
-  date?: string
-  picks?: any
-  matches?: any
-  imageOptions?: Array<BracketImageOptions>
-}
-
 interface ObjectStorageUploader {
   upload: (buffer: Buffer, contentType: string, body: any) => Promise<string>
 }
 
 const s3Uploader: ObjectStorageUploader = {
-  upload: async (buffer, contentType, body) => {
-    const { s3Options } = body
-    if (!s3Options) {
-      throw new Error('s3Options is required')
+  upload: async (buffer, contentType, storageOptions) => {
+    if (!storageOptions) {
+      throw new Error('storageOptions is required')
     }
-    const { s3Bucket, s3Key } = s3Options
-    if (!s3Bucket || !s3Key) {
-      throw new Error('s3Bucket and s3Key are required')
+    const { bucket, key } = storageOptions
+    if (!bucket || !key) {
+      throw new Error('bucket and key are required')
     }
 
     const s3 = new S3Client({ region: process.env.AWS_REGION })
     const command = new PutObjectCommand({
-      Bucket: s3Bucket,
-      Key: s3Key,
+      Bucket: bucket,
+      Key: key,
       Body: buffer,
       ContentType: contentType,
     })
     return s3.send(command).then((data) => {
       return JSON.stringify({
-        image_url: `https://${s3Bucket}.s3.amazonaws.com/${s3Key}`,
+        image_url: `https://${bucket}.s3.amazonaws.com/${key}`,
       })
     })
   },
 }
 
-app.post('/generate', async (req, res) => {
+interface GenerateRequest {
+  url?: string
+  queryParams?: any
+  storageOptions?: any
+  storageService?: string
+  pdf?: boolean
+  deviceScaleFactor?: number
+  inchHeight?: number
+  inchWidth?: number
+}
+
+const generateBracketImage = async (req: GenerateRequest, res: any) => {
   const {
     url,
     queryParams,
-    s3Options,
+    storageOptions,
+    storageService,
     pdf,
     deviceScaleFactor = 1,
     inchHeight = 16,
@@ -161,15 +151,15 @@ app.post('/generate', async (req, res) => {
   const extension = pdf ? 'pdf' : 'png'
   const contentType = pdf ? 'application/pdf' : 'image/png'
   let uploader: ObjectStorageUploader
-  if (s3Options) {
+  if (storageService === 's3') {
     uploader = s3Uploader
   }
   if (!uploader) {
-    return res.status(400).send('uploadService is required')
+    return res.status(400).send('storageService is required')
   }
   try {
     console.time('uploadToS3')
-    const image_url = await uploader.upload(file, contentType, req.body)
+    const image_url = await uploader.upload(file, contentType, storageOptions)
     res.send(image_url)
   } catch (err: any) {
     console.error(err)
@@ -179,7 +169,9 @@ app.post('/generate', async (req, res) => {
     console.timeEnd('start')
     await browser.close()
   }
-})
+}
+
+app.post('/generate', async (req, res) => {})
 
 app.post('/test', async (req, res) => {
   console.log(req.body)
