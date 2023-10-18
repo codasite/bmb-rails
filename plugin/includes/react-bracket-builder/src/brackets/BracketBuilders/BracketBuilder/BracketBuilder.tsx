@@ -55,7 +55,6 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       title: bracketMeta?.title || defaultBracketName,
       date: bracketMeta?.date || new Date().getFullYear().toString(),
     })
-    setCurrentPage('add-teams')
   }, [])
 
   useEffect(() => {
