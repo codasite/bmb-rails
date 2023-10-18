@@ -90,8 +90,6 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           <AddTeamsBracket
             matchTree={props.matchTree}
             setMatchTree={props.setMatchTree}
-            page={page}
-            setPage={setPage}
             getBracketWidth={() => bracketWidth}
             getTeamWidth={() => getTeamWidth(0)}
             getTeamHeight={() => getTeamHeight(0)}
