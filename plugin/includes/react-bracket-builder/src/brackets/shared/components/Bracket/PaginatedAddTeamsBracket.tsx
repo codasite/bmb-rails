@@ -1,13 +1,7 @@
 import React from 'react'
 import { PaginatedBracketProps } from '../types'
 import { AddTeamsBracket } from './AddTeamsBracket'
-import {
-  getFirstRoundMatchGap,
-  getTeamFontSize,
-  getTeamGap,
-  getTeamHeight,
-  getTeamWidth,
-} from '../../utils'
+import { getTeamFontSize, getTeamHeight, getTeamWidth } from '../../utils'
 import { WhiteButton } from '../ActionButtons'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
@@ -91,8 +85,8 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
             getBracketWidth={() => bracketWidth}
             getTeamWidth={() => getTeamWidth(0)}
             getTeamHeight={() => getTeamHeight(0)}
-            getTeamGap={() => getTeamGap(0)}
-            getFirstRoundMatchGap={() => getFirstRoundMatchGap(0)}
+            getTeamGap={() => 10}
+            getFirstRoundMatchGap={() => 15}
             getTeamFontSize={() => getTeamFontSize(0)}
             columnsToRender={columnsToRender}
             renderWinnerAndLogo={false}
