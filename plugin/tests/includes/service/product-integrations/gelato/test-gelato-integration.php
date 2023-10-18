@@ -122,7 +122,6 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    // save post meta
     update_post_meta($post->ID, $meta_key, json_encode($image_urls));
 
     $top_overlay = [
