@@ -48,6 +48,8 @@ export const DefaultBracket = (props: BracketProps) => {
     title,
     date,
     darkMode,
+    columnsToRender,
+    renderWinnerAndLogo = true,
   } = props
 
   let dark = darkMode
@@ -139,7 +141,17 @@ export const DefaultBracket = (props: BracketProps) => {
     const rightMatchColumns = getMatchColumns(rightMatches, 'right', numRounds)
     const finalMatchColumn = getMatchColumns(finalMatches, 'center', numRounds)
 
-    return [...leftMatchColumns, ...finalMatchColumn, ...rightMatchColumns]
+    return [...leftMatchColumns, ...finalMatchColumn, ...rightMatchColumns].map(
+      (column, index) => {
+        if (!columnsToRender) {
+          return column
+        }
+        if (columnsToRender.includes(index)) {
+          return column
+        }
+        return <div className={`tw-w-[${getTeamWidth(numRounds)}px]`}></div>
+      }
+    )
   }
 
   const width = getBracketWidth(matchTree.rounds.length)
@@ -156,7 +168,7 @@ export const DefaultBracket = (props: BracketProps) => {
           dark ? ' tw-dark' : ''
         } wpbb-default-bracket tw-relative`}
       >
-        {rootMatch && (
+        {rootMatch && renderWinnerAndLogo && (
           <div className={`tw-mb-[${winnerContainerMB}px]`}>
             <WinnerContainer
               match={rootMatch}
@@ -167,7 +179,11 @@ export const DefaultBracket = (props: BracketProps) => {
             />
           </div>
         )}
-        <div className="tw-flex tw-flex-col tw-justify-center tw-h-100">
+        <div
+          className={`tw-flex tw-flex-col tw-justify-center ${
+            renderWinnerAndLogo ? 'tw-h-100' : ''
+          }`}
+        >
           <div
             className={`tw-flex tw-justify-${
               numRounds > 1 ? 'between' : 'center'
@@ -176,13 +192,15 @@ export const DefaultBracket = (props: BracketProps) => {
             {buildMatches(matchTree.rounds)}
           </div>
         </div>
-        {
+        {renderWinnerAndLogo && (
           <div className={`tw-mt-${numRounds > 5 ? 50 : 20}`}>
             <LogoContainer {...props} bottomText={bracketDate} />
           </div>
-        }
+        )}
         <BracketLines rounds={matchTree.rounds} style={linesStyle} />
-        <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
+        {renderWinnerAndLogo && (
+          <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
+        )}
       </div>
     </DarkModeContext.Provider>
   )

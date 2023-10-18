@@ -22,7 +22,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
     <div
-      className="tw-flex tw-flex-col tw-gap-60 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover"
+      className="tw-flex tw-flex-col tw-gap-60 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-overflow-x-hidden"
       style={{ background: `url(${iconBackground}), #000225` }}
     >
       <div className="tw-px-60">

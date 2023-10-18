@@ -87,6 +87,9 @@ export interface BracketProps {
   lineColor?: string
   lineWidth?: number
   darkLineColor?: string
+  // undefined means all columns
+  columnsToRender?: number[]
+  renderWinnerAndLogo?: boolean
 }
 
 export interface BracketActionButtonProps extends ActionButtonProps {

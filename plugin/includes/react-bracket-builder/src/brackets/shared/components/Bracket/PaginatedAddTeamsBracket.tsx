@@ -45,6 +45,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   }
   const currentColumn = columnsToPaginate[page]
   const columnOffset = numRounds - 1 - currentColumn
+  const columnsToRender = [currentColumn - 1, currentColumn, currentColumn + 1]
   return (
     <div className={'tw-relative tw-pt-4 tw-max-w-100'}>
       {page > 0 && (
@@ -85,6 +86,8 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           getTeamGap={() => getTeamGap(0)}
           getFirstRoundMatchGap={() => getFirstRoundMatchGap(0)}
           getTeamFontSize={() => getTeamFontSize(0)}
+          columnsToRender={columnsToRender}
+          renderWinnerAndLogo={false}
         />
       </div>
     </div>
