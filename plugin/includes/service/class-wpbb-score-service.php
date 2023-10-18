@@ -69,6 +69,8 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
       throw new Exception('Cannot find bracket id');
     }
 
+    echo 'score_plays: bracket_id: ' . $bracket_id . '<br />';
+
     $num_rounds = $bracket->get_num_rounds();
 
     if (!$num_rounds || $num_rounds < 1) {
@@ -97,22 +99,32 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
 
     $total_score_exp = implode(' + ', $total_score_arr);
 
-    $sql = "
-		UPDATE $plays_table p0
-		LEFT JOIN (
-				SELECT p1.bracket_play_id,
-								$num_correct_select
-				FROM $picks_table p1
-				JOIN $results_table p2 ON p1.round_index = p2.round_index
-																										AND p1.match_index = p2.match_index
-																										AND p1.winning_team_id = p2.winning_team_id
-																										AND p2.bracket_id = $bracket_id
-				GROUP BY p1.bracket_play_id
-		) agg ON p0.id = agg.bracket_play_id
-		SET p0.total_score = COALESCE($total_score_exp, 0),
-				p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score;
-		";
+    // $sql = "
+    // UPDATE $plays_table p0
+    // LEFT JOIN (
+    // 		SELECT p1.bracket_play_id,
+    // 						$num_correct_select
+    // 		FROM $picks_table p1
+    // 		JOIN $results_table p2 ON p1.round_index = p2.round_index
+    // 																								AND p1.match_index = p2.match_index
+    // 																								AND p1.winning_team_id = p2.winning_team_id
+    // 																								AND p2.bracket_id = $bracket_id
+    // 		GROUP BY p1.bracket_play_id
+    // ) agg ON p0.id = agg.bracket_play_id
+    // SET p0.total_score = COALESCE($total_score_exp, 0),
+    // 		p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score;
+    // ";
+    // $sql = "
+    // 		SELECT p1.bracket_play_id
+    // 		FROM $picks_table p1
+    // 		JOIN $results_table p2 ON p1.round_index = p2.round_index
+    // 																								AND p1.match_index = p2.match_index
+    // 																								AND p1.winning_team_id = p2.winning_team_id
+    // 																								AND p2.bracket_id = $bracket_id
+    // ";
+    $sql = "SELECT * FROM $picks_table ";
 
     $results = $this->wpdb->get_results($sql, ARRAY_A);
+    echo 'results: ' . print_r($results, true) . '<br />';
   }
 }
