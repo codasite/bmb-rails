@@ -57,11 +57,32 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     return count($this->results) > 0;
   }
 
-  public function get_num_rounds(): int {
-    if (!$this->num_teams) {
-      return 0;
+  public function get_num_teams(): int {
+    if ($this->num_teams !== null) {
+      return $this->num_teams;
     }
-    return ceil(log($this->num_teams, 2));
+    if ($this->matches) {
+      $team_count = 0;
+      foreach ($this->matches as $match) {
+        if ($match->team1) {
+          $team_count++;
+        }
+        if ($match->team2) {
+          $team_count++;
+        }
+      }
+      return $team_count;
+    }
+    return 0;
+  }
+
+  public function get_num_rounds(): int {
+    $num_teams = $this->get_num_teams();
+    $num_rounds = 0;
+    if ($num_teams !== 0) {
+      $num_rounds = ceil(log($num_teams, 2));
+    }
+    return $num_rounds;
   }
 
   public function highest_possible_score() {
@@ -160,10 +181,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
 
   public function get_date(): string {
     return $this->date;
-  }
-
-  public function get_num_teams(): int {
-    return $this->num_teams;
   }
 
   public function get_post_id(): int {
