@@ -123,6 +123,7 @@ const generateBracketImage = async (req: GenerateRequest) => {
 
   console.time('start')
   console.time('launch')
+  // const browser = await puppeteer.launch({ headless: 'new' })
   const browser = await puppeteer.launch({ headless: 'new' })
   console.timeEnd('launch')
   console.time('newPage')
@@ -139,9 +140,10 @@ const generateBracketImage = async (req: GenerateRequest) => {
 
   console.time('goto')
   const queryString = Object.keys(queryParams)
-    .map((key) => key + '=' + queryParams[key])
+    .map((key) => key + '=' + encodeURIComponent(queryParams[key]))
     .join('&')
   const path = url + (queryString ? '?' + queryString : '')
+  console.log('path', path)
   try {
     await page.goto(path, { waitUntil: 'networkidle0' })
   } catch (err) {
