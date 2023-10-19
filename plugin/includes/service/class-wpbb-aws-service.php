@@ -15,15 +15,15 @@ class Wpbb_S3_Service {
   protected S3Client $s3Client;
 
   public function __construct($region = 'us-east-1', $version = 'latest') {
-    if (!defined('AWS_ACCESS_KEY') || !defined('AWS_SECRET_KEY')) {
+    if (!defined('AWS_ACCESS_KEY_ID') || !defined('AWS_SECRET_ACCESS_KEY')) {
       return;
     }
     $this->s3Client = new S3Client([
       'region' => $region,
       'version' => $version,
       'credentials' => [
-        'key' => AWS_ACCESS_KEY,
-        'secret' => AWS_SECRET_KEY,
+        'key' => AWS_ACCESS_KEY_ID,
+        'secret' => AWS_SECRET_ACCESS_KEY,
       ],
     ]);
   }
@@ -149,7 +149,7 @@ class Wpbb_Lambda_Service {
       return;
     }
 
-    if (!defined('AWS_ACCESS_KEY') || !defined('AWS_SECRET_KEY')) {
+    if (!defined('AWS_ACCESS_KEY_ID') || !defined('AWS_SECRET_ACCESS_KEY')) {
       return;
     }
 
@@ -157,8 +157,8 @@ class Wpbb_Lambda_Service {
       'region' => $region,
       'version' => $version,
       'credentials' => [
-        'key' => AWS_ACCESS_KEY,
-        'secret' => AWS_SECRET_KEY,
+        'key' => AWS_ACCESS_KEY_ID,
+        'secret' => AWS_SECRET_ACCESS_KEY,
       ],
     ]);
   }

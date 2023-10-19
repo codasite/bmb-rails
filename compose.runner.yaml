@@ -60,8 +60,8 @@ services:
         define('WP_SENTRY_ENV', 'production');
         define( 'WP_SENTRY_PHP_DSN', 'https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752' );
         define( 'WP_SENTRY_ERROR_TYPES', E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_USER_DEPRECATED );
-        define('AWS_ACCESS_KEY', '${AWS_ACCESS_KEY}');
-        define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
+        define('AWS_ACCESS_KEY_ID', '${AWS_ACCESS_KEY_ID}');
+        define('AWS_SECRET_ACCESS_KEY', '${AWS_SECRET_ACCESS_KEY}');
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
         define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
         define('WP_MEMORY_LIMIT', '512M');
