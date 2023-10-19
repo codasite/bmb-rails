@@ -71,6 +71,8 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         <DatePicker
           handleMonthChange={(month) => setMonth(month)}
           handleYearChange={(year) => setYear(year)}
+          showTitle={true}
+          backgroundColorClass='tw-bg-bgd-blue'
         />
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />

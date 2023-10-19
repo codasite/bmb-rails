@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import Select, { components, OptionProps, GroupBase, DropdownIndicatorProps } from 'react-select';
 import { ReactComponent as CalendarIcon } from '../assets/calendar.svg';
 
-const MonthOption: React.FC<OptionProps<{value: string; label: string; }, false, GroupBase<{value: string; label: string; }>>> = ({ data, innerProps, isSelected }) => {
-    const { value, label } = data;
+const MonthOption: React.FC<OptionProps<{value: string; label: string; backgroundColorClass: string}, false, GroupBase<{value: string; label: string;  backgroundColorClass: string}>>> = ({ data, innerProps, isSelected }) => {
+    const { value, label, backgroundColorClass } = data;
     const { onMouseMove, onMouseOver, ...restInnerProps } = innerProps;
 
     return (
         <div
             {...restInnerProps}
-            className='tw-flex tw-justify-center tw-items-center tw-p-16 tw-border-b tw-border-b-solid tw-border-b-white/20 tw-bg-bgd-blue'
+            className={`tw-flex tw-justify-center tw-items-center tw-p-16 tw-border-b tw-border-b-solid tw-border-b-white/20 ${backgroundColorClass}`}
         >
             <span
                 className="tw-text-center tw-text-24 tw-font-600 tw-text-white-50"
@@ -19,10 +19,11 @@ const MonthOption: React.FC<OptionProps<{value: string; label: string; }, false,
 }
 
 interface MonthProps {
-    handleMonthChange: (year: string) => void;
+    handleMonthChange: (year: string) => void
+    backgroundColorClass: string,
 }
 
-const MonthPicker: React.FC<MonthProps> = ({handleMonthChange}) => {
+const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorClass }) => {
     const [month, setMonth] = useState<{ value: string; label: string; } | null>(null);
 
     const handleChange = (selectedOption: {value: string; label: string; } | null) => {
@@ -31,18 +32,18 @@ const MonthPicker: React.FC<MonthProps> = ({handleMonthChange}) => {
     }
 
     const options = [
-        { value: '01', label: 'January' },
-        { value: '02', label: 'February' },
-        { value: '03', label: 'March' },
-        { value: '04', label: 'April' },
-        { value: '05', label: 'May' },
-        { value: '06', label: 'June' },
-        { value: '07', label: 'July' },
-        { value: '08', label: 'August' },
-        { value: '09', label: 'September' },
-        { value: '10', label: 'October' },
-        { value: '11', label: 'November' },
-        { value: '12', label: 'December' }
+        { value: '01', label: 'January', backgroundColorClass: backgroundColorClass },
+        { value: '02', label: 'February', backgroundColorClass: backgroundColorClass  },
+        { value: '03', label: 'March', backgroundColorClass: backgroundColorClass  },
+        { value: '04', label: 'April', backgroundColorClass: backgroundColorClass  },
+        { value: '05', label: 'May', backgroundColorClass: backgroundColorClass  },
+        { value: '06', label: 'June', backgroundColorClass: backgroundColorClass  },
+        { value: '07', label: 'July', backgroundColorClass: backgroundColorClass  },
+        { value: '08', label: 'August', backgroundColorClass: backgroundColorClass  },
+        { value: '09', label: 'September', backgroundColorClass: backgroundColorClass  },
+        { value: '10', label: 'October', backgroundColorClass: backgroundColorClass  },
+        { value: '11', label: 'November', backgroundColorClass: backgroundColorClass  },
+        { value: '12', label: 'December', backgroundColorClass: backgroundColorClass  }
     ];
 
     const styles = {
@@ -89,7 +90,7 @@ const MonthPicker: React.FC<MonthProps> = ({handleMonthChange}) => {
             unstyled
             styles={styles}
             menuPlacement="bottom"
-            className="tw-flex tw-justify-center tw-items-center tw-p-16 tw-bg-bgd-blue tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-344 tw-h-62 focus:tw-border-white"
+            className={`tw-flex tw-justify-center tw-items-center tw-p-16 ${backgroundColorClass} tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-344 tw-h-62 focus:tw-border-white`}
 
             
         />
@@ -98,9 +99,10 @@ const MonthPicker: React.FC<MonthProps> = ({handleMonthChange}) => {
 
 interface YearProps {
     handleYearChange: (year: string) => void;
+    backgroundColorClass: string,
 }
 
-export const YearInput: React.FC<YearProps> = ({handleYearChange}) => {
+export const YearInput: React.FC<YearProps> = ({handleYearChange, backgroundColorClass}) => {
     const [year, setYear] = useState<string>('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +122,7 @@ export const YearInput: React.FC<YearProps> = ({handleYearChange}) => {
             value={year}
             onChange={handleChange}
             maxLength={4}
-            className="tw-flex tw-justify-center tw-bg-bgd-blue tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-150 tw-h-62"
+            className={`tw-flex tw-justify-center ${backgroundColorClass} tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-150 tw-h-62`}
         />
     )
 }
@@ -128,21 +130,28 @@ export const YearInput: React.FC<YearProps> = ({handleYearChange}) => {
 interface DatePickerProps {
     handleMonthChange: (year: string) => void;
     handleYearChange: (year: string) => void;
+    showTitle: boolean,
+    backgroundColorClass: string,
 }
-export const DatePicker: React.FC<DatePickerProps> = ({handleMonthChange, handleYearChange}) => {
+export const DatePicker: React.FC<DatePickerProps> = ({handleMonthChange, handleYearChange, showTitle, backgroundColorClass}) => {
     return (
         <div className="tw-flex tw-flex-col tw-justify-center tw-text-center tw-gap-16">
-            <span
-                className="tw-text-white/50 tw-text-24 tw-font-500"
-            >
-                Your Bracket's Date
-            </span>
+            { showTitle && (
+                <span
+                    className="tw-text-white/50 tw-text-24 tw-font-500"
+                >
+                    Your Bracket's Date
+                </span>
+            )}
             <div className="tw-flex tw-justify-center tw-items-start tw-gap-16 tw-min-w-150 tw-h-62">
                 <MonthPicker
                     handleMonthChange={handleMonthChange}
+                    backgroundColorClass={backgroundColorClass}
+
                  />
                 <YearInput
                     handleYearChange={handleYearChange}
+                    backgroundColorClass={backgroundColorClass}
                  />
             </div>
         </div>
