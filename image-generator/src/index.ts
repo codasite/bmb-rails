@@ -121,25 +121,16 @@ const generateBracketImage = async (req: GenerateRequest) => {
   const pxHeight = inchHeight * 96
   const pxWidth = inchWidth * 96
 
-  console.time('start')
-  console.time('launch')
   // const browser = await puppeteer.launch({ headless: 'new' })
   const browser = await puppeteer.launch({ headless: 'new' })
-  console.timeEnd('launch')
-  console.time('newPage')
   const page = await browser.newPage()
-  console.timeEnd('newPage')
 
-  console.time('setViewport')
   await page.setViewport({
     height: pxHeight,
     width: pxWidth,
     deviceScaleFactor,
   })
-  console.timeEnd('setViewport')
 
-  console.time('goto')
-  console.log('queryParams', queryParams)
   const queryString = Object.entries(queryParams)
     .map(([key, value]) => {
       if (typeof value === 'object') {
@@ -149,17 +140,13 @@ const generateBracketImage = async (req: GenerateRequest) => {
     })
     .join('&')
   const path = url + (queryString ? '?' + queryString : '')
-  console.log('path', path)
   try {
     await page.goto(path, { waitUntil: 'networkidle0' })
   } catch (err) {
-    console.log(err)
+    console.error(err)
     browser.close()
     throw new Error(`Error loading ${path}`)
   }
-  console.timeEnd('goto')
-
-  console.time('screenshot')
 
   let file: Buffer
   if (pdf) {
@@ -176,7 +163,6 @@ const generateBracketImage = async (req: GenerateRequest) => {
     })
   }
 
-  console.timeEnd('screenshot')
   const extension = pdf ? 'pdf' : 'png'
   const contentType = pdf ? 'application/pdf' : 'image/png'
   let uploader: ObjectStorageUploader
@@ -185,14 +171,11 @@ const generateBracketImage = async (req: GenerateRequest) => {
   }
   let image_url
   try {
-    console.time('uploadToS3')
     image_url = await uploader.upload(file, contentType, storageOptions)
   } catch (err: any) {
     console.error(err)
     throw new Error('Error uploading to S3')
   } finally {
-    console.timeEnd('uploadToS3')
-    console.timeEnd('start')
     await browser.close()
   }
   return image_url
@@ -210,10 +193,10 @@ app.post('/generate', async (req, res) => {
     console.error(err)
     res.status(500).send('Error generating image: ' + err.message)
   }
+  console.log('done')
 })
 
 app.post('/test', async (req, res) => {
-  console.log(req.body)
   res.send(req.body)
 })
 
