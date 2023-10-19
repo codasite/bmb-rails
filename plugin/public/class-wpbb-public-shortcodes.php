@@ -62,12 +62,6 @@ class Wpbb_Public_Shortcodes {
 		$post_author_id = get_post()->post_author;
 		$user_is_admin = current_user_can('administrator');
 
-		if (!$user_is_admin && $current_user_id !== $post_author_id) {
-			header('HTTP/1.0 401 Unauthorized');
-			ob_start();
-			include('error/401.php');
-			return ob_get_clean();
-		}
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-page.php';
 		return ob_get_clean();

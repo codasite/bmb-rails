@@ -6,6 +6,11 @@ wp-pull:
 wp-up:
 	docker compose --profile wp up --build
 
+# Start image generator containers
+images-up:
+	docker compose --profile images up --build
+
+
 # Start all wordpress containers in detached mode for ci
 wp-up-detach:
 	docker compose --profile wp up --build --detach
