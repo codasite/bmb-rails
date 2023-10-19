@@ -6,20 +6,23 @@ import { Modal } from '../../Modal'
 import { ModalHeader } from '../../ModalHeader'
 import { ModalTextField } from '../../ModalTextFields'
 import { CancelButton, ConfirmButton } from '../../ModalButtons'
+import { DatePicker } from '../../../brackets/shared/components/DatePicker'
 
 export const EditBracketModal = () => {
   const [bracketId, setBracketId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [titleHasError, setTitleHasError] = useState(false)
-  const [date, setDate] = useState('')
+  const [month, setMonth] = useState('')
+  const [year, setYear] = useState('')
+  // const [date, setDate] = useState('')
   const [dateHasError, setDateHasError] = useState(false)
   const [show, setShow] = useState(false)
   addClickHandlers({
     buttonClassName: 'wpbb-edit-bracket-button',
     onButtonClick: (b) => {
       setTitle(b.dataset.bracketTitle)
-      setDate(b.dataset.bracketDate)
+      // setDate(b.dataset.bracketDate)
       setBracketId(parseInt(b.dataset.bracketId))
       setShow(true)
     },
@@ -37,7 +40,11 @@ export const EditBracketModal = () => {
       setTitleHasError(true)
       return
     }
-    if (!date) {
+    // if (!date) {
+    //   setDateHasError(true)
+    //   return
+    // }
+    if (!month || !year) {
       setDateHasError(true)
       return
     }
@@ -45,7 +52,7 @@ export const EditBracketModal = () => {
     bracketApi
       .updateBracket(bracketId, {
         title: title,
-        date: date,
+        date: `${year}-${month}`,
       })
       .then((res) => {
         window.location.reload()
@@ -70,14 +77,21 @@ export const EditBracketModal = () => {
             setInput={setTitle}
             setHasError={setTitleHasError}
           />
-          <ModalTextField
+          <div className="tw-mb-20"></div>
+          <DatePicker
+            handleMonthChange={(month) => setMonth(month)}
+            handleYearChange={(year) => setYear(year)}
+            showTitle={false}
+            backgroundColorClass={'tw-bg-navyBlue'}
+          />
+          {/* <ModalTextField
             hasError={dateHasError}
             errorText={'Date is required'}
             placeholderText={'Date...'}
             input={date}
             setInput={setDate}
             setHasError={setDateHasError}
-          />
+          /> */}
           <div className={'tw-mb-30'}></div>
           <ConfirmButton
             disabled={loading || titleHasError}

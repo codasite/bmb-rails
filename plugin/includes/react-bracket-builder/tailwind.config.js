@@ -67,6 +67,7 @@ module.exports = {
       'dd-blue': '#010433',
       'bgd-blue': 'rgb(13 15 49)',
       blueLight: '#3B1FFF26',
+      navyBlue: 'rgb(13 20 84)',
       yellow: '#F8E11A',
       red: '#FF456D',
       redLight: '#FF1F4F26',
