@@ -114,7 +114,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   const getBracketReq = () => {
     const req: BracketReq = {
       title: bracketMeta.title,
-      date: month && year? `${year}-${month}`: bracketMeta.date,
+      date: month && year? `${month} ${year}`: bracketMeta.date,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),

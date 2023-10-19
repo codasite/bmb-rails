@@ -32,18 +32,18 @@ const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorC
     }
 
     const options = [
-        { value: '01', label: 'January', backgroundColorClass: backgroundColorClass },
-        { value: '02', label: 'February', backgroundColorClass: backgroundColorClass  },
-        { value: '03', label: 'March', backgroundColorClass: backgroundColorClass  },
-        { value: '04', label: 'April', backgroundColorClass: backgroundColorClass  },
-        { value: '05', label: 'May', backgroundColorClass: backgroundColorClass  },
-        { value: '06', label: 'June', backgroundColorClass: backgroundColorClass  },
-        { value: '07', label: 'July', backgroundColorClass: backgroundColorClass  },
-        { value: '08', label: 'August', backgroundColorClass: backgroundColorClass  },
-        { value: '09', label: 'September', backgroundColorClass: backgroundColorClass  },
-        { value: '10', label: 'October', backgroundColorClass: backgroundColorClass  },
-        { value: '11', label: 'November', backgroundColorClass: backgroundColorClass  },
-        { value: '12', label: 'December', backgroundColorClass: backgroundColorClass  }
+        { value: 'January', label: 'January', backgroundColorClass: backgroundColorClass },
+        { value: 'February', label: 'February', backgroundColorClass: backgroundColorClass  },
+        { value: 'March', label: 'March', backgroundColorClass: backgroundColorClass  },
+        { value: 'April', label: 'April', backgroundColorClass: backgroundColorClass  },
+        { value: 'May', label: 'May', backgroundColorClass: backgroundColorClass  },
+        { value: 'June', label: 'June', backgroundColorClass: backgroundColorClass  },
+        { value: 'July', label: 'July', backgroundColorClass: backgroundColorClass  },
+        { value: 'August', label: 'August', backgroundColorClass: backgroundColorClass  },
+        { value: 'September', label: 'September', backgroundColorClass: backgroundColorClass  },
+        { value: 'October', label: 'October', backgroundColorClass: backgroundColorClass  },
+        { value: 'November', label: 'November', backgroundColorClass: backgroundColorClass  },
+        { value: 'December', label: 'December', backgroundColorClass: backgroundColorClass  }
     ];
 
     const styles = {
