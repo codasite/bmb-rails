@@ -88,9 +88,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
 
   return (
     <div
-      className={`wpbb-reset tw-py-60 tw-mx-auto tw-bg-${
-        darkMode ? 'black' : 'white'
-      } tw-flex tw-flex-col tw-items-center tw-justify-${justify} tw-h-[${heightPx}px] tw-w-[${widthPx}px]${
+      className={`wpbb-reset tw-py-60 tw-mx-auto tw-flex tw-flex-col tw-items-center tw-justify-${justify} tw-h-[${heightPx}px] tw-w-[${widthPx}px]${
         darkMode ? ' tw-dark' : ''
       }`}
     >
