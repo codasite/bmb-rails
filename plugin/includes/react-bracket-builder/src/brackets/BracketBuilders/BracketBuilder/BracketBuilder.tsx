@@ -109,13 +109,13 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   }
 
   // bracket month and year. set when user selects a month and year from the date picker
-  const [month, setMonth] = useState('');
-  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('')
+  const [year, setYear] = useState('')
 
   const getBracketReq = () => {
     const req: BracketReq = {
       title: bracketMeta.title,
-      date: month && year? `${month} ${year}`: bracketMeta.date,
+      date: month && year ? `${month} ${year}` : bracketMeta.date,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),

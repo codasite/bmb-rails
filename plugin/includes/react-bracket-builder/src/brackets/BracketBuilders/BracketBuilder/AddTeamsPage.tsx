@@ -21,8 +21,18 @@ interface AddTeamsPageProps {
   setYear?: (year: string) => void
 }
 export const AddTeamsPage = (props: AddTeamsPageProps) => {
-  const { matchTree, setMatchTree, handleSaveBracket, handleBack, month, setMonth, year, setYear } = props
-  const createDisabled = !matchTree || !matchTree.allTeamsAdded() || !month || !year
+  const {
+    matchTree,
+    setMatchTree,
+    handleSaveBracket,
+    handleBack,
+    month,
+    setMonth,
+    year,
+    setYear,
+  } = props
+  const createDisabled =
+    !matchTree || !matchTree.allTeamsAdded() || !month || !year
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
@@ -69,7 +79,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
           showTitle={true}
           // backgroundColorClass={'tw-bg-greyBlue'}
           backgroundColorClass={'tw-bg-lightGreyBlue'}
-          selectMenuPlacement='top'
+          selectMenuPlacement="top"
         />
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />

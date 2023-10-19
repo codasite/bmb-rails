@@ -84,7 +84,7 @@ export const EditBracketModal = () => {
             showTitle={false}
             // backgroundColorClass={'tw-bg-greyBlue'}
             backgroundColorClass={'tw-bg-lightGreyBlue'}
-            selectMenuPlacement='bottom'
+            selectMenuPlacement="bottom"
           />
           {/* <ModalTextField
             hasError={dateHasError}
