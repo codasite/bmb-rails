@@ -5,9 +5,9 @@ import { MatchColumnProps } from '../types'
 import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox'
 import { FlexMatchBox } from '../MatchBox'
 import { FlexTeamSlot } from '../TeamSlot'
-import { WildcardPlacement } from '../../models/MatchTree'
 import { isPowerOfTwo } from '../../utils'
 import { flexBracketConstants } from '../../constants'
+import { WildcardPlacement } from '../../models/WildcardPlacement'
 
 const { teamBreakpoints, teamHeights, teamGaps, matchGapMin, matchGapMax } =
   flexBracketConstants

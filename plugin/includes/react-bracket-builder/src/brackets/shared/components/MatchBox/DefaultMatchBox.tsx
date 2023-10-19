@@ -1,9 +1,9 @@
 import React from 'react'
-import { Team } from '../../models/MatchTree'
 import { MatchBoxProps } from '../types'
 import { Nullable } from '../../../../utils/types'
 //@ts-ignore
 import { DefaultTeamSlot } from '../TeamSlot'
+import { Team } from '../../models/Team'
 
 export const DefaultMatchBox = (props: MatchBoxProps) => {
   const {

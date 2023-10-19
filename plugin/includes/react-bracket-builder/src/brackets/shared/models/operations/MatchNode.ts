@@ -1,0 +1,99 @@
+import { Nullable } from '../../../../utils/types'
+import { Team } from '../Team'
+import { MatchNodeArgs } from './MatchNodeArgs'
+import { MatchRepr } from '../../api/types/bracket'
+
+export class MatchNode {
+  id?: number
+  matchIndex: number
+  roundIndex: number
+  private team1: Nullable<Team> = null
+  private team2: Nullable<Team> = null
+  team1Wins?: boolean = false
+  team2Wins?: boolean = false
+  left: Nullable<MatchNode> = null
+  right: Nullable<MatchNode> = null
+  parent: Nullable<MatchNode> = null
+  depth: number
+  // constructor(matchIndex, roundIndex, id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
+  constructor(args: MatchNodeArgs) {
+    const {
+      id,
+      matchIndex,
+      roundIndex,
+      team1,
+      team2,
+      team1Wins,
+      team2Wins,
+      left,
+      right,
+      parent,
+      depth,
+    } = args
+    this.matchIndex = matchIndex
+    this.roundIndex = roundIndex
+    this.depth = depth
+    this.id = id
+    this.team1Wins = team1Wins
+    this.team2Wins = team2Wins
+    this.left = left ? left : null
+    this.right = right ? right : null
+    this.parent = parent ? parent : null
+    this.team1 = team1 ? team1 : null
+    this.team2 = team2 ? team2 : null
+  }
+  serialize(): MatchRepr {
+    const { id, matchIndex, roundIndex, team1, team2, team1Wins, team2Wins } =
+      this
+    return {
+      id,
+      matchIndex,
+      roundIndex,
+      team1: team1 ? team1.serialize() : undefined,
+      team2: team2 ? team2.serialize() : undefined,
+      team1Wins,
+      team2Wins,
+    }
+  }
+  getWinner(): Nullable<Team> {
+    if (this.team1Wins) {
+      return this.getTeam1()
+    } else if (this.team2Wins) {
+      return this.getTeam2()
+    }
+    return null
+  }
+  isLeftChild(): boolean {
+    return this.parent !== null && this.parent.left === this
+  }
+  isRightChild(): boolean {
+    return !this.isLeftChild()
+  }
+  getTeam1(): Nullable<Team> {
+    return this.left ? this.left.getWinner() : this.team1
+  }
+  getTeam2(): Nullable<Team> {
+    return this.right ? this.right.getWinner() : this.team2
+  }
+  setTeam1(team: Team): void {
+    this.team1 = team
+  }
+  setTeam2(team: Team): void {
+    this.team2 = team
+  }
+  pick(team: Nullable<Team>): void {
+    if (!team) {
+      return
+    }
+    this.team1Wins = false
+    this.team2Wins = false
+    if (this.getTeam1() === team) {
+      this.team1Wins = true
+    } else if (this.getTeam2() === team) {
+      this.team2Wins = true
+    }
+  }
+  isPicked(): boolean {
+    return this.team1Wins || this.team2Wins
+  }
+}

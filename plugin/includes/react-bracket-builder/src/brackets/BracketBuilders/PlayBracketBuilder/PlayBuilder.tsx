@@ -1,24 +1,9 @@
-import React, { useState, useEffect } from 'react'
-import * as Sentry from '@sentry/react'
-import { bracketApi } from '../../shared/api/bracketApi'
-import { Nullable } from '../../../utils/types'
-
-import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
-import {
-  WithDarkMode,
-  WithMatchTree,
-  WithBracketMeta,
-  WithProvider,
-} from '../../shared/components/HigherOrder'
+import React from 'react'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { PickableBracket } from '../../shared/components/Bracket/PickableBracket'
+import { PickableBracket } from '../../shared/components/Bracket'
 import { ThemeSelector } from '../../shared/components'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import { PlayReq } from '../../shared/api/types/bracket'
-import { useWindowDimensions } from '../../../utils/hooks'
-import { PaginatedPickableBracket } from '../../shared/components/Bracket'
 import { PlayBuilderProps } from './types'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {

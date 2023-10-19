@@ -1,22 +1,23 @@
 import {
   MatchTree,
-  Round,
-  Team,
-  MatchNode,
-  getNumRounds,
-  getNullMatches,
-  matchReprFromRes,
-  fillInEmptyMatches,
-  WildcardPlacement,
-  getWildcardRange,
-  getFirstRoundMatches,
-  matchReprFromNumTeams,
-  linkNodes,
+
   // linkTeams,
 } from './MatchTree'
 import { MatchPicks, MatchRes, MatchReq } from '../api/types/bracket'
 
 import { describe, test, expect, it } from '@jest/globals'
+import { WildcardPlacement } from './WildcardPlacement'
+import { Team } from './Team'
+import { MatchNode } from './operations/MatchNode'
+import { Round } from './Round'
+import { getFirstRoundMatches } from './operations/GetFirstRoundMatches'
+import { matchReprFromNumTeams } from './operations/MatchReprFromNumTeams'
+import { getWildcardRange } from './operations/GetWildcardRange'
+import { fillInEmptyMatches } from './operations/FillInEmptyMatches'
+import { getNullMatches } from './operations/GetNullMatches'
+import { getNumRounds } from './operations/GetNumRounds'
+import { matchReprFromRes } from './operations/MatchReprFromRes'
+import { linkNodes } from './operations/LinkNodes'
 
 describe('MatchTree', () => {
   test('testing create match tree from a number of teams and wildcard placement', () => {

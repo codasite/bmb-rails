@@ -1,8 +1,8 @@
-import { Round, MatchNode, Team } from '../models/MatchTree'
-import { Nullable } from '../../../utils/types'
 import { MatchTree } from '../models/MatchTree'
-import { Match } from '@sentry/react/types/reactrouterv3'
+import { Nullable } from '../../../utils/types'
 import { ActionButtonProps } from './ActionButtons'
+import { Team } from '../models/Team'
+import { MatchNode } from '../models/operations/MatchNode'
 
 type TeamClickCallback = (
   match: MatchNode,
@@ -71,7 +71,11 @@ export interface BracketProps {
   getTeamWidth?: (numRounds: number) => number
   getTeamFontSize?: (numRounds: number) => number
   getFirstRoundMatchGap?: (numRounds: number) => number
-  getSubsequentMatchGap?: (numRounds: number) => number
+  getSubsequentMatchGap?: (
+    prevMatchHeight: number,
+    prevMatchGap: number,
+    matchHeight: number
+  ) => number
   setMatchTree?: (matchTree: MatchTree) => void
   onTeamClick?: TeamClickCallback
   matchTree: MatchTree
@@ -87,6 +91,9 @@ export interface BracketProps {
   lineColor?: string
   lineWidth?: number
   darkLineColor?: string
+  // undefined means all columns
+  columnsToRender?: number[]
+  renderWinnerAndLogo?: boolean
 }
 
 export interface BracketActionButtonProps extends ActionButtonProps {
@@ -97,6 +104,12 @@ export interface PaginatedBracketProps extends BracketProps {
   onFinished?: () => void
   NextButtonComponent?: React.FC<ActionButtonProps>
   FinalButtonComponent?: React.FC<ActionButtonProps>
+}
+
+export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
+  page: number
+  setPage: (page: number) => void
+  disableNext: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
 }
 
 export interface ScaledBracketProps extends BracketProps {

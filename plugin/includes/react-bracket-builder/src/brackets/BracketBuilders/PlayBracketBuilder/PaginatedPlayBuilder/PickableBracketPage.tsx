@@ -24,7 +24,6 @@ export const PickableBracketPage = (props: PickableBracketPageProps) => {
       backgroundPosition: 'center',
     }
   }
-
   return (
     <div {...containerProps}>
       {matchTree && (
