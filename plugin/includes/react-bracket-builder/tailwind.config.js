@@ -47,13 +47,6 @@ module.exports = {
     minWidth: {
       20: '20px',
       24: '24px',
-      344: '344px',
-    },
-    width: {
-      150: '150px',
-    },
-    height: {
-      62: '62px',
     },
     colors: {
       transparent: 'transparent',
@@ -65,9 +58,9 @@ module.exports = {
       blue: '#2137ff',
       'dark-blue': '#0D1454',
       'dd-blue': '#010433',
-      'bgd-blue': 'rgb(13 15 49)',
       blueLight: '#3B1FFF26',
-      navyBlue: 'rgb(13 20 84)',
+      greyBlue: 'rgb(134 138 170)',
+      lightGreyBlue: 'rgb(25 31 92)',
       yellow: '#F8E11A',
       red: '#FF456D',
       redLight: '#FF1F4F26',

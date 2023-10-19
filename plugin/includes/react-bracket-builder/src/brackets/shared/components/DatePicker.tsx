@@ -82,7 +82,7 @@ const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorC
 
     return (
         <Select
-            placeholder={<><CalendarIcon /> Month</>}
+            placeholder={<div className="tw-flex tw-items-center tw-justify-center tw-gap-16"><CalendarIcon /> <span className="tw-i">Month</span></div>}
             value={month}
             onChange={handleChange}
             options={options}
@@ -90,7 +90,7 @@ const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorC
             unstyled
             styles={styles}
             menuPlacement="bottom"
-            className={`tw-flex tw-justify-center tw-items-center tw-p-16 ${backgroundColorClass} tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-344 tw-h-62 focus:tw-border-white`}
+            className={`tw-flex tw-justify-center tw-items-center tw-p-16 ${backgroundColorClass} tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-[344px] tw-h-[62px] focus:tw-border-white`}
 
             
         />
@@ -122,7 +122,7 @@ export const YearInput: React.FC<YearProps> = ({handleYearChange, backgroundColo
             value={year}
             onChange={handleChange}
             maxLength={4}
-            className={`tw-flex tw-justify-center ${backgroundColorClass} tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-150 tw-h-62`}
+            className={`tw-flex tw-justify-center ${backgroundColorClass} tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-[150px] tw-h-[62px] tw-placeholder-white/50`}
         />
     )
 }
@@ -143,7 +143,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({handleMonthChange, handle
                     Your Bracket's Date
                 </span>
             )}
-            <div className="tw-flex tw-justify-center tw-items-start tw-gap-16 tw-min-w-150 tw-h-62">
+            <div className="tw-flex tw-justify-center tw-items-start tw-gap-16 tw-min-w-150 tw-h-[62px]">
                 <MonthPicker
                     handleMonthChange={handleMonthChange}
                     backgroundColorClass={backgroundColorClass}

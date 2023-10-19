@@ -72,7 +72,8 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
           handleMonthChange={(month) => setMonth(month)}
           handleYearChange={(year) => setYear(year)}
           showTitle={true}
-          backgroundColorClass='tw-bg-bgd-blue'
+          // backgroundColorClass={'tw-bg-greyBlue'}
+          backgroundColorClass={'tw-bg-lightGreyBlue'}
         />
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />

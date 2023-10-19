@@ -82,7 +82,8 @@ export const EditBracketModal = () => {
             handleMonthChange={(month) => setMonth(month)}
             handleYearChange={(year) => setYear(year)}
             showTitle={false}
-            backgroundColorClass={'tw-bg-navyBlue'}
+            // backgroundColorClass={'tw-bg-greyBlue'}
+            backgroundColorClass={'tw-bg-lightGreyBlue'}
           />
           {/* <ModalTextField
             hasError={dateHasError}
