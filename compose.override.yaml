@@ -193,7 +193,7 @@ services:
         define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
         define('WP_MEMORY_LIMIT', '512M');
       PLUGIN_NAME: wp-bracket-builder
-      WORDPRESS_URL: http://localhost:8090
+      WORDPRESS_URL: http://localhost:8009
       WORDPRESS_TITLE: Wordpress
       WORDPRESS_ADMIN_USER: admin
       WORDPRESS_ADMIN_PASSWORD: admin
@@ -202,7 +202,7 @@ services:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
 
     ports:
-      - 8090:80
+      - 8009:80
     depends_on:
       - wp-import-db
     profiles:
