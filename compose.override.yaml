@@ -99,7 +99,7 @@ services:
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress
     volumes:
-      - ./docker/db/scripts:/docker-entrypoint-initdb.d
+      - ./docker/db/local:/docker-entrypoint-initdb.d
       - wp-dev-db-data:/var/lib/mysql
     ports:
       - 3308:3306
@@ -112,7 +112,7 @@ services:
     container_name: phpmyadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: wp-dev-db
+      PMA_HOSTS: wp-dev-db, wp-import-db
       PMA_PORT: 3306
       PMA_USER: wordpress
       PMA_PASSWORD: wordpress
@@ -123,6 +123,7 @@ services:
     profiles:
       - wp
       - all
+      - import
 
   wp-test:
     tty: true
@@ -161,6 +162,69 @@ services:
     profiles:
       - test
 
+  wp-import:
+    tty: true
+    container_name: wp-import
+    build:
+      context: .
+      dockerfile: ./docker/wordpress/Dockerfile.import
+      args:
+        PLUGIN_NAME: wp-bracket-builder
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: wp-import-db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WP_DEBUG_LOG', true );
+        define( 'WP_DEBUG_DISPLAY', false );
+        define('BRACKET_BUILDER_S3_IMAGE_BUCKET', 'wpbb-bracket-images-test1');
+        define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
+        define('BRACKET_PRODUCT_CATEGORY', 'bracket-ready');
+        define('BRACKET_PLACEMENT_CENTER_CAT', 'wpbb-placement-center');
+        define('WP_SENTRY_ENV', 'production');
+        define( 'WP_SENTRY_PHP_DSN', 'https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752' );
+        define( 'WP_SENTRY_ERROR_TYPES', E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_USER_DEPRECATED );
+        define('AWS_ACCESS_KEY', '${AWS_ACCESS_KEY}');
+        define('AWS_SECRET_KEY', '${AWS_SECRET_KEY}');
+        define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
+        define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
+        define('WP_MEMORY_LIMIT', '512M');
+      PLUGIN_NAME: wp-bracket-builder
+      WORDPRESS_URL: http://localhost:8090
+      WORDPRESS_TITLE: Wordpress
+      WORDPRESS_ADMIN_USER: admin
+      WORDPRESS_ADMIN_PASSWORD: admin
+      WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
+    volumes:
+      - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
+
+    ports:
+      - 8090:80
+    depends_on:
+      - wp-import-db
+    profiles:
+      - import
+
+  wp-import-db:
+    tty: true
+    image: mariadb
+    restart: unless-stopped
+    container_name: wp-import-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+    volumes:
+      - ./docker/db/import:/docker-entrypoint-initdb.d
+      - wp-import-db-data:/var/lib/mysql
+    ports:
+      - 3309:3306
+    profiles:
+      - import
 networks:
   default:
     name: wpbb
@@ -168,3 +232,4 @@ networks:
 volumes:
   wp-dev-data:
   wp-dev-db-data:
+  wp-import-db-data:
