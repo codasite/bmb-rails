@@ -139,8 +139,14 @@ const generateBracketImage = async (req: GenerateRequest) => {
   console.timeEnd('setViewport')
 
   console.time('goto')
-  const queryString = Object.keys(queryParams)
-    .map((key) => key + '=' + encodeURIComponent(queryParams[key]))
+  console.log('queryParams', queryParams)
+  const queryString = Object.entries(queryParams)
+    .map(([key, value]) => {
+      if (typeof value === 'object') {
+        value = encodeURIComponent(JSON.stringify(value))
+      }
+      return key + '=' + encodeURIComponent(value as any)
+    })
     .join('&')
   const path = url + (queryString ? '?' + queryString : '')
   console.log('path', path)
