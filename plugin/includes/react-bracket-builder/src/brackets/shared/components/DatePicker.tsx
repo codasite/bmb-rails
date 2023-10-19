@@ -18,11 +18,16 @@ const MonthOption: React.FC<OptionProps<{value: string; label: string; }, false,
     );
 }
 
-const MonthPicker: React.FC = () => {
+interface MonthProps {
+    handleMonthChange: (year: string) => void;
+}
+
+const MonthPicker: React.FC<MonthProps> = ({handleMonthChange}) => {
     const [month, setMonth] = useState<{ value: string; label: string; } | null>(null);
 
     const handleChange = (selectedOption: {value: string; label: string; } | null) => {
         setMonth(selectedOption);
+        handleMonthChange(selectedOption?.value || '');
     }
 
     const options = [
@@ -67,7 +72,11 @@ const MonthPicker: React.FC = () => {
           "::-webkit-scrollbar-thumb:hover": {
             background: "#555"
           }
-        })
+        }),
+        option: (base, state) => ({
+            ...base,
+            cursor: 'pointer',
+        }),
       }
 
     return (
@@ -87,7 +96,11 @@ const MonthPicker: React.FC = () => {
     )
 }
 
-export const YearInput: React.FC = () => {
+interface YearProps {
+    handleYearChange: (year: string) => void;
+}
+
+export const YearInput: React.FC<YearProps> = ({handleYearChange}) => {
     const [year, setYear] = useState<string>('');
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,6 +109,7 @@ export const YearInput: React.FC = () => {
 
         if (regex.test(value)) {
             setYear(value);
+            handleYearChange(value);
         }
     };
 
@@ -111,7 +125,11 @@ export const YearInput: React.FC = () => {
     )
 }
 
-export const DatePicker: React.FC = () => {
+interface DatePickerProps {
+    handleMonthChange: (year: string) => void;
+    handleYearChange: (year: string) => void;
+}
+export const DatePicker: React.FC<DatePickerProps> = ({handleMonthChange, handleYearChange}) => {
     return (
         <div className="tw-flex tw-flex-col tw-justify-center tw-text-center tw-gap-16">
             <span
@@ -120,8 +138,12 @@ export const DatePicker: React.FC = () => {
                 Your Bracket's Date
             </span>
             <div className="tw-flex tw-justify-center tw-items-start tw-gap-16 tw-min-w-150 tw-h-62">
-                <MonthPicker />
-                <YearInput />
+                <MonthPicker
+                    handleMonthChange={handleMonthChange}
+                 />
+                <YearInput
+                    handleYearChange={handleYearChange}
+                 />
             </div>
         </div>
     )

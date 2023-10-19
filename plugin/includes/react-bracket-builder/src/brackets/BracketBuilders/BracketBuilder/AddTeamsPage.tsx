@@ -16,10 +16,14 @@ interface AddTeamsPageProps {
   setMatchTree?: (matchTree: MatchTree) => void
   handleSaveBracket: () => void
   handleBack: () => void
+  month?: string
+  setMonth?: (month: string) => void
+  year?: string
+  setYear?: (year: string) => void
 }
 export const AddTeamsPage = (props: AddTeamsPageProps) => {
-  const { matchTree, setMatchTree, handleSaveBracket, handleBack } = props
-  const createDisabled = !matchTree || !matchTree.allTeamsAdded()
+  const { matchTree, setMatchTree, handleSaveBracket, handleBack, month, setMonth, year, setYear } = props
+  const createDisabled = !matchTree || !matchTree.allTeamsAdded() || !month || !year
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < 768
   if (showPaginated) {
@@ -64,7 +68,10 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         </div>
       </div>
       <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full">
-        <DatePicker />
+        <DatePicker
+          handleMonthChange={(month) => setMonth(month)}
+          handleYearChange={(year) => setYear(year)}
+        />
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />
 					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
