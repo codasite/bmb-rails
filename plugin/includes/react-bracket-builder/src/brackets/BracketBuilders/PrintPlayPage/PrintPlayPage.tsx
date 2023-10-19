@@ -26,7 +26,8 @@ interface PrintParams {
   inchHeight?: number
   inchWidth?: number
   title?: string
-  date?: string
+  month?: string
+  year?: string
   picks?: MatchPicks[]
   matches?: MatchRes[]
   numTeams?: number
@@ -62,7 +63,8 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
       inchHeight,
       inchWidth,
       title,
-      date,
+      month,
+      year,
       picks,
       matches,
       numTeams,
@@ -72,7 +74,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
     setPosition(position)
     setInchHeight(inchHeight)
     setInchWidth(inchWidth)
-    setBracketMeta({ title, date })
+    setBracketMeta({ title, month, year })
 
     const tree = MatchTree.fromPicks(numTeams, matches, picks)
     console.log('tree', tree)
@@ -89,7 +91,8 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
     const inchHeight = Number(urlParams.get('inch_height')) || 16
     const inchWidth = Number(urlParams.get('inch_width')) || 11
     const title = urlParams.get('title') || 'Winner'
-    const date = urlParams.get('date') || ''
+    const month = urlParams.get('month') || ''
+    const year = urlParams.get('year') || ''
     const picks = camelCaseKeys(
       JSON.parse(decodeURIComponent(urlParams.get('picks')))
     )
@@ -104,7 +107,8 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
       inchHeight,
       inchWidth,
       title,
-      date,
+      month,
+      year,
       picks,
       matches,
       numTeams,
@@ -118,7 +122,8 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
       inchHeight,
       inchWidth,
       title,
-      date,
+      month,
+      year,
       picks,
       matches,
       numTeams,
@@ -146,10 +151,6 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
       errors.push('title is required and must be less than 100 characters')
     }
 
-    if (date && date.length > 100) {
-      errors.push('date must be less than 100 characters')
-    }
-
     if (!picks || picks.length < 1) {
       errors.push('picks is required')
     }
@@ -175,7 +176,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
 
   const heightPx = inchHeight * 96
   const widthPx = inchWidth * 96
-  const { title: bracketTitle, date: bracketDate } = bracketMeta
+  const { title: bracketTitle, month: bracketMonth, year: bracketYear } = bracketMeta
 
   return (
     <div
@@ -190,7 +191,8 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
           matchTree={matchTree}
           darkMode={darkMode}
           title={bracketTitle}
-          date={bracketDate}
+          month={bracketMonth}
+          year={bracketYear}
         />
       )}
     </div>

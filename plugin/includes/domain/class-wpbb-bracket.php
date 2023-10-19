@@ -13,7 +13,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
   /**
    * @var string
    */
-  public $date;
+  public $month;
+  public $year;
   /**
    * @var int
    */
@@ -36,7 +37,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
 
   public function __construct(array $data = []) {
     parent::__construct($data);
-    $this->date = $data['date'] ?? null;
+    $this->month = $data['month'] ?? null;  
+    $this->year = $data['year'] ?? null;
     $this->num_teams = (int) ($data['num_teams'] ?? null);
     $this->wildcard_placement = (int) ($data['wildcard_placement'] ?? null);
     $this->matches = $data['matches'] ?? [];
@@ -105,13 +107,15 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     return [
       'num_teams' => $this->num_teams,
       'wildcard_placement' => $this->wildcard_placement,
-      'date' => $this->date,
+      'month' => $this->month,
+      'year' => $this->year,
     ];
   }
 
   public function get_update_post_meta(): array {
     return [
-      'date' => $this->date,
+      'month' => $this->month,
+      'year' => $this->year,
     ];
   }
 
@@ -122,7 +126,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
-      // 'date',
       'author',
       'title',
       'matches',
@@ -148,7 +151,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $bracket = parent::to_array();
     $bracket['num_teams'] = $this->num_teams;
     $bracket['wildcard_placement'] = $this->wildcard_placement;
-    $bracket['date'] = $this->date;
+    $bracket['month'] = $this->month;
+    $bracket['year'] = $this->year;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {
@@ -180,7 +184,7 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
   }
 
   public function get_date(): string {
-    return $this->date;
+    return $this->month . ' ' . $this->year;
   }
 
   public function get_post_id(): int {

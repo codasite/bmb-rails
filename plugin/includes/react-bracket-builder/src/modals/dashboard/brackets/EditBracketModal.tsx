@@ -15,14 +15,12 @@ export const EditBracketModal = () => {
   const [titleHasError, setTitleHasError] = useState(false)
   const [month, setMonth] = useState('')
   const [year, setYear] = useState('')
-  // const [date, setDate] = useState('')
   const [dateHasError, setDateHasError] = useState(false)
   const [show, setShow] = useState(false)
   addClickHandlers({
     buttonClassName: 'wpbb-edit-bracket-button',
     onButtonClick: (b) => {
       setTitle(b.dataset.bracketTitle)
-      // setDate(b.dataset.bracketDate)
       setBracketId(parseInt(b.dataset.bracketId))
       setShow(true)
     },
@@ -40,10 +38,6 @@ export const EditBracketModal = () => {
       setTitleHasError(true)
       return
     }
-    // if (!date) {
-    //   setDateHasError(true)
-    //   return
-    // }
     if (!month || !year) {
       setDateHasError(true)
       return
@@ -52,7 +46,8 @@ export const EditBracketModal = () => {
     bracketApi
       .updateBracket(bracketId, {
         title: title,
-        date: `${month} ${year}`,
+        month: month,
+        year: year,
       })
       .then((res) => {
         window.location.reload()
@@ -86,14 +81,6 @@ export const EditBracketModal = () => {
             backgroundColorClass={'tw-bg-lightGreyBlue'}
             selectMenuPlacement="bottom"
           />
-          {/* <ModalTextField
-            hasError={dateHasError}
-            errorText={'Date is required'}
-            placeholderText={'Date...'}
-            input={date}
-            setInput={setDate}
-            setHasError={setDateHasError}
-          /> */}
           <div className={'tw-mb-30'}></div>
           <ConfirmButton
             disabled={loading || titleHasError}

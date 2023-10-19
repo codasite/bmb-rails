@@ -170,8 +170,9 @@ function get_bracket_buttons($bracket) {
 function edit_bracket_btn($bracket) {
 	$id = $bracket->id;
 	$title = $bracket->title;
-	$date = $bracket->date;
-	return icon_btn('pencil.svg', 'submit', classes: "wpbb-edit-bracket-button", attributes: "data-bracket-id='$id' data-bracket-title='$title' data-bracket-date='$date'");
+	$month = $bracket->month;
+	$year = $bracket->year;
+	return icon_btn('pencil.svg', 'submit', classes: "wpbb-edit-bracket-button", attributes: "data-bracket-id='$id' data-bracket-title='$title' data-bracket-month='$month' data-bracket-year='$year'");
 }
 
 

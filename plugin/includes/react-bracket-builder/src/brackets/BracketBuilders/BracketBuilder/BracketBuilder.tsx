@@ -53,7 +53,8 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   useEffect(() => {
     setBracketMeta?.({
       title: bracketMeta?.title || defaultBracketName,
-      date: bracketMeta?.date || new Date().getFullYear().toString(),
+      month: bracketMeta?.month,
+      year: bracketMeta?.year,
     })
   }, [])
 
@@ -63,7 +64,8 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       console.log('bracket found', bracket)
       setBracketMeta?.({
         title: `${bracket.title} Copy` || defaultBracketName,
-        date: bracket.date,
+        month: bracket.month,
+        year: bracket.year,
       })
       setNumTeams(numTeams)
       setWildcardPlacement(wildcardPlacement)
@@ -115,7 +117,8 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   const getBracketReq = () => {
     const req: BracketReq = {
       title: bracketMeta.title,
-      date: month && year ? `${month} ${year}` : bracketMeta.date,
+      month: month,
+      year: year,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),

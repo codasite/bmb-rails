@@ -85,7 +85,8 @@ export interface BracketProps {
   TeamSlotComponent?: React.FC<TeamSlotProps>
   BracketComponent?: React.FC<BracketProps> // for nesting brackets
   title?: string
-  date?: string
+  month?: string
+  year?: string
   darkMode?: boolean
   lineStyle?: object
   lineColor?: string
