@@ -58,10 +58,6 @@ class Wpbb_Public_Shortcodes {
 
 
 	public function render_bracket_page() {
-		$current_user_id = get_current_user_id();
-		$post_author_id = get_post()->post_author;
-		$user_is_admin = current_user_can('administrator');
-
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-page.php';
 		return ob_get_clean();
