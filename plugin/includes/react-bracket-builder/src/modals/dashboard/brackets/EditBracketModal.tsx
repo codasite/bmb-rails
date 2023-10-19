@@ -52,9 +52,7 @@ export const EditBracketModal = () => {
     bracketApi
       .updateBracket(bracketId, {
         title: title,
-        // date: `${month} ${year}`,
-        month: month,
-        year: year,
+        date: `${month} ${year}`,
       })
       .then((res) => {
         window.location.reload()
@@ -86,6 +84,7 @@ export const EditBracketModal = () => {
             showTitle={false}
             // backgroundColorClass={'tw-bg-greyBlue'}
             backgroundColorClass={'tw-bg-lightGreyBlue'}
+            selectMenuPlacement='bottom'
           />
           {/* <ModalTextField
             hasError={dateHasError}

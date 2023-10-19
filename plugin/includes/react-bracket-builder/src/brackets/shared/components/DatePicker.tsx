@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Select, { components, OptionProps, GroupBase, DropdownIndicatorProps } from 'react-select';
+import Select, { components, OptionProps, GroupBase, DropdownIndicatorProps, MenuPlacement } from 'react-select';
 import { ReactComponent as CalendarIcon } from '../assets/calendar.svg';
 
 const MonthOption: React.FC<OptionProps<{value: string; label: string; backgroundColorClass: string}, false, GroupBase<{value: string; label: string;  backgroundColorClass: string}>>> = ({ data, innerProps, isSelected }) => {
@@ -9,7 +9,7 @@ const MonthOption: React.FC<OptionProps<{value: string; label: string; backgroun
     return (
         <div
             {...restInnerProps}
-            className={`tw-flex tw-justify-center tw-items-center tw-p-16 tw-border-b tw-border-b-solid tw-border-b-white/20 ${backgroundColorClass}`}
+            className={`tw-flex tw-justify-center tw-items-center tw-p-16 tw-border-b tw-border-b-solid tw-border-b-white/20 ${backgroundColorClass} hover:tw-cursor-pointer hover:tw-bg-greyBlue`}
         >
             <span
                 className="tw-text-center tw-text-24 tw-font-600 tw-text-white-50"
@@ -21,9 +21,10 @@ const MonthOption: React.FC<OptionProps<{value: string; label: string; backgroun
 interface MonthProps {
     handleMonthChange: (year: string) => void
     backgroundColorClass: string,
+    menuPlacement: MenuPlacement,
 }
 
-const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorClass }) => {
+const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorClass, menuPlacement }) => {
     const [month, setMonth] = useState<{ value: string; label: string; } | null>(null);
 
     const handleChange = (selectedOption: {value: string; label: string; } | null) => {
@@ -47,36 +48,15 @@ const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorC
     ];
 
     const styles = {
-        control: (base, state) => ({
-            ...base,
-            zIndex: "1",
-        }),
-        menu: (base) => ({
-            ...base,
-            marginTop: '1px',
-            zIndex: "9999",
-        }),
         menuList: (base) => ({
           ...base,
-          zIndex: 9999,
+          borderRadius: '8px',
+          marginBottom: menuPlacement == 'bottom'? '-3px': '3px',
       
           "::-webkit-scrollbar": {
-            width: "1px",
+            width: "0px",
             height: "0px",
           },
-          "::-webkit-scrollbar-track": {
-            background: "#f1f1f1"
-          },
-          "::-webkit-scrollbar-thumb": {
-            background: "#888"
-          },
-          "::-webkit-scrollbar-thumb:hover": {
-            background: "#555"
-          }
-        }),
-        option: (base, state) => ({
-            ...base,
-            cursor: 'pointer',
         }),
       }
 
@@ -89,7 +69,7 @@ const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorC
             components={{ Option: MonthOption, DropdownIndicator: () => null }}
             unstyled
             styles={styles}
-            menuPlacement="bottom"
+            menuPlacement={menuPlacement}
             className={`tw-flex tw-justify-center tw-items-center tw-p-16 ${backgroundColorClass} tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-[344px] tw-h-[62px] focus:tw-border-white`}
 
             
@@ -132,8 +112,9 @@ interface DatePickerProps {
     handleYearChange: (year: string) => void;
     showTitle: boolean,
     backgroundColorClass: string,
+    selectMenuPlacement: MenuPlacement,
 }
-export const DatePicker: React.FC<DatePickerProps> = ({handleMonthChange, handleYearChange, showTitle, backgroundColorClass}) => {
+export const DatePicker: React.FC<DatePickerProps> = ({handleMonthChange, handleYearChange, showTitle, backgroundColorClass, selectMenuPlacement}) => {
     return (
         <div className="tw-flex tw-flex-col tw-justify-center tw-text-center tw-gap-16">
             { showTitle && (
@@ -147,8 +128,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({handleMonthChange, handle
                 <MonthPicker
                     handleMonthChange={handleMonthChange}
                     backgroundColorClass={backgroundColorClass}
-
-                 />
+                    menuPlacement={selectMenuPlacement}
+                />
                 <YearInput
                     handleYearChange={handleYearChange}
                     backgroundColorClass={backgroundColorClass}

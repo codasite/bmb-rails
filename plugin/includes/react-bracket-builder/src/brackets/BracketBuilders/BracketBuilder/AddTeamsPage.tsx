@@ -74,6 +74,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
           showTitle={true}
           // backgroundColorClass={'tw-bg-greyBlue'}
           backgroundColorClass={'tw-bg-lightGreyBlue'}
+          selectMenuPlacement='top'
         />
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />
