@@ -1,6 +1,6 @@
 <?php
 require_once 'class-wpbb-object-storage-interface.php';
-class Wpbb_S3Storage implements Wpbb_Object_Storage_Interface {
+class Wpbb_S3Storage implements Wpbb_ObjectStorageInterface {
   /**
    * Upload a file to the object storage.
    * @param  string $file The path to the file to upload.

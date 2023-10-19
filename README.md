@@ -149,19 +149,26 @@ Docker can be used to run a local clone of an existing site. This is useful for 
 
 For development it's faster to use a slimmed down version of the site.
 
-1. Delete existing volumes
+1. Add the following plugins to `docker/wordpress/plugins`:
+- [Sentry](https://wordpress.org/plugins/wp-sentry-integration/)
+- [WooCommerce](https://wordpress.org/plugins/woocommerce/)
+- [Oxygen](https://drive.google.com/file/d/19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2/view?usp=sharing)
+- [Oxygen-WooCommerce](https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing)
+
+
+2. Delete existing volumes
     
     ```
     make wp-down
     ```
 
-2. Reload containers, intitializing the database from the latest dump
+3. Reload containers, intitializing the database from the latest dump
 
     ```
     make wp-up
     ```
 
-3. Install wordpress plugins
+4. Install wordpress and plugins
     
     ```
     make wp-install

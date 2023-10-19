@@ -4,7 +4,7 @@ import { TeamSlotProps } from '../types'
 import { InactiveTeamSlot } from './InactiveTeamSlot'
 import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
-import { Team } from '../../models/MatchTree'
+import { Team } from '../../models/Team'
 
 export const EditableTeamSlot = (props: TeamSlotProps) => {
   const { team, match, teamPosition, matchTree, setMatchTree } = props
@@ -61,6 +61,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           value={teamName}
           onChange={handleUpdateTeamName}
           onBlur={doneEditing}
+          maxLength={8}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
               doneEditing()

@@ -1,26 +1,23 @@
-import React, { useState, useContext, useEffect } from 'react'
-import { BracketProps, PaginatedBracketProps } from '../types'
+import React, { useContext } from 'react'
+import { PaginatedDefaultBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
-  getMatchGap,
   getSubsequentMatchGap as getDefaultSubsequentMatchGap,
-  getBracketHeight as getDefaultBracketHeight,
-  getBracketWidth as getDefaultBracketWidth,
+  getTeamFontSize as getDefaultTeamFontSize,
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
-  getTeamFontSize as getDefaultTeamFontSize,
   getTeamWidth as getDefaultTeamWidth,
 } from '../../utils'
 import { DefaultMatchColumn } from '../MatchColumn'
 import { DefaultTeamSlot } from '../TeamSlot'
 import { BracketLines, RootMatchLines } from './BracketLines'
 import { DarkModeContext } from '../../context'
-import { ActionButton } from '../ActionButtons'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
-import { DefaultNextButton, DefaultFinalButton } from './BracketActionButtons'
-import { MatchNode } from '../../models/MatchTree'
+import { DefaultFinalButton, DefaultNextButton } from './BracketActionButtons'
 
-export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
+export const PaginatedDefaultBracket = (
+  props: PaginatedDefaultBracketProps
+) => {
   const {
     getBracketWidth = () => 260,
     getTeamHeight = () => getDefaultTeamHeight(4),
@@ -39,72 +36,55 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
     onFinished,
     NextButtonComponent = DefaultNextButton,
     FinalButtonComponent = DefaultFinalButton,
+    page,
+    setPage,
+    disableNext,
   } = props
-
-  const [page, setPage] = useState(0)
-
-  useEffect(() => {
-    // try to determine page from matchTree
-    if (!matchTree.anyPicked()) {
-      return
-    }
-    if (matchTree.allPicked()) {
-      return setPage((matchTree.rounds.length - 1) * 2)
-    }
-    // find first unpicked match
-    const firstUnpickedMatch = matchTree.findMatch(
-      (match) => match && !match.isPicked()
-    )
-    if (!firstUnpickedMatch) {
-      return
-    }
-    const { roundIndex, matchIndex } = firstUnpickedMatch
-    const numMatches = matchTree.rounds[roundIndex].matches.length
-    let pageNum = roundIndex * 2
-    if (matchIndex >= numMatches / 2) {
-      pageNum++
-    }
-    setPage(pageNum)
-  }, [])
 
   const numRounds = matchTree.rounds.length
   const roundIndex = Math.floor(page / 2)
   const nextRoundIndex = roundIndex + 1
-  const thisRoundIsLast = roundIndex === numRounds - 1
+  const currentRoundIsLast = roundIndex === numRounds - 1
   const nextRoundIsLast = nextRoundIndex === numRounds - 1
   const leftSide = page % 2 === 0
 
-  let matches1 = matchTree.rounds[roundIndex].matches
-  let matches2 = thisRoundIsLast
+  let currentRoundMatches = matchTree.rounds[roundIndex].matches
+  let nextRoundMatches = currentRoundIsLast
     ? null
     : matchTree.rounds[nextRoundIndex].matches
 
-  if (matches2) {
+  if (nextRoundMatches) {
     // remove nulls from col 1 whose parent match has no children
-    matches1 = matches1.reduce((acc, match, i) => {
+    currentRoundMatches = currentRoundMatches.reduce((acc, match, i) => {
       const parentMatchIndex = Math.floor(i / 2)
-      const parentMatch = matches2[parentMatchIndex]
+      const parentMatch = nextRoundMatches[parentMatchIndex]
       if (parentMatch.left || parentMatch.right) {
         acc = [...acc, match]
       }
       return acc
     }, [])
     // remove matches from col 2 with no children
-    matches2 = matches2.filter((match) => match.left || match.right)
+    nextRoundMatches = nextRoundMatches.filter(
+      (match) => match.left || match.right
+    )
   }
 
-  if (!thisRoundIsLast) {
-    const mid1 = matches1.length / 2
-    const mid2 = matches2.length / 2
+  if (!currentRoundIsLast) {
+    const mid1 = currentRoundMatches.length / 2
+    const mid2 = nextRoundMatches.length / 2
 
     if (leftSide) {
       // if left side, get first half of matches
-      matches1 = matches1.slice(0, mid1)
-      matches2 = nextRoundIsLast ? matches2 : matches2.slice(0, mid2)
+      currentRoundMatches = currentRoundMatches.slice(0, mid1)
+      nextRoundMatches = nextRoundIsLast
+        ? nextRoundMatches
+        : nextRoundMatches.slice(0, mid2)
     } else {
       // if right side, get second half of matches
-      matches1 = matches1.slice(mid1)
-      matches2 = nextRoundIsLast ? matches2 : matches2.slice(mid2)
+      currentRoundMatches = currentRoundMatches.slice(mid1)
+      nextRoundMatches = nextRoundIsLast
+        ? nextRoundMatches
+        : nextRoundMatches.slice(mid2)
     }
   }
 
@@ -118,17 +98,17 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
   const matchHeight = teamHeight * 2 + teamGap
   const matchGap2 = getSubsequentMatchGap(matchHeight, matchGap1, matchHeight)
 
-  const thisMatchPosition = leftSide ? 'left' : 'right'
+  const currentMatchPosition = leftSide ? 'left' : 'right'
   const nextMatchPosition = nextRoundIsLast
     ? 'center'
     : leftSide
     ? 'left'
     : 'right'
 
-  const matchCol1 = (
+  const currentRoundColumn = (
     <MatchColumnComponent
-      matches={matches1}
-      matchPosition={thisMatchPosition}
+      matches={currentRoundMatches}
+      matchPosition={currentMatchPosition}
       matchTree={matchTree}
       setMatchTree={setMatchTree}
       MatchBoxComponent={MatchBoxComponent}
@@ -142,9 +122,9 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
     />
   )
 
-  const matchCol2 = thisRoundIsLast ? null : (
+  const nextRoundColumn = currentRoundIsLast ? null : (
     <MatchColumnComponent
-      matches={matches2}
+      matches={nextRoundMatches}
       matchPosition={nextMatchPosition}
       matchTree={matchTree}
       MatchBoxComponent={MatchBoxComponent}
@@ -173,8 +153,6 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
     }
   }
 
-  const disableNext = matches1.some((match) => match && !match.isPicked())
-
   return (
     <div
       className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}
@@ -186,10 +164,10 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
       </div>
       <div
         className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${
-          thisRoundIsLast ? ' tw-pb-0' : ''
+          currentRoundIsLast ? ' tw-pb-0' : ''
         }`}
       >
-        {thisRoundIsLast && (
+        {currentRoundIsLast && (
           <WinnerContainer
             match={matchTree.rounds[roundIndex].matches[0]}
             matchTree={matchTree}
@@ -202,12 +180,12 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 
         <div
           className={`tw-flex tw-justify-${
-            thisRoundIsLast ? 'center' : 'between'
-          }`}
+            currentRoundIsLast ? 'center' : 'between'
+          } tw-relative`}
         >
-          {leftSide ? matchCol1 : matchCol2}
-          {leftSide ? matchCol2 : matchCol1}
-          {thisRoundIsLast ? (
+          {leftSide ? currentRoundColumn : nextRoundColumn}
+          {leftSide ? nextRoundColumn : currentRoundColumn}
+          {currentRoundIsLast ? (
             <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
           ) : (
             <BracketLines rounds={matchTree.rounds} style={linesStyle} />
@@ -216,13 +194,19 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
       </div>
       <div
         className={`tw-flex tw-flex-col tw-justify-end tw-items-${
-          thisRoundIsLast ? 'center' : 'stretch'
-        }${thisRoundIsLast ? ' tw-flex-grow' : ''}`}
+          currentRoundIsLast ? 'center' : 'stretch'
+        }${currentRoundIsLast ? ' tw-flex-grow' : ''}`}
       >
-        {thisRoundIsLast ? (
-          <FinalButtonComponent disabled={disableNext} onClick={onFinished} />
+        {currentRoundIsLast ? (
+          <FinalButtonComponent
+            disabled={disableNext(currentRoundMatches)}
+            onClick={onFinished}
+          />
         ) : (
-          <NextButtonComponent disabled={disableNext} onClick={handleNext} />
+          <NextButtonComponent
+            disabled={disableNext(currentRoundMatches)}
+            onClick={handleNext}
+          />
         )}
       </div>
     </div>

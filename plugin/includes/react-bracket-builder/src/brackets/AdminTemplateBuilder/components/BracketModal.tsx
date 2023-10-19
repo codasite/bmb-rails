@@ -4,9 +4,10 @@ import { Modal } from 'react-bootstrap'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
 import { Bracket } from '../../shared/components/Bracket/Bracket'
-import { MatchTree, WildcardPlacement } from '../../shared/models/MatchTree'
+import { MatchTree } from '../../shared/models/MatchTree'
 import { BracketRes } from '../../shared/api/types/bracket'
 import { BracketSubmissionsModal } from './BracketSubmissionsModal'
+import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 
 export enum BracketModalMode {
   New = 0,

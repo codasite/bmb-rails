@@ -1,11 +1,12 @@
 import React, { useContext } from 'react'
-import { MatchNode, Team } from '../../models/MatchTree'
 import { BracketProps } from '../types'
 import { DefaultBracket } from './DefaultBracket'
 import { BusterTeamSlotToggle, TeamSlotToggle } from '../TeamSlot'
 import { Nullable } from '../../../../utils/types'
 import { PickableBracket } from './PickableBracket'
 import { BusterMatchTreeContext } from '../../context'
+import { Team } from '../../models/Team'
+import { MatchNode } from '../../models/operations/MatchNode'
 
 export const BusterBracket = (props: BracketProps) => {
   const {

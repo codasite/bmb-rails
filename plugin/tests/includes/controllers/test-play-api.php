@@ -172,6 +172,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'author' => 1,
+      'generate_images' => true,
       'picks' => [
         [
           'round_index' => 0,

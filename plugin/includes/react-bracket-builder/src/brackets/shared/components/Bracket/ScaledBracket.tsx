@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { BracketProps, ScaledBracketProps } from '../types'
+import { ScaledBracketProps } from '../types'
 import { DarkModeContext } from '../../context'
 
 export const ScaledBracket = (props: ScaledBracketProps) => {

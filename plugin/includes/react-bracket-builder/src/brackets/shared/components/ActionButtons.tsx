@@ -171,7 +171,7 @@ const SmallGreenButton = (props: ActionButtonProps) => {
   )
 }
 
-const WhiteButton = (props: ActionButtonProps) => {
+export const WhiteButton = (props: ActionButtonProps) => {
   const { disabled } = props
   const background = 'transparent'
   const border = disabled ? 'white/20' : 'white'
