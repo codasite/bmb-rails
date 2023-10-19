@@ -2,13 +2,11 @@ import React, { useState, useEffect, useRef } from 'react'
 import { Button } from 'react-bootstrap'
 import { Form } from 'react-bootstrap'
 import { Nullable } from '../../../../utils/types'
-import {
-  MatchTree,
-  Round,
-  MatchNode,
-  Team,
-  WildcardPlacement,
-} from '../../models/MatchTree'
+import { MatchTree } from '../../models/MatchTree'
+import { WildcardPlacement } from '../../models/WildcardPlacement'
+import { Team } from '../../models/Team'
+import { MatchNode } from '../../models/operations/MatchNode'
+import { Round } from '../../models/Round'
 // Direction enum
 enum Direction {
   TopLeft = 0,

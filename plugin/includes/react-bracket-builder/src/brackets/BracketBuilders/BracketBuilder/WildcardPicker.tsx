@@ -1,5 +1,5 @@
 import React from 'react'
-import { WildcardPlacement } from '../../shared/models/MatchTree'
+import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 
 interface WildcardPickerButtonProps {
   active: boolean
