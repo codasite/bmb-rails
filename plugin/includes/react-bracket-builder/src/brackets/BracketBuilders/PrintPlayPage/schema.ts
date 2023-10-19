@@ -1,4 +1,5 @@
 import { PrintSchema, PrintParams } from './types'
+import { camelCaseKeys } from '../../shared/api/bracketApi'
 
 export const printBracketSchema: PrintSchema[] = [
   {
@@ -65,7 +66,8 @@ export const parseParams = (urlParams: any): PrintParams => {
     if (paramType === 'number') {
       acc[name] = Number(paramValue) || paramDefault
     } else if (paramType === 'object') {
-      acc[name] = JSON.parse(decodeURIComponent(paramValue)) || []
+      acc[name] =
+        camelCaseKeys(JSON.parse(decodeURIComponent(paramValue))) || []
     } else {
       acc[name] = paramValue || paramDefault
     }
