@@ -9,7 +9,7 @@ const MonthOption: React.FC<OptionProps<{value: string; label: string; }, false,
     return (
         <div
             {...restInnerProps}
-            className='tw-flex tw-justify-center tw-items-center tw-p-16 tw-bg-bgd-blue'
+            className='tw-flex tw-justify-center tw-items-center tw-p-16 tw-border-b tw-border-b-solid tw-border-b-white/20 tw-bg-bgd-blue'
         >
             <span
                 className="tw-text-center tw-text-24 tw-font-600 tw-text-white-50"
@@ -40,6 +40,36 @@ const MonthPicker: React.FC = () => {
         { value: '12', label: 'December' }
     ];
 
+    const styles = {
+        control: (base, state) => ({
+            ...base,
+            zIndex: "1",
+        }),
+        menu: (base) => ({
+            ...base,
+            marginTop: '1px',
+            zIndex: "9999",
+        }),
+        menuList: (base) => ({
+          ...base,
+          zIndex: 9999,
+      
+          "::-webkit-scrollbar": {
+            width: "1px",
+            height: "0px",
+          },
+          "::-webkit-scrollbar-track": {
+            background: "#f1f1f1"
+          },
+          "::-webkit-scrollbar-thumb": {
+            background: "#888"
+          },
+          "::-webkit-scrollbar-thumb:hover": {
+            background: "#555"
+          }
+        })
+      }
+
     return (
         <Select
             placeholder={<><CalendarIcon /> Month</>}
@@ -48,7 +78,11 @@ const MonthPicker: React.FC = () => {
             options={options}
             components={{ Option: MonthOption, DropdownIndicator: () => null }}
             unstyled
-            className="tw-flex tw-justify-center tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-344 tw-h-62"
+            styles={styles}
+            menuPlacement="bottom"
+            className="tw-flex tw-justify-center tw-items-center tw-p-16 tw-bg-bgd-blue tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-344 tw-h-62 focus:tw-border-white"
+
+            
         />
     )
 }
@@ -72,7 +106,7 @@ export const YearInput: React.FC = () => {
             value={year}
             onChange={handleChange}
             maxLength={4}
-            className="tw-flex tw-justify-center tw-bg-transparent tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-150 tw-h-62"
+            className="tw-flex tw-justify-center tw-bg-bgd-blue tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-150 tw-h-62"
         />
     )
 }

@@ -65,7 +65,7 @@ module.exports = {
       blue: '#2137ff',
       'dark-blue': '#0D1454',
       'dd-blue': '#010433',
-      'bgd-blue': '#000225',
+      'bgd-blue': 'rgb(13 15 49)',
       blueLight: '#3B1FFF26',
       yellow: '#F8E11A',
       red: '#FF456D',
