@@ -82,7 +82,7 @@ const MonthPicker: React.FC<MonthProps> = ({ handleMonthChange, backgroundColorC
 
     return (
         <Select
-            placeholder={<div className="tw-flex tw-items-center tw-justify-center tw-gap-16"><CalendarIcon /> <span className="tw-i">Month</span></div>}
+            placeholder={<div className="tw-flex tw-items-center tw-justify-center tw-gap-16"><CalendarIcon /> <span>Month</span></div>}
             value={month}
             onChange={handleChange}
             options={options}

@@ -52,7 +52,9 @@ export const EditBracketModal = () => {
     bracketApi
       .updateBracket(bracketId, {
         title: title,
-        date: `${month} ${year}`,
+        // date: `${month} ${year}`,
+        month: month,
+        year: year,
       })
       .then((res) => {
         window.location.reload()
