@@ -126,8 +126,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
-      'month',
-      'year',
+      // 'month',
+      // 'year',
       'author',
       'title',
       'matches',
