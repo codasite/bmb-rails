@@ -79,7 +79,7 @@ class BracketApi {
       if (!response.ok) {
         const text = await response.text()
         throw new Error(
-          `HTTP Error ${response.status}: ${response.statusText} - ${text}`
+          `HTTP Error ${response.status}: ${response.statusText} - ${text} - ${request['body']}`
         )
       }
       let responseData = await response.json()
