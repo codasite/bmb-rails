@@ -11,16 +11,38 @@ require_once('shared/wpbb-pagination-widget.php');
 $bracket_repo = new Wpbb_BracketRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
 
-$status = get_query_var('status');
+// $status = get_query_var('status');
 
-$filter_status = 'publish';
-if ($status === ALL_STATUS) {
-	$filter_status = 'any';
-} else if ($status === SCORED_STATUS) {
-	$filter_status = 'complete';
-}
+// $filter_status = 'publish';
+// if ($status === ALL_STATUS) {
+// 	$filter_status = 'any';
+// } else if ($status === SCORED_STATUS) {
+// 	$filter_status = 'complete';
+// }
+
+// $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+$paged_status = get_query_var('status');
+
+if (empty($paged_status)) {
+	$paged_status = 'all';
+}
+
+$all_status = ['publish', 'private', 'score', 'complete'];
+$active_status = ['publish', 'private'];
+$scored_status = ['score', 'complete'];
+
+if ($paged_status === 'all') {
+	$post_status = $all_status;
+} else if ($paged_status === 'active') {
+	$post_status = $active_status;
+} else if ($paged_status === 'scored') {
+	$post_status = $scored_status;
+} else {
+	$post_status = $all_status;
+}
+
 
 $the_query = new WP_Query([
 	'post_type' => Wpbb_Bracket::get_post_type(),
