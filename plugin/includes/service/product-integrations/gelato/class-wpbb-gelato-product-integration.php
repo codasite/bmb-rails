@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) .
   'class-wpbb-product-integration-interface.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
 require_once 'class-wpbb-gelato-admin-hooks.php';
 require_once 'class-wpbb-gelato-public-hooks.php';
 require_once WPBB_PLUGIN_DIR .
@@ -41,16 +42,28 @@ class Wpbb_GelatoProductIntegration implements
    */
   private $request_factory;
 
+  /**
+   * @var Wpbb_Utils
+   */
+  private $utils;
+
+  /**
+   * @var Wpbb_BracketPlayRepo
+   */
+  private $play_repo;
+
   public function __construct($args = []) {
-    $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
-    $this->public_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoPublicHooks();
-    $this->client = $args['client'] ?? new Wpbb_GuzzleClient();
     $this->object_storage = $args['object_storage'] ?? new Wpbb_S3Storage();
     $this->request_factory =
       $args['request_factory'] ??
       new Wpbb_BracketImageRequestFactory([
         'object_storage' => $this->object_storage,
       ]);
+    $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
+    $this->public_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoPublicHooks($this->request_factory, $this);
+    $this->client = $args['client'] ?? new Wpbb_GuzzleClient();
+    $this->utils = new Wpbb_Utils;
+    $this->play_repo = new Wpbb_BracketPlayRepo;
   }
 
   public function get_post_meta_key(): string {
@@ -172,12 +185,7 @@ class Wpbb_GelatoProductIntegration implements
     Wpbb_PostBracketInterface $bracket,
     string $placement
   ): array {
-    $meta = json_decode(
-      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true)
-    );
-    if (!$meta) {
-      return [];
-    }
+    $meta = $this->get_meta($bracket);
     $overlay_map = [];
     foreach ($meta as $key => $value) {
       if (strpos($key, $placement) !== false) {
@@ -186,5 +194,20 @@ class Wpbb_GelatoProductIntegration implements
       }
     }
     return $overlay_map;
+  }
+
+
+  public function get_bracket_config($theme, $placement) {
+    $play = $this->play_repo->get();
+  }
+
+  private function get_meta(Wpbb_PostBracketInterface $bracket): array {
+    $meta = json_decode(
+      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true)
+    );
+    if (!$meta) {
+      return [];
+    }
+    return $meta;
   }
 }

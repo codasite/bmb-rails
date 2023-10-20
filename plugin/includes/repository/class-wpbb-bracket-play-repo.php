@@ -43,6 +43,15 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     parent::__construct();
   }
 
+  public function get_id_from_cookie() {
+    $play_id = $this->utils->get_cookie('play_id');
+    if (!$play_id) {
+      $this->utils->warn('play_id not found');
+      return null;
+    }
+    return $play_id;
+  }
+
   public function get(
     int|WP_Post|null|Wpbb_BracketPlay $post = null,
     bool $fetch_picks = true,
@@ -50,6 +59,11 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     bool $fetch_results = true,
     bool $fetch_matches = true
   ): ?Wpbb_BracketPlay {
+
+    if ($post === null) {
+      $post = $this->get_id_from_cookie();
+    }
+
     if ($post instanceof Wpbb_BracketPlay) {
       $post = $post->id;
     }

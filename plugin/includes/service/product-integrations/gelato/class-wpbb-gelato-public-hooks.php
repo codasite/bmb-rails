@@ -23,9 +23,21 @@ class Wpbb_GelatoPublicHooks {
    */
   private $bracket_config_repo;
 
-  public function __construct() {
+  /**
+   * @var Wpbb_BracketImageRequestFactory
+   */
+  private $image_handler;
+
+  /**
+   * @var Wpbb_GelatoProductIntegration
+   */
+  private $gelato;
+
+  public function __construct(Wpbb_BracketImageRequestFactory $image_handler, Wpbb_GelatoProductIntegration $gelato) {
     $this->bracket_product_utils = new Wpbb_BracketProductUtils();
     $this->utils = new Wpbb_Utils();
+    $this->image_handler = $image_handler;
+    $this->gelato = $gelato;
     $this->bracket_config_repo = new Wpbb_BracketConfigRepo();
   }
 
