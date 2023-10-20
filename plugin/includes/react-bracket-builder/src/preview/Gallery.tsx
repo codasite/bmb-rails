@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Spinner from 'react-bootstrap/Spinner'
 import ImageGallery from 'react-image-gallery'
 import * as Sentry from '@sentry/react'
+import 'react-image-gallery/styles/css/image-gallery.css'
+import { Spinner } from './Spinner'
 
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
@@ -229,12 +230,12 @@ const Gallery: React.FC<GalleryProps> = ({
     //@ts-ignore
     <>
       {loadingImages ? (
-        <div className="wpbb-gallery-spinner-container">
+        <div className="tw-flex tw-h-[400px] tw-items-center tw-justify-center">
           <Spinner
-            variant="dark"
-            animation="border"
-            role="status"
-            style={{ borderWidth: '4px' }}
+            // variant="dark"
+            // animation="border"
+            // role="status"
+            // style={{ borderWidth: '4px' }}
           />
         </div>
       ) : (
