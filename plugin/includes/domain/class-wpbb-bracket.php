@@ -126,6 +126,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
+      // 'month',
+      // 'year',
       'author',
       'title',
       'matches',
@@ -144,6 +146,7 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
       }
       $data['results'] = $results;
     }
+    $bracket = new Wpbb_Bracket($data);
     return new Wpbb_Bracket($data);
   }
 
@@ -151,8 +154,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $bracket = parent::to_array();
     $bracket['num_teams'] = $this->num_teams;
     $bracket['wildcard_placement'] = $this->wildcard_placement;
-    $bracket['month'] = $this->month;
-    $bracket['year'] = $this->year;
+    // $bracket['month'] = $this->month;
+    // $bracket['year'] = $this->year;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {

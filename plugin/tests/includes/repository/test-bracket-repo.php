@@ -85,7 +85,8 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   public function test_update() {
     $bracket = new Wpbb_Bracket([
       'title' => 'Test Bracket',
-      'date' => '2019-01-01 00:00:00',
+      'month' => 'January',
+      'year' => '2019',
       'status' => 'publish',
       'author' => 1,
       'matches' => [
@@ -106,13 +107,15 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $bracket = $this->bracket_repo->update($bracket->id, [
       'title' => 'New Title',
-      'date' => '2019-01-01 00:00:00',
+      'month' => 'February',
+      'year' => '2019',
       'status' => 'archive',
     ]);
 
     $this->assertNotNull($bracket->id);
     $this->assertEquals('New Title', $bracket->title);
-    $this->assertEquals('2019-01-01 00:00:00', $bracket->date);
+    $this->assertEquals('February', $bracket->month);
+    $this->assertEquals('2019', $bracket->year);
     $this->assertEquals('archive', $bracket->status);
     $this->assertEquals(1, $bracket->author);
   }
