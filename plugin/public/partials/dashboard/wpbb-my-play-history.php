@@ -39,6 +39,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
+	$show_leaderboard = $play->bracket?->status !== 'private';
 	$accuracy_score = round($play->accuracy_score * 100);
 	$show_score = $play->accuracy_score !== null;
 	$buster_play = $play->busted_id !== null;
@@ -57,7 +58,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
       </div>
       <div class="tw-flex tw-gap-16">
 				<?php echo view_play_btn($view_link); ?>
-				<?php echo $bracket_id ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant) : null; ?>
+				<?php echo $bracket_id && $show_leaderboard ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant) : null; ?>
       </div>
     </div>
     <div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
