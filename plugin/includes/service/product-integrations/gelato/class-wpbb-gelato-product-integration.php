@@ -223,7 +223,7 @@ class Wpbb_GelatoProductIntegration implements
 
   private function get_meta(Wpbb_PostBracketInterface $bracket): array {
     $meta = json_decode(
-      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true)
+      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true), true
     );
     if (!$meta) {
       return [];
