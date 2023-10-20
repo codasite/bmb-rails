@@ -40,7 +40,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
 	$accuracy_score = round($play->accuracy_score * 100);
-	$show_score = $play->bracket?->has_results();
+	$show_score = $play->accuracy_score !== null;
 	$buster_play = $play->busted_id !== null;
 	ob_start();
 ?>
