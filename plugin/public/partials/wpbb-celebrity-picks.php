@@ -1,5 +1,6 @@
 <?php
 // require_once('shared/wpbb-tournaments-common.php');
+require_once('shared/wpbb-brackets-common.php');
 require_once('shared/wpbb-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once(plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-repo.php');
@@ -30,24 +31,16 @@ $tournaments = $bracket_repo->get_all([
 	'tag' => 'bmb_vip_tourney'
 ]);
 
-// $tournament_repo = new Wpbb_BracketTournamentRepo();
-// // Get all tournaments with the bmb_vip_tourney tag
-// $tournaments = $tournament_repo->get_all([
-// 	'post_type' => Wpbb_BracketTournament::get_post_type(),
-// 	'posts_per_page' => -1,
-// 	'post_status' => 'any',
-// 	'tag' => 'bmb_vip_tourney'
-// ]);
-
 $page = get_query_var('paged');
-function wpbb_get_official_tournaments() {
-	$args = array(
-		'post_type' => 'bracket_tournament',
-		'posts_per_page' => -1,
-	);
-	$tournaments = get_posts($args);
-	return $tournaments;
-}
+
+// function wpbb_get_official_tournaments() {
+// 	$args = array(
+// 		'post_type' => 'bracket_tournament',
+// 		'posts_per_page' => -1,
+// 	);
+// 	$tournaments = get_posts($args);
+// 	return $tournaments;
+// }
 
 function wpbb_tournament_sort_buttons() {
 	$all_endpoint = get_permalink();
@@ -124,7 +117,7 @@ function wpbb_celebrity_play_list_item($play) {
 			<div class="tw-flex tw-flex-col tw-gap-15">
 				<?php echo wpbb_tournament_sort_buttons(); ?>
 				<?php foreach ($tournaments as $tournament) : ?>
-					<?php echo public_tournament_list_item($tournament); ?>
+					<?php echo public_bracket_list_item($tournament); ?>
 				<?php endforeach; ?>
 			</div>
 		</div>
