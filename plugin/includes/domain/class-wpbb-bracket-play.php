@@ -108,7 +108,8 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
   }
 
   public function get_date(): string {
-    return $this->bracket->date;
+    // return $this->bracket->date;
+    return $this->bracket->get_date();
   }
 
   public function get_num_teams(): int {

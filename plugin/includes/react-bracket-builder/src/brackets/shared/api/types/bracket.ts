@@ -65,7 +65,8 @@ interface PostBase {
 }
 export interface BracketReq {
   title: string
-  date: string
+  month: string
+  year: string
   numTeams: number
   status?: string
   wildcardPlacement: WildcardPlacement
@@ -74,7 +75,8 @@ export interface BracketReq {
   updateNotifyParticipants?: boolean
 }
 export interface BracketRes extends PostBase {
-  date: string
+  month: string
+  year: string
   numTeams: number
   wildcardPlacement: WildcardPlacement
   html: string

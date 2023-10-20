@@ -53,7 +53,8 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   useEffect(() => {
     setBracketMeta?.({
       title: bracketMeta?.title || defaultBracketName,
-      date: bracketMeta?.date || new Date().getFullYear().toString(),
+      month: bracketMeta?.month,
+      year: bracketMeta?.year,
     })
   }, [])
 
@@ -63,7 +64,8 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       console.log('bracket found', bracket)
       setBracketMeta?.({
         title: `${bracket.title} Copy` || defaultBracketName,
-        date: bracket.date,
+        month: bracket.month,
+        year: bracket.year,
       })
       setNumTeams(numTeams)
       setWildcardPlacement(wildcardPlacement)
@@ -107,10 +109,16 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
   }
+
+  // bracket month and year. set when user selects a month and year from the date picker
+  const [month, setMonth] = useState('')
+  const [year, setYear] = useState('')
+
   const getBracketReq = () => {
     const req: BracketReq = {
       title: bracketMeta.title,
-      date: bracketMeta.date,
+      month: month,
+      year: year,
       numTeams: numTeams,
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),
@@ -118,6 +126,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
     }
     return req
   }
+
   const handleSaveBracketClick = () => {
     if (!matchTree || !matchTree.allTeamsAdded()) {
       return
@@ -159,6 +168,10 @@ const BracketBuilder = (props: BracketBuilderProps) => {
           setMatchTree={setMatchTree}
           handleBack={() => setCurrentPage('num-teams')}
           handleSaveBracket={handleSaveBracketClick}
+          month={month}
+          setMonth={setMonth}
+          year={year}
+          setYear={setYear}
         />
       )}
     </div>

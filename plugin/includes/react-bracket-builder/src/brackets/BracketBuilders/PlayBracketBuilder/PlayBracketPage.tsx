@@ -54,7 +54,7 @@ const PlayPage = (props: PlayPageProps) => {
       const numTeams = bracket.numTeams
       const matches = bracket.matches
       tree = MatchTree.fromMatchRes(numTeams, matches)
-      setBracketMeta?.({ title: bracket.title, date: bracket.date })
+      setBracketMeta?.({ title: bracket.title, month: bracket.month, year: bracket.year })
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)

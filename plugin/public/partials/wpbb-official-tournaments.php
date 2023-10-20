@@ -27,7 +27,7 @@ $the_query = new WP_Query([
 	'posts_per_page' => 8,
 	'paged' => $paged,
 	'post_status' => $filter_status,
-	'orderby' => 'date',
+	// 'orderby' => 'date',
 	'order' => 'DESC',
 ]);
 

@@ -3,7 +3,8 @@ import { MatchTree } from './models/MatchTree'
 
 export interface BracketMeta {
   title?: string
-  date?: string
+  month?: string
+  year?: string
 }
 
 export const DarkModeContext = createContext(false)

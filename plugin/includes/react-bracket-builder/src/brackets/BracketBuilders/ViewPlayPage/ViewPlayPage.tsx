@@ -44,8 +44,9 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   useEffect(() => {
     const picks = play?.picks
     const title = play?.bracket?.title ?? play.bracket?.title
-    const date = play?.bracket?.date ?? play.bracket?.date
-    setBracketMeta({ title, date })
+    const month = play?.bracket?.month ?? play.bracket?.month
+    const year = play?.bracket?.year ?? play.bracket?.year
+    setBracketMeta({ title, month, year })
     const bracket = play?.bracket?.bracketBracket ?? play?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams

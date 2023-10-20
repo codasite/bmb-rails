@@ -8,16 +8,31 @@ import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 import { getBracketWidth } from '../../shared/utils'
+import { DatePicker } from '../../shared/components/DatePicker'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   handleSaveBracket: () => void
   handleBack: () => void
+  month?: string
+  setMonth?: (month: string) => void
+  year?: string
+  setYear?: (year: string) => void
 }
 export const AddTeamsPage = (props: AddTeamsPageProps) => {
-  const { matchTree, setMatchTree, handleSaveBracket, handleBack } = props
-  const createDisabled = !matchTree || !matchTree.allTeamsAdded()
+  const {
+    matchTree,
+    setMatchTree,
+    handleSaveBracket,
+    handleBack,
+    month,
+    setMonth,
+    year,
+    setYear,
+  } = props
+  const createDisabled =
+    !matchTree || !matchTree.allTeamsAdded() || !month || !year
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
@@ -58,6 +73,14 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         </div>
       </div>
       <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full">
+        <DatePicker
+          handleMonthChange={(month) => setMonth(month)}
+          handleYearChange={(year) => setYear(year)}
+          showTitle={true}
+          // backgroundColorClass={'tw-bg-greyBlue'}
+          backgroundColorClass={'tw-bg-lightGreyBlue'}
+          selectMenuPlacement="top"
+        />
         {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />
 					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
