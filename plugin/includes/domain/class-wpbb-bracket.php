@@ -146,7 +146,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
       }
       $data['results'] = $results;
     }
-    $bracket = new Wpbb_Bracket($data);
     return new Wpbb_Bracket($data);
   }
 
