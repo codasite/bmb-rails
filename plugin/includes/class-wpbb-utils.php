@@ -1,5 +1,45 @@
 <?php
 class Wpbb_Utils {
+
+  public function set_cookie($key, $value, array $expires = ['days' => 1], array $options = []) {
+    $expiration = time();
+    if (isset($expires['years'])) {
+      $expiration += 60 * 60 * 24 * 365 * $expires['years'];
+    }
+    if (isset($expires['months'])) {
+      $expiration += 60 * 60 * 24 * 30 * $expires['months'];
+    }
+    if (isset($expires['days'])) {
+      $expiration += 60 * 60 * 24 * $expires['days'];
+    }
+    if (isset($expires['hours'])) {
+      $expiration += 60 * 60 * $expires['hours'];
+    }
+    if (isset($expires['minutes'])) {
+      $expiration += 60 * $expires['minutes'];
+    }
+    if (isset($expires['seconds'])) {
+      $expiration += $expires['seconds'];
+    }
+
+    $default_options = [
+      'path' => '/',
+      'domain' => COOKIE_DOMAIN,
+      'secure' => is_ssl(),
+      'httponly' => false,
+    ];
+    $options = array_merge($default_options, $options);
+
+    setcookie($key, $value, $expiration, $options['path'], $options['domain'], $options['secure'], $options['httponly']);
+  }
+
+  public function get_cookie($key) {
+    if (isset($_COOKIE[$key])) {
+      return $_COOKIE[$key];
+    }
+    return null;
+  }
+
   public function set_session_value($key, $value) {
     if (!session_id()) {
       session_start();
@@ -76,5 +116,9 @@ class Wpbb_Utils {
 
   public function log_error($msg) {
     return $this->log($msg, 'error');
+  }
+
+  public function warn($msg) {
+    return $this->log($msg, 'warning');
   }
 }

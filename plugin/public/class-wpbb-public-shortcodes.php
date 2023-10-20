@@ -10,12 +10,9 @@ class Wpbb_Public_Shortcodes {
 	 *
 	 * @return void
 	 */
-	public function render_bracket_preview() {
+	public function render_bracket_product_preview() {
 		ob_start();
-		?>
-		<div id="wpbb-bracket-preview-controller" style="width: 100%">
-		</div>
-	<?php
+		include plugin_dir_path(__FILE__) . 'partials/product-preview/wpbb-bracket-product-preview.php';
 		return ob_get_clean();
 	}
 
@@ -87,5 +84,6 @@ class Wpbb_Public_Shortcodes {
 		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']); // This is a page with slug `celebrity-picks`
 		add_shortcode('wpbb-bracket-page', [$this, 'render_bracket_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
+		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_product_preview']); // This is a single post type template for woocommerce product posts with the `bracket-ready` tag
 	}
 }

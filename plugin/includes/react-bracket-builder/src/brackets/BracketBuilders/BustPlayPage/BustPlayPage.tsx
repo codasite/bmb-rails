@@ -44,7 +44,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     thumbnailUrl,
   } = props
 
-  console.log('play', play)
+  console.log('bust play', play)
 
   const [page, setPage] = useState('view')
 
@@ -60,7 +60,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       ? `${authorDisplayName}'s ${bracketTitle} picks`
       : bracketTitle
     setBracketMeta({ title, date: play?.bracket?.date })
-    const bracket = play?.bracket?.bracketBracket
+    const bracket = play?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
     if (picks && matches) {

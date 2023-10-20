@@ -46,7 +46,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
-    const bracket = busteePlay?.bracket?.bracketBracket
+    const bracket = busteePlay?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
     const tree = MatchTree.fromMatchRes(numTeams, matches)

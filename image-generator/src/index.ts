@@ -71,7 +71,6 @@ interface GenerateRequest {
 const validateParams = (req: GenerateRequest) => {
   const validStorages = ['s3']
   const errors = []
-  console.log('req', req)
   const { inchHeight, inchWidth, url, storageOptions, storageService } = req
 
   if (inchHeight && !Number.isInteger(inchHeight)) {

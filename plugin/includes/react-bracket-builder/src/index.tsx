@@ -44,6 +44,7 @@ const PrintPlayPage = React.lazy(
 )
 
 declare var wpbb_ajax_obj: any
+declare var wpbb_bracket_product_preview_obj: any
 // Try to get the wpbb_ajax_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 if (window.hasOwnProperty('wpbb_ajax_obj')) {
   const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
@@ -174,12 +175,17 @@ function renderPrintBracketPage() {
 }
 // This renders the image gallery on the bracket product preview page
 function renderProductPreview(ajaxObj: WpbbAjaxObj) {
+  if (typeof wpbb_bracket_product_preview_obj === 'undefined') {
+    return
+  }
+  const previewObj: any = camelCaseKeys(wpbb_bracket_product_preview_obj)
+  console.log('previewObj', previewObj)
   renderDiv(
     <App>
       <Gallery
-        overlayThemeMap={ajaxObj.bracketUrlThemeMap}
-        galleryImages={ajaxObj.galleryImages}
-        colorOptions={ajaxObj.colorOptions}
+        overlayThemeMap={previewObj.bracketUrlThemeMap}
+        galleryImages={previewObj.galleryImages}
+        colorOptions={previewObj.colorOptions}
       />
     </App>,
     'wpbb-product-preview'

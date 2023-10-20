@@ -30,7 +30,6 @@ interface PlayPageProps {
 }
 
 const PlayPage = (props: PlayPageProps) => {
-  console.log('PlayPage hiii')
   const {
     bracket,
     apparelUrl,
@@ -42,6 +41,7 @@ const PlayPage = (props: PlayPageProps) => {
     darkMode,
     setDarkMode,
   } = props
+  console.log('apparelUrl', apparelUrl)
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -85,7 +85,8 @@ const PlayPage = (props: PlayPageProps) => {
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        // window.location.href = apparelUrl
+
+        window.location.href = apparelUrl
       })
       .catch((err) => {
         console.error('error: ', err)
