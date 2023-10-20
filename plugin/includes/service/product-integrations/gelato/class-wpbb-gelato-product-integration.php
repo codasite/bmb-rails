@@ -214,7 +214,7 @@ class Wpbb_GelatoProductIntegration implements
     foreach ($meta as $key => $value) {
       if (strpos($key, $placement) !== false && strpos($key, $theme) !== false) {
         list($placement, $theme) = explode('_', $key);
-        $config = new Wpbb_BracketConfig($play->id, $theme, $placement, $value->image_url);
+        $config = new Wpbb_BracketConfig($play->id, $theme, $placement, $value['image_url']);
         return $config;
       }
     }
