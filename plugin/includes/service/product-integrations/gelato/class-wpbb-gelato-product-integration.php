@@ -194,7 +194,7 @@ class Wpbb_GelatoProductIntegration implements
     foreach ($meta as $key => $value) {
       if (strpos($key, $placement) !== false) {
         list($placement, $theme) = explode('_', $key);
-        $overlay_map[$theme] = $value->image_url;
+        $overlay_map[$theme] = $value['image_url'];
       }
     }
     return $overlay_map;

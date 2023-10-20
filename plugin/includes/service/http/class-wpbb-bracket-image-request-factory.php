@@ -55,9 +55,9 @@ class Wpbb_BracketImageRequestFactory {
   }
 
   private function default_parameters(array $args): array {
-    $path = $args['path'] ?? defined('IMAGE_GENERATOR_PATH')
+    $path = $args['path'] ?? (defined('IMAGE_GENERATOR_PATH')
       ? IMAGE_GENERATOR_PATH
-      : 'http://localhost:3000/generate';
+      : 'http://localhost:3000/generate');
     $method = $args['method'] ?? 'POST';
     $headers = $args['headers'] ?? [
       'Content-Type' => 'application/json',
