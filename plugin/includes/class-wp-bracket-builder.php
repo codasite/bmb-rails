@@ -263,7 +263,7 @@ class Wp_Bracket_Builder {
     $this->loader->add_action(
       'woocommerce_add_cart_item_data',
       $gelato_product_integration,
-      'add_to_cart_item_data',
+      'add_cart_item_data',
       10,
       3
     );
