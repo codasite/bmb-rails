@@ -2,9 +2,9 @@
 
 class Wpbb_BracketConfig {
   /**
-   * @var string
+   * @var int
    */
-  public $html;
+  public $play_id;
 
   /**
    * @var string
@@ -22,12 +22,12 @@ class Wpbb_BracketConfig {
   public $bracket_placement;
 
   public function __construct(
-    string $html,
+    string $play_id,
     string $theme_mode,
-    string $img_url,
-    string $bracket_placement
+    string $bracket_placement,
+    string $img_url
   ) {
-    $this->html = $html;
+    $this->play_id = $play_id;
     $this->theme_mode = $theme_mode;
     $this->img_url = $img_url;
     $this->bracket_placement = $bracket_placement;

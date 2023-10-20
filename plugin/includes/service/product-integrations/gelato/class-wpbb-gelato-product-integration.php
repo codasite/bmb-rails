@@ -14,6 +14,10 @@ require_once WPBB_PLUGIN_DIR .
   'includes/service/object-storage/class-wpbb-s3-storage.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/http/class-wpbb-bracket-image-request-factory.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/domain/class-wpbb-bracket-config.php';
 
 class Wpbb_GelatoProductIntegration implements
   Wpbb_ProductIntegrationInterface {
@@ -196,9 +200,25 @@ class Wpbb_GelatoProductIntegration implements
     return $overlay_map;
   }
 
+  public function has_bracket_config() {
+    $play = $this->play_repo->get();
+    return $play !== null;
+  }
 
   public function get_bracket_config($theme, $placement) {
     $play = $this->play_repo->get();
+    if (!$play) {
+      return null;
+    }
+    $meta = $this->get_meta($play);
+    foreach ($meta as $key => $value) {
+      if (strpos($key, $placement) !== false && strpos($key, $theme) !== false) {
+        list($placement, $theme) = explode('_', $key);
+        $config = new Wpbb_BracketConfig($play->id, $theme, $placement, $value->image_url);
+        return $config;
+      }
+    }
+    return null;
   }
 
   private function get_meta(Wpbb_PostBracketInterface $bracket): array {

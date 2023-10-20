@@ -66,7 +66,7 @@ class Wpbb_GelatoPublicHooks {
 
     if (
       !$this->is_bracket_product($product) ||
-      $this->bracket_config_repo->is_empty()
+      !$this->gelato->has_bracket_config()
     ) {
       // Not a bracket product. Treat as a normal product.
       return $passed;
@@ -101,7 +101,7 @@ class Wpbb_GelatoPublicHooks {
 
     // The config is stored in the session and set when "Add to Apparel" button is clicked on the bracket builder page.
     // It contains the bracket theme and HTML to render the bracket.
-    $config = $this->bracket_config_repo->get(
+    $config = $this->gelato->get_bracket_config(
       $bracket_theme,
       $bracket_placement
     );
@@ -133,7 +133,7 @@ class Wpbb_GelatoPublicHooks {
     // Perform similar checks as above to make sure we are dealing with a bracket product and that we have a bracket config
     if (
       !$this->is_bracket_product($product) ||
-      $this->bracket_config_repo->is_empty()
+      !$this->gelato->has_bracket_config()
     ) {
       $this->log(
         'in add_bracket_to_cart_item_data: not a bracket product or no bracket config'
@@ -144,7 +144,7 @@ class Wpbb_GelatoPublicHooks {
     $bracket_theme = $this->get_bracket_theme($variation_id);
     $bracket_placement = $this->get_bracket_placement($product);
 
-    $config = $this->bracket_config_repo->get(
+    $config = $this->gelato->get_bracket_config(
       $bracket_theme,
       $bracket_placement
     );
@@ -433,7 +433,7 @@ class Wpbb_GelatoPublicHooks {
       return $available_array;
     }
     // Check if config exists
-    $custom_back = !$this->bracket_config_repo->is_empty(); // If config is not empty, the product has a custom back design so bracket theme is needed
+    $custom_back = !!$this->gelato->has_bracket_config(); // If config is not empty, the product has a custom back design so bracket theme is needed
     $front_design = get_post_meta(
       $variation->get_id(),
       'wpbb_front_design',
