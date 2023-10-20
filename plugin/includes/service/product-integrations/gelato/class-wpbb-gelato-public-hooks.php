@@ -5,6 +5,8 @@ require_once plugin_dir_path(dirname(__FILE__, 2)) .
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-config-repo.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/domain/class-wpbb-bracket-config.php';
 
 class Wpbb_GelatoPublicHooks {
   /**
@@ -16,12 +18,6 @@ class Wpbb_GelatoPublicHooks {
    * @var Wpbb_Utils
    */
   private $utils;
-
-  /**
-   * @var Wpbb_BracketConfigRepo
-   * @deprecated We no longer use the bracket config repo. Config should be stored in play meta data
-   */
-  private $bracket_config_repo;
 
   /**
    * @var Wpbb_BracketImageRequestFactory
@@ -38,7 +34,6 @@ class Wpbb_GelatoPublicHooks {
     $this->utils = new Wpbb_Utils();
     $this->image_handler = $image_handler;
     $this->gelato = $gelato;
-    $this->bracket_config_repo = new Wpbb_BracketConfigRepo();
   }
 
   private function is_bracket_product($product) {
@@ -153,6 +148,7 @@ class Wpbb_GelatoPublicHooks {
     );
 
     $cart_item_data['bracket_config'] = $config;
+    $this->log('in add_bracket_to_cart_item_data: done');
 
     return $cart_item_data;
   }
@@ -165,12 +161,14 @@ class Wpbb_GelatoPublicHooks {
     $values,
     $order
   ) {
+    $this->log('in add_bracket_to_order_item');
     if (array_key_exists('bracket_config', $values)) {
       $item->add_meta_data('bracket_config', $values['bracket_config']);
     }
     if (array_key_exists('s3_url', $values)) {
       $item->add_meta_data('s3_url', $values['s3_url']);
     }
+    $this->log('in add_bracket_to_order_item: item: ' . json_encode($item));
   }
 
   // Helper method to log error and show notice
@@ -180,6 +178,7 @@ class Wpbb_GelatoPublicHooks {
     $product_id,
     $error_message
   ) {
+    $this->log('in handle_add_to_cart_error');
     $product_name = $product->get_name();
     $msg =
       'Error adding ' .
@@ -198,6 +197,7 @@ class Wpbb_GelatoPublicHooks {
       ),
       'error'
     );
+    $this->log('in handle_add_to_cart_error: done');
   }
 
   // this function hooks into woocommerce_before_checkout_process
