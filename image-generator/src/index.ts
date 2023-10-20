@@ -1,6 +1,9 @@
 import express from 'express'
 import puppeteer from 'puppeteer'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import http from 'http'
+//import aws
+
 
 import os from 'os'
 
@@ -39,6 +42,28 @@ app.get('/ping', async (req, res) => {
   res.send('pong')
 })
 
+app.get('/react', async (req, res) => {
+  // http.get('http://react-server:3001/hello', (resp) => {
+  //   let data = ''
+  //   resp.on('data', (chunk) => {
+  //     data += chunk
+  //   })
+  //   resp.on('end', () => {
+  //     console.log(data)
+  //     res.send(data)
+  //   })
+  // }).on('error', (err) => {
+  //   console.error(err)
+  //   res.send('Error')
+  // })
+  const browser = await puppeteer.launch({ headless: 'new' })
+  const page = await browser.newPage()
+  await page.goto('http://react-server:3001/hello', { waitUntil: 'networkidle0' })
+  const text = await page.evaluate(() => document.body.textContent + 'this is from server')
+  await browser.close()
+  res.send(text)
+})
+
 interface ObjectStorageUploader {
   upload: (buffer: Buffer, contentType: string, body: any) => Promise<string>
 }
@@ -53,7 +78,10 @@ const s3Uploader: ObjectStorageUploader = {
       throw new ValidationError('bucket and key are required')
     }
 
-    const s3 = new S3Client({ region: process.env.AWS_REGION })
+    const s3 = new S3Client({ region: process.env.AWS_REGION, credentials: {
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+     }})
     const command = new PutObjectCommand({
       Bucket: bucket,
       Key: key,
@@ -82,7 +110,9 @@ interface GenerateRequest {
 const validateParams = (req: GenerateRequest) => {
   const validStorages = ['s3']
   const errors = []
+  console.log('req', req)
   const { inchHeight, inchWidth, url, storageOptions, storageService } = req
+
   if (inchHeight && !Number.isInteger(inchHeight)) {
     errors.push('inch_height must be an integer')
   }
@@ -104,6 +134,7 @@ const generateBracketImage = async (req: GenerateRequest) => {
   if (!req.url) {
     req.url = process.env.CLIENT_URL
   }
+  console.log('req.url', req.url )
 
   validateParams(req)
 
@@ -201,5 +232,5 @@ app.post('/test', async (req, res) => {
 })
 
 app.listen(port, host, () => {
-  console.log(`Example app listening at http://${host}:${port}`)
+  console.log(`Image Generator listening at http://${host}:${port}`)
 })

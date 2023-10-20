@@ -30,7 +30,7 @@ interface PlayPageProps {
 }
 
 const PlayPage = (props: PlayPageProps) => {
-  console.log('PlayPage')
+  console.log('PlayPage hiii')
   const {
     bracket,
     apparelUrl,
@@ -81,10 +81,10 @@ const PlayPage = (props: PlayPageProps) => {
 
     console.log(playReq)
     setProcessing(true)
+    console.time('createPlay')
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        console.log(res)
         // window.location.href = apparelUrl
       })
       .catch((err) => {
@@ -93,6 +93,8 @@ const PlayPage = (props: PlayPageProps) => {
       })
       .finally(() => {
         setProcessing(false)
+        console.timeEnd('createPlay')
+        console.log('createPlay')
       })
   }
 

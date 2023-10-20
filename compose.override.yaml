@@ -69,6 +69,7 @@ services:
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
         define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
         define('WP_MEMORY_LIMIT', '512M');
+        define('IMAGE_GENERATOR_PATH', 'http://image-generator:3000/generate');
       PLUGIN_NAME: wp-bracket-builder
       WORDPRESS_URL: http://localhost:8008
       WORDPRESS_TITLE: Wordpress
