@@ -35,7 +35,7 @@ $scored_status = ['score', 'complete'];
 
 if ($paged_status === 'all') {
 	$post_status = $all_status;
-} else if ($paged_status === 'active') {
+} else if ($paged_status === 'active' || $paged_status === 'live') {
 	$post_status = $active_status;
 } else if ($paged_status === 'scored') {
 	$post_status = $scored_status;
@@ -49,7 +49,7 @@ $the_query = new WP_Query([
 	'tag' => 'bmb_official_tourney',
 	'posts_per_page' => 8,
 	'paged' => $paged,
-	'post_status' => $filter_status,
+	'post_status' => $post_status,
 	// 'orderby' => 'date',
 	'order' => 'DESC',
 ]);

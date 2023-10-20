@@ -22,12 +22,33 @@ $plays = $play_repo->get_all($the_query);
 $paged_plays = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $num_plays_pages = $the_query->max_num_pages;
 
+$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+$paged_status = get_query_var('status');
+
+if (empty($paged_status)) {
+	$paged_status = 'all';
+}
+
+$all_status = ['publish', 'private', 'score', 'complete'];
+$active_status = ['publish', 'private'];
+$scored_status = ['score', 'complete'];
+
+if ($paged_status === 'all') {
+	$post_status = $all_status;
+} else if ($paged_status === 'active' || $paged_status === 'live') {
+	$post_status = $active_status;
+} else if ($paged_status === 'scored') {
+	$post_status = $scored_status;
+} else {
+	$post_status = $all_status;
+}
+
 $bracket_repo = new Wpbb_BracketRepo();
 // $tournaments = $bracket_repo->get_all([]);
 $tournaments = $bracket_repo->get_all([
 	'post_type' => Wpbb_Bracket::get_post_type(),
 	'posts_per_page' => 6,
-	'post_status' => 'any',
+	'post_status' => $post_status,
 	'tag' => 'bmb_vip_tourney'
 ]);
 
