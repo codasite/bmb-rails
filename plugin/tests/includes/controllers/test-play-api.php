@@ -11,6 +11,7 @@ require_once WPBB_PLUGIN_DIR .
   'includes/service/class-wpbb-score-service-interface.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
 
 class PlayAPITest extends WPBB_UnitTestCase {
   private $play_repo;
@@ -187,8 +188,21 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
 
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('set_cookie')
+      ->with(
+        $this->equalTo('play_id'),
+        $this->equalTo($bracket->id + 1),
+        $this->equalTo([
+          'days' => 30,
+        ])
+      );
+
     $api = new Wpbb_BracketPlayAPI([
       'product_integration' => $integration,
+      'utils' => $utils_mock,
     ]);
 
     $response = $api->create_item($request);
