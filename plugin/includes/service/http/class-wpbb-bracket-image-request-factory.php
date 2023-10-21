@@ -68,7 +68,7 @@ class Wpbb_BracketImageRequestFactory {
     ];
     $pdf = $args['pdf'] ?? false;
     $inch_height = $args['inch_height'] ?? 16;
-    $inch_width = $args['inch_width'] ?? 11;
+    $inch_width = $args['inch_width'] ?? 12;
     $positions = $args['positions'] ?? ['top', 'center'];
     $themes = $args['themes'] ?? ['light', 'dark'];
     return [

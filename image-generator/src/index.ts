@@ -106,7 +106,7 @@ const generateBracketImage = async (req: GenerateRequest) => {
     pdf,
     deviceScaleFactor = 1,
     inchHeight = 16,
-    inchWidth = 11,
+    inchWidth = 12,
   } = req
 
   const pxHeight = inchHeight * 96

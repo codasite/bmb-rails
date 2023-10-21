@@ -22,7 +22,7 @@ export const printBracketSchema: PrintSchema[] = [
     queryName: 'inch_width',
     localName: 'inchWidth',
     type: 'number',
-    default: 11,
+    default: 12,
   },
   {
     queryName: 'title',

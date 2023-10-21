@@ -34,7 +34,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
 
   const [position, setPosition] = React.useState('top')
   const [inchHeight, setInchHeight] = React.useState(16)
-  const [inchWidth, setInchWidth] = React.useState(11)
+  const [inchWidth, setInchWidth] = React.useState(12)
 
   useEffect(() => {
     console.log('PrintPlayPage useEffect')

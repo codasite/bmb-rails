@@ -324,6 +324,7 @@ class Wpbb_GelatoPublicHooks {
   ) {
     // Use config to generate the back design and merge it with the front design in a two-page PDF
     $play_id = $bracket_config->play_id;
+    $play = $this->gelato->play_repo->get($play_id);
     $theme = $bracket_config->theme_mode;
     $placement = $bracket_config->bracket_placement;
 
@@ -336,7 +337,13 @@ class Wpbb_GelatoPublicHooks {
     //   'html' => $html,
     // ];
 
-    $request_data = $this->gelato->request_factory->get_request_data();
+    $request_data = $this->gelato->request_factory->get_request_data($play, [
+      'theme' => $theme,
+      'placement' => $placement,
+      'inch_height' => 16,
+      'inch_width' => 12,
+      'pdf' => true,
+    ]);
     // check if convert res is wp_error
     if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
       $error_data = [
