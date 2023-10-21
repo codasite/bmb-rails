@@ -133,8 +133,8 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       'title' => $bracket_post->post_title,
       'author' => $author_id,
       'status' => $bracket_post->post_status,
-      'month' => get_post_meta($bracket_post->ID, month, true),
-      'year' => get_post_meta($bracket_post->ID, year, true),
+      'month' => get_post_meta($bracket_post->ID, 'month', true),
+      'year' => get_post_meta($bracket_post->ID, 'year', true),
       'num_teams' => get_post_meta($bracket_post->ID, 'num_teams', true),
       'wildcard_placement' => get_post_meta(
         $bracket_post->ID,

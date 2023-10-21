@@ -27,7 +27,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'title' => 'Test Bracket',
       'status' => 'publish',
       'author' => 1,
-      'date' => 'test date',
+      'month' => 'test month',
+      'year' => 'test year',
       'num_teams' => 8,
       'wildcard_placement' => 0,
       'matches' => [
@@ -62,7 +63,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals('Test Bracket', $response->get_data()->title);
     $this->assertEquals('publish', $response->get_data()->status);
     $this->assertEquals(1, $response->get_data()->author);
-    $this->assertEquals('test date', $response->get_data()->date);
+    $this->assertEquals('test month', $response->get_data()->month);
+    $this->assertEquals('test year', $response->get_data()->year);
     $this->assertEquals(8, $response->get_data()->num_teams);
     $this->assertEquals(0, $response->get_data()->wildcard_placement);
     $this->assertEquals(2, count($response->get_data()->matches));
@@ -94,7 +96,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $data = [
       'title' => 'Test Bracket',
       'status' => 'publish',
-      'date' => 'test date',
+      'month' => 'test month',
+      'year' => 'test year',
       'num_teams' => 8,
       'wildcard_placement' => 0,
       'matches' => [
@@ -131,7 +134,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
     $this->assertEquals(400, $response->get_status());
     $this->assertEquals(
-      'num_teams, wildcard_placement, title, matches is required',
+      'num_teams, wildcard_placement, month, year, title, matches is required',
       $response->get_data()['message']
     );
   }
@@ -164,7 +167,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $data = [
       'title' => 'Test Bracket',
-      'date' => 'Test Date',
+      'month' => 'Test Month',
+      'year' => 'Test Year',
       'results' => [
         [
           'round_index' => 0,
@@ -197,12 +201,10 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $this->assertEquals(200, $response->get_status());
     $this->assertEquals('Test Bracket', $response->get_data()->title);
-    $this->assertEquals('Test Date', $response->get_data()->date);
 
     $bracket = $this->bracket_repo->get($response->get_data()->id);
     $this->assertNotNull($bracket);
     $this->assertEquals('Test Bracket', $bracket->title);
-    $this->assertEquals('Test Date', $bracket->date);
     $this->assertEquals(3, count($bracket->results));
     $this->assertEquals(0, $bracket->results[0]->round_index);
     $this->assertEquals(0, $bracket->results[0]->match_index);
@@ -245,7 +247,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $data = [
       'title' => 'Test Bracket',
-      'date' => 'Test Date',
+      'month' => 'Test Month',
+      'year' => 'Test Year',
     ];
 
     $request = new WP_REST_Request(
@@ -260,12 +263,14 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $this->assertEquals(200, $response->get_status());
     $this->assertEquals('Test Bracket', $response->get_data()->title);
-    $this->assertEquals('Test Date', $response->get_data()->date);
+    $this->assertEquals('Test Month', $response->get_data()->month);
+    $this->assertEquals('Test Year', $response->get_data()->year);
 
     $bracket = $this->bracket_repo->get($response->get_data()->id);
     $this->assertNotNull($bracket);
     $this->assertEquals('Test Bracket', $bracket->title);
-    $this->assertEquals('Test Date', $bracket->date);
+    $this->assertEquals('Test Month', $bracket->month);
+    $this->assertEquals('Test Year', $bracket->year);
   }
 
   public function test_non_author_cannot_edit_bracket() {
@@ -289,7 +294,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $data = [
       'title' => 'Test Bracket',
-      'date' => 'Test Date',
+      'month' => 'Test Month',
+      'year' => 'Test Year',
     ];
 
     $request = new WP_REST_Request(
@@ -307,7 +313,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $bracket = $this->bracket_repo->get($bracket->id);
     $this->assertNotNull($bracket);
     $this->assertNotEquals('Test Bracket', $bracket->title);
-    $this->assertNotEquals('Test Date', $bracket->date);
+    $this->assertNotEquals('Test Month', $bracket->month);
+    $this->assertNotEquals('Test Year', $bracket->year);
   }
 
   public function test_delete_bracket_is_soft() {
@@ -522,7 +529,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $data = [
       'title' => 'Test Bracket',
       'status' => 'publish',
-      'date' => 'test date',
+      'month' => 'test month',
+      'year' => 'test year',
       'num_teams' => 8,
       'wildcard_placement' => 0,
       'matches' => [
@@ -555,7 +563,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $data = [
       'title' => 'Test Bracket',
       'status' => 'publish',
-      'date' => 'test date',
+      'month' => 'test month',
+      'year' => 'test year',
       'num_teams' => 8,
       'wildcard_placement' => 0,
       'matches' => [
