@@ -26,10 +26,11 @@ class Wpbb_BracketImageRequestFactory {
       $inch_width,
       $themes,
       $positions,
+      $pdf,
     ) = $this->default_parameters($args);
     $bracket_id = $bracket->get_post_id();
 
-    $base_data = $this->create_base_data($inch_height, $inch_width);
+    $base_data = $this->create_base_data($inch_height, $inch_width, $pdf);
     $base_query = $this->create_base_query($bracket, $inch_height, $inch_width);
 
     $request_data = [];
@@ -55,14 +56,17 @@ class Wpbb_BracketImageRequestFactory {
   }
 
   private function default_parameters(array $args): array {
-    $path = $args['path'] ?? (defined('IMAGE_GENERATOR_PATH')
-      ? IMAGE_GENERATOR_PATH
-      : 'http://localhost:3000/generate');
+    $path =
+      $args['path'] ??
+      (defined('IMAGE_GENERATOR_PATH')
+        ? IMAGE_GENERATOR_PATH
+        : 'http://localhost:3000/generate');
     $method = $args['method'] ?? 'POST';
     $headers = $args['headers'] ?? [
       'Content-Type' => 'application/json',
       'Accept' => '*',
     ];
+    $pdf = $args['pdf'] ?? false;
     $inch_height = $args['inch_height'] ?? 16;
     $inch_width = $args['inch_width'] ?? 11;
     $positions = $args['positions'] ?? ['top', 'center'];
@@ -75,15 +79,24 @@ class Wpbb_BracketImageRequestFactory {
       $inch_width,
       $themes,
       $positions,
+      $pdf,
     ];
   }
 
-  private function create_base_data(int $inch_height, int $inch_width): array {
-    return [
+  private function create_base_data(
+    int $inch_height,
+    int $inch_width,
+    bool $pdf
+  ): array {
+    $data = [
       'inchHeight' => $inch_height,
       'inchWidth' => $inch_width,
       'storageService' => $this->object_storage->get_service_name(),
     ];
+    if ($pdf) {
+      $data['pdf'] = true;
+    }
+    return $data;
   }
 
   private function create_base_query(
