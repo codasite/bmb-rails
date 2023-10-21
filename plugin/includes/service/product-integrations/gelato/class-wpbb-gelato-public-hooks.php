@@ -119,8 +119,6 @@ class Wpbb_GelatoPublicHooks {
       return false;
     }
 
-    $this->log('passed validation');
-
     return $passed;
   }
 
@@ -139,9 +137,6 @@ class Wpbb_GelatoPublicHooks {
       !$this->is_bracket_product($product) ||
       !$this->gelato->has_bracket_config()
     ) {
-      $this->log(
-        'in add_bracket_to_cart_item_data: not a bracket product or no bracket config'
-      );
       return $cart_item_data;
     }
 
@@ -153,12 +148,8 @@ class Wpbb_GelatoPublicHooks {
       $bracket_theme,
       $bracket_placement
     );
-    $this->log(
-      'in add_bracket_to_cart_item_data: config: ' . json_encode($config)
-    );
 
     $cart_item_data['bracket_config'] = $config;
-    $this->log('in add_bracket_to_cart_item_data: done');
 
     return $cart_item_data;
   }
@@ -171,14 +162,12 @@ class Wpbb_GelatoPublicHooks {
     $values,
     $order
   ) {
-    $this->log('in add_bracket_to_order_item');
     if (array_key_exists('bracket_config', $values)) {
       $item->add_meta_data('bracket_config', $values['bracket_config']);
     }
     if (array_key_exists('s3_url', $values)) {
       $item->add_meta_data('s3_url', $values['s3_url']);
     }
-    $this->log('in add_bracket_to_order_item: item: ' . json_encode($item));
   }
 
   // Helper method to log error and show notice
@@ -188,7 +177,6 @@ class Wpbb_GelatoPublicHooks {
     $product_id,
     $error_message
   ) {
-    $this->log('in handle_add_to_cart_error');
     $product_name = $product->get_name();
     $msg =
       'Error adding ' .
@@ -207,7 +195,6 @@ class Wpbb_GelatoPublicHooks {
       ),
       'error'
     );
-    $this->log('in handle_add_to_cart_error: done');
   }
 
   // this function hooks into woocommerce_before_checkout_process
@@ -328,32 +315,43 @@ class Wpbb_GelatoPublicHooks {
     $theme = $bracket_config->theme_mode;
     $placement = $bracket_config->bracket_placement;
 
-    // Generate a PDF file for the back design (the bracket)
-    // We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
-    // $convert_req = [
-    //   'inchHeight' => 16,
-    //   'inchWidth' => 12,
-    //   'pdf' => true,
-    //   'html' => $html,
-    // ];
-
     $request_data = $this->gelato->request_factory->get_request_data($play, [
-      'theme' => $theme,
-      'placement' => $placement,
+      'themes' => [$theme],
+      'positions' => [$placement],
       'inch_height' => 16,
       'inch_width' => 12,
       'pdf' => true,
     ]);
-    // check if convert res is wp_error
-    if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
+
+    $response = null;
+    try {
+      $response = $this->gelato->client->send_many($request_data);
+    } catch (Exception $e) {
+      $this->log_error('Error sending request to Gelato: ' . $e->getMessage());
+      throw new Exception(
+        'An error occurred while processing your order. Please contact the site administrator.'
+      );
+    }
+
+    if (!$response) {
       $error_data = [
-        'error' => 'Error converting bracket to PDF.',
+        'error' => 'Error converting bracket to PDF. No response found.',
+        'response' => $response,
+      ];
+      throw new Exception(json_encode($error_data));
+    }
+
+    $convert_res = reset($response);
+    // check if convert res is wp_error
+    if (!isset($convert_res['image_url']) || empty($convert_res['image_url'])) {
+      $error_data = [
+        'error' => 'Error converting bracket to PDF. No image_url found.',
         'convert_res' => $convert_res,
       ];
       throw new Exception(json_encode($error_data));
     }
 
-    $back_url = $convert_res['imageUrl'];
+    $back_url = $convert_res['image_url'];
 
     // merge pdfs
     $front = $this->s3->get_from_url($front_url);
@@ -423,17 +421,7 @@ class Wpbb_GelatoPublicHooks {
     }
   }
 
-  // public function handle_bracket_product_item($order, $item) {
-  // 	$item_arr = array();
-
-  // 	// Once the order has processed, we need to rename the s3 file to include the order ID and item ID
-  // 	$order_filename = $this->get_gelato_order_filename($order, $item);
-  // 	$item_arr['order_filename'] = $order_filename;
-
-  // 	$this->utils->log_sentry_message(json_encode($item_arr));
-  // }
-
-  public function get_gelato_order_filename($order, $item) {
+  private function get_gelato_order_filename($order, $item) {
     $order_id = $order->get_id();
     $item_id = $item->get_id();
     $filename = $order_id . '_' . $item_id . '.pdf';
