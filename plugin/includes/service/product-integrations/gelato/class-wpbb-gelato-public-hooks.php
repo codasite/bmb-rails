@@ -94,8 +94,6 @@ class Wpbb_GelatoPublicHooks {
       return false;
     }
 
-    // The config is stored in the session and set when "Add to Apparel" button is clicked on the bracket builder page.
-    // It contains the bracket theme and HTML to render the bracket.
     $config = $this->gelato->get_bracket_config(
       $bracket_theme,
       $bracket_placement
@@ -118,6 +116,7 @@ class Wpbb_GelatoPublicHooks {
 
   // Add the bracket to the cart item data
   // This hooks into the woocommerce_add_cart_item_data filter
+  // This fires when a product is added to the cart
   public function add_bracket_to_cart_item_data(
     $cart_item_data,
     $product_id,
@@ -139,6 +138,7 @@ class Wpbb_GelatoPublicHooks {
     $bracket_theme = $this->get_bracket_theme($variation_id);
     $bracket_placement = $this->get_bracket_placement($product);
 
+    // Get the bracket config for the given theme and placement
     $config = $this->gelato->get_bracket_config(
       $bracket_theme,
       $bracket_placement
