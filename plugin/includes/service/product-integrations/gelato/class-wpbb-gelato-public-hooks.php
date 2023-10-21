@@ -329,15 +329,14 @@ class Wpbb_GelatoPublicHooks {
 
     // Generate a PDF file for the back design (the bracket)
     // We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
-    $convert_req = [
-      'inchHeight' => 16,
-      'inchWidth' => 12,
-      'pdf' => true,
-      'html' => $html,
-    ];
+    // $convert_req = [
+    //   'inchHeight' => 16,
+    //   'inchWidth' => 12,
+    //   'pdf' => true,
+    //   'html' => $html,
+    // ];
 
-    $request_data = $this->gelato->request_factory->get_request_data()
-    $convert_res = $this->lambda_service->html_to_image($convert_req);
+    $request_data = $this->gelato->request_factory->get_request_data();
     // check if convert res is wp_error
     if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
       $error_data = [
