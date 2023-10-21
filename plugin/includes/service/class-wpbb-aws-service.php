@@ -11,7 +11,7 @@ use Aws\S3\S3UriParser;
 
 #snippet-start:[php.example_code.lambda.service]
 
-class Wpbb_S3_Service {
+class Wpbb_S3Service {
   protected S3Client $s3Client;
 
   public function __construct($region = 'us-east-1', $version = 'latest') {

@@ -34,27 +34,27 @@ class Wpbb_GelatoProductIntegration implements
   /**
    * @var Wpbb_HttpClientInterface
    */
-  private $client;
+  public $client;
 
   /**
    * @var Wpbb_ObjectStorageInterface
    */
-  private $object_storage;
+  public $object_storage;
 
   /**
    * @var Wpbb_BracketImageRequestFactory
    */
-  private $request_factory;
+  public $request_factory;
 
   /**
    * @var Wpbb_Utils
    */
-  private $utils;
+  public $utils;
 
   /**
    * @var Wpbb_BracketPlayRepo
    */
-  private $play_repo;
+  public $play_repo;
 
   public function __construct($args = []) {
     $this->object_storage = $args['object_storage'] ?? new Wpbb_S3Storage();
@@ -64,7 +64,7 @@ class Wpbb_GelatoProductIntegration implements
         'object_storage' => $this->object_storage,
       ]);
     $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
-    $this->public_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoPublicHooks($this->request_factory, $this);
+    $this->public_hooks = $args['public_hooks'] ?? new Wpbb_GelatoPublicHooks($this);
     $this->client = $args['client'] ?? new Wpbb_GuzzleClient();
     $this->utils = new Wpbb_Utils;
     $this->play_repo = new Wpbb_BracketPlayRepo;
@@ -159,11 +159,9 @@ class Wpbb_GelatoProductIntegration implements
     );
   }
 
-  //implement this
   public function generate_images(Wpbb_PostBracketInterface $bracket): void {
     $request_data = $this->request_factory->get_request_data($bracket);
     $responses = $this->client->send_many($request_data);
-    //Save to post meta
     update_post_meta(
       $bracket->get_post_id(),
       $this->get_post_meta_key(),

@@ -7,6 +7,10 @@ require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-config-repo.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/domain/class-wpbb-bracket-config.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/class-wpbb-aws-service.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/class-wpbb-pdf-service.php';
 
 class Wpbb_GelatoPublicHooks {
   /**
@@ -20,20 +24,26 @@ class Wpbb_GelatoPublicHooks {
   private $utils;
 
   /**
-   * @var Wpbb_BracketImageRequestFactory
-   */
-  private $image_handler;
-
-  /**
    * @var Wpbb_GelatoProductIntegration
    */
   private $gelato;
 
-  public function __construct(Wpbb_BracketImageRequestFactory $image_handler, Wpbb_GelatoProductIntegration $gelato) {
+  /**
+   * @var Wpbb_S3Service
+   */
+  private $s3;
+
+  /**
+   * @var Wpbb_PdfService
+   */
+  private $pdf_service;
+
+  public function __construct(Wpbb_GelatoProductIntegration $gelato) {
     $this->bracket_product_utils = new Wpbb_BracketProductUtils();
     $this->utils = new Wpbb_Utils();
-    $this->image_handler = $image_handler;
     $this->gelato = $gelato;
+    $this->s3 = new Wpbb_S3Service();
+    $this->pdf_service = new Wpbb_PdfService();
   }
 
   private function is_bracket_product($product) {
@@ -313,7 +323,9 @@ class Wpbb_GelatoPublicHooks {
     $temp_filename
   ) {
     // Use config to generate the back design and merge it with the front design in a two-page PDF
-    $html = $bracket_config->html;
+    $play_id = $bracket_config->play_id;
+    $theme = $bracket_config->theme_mode;
+    $placement = $bracket_config->bracket_placement;
 
     // Generate a PDF file for the back design (the bracket)
     // We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
@@ -324,6 +336,7 @@ class Wpbb_GelatoPublicHooks {
       'html' => $html,
     ];
 
+    $request_data = $this->gelato->request_factory->get_request_data()
     $convert_res = $this->lambda_service->html_to_image($convert_req);
     // check if convert res is wp_error
     if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
