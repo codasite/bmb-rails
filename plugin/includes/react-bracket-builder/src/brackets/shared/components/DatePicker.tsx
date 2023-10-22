@@ -269,8 +269,6 @@ export const YearInput: React.FC<YearProps> = ({
   extraClass,
 }) => {
   const [year, setYear] = useState<string>('')
-  const classes = `tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-placeholder-white/50 !tw-bg-transparent focus:tw-placeholder-transparent focus:tw-outline-none`
-  const className = [classes, extraClass].join(' ')
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
@@ -283,13 +281,13 @@ export const YearInput: React.FC<YearProps> = ({
   }
 
   return (
-    <input
+    <DatePickerTextInput
       type="text"
       placeholder="YEAR"
       value={year}
       onChange={handleChange}
       maxLength={4}
-      className={className}
+      extraClass={extraClass}
     />
   )
 }
@@ -322,7 +320,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         />
         <YearInput
           handleYearChange={handleYearChange}
-          extraClass={`${backgroundColorClass} sm:tw-w-[150px]`}
+          extraClass={`sm:tw-w-[150px]`}
         />
       </div>
     </div>
