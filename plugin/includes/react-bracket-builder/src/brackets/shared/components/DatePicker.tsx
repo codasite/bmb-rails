@@ -168,6 +168,7 @@ interface BufferedTextInputProps {
   onStartEditing?: () => void
   validate?: (newValue: string) => boolean
   className?: string
+  errorText?: string
   [key: string]: any
 }
 
@@ -180,6 +181,7 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
     onDoneEditing,
     placeholderEl,
     validate,
+    errorText,
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
@@ -221,7 +223,7 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
   }
 
   return (
-    <div className="tw-relative">
+    <div className="tw-relative tw-flex tw-flex-col tw-gap-8">
       {showPlaceholder && placeholderEl && (
         <PlaceholderWrapper>{placeholderEl}</PlaceholderWrapper>
       )}
@@ -244,6 +246,11 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
         onChange={handleChange}
         className={className}
       />
+      {hasError && errorText && (
+        <span className="tw-text-red tw-text-12 tw-font-sans tw-text-left ">
+          {errorText}
+        </span>
+      )}
     </div>
   )
 }
@@ -369,6 +376,7 @@ const MonthPicker = (props: MonthPickerProps) => {
         extraClass={extraClass}
         onChange={handleChange}
         validate={validateMonth}
+        errorText="Invalid month"
         placeholderEl={
           <div className="tw-flex tw-items-center tw-justify-center tw-gap-16 tw-pointer-events-none">
             <CalendarIcon />
@@ -417,6 +425,7 @@ export const YearInput: React.FC<YearProps> = ({
       initialValue={value}
       onDoneEditing={onDoneEditing}
       validate={validateYear}
+      errorText="Invalid year"
       maxLength={4}
       extraClass={extraClass}
     />
