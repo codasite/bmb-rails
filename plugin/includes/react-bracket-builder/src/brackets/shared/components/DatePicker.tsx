@@ -457,7 +457,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           Your Bracket's Date
         </span>
       )}
-      <div className="tw-flex tw-flex-col tw-items-start sm:tw-flex-row tw-justify-center tw-gap-16 ">
+      <div className="tw-flex tw-flex-col sm:tw-items-start sm:tw-flex-row tw-justify-center tw-gap-16 ">
         <MonthPicker
           value={month}
           handleMonthChange={handleMonthChange}
