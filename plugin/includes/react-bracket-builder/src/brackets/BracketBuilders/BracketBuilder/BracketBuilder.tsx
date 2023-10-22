@@ -12,6 +12,7 @@ import {
 } from '../../shared/components/HigherOrder'
 import { BracketMeta } from '../../shared/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
+import { getBracketMeta } from '../../shared/utils'
 
 const defaultBracketName = 'MY BRACKET NAME'
 const defaultInitialPickerIndex = 0
@@ -36,8 +37,8 @@ const BracketBuilder = (props: BracketBuilderProps) => {
     bracketMeta,
     setBracketMeta,
   } = props
-  console.log('bracket builder')
   const [currentPage, setCurrentPage] = useState('num-teams')
+  // const [currentPage, setCurrentPage] = useState('add-teams')
   const [numTeams, setNumTeams] = useState(
     teamPickerDefaults[defaultInitialPickerIndex]
   )
@@ -50,28 +51,34 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       selected: i === defaultInitialPickerIndex,
     }))
   )
+  const [month, setMonth] = useState('')
+  const [year, setYear] = useState('')
+
+  useEffect(() => {
+    setBracketMeta?.({
+      date: `${month} ${year}`,
+    })
+  }, [month, year])
+
   useEffect(() => {
     setBracketMeta?.({
       title: bracketMeta?.title || defaultBracketName,
-      month: bracketMeta?.month,
-      year: bracketMeta?.year,
+      date: bracketMeta?.date || '',
     })
   }, [])
 
   useEffect(() => {
     if (bracket) {
       const { numTeams, wildcardPlacement, matches } = bracket
-      console.log('bracket found', bracket)
+      const { title, date } = getBracketMeta(bracket)
       setBracketMeta?.({
-        title: `${bracket.title} Copy` || defaultBracketName,
-        month: bracket.month,
-        year: bracket.year,
+        title: `${title} Copy`,
+        date: date,
       })
       setNumTeams(numTeams)
       setWildcardPlacement(wildcardPlacement)
       pickerStateFromNumTeams(numTeams)
       if (matches && matches.length > 0) {
-        console.log('matches found', matches)
         const newMatches = matches.map((match) => ({
           roundIndex: match.roundIndex,
           matchIndex: match.matchIndex,
@@ -109,10 +116,6 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   const handleAddTeamsClick = () => {
     setCurrentPage('add-teams')
   }
-
-  // bracket month and year. set when user selects a month and year from the date picker
-  const [month, setMonth] = useState('')
-  const [year, setYear] = useState('')
 
   const getBracketReq = () => {
     const req: BracketReq = {
