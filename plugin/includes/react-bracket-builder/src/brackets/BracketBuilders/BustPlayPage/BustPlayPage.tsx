@@ -18,6 +18,7 @@ import { BustPlayBuilder } from './BustPlayBuilder'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
+import { getBracketMeta } from '../../shared/utils'
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -56,14 +57,11 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     const picks = play?.picks
     const bracketTitle = play?.bracket?.title
     const authorDisplayName = play?.authorDisplayName
-    const title = authorDisplayName
-      ? `${authorDisplayName}'s ${bracketTitle} picks`
-      : bracketTitle
-    setBracketMeta({
-      title,
-      month: play?.bracket?.month,
-      year: play?.bracket?.year,
-    })
+    const meta = getBracketMeta(play?.bracket)
+    if (authorDisplayName) {
+      meta.title = `${authorDisplayName}'s ${bracketTitle} picks`
+    }
+    setBracketMeta(meta)
     const bracket = play?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams

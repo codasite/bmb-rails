@@ -14,7 +14,7 @@ import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
-import { getBracketWidth } from '../../shared/utils'
+import { getBracketMeta, getBracketWidth } from '../../shared/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 
 interface PlayPageProps {
@@ -54,7 +54,8 @@ const PlayPage = (props: PlayPageProps) => {
       const numTeams = bracket.numTeams
       const matches = bracket.matches
       tree = MatchTree.fromMatchRes(numTeams, matches)
-      setBracketMeta?.({ title: bracket.title, month: bracket.month, year: bracket.year })
+      const meta = getBracketMeta(bracket)
+      setBracketMeta?.(meta)
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
@@ -85,7 +86,6 @@ const PlayPage = (props: PlayPageProps) => {
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-
         window.location.href = apparelUrl
       })
       .catch((err) => {

@@ -54,8 +54,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
       inchHeight,
       inchWidth,
       title,
-      month,
-      year,
+      date,
       picks,
       matches,
       numTeams,
@@ -65,7 +64,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
     setPosition(position)
     setInchHeight(inchHeight)
     setInchWidth(inchWidth)
-    setBracketMeta({ title, month, year })
+    setBracketMeta({ title, date })
 
     const tree = MatchTree.fromPicks(numTeams, matches, picks)
     console.log('tree', tree)
@@ -85,11 +84,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
 
   const heightPx = inchHeight * 96
   const widthPx = inchWidth * 96
-  const {
-    title: bracketTitle,
-    month: bracketMonth,
-    year: bracketYear,
-  } = bracketMeta
+  const { title: bracketTitle, date: bracketDate } = bracketMeta
 
   return (
     <div
@@ -102,8 +97,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
           matchTree={matchTree}
           darkMode={darkMode}
           title={bracketTitle}
-          month={bracketMonth}
-          year={bracketYear}
+          date={bracketDate}
         />
       )}
     </div>

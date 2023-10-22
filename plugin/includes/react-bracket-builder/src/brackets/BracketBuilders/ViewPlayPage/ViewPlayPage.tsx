@@ -14,6 +14,7 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
+import { getBracketMeta } from '../../shared/utils'
 
 console.log('view play page')
 
@@ -43,10 +44,8 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 
   useEffect(() => {
     const picks = play?.picks
-    const title = play?.bracket?.title ?? play.bracket?.title
-    const month = play?.bracket?.month ?? play.bracket?.month
-    const year = play?.bracket?.year ?? play.bracket?.year
-    setBracketMeta({ title, month, year })
+    const meta = getBracketMeta(play?.bracket)
+    setBracketMeta(meta)
     const bracket = play?.bracket?.bracketBracket ?? play?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
