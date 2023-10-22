@@ -76,6 +76,8 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
         {/* <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full"> */}
         <div className="tw-flex tw-flex-col tw-gap-60 tw-max-w-[510px] tw-w-full tw-mx-auto">
           <DatePicker
+            month={month}
+            year={year}
             handleMonthChange={(month) => setMonth(month)}
             handleYearChange={(year) => setYear(year)}
             showTitle={true}
