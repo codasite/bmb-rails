@@ -8,13 +8,13 @@ import { LogoContainer } from './LogoContainer'
 export const DefaultFinalMatchChildren = (props: MatchBoxChildProps) => {
   const { matchPosition } = props
 
-  const { date: bracketDate, title: bracketTitle } =
+  const { month: bracketMonth, year: bracketYear, title: bracketTitle } =
     useContext(BracketMetaContext)
 
   return matchPosition === 'center' ? (
     <>
       <WinnerContainer {...props} topText={bracketTitle} />
-      <LogoContainer {...props} bottomText={bracketDate} />
+      <LogoContainer {...props} bottomText={`${bracketMonth} ${bracketYear}`} />
     </>
   ) : (
     <></>

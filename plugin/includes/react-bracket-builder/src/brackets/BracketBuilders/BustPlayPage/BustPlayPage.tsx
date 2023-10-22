@@ -59,7 +59,11 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     const title = authorDisplayName
       ? `${authorDisplayName}'s ${bracketTitle} picks`
       : bracketTitle
-    setBracketMeta({ title, date: play?.bracket?.date })
+    setBracketMeta({
+      title,
+      month: play?.bracket?.month,
+      year: play?.bracket?.year,
+    })
     const bracket = play?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams

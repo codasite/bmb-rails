@@ -55,7 +55,8 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   const { matchTree, setMatchTree, bracket, myBracketsUrl } = props
 
   const [bracketTitle, setBracketTitle] = useState('')
-  const [bracketDate, setBracketDate] = useState('')
+  const [bracketMonth, setBracketMonth] = useState('')
+  const [bracketYear, setBracketYear] = useState('')
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
   console.log('bracket', bracket)
@@ -66,7 +67,8 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       const matches = bracket.matches
       const results = bracket.results
       setBracketTitle(bracket.title)
-      setBracketDate(bracket.date)
+      setBracketMonth(bracket.month)
+      setBracketYear(bracket.year)
       setBracketId(bracket.id)
       let tree: MatchTree | null
       if (results && results.length > 0) {
@@ -108,7 +110,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
 
   return (
     <BracketMetaContext.Provider
-      value={{ title: bracketTitle, date: bracketDate }}
+      value={{ title: bracketTitle, month: bracketMonth, year: bracketYear }}
     >
       <DarkModeContext.Provider value={darkMode}>
         <div

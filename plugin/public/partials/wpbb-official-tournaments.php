@@ -1,39 +1,62 @@
 <?php
+require_once('shared/wpbb-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket.php';
 require_once('shared/wpbb-partials-constants.php');
-require_once('shared/wpbb-tournaments-common.php');
+require_once('shared/wpbb-brackets-common.php');
 require_once('shared/wpbb-pagination-widget.php');
 
-$tournament_repo = new Wpbb_BracketTournamentRepo();
+$bracket_repo = new Wpbb_BracketRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
 
-$status = get_query_var('status');
+// $status = get_query_var('status');
 
-$filter_status = 'publish';
-if ($status === ALL_STATUS) {
-	$filter_status = 'any';
-} else if ($status === SCORED_STATUS) {
-	$filter_status = 'complete';
-}
+// $filter_status = 'publish';
+// if ($status === ALL_STATUS) {
+// 	$filter_status = 'any';
+// } else if ($status === SCORED_STATUS) {
+// 	$filter_status = 'complete';
+// }
+
+// $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+$paged_status = get_query_var('status');
+
+if (empty($paged_status)) {
+	$paged_status = 'all';
+}
+
+$all_status = ['publish', 'private', 'score', 'complete'];
+$active_status = ['publish', 'private'];
+$scored_status = ['score', 'complete'];
+
+if ($paged_status === 'all') {
+	$post_status = $all_status;
+} else if ($paged_status === 'active' || $paged_status === 'live') {
+	$post_status = $active_status;
+} else if ($paged_status === 'scored') {
+	$post_status = $scored_status;
+} else {
+	$post_status = $all_status;
+}
+
 
 $the_query = new WP_Query([
-	'post_type' => Wpbb_BracketTournament::get_post_type(),
+	'post_type' => Wpbb_Bracket::get_post_type(),
 	'tag' => 'bmb_official_tourney',
 	'posts_per_page' => 8,
 	'paged' => $paged,
-	'post_status' => $filter_status,
-	'orderby' => 'date',
+	'post_status' => $post_status,
+	// 'orderby' => 'date',
 	'order' => 'DESC',
 ]);
 
 $num_pages = $the_query->max_num_pages;
 
-$tournaments = $tournament_repo->get_all($the_query);
+$tournaments = $bracket_repo->get_all($the_query);
 
 function wpbb_tournament_sort_buttons() {
 	$all_endpoint = get_permalink();
@@ -60,7 +83,7 @@ function wpbb_tournament_sort_buttons() {
 	<div class="tw-flex tw-flex-col tw-gap-15">
 		<?php echo wpbb_tournament_sort_buttons(); ?>
 		<?php foreach ($tournaments as $tournament) : ?>
-			<?php echo public_tournament_list_item($tournament, $play_repo); ?>
+			<?php echo public_bracket_list_item($tournament, $play_repo); ?>
 		<?php endforeach; ?>
 		<?php wpbb_pagination($paged, $num_pages); ?>
 	</div>
