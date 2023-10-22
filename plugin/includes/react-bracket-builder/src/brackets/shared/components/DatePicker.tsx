@@ -167,6 +167,7 @@ interface BufferedTextInputProps {
   onDoneEditing?: (newValue: string) => void
   onStartEditing?: () => void
   validate?: (newValue: string) => boolean
+  className?: string
   [key: string]: any
 }
 
@@ -182,6 +183,10 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
+  const [hasError, setHasError] = useState<boolean>(false)
+  const errorClass = 'tw-border-red tw-text-red'
+  const extraClass = hasError ? errorClass : ''
+  const className = [props.className, extraClass].join(' ')
 
   useEffect(() => {
     setBuffer(initialValue ?? '')
@@ -191,7 +196,7 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
     if (!buffer) {
       setShowPlacholder(true)
     }
-    if (onDoneEditing) {
+    if (onDoneEditing && !hasError) {
       onDoneEditing(buffer)
     }
   }
@@ -206,8 +211,8 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
 
-    if (validate && !validate(value)) {
-      return
+    if (validate) {
+      setHasError(!validate(value))
     }
     setBuffer(value)
     if (onChange) {
@@ -237,6 +242,7 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
         value={buffer}
         {...props}
         onChange={handleChange}
+        className={className}
       />
     </div>
   )
@@ -349,6 +355,10 @@ const MonthPicker = (props: MonthPickerProps) => {
     setFoundMonths(filtered)
   }
 
+  const validateMonth = (newValue: string) => {
+    return !newValue || searchArray(months, newValue).length > 0
+  }
+
   return (
     <div className="tw-flex tw-flex-col">
       <DatePickerTextInput
@@ -358,6 +368,7 @@ const MonthPicker = (props: MonthPickerProps) => {
         onStartEditing={onStartEditing}
         extraClass={extraClass}
         onChange={handleChange}
+        validate={validateMonth}
         placeholderEl={
           <div className="tw-flex tw-items-center tw-justify-center tw-gap-16 tw-pointer-events-none">
             <CalendarIcon />
