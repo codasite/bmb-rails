@@ -32,18 +32,22 @@ const MonthOption: React.FC<
 
 interface MonthProps {
   handleMonthChange: (year: string) => void
-  backgroundColorClass: string
   menuPlacement: MenuPlacement
+  backgroundColorClass: string
+  extraClass?: string
 }
 
 const MonthPicker: React.FC<MonthProps> = ({
   handleMonthChange,
-  backgroundColorClass,
   menuPlacement,
+  backgroundColorClass,
+  extraClass,
 }) => {
   const [month, setMonth] = useState<{ value: string; label: string } | null>(
     null
   )
+  const classes = `${backgroundColorClass} tw-flex tw-justify-center tw-items-center tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 focus:tw-border-white`
+  const className = [classes, extraClass].join(' ')
 
   const handleChange = (
     selectedOption: { value: string; label: string } | null
@@ -138,23 +142,23 @@ const MonthPicker: React.FC<MonthProps> = ({
       unstyled
       styles={styles}
       menuPlacement={menuPlacement}
-      className={`tw-flex tw-justify-center tw-items-center tw-p-16 ${backgroundColorClass} tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 focus:tw-border-white`}
+      className={className}
     />
   )
 }
 
 interface YearProps {
   handleYearChange: (year: string) => void
-  extraClasses?: string
+  extraClass?: string
 }
 
 export const YearInput: React.FC<YearProps> = ({
   handleYearChange,
-  extraClasses,
+  extraClass,
 }) => {
   const [year, setYear] = useState<string>('')
   const classes = `tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50`
-  const className = [classes, extraClasses].join(' ')
+  const className = [classes, extraClass].join(' ')
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
@@ -200,14 +204,16 @@ export const DatePicker: React.FC<DatePickerProps> = ({
         </span>
       )}
       <div className="tw-flex tw-flex-col sm:tw-flex-row tw-justify-center tw-gap-16 ">
-        <div className="tw-flex-grow">
-          <MonthPicker
-            handleMonthChange={handleMonthChange}
-            backgroundColorClass={backgroundColorClass}
-            menuPlacement={selectMenuPlacement}
-          />
-        </div>
-        <YearInput handleYearChange={handleYearChange} extraClasses={} />
+        <MonthPicker
+          handleMonthChange={handleMonthChange}
+          backgroundColorClass={backgroundColorClass}
+          menuPlacement={selectMenuPlacement}
+          extraClass="tw-flex-grow"
+        />
+        <YearInput
+          handleYearChange={handleYearChange}
+          extraClass={`${backgroundColorClass} sm:tw-w-[150px]`}
+        />
       </div>
     </div>
   )
