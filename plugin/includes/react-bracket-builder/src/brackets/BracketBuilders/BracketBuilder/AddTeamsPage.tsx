@@ -37,7 +37,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
     <div
-      className="tw-flex tw-flex-col tw-gap-1 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-overflow-x-hidden tw-px-20"
+      className="tw-flex tw-flex-col tw-gap-1 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-20"
       style={{ background: `url(${iconBackground}), #000225` }}
     >
       <div className="tw-px-30 sm:tw-px-60 tw-mb-16">
@@ -54,50 +54,51 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
           </a>
         </div>
       </div>
-      <div>
-        <div
-          className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-max-w-screen-xl tw-m-auto tw-dark`}
-        >
-          {matchTree && !showPaginated && (
-            <AddTeamsBracket
-              matchTree={matchTree}
-              setMatchTree={setMatchTree}
-            />
-          )}
-          {matchTree && showPaginated && (
-            <PaginatedAddTeamsBracket
-              matchTree={matchTree}
-              setMatchTree={setMatchTree}
-            />
-          )}
+      <div className="tw-flex tw-flex-col tw-gap-60 tw-w-full tw-max-w-screen-lg tw-mx-auto">
+        <div>
+          <div
+            className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-dark`}
+          >
+            {matchTree && !showPaginated && (
+              <AddTeamsBracket
+                matchTree={matchTree}
+                setMatchTree={setMatchTree}
+              />
+            )}
+            {matchTree && showPaginated && (
+              <PaginatedAddTeamsBracket
+                matchTree={matchTree}
+                setMatchTree={setMatchTree}
+              />
+            )}
+          </div>
         </div>
-      </div>
-      <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full">
-        <DatePicker
-          handleMonthChange={(month) => setMonth(month)}
-          handleYearChange={(year) => setYear(year)}
-          showTitle={true}
-          // backgroundColorClass={'tw-bg-greyBlue'}
-          backgroundColorClass={'tw-bg-lightGreyBlue'}
-          selectMenuPlacement="top"
-        />
-        {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
+        {/* <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full"> */}
+        <div className="tw-flex tw-flex-col tw-gap-60">
+          <DatePicker
+            handleMonthChange={(month) => setMonth(month)}
+            handleYearChange={(year) => setYear(year)}
+            showTitle={true}
+            // backgroundColorClass={'tw-bg-greyBlue'}
+            backgroundColorClass={'tw-bg-lightGreyBlue'}
+            selectMenuPlacement="top"
+          />
+          {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />
 					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
 				</ActionButton> */}
-        <div className="tw-flex tw-flex-col tw-gap-16">
-          <ActionButton
-            variant="blue"
-            gap={16}
-            disabled={createDisabled}
-            onClick={handleSaveBracket}
-          >
-            <SaveIcon />
-            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-              Save
-            </span>
-          </ActionButton>
         </div>
+        <ActionButton
+          variant="blue"
+          gap={16}
+          disabled={createDisabled}
+          onClick={handleSaveBracket}
+        >
+          <SaveIcon />
+          <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+            Save
+          </span>
+        </ActionButton>
       </div>
     </div>
   )
