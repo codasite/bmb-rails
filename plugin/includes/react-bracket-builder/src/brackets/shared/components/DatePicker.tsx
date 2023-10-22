@@ -148,9 +148,6 @@ const MonthPickerOld: React.FC<MonthProps> = ({
 }
 
 interface DatePickerTextInputProps {
-  value: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  placeholder: string
   extraClass?: string
   [key: string]: any
 }
@@ -203,18 +200,18 @@ const MonthPicker = (props: MonthPickerProps) => {
   const [editing, setEditing] = useState<boolean>(false)
   const [month, setMonth] = useState<number | null>(null)
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August ',
-    'September',
-    'October',
-    'November',
-    'December',
+    'JANUARY',
+    'FEBRUARY',
+    'MARCH',
+    'APRIL',
+    'MAY',
+    'JUNE',
+    'JULY',
+    'AUGUST ',
+    'SEPTEMBER',
+    'OCTOBER',
+    'NOVEMBER',
+    'DECEMBER',
   ]
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -232,10 +229,18 @@ const MonthPicker = (props: MonthPickerProps) => {
     // }
   }
 
-  if (editing) {
-    return (
+  const monthPlaceholder = (
+    <div className="tw-absolute tw-top-1/2 tw-left-1/2 tw--translate-x-1/2 tw--translate-y-1/2 tw-absolute tw-flex tw-items-center tw-justify-center tw-gap-16 tw-pointer-events-none">
+      <CalendarIcon />{' '}
+      <span className="tw-text-24 tw-font-600 tw-text-white/50">Month</span>
+    </div>
+  )
+  const showPlaceholder = !editing && !monthText
+
+  return (
+    <div className="tw-relative">
+      {showPlaceholder && monthPlaceholder}
       <DatePickerTextInput
-        placeholder="MONTH"
         value={monthText}
         onChange={handleChange}
         extraClass={extraClass}
@@ -245,20 +250,12 @@ const MonthPicker = (props: MonthPickerProps) => {
             setEditing(false)
           }
         }}
-        autoFocus
+        onFocus={(e) => {
+          setEditing(true)
+          e.target.select()
+        }}
       />
-    )
-  }
-
-  const monthBtnContent = monthText || (
-    <div className="tw-flex tw-items-center tw-justify-center tw-gap-16">
-      <CalendarIcon /> <span>Month</span>
     </div>
-  )
-  return (
-    <MonthPickerButton onClick={() => setEditing(true)} extraClass="">
-      {monthBtnContent}
-    </MonthPickerButton>
   )
 }
 
