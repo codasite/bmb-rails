@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Select, {
   components,
   OptionProps,
@@ -172,6 +172,7 @@ interface BufferedTextInputProps {
 
 const BufferedTextInput = (props: BufferedTextInputProps) => {
   const {
+    inputRef,
     initialValue,
     onChange,
     onStartEditing,
@@ -220,6 +221,7 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
         <PlaceholderWrapper>{placeholderEl}</PlaceholderWrapper>
       )}
       <input
+        ref={props.inputRef}
         type="text"
         onFocus={(e) => {
           startEditing()
@@ -268,6 +270,7 @@ const MonthOpt = (props: MonthOptProps) => {
   const handleMonthClick = (e) => {
     console.log('handle month click')
     console.log(value)
+    e.preventDefault()
     onClick && onClick()
   }
   return (
@@ -302,6 +305,7 @@ const MonthPicker = (props: MonthPickerProps) => {
   const { handleMonthChange, extraClass, value } = props
   const [editing, setEditing] = useState<boolean>(false)
   const [foundMonths, setFoundMonths] = useState<string[]>([])
+  const inputRef = useRef<HTMLInputElement>(null)
   const months = [
     'JANUARY',
     'FEBRUARY',
@@ -318,8 +322,6 @@ const MonthPicker = (props: MonthPickerProps) => {
   ]
 
   const handleDoneEditing = (newValue: string) => {
-    console.log('done editing')
-    console.log('new: ', newValue)
     handleMonthChange(newValue)
     setEditing(false)
   }
@@ -329,11 +331,13 @@ const MonthPicker = (props: MonthPickerProps) => {
     setEditing(true)
   }
 
-  const handleMonthClick = (month: string) => {
+  const handleMonthClick = async (month: string) => {
+    handleDoneEditing(month)
     console.log('handle month click')
-    console.log(month)
-    handleMonthChange(month)
-    setEditing(false)
+    console.log(inputRef.current)
+    setTimeout(() => {
+      inputRef.current?.blur()
+    }, 100)
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -348,6 +352,7 @@ const MonthPicker = (props: MonthPickerProps) => {
   return (
     <div className="tw-flex tw-flex-col">
       <DatePickerTextInput
+        inputRef={inputRef}
         initialValue={value}
         onDoneEditing={handleDoneEditing}
         onStartEditing={onStartEditing}
@@ -366,10 +371,7 @@ const MonthPicker = (props: MonthPickerProps) => {
         <ul className="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-rounded-b-8 tw-bg-white/5 tw-overflow-hidden">
           {foundMonths.map((month, i) => (
             <li>
-              <MonthOpt
-                value={month}
-                onClick={() => handleDoneEditing(month)}
-              />
+              <MonthOpt value={month} onClick={() => handleMonthClick(month)} />
             </li>
           ))}
         </ul>
