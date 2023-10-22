@@ -164,8 +164,9 @@ const PlaceholderWrapper = (props: PlaceholderWrapperProps) => {
 interface BufferedTextInputProps {
   initialValue?: string
   placeholderEl?: React.ReactNode
-  onDoneEditing?: (newValue) => void
+  onDoneEditing?: (newValue: string) => void
   onStartEditing?: () => void
+  validate?: (newValue: string) => boolean
   [key: string]: any
 }
 
@@ -173,16 +174,16 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
   const {
     initialValue,
     onChange,
-    extraClass,
     onStartEditing,
     onDoneEditing,
     placeholderEl,
+    validate,
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
 
   useEffect(() => {
-    setBuffer(initialValue)
+    setBuffer(initialValue ?? '')
   }, [initialValue])
 
   const doneEditing = () => {
@@ -203,7 +204,10 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
-    console.log(value)
+
+    if (validate && !validate(value)) {
+      return
+    }
     setBuffer(value)
     if (onChange) {
       onChange(event)
@@ -245,29 +249,10 @@ interface DatePickerTextInputProps {
 const DatePickerTextInput = (props: DatePickerTextInputProps) => {
   const { initialValue, extraClass } = props
   const bgClass = initialValue ? 'tw-bg-white/5' : 'tw-bg-transparent'
-  console.log(initialValue)
   const classes = `tw-font-sans tw-uppercase tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50 ${bgClass} focus:tw-placeholder-transparent focus:tw-outline-none focus:tw-bg-white/5`
   const className = [classes, extraClass].join(' ')
 
   return <BufferedTextInput className={className} {...props} />
-}
-
-interface MonthPickerButtonProps {
-  children: React.ReactNode
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
-  extraClass?: string
-}
-const MonthPickerButton = (props: MonthPickerButtonProps) => {
-  const { children, onClick, extraClass } = props
-  const classes = `tw-font-sans tw-uppercase tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50 focus:tw-placeholder-transparent focus:tw-outline-none focus:tw-bg-white/5`
-  const btnClasses = `tw-flex-grow tw-bg-transparent hover:tw-cursor-pointer`
-  const className = [classes, btnClasses, extraClass].join(' ')
-  return (
-    <button type="button" className={className} onClick={onClick}>
-      {/* <button type="button" className={className}> */}
-      {children}
-    </button>
-  )
 }
 
 interface MonthPickerProps {
@@ -278,8 +263,6 @@ interface MonthPickerProps {
 
 const MonthPicker = (props: MonthPickerProps) => {
   const { handleMonthChange, extraClass, value } = props
-  const [editing, setEditing] = useState<boolean>(false)
-  const [month, setMonth] = useState<number | null>(null)
   const months = [
     'JANUARY',
     'FEBRUARY',
@@ -295,7 +278,7 @@ const MonthPicker = (props: MonthPickerProps) => {
     'DECEMBER',
   ]
 
-  const handleDoneEditing = (newValue) => {
+  const handleDoneEditing = (newValue: string) => {
     handleMonthChange(newValue)
   }
 
@@ -303,7 +286,6 @@ const MonthPicker = (props: MonthPickerProps) => {
     <DatePickerTextInput
       initialValue={value}
       onDoneEditing={handleDoneEditing}
-      onStartEditing={() => setEditing(true)}
       extraClass={extraClass}
       placeholderEl={
         <div className="tw-flex tw-items-center tw-justify-center tw-gap-16 tw-pointer-events-none">
@@ -317,31 +299,30 @@ const MonthPicker = (props: MonthPickerProps) => {
 
 interface YearProps {
   handleYearChange: (year: string) => void
+  value?: string
   extraClass?: string
 }
 
 export const YearInput: React.FC<YearProps> = ({
   handleYearChange,
   extraClass,
+  value,
 }) => {
-  const [year, setYear] = useState<string>('')
+  const onDoneEditing = (newValue: string) => {
+    handleYearChange(newValue)
+  }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target
+  const validateYear = (newValue: string) => {
     const regex = /^[0-9\b]{0,4}$/
-
-    if (regex.test(value)) {
-      setYear(value)
-      handleYearChange(value)
-    }
+    return regex.test(newValue)
   }
 
   return (
     <DatePickerTextInput
-      type="text"
       placeholder="YEAR"
-      value={year}
-      onChange={handleChange}
+      initialValue={value}
+      onDoneEditing={onDoneEditing}
+      validate={validateYear}
       maxLength={4}
       extraClass={extraClass}
     />
