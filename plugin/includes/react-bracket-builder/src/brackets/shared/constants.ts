@@ -89,6 +89,16 @@ export const defaultBracketConstants = {
     250, // 6 rounds
   ],
 
+  logoContainerBottomMargin: [
+    0, // 0 rounds
+    0, // 1 round
+    0, // 2 rounds
+    0, // 3 rounds
+    20, // 4 rounds
+    160, // 5 rounds
+    160, // 6 rounds
+  ],
+
   // Window breakpoints
   paginatedBracketWidth: 768,
   roundWidth: 54,

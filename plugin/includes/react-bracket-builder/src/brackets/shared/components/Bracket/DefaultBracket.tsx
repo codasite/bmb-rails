@@ -160,6 +160,9 @@ export const DefaultBracket = (props: BracketProps) => {
   const numRounds = matchTree.rounds.length
   const winnerContainerMB =
     defaultBracketConstants.winnerContainerBottomMargin[numRounds]
+  const logoContainerMB =
+    defaultBracketConstants.logoContainerBottomMargin[numRounds]
+  const logoContainerMT = numRounds > 5 ? 50 : 20
 
   return (
     <DarkModeContext.Provider value={dark}>
@@ -193,7 +196,12 @@ export const DefaultBracket = (props: BracketProps) => {
           </div>
         </div>
         {renderWinnerAndLogo && (
-          <div className={`tw-mt-${numRounds > 5 ? 50 : 20}`}>
+          <div
+            style={{
+              marginTop: logoContainerMT,
+              marginBottom: logoContainerMB,
+            }}
+          >
             <LogoContainer {...props} bottomText={bracketDate} />
           </div>
         )}

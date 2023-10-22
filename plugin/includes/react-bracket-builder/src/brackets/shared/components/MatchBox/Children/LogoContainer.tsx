@@ -42,7 +42,7 @@ export const LogoContainer = (props: LogoContainerProps) => {
         className={`tw-w-[124px] tw-text-${logoColor} dark:tw-text-${logoColorDark}`}
       />
       <span
-        className={`tw-text-${bottomTextFontSize} tw-text-${bottomTextColor} dark:tw-text-${bottomTextColorDark}`}
+        className={`tw-min-h-[${bottomTextFontSize}px] tw-text-${bottomTextFontSize} tw-text-${bottomTextColor} dark:tw-text-${bottomTextColorDark}`}
       >
         {bottomText}
       </span>
