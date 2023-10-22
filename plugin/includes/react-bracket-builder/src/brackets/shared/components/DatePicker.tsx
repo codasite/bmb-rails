@@ -37,7 +37,7 @@ interface MonthProps {
   extraClass?: string
 }
 
-const MonthPicker: React.FC<MonthProps> = ({
+const MonthPickerOld: React.FC<MonthProps> = ({
   handleMonthChange,
   menuPlacement,
   backgroundColorClass,
@@ -147,6 +147,121 @@ const MonthPicker: React.FC<MonthProps> = ({
   )
 }
 
+interface DatePickerTextInputProps {
+  value: string
+  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  placeholder: string
+  extraClass?: string
+  [key: string]: any
+}
+
+const DatePickerTextInput = (props: DatePickerTextInputProps) => {
+  const { value, onChange, placeholder, extraClass } = props
+  const bgClass = value ? 'tw-bg-white/5' : 'tw-bg-transparent'
+  const classes = `tw-font-sans tw-uppercase tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50 ${bgClass} focus:tw-placeholder-transparent focus:tw-outline-none focus:tw-bg-white/5`
+  const className = [classes, extraClass].join(' ')
+
+  return (
+    <input
+      onFocus={(e) => e.target.select()}
+      type="text"
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      className={className}
+      {...props}
+    />
+  )
+}
+
+interface MonthPickerButtonProps {
+  children: React.ReactNode
+  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void
+  extraClass?: string
+}
+const MonthPickerButton = (props: MonthPickerButtonProps) => {
+  const { children, onClick, extraClass } = props
+  const classes = `tw-font-sans tw-uppercase tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50 focus:tw-placeholder-transparent focus:tw-outline-none focus:tw-bg-white/5`
+  const btnClasses = `tw-flex-grow tw-bg-transparent hover:tw-cursor-pointer`
+  const className = [classes, btnClasses, extraClass].join(' ')
+  return (
+    <button type="button" className={className} onClick={onClick}>
+      {/* <button type="button" className={className}> */}
+      {children}
+    </button>
+  )
+}
+
+interface MonthPickerProps {
+  handleMonthChange: (month: string) => void
+  extraClass?: string
+}
+
+const MonthPicker = (props: MonthPickerProps) => {
+  const { handleMonthChange, extraClass } = props
+  const [monthText, setMonthText] = useState<string>('')
+  const [editing, setEditing] = useState<boolean>(false)
+  const [month, setMonth] = useState<number | null>(null)
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August ',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    setMonthText(value)
+    handleMonthChange(value)
+    // setMonthText(value)
+    // const monthIndex = months.indexOf(value)
+    // if (monthIndex >= 0) {
+    //   setMonth(monthIndex + 1)
+    //   handleMonthChange(`${monthIndex + 1}`)
+    // } else {
+    //   setMonth(null)
+    //   handleMonthChange('')
+    // }
+  }
+
+  if (editing) {
+    return (
+      <DatePickerTextInput
+        placeholder="MONTH"
+        value={monthText}
+        onChange={handleChange}
+        extraClass={extraClass}
+        onBlur={() => setEditing(false)}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            setEditing(false)
+          }
+        }}
+        autoFocus
+      />
+    )
+  }
+
+  const monthBtnContent = monthText || (
+    <div className="tw-flex tw-items-center tw-justify-center tw-gap-16">
+      <CalendarIcon /> <span>Month</span>
+    </div>
+  )
+  return (
+    <MonthPickerButton onClick={() => setEditing(true)} extraClass="">
+      {monthBtnContent}
+    </MonthPickerButton>
+  )
+}
+
 interface YearProps {
   handleYearChange: (year: string) => void
   extraClass?: string
@@ -157,7 +272,7 @@ export const YearInput: React.FC<YearProps> = ({
   extraClass,
 }) => {
   const [year, setYear] = useState<string>('')
-  const classes = `tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50`
+  const classes = `tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-placeholder-white/50 !tw-bg-transparent focus:tw-placeholder-transparent focus:tw-outline-none`
   const className = [classes, extraClass].join(' ')
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,9 +321,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
       <div className="tw-flex tw-flex-col sm:tw-flex-row tw-justify-center tw-gap-16 ">
         <MonthPicker
           handleMonthChange={handleMonthChange}
-          backgroundColorClass={backgroundColorClass}
-          menuPlacement={selectMenuPlacement}
-          extraClass="tw-flex-grow"
+          extraClass={`tw-flex-grow`}
         />
         <YearInput
           handleYearChange={handleYearChange}
