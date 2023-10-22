@@ -233,8 +233,8 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
           }
         }}
         value={buffer}
-        onChange={handleChange}
         {...props}
+        onChange={handleChange}
       />
     </div>
   )
@@ -284,6 +284,14 @@ const MonthOptions = (props: MonthOptionsProps) => {
   )
 }
 
+const searchArray = (arr: string[], query: string) => {
+  if (!query) {
+    return []
+  }
+  const regex = new RegExp(`${query.trim()}`, 'i')
+  return arr.filter((item) => item.search(regex) >= 0)
+}
+
 interface MonthPickerProps {
   handleMonthChange: (month: string) => void
   value?: string
@@ -293,6 +301,7 @@ interface MonthPickerProps {
 const MonthPicker = (props: MonthPickerProps) => {
   const { handleMonthChange, extraClass, value } = props
   const [editing, setEditing] = useState<boolean>(false)
+  const [foundMonths, setFoundMonths] = useState<string[]>([])
   const months = [
     'JANUARY',
     'FEBRUARY',
@@ -327,6 +336,15 @@ const MonthPicker = (props: MonthPickerProps) => {
     setEditing(false)
   }
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    console.log('handle change')
+    console.log(value)
+    const filtered = searchArray(months, value)
+    console.log(filtered)
+    setFoundMonths(filtered)
+  }
+
   return (
     <div className="tw-flex tw-flex-col">
       <DatePickerTextInput
@@ -334,6 +352,7 @@ const MonthPicker = (props: MonthPickerProps) => {
         onDoneEditing={handleDoneEditing}
         onStartEditing={onStartEditing}
         extraClass={extraClass}
+        onChange={handleChange}
         placeholderEl={
           <div className="tw-flex tw-items-center tw-justify-center tw-gap-16 tw-pointer-events-none">
             <CalendarIcon />
@@ -345,7 +364,7 @@ const MonthPicker = (props: MonthPickerProps) => {
       />
       {editing && (
         <ul className="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-rounded-b-8 tw-bg-white/5 tw-overflow-hidden">
-          {months.map((month, i) => (
+          {foundMonths.map((month, i) => (
             <li>
               <MonthOpt
                 value={month}
