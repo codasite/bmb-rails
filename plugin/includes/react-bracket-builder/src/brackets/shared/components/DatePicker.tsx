@@ -57,16 +57,28 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
   }, [initialValue])
 
   const doneEditing = () => {
+    if (validate) {
+      const isValid = validate(buffer)
+      if (isValid && hasError) {
+        console.log('clearing error')
+        setHasError(false)
+        onErrorCleared?.()
+      } else if (!isValid && !hasError) {
+        setHasError(true)
+        onHasError?.(errorText)
+      }
+    }
     if (!buffer) {
       setShowPlacholder(true)
     }
-    if (onDoneEditing && !hasError) {
-      onDoneEditing(buffer)
-    }
+    onDoneEditing?.(buffer)
   }
 
   const startEditing = () => {
     setShowPlacholder(false)
+    if (hasError) {
+      setHasError(false)
+    }
     if (onStartEditing) {
       onStartEditing()
     }
@@ -75,16 +87,6 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
 
-    if (validate) {
-      const isValid = validate(value)
-      if (isValid && hasError) {
-        setHasError(false)
-        onErrorCleared?.()
-      } else if (!isValid && !hasError) {
-        setHasError(true)
-        onHasError?.(errorText)
-      }
-    }
     setBuffer(value)
     if (onChange) {
       onChange(event)
@@ -200,7 +202,10 @@ const MonthPicker = (props: MonthPickerProps) => {
   ]
 
   const handleDoneEditing = (newValue: string) => {
-    handleMonthChange(newValue)
+    if (validateMonth(newValue)) {
+      handleMonthChange(newValue)
+      onErrorCleared?.()
+    }
     setEditing(false)
   }
 
@@ -228,7 +233,7 @@ const MonthPicker = (props: MonthPickerProps) => {
   }
 
   const validateMonth = (newValue: string) => {
-    return !newValue || searchArray(months, newValue).length > 0
+    return !newValue || months.includes(newValue.toUpperCase())
   }
 
   return (
@@ -282,11 +287,14 @@ export const YearInput: React.FC<YearProps> = ({
   onErrorCleared,
 }) => {
   const onDoneEditing = (newValue: string) => {
-    handleYearChange(newValue)
+    if (validateYear(newValue)) {
+      handleYearChange(newValue)
+      onErrorCleared?.()
+    }
   }
 
   const validateYear = (newValue: string) => {
-    const regex = /^[0-9\b]{0,4}$/
+    const regex = /^[0-9\b]{4}$/
     return regex.test(newValue)
   }
 
