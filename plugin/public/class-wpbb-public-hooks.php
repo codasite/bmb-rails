@@ -1,7 +1,7 @@
 <?php
 
 
-class Wpbb_Public_Hooks
+class Wpbb_PublicHooks
 {
 
 	public function add_rewrite_tags() {
@@ -38,7 +38,7 @@ class Wpbb_Public_Hooks
 	public function add_roles() {
 		add_role(
 			'bmb_plus',
-			'BMB Plus',
+			'BMB Plus',	
 			array(
 				'wpbb_share_bracket' => true,
 				'wpbb_bust_play' => true,
@@ -105,5 +105,17 @@ class Wpbb_Public_Hooks
 			$orderby = "plays.{$query_object->get('orderby')} {$query_object->get('order')}";
 		}
 		return $clauses;
+	}
+
+	public function add_bmb_plus_role(WC_Subscription $subscription) {
+		$user_id = $subscription->get_user_id();
+		$user = get_user_by('id', $user_id);
+		$user->add_role('bmb_plus');
+	}
+
+	public function remove_bmb_plus_role(WC_Subscription $subscription) {
+		$user_id = $subscription->get_user_id();
+		$user = get_user_by('id', $user_id);
+		$user->remove_role('bmb_plus');
 	}
 }
