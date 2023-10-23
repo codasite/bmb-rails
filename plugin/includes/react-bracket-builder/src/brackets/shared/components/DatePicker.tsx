@@ -220,7 +220,7 @@ const MonthPicker = (props: MonthPickerProps) => {
     console.log(inputRef.current)
     setTimeout(() => {
       inputRef.current?.blur()
-    }, 100)
+    }, 500)
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

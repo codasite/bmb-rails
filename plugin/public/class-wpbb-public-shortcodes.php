@@ -80,7 +80,7 @@ class Wpbb_Public_Shortcodes {
 	public function add_shortcodes() {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']); // This is a page with slug `bracket-template-builder
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']); // This is a page with slug `dashboard`
-		add_shortcode('wpbb-official-brackets', [$this, 'render_official_brackets']); // This is a page with slug `official-tournaments`
+		add_shortcode('wpbb-official-brackets', [$this, 'render_official_brackets']); // This is a page with slug `official-brackets`
 		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']); // This is a page with slug `celebrity-picks`
 		add_shortcode('wpbb-bracket-page', [$this, 'render_bracket_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
