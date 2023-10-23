@@ -21,51 +21,13 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
     $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
   }
 
-  public function get_last_round_picks_for_bracket(
-    $bracket_id,
-    $final_round_pick
-  ) {
-    global $wpdb;
-
-    /**
-     * @var $query string
-     * Sorts picks for bracket by round index and
-     * returns the author's email, display name, the
-     * winning pick and the winning result.
-     */
-
-    $query = "
-        SELECT author.user_email as email, author.display_name as name, pick.winning_team_id as winning_team_id
-        FROM wp_bracket_builder_plays play
-        JOIN wp_bracket_builder_match_picks pick 
-        ON pick.bracket_play_id = play.id
-        AND pick.round_index = %d
-        AND pick.match_index = %d
-        JOIN wp_posts post
-        ON post.ID = play.post_id
-        JOIN wp_users author
-        ON author.ID = post.post_author
-        WHERE play.bracket_post_id = %d
-        GROUP BY post.post_author;
-        ";
-
-    $prepared_query = $wpdb->prepare(
-      $query,
-      $final_round_pick->round_index,
-      $final_round_pick->match_index,
-      $bracket_id
-    );
-    $results = $wpdb->get_results($prepared_query);
-    return $results;
-  }
-
   public function notify_bracket_results_updated($bracket_id): void {
     $play_repo = new Wpbb_BracketPlayRepo();
     $team_repo = new Wpbb_BracketTeamRepo();
 
     $bracket = $this->bracket_repo->get($bracket_id);
     $final_round_pick = end($bracket->results);
-    $user_picks = $this->get_last_round_picks_for_bracket(
+    $user_picks = $this->bracket_repo->get_user_info_and_last_round_pick(
       $bracket_id,
       $final_round_pick
     );
