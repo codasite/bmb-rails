@@ -291,7 +291,7 @@ class Wp_Bracket_Builder {
       10,
       3
     );
-    $public_hooks = new Wpbb_Public_Hooks();
+    $public_hooks = new Wpbb_PublicHooks();
     $this->loader->add_action('init', $public_hooks, 'add_rewrite_tags', 10, 0);
     $this->loader->add_action(
       'init',
@@ -324,7 +324,13 @@ class Wp_Bracket_Builder {
 
     $this->loader->add_action('init', $shortcodes, 'add_shortcodes');
 
-    $this->loader->add_action('woocommerce_subscription_status_active', $public_hooks, 'add_bmb_plus_role', 10, 1);
+    $this->loader->add_action(
+      'woocommerce_subscription_status_active',
+      $public_hooks,
+      'add_bmb_plus_role',
+      10,
+      1
+    );
   }
 
   /**

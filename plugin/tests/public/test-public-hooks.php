@@ -1,6 +1,6 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'public/wpbb-public-hooks.php';
+require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public-hooks.php';
 
 class PublicHooksTest extends WPBB_UnitTestCase {
   public function test_role_is_added_when_sub_activated() {
@@ -9,5 +9,14 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertTrue(!$user->has_role('bmb_plus'));
 
     // check that the role is added when the subscription is activated
+    //standard class mock
+    $sub_mock = $this->getMockBuilder('WC_Subscription')
+      ->setMethods(['get_status'])
+      ->getMock();
+
+    $hooks = new Wpbb_PublicHooks();
+    $hooks->add_bmb_plus_role($sub_mock);
+
+    $this->assertTrue($user->has_role('bmb_plus'));
   }
 }

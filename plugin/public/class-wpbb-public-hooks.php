@@ -1,7 +1,7 @@
 <?php
 
 
-class Wpbb_Public_Hooks
+class Wpbb_PublicHooks
 {
 
 	public function add_rewrite_tags() {
