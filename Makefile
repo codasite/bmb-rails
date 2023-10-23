@@ -10,7 +10,6 @@ wp-up:
 images-up:
 	docker compose --profile images up --build
 
-
 # Start all wordpress containers in detached mode for ci
 wp-up-detach:
 	docker compose --profile wp up --build --detach

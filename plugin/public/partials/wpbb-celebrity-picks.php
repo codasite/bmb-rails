@@ -9,6 +9,7 @@ require_once plugin_dir_path(dirname(__FILE__, 2)) . 'public/partials/shared/wpb
 
 $play_repo = new Wpbb_BracketPlayRepo();
 
+$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $the_query = new WP_Query([
 	'post_type' => Wpbb_BracketPlay::get_post_type(),
 	'posts_per_page' => 6,
@@ -22,7 +23,6 @@ $plays = $play_repo->get_all($the_query);
 $paged_plays = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $num_plays_pages = $the_query->max_num_pages;
 
-$paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $paged_status = get_query_var('status');
 
 if (empty($paged_status)) {
