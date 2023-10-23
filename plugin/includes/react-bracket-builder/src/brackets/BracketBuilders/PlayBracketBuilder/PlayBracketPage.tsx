@@ -63,11 +63,8 @@ const PlayPage = (props: PlayPageProps) => {
   }, [])
 
   const handleApparelClick = () => {
-    console.log('handleApparelClick')
     const picks = matchTree?.toMatchPicks()
-    console.log(picks)
     const bracketId = bracket?.id
-    console.log(bracketId)
     if (!picks) {
       const msg = 'Cannot create play. Missing picks'
       console.error(msg)
@@ -75,6 +72,7 @@ const PlayPage = (props: PlayPageProps) => {
       return
     }
     const playReq: PlayReq = {
+      title: bracket?.title,
       bracketId: bracket?.id,
       picks: picks,
       generateImages: true,

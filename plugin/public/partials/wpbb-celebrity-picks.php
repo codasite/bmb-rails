@@ -1,5 +1,5 @@
 <?php
-// require_once('shared/wpbb-tournaments-common.php');
+// require_once('shared/wpbb-brackets-common.php');
 require_once('shared/wpbb-brackets-common.php');
 require_once('shared/wpbb-partials-common.php');
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
@@ -13,7 +13,7 @@ $the_query = new WP_Query([
 	'post_type' => Wpbb_BracketPlay::get_post_type(),
 	'posts_per_page' => 6,
 	'paged' => $paged,
-	'post_status' => 'any',
+	'post_status' => 'publish',
 	'tag' => 'bmb_vip_play'
 ]);
 
@@ -29,8 +29,8 @@ if (empty($paged_status)) {
 	$paged_status = 'all';
 }
 
-$all_status = ['publish', 'private', 'score', 'complete'];
-$active_status = ['publish', 'private'];
+$all_status = ['publish', 'score', 'complete'];
+$active_status = ['publish'];
 $scored_status = ['score', 'complete'];
 
 if ($paged_status === 'all') {
@@ -44,26 +44,17 @@ if ($paged_status === 'all') {
 }
 
 $bracket_repo = new Wpbb_BracketRepo();
-// $tournaments = $bracket_repo->get_all([]);
-$tournaments = $bracket_repo->get_all([
+// $brackets = $bracket_repo->get_all([]);
+$brackets = $bracket_repo->get_all([
 	'post_type' => Wpbb_Bracket::get_post_type(),
 	'posts_per_page' => 6,
 	'post_status' => $post_status,
-	'tag' => 'bmb_vip_tourney'
+	'tag' => 'bmb_vip_bracket'
 ]);
 
 $page = get_query_var('paged');
 
-// function wpbb_get_official_tournaments() {
-// 	$args = array(
-// 		'post_type' => 'bracket_tournament',
-// 		'posts_per_page' => -1,
-// 	);
-// 	$tournaments = get_posts($args);
-// 	return $tournaments;
-// }
-
-function wpbb_tournament_sort_buttons() {
+function wpbb_bracket_sort_buttons() {
 	$all_endpoint = get_permalink();
 	$status = get_query_var('status');
 	$live_endpoint = add_query_arg('status', LIVE_STATUS, $all_endpoint);
@@ -93,7 +84,6 @@ function wpbb_bust_bracket_btn($endpoint) {
 function wpbb_celebrity_play_list_item($play) {
 	$title = $play->title;
 	$id = $play->id;
-	$tournament_id = $play->tournament_id;
 	$thumbnail = get_the_post_thumbnail_url($id);
 	$play_link = get_permalink($id) . 'play';
 	$bust_link = get_permalink($id) . 'bust';
@@ -133,12 +123,12 @@ function wpbb_celebrity_play_list_item($play) {
 			</div>
 
 		</div>
-		<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
-			<h2 class="tw-text-48 tw-font-700">Tournaments</h2>
+		<div class="tw-flex tw-flex-col tw-gap-30 tw-py-60 tw-max-w-screen-lg tw-w-full tw-m-auto tw-px-20 lg:tw-px-0">
+			<h2 class="tw-text-48 tw-font-700">Brackets</h2>
 			<div class="tw-flex tw-flex-col tw-gap-15">
-				<?php echo wpbb_tournament_sort_buttons(); ?>
-				<?php foreach ($tournaments as $tournament) : ?>
-					<?php echo public_bracket_list_item($tournament); ?>
+				<?php echo wpbb_bracket_sort_buttons(); ?>
+				<?php foreach ($brackets as $bracket) : ?>
+					<?php echo public_bracket_list_item($bracket, $play_repo); ?>
 				<?php endforeach; ?>
 			</div>
 		</div>
