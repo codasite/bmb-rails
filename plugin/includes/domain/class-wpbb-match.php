@@ -32,7 +32,7 @@ class Wpbb_Match {
     $this->match_index = (int) $args['match_index'];
     $this->team1 = $args['team1'] ?? null;
     $this->team2 = $args['team2'] ?? null;
-    $this->id = $args['id'] ?? null;
+    $this->id = isset($args['id']) ? (int) $args['id'] : null;
   }
 
   public static function from_array(array $data): Wpbb_Match {

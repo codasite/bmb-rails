@@ -12,7 +12,7 @@ class Wpbb_Team {
   public $name;
 
   public function __construct($args = []) {
-    $this->id = $args['id'] ?? null;
+    $this->id = isset($args['id']) ? (int) $args['id'] : null;
     $this->name = $args['name'] ?? null;
   }
 
