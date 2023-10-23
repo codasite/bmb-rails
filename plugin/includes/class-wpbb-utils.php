@@ -1,7 +1,11 @@
 <?php
 class Wpbb_Utils {
-
-  public function set_cookie($key, $value, array $expires = ['days' => 1], array $options = []) {
+  public function set_cookie(
+    $key,
+    $value,
+    array $expires = ['days' => 1],
+    array $options = []
+  ) {
     $expiration = time();
     if (isset($expires['years'])) {
       $expiration += 60 * 60 * 24 * 365 * $expires['years'];
@@ -30,7 +34,15 @@ class Wpbb_Utils {
     ];
     $options = array_merge($default_options, $options);
 
-    setcookie($key, $value, $expiration, $options['path'], $options['domain'], $options['secure'], $options['httponly']);
+    setcookie(
+      $key,
+      $value,
+      $expiration,
+      $options['path'],
+      $options['domain'],
+      $options['secure'],
+      $options['httponly']
+    );
   }
 
   public function get_cookie($key) {

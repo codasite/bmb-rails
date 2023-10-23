@@ -70,23 +70,22 @@ class Wpbb_ProductPreviewService {
       return;
     }
 
-
     $gallery_images = $this->get_product_gallery($product);
     $color_options = $this->get_attribute_options($product, 'color');
-    $placement = $this->bracket_product_utils->get_bracket_placement(
-      $product
+    $placement = $this->bracket_product_utils->get_bracket_placement($product);
+
+    $overlay_map = $this->product_integration->get_overlay_map(
+      $play,
+      $placement
     );
 
-    $overlay_map = $this->product_integration->get_overlay_map($play, $placement);
-
-    return array(
-    		'bracket_url_theme_map' => $overlay_map, 
-    		'gallery_images' => $gallery_images,
-    		'color_options' => $color_options,
-        'play_id' => $play_id,
-    );
+    return [
+      'bracket_url_theme_map' => $overlay_map,
+      'gallery_images' => $gallery_images,
+      'color_options' => $color_options,
+      'play_id' => $play_id,
+    ];
   }
-
 
   public function get_archive_url() {
     $category_slug = 'bracket-ready';

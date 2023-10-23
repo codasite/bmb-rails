@@ -232,10 +232,10 @@ const Gallery: React.FC<GalleryProps> = ({
       {loadingImages ? (
         <div className="tw-flex tw-h-[400px] tw-items-center tw-justify-center">
           <Spinner
-            // variant="dark"
-            // animation="border"
-            // role="status"
-            // style={{ borderWidth: '4px' }}
+          // variant="dark"
+          // animation="border"
+          // role="status"
+          // style={{ borderWidth: '4px' }}
           />
         </div>
       ) : (

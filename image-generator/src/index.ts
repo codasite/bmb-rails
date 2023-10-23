@@ -4,7 +4,6 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import http from 'http'
 //import aws
 
-
 import os from 'os'
 
 const app = express()
@@ -184,8 +183,8 @@ const generateBracketImage = async (req: GenerateRequest) => {
 }
 
 app.post('/generate', async (req, res) => {
-    const theme = req.body.queryParams.theme
-    const position = req.body.queryParams.position
+  const theme = req.body.queryParams.theme
+  const position = req.body.queryParams.position
   try {
     console.time(`generateBracketImage ${theme} ${position}`)
     const image_url = await generateBracketImage(req.body)

@@ -5,12 +5,9 @@ require_once plugin_dir_path(dirname(__FILE__, 2)) .
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-config-repo.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/domain/class-wpbb-bracket-config.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/class-wpbb-aws-service.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/class-wpbb-pdf-service.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-aws-service.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-pdf-service.php';
 
 class Wpbb_GelatoPublicHooks {
   /**

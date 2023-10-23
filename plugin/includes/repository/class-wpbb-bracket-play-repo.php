@@ -59,7 +59,6 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     bool $fetch_results = true,
     bool $fetch_matches = true
   ): ?Wpbb_BracketPlay {
-
     if ($post === null) {
       $post = $this->get_id_from_cookie();
     }

@@ -16,8 +16,7 @@ require_once WPBB_PLUGIN_DIR .
   'includes/service/http/class-wpbb-bracket-image-request-factory.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/domain/class-wpbb-bracket-config.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
 
 class Wpbb_GelatoProductIntegration implements
   Wpbb_ProductIntegrationInterface {
@@ -64,10 +63,11 @@ class Wpbb_GelatoProductIntegration implements
         'object_storage' => $this->object_storage,
       ]);
     $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
-    $this->public_hooks = $args['public_hooks'] ?? new Wpbb_GelatoPublicHooks($this);
+    $this->public_hooks =
+      $args['public_hooks'] ?? new Wpbb_GelatoPublicHooks($this);
     $this->client = $args['client'] ?? new Wpbb_GuzzleClient();
-    $this->utils = new Wpbb_Utils;
-    $this->play_repo = new Wpbb_BracketPlayRepo;
+    $this->utils = new Wpbb_Utils();
+    $this->play_repo = new Wpbb_BracketPlayRepo();
   }
 
   public function get_post_meta_key(): string {
@@ -210,9 +210,17 @@ class Wpbb_GelatoProductIntegration implements
     }
     $meta = $this->get_meta($play);
     foreach ($meta as $key => $value) {
-      if (strpos($key, $placement) !== false && strpos($key, $theme) !== false) {
+      if (
+        strpos($key, $placement) !== false &&
+        strpos($key, $theme) !== false
+      ) {
         list($placement, $theme) = explode('_', $key);
-        $config = new Wpbb_BracketConfig($play->id, $theme, $placement, $value['image_url']);
+        $config = new Wpbb_BracketConfig(
+          $play->id,
+          $theme,
+          $placement,
+          $value['image_url']
+        );
         return $config;
       }
     }
@@ -221,7 +229,8 @@ class Wpbb_GelatoProductIntegration implements
 
   private function get_meta(Wpbb_PostBracketInterface $bracket): array {
     $meta = json_decode(
-      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true), true
+      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true),
+      true
     );
     if (!$meta) {
       return [];
