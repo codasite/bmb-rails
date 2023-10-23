@@ -1,151 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import Select, {
-  components,
-  OptionProps,
-  GroupBase,
-  DropdownIndicatorProps,
-  MenuPlacement,
-} from 'react-select'
 import { ReactComponent as CalendarIcon } from '../assets/calendar.svg'
-
-const MonthOption: React.FC<
-  OptionProps<
-    { value: string; label: string; backgroundColorClass: string },
-    false,
-    GroupBase<{ value: string; label: string; backgroundColorClass: string }>
-  >
-> = ({ data, innerProps, isSelected }) => {
-  const { value, label, backgroundColorClass } = data
-  const { onMouseMove, onMouseOver, ...restInnerProps } = innerProps
-
-  return (
-    <div
-      {...restInnerProps}
-      className={`tw-flex tw-justify-center tw-items-center tw-p-16 tw-border-b tw-border-b-solid tw-border-b-white/20 ${backgroundColorClass} hover:tw-cursor-pointer hover:tw-bg-greyBlue`}
-    >
-      <span className="tw-text-center tw-text-24 tw-font-600 tw-text-white-50">
-        {label}
-      </span>
-    </div>
-  )
-}
-
-interface MonthProps {
-  handleMonthChange: (year: string) => void
-  menuPlacement: MenuPlacement
-  backgroundColorClass: string
-  extraClass?: string
-}
-
-const MonthPickerOld: React.FC<MonthProps> = ({
-  handleMonthChange,
-  menuPlacement,
-  backgroundColorClass,
-  extraClass,
-}) => {
-  const [month, setMonth] = useState<{ value: string; label: string } | null>(
-    null
-  )
-  const classes = `${backgroundColorClass} tw-flex tw-justify-center tw-items-center tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 focus:tw-border-white`
-  const className = [classes, extraClass].join(' ')
-
-  const handleChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
-    setMonth(selectedOption)
-    handleMonthChange(selectedOption?.value || '')
-  }
-
-  const options = [
-    {
-      value: 'January',
-      label: 'January',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'February',
-      label: 'February',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'March',
-      label: 'March',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'April',
-      label: 'April',
-      backgroundColorClass: backgroundColorClass,
-    },
-    { value: 'May', label: 'May', backgroundColorClass: backgroundColorClass },
-    {
-      value: 'June',
-      label: 'June',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'July',
-      label: 'July',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'August',
-      label: 'August',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'September',
-      label: 'September',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'October',
-      label: 'October',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'November',
-      label: 'November',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'December',
-      label: 'December',
-      backgroundColorClass: backgroundColorClass,
-    },
-  ]
-
-  const styles = {
-    menuList: (base) => ({
-      ...base,
-      borderRadius: '8px',
-      marginBottom: menuPlacement == 'bottom' ? '-3px' : '3px',
-
-      '::-webkit-scrollbar': {
-        width: '0px',
-        height: '0px',
-      },
-    }),
-  }
-
-  return (
-    <Select
-      placeholder={
-        <div className="tw-flex tw-items-center tw-justify-center tw-gap-16">
-          <CalendarIcon /> <span>Month</span>
-        </div>
-      }
-      value={month}
-      onChange={handleChange}
-      options={options}
-      components={{ Option: MonthOption, DropdownIndicator: () => null }}
-      unstyled
-      styles={styles}
-      menuPlacement={menuPlacement}
-      className={className}
-    />
-  )
-}
 
 interface PlaceholderWrapperProps {
   children: React.ReactNode
@@ -169,6 +23,9 @@ interface BufferedTextInputProps {
   validate?: (newValue: string) => boolean
   className?: string
   errorText?: string
+  inputRef?: React.RefObject<HTMLInputElement>
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
   [key: string]: any
 }
 
@@ -182,6 +39,8 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
     placeholderEl,
     validate,
     errorText,
+    onHasError,
+    onErrorCleared,
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
@@ -191,7 +50,10 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
   const className = [props.className, extraClass].join(' ')
 
   useEffect(() => {
-    setBuffer(initialValue ?? '')
+    if (initialValue) {
+      setShowPlacholder(false)
+      setBuffer(initialValue)
+    }
   }, [initialValue])
 
   const doneEditing = () => {
@@ -214,7 +76,14 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
     const { value } = event.target
 
     if (validate) {
-      setHasError(!validate(value))
+      const isValid = validate(value)
+      if (isValid && hasError) {
+        setHasError(false)
+        onErrorCleared?.()
+      } else if (!isValid && !hasError) {
+        setHasError(true)
+        onHasError?.(errorText)
+      }
     }
     setBuffer(value)
     if (onChange) {
@@ -228,7 +97,7 @@ const BufferedTextInput = (props: BufferedTextInputProps) => {
         <PlaceholderWrapper>{placeholderEl}</PlaceholderWrapper>
       )}
       <input
-        ref={props.inputRef}
+        ref={inputRef}
         type="text"
         onFocus={(e) => {
           startEditing()
@@ -293,13 +162,6 @@ const MonthOpt = (props: MonthOptProps) => {
   )
 }
 
-interface MonthOptionsProps {}
-const MonthOptions = (props: MonthOptionsProps) => {
-  return (
-    <div className="tw-flex tw-flex-col tw-items-center tw-rounded-8 tw-bg-white/5"></div>
-  )
-}
-
 const searchArray = (arr: string[], query: string) => {
   if (!query) {
     return []
@@ -312,10 +174,13 @@ interface MonthPickerProps {
   handleMonthChange: (month: string) => void
   value?: string
   extraClass?: string
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
 }
 
 const MonthPicker = (props: MonthPickerProps) => {
-  const { handleMonthChange, extraClass, value } = props
+  const { handleMonthChange, extraClass, value, onErrorCleared, onHasError } =
+    props
   const [editing, setEditing] = useState<boolean>(false)
   const [foundMonths, setFoundMonths] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
@@ -373,6 +238,8 @@ const MonthPicker = (props: MonthPickerProps) => {
         initialValue={value}
         onDoneEditing={handleDoneEditing}
         onStartEditing={onStartEditing}
+        onHasError={onHasError}
+        onErrorCleared={onErrorCleared}
         extraClass={extraClass}
         onChange={handleChange}
         validate={validateMonth}
@@ -403,12 +270,16 @@ interface YearProps {
   handleYearChange: (year: string) => void
   value?: string
   extraClass?: string
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
 }
 
 export const YearInput: React.FC<YearProps> = ({
   handleYearChange,
   extraClass,
   value,
+  onHasError,
+  onErrorCleared,
 }) => {
   const onDoneEditing = (newValue: string) => {
     handleYearChange(newValue)
@@ -425,6 +296,8 @@ export const YearInput: React.FC<YearProps> = ({
       initialValue={value}
       onDoneEditing={onDoneEditing}
       validate={validateYear}
+      onHasError={onHasError}
+      onErrorCleared={onErrorCleared}
       errorText="Invalid year"
       maxLength={4}
       extraClass={extraClass}
@@ -437,9 +310,9 @@ interface DatePickerProps {
   year?: string
   handleMonthChange: (year: string) => void
   handleYearChange: (year: string) => void
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
   showTitle: boolean
-  backgroundColorClass: string
-  selectMenuPlacement: MenuPlacement
 }
 export const DatePicker: React.FC<DatePickerProps> = ({
   month,
@@ -447,8 +320,8 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   handleMonthChange,
   handleYearChange,
   showTitle,
-  backgroundColorClass,
-  selectMenuPlacement,
+  onHasError,
+  onErrorCleared,
 }) => {
   return (
     <div className="tw-flex tw-flex-col tw-justify-center tw-text-center tw-gap-16">
@@ -462,11 +335,15 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           value={month}
           handleMonthChange={handleMonthChange}
           extraClass={`tw-flex-grow`}
+          onHasError={onHasError}
+          onErrorCleared={onErrorCleared}
         />
         <YearInput
           value={year}
           handleYearChange={handleYearChange}
           extraClass={`sm:tw-w-[150px]`}
+          onHasError={onHasError}
+          onErrorCleared={onErrorCleared}
         />
       </div>
     </div>

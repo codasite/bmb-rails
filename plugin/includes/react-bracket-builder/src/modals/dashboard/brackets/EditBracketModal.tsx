@@ -13,14 +13,16 @@ export const EditBracketModal = () => {
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
   const [titleHasError, setTitleHasError] = useState(false)
+  const [dateHasError, setDateHasError] = useState(false)
   const [month, setMonth] = useState('')
   const [year, setYear] = useState('')
-  const [dateHasError, setDateHasError] = useState(false)
   const [show, setShow] = useState(false)
   addClickHandlers({
     buttonClassName: 'wpbb-edit-bracket-button',
     onButtonClick: (b) => {
       setTitle(b.dataset.bracketTitle)
+      setMonth(b.dataset.bracketMonth)
+      setYear(b.dataset.bracketYear)
       setBracketId(parseInt(b.dataset.bracketId))
       setShow(true)
     },
@@ -33,13 +35,17 @@ export const EditBracketModal = () => {
     setShow(false)
   }
 
+  const onDateError = (error: string) => {
+    setDateHasError(true)
+  }
+
+  const onDateErrorCleared = () => {
+    setDateHasError(false)
+  }
+
   const onEditBracket = () => {
     if (!title) {
       setTitleHasError(true)
-      return
-    }
-    if (!month || !year) {
-      setDateHasError(true)
       return
     }
     setLoading(true)
@@ -74,16 +80,17 @@ export const EditBracketModal = () => {
           />
           <div className="tw-mb-20"></div>
           <DatePicker
+            month={month}
+            year={year}
             handleMonthChange={(month) => setMonth(month)}
             handleYearChange={(year) => setYear(year)}
             showTitle={false}
-            // backgroundColorClass={'tw-bg-greyBlue'}
-            backgroundColorClass={'tw-bg-lightGreyBlue'}
-            selectMenuPlacement="bottom"
+            onHasError={onDateError}
+            onErrorCleared={onDateErrorCleared}
           />
           <div className={'tw-mb-30'}></div>
           <ConfirmButton
-            disabled={loading || titleHasError}
+            disabled={loading || titleHasError || dateHasError}
             onClick={onEditBracket}
           >
             {'Save'}

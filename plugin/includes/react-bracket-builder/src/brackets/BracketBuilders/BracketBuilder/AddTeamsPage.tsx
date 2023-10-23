@@ -31,8 +31,8 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
     year,
     setYear,
   } = props
-  const createDisabled =
-    !matchTree || !matchTree.allTeamsAdded() || !month || !year
+  const [dateError, setDateError] = React.useState(false)
+  const createDisabled = !matchTree || !matchTree.allTeamsAdded() || dateError
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
@@ -80,10 +80,9 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
             year={year}
             handleMonthChange={(month) => setMonth(month)}
             handleYearChange={(year) => setYear(year)}
+            onHasError={(error) => setDateError(true)}
+            onErrorCleared={() => setDateError(false)}
             showTitle={true}
-            // backgroundColorClass={'tw-bg-greyBlue'}
-            backgroundColorClass={'tw-bg-lightGreyBlue'}
-            selectMenuPlacement="top"
           />
           {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
 					<ShuffleIcon />

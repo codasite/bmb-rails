@@ -56,6 +56,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
 
   useEffect(() => {
     setBracketMeta?.({
+      ...bracketMeta,
       date: `${month} ${year}`,
     })
   }, [month, year])
