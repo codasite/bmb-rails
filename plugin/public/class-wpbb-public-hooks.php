@@ -107,7 +107,8 @@ class Wpbb_Public_Hooks
 		return $clauses;
 	}
 
-	public function add_bmb_plus_role() {
+	public function add_bmb_plus_role(WC_Subscription $subscription) {
 		$current_user = wp_get_current_user();
+		$current_user->add_role('bmb_plus');
 	}
 }
