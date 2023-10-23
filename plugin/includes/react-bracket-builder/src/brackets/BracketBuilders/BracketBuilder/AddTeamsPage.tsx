@@ -19,6 +19,7 @@ interface AddTeamsPageProps {
   setMonth?: (month: string) => void
   year?: string
   setYear?: (year: string) => void
+  processing?: boolean
 }
 export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const {
@@ -30,9 +31,11 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
     setMonth,
     year,
     setYear,
+    processing,
   } = props
   const [dateError, setDateError] = React.useState(false)
-  const createDisabled = !matchTree || !matchTree.allTeamsAdded() || dateError
+  const createDisabled =
+    !matchTree || !matchTree.allTeamsAdded() || dateError || processing
   const { width: windowWidth } = useWindowDimensions()
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (

@@ -53,6 +53,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   )
   const [month, setMonth] = useState('')
   const [year, setYear] = useState('')
+  const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
     setBracketMeta?.({
@@ -70,7 +71,9 @@ const BracketBuilder = (props: BracketBuilderProps) => {
 
   useEffect(() => {
     if (bracket) {
-      const { numTeams, wildcardPlacement, matches } = bracket
+      const { numTeams, wildcardPlacement, matches, month, year } = bracket
+      setMonth(month)
+      setYear(year)
       const { title, date } = getBracketMeta(bracket)
       setBracketMeta?.({
         title: `${title} Copy`,
@@ -135,6 +138,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
     if (!matchTree || !matchTree.allTeamsAdded()) {
       return
     }
+    setProcessing(true)
     bracketApi
       .createBracket(getBracketReq())
       .then((res) => {
@@ -144,6 +148,9 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       })
       .catch((err) => {
         console.error(err)
+      })
+      .finally(() => {
+        setProcessing(false)
       })
   }
   return (
@@ -176,6 +183,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
           setMonth={setMonth}
           year={year}
           setYear={setYear}
+          processing={processing}
         />
       )}
     </div>
