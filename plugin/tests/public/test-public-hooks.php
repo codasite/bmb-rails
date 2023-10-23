@@ -18,10 +18,10 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $hooks = new Wpbb_PublicHooks();
     $hooks->add_bmb_plus_role($sub_mock);
-    
+
     $user = get_user_by('id', $user->ID);
     $this->assertTrue(in_array('bmb_plus', $user->roles));
-  } 
+  }
 
   public function test_role_is_removed_when_sub_canceled() {
     $user = $this->factory->user->create_and_get();
