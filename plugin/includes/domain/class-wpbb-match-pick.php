@@ -28,11 +28,11 @@ class Wpbb_MatchPick {
   public $winning_team_id;
 
   public function __construct($data = []) {
-    $this->round_index = $data['round_index'];
-    $this->match_index = $data['match_index'];
-    $this->winning_team_id = $data['winning_team_id'];
+    $this->round_index = (int) $data['round_index'];
+    $this->match_index = (int) $data['match_index'];
+    $this->winning_team_id = (int) $data['winning_team_id'];
     $this->winning_team = $data['winning_team'] ?? null;
-    $this->id = $data['id'] ?? null;
+    $this->id = isset($data['id']) ? (int) $data['id'] : null;
   }
 
   public static function from_array($data) {

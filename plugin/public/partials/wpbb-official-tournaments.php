@@ -29,8 +29,8 @@ if (empty($paged_status)) {
 	$paged_status = 'all';
 }
 
-$all_status = ['publish', 'private', 'score', 'complete'];
-$active_status = ['publish', 'private'];
+$all_status = ['publish', 'score', 'complete'];
+$active_status = ['publish'];
 $scored_status = ['score', 'complete'];
 
 if ($paged_status === 'all') {
@@ -75,16 +75,18 @@ function wpbb_tournament_sort_buttons() {
 }
 
 ?>
-<div class="wpbb-reset wpbb-official-tourneys tw-flex tw-flex-col tw-gap-30">
-	<div class="tw-flex tw-flex-col tw-py-30 tw-gap-15 tw-items-center">
-		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/logo_dark.svg'); ?>
-		<h1 class="tw-text-80 tw-font-700 tw-text-center">Official Tournaments</h1>
-	</div>
-	<div class="tw-flex tw-flex-col tw-gap-15">
-		<?php echo wpbb_tournament_sort_buttons(); ?>
-		<?php foreach ($tournaments as $tournament) : ?>
-			<?php echo public_bracket_list_item($tournament, $play_repo); ?>
-		<?php endforeach; ?>
-		<?php wpbb_pagination($paged, $num_pages); ?>
+<div class="tw-bg-dd-blue tw-py-100">
+	<div class="wpbb-reset wpbb-official-tourneys tw-flex tw-flex-col tw-gap-30 tw-max-w-screen-xl tw-mx-auto ">
+		<div class="tw-flex tw-flex-col tw-py-30 tw-gap-15 tw-items-center ">
+			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/logo_dark.svg'); ?>
+			<h1 class="tw-text-80 tw-font-700 tw-text-center">Official Tournaments</h1>
+		</div>
+		<div class="tw-flex tw-flex-col tw-gap-15">
+			<?php echo wpbb_tournament_sort_buttons(); ?>
+			<?php foreach ($tournaments as $tournament) : ?>
+				<?php echo public_bracket_list_item($tournament, $play_repo); ?>
+			<?php endforeach; ?>
+			<?php wpbb_pagination($paged, $num_pages); ?>
+		</div>
 	</div>
 </div>

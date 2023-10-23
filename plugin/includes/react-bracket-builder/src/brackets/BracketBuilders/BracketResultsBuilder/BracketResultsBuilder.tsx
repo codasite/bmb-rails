@@ -91,7 +91,11 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       }
       if (tree) {
         setMatchTree?.(tree)
+      } else {
+        console.error('no tree')
       }
+    } else {
+      console.error('no bracket')
     }
   }, [])
 

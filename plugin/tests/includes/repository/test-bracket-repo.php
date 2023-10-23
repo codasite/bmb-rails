@@ -166,25 +166,43 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($winning_team_id, $new_results[0]->winning_team_id);
   }
 
-  /**
-   * @group skip
-   */
-  // public function test_update_title() {
-  // 	$bracket = new Wpbb_Bracket([
-  // 		'title' => 'Test Bracket',
-  // 		'status' => 'publish',
-  // 		'author' => 1,
-  // 	]);
+  public function test_update_result_deletes_old_results() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'num_teams' => 4,
+    ]);
 
-  // 	$bracket = $this->bracket_repo->add($bracket);
+    $this->bracket_repo->update($bracket->id, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ],
+      ],
+    ]);
 
-  // 	$bracket = $this->bracket_repo->update($bracket->id, [
-  // 		'title' => 'New Title',
-  // 	]);
+    $bracket = $this->bracket_repo->get($bracket->id);
 
-  // 	$this->assertNotNull($bracket->id);
-  // 	$this->assertEquals('New Title', $bracket->title);
-  // 	$this->assertEquals('publish', $bracket->status);
-  // 	$this->assertEquals(1, $bracket->author);
-  // }
+    $this->assertEquals(2, count($bracket->results));
+
+    $this->bracket_repo->update($bracket->id, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ]);
+
+    $bracket = $this->bracket_repo->get($bracket->id);
+
+    $this->assertEquals(2, count($bracket->results));
+  }
 }

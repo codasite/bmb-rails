@@ -9,11 +9,10 @@ $play_repo = new Wpbb_BracketPlayRepo();
 $bracket_repo = new Wpbb_BracketRepo();
 $bracket = $bracket_repo->get(get_the_ID());
 $bracket_winner = $bracket->get_winning_team();
-// This is just temporary. Don't do this
-// $complete = true;
-$complete = get_post_status() === 'complete';
-$scored = count($bracket->results) > 0;
-// $scored = true;
+$post_status = get_post_status();
+echo $post_status;
+$complete = $post_status === 'complete';
+$scored = $post_status === 'score';
 $show_scores = $complete || $scored;
 
 $plays = $play_repo->get_all(
@@ -55,7 +54,7 @@ function wpbb_share_bracket_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false, $show_score = false) {
+function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false, $show_score = false, $complete = false) {
 	$play_id = $play->id;
 	$play_author = $play->author;
 	$author_name = get_the_author_meta('display_name', $play_author);
@@ -81,8 +80,8 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 				</div>
 			<?php endif; ?>
 			<div class="tw-flex tw-gap-<?php echo $winner ? '20' : '16' ?>">
-				<div class="tw-flex tw-flex-col tw-items-center tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
-					<span class="tw-px-16 tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>">
+				<div class="tw-flex tw-flex-col tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
+					<span class="tw-px-16 tw-text-center tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>">
 						<?php echo esc_html($winning_team_name); ?>
 					</span>
 					<span class="tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500<?php echo $winner ? ' tw-text-white/50' : '' ?>">
@@ -130,7 +129,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 			<div class="tw-flex tw-flex-col tw-gap-16">
 				<?php
 				foreach ($plays as $i => $play) {
-					echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $show_scores);
+					echo wpbb_leaderboard_play_list_item($play, $i === 0 && $complete, $show_scores, $complete);
 					// echo wpbb_leaderboard_play_list_item($play, true, $complete);
 				}
 				?>
