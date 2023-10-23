@@ -11,8 +11,10 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     // check that the role is added when the subscription is activated
     //standard class mock
     $sub_mock = $this->getMockBuilder('WC_Subscription')
-      ->setMethods(['get_status'])
+      ->setMethods(['get_user_id'])
       ->getMock();
+
+    $sub_mock->method('get_user_id')->willReturn($user->ID);
 
     $hooks = new Wpbb_PublicHooks();
     $hooks->add_bmb_plus_role($sub_mock);
