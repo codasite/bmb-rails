@@ -25,7 +25,7 @@ wp_localize_script(
 $current_tab = get_query_var('tab');
 
 if (empty($current_tab)) {
-	$current_tab = 'profile';
+	$current_tab = 'brackets';
 }
 
 switch ($current_tab) {

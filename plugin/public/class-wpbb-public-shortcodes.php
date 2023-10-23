@@ -10,12 +10,9 @@ class Wpbb_Public_Shortcodes {
 	 *
 	 * @return void
 	 */
-	public function render_bracket_preview() {
+	public function render_bracket_product_preview() {
 		ob_start();
-		?>
-		<div id="wpbb-bracket-preview-controller" style="width: 100%">
-		</div>
-	<?php
+		include plugin_dir_path(__FILE__) . 'partials/product-preview/wpbb-bracket-product-preview.php';
 		return ob_get_clean();
 	}
 
@@ -58,16 +55,6 @@ class Wpbb_Public_Shortcodes {
 
 
 	public function render_bracket_page() {
-		$current_user_id = get_current_user_id();
-		$post_author_id = get_post()->post_author;
-		$user_is_admin = current_user_can('administrator');
-
-		if (!$user_is_admin && $current_user_id !== $post_author_id) {
-			header('HTTP/1.0 401 Unauthorized');
-			ob_start();
-			include('error/401.php');
-			return ob_get_clean();
-		}
 		ob_start();
 		include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-page.php';
 		return ob_get_clean();
@@ -93,9 +80,10 @@ class Wpbb_Public_Shortcodes {
 	public function add_shortcodes() {
 		add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']); // This is a page with slug `bracket-template-builder
 		add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']); // This is a page with slug `dashboard`
-		add_shortcode('wpbb-official-brackets', [$this, 'render_official_brackets']); // This is a page with slug `official-tournaments`
+		add_shortcode('wpbb-official-brackets', [$this, 'render_official_brackets']); // This is a page with slug `official-brackets`
 		add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']); // This is a page with slug `celebrity-picks`
 		add_shortcode('wpbb-bracket-page', [$this, 'render_bracket_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
+		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_product_preview']); // This is a single post type template for woocommerce product posts with the `bracket-ready` tag
 	}
 }

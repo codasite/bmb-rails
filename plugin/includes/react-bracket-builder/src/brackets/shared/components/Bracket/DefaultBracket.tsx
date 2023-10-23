@@ -46,8 +46,7 @@ export const DefaultBracket = (props: BracketProps) => {
     darkLineColor = 'white',
     lineWidth = 1,
     title,
-    month,
-    year,
+    date,
     darkMode,
     columnsToRender,
     renderWinnerAndLogo = true,
@@ -62,13 +61,11 @@ export const DefaultBracket = (props: BracketProps) => {
     dark = darkContext
   }
   let bracketTitle = title
-  let bracketMonth = month
-  let bracketYear = year
-  if (!bracketTitle || !bracketMonth || !bracketYear) {
+  let bracketDate = date
+  if (!bracketTitle || !date) {
     const meta = useContext(BracketMetaContext)
     bracketTitle = title ?? meta?.title
-    bracketMonth = month ?? meta?.month
-    bracketYear = year ?? meta?.year
+    bracketDate = date ?? meta?.date
   }
   const linesStyle = lineStyle || {
     className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${
@@ -163,6 +160,9 @@ export const DefaultBracket = (props: BracketProps) => {
   const numRounds = matchTree.rounds.length
   const winnerContainerMB =
     defaultBracketConstants.winnerContainerBottomMargin[numRounds]
+  const logoContainerMB =
+    defaultBracketConstants.logoContainerBottomMargin[numRounds]
+  const logoContainerMT = numRounds > 5 ? 50 : 20
 
   return (
     <DarkModeContext.Provider value={dark}>
@@ -196,8 +196,13 @@ export const DefaultBracket = (props: BracketProps) => {
           </div>
         </div>
         {renderWinnerAndLogo && (
-          <div className={`tw-mt-${numRounds > 5 ? 50 : 20}`}>
-            <LogoContainer {...props} bottomText={`${bracketMonth} ${bracketYear}`} />
+          <div
+            style={{
+              marginTop: logoContainerMT,
+              marginBottom: logoContainerMB,
+            }}
+          >
+            <LogoContainer {...props} bottomText={bracketDate} />
           </div>
         )}
         <BracketLines rounds={matchTree.rounds} style={linesStyle} />

@@ -37,7 +37,7 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
 
   public function __construct(array $data = []) {
     parent::__construct($data);
-    $this->month = $data['month'] ?? null;  
+    $this->month = $data['month'] ?? null;
     $this->year = $data['year'] ?? null;
     $this->num_teams = (int) ($data['num_teams'] ?? null);
     $this->wildcard_placement = (int) ($data['wildcard_placement'] ?? null);

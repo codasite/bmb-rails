@@ -1,18 +1,18 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-tournament-repo.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket-tournament.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-repo.php';
+require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket.php';
 
 $page = get_query_var('paged');
 $play_repo = new Wpbb_BracketPlayRepo();
-$tournament_repo = new Wpbb_BracketTournamentRepo();
-$tournament = $tournament_repo->get(get_the_ID());
-$tournament_winner = $tournament->get_winning_team();
+$bracket_repo = new Wpbb_BracketRepo();
+$bracket = $bracket_repo->get(get_the_ID());
+$bracket_winner = $bracket->get_winning_team();
 // This is just temporary. Don't do this
 // $complete = true;
 $complete = get_post_status() === 'complete';
-$scored = count($tournament->results) > 0;
+$scored = count($bracket->results) > 0;
 // $scored = true;
 $show_scores = $complete || $scored;
 
@@ -21,7 +21,7 @@ $plays = $play_repo->get_all(
 		'post_status' => 'publish',
 		'meta_query' => [
 			[
-				'key' => 'bracket_tournament_id',
+				'key' => 'bracket_id',
 				'value' => get_the_ID(),
 			],
 		],
@@ -33,18 +33,18 @@ $plays = $play_repo->get_all(
 	]
 );
 
-function wpbb_score_tournament_btn($endpoint) {
+function wpbb_score_bracket_btn($endpoint) {
 	ob_start();
 ?>
 	<a href="<?php echo $endpoint; ?>" class="tw-flex tw-justify-center tw-items-center !tw-text-off-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-yellow tw-font-500 tw-mt-16">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trophy_small.svg'); ?>
-		<span>Score Tournament</span>
+		<span>Score Bracket</span>
 	</a>
 <?php
 	return ob_get_clean();
 }
 
-function wpbb_share_tournament_btn($endpoint) {
+function wpbb_share_bracket_btn($endpoint) {
 	ob_start();
 ?>
 	<a href="#" class="tw-flex tw-justify-center tw-items-center tw-text-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-white tw-font-500 tw-mt-16">
@@ -115,18 +115,18 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 		<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 tw-pb-<?php echo $complete ? '30' : '[53px]' ?>">
 			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trophy.svg'); ?>
 			<h1 class="tw-mt-16 tw-mb-12">
-				<?php echo $complete && $tournament_winner ? "{$tournament_winner->name} Wins" : esc_html(get_the_title()); ?>
+				<?php echo $complete && $bracket_winner ? "{$bracket_winner->name} Wins" : esc_html(get_the_title()); ?>
 			</h1>
 			<?php if ($complete) : ?>
 				<h3 class="tw-text-20 tw-font-400 ">
 					<?php echo esc_html(get_the_title()); ?>
 				</h3>
 			<?php endif; ?>
-			<!-- <?php echo $complete ? wpbb_share_tournament_btn(get_permalink()) : wpbb_score_tournament_btn(get_permalink() . 'results'); ?> -->
-			<?php echo $complete ? '' : wpbb_score_tournament_btn(get_permalink() . 'results'); ?>
+			<!-- <?php echo $complete ? wpbb_share_bracket_btn(get_permalink()) : wpbb_score_bracket_btn(get_permalink() . 'results'); ?> -->
+			<!-- <?php echo $complete ? '' : wpbb_score_bracket_btn(get_permalink() . 'results'); ?> -->
 		</div>
 		<div class="tw-flex tw-flex-col tw-gap-16">
-		<h2 class="!tw-text-white/50 tw-text-24 tw-font-500"><?php echo count($plays) > 0 ? "Tournament Plays" : "No Players in this Tournament"?></h2>
+		<h2 class="!tw-text-white/50 tw-text-24 tw-font-500"><?php echo count($plays) > 0 ? "Bracket Plays" : "No Players in this Bracket"?></h2>
 			<div class="tw-flex tw-flex-col tw-gap-16">
 				<?php
 				foreach ($plays as $i => $play) {

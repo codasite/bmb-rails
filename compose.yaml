@@ -16,6 +16,8 @@ services:
     environment:
       - CLIENT_URL=http://react-server:3001
       - AWS_REGION=us-east-1
+    env_file:
+      - .env
     volumes:
       - ~/.aws/credentials:/home/pptruser/.aws/credentials:ro
     healthcheck:

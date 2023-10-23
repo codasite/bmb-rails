@@ -35,3 +35,19 @@ RUN echo "#!/bin/bash" > /usr/local/bin/install-wp-tests \
         && chmod ugo+x /usr/local/bin/install-wp-test* \
         # && su www-data -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true" \
         && echo "*** install-wp-tests installed"
+
+COPY --chmod=755 docker/wordpress/downloads /tmp/downloads
+# COPY --chmod=755 docker/wordpress/plugins /tmp/plugins
+
+# the default docker image will copy files from /usr/src/wordpress to /var/www/html
+# we can copy an existing wordpress installation there and then delete wp-config.php so that the docker default is used
+
+RUN unzip -qq /tmp/downloads/wordpress.zip -d /tmp/from_site; \
+        rm -f /tmp/downloads/wordpress.zip; \
+
+# Check if the directory exists before performing further operations.
+RUN echo "*** Deleting wp-config.php and copying to /usr/src/wordpress"; \
+        rm -f /tmp/from_site/wp-config.php; \
+        cp -r /tmp/from_site/* /usr/src/wordpress; \
+        rm -rf /tmp/from_site; \
+        echo "*** wordpress downloaded"

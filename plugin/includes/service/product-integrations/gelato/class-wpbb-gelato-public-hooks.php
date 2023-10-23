@@ -5,6 +5,9 @@ require_once plugin_dir_path(dirname(__FILE__, 2)) .
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-config-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-aws-service.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-pdf-service.php';
 
 class Wpbb_GelatoPublicHooks {
   /**
@@ -18,15 +21,26 @@ class Wpbb_GelatoPublicHooks {
   private $utils;
 
   /**
-   * @var Wpbb_BracketConfigRepo
-   * @deprecated We no longer use the bracket config repo. Config should be stored in play meta data
+   * @var Wpbb_GelatoProductIntegration
    */
-  private $bracket_config_repo;
+  private $gelato;
 
-  public function __construct() {
+  /**
+   * @var Wpbb_S3Service
+   */
+  private $s3;
+
+  /**
+   * @var Wpbb_PdfService
+   */
+  private $pdf_service;
+
+  public function __construct(Wpbb_GelatoProductIntegration $gelato) {
     $this->bracket_product_utils = new Wpbb_BracketProductUtils();
     $this->utils = new Wpbb_Utils();
-    $this->bracket_config_repo = new Wpbb_BracketConfigRepo();
+    $this->gelato = $gelato;
+    $this->s3 = new Wpbb_S3Service();
+    $this->pdf_service = new Wpbb_PdfService();
   }
 
   private function is_bracket_product($product) {
@@ -54,7 +68,7 @@ class Wpbb_GelatoPublicHooks {
 
     if (
       !$this->is_bracket_product($product) ||
-      $this->bracket_config_repo->is_empty()
+      !$this->gelato->has_bracket_config()
     ) {
       // Not a bracket product. Treat as a normal product.
       return $passed;
@@ -87,9 +101,7 @@ class Wpbb_GelatoPublicHooks {
       return false;
     }
 
-    // The config is stored in the session and set when "Add to Apparel" button is clicked on the bracket builder page.
-    // It contains the bracket theme and HTML to render the bracket.
-    $config = $this->bracket_config_repo->get(
+    $config = $this->gelato->get_bracket_config(
       $bracket_theme,
       $bracket_placement
     );
@@ -104,13 +116,12 @@ class Wpbb_GelatoPublicHooks {
       return false;
     }
 
-    $this->log('passed validation');
-
     return $passed;
   }
 
   // Add the bracket to the cart item data
   // This hooks into the woocommerce_add_cart_item_data filter
+  // This fires when a product is added to the cart
   public function add_bracket_to_cart_item_data(
     $cart_item_data,
     $product_id,
@@ -121,23 +132,18 @@ class Wpbb_GelatoPublicHooks {
     // Perform similar checks as above to make sure we are dealing with a bracket product and that we have a bracket config
     if (
       !$this->is_bracket_product($product) ||
-      $this->bracket_config_repo->is_empty()
+      !$this->gelato->has_bracket_config()
     ) {
-      $this->log(
-        'in add_bracket_to_cart_item_data: not a bracket product or no bracket config'
-      );
       return $cart_item_data;
     }
 
     $bracket_theme = $this->get_bracket_theme($variation_id);
     $bracket_placement = $this->get_bracket_placement($product);
 
-    $config = $this->bracket_config_repo->get(
+    // Get the bracket config for the given theme and placement
+    $config = $this->gelato->get_bracket_config(
       $bracket_theme,
       $bracket_placement
-    );
-    $this->log(
-      'in add_bracket_to_cart_item_data: config: ' . json_encode($config)
     );
 
     $cart_item_data['bracket_config'] = $config;
@@ -301,28 +307,48 @@ class Wpbb_GelatoPublicHooks {
     $temp_filename
   ) {
     // Use config to generate the back design and merge it with the front design in a two-page PDF
-    $html = $bracket_config->html;
+    $play_id = $bracket_config->play_id;
+    $play = $this->gelato->play_repo->get($play_id);
+    $theme = $bracket_config->theme_mode;
+    $placement = $bracket_config->bracket_placement;
 
-    // Generate a PDF file for the back design (the bracket)
-    // We don't reuse the png from the product preview because only a PDF can supply Gelato with multiple designs
-    $convert_req = [
-      'inchHeight' => 16,
-      'inchWidth' => 12,
+    $request_data = $this->gelato->request_factory->get_request_data($play, [
+      'themes' => [$theme],
+      'positions' => [$placement],
+      'inch_height' => 16,
+      'inch_width' => 12,
       'pdf' => true,
-      'html' => $html,
-    ];
+    ]);
 
-    $convert_res = $this->lambda_service->html_to_image($convert_req);
-    // check if convert res is wp_error
-    if (!isset($convert_res['imageUrl']) || empty($convert_res['imageUrl'])) {
+    $response = null;
+    try {
+      $response = $this->gelato->client->send_many($request_data);
+    } catch (Exception $e) {
+      $this->log_error('Error sending request to Gelato: ' . $e->getMessage());
+      throw new Exception(
+        'An error occurred while processing your order. Please contact the site administrator.'
+      );
+    }
+
+    if (!$response) {
       $error_data = [
-        'error' => 'Error converting bracket to PDF.',
+        'error' => 'Error converting bracket to PDF. No response found.',
+        'response' => $response,
+      ];
+      throw new Exception(json_encode($error_data));
+    }
+
+    $convert_res = reset($response);
+    // check if convert res is wp_error
+    if (!isset($convert_res['image_url']) || empty($convert_res['image_url'])) {
+      $error_data = [
+        'error' => 'Error converting bracket to PDF. No image_url found.',
         'convert_res' => $convert_res,
       ];
       throw new Exception(json_encode($error_data));
     }
 
-    $back_url = $convert_res['imageUrl'];
+    $back_url = $convert_res['image_url'];
 
     // merge pdfs
     $front = $this->s3->get_from_url($front_url);
@@ -392,17 +418,7 @@ class Wpbb_GelatoPublicHooks {
     }
   }
 
-  // public function handle_bracket_product_item($order, $item) {
-  // 	$item_arr = array();
-
-  // 	// Once the order has processed, we need to rename the s3 file to include the order ID and item ID
-  // 	$order_filename = $this->get_gelato_order_filename($order, $item);
-  // 	$item_arr['order_filename'] = $order_filename;
-
-  // 	$this->utils->log_sentry_message(json_encode($item_arr));
-  // }
-
-  public function get_gelato_order_filename($order, $item) {
+  private function get_gelato_order_filename($order, $item) {
     $order_id = $order->get_id();
     $item_id = $item->get_id();
     $filename = $order_id . '_' . $item_id . '.pdf';
@@ -421,7 +437,7 @@ class Wpbb_GelatoPublicHooks {
       return $available_array;
     }
     // Check if config exists
-    $custom_back = !$this->bracket_config_repo->is_empty(); // If config is not empty, the product has a custom back design so bracket theme is needed
+    $custom_back = !!$this->gelato->has_bracket_config(); // If config is not empty, the product has a custom back design so bracket theme is needed
     $front_design = get_post_meta(
       $variation->get_id(),
       'wpbb_front_design',

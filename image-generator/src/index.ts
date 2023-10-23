@@ -1,6 +1,8 @@
 import express from 'express'
 import puppeteer from 'puppeteer'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import http from 'http'
+//import aws
 
 import os from 'os'
 
@@ -15,20 +17,6 @@ class ValidationError extends Error {
     this.name = 'ValidationError'
   }
 }
-
-app.post('/encode', async (req, res) => {
-  const { picks, matches } = req.body
-
-  const encodedPicks = encodeURIComponent(JSON.stringify(picks))
-  const encodedMatches = encodeURIComponent(JSON.stringify(matches))
-
-  const encoded = {
-    picks: encodedPicks,
-    matches: encodedMatches,
-  }
-
-  res.send(encoded)
-})
 
 app.get('/', async (req, res) => {
   const user = os.userInfo()
@@ -83,6 +71,7 @@ const validateParams = (req: GenerateRequest) => {
   const validStorages = ['s3']
   const errors = []
   const { inchHeight, inchWidth, url, storageOptions, storageService } = req
+
   if (inchHeight && !Number.isInteger(inchHeight)) {
     errors.push('inch_height must be an integer')
   }
@@ -101,6 +90,7 @@ const validateParams = (req: GenerateRequest) => {
 }
 
 const generateBracketImage = async (req: GenerateRequest) => {
+  const randInt = Math.floor(Math.random() * 1000000)
   if (!req.url) {
     req.url = process.env.CLIENT_URL
   }
@@ -115,43 +105,46 @@ const generateBracketImage = async (req: GenerateRequest) => {
     pdf,
     deviceScaleFactor = 1,
     inchHeight = 16,
-    inchWidth = 11,
+    inchWidth = 12,
   } = req
 
   const pxHeight = inchHeight * 96
   const pxWidth = inchWidth * 96
 
-  console.time('start')
-  console.time('launch')
+  // const browser = await puppeteer.launch({ headless: 'new' })
   const browser = await puppeteer.launch({ headless: 'new' })
-  console.timeEnd('launch')
-  console.time('newPage')
   const page = await browser.newPage()
-  console.timeEnd('newPage')
 
-  console.time('setViewport')
+  console.time('setViewport ' + randInt)
   await page.setViewport({
     height: pxHeight,
     width: pxWidth,
     deviceScaleFactor,
   })
-  console.timeEnd('setViewport')
+  console.timeEnd('setViewport ' + randInt)
 
-  console.time('goto')
-  const queryString = Object.keys(queryParams)
-    .map((key) => key + '=' + queryParams[key])
+  const queryString = Object.entries(queryParams)
+    .map(([key, value]) => {
+      if (typeof value === 'object') {
+        value = encodeURIComponent(JSON.stringify(value))
+      }
+      return key + '=' + encodeURIComponent(value as any)
+    })
     .join('&')
   const path = url + (queryString ? '?' + queryString : '')
+  console.time('goto ' + randInt)
   try {
     await page.goto(path, { waitUntil: 'networkidle0' })
+    // await page.setContent('<div>HIIIIII</div>', { waitUntil: 'networkidle0' })
   } catch (err) {
-    console.log(err)
+    console.error(err)
     browser.close()
     throw new Error(`Error loading ${path}`)
+  } finally {
+    console.timeEnd('goto ' + randInt)
   }
-  console.timeEnd('goto')
 
-  console.time('screenshot')
+  console.time('screenshot ' + randInt)
 
   let file: Buffer
   if (pdf) {
@@ -167,8 +160,8 @@ const generateBracketImage = async (req: GenerateRequest) => {
       omitBackground: true,
     })
   }
+  console.timeEnd('screenshot ' + randInt)
 
-  console.timeEnd('screenshot')
   const extension = pdf ? 'pdf' : 'png'
   const contentType = pdf ? 'application/pdf' : 'image/png'
   let uploader: ObjectStorageUploader
@@ -176,23 +169,26 @@ const generateBracketImage = async (req: GenerateRequest) => {
     uploader = s3Uploader
   }
   let image_url
+  console.time('upload ' + randInt)
   try {
-    console.time('uploadToS3')
     image_url = await uploader.upload(file, contentType, storageOptions)
   } catch (err: any) {
     console.error(err)
     throw new Error('Error uploading to S3')
   } finally {
-    console.timeEnd('uploadToS3')
-    console.timeEnd('start')
     await browser.close()
+    console.timeEnd('upload ' + randInt)
   }
   return image_url
 }
 
 app.post('/generate', async (req, res) => {
+  const theme = req.body.queryParams.theme
+  const position = req.body.queryParams.position
   try {
+    console.time(`generateBracketImage ${theme} ${position}`)
     const image_url = await generateBracketImage(req.body)
+    console.log(image_url)
     res.send(image_url)
   } catch (err: any) {
     if (err.name === 'ValidationError') {
@@ -201,14 +197,11 @@ app.post('/generate', async (req, res) => {
     }
     console.error(err)
     res.status(500).send('Error generating image: ' + err.message)
+  } finally {
+    console.timeEnd(`generateBracketImage ${theme} ${position}`)
   }
 })
 
-app.post('/test', async (req, res) => {
-  console.log(req.body)
-  res.send(req.body)
-})
-
 app.listen(port, host, () => {
-  console.log(`Example app listening at http://${host}:${port}`)
+  console.log(`Image Generator listening at http://${host}:${port}`)
 })

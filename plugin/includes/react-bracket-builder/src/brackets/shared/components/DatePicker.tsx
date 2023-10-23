@@ -1,194 +1,335 @@
-import React, { useState } from 'react'
-import Select, {
-  components,
-  OptionProps,
-  GroupBase,
-  DropdownIndicatorProps,
-  MenuPlacement,
-} from 'react-select'
+import React, { useState, useEffect, useRef } from 'react'
 import { ReactComponent as CalendarIcon } from '../assets/calendar.svg'
 
-const MonthOption: React.FC<
-  OptionProps<
-    { value: string; label: string; backgroundColorClass: string },
-    false,
-    GroupBase<{ value: string; label: string; backgroundColorClass: string }>
-  >
-> = ({ data, innerProps, isSelected }) => {
-  const { value, label, backgroundColorClass } = data
-  const { onMouseMove, onMouseOver, ...restInnerProps } = innerProps
+interface PlaceholderWrapperProps {
+  children: React.ReactNode
+  extraClass?: string
+}
 
+const PlaceholderWrapper = (props: PlaceholderWrapperProps) => {
+  const { children, extraClass } = props
   return (
-    <div
-      {...restInnerProps}
-      className={`tw-flex tw-justify-center tw-items-center tw-p-16 tw-border-b tw-border-b-solid tw-border-b-white/20 ${backgroundColorClass} hover:tw-cursor-pointer hover:tw-bg-greyBlue`}
-    >
-      <span className="tw-text-center tw-text-24 tw-font-600 tw-text-white-50">
-        {label}
-      </span>
+    <div className="tw-absolute tw-top-1/2 tw-left-1/2 tw--translate-x-1/2 tw--translate-y-1/2 tw-pointer-events-none">
+      {children}
     </div>
   )
 }
 
-interface MonthProps {
-  handleMonthChange: (year: string) => void
-  backgroundColorClass: string
-  menuPlacement: MenuPlacement
+interface BufferedTextInputProps {
+  initialValue?: string
+  placeholderEl?: React.ReactNode
+  onDoneEditing?: (newValue: string) => void
+  onStartEditing?: () => void
+  validate?: (newValue: string) => boolean
+  className?: string
+  errorText?: string
+  inputRef?: React.RefObject<HTMLInputElement>
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
+  [key: string]: any
 }
 
-const MonthPicker: React.FC<MonthProps> = ({
-  handleMonthChange,
-  backgroundColorClass,
-  menuPlacement,
-}) => {
-  const [month, setMonth] = useState<{ value: string; label: string } | null>(
-    null
-  )
+const BufferedTextInput = (props: BufferedTextInputProps) => {
+  const {
+    inputRef,
+    initialValue,
+    onChange,
+    onStartEditing,
+    onDoneEditing,
+    placeholderEl,
+    validate,
+    errorText,
+    onHasError,
+    onErrorCleared,
+  } = props
+  const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
+  const [buffer, setBuffer] = useState<string>('')
+  const [hasError, setHasError] = useState<boolean>(false)
+  const errorClass = 'tw-border-red tw-text-red'
+  const extraClass = hasError ? errorClass : ''
+  const className = [props.className, extraClass].join(' ')
 
-  const handleChange = (
-    selectedOption: { value: string; label: string } | null
-  ) => {
-    setMonth(selectedOption)
-    handleMonthChange(selectedOption?.value || '')
+  useEffect(() => {
+    if (initialValue) {
+      setShowPlacholder(false)
+      setBuffer(initialValue)
+    }
+  }, [initialValue])
+
+  const doneEditing = () => {
+    if (validate) {
+      const isValid = validate(buffer)
+      if (isValid && hasError) {
+        console.log('clearing error')
+        setHasError(false)
+        onErrorCleared?.()
+      } else if (!isValid && !hasError) {
+        setHasError(true)
+        onHasError?.(errorText)
+      }
+    }
+    if (!buffer) {
+      setShowPlacholder(true)
+    }
+    onDoneEditing?.(buffer)
   }
 
-  const options = [
-    {
-      value: 'January',
-      label: 'January',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'February',
-      label: 'February',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'March',
-      label: 'March',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'April',
-      label: 'April',
-      backgroundColorClass: backgroundColorClass,
-    },
-    { value: 'May', label: 'May', backgroundColorClass: backgroundColorClass },
-    {
-      value: 'June',
-      label: 'June',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'July',
-      label: 'July',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'August',
-      label: 'August',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'September',
-      label: 'September',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'October',
-      label: 'October',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'November',
-      label: 'November',
-      backgroundColorClass: backgroundColorClass,
-    },
-    {
-      value: 'December',
-      label: 'December',
-      backgroundColorClass: backgroundColorClass,
-    },
-  ]
+  const startEditing = () => {
+    setShowPlacholder(false)
+    if (hasError) {
+      setHasError(false)
+    }
+    if (onStartEditing) {
+      onStartEditing()
+    }
+  }
 
-  const styles = {
-    menuList: (base) => ({
-      ...base,
-      borderRadius: '8px',
-      marginBottom: menuPlacement == 'bottom' ? '-3px' : '3px',
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
 
-      '::-webkit-scrollbar': {
-        width: '0px',
-        height: '0px',
-      },
-    }),
+    setBuffer(value)
+    if (onChange) {
+      onChange(event)
+    }
   }
 
   return (
-    <Select
-      placeholder={
-        <div className="tw-flex tw-items-center tw-justify-center tw-gap-16">
-          <CalendarIcon /> <span>Month</span>
-        </div>
-      }
-      value={month}
-      onChange={handleChange}
-      options={options}
-      components={{ Option: MonthOption, DropdownIndicator: () => null }}
-      unstyled
-      styles={styles}
-      menuPlacement={menuPlacement}
-      className={`tw-flex tw-justify-center tw-items-center tw-p-16 ${backgroundColorClass} tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-min-w-[344px] tw-h-[62px] focus:tw-border-white`}
-    />
+    <div className="tw-relative tw-flex tw-flex-col tw-gap-8">
+      {showPlaceholder && placeholderEl && (
+        <PlaceholderWrapper>{placeholderEl}</PlaceholderWrapper>
+      )}
+      <input
+        ref={inputRef}
+        type="text"
+        onFocus={(e) => {
+          startEditing()
+          e.target.select()
+        }}
+        onBlur={() => doneEditing()}
+        onKeyUp={(e) => {
+          if (e.key === 'Enter') {
+            doneEditing()
+            e.currentTarget.blur()
+          }
+        }}
+        value={buffer}
+        {...props}
+        onChange={handleChange}
+        className={className}
+      />
+      {hasError && errorText && (
+        <span className="tw-text-red tw-text-12 tw-font-sans tw-text-left ">
+          {errorText}
+        </span>
+      )}
+    </div>
+  )
+}
+
+interface DatePickerTextInputProps {
+  extraClass?: string
+  initialValue?: string
+  [key: string]: any
+}
+
+const DatePickerTextInput = (props: DatePickerTextInputProps) => {
+  const { initialValue, extraClass } = props
+  const bgClass = initialValue ? 'tw-bg-white/5' : 'tw-bg-transparent'
+  const classes = `tw-font-sans tw-uppercase tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50 ${bgClass} focus:tw-placeholder-transparent focus:tw-outline-none focus:tw-bg-white/5`
+  const className = [classes, extraClass].join(' ')
+
+  return <BufferedTextInput className={className} {...props} />
+}
+
+interface MonthOptProps {
+  value?: string
+  extraClass?: string
+  onClick?: () => void
+}
+
+const MonthOpt = (props: MonthOptProps) => {
+  const { value, extraClass, onClick } = props
+  const classes = `tw-p-16 tw-font-sans tw-uppercase tw-w-full tw-border-none tw-border-b tw-border-b-solid hover:tw-cursor-pointer tw-border-b-white/5 tw-bg-transparent hover:tw-bg-white/15 tw-text-center tw-text-24 tw-font-600 tw-text-white/50`
+  const className = [classes, extraClass].join(' ')
+  const handleMonthClick = (e) => {
+    console.log('handle month click')
+    console.log(value)
+    e.preventDefault()
+    onClick && onClick()
+  }
+  return (
+    <button onMouseDown={handleMonthClick} className={className}>
+      {value}
+    </button>
+  )
+}
+
+const searchArray = (arr: string[], query: string) => {
+  if (!query) {
+    return []
+  }
+  const regex = new RegExp(`${query.trim()}`, 'i')
+  return arr.filter((item) => item.search(regex) >= 0)
+}
+
+interface MonthPickerProps {
+  handleMonthChange: (month: string) => void
+  value?: string
+  extraClass?: string
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
+}
+
+const MonthPicker = (props: MonthPickerProps) => {
+  const { handleMonthChange, extraClass, value, onErrorCleared, onHasError } =
+    props
+  const [editing, setEditing] = useState<boolean>(false)
+  const [foundMonths, setFoundMonths] = useState<string[]>([])
+  const inputRef = useRef<HTMLInputElement>(null)
+  const months = [
+    'JANUARY',
+    'FEBRUARY',
+    'MARCH',
+    'APRIL',
+    'MAY',
+    'JUNE',
+    'JULY',
+    'AUGUST ',
+    'SEPTEMBER',
+    'OCTOBER',
+    'NOVEMBER',
+    'DECEMBER',
+  ]
+
+  const handleDoneEditing = (newValue: string) => {
+    if (validateMonth(newValue)) {
+      handleMonthChange(newValue)
+      onErrorCleared?.()
+    }
+    setEditing(false)
+  }
+
+  const onStartEditing = () => {
+    console.log('start editing')
+    setEditing(true)
+  }
+
+  const handleMonthClick = async (month: string) => {
+    handleDoneEditing(month)
+    console.log('handle month click')
+    console.log(inputRef.current)
+    setTimeout(() => {
+      inputRef.current?.blur()
+    }, 500)
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target
+    console.log('handle change')
+    console.log(value)
+    const filtered = searchArray(months, value)
+    console.log(filtered)
+    setFoundMonths(filtered)
+  }
+
+  const validateMonth = (newValue: string) => {
+    return !newValue || months.includes(newValue.toUpperCase())
+  }
+
+  return (
+    <div className="tw-flex tw-flex-col">
+      <DatePickerTextInput
+        inputRef={inputRef}
+        initialValue={value}
+        onDoneEditing={handleDoneEditing}
+        onStartEditing={onStartEditing}
+        onHasError={onHasError}
+        onErrorCleared={onErrorCleared}
+        extraClass={extraClass}
+        onChange={handleChange}
+        validate={validateMonth}
+        errorText="Invalid month"
+        placeholderEl={
+          <div className="tw-flex tw-items-center tw-justify-center tw-gap-16 tw-pointer-events-none">
+            <CalendarIcon />
+            <span className="tw-text-24 tw-font-600 tw-text-white/50">
+              Month
+            </span>
+          </div>
+        }
+      />
+      {editing && (
+        <ul className="tw-list-none tw-m-0 tw-p-0 tw-flex tw-flex-col tw-rounded-b-8 tw-bg-white/5 tw-overflow-hidden">
+          {foundMonths.map((month, i) => (
+            <li>
+              <MonthOpt value={month} onClick={() => handleMonthClick(month)} />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   )
 }
 
 interface YearProps {
   handleYearChange: (year: string) => void
-  backgroundColorClass: string
+  value?: string
+  extraClass?: string
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
 }
 
 export const YearInput: React.FC<YearProps> = ({
   handleYearChange,
-  backgroundColorClass,
+  extraClass,
+  value,
+  onHasError,
+  onErrorCleared,
 }) => {
-  const [year, setYear] = useState<string>('')
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target
-    const regex = /^[0-9\b]{0,4}$/
-
-    if (regex.test(value)) {
-      setYear(value)
-      handleYearChange(value)
+  const onDoneEditing = (newValue: string) => {
+    if (validateYear(newValue)) {
+      handleYearChange(newValue)
+      onErrorCleared?.()
     }
   }
 
+  const validateYear = (newValue: string) => {
+    const regex = /^[0-9\b]{4}$/
+    return regex.test(newValue)
+  }
+
   return (
-    <input
-      type="text"
+    <DatePickerTextInput
       placeholder="YEAR"
-      value={year}
-      onChange={handleChange}
+      initialValue={value}
+      onDoneEditing={onDoneEditing}
+      validate={validateYear}
+      onHasError={onHasError}
+      onErrorCleared={onErrorCleared}
+      errorText="Invalid year"
       maxLength={4}
-      className={`tw-flex tw-justify-center ${backgroundColorClass} tw-items-center tw-p-16  tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-w-[150px] tw-h-[62px] tw-placeholder-white/50`}
+      extraClass={extraClass}
     />
   )
 }
 
 interface DatePickerProps {
+  month?: string
+  year?: string
   handleMonthChange: (year: string) => void
   handleYearChange: (year: string) => void
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
   showTitle: boolean
-  backgroundColorClass: string
-  selectMenuPlacement: MenuPlacement
 }
 export const DatePicker: React.FC<DatePickerProps> = ({
+  month,
+  year,
   handleMonthChange,
   handleYearChange,
   showTitle,
-  backgroundColorClass,
-  selectMenuPlacement,
+  onHasError,
+  onErrorCleared,
 }) => {
   return (
     <div className="tw-flex tw-flex-col tw-justify-center tw-text-center tw-gap-16">
@@ -197,15 +338,20 @@ export const DatePicker: React.FC<DatePickerProps> = ({
           Your Bracket's Date
         </span>
       )}
-      <div className="tw-flex tw-justify-center tw-items-start tw-gap-16 tw-min-w-150 tw-h-[62px]">
+      <div className="tw-flex tw-flex-col sm:tw-items-start sm:tw-flex-row tw-justify-center tw-gap-16 ">
         <MonthPicker
+          value={month}
           handleMonthChange={handleMonthChange}
-          backgroundColorClass={backgroundColorClass}
-          menuPlacement={selectMenuPlacement}
+          extraClass={`tw-flex-grow`}
+          onHasError={onHasError}
+          onErrorCleared={onErrorCleared}
         />
         <YearInput
+          value={year}
           handleYearChange={handleYearChange}
-          backgroundColorClass={backgroundColorClass}
+          extraClass={`sm:tw-w-[150px]`}
+          onHasError={onHasError}
+          onErrorCleared={onErrorCleared}
         />
       </div>
     </div>

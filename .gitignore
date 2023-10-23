@@ -140,3 +140,5 @@ docker/wordpress/downloads/*
 !docker/wordpress/downloads/.gitkeep
 docker/wordpress/plugins/*
 !docker/wordpress/plugins/.gitkeep
+docker/db/import/1bmb_import.sql
+!docker/wordpress/db/import/.gitkeep

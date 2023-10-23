@@ -1,8 +1,13 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 3)) .
-  'includes/service/class-wpbb-product-preview-service.php';
-require_once plugin_dir_path(dirname(__FILE__, 3)) .
+require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
 
 class Wpbb_ProductPreviewService {
   /**
@@ -10,69 +15,76 @@ class Wpbb_ProductPreviewService {
    */
   private $bracket_product_utils;
 
+  /**
+   * @var Wpbb_BracketPlayRepo
+   */
+  private $play_repo;
+
+  /**
+   * @var Wpbb_ProductIntegrationInterface
+   */
+  private $product_integration;
+
+  /**
+   * @var Wpbb_Utils
+   */
+  private $utils;
+
   public function __construct() {
     $this->bracket_product_utils = new Wpbb_BracketProductUtils();
+    $this->play_repo = new Wpbb_BracketPlayRepo();
+    $this->product_integration = new Wpbb_GelatoProductIntegration();
+    $this->utils = new Wpbb_Utils();
   }
 
-  public function localize_script() {
+  public function get_ajax_obj() {
+    $this->utils->log('get_ajax_obj');
     $post = get_post();
     // check if post is product
+    if (!$post || $post->post_type !== 'product') {
+      $this->utils->warn('post is not product');
+      echo 'post is not product';
+      return;
+    }
 
-    // For product page
     $product = wc_get_product($post->ID);
-    $bracket_product_archive_url = $this->get_archive_url();
-
-    $bracket_placement = $this->bracket_product_utils->get_bracket_placement(
-      $product
-    );
-
     $is_bracket_product = $this->bracket_product_utils->is_bracket_product(
       $product
     );
-    // Only get product details on product pages.
-    $gallery_images = $is_bracket_product
-      ? $this->get_product_gallery($product)
-      : [];
-    $color_options = $is_bracket_product
-      ? $this->get_attribute_options($product, 'color')
-      : [];
-    $overlay_map = $is_bracket_product
-      ? $this->build_overlay_map($bracket_placement)
-      : [];
+    if (!$is_bracket_product) {
+      $this->utils->warn('product is not bracket product');
+      echo 'product is not bracket product';
+      return;
+    }
 
-    // wp_localize_script(
-    // 	'wpbb-bracket-builder-react',
-    // 	'wpbb_ajax_obj',
-    // 	array(
-    // 		'sentry_env' => $sentry_env,
-    // 		'sentry_dsn' => $sentry_dsn,
-    // 		'nonce' => wp_create_nonce('wp_rest'),
-    // 		'page' => 'user-bracket',
-    // 		'ajax_url' => admin_url('admin-ajax.php'),
-    // 		'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-    // 		'post' => $post,
-    // 		'bracket' => $bracket,
-    // 		'css_file' => $css_file,
-    // 		'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
+    $play_id = $this->utils->get_cookie('play_id');
+    if (!$play_id) {
+      $this->utils->warn('play_id not found');
+      echo 'play_id not found';
+      return;
+    }
+    $play = $this->play_repo->get($play_id);
+    if (!$play) {
+      $this->utils->warn('play not found');
+      echo 'play not found';
+      return;
+    }
 
-    // 		// For product page
-    // 		'bracket_url_theme_map' => $overlay_map, // map of theme mode to bracket image url
-    // 		'gallery_images' => $gallery_images,
-    // 		'color_options' => $color_options,
-    // 	)
-    // );
-  }
+    $gallery_images = $this->get_product_gallery($product);
+    $color_options = $this->get_attribute_options($product, 'color');
+    $placement = $this->bracket_product_utils->get_bracket_placement($product);
 
-  public function build_overlay_map($placement): array {
-    $dark = $this->bracket_config_repo->get('dark', $placement);
-    $light = $this->bracket_config_repo->get('light', $placement);
+    $overlay_map = $this->product_integration->get_overlay_map(
+      $play,
+      $placement
+    );
 
-    $overlay_map = [
-      'dark' => $dark->img_url,
-      'light' => $light->img_url,
+    return [
+      'bracket_url_theme_map' => $overlay_map,
+      'gallery_images' => $gallery_images,
+      'color_options' => $color_options,
+      'play_id' => $play_id,
     ];
-
-    return $overlay_map;
   }
 
   public function get_archive_url() {
@@ -112,9 +124,6 @@ class Wpbb_ProductPreviewService {
     $images = [];
 
     foreach ($image_ids as $imageId) {
-      // $imageSrc = wp_get_attachment_image_src($imageId, 'full');
-      // $imageUrl = $imageSrc[0];
-      // $image_urls[] = $imageUrl;
       $image_attrs = [
         'src' => wp_get_attachment_url($imageId),
         'title' => get_the_title($imageId),

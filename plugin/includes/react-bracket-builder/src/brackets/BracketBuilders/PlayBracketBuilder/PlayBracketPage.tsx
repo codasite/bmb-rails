@@ -14,7 +14,7 @@ import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
-import { getBracketWidth } from '../../shared/utils'
+import { getBracketMeta, getBracketWidth } from '../../shared/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 
 interface PlayPageProps {
@@ -30,7 +30,6 @@ interface PlayPageProps {
 }
 
 const PlayPage = (props: PlayPageProps) => {
-  console.log('PlayPage')
   const {
     bracket,
     apparelUrl,
@@ -42,6 +41,7 @@ const PlayPage = (props: PlayPageProps) => {
     darkMode,
     setDarkMode,
   } = props
+  console.log('apparelUrl', apparelUrl)
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -54,59 +54,13 @@ const PlayPage = (props: PlayPageProps) => {
       const numTeams = bracket.numTeams
       const matches = bracket.matches
       tree = MatchTree.fromMatchRes(numTeams, matches)
-      setBracketMeta?.({ title: bracket.title, month: bracket.month, year: bracket.year })
+      const meta = getBracketMeta(bracket)
+      setBracketMeta?.(meta)
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
     }
   }, [])
-
-  const buildPrintHTML = (
-    innerHTML: string,
-    styleUrl: string,
-    inchHeight: number,
-    inchWidth: number
-  ) => {
-    const printArea = buildPrintArea(innerHTML, inchHeight, inchWidth)
-    // const stylesheet = 'https://backmybracket.com/wp-content/plugins/wp-bracket-builder/includes/react-bracket-builder/build/index.css'
-    const stylesheet = 'https://wpbb-stylesheets.s3.amazonaws.com/index.css'
-    return `
-			<html>
-				<head>
-					<link rel='stylesheet' href='${stylesheet}' />
-				</head>
-			<body style='margin: 0; padding: 0;'>
-				${printArea}
-			</body>
-			</html>
-		`
-  }
-
-  const buildPrintArea = (
-    innerHTML: string,
-    inchHeight: number,
-    inchWidth: number
-  ) => {
-    const width = inchWidth * 96
-    const height = inchHeight * 96
-    return `
-			<div class='wpbb-bracket-print-area' style='height: ${height}px; width: ${width}px; background-color: transparent'>
-				${innerHTML}
-			</div>
-		`
-  }
-
-  const getHTML = (): string => {
-    const bracketEl = document.getElementsByClassName('wpbb-bracket')[0]
-    const bracketHTML = bracketEl.outerHTML
-    const bracketCss = bracketStylesheetUrl
-    const html = buildPrintHTML(bracketHTML, bracketCss, 16, 12)
-    return html
-  }
-
-  const minify = (html: string) => {
-    return html.replace(/[\n\t]/g, '').replace(/"/g, "'")
-  }
 
   const handleApparelClick = () => {
     console.log('handleApparelClick')
@@ -128,11 +82,11 @@ const PlayPage = (props: PlayPageProps) => {
 
     console.log(playReq)
     setProcessing(true)
+    console.time('createPlay')
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        console.log(res)
-        // window.location.href = apparelUrl
+        window.location.href = apparelUrl
       })
       .catch((err) => {
         console.error('error: ', err)
@@ -140,6 +94,8 @@ const PlayPage = (props: PlayPageProps) => {
       })
       .finally(() => {
         setProcessing(false)
+        console.timeEnd('createPlay')
+        console.log('createPlay')
       })
   }
 

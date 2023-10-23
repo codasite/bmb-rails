@@ -191,6 +191,8 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
       $params['generate_images'] === true
     ) {
       $this->product_integration->generate_images($saved);
+      // set the play id in the session
+      $this->utils->set_cookie('play_id', $saved->id, ['days' => 30]);
     }
 
     return new WP_REST_Response($saved, 201);

@@ -1,5 +1,6 @@
 import { defaultBracketConstants } from './constants'
-// import { BracketRes, TeamRes, MatchRes, RoundRes } from "./api/types/bracket"
+import { BracketRes } from './api/types/bracket'
+import { BracketMeta } from './context'
 
 const {
   bracketHeights,
@@ -70,38 +71,6 @@ export const getUniqueTeamClass = (
   return className
 }
 
-// /**
-//  * Get the match height for the first round of a bracket given a target height
-//  */
-// export const getFirstRoundMatchHeight = (targetHeight, numDirections, numRounds, teamHeight) => {
-// 	const maxMatchesPerRound = 2 ** (numRounds - 1)
-// 	const maxMatchesPerColumn = maxMatchesPerRound / numDirections
-// 	let firstRoundMatchHeight = targetHeight / maxMatchesPerColumn
-// 	firstRoundMatchHeight += (firstRoundMatchHeight - teamHeight) / maxMatchesPerColumn // Divvy up spacing that would be added after the last match in the column
-// 	return firstRoundMatchHeight
-// }
-
-/**
- * Get the match gap for the first round of a bracket given a target height
- *
- */
-// export const getFirstRoundMatchGap = (targetHeight: number, numRounds: number, matchHeight: number) => {
-// 	const numDirections = 2
-// 	const firstRoundMatches = 2 ** (numRounds - 1) / numDirections
-// 	const firstRoundGaps = firstRoundMatches - 1
-// 	const firstRoundMatchGap = (targetHeight - firstRoundMatches * matchHeight) / firstRoundGaps
-// 	return firstRoundMatchGap
-// }
-
-// /**
-//  * Get the match height for a subsequent round of a bracket given the first round match height
-//  * @param {number} firstRoundMatchHeight The match height for the first round of a bracket
-//  * @param {number} i The index of the round when building up from the first round
-//  */
-// export const getTargetMatchHeight = (firstRoundMatchHeight, i) => {
-// 	return firstRoundMatchHeight * (2 ** i)
-// }
-
 /**
  * Get the match gap for a subsequent round of a bracket given the first round match gap
  * @param {number} firstRoundMatchGap The match height for the first round of a bracket
@@ -135,4 +104,8 @@ export const getSubsequentMatchGap = (
   return 2 * (prevMatchHeight + prevMatchGap) - matchHeight
 }
 
-// export const
+export const getBracketMeta = (bracket: BracketRes): BracketMeta => {
+  const { title, month, year } = bracket
+  const date = [month, year].filter(Boolean).join(' ')
+  return { title, date }
+}

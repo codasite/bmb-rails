@@ -38,5 +38,5 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.listen(port, host, () => {
-  console.log(`Example app listening at http://${host}:${port}`)
+  console.log(`React Server listening at http://${host}:${port}`)
 })

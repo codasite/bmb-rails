@@ -4,7 +4,7 @@ require_once plugin_dir_path(dirname(__FILE__)) . '../vendor/autoload.php';
 use setasign\Fpdi\Fpdi;
 use setasign\Fpdi\PdfParser\StreamReader;
 
-class Wpbb_PDF_Service {
+class Wpbb_PdfService {
   /**
    * @param array $pdfParams - array of arrays
    * @return string

@@ -1,6 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) .
   'class-wpbb-product-integration-interface.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
 require_once 'class-wpbb-gelato-admin-hooks.php';
 require_once 'class-wpbb-gelato-public-hooks.php';
 require_once WPBB_PLUGIN_DIR .
@@ -13,6 +14,9 @@ require_once WPBB_PLUGIN_DIR .
   'includes/service/object-storage/class-wpbb-s3-storage.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/http/class-wpbb-bracket-image-request-factory.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
 
 class Wpbb_GelatoProductIntegration implements
   Wpbb_ProductIntegrationInterface {
@@ -29,28 +33,41 @@ class Wpbb_GelatoProductIntegration implements
   /**
    * @var Wpbb_HttpClientInterface
    */
-  private $client;
+  public $client;
 
   /**
    * @var Wpbb_ObjectStorageInterface
    */
-  private $object_storage;
+  public $object_storage;
 
   /**
    * @var Wpbb_BracketImageRequestFactory
    */
-  private $request_factory;
+  public $request_factory;
+
+  /**
+   * @var Wpbb_Utils
+   */
+  public $utils;
+
+  /**
+   * @var Wpbb_BracketPlayRepo
+   */
+  public $play_repo;
 
   public function __construct($args = []) {
-    $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
-    $this->public_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoPublicHooks();
-    $this->client = $args['client'] ?? new Wpbb_GuzzleClient();
     $this->object_storage = $args['object_storage'] ?? new Wpbb_S3Storage();
     $this->request_factory =
       $args['request_factory'] ??
       new Wpbb_BracketImageRequestFactory([
         'object_storage' => $this->object_storage,
       ]);
+    $this->admin_hooks = $args['admin_hooks'] ?? new Wpbb_GelatoAdminHooks();
+    $this->public_hooks =
+      $args['public_hooks'] ?? new Wpbb_GelatoPublicHooks($this);
+    $this->client = $args['client'] ?? new Wpbb_GuzzleClient();
+    $this->utils = new Wpbb_Utils();
+    $this->play_repo = new Wpbb_BracketPlayRepo();
   }
 
   public function get_post_meta_key(): string {
@@ -142,11 +159,9 @@ class Wpbb_GelatoProductIntegration implements
     );
   }
 
-  //implement this
   public function generate_images(Wpbb_PostBracketInterface $bracket): void {
     $request_data = $this->request_factory->get_request_data($bracket);
     $responses = $this->client->send_many($request_data);
-    //Save to post meta
     update_post_meta(
       $bracket->get_post_id(),
       $this->get_post_meta_key(),
@@ -172,19 +187,54 @@ class Wpbb_GelatoProductIntegration implements
     Wpbb_PostBracketInterface $bracket,
     string $placement
   ): array {
-    $meta = json_decode(
-      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true)
-    );
-    if (!$meta) {
-      return [];
-    }
+    $meta = $this->get_meta($bracket);
     $overlay_map = [];
     foreach ($meta as $key => $value) {
       if (strpos($key, $placement) !== false) {
         list($placement, $theme) = explode('_', $key);
-        $overlay_map[$theme] = $value->image_url;
+        $overlay_map[$theme] = $value['image_url'];
       }
     }
     return $overlay_map;
+  }
+
+  public function has_bracket_config() {
+    $play = $this->play_repo->get();
+    return $play !== null;
+  }
+
+  public function get_bracket_config($theme, $placement) {
+    $play = $this->play_repo->get();
+    if (!$play) {
+      return null;
+    }
+    $meta = $this->get_meta($play);
+    foreach ($meta as $key => $value) {
+      if (
+        strpos($key, $placement) !== false &&
+        strpos($key, $theme) !== false
+      ) {
+        list($placement, $theme) = explode('_', $key);
+        $config = new Wpbb_BracketConfig(
+          $play->id,
+          $theme,
+          $placement,
+          $value['image_url']
+        );
+        return $config;
+      }
+    }
+    return null;
+  }
+
+  private function get_meta(Wpbb_PostBracketInterface $bracket): array {
+    $meta = json_decode(
+      get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true),
+      true
+    );
+    if (!$meta) {
+      return [];
+    }
+    return $meta;
   }
 }
