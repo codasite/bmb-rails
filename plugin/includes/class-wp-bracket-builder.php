@@ -323,6 +323,8 @@ class Wp_Bracket_Builder {
     );
 
     $this->loader->add_action('init', $shortcodes, 'add_shortcodes');
+
+    $this->loader->add_action('woocommerce_subscription_status_active', $public_hooks, 'add_bmb_plus_role', 10, 1);
   }
 
   /**

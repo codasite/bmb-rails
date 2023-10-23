@@ -38,7 +38,7 @@ class Wpbb_Public_Hooks
 	public function add_roles() {
 		add_role(
 			'bmb_plus',
-			'BMB Plus',
+			'BMB Plus',	
 			array(
 				'wpbb_share_bracket' => true,
 				'wpbb_bust_play' => true,
@@ -105,5 +105,9 @@ class Wpbb_Public_Hooks
 			$orderby = "plays.{$query_object->get('orderby')} {$query_object->get('order')}";
 		}
 		return $clauses;
+	}
+
+	public function add_bmb_plus_role() {
+		$current_user = wp_get_current_user();
 	}
 }
