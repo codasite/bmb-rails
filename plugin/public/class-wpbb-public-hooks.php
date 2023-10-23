@@ -108,10 +108,14 @@ class Wpbb_PublicHooks
 	}
 
 	public function add_bmb_plus_role(WC_Subscription $subscription) {
-		echo 'get_user_id(): ' . $subscription->get_user_id();
 		$user_id = $subscription->get_user_id();
 		$user = get_user_by('id', $user_id);
-		$user->set_role('bmb_plus');
-		print_r($user->roles);
+		$user->add_role('bmb_plus');
+	}
+
+	public function remove_bmb_plus_role(WC_Subscription $subscription) {
+		$user_id = $subscription->get_user_id();
+		$user = get_user_by('id', $user_id);
+		$user->remove_role('bmb_plus');
 	}
 }
