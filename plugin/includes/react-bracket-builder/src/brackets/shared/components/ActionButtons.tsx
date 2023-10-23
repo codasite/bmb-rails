@@ -50,6 +50,7 @@ export const ActionButtonBase = (props: ActionButtonProps) => {
     'tw-justify-center',
     'tw-font-sans',
     'tw-uppercase',
+    'tw-whitespace-nowrap',
   ]
 
   if (!disabled) baseStyles.push('tw-cursor-pointer')

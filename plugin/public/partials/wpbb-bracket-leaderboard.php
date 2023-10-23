@@ -10,7 +10,6 @@ $bracket_repo = new Wpbb_BracketRepo();
 $bracket = $bracket_repo->get(get_the_ID());
 $bracket_winner = $bracket->get_winning_team();
 $post_status = get_post_status();
-echo $post_status;
 $complete = $post_status === 'complete';
 $scored = $post_status === 'score';
 $show_scores = $complete || $scored;
