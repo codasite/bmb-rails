@@ -108,7 +108,10 @@ class Wpbb_PublicHooks
 	}
 
 	public function add_bmb_plus_role(WC_Subscription $subscription) {
-		$current_user = wp_get_current_user();
-		$current_user->add_role('bmb_plus');
+		echo 'get_user_id(): ' . $subscription->get_user_id();
+		$user_id = $subscription->get_user_id();
+		$user = get_user_by('id', $user_id);
+		$user->set_role('bmb_plus');
+		print_r($user->roles);
 	}
 }

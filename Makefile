@@ -6,10 +6,6 @@ wp-pull:
 wp-up:
 	docker compose --profile wp up --build
 
-# Start image generator containers
-images-up:
-	docker compose --profile images up --build
-
 # Start all wordpress containers in detached mode for ci
 wp-up-detach:
 	docker compose --profile wp up --build --detach
@@ -42,7 +38,6 @@ wp-log:
 wp-dump:
 	docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
 
-# Start image generator containers
 images-up:
 	docker compose --profile images up --build
 
@@ -54,14 +49,5 @@ up:
 down:
 	docker compose down -v
 
-# Run prettier on all files
 pretty:
 	npm run pretty
-
-# Start the plugin's react dev server
-start-react:
-	cd ./plugin/includes/react-bracket-builder; npm run start
-
-# Build the plugin's react app
-build-react:
-	cd ./plugin/includes/react-bracket-builder; npm run build

@@ -6,7 +6,11 @@ class PublicHooksTest extends WPBB_UnitTestCase {
   public function test_role_is_added_when_sub_activated() {
     $user = $this->factory->user->create_and_get();
     $user->set_role('subscriber');
-    $this->assertTrue(!$user->has_role('bmb_plus'));
+    // $this->assertTrue(!$user->has_role('bmb_plus')); // this doesn't work, I verified with failing line below
+    // $this->assertTrue($user->has_role('subscriber')); // fails
+    $this->assertTrue(in_array('subscriber', $user->roles)); // this work's instead
+
+    echo 'user id: ' . $user->ID;
 
     // check that the role is added when the subscription is activated
     //standard class mock
@@ -18,9 +22,11 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $hooks = new Wpbb_PublicHooks();
     $hooks->add_bmb_plus_role($sub_mock);
-
-    $this->assertTrue($user->has_role('bmb_plus'));
-  }
+    
+    print_r($user->roles);
+    // // $this->assertTrue($user->has_role('bmb_plus')); // invalid
+    $this->assertTrue(in_array('bmb_plus', $user->roles)); // this instead
+  } 
 
   public function test_role_is_removed_when_sub_canceled() {
     $user = $this->factory->user->create_and_get();
