@@ -189,7 +189,7 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       $this->update_results($bracket_id, $bracket->results);
     }
 
-    $this->notification_service->notify_bracket_updated($bracket_id);
+    // $this->notification_service->notify_bracket_updated($bracket_id);
 
     # refresh from db
     $bracket = $this->get($post_id);
