@@ -32,9 +32,9 @@ class Wpbb_BracketApi extends WP_REST_Controller {
   private $score_service;
 
   /**
-   * @var Wpbb_Notification_Service_Interface
+   * @var Wpbb_NotificationService_Interface
    */
-  private ?Wpbb_Notification_Service_Interface $notification_service;
+  private ?Wpbb_NotificationService_Interface $notification_service;
 
   /**
    * Constructor.
@@ -46,7 +46,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
     $this->score_service = $args['score_service'] ?? new Wpbb_ScoreService();
     try {
       $this->notification_service =
-        $args['notification_service'] ?? new Wpbb_Notification_Service();
+        $args['notification_service'] ?? new Wpbb_NotificationService();
     } catch (Exception $e) {
       $this->notification_service = null;
     }

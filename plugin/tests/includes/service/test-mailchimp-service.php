@@ -23,7 +23,7 @@ class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
 
     $client->messages = $messagesMock;
 
-    $mailchimp = new Wpbb_Mailchimp_Email_Service([
+    $mailchimp = new Wpbb_MailchimpEmailService([
       'api_client' => $client,
       'api_key' => '123',
       'from_email' => 'test@test.com',

@@ -3,7 +3,7 @@
 require_once plugin_dir_path(dirname(__FILE__, 2)) . 'vendor/autoload.php';
 require_once 'class-wpbb-email-service-interface.php';
 
-class Wpbb_Mailchimp_Email_Service implements Wpbb_Email_Service_Interface {
+class Wpbb_MailchimpEmailService implements Wpbb_EmailServiceInterface {
   protected MailchimpTransactional\ApiClient $client;
 
   public $from_email;

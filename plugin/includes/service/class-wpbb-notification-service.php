@@ -10,16 +10,16 @@ require_once plugin_dir_path(dirname(__FILE__, 1)) .
 require_once plugin_dir_path(dirname(__FILE__, 1)) .
   'repository/class-wpbb-bracket-repo.php';
 
-class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
-  protected Wpbb_Email_Service_Interface $email_service;
+class Wpbb_NotificationService implements Wpbb_NotificationService_Interface {
+  protected Wpbb_EmailServiceInterface $email_service;
 
   protected Wpbb_BracketRepo $bracket_repo;
   protected Wpbb_BracketPlayRepo $play_repo;
 
   public function __construct($args = []) {
     $this->email_service =
-      $args['email_service'] ?? new Wpbb_Mailchimp_Email_Service();
-    $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketRepo();
+      $args['email_service'] ?? new Wpbb_MailchimpEmailService();
+    $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketPlayRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
   }
 
