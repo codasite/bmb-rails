@@ -238,7 +238,8 @@ class Wpbb_GelatoProductIntegration implements
       return;
     }
     $data = [
-      'is_printed' => 1,
+      'is_printed' => true,
+      // maybe: 'is_printed' => 1
     ];
     $this->play_repo->update($play, $data);
   }
