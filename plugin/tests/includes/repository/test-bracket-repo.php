@@ -223,6 +223,13 @@ class BracketRepoTest extends WPBB_UnitTestCase {
           ]),
         ]),
       ],
+      // 'results' => [
+      //   new Wpbb_MatchPick([
+      //     'round_index' => 0,
+      //     'match_index' => 0,
+      //     'winning_team_id' => 1,
+      //   ]),
+      // ]
     ]);
 
     $bracket = $this->bracket_repo->add($bracket);
@@ -241,12 +248,20 @@ class BracketRepoTest extends WPBB_UnitTestCase {
       'picks' => $picks,
     ]);
 
+    $final_round_pick = end($bracket->results);
+
+    echo '----------------------------------------------------------------';
+
     $emails = $this->bracket_repo->get_user_info_and_last_round_pick(
       $bracket->id,
-      $picks[0],
+      new Wpbb_MatchPick([
+        'round_index' => 0,
+        'match_index' => 0,
+        'winning_team_id' => $bracket->matches[0]->team1->id,
+      ]),
     );
 
-    echo 'nigga';
+    echo '----------------------------------------------------------------';
     print_r($emails);
   }
 }
