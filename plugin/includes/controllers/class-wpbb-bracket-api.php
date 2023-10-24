@@ -9,6 +9,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-notification-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-notification-service-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 class Wpbb_BracketApi extends WP_REST_Controller {
   /**
@@ -27,26 +28,32 @@ class Wpbb_BracketApi extends WP_REST_Controller {
   protected $rest_base;
 
   /**
-   * @var Wpbb_Score_Service
+   * @var Wpbb_ScoreService
    */
   private $score_service;
 
   /**
-   * @var Wpbb_Notification_Service_Interface
+   * @var Wpbb_NotificationService_Interface
    */
-  private ?Wpbb_Notification_Service_Interface $notification_service;
+  private ?Wpbb_NotificationService_Interface $notification_service;
+
+  /**
+   * @var Wpbb_Utils
+   */
+  private $utils;
 
   /**
    * Constructor.
    */
   public function __construct($args = []) {
+    $this->utils = new Wpbb_Utils();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
-    $this->score_service = $args['score_service'] ?? new Wpbb_Score_Service();
+    $this->score_service = $args['score_service'] ?? new Wpbb_ScoreService();
     try {
       $this->notification_service =
-        $args['notification_service'] ?? new Wpbb_Notification_Service();
+        $args['notification_service'] ?? new Wpbb_NotificationService();
     } catch (Exception $e) {
       $this->notification_service = null;
     }

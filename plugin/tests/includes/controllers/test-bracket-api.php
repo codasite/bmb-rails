@@ -424,7 +424,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
   public function test_notification_is_sent_when_results_are_updated() {
     $notification_service = $this->getMockBuilder(
-      'Wpbb_Notification_Service_Interface'
+      'Wpbb_NotificationService_Interface'
     )
       ->disableOriginalConstructor()
       ->getMock();
@@ -477,7 +477,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_bracket_is_scored_on_update_results() {
-    $score_service = $this->getMockBuilder('Wpbb_Score_Service_Interface')
+    $score_service = $this->getMockBuilder('Wpbb_ScoreService_Interface')
       ->disableOriginalConstructor()
       ->getMock();
 

@@ -8,11 +8,8 @@ wp-cli core install \
 	--admin_password=${WORDPRESS_ADMIN_PASSWORD} \
 	--admin_email=${WORDPRESS_ADMIN_EMAIL}
 
+# installs and activates all plugins in /tmp/plugins
 find /tmp/plugins -type f -name '*.zip' | xargs -I {} wp-cli plugin install {} --activate
-# wp-cli plugin install /tmp/plugins/oxygen4.5.zip --activate
-# wp-cli plugin install /tmp/plugins/oxygen-woocommerce.zip --activate
-# wp-cli plugin install /tmp/plugins/woocommerce.8.2.0.zip --activate
-# wp-cli plugin install /tmp/plugins/wp-sentry-integration.zip --activate
 wp-cli plugin activate wp-bracket-builder
 
 echo "done"
