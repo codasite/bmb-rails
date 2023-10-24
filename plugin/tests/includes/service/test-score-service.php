@@ -49,7 +49,9 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService();
+    $score_service = new Wpbb_ScoreService([
+      'only_score_printed_plays' => false,
+    ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play1->id);
@@ -99,7 +101,9 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService();
+    $score_service = new Wpbb_ScoreService([
+      'only_score_printed_plays' => false,
+    ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play1->id);
@@ -165,7 +169,9 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService();
+    $score_service = new Wpbb_ScoreService([
+      'only_score_printed_plays' => false,
+    ]);
     $affected = $score_service->score_bracket_plays($bracket1);
 
     $updated = $score_service->play_repo->get($play->id);
@@ -235,7 +241,9 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       'picks' => $play_picks,
     ]);
 
-    $score_service = new Wpbb_ScoreService();
+    $score_service = new Wpbb_ScoreService([
+      'only_score_printed_plays' => false,
+    ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play->id);
@@ -334,7 +342,9 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService();
+    $score_service = new Wpbb_ScoreService([
+      'only_score_printed_plays' => false,
+    ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play->id);
