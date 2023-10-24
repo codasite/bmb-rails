@@ -209,7 +209,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
    * @return WP_Error|WP_REST_Response
    */
   public function update_item($request) {
-    throw new Exception('update_item not implemented');
+    // throw new Exception('update_item not implemented');
     $bracket_id = $request->get_param('item_id');
     if (!current_user_can('wpbb_edit_bracket', $bracket_id)) {
       return new WP_Error(
