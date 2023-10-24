@@ -205,4 +205,48 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(2, count($bracket->results));
   }
+
+  public function test_get_user_info_and_last_round_pick() {
+    $bracket = new Wpbb_Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $bracket = $this->bracket_repo->add($bracket);
+    $user = $this->factory->user->create_and_get();
+    // print_r($user);
+    $picks = [
+      new Wpbb_MatchPick([
+        'round_index' => 0,
+        'match_index' => 0,
+        'winning_team_id' => $bracket->matches[0]->team1->id,
+      ]),
+    ];
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'user_id' => $user->ID,
+      'picks' => $picks,
+    ]);
+
+    $emails = $this->bracket_repo->get_user_info_and_last_round_pick(
+      $bracket->id,
+      $picks[0],
+    );
+
+    echo 'nigga';
+    print_r($emails);
+  }
 }
