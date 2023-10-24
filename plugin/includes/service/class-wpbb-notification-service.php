@@ -84,13 +84,15 @@ class Wpbb_NotificationService implements Wpbb_NotificationService_Interface {
     Wpbb_MatchPick $pick,
     Wpbb_MatchPick $correct_pick
   ): string {
+    $picked_team = strtoupper($pick->winning_team->name);
+    $correct_team = strtoupper($correct_pick->winning_team->name);
     if ($this->correct_picked($pick, $correct_pick)) {
-      return 'You picked ' . $pick->winning_team->name . '... and they won!';
+      return 'You picked ' . $picked_team . '... and they won!';
     } else {
       return 'You picked ' .
-        $pick->winning_team->name .
+        $picked_team .
         ', but ' .
-        $correct_pick->winning_team->name .
+        $correct_team .
         ' won the round...';
     }
   }

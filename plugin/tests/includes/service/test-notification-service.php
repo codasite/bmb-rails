@@ -62,14 +62,14 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
     ]);
 
     $this->assertEquals(
-      'You picked Team 1... and they won!',
+      'You picked TEAM 1... and they won!',
       $notification_service->get_pick_result_heading(
         $correct_pick,
         $winning_pick
       )
     );
     $this->assertEquals(
-      'You picked Team 2, but Team 1 won the round...',
+      'You picked TEAM 2, but TEAM 1 won the round...',
       $notification_service->get_pick_result_heading(
         $incorrect_pick,
         $winning_pick
