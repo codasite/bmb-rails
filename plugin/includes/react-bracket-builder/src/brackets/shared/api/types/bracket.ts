@@ -72,7 +72,7 @@ export interface BracketReq {
   wildcardPlacement: WildcardPlacement
   matches: MatchReq[]
   results?: MatchPicks[]
-  updateNotifyParticipants?: boolean
+  updateNotifyPlayers?: boolean
 }
 export interface BracketRes extends PostBase {
   month: string

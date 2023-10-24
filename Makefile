@@ -51,3 +51,9 @@ down:
 
 pretty:
 	npm run pretty
+
+wp-start:
+	cd plugin/includes/react-bracket-builder && npm run start
+
+wp-build:
+	cd plugin/includes/react-bracket-builder && npm run build

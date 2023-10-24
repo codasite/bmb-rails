@@ -108,7 +108,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       const complete = matchTree.allPicked()
       const data = {
         results: picks,
-        updateNotifyParticipants: notifyParticipants,
+        updateNotifyPlayers: notifyParticipants,
       }
       bracketApi
         .updateBracket(bracketId, data)

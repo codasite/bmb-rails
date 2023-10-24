@@ -115,6 +115,24 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     return new Wpbb_BracketPlay($data);
   }
 
+  public function get_pick(int $pick_id): ?Wpbb_MatchPick {
+    $table_name = $this->picks_table();
+    $sql = "SELECT * FROM $table_name WHERE id = $pick_id";
+    $data = $this->wpdb->get_row($sql, ARRAY_A);
+    if (!$data) {
+      return null;
+    }
+    $winning_team_id = $data['winning_team_id'];
+    $winning_team = $this->team_repo->get($winning_team_id);
+    return new Wpbb_MatchPick([
+      'round_index' => $data['round_index'],
+      'match_index' => $data['match_index'],
+      'winning_team_id' => $winning_team_id,
+      'id' => $data['id'],
+      'winning_team' => $winning_team,
+    ]);
+  }
+
   private function get_picks(int $play_id): array {
     $table_name = $this->picks_table();
     $where = $play_id ? "WHERE bracket_play_id = $play_id" : '';
@@ -225,37 +243,6 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     return $query->found_posts;
   }
 
-  // get all plays for a specific bracket
-  public function get_all_by_bracket(int $bracket_id): array {
-    $query = new WP_Query([
-      'post_type' => Wpbb_BracketPlay::get_post_type(),
-      'posts_per_page' => -1,
-      'post_status' => 'any',
-      'bracket_id' => $bracket_id,
-    ]);
-    $plays = [];
-    foreach ($query->posts as $post) {
-      $plays[] = $this->get($post, false, false);
-    }
-    return $plays;
-  }
-
-  // get plays made by a specific author
-  public function get_all_by_author(int $bracket_id): array {
-    $query = new WP_Query([
-      'post_type' => Wpbb_BracketPlay::get_post_type(),
-      'posts_per_page' => -1,
-      'post_status' => 'any',
-      'author' => get_current_user_id(),
-    ]);
-
-    $plays = [];
-    foreach ($query->posts as $post) {
-      $plays[] = $this->get($post, false, false);
-    }
-    return $plays;
-  }
-
   /**
    * @throws Wpbb_ValidationException
    */
@@ -321,6 +308,65 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
       'match_index' => $pick->match_index,
       'winning_team_id' => $pick->winning_team_id,
     ]);
+  }
+
+  /**
+   * Get an array of users and their picks for the given bracket result
+   *
+   * @param int $bracket_id The bracket id
+   * @param Wpbb_MatchPick $bracket_result The bracket result to match against
+   *
+   * @return array An array of objects with the user and their pick
+   */
+  public function get_user_picks_for_result(
+    Wpbb_Bracket|int|null $bracket_id,
+    Wpbb_MatchPick $bracket_result
+  ) {
+    if (!$bracket_id) {
+      return [];
+    }
+    if ($bracket_id instanceof Wpbb_Bracket) {
+      $bracket_id = $bracket_id->id;
+    }
+    global $wpdb;
+    $plays_table = $this->plays_table();
+    $picks_table = $this->picks_table();
+    $posts_table = $wpdb->prefix . 'posts';
+    $users_table = $wpdb->prefix . 'users';
+
+    $query = "
+        SELECT users.ID as user_id, picks.id as pick_id, plays.post_id as play_id
+        FROM $plays_table plays
+        JOIN $picks_table picks 
+        ON picks.bracket_play_id = plays.id
+        AND picks.round_index = %d
+        AND picks.match_index = %d
+        JOIN $posts_table posts
+        ON posts.ID = plays.post_id
+        JOIN $users_table users
+        ON users.ID = posts.post_author
+        WHERE plays.bracket_post_id = %d
+        GROUP BY posts.post_author;
+        ";
+
+    $prepared_query = $wpdb->prepare(
+      $query,
+      $bracket_result->round_index,
+      $bracket_result->match_index,
+      $bracket_id
+    );
+
+    $results = $wpdb->get_results($prepared_query);
+    $user_picks = [];
+    foreach ($results as $result) {
+      $user_pick = [
+        'play_id' => $result->play_id,
+        'user_id' => $result->user_id,
+        'pick_id' => $result->pick_id,
+      ];
+      $user_picks[] = $user_pick;
+    }
+    return $user_picks;
   }
 
   public function update($play_id, $data) {
