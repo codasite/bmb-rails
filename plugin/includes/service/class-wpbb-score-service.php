@@ -10,7 +10,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   '/repository/class-wpbb-bracket-repo.php';
 
-class Wpbb_ScoreService implements Wpbb_ScoreService_Interface {
+class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
   /**
    * This method scores bracket plays against bracket results
    */
