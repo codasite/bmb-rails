@@ -229,7 +229,8 @@ class Wpbb_GelatoProductIntegration implements
 
   public function mark_play_printed(WC_Order $order, WC_Order_Item $item) {
     print_r('------------------------before--------------------------------');
-    $play = $item->get_meta('bracket_config');
+    $bracket_config = $item->get_meta('bracket_config');
+    $play_id = $bracket_config->play_id;
     print_r($play);
     print_r('------------------------after--------------------------------');
 

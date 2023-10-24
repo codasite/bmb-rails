@@ -371,7 +371,25 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
   }
 
   public function update($play_id, $data) {
-    throw new Exception('Not implemented');
+    global $wpdb;
+    $plays_table = $this->plays_table();
+
+    $query = "UPDATE $plays_table plays";
+    $updates = array();
+    foreach ($data as $column => $value) {
+      $updates[] = "$column = '$value'";
+    }
+    $query .= ' SET ' . implode(', ', $updates);
+    $query .= " WHERE $plays.id = %d";
+
+    $prepared_query = $wpdb->prepare(
+      $query,
+      $play_id
+    );
+
+    $wpdb->query($prepared_query);
+
+    return $this->get($play_id);
   }
 
   public function picks_table() {
