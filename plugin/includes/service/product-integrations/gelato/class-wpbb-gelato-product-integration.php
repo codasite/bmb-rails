@@ -234,11 +234,14 @@ class Wpbb_GelatoProductIntegration implements
     echo 'play_id: ' . $play_id . '<br>';
     print_r('------------------------after--------------------------------');
 
-    if (!$play) {
+    if (!$play_id) {
       return;
     }
-    $play->is_printed = true;
-    $this->play_repo->update($play);
+    $data = [
+      'is_printed' => true,
+      // maybe: 'is_printed' => 1
+    ];
+    $this->play_repo->update($play, $data);
   }
 
   private function get_meta(Wpbb_PostBracketInterface $bracket): array {
