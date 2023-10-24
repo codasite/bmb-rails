@@ -227,7 +227,15 @@ class Wpbb_GelatoProductIntegration implements
     return null;
   }
 
-  public function mark_play_printed(WC_Order $order, WC_Order_Item $item) {}
+  public function mark_play_printed(WC_Order $order, WC_Order_Item $item) {
+    print_r($item);
+    $play = $this->play_repo->get_by_id($item->get_variation_id());
+    if (!$play) {
+      return;
+    }
+    $play->is_printed = true;
+    $this->play_repo->update($play);
+  }
 
   private function get_meta(Wpbb_PostBracketInterface $bracket): array {
     $meta = json_decode(
