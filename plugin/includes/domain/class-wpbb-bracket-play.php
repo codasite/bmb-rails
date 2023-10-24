@@ -40,6 +40,11 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
    */
   public $busted_id;
 
+  /**
+   * @var bool
+   */
+  public $is_printed;
+
   public function __construct(array $data = []) {
     parent::__construct($data);
 
