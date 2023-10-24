@@ -207,7 +207,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_user_info_and_last_round_pick() {
-    $bracket = new Wpbb_Bracket([
+    $bracket = self::factory()->bracket->create_object([
       'title' => 'Test Bracket',
       'status' => 'publish',
       'author' => 1,
@@ -232,7 +232,6 @@ class BracketRepoTest extends WPBB_UnitTestCase {
       // ]
     ]);
 
-    $bracket = $this->bracket_repo->add($bracket);
     $user = $this->factory->user->create_and_get();
     // print_r($user);
     $picks = [
