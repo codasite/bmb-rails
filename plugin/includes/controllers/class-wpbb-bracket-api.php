@@ -27,7 +27,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
   protected $rest_base;
 
   /**
-   * @var Wpbb_Score_Service
+   * @var Wpbb_ScoreService
    */
   private $score_service;
 
@@ -43,7 +43,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
-    $this->score_service = $args['score_service'] ?? new Wpbb_Score_Service();
+    $this->score_service = $args['score_service'] ?? new Wpbb_ScoreService();
     try {
       $this->notification_service =
         $args['notification_service'] ?? new Wpbb_Notification_Service();

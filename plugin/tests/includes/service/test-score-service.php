@@ -2,7 +2,7 @@
 require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-score-service.php';
 require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-match-pick.php';
 
-class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
+class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
   public function set_up() {
     parent::set_up();
   }
@@ -49,7 +49,7 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_Score_Service();
+    $score_service = new Wpbb_ScoreService();
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play1->id);
@@ -99,7 +99,7 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_Score_Service();
+    $score_service = new Wpbb_ScoreService();
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play1->id);
@@ -165,7 +165,7 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_Score_Service();
+    $score_service = new Wpbb_ScoreService();
     $affected = $score_service->score_bracket_plays($bracket1);
 
     $updated = $score_service->play_repo->get($play->id);
@@ -235,7 +235,7 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
       'picks' => $play_picks,
     ]);
 
-    $score_service = new Wpbb_Score_Service();
+    $score_service = new Wpbb_ScoreService();
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play->id);
@@ -334,7 +334,7 @@ class Test_Wpbb_Score_Service extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_Score_Service();
+    $score_service = new Wpbb_ScoreService();
     $affected = $score_service->score_bracket_plays($update_bracket);
 
     $updated = $score_service->play_repo->get($play->id);

@@ -149,6 +149,13 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     return new Wpbb_Bracket($data);
   }
 
+  public function get_last_result(): ?Wpbb_MatchPick {
+    if (!$this->results) {
+      return null;
+    }
+    return $this->results[count($this->results) - 1];
+  }
+
   public function to_array(): array {
     $bracket = parent::to_array();
     $bracket['num_teams'] = $this->num_teams;

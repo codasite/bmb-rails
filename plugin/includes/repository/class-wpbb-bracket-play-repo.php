@@ -318,10 +318,16 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
    *
    * @return array An array of objects with the user and their pick
    */
-  public function get_user_pick_for_result(
-    int $bracket_id,
+  public function get_user_picks_for_result(
+    Wpbb_Bracket|int|null $bracket_id,
     Wpbb_MatchPick $bracket_result
   ) {
+    if (!$bracket_id) {
+      return [];
+    }
+    if ($bracket_id instanceof Wpbb_Bracket) {
+      $bracket_id = $bracket_id->id;
+    }
     global $wpdb;
     $plays_table = $this->plays_table();
     $picks_table = $this->picks_table();

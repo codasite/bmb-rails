@@ -14,34 +14,37 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
   protected Wpbb_Email_Service_Interface $email_service;
 
   protected Wpbb_BracketRepo $bracket_repo;
+  protected Wpbb_BracketPlayRepo $play_repo;
 
   public function __construct($args = []) {
     $this->email_service =
       $args['email_service'] ?? new Wpbb_Mailchimp_Email_Service();
+    $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
   }
 
-  public function notify_bracket_results_updated($bracket_id): void {
-    $play_repo = new Wpbb_BracketPlayRepo();
-    $team_repo = new Wpbb_BracketTeamRepo();
-
-    $bracket = $this->bracket_repo->get($bracket_id);
-    $final_round_pick = end($bracket->results);
-    $user_picks = $this->bracket_repo->get_user_pick_for_result(
-      $bracket_id,
-      $final_round_pick
+  public function notify_bracket_results_updated(
+    Wpbb_Bracket|int|null $bracket
+  ): void {
+    if (!$bracket) {
+      return;
+    }
+    if (is_numeric($bracket)) {
+      $bracket = $this->bracket_repo->get($bracket);
+    }
+    $bracket_id = $bracket->id;
+    $winning_pick = $bracket->get_last_result();
+    $user_picks = $this->play_repo->get_user_picks_for_result(
+      $bracket,
+      $winning_pick
     );
 
-    foreach ($user_picks as $pick) {
-      $to_email = $pick->email;
-      $to_name = $pick->name;
-      $subject = 'Back My Bracket Notification';
-      $user_bracket_pick = $team_repo->get($pick->winning_team_id);
-      $user_pick = strtoupper($user_bracket_pick->name);
-      $winner_bracket_pick = $team_repo->get(
-        $final_round_pick->winning_team_id
-      );
-      $winner = strtoupper($winner_bracket_pick->name);
+    foreach ($user_picks as $user_pick) {
+      $user = get_user_by('id', $user_pick['user_id']);
+      $to_email = $user->user_email;
+      $to_name = $user->display_name;
+      $subject = 'Bracket Results Updated';
+      $pick = $user_pick['pick'];
       $bracket_url = get_permalink($bracket_id) . '/leaderboard';
       $message = [
         'to' => [
@@ -57,12 +60,7 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
         'https://backmybracket.com/wp-content/uploads/2023/10/bracket_bg.png';
       $logo_url =
         'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
-      if ($user_pick == $winner) {
-        $heading = 'You picked ' . $user_pick . '... and they won!';
-      } else {
-        $heading =
-          'You picked ' . $user_pick . ', but ' . $winner . ' won the round...';
-      }
+      $heading = $this->get_pick_result_heading($pick, $winning_pick);
       $button_url = get_permalink($bracket_id) . '/leaderboard';
       $button_text = 'View Bracket';
 
@@ -80,5 +78,24 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
         $html
       );
     }
+  }
+
+  public function get_pick_result_heading(
+    Wpbb_MatchPick $pick,
+    Wpbb_MatchPick $result
+  ): string {
+    if ($this->correct_picked($pick, $result)) {
+      return 'You picked ' . $pick->winning_team->name . '... and they won!';
+    } else {
+      return 'You picked ' .
+        $pick->winning_team->name .
+        ', but ' .
+        $result->winning_team->name .
+        ' won the round...';
+    }
+  }
+
+  public function correct_picked(Wpbb_MatchPick $pick, Wpbb_MatchPick $result) {
+    return $pick->winning_team_id === $result->winning_team_id;
   }
 }

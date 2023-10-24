@@ -221,7 +221,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($play1->id, $plays[0]->id);
     $this->assertEquals($play2->id, $plays[1]->id);
   }
-  public function test_get_user_pick_for_result() {
+  public function test_get_user_picks_for_result() {
     $bracket = self::factory()->bracket->create_object([
       'num_teams' => 4,
     ]);
@@ -246,7 +246,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'winning_team_id' => $bracket->matches[0]->team1->id,
     ]);
 
-    $user_picks = $this->play_repo->get_user_pick_for_result(
+    $user_picks = $this->play_repo->get_user_picks_for_result(
       $bracket->id,
       $result
     );
@@ -322,7 +322,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'winning_team_id' => $bracket->matches[0]->team1->id,
     ]);
 
-    $user_picks = $this->play_repo->get_user_pick_for_result(
+    $user_picks = $this->play_repo->get_user_picks_for_result(
       $bracket->id,
       $result
     );
