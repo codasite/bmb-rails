@@ -103,7 +103,6 @@ class Wpbb_Activator {
 			busted_play_post_id bigint(20) UNSIGNED,
 			busted_play_id bigint(20) UNSIGNED,
       is_printed tinyint(1) NOT NULL DEFAULT 0,
-      -- printed = tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE,
