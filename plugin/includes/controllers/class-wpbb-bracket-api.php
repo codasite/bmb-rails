@@ -9,6 +9,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-notification-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-notification-service-interface.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
 
 class Wpbb_BracketApi extends WP_REST_Controller {
   /**
@@ -37,9 +38,15 @@ class Wpbb_BracketApi extends WP_REST_Controller {
   private ?Wpbb_NotificationService_Interface $notification_service;
 
   /**
+   * @var Wpbb_Utils
+   */
+  private $utils;
+
+  /**
    * Constructor.
    */
   public function __construct($args = []) {
+    $this->utils = new Wpbb_Utils();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
@@ -202,6 +209,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
    * @return WP_Error|WP_REST_Response
    */
   public function update_item($request) {
+    throw new Exception('update_item not implemented');
     $bracket_id = $request->get_param('item_id');
     if (!current_user_can('wpbb_edit_bracket', $bracket_id)) {
       return new WP_Error(
@@ -242,6 +250,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
         $this->score_service->score_bracket_plays($updated);
         $notify = $request->get_param('update_notify_players');
         if ($this->notification_service && $notify) {
+          $this->utils->log('Notifying players of bracket update');
           $this->notification_service->notify_bracket_results_updated(
             $bracket_id
           );
