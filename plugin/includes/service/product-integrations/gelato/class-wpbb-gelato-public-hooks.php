@@ -407,6 +407,8 @@ class Wpbb_GelatoPublicHooks {
             // update the cart item with the new s3 url for record keeping
             $item->update_meta_data('s3_url', $order_url);
             $item->save();
+            // if all went well, do the play_printed action
+            do_action('wpbb_play_printed', $order, $item);
           } catch (Exception $e) {
             $this->utils->log_sentry_message(
               $e->getMessage(),

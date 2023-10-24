@@ -16,11 +16,6 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
    */
 
   /**
-   * @var Wpbb_Bracket
-   */
-  public $bracket;
-
-  /**
    * @var Wpbb_BracketPlayRepo
    */
   public $play_repo;
@@ -40,21 +35,26 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
    */
   private $utils;
 
-  public function __construct($bracket = null) {
+  /**
+   * @var bool
+   */
+  private $only_score_printed_plays;
+
+  public function __construct($opts = []) {
     global $wpdb;
     $this->wpdb = $wpdb;
-    $this->bracket = $bracket;
     $this->play_repo = new Wpbb_BracketPlayRepo();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->utils = new Wpbb_Utils();
+    $this->only_score_printed_plays = $opts['only_score_printed_plays'] ?? true;
   }
 
   /**
    * @param Wpbb_Bracket|int|null $bracket
    * @return int returns the number of plays scored
    */
-  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket, bool $only_score_printed_plays = true): int {
+  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket): int {
     try {
       $affected_rows = $this->score_plays($bracket);
       return $affected_rows;
@@ -124,8 +124,10 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
     		p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
     WHERE p0.bracket_id = $bracket_id
     ";
-    
-    $sql = ($only_score_printed_plays) ? $sql . " AND p0.is_printed = 1" : $sql;
+
+    $sql = $this->only_score_printed_plays
+      ? $sql . ' AND p0.is_printed = 1'
+      : $sql;
 
     $this->wpdb->query($sql);
     return $this->wpdb->rows_affected;
