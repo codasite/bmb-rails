@@ -54,7 +54,7 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
    * @param Wpbb_Bracket|int|null $bracket
    * @return int returns the number of plays scored
    */
-  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket): int {
+  public function score_bracket_plays(Wpbb_Bracket|int|null $bracket, bool $only_score_printed_plays = true): int {
     try {
       $affected_rows = $this->score_plays($bracket);
       return $affected_rows;
@@ -124,6 +124,8 @@ class Wpbb_Score_Service implements Wpbb_Score_Service_Interface {
     		p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
     WHERE p0.bracket_id = $bracket_id
     ";
+    
+    $sql = ($only_score_printed_plays) ? $sql . " AND p0.is_printed = 1" : $sql;
 
     $this->wpdb->query($sql);
     return $this->wpdb->rows_affected;
