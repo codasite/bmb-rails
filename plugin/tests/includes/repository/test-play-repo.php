@@ -254,14 +254,13 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(count($user_picks), 1);
     $user_pick = $user_picks[0];
     // $this->assertEquals($play->id, $user_pick['play_id']);
-    $this->assertEquals($user->ID, $user_pick['user']->ID);
-    $this->assertEquals($play->picks[0]->id, $user_pick['pick']->id);
-    $this->assertEquals($result->round_index, $user_pick['pick']->round_index);
-    $this->assertEquals($result->match_index, $user_pick['pick']->match_index);
-    $this->assertEquals(
-      $result->winning_team_id,
-      $user_pick['pick']->winning_team_id
-    );
+    $this->assertEquals($user->ID, $user_pick['user_id']);
+    $this->assertEquals($play->picks[0]->id, $user_pick['pick_id']);
+
+    $pick = $this->play_repo->get_pick($user_picks[0]['pick_id']);
+    $this->assertEquals($result->round_index, $pick->round_index);
+    $this->assertEquals($result->match_index, $pick->match_index);
+    $this->assertEquals($result->winning_team_id, $pick->winning_team_id);
   }
 
   public function test_get_multiple_user_picks_for_result() {
@@ -330,27 +329,23 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(count($user_picks), 2);
 
     $user_pick1 = $user_picks[0];
-    $this->assertEquals($user1->ID, $user_pick1['user']->ID);
-    $this->assertEquals($play1->picks[2]->id, $user_pick1['pick']->id);
-    $this->assertEquals($result->round_index, $user_pick1['pick']->round_index);
-    $this->assertEquals($result->match_index, $user_pick1['pick']->match_index);
-    $this->assertEquals(
-      $result->winning_team_id,
-      $user_pick1['pick']->winning_team_id
-    );
+    $this->assertEquals($user1->ID, $user_pick1['user_id']);
+    $this->assertEquals($play1->picks[2]->id, $user_pick1['pick_id']);
+    $pick1 = $this->play_repo->get_pick($user_pick1['pick_id']);
+    $this->assertEquals($result->round_index, $pick1->round_index);
+    $this->assertEquals($result->match_index, $pick1->match_index);
+    $this->assertEquals($result->winning_team_id, $pick1->winning_team_id);
 
     $user_pick2 = $user_picks[1];
-    $this->assertEquals($user2->ID, $user_pick2['user']->ID);
-    $this->assertEquals($play2->picks[2]->id, $user_pick2['pick']->id);
-    $this->assertEquals($result->round_index, $user_pick2['pick']->round_index);
-    $this->assertEquals($result->match_index, $user_pick2['pick']->match_index);
-    $this->assertNotEquals(
-      $result->winning_team_id,
-      $user_pick2['pick']->winning_team_id
-    );
+    $this->assertEquals($user2->ID, $user_pick2['user_id']);
+    $this->assertEquals($play2->picks[2]->id, $user_pick2['pick_id']);
+    $pick2 = $this->play_repo->get_pick($user_pick2['pick_id']);
+    $this->assertEquals($result->round_index, $pick2->round_index);
+    $this->assertEquals($result->match_index, $pick2->match_index);
+    $this->assertNotEquals($result->winning_team_id, $pick2->winning_team_id);
     $this->assertEquals(
       $bracket->matches[0]->team2->id,
-      $user_pick2['pick']->winning_team_id
+      $pick2->winning_team_id
     );
   }
 }

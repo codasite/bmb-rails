@@ -115,7 +115,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     return new Wpbb_BracketPlay($data);
   }
 
-  private function get_pick(int $pick_id): ?Wpbb_MatchPick {
+  public function get_pick(int $pick_id): ?Wpbb_MatchPick {
     $table_name = $this->picks_table();
     $sql = "SELECT * FROM $table_name WHERE id = $pick_id";
     $data = $this->wpdb->get_row($sql, ARRAY_A);
@@ -361,8 +361,8 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     foreach ($results as $result) {
       $user_pick = [
         'play_id' => $result->play_id,
-        'user' => get_user_by('id', $result->user_id),
-        'pick' => $this->get_pick($result->pick_id),
+        'user_id' => $result->user_id,
+        'pick_id' => $result->pick_id,
       ];
       $user_picks[] = $user_pick;
     }

@@ -76,4 +76,15 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       )
     );
   }
+
+  public function test_notify_bracket_results_updated() {
+    $email_mock = $this->getMockBuilder('Wpbb_EmailServiceInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    // $email_mock
+    //   ->expects($this->once())
+    //   ->method('send')
+    //   ->with(
+    //     $this->equalTo('
+  }
 }
