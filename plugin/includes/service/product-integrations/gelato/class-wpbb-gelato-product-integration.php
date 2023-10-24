@@ -227,6 +227,8 @@ class Wpbb_GelatoProductIntegration implements
     return null;
   }
 
+  public function mark_play_printed(WC_Order $order, WC_Order_Item $item) {}
+
   private function get_meta(Wpbb_PostBracketInterface $bracket): array {
     $meta = json_decode(
       get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true),

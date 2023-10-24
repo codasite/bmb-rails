@@ -291,6 +291,13 @@ class Wp_Bracket_Builder {
       10,
       3
     );
+    $this->loader->add_action(
+      'wpbb_play_printed',
+      $gelato_product_integration,
+      'mark_play_printed',
+      10,
+      2,
+    );
     $public_hooks = new Wpbb_PublicHooks();
     $this->loader->add_action('init', $public_hooks, 'add_rewrite_tags', 10, 0);
     $this->loader->add_action(
