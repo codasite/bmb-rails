@@ -279,6 +279,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
       'busted_play_id' => $busted_play_id ?? null,
       'total_score' => $play->total_score,
       'accuracy_score' => $play->accuracy_score,
+      'is_printed' => $play->is_printed ?? false,
     ]);
 
     if ($play_id && $play->picks) {

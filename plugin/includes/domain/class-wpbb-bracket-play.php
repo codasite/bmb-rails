@@ -54,6 +54,7 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     $this->total_score = $data['total_score'] ?? null;
     $this->accuracy_score = $data['accuracy_score'] ?? null;
     $this->busted_id = $data['busted_id'] ?? null;
+    $this->is_printed = $data['is_printed'] ?? false;
   }
 
   public static function get_post_type(): string {
