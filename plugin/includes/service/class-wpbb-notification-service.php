@@ -41,10 +41,10 @@ class Wpbb_NotificationService implements Wpbb_NotificationService_Interface {
 
     foreach ($user_picks as $user_pick) {
       $user = get_user_by('id', $user_pick['user_id']);
+      $pick = $this->play_repo->get_pick($user_pick['pick_id']);
       $to_email = $user->user_email;
       $to_name = $user->display_name;
       $subject = 'Bracket Results Updated';
-      $pick = $user_pick['pick'];
       $bracket_url = get_permalink($bracket_id) . '/leaderboard';
       $message = [
         'to' => [
@@ -82,20 +82,23 @@ class Wpbb_NotificationService implements Wpbb_NotificationService_Interface {
 
   public function get_pick_result_heading(
     Wpbb_MatchPick $pick,
-    Wpbb_MatchPick $result
+    Wpbb_MatchPick $correct_pick
   ): string {
-    if ($this->correct_picked($pick, $result)) {
+    if ($this->correct_picked($pick, $correct_pick)) {
       return 'You picked ' . $pick->winning_team->name . '... and they won!';
     } else {
       return 'You picked ' .
         $pick->winning_team->name .
         ', but ' .
-        $result->winning_team->name .
+        $correct_pick->winning_team->name .
         ' won the round...';
     }
   }
 
-  public function correct_picked(Wpbb_MatchPick $pick, Wpbb_MatchPick $result) {
-    return $pick->winning_team_id === $result->winning_team_id;
+  public function correct_picked(
+    Wpbb_MatchPick $pick,
+    Wpbb_MatchPick $correct_pick
+  ) {
+    return $pick->winning_team_id === $correct_pick->winning_team_id;
   }
 }

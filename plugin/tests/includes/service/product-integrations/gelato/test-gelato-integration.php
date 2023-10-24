@@ -7,7 +7,7 @@ require_once WPBB_PLUGIN_DIR .
 
 class GelatoIntgrationTest extends WPBB_UnitTestCase {
   public function test_generate_images() {
-    $post = $this->factory()->post->create_and_get([
+    $post = self::factory()->post->create_and_get([
       'post_type' => 'bracket_play',
     ]);
     $bracket_mock = $this->createMock(Wpbb_PostBracketInterface::class);
@@ -97,7 +97,7 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_overlay_map() {
-    $post = $this->factory()->post->create_and_get([
+    $post = self::factory()->post->create_and_get([
       'post_type' => 'bracket_play',
     ]);
     $bracket_mock = $this->createMock(Wpbb_PostBracketInterface::class);

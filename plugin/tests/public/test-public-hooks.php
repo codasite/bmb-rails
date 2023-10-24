@@ -4,7 +4,7 @@ require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public-hooks.php';
 
 class PublicHooksTest extends WPBB_UnitTestCase {
   public function test_role_is_added_when_sub_activated() {
-    $user = $this->factory->user->create_and_get();
+    $user = self::factory()->user->create_and_get();
 
     // check that the role is added when the subscription is activated
     //standard class mock
@@ -22,7 +22,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_role_is_removed_when_sub_canceled() {
-    $user = $this->factory->user->create_and_get();
+    $user = self::factory()->user->create_and_get();
     $user_id = $user->ID;
     $user->set_role('bmb_plus');
 
@@ -43,7 +43,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_other_roles_are_not_removed_when_sub_activated() {
-    $user = $this->factory->user->create_and_get();
+    $user = self::factory()->user->create_and_get();
     $user->set_role('subscriber');
 
     // check that the role is added when the subscription is activated
@@ -62,7 +62,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertTrue(in_array('subscriber', $user->roles));
   }
   public function test_other_roles_are_not_removed_when_sub_canceled() {
-    $user = $this->factory->user->create_and_get();
+    $user = self::factory()->user->create_and_get();
     $user->add_role('subscriber');
     $user->add_role('bmb_plus');
 

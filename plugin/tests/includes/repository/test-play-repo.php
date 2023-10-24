@@ -226,7 +226,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
     ]);
 
-    $user = $this->factory->user->create_and_get();
+    $user = self::factory()->user->create_and_get();
 
     $play = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
@@ -268,8 +268,8 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
     ]);
 
-    $user1 = $this->factory->user->create_and_get();
-    $user2 = $this->factory->user->create_and_get();
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
 
     $play1 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
