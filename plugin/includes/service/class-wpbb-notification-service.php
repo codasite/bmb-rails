@@ -27,7 +27,7 @@ class Wpbb_Notification_Service implements Wpbb_Notification_Service_Interface {
 
     $bracket = $this->bracket_repo->get($bracket_id);
     $final_round_pick = end($bracket->results);
-    $user_picks = $this->bracket_repo->get_user_info_and_last_round_pick(
+    $user_picks = $this->bracket_repo->get_user_pick_for_result(
       $bracket_id,
       $final_round_pick
     );

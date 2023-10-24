@@ -23,16 +23,10 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
    */
   private $wpdb;
 
-  /**
-   * @var Wpbb_Notification_Service
-   */
-  private $notification_service;
-
   public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = new Wpbb_BracketTeamRepo();
-    $this->notification_service = new Wpbb_Notification_Service();
     parent::__construct();
   }
 
@@ -189,8 +183,6 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       $this->update_results($bracket_id, $bracket->results);
     }
 
-    // $this->notification_service->notify_bracket_updated($bracket_id);
-
     # refresh from db
     $bracket = $this->get($post_id);
     return $bracket;
@@ -335,44 +327,6 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       }
     }
     return $brackets;
-  }
-
-  public function get_user_info_and_last_round_pick(
-    $bracket_id,
-    $final_round_pick
-  ) {
-    global $wpdb;
-
-    /**
-     * @var $query string
-     * Sorts picks for bracket by round index and
-     * returns the author's email, display name, the
-     * winning pick and the winning result.
-     */
-
-    $query = "
-        SELECT author.user_email as email, author.display_name as name, pick.winning_team_id as winning_team_id
-        FROM wp_bracket_builder_plays play
-        JOIN wp_bracket_builder_match_picks pick 
-        ON pick.bracket_play_id = play.id
-        AND pick.round_index = %d
-        AND pick.match_index = %d
-        JOIN wp_posts post
-        ON post.ID = play.post_id
-        JOIN wp_users author
-        ON author.ID = post.post_author
-        WHERE play.bracket_post_id = %d
-        GROUP BY post.post_author;
-        ";
-
-    $prepared_query = $wpdb->prepare(
-      $query,
-      $final_round_pick->round_index,
-      $final_round_pick->match_index,
-      $bracket_id
-    );
-    $results = $wpdb->get_results($prepared_query);
-    return $results;
   }
 
   public function delete(int $id, $force = false): bool {

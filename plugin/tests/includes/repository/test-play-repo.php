@@ -6,6 +6,8 @@ require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-repo.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/repository/class-wpbb-bracket-repo.php';
 
 class PlayRepoTest extends WPBB_UnitTestCase {
   private $play_repo;
@@ -218,5 +220,137 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(2, count($plays));
     $this->assertEquals($play1->id, $plays[0]->id);
     $this->assertEquals($play2->id, $plays[1]->id);
+  }
+  public function test_get_user_pick_for_result() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 4,
+    ]);
+
+    $user = $this->factory->user->create_and_get();
+
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'author' => $user->ID,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $result = new Wpbb_MatchPick([
+      'round_index' => 0,
+      'match_index' => 0,
+      'winning_team_id' => $bracket->matches[0]->team1->id,
+    ]);
+
+    $user_picks = $this->play_repo->get_user_pick_for_result(
+      $bracket->id,
+      $result
+    );
+
+    $this->assertEquals(count($user_picks), 1);
+    $user_pick = $user_picks[0];
+    // $this->assertEquals($play->id, $user_pick['play_id']);
+    $this->assertEquals($user->ID, $user_pick['user']->ID);
+    $this->assertEquals($play->picks[0]->id, $user_pick['pick']->id);
+    $this->assertEquals($result->round_index, $user_pick['pick']->round_index);
+    $this->assertEquals($result->match_index, $user_pick['pick']->match_index);
+    $this->assertEquals(
+      $result->winning_team_id,
+      $user_pick['pick']->winning_team_id
+    );
+  }
+
+  public function test_get_multiple_user_picks_for_result() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 4,
+    ]);
+
+    $user1 = $this->factory->user->create_and_get();
+    $user2 = $this->factory->user->create_and_get();
+
+    $play1 = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'author' => $user1->ID,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $play2 = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'author' => $user2->ID,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $result = new Wpbb_MatchPick([
+      'round_index' => 1,
+      'match_index' => 0,
+      'winning_team_id' => $bracket->matches[0]->team1->id,
+    ]);
+
+    $user_picks = $this->play_repo->get_user_pick_for_result(
+      $bracket->id,
+      $result
+    );
+
+    $this->assertEquals(count($user_picks), 2);
+
+    $user_pick1 = $user_picks[0];
+    $this->assertEquals($user1->ID, $user_pick1['user']->ID);
+    $this->assertEquals($play1->picks[2]->id, $user_pick1['pick']->id);
+    $this->assertEquals($result->round_index, $user_pick1['pick']->round_index);
+    $this->assertEquals($result->match_index, $user_pick1['pick']->match_index);
+    $this->assertEquals(
+      $result->winning_team_id,
+      $user_pick1['pick']->winning_team_id
+    );
+
+    $user_pick2 = $user_picks[1];
+    $this->assertEquals($user2->ID, $user_pick2['user']->ID);
+    $this->assertEquals($play2->picks[2]->id, $user_pick2['pick']->id);
+    $this->assertEquals($result->round_index, $user_pick2['pick']->round_index);
+    $this->assertEquals($result->match_index, $user_pick2['pick']->match_index);
+    $this->assertNotEquals(
+      $result->winning_team_id,
+      $user_pick2['pick']->winning_team_id
+    );
+    $this->assertEquals(
+      $bracket->matches[0]->team2->id,
+      $user_pick2['pick']->winning_team_id
+    );
   }
 }

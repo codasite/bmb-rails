@@ -9,12 +9,17 @@ class Wpbb_Mailchimp_Email_Service implements Wpbb_Email_Service_Interface {
   public $from_email;
 
   public function __construct($args = []) {
-    $api_key = MAILCHIMP_API_KEY;
-    $this->from_email = MAILCHIMP_FROM_EMAIL;
+    $api_key =
+      $args['api_key'] ??
+      (defined('MAILCHIMP_API_KEY') ? MAILCHIMP_API_KEY : null);
+    $this->from_email =
+      $args['from_email'] ??
+      (defined('MAILCHIMP_FROM_EMAIL') ? MAILCHIMP_FROM_EMAIL : null);
     if (!$api_key || !$this->from_email) {
       throw new Exception('API Key and From Email must be defined');
     }
-    $this->client = new \MailchimpTransactional\ApiClient();
+    $this->client =
+      $args['api_client'] ?? new \MailchimpTransactional\ApiClient();
     $this->client->setApiKey($api_key);
   }
 
