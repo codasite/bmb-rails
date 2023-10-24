@@ -231,7 +231,7 @@ class Wpbb_GelatoProductIntegration implements
     print_r('------------------------before--------------------------------');
     $bracket_config = $item->get_meta('bracket_config');
     $play_id = $bracket_config->play_id;
-    print_r($play);
+    echo 'play_id: ' . $play_id . '<br>';
     print_r('------------------------after--------------------------------');
 
     if (!$play) {
