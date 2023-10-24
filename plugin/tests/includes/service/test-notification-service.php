@@ -34,4 +34,46 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       $notification_service->correct_picked($incorrect_pick, $winning_pick)
     );
   }
+
+  public function test_get_pick_result_heading() {
+    $email_mock = $this->getMockBuilder('Wpbb_EmailServiceInterface')
+      ->disableOriginalConstructor()
+      ->getMock();
+    $notification_service = new Wpbb_NotificationService([
+      'email_service' => $email_mock,
+    ]);
+    $winning_pick = new Wpbb_MatchPick([
+      'round_index' => 0,
+      'match_index' => 0,
+      'winning_team_id' => 1,
+      'winning_team' => new Wpbb_Team(['name' => 'Team 1']),
+    ]);
+    $correct_pick = new Wpbb_MatchPick([
+      'round_index' => 0,
+      'match_index' => 0,
+      'winning_team_id' => 1,
+      'winning_team' => new Wpbb_Team(['name' => 'Team 1']),
+    ]);
+    $incorrect_pick = new Wpbb_MatchPick([
+      'round_index' => 0,
+      'match_index' => 0,
+      'winning_team_id' => 2,
+      'winning_team' => new Wpbb_Team(['name' => 'Team 2']),
+    ]);
+
+    $this->assertEquals(
+      'You picked Team 1... and they won!',
+      $notification_service->get_pick_result_heading(
+        $correct_pick,
+        $winning_pick
+      )
+    );
+    $this->assertEquals(
+      'You picked Team 2, but Team 1 won the round...',
+      $notification_service->get_pick_result_heading(
+        $incorrect_pick,
+        $winning_pick
+      )
+    );
+  }
 }
