@@ -35,12 +35,16 @@ class Wpbb_GelatoPublicHooks {
    */
   private $pdf_service;
 
-  public function __construct(Wpbb_GelatoProductIntegration $gelato) {
-    $this->bracket_product_utils = new Wpbb_BracketProductUtils();
-    $this->utils = new Wpbb_Utils();
+  public function __construct(
+    Wpbb_GelatoProductIntegration $gelato,
+    $opts = []
+  ) {
     $this->gelato = $gelato;
-    $this->s3 = new Wpbb_S3Service();
-    $this->pdf_service = new Wpbb_PdfService();
+    $this->bracket_product_utils =
+      $opts['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
+    $this->utils = $opts['utils'] ?? new Wpbb_Utils();
+    $this->s3 = $opts['s3'] ?? new Wpbb_S3Service();
+    $this->pdf_service = $opts['pdf_service'] ?? new Wpbb_PdfService();
   }
 
   private function is_bracket_product($product) {
