@@ -223,17 +223,16 @@ class BracketRepoTest extends WPBB_UnitTestCase {
           ]),
         ]),
       ],
-      // 'results' => [
-      //   new Wpbb_MatchPick([
-      //     'round_index' => 0,
-      //     'match_index' => 0,
-      //     'winning_team_id' => 1,
-      //   ]),
-      // ]
+      'results' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => 1,
+        ]),
+      ]
     ]);
 
     $user = $this->factory->user->create_and_get();
-    // print_r($user);
     $picks = [
       new Wpbb_MatchPick([
         'round_index' => 0,

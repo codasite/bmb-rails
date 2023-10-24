@@ -9,6 +9,8 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'repository/class-wpbb-custom-post-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
+require_once plugin_dir_path(dirname(__FILE__)) .
+  'service/class-wpbb-notification-service.php';
 
 class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
   /**
@@ -21,10 +23,16 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
    */
   private $wpdb;
 
+  /**
+   * @var Wpbb_Notification_Service
+   */
+  private $notification_service;
+
   public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = new Wpbb_BracketTeamRepo();
+    $this->notification_service = new Wpbb_Notification_Service();
     parent::__construct();
   }
 
@@ -180,6 +188,8 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
     if ($bracket_id && $bracket->results) {
       $this->update_results($bracket_id, $bracket->results);
     }
+
+    $this->notification_service->notify_bracket_updated($bracket_id);
 
     # refresh from db
     $bracket = $this->get($post_id);
