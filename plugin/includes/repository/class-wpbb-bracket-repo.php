@@ -159,7 +159,7 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
     Wpbb_Bracket|int|null $bracket,
     array|null $data = null
   ): ?Wpbb_Bracket {
-    if (!$bracket || !$data) {
+    if ($bracket === null || empty($data)) {
       return null;
     }
     if (!($bracket instanceof Wpbb_Bracket)) {
@@ -170,7 +170,7 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
 
     $bracket = Wpbb_Bracket::from_array($updated_array);
 
-    $post_id = $this->update_post($bracket);
+    $post_id = $this->update_post($bracket, true);
 
     if (is_wp_error($post_id)) {
       return null;

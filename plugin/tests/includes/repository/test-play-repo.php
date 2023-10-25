@@ -349,19 +349,32 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     );
   }
   public function test_update_is_printed() {
-    echo 'TEST PRINTED';
     $bracket = self::factory()->bracket->create_and_get([
       'num_teams' => 4,
     ]);
     $play = self::factory()->play->create_and_get([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
     ]);
 
-    $play = $this->play_repo->update($play->id, [
+    $updated = $this->play_repo->update($play->id, [
       'is_printed' => true,
     ]);
 
-    $this->assertTrue($play->is_printed);
+    $this->assertTrue($updated->is_printed);
+    $this->assertEquals($play->id, $updated->id);
+    $this->assertEquals($play->bracket_id, $updated->bracket_id);
+    $this->assertEquals($play->author, $updated->author);
+    $this->assertEquals($play->title, $updated->title);
+    $this->assertEquals($play->total_score, $updated->total_score);
+    $this->assertEquals($play->accuracy_score, $updated->accuracy_score);
+    $this->assertEquals($play->busted_id, $updated->busted_id);
   }
 }

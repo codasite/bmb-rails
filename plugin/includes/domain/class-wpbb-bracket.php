@@ -14,7 +14,12 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
    * @var string
    */
   public $month;
+
+  /**
+   * @var string
+   */
   public $year;
+
   /**
    * @var int
    */

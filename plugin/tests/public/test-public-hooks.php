@@ -89,6 +89,13 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $play = self::factory()->play->create_and_get([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
     ]);
 
     $hooks = new Wpbb_PublicHooks();

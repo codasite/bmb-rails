@@ -53,13 +53,19 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     }
 
     parent::__construct($data);
-    $this->bracket_id = $data['bracket_id'];
+    $this->bracket_id = isset($data['bracket_id'])
+      ? (int) $data['bracket_id']
+      : null;
     $this->bracket = $data['bracket'] ?? null;
     $this->picks = $data['picks'] ?? [];
     $this->total_score = $data['total_score'] ?? null;
     $this->accuracy_score = $data['accuracy_score'] ?? null;
-    $this->busted_id = $data['busted_id'] ?? null;
-    $this->is_printed = $data['is_printed'] ?? false;
+    $this->busted_id = isset($data['busted_id'])
+      ? (int) $data['busted_id']
+      : null;
+    $this->is_printed = isset($data['is_printed'])
+      ? (bool) $data['is_printed']
+      : false;
   }
 
   public static function get_post_type(): string {
@@ -95,6 +101,23 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     $data['picks'] = $picks;
 
     return new Wpbb_BracketPlay($data);
+  }
+
+  public function to_array(): array {
+    $play = parent::to_array();
+    $play['bracket_id'] = $this->bracket_id;
+    $play['bracket'] = $this->bracket->to_array();
+    $play['total_score'] = $this->total_score;
+    $play['accuracy_score'] = $this->accuracy_score;
+    $play['busted_id'] = $this->busted_id;
+    $play['is_printed'] = $this->is_printed;
+    if ($this->picks) {
+      $play['picks'] = [];
+      foreach ($this->picks as $pick) {
+        $play['picks'][] = $pick->to_array();
+      }
+    }
+    return $play;
   }
 
   public function get_post_id(): int {
