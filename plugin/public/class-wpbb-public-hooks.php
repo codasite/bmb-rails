@@ -1,5 +1,5 @@
 <?php
-
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
 class Wpbb_PublicHooks
 {
@@ -121,12 +121,8 @@ class Wpbb_PublicHooks
 
 
 	public function mark_play_printed($order, $item) {
-		print_r('------------------------before-------------------------------- ');
 		$bracket_config = $item->get_meta('bracket_config');
-		print_r($bracket_config);
 		$play_id = $bracket_config->play_id;
-		echo 'play_id: ' . $play_id . '<br>';
-		print_r(' ------------------------after--------------------------------');
 	
 		if (!$play_id) {
 		  return;
@@ -135,6 +131,8 @@ class Wpbb_PublicHooks
 		  'is_printed' => true,
 		  // maybe: 'is_printed' => 1
 		];
-		$this->play_repo->update($play, $data);
+		$play_repo = new Wpbb_BracketPlayRepo();
+
+		$play_repo->update($play_id, $data);
 	  }
 }
