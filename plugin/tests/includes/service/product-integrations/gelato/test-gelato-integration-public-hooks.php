@@ -46,12 +46,15 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $wc_order_item_stub->method('get_product')->willReturn($wc_product_stub);
     $wc_order_item_stub
       ->method('get_meta')
-      ->with('s3_url')
-      ->willReturn('sample-s3-url');
-    $wc_order_item_stub
-      ->method('get_meta')
-      ->with('bracket_config')
-      ->willReturn($bracket_config);
+      ->willReturnCallback(function ($arg) use ($bracket_config) {
+        if ($arg === 's3_url') {
+          return 'sample-s3-url';
+        }
+        if ($arg === 'bracket_config') {
+          return $bracket_config;
+        }
+        return null; // default return value, or you can throw an exception or whatever makes sense for your use case
+      });
     $wc_order_item_stub->method('get_id')->willReturn(999);
     $product_utils_mock->method('is_bracket_product')->willReturn(true);
     $s3_mock->method('rename_from_url')->willReturn('sample-renamed-s3-url');

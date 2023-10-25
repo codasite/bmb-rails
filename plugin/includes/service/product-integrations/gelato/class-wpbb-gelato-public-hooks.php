@@ -397,6 +397,7 @@ class Wpbb_GelatoPublicHooks {
 
             // get the s3 url from the cart item
             $s3_url = $item->get_meta('s3_url');
+            $config = $item->get_meta('bracket_config');
 
             if (empty($s3_url)) {
               // If S3 url is not found, log an error and continue to the next item.
@@ -422,10 +423,11 @@ class Wpbb_GelatoPublicHooks {
             // if all went well, do the play_printed action
             do_action('wpbb_play_printed', $order, $item);
           } catch (Exception $e) {
-            $this->utils->log_sentry_message(
-              $e->getMessage(),
-              \Sentry\Severity::error()
-            );
+            throw $e;
+            // $this->utils->log_sentry_message(
+            //   $e->getMessage(),
+            //   \Sentry\Severity::error()
+            // );
           }
         }
       }
