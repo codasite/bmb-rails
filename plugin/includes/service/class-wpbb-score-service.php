@@ -53,7 +53,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->utils = new Wpbb_Utils();
     $this->ignore_unprinted_plays = $opts['ignore_unprinted_plays'] ?? true;
-    $this->ignore_late_plays = $opts['ignore_late_plays'] ?? false;
+    $this->ignore_late_plays = $opts['ignore_late_plays'] ?? true;
   }
 
   /**
@@ -98,7 +98,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
 
     $join = $this->get_join_clause($bracket_id, $num_rounds);
     $total_score_exp = $this->get_total_score_exp($num_rounds, $point_values);
-    $where = $this->get_where_clause($bracket);
+    $where = $this->get_where_clause($bracket_id);
 
     $sql = "
         UPDATE $plays_table p0
@@ -135,6 +135,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     if ($this->ignore_late_plays) {
       $join .= "
         JOIN $posts_table p3 ON p0.post_id = p3.ID
+        JOIN $brackets_table b1 ON p0.bracket_id = b1.id
       ";
     }
 
@@ -163,15 +164,14 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     return $total_score_exp;
   }
 
-  private function get_where_clause(Wpbb_Bracket $bracket): string {
-    $where = " WHERE p0.bracket_id = $bracket->id";
+  private function get_where_clause($bracket_id): string {
+    $where = " WHERE p0.bracket_id = $bracket_id";
 
     if ($this->ignore_unprinted_plays) {
       $where .= ' AND p0.is_printed = 1';
     }
     if ($this->ignore_late_plays) {
-      $updated_at = $bracket->results_first_updated_at->format('Y-m-d H:i:s');
-      $where .= " AND p3.post_date_gmt < '$updated_at'";
+      $where .= ' AND p3.post_date_gmt < b1.results_first_updated_at';
     }
 
     return $where;
