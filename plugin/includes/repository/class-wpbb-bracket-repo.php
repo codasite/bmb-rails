@@ -252,6 +252,11 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
     }
   }
 
+  public function update_bracket_data(int $id, array $data): void {
+    $table_name = $this->brackets_table();
+    $this->wpdb->update($table_name, $data, ['id' => $id]);
+  }
+
   public function get_bracket_data(int|WP_Post|null $bracket_post): array {
     if (
       !$bracket_post ||
