@@ -178,6 +178,7 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $bracket['wildcard_placement'] = $this->wildcard_placement;
     $bracket['month'] = $this->month;
     $bracket['year'] = $this->year;
+    $bracket['results_first_updated_at'] = $this->results_first_updated_at;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {
