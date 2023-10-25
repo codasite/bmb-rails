@@ -15,7 +15,7 @@ require_once WPBB_PLUGIN_DIR . 'tests/mock/WooCommerceMock.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
 
-class GelatoIntgrationPublicHooksTest extends WPBB_UnitTestCase {
+class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   public function test_handle_payment_complete() {
     // Create necessary mocks and stubs
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
