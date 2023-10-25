@@ -126,7 +126,6 @@ class Wpbb_PublicHooks
 		}
 		$data = [
 		  'is_printed' => true,
-		  // maybe: 'is_printed' => 1
 		];
 		$play_repo = new Wpbb_BracketPlayRepo();
 

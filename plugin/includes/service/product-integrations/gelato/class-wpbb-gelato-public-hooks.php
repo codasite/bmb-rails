@@ -423,11 +423,10 @@ class Wpbb_GelatoPublicHooks {
             $config = $item->get_meta('bracket_config');
             do_action('wpbb_play_printed', $config->play_id);
           } catch (Exception $e) {
-            throw $e;
-            // $this->utils->log_sentry_message(
-            //   $e->getMessage(),
-            //   \Sentry\Severity::error()
-            // );
+            $this->utils->log_sentry_message(
+              $e->getMessage(),
+              \Sentry\Severity::error()
+            );
           }
         }
       }
