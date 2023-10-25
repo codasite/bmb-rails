@@ -238,17 +238,15 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $repo = new Wpbb_BracketRepo();
 
     $data = $repo->get_bracket_data($bracket->id);
-    print_r($data);
+
+    $time = '2019-01-01 00:00:00';
+    $datetime = new DateTimeImmutable($time);
     $repo->update_bracket_data($data['id'], [
-      'results_first_updated_at' => '2020-01-01 00:00:00',
+      'results_first_updated_at' => $time,
     ]);
 
-    $updated = self::factory()->bracket->get_object($bracket->id);
-    print_r($updated);
+    $updated = self::factory()->bracket->get_object_by_id($bracket->id);
 
-    $this->assertEquals(
-      '2020-01-01 00:00:00',
-      $updated->results_first_updated_at
-    );
+    $this->assertEquals($datetime, $updated->results_first_updated_at);
   }
 }
