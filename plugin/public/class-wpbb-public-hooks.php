@@ -118,4 +118,23 @@ class Wpbb_PublicHooks
 		$user = get_user_by('id', $user_id);
 		$user->remove_role('bmb_plus');
 	}
+
+
+	public function mark_play_printed($order, $item) {
+		print_r('------------------------before-------------------------------- ');
+		$bracket_config = $item->get_meta('bracket_config');
+		print_r($bracket_config);
+		$play_id = $bracket_config->play_id;
+		echo 'play_id: ' . $play_id . '<br>';
+		print_r(' ------------------------after--------------------------------');
+	
+		if (!$play_id) {
+		  return;
+		}
+		$data = [
+		  'is_printed' => true,
+		  // maybe: 'is_printed' => 1
+		];
+		$this->play_repo->update($play, $data);
+	  }
 }

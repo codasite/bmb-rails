@@ -227,24 +227,6 @@ class Wpbb_GelatoProductIntegration implements
     return null;
   }
 
-  public function mark_play_printed($order, $item) {
-    print_r('------------------------before-------------------------------- ');
-    $bracket_config = $item->get_meta('bracket_config');
-    print_r($bracket_config);
-    $play_id = $bracket_config->play_id;
-    echo 'play_id: ' . $play_id . '<br>';
-    print_r(' ------------------------after--------------------------------');
-
-    if (!$play_id) {
-      return;
-    }
-    $data = [
-      'is_printed' => true,
-      // maybe: 'is_printed' => 1
-    ];
-    $this->play_repo->update($play, $data);
-  }
-
   private function get_meta(Wpbb_PostBracketInterface $bracket): array {
     $meta = json_decode(
       get_post_meta($bracket->get_post_id(), $this->get_post_meta_key(), true),
