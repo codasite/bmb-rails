@@ -158,9 +158,14 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     }
 
     if (isset($data['results_first_updated_at'])) {
-      $data['results_first_updated_at'] = new DateTimeImmutable(
-        $data['results_first_updated_at']
-      );
+      $results_updated = $data['results_first_updated_at'];
+      if ($results_updated instanceof DateTimeImmutable) {
+        $data['results_first_updated_at'] = $results_updated;
+      } else {
+        $data['results_first_updated_at'] = new DateTimeImmutable(
+          $results_updated
+        );
+      }
     }
     return new Wpbb_Bracket($data);
   }
