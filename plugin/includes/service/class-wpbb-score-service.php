@@ -98,7 +98,10 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
 
     $join = $this->get_join_clause($bracket_id, $num_rounds);
     $total_score_exp = $this->get_total_score_exp($num_rounds, $point_values);
-    $where = $this->get_where_clause($bracket_id);
+    $where = $this->get_where_clause(
+      $bracket_id,
+      $bracket->results_first_updated_at
+    );
 
     $sql = "
         UPDATE $plays_table p0
@@ -135,7 +138,6 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     if ($this->ignore_late_plays) {
       $join .= "
         JOIN $posts_table p3 ON p0.post_id = p3.ID
-        JOIN $brackets_table b1 ON p0.bracket_id = b1.id
       ";
     }
 
@@ -164,14 +166,18 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     return $total_score_exp;
   }
 
-  private function get_where_clause($bracket_id): string {
+  private function get_where_clause(
+    int $bracket_id,
+    DateTimeImmutable|false $first_updated = false
+  ): string {
     $where = " WHERE p0.bracket_id = $bracket_id";
 
     if ($this->ignore_unprinted_plays) {
       $where .= ' AND p0.is_printed = 1';
     }
-    if ($this->ignore_late_plays) {
-      $where .= ' AND p3.post_date_gmt < b1.results_first_updated_at';
+    if ($this->ignore_late_plays && $first_updated) {
+      $updated = $first_updated->format('Y-m-d H:i:s');
+      $where .= " AND p3.post_date_gmt < '$updated'";
     }
 
     return $where;
