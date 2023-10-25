@@ -134,7 +134,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
     $this->assertEquals(400, $response->get_status());
     $this->assertEquals(
-      'num_teams, wildcard_placement, month, year, title, matches is required',
+      'num_teams, wildcard_placement, title, matches is required',
       $response->get_data()['message']
     );
   }

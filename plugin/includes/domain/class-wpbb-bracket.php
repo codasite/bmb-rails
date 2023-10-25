@@ -138,8 +138,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
-      'month',
-      'year',
       'author',
       'title',
       'matches',
@@ -157,6 +155,12 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
         $results[] = Wpbb_MatchPick::from_array($result);
       }
       $data['results'] = $results;
+    }
+
+    if (isset($data['results_first_updated_at'])) {
+      $data['results_first_updated_at'] = new DateTimeImmutable(
+        $data['results_first_updated_at']
+      );
     }
     return new Wpbb_Bracket($data);
   }
