@@ -11,6 +11,10 @@ class GelatoIntgrationPublicHooksTest extends WPBB_UnitTestCase {
   public function test_handle_payment_complete() {
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
     $integration_mock = $this->createMock(Wpbb_GelatoProductIntegration::class);
+
+    $integration_mock->expects($this->once())
+      ->method('get_items')
+      ->with(1);
     $hooks = new Wpbb_GelatoPublicHooks($integration_mock, [
       'wc' => $wc_mock,
     ]);
