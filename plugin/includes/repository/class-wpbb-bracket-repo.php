@@ -121,6 +121,9 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       return null;
     }
     $bracket_id = $bracket_data['id'];
+    $results_updated = isset($bracket_data['results_first_updated_at'])
+      ? new DateTimeImmutable($bracket_data['results_first_updated_at'])
+      : false;
 
     $matches =
       $fetch_matches && $bracket_id ? $this->get_matches($bracket_id) : [];
@@ -150,6 +153,7 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       'author_display_name' => $author_id
         ? get_the_author_meta('display_name', $author_id)
         : '',
+      'results_first_updated_at' => $results_updated,
     ];
 
     return new Wpbb_Bracket($data);
@@ -203,28 +207,48 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       return;
     }
 
-    foreach ($new_results as $new_result) {
-      $pick_exists = false;
-      foreach ($old_results as $old_result) {
-        if (
-          $new_result->round_index === $old_result->round_index &&
-          $new_result->match_index === $old_result->match_index
-        ) {
-          $pick_exists = true;
-          $this->wpdb->update(
-            $this->results_table(),
-            [
-              'winning_team_id' => $new_result->winning_team_id,
-            ],
-            [
-              'id' => $old_result->id,
-            ]
-          );
+    $this->wpdb->query('START TRANSACTION');
+
+    try {
+      foreach ($new_results as $new_result) {
+        $pick_exists = false;
+        foreach ($old_results as $old_result) {
+          if (
+            $new_result->round_index === $old_result->round_index &&
+            $new_result->match_index === $old_result->match_index
+          ) {
+            $pick_exists = true;
+            $this->wpdb->update(
+              $this->results_table(),
+              [
+                'winning_team_id' => $new_result->winning_team_id,
+              ],
+              [
+                'id' => $old_result->id,
+              ]
+            );
+          }
+        }
+        if (!$pick_exists) {
+          $this->insert_result($bracket_id, $new_result);
         }
       }
-      if (!$pick_exists) {
-        $this->insert_result($bracket_id, $new_result);
-      }
+      // assuming all went well, update the results_first_updated_at field
+      $this->wpdb->update(
+        $this->brackets_table(),
+        [
+          'results_first_updated_at' => (new DateTimeImmutable())->format(
+            'Y-m-d H:i:s'
+          ),
+        ],
+        [
+          'id' => $bracket_id,
+        ]
+      );
+      $this->wpdb->query('COMMIT');
+    } catch (Exception $e) {
+      $this->wpdb->query('ROLLBACK');
+      throw $e;
     }
   }
 
