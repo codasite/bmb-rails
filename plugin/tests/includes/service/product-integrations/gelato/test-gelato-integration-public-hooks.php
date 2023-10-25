@@ -16,7 +16,7 @@ require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
 
 class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
-  public function test_handle_payment_complete() {
+  public function test_play_marked_printed_when_payment_complete() {
     // Create necessary mocks and stubs
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
     $wc_order_item_stub = $this->createMock(OrderItemInterface::class);
@@ -27,20 +27,15 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $utils_mock = $this->createMock(Wpbb_Utils::class);
     $product_utils_mock = $this->createMock(Wpbb_BracketProductUtils::class);
 
-    // Setup method returns
     $wc_order_stub->method('get_items')->willReturn([$wc_order_item_stub]);
     $wc_order_stub->method('get_id')->willReturn(99);
     $wc_order_item_stub->method('get_product')->willReturn($wc_product_stub);
     $wc_order_item_stub->method('get_meta')->willReturn('sample-s3-url');
     $wc_order_item_stub->method('get_id')->willReturn(999);
     $product_utils_mock->method('is_bracket_product')->willReturn(true);
-    // $integration_mock
-    //   ->method('get_gelato_order_filename')
-    //   ->willReturn('sample-order-filename');
     $s3_mock->method('rename_from_url')->willReturn('sample-renamed-s3-url');
     $wc_mock->method('wc_get_order')->willReturn($wc_order_stub);
 
-    // Instantiate the class under test
     $hooks = new Wpbb_GelatoPublicHooks($integration_mock, [
       'wc' => $wc_mock,
       's3' => $s3_mock,
