@@ -1,5 +1,5 @@
 <?php
-
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
 
 class Wpbb_PublicHooks
 {
@@ -118,4 +118,17 @@ class Wpbb_PublicHooks
 		$user = get_user_by('id', $user_id);
 		$user->remove_role('bmb_plus');
 	}
+
+
+	public function mark_play_printed($play_id) {
+		if (!$play_id) {
+		  return;
+		}
+		$data = [
+		  'is_printed' => true,
+		];
+		$play_repo = new Wpbb_BracketPlayRepo();
+
+		$play_repo->update($play_id, $data);
+	  }
 }

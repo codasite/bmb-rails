@@ -8,6 +8,8 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
 require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-aws-service.php';
 require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-pdf-service.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-wc-functions.php';
 
 class Wpbb_GelatoPublicHooks {
   /**
@@ -35,12 +37,22 @@ class Wpbb_GelatoPublicHooks {
    */
   private $pdf_service;
 
-  public function __construct(Wpbb_GelatoProductIntegration $gelato) {
-    $this->bracket_product_utils = new Wpbb_BracketProductUtils();
-    $this->utils = new Wpbb_Utils();
+  /**
+   * @var Wpbb_WcFunctions
+   */
+  private $wc;
+
+  public function __construct(
+    Wpbb_GelatoProductIntegration $gelato,
+    $opts = []
+  ) {
     $this->gelato = $gelato;
-    $this->s3 = new Wpbb_S3Service();
-    $this->pdf_service = new Wpbb_PdfService();
+    $this->bracket_product_utils =
+      $opts['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
+    $this->utils = $opts['utils'] ?? new Wpbb_Utils();
+    $this->s3 = $opts['s3'] ?? new Wpbb_S3Service();
+    $this->pdf_service = $opts['pdf_service'] ?? new Wpbb_PdfService();
+    $this->wc = $opts['wc'] ?? new Wpbb_WcFunctions();
   }
 
   private function is_bracket_product($product) {
@@ -64,7 +76,7 @@ class Wpbb_GelatoPublicHooks {
     $variation_id = null,
     $variations = null
   ): bool {
-    $product = wc_get_product($product_id);
+    $product = $this->wc->wc_get_product($product_id);
 
     if (
       !$this->is_bracket_product($product) ||
@@ -127,7 +139,7 @@ class Wpbb_GelatoPublicHooks {
     $product_id,
     $variation_id
   ) {
-    $product = wc_get_product($product_id);
+    $product = $this->wc->wc_get_product($product_id);
 
     // Perform similar checks as above to make sure we are dealing with a bracket product and that we have a bracket config
     if (
@@ -185,7 +197,7 @@ class Wpbb_GelatoPublicHooks {
       ' Product ID: ' .
       $product_id;
     $this->log($msg, 'warning');
-    wc_add_notice(
+    $this->wc->wc_add_notice(
       __(
         'Error adding item to cart. Please contact the site administrator.',
         'wp-bracket-builder'
@@ -196,7 +208,7 @@ class Wpbb_GelatoPublicHooks {
 
   // this function hooks into woocommerce_before_checkout_process
   public function handle_before_checkout_process() {
-    $cart = WC()->cart;
+    $cart = $this->wc->WC()->cart;
     if (!$cart) {
       return;
     }
@@ -371,7 +383,7 @@ class Wpbb_GelatoPublicHooks {
 
   // this function hooks into woocommerce_payment_complete
   public function handle_payment_complete($order_id) {
-    $order = wc_get_order($order_id);
+    $order = $this->wc->wc_get_order($order_id);
     if ($order) {
       $items = $order->get_items();
       foreach ($items as $item) {
@@ -407,6 +419,9 @@ class Wpbb_GelatoPublicHooks {
             // update the cart item with the new s3 url for record keeping
             $item->update_meta_data('s3_url', $order_url);
             $item->save();
+            // if all went well, do the play_printed action
+            $config = $item->get_meta('bracket_config');
+            do_action('wpbb_play_printed', $config->play_id);
           } catch (Exception $e) {
             $this->utils->log_sentry_message(
               $e->getMessage(),

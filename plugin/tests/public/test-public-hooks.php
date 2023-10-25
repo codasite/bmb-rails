@@ -81,4 +81,28 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertTrue(!in_array('bmb_plus', $user->roles));
     $this->assertTrue(in_array('subscriber', $user->roles));
   }
+
+  public function test_mark_play_printed() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $hooks = new Wpbb_PublicHooks();
+    $hooks->mark_play_printed($play);
+
+    $play = self::factory()->play->get_object_by_id($play->id);
+
+    $this->assertTrue($play->is_printed);
+  }
 }

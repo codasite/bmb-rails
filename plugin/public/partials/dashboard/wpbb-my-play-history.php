@@ -43,6 +43,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
 	$accuracy_score = round($play->accuracy_score * 100);
 	$show_score = $play->accuracy_score !== null;
 	$buster_play = $play->busted_id !== null;
+	$printed = $play->is_printed;
 	ob_start();
 ?>
 
@@ -52,8 +53,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
 				<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
         <div class="tw-flex tw-gap-10 tw-flex-wrap">
 					<?php echo $buster_play ? bracket_tag('buster', 'red') : '' ?>
-          <!-- <?php echo bracket_tag('printed', 'green') ?>
-					<?php echo bracket_tag('not printed', 'yellow', false) ?> -->
+          <?php echo $printed ? bracket_tag('printed', 'green') : '' ?>
         </div>
       </div>
       <div class="tw-flex tw-gap-16">

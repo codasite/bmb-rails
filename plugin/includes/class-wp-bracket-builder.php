@@ -339,6 +339,14 @@ class Wp_Bracket_Builder {
       10,
       1
     );
+
+    $this->loader->add_action(
+      'wpbb_play_printed',
+      $public_hooks,
+      'mark_play_printed',
+      10,
+      1
+    );
   }
 
   /**

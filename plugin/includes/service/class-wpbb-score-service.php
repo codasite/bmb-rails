@@ -10,15 +10,10 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   '/repository/class-wpbb-bracket-repo.php';
 
-class Wpbb_ScoreService implements Wpbb_ScoreService_Interface {
+class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
   /**
    * This method scores bracket plays against bracket results
    */
-
-  /**
-   * @var Wpbb_Bracket
-   */
-  public $bracket;
 
   /**
    * @var Wpbb_BracketPlayRepo
@@ -40,14 +35,19 @@ class Wpbb_ScoreService implements Wpbb_ScoreService_Interface {
    */
   private $utils;
 
-  public function __construct($bracket = null) {
+  /**
+   * @var bool
+   */
+  private $only_score_printed_plays;
+
+  public function __construct($opts = []) {
     global $wpdb;
     $this->wpdb = $wpdb;
-    $this->bracket = $bracket;
     $this->play_repo = new Wpbb_BracketPlayRepo();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->utils = new Wpbb_Utils();
+    $this->only_score_printed_plays = $opts['only_score_printed_plays'] ?? true;
   }
 
   /**
@@ -124,6 +124,10 @@ class Wpbb_ScoreService implements Wpbb_ScoreService_Interface {
     		p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
     WHERE p0.bracket_id = $bracket_id
     ";
+
+    $sql = $this->only_score_printed_plays
+      ? $sql . ' AND p0.is_printed = 1'
+      : $sql;
 
     $this->wpdb->query($sql);
     return $this->wpdb->rows_affected;

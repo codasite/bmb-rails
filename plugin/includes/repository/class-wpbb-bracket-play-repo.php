@@ -83,6 +83,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     $play_id = $play_data['id'];
     $bracket_post_id = $play_data['bracket_post_id'];
     $busted_id = $play_data['busted_play_post_id'];
+    $is_printed = (bool) $play_data['is_printed'];
     $bracket =
       $bracket_post_id && $fetch_bracket
         ? $this->bracket_repo->get(
@@ -110,6 +111,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
         ? get_the_author_meta('display_name', $author_id)
         : '',
       'busted_id' => $busted_id,
+      'is_printed' => $is_printed,
     ];
 
     return new Wpbb_BracketPlay($data);
@@ -279,6 +281,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
       'busted_play_id' => $busted_play_id ?? null,
       'total_score' => $play->total_score,
       'accuracy_score' => $play->accuracy_score,
+      'is_printed' => $play->is_printed ?? false,
     ]);
 
     if ($play_id && $play->picks) {
@@ -369,8 +372,74 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     return $user_picks;
   }
 
-  public function update($play_id, $data) {
-    throw new Exception('Not implemented');
+  public function update(Wpbb_BracketPlay|int|null $play, $data) {
+    if ($play === null || empty($data)) {
+      return null;
+    }
+    if (!($play instanceof Wpbb_BracketPlay)) {
+      $play = $this->get($play);
+    }
+    $array = $play->to_array();
+    $updated_array = array_merge($array, $data);
+
+    $play = Wpbb_BracketPlay::from_array($updated_array);
+
+    $post_id = $this->update_post($play, true);
+
+    if (is_wp_error($post_id)) {
+      return null;
+    }
+
+    $play_data = $this->get_play_data($post_id);
+    $play_id = $play_data['id'];
+
+    if ($play_id) {
+      $this->update_play_data($play_id, $data);
+    }
+
+    $plays_table = $this->plays_table();
+
+    $query = "UPDATE $plays_table plays";
+    $updates = [];
+    foreach ($data as $column => $value) {
+      $updates[] = "$column = $value";
+    }
+    $query .= ' SET ' . implode(', ', $updates);
+    $query .= ' WHERE plays.post_id = %d';
+
+    global $wpdb;
+    $prepared_query = $wpdb->prepare($query, $play_id);
+
+    $wpdb->query($prepared_query);
+
+    return $this->get($post_id);
+  }
+
+  private function update_play_data($play_id, $data) {
+    $update_fields = $this->play_data_update_fields();
+
+    $plays_table = $this->plays_table();
+
+    $query = "UPDATE $plays_table plays";
+    $updates = [];
+    foreach ($data as $column => $value) {
+      if (in_array($column, $update_fields)) {
+        $updates[] = "$column = $value";
+      }
+    }
+    $query .= ' SET ' . implode(', ', $updates);
+    $query .= ' WHERE plays.id = %d';
+
+    global $wpdb;
+    $prepared_query = $wpdb->prepare($query, $play_id);
+
+    $wpdb->query($prepared_query);
+
+    return $this->get($play_id);
+  }
+
+  private function play_data_update_fields() {
+    return ['is_printed'];
   }
 
   public function picks_table() {
