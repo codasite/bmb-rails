@@ -380,7 +380,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
       $updates[] = "$column = '$value'";
     }
     $query .= ' SET ' . implode(', ', $updates);
-    $query .= " WHERE $plays.id = %d";
+    $query .= " WHERE plays.id = %d";
 
     $prepared_query = $wpdb->prepare(
       $query,
