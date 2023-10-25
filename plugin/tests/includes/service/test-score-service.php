@@ -51,6 +51,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
 
     $score_service = new Wpbb_ScoreService([
       'only_score_printed_plays' => false,
+      'check_timestamp' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -103,6 +104,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
 
     $score_service = new Wpbb_ScoreService([
       'only_score_printed_plays' => false,
+      'check_timestamp' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -171,6 +173,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
 
     $score_service = new Wpbb_ScoreService([
       'only_score_printed_plays' => false,
+      'check_timestamp' => false,
     ]);
     $affected = $score_service->score_bracket_plays($bracket1);
 
@@ -243,6 +246,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
 
     $score_service = new Wpbb_ScoreService([
       'only_score_printed_plays' => false,
+      'check_timestamp' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -344,6 +348,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
 
     $score_service = new Wpbb_ScoreService([
       'only_score_printed_plays' => false,
+      'check_timestamp' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -409,6 +414,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
 
     $score_service = new Wpbb_ScoreService([
       'only_score_printed_plays' => true,
+      'check_timestamp' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
