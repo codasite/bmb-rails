@@ -14,9 +14,23 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR . 'tests/mock/WooCommerceMock.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
 
 class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   public function test_play_marked_printed_when_payment_complete() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+    ]);
+    $bracket_config = new Wpbb_BracketConfig(
+      $play->id,
+      'light',
+      'top',
+      'https://example.com'
+    );
     // Create necessary mocks and stubs
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
     $wc_order_item_stub = $this->createMock(OrderItemInterface::class);
@@ -30,7 +44,14 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $wc_order_stub->method('get_items')->willReturn([$wc_order_item_stub]);
     $wc_order_stub->method('get_id')->willReturn(99);
     $wc_order_item_stub->method('get_product')->willReturn($wc_product_stub);
-    $wc_order_item_stub->method('get_meta')->willReturn('sample-s3-url');
+    $wc_order_item_stub
+      ->method('get_meta')
+      ->with('s3_url')
+      ->willReturn('sample-s3-url');
+    $wc_order_item_stub
+      ->method('get_meta')
+      ->with('bracket_config')
+      ->willReturn($bracket_config);
     $wc_order_item_stub->method('get_id')->willReturn(999);
     $product_utils_mock->method('is_bracket_product')->willReturn(true);
     $s3_mock->method('rename_from_url')->willReturn('sample-renamed-s3-url');
@@ -44,5 +65,8 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     ]);
 
     $hooks->handle_payment_complete(1);
+    $play = self::factory()->play->get_object_by_id($play->id);
+
+    $this->assertTrue($play->is_printed);
   }
 }
