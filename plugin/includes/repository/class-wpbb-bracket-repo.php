@@ -83,8 +83,25 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
   }
 
   public function insert_results(int $bracket_id, array $results): void {
-    foreach ($results as $result) {
-      $this->insert_result($bracket_id, $result);
+    $this->wpdb->query('START TRANSACTION');
+    try {
+      foreach ($results as $result) {
+        $this->insert_result($bracket_id, $result);
+      }
+      // assuming all went well, update the results_first_updated_at field
+      $this->update_bracket_data(
+        $bracket_id,
+        [
+          'results_first_updated_at' => (new DateTimeImmutable())->format(
+            'Y-m-d H:i:s'
+          ),
+        ],
+        false
+      );
+      $this->wpdb->query('COMMIT');
+    } catch (Exception $e) {
+      $this->wpdb->query('ROLLBACK');
+      throw $e;
     }
   }
 
@@ -180,6 +197,8 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       return null;
     }
 
+    $this->update_bracket_data($post_id, $data, true);
+
     $bracket_data = $this->get_bracket_data($post_id);
     $bracket_id = $bracket_data['id'];
 
@@ -233,18 +252,6 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
           $this->insert_result($bracket_id, $new_result);
         }
       }
-      // assuming all went well, update the results_first_updated_at field
-      $this->wpdb->update(
-        $this->brackets_table(),
-        [
-          'results_first_updated_at' => (new DateTimeImmutable())->format(
-            'Y-m-d H:i:s'
-          ),
-        ],
-        [
-          'id' => $bracket_id,
-        ]
-      );
       $this->wpdb->query('COMMIT');
     } catch (Exception $e) {
       $this->wpdb->query('ROLLBACK');
@@ -252,9 +259,25 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
     }
   }
 
-  public function update_bracket_data(int $id, array $data): void {
-    $table_name = $this->brackets_table();
-    $this->wpdb->update($table_name, $data, ['id' => $id]);
+  private function update_bracket_data(
+    int $id,
+    array $data,
+    bool $use_post_id = false
+  ): void {
+    $id_field = $use_post_id ? 'post_id' : 'id';
+    $update_fields = ['results_first_updated_at'];
+    $update_data = [];
+    foreach ($data as $key => $value) {
+      if (in_array($key, $update_fields)) {
+        $update_data[$key] = $value;
+      }
+    }
+    if (empty($update_data)) {
+      return;
+    }
+    $this->wpdb->update($this->brackets_table(), $update_data, [
+      $id_field => $id,
+    ]);
   }
 
   public function get_bracket_data(int|WP_Post|null $bracket_post): array {
