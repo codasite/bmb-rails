@@ -227,12 +227,13 @@ class Wpbb_GelatoProductIntegration implements
     return null;
   }
 
-  public function mark_play_printed(WC_Order $order, WC_Order_Item $item) {
-    print_r('------------------------before--------------------------------');
+  public function mark_play_printed($order, $item) {
+    print_r('------------------------before-------------------------------- ');
     $bracket_config = $item->get_meta('bracket_config');
+    print_r($bracket_config);
     $play_id = $bracket_config->play_id;
     echo 'play_id: ' . $play_id . '<br>';
-    print_r('------------------------after--------------------------------');
+    print_r(' ------------------------after--------------------------------');
 
     if (!$play_id) {
       return;
