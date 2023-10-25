@@ -345,7 +345,7 @@ class Wp_Bracket_Builder {
       $public_hooks,
       'mark_play_printed',
       10,
-      2,
+      1
     );
   }
 

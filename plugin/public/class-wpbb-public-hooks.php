@@ -120,10 +120,7 @@ class Wpbb_PublicHooks
 	}
 
 
-	public function mark_play_printed($order, $item) {
-		$bracket_config = $item->get_meta('bracket_config');
-		$play_id = $bracket_config->play_id;
-	
+	public function mark_play_printed($play_id) {
 		if (!$play_id) {
 		  return;
 		}

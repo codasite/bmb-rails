@@ -397,7 +397,6 @@ class Wpbb_GelatoPublicHooks {
 
             // get the s3 url from the cart item
             $s3_url = $item->get_meta('s3_url');
-            $config = $item->get_meta('bracket_config');
 
             if (empty($s3_url)) {
               // If S3 url is not found, log an error and continue to the next item.
@@ -421,7 +420,8 @@ class Wpbb_GelatoPublicHooks {
             $item->update_meta_data('s3_url', $order_url);
             $item->save();
             // if all went well, do the play_printed action
-            do_action('wpbb_play_printed', $order, $item);
+            $config = $item->get_meta('bracket_config');
+            do_action('wpbb_play_printed', $config->play_id);
           } catch (Exception $e) {
             throw $e;
             // $this->utils->log_sentry_message(
