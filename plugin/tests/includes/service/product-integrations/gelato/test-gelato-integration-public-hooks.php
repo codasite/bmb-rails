@@ -7,7 +7,7 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/service/product-integrations/class-wpbb-wc-functions.php';
 
-class GelatoIntgrationPublicHooksTest extends WPBB_UnitTestCase {
+class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   public function test_handle_payment_complete() {
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
     $integration_mock = $this->createMock(Wpbb_GelatoProductIntegration::class);
