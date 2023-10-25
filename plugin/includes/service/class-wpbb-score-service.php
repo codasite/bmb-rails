@@ -40,6 +40,11 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
    */
   private $only_score_printed_plays;
 
+  /**
+   * @var bool
+   */
+  private $check_timestamp;
+
   public function __construct($opts = []) {
     global $wpdb;
     $this->wpdb = $wpdb;
@@ -48,6 +53,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->utils = new Wpbb_Utils();
     $this->only_score_printed_plays = $opts['only_score_printed_plays'] ?? true;
+    $this->check_timestamp = $opts['check_timestamp'] ?? true;
   }
 
   /**
@@ -91,6 +97,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     $plays_table = $this->play_repo->plays_table();
     $picks_table = $this->play_repo->picks_table();
     $results_table = $this->bracket_repo->results_table();
+    $posts_table = $this->wpdb->posts;
 
     $num_correct_arr = [];
 
@@ -108,26 +115,44 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
 
     $total_score_exp = implode(' + ', $total_score_arr);
 
-    $sql = "
-    UPDATE $plays_table p0
-    LEFT JOIN (
-    		SELECT p1.bracket_play_id,
-    						$num_correct_select
-    		FROM $picks_table p1
-    		JOIN $results_table p2 ON p1.round_index = p2.round_index
-    																								AND p1.match_index = p2.match_index
-    																								AND p1.winning_team_id = p2.winning_team_id
-    																								AND p2.bracket_id = $bracket_id
-    		GROUP BY p1.bracket_play_id
-    ) agg ON p0.id = agg.bracket_play_id
-    SET p0.total_score = COALESCE($total_score_exp, 0),
-    		p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
-    WHERE p0.bracket_id = $bracket_id
-    ";
+    if ($this->check_timestamp) {
+      $sql = "
+        UPDATE $plays_table p0
+        LEFT JOIN (
+          SELECT p1.bracket_play_id, $num_correct_select
+          FROM $picks_table p1
+          JOIN $results_table p2 ON p1.round_index = p2.round_index
+          JOIN $posts_table p3 on $plays_table.post_id = p3.ID
+          AND p1.match_index = p2.match_index
+          AND p1.winning_team_id = p2.winning_team_id
+          AND p2.bracket_id = $bracket_id
+          GROUP BY p1.bracket_play_id
+        ) agg ON p0.id = agg.bracket_play_id
+        SET p0.total_score = COALESCE($total_score_exp, 0),
+          p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
+        WHERE p0.bracket_id = $bracket_id
+      ";
+    } else {
+      $sql = "
+        UPDATE $plays_table p0
+        LEFT JOIN (
+          SELECT p1.bracket_play_id, $num_correct_select
+          FROM $picks_table p1
+          JOIN $results_table p2 ON p1.round_index = p2.round_index
+          AND p1.match_index = p2.match_index
+          AND p1.winning_team_id = p2.winning_team_id
+          AND p2.bracket_id = $bracket_id
+          GROUP BY p1.bracket_play_id
+        ) agg ON p0.id = agg.bracket_play_id
+        SET p0.total_score = COALESCE($total_score_exp, 0),
+          p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
+        WHERE p0.bracket_id = $bracket_id
+      ";
+    }
 
     $sql = $this->only_score_printed_plays
-      ? $sql . ' AND p0.is_printed = 1'
-      : $sql;
+    ? $sql . ' AND p0.is_printed = 1'
+    : $sql;
 
     $this->wpdb->query($sql);
     return $this->wpdb->rows_affected;
