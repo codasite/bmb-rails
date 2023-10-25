@@ -40,6 +40,11 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
    */
   public $results;
 
+  /**
+   * @var DateTimeImmutable|false
+   */
+  public $results_first_updated_at;
+
   public function __construct(array $data = []) {
     parent::__construct($data);
     $this->month = $data['month'] ?? null;
@@ -48,6 +53,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $this->wildcard_placement = (int) ($data['wildcard_placement'] ?? null);
     $this->matches = $data['matches'] ?? [];
     $this->results = $data['results'] ?? [];
+    $this->results_first_updated_at =
+      $data['results_first_updated_at'] ?? false;
   }
 
   public function get_winning_team(): ?Wpbb_Team {

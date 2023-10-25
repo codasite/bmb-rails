@@ -8,12 +8,14 @@ class BracketTest extends WPBB_UnitTestCase {
   }
 
   public function test_constructor() {
+    $now = new DateTimeImmutable();
     $args = [
       'title' => 'Test Template',
       'status' => 'publish',
       'author' => 1,
       'num_teams' => 2,
       'wildcard_placement' => 0,
+      'results_first_updated_at' => $now,
       'matches' => [
         new Wpbb_Match([
           'round_index' => 0,
@@ -40,5 +42,6 @@ class BracketTest extends WPBB_UnitTestCase {
     $this->assertEquals(0, $bracket->wildcard_placement);
     $this->assertEquals(1, count($bracket->matches));
     $this->assertEquals(1, count($bracket->results));
+    $this->assertEquals($now, $bracket->results_first_updated_at);
   }
 }
