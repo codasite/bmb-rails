@@ -34,7 +34,7 @@ class Wpbb_Activator {
     $plugin_prefix = 'bracket_builder_';
     $prefix = $wp_prefix . $plugin_prefix;
 
-    // self::delete_tables($prefix);
+    self::delete_tables($prefix);
 
     self::create_brackets_table($prefix);
     self::create_plays_table($prefix); // one-to-one table for bracket plays
@@ -44,17 +44,16 @@ class Wpbb_Activator {
     self::create_bracket_results_table($prefix); // associated with bracket tournaments
   }
 
+  // WARNING: This function will delete all bracket data
+  // DO NOT USE IN PRODUCTION
   private static function delete_tables(string $prefix) {
     global $wpdb;
     $tables = [
       $prefix . 'bracket_results',
-      $prefix . 'tournament_results',
       $prefix . 'match_picks',
       $prefix . 'matches',
       $prefix . 'teams',
       $prefix . 'plays',
-      $prefix . 'tournaments',
-      $prefix . 'templates',
       $prefix . 'brackets',
     ];
 
@@ -74,6 +73,7 @@ class Wpbb_Activator {
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
 			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			post_id bigint(20) UNSIGNED NOT NULL,
+      results_first_updated_at datetime,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
