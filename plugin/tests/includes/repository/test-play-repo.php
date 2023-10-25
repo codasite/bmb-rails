@@ -348,4 +348,20 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       $pick2->winning_team_id
     );
   }
+  public function test_update_is_printed() {
+    echo 'TEST PRINTED';
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+    ]);
+
+    $play = $this->play_repo->update($play->id, [
+      'is_printed' => true,
+    ]);
+
+    $this->assertTrue($play->is_printed);
+  }
 }
