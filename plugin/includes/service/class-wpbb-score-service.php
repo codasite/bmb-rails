@@ -53,7 +53,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->utils = new Wpbb_Utils();
     $this->only_score_printed_plays = $opts['only_score_printed_plays'] ?? true;
-    $this->check_timestamp = $opts['check_timestamp'] ?? true;
+    $this->check_timestamp = $opts['check_timestamp'] ?? false;
   }
 
   /**
@@ -69,7 +69,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     }
   }
 
-  private function score_plays(Wpbb_Bracket|int|null $bracket) {
+  private function score_plays(Wpbb_Bracket|int|null $bracket): int {
     $point_values = [1, 2, 4, 8, 16, 32];
 
     if (is_int($bracket)) {
@@ -151,8 +151,8 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     }
 
     $sql = $this->only_score_printed_plays
-    ? $sql . ' AND p0.is_printed = 1'
-    : $sql;
+      ? $sql . ' AND p0.is_printed = 1'
+      : $sql;
 
     $this->wpdb->query($sql);
     return $this->wpdb->rows_affected;
