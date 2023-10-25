@@ -95,60 +95,23 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     $high_score = $bracket->highest_possible_score();
 
     $plays_table = $this->play_repo->plays_table();
-    $picks_table = $this->play_repo->picks_table();
-    $results_table = $this->bracket_repo->results_table();
-    $posts_table = $this->wpdb->posts;
 
-    $num_correct_arr = [];
+    $num_correct_select = $this->get_num_correct_select($num_rounds);
+    $join = $this->get_join_clause(
+      $bracket_id,
+      $num_rounds,
+      $num_correct_select
+    );
+    $total_score_exp = $this->get_total_score_exp($num_rounds, $point_values);
+    $where = $this->get_where_clause($bracket_id);
 
-    for ($i = 0; $i < $num_rounds; $i++) {
-      $num_correct_arr[] = "COALESCE(SUM(CASE WHEN p1.round_index = $i THEN 1 ELSE 0 END), 0) AS round{$i}correct";
-    }
-
-    $num_correct_select = implode(', ', $num_correct_arr);
-
-    $total_score_arr = [];
-
-    for ($i = 0; $i < $num_rounds; $i++) {
-      $total_score_arr[] = "agg.round{$i}correct * {$point_values[$i]}";
-    }
-
-    $total_score_exp = implode(' + ', $total_score_arr);
-
-    if ($this->check_timestamp) {
-      $sql = "
+    $sql = "
         UPDATE $plays_table p0
-        LEFT JOIN (
-          SELECT p1.bracket_play_id, $num_correct_select
-          FROM $picks_table p1
-          JOIN $results_table p2 ON p1.round_index = p2.round_index
-          JOIN $posts_table p3 on $plays_table.post_id = p3.ID
-          AND p1.match_index = p2.match_index
-          AND p1.winning_team_id = p2.winning_team_id
-          AND p2.bracket_id = $bracket_id
-          GROUP BY p1.bracket_play_id
-        ) agg ON p0.id = agg.bracket_play_id
+        $join
         SET p0.total_score = COALESCE($total_score_exp, 0),
           p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
-        WHERE p0.bracket_id = $bracket_id
+        $where
       ";
-    } else {
-      $sql = "
-        UPDATE $plays_table p0
-        LEFT JOIN (
-          SELECT p1.bracket_play_id, $num_correct_select
-          FROM $picks_table p1
-          JOIN $results_table p2 ON p1.round_index = p2.round_index
-          AND p1.match_index = p2.match_index
-          AND p1.winning_team_id = p2.winning_team_id
-          AND p2.bracket_id = $bracket_id
-          GROUP BY p1.bracket_play_id
-        ) agg ON p0.id = agg.bracket_play_id
-        SET p0.total_score = COALESCE($total_score_exp, 0),
-          p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
-        WHERE p0.bracket_id = $bracket_id
-      ";
-    }
 
     $sql = $this->only_score_printed_plays
       ? $sql . ' AND p0.is_printed = 1'
@@ -156,5 +119,70 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
 
     $this->wpdb->query($sql);
     return $this->wpdb->rows_affected;
+  }
+
+  private function get_join_clause(
+    $bracket_id,
+    $num_rounds,
+    $num_correct_select
+  ): string {
+    $picks_table = $this->play_repo->picks_table();
+    $results_table = $this->bracket_repo->results_table();
+    $posts_table = $this->wpdb->posts;
+
+    $join = "
+        LEFT JOIN (
+          SELECT p1.bracket_play_id, $num_correct_select
+          FROM $picks_table p1
+          JOIN $results_table p2 ON p1.round_index = p2.round_index
+          AND p1.match_index = p2.match_index
+          AND p1.winning_team_id = p2.winning_team_id
+          AND p2.bracket_id = $bracket_id
+          GROUP BY p1.bracket_play_id
+        ) agg ON p0.id = agg.bracket_play_id
+    ";
+
+    if ($this->check_timestamp) {
+      $join .= "
+        JOIN $posts_table p3 ON p0.post_id = p3.ID
+      ";
+    }
+
+    return $join;
+  }
+
+  private function get_num_correct_select($num_rounds): string {
+    $num_correct_arr = [];
+
+    for ($i = 0; $i < $num_rounds; $i++) {
+      $num_correct_arr[] = "COALESCE(SUM(CASE WHEN p1.round_index = $i THEN 1 ELSE 0 END), 0) AS round{$i}correct";
+    }
+
+    $num_correct_select = implode(', ', $num_correct_arr);
+    return $num_correct_select;
+  }
+
+  private function get_total_score_exp($num_rounds, $point_values): string {
+    $total_score_arr = [];
+
+    for ($i = 0; $i < $num_rounds; $i++) {
+      $total_score_arr[] = "agg.round{$i}correct * {$point_values[$i]}";
+    }
+
+    $total_score_exp = implode(' + ', $total_score_arr);
+    return $total_score_exp;
+  }
+
+  private function get_where_clause($bracket_id): string {
+    $where = " WHERE p0.bracket_id = $bracket_id";
+
+    if ($this->only_score_printed_plays) {
+      $where .= ' AND p0.is_printed = 1';
+    }
+    if ($this->check_timestamp) {
+      $where .= ' AND p3.post_modified > p0.results_first_updated_at';
+    }
+
+    return $where;
   }
 }
