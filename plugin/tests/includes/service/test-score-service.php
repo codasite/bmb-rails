@@ -50,7 +50,8 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new Wpbb_ScoreService([
-      'only_score_printed_plays' => false,
+      'ignore_unprinted_plays' => false,
+      'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -102,7 +103,8 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new Wpbb_ScoreService([
-      'only_score_printed_plays' => false,
+      'ignore_unprinted_plays' => false,
+      'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -170,7 +172,8 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new Wpbb_ScoreService([
-      'only_score_printed_plays' => false,
+      'ignore_unprinted_plays' => false,
+      'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($bracket1);
 
@@ -242,7 +245,8 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new Wpbb_ScoreService([
-      'only_score_printed_plays' => false,
+      'ignore_unprinted_plays' => false,
+      'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -343,7 +347,8 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new Wpbb_ScoreService([
-      'only_score_printed_plays' => false,
+      'ignore_unprinted_plays' => false,
+      'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -353,7 +358,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $this->assertEquals(0.333333, $updated->accuracy_score);
   }
 
-  public function test_only_score_printed_plays() {
+  public function test_ignore_unprinted_plays() {
     $bracket = self::factory()->bracket->create_object([
       'num_teams' => 2,
       'matches' => [
@@ -408,7 +413,8 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new Wpbb_ScoreService([
-      'only_score_printed_plays' => true,
+      'ignore_unprinted_plays' => true,
+      'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -421,5 +427,124 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $unscored = $score_service->play_repo->get($play2->id);
     $this->assertEquals(null, $unscored->total_score);
     $this->assertEquals(null, $unscored->accuracy_score);
+  }
+
+  public function test_play_created_before_results_update_is_scored() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 4,
+    ]);
+    $bracket = self::factory()->bracket->update_object($bracket, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ],
+      ],
+    ]);
+
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+    $play_time = $play->published_date;
+    $bracket_time = $play_time->modify('+1 second');
+
+    $bracket = self::factory()->bracket->update_object($bracket, [
+      'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
+    ]);
+
+    $score_service = new Wpbb_ScoreService([
+      'ignore_unprinted_plays' => false,
+      'ignore_late_plays' => true,
+    ]);
+
+    $affected = $score_service->score_bracket_plays($bracket);
+
+    $updated = self::factory()->play->get_object_by_id($play->id);
+    $this->assertEquals(1, $affected);
+    $this->assertNotNull($updated->total_score);
+    $this->assertNotNull($updated->accuracy_score);
+  }
+
+  public function test_play_created_after_results_updated_not_scored() {
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 4,
+    ]);
+    $bracket = self::factory()->bracket->update_object($bracket, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ],
+      ],
+    ]);
+
+    $play = self::factory()->play->create_object([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ]),
+        new Wpbb_MatchPick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $play_time = $play->published_date;
+    $bracket_time = $play_time->modify('-1 second');
+
+    $bracket = self::factory()->bracket->update_object($bracket, [
+      'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
+    ]);
+
+    $score_service = new Wpbb_ScoreService([
+      'ignore_unprinted_plays' => false,
+      'ignore_late_plays' => true,
+    ]);
+
+    $affected = $score_service->score_bracket_plays($bracket);
+
+    $updated = $score_service->play_repo->get($play->id);
+    $this->assertEquals(0, $affected);
+    $this->assertNull($updated->total_score);
+    $this->assertNull($updated->accuracy_score);
   }
 }

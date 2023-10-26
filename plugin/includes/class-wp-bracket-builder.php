@@ -310,7 +310,7 @@ class Wp_Bracket_Builder {
     $this->loader->add_filter(
       'posts_clauses',
       $public_hooks,
-      'sort_plays',
+      'custom_query_fields',
       10,
       2
     );

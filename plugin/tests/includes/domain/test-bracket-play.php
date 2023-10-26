@@ -67,14 +67,4 @@ class BracketPlayTest extends WPBB_UnitTestCase {
 
     $play = Wpbb_BracketPlay::from_array($args);
   }
-
-  public function test_from_array_picks_is_required() {
-    $this->expectException(Exception::class);
-    $args = [
-      'bracket_id' => 716,
-      'author' => 1,
-    ];
-
-    $play = Wpbb_BracketPlay::from_array($args);
-  }
 }

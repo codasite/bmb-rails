@@ -40,6 +40,11 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
    */
   public $results;
 
+  /**
+   * @var DateTimeImmutable|false
+   */
+  public $results_first_updated_at;
+
   public function __construct(array $data = []) {
     parent::__construct($data);
     $this->month = $data['month'] ?? null;
@@ -48,6 +53,8 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $this->wildcard_placement = (int) ($data['wildcard_placement'] ?? null);
     $this->matches = $data['matches'] ?? [];
     $this->results = $data['results'] ?? [];
+    $this->results_first_updated_at =
+      $data['results_first_updated_at'] ?? false;
   }
 
   public function get_winning_team(): ?Wpbb_Team {
@@ -131,8 +138,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $requiredFields = [
       'num_teams',
       'wildcard_placement',
-      'month',
-      'year',
       'author',
       'title',
       'matches',
@@ -151,6 +156,17 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
       }
       $data['results'] = $results;
     }
+
+    if (isset($data['results_first_updated_at'])) {
+      $results_updated = $data['results_first_updated_at'];
+      if ($results_updated instanceof DateTimeImmutable) {
+        $data['results_first_updated_at'] = $results_updated;
+      } else {
+        $data['results_first_updated_at'] = new DateTimeImmutable(
+          $results_updated
+        );
+      }
+    }
     return new Wpbb_Bracket($data);
   }
 
@@ -167,6 +183,7 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $bracket['wildcard_placement'] = $this->wildcard_placement;
     $bracket['month'] = $this->month;
     $bracket['year'] = $this->year;
+    $bracket['results_first_updated_at'] = $this->results_first_updated_at;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {

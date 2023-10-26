@@ -38,7 +38,12 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
   /**
    * @var bool
    */
-  private $only_score_printed_plays;
+  private $ignore_unprinted_plays;
+
+  /**
+   * @var bool
+   */
+  private $ignore_late_plays;
 
   public function __construct($opts = []) {
     global $wpdb;
@@ -47,7 +52,8 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->utils = new Wpbb_Utils();
-    $this->only_score_printed_plays = $opts['only_score_printed_plays'] ?? true;
+    $this->ignore_unprinted_plays = $opts['ignore_unprinted_plays'] ?? true;
+    $this->ignore_late_plays = $opts['ignore_late_plays'] ?? true;
   }
 
   /**
@@ -63,7 +69,7 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     }
   }
 
-  private function score_plays(Wpbb_Bracket|int|null $bracket) {
+  private function score_plays(Wpbb_Bracket|int|null $bracket): int {
     $point_values = [1, 2, 4, 8, 16, 32];
 
     if (is_int($bracket)) {
@@ -89,9 +95,56 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     $high_score = $bracket->highest_possible_score();
 
     $plays_table = $this->play_repo->plays_table();
+
+    $join = $this->get_join_clause($bracket_id, $num_rounds);
+    $total_score_exp = $this->get_total_score_exp($num_rounds, $point_values);
+    $where = $this->get_where_clause(
+      $bracket_id,
+      $bracket->results_first_updated_at
+    );
+
+    $sql = "
+        UPDATE $plays_table p0
+        $join
+        SET p0.total_score = COALESCE($total_score_exp, 0),
+          p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
+        $where
+      ";
+
+    $this->wpdb->query($sql);
+    return $this->wpdb->rows_affected;
+  }
+
+  private function get_join_clause($bracket_id, $num_rounds): string {
     $picks_table = $this->play_repo->picks_table();
     $results_table = $this->bracket_repo->results_table();
+    $posts_table = $this->wpdb->posts;
+    $brackets_table = $this->bracket_repo->brackets_table();
 
+    $num_correct_select = $this->get_num_correct_select($num_rounds);
+
+    $join = "
+        LEFT JOIN (
+          SELECT p1.bracket_play_id, $num_correct_select
+          FROM $picks_table p1
+          JOIN $results_table p2 ON p1.round_index = p2.round_index
+          AND p1.match_index = p2.match_index
+          AND p1.winning_team_id = p2.winning_team_id
+          AND p2.bracket_id = $bracket_id
+          GROUP BY p1.bracket_play_id
+        ) agg ON p0.id = agg.bracket_play_id
+    ";
+
+    if ($this->ignore_late_plays) {
+      $join .= "
+        JOIN $posts_table p3 ON p0.post_id = p3.ID
+      ";
+    }
+
+    return $join;
+  }
+
+  private function get_num_correct_select($num_rounds): string {
     $num_correct_arr = [];
 
     for ($i = 0; $i < $num_rounds; $i++) {
@@ -99,7 +152,10 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     }
 
     $num_correct_select = implode(', ', $num_correct_arr);
+    return $num_correct_select;
+  }
 
+  private function get_total_score_exp($num_rounds, $point_values): string {
     $total_score_arr = [];
 
     for ($i = 0; $i < $num_rounds; $i++) {
@@ -107,29 +163,23 @@ class Wpbb_ScoreService implements Wpbb_ScoreServiceInterface {
     }
 
     $total_score_exp = implode(' + ', $total_score_arr);
+    return $total_score_exp;
+  }
 
-    $sql = "
-    UPDATE $plays_table p0
-    LEFT JOIN (
-    		SELECT p1.bracket_play_id,
-    						$num_correct_select
-    		FROM $picks_table p1
-    		JOIN $results_table p2 ON p1.round_index = p2.round_index
-    																								AND p1.match_index = p2.match_index
-    																								AND p1.winning_team_id = p2.winning_team_id
-    																								AND p2.bracket_id = $bracket_id
-    		GROUP BY p1.bracket_play_id
-    ) agg ON p0.id = agg.bracket_play_id
-    SET p0.total_score = COALESCE($total_score_exp, 0),
-    		p0.accuracy_score = COALESCE($total_score_exp, 0) / $high_score
-    WHERE p0.bracket_id = $bracket_id
-    ";
+  private function get_where_clause(
+    int $bracket_id,
+    DateTimeImmutable|false $first_updated = false
+  ): string {
+    $where = " WHERE p0.bracket_id = $bracket_id";
 
-    $sql = $this->only_score_printed_plays
-      ? $sql . ' AND p0.is_printed = 1'
-      : $sql;
+    if ($this->ignore_unprinted_plays) {
+      $where .= ' AND p0.is_printed = 1';
+    }
+    if ($this->ignore_late_plays && $first_updated) {
+      $updated = $first_updated->format('Y-m-d H:i:s');
+      $where .= " AND p3.post_date_gmt < '$updated'";
+    }
 
-    $this->wpdb->query($sql);
-    return $this->wpdb->rows_affected;
+    return $where;
   }
 }

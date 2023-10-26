@@ -1,5 +1,9 @@
 <?php
 class Wpbb_Utils {
+  static function now() {
+    return new DateTimeImmutable('now', new DateTimeZone('UTC'));
+  }
+
   public function set_cookie(
     $key,
     $value,

@@ -1,8 +1,16 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/custom-query/class-wpbb-play-query.php';
 
 class Wpbb_PublicHooks
 {
+
+	private $play_query;
+
+	public function __construct($opts = [])
+	{
+		$this->play_query = $opts['play_query'] ?? new Wpbb_CustomPlayQuery();
+	}
 
 	public function add_rewrite_tags() {
 		add_rewrite_tag('%tab%', '([^&]+)');
@@ -80,29 +88,9 @@ class Wpbb_PublicHooks
 		return $allcaps;
 	}
 
-	/**
-	 * Sort plays by a field in the plays table
-	 * 
-	 * adapted from: https://wordpress.stackexchange.com/questions/4852/post-meta-vs-separate-database-tables
-	 */
-	public function sort_plays($clauses, $query_object) {
-		$play_sort_options = [
-			'total_score',
-			'accuracy_score',
-		];
-
-		// Only affect queries for bracket_play post type and sorting by a valid option
-		if ($query_object->get('post_type') === 'bracket_play' && in_array($query_object->get('orderby'), $play_sort_options)) {
-			global $wpdb;
-			require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
-			$play_repo = new Wpbb_BracketPlayRepo();
-
-			$join = &$clauses['join'];
-			if (!empty($join)) $join .= ' '; // Add space only if we need to
-			$join .= "JOIN {$play_repo->plays_table()} plays ON plays.post_id = {$wpdb->posts}.ID";
-
-			$orderby = &$clauses['orderby'];
-			$orderby = "plays.{$query_object->get('orderby')} {$query_object->get('order')}";
+	public function custom_query_fields($clauses, $query_object) {
+		if ($query_object->get('post_type') === 'bracket_play') {
+			return $this->play_query->handle_custom_query($clauses, $query_object);
 		}
 		return $clauses;
 	}

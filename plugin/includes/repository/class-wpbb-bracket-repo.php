@@ -83,8 +83,25 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
   }
 
   public function insert_results(int $bracket_id, array $results): void {
-    foreach ($results as $result) {
-      $this->insert_result($bracket_id, $result);
+    $this->wpdb->query('START TRANSACTION');
+    try {
+      foreach ($results as $result) {
+        $this->insert_result($bracket_id, $result);
+      }
+      // assuming all went well, update the results_first_updated_at field
+      $this->update_bracket_data(
+        $bracket_id,
+        [
+          'results_first_updated_at' => (new DateTimeImmutable())->format(
+            'Y-m-d H:i:s'
+          ),
+        ],
+        false
+      );
+      $this->wpdb->query('COMMIT');
+    } catch (Exception $e) {
+      $this->wpdb->query('ROLLBACK');
+      throw $e;
     }
   }
 
@@ -121,6 +138,9 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       return null;
     }
     $bracket_id = $bracket_data['id'];
+    $results_updated = isset($bracket_data['results_first_updated_at'])
+      ? new DateTimeImmutable($bracket_data['results_first_updated_at'])
+      : false;
 
     $matches =
       $fetch_matches && $bracket_id ? $this->get_matches($bracket_id) : [];
@@ -150,6 +170,7 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       'author_display_name' => $author_id
         ? get_the_author_meta('display_name', $author_id)
         : '',
+      'results_first_updated_at' => $results_updated,
     ];
 
     return new Wpbb_Bracket($data);
@@ -175,6 +196,8 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
     if (is_wp_error($post_id)) {
       return null;
     }
+
+    $this->update_bracket_data($post_id, $data, true);
 
     $bracket_data = $this->get_bracket_data($post_id);
     $bracket_id = $bracket_data['id'];
@@ -203,29 +226,58 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       return;
     }
 
-    foreach ($new_results as $new_result) {
-      $pick_exists = false;
-      foreach ($old_results as $old_result) {
-        if (
-          $new_result->round_index === $old_result->round_index &&
-          $new_result->match_index === $old_result->match_index
-        ) {
-          $pick_exists = true;
-          $this->wpdb->update(
-            $this->results_table(),
-            [
-              'winning_team_id' => $new_result->winning_team_id,
-            ],
-            [
-              'id' => $old_result->id,
-            ]
-          );
+    $this->wpdb->query('START TRANSACTION');
+
+    try {
+      foreach ($new_results as $new_result) {
+        $pick_exists = false;
+        foreach ($old_results as $old_result) {
+          if (
+            $new_result->round_index === $old_result->round_index &&
+            $new_result->match_index === $old_result->match_index
+          ) {
+            $pick_exists = true;
+            $this->wpdb->update(
+              $this->results_table(),
+              [
+                'winning_team_id' => $new_result->winning_team_id,
+              ],
+              [
+                'id' => $old_result->id,
+              ]
+            );
+          }
+        }
+        if (!$pick_exists) {
+          $this->insert_result($bracket_id, $new_result);
         }
       }
-      if (!$pick_exists) {
-        $this->insert_result($bracket_id, $new_result);
+      $this->wpdb->query('COMMIT');
+    } catch (Exception $e) {
+      $this->wpdb->query('ROLLBACK');
+      throw $e;
+    }
+  }
+
+  private function update_bracket_data(
+    int $id,
+    array $data,
+    bool $use_post_id = false
+  ): void {
+    $id_field = $use_post_id ? 'post_id' : 'id';
+    $update_fields = ['results_first_updated_at'];
+    $update_data = [];
+    foreach ($data as $key => $value) {
+      if (in_array($key, $update_fields)) {
+        $update_data[$key] = $value;
       }
     }
+    if (empty($update_data)) {
+      return;
+    }
+    $this->wpdb->update($this->brackets_table(), $update_data, [
+      $id_field => $id,
+    ]);
   }
 
   public function get_bracket_data(int|WP_Post|null $bracket_post): array {

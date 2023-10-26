@@ -8,12 +8,14 @@ class BracketTest extends WPBB_UnitTestCase {
   }
 
   public function test_constructor() {
+    $now = new DateTimeImmutable();
     $args = [
       'title' => 'Test Template',
       'status' => 'publish',
       'author' => 1,
       'num_teams' => 2,
       'wildcard_placement' => 0,
+      'results_first_updated_at' => $now,
       'matches' => [
         new Wpbb_Match([
           'round_index' => 0,
@@ -40,5 +42,94 @@ class BracketTest extends WPBB_UnitTestCase {
     $this->assertEquals(0, $bracket->wildcard_placement);
     $this->assertEquals(1, count($bracket->matches));
     $this->assertEquals(1, count($bracket->results));
+    $this->assertEquals($now, $bracket->results_first_updated_at);
+  }
+
+  public function test_from_array() {
+    $args = [
+      'id' => 1,
+      'title' => 'Test Template',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 2,
+      'wildcard_placement' => 0,
+      'results_first_updated_at' => '2020-01-01 00:00:00',
+      'matches' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => [
+            'name' => 'Team 1',
+          ],
+          'team2' => [
+            'name' => 'Team 2',
+          ],
+        ],
+      ],
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => 1,
+        ],
+      ],
+    ];
+    $bracket = Wpbb_Bracket::from_array($args);
+    $this->assertInstanceOf(Wpbb_Bracket::class, $bracket);
+    $this->assertEquals(1, $bracket->id);
+    $this->assertEquals('Test Template', $bracket->title);
+    $this->assertEquals('publish', $bracket->status);
+    $this->assertEquals(1, $bracket->author);
+    $this->assertEquals(2, $bracket->num_teams);
+    $this->assertEquals(0, $bracket->wildcard_placement);
+    $this->assertEquals(1, count($bracket->matches));
+    $this->assertEquals(1, count($bracket->results));
+    $this->assertEquals(
+      '2020-01-01 00:00:00',
+      $bracket->results_first_updated_at->format('Y-m-d H:i:s')
+    );
+  }
+
+  public function test_to_array() {
+    $now = new DateTimeImmutable();
+    $args = [
+      'id' => 1,
+      'title' => 'Test Template',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 2,
+      'wildcard_placement' => 0,
+      'results_first_updated_at' => $now,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+      'results' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => 1,
+        ]),
+      ],
+    ];
+    $bracket = new Wpbb_Bracket($args);
+    $array = $bracket->to_array();
+    $this->assertEquals(1, $array['id']);
+    $this->assertEquals('Test Template', $array['title']);
+    $this->assertEquals('publish', $array['status']);
+    $this->assertEquals(1, $array['author']);
+    $this->assertEquals(2, $array['num_teams']);
+    $this->assertEquals(0, $array['wildcard_placement']);
+    $this->assertEquals(1, count($array['matches']));
+    $this->assertEquals(1, count($array['results']));
+    $this->assertEquals($now, $array['results_first_updated_at']);
   }
 }

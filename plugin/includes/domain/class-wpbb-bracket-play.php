@@ -93,7 +93,7 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
    * @throws Wpbb_ValidationException
    */
   public static function from_array($data): Wpbb_BracketPlay {
-    validateRequiredFields($data, ['bracket_id', 'author', 'picks']);
+    validateRequiredFields($data, ['bracket_id', 'author']);
     $picks = [];
     foreach ($data['picks'] as $pick) {
       $picks[] = Wpbb_MatchPick::from_array($pick);
