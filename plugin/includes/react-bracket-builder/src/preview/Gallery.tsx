@@ -4,6 +4,8 @@ import * as Sentry from '@sentry/react'
 import 'react-image-gallery/styles/css/image-gallery.css'
 import { Spinner } from './Spinner'
 
+const RESFACTOR = 3;
+
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
   // [key: string]: string;
@@ -64,18 +66,19 @@ const Gallery: React.FC<GalleryProps> = ({
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([])
   const [loadingImages, setLoadingImages] = useState<boolean>(true)
-  // const [loadingImages, setLoadingImages] = useState<boolean>(false);
 
   useEffect(() => {
     const imageConfigsPromise = buildImageConfigs()
     const domContentLoadedPromise = createDomContentLoadedPromise()
+    console.time('buildImageConfigs')
 
     // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
-        setImageConfigs(imageConfigs)
+        // setImageConfigs(imageConfigs)
         initChangeHandlers()
         setLoadingImages(false)
+        console.timeEnd('buildImageConfigs')
       })
       .catch((error) => {
         console.error('An error occurred:', error)
@@ -216,6 +219,10 @@ const Gallery: React.FC<GalleryProps> = ({
       variationColor,
     }
 
+    setImageConfigs((prev) => [...prev, config])
+    if (loadingImages) {
+      setLoadingImages(false)
+    }
     return config
   }
 
@@ -231,12 +238,7 @@ const Gallery: React.FC<GalleryProps> = ({
     <>
       {loadingImages ? (
         <div className="tw-flex tw-h-[400px] tw-items-center tw-justify-center">
-          <Spinner
-          // variant="dark"
-          // animation="border"
-          // role="status"
-          // style={{ borderWidth: '4px' }}
-          />
+          <Spinner />
         </div>
       ) : (
         <div className="wpbb-gallery-container">
@@ -355,12 +357,14 @@ async function addOverlay(
   // await loadImage(bracketImage).catch((error) => {
   //   console.error(error);
   // });
+  console.time('loadImage ' + bracketImage.src)
   await Promise.all([
     loadImage(backgroundImage),
     loadImage(bracketImage),
   ]).catch((error) => {
     console.error(error)
   })
+  console.timeEnd('loadImage ' + bracketImage.src)
 
   // Scale the bracket image to the correct size
   const aspectRatio = bracketImage.width / bracketImage.height
@@ -370,21 +374,30 @@ async function addOverlay(
   const canvas = document.createElement('canvas')
   const context = canvas.getContext('2d')
 
+  // Scale the canvas
+  // context.scale(RESFACTOR, RESFACTOR)
+
   // Set canvas dimensions to match the background image
-  canvas.width = backgroundImage.width
-  canvas.height = backgroundImage.height
+  canvas.width = backgroundImage.width * RESFACTOR
+  canvas.height = backgroundImage.height * RESFACTOR
 
   // Draw the background image on the canvas
-  context?.drawImage(backgroundImage, 0, 0)
+  context?.drawImage(backgroundImage, 0, 0, backgroundImage.width * RESFACTOR, backgroundImage.height * RESFACTOR)
+
+  // context.scale(1/RESFACTOR, 1/RESFACTOR)
 
   // Calculate the position to place the logo on the canvas
   //const [x, y] = logoPosition;
   var [x, y] = bracketCenter
+
   x -= bracketWidth / 2
   y -= bracketHeight / 2
 
+  x = x * RESFACTOR;
+  y = y * RESFACTOR;
+
   // Draw the logo image on the canvas at the specified position and size
-  context?.drawImage(bracketImage, x, y, bracketWidth, bracketHeight)
+  context?.drawImage(bracketImage, x, y, bracketWidth * RESFACTOR, bracketHeight * RESFACTOR)
 
   // Convert the canvas image to a data URL
   const outputImageUrl = canvas.toDataURL()
