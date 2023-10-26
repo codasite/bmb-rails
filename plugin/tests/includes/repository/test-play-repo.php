@@ -506,4 +506,64 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(1, count($plays));
     $this->assertEquals($play1->id, $plays[0]->id);
   }
+
+  public function test_query_printed_ignore_late_plays() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+
+    $bracket_results_date = '2020-03-01 12:00:00';
+
+    $ontime_date = '2020-03-01 11:59:59';
+    $late_date = '2020-03-01 12:00:01';
+
+    $play1 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+    ]);
+    $play2 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+    ]);
+    $play3 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+    ]);
+    $play4 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+    ]);
+    wp_update_post([
+      'ID' => $play1->id,
+      'post_date_gmt' => $ontime_date,
+    ]);
+    wp_update_post([
+      'ID' => $play2->id,
+      'post_date_gmt' => $ontime_date,
+    ]);
+    wp_update_post([
+      'ID' => $play3->id,
+      'post_date_gmt' => $late_date,
+    ]);
+    wp_update_post([
+      'ID' => $play4->id,
+      'post_date_gmt' => $late_date,
+    ]);
+
+    // query for all plays with post_date_gmt before bracket_results_date
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+      'date_query' => [
+        [
+          'column' => 'post_date_gmt',
+          'before' => $bracket_results_date,
+        ],
+      ],
+    ]);
+
+    $this->assertEquals(2, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+  }
 }
