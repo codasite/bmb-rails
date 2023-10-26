@@ -75,7 +75,7 @@ const Gallery: React.FC<GalleryProps> = ({
     // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
-        setImageConfigs(imageConfigs)
+        //setImageConfigs(imageConfigs)
         initChangeHandlers()
         setLoadingImages(false)
         console.timeEnd('buildImageConfigs')
@@ -219,10 +219,10 @@ const Gallery: React.FC<GalleryProps> = ({
       variationColor,
     }
 
-    // setImageConfigs((prev) => [...prev, config])
-    // if (loadingImages) {
-    //   setLoadingImages(false)
-    // }
+    setImageConfigs((prev) => [...prev, config])
+    //if (loadingImages) {
+    //  setLoadingImages(false)
+    //}
     return config
   }
 
