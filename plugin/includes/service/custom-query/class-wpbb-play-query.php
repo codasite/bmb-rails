@@ -14,7 +14,11 @@ class Wpbb_CustomPlayQuery {
   }
 
   public static $sort_fields = ['total_score', 'accuracy_score'];
-  public static $filter_fields = ['bracket_id', 'bracket_post_id'];
+  public static $filter_fields = [
+    'bracket_id',
+    'bracket_post_id',
+    'is_printed',
+  ];
   // This is a mapping of query fields to the actual field names in the database
   public static $alternate_field_mappings = [
     'bracket_id' => 'bracket_post_id',
