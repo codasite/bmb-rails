@@ -377,4 +377,111 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($play->accuracy_score, $updated->accuracy_score);
     $this->assertEquals($play->busted_id, $updated->busted_id);
   }
+
+  public function test_get_plays_for_bracket_id() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play1 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+    $play2 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $bracket2 = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+
+    $play3 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket2->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $this->assertEquals(2, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+  }
+
+  public function test_sort_plays_by_total_score() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play1 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'total_score' => 5,
+    ]);
+    $play2 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'total_score' => 10,
+    ]);
+    $play3 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'total_score' => 15,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'orderby' => 'total_score',
+      'order' => 'DESC',
+    ]);
+
+    $this->assertEquals(3, count($plays));
+    $this->assertEquals($play3->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+    $this->assertEquals($play1->id, $plays[2]->id);
+  }
+
+  public function test_sort_plays_by_accuracy_score() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play1 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'accuracy_score' => 0.5,
+    ]);
+    $play2 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'accuracy_score' => 0.75,
+    ]);
+    $play3 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'accuracy_score' => 0.25,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'orderby' => 'accuracy_score',
+      'order' => 'DESC',
+    ]);
+
+    $this->assertEquals(3, count($plays));
+    $this->assertEquals($play2->id, $plays[0]->id);
+    $this->assertEquals($play1->id, $plays[1]->id);
+    $this->assertEquals($play3->id, $plays[2]->id);
+  }
 }
