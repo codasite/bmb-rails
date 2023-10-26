@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/react'
 import 'react-image-gallery/styles/css/image-gallery.css'
 import { Spinner } from './Spinner'
 
-const RESFACTOR = 3;
+const RESFACTOR = 3
 
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
@@ -75,7 +75,7 @@ const Gallery: React.FC<GalleryProps> = ({
     // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
-        // setImageConfigs(imageConfigs)
+        setImageConfigs(imageConfigs)
         initChangeHandlers()
         setLoadingImages(false)
         console.timeEnd('buildImageConfigs')
@@ -219,10 +219,10 @@ const Gallery: React.FC<GalleryProps> = ({
       variationColor,
     }
 
-    setImageConfigs((prev) => [...prev, config])
-    if (loadingImages) {
-      setLoadingImages(false)
-    }
+    // setImageConfigs((prev) => [...prev, config])
+    // if (loadingImages) {
+    //   setLoadingImages(false)
+    // }
     return config
   }
 
@@ -382,7 +382,13 @@ async function addOverlay(
   canvas.height = backgroundImage.height * RESFACTOR
 
   // Draw the background image on the canvas
-  context?.drawImage(backgroundImage, 0, 0, backgroundImage.width * RESFACTOR, backgroundImage.height * RESFACTOR)
+  context?.drawImage(
+    backgroundImage,
+    0,
+    0,
+    backgroundImage.width * RESFACTOR,
+    backgroundImage.height * RESFACTOR
+  )
 
   // context.scale(1/RESFACTOR, 1/RESFACTOR)
 
@@ -393,11 +399,17 @@ async function addOverlay(
   x -= bracketWidth / 2
   y -= bracketHeight / 2
 
-  x = x * RESFACTOR;
-  y = y * RESFACTOR;
+  x = x * RESFACTOR
+  y = y * RESFACTOR
 
   // Draw the logo image on the canvas at the specified position and size
-  context?.drawImage(bracketImage, x, y, bracketWidth * RESFACTOR, bracketHeight * RESFACTOR)
+  context?.drawImage(
+    bracketImage,
+    x,
+    y,
+    bracketWidth * RESFACTOR,
+    bracketHeight * RESFACTOR
+  )
 
   // Convert the canvas image to a data URL
   const outputImageUrl = canvas.toDataURL()
