@@ -14,18 +14,24 @@ $complete = $post_status === 'complete';
 $scored = $post_status === 'score';
 $show_scores = $complete || $scored;
 
-$plays = $play_repo->get_all(
-	[
+$query = [
 		'post_status' => 'publish',
-		'meta_query' => [
-			[
-				'key' => 'bracket_id',
-				'value' => get_the_ID(),
-			],
-		],
+		'bracket_id' => $bracket->id,
+		'is_printed' => true,
 		'orderby' => 'accuracy_score',
 		'order' => 'DESC',
-	],
+	];
+
+if ($bracket->results_first_updated_at) {
+	$query['date_query'] = [
+		[
+			'column' => 'post_modified_gmt',
+			'before' => $bracket->results_first_updated_at->format('Y-m-d H:i:s'),
+		]
+	];
+}
+$plays = $play_repo->get_all(
+	$query,
 	[
 		'fetch_picks' => true,
 	]
