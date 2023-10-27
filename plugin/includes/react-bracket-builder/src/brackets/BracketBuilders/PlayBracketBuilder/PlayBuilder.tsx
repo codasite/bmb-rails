@@ -5,6 +5,7 @@ import { PickableBracket } from '../../shared/components/Bracket'
 import { ThemeSelector } from '../../shared/components'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PlayBuilderProps } from './types'
+import { Spinner } from '../../shared/components/Spinner'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {
@@ -40,7 +41,7 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
               onClick={handleApparelClick}
               disabled={processing || !matchTree.allPicked()}
             >
-              Add to Apparel
+              {processing ? <Spinner /> : 'Get Apparel'}
             </ActionButton>
           </div>
         </div>

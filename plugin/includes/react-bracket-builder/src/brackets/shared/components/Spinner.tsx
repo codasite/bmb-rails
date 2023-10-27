@@ -1,4 +1,4 @@
-import { ReactComponent as SpinnerSVG } from '../assets/icons/spinner.svg'
+import { ReactComponent as SpinnerSVG } from '../../../assets/icons/spinner.svg'
 
 export const Spinner = () => {
   return (
