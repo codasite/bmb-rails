@@ -2,7 +2,7 @@
 /**
  * The template for displaying 401 pages (Unauthorized)
  */
-get_header();
+// get_header();
 
 ?>
 <div class="wpbb-reset tw-bg-dd-blue tw-min-h-screen">
