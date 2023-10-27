@@ -47,8 +47,7 @@ switch ($view) {
         echo '<div id="wpbb-bracket-builder"></div>';
         break;
     case 'results':
-		$current_user = wp_get_current_user();
-		if ($current_user->ID !== $bracket->author) {
+		if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
 			include(WPBB_PLUGIN_DIR . 'public/error/401.php');
 			return;
 		}
