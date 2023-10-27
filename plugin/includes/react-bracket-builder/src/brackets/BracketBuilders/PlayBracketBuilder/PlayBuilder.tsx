@@ -16,6 +16,7 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     handleApparelClick,
     processing,
   } = props
+  console.log('sup')
 
   return (
     <div
@@ -40,10 +41,14 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
               darkMode={darkMode}
               onClick={handleApparelClick}
               disabled={processing || !matchTree.allPicked()}
-              height={82}
-              width={330}
+              height={72}
+              width={405}
             >
-              {processing ? <Spinner fill="white"/> : 'Get Apparel'}
+              {processing ? (
+                <Spinner fill="white" height={50} width={50} />
+              ) : (
+                'Add to Apparel'
+              )}
             </ActionButton>
           </div>
         </div>
