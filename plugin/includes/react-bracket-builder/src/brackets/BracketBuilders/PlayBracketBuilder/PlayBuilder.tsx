@@ -16,7 +16,6 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     handleApparelClick,
     processing,
   } = props
-  console.log('sup')
 
   return (
     <div
