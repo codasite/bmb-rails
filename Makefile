@@ -57,3 +57,9 @@ wp-start:
 
 wp-build:
 	cd plugin/includes/react-bracket-builder && npm run build
+
+prod-up:
+	docker compose -f compose.yaml -f compose.prod.yaml up --build -d
+	
+prod-down:
+	docker compose -f compose.yaml -f compose.prod.yaml down
