@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import ImageGallery from 'react-image-gallery'
 import * as Sentry from '@sentry/react'
 import 'react-image-gallery/styles/css/image-gallery.css'
-import { Spinner } from './Spinner'
+import { Spinner } from '../brackets/shared/components/Spinner'
 
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
