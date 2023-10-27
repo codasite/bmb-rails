@@ -36,6 +36,7 @@ enum ProductImageThemeMode {
 }
 
 interface ProductImageConfig {
+  originalIndex: number
   url: string
   variationColor?: string
   variationTheme?: ProductImageThemeMode
@@ -66,6 +67,20 @@ const Gallery: React.FC<GalleryProps> = ({
   const [imageUrls, setImageUrls] = useState<string[]>([])
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([])
   const [loadingImages, setLoadingImages] = useState<boolean>(true)
+
+  const insertImageConfig = (imageConfig: ProductImageConfig) => {
+    setImageConfigs((prev) => {
+      const newImageConfigs = [...prev, imageConfig]
+      // sort the image configs by the original index
+      const sorted = newImageConfigs.sort((a, b) => {
+        return a.originalIndex - b.originalIndex
+      })
+      return sorted
+    })
+    if (loadingImages) {
+      setLoadingImages(false)
+    }
+  }
 
   useEffect(() => {
     const imageConfigsPromise = buildImageConfigs()
@@ -166,8 +181,8 @@ const Gallery: React.FC<GalleryProps> = ({
   }
 
   const buildImageConfigs = async (): Promise<ProductImageConfig[]> => {
-    const promises = galleryImages.map((image) => {
-      return buildProductImageConfig(image, overlayThemeMap)
+    const promises = galleryImages.map((image, i) => {
+      return buildProductImageConfig(image, overlayThemeMap, i)
     })
 
     const configs = await Promise.allSettled(promises)
@@ -198,7 +213,8 @@ const Gallery: React.FC<GalleryProps> = ({
 
   const buildProductImageConfig = async (
     image: GalleryImage,
-    overlayMap: OverlayUrlThemeMap
+    overlayMap: OverlayUrlThemeMap,
+    originalIndex: number
   ): Promise<ProductImageConfig> => {
     const { src: backgroundImageUrl, title: backgroundImageTitle } = image
 
@@ -217,9 +233,10 @@ const Gallery: React.FC<GalleryProps> = ({
     const config: ProductImageConfig = {
       url,
       variationColor,
+      originalIndex,
     }
 
-    setImageConfigs((prev) => [...prev, config])
+    insertImageConfig(config)
     //if (loadingImages) {
     //  setLoadingImages(false)
     //}
