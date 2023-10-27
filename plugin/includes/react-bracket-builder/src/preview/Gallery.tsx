@@ -4,11 +4,10 @@ import * as Sentry from '@sentry/react'
 import 'react-image-gallery/styles/css/image-gallery.css'
 import { Spinner } from './Spinner'
 
-const RESFACTOR = 3
+const SCALE_FACTOR = 3
 
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
-  // [key: string]: string;
   light: string
   dark: string
 }
@@ -24,7 +23,6 @@ interface GalleryProps {
   colorOptions: string[]
 }
 
-// An enum called ProductImageOrientation
 enum ProductImageOrientation {
   FRONT = 'front',
   BACK = 'back',
@@ -71,7 +69,6 @@ const Gallery: React.FC<GalleryProps> = ({
   const insertImageConfig = (imageConfig: ProductImageConfig) => {
     setImageConfigs((prev) => {
       const newImageConfigs = [...prev, imageConfig]
-      // sort the image configs by the original index
       const sorted = newImageConfigs.sort((a, b) => {
         return a.originalIndex - b.originalIndex
       })
@@ -85,15 +82,12 @@ const Gallery: React.FC<GalleryProps> = ({
   useEffect(() => {
     const imageConfigsPromise = buildImageConfigs()
     const domContentLoadedPromise = createDomContentLoadedPromise()
-    console.time('buildImageConfigs')
 
     // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
-        //setImageConfigs(imageConfigs)
         initChangeHandlers()
         setLoadingImages(false)
-        console.timeEnd('buildImageConfigs')
       })
       .catch((error) => {
         console.error('An error occurred:', error)
@@ -129,7 +123,6 @@ const Gallery: React.FC<GalleryProps> = ({
     theme: string
   ): ProductImageConfig[] => {
     return imageConfigs.filter((config) => {
-      // if (config.variationColor === color && config.variationTheme === theme) {
       if (config.variationColor === color) {
         return true
       }
@@ -237,9 +230,6 @@ const Gallery: React.FC<GalleryProps> = ({
     }
 
     insertImageConfig(config)
-    //if (loadingImages) {
-    //  setLoadingImages(false)
-    //}
     return config
   }
 
@@ -371,17 +361,13 @@ async function addOverlay(
 
   // Set the source URL for the logo image
   bracketImage.src = overlayUrl
-  // await loadImage(bracketImage).catch((error) => {
-  //   console.error(error);
-  // });
-  console.time('loadImage ' + bracketImage.src)
+
   await Promise.all([
     loadImage(backgroundImage),
     loadImage(bracketImage),
   ]).catch((error) => {
     console.error(error)
   })
-  console.timeEnd('loadImage ' + bracketImage.src)
 
   // Scale the bracket image to the correct size
   const aspectRatio = bracketImage.width / bracketImage.height
@@ -391,41 +377,34 @@ async function addOverlay(
   const canvas = document.createElement('canvas')
   const context = canvas.getContext('2d')
 
-  // Scale the canvas
-  // context.scale(RESFACTOR, RESFACTOR)
-
   // Set canvas dimensions to match the background image
-  canvas.width = backgroundImage.width * RESFACTOR
-  canvas.height = backgroundImage.height * RESFACTOR
+  canvas.width = backgroundImage.width * SCALE_FACTOR
+  canvas.height = backgroundImage.height * SCALE_FACTOR
 
   // Draw the background image on the canvas
   context?.drawImage(
     backgroundImage,
     0,
     0,
-    backgroundImage.width * RESFACTOR,
-    backgroundImage.height * RESFACTOR
+    backgroundImage.width * SCALE_FACTOR,
+    backgroundImage.height * SCALE_FACTOR
   )
 
-  // context.scale(1/RESFACTOR, 1/RESFACTOR)
-
-  // Calculate the position to place the logo on the canvas
-  //const [x, y] = logoPosition;
   var [x, y] = bracketCenter
 
   x -= bracketWidth / 2
   y -= bracketHeight / 2
 
-  x = x * RESFACTOR
-  y = y * RESFACTOR
+  x = x * SCALE_FACTOR
+  y = y * SCALE_FACTOR
 
   // Draw the logo image on the canvas at the specified position and size
   context?.drawImage(
     bracketImage,
     x,
     y,
-    bracketWidth * RESFACTOR,
-    bracketHeight * RESFACTOR
+    bracketWidth * SCALE_FACTOR,
+    bracketHeight * SCALE_FACTOR
   )
 
   // Convert the canvas image to a data URL
