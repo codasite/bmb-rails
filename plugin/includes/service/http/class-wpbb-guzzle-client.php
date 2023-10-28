@@ -52,6 +52,14 @@ class Wpbb_GuzzleClient implements Wpbb_HttpClientInterface {
    * 	],
    * ]
    * @return array
+   * @example $responses = [
+   *   'top_light' => [
+   *    'image_url' => 'https://test.com/top_light.png',
+   *  ],
+   *    'center_light' => [
+   *    'image_url' => 'https://test.com/center_light.png',
+   *  ],
+   * ]
    */
   public function send_many($requests = []): array {
     $keys = array_keys($requests);

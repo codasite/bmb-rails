@@ -16,8 +16,6 @@ import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
 import { getBracketMeta } from '../../shared/utils'
 
-console.log('view play page')
-
 interface ViewPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
@@ -40,7 +38,6 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
     bracketPlay: play,
     apparelUrl,
   } = props
-  console.log('play', play)
 
   useEffect(() => {
     const picks = play?.picks
@@ -60,6 +57,12 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   const handleAddToApparel = () => {
     console.log('handleAddToApparel')
     console.log('apparelUrl', apparelUrl)
+    const playId = play?.id
+    if (playId) {
+      //set play id in cookie
+      const expiryDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+      document.cookie = `play_id=${playId}; path=/; expires=${expiryDate.toUTCString()}`
+    }
     window.location.href = props.apparelUrl
   }
 
