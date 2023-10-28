@@ -16,8 +16,6 @@ import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
 import { getBracketMeta } from '../../shared/utils'
 
-console.log('view play page')
-
 interface ViewPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
@@ -40,7 +38,6 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
     bracketPlay: play,
     apparelUrl,
   } = props
-  console.log('play', play)
 
   useEffect(() => {
     const picks = play?.picks
