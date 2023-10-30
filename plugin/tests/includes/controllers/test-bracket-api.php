@@ -944,4 +944,52 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $this->assertEquals(3, count($updated->results));
   }
+
+  public function test_anonymous_bracket_sets_cookie() {
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('set_cookie')
+      ->with(
+        $this->equalTo('bracket_id'),
+        $this->isType('int'),
+        $this->anything()
+      );
+    $bracket_api = new Wpbb_BracketApi([
+      'utils' => $utils_mock,
+    ]);
+
+    // set current user to anonymous user
+    wp_set_current_user(0);
+
+    $request = new WP_REST_Request('POST', '/wp/v2/brackets');
+    $request->set_body_params([
+      'name' => 'test bracket',
+      'num_teams' => 4,
+      'matches' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => [
+            'name' => 'Team 1',
+          ],
+          'team2' => [
+            'name' => 'Team 2',
+          ],
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => [
+            'name' => 'Team 3',
+          ],
+          'team2' => [
+            'name' => 'Team 4',
+          ],
+        ],
+      ],
+    ]);
+
+    $bracket_api->create_item($request);
+  }
 }
