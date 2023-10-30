@@ -130,11 +130,9 @@ class Wpbb_PublicHooks
 		if (!$bracket_id) {
 			return;
 		}
-		$post = get_post($bracket_id);
-		wp_update_post([
-			'ID' => $bracket_id,
-			'post_author' => $user->ID,
-		]);
 
+		$bracket_repo = new Wpbb_BracketRepo();
+		$bracket = $bracket_repo->get($bracket_id);
+		$bracket_repo->update($bracket_id, ['author'=> $user->ID]);
 	}
 }
