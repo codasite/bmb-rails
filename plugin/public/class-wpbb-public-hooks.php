@@ -133,6 +133,9 @@ class Wpbb_PublicHooks
 
 		$bracket_repo = new Wpbb_BracketRepo();
 		$bracket = $bracket_repo->get($bracket_id);
-		$bracket_repo->update($bracket_id, ['author'=> $user->ID]);
+
+		if ($bracket->author === 0) {
+			$bracket_repo->update($bracket_id, ['author'=> $user->ID]);
+		}
 	}
 }
