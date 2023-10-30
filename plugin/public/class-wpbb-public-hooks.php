@@ -125,7 +125,15 @@ class Wpbb_PublicHooks
 	/**
 	 * this function gets hooked to the 'wp_login' action
 	 */
-	public function link_anonymous_bracket_to_user($user_login, WP_User $user) {
+	public function link_anonymous_bracket_to_user_on_login($user_login, WP_User $user) {
+		$this->link_anonymous_bracket_to_user($user->ID);
+	}
+
+	public function link_anonymous_bracket_to_user_on_register($user_id) {
+		$this->link_anonymous_bracket_to_user($user_id);
+	}
+
+	private function link_anonymous_bracket_to_user(int $user_id) {
 		$bracket_id = $this->utils->pop_cookie('bracket_id');
 		if (!$bracket_id) {
 			return;
@@ -135,7 +143,7 @@ class Wpbb_PublicHooks
 		$bracket = $bracket_repo->get($bracket_id);
 
 		if ($bracket->author === 0) {
-			$bracket_repo->update($bracket_id, ['author'=> $user->ID]);
+			$bracket_repo->update($bracket_id, ['author'=> $user_id]);
 		}
 	}
 }
