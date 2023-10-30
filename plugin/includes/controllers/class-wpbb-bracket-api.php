@@ -201,7 +201,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
     $saved = $this->bracket_repo->add($bracket);
     // check if user logged in
     if (!is_user_logged_in()) {
-    // if (get_current_user_id() === 0) 
+      // if (get_current_user_id() === 0)
       $this->utils->set_cookie('bracket_id', $saved->id);
     }
     // chec

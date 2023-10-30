@@ -965,7 +965,8 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $request = new WP_REST_Request('POST', '/wp/v2/brackets');
     $request->set_body_params([
-      'name' => 'test bracket',
+      'title' => 'test bracket',
+      'wildcard_placement' => 0,
       'num_teams' => 4,
       'matches' => [
         [
@@ -991,6 +992,6 @@ class BracketAPITest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $bracket_api->create_item($request);
+    $res = $bracket_api->create_item($request);
   }
 }
