@@ -203,6 +203,10 @@ class Wpbb_BracketApi extends WP_REST_Controller {
     if (!is_user_logged_in()) {
       // if (get_current_user_id() === 0)
       $this->utils->set_cookie('bracket_id', $saved->id);
+
+      // nonce
+      $this->utils->set_cookie('anonyous_bracket_nonce', 'fatty');
+      update_post_meta($saved->post_id, 'anonymous_bracket', 'fatty');
     }
     // chec
     return new WP_REST_Response($saved, 201);
