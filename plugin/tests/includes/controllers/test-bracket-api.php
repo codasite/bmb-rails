@@ -947,18 +947,19 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
   public function test_anonymous_bracket_sets_cookie() {
     $utils_mock = $this->createMock(Wpbb_Utils::class);
+
     $utils_mock
       ->expects($this->at(0))
       ->method('set_cookie')
       ->with($this->equalTo('bracket_id'), $this->isType('int'));
+    $utils_mock
+      ->expects($this->at(1))
+      ->method('set_cookie')
+      ->with($this->equalTo('anonymous_bracket_nonce', $this->isType('string')));
+
     $bracket_api = new Wpbb_BracketApi([
       'utils' => $utils_mock,
     ]);
-
-    $utils_mock
-      ->expets($this->at(1))
-      ->method('set_cookie')
-      ->with($this->equalTo('anonymous_bracket_nonce', $this->isType('string')));
 
     // set current user to anonymous user
     wp_set_current_user(0);
