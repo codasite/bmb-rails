@@ -950,12 +950,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $utils_mock
       ->expects($this->once())
       ->method('set_cookie')
-      ->with(
-        $this->equalTo('bracket_id'),
-        $this->isType('int'),
-        $this->anything(),
-        $this->anything()
-      );
+      ->with($this->equalTo('bracket_id'), $this->isType('int'));
     $bracket_api = new Wpbb_BracketApi([
       'utils' => $utils_mock,
     ]);

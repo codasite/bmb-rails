@@ -46,7 +46,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
    * Constructor.
    */
   public function __construct($args = []) {
-    $this->utils = new Wpbb_Utils();
+    $this->utils = $args['utils'] ?? new Wpbb_Utils();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
