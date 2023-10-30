@@ -76,6 +76,7 @@ abstract class Wpbb_PostBase implements Wpbb_CustomPostInterface {
       'ID' => $this->id,
       'post_title' => $this->title,
       'post_status' => $this->status,
+      'post_author' => $this->author,
     ];
   }
 
