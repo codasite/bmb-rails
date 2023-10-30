@@ -105,4 +105,33 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $this->assertTrue($play->is_printed);
   }
+
+  public function test_anonymous_bracket_is_linked_to_logged_in_user() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('pop_cookie')
+      ->with($this->equalTo('bracket_id'))
+      ->willReturn($bracket->id);
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_bracket_to_user($user->user_login, $user);
+
+    $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $this->assertEquals($user->ID, $bracket->author);
+  }
+
+  public function test_user_can_login_without_anonymous_bracket() {
+    // assert true
+    $this->assertTrue(true);
+  }
 }

@@ -6,10 +6,12 @@ class Wpbb_PublicHooks
 {
 
 	private $play_query;
+	private $utils;
 
 	public function __construct($opts = [])
 	{
 		$this->play_query = $opts['play_query'] ?? new Wpbb_CustomPlayQuery();
+		$this->utils = $opts['utils'] ?? new Wpbb_Utils();
 	}
 
 	public function add_rewrite_tags() {
@@ -119,4 +121,11 @@ class Wpbb_PublicHooks
 
 		$play_repo->update($play_id, $data);
 	  }
+
+	/**
+	 * this function gets hooked to the 'wp_login' action
+	 */
+	public function link_anonymous_bracket_to_user($user_login, WP_User $user) {
+
+	}
 }

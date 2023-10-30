@@ -953,6 +953,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
       ->with(
         $this->equalTo('bracket_id'),
         $this->isType('int'),
+        $this->anything(),
         $this->anything()
       );
     $bracket_api = new Wpbb_BracketApi([
