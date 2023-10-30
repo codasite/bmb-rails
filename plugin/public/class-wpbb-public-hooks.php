@@ -126,6 +126,15 @@ class Wpbb_PublicHooks
 	 * this function gets hooked to the 'wp_login' action
 	 */
 	public function link_anonymous_bracket_to_user($user_login, WP_User $user) {
+		$bracket_id = $this->utils->pop_cookie('bracket_id');
+		if (!$bracket_id) {
+			return;
+		}
+		$post = get_post($bracket_id);
+		wp_update_post([
+			'ID' => $bracket_id,
+			'post_author' => $user->ID,
+		]);
 
 	}
 }
