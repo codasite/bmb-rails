@@ -61,7 +61,7 @@ class Wpbb_NotificationService implements Wpbb_NotificationService_Interface {
       $logo_url =
         'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
       $heading = $this->get_pick_result_heading($pick, $winning_pick);
-      $button_url = get_permalink($bracket_id) . '/leaderboard';
+      $button_url = get_permalink($bracket_id);
       $button_text = 'View Bracket';
 
       ob_start();
