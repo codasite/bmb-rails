@@ -209,7 +209,8 @@ class Wpbb_BracketApi extends WP_REST_Controller {
       $bytes = random_bytes(32);
       $nonce = base64_encode($bytes);
       $this->utils->set_cookie('anonymous_bracket_nonce', $nonce);
-      update_post_meta($saved->id, 'anonymous_bracket', $nonce);
+
+      update_post_meta($saved->id, 'anonymous_bracket_nonce', $nonce);
     }
     // chec
     return new WP_REST_Response($saved, 201);
