@@ -228,9 +228,14 @@ class PlayAPITest extends WPBB_UnitTestCase {
       ],
     ]);
     $play = self::factory()->play->create_and_get([
-      'status' => 'publish',
-      'author' => $user1->ID,
       'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
     ]);
 
     $repo = new Wpbb_BracketPlayRepo();

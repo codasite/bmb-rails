@@ -157,6 +157,7 @@ class Wpbb_PublicHooks
 
 		$bracket_repo = new Wpbb_BracketRepo();
 		$bracket = $bracket_repo->get($bracket_id);
+		print_r($bracket);
 
 		if ($bracket->author === 0) {
 			$bracket_repo->update($bracket_id, ['author'=> $user_id]);
@@ -173,9 +174,6 @@ class Wpbb_PublicHooks
 
 	public function link_anonymous_play_to_user(int $user_id) {
 		$play_id = $this->utils->pop_cookie('wpbb_anonymous_play_id');
-		if (!$play_id) {
-			return;
-		}
 		$cookie_play_nonce = $this->utils->pop_cookie('wpbb_anonymous_play_key');
 		$post_meta = get_post_meta($play_id, 'wpbb_anonymous_play_key');
 		if (isset($post_meta) && !empty($post_meta)) {
@@ -195,6 +193,7 @@ class Wpbb_PublicHooks
 
 		$play_repo = new Wpbb_BracketPlayRepo();
 		$play = $play_repo->get($play_id);
+		print_r($play);
 
 		if ($play->author === 0) {
 			$play_repo->update($play_id, ['author'=> $user_id]);

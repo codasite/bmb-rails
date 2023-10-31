@@ -137,13 +137,29 @@ class PublicHooksTest extends WPBB_UnitTestCase {
   public function test_anonymous_play_is_linked_to_user() {
     $user = self::factory()->user->create_and_get();
     $bracket = self::factory()->bracket->create_and_get([
-      'author' => 0,
-      'num_teams' => 4,
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
     ]);
     $play = self::factory()->play->create_and_get([
-      'author' => 0,
       'bracket_id' => $bracket->id,
-      'picks' => [],
+      'author' => 0,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
     ]);
 
     update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
@@ -162,7 +178,6 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'utils' => $utils_mock,
     ]);
     $hooks->link_anonymous_play_to_user($user->ID);
-
     $play = self::factory()->play->get_object_by_id($play->id);
 
     $this->assertEquals($user->ID, $play->author);
