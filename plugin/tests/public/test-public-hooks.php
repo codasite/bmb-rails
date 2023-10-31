@@ -105,4 +105,89 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $this->assertTrue($play->is_printed);
   }
+
+  public function test_anonymous_bracket_is_linked_to_user() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+    update_post_meta($bracket->id, 'wpbb_anonymous_bracket_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_bracket_id')],
+        [$this->equalTo('wpbb_anonymous_bracket_key')]
+      )
+      ->willReturnOnConsecutiveCalls($bracket->id, 'test_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_bracket_to_user($user->ID);
+
+    $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $this->assertEquals($user->ID, $bracket->author);
+  }
+
+  public function test_bracket_with_author_is_not_linked_to_user() {
+    $user = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => $user->ID,
+      'num_teams' => 4,
+    ]);
+    update_post_meta($bracket->id, 'wpbb_anonymous_bracket_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_bracket_id')],
+        [$this->equalTo('wpbb_anonymous_bracket_key')]
+      )
+      ->willReturnOnConsecutiveCalls($bracket->id, 'test_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_bracket_to_user($user2->ID);
+
+    $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $this->assertEquals($user->ID, $bracket->author);
+  }
+
+  public function test_anonymous_bracket_with_invalid_key_is_not_linked() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+    update_post_meta($bracket->id, 'wpbb_anonymous_bracket_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_bracket_id')],
+        [$this->equalTo('wpbb_anonymous_bracket_key')]
+      )
+      ->willReturnOnConsecutiveCalls($bracket->id, 'invalid_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_bracket_to_user($user->ID);
+
+    $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $this->assertEquals(0, $bracket->author);
+  }
 }

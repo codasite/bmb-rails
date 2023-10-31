@@ -6,10 +6,12 @@ class Wpbb_PublicHooks
 {
 
 	private $play_query;
+	private $utils;
 
 	public function __construct($opts = [])
 	{
 		$this->play_query = $opts['play_query'] ?? new Wpbb_CustomPlayQuery();
+		$this->utils = $opts['utils'] ?? new Wpbb_Utils();
 	}
 
 	public function add_rewrite_tags() {
@@ -119,4 +121,45 @@ class Wpbb_PublicHooks
 
 		$play_repo->update($play_id, $data);
 	  }
+
+	/**
+	 * this function gets hooked to the 'wp_login' action
+	 */
+	public function link_anonymous_bracket_to_user_on_login($user_login, WP_User $user) {
+		$this->link_anonymous_bracket_to_user($user->ID);
+	}
+
+	public function link_anonymous_bracket_to_user_on_register($user_id) {
+		$this->link_anonymous_bracket_to_user($user_id);
+	}
+
+	public function link_anonymous_bracket_to_user(int $user_id) {
+		$bracket_id = $this->utils->pop_cookie('wpbb_anonymous_bracket_id');
+		if (!$bracket_id) {
+			return;
+		}
+		$cookie_bracket_nonce = $this->utils->pop_cookie('wpbb_anonymous_bracket_key');
+		$post_meta = get_post_meta($bracket_id, 'wpbb_anonymous_bracket_key');
+		if (isset($post_meta) && !empty($post_meta)) {
+			$meta_bracket_nonce = $post_meta[0];
+		} else {
+			return;
+		}
+
+		if ($cookie_bracket_nonce !== $meta_bracket_nonce) {
+			return;
+		}
+
+		$bracket = get_post($bracket_id);
+		if (!$bracket_id) {
+			return;
+		}
+
+		$bracket_repo = new Wpbb_BracketRepo();
+		$bracket = $bracket_repo->get($bracket_id);
+
+		if ($bracket->author === 0) {
+			$bracket_repo->update($bracket_id, ['author'=> $user_id]);
+		}
+	}
 }

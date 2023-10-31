@@ -56,6 +56,14 @@ class Wpbb_Utils {
     return null;
   }
 
+  public function pop_cookie($key) {
+    $value = $this->get_cookie($key);
+    if ($value) {
+      $this->set_cookie($key, '', ['days' => -1]);
+    }
+    return $value;
+  }
+
   public function set_session_value($key, $value) {
     if (!session_id()) {
       session_start();
