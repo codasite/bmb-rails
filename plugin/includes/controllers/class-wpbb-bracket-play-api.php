@@ -192,7 +192,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
     ) {
       $this->product_integration->generate_images($saved);
       // set the play id in the session
-      $this->utils->set_cookie('play_id', $saved->id, ['days' => 30]);
+      $this->utils->set_cookie('wpbb_anonymous_play_id', $saved->id, ['days' => 30]);
     }
 
     // check if user logged in
