@@ -135,15 +135,22 @@ class Wpbb_PublicHooks
 
 	public function link_anonymous_bracket_to_user(int $user_id) {
 		$bracket_id = $this->utils->pop_cookie('bracket_id');
+		if (!$bracket_id) {
+			return;
+		}
 		$cookie_bracket_nonce = $this->utils->pop_cookie('anonymous_bracket_nonce');
-		$meta_bracket_nonce = get_post_meta($bracket_id, 'anonymous_bracket_nonce')[0];
+		print_r( $cookie_bracket_nonce);
+		$meta_bracket_nonce = get_post_meta($bracket_id, 'anonymous_bracket_nonce');
+		print_r($meta_bracket_nonce);
 
 		if ($cookie_bracket_nonce !== $meta_bracket_nonce) {
+			echo 'nonce mismatch';
 			return;
 		}
 
 		$bracket = get_post($bracket_id);
 		if (!$bracket_id) {
+			echo 'no bracket';
 			return;
 		}
 
