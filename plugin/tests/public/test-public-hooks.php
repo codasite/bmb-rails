@@ -136,10 +136,16 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
   public function test_anonymous_play_is_linked_to_user() {
     $user = self::factory()->user->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = self::factory()->bracket->create_and_get([
       'author' => 0,
       'num_teams' => 4,
     ]);
+    $play = self::factory()->play->create_and_get([
+      'author' => 0,
+      'bracket_id' => $bracket->id,
+      'picks' => [],
+    ]);
+
     update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
 
     $utils_mock = $this->createMock(Wpbb_Utils::class);
