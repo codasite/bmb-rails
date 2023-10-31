@@ -140,7 +140,13 @@ class Wpbb_PublicHooks
 		}
 		$cookie_bracket_nonce = $this->utils->pop_cookie('anonymous_bracket_nonce');
 		print_r( $cookie_bracket_nonce);
-		$meta_bracket_nonce = get_post_meta($bracket_id, 'anonymous_bracket_nonce');
+		$post_meta = get_post_meta($bracket_id, 'anonymous_bracket_nonce');
+		if (isset($post_meta) && !empty($post_meta)) {
+			$meta_bracket_nonce = $post_meta[0];
+		} else {
+			echo 'no post meta';
+			return;
+		}
 		print_r($meta_bracket_nonce);
 
 		if ($cookie_bracket_nonce !== $meta_bracket_nonce) {
