@@ -106,7 +106,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertTrue($play->is_printed);
   }
 
-  public function test_anonymous_bracket_is_linked_to_logged_in_user() {
+  public function test_anonymous_bracket_is_linked_to_user() {
     $user = self::factory()->user->create_and_get();
     $bracket = self::factory()->bracket->create_and_get([
       'author' => 0,
@@ -114,12 +114,6 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
 
     $utils_mock = $this->createMock(Wpbb_Utils::class);
-    // $utils_mock
-    //   ->expects($this->once())
-    //   ->method('pop_cookie')
-    //   ->with($this->equalTo('bracket_id'))
-    //   ->willReturn($bracket->id);
-
     $utils_mock
       ->expects($this->at(0))
       ->method('pop_cookie')
@@ -134,42 +128,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $hooks = new Wpbb_PublicHooks([
       'utils' => $utils_mock,
     ]);
-    $hooks->link_anonymous_bracket_to_user_on_login($user->user_login, $user);
-
-    $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
-
-    $this->assertEquals($user->ID, $bracket->author);
-  }
-
-  public function test_anonymous_bracket_is_linked_to_registered_user() {
-    $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
-      'author' => 0,
-      'num_teams' => 4,
-    ]);
-
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
-    // $utils_mock
-    //   ->expects($this->once())
-    //   ->method('pop_cookie')
-    //   ->with($this->equalTo('bracket_id'))
-    //   ->willReturn($bracket->id);
-  
-    $utils_mock
-      ->expects($this->at(0))
-      ->method('pop_cookie')
-      ->with($this->equalTo('bracket_id'))
-      ->willReturn($bracket->id);
-
-    $utils_mock
-      ->expects($this->at(1))
-      ->method('pop_cookie')
-      ->with($this->equalTo('anonymous_bracket_nonce'));   
-
-    $hooks = new Wpbb_PublicHooks([
-      'utils' => $utils_mock,
-    ]);
-    $hooks->link_anonymous_bracket_to_user_on_register($user->ID);
+    $hooks->link_anonymous_bracket_to_user($user->ID);
 
     $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 

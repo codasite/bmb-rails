@@ -133,7 +133,7 @@ class Wpbb_PublicHooks
 		$this->link_anonymous_bracket_to_user($user_id);
 	}
 
-	private function link_anonymous_bracket_to_user(int $user_id) {
+	public function link_anonymous_bracket_to_user(int $user_id) {
 		$bracket_id = $this->utils->pop_cookie('bracket_id');
 		$cookie_bracket_nonce = $this->utils->pop_cookie('anonymous_bracket_nonce');
 		$meta_bracket_nonce = get_post_meta($bracket_id, 'anonymous_bracket_nonce')[0];
