@@ -129,8 +129,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $utils_mock
       ->expects($this->at(1))
       ->method('pop_cookie')
-      ->with($this->equalTo('anonymous_bracket_nonce'))
-      ->willReturn('fatty');
+      ->with($this->equalTo('anonymous_bracket_nonce'));
 
     $hooks = new Wpbb_PublicHooks([
       'utils' => $utils_mock,
@@ -165,9 +164,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $utils_mock
       ->expects($this->at(1))
       ->method('pop_cookie')
-      ->with($this->equalTo('anonymous_bracket_nonce'))
-      ->willReturn('fatty');
-      
+      ->with($this->equalTo('anonymous_bracket_nonce'));   
 
     $hooks = new Wpbb_PublicHooks([
       'utils' => $utils_mock,
