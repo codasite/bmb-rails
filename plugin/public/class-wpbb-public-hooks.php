@@ -173,7 +173,7 @@ class Wpbb_PublicHooks
 
 	public function link_anonymous_play_to_user(int $user_id) {
 		$play_id = $this->utils->pop_cookie('wpbb_anonymous_play_id');
-		if (!play_id) {
+		if (!$play_id) {
 			return;
 		}
 		$cookie_play_nonce = $this->utils->pop_cookie('wpbb_anonymous_play_key');
