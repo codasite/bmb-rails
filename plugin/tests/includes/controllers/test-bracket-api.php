@@ -945,17 +945,16 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals(3, count($updated->results));
   }
 
-  public function test_anonymous_bracket_sets_cookie() {
+  public function test_anonymous_bracket_sets_cookies() {
     $utils_mock = $this->createMock(Wpbb_Utils::class);
 
     $utils_mock
-      ->expects($this->at(0))
+      ->expects($this->exactly(2))
       ->method('set_cookie')
-      ->with($this->equalTo('bracket_id'), $this->isType('int'));
-    $utils_mock
-      ->expects($this->at(1))
-      ->method('set_cookie')
-      ->with($this->equalTo('anonymous_bracket_nonce', $this->isType('string')));
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_bracket_id'), $this->isType('int')],
+        [$this->equalTo('wpbb_anonymous_bracket_key'), $this->isType('string')]
+      );
 
     $bracket_api = new Wpbb_BracketApi([
       'utils' => $utils_mock,

@@ -112,18 +112,17 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'author' => 0,
       'num_teams' => 4,
     ]);
+    update_post_meta($bracket->id, 'wpbb_anonymous_bracket_key', 'test_key');
 
     $utils_mock = $this->createMock(Wpbb_Utils::class);
     $utils_mock
-      ->expects($this->at(0))
+      ->expects($this->exactly(2))
       ->method('pop_cookie')
-      ->with($this->equalTo('bracket_id'))
-      ->willReturn($bracket->id);
-
-    $utils_mock
-      ->expects($this->at(1))
-      ->method('pop_cookie')
-      ->with($this->equalTo('anonymous_bracket_nonce'));
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_bracket_id')],
+        [$this->equalTo('wpbb_anonymous_bracket_key')]
+      )
+      ->willReturnOnConsecutiveCalls($bracket->id, 'test_key');
 
     $hooks = new Wpbb_PublicHooks([
       'utils' => $utils_mock,
