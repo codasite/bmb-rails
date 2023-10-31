@@ -361,6 +361,20 @@ class Wp_Bracket_Builder {
       10,
       1
     );
+    $this->loader->add_action(
+      'wp_login',
+      $public_hooks,
+      'link_anonymous_play_to_user_on_login',
+      10,
+      2
+    );
+    $this->loader->add_action(
+      'user_register',
+      $public_hooks,
+      'link_anonymous_play_to_user_on_register',
+      10,
+      1
+    );
   }
 
   /**

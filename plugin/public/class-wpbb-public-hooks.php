@@ -162,4 +162,42 @@ class Wpbb_PublicHooks
 			$bracket_repo->update($bracket_id, ['author'=> $user_id]);
 		}
 	}
+
+	public function link_anonymous_play_to_user_on_login(int $user_login, WP_User $user) {
+		$this->link_anonymous_play_to_user($user->ID);
+	}
+
+	public function link_anonymous_play_to_user_on_register(int $user_id) {
+		$this->link_anonymous_play_to_user($user_id);
+	}
+
+	public function link_anonymous_play_to_user(int $user_id) {
+		$play_id = $this->utils->pop_cookie('wpbb_anonymous_play_id');
+		if (!play_id) {
+			return;
+		}
+		$cookie_play_nonce = $this->utils->pop_cookie('wpbb_anonymous_play_key');
+		$post_meta = get_post_meta($play_id, 'wpbb_anonymous_play_key');
+		if (isset($post_meta) && !empty($post_meta)) {
+			$meta_play_nonce = $post_meta[0];
+		} else {
+			return;
+		}
+
+		if ($cookie_play_nonce !== $meta_play_nonce) {
+			return;
+		}
+
+		$play = get_post($play_id);
+		if (!$play_id) {
+			return;
+		}
+
+		$play_repo = new Wpbb_BracketPlayRepo();
+		$play = $play_repo->get($play_id);
+
+		if ($play->author === 0) {
+			$play_repo->update($play_id, ['author'=> $user_id]);
+		}
+	}
 }

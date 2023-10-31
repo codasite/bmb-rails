@@ -133,4 +133,32 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $this->assertEquals($user->ID, $bracket->author);
   }
+
+  public function test_anonymous_play_is_linked_to_user() {
+    $user = self::factory()->user->create_and_get();
+    $play = self::factory()->play->create_and_get([
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+    update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_play_id')],
+        [$this->equalTo('wpbb_anonymous_play_key')]
+      )
+      ->willReturnOnConsecutiveCalls($play->id, 'test_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_play_to_user($user->ID);
+
+    $play = self::factory()->play->get_object_by_id($play->id);
+
+    $this->assertEquals($user->ID, $play->author);
+  }
 }
