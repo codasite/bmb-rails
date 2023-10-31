@@ -400,27 +400,22 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     return $this->get($post_id);
   }
 
-  private function update_play_data($play_id, $data) {
-    $update_fields = $this->play_data_update_fields();
-
-    $plays_table = $this->plays_table();
-
-    $query = "UPDATE $plays_table plays";
-    $updates = [];
-    foreach ($data as $column => $value) {
-      if (in_array($column, $update_fields)) {
-        $updates[] = "$column = $value";
+  private function update_play_data($play_id, $data, $use_post_id = false) {
+    $id_field = $use_post_id ? 'post_id' : 'id';
+    $update_fields = [];
+    $update_data = [];
+    foreach ($data as $key => $value) {
+      if (in_array($key, $this->play_data_update_fields())) {
+        $update_fields[] = $key;
+        $update_data[$key] = $value;
       }
     }
-    $query .= ' SET ' . implode(', ', $updates);
-    $query .= ' WHERE plays.id = %d';
-
-    global $wpdb;
-    $prepared_query = $wpdb->prepare($query, $play_id);
-
-    $wpdb->query($prepared_query);
-
-    return $this->get($play_id);
+    if (empty($update_fields)) {
+      return;
+    }
+    $this->wpdb->update($this->plays_table(), $update_data, [
+      $id_field => $play_id,
+    ]);
   }
 
   private function play_data_update_fields() {
