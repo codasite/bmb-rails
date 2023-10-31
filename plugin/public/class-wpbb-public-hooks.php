@@ -157,7 +157,6 @@ class Wpbb_PublicHooks
 
 		$bracket_repo = new Wpbb_BracketRepo();
 		$bracket = $bracket_repo->get($bracket_id);
-		print_r($bracket);
 
 		if ($bracket->author === 0) {
 			$bracket_repo->update($bracket_id, ['author'=> $user_id]);
@@ -193,7 +192,6 @@ class Wpbb_PublicHooks
 
 		$play_repo = new Wpbb_BracketPlayRepo();
 		$play = $play_repo->get($play_id);
-		print_r($play);
 
 		if ($play->author === 0) {
 			$play_repo->update($play_id, ['author'=> $user_id]);
