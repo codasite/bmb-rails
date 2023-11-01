@@ -18,6 +18,7 @@ import { BustPlayBuilder } from './BustPlayBuilder'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
+import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { getBracketMeta } from '../../shared/utils'
 
 interface BustPlayPageProps {
@@ -30,6 +31,7 @@ interface BustPlayPageProps {
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
   thumbnailUrl: string
+  playAgainUrl: string
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
@@ -43,6 +45,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     bracketPlay: play,
     redirectUrl,
     thumbnailUrl,
+    playAgainUrl,
   } = props
 
   console.log('bust play', play)
@@ -51,6 +54,10 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 
   const actionButtonCallback = async () => {
     setPage('bust')
+  }
+
+  const defaultBracketCallback = async () => {
+    window.location.href = playAgainUrl;
   }
 
   useEffect(() => {
@@ -109,7 +116,15 @@ const BustPlayPage = (props: BustPlayPageProps) => {
               />
             </div>
             <PickableBracket matchTree={matchTree} />
-            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-16">
+              <ActionButton
+                variant="big-green"
+                darkMode={darkMode}
+                onClick={defaultBracketCallback}
+              >
+                <PlayIcon />
+                Join Tournament
+              </ActionButton>
               <ActionButton
                 variant="big-red"
                 darkMode={darkMode}

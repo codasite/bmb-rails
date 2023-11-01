@@ -9,6 +9,7 @@ export interface WpbbAjaxObj {
   bracketUrlThemeMap: OverlayUrlThemeMap
   cssUrl: string
   redirectUrl: string
+  playAgainUrl: string
   galleryImages: any
   colorOptions: any
   sentryEnv: string
