@@ -87,6 +87,13 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     $play_id = $play_data['id'];
     $bracket_post_id = $play_data['bracket_post_id'];
     $busted_id = $play_data['busted_play_post_id'];
+    $busted_play = $busted_id
+      ? $this->get($busted_id, [
+        'fetch_bracket' => false,
+        'fetch_results' => false,
+        'fetch_matches' => false,
+      ])
+      : null;
     $is_printed = (bool) $play_data['is_printed'];
 
     $bracket =
@@ -116,6 +123,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
         ? get_the_author_meta('display_name', $author_id)
         : '',
       'busted_id' => $busted_id,
+      'busted_play' => $busted_play,
       'is_printed' => $is_printed,
     ];
 
