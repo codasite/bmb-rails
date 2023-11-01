@@ -341,11 +341,18 @@ class Wp_Bracket_Builder {
     );
 
     $this->loader->add_action(
-      'wpbb_play_printed',
+      'wpbb_after_play_printed',
       $public_hooks,
       'mark_play_printed',
       10,
       1
+    );
+    $this->loader->add_action(
+      'wpbb_after_play_printed',
+      $public_hooks,
+      'link_anonymous_printed_play_to_user',
+      10,
+      2
     );
     $this->loader->add_action(
       'wp_login',

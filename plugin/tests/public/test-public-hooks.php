@@ -106,7 +106,11 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertTrue($play->is_printed);
   }
 
-  public function test_anonymous_bracket_is_linked_to_user() {
+  // public function test_anonymous_printed_play_is_linked_to_user() {
+
+  // }
+
+  public function test_anonymous_bracket_is_linked_to_user_on_login() {
     $user = self::factory()->user->create_and_get();
     $bracket = self::factory()->bracket->create_and_get([
       'author' => 0,
@@ -127,28 +131,46 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $hooks = new Wpbb_PublicHooks([
       'utils' => $utils_mock,
     ]);
-    $hooks->link_anonymous_bracket_to_user($user->ID);
+    $hooks->link_anonymous_bracket_to_user_on_login('test_login', $user);
 
     $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
     $this->assertEquals($user->ID, $bracket->author);
   }
 
-  public function test_anonymous_play_is_linked_to_user() {
+  public function test_anonymous_bracket_is_linked_to_user_on_register() {
     $user = self::factory()->user->create_and_get();
     $bracket = self::factory()->bracket->create_and_get([
-      'matches' => [
-        new Wpbb_Match([
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => new Wpbb_Team([
-            'name' => 'Team 1',
-          ]),
-          'team2' => new Wpbb_Team([
-            'name' => 'Team 2',
-          ]),
-        ]),
-      ],
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+    update_post_meta($bracket->id, 'wpbb_anonymous_bracket_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_bracket_id')],
+        [$this->equalTo('wpbb_anonymous_bracket_key')]
+      )
+      ->willReturnOnConsecutiveCalls($bracket->id, 'test_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_bracket_to_user_on_register($user->ID);
+
+    $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+
+    $this->assertEquals($user->ID, $bracket->author);
+  }
+
+  public function test_anonymous_play_is_linked_to_user_on_login() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => 0,
+      'num_teams' => 4,
     ]);
     $play = self::factory()->play->create_and_get([
       'bracket_id' => $bracket->id,
@@ -161,7 +183,6 @@ class PublicHooksTest extends WPBB_UnitTestCase {
         ]),
       ],
     ]);
-
     update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
 
     $utils_mock = $this->createMock(Wpbb_Utils::class);
@@ -177,9 +198,93 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $hooks = new Wpbb_PublicHooks([
       'utils' => $utils_mock,
     ]);
-    $hooks->link_anonymous_play_to_user($user->ID);
+    $hooks->link_anonymous_play_to_user_on_login('test_login', $user);
+
     $play = self::factory()->play->get_object_by_id($play->id);
 
     $this->assertEquals($user->ID, $play->author);
+  }
+
+  public function test_anonymous_play_is_linked_to_user_on_register() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'author' => 0,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+    update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('play_id')],
+        [$this->equalTo('wpbb_anonymous_play_key')]
+      )
+      ->willReturnOnConsecutiveCalls($play->id, 'test_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_play_to_user_on_register($user->ID);
+
+    $play = self::factory()->play->get_object_by_id($play->id);
+
+    $this->assertEquals($user->ID, $play->author);
+  }
+
+  public function test_link_anonymous_post_to_user_from_cookie() {
+    $user = self::factory()->user->create_and_get();
+    $post = self::factory()->post->create_and_get([
+      'post_author' => 0,
+    ]);
+    update_post_meta($post->ID, 'wpbb_anonymous_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_id')],
+        [$this->equalTo('wpbb_anonymous_key')]
+      )
+      ->willReturnOnConsecutiveCalls($post->ID, 'test_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_post_to_user_from_cookie(
+      $user->ID,
+      'wpbb_anonymous_id',
+      'wpbb_anonymous_key'
+    );
+
+    $post = self::factory()->post->get_object_by_id($post->ID);
+
+    $this->assertEquals($user->ID, $post->post_author);
+  }
+  public function test_link_anonymous_post_to_user() {
+    $user = self::factory()->user->create_and_get();
+    $post = self::factory()->post->create_and_get([
+      'post_author' => 0,
+    ]);
+
+    $hooks = new Wpbb_PublicHooks();
+    $hooks->link_anonymous_post_to_user($post->ID, $user->ID);
+
+    $post = self::factory()->post->get_object_by_id($post->ID);
+
+    $this->assertEquals($user->ID, $post->post_author);
   }
 }

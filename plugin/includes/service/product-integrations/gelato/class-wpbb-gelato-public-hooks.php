@@ -10,7 +10,8 @@ require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-aws-service.php';
 require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-pdf-service.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/product-integrations/class-wpbb-wc-functions.php';
-require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/repository/class-wpbb-bracket-play-repo.php';
 
 class Wpbb_GelatoPublicHooks {
   /**
@@ -386,12 +387,9 @@ class Wpbb_GelatoPublicHooks {
   public function handle_payment_complete($order_id) {
     $order = $this->wc->wc_get_order($order_id);
     if ($order) {
+      // Find user associated with order
+      $user_id = $order->get_user_id();
 
-      // Find user from order email address
-      $email = $order->get_billing_email();
-      $user = get_user_by('email', $email);
-      $user_id = $user->ID;
-      
       $items = $order->get_items();
       foreach ($items as $item) {
         $product = $item->get_product();
@@ -428,14 +426,9 @@ class Wpbb_GelatoPublicHooks {
             $item->save();
             // if all went well, do the play_printed action
             $config = $item->get_meta('bracket_config');
-            do_action('wpbb_play_printed', $config->play_id);
-
-
-            // update play author id with user_id
-            $play_repo = new Wpbb_BracketPlayRepo();
-            $play_repo->update($config->play_id, ['author' => $user_id]);
-            
+            do_action('wpbb_after_play_printed', $config->play_id, $user_id);
           } catch (Exception $e) {
+            print_r($e->getMessage());
             $this->utils->log_sentry_message(
               $e->getMessage(),
               \Sentry\Severity::error()
