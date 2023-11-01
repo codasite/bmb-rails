@@ -433,10 +433,8 @@ class Wpbb_GelatoPublicHooks {
 
             // update play author id with user_id
             $play_repo = new Wpbb_BracketPlayRepo();
-            $play_repo->update($play->id, ['author' => $user_id]);
-
-
-
+            $play_repo->update($config->play_id, ['author' => $user_id]);
+            
           } catch (Exception $e) {
             $this->utils->log_sentry_message(
               $e->getMessage(),
