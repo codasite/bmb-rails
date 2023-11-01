@@ -86,7 +86,35 @@ function play_bracket_btn($endpoint, $bracket_id) {
 /**
  * This button goes to the Leaderboard page
  */
-function view_leaderboard_btn($endpoint, $variant = 'primary', $buster_play = false) {
+function view_leaderboard_btn($endpoint, $variant = 'primary') {
+	$label = 'View Leaderboard';
+	$final = false;
+
+	$base_cls = array('tw-flex', 'tw-justify-center', 'sm:tw-justify-start', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
+
+	$cls_list = array(
+		'primary' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12', 'hover:tw-bg-white', 'hover:tw-text-black')),
+		'compact' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-4', 'sm:tw-px-8', 'sm:tw-py-4', 'hover:tw-bg-white', 'hover:tw-text-black')),
+		'final' => array_merge($base_cls, array('wpbb-view-final-leaderboard-btn', 'tw-border-transparent', 'tw-bg-clip-padding', 'tw-gap-10', 'tw-px-16', 'tw-py-12')),
+	);
+
+	if ($variant === 'final') {
+		$label = 'View Final Leaderboard';
+		$final = true;
+	}
+
+	ob_start();
+?>
+	<a class="<?php echo implode(' ', $cls_list[$variant]) ?>" href="<?php echo esc_url($endpoint) ?>">
+		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trend_up.svg'); ?>
+		<span class="tw-font-500 tw-text-16"><?php echo esc_html($label) ?></span>
+	</a>
+<?php
+	$btn = ob_get_clean();
+	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border tw-rounded-8')) : $btn;
+}
+
+function view_leaderboard_or_bust_btn($endpoint, $variant = 'primary', $buster_play = false) {
 	$label = $buster_play? 'Bust Again' : 'View Leaderboard';
 	$final = false;
 
