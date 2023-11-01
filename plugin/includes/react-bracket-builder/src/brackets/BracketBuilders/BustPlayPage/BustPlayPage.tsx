@@ -20,6 +20,9 @@ import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
 import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { getBracketMeta } from '../../shared/utils'
+import redBracketBg from '../../shared/assets/bracket-bg-red.png'
+
+console.log('fuck: ', redBracketBg)
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -99,7 +102,8 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         darkMode ? ' tw-dark' : ''
       }`}
       style={{
-        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
+        // backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
+        backgroundImage: `url(${redBracketBg})`,
       }}
     >
       <div
