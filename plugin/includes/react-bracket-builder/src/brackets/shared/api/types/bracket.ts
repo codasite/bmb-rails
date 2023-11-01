@@ -95,4 +95,6 @@ export interface PlayRes extends PostBase {
   bracketId: number
   picks: MatchPicks[]
   bracket?: BracketRes
+  bustedId?: number
+  bustedPlay?: PlayRes
 }
