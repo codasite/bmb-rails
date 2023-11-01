@@ -163,16 +163,16 @@ class Wpbb_PublicHooks
 		}
 	}
 
-	public function link_anonymous_play_to_user_on_login(int $user_login, WP_User $user) {
+	public function link_anonymous_play_to_user_on_login($user_login, WP_User $user) {
 		$this->link_anonymous_play_to_user($user->ID);
 	}
 
-	public function link_anonymous_play_to_user_on_register(int $user_id) {
+	public function link_anonymous_play_to_user_on_register($user_id) {
 		$this->link_anonymous_play_to_user($user_id);
 	}
 
-	public function link_anonymous_play_to_user(int $user_id) {
-		$play_id = $this->utils->pop_cookie('wpbb_anonymous_play_id');
+	public function link_anonymous_play_to_user($user_id) {
+		$play_id = $this->utils->pop_cookie('play_id');
 		$cookie_play_nonce = $this->utils->pop_cookie('wpbb_anonymous_play_key');
 		$post_meta = get_post_meta($play_id, 'wpbb_anonymous_play_key');
 		if (isset($post_meta) && !empty($post_meta)) {

@@ -169,7 +169,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       ->expects($this->exactly(2))
       ->method('pop_cookie')
       ->withConsecutive(
-        [$this->equalTo('wpbb_anonymous_play_id')],
+        [$this->equalTo('play_id')],
         [$this->equalTo('wpbb_anonymous_play_key')]
       )
       ->willReturnOnConsecutiveCalls($play->id, 'test_key');

@@ -198,6 +198,7 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
     // check if user logged in
     if (!is_user_logged_in()) {
       // if (get_current_user_id() === 0)
+      $this->utils->set_cookie('play_id', $saved->id, ['days' => 30]);
 
       // nonce
       $bytes = random_bytes(32);
