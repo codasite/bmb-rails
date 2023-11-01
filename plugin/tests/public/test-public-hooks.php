@@ -287,4 +287,52 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $this->assertEquals($user->ID, $post->post_author);
   }
+
+  public function test_post_with_author_is_not_linked() {
+    $user = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $post = self::factory()->post->create_and_get([
+      'post_author' => $user->ID,
+    ]);
+
+    $hooks = new Wpbb_PublicHooks();
+    $hooks->link_anonymous_post_to_user($post->ID, $user2->ID);
+
+    $post = self::factory()->post->get_object_by_id($post->ID);
+
+    $this->assertEquals($user->ID, $post->post_author);
+  }
+
+  public function test_link_post_from_cookie_with_invalid_key() {
+    $user = self::factory()->user->create_and_get();
+    $post = self::factory()->post->create_and_get([
+      'post_author' => 0,
+    ]);
+    update_post_meta($post->ID, 'wpbb_anonymous_bracket_key', 'test_key');
+
+    $utils_mock = $this->createMock(Wpbb_Utils::class);
+
+    $utils_mock
+      ->expects($this->exactly(2))
+      ->method('pop_cookie')
+      ->withConsecutive(
+        [$this->equalTo('wpbb_anonymous_bracket_id')],
+        [$this->equalTo('wpbb_anonymous_bracket_key')]
+      )
+      ->willReturnOnConsecutiveCalls($post->ID, 'invalid_key');
+
+    $hooks = new Wpbb_PublicHooks([
+      'utils' => $utils_mock,
+    ]);
+
+    $hooks->link_anonymous_post_to_user_from_cookie(
+      $user->ID,
+      'wpbb_anonymous_bracket_id',
+      'wpbb_anonymous_bracket_key'
+    );
+
+    $post = get_post($post->ID);
+
+    $this->assertEquals(0, $post->post_author);
+  }
 }
