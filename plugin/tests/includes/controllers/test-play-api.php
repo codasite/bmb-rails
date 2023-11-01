@@ -209,4 +209,43 @@ class PlayAPITest extends WPBB_UnitTestCase {
 
     $this->assertEquals(201, $response->get_status());
   }
+
+  public function test_update_play_author() {
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'matches' => [
+        new Wpbb_Match([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Wpbb_Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Wpbb_Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Wpbb_MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $repo = new Wpbb_BracketPlayRepo();
+
+    $repo->update($play->id, [
+      'author' => $user2->ID,
+    ]);
+
+    $updated = self::factory()->play->get_object_by_id($play->id);
+
+    $this->assertEquals($user2->ID, $updated->author);
+  }
 }

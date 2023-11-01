@@ -2,6 +2,7 @@
 interface OrderInterface {
   public function get_items();
   public function get_id();
+  public function get_user_id();
 }
 
 interface OrderItemInterface {
