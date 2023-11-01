@@ -33,7 +33,7 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
     const picks = play?.picks
     const meta = getBracketMeta(play?.bracket)
     setBracketMeta(meta)
-    const bracket = play?.bracket?.bracketBracket ?? play?.bracket
+    const bracket = play?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
     if (picks && matches) {
