@@ -34,8 +34,8 @@ function play_list_item(Wpbb_BracketPlay $play) {
 	$complete = $play->bracket?->status === 'complete';
 	$play_id = $play->id;
 	$bracket_id = $play->bracket_id;
-	$view_link = $play->busted_id == null ? get_permalink($play_id) . 'view' : get_permalink($play_id) . 'bust';
-	$leaderboard_link = $play->busted_id == null ? get_permalink($bracket_id) . 'leaderboard' : get_permalink($bracket_id) . 'bust';
+	$view_link = get_permalink($play_id) . 'view';
+	$leaderboard_link = get_permalink($bracket_id) . 'leaderboard';
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
@@ -57,8 +57,8 @@ function play_list_item(Wpbb_BracketPlay $play) {
         </div>
       </div>
       <div class="tw-flex tw-gap-16">
-				<?php echo view_play_btn($view_link, $buster_play); ?>
-				<?php echo $bracket_id && $show_leaderboard ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant, $buster_play) : null; ?>
+				<?php echo view_play_btn($view_link); ?>
+				<?php echo $bracket_id && $show_leaderboard ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant) : null; ?>
       </div>
     </div>
     <div class="tw-flex tw-flex-col tw-justify-between tw-items-end">

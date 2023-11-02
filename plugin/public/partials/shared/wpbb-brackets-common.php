@@ -79,15 +79,12 @@ function play_bracket_btn($endpoint, $bracket_id) {
 	return ob_get_clean();
 }
 
-/**
- * This button goes to 
- */
 
 /**
  * This button goes to the Leaderboard page
  */
-function view_leaderboard_btn($endpoint, $variant = 'primary', $buster_play = false) {
-	$label = $buster_play? 'Bust Again' : 'View Leaderboard';
+function view_leaderboard_btn($endpoint, $variant = 'primary') {
+	$label = 'View Leaderboard';
 	$final = false;
 
 	$base_cls = array('tw-flex', 'tw-justify-center', 'sm:tw-justify-start', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
