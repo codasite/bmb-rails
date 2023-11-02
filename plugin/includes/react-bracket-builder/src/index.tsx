@@ -135,11 +135,11 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const { play } = ajaxObj
+  const { play, redirectUrl } = ajaxObj
   if (play) {
     renderDiv(
       <App>
-        <BustPlayPage bracketPlay={play} />
+        <BustPlayPage bracketPlay={play} redirectUrl={redirectUrl} />
       </App>,
       'wpbb-bust-play'
     )

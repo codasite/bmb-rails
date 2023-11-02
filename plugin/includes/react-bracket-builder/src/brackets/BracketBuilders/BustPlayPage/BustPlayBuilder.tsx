@@ -84,7 +84,9 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     setProcessing(true)
     bracketApi
       .createPlay(playReq)
-      .then((res) => {
+      .then(async (res) => {
+        // time out to allow for play to be created
+        await new Promise((r) => setTimeout(r, 1000))
         window.location.href = redirectUrl
       })
       .catch((err) => {

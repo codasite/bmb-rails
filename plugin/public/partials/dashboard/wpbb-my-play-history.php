@@ -28,18 +28,52 @@ $plays = $play_repo->get_all(
 	]
 );
 
-function play_list_item(Wpbb_BracketPlay $play) {
-	$title = $play->bracket?->title ?? $play->bracket?->title;
-	$user_rank = 99999;
+function view_bust_btn($endpoint) {
+	return view_play_btn($endpoint, 'View Bust');
+}
+
+function bust_again_btn($endpoint) {
+	ob_start();
+?>
+	<a class="tw-border-red tw-border-solid tw-border tw-bg-red/15 hover:tw-bg-red hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
+		<span class="tw-font-500">Bust Again</span>
+	</a>
+<?php
+	return ob_get_clean();
+}
+
+function get_default_play_buttons($play) {
 	$complete = $play->bracket?->status === 'complete';
 	$play_id = $play->id;
 	$bracket_id = $play->bracket_id;
 	$view_link = get_permalink($play_id) . 'view';
 	$leaderboard_link = get_permalink($bracket_id) . 'leaderboard';
-	$trend_up = true;
-	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$leaderboard_variant = $complete ? 'final' : 'primary';
 	$show_leaderboard = $play->bracket?->status !== 'private';
+	ob_start();
+	?>
+		<?php echo view_play_btn($view_link); ?>
+		<?php echo $bracket_id && $show_leaderboard ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant) : null; ?>
+	<?php
+	return ob_get_clean();
+}
+
+function get_buster_play_buttons($play) {
+	$view_link = get_permalink($play->id) . 'view';
+	$bust_again_link = get_permalink($play->busted_id) . 'bust';
+	ob_start();
+	?>
+		<?php echo view_bust_btn($view_link); ?>
+		<?php echo bust_again_btn($bust_again_link); ?>
+	<?php
+	return ob_get_clean();
+}
+
+function play_list_item(Wpbb_BracketPlay $play) {
+	$title = $play->bracket?->title ?? $play->bracket?->title;
+	$user_rank = 99999;
+	$trend_up = true;
+	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
 	$accuracy_score = round($play->accuracy_score * 100);
 	$show_score = $play->accuracy_score !== null;
 	$buster_play = $play->busted_id !== null;
@@ -57,8 +91,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
         </div>
       </div>
       <div class="tw-flex tw-gap-16">
-				<?php echo view_play_btn($view_link); ?>
-				<?php echo $bracket_id && $show_leaderboard ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant) : null; ?>
+				<?php echo $buster_play ? get_buster_play_buttons($play) : get_default_play_buttons($play) ?>
       </div>
     </div>
     <div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
