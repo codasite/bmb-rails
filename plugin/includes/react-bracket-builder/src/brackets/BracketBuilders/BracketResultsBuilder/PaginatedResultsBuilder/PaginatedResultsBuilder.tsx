@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { ResultsBuilderProps } from '../../PlayBracketBuilder/types'
 import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
-import { PickableBracketPage } from './PickableBracketPage'
+import { ResultsBracketPage } from './ResultsBracketPage'
 import { FullBracketPage } from './FullBracketPage'
 
 export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
@@ -45,7 +45,7 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
       break
     case 'bracket':
       element = (
-        <PickableBracketPage
+        <ResultsBracketPage
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onFinished={onFinished}

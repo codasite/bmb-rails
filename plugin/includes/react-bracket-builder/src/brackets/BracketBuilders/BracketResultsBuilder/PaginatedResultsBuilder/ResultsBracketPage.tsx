@@ -2,6 +2,7 @@ import React from 'react'
 import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
+import { PaginatedResultsBracket } from '../../../shared/components/Bracket/PaginatedResultsBracket'
 
 interface PickableBracketPageProps {
   matchTree?: MatchTree
@@ -9,7 +10,7 @@ interface PickableBracketPageProps {
   onFinished?: () => void
 }
 
-export const PickableBracketPage = (props: PickableBracketPageProps) => {
+export const ResultsBracketPage = (props: PickableBracketPageProps) => {
   const { matchTree, setMatchTree, onFinished } = props
 
   let containerProps = {
@@ -27,7 +28,7 @@ export const PickableBracketPage = (props: PickableBracketPageProps) => {
   return (
     <div {...containerProps}>
       {matchTree && (
-        <PaginatedPickableBracket
+        <PaginatedResultsBracket
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onFinished={onFinished}
