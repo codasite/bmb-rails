@@ -46,7 +46,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           onClick={onApparelClick}
           disabled={processing || !matchTree?.allPicked()}
         >
-          complete tournament
+          {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
         </ActionButton>
       </div>
     </div>
