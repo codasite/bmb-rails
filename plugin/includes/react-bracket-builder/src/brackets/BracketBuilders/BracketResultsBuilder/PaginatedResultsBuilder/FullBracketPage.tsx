@@ -3,11 +3,10 @@ import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
-import { PickableBracket } from '../../../shared/components/Bracket'
+import { ResultsBracket } from '../../../shared/components/Bracket'
 import { DarkModeContext } from '../../../shared/context'
 import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
-import { Spinner } from '../../../shared/components/Spinner'
 
 interface FullBracketPageProps {
   onApparelClick: () => void
@@ -16,6 +15,8 @@ interface FullBracketPageProps {
   setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
 }
+
+console.log('mark is here')
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
   const { onApparelClick, matchTree, darkMode, setDarkMode, processing } = props
@@ -35,21 +36,17 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
         {matchTree && (
           <ScaledBracket
-            BracketComponent={PickableBracket}
+            BracketComponent={ResultsBracket}
             matchTree={matchTree}
           />
         )}
         <ActionButton
-          variant="small-green"
+          variant="small-yellow"
           darkMode={darkMode}
           onClick={onApparelClick}
           disabled={processing || !matchTree?.allPicked()}
         >
-          {processing ? (
-            <Spinner fill="white" height={32} width={32} />
-          ) : (
-            'Add to Apparel'
-          )}
+          complete tournament
         </ActionButton>
       </div>
     </div>
