@@ -14,7 +14,7 @@ $play = $play_repo->get($post);
 $is_bust = $play->busted_id !== null;
 
 if ($is_bust) {
-    $redirect_url = get_permalink($play->busted_id);
+    $redirect_url = get_permalink($play->busted_id) . '/bust';
 } else {
     $product_utils = new Wpbb_BracketProductUtils();
     $redirect_url = $product_utils->get_bracket_product_archive_url();
