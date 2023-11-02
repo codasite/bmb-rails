@@ -64,7 +64,7 @@ export const ResultsFinalButton = (props: ActionButtonProps) => {
       width={300}
       {...props}
     >
-      View Full Bracket
+      Update Picks
     </PaginatedBracketButtonBase>
   )
 }
