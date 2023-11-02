@@ -1,7 +1,7 @@
 import React from 'react'
-import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
+import { PaginatedPickableBracket } from '../../shared/components/Bracket'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
-import { MatchTree } from '../../../shared/models/MatchTree'
+import { MatchTree } from '../../shared/models/MatchTree'
 
 interface PickableBracketPageProps {
   matchTree?: MatchTree

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { PlayBuilderProps } from '../types'
-import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
+import { PlayBuilderProps } from '../PlayBracketBuilder/types'
+import { PaginatedPickableBracket } from '../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
 import { PickableBracketPage } from './PickableBracketPage'
 import { FullBracketPage } from './FullBracketPage'

@@ -12,7 +12,7 @@ import {
 } from '../../shared/components/HigherOrder'
 import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
-import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
+import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
 import { getBracketMeta, getBracketWidth } from '../../shared/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'

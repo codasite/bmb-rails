@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
-import { MatchTree } from '../../../shared/models/MatchTree'
-import { ActionButton } from '../../../shared/components/ActionButtons'
-import { PickableBracket } from '../../../shared/components/Bracket'
-import { DarkModeContext } from '../../../shared/context'
-import { ThemeSelector } from '../../../shared/components'
-import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
+import { MatchTree } from '../../shared/models/MatchTree'
+import { ActionButton } from '../../shared/components/ActionButtons'
+import { PickableBracket } from '../../shared/components/Bracket'
+import { DarkModeContext } from '../../shared/context'
+import { ThemeSelector } from '../../shared/components'
+import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 
 interface FullBracketPageProps {
   onApparelClick: () => void
