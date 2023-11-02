@@ -11,44 +11,20 @@ import { bracketApi } from '../../../shared/api/bracketApi'
 
 
 interface FullBracketPageProps {
-  onApparelClick: () => void
   matchTree?: MatchTree
   darkMode?: boolean
   setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
   myBracketsUrl?: string
+  handleUpdatePicks: () => void
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { myBracketsUrl, matchTree, darkMode, setDarkMode, processing } = props
+  const { myBracketsUrl, matchTree, darkMode, setDarkMode, processing, handleUpdatePicks } = props
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
 
   console.log('darkMode', darkMode)
-
-  const handleUpdatePicks = () => {
-    if (matchTree) {
-      const picks = matchTree.toMatchPicks()
-      if (!picks || picks.length === 0) return
-      const complete = matchTree.allPicked()
-      const data = {
-        results: picks,
-        updateNotifyPlayers: notifyParticipants,
-      }
-      bracketApi
-        .updateBracket(bracketId, data)
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-        .finally(() => {
-          if (myBracketsUrl) window.location.href = myBracketsUrl || ''
-        })
-    }
-  }
-  
 
   return (
     <div
@@ -73,6 +49,8 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           onClick={handleUpdatePicks}
           disabled={processing || !matchTree?.allPicked()}
           fontSize={16}
+          backgroundColor='yellow'
+          textColor='dd-blue'
         >
           {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
         </ActionButton>

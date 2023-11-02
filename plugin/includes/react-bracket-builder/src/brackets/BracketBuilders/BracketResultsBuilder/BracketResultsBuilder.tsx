@@ -135,7 +135,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   }
 
   if (showPaginated) {
-    return <PaginatedResultsBuilder {...props} />
+    return <PaginatedResultsBuilder {...props} handleUpdatePicks={handleUpdatePicks} />
   }
   return (
     <div
@@ -144,7 +144,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       }`}
       style={{
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
-      }}
+      }}  
     >
       {matchTree && (
         <div

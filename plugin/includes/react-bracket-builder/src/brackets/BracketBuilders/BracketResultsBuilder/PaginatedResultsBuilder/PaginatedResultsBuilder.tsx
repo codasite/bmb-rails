@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { ResultsBuilderProps } from '../../PlayBracketBuilder/types'
+import { ResultsBuilderProps } from '../types'
 import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
 import { ResultsBracketPage } from './ResultsBracketPage'
@@ -12,8 +12,8 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
     setMatchTree,
     darkMode,
     setDarkMode,
-    handleApparelClick,
     processing,
+    handleUpdatePicks,
   } = props
 
   const [page, setPage] = useState('landing')
@@ -61,8 +61,8 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
           matchTree={matchTree}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
-          onApparelClick={handleApparelClick}
           processing={processing}
+          handleUpdatePicks={handleUpdatePicks}
         />
       )
       break

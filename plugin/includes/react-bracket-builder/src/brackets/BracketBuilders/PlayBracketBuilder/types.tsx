@@ -12,13 +12,3 @@ export interface PlayBuilderProps {
   processing?: boolean
 }
 
-export interface ResultsBuilderProps {
-  matchTree?: MatchTree
-  setMatchTree?: (matchTree: MatchTree) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
-  bracketMeta?: BracketMeta
-  setBracketMeta?: (bracketMeta: BracketMeta) => void
-  handleApparelClick?: () => void
-  processing?: boolean
-}

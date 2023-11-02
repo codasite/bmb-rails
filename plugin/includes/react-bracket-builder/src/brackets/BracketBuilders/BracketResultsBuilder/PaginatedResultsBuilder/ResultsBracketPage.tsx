@@ -35,7 +35,6 @@ export const ResultsBracketPage = (props: PickableBracketPageProps) => {
             setMatchTree={setMatchTree}
             onFinished={onFinished}
           />
-          <ResultsFinalButton />
         </div>
       )}
     </div>
