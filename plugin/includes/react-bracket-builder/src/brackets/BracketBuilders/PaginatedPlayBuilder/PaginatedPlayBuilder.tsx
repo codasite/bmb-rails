@@ -6,8 +6,14 @@ import { PickableBracketPage } from './PickableBracketPage'
 import { FullBracketPage } from './FullBracketPage'
 
 export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
-  const { matchTree, setMatchTree, darkMode, setDarkMode, handleApparelClick } =
-    props
+  const {
+    matchTree,
+    setMatchTree,
+    darkMode,
+    setDarkMode,
+    handleApparelClick,
+    processing,
+  } = props
 
   const [page, setPage] = useState('landing')
 
@@ -53,6 +59,7 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
           darkMode={darkMode}
           setDarkMode={setDarkMode}
           onApparelClick={handleApparelClick}
+          processing={processing}
         />
       )
       break

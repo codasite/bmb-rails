@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
+import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PickableBracket } from '../../shared/components/Bracket'

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
@@ -11,11 +11,15 @@ import {
 } from '../../shared/components/HigherOrder'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-//@ts-ignore
+//@ts-ignoredododo
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
-import { getBracketMeta } from '../../shared/utils'
+import { getBracketMeta, getBracketWidth } from '../../shared/utils'
 import { ViewPlayPageProps } from './types'
+import { FullBracketPage } from '../PaginatedPlayBuilder/FullBracketPage'
+import { useWindowDimensions } from '../../../utils/hooks'
+import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
+import { Spinner } from '../../shared/components/Spinner'
 
 export const BracketPlayPage = (props: ViewPlayPageProps) => {
   const {
@@ -28,6 +32,11 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
     bracketPlay: play,
     redirectUrl,
   } = props
+
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+  const [processing, setProcessing] = useState(false)
+  const showPaginated =
+    windowWidth - 100 < getBracketWidth(getNumRounds(play?.bracket?.numTeams))
 
   useEffect(() => {
     const picks = play?.picks
@@ -54,6 +63,17 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
       document.cookie = `play_id=${playId}; path=/; expires=${expiryDate.toUTCString()}`
     }
     window.location.href = props.redirectUrl
+  }
+
+  if (showPaginated) {
+    return (
+      <FullBracketPage
+        onApparelClick={handleAddToApparel}
+        matchTree={matchTree}
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+      />
+    )
   }
 
   return (
