@@ -26,7 +26,7 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
     matchTree,
     setMatchTree,
     bracketPlay: play,
-    apparelUrl,
+    redirectUrl,
   } = props
 
   useEffect(() => {
@@ -46,14 +46,14 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
 
   const handleAddToApparel = () => {
     console.log('handleAddToApparel')
-    console.log('apparelUrl', apparelUrl)
+    console.log('redirectUrl', redirectUrl)
     const playId = play?.id
     if (playId) {
       //set play id in cookie
       const expiryDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
       document.cookie = `play_id=${playId}; path=/; expires=${expiryDate.toUTCString()}`
     }
-    window.location.href = props.apparelUrl
+    window.location.href = props.redirectUrl
   }
 
   return (
