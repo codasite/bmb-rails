@@ -3,20 +3,9 @@
 /**
  * This button goes to the View Play page
  */
-function view_play_btn($endpoint) {
+function view_play_btn($endpoint, $buster_play = false) {
 	ob_start();
 ?>
-	<a class="tw-flex tw-items-center tw-justify-center tw-text-white tw-px-16 tw-py-12 tw-rounded-8 tw-border tw-border-solid tw-border-transparent tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue tw-bg-clip-padding tw-h-full" href="<?php echo esc_url($endpoint) ?>">
-		<span class="tw-font-700">View Play</span>
-	</a>
-<?php
-	// return ob_get_clean();
-	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'tw-rounded-8'));
-}
-
-function view_bust_or_play_btn($endpoint, $buster_play = false) {
-	ob_start();
-	?>
 	<a class="tw-flex tw-items-center tw-justify-center tw-text-white tw-px-16 tw-py-12 tw-rounded-8 tw-border tw-border-solid tw-border-transparent tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue tw-bg-clip-padding tw-h-full" href="<?php echo esc_url($endpoint) ?>">
 		<span class="tw-font-700"><?php echo $buster_play ? 'View Bust': 'View Play' ?></span>
 	</a>
@@ -24,6 +13,7 @@ function view_bust_or_play_btn($endpoint, $buster_play = false) {
 	// return ob_get_clean();
 	return gradient_border_wrap(ob_get_clean(), array('wpbb-add-apparel-gradient-border', 'tw-rounded-8'));
 }
+
 /**
  * This is a utility wrapper for buttons that have a gradient border
  */

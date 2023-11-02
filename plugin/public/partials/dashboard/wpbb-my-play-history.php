@@ -57,8 +57,8 @@ function play_list_item(Wpbb_BracketPlay $play) {
         </div>
       </div>
       <div class="tw-flex tw-gap-16">
-				<?php echo view_bust_or_play_btn($view_link, $buster_play); ?>
-				<?php echo $bracket_id && $show_leaderboard ? view_leaderboard_or_bust_btn($leaderboard_link, $leaderboard_variant, $buster_play) : null; ?>
+				<?php echo view_play_btn($view_link, $buster_play); ?>
+				<?php echo $bracket_id && $show_leaderboard ? view_leaderboard_btn($leaderboard_link, $leaderboard_variant, $buster_play) : null; ?>
       </div>
     </div>
     <div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
