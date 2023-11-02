@@ -101,7 +101,7 @@ function renderPlayBracket(ajaxObj: WpbbAjaxObj) {
   if (bracket) {
     renderDiv(
       <App>
-        <PlayBracketPage bracket={bracket} apparelUrl={redirectUrl} />
+        <PlayBracketPage bracket={bracket} redirectUrl={redirectUrl} />
       </App>,
       'wpbb-play-bracket'
     )
@@ -128,23 +128,18 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
   if (play) {
     renderDiv(
       <App>
-        <ViewPlayPage bracketPlay={play} apparelUrl={redirectUrl} />
+        <ViewPlayPage bracketPlay={play} redirectUrl={redirectUrl} />
       </App>,
       'wpbb-view-play'
     )
   }
 }
 function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const { play, redirectUrl, thumbnailUrl, authorDisplayName } = ajaxObj
+  const { play, redirectUrl } = ajaxObj
   if (play) {
     renderDiv(
       <App>
-        <BustPlayPage
-          bracketPlay={play}
-          redirectUrl={redirectUrl}
-          thumbnailUrl={thumbnailUrl}
-          authorDisplayName={authorDisplayName}
-        />
+        <BustPlayPage bracketPlay={play} redirectUrl={redirectUrl} />
       </App>,
       'wpbb-bust-play'
     )
@@ -164,7 +159,6 @@ function renderPrintBracketPage() {
   link.crossOrigin = 'anonymous'
   document.head.appendChild(link)
 
-  console.log('print bracket play')
   renderDiv(
     <App>
       <PrintPlayPage />
@@ -178,7 +172,6 @@ function renderProductPreview(ajaxObj: WpbbAjaxObj) {
     return
   }
   const previewObj: any = camelCaseKeys(wpbb_bracket_product_preview_obj)
-  console.log('previewObj', previewObj)
   renderDiv(
     <App>
       <Gallery

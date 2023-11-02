@@ -54,11 +54,15 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
 
   public function get(
     int|WP_Post|null|Wpbb_BracketPlay $post = null,
-    bool $fetch_picks = true,
-    bool $fetch_bracket = true,
-    bool $fetch_results = true,
-    bool $fetch_matches = true
+    array $opts = []
   ): ?Wpbb_BracketPlay {
+    list(
+      $fetch_picks,
+      $fetch_bracket,
+      $fetch_results,
+      $fetch_matches,
+    ) = $this->get_defaults($opts);
+
     if ($post === null) {
       $post = $this->get_id_from_cookie();
     }
@@ -83,7 +87,15 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     $play_id = $play_data['id'];
     $bracket_post_id = $play_data['bracket_post_id'];
     $busted_id = $play_data['busted_play_post_id'];
+    $busted_play = $busted_id
+      ? $this->get($busted_id, [
+        'fetch_bracket' => false,
+        'fetch_results' => false,
+        'fetch_matches' => false,
+      ])
+      : null;
     $is_printed = (bool) $play_data['is_printed'];
+
     $bracket =
       $bracket_post_id && $fetch_bracket
         ? $this->bracket_repo->get(
@@ -111,10 +123,32 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
         ? get_the_author_meta('display_name', $author_id)
         : '',
       'busted_id' => $busted_id,
+      'busted_play' => $busted_play,
       'is_printed' => $is_printed,
+      'thumbnail_url' => get_the_post_thumbnail_url(
+        $play_post->ID,
+        'thumbnail'
+      ),
+      'url' => get_permalink($play_post->ID),
     ];
 
     return new Wpbb_BracketPlay($data);
+  }
+
+  private function get_defaults(array $user_opts = []) {
+    $default_opts = [
+      'fetch_picks' => true,
+      'fetch_bracket' => true,
+      'fetch_results' => true,
+      'fetch_matches' => true,
+    ];
+    $opts = array_merge($default_opts, $user_opts);
+    return [
+      $opts['fetch_picks'],
+      $opts['fetch_bracket'],
+      $opts['fetch_results'],
+      $opts['fetch_matches'],
+    ];
   }
 
   public function get_pick(int $pick_id): ?Wpbb_MatchPick {
@@ -212,18 +246,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
   public function plays_from_query(WP_Query $query, $options): array {
     $plays = [];
     foreach ($query->posts as $post) {
-      $fetch_picks = $options['fetch_picks'] ?? false;
-      $fetch_bracket = $options['fetch_bracket'] ?? false;
-      $fetch_results = $options['fetch_results'] ?? false;
-      $fetch_matches = $options['fetch_matches'] ?? false;
-
-      $play = $this->get(
-        $post,
-        $fetch_picks,
-        $fetch_bracket,
-        $fetch_results,
-        $fetch_matches
-      );
+      $play = $this->get($post, $options);
       if ($play) {
         $plays[] = $play;
       }

@@ -25,7 +25,6 @@ export const BusterBracket = (props: BracketProps) => {
     team?: Nullable<Team>
   ) => {
     // Match node always comes from buster bracket. Team can come from either the buster or bustee bracket
-    console.log('handleTeamClick busting', match, team)
     if (!match || !team || !setMatchTree || !setBusterMatchTree) {
       return
     }
@@ -52,7 +51,7 @@ export const BusterBracket = (props: BracketProps) => {
   return (
     <BracketComponent
       TeamSlotComponent={TeamSlotComponent}
-      onTeamClick={handleTeamClick}
+      onTeamClick={setMatchTree ? handleTeamClick : undefined}
       {...props}
     />
   )

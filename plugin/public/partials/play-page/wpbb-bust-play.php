@@ -23,6 +23,7 @@ wp_localize_script(
         'nonce' => wp_create_nonce('wp_rest'),
         'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
         'redirect_url' => $play_history_url,
+        'play_again_url' => get_permalink(get_page_by_path('play')),
         'thumbnailUrl' => get_the_post_thumbnail_url($post->ID, 'thumbnail'),
     )
 );

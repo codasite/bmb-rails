@@ -21,38 +21,44 @@ import {
   BusteeMatchTreeContext,
 } from '../../shared/context'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
+import { BusterVsBustee } from './BusterVersusBustee'
 
 interface BustPlayBuilderProps {
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
   busteePlay: PlayRes
   redirectUrl: string
-  thumbnailUrl?: string
-  busteeDisplayName?: string
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    busteePlay,
-    redirectUrl,
-    thumbnailUrl,
-    busteeDisplayName,
-  } = props
+  const { matchTree, setMatchTree, busteePlay, redirectUrl } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
-  const [processing, setProcessing] = useState(false)
+  const [busteeThumbnail, setBusteeThumbnail] = useState<string>('')
+  const [busteeDisplayName, setBusteeDisplayName] = useState<string>('')
+  const [processing, setProcessing] = useState<boolean>(false)
 
   useEffect(() => {
+    handleVersus()
+    buildMatchTrees()
+  }, [])
+
+  const handleVersus = () => {
+    const busteeName = busteePlay?.authorDisplayName
+    const busteeThumbnail = busteePlay?.thumbnailUrl
+    setBusteeDisplayName(busteeName)
+    setBusteeThumbnail(busteeThumbnail)
+  }
+
+  const buildMatchTrees = () => {
     const bracket = busteePlay?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
     const tree = MatchTree.fromMatchRes(numTeams, matches)
     setBusterMatchTree(tree)
     setBusteeMatchTree(matchTree.clone())
-  }, [])
+  }
 
   const handleSubmit = () => {
     const picks = busterMatchTree?.toMatchPicks()
@@ -78,7 +84,9 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     setProcessing(true)
     bracketApi
       .createPlay(playReq)
-      .then((res) => {
+      .then(async (res) => {
+        // time out to allow for play to be created
+        await new Promise((r) => setTimeout(r, 1000))
         window.location.href = redirectUrl
       })
       .catch((err) => {
@@ -118,60 +126,23 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                 setMatchTree: setBusterTree,
               }}
             >
-              <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                <div className="tw-text-2xl tw-font-bold tw-text-white tw-flex tw-flex-row">
-                  <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
-                    <ProfilePicture
-                      src={thumbnailUrl}
-                      alt="celebrity-photo"
-                      color="blue"
-                      backgroundColor="blueLight"
-                      shadow={true}
-                    />
-                    <span className="tw-text-white tw-font-700 tw-text-12 tw-mb-8 tw-mt-8">
-                      {busteeDisplayName}
-                    </span>
-                  </div>
-                  <span className="tw-text-white tw-font-700 tw-text-48 tw-m-18 tw-mt-40 tw-mb-40">
-                    VS
-                  </span>
-                  <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
-                    <ProfilePicture
-                      src=""
-                      alt="celebrity-photo"
-                      color="red"
-                      backgroundColor="redLight"
-                      shadow={false}
-                    />
-                    <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">
-                      You
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <BusterVsBustee
+                busteeDisplayName={busteeDisplayName}
+                busteeThumbnail={busteeThumbnail}
+              />
               <BusterBracket
                 matchTree={matchTree}
                 setMatchTree={setMatchTree}
               />
               <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                {busterMatchTree.allPicked() ? (
-                  <ActionButton
-                    variant="big-red"
-                    darkMode={true}
-                    onClick={handleSubmit}
-                  >
-                    Submit
-                  </ActionButton>
-                ) : (
-                  <ActionButton
-                    variant="big-red"
-                    darkMode={true}
-                    disabled={true}
-                    onClick={() => {}}
-                  >
-                    Submit
-                  </ActionButton>
-                )}
+                <ActionButton
+                  variant="big-red"
+                  darkMode={true}
+                  disabled={!busterMatchTree?.allPicked() || processing}
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </ActionButton>
               </div>
             </BusterMatchTreeContext.Provider>
           </BusteeMatchTreeContext.Provider>

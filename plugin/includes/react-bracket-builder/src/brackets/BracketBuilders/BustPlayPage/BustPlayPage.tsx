@@ -18,7 +18,9 @@ import { BustPlayBuilder } from './BustPlayBuilder'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
+import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { getBracketMeta } from '../../shared/utils'
+// import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -45,12 +47,14 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     thumbnailUrl,
   } = props
 
-  console.log('bust play', play)
-
   const [page, setPage] = useState('view')
 
-  const actionButtonCallback = async () => {
+  const handleBustPlay = async () => {
     setPage('bust')
+  }
+
+  const handlePlayBracket = async () => {
+    window.location.href = play?.bracket?.url
   }
 
   useEffect(() => {
@@ -81,7 +85,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         setMatchTree={setMatchTree}
         redirectUrl={redirectUrl}
         busteePlay={play}
-        thumbnailUrl={thumbnailUrl}
       />
     )
   }
@@ -109,11 +112,19 @@ const BustPlayPage = (props: BustPlayPageProps) => {
               />
             </div>
             <PickableBracket matchTree={matchTree} />
-            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-16">
+              <ActionButton
+                variant="big-green"
+                darkMode={darkMode}
+                onClick={handlePlayBracket}
+              >
+                <PlayIcon />
+                Join Tournament
+              </ActionButton>
               <ActionButton
                 variant="big-red"
                 darkMode={darkMode}
-                onClick={actionButtonCallback}
+                onClick={handleBustPlay}
               >
                 <LightningIcon />
                 Bust Bracket

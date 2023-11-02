@@ -62,6 +62,8 @@ interface PostBase {
   author: number
   authorDisplayName: string
   publishedDate: phpDate
+  thumbnailUrl?: string
+  url?: string
 }
 export interface BracketReq {
   title: string
@@ -79,8 +81,6 @@ export interface BracketRes extends PostBase {
   year: string
   numTeams: number
   wildcardPlacement: WildcardPlacement
-  html: string
-  imgUrl: string
   matches?: MatchRes[]
 }
 export interface PlayReq {
@@ -95,4 +95,6 @@ export interface PlayRes extends PostBase {
   bracketId: number
   picks: MatchPicks[]
   bracket?: BracketRes
+  bustedId?: number
+  bustedPlay?: PlayRes
 }
