@@ -4,6 +4,7 @@ import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
 import { ResultsBracketPage } from './ResultsBracketPage'
 import { FullBracketPage } from './FullBracketPage'
+import { CallbackContext } from '../../../shared/context'
 
 export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
   const {
@@ -45,11 +46,13 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
       break
     case 'bracket':
       element = (
-        <ResultsBracketPage
-          matchTree={matchTree}
-          setMatchTree={setMatchTree}
-          onFinished={onFinished}
-        />
+        <CallbackContext.Provider value={onFinished}>
+          <ResultsBracketPage
+            matchTree={matchTree}
+            setMatchTree={setMatchTree}
+            onFinished={onFinished}
+          />
+        </CallbackContext.Provider>
       )
       break
     case 'final':
