@@ -52,3 +52,19 @@ export const DefaultFinalButton = (props: ActionButtonProps) => {
     </PaginatedBracketButtonBase>
   )
 }
+
+export const ResultsFinalButton = (props: ActionButtonProps) => {
+  const { disabled } = props
+  const background = disabled ? 'yellow/20' : 'yellow'
+  const textColor = 'dd-blue'
+  return (
+    <PaginatedBracketButtonBase
+      backgroundColor={background}
+      textColor={textColor}
+      width={300}
+      {...props}
+    >
+      View Full Bracket
+    </PaginatedBracketButtonBase>
+  )
+}
