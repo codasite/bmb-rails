@@ -87,7 +87,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         setMatchTree={setMatchTree}
         redirectUrl={redirectUrl}
         busteePlay={play}
-        thumbnailUrl={thumbnailUrl}
       />
     )
   }

@@ -125,6 +125,10 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
       'busted_id' => $busted_id,
       'busted_play' => $busted_play,
       'is_printed' => $is_printed,
+      'thumbnail_url' => get_the_post_thumbnail_url(
+        $play_post->ID,
+        'thumbnail'
+      ),
     ];
 
     return new Wpbb_BracketPlay($data);

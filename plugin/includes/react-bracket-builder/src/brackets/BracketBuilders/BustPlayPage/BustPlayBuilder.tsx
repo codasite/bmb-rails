@@ -28,32 +28,37 @@ interface BustPlayBuilderProps {
   setMatchTree: (matchTree: MatchTree) => void
   busteePlay: PlayRes
   redirectUrl: string
-  thumbnailUrl?: string
-  busteeDisplayName?: string
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    busteePlay,
-    redirectUrl,
-    thumbnailUrl,
-    busteeDisplayName,
-  } = props
+  const { matchTree, setMatchTree, busteePlay, redirectUrl } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
-  const [processing, setProcessing] = useState(false)
+  const [busteeThumbnail, setBusteeThumbnail] = useState<string>('')
+  const [busteeDisplayName, setBusteeDisplayName] = useState<string>('')
+  const [processing, setProcessing] = useState<boolean>(false)
 
   useEffect(() => {
+    handleVersus()
+    buildMatchTrees()
+  }, [])
+
+  const handleVersus = () => {
+    const busteeName = busteePlay?.authorDisplayName
+    const busteeThumbnail = busteePlay?.thumbnailUrl
+    setBusteeDisplayName(busteeName)
+    setBusteeThumbnail(busteeThumbnail)
+  }
+
+  const buildMatchTrees = () => {
     const bracket = busteePlay?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
     const tree = MatchTree.fromMatchRes(numTeams, matches)
     setBusterMatchTree(tree)
     setBusteeMatchTree(matchTree.clone())
-  }, [])
+  }
 
   const handleSubmit = () => {
     const picks = busterMatchTree?.toMatchPicks()
@@ -121,7 +126,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
             >
               <BusterVsBustee
                 busteeDisplayName={busteeDisplayName}
-                busteeThumbnail={thumbnailUrl}
+                busteeThumbnail={busteeThumbnail}
               />
               <BusterBracket
                 matchTree={matchTree}

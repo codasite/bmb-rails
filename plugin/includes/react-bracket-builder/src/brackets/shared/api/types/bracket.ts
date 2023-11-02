@@ -97,4 +97,5 @@ export interface PlayRes extends PostBase {
   bracket?: BracketRes
   bustedId?: number
   bustedPlay?: PlayRes
+  thumbnailUrl?: string
 }

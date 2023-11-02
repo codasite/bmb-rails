@@ -3,10 +3,17 @@ import { ProfilePicture } from '../../shared/components/ProfilePicture'
 interface BusterVsBusteeProps {
   busteeDisplayName?: string
   busteeThumbnail?: string
+  busterDisplayName?: string
+  busterThumbnail?: string
 }
 
 export const BusterVsBustee = (props: BusterVsBusteeProps) => {
-  const { busteeDisplayName, busteeThumbnail } = props
+  const {
+    busteeDisplayName = 'Opponent',
+    busteeThumbnail = '',
+    busterDisplayName = 'You',
+    busterThumbnail = '',
+  } = props
   return (
     <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
       <div className="tw-text-2xl tw-font-bold tw-text-white tw-flex tw-flex-row">
@@ -27,14 +34,14 @@ export const BusterVsBustee = (props: BusterVsBusteeProps) => {
         </span>
         <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
           <ProfilePicture
-            src=""
+            src={busterThumbnail}
             alt="celebrity-photo"
             color="red"
             backgroundColor="redLight"
             shadow={false}
           />
           <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">
-            You
+            {busterDisplayName}
           </span>
         </div>
       </div>
