@@ -7,6 +7,8 @@ import { ResultsBracket } from '../../../shared/components/Bracket'
 import { DarkModeContext } from '../../../shared/context'
 import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
+import { bracketApi } from '../../../shared/api/bracketApi'
+
 
 interface FullBracketPageProps {
   onApparelClick: () => void
@@ -14,14 +16,39 @@ interface FullBracketPageProps {
   darkMode?: boolean
   setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
+  myBracketsUrl?: string
 }
 
-console.log('mark is here')
-
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { onApparelClick, matchTree, darkMode, setDarkMode, processing } = props
+  const { myBracketsUrl, matchTree, darkMode, setDarkMode, processing } = props
+  const [notifyParticipants, setNotifyParticipants] = useState(true)
+  const [bracketId, setBracketId] = useState(0)
 
   console.log('darkMode', darkMode)
+
+  const handleUpdatePicks = () => {
+    if (matchTree) {
+      const picks = matchTree.toMatchPicks()
+      if (!picks || picks.length === 0) return
+      const complete = matchTree.allPicked()
+      const data = {
+        results: picks,
+        updateNotifyPlayers: notifyParticipants,
+      }
+      bracketApi
+        .updateBracket(bracketId, data)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+        .finally(() => {
+          if (myBracketsUrl) window.location.href = myBracketsUrl || ''
+        })
+    }
+  }
+  
 
   return (
     <div
@@ -43,8 +70,9 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         <ActionButton
           variant="small-yellow"
           darkMode={darkMode}
-          onClick={onApparelClick}
+          onClick={handleUpdatePicks}
           disabled={processing || !matchTree?.allPicked()}
+          fontSize={16}
         >
           complete tournament
         </ActionButton>
