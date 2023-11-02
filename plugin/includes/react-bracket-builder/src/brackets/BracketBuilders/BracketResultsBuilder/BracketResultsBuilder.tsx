@@ -17,7 +17,11 @@ import {
   WithMatchTree,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import { getBracketMeta } from '../../shared/utils'
+import { getBracketMeta, getBracketWidth } from '../../shared/utils'
+import { useWindowDimensions } from '../../../utils/hooks'
+import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
+import { PaginatedResultsBuilder } from './PaginatedResultsBuilder/PaginatedResultsBuilder'
+
 
 const CustomCheckbox = (props: any) => {
   const { id, checked, onChange } = props
@@ -75,6 +79,12 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   const [bracketId, setBracketId] = useState(0)
   console.log('bracket', bracket)
 
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+  const showPaginated =
+    windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
+
+  console.log('showPaginated', showPaginated);
+
   useEffect(() => {
     if (bracket) {
       const numTeams = bracket.numTeams
@@ -124,6 +134,9 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
     }
   }
 
+  if (showPaginated) {
+    return <PaginatedResultsBuilder {...props} />
+  }
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
@@ -166,6 +179,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       )}
     </div>
   )
+            
 }
 
 const Wrapped = WithProvider(

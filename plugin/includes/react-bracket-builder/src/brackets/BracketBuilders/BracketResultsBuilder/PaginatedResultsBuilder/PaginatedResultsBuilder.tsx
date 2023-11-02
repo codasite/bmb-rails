@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { PlayBuilderProps } from '../PlayBracketBuilder/types'
-import { PaginatedPickableBracket } from '../../shared/components/Bracket'
+import { ResultsBuilderProps } from '../../PlayBracketBuilder/types'
+import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
 import { PickableBracketPage } from './PickableBracketPage'
 import { FullBracketPage } from './FullBracketPage'
 
-export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
+export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
   const {
     matchTree,
     setMatchTree,
