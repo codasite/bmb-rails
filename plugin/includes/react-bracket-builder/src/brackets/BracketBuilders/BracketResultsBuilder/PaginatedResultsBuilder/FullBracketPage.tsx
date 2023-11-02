@@ -8,7 +8,39 @@ import { DarkModeContext } from '../../../shared/context'
 import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'
+import checkIcon from '../../../shared/assets/check.svg'
 
+
+const CustomCheckbox = (props: any) => {
+  const { id, checked, onChange } = props
+
+  const baseStyles = [
+    'tw-appearance-none',
+    'tw-h-24',
+    'tw-w-24',
+    'tw-rounded-8',
+    'tw-cursor-pointer',
+  ]
+
+  const uncheckedStyles = ['tw-border', 'tw-border-solid', 'tw-border-white']
+
+  const checkedStyles = ['tw-bg-white', 'tw-bg-no-repeat', 'tw-bg-center']
+
+  const styles = baseStyles
+    .concat(checked ? checkedStyles : uncheckedStyles)
+    .join(' ')
+
+  return (
+    <input
+      type="checkbox"
+      id={id}
+      className={styles}
+      checked={checked}
+      onChange={onChange}
+      style={{ backgroundImage: checked ? `url(${checkIcon})` : 'none' }}
+    />
+  )
+}
 
 interface FullBracketPageProps {
   matchTree?: MatchTree
@@ -54,6 +86,19 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         >
           {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
         </ActionButton>
+        <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px]">
+          <CustomCheckbox
+            id="notify-participants-check"
+            checked={notifyParticipants}
+            onChange={() => setNotifyParticipants(!notifyParticipants)}
+          />
+          <label
+            htmlFor="notify-participants-check"
+            className="tw-font-500 tw-text-16 tw-items-center"
+          >
+            Notify Participants
+          </label>
+        </div>
       </div>
     </div>
   )
