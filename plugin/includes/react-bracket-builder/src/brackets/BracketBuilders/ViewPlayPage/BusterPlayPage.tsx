@@ -1,22 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { ThemeSelector } from '../../shared/components'
+import { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { PickableBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import {
-  WithBracketMeta,
-  WithDarkMode,
-  WithMatchTree,
-  WithProvider,
-} from '../../shared/components/HigherOrder'
-//@ts-ignore
-import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-//@ts-ignore
-import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { BracketMeta } from '../../shared/context'
+import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 import { getBracketMeta } from '../../shared/utils'
 import { ViewPlayPageProps } from './types'
 import { BusterVsBustee } from '../BustPlayPage/BusterVersusBustee'
+import { BusterBracket } from '../../shared/components/Bracket'
 import {
   BusterMatchTreeContext,
   BusteeMatchTreeContext,
@@ -24,19 +13,17 @@ import {
 
 export const BusterPlayPage = (props: ViewPlayPageProps) => {
   const {
-    bracketMeta,
     setBracketMeta,
-    darkMode,
-    setDarkMode,
     matchTree,
     setMatchTree,
     bracketPlay: play,
-    apparelUrl,
+    redirectUrl,
   } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
   const [busteeDisplayName, setBusteeDisplayName] = useState<string>()
+  const [busteeThumbnail, setBusteeThumbnail] = useState<string>()
 
   useEffect(() => {
     handleBracketMeta()
@@ -46,11 +33,13 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
   const handleBracketMeta = () => {
     const bracket = play.bracket
     const busteeName = play.bustedPlay?.authorDisplayName
+    const busteeThumbnail = play.bustedPlay?.thumbnailUrl
     const busterName = play.authorDisplayName
     const title = `${busteeName} vs ${busterName}`
     const { date } = getBracketMeta(bracket)
     setBracketMeta({ title, date })
     setBusteeDisplayName(busteeName)
+    setBusteeThumbnail(busteeThumbnail)
   }
 
   const buildMatchTrees = () => {
@@ -63,6 +52,11 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
     const busteeTree = MatchTree.fromPicks(numTeams, matches, busteePicks)
     setBusterMatchTree(busterTree)
     setBusteeMatchTree(busteeTree)
+    setMatchTree(busterTree)
+  }
+
+  const handleBustAgain = async () => {
+    window.location.href = redirectUrl
   }
 
   return (
@@ -75,7 +69,7 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
       >
-        {matchTree && busterMatchTree && (
+        {matchTree && busteeMatchTree && busterMatchTree && (
           <BusteeMatchTreeContext.Provider
             value={{
               matchTree: busteeMatchTree,
@@ -88,31 +82,17 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
             >
               <BusterVsBustee
                 busteeDisplayName={busteeDisplayName}
-                busteeThumbnail={thumbnailUrl}
+                busteeThumbnail={busteeThumbnail}
               />
-              <BusterBracket
-                matchTree={matchTree}
-                setMatchTree={setMatchTree}
-              />
+              <BusterBracket matchTree={matchTree} />
               <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                {busterMatchTree.allPicked() ? (
-                  <ActionButton
-                    variant="big-red"
-                    darkMode={true}
-                    onClick={handleSubmit}
-                  >
-                    Submit
-                  </ActionButton>
-                ) : (
-                  <ActionButton
-                    variant="big-red"
-                    darkMode={true}
-                    disabled={true}
-                    onClick={() => {}}
-                  >
-                    Submit
-                  </ActionButton>
-                )}
+                <ActionButton
+                  variant="big-red"
+                  darkMode={true}
+                  onClick={handleBustAgain}
+                >
+                  Bust Again
+                </ActionButton>
               </div>
             </BusterMatchTreeContext.Provider>
           </BusteeMatchTreeContext.Provider>

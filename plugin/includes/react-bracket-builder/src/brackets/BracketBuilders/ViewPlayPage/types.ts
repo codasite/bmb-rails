@@ -8,7 +8,7 @@ export interface ViewPlayPageProps {
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
   bracketPlay: PlayRes
-  apparelUrl: string
+  redirectUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
 }

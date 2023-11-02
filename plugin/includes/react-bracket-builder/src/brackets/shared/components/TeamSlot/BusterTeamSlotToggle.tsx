@@ -12,7 +12,6 @@ export const BusterTeamSlotToggle = (props: TeamSlotProps) => {
   const { matchTree: busteeMatchTree } = useContext(BusteeMatchTreeContext)
   const { matchTree: busterMatchTree } = useContext(BusterMatchTreeContext)
 
-  const picked = team && match.getWinner() === team ? true : false
   const teamPosition = team && team === match.getTeam1() ? 'left' : 'right'
   const roundIndex = match.roundIndex
   const matchIndex = match.matchIndex
@@ -29,7 +28,6 @@ export const BusterTeamSlotToggle = (props: TeamSlotProps) => {
   const busteePicked = busteeTeam && busteeMatch.getWinner() === busteeTeam
 
   if (busterPicked && busteePicked && team.equals(busteeTeam)) {
-    console.log('BustableTeamSlotToggle both picked', team, busterTeam)
     return (
       <BaseTeamSlot
         textColor={'white'}

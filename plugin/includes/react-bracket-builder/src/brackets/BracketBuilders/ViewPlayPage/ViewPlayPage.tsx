@@ -21,6 +21,7 @@ import { BracketPlayPage } from './BracketPlayPage'
 
 const ViewPlayPage = (props: ViewPlayPageProps) => {
   const { bracketPlay: play } = props
+  console.log('ViewPlayPage', props)
 
   if (!play) {
     return <div>Play not found</div>
