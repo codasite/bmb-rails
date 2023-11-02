@@ -74,7 +74,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           disabled={processing || !matchTree?.allPicked()}
           fontSize={16}
         >
-          complete tournament
+          {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
         </ActionButton>
       </div>
     </div>
