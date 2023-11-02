@@ -32,7 +32,6 @@ interface BustPlayPageProps {
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
   thumbnailUrl: string
-  playAgainUrl: string
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
@@ -46,17 +45,16 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     bracketPlay: play,
     redirectUrl,
     thumbnailUrl,
-    playAgainUrl,
   } = props
 
   const [page, setPage] = useState('view')
 
-  const actionButtonCallback = async () => {
+  const handleBustPlay = async () => {
     setPage('bust')
   }
 
-  const defaultBracketCallback = async () => {
-    window.location.href = playAgainUrl
+  const handlePlayBracket = async () => {
+    window.location.href = play?.bracket?.url
   }
 
   useEffect(() => {
@@ -118,7 +116,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
               <ActionButton
                 variant="big-green"
                 darkMode={darkMode}
-                onClick={defaultBracketCallback}
+                onClick={handlePlayBracket}
               >
                 <PlayIcon />
                 Join Tournament
@@ -126,7 +124,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
               <ActionButton
                 variant="big-red"
                 darkMode={darkMode}
-                onClick={actionButtonCallback}
+                onClick={handleBustPlay}
               >
                 <LightningIcon />
                 Bust Bracket

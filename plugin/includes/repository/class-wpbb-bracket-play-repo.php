@@ -129,6 +129,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
         $play_post->ID,
         'thumbnail'
       ),
+      'url' => get_permalink($play_post->ID),
     ];
 
     return new Wpbb_BracketPlay($data);

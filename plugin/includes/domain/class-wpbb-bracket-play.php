@@ -50,11 +50,6 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
    */
   public $busted_play;
 
-  /**
-   * @var string
-   */
-  public $thumbnail_url;
-
   public function __construct(array $data = []) {
     parent::__construct($data);
 
@@ -77,7 +72,6 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
       ? (bool) $data['is_printed']
       : false;
     $this->busted_play = $data['busted_play'] ?? null;
-    $this->thumbnail_url = $data['thumbnail_url'] ?? false;
   }
 
   public static function get_post_type(): string {
@@ -121,7 +115,6 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     $play['bracket'] = $this->bracket->to_array();
     $play['total_score'] = $this->total_score;
     $play['accuracy_score'] = $this->accuracy_score;
-    $play['thumbnail_url'] = $this->thumbnail_url;
     $play['busted_id'] = $this->busted_id;
     if (!empty($this->busted_play)) {
       $play['busted_play'] = $this->busted_play->to_array();

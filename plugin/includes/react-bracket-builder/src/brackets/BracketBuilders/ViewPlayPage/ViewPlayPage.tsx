@@ -35,5 +35,4 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 const WrappedViewPlayPage = WithProvider(
   WithMatchTree(WithBracketMeta(WithDarkMode(ViewPlayPage)))
 )
-// export { WrappedViewPlayPage as ViewPlayPage }
 export default WrappedViewPlayPage
