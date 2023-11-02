@@ -53,6 +53,23 @@ export const DefaultFinalButton = (props: ActionButtonProps) => {
   )
 }
 
+export const ResultsNextButton = (props: ActionButtonProps) => {
+  return (
+    <div className="tw-flex tw-flex-col tw-gap-10">
+      <DefaultNextButton {...props} />
+      <PaginatedBracketButtonBase
+        backgroundColor={'yellow/15'}
+        borderColor={'yellow'}
+        textColor={'yellow'}
+        borderWidth={4}
+        {...props}
+      >
+        Full Bracket
+      </PaginatedBracketButtonBase>
+    </div>
+  )
+}
+
 export const ResultsFinalButton = (props: ActionButtonProps) => {
   const { disabled } = props
   const background = disabled ? 'yellow/20' : 'yellow'

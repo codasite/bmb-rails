@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { PaginatedBracketProps, PaginatedDefaultBracketProps } from '../types'
 import { PaginatedDefaultBracket } from './PaginatedDefaultBracket'
 import { ResultsBracket } from './ResultsBracket'
-import { ResultsFinalButton } from './BracketActionButtons'
+import { ResultsFinalButton, ResultsNextButton } from './BracketActionButtons'
 
 export const PaginatedResultsBracket = (props: PaginatedBracketProps) => {
   const { matchTree } = props
@@ -14,6 +14,7 @@ export const PaginatedResultsBracket = (props: PaginatedBracketProps) => {
     disableNext: (currentRoundMatches) =>
       currentRoundMatches.some((match) => match && !match.isPicked()),
     FinalButtonComponent: ResultsFinalButton,
+    NextButtonComponent: ResultsNextButton,
   }
 
   console.log('PaginatedResultsBracket', matchTree)

@@ -3,6 +3,7 @@ import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { PaginatedResultsBracket } from '../../../shared/components/Bracket/PaginatedResultsBracket'
+import { ResultsFinalButton } from '../../../shared/components/Bracket/BracketActionButtons'
 
 interface PickableBracketPageProps {
   matchTree?: MatchTree
@@ -28,11 +29,14 @@ export const ResultsBracketPage = (props: PickableBracketPageProps) => {
   return (
     <div {...containerProps}>
       {matchTree && (
-        <PaginatedResultsBracket
-          matchTree={matchTree}
-          setMatchTree={setMatchTree}
-          onFinished={onFinished}
-        />
+        <div className="tw-flex tw-flex-col">
+          <PaginatedResultsBracket
+            matchTree={matchTree}
+            setMatchTree={setMatchTree}
+            onFinished={onFinished}
+          />
+          <ResultsFinalButton />
+        </div>
       )}
     </div>
   )
