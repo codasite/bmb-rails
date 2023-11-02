@@ -35,6 +35,7 @@ interface BustPlayPageProps {
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
+  console.log('BustPlayPage');
   const {
     bracketMeta,
     setBracketMeta,
@@ -85,6 +86,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         setMatchTree={setMatchTree}
         redirectUrl={redirectUrl}
         busteePlay={play}
+        bracket={play?.bracket}
       />
     )
   }

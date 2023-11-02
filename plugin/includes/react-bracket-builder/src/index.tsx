@@ -135,6 +135,7 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
+  console.log('renderBustBracketPlay');
   const { play, redirectUrl } = ajaxObj
   if (play) {
     renderDiv(

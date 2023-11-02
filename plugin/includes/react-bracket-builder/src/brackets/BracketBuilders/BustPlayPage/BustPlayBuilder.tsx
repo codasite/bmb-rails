@@ -22,16 +22,24 @@ import {
 } from '../../shared/context'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { BusterVsBustee } from './BusterVersusBustee'
+import { useWindowDimensions } from '../../../utils/hooks'
+import { getBracketWidth } from '../../shared/utils'
+import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
+import { PaginatedBustPlayBuilder } from './PaginatedBustPlayPage/PaginatedBustPlayBuilder'
+
+
 
 interface BustPlayBuilderProps {
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
   busteePlay: PlayRes
   redirectUrl: string
+  bracket?: any
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  const { matchTree, setMatchTree, busteePlay, redirectUrl } = props
+  console.log('BustPlayBuilder');
+  const { matchTree, setMatchTree, busteePlay, redirectUrl, bracket } = props
 
   const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
   const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
@@ -102,6 +110,15 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
   const setBusterTree = (tree: MatchTree) => {
     setBusterMatchTree(tree.clone())
+  }
+
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+
+  const showPaginated = 
+    windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
+
+  if (showPaginated) {
+    return <PaginatedBustPlayBuilder {...props} />
   }
 
   return (
