@@ -11,13 +11,11 @@ export const PaginatedResultsBracket = (props: PaginatedBracketProps) => {
     ...props,
     page,
     setPage,
-    disableNext: (currentRoundMatches) =>
-      currentRoundMatches.some((match) => match && !match.isPicked()),
+    disableNext: (currentRoundMatches) => false,
     FinalButtonComponent: ResultsFinalButton,
     NextButtonComponent: ResultsNextButton,
   }
 
-  console.log('PaginatedResultsBracket', matchTree)
   useEffect(() => {
     // try to determine page from matchTree
     if (!matchTree.anyPicked()) {
