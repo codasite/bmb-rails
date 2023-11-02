@@ -35,7 +35,8 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
     const busteeName = play.bustedPlay?.authorDisplayName
     const busteeThumbnail = play.bustedPlay?.thumbnailUrl
     const busterName = play.authorDisplayName
-    const title = `${busteeName} vs ${busterName}`
+    const bracketTitle = bracket?.title || 'Bracket'
+    const title = `${busterName}'s Bust of ${busterName}'s ${bracketTitle} Picks`
     const { date } = getBracketMeta(bracket)
     setBracketMeta({ title, date })
     setBusteeDisplayName(busteeName)
