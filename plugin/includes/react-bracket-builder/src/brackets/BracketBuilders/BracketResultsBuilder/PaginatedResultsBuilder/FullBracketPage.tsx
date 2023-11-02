@@ -5,7 +5,6 @@ import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
 import { ResultsBracket } from '../../../shared/components/Bracket'
 import { DarkModeContext } from '../../../shared/context'
-import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'
 import checkIcon from '../../../shared/assets/check.svg'
@@ -68,7 +67,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
       }}
     >
       <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
-        <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
         {matchTree && (
           <ScaledBracket
             BracketComponent={ResultsBracket}
