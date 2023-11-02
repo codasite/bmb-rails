@@ -9,7 +9,6 @@ import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'
 import checkIcon from '../../../shared/assets/check.svg'
 
-
 const CustomCheckbox = (props: any) => {
   const { id, checked, onChange } = props
 
@@ -51,7 +50,14 @@ interface FullBracketPageProps {
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { myBracketsUrl, matchTree, darkMode, setDarkMode, processing, handleUpdatePicks } = props
+  const {
+    myBracketsUrl,
+    matchTree,
+    darkMode,
+    setDarkMode,
+    processing,
+    handleUpdatePicks,
+  } = props
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
 
@@ -79,8 +85,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           onClick={handleUpdatePicks}
           disabled={processing || !matchTree?.allPicked()}
           fontSize={16}
-          backgroundColor='yellow'
-          textColor='dd-blue'
         >
           {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
         </ActionButton>

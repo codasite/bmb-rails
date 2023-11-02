@@ -117,11 +117,11 @@ export const YellowButton = (props: ActionButtonProps) => {
   const darkModeTextColor = disabled ? 'white/20' : 'white'
   return (
     <ActionButtonBase
-      backgroundColor={darkMode ? darkModeBackground : background}
+      backgroundColor={'yellow/15'}
       padding={16}
-      textColor={darkMode ? darkModeTextColor : textColor}
+      textColor={'yellow'}
       borderRadius={8}
-      borderColor={darkMode ? darkModeBorder : border}
+      borderColor={'yellow'}
       {...props}
     />
   )
