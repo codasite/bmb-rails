@@ -51,8 +51,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     playAgainUrl,
   } = props
 
-  console.log('bust play', play)
-
   const [page, setPage] = useState('view')
 
   const actionButtonCallback = async () => {
@@ -60,7 +58,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   }
 
   const defaultBracketCallback = async () => {
-    window.location.href = playAgainUrl;
+    window.location.href = playAgainUrl
   }
 
   useEffect(() => {
@@ -102,8 +100,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
         darkMode ? ' tw-dark' : ''
       }`}
       style={{
-        // backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
-        backgroundImage: `url(${redBracketBg})`,
+        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
       <div

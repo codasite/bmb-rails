@@ -21,6 +21,7 @@ import {
   BusteeMatchTreeContext,
 } from '../../shared/context'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
+import { BusterVsBustee } from './BusterVersusBustee'
 
 interface BustPlayBuilderProps {
   matchTree: MatchTree
@@ -118,37 +119,10 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
                 setMatchTree: setBusterTree,
               }}
             >
-              <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                <div className="tw-text-2xl tw-font-bold tw-text-white tw-flex tw-flex-row">
-                  <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
-                    <ProfilePicture
-                      src={thumbnailUrl}
-                      alt="celebrity-photo"
-                      color="blue"
-                      backgroundColor="blueLight"
-                      shadow={true}
-                    />
-                    <span className="tw-text-white tw-font-700 tw-text-12 tw-mb-8 tw-mt-8">
-                      {busteeDisplayName}
-                    </span>
-                  </div>
-                  <span className="tw-text-white tw-font-700 tw-text-48 tw-m-18 tw-mt-40 tw-mb-40">
-                    VS
-                  </span>
-                  <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
-                    <ProfilePicture
-                      src=""
-                      alt="celebrity-photo"
-                      color="red"
-                      backgroundColor="redLight"
-                      shadow={false}
-                    />
-                    <span className="tw-text-white tw-font-700 tw-text-12 tw-m-8">
-                      You
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <BusterVsBustee
+                busteeDisplayName={busteeDisplayName}
+                busteeThumbnail={thumbnailUrl}
+              />
               <BusterBracket
                 matchTree={matchTree}
                 setMatchTree={setMatchTree}

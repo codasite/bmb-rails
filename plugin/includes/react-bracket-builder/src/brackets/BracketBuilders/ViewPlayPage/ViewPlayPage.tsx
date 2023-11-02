@@ -24,7 +24,7 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
 
   if (!play) {
     return <div>Play not found</div>
-  } else if (play.bustedId !== null) {
+  } else if (play.bustedPlay) {
     return <BusterPlayPage {...props} />
   } else {
     return <BracketPlayPage {...props} />
