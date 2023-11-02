@@ -1,22 +1,24 @@
 import React, { useState, useContext } from 'react'
-import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
-import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
-import { MatchTree } from '../../../shared/models/MatchTree'
-import { ActionButton } from '../../../shared/components/ActionButtons'
-import { PickableBracket } from '../../../shared/components/Bracket'
-import { DarkModeContext } from '../../../shared/context'
-import { ThemeSelector } from '../../../shared/components'
-import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
+import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
+import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
+import { MatchTree } from '../../shared/models/MatchTree'
+import { ActionButton } from '../../shared/components/ActionButtons'
+import { PickableBracket } from '../../shared/components/Bracket'
+import { DarkModeContext } from '../../shared/context'
+import { ThemeSelector } from '../../shared/components'
+import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
+import { Spinner } from '../../shared/components/Spinner'
 
 interface FullBracketPageProps {
   onApparelClick: () => void
   matchTree?: MatchTree
   darkMode?: boolean
   setDarkMode?: (darkMode: boolean) => void
+  processing?: boolean
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { onApparelClick, matchTree, darkMode, setDarkMode } = props
+  const { onApparelClick, matchTree, darkMode, setDarkMode, processing } = props
 
   console.log('darkMode', darkMode)
 
@@ -41,9 +43,13 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           variant="small-green"
           darkMode={darkMode}
           onClick={onApparelClick}
-          disabled={!matchTree?.allPicked()}
+          disabled={processing || !matchTree?.allPicked()}
         >
-          Add to Apparel
+          {processing ? (
+            <Spinner fill="white" height={32} width={32} />
+          ) : (
+            'Add to Apparel'
+          )}
         </ActionButton>
       </div>
     </div>
