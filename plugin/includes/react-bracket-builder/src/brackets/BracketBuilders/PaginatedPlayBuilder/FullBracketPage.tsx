@@ -49,7 +49,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           />
         )}
         <ActionButton
-          variant="small-white"
+          variant="white"
           darkMode={darkMode}
           onClick={onEditClick}
           disabled={processing}

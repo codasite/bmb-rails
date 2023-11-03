@@ -10,52 +10,8 @@ import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { Next } from 'react-bootstrap/esm/PageItem'
 
-export const PaginatedBracketButtonBase = (props: ActionButtonProps) => {
-  return <ActionButtonBase {...props} />
-}
-
 export const PaginatedBracketButton = (props: ActionButtonProps) => {
-  const { variant } = props
-
-  switch (variant) {
-    case 'white':
-      return <WhitePaginatedBracketButton {...props} />
-    case 'white-filled':
-      return <WhiteFilledPaginatedBracketButton {...props} />
-    default:
-      return <PaginatedBracketButtonBase {...props} />
-  }
-}
-
-export const WhitePaginatedBracketButton = (props: ActionButtonProps) => {
-  const { disabled } = props
-  const background = 'transparent'
-  const border = disabled ? 'white/20' : 'white'
-  const textColor = disabled ? 'white/20' : 'white'
-
-  return (
-    <PaginatedBracketButtonBase
-      backgroundColor={background}
-      textColor={textColor}
-      borderColor={border}
-      borderWidth={1}
-      {...props}
-    />
-  )
-}
-
-export const WhiteFilledPaginatedBracketButton = (props: ActionButtonProps) => {
-  const { disabled } = props
-  const background = disabled ? 'white/20' : 'white'
-  const textColor = disabled ? 'white/20' : 'dd-blue'
-
-  return (
-    <PaginatedBracketButtonBase
-      backgroundColor={background}
-      textColor={textColor}
-      {...props}
-    />
-  )
+  return <ActionButton size="small" {...props} />
 }
 
 export const DefaultPrevButton = (props: ActionButtonProps) => {
@@ -85,7 +41,12 @@ export const DefaultFullBracketButton = (props: ActionButtonProps) => {
 
 export const DefaultFinalButton = (props: ActionButtonProps) => {
   return (
-    <PaginatedBracketButton variant="white-filled" fontSize={16} {...props}>
+    <PaginatedBracketButton
+      variant="white"
+      filled={true}
+      fontSize={16}
+      {...props}
+    >
       View Full Bracket
     </PaginatedBracketButton>
   )

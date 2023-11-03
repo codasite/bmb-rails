@@ -20,6 +20,8 @@ export interface ActionButtonProps {
   darkMode?: boolean
   height?: number
   width?: number
+  size?: string
+  filled?: boolean
 }
 
 export const ActionButtonBase = (props: ActionButtonProps) => {
@@ -202,19 +204,12 @@ const SmallGreenButton = (props: ActionButtonProps) => {
   )
 }
 
-export const SmallWhiteButton = (props: ActionButtonProps) => {
-  return (
-    <WhiteButton
-      height={48}
-      fontSize={24}
-      fontWeight={700}
-      borderWidth={4}
-      {...props}
-    />
-  )
+export const WhiteButton = (props: ActionButtonProps) => {
+  if (props.filled) return <FilledWhiteButton {...props} />
+  return <DefaultWhiteButton {...props} />
 }
 
-export const WhiteButton = (props: ActionButtonProps) => {
+export const DefaultWhiteButton = (props: ActionButtonProps) => {
   const { disabled, darkMode } = props
   const background = 'transparent'
   const border = disabled ? 'black/20' : 'black'
@@ -231,7 +226,22 @@ export const WhiteButton = (props: ActionButtonProps) => {
       fontSize={24}
       borderColor={darkMode ? darkModeBorder : border}
       height={48}
-      borderWidth={4}
+      borderWidth={1}
+      {...props}
+    />
+  )
+}
+
+export const FilledWhiteButton = (props: ActionButtonProps) => {
+  const { disabled } = props
+  const background = disabled ? 'white/20' : 'white'
+  const textColor = disabled ? 'black/20' : 'black'
+
+  return (
+    <DefaultWhiteButton
+      backgroundColor={background}
+      textColor={textColor}
+      borderWidth={0}
       {...props}
     />
   )
@@ -288,8 +298,6 @@ export const ActionButton = (props: ActionButtonProps) => {
       return <SmallYellowButton {...props} />
     case 'white':
       return <WhiteButton {...props} />
-    case 'small-white':
-      return <SmallWhiteButton {...props} />
     case 'red':
       return <RedButton {...props} />
     case 'big-red':
