@@ -104,6 +104,8 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
         EndPageComponent={BustEndPage}
         BracketPagesComponent={BustBracketPages}
         handleSubmit={handleSubmit}
+        matchTree={baseTree}
+        setMatchTree={setBaseTree}
       />
     )
   }

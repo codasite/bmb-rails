@@ -1,8 +1,9 @@
-import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
+import redBracketBg from '../../../shared/assets/bracket-bg-red.png'
 import { PaginatedResultsBracket } from '../../../shared/components/Bracket/PaginatedResultsBracket'
 import { BracketPagesProps } from '../../PaginatedBuilderBase/types'
 
 export const BustBracketPages = (props: BracketPagesProps) => {
+  console.log('BustBracketPages')
   const { matchTree, setMatchTree, onFinished } = props
 
   let containerProps = {
@@ -11,7 +12,7 @@ export const BustBracketPages = (props: BracketPagesProps) => {
 
   if (matchTree?.allPicked()) {
     containerProps['style'] = {
-      backgroundImage: `url(${darkBracketBg})`,
+      backgroundImage: `url(${redBracketBg})`,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
       backgroundPosition: 'center',
