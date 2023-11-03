@@ -7,6 +7,7 @@ import {
 import { BracketActionButtonProps } from '../types'
 import { CallbackContext } from '../../context'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
+import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 
 export const PaginatedBracketButtonBase = (props: ActionButtonProps) => {
   return (
@@ -75,7 +76,8 @@ export const DefaultPrevButton = (props: ActionButtonProps) => {
 export const DefaultNextButton = (props: ActionButtonProps) => {
   return (
     <PaginatedBracketButton variant="white" {...props}>
-      Next
+      <span>Next</span>
+      <ChevronRight />
     </PaginatedBracketButton>
   )
 }

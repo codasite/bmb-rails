@@ -202,20 +202,34 @@ const SmallGreenButton = (props: ActionButtonProps) => {
   )
 }
 
+export const SmallWhiteButton = (props: ActionButtonProps) => {
+  return (
+    <WhiteButton
+      height={48}
+      fontSize={24}
+      fontWeight={700}
+      borderWidth={4}
+      {...props}
+    />
+  )
+}
+
 export const WhiteButton = (props: ActionButtonProps) => {
-  const { disabled } = props
+  const { disabled, darkMode } = props
   const background = 'transparent'
-  const border = disabled ? 'white/20' : 'white'
-  const textColor = disabled ? 'white/20' : 'white'
+  const border = disabled ? 'black/20' : 'black'
+  const darkModeBorder = disabled ? 'white/20' : 'white'
+  const textColor = disabled ? 'black/20' : 'black'
+  const darkModeTextColor = disabled ? 'white/20' : 'white'
 
   return (
     <ActionButtonBase
       backgroundColor={background}
-      textColor={textColor}
+      textColor={darkMode ? darkModeTextColor : textColor}
       borderRadius={8}
       fontWeight={700}
       fontSize={24}
-      borderColor={border}
+      borderColor={darkMode ? darkModeBorder : border}
       height={48}
       borderWidth={4}
       {...props}
@@ -274,6 +288,8 @@ export const ActionButton = (props: ActionButtonProps) => {
       return <SmallYellowButton {...props} />
     case 'white':
       return <WhiteButton {...props} />
+    case 'small-white':
+      return <SmallWhiteButton {...props} />
     case 'red':
       return <RedButton {...props} />
     case 'big-red':

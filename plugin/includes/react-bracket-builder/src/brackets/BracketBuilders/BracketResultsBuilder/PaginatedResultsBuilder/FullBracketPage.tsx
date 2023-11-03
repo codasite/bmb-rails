@@ -7,6 +7,7 @@ import { ResultsBracket } from '../../../shared/components/Bracket'
 import { DarkModeContext } from '../../../shared/context'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'
+import { ReactComponent as EditIcon } from '../../../shared/assets/edit-icon.svg'
 import checkIcon from '../../../shared/assets/check.svg'
 
 const CustomCheckbox = (props: any) => {

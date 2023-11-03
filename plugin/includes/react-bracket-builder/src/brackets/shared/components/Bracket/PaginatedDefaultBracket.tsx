@@ -216,6 +216,7 @@ export const PaginatedDefaultBracket = (
           hasNext={page < (matchTree.rounds.length - 1) * 2}
           onPrev={handlePrev}
           onFullBracket={onFinished}
+          onFinished={onFinished}
         />
         {/* {currentRoundIsLast ? (
           <FinalButtonComponent

@@ -8,8 +8,10 @@ import { DarkModeContext } from '../../shared/context'
 import { ThemeSelector } from '../../shared/components'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { Spinner } from '../../shared/components/Spinner'
+import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
 
 interface FullBracketPageProps {
+  onEditClick: () => void
   onApparelClick: () => void
   matchTree?: MatchTree
   darkMode?: boolean
@@ -18,7 +20,14 @@ interface FullBracketPageProps {
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { onApparelClick, matchTree, darkMode, setDarkMode, processing } = props
+  const {
+    onEditClick,
+    onApparelClick,
+    matchTree,
+    darkMode,
+    setDarkMode,
+    processing,
+  } = props
 
   console.log('darkMode', darkMode)
 
@@ -39,6 +48,16 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             matchTree={matchTree}
           />
         )}
+        <ActionButton
+          variant="small-white"
+          darkMode={darkMode}
+          onClick={onEditClick}
+          disabled={processing}
+          borderWidth={1}
+        >
+          <EditIcon />
+          <span>Edit</span>
+        </ActionButton>
         <ActionButton
           variant="small-green"
           darkMode={darkMode}
