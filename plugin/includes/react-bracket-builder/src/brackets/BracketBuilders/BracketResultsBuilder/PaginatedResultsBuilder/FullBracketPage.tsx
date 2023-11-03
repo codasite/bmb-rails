@@ -48,6 +48,7 @@ interface FullBracketPageProps {
   processing?: boolean
   myBracketsUrl?: string
   handleUpdatePicks: () => void
+  onEditClick: () => void
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
@@ -57,6 +58,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
     darkMode,
     setDarkMode,
     processing,
+    onEditClick,
     handleUpdatePicks,
   } = props
   const [notifyParticipants, setNotifyParticipants] = useState(true)
@@ -80,17 +82,29 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             matchTree={matchTree}
           />
         )}
-        <ActionButton
-          variant="yellow"
-          size="small"
-          darkMode={darkMode}
-          onClick={handleUpdatePicks}
-          disabled={processing || !matchTree?.allPicked()}
-          fontSize={16}
-        >
-          {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
-        </ActionButton>
-        <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px]">
+        <div className="tw-flex tw-flex-col tw-gap-10">
+          <ActionButton
+            variant="white"
+            darkMode={darkMode}
+            onClick={onEditClick}
+            disabled={processing}
+            borderWidth={1}
+          >
+            <EditIcon />
+            <span>Edit</span>
+          </ActionButton>
+          <ActionButton
+            variant="yellow"
+            size="small"
+            darkMode={darkMode}
+            onClick={handleUpdatePicks}
+            disabled={processing}
+            fontSize={16}
+          >
+            {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
+          </ActionButton>
+        </div>
+        <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px] tw-mt-[52px]">
           <CustomCheckbox
             id="notify-participants-check"
             checked={notifyParticipants}

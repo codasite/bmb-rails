@@ -61,6 +61,7 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
           setDarkMode={setDarkMode}
           processing={processing}
           handleUpdatePicks={handleUpdatePicks}
+          onEditClick={onStart}
         />
       )
       break
