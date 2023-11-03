@@ -1,17 +1,8 @@
-import React from 'react'
-import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
-import { MatchTree } from '../../../shared/models/MatchTree'
 import { PaginatedResultsBracket } from '../../../shared/components/Bracket/PaginatedResultsBracket'
-import { ResultsFinalButton } from '../../../shared/components/Bracket/BracketActionButtons'
+import { BracketPagesProps } from '../../PaginatedBuilderBase/types'
 
-interface PickableBracketPageProps {
-  matchTree?: MatchTree
-  setMatchTree?: (matchTree: MatchTree) => void
-  onFinished?: () => void
-}
-
-export const ResultsBracketPage = (props: PickableBracketPageProps) => {
+export const BustBracketPages = (props: BracketPagesProps) => {
   const { matchTree, setMatchTree, onFinished } = props
 
   let containerProps = {

@@ -1,23 +1,22 @@
 import React, { useState } from 'react'
-import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
+import redBracketBg from '../../../shared/assets/bracket-bg-red.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
-import { BusterBracket } from '../../../shared/components/Bracket'
+import { ResultsBracket } from '../../../shared/components/Bracket'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
+import { StartPageProps } from '../../PaginatedBuilderBase/types'
 
-interface LandingPageProps {
-  onStart: () => void
+interface BustStartPageProps extends StartPageProps {
   matchTree?: MatchTree
 }
 
-export const LandingPage = (props: LandingPageProps) => {
-  console.log('LandingPage')
+export const BustStartPage = (props: BustStartPageProps) => {
   const { onStart, matchTree } = props
 
   return (
     <div
       className={`wpbb-reset tw-flex tw-uppercase tw-min-h-screen tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark `}
-      style={{ backgroundImage: `url(${darkBracketBg})` }}
+      style={{ backgroundImage: `url(${redBracketBg})` }}
     >
       <div className="tw-flex tw-flex-col tw-justify-center px-60 tw-max-w-[268px] tw-m-auto">
         <h1 className="tw-text-center tw-text-48 tw-font-700 tw-w-">
@@ -25,11 +24,16 @@ export const LandingPage = (props: LandingPageProps) => {
         </h1>
         {matchTree && (
           <ScaledBracket
-            BracketComponent={BusterBracket}
+            BracketComponent={ResultsBracket}
             matchTree={matchTree}
           />
         )}
-        <ActionButton darkMode={true} variant="small-yellow" onClick={onStart}>
+        <ActionButton
+          darkMode={true}
+          variant="red"
+          size="small"
+          onClick={onStart}
+        >
           Update Picks
         </ActionButton>
       </div>

@@ -8,19 +8,10 @@ import { DarkModeContext } from '../../../shared/context'
 import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'
+import { EndPageProps } from '../../PaginatedBuilderBase/types'
 
-
-interface FullBracketPageProps {
-  matchTree?: MatchTree
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
-  processing?: boolean
-  myBracketsUrl?: string
-  handleUpdatePicks?: () => void
-}
-
-export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { myBracketsUrl, matchTree, darkMode, setDarkMode, processing, handleUpdatePicks } = props
+export const BustEndPage = (props: EndPageProps) => {
+  const { matchTree, darkMode, setDarkMode, processing, handleSubmit } = props
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
 
@@ -46,11 +37,11 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         <ActionButton
           variant="small-yellow"
           darkMode={darkMode}
-          onClick={handleUpdatePicks}
+          onClick={handleSubmit}
           disabled={processing || !matchTree?.allPicked()}
           fontSize={16}
-          backgroundColor='yellow'
-          textColor='dd-blue'
+          backgroundColor="yellow"
+          textColor="dd-blue"
         >
           {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
         </ActionButton>

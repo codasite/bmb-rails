@@ -4,7 +4,6 @@ import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
 import { ResultsBracketPage } from './ResultsBracketPage'
 import { FullBracketPage } from './FullBracketPage'
-import { CallbackContext } from '../../../shared/context'
 
 export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
   const {

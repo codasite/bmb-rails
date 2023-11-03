@@ -1,29 +1,27 @@
-import React, { useState, useEffect } from 'react'
-import { PlayBuilderProps } from '../PlayBracketBuilder/types'
-import { PaginatedPickableBracket } from '../../shared/components/Bracket'
-import { LandingPage } from './LandingPage'
-import { PickableBracketPage } from './PickableBracketPage'
-import { FullBracketPage } from './FullBracketPage'
+import { useState, useEffect } from 'react'
+import { PaginatedBuilderProps } from './types'
 
-export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
+export const PaginatedBuilder = (props: PaginatedBuilderProps) => {
   const {
     matchTree,
     setMatchTree,
     darkMode,
     setDarkMode,
-    handleApparelClick,
+    handleSubmit,
     processing,
+    StartPageComponent,
+    BracketPagesComponent,
+    EndPageComponent,
   } = props
 
-  const [page, setPage] = useState('landing')
+  const [page, setPage] = useState(StartPageComponent ? 'start' : 'bracket')
 
   useEffect(() => {
     if (!matchTree) {
       return
     }
     if (matchTree.allPicked()) {
-      console.log('all picked')
-      setPage('final')
+      setPage('end')
     } else if (matchTree.anyPicked()) {
       setPage('bracket')
     }
@@ -34,32 +32,32 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
   }
 
   const onFinished = () => {
-    setPage('final')
+    setPage('end')
   }
 
   let element: JSX.Element | null = null
 
   switch (page) {
-    case 'landing':
-      element = <LandingPage matchTree={matchTree} onStart={onStart} />
+    case 'start':
+      element = <StartPageComponent matchTree={matchTree} onStart={onStart} />
       break
     case 'bracket':
       element = (
-        <PickableBracketPage
+        <BracketPagesComponent
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onFinished={onFinished}
         />
       )
       break
-    case 'final':
+    case 'end':
       element = (
-        <FullBracketPage
+        <EndPageComponent
           matchTree={matchTree}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
           onEditClick={onStart}
-          onApparelClick={handleApparelClick}
+          handleSubmit={handleSubmit}
           processing={processing}
         />
       )

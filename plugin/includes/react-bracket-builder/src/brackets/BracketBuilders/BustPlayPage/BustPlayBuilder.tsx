@@ -10,8 +10,9 @@ import { BusterVsBustee } from './BusterVersusBustee'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { getBracketWidth } from '../../shared/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
-import { PaginatedBustPlayBuilder } from './PaginatedBustPlayPage/PaginatedBustPlayBuilder'
+import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { getBustTrees } from './utils'
+import { BustEndPage, BustBracketPages } from './PaginatedBustBuilder'
 
 interface BustPlayBuilderProps {
   busteePlay: PlayRes
@@ -30,11 +31,11 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     getBustTrees()
 
   useEffect(() => {
-    handleVersus()
+    setVersus()
     buildMatchTrees()
   }, [])
 
-  const handleVersus = () => {
+  const setVersus = () => {
     const busteeName = busteePlay?.authorDisplayName
     const busteeThumbnail = busteePlay?.thumbnailUrl
     setBusteeDisplayName(busteeName)
@@ -97,9 +98,15 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
-  // if (showPaginated) {
-  //   return <PaginatedBustPlayBuilder {...props} />
-  // }
+  if (showPaginated) {
+    return (
+      <PaginatedBuilder
+        EndPageComponent={BustEndPage}
+        BracketPagesComponent={BustBracketPages}
+        handleSubmit={handleSubmit}
+      />
+    )
+  }
 
   return (
     <div
