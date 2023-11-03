@@ -38,10 +38,7 @@ export const PaginatedDefaultBracket = (
     onTeamClick,
     lineStyle,
     onFinished,
-    // PrevButtonComponent = DefaultPrevButton,
-    // NextButtonComponent = DefaultNextButton,
-    NavButtonComponent = DefaultNavButtons,
-    FinalButtonComponent = DefaultFinalButton,
+    NavButtonsComponent = DefaultNavButtons,
     page,
     setPage,
     disableNext,
@@ -209,7 +206,7 @@ export const PaginatedDefaultBracket = (
           currentRoundIsLast ? 'center' : 'stretch'
         }${currentRoundIsLast ? ' tw-flex-grow' : ''}`}
       >
-        <NavButtonComponent
+        <NavButtonsComponent
           disableNext={disableNext(currentRoundMatches)}
           disablePrev={page === 0}
           onNext={handleNext}
@@ -218,24 +215,6 @@ export const PaginatedDefaultBracket = (
           onFullBracket={onFinished}
           onFinished={onFinished}
         />
-        {/* {currentRoundIsLast ? (
-          <FinalButtonComponent
-            disabled={disableNext(currentRoundMatches)}
-            onClick={onFinished}
-          />
-        ) : (
-          // <NextButtonComponent
-          //   disabled={disableNext(currentRoundMatches)}
-          //   onClick={handleNext}
-          // />
-          <NavButtonComponent
-            disableNext={disableNext(currentRoundMatches)}
-            disablePrev={page === 0}
-            onNext={handleNext}
-            onPrev={handlePrev}
-            onFullBracket={onFinished}
-          />
-        )} */}
       </div>
     </div>
   )

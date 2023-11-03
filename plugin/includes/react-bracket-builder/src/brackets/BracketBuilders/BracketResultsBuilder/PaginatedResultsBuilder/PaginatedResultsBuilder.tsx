@@ -46,13 +46,11 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
       break
     case 'bracket':
       element = (
-        <CallbackContext.Provider value={onFinished}>
-          <ResultsBracketPage
-            matchTree={matchTree}
-            setMatchTree={setMatchTree}
-            onFinished={onFinished}
-          />
-        </CallbackContext.Provider>
+        <ResultsBracketPage
+          matchTree={matchTree}
+          setMatchTree={setMatchTree}
+          onFinished={onFinished}
+        />
       )
       break
     case 'final':

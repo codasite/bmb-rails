@@ -4,21 +4,14 @@ import {
   ActionButtonProps,
   ActionButtonBase,
 } from '../ActionButtons'
-import { BracketActionButtonProps } from '../types'
+import { BracketActionButtonProps, PaginatedNavButtonsProps } from '../types'
 import { CallbackContext } from '../../context'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
+import { Next } from 'react-bootstrap/esm/PageItem'
 
 export const PaginatedBracketButtonBase = (props: ActionButtonProps) => {
-  return (
-    <ActionButtonBase
-      borderRadius={8}
-      fontWeight={700}
-      fontSize={24}
-      height={48}
-      {...props}
-    />
-  )
+  return <ActionButtonBase {...props} />
 }
 
 export const PaginatedBracketButton = (props: ActionButtonProps) => {
@@ -90,21 +83,15 @@ export const DefaultFullBracketButton = (props: ActionButtonProps) => {
   )
 }
 
-interface DefaultNavButtonsProps {
-  PrevButtonComponent?: React.FC<ActionButtonProps>
-  NextButtonComponent?: React.FC<ActionButtonProps>
-  FullBracketBtnComponent?: React.FC<ActionButtonProps>
-  FinalButtonComponent?: React.FC<ActionButtonProps>
-  disablePrev?: boolean
-  disableNext?: boolean
-  hasNext?: boolean
-  onPrev?: () => void
-  onNext?: () => void
-  onFinished?: () => void
-  onFullBracket?: () => void
+export const DefaultFinalButton = (props: ActionButtonProps) => {
+  return (
+    <PaginatedBracketButton variant="white-filled" fontSize={16} {...props}>
+      View Full Bracket
+    </PaginatedBracketButton>
+  )
 }
 
-export const DefaultNavButtons = (props: DefaultNavButtonsProps) => {
+export const DefaultNavButtons = (props: PaginatedNavButtonsProps) => {
   const {
     PrevButtonComponent = DefaultPrevButton,
     NextButtonComponent = DefaultNextButton,
@@ -135,44 +122,37 @@ export const DefaultNavButtons = (props: DefaultNavButtonsProps) => {
   )
 }
 
-export const DefaultFinalButton = (props: ActionButtonProps) => {
+export const ResultsNavButtons = (props: PaginatedNavButtonsProps) => {
+  const {
+    PrevButtonComponent = ResultsPrevButton,
+    NextButtonComponent = ResultsNextButton,
+    FullBracketBtnComponent = ResultsFullBracketButton,
+    FinalButtonComponent = ResultsFinalButton,
+  } = props
+
   return (
-    <PaginatedBracketButton variant="white-filled" fontSize={16} {...props}>
-      View Full Bracket
-    </PaginatedBracketButton>
+    <DefaultNavButtons
+      PrevButtonComponent={PrevButtonComponent}
+      NextButtonComponent={NextButtonComponent}
+      FullBracketBtnComponent={FullBracketBtnComponent}
+      FinalButtonComponent={FinalButtonComponent}
+      {...props}
+    />
   )
 }
 
 export const ResultsNextButton = (props: ActionButtonProps) => {
-  const onFinished = useContext(CallbackContext)
-  return (
-    <div className="tw-flex tw-flex-col tw-gap-10">
-      <DefaultNextButton {...props} />
-      <PaginatedBracketButtonBase
-        backgroundColor={'yellow/15'}
-        borderColor={'yellow'}
-        textColor={'yellow'}
-        borderWidth={4}
-        onClick={onFinished}
-      >
-        Full Bracket
-      </PaginatedBracketButtonBase>
-    </div>
-  )
+  return <DefaultNextButton variant="yellow" {...props} />
+}
+
+export const ResultsPrevButton = (props: ActionButtonProps) => {
+  return <DefaultPrevButton variant="yellow" {...props} />
+}
+
+export const ResultsFullBracketButton = (props: ActionButtonProps) => {
+  return <DefaultFullBracketButton variant="small-yellow" {...props} />
 }
 
 export const ResultsFinalButton = (props: ActionButtonProps) => {
-  const { disabled } = props
-  const background = disabled ? 'yellow/20' : 'yellow'
-  const textColor = 'dd-blue'
-  return (
-    <PaginatedBracketButtonBase
-      backgroundColor={background}
-      textColor={textColor}
-      width={300}
-      {...props}
-    >
-      View Full Bracket
-    </PaginatedBracketButtonBase>
-  )
+  return <DefaultFinalButton variant="small-yellow" {...props} />
 }
