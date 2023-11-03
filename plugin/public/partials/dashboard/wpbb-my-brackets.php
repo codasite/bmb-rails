@@ -296,7 +296,7 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
       </div>
     </div>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
-      <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($title) ?></h2>
+      <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html($title) ?></h2>
 			<div class="tw-flex tw-gap-10 tw-items-center">
 				<?php echo get_bracket_icon_buttons($bracket); ?>
 			</div>

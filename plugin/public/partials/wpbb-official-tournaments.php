@@ -68,7 +68,7 @@ function wpbb_tournament_sort_buttons() {
 	<div class="wpbb-reset wpbb-official-tourneys tw-flex tw-flex-col tw-gap-30 tw-max-w-screen-lg tw-mx-auto ">
 		<div class="tw-flex tw-flex-col tw-py-30 tw-gap-15 tw-items-center ">
 			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/logo_dark.svg'); ?>
-			<h1 class="tw-text-80 tw-font-700 tw-text-center">Official Brackets</h1>
+			<h1 class="tw-text-32 sm:tw-text-80 tw-font-700 tw-text-center">Official Brackets</h1>
 		</div>
 		<div class="tw-flex tw-flex-col tw-gap-15">
 			<?php echo wpbb_tournament_sort_buttons(); ?>

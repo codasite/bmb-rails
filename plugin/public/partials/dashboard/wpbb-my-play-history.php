@@ -84,7 +84,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
 	<div class="tw-flex tw-justify-between tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
 		<div class="tw-flex tw-w-full tw-flex-col tw-gap-20">
 			<div class="tw-flex tw-gap-10 tw-flex-wrap">
-				<h2 class="tw-font-700 tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
+				<h2 class="tw-font-700 tw-text-20 sm:tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
         <div class="tw-flex tw-gap-10 tw-flex-wrap">
 					<?php echo $buster_play ? bracket_tag('buster', 'red') : '' ?>
           <?php echo $printed ? bracket_tag('printed', 'green') : '' ?>
