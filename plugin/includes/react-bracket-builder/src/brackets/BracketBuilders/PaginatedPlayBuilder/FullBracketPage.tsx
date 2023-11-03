@@ -11,12 +11,13 @@ import { Spinner } from '../../shared/components/Spinner'
 import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
 
 interface FullBracketPageProps {
-  onEditClick: () => void
+  onEditClick?: () => void
   onApparelClick: () => void
   matchTree?: MatchTree
   darkMode?: boolean
   setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
+  canEdit?: boolean
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
@@ -28,6 +29,8 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
     setDarkMode,
     processing,
   } = props
+
+  const canEdit = !!onEditClick
 
   console.log('darkMode', darkMode)
 
@@ -48,16 +51,18 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             matchTree={matchTree}
           />
         )}
-        <ActionButton
-          variant="white"
-          darkMode={darkMode}
-          onClick={onEditClick}
-          disabled={processing}
-          borderWidth={1}
-        >
-          <EditIcon />
-          <span>Edit</span>
-        </ActionButton>
+        {canEdit && (
+          <ActionButton
+            variant="white"
+            darkMode={darkMode}
+            onClick={onEditClick}
+            disabled={processing}
+            borderWidth={1}
+          >
+            <EditIcon />
+            <span>Edit</span>
+          </ActionButton>
+        )}
         <ActionButton
           variant="small-green"
           darkMode={darkMode}
