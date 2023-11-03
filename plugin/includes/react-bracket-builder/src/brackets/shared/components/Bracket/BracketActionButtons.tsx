@@ -6,6 +6,7 @@ import {
 } from '../ActionButtons'
 import { BracketActionButtonProps } from '../types'
 import { CallbackContext } from '../../context'
+import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 
 export const PaginatedBracketButtonBase = (props: ActionButtonProps) => {
   return (
@@ -19,7 +20,20 @@ export const PaginatedBracketButtonBase = (props: ActionButtonProps) => {
   )
 }
 
-export const DefaultNextButton = (props: ActionButtonProps) => {
+export const PaginatedBracketButton = (props: ActionButtonProps) => {
+  const { variant } = props
+
+  switch (variant) {
+    case 'white':
+      return <WhitePaginatedBracketButton {...props} />
+    case 'white-filled':
+      return <WhiteFilledPaginatedBracketButton {...props} />
+    default:
+      return <PaginatedBracketButtonBase {...props} />
+  }
+}
+
+export const WhitePaginatedBracketButton = (props: ActionButtonProps) => {
   const { disabled } = props
   const background = 'transparent'
   const border = disabled ? 'white/20' : 'white'
@@ -30,27 +44,100 @@ export const DefaultNextButton = (props: ActionButtonProps) => {
       backgroundColor={background}
       textColor={textColor}
       borderColor={border}
-      borderWidth={4}
+      borderWidth={1}
       {...props}
-    >
-      Next
-    </PaginatedBracketButtonBase>
+    />
   )
 }
 
-export const DefaultFinalButton = (props: ActionButtonProps) => {
+export const WhiteFilledPaginatedBracketButton = (props: ActionButtonProps) => {
   const { disabled } = props
   const background = disabled ? 'white/20' : 'white'
-  const textColor = 'dd-blue'
+  const textColor = disabled ? 'white/20' : 'dd-blue'
+
   return (
     <PaginatedBracketButtonBase
       backgroundColor={background}
       textColor={textColor}
-      width={300}
       {...props}
-    >
+    />
+  )
+}
+
+export const DefaultPrevButton = (props: ActionButtonProps) => {
+  return (
+    <PaginatedBracketButton variant="white" {...props}>
+      <ChevronLeft />
+    </PaginatedBracketButton>
+  )
+}
+
+export const DefaultNextButton = (props: ActionButtonProps) => {
+  return (
+    <PaginatedBracketButton variant="white" {...props}>
+      Next
+    </PaginatedBracketButton>
+  )
+}
+
+export const DefaultFullBracketButton = (props: ActionButtonProps) => {
+  return (
+    <PaginatedBracketButton variant="white" fontSize={16} {...props}>
       View Full Bracket
-    </PaginatedBracketButtonBase>
+    </PaginatedBracketButton>
+  )
+}
+
+interface DefaultNavButtonsProps {
+  PrevButtonComponent?: React.FC<ActionButtonProps>
+  NextButtonComponent?: React.FC<ActionButtonProps>
+  FullBracketBtnComponent?: React.FC<ActionButtonProps>
+  FinalButtonComponent?: React.FC<ActionButtonProps>
+  disablePrev?: boolean
+  disableNext?: boolean
+  hasNext?: boolean
+  onPrev?: () => void
+  onNext?: () => void
+  onFinished?: () => void
+  onFullBracket?: () => void
+}
+
+export const DefaultNavButtons = (props: DefaultNavButtonsProps) => {
+  const {
+    PrevButtonComponent = DefaultPrevButton,
+    NextButtonComponent = DefaultNextButton,
+    FullBracketBtnComponent = DefaultFullBracketButton,
+    FinalButtonComponent = DefaultFinalButton,
+    onPrev,
+    onNext,
+    onFullBracket,
+    onFinished,
+    disableNext,
+    hasNext,
+    disablePrev,
+  } = props
+  return (
+    <div className="tw-flex tw-flex-col tw-gap-10 tw-w-full">
+      <div className="tw-flex tw-gap-10">
+        {!disablePrev && <PrevButtonComponent onClick={onPrev} />}
+        <div className="tw-flex tw-flex-col tw-flex-grow">
+          {hasNext ? (
+            <NextButtonComponent onClick={onNext} disabled={disableNext} />
+          ) : (
+            <FinalButtonComponent onClick={onFinished} />
+          )}
+        </div>
+      </div>
+      {hasNext && <FullBracketBtnComponent onClick={onFullBracket} />}
+    </div>
+  )
+}
+
+export const DefaultFinalButton = (props: ActionButtonProps) => {
+  return (
+    <PaginatedBracketButton variant="white-filled" fontSize={16} {...props}>
+      View Full Bracket
+    </PaginatedBracketButton>
   )
 }
 

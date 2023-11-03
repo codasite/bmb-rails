@@ -104,6 +104,7 @@ export interface PaginatedBracketProps extends BracketProps {
   onFinished?: () => void
   NextButtonComponent?: React.FC<ActionButtonProps>
   FinalButtonComponent?: React.FC<ActionButtonProps>
+  NavButtonComponent?: React.FC<ActionButtonProps>
 }
 
 export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
