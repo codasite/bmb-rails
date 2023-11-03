@@ -58,6 +58,7 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
           matchTree={matchTree}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
+          onEditClick={onStart}
           onApparelClick={handleApparelClick}
           processing={processing}
         />

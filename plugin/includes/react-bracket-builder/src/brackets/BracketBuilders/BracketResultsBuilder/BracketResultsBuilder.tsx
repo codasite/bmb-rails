@@ -22,7 +22,6 @@ import { useWindowDimensions } from '../../../utils/hooks'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { PaginatedResultsBuilder } from './PaginatedResultsBuilder/PaginatedResultsBuilder'
 
-
 const CustomCheckbox = (props: any) => {
   const { id, checked, onChange } = props
 
@@ -83,7 +82,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
-  console.log('showPaginated', showPaginated);
+  console.log('showPaginated', showPaginated)
 
   useEffect(() => {
     if (bracket) {
@@ -135,7 +134,12 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   }
 
   if (showPaginated) {
-    return <PaginatedResultsBuilder {...props} handleUpdatePicks={handleUpdatePicks} />
+    return (
+      <PaginatedResultsBuilder
+        {...props}
+        handleUpdatePicks={handleUpdatePicks}
+      />
+    )
   }
   return (
     <div
@@ -144,7 +148,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       }`}
       style={{
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
-      }}  
+      }}
     >
       {matchTree && (
         <div
@@ -158,7 +162,11 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
               !complete ? ' tw-max-w-[470px] tw-w-full' : ''
             }`}
           >
-            <ActionButton variant="big-yellow" onClick={handleUpdatePicks}>
+            <ActionButton
+              variant="yellow"
+              size="big"
+              onClick={handleUpdatePicks}
+            >
               {complete ? 'Complete Bracket' : 'Update Picks'}
             </ActionButton>
             <div className="tw-flex tw-gap-20 tw-items-center tw-self-center">
@@ -179,7 +187,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       )}
     </div>
   )
-            
 }
 
 const Wrapped = WithProvider(

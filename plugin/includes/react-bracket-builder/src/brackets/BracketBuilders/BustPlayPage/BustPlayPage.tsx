@@ -79,7 +79,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     }
   }, [play])
 
-  if (page === 'bust' && matchTree) {
+  if (true || page === 'bust' && matchTree) {
     return (
       <BustPlayBuilder
         matchTree={matchTree}
