@@ -20,8 +20,8 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
     redirectUrl,
   } = props
 
-  const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
-  const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
+  const [busterTree, setBusterTree] = useState<MatchTree>()
+  const [busteeTree, setBusteeTree] = useState<MatchTree>()
   const [busteeDisplayName, setBusteeDisplayName] = useState<string>()
   const [busteeThumbnail, setBusteeThumbnail] = useState<string>()
 
@@ -51,8 +51,8 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
     const numTeams = bracket?.numTeams
     const busterTree = MatchTree.fromPicks(numTeams, matches, busterPicks)
     const busteeTree = MatchTree.fromPicks(numTeams, matches, busteePicks)
-    setBusterMatchTree(busterTree)
-    setBusteeMatchTree(busteeTree)
+    setBusterTree(busterTree)
+    setBusteeTree(busteeTree)
     setMatchTree(busterTree)
   }
 
@@ -70,15 +70,15 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
       >
-        {matchTree && busteeMatchTree && busterMatchTree && (
+        {matchTree && busteeTree && busterTree && (
           <BusteeMatchTreeContext.Provider
             value={{
-              matchTree: busteeMatchTree,
+              matchTree: busteeTree,
             }}
           >
             <BusterMatchTreeContext.Provider
               value={{
-                matchTree: busterMatchTree,
+                matchTree: busterTree,
               }}
             >
               <BusterVsBustee

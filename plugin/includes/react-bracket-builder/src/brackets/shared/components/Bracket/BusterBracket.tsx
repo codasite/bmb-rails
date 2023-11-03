@@ -7,17 +7,15 @@ import { PickableBracket } from './PickableBracket'
 import { BusterMatchTreeContext } from '../../context'
 import { Team } from '../../models/Team'
 import { MatchNode } from '../../models/operations/MatchNode'
+import { getBustTrees } from '../../../BracketBuilders/BustPlayPage/utils'
 
 export const BusterBracket = (props: BracketProps) => {
   const {
-    matchTree,
-    setMatchTree,
     BracketComponent = DefaultBracket,
     TeamSlotComponent = BusterTeamSlotToggle,
   } = props
-
-  const { matchTree: busterMatchTree, setMatchTree: setBusterMatchTree } =
-    useContext(BusterMatchTreeContext)
+  const { baseTree, setBaseTree, busterTree, setBusterTree } = getBustTrees()
+  console.log('in BusterBracket')
 
   const handleTeamClick = (
     match: MatchNode,
@@ -25,33 +23,33 @@ export const BusterBracket = (props: BracketProps) => {
     team?: Nullable<Team>
   ) => {
     // Match node always comes from buster bracket. Team can come from either the buster or bustee bracket
-    if (!match || !team || !setMatchTree || !setBusterMatchTree) {
+    if (!match || !team || !setBaseTree || !setBusterTree) {
       return
     }
 
     const roundIndex = match.roundIndex
     const matchIndex = match.matchIndex
 
-    const busterMatch = busterMatchTree.rounds[roundIndex].matches[matchIndex]
+    const busterMatch = busterTree.rounds[roundIndex].matches[matchIndex]
     const busterTeam =
       position === 'left' ? busterMatch.getTeam1() : busterMatch.getTeam2()
 
     match.pick(team)
     if (!busterTeam) {
       // allow buster to pick teams that don't yet exist in the buster bracket
-      busterMatchTree.syncPick(match)
+      busterTree.syncPick(match)
     } else {
       busterMatch.pick(busterTeam)
     }
 
-    setBusterMatchTree(busterMatchTree)
-    setMatchTree(matchTree)
+    setBusterTree(busterTree)
+    setBaseTree(baseTree)
   }
 
   return (
     <BracketComponent
       TeamSlotComponent={TeamSlotComponent}
-      onTeamClick={setMatchTree ? handleTeamClick : undefined}
+      onTeamClick={setBaseTree ? handleTeamClick : undefined}
       {...props}
     />
   )

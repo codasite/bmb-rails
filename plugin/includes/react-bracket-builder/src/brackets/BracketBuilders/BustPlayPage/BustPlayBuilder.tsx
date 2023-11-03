@@ -1,51 +1,33 @@
-import React, { useEffect, useContext, useState, createContext } from 'react'
+import { useEffect, useState } from 'react'
 import * as Sentry from '@sentry/react'
-import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BusterBracket, PickableBracket } from '../../shared/components/Bracket'
+import { BusterBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import {
-  WithDarkMode,
-  WithMatchTree,
-  WithBracketMeta,
-  WithProvider,
-} from '../../shared/components/HigherOrder'
-//@ts-ignore
 import redBracketBg from '../../shared/assets/bracket-bg-red.png'
-//@ts-ignore
 import { bracketApi } from '../../shared/api/bracketApi'
-import { MatchRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
-import { DarkModeContext } from '../../shared/context'
-import {
-  BusterMatchTreeContext,
-  BusteeMatchTreeContext,
-} from '../../shared/context'
-import { ProfilePicture } from '../../shared/components/ProfilePicture'
+import { PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { BusterVsBustee } from './BusterVersusBustee'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { getBracketWidth } from '../../shared/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { PaginatedBustPlayBuilder } from './PaginatedBustPlayPage/PaginatedBustPlayBuilder'
-
-
+import { getBustTrees } from './utils'
 
 interface BustPlayBuilderProps {
-  matchTree: MatchTree
-  setMatchTree: (matchTree: MatchTree) => void
   busteePlay: PlayRes
   redirectUrl: string
   bracket?: any
 }
 
 export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
-  console.log('BustPlayBuilder');
-  const { matchTree, setMatchTree, busteePlay, redirectUrl, bracket } = props
+  const { busteePlay, redirectUrl, bracket } = props
 
-  const [busterMatchTree, setBusterMatchTree] = useState<MatchTree>()
-  const [busteeMatchTree, setBusteeMatchTree] = useState<MatchTree>()
   const [busteeThumbnail, setBusteeThumbnail] = useState<string>('')
   const [busteeDisplayName, setBusteeDisplayName] = useState<string>('')
   const [processing, setProcessing] = useState<boolean>(false)
+
+  const { baseTree, setBaseTree, busterTree, setBusterTree, setBusteeTree } =
+    getBustTrees()
 
   useEffect(() => {
     handleVersus()
@@ -60,16 +42,18 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   }
 
   const buildMatchTrees = () => {
+    console.log('buildMatchTrees')
     const bracket = busteePlay?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
-    const tree = MatchTree.fromMatchRes(numTeams, matches)
-    setBusterMatchTree(tree)
-    setBusteeMatchTree(matchTree.clone())
+    const buster = MatchTree.fromMatchRes(numTeams, matches)
+    console.log('buster', buster)
+    setBusterTree(buster)
+    setBusteeTree(baseTree.clone())
   }
 
   const handleSubmit = () => {
-    const picks = busterMatchTree?.toMatchPicks()
+    const picks = busterTree?.toMatchPicks()
     const bracketId = busteePlay?.bracket?.id
     const busteeId = busteePlay?.id
 
@@ -108,18 +92,15 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     window.location.href = redirectUrl
   }
 
-  const setBusterTree = (tree: MatchTree) => {
-    setBusterMatchTree(tree.clone())
-  }
-
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
 
-  const showPaginated = 
+  const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
-  if (showPaginated) {
-    return <PaginatedBustPlayBuilder {...props} />
-  }
+  // if (showPaginated) {
+  //   return <PaginatedBustPlayBuilder {...props} />
+  // }
+  console.log('redBracketBg', redBracketBg)
 
   return (
     <div
@@ -131,38 +112,25 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
       >
-        {matchTree && busterMatchTree && (
-          <BusteeMatchTreeContext.Provider
-            value={{
-              matchTree: busteeMatchTree,
-            }}
-          >
-            <BusterMatchTreeContext.Provider
-              value={{
-                matchTree: busterMatchTree,
-                setMatchTree: setBusterTree,
-              }}
-            >
-              <BusterVsBustee
-                busteeDisplayName={busteeDisplayName}
-                busteeThumbnail={busteeThumbnail}
-              />
-              <BusterBracket
-                matchTree={matchTree}
-                setMatchTree={setMatchTree}
-              />
-              <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                <ActionButton
-                  variant="big-red"
-                  darkMode={true}
-                  disabled={!busterMatchTree?.allPicked() || processing}
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </ActionButton>
-              </div>
-            </BusterMatchTreeContext.Provider>
-          </BusteeMatchTreeContext.Provider>
+        {baseTree && busterTree && (
+          <>
+            Running
+            <BusterVsBustee
+              busteeDisplayName={busteeDisplayName}
+              busteeThumbnail={busteeThumbnail}
+            />
+            <BusterBracket matchTree={baseTree} setMatchTree={setBaseTree} />
+            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+              <ActionButton
+                variant="big-red"
+                darkMode={true}
+                disabled={!busterTree?.allPicked() || processing}
+                onClick={handleSubmit}
+              >
+                Submit
+              </ActionButton>
+            </div>
+          </>
         )}
       </div>
     </div>

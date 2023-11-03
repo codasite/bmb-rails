@@ -20,6 +20,7 @@ import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
 import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { getBracketMeta } from '../../shared/utils'
+import { WithMatchTree3 } from '../../shared/components/HigherOrder/WithMatchTree'
 // import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 
 interface BustPlayPageProps {
@@ -35,7 +36,7 @@ interface BustPlayPageProps {
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
-  console.log('BustPlayPage');
+  console.log('BustPlayPage')
   const {
     bracketMeta,
     setBracketMeta,
@@ -79,11 +80,9 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     }
   }, [play])
 
-  if (true || page === 'bust' && matchTree) {
+  if (page === 'bust' && matchTree) {
     return (
       <BustPlayBuilder
-        matchTree={matchTree}
-        setMatchTree={setMatchTree}
         redirectUrl={redirectUrl}
         busteePlay={play}
         bracket={play?.bracket}
@@ -140,6 +139,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 }
 
 const WrappedBustPlayPage = WithProvider(
-  WithMatchTree(WithBracketMeta(WithDarkMode(BustPlayPage)))
+  WithMatchTree3(WithBracketMeta(WithDarkMode(BustPlayPage)))
 )
 export default WrappedBustPlayPage
