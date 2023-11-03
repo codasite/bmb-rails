@@ -100,11 +100,10 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   // if (showPaginated) {
   //   return <PaginatedBustPlayBuilder {...props} />
   // }
-  console.log('redBracketBg', redBracketBg)
 
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark`}
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover$`}
       style={{
         backgroundImage: `url(${redBracketBg})`,
       }}
@@ -114,7 +113,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       >
         {baseTree && busterTree && (
           <>
-            Running
             <BusterVsBustee
               busteeDisplayName={busteeDisplayName}
               busteeThumbnail={busteeThumbnail}
