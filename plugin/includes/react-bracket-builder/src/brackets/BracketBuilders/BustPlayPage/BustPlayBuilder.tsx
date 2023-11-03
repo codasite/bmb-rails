@@ -170,50 +170,50 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   )
 
 
-  return (
-    <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark`}
-      style={{
-        backgroundImage: `url(${redBracketBg})`,
-      }}
-    >
-      <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
-      >
-        {matchTree && busterMatchTree && (
-          <BusteeMatchTreeContext.Provider
-            value={{
-              matchTree: busteeMatchTree,
-            }}
-          >
-            <BusterMatchTreeContext.Provider
-              value={{
-                matchTree: busterMatchTree,
-                setMatchTree: setBusterTree,
-              }}
-            >
-              <BusterVsBustee
-                busteeDisplayName={busteeDisplayName}
-                busteeThumbnail={busteeThumbnail}
-              />
-              <BusterBracket
-                matchTree={matchTree}
-                setMatchTree={setMatchTree}
-              />
-              <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                <ActionButton
-                  variant="big-red"
-                  darkMode={true}
-                  disabled={!busterMatchTree?.allPicked() || processing}
-                  onClick={handleSubmit}
-                >
-                  Submit
-                </ActionButton>
-              </div>
-            </BusterMatchTreeContext.Provider>
-          </BusteeMatchTreeContext.Provider>
-        )}
-      </div>
-    </div>
-  )
+  // return (
+  //   <div
+  //     className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark`}
+  //     style={{
+  //       backgroundImage: `url(${redBracketBg})`,
+  //     }}
+  //   >
+  //     <div
+  //       className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
+  //     >
+  //       {matchTree && busterMatchTree && (
+  //         <BusteeMatchTreeContext.Provider
+  //           value={{
+  //             matchTree: busteeMatchTree,
+  //           }}
+  //         >
+  //           <BusterMatchTreeContext.Provider
+  //             value={{
+  //               matchTree: busterMatchTree,
+  //               setMatchTree: setBusterTree,
+  //             }}
+  //           >
+  //             <BusterVsBustee
+  //               busteeDisplayName={busteeDisplayName}
+  //               busteeThumbnail={busteeThumbnail}
+  //             />
+  //             <BusterBracket
+  //               matchTree={matchTree}
+  //               setMatchTree={setMatchTree}
+  //             />
+  //             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+  //               <ActionButton
+  //                 variant="big-red"
+  //                 darkMode={true}
+  //                 disabled={!busterMatchTree?.allPicked() || processing}
+  //                 onClick={handleSubmit}
+  //               >
+  //                 Submit
+  //               </ActionButton>
+  //             </div>
+  //           </BusterMatchTreeContext.Provider>
+  //         </BusteeMatchTreeContext.Provider>
+  //       )}
+  //     </div>
+  //   </div>
+  // )
 }

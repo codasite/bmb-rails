@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
-import { ResultsBracket } from '../../../shared/components/Bracket'
+import { BusterBracket } from '../../../shared/components/Bracket'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 
 interface LandingPageProps {
@@ -25,7 +25,7 @@ export const LandingPage = (props: LandingPageProps) => {
         </h1>
         {matchTree && (
           <ScaledBracket
-            BracketComponent={ResultsBracket}
+            BracketComponent={BusterBracket}
             matchTree={matchTree}
           />
         )}
