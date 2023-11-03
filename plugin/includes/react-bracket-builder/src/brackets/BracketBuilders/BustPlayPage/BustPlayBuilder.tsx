@@ -26,6 +26,9 @@ import { useWindowDimensions } from '../../../utils/hooks'
 import { getBracketWidth } from '../../shared/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { PaginatedBustPlayBuilder } from './PaginatedBustPlayPage/PaginatedBustPlayBuilder'
+import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
+import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
+
 
 
 
@@ -65,7 +68,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     const numTeams = bracket?.numTeams
     const tree = MatchTree.fromMatchRes(numTeams, matches)
     setBusterMatchTree(tree)
-    setBusteeMatchTree(matchTree.clone())
+    // setBusteeMatchTree(matchTree.clone())
   }
 
   const handleSubmit = () => {
@@ -109,7 +112,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   }
 
   const setBusterTree = (tree: MatchTree) => {
-    setBusterMatchTree(tree.clone())
+    // setBusterMatchTree(tree.clone())
   }
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -120,6 +123,52 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   if (showPaginated) {
     return <PaginatedBustPlayBuilder {...props} />
   }
+
+  return (
+    <div
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover$`}
+      style={{
+        backgroundImage: `url(${redBracketBg})`,
+      }}
+    >
+      <div
+        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
+      >
+        {matchTree && (
+          <>
+            <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+              <ProfilePicture
+                src={"thumbnailUrl"}
+                alt="celebrity-photo"
+                color="blue"
+                shadow={false}
+              />
+            </div>
+            <PickableBracket matchTree={matchTree} />
+            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-16">
+              <ActionButton
+                variant="big-green"
+                darkMode={true}
+                onClick={() => console.log('handlePlayBracket')}
+              >
+                <PlayIcon />
+                Join Tournament
+              </ActionButton>
+              <ActionButton
+                variant="big-red"
+                darkMode={true}
+                onClick={() => console.log('handleBustPlay')}
+              >
+                <LightningIcon />
+                Bust Bracket
+              </ActionButton>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  )
+
 
   return (
     <div

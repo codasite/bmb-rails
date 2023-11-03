@@ -11,6 +11,7 @@ interface LandingPageProps {
 }
 
 export const LandingPage = (props: LandingPageProps) => {
+  console.log('LandingPage')
   const { onStart, matchTree } = props
 
   return (

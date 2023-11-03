@@ -7,6 +7,7 @@ import { FullBracketPage } from './FullBracketPage'
 import { CallbackContext } from '../../../shared/context'
 
 export const PaginatedBustPlayBuilder = (props: BustPlayBuilderProps) => {
+  console.log('PaginatedBustPlayBuilder');
   const {
     matchTree,
     setMatchTree,

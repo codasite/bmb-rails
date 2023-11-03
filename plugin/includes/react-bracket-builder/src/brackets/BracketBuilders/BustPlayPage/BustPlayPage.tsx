@@ -79,7 +79,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     }
   }, [play])
 
-  if (page === 'bust' && matchTree) {
+  if (true || page === 'bust' && matchTree) {
     return (
       <BustPlayBuilder
         matchTree={matchTree}
@@ -90,7 +90,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       />
     )
   }
-
+  console.log('original bust play builder');
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
