@@ -28,7 +28,7 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
   return (
     <div className={`tw-flex tw-flex-col tw-gap-${gap} tw-items-center`}>
       <span
-        className={`tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-max-w-[700px] tw-text-center tw-leading-none`}
+        className={`tw-text-48 sm:tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-max-w-[700px] tw-text-center tw-leading-none`}
       >
         {topText}
       </span>
