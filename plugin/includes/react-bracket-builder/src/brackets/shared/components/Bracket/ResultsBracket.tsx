@@ -7,7 +7,12 @@ import { Team } from '../../models/Team'
 import { MatchNode } from '../../models/operations/MatchNode'
 
 export const ResultsBracket = (props: BracketProps) => {
-  const { matchTree, setMatchTree } = props
+  const {
+    matchTree,
+    setMatchTree,
+    BracketComponent = DefaultBracket,
+    TeamSlotComponent = ResultsTeamSlotToggle,
+  } = props
 
   const handleTeamClick = (
     match: MatchNode,
@@ -28,9 +33,9 @@ export const ResultsBracket = (props: BracketProps) => {
   }
 
   return (
-    <DefaultBracket
+    <BracketComponent
       {...props}
-      TeamSlotComponent={ResultsTeamSlotToggle}
+      TeamSlotComponent={TeamSlotComponent}
       onTeamClick={handleTeamClick}
     />
   )

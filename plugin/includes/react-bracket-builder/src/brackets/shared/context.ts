@@ -8,6 +8,7 @@ export interface BracketMeta {
 
 export const DarkModeContext = createContext(false)
 export const BracketMetaContext = createContext<BracketMeta>({})
+export const CallbackContext = createContext<() => void>(() => {})
 
 export interface MatchTreeContextState {
   matchTree?: MatchTree

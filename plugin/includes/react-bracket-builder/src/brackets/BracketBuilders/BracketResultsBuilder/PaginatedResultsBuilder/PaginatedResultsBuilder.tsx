@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
-import { PlayBuilderProps } from '../PlayBracketBuilder/types'
-import { PaginatedPickableBracket } from '../../shared/components/Bracket'
+import { ResultsBuilderProps } from '../types'
+import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
-import { PickableBracketPage } from './PickableBracketPage'
+import { ResultsBracketPage } from './ResultsBracketPage'
 import { FullBracketPage } from './FullBracketPage'
+import { CallbackContext } from '../../../shared/context'
 
-export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
+export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
   const {
     matchTree,
     setMatchTree,
     darkMode,
     setDarkMode,
-    handleApparelClick,
     processing,
+    handleUpdatePicks,
   } = props
 
   const [page, setPage] = useState('landing')
@@ -45,7 +46,7 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
       break
     case 'bracket':
       element = (
-        <PickableBracketPage
+        <ResultsBracketPage
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onFinished={onFinished}
@@ -58,9 +59,9 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
           matchTree={matchTree}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
-          onEditClick={onStart}
-          onApparelClick={handleApparelClick}
           processing={processing}
+          handleUpdatePicks={handleUpdatePicks}
+          onEditClick={onStart}
         />
       )
       break
