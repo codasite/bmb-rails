@@ -81,7 +81,8 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           />
         )}
         <ActionButton
-          variant="small-yellow"
+          variant="yellow"
+          size="small"
           darkMode={darkMode}
           onClick={handleUpdatePicks}
           disabled={processing || !matchTree?.allPicked()}

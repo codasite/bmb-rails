@@ -29,14 +29,11 @@ export const ResultsBracketPage = (props: PickableBracketPageProps) => {
   return (
     <div {...containerProps}>
       {matchTree && (
-        <div className="tw-flex tw-flex-col">
-          <PaginatedResultsBracket
-            matchTree={matchTree}
-            setMatchTree={setMatchTree}
-            onFinished={onFinished}
-          />
-          <ResultsFinalButton />
-        </div>
+        <PaginatedResultsBracket
+          matchTree={matchTree}
+          setMatchTree={setMatchTree}
+          onFinished={onFinished}
+        />
       )}
     </div>
   )

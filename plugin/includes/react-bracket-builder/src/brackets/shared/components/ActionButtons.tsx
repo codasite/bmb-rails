@@ -109,26 +109,6 @@ export const GreenButton = (props: ActionButtonProps) => {
   )
 }
 
-export const YellowButton = (props: ActionButtonProps) => {
-  const { disabled, darkMode } = props
-  const background = disabled ? 'transparent' : 'yellow'
-  const darkModeBackground = disabled ? 'transparent' : 'yellow/15'
-  const border = disabled ? 'black/20' : undefined
-  const darkModeBorder = disabled ? 'white/20' : 'yellow'
-  const textColor = disabled ? 'black/20' : 'dd-blue'
-  const darkModeTextColor = disabled ? 'white/20' : 'white'
-  return (
-    <ActionButtonBase
-      backgroundColor={'yellow/15'}
-      padding={16}
-      textColor={'yellow'}
-      borderRadius={8}
-      borderColor={'yellow'}
-      {...props}
-    />
-  )
-}
-
 export const BlueButton = (props: ActionButtonProps) => {
   const { disabled } = props
   const background = disabled ? 'transparent' : 'blue/15'
@@ -147,7 +127,18 @@ export const BlueButton = (props: ActionButtonProps) => {
   )
 }
 
-export const BigYellowButton = (props: ActionButtonProps) => {
+export const YellowButton = (props: ActionButtonProps) => {
+  switch (props.size) {
+    case 'big':
+      return <BigYellowButton {...props} />
+    case 'small':
+      return <SmallYellowButton {...props} />
+    default:
+      return <DefaultYellowButton {...props} />
+  }
+}
+
+export const DefaultYellowButton = (props: ActionButtonProps) => {
   const { disabled } = props
   const background = disabled ? 'transparent' : 'yellow/15'
   const border = disabled ? 'white/50' : 'yellow'
@@ -155,29 +146,25 @@ export const BigYellowButton = (props: ActionButtonProps) => {
 
   return (
     <ActionButtonBase
-      {...props}
       backgroundColor={background}
-      paddingX={30}
-      paddingY={16}
-      fontSize={36}
       fontWeight={700}
+      padding={16}
       textColor={textColor}
       borderRadius={8}
       borderColor={border}
       borderWidth={4}
-    />
-  )
-}
-const SmallYellowButton = (props: ActionButtonProps) => {
-  return (
-    <YellowButton
-      height={48}
-      fontSize={24}
-      fontWeight={700}
-      borderWidth={4}
       {...props}
     />
   )
+}
+
+export const BigYellowButton = (props: ActionButtonProps) => {
+  return (
+    <DefaultYellowButton {...props} paddingX={30} paddingY={16} fontSize={36} />
+  )
+}
+const SmallYellowButton = (props: ActionButtonProps) => {
+  return <DefaultYellowButton height={48} fontSize={24} {...props} />
 }
 const BigGreenButton = (props: ActionButtonProps) => {
   return (
@@ -292,10 +279,8 @@ export const ActionButton = (props: ActionButtonProps) => {
       return <SmallGreenButton {...props} />
     case 'blue':
       return <BlueButton {...props} />
-    case 'big-yellow':
-      return <BigYellowButton {...props} />
-    case 'small-yellow':
-      return <SmallYellowButton {...props} />
+    case 'yellow':
+      return <YellowButton {...props} />
     case 'white':
       return <WhiteButton {...props} />
     case 'red':
