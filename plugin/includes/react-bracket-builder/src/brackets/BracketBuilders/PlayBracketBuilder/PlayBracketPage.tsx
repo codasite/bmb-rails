@@ -18,7 +18,7 @@ import { getBracketMeta, getBracketWidth } from '../../shared/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 
 interface PlayPageProps {
-  apparelUrl: string
+  redirectUrl: string
   bracketStylesheetUrl: string
   bracket?: BracketRes
   matchTree?: MatchTree
@@ -32,7 +32,7 @@ interface PlayPageProps {
 const PlayPage = (props: PlayPageProps) => {
   const {
     bracket,
-    apparelUrl,
+    redirectUrl,
     bracketStylesheetUrl,
     matchTree,
     setMatchTree,
@@ -41,7 +41,7 @@ const PlayPage = (props: PlayPageProps) => {
     darkMode,
     setDarkMode,
   } = props
-  console.log('apparelUrl', apparelUrl)
+  console.log('redirectUrl', redirectUrl)
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -84,7 +84,7 @@ const PlayPage = (props: PlayPageProps) => {
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        window.location.href = apparelUrl
+        window.location.href = redirectUrl
       })
       .catch((err) => {
         console.error('error: ', err)
