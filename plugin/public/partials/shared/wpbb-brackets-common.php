@@ -167,7 +167,7 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 			</div>
 		</div>
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
-			<h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($name) ?></h2>
+			<h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html($name) ?></h2>
 		</div>
 		<div class="tw-mt-10">
 			<?php echo $completed ? public_bracket_completed_buttons($bracket) : public_bracket_active_buttons($bracket); ?>

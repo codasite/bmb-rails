@@ -16,7 +16,7 @@ $accuracy = $user->get_total_accuracy() * 100;
 
 ?>
 <div class="tw-flex tw-flex-col tw-gap-15">
-	<h1 class="tw-mb-16">My Profile</h1>
+	<h1 class="tw-mb-16 tw-text-32 sm:tw-text-48 lg:tw-text-64">My Profile</h1>
 	<!-- <h3 class="tw-text-white/50">Overall Tournament Score</h3> -->
 	<div class="tw-flex tw-gap-10 tw-flex-wrap">
 		<!-- <div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-between tw-bg-green/15 ">
@@ -39,7 +39,7 @@ $accuracy = $user->get_total_accuracy() * 100;
 			</a>
 			<div class="tw-flex tw-flex-col tw-gap-4">
 				<!-- This is the number of tournaments the user has played -->
-				<h1><?php echo $num_plays; ?></h1>
+				<h1 class="tw-text-48 sm:tw-text-64"><?php echo $num_plays; ?></h1>
 				<h3 class="tw-text-20 tw-text-white/50 tw-font-500">Total Brackets Played</h3>
 			</div>
 		</div>

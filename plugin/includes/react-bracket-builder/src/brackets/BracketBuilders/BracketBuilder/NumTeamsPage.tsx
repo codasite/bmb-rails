@@ -37,7 +37,7 @@ const BracketTitle = (props: BracketTitleProps) => {
     >
       {editing ? (
         <input
-          className="tw-py-0 tw-outline-none tw-border-none tw-bg-transparent tw-text-32 tw-text-white tw-text-center tw-font-sans tw-w-full tw-uppercase"
+          className="tw-py-0 tw-outline-none tw-border-none tw-bg-transparent tw-text-24 sm:tw-text-32 tw-text-white tw-text-center tw-font-sans tw-w-full tw-uppercase"
           autoFocus
           onFocus={(e) => e.target.select()}
           type="text"
@@ -51,7 +51,7 @@ const BracketTitle = (props: BracketTitleProps) => {
           }}
         />
       ) : (
-        <h1 className="tw-font-500 tw-text-32 !tw-text-white/20 tw-text-center">
+        <h1 className="tw-font-500 tw-text-24 sm:tw-text-32 !tw-text-white/20 tw-text-center">
           {title}
         </h1>
       )}
@@ -246,7 +246,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
             showWildCardOptions ? '' : ' tw-pb-24'
           }`}
         >
-          <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-24">
+          <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24">
             How Many total teams in Your Bracket
           </span>
           <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-24">

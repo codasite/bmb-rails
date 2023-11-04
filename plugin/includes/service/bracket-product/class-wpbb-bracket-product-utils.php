@@ -1,9 +1,13 @@
 <?php
 class Wpbb_BracketProductUtils {
   public function get_bracket_product_archive_url() {
-    $category_slug = BRACKET_PRODUCT_CATEGORY;
-    $redirect_url = get_term_link($category_slug, 'product_cat');
-    return $redirect_url;
+    // $category_slug = BRACKET_PRODUCT_CATEGORY;
+    // $redirect_url = get_term_link($category_slug, 'product_cat');
+    // return $redirect_url;
+    $shop_slug = defined('BRACKET_PRODUCT_SHOP_SLUG')
+      ? BRACKET_PRODUCT_SHOP_SLUG
+      : 'bracket-shop';
+    return get_permalink(get_page_by_path($shop_slug));
   }
   // Helper method to check if product is a bracket product
   public function is_bracket_product($product) {
