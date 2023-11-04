@@ -4,7 +4,7 @@ class Wpbb_BracketProductUtils {
     // $category_slug = BRACKET_PRODUCT_CATEGORY;
     // $redirect_url = get_term_link($category_slug, 'product_cat');
     // return $redirect_url;
-    $shop_slug = defined(BRACKET_PRODUCT_SHOP_SLUG)
+    $shop_slug = defined('BRACKET_PRODUCT_SHOP_SLUG')
       ? BRACKET_PRODUCT_SHOP_SLUG
       : 'bracket-shop';
     return get_permalink($shop_slug);
