@@ -7,7 +7,7 @@ class Wpbb_BracketProductUtils {
     $shop_slug = defined('BRACKET_PRODUCT_SHOP_SLUG')
       ? BRACKET_PRODUCT_SHOP_SLUG
       : 'bracket-shop';
-    return get_permalink($shop_slug);
+    return get_permalink(get_page_by_path($shop_slug));
   }
   // Helper method to check if product is a bracket product
   public function is_bracket_product($product) {
