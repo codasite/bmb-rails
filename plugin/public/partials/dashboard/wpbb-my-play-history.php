@@ -115,7 +115,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
 }
 ?>
 <div class="tw-flex tw-flex-col tw-gap-30">
-	<h1>My Play History</h1>
+	<h1 class="tw-text-32 sm:tw-text-48 lg:tw-text-64">My Play History</h1>
 	<div class="tw-flex tw-flex-col tw-gap-16">
 		<?php foreach ($plays as $play) {
 			echo play_list_item($play);

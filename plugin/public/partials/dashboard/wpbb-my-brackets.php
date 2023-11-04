@@ -302,7 +302,7 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
 
 <div id="wpbb-my-brackets-modals"></div>
 <div class="tw-flex tw-flex-col tw-gap-15">
-	<h1 class="tw-mb-8 tw-text-32 sm:tw-text-64 tw-font-700 tw-leading-none">My Brackets</h1>
+	<h1 class="tw-mb-8 tw-text-32 sm:tw-text-48 lg:tw-text-64 tw-font-700 tw-leading-none">My Brackets</h1>
 	<a href="<?php echo get_permalink(get_page_by_path('bracket-builder'))?>" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/signal.svg'); ?>
 		<span class="tw-font-700 tw-text-16 sm:tw-text-24 tw-leading-none">Create Bracket</span>
