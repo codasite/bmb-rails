@@ -111,7 +111,7 @@ function wpbb_celebrity_play_list_item($play) {
 		<div class="logo-svg"></div>
 		<h1 class="tw-text-32 sm:tw-text-48 md:tw-text-64 lg:tw-text-80 tw-font-700 tw-text-center">Celebrity Picks</h1>
 		</div>
-		<div class="wpbb-faded-bracket-bg tw-py-30 sm:tw-py-60 tw-px-20 ">
+		<div class="wpbb-faded-bracket-bg tw-py-30 md:tw-py-60 tw-px-20 ">
 			<div class="tw-flex tw-flex-col tw-gap-30 tw-max-w-[1160px] tw-m-auto ">
 				<h2 class="tw-text-36 md:tw-text-48 tw-font-700 ">Plays</h2>
 				<div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10">
