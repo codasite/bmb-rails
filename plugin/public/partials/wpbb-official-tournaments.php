@@ -64,7 +64,7 @@ function wpbb_tournament_sort_buttons() {
 }
 
 ?>
-<div class="tw-bg-dd-blue tw-py-100 tw-px-20">
+<div class="wpbb-faded-bracket-bg tw-py-60 tw-px-20">
 	<div class="wpbb-reset wpbb-official-tourneys tw-flex tw-flex-col tw-gap-30 tw-max-w-screen-lg tw-mx-auto ">
 		<div class="tw-flex tw-flex-col tw-py-30 tw-gap-15 tw-items-center ">
 			<div class="logo-svg"></div>
