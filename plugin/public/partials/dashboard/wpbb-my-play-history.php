@@ -35,7 +35,7 @@ function view_bust_btn($endpoint) {
 function bust_again_btn($endpoint) {
 	ob_start();
 ?>
-	<a class="tw-border-red tw-border-solid tw-border tw-bg-red/15 hover:tw-bg-red hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
+	<a class="tw-border-red tw-border-solid tw-border tw-bg-red/15 hover:tw-bg-red hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<span class="tw-font-500">Bust Again</span>
 	</a>
 <?php
@@ -70,7 +70,7 @@ function get_buster_play_buttons($play) {
 }
 
 function play_list_item(Wpbb_BracketPlay $play) {
-	$title = $play->bracket?->title ?? $play->bracket?->title;
+	$title = $play->bracket?->title;
 	$user_rank = 99999;
 	$trend_up = true;
 	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
@@ -78,11 +78,13 @@ function play_list_item(Wpbb_BracketPlay $play) {
 	$show_score = $play->accuracy_score !== null;
 	$buster_play = $play->busted_id !== null;
 	$printed = $play->is_printed;
+	$num_teams = $play->bracket?->num_teams;
 	ob_start();
 ?>
 
 	<div class="tw-flex tw-justify-between tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
 		<div class="tw-flex tw-w-full tw-flex-col tw-gap-20">
+      <span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-10 tw-flex-wrap">
 				<h2 class="tw-font-700 tw-text-20 sm:tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
         <div class="tw-flex tw-gap-10 tw-flex-wrap">
@@ -90,7 +92,7 @@ function play_list_item(Wpbb_BracketPlay $play) {
           <?php echo $printed ? bracket_tag('printed', 'green') : '' ?>
         </div>
       </div>
-      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-16">
+      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8">
 				<?php echo $buster_play ? get_buster_play_buttons($play) : get_default_play_buttons($play) ?>
       </div>
     </div>
