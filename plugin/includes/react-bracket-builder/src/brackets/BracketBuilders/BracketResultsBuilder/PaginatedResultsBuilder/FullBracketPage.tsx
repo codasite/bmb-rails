@@ -109,7 +109,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             id="notify-participants-check"
             checked={notifyParticipants}
             onChange={() => setNotifyParticipants(!notifyParticipants)}
-          />
+          /> 
           <label
             htmlFor="notify-participants-check"
             className="tw-font-500 tw-text-16 tw-items-center"

@@ -102,9 +102,25 @@
 
 /** DASHBOARD END */
 
-.wpbb-celeb-plays {
+.wpbb-faded-bracket-bg {
   background:
     linear-gradient(236deg, rgba(5, 9, 73, 0.4) 0%, #010433 100%),
     url('../assets/images/bracket_bg.png'),
     lightgray 50% / cover no-repeat;
+}
+
+.logo-svg {
+  background-image: url('../assets/icons/logo_dark_small.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 279px;
+  height: 70px;
+}
+
+@media (min-width: 640px) {
+  .logo-svg {
+    background-image: url('../assets/icons/logo_dark.svg');
+    width: 340px;
+    height:85px;
+  }
 }

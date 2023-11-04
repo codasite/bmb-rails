@@ -58,7 +58,7 @@ export const WildcardPicker = (props: WildcardPickerProps) => {
   const { wildcardPlacement, onWildcardPlacementChanged } = props
   return (
     <div className="tw-flex tw-flex-col tw-gap-10">
-      <span className="tw-text-24 tw-text-center tw-font-500 tw-text-white/50">
+      <span className="tw-text-16 sm:tw-text-24 tw-text-center tw-font-500 tw-text-white/50">
         Wildcard Display
       </span>
       <div className="tw-flex tw-flex-col sm:tw-flex-row tw-gap-16">
