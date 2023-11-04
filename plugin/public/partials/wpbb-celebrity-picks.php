@@ -107,9 +107,9 @@ function wpbb_celebrity_play_list_item($play) {
 ?>
 <div class="wpbb-reset tw-bg-dd-blue">
 	<div class="tw-flex tw-flex-col">
-		<div class="tw-flex tw-flex-row md:tw-flex-row-reverse tw-py-60 tw-gap-15 tw-items-center md:tw-justify-between tw-max-w-[1160px] tw-w-full tw-m-auto tw-px-20 lg:tw-px-0">
+	<div class="tw-flex tw-flex-col tw-py-30 tw-gap-15 tw-items-center ">
 			<div class="logo-svg"></div>
-			<h1 class="tw-text-64 sm:tw-text-80 tw-font-700 tw-text-center md:tw-text-left">Celebrity Picks</h1>
+			<h1 class="tw-text-32 sm:tw-text-80 tw-font-700 tw-text-center">Celebrity Picks</h1>
 		</div>
 		<div class="wpbb-celeb-plays tw-py-60 tw-px-20 lg:tw-px-0">
 			<div class="tw-flex tw-flex-col tw-gap-30 tw-max-w-[1160px] tw-m-auto ">
