@@ -86,7 +86,6 @@ const Gallery: React.FC<GalleryProps> = ({
     // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
-        setImageConfigs(imageConfigs)
         initChangeHandlers()
         setLoadingImages(false)
       })
@@ -230,7 +229,7 @@ const Gallery: React.FC<GalleryProps> = ({
       originalIndex,
     }
 
-    // insertImageConfig(config)
+    insertImageConfig(config)
     return config
   }
 
