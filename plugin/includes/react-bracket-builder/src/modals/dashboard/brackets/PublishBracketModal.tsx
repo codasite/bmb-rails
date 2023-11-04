@@ -21,7 +21,7 @@ const PaywallModalContent = (props: PaywallModalProps) => {
       <LogoDark />
       <div className="tw-flex tw-items-end tw-justify-center tw-mt-24">
         <span className="tw-text-24">$</span>
-        <span className="tw-text-64 tw-font-700 tw-leading-none">99</span>
+        <span className="tw-text-64 tw-font-700 tw-leading-none">49</span>
       </div>
       <p className="tw-text-12 tw-font-700 tw-m-0 tw-mb-12">Yearly</p>
       <ul className="tw-list-none tw-p-0 tw-m-0 tw-text-16 tw-font-700">
