@@ -34,6 +34,7 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
     team: Nullable<Team> | undefined,
     teamPosition: string
   ) => {
+    console.log('teamFontSize: ', teamFontSize);
     return (
       <TeamSlotComponent
         team={team}

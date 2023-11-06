@@ -32,10 +32,12 @@ export const getTeamGap = (depth: number) => {
 }
 
 export const getTeamFontSize = (numRounds: number) => {
-  if (numRounds > 4) {
-    return 12
-  }
-  return 16
+  return 11;
+
+  // if (numRounds > 4) {
+  //   return 12
+  // }
+  // return 16
 }
 
 export const getFirstRoundMatchGap = (numRounds: number) => {
