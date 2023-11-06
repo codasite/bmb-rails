@@ -11,7 +11,7 @@ export const DefaultTeamSlot = (props: TeamSlotProps) => {
     height,
     width = 115,
     fontWeight = 500,
-    fontSize = 16,
+    fontSize = 11,
     getTeamClass = getUniqueTeamClass,
   } = props
   // console.log('winner', winner)
