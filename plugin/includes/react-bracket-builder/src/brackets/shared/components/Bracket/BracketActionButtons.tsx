@@ -108,14 +108,6 @@ export const ResultsNavButtons = (props: PaginatedNavButtonsProps) => {
   )
 }
 
-export const ResultsNextButton = (props: ActionButtonProps) => {
-  return <DefaultNextButton variant="yellow" {...props} />
-}
-
-export const ResultsPrevButton = (props: ActionButtonProps) => {
-  return <DefaultPrevButton variant="yellow" {...props} />
-}
-
 export const ResultsFullBracketButton = (props: ActionButtonProps) => {
   return (
     <DefaultFullBracketButton variant="yellow" borderWidth={1} {...props} />
