@@ -2,7 +2,10 @@ import React, { useState, useContext } from 'react'
 import redBracketBg from '../../../shared/assets/bracket-bg-red.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
-import { ResultsBracket } from '../../../shared/components/Bracket'
+import {
+  BusterBracket,
+  ResultsBracket,
+} from '../../../shared/components/Bracket'
 import { DarkModeContext } from '../../../shared/context'
 import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
@@ -10,11 +13,7 @@ import { bracketApi } from '../../../shared/api/bracketApi'
 import { EndPageProps } from '../../PaginatedBuilderBase/types'
 
 export const BustEndPage = (props: EndPageProps) => {
-  const { matchTree, darkMode, setDarkMode, processing, handleSubmit } = props
-  const [notifyParticipants, setNotifyParticipants] = useState(true)
-  const [bracketId, setBracketId] = useState(0)
-
-  console.log('darkMode', darkMode)
+  const { matchTree, darkMode, processing, handleSubmit } = props
 
   return (
     <div
@@ -28,12 +27,13 @@ export const BustEndPage = (props: EndPageProps) => {
       <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
         {matchTree && (
           <ScaledBracket
-            BracketComponent={ResultsBracket}
+            BracketComponent={BusterBracket}
             matchTree={matchTree}
           />
         )}
         <ActionButton
-          variant="small-yellow"
+          variant="red"
+          size="small"
           darkMode={darkMode}
           onClick={handleSubmit}
           disabled={processing || !matchTree?.allPicked()}

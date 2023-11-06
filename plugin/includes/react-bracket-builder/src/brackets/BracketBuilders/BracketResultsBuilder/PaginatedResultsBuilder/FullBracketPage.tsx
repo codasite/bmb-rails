@@ -22,17 +22,8 @@ interface FullBracketPageProps {
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const {
-    myBracketsUrl,
-    matchTree,
-    darkMode,
-    setDarkMode,
-    processing,
-    onEditClick,
-    handleUpdatePicks,
-  } = props
-
-  console.log('darkMode', darkMode)
+  const { matchTree, darkMode, processing, onEditClick, handleUpdatePicks } =
+    props
 
   const { notifyParticipants, toggleNotifyParticipants } = useContext(
     BracketResultsBuilderContext

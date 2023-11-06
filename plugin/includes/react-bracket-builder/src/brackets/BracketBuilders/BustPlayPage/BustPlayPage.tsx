@@ -122,7 +122,8 @@ const BustPlayPage = (props: BustPlayPageProps) => {
                 Join Tournament
               </ActionButton>
               <ActionButton
-                variant="big-red"
+                variant="red"
+                size="big"
                 darkMode={darkMode}
                 onClick={handleBustPlay}
               >

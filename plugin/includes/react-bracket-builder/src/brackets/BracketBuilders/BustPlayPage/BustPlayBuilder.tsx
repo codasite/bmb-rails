@@ -129,7 +129,8 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
             <BusterBracket matchTree={baseTree} setMatchTree={setBaseTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
-                variant="big-red"
+                variant="red"
+                size="big"
                 darkMode={true}
                 disabled={!busterTree?.allPicked() || processing}
                 onClick={handleSubmit}
