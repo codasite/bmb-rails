@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react'
-import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
-import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
+import redBracketBg from '../../../shared/assets/bracket-bg-red.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
 import { ResultsBracket } from '../../../shared/components/Bracket'
@@ -23,11 +22,10 @@ export const BustEndPage = (props: EndPageProps) => {
         darkMode ? ' tw-dark' : ''
       }`}
       style={{
-        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
+        backgroundImage: `url(${redBracketBg})`,
       }}
     >
       <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
-        <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
         {matchTree && (
           <ScaledBracket
             BracketComponent={ResultsBracket}

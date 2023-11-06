@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import {
+  BracketMeta,
+  BracketMetaContext,
+  DarkModeContext,
+} from '../../shared/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ResultsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
+import checkIcon from '../../shared/assets/check.svg'
 import { bracketApi } from '../../shared/api/bracketApi'
 import {
   WithDarkMode,
@@ -12,15 +17,38 @@ import {
   WithMatchTree,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import {
-  getBracketMeta,
-  getBracketWidth,
-} from '../../shared/components/Bracket/utils'
-import { useWindowDimensions } from '../../../utils/hooks'
-import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
-import { PaginatedResultsBuilder } from './PaginatedResultsBuilder/PaginatedResultsBuilder'
-import { CustomCheckbox } from './CustomCheckbox'
-import { BracketResultsBuilderContext } from './context'
+import { getBracketMeta } from '../../shared/components/Bracket/utils'
+
+const CustomCheckbox = (props: any) => {
+  const { id, checked, onChange } = props
+
+  const baseStyles = [
+    'tw-appearance-none',
+    'tw-h-32',
+    'tw-w-32',
+    'tw-rounded-8',
+    'tw-cursor-pointer',
+  ]
+
+  const uncheckedStyles = ['tw-border', 'tw-border-solid', 'tw-border-white']
+
+  const checkedStyles = ['tw-bg-white', 'tw-bg-no-repeat', 'tw-bg-center']
+
+  const styles = baseStyles
+    .concat(checked ? checkedStyles : uncheckedStyles)
+    .join(' ')
+
+  return (
+    <input
+      type="checkbox"
+      id={id}
+      className={styles}
+      checked={checked}
+      onChange={onChange}
+      style={{ backgroundImage: checked ? `url(${checkIcon})` : 'none' }}
+    />
+  )
+}
 
 interface BracketResultsBuilderProps {
   matchTree?: MatchTree
@@ -46,16 +74,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
   console.log('bracket', bracket)
-
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-  const showPaginated =
-    windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
-
-  console.log('showPaginated', showPaginated)
-
-  const toggleNotifyParticipants = () => {
-    setNotifyParticipants(!notifyParticipants)
-  }
 
   useEffect(() => {
     if (bracket) {
@@ -106,18 +124,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
     }
   }
 
-  if (showPaginated) {
-    return (
-      <BracketResultsBuilderContext.Provider
-        value={{ notifyParticipants, toggleNotifyParticipants }}
-      >
-        <PaginatedResultsBuilder
-          {...props}
-          handleUpdatePicks={handleUpdatePicks}
-        />
-      </BracketResultsBuilderContext.Provider>
-    )
-  }
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
@@ -139,11 +145,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
               !complete ? ' tw-max-w-[470px] tw-w-full' : ''
             }`}
           >
-            <ActionButton
-              variant="yellow"
-              size="big"
-              onClick={handleUpdatePicks}
-            >
+            <ActionButton variant="big-yellow" onClick={handleUpdatePicks}>
               {complete ? 'Complete Bracket' : 'Update Picks'}
             </ActionButton>
             <div className="tw-flex tw-gap-20 tw-items-center tw-self-center">

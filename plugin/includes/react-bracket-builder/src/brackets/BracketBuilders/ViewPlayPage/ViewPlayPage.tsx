@@ -14,7 +14,7 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
-import { getBracketMeta } from '../../shared/utils'
+import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { ViewPlayPageProps } from './types'
 import { BusterPlayPage } from './BusterPlayPage'
 import { BracketPlayPage } from './BracketPlayPage'

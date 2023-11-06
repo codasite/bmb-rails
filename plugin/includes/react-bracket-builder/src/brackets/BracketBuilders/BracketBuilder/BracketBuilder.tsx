@@ -12,7 +12,7 @@ import {
 } from '../../shared/components/HigherOrder'
 import { BracketMeta } from '../../shared/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
-import { getBracketMeta } from '../../shared/utils'
+import { getBracketMeta } from '../../shared/components/Bracket/utils'
 
 const defaultBracketName = 'MY BRACKET NAME'
 const defaultInitialPickerIndex = 0

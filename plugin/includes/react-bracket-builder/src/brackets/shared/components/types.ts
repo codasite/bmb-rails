@@ -122,7 +122,8 @@ export interface PaginatedNavButtonsProps {
 export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
   page: number
   setPage: (page: number) => void
-  disableNext: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
+  disableNext?: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
+  forcePageAllPicked?: boolean
 }
 
 export interface ScaledBracketProps extends BracketProps {

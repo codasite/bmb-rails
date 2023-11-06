@@ -8,38 +8,8 @@ import { DarkModeContext } from '../../../shared/context'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'
 import { ReactComponent as EditIcon } from '../../../shared/assets/edit-icon.svg'
-import checkIcon from '../../../shared/assets/check.svg'
-
-const CustomCheckbox = (props: any) => {
-  const { id, checked, onChange } = props
-
-  const baseStyles = [
-    'tw-appearance-none',
-    'tw-h-24',
-    'tw-w-24',
-    'tw-rounded-8',
-    'tw-cursor-pointer',
-  ]
-
-  const uncheckedStyles = ['tw-border', 'tw-border-solid', 'tw-border-white']
-
-  const checkedStyles = ['tw-bg-white', 'tw-bg-no-repeat', 'tw-bg-center']
-
-  const styles = baseStyles
-    .concat(checked ? checkedStyles : uncheckedStyles)
-    .join(' ')
-
-  return (
-    <input
-      type="checkbox"
-      id={id}
-      className={styles}
-      checked={checked}
-      onChange={onChange}
-      style={{ backgroundImage: checked ? `url(${checkIcon})` : 'none' }}
-    />
-  )
-}
+import { CustomCheckbox } from '../CustomCheckbox'
+import { BracketResultsBuilderContext } from '../context'
 
 interface FullBracketPageProps {
   matchTree?: MatchTree
@@ -61,10 +31,12 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
     onEditClick,
     handleUpdatePicks,
   } = props
-  const [notifyParticipants, setNotifyParticipants] = useState(true)
-  const [bracketId, setBracketId] = useState(0)
 
   console.log('darkMode', darkMode)
+
+  const { notifyParticipants, toggleNotifyParticipants } = useContext(
+    BracketResultsBuilderContext
+  )
 
   return (
     <div
@@ -108,8 +80,10 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           <CustomCheckbox
             id="notify-participants-check"
             checked={notifyParticipants}
-            onChange={() => setNotifyParticipants(!notifyParticipants)}
-          /> 
+            onChange={toggleNotifyParticipants}
+            height={24}
+            width={24}
+          />
           <label
             htmlFor="notify-participants-check"
             className="tw-font-500 tw-text-16 tw-items-center"

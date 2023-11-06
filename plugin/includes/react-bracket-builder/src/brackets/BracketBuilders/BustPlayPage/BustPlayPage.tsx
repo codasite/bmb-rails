@@ -19,7 +19,7 @@ import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
 import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
-import { getBracketMeta } from '../../shared/utils'
+import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { WithMatchTree3 } from '../../shared/components/HigherOrder/WithMatchTree'
 // import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 

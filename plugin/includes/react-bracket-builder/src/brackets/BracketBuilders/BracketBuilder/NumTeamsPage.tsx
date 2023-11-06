@@ -4,7 +4,7 @@ import { MatchTree } from '../../shared/models/MatchTree'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import { BracketPreview } from './BracketPreview'
-import { isPowerOfTwo } from '../../shared/utils'
+import { isPowerOfTwo } from '../../shared/components/Bracket/utils'
 import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { BracketMeta } from '../../shared/context'

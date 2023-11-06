@@ -14,7 +14,10 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignoredododo
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context'
-import { getBracketMeta, getBracketWidth } from '../../shared/utils'
+import {
+  getBracketMeta,
+  getBracketWidth,
+} from '../../shared/components/Bracket/utils'
 import { ViewPlayPageProps } from './types'
 import { FullBracketPage } from '../PaginatedPlayBuilder/FullBracketPage'
 import { useWindowDimensions } from '../../../utils/hooks'

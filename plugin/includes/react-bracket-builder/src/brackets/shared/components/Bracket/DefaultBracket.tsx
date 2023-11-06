@@ -7,7 +7,7 @@ import {
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
   getTeamWidth as getDefaultTeamWidth,
-} from '../../utils'
+} from './utils'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
 import { BracketMetaContext, DarkModeContext } from '../../context'

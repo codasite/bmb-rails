@@ -14,7 +14,10 @@ import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
-import { getBracketMeta, getBracketWidth } from '../../shared/utils'
+import {
+  getBracketMeta,
+  getBracketWidth,
+} from '../../shared/components/Bracket/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 
 interface PlayPageProps {

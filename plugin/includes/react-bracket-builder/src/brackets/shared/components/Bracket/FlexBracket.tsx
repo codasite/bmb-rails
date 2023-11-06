@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { MatchTree } from '../../models/MatchTree'
 import { BracketLines, RootMatchLines } from './BracketLines'
-import { getBracketHeight, getBracketWidth } from '../../utils'
+import { getBracketHeight, getBracketWidth } from './utils'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
 import { DarkModeContext } from '../../context'
