@@ -11,9 +11,17 @@ import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'
 import { EndPageProps } from '../../PaginatedBuilderBase/types'
+import { BusterVsBustee } from '../BusterVersusBustee'
+import { BracketBusterContext } from '../context'
 
 export const BustEndPage = (props: EndPageProps) => {
   const { matchTree, darkMode, processing, handleSubmit } = props
+  const {
+    busteeDisplayName,
+    busteeThumbnail,
+    busterDisplayName,
+    busterThumbnail,
+  } = useContext(BracketBusterContext)
 
   return (
     <div
@@ -24,7 +32,13 @@ export const BustEndPage = (props: EndPageProps) => {
         backgroundImage: `url(${redBracketBg})`,
       }}
     >
-      <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
+        <BusterVsBustee
+          busteeDisplayName={busteeDisplayName}
+          busteeThumbnail={busteeThumbnail}
+          busterDisplayName={busterDisplayName}
+          busterThumbnail={busterThumbnail}
+        />
         {matchTree && (
           <ScaledBracket
             BracketComponent={BusterBracket}
@@ -33,15 +47,13 @@ export const BustEndPage = (props: EndPageProps) => {
         )}
         <ActionButton
           variant="red"
-          size="small"
-          darkMode={darkMode}
+          paddingX={60}
+          paddingY={15}
+          fontSize={20}
           onClick={handleSubmit}
           disabled={processing || !matchTree?.allPicked()}
-          fontSize={16}
-          backgroundColor="yellow"
-          textColor="dd-blue"
         >
-          {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
+          Submit
         </ActionButton>
       </div>
     </div>

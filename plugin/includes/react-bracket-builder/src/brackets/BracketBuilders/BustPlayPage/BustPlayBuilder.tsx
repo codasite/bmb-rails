@@ -13,6 +13,7 @@ import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { getBustTrees } from './utils'
 import { BustEndPage, BustBracketPages } from './PaginatedBustBuilder'
+import { BracketBusterContext } from './context'
 
 interface BustPlayBuilderProps {
   busteePlay: PlayRes
@@ -100,13 +101,20 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
   if (showPaginated) {
     return (
-      <PaginatedBuilder
-        EndPageComponent={BustEndPage}
-        BracketPagesComponent={BustBracketPages}
-        handleSubmit={handleSubmit}
-        matchTree={baseTree}
-        setMatchTree={setBaseTree}
-      />
+      <BracketBusterContext.Provider
+        value={{
+          busteeDisplayName,
+          busteeThumbnail,
+        }}
+      >
+        <PaginatedBuilder
+          EndPageComponent={BustEndPage}
+          BracketPagesComponent={BustBracketPages}
+          handleSubmit={handleSubmit}
+          matchTree={baseTree}
+          setMatchTree={setBaseTree}
+        />
+      </BracketBusterContext.Provider>
     )
   }
 

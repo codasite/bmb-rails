@@ -14,7 +14,7 @@ export const ProfilePicture = ({
   backgroundColor?: string
   shadow?: boolean
 }) => {
-  let class_name = `tw-h-50 tw-w-50 tw-flex tw-rounded-full tw-border-solid tw-border-1 tw-border-${color} tw-justify-center tw-items-center tw-bg-${backgroundColor}`
+  let class_name = `tw-h-52 tw-w-52 tw-flex tw-rounded-full tw-border-solid tw-border-1 tw-border-${color} tw-justify-center tw-items-center tw-bg-${backgroundColor}`
   class_name = shadow
     ? class_name + ` tw-shadow-lg tw-shadow-${color}`
     : class_name
@@ -25,8 +25,8 @@ export const ProfilePicture = ({
         <img
           className={
             shadow
-              ? `tw-h-50 tw-w-50 tw-rounded-full tw-shadow-lg tw-shadow-${color}`
-              : 'tw-h-50 tw-w-50 tw-rounded-full'
+              ? `tw-h-52 tw-w-52 tw-rounded-full tw-shadow-lg tw-shadow-${color}`
+              : 'tw-h-52 tw-w-52 tw-rounded-full'
           }
           src={src}
           alt={alt}
