@@ -5,9 +5,19 @@ import { CallbackContext } from '../../context'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { Next } from 'react-bootstrap/esm/PageItem'
+import { ReactComponent as EditIcon } from '../../assets/edit-icon.svg'
 
 export const PaginatedBracketButton = (props: ActionButtonProps) => {
   return <ActionButton size="small" {...props} />
+}
+
+export const DefaultEditButton = (props: ActionButtonProps) => {
+  return (
+    <PaginatedBracketButton variant="white" {...props}>
+      <EditIcon />
+      <span>Edit</span>
+    </PaginatedBracketButton>
+  )
 }
 
 export const DefaultPrevButton = (props: ActionButtonProps) => {

@@ -28,6 +28,7 @@ export const BustBracketPages = (props: BracketPagesProps) => {
             matchTree={baseTree}
             setMatchTree={setBaseTree}
             onFinished={onFinished}
+            pagedTree={busterTree}
           />
         </div>
       )}

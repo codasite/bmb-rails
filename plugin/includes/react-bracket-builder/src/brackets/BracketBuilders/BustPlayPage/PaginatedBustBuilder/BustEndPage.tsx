@@ -13,9 +13,12 @@ import { bracketApi } from '../../../shared/api/bracketApi'
 import { EndPageProps } from '../../PaginatedBuilderBase/types'
 import { BusterVsBustee } from '../BusterVersusBustee'
 import { BracketBusterContext } from '../context'
+import { getBustTrees } from '../utils'
+import { DefaultEditButton } from '../../../shared/components/Bracket/BracketActionButtons'
 
 export const BustEndPage = (props: EndPageProps) => {
-  const { matchTree, darkMode, processing, handleSubmit } = props
+  const { matchTree, darkMode, processing, handleSubmit, onEditClick } = props
+  const { busterTree } = getBustTrees()
   const {
     busteeDisplayName,
     busteeThumbnail,
@@ -32,7 +35,7 @@ export const BustEndPage = (props: EndPageProps) => {
         backgroundImage: `url(${redBracketBg})`,
       }}
     >
-      <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
         <BusterVsBustee
           busteeDisplayName={busteeDisplayName}
           busteeThumbnail={busteeThumbnail}
@@ -45,16 +48,21 @@ export const BustEndPage = (props: EndPageProps) => {
             matchTree={matchTree}
           />
         )}
-        <ActionButton
-          variant="red"
-          paddingX={60}
-          paddingY={15}
-          fontSize={20}
-          onClick={handleSubmit}
-          disabled={processing || !matchTree?.allPicked()}
-        >
-          Submit
-        </ActionButton>
+        <div className="tw-flex tw-flex-col tw-gap-10">
+          <DefaultEditButton
+            darkMode={darkMode}
+            onClick={onEditClick}
+            disabled={processing}
+          />
+          <ActionButton
+            variant="red"
+            size="small"
+            onClick={handleSubmit}
+            disabled={processing || !busterTree?.allPicked()}
+          >
+            Submit
+          </ActionButton>
+        </div>
       </div>
     </div>
   )

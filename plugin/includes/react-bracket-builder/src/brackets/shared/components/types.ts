@@ -103,6 +103,7 @@ export interface BracketActionButtonProps extends ActionButtonProps {
 export interface PaginatedBracketProps extends BracketProps {
   onFinished?: () => void
   NavButtonsComponent?: React.FC<PaginatedNavButtonsProps>
+  pagedTree?: MatchTree
 }
 
 export interface PaginatedNavButtonsProps {
@@ -119,6 +120,7 @@ export interface PaginatedNavButtonsProps {
   onFullBracket?: () => void
 }
 
+// why is this different from PaginatedBracketProps?
 export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
   page: number
   setPage: (page: number) => void

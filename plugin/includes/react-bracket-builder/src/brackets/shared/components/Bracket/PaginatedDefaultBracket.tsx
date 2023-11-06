@@ -31,6 +31,7 @@ export const PaginatedDefaultBracket = (
     getSubsequentMatchGap = getDefaultSubsequentMatchGap,
     getTeamFontSize = () => getDefaultTeamFontSize(4),
     getTeamWidth = () => getDefaultTeamWidth(4),
+    pagedTree,
     matchTree,
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
@@ -46,22 +47,23 @@ export const PaginatedDefaultBracket = (
   } = props
 
   useEffect(() => {
+    const paged = pagedTree || matchTree
     // try to determine page from matchTree
-    if (!matchTree.anyPicked()) {
+    if (!paged.anyPicked()) {
       return
     }
-    if (matchTree.allPicked()) {
-      return setPage((matchTree.rounds.length - 1) * 2)
+    if (paged.allPicked()) {
+      return setPage((paged.rounds.length - 1) * 2)
     }
     // find first unpicked match
-    const firstUnpickedMatch = matchTree.findMatch(
+    const firstUnpickedMatch = paged.findMatch(
       (match) => match && !match.isPicked()
     )
     if (!firstUnpickedMatch) {
       return
     }
     const { roundIndex, matchIndex } = firstUnpickedMatch
-    const numMatches = matchTree.rounds[roundIndex].matches.length
+    const numMatches = paged.rounds[roundIndex].matches.length
     let pageNum = roundIndex * 2
     if (matchIndex >= numMatches / 2) {
       pageNum++
