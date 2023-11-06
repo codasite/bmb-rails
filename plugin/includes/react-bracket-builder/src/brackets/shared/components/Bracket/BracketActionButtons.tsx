@@ -1,9 +1,5 @@
 import React, { useContext } from 'react'
-import {
-  ActionButton,
-  ActionButtonProps,
-  ActionButtonBase,
-} from '../ActionButtons'
+import { ActionButton, ActionButtonProps } from '../ActionButtons'
 import { BracketActionButtonProps, PaginatedNavButtonsProps } from '../types'
 import { CallbackContext } from '../../context'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
