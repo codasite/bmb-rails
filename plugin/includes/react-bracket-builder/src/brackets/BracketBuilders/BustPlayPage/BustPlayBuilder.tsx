@@ -51,7 +51,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     const buster = MatchTree.fromMatchRes(numTeams, matches)
     console.log('buster', buster)
     setBusterTree(buster)
-    setBusteeTree(baseTree.clone())
   }
 
   const handleSubmit = () => {
@@ -102,7 +101,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
-  if (showPaginated && baseTree && busterTree) {
+  if (showPaginated && busterTree) {
     return (
       <BracketBusterContext.Provider
         value={{
@@ -114,7 +113,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
           EndPageComponent={BustEndPage}
           BracketPagesComponent={BustBracketPages}
           handleSubmit={handleSubmit}
-          matchTree={baseTree}
+          matchTree={busterTree}
           setMatchTree={setBaseTree}
           pagedTree={busterTree}
         />
@@ -132,13 +131,13 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
       >
-        {baseTree && busterTree && (
+        {busterTree && (
           <>
             <BusterVsBustee
               busteeDisplayName={busteeDisplayName}
               busteeThumbnail={busteeThumbnail}
             />
-            <BusterBracket matchTree={baseTree} setMatchTree={setBaseTree} />
+            <BusterBracket matchTree={busterTree} setMatchTree={setBaseTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="red"
