@@ -61,7 +61,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           value={teamName}
           onChange={handleUpdateTeamName}
           onBlur={doneEditing}
-          maxLength={8}
+          maxLength={12}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
               doneEditing()
