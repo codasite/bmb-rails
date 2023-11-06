@@ -38,8 +38,8 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
         team={match.getWinner()}
         teamPosition={'winner'}
         height={52}
-        width={257}
-        fontSize={36}
+        width={297}
+        fontSize={32}
         fontWeight={700}
       />
     </div>
