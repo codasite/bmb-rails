@@ -16,6 +16,7 @@ export const BusterBracket = (props: BracketProps) => {
   } = props
   const { baseTree, setBaseTree, busterTree, setBusterTree } = getBustTrees()
   console.log('in BusterBracket')
+  console.log('busterTree', busterTree)
 
   const handleTeamClick = (
     match: MatchNode,

@@ -93,13 +93,16 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
     window.location.href = redirectUrl
   }
+  console.log('in BustPlayBuilder')
+  console.log('base picks', baseTree?.toMatchPicks())
+  console.log('buster picks', busterTree?.toMatchPicks())
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
 
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
-  if (showPaginated) {
+  if (showPaginated && baseTree && busterTree) {
     return (
       <BracketBusterContext.Provider
         value={{
@@ -113,6 +116,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
           handleSubmit={handleSubmit}
           matchTree={baseTree}
           setMatchTree={setBaseTree}
+          pagedMatchTree={busterTree}
         />
       </BracketBusterContext.Provider>
     )

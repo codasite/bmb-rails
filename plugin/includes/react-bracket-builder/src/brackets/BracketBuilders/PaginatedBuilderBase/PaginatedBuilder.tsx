@@ -5,6 +5,7 @@ export const PaginatedBuilder = (props: PaginatedBuilderProps) => {
   const {
     matchTree,
     setMatchTree,
+    pagedMatchTree,
     darkMode,
     setDarkMode,
     handleSubmit,
@@ -17,12 +18,14 @@ export const PaginatedBuilder = (props: PaginatedBuilderProps) => {
   const [page, setPage] = useState(StartPageComponent ? 'start' : 'bracket')
 
   useEffect(() => {
-    if (!matchTree) {
+    console.log('pagedMatchTree', pagedMatchTree)
+    const paged = pagedMatchTree || matchTree
+    if (!paged) {
       return
     }
-    if (matchTree.allPicked()) {
+    if (paged.allPicked()) {
       setPage('end')
-    } else if (matchTree.anyPicked()) {
+    } else if (paged.anyPicked()) {
       setPage('bracket')
     }
   }, [])
