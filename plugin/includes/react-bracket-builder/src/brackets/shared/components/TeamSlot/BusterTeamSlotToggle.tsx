@@ -8,11 +8,9 @@ import { BusteeMatchTreeContext, BusterMatchTreeContext } from '../../context'
 import { getBustTrees } from '../../../BracketBuilders/BustPlayPage/utils'
 
 export const BusterTeamSlotToggle = (props: TeamSlotProps) => {
-  const { team, match } = props
-  console.log('team', team)
+  const { team, match, teamPosition } = props
 
   const { busteeTree } = getBustTrees()
-  const teamPosition = team && team === match.getTeam1() ? 'left' : 'right'
   const roundIndex = match.roundIndex
   const matchIndex = match.matchIndex
 
@@ -26,8 +24,11 @@ export const BusterTeamSlotToggle = (props: TeamSlotProps) => {
   const busterPicked = busterTeam && busterMatch.getWinner() === busterTeam
   const busteePicked = busteeTeam && busteeMatch.getWinner() === busteeTeam
 
+  // If current team is null, set it to the bustee team
+  props.team = team ? team : busteeTeam
+
   // if both buster and bustee picked, show red box with blue border
-  if (busterPicked && busteePicked) {
+  if (busterPicked && busteePicked && team && team.equals(busteeTeam)) {
     return (
       <BaseTeamSlot
         textColor={'white'}
@@ -43,9 +44,9 @@ export const BusterTeamSlotToggle = (props: TeamSlotProps) => {
     )
   } else if (busteePicked && (team ? team.equals(busteeTeam) : true)) {
     // if only bustee picked, show blue border
-    return <InactiveTeamSlot {...props} borderColor="blue" team={busteeTeam} />
+    return <InactiveTeamSlot {...props} borderColor="blue" />
   }
 
   // if neither buster nor bustee picked, show inactive
-  return <InactiveTeamSlot {...props} team={busteeTeam} />
+  return <InactiveTeamSlot {...props} />
 }

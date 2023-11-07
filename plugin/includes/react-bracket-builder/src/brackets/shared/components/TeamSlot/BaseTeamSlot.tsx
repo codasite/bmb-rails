@@ -18,7 +18,6 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     onTeamClick,
     children,
   } = props
-  // console.log('winner', winner)
   const teamClass = getTeamClass(
     match.roundIndex,
     match.matchIndex,

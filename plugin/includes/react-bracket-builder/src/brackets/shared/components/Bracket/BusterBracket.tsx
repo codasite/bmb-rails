@@ -11,10 +11,12 @@ import { getBustTrees } from '../../../BracketBuilders/BustPlayPage/utils'
 
 export const BusterBracket = (props: BracketProps) => {
   const {
+    matchTree,
+    setMatchTree,
     BracketComponent = DefaultBracket,
     TeamSlotComponent = BusterTeamSlotToggle,
   } = props
-  const { baseTree, setBaseTree, busterTree, setBusterTree } = getBustTrees()
+  const { busterTree } = getBustTrees()
   console.log('in BusterBracket')
   console.log('busterTree', busterTree)
 
@@ -23,34 +25,26 @@ export const BusterBracket = (props: BracketProps) => {
     position: string,
     team?: Nullable<Team>
   ) => {
-    // Match node always comes from buster bracket. Team can come from either the buster or bustee bracket
-    if (!match || !team || !setBaseTree || !setBusterTree) {
-      return
-    }
-
     const roundIndex = match.roundIndex
     const matchIndex = match.matchIndex
-
+    if (!match || !team || !setMatchTree) {
+      return
+    }
     const busterMatch = busterTree.rounds[roundIndex].matches[matchIndex]
     const busterTeam =
       position === 'left' ? busterMatch.getTeam1() : busterMatch.getTeam2()
-
-    match.pick(team)
     if (!busterTeam) {
-      // allow buster to pick teams that don't yet exist in the buster bracket
-      busterTree.syncPick(match)
-    } else {
-      busterMatch.pick(busterTeam)
+      return
     }
 
-    setBusterTree(busterTree)
-    setBaseTree(baseTree)
+    match.pick(team)
+    setMatchTree(matchTree)
   }
 
   return (
     <BracketComponent
       TeamSlotComponent={TeamSlotComponent}
-      onTeamClick={setBaseTree ? handleTeamClick : undefined}
+      onTeamClick={setMatchTree ? handleTeamClick : undefined}
       {...props}
     />
   )

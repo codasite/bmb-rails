@@ -28,8 +28,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const [busteeDisplayName, setBusteeDisplayName] = useState<string>('')
   const [processing, setProcessing] = useState<boolean>(false)
 
-  const { baseTree, setBaseTree, busterTree, setBusterTree, setBusteeTree } =
-    getBustTrees()
+  const { busterTree, setBusterTree } = getBustTrees()
 
   useEffect(() => {
     setVersus()
@@ -92,8 +91,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
     window.location.href = redirectUrl
   }
-  console.log('in BustPlayBuilder')
-  console.log('base picks', baseTree?.toMatchPicks())
   console.log('buster picks', busterTree?.toMatchPicks())
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -114,7 +111,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
           BracketPagesComponent={BustBracketPages}
           handleSubmit={handleSubmit}
           matchTree={busterTree}
-          setMatchTree={setBaseTree}
+          setMatchTree={setBusterTree}
           pagedTree={busterTree}
         />
       </BracketBusterContext.Provider>
@@ -137,7 +134,10 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
               busteeDisplayName={busteeDisplayName}
               busteeThumbnail={busteeThumbnail}
             />
-            <BusterBracket matchTree={busterTree} setMatchTree={setBaseTree} />
+            <BusterBracket
+              matchTree={busterTree}
+              setMatchTree={setBusterTree}
+            />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="red"

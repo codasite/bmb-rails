@@ -5,14 +5,14 @@ import { getBustTrees } from '../utils'
 
 export const BustBracketPages = (props: BracketPagesProps) => {
   console.log('BustBracketPages')
-  const { matchTree: baseTree, setMatchTree: setBaseTree, onFinished } = props
+  const { matchTree, setMatchTree, onFinished } = props
   const { busterTree } = getBustTrees()
 
   let containerProps = {
     className: 'wpbb-reset tw-uppercase tw-dark tw-bg-dd-blue',
   }
 
-  if (baseTree?.allPicked()) {
+  if (matchTree?.allPicked()) {
     containerProps['style'] = {
       backgroundImage: `url(${redBracketBg})`,
       backgroundRepeat: 'no-repeat',
@@ -22,11 +22,11 @@ export const BustBracketPages = (props: BracketPagesProps) => {
   }
   return (
     <div {...containerProps}>
-      {baseTree && busterTree && (
+      {matchTree && busterTree && (
         <div className="tw-flex tw-flex-col">
           <PaginatedBusterBracket
-            matchTree={baseTree}
-            setMatchTree={setBaseTree}
+            matchTree={matchTree}
+            setMatchTree={setMatchTree}
             onFinished={onFinished}
             pagedTree={busterTree}
           />
