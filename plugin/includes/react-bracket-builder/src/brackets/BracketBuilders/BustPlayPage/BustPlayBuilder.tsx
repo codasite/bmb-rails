@@ -112,7 +112,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
           handleSubmit={handleSubmit}
           matchTree={busterTree}
           setMatchTree={setBusterTree}
-          pagedTree={busterTree}
         />
       </BracketBusterContext.Provider>
     )

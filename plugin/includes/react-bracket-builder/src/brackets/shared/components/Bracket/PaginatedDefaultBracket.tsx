@@ -31,7 +31,6 @@ export const PaginatedDefaultBracket = (
     getSubsequentMatchGap = getDefaultSubsequentMatchGap,
     getTeamFontSize = () => getDefaultTeamFontSize(4),
     getTeamWidth = () => getDefaultTeamWidth(4),
-    pagedTree,
     matchTree,
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
@@ -47,7 +46,7 @@ export const PaginatedDefaultBracket = (
   } = props
 
   useEffect(() => {
-    const paged = pagedTree || matchTree
+    const paged = matchTree
     // try to determine page from matchTree
     if (!paged.anyPicked()) {
       return

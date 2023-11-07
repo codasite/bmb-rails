@@ -103,7 +103,6 @@ export interface BracketActionButtonProps extends ActionButtonProps {
 export interface PaginatedBracketProps extends BracketProps {
   onFinished?: () => void
   NavButtonsComponent?: React.FC<PaginatedNavButtonsProps>
-  pagedTree?: MatchTree
 }
 
 export interface PaginatedNavButtonsProps {
