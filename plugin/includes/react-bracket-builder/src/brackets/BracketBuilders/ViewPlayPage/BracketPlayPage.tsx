@@ -23,6 +23,7 @@ import { FullBracketPage } from '../PaginatedPlayBuilder/FullBracketPage'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { Spinner } from '../../shared/components/Spinner'
+import { addToApparelHandler } from './utils'
 
 export const BracketPlayPage = (props: ViewPlayPageProps) => {
   const {
@@ -56,16 +57,8 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
     }
   }, [play])
 
-  const handleAddToApparel = () => {
-    console.log('handleAddToApparel')
-    console.log('redirectUrl', redirectUrl)
-    const playId = play?.id
-    if (playId) {
-      //set play id in cookie
-      const expiryDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
-      document.cookie = `play_id=${playId}; path=/; expires=${expiryDate.toUTCString()}`
-    }
-    window.location.href = props.redirectUrl
+  const handleAddToApparel = async () => {
+    addToApparelHandler(play?.id, redirectUrl)
   }
 
   if (showPaginated) {
@@ -99,7 +92,8 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
             <PickableBracket matchTree={matchTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
-                variant="big-green"
+                variant="green"
+                size="big"
                 darkMode={darkMode}
                 onClick={handleAddToApparel}
               >

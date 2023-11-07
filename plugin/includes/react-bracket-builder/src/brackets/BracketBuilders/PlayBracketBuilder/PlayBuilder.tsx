@@ -36,7 +36,8 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
           <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
           <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
             <ActionButton
-              variant="big-green"
+              variant="green"
+              size="big"
               darkMode={darkMode}
               onClick={handleApparelClick}
               disabled={processing || !matchTree.allPicked()}

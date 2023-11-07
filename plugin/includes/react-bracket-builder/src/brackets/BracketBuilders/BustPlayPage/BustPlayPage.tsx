@@ -22,7 +22,12 @@ import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { WithMatchTree3 } from '../../shared/components/HigherOrder/WithMatchTree'
 import { getBustTrees } from './utils'
-// import redBracketBg from '../../shared/assets/bracket-bg-red.png'
+import {
+  AddApparelButton,
+  BustBracketButton,
+  JoinTournamentButton,
+} from './buttons'
+import { addToApparelHandler } from '../ViewPlayPage/utils'
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -55,6 +60,10 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 
   const handlePlayBracket = async () => {
     window.location.href = play?.bracket?.url
+  }
+
+  const handleAddApparel = async () => {
+    addToApparelHandler(play?.id, 'test')
   }
 
   useEffect(() => {
@@ -111,23 +120,9 @@ const BustPlayPage = (props: BustPlayPageProps) => {
             </div>
             <PickableBracket matchTree={busteeTree} />
             <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-16">
-              <ActionButton
-                variant="big-green"
-                darkMode={darkMode}
-                onClick={handlePlayBracket}
-              >
-                <PlayIcon />
-                Join Tournament
-              </ActionButton>
-              <ActionButton
-                variant="red"
-                size="big"
-                darkMode={darkMode}
-                onClick={handleBustPlay}
-              >
-                <LightningIcon />
-                Bust Bracket
-              </ActionButton>
+              <AddApparelButton size="big" onClick={handleAddApparel} />
+              <JoinTournamentButton size="big" onClick={handlePlayBracket} />
+              <BustBracketButton size="big" onClick={handleBustPlay} />
             </div>
           </>
         )}

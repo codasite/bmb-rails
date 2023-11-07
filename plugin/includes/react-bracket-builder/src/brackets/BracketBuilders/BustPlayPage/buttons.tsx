@@ -7,7 +7,7 @@ import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 
 export const JoinTournamentButton = (props: ActionButtonProps) => {
   return (
-    <ActionButton variant="big-green" {...props}>
+    <ActionButton variant="green" {...props}>
       <PlayIcon />
       Join Tournament
     </ActionButton>
@@ -16,7 +16,7 @@ export const JoinTournamentButton = (props: ActionButtonProps) => {
 
 export const BustBracketButton = (props: ActionButtonProps) => {
   return (
-    <ActionButton variant="red" size="big" {...props}>
+    <ActionButton variant="red" {...props}>
       <LightningIcon />
       Bust Bracket
     </ActionButton>
@@ -25,7 +25,7 @@ export const BustBracketButton = (props: ActionButtonProps) => {
 
 export const AddApparelButton = (props: ActionButtonProps) => {
   return (
-    <ActionButton variant="green" size="big" {...props}>
+    <ActionButton variant="green" {...props}>
       Add to Apparel
     </ActionButton>
   )
