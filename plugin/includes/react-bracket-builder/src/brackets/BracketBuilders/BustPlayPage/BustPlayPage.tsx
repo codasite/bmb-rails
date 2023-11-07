@@ -106,7 +106,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       }}
     >
       <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
+        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-[83px]`}
       >
         {busteeTree && (
           <>
@@ -119,10 +119,28 @@ const BustPlayPage = (props: BustPlayPageProps) => {
               />
             </div>
             <PickableBracket matchTree={busteeTree} />
-            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-16">
-              <AddApparelButton size="big" onClick={handleAddApparel} />
-              <JoinTournamentButton size="big" onClick={handlePlayBracket} />
-              <BustBracketButton size="big" onClick={handleBustPlay} />
+            <div className="tw-flex tw-flex-col tw-justify-center tw-gap-15">
+              <div className="tw-flex tw-flex-row tw-gap-15">
+                <JoinTournamentButton
+                  size="big"
+                  fontSize={30}
+                  paddingX={0}
+                  className="tw-flex-grow"
+                  onClick={handlePlayBracket}
+                />
+                <BustBracketButton
+                  size="big"
+                  fontSize={30}
+                  paddingX={0}
+                  className="tw-flex-grow"
+                  onClick={handleBustPlay}
+                />
+              </div>
+              <AddApparelButton
+                size="big"
+                fontSize={30}
+                onClick={handleAddApparel}
+              />
             </div>
           </>
         )}

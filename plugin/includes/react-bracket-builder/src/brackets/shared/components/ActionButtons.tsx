@@ -140,7 +140,7 @@ const DefaultYellowButton = (props: ActionButtonProps) => {
 
 const BigYellowButton = (props: ActionButtonProps) => {
   return (
-    <DefaultYellowButton {...props} paddingX={30} paddingY={16} fontSize={36} />
+    <DefaultYellowButton paddingX={30} paddingY={16} fontSize={36} {...props} />
   )
 }
 const SmallYellowButton = (props: ActionButtonProps) => {
