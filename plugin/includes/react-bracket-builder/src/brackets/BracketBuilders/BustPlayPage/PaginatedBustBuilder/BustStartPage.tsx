@@ -6,6 +6,7 @@ import { PickableBracket } from '../../../shared/components/Bracket'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { StartPageProps } from '../../PaginatedBuilderBase/types'
 import { BustablePlayPageButtons } from '../buttons'
+import { ProfilePicture } from '../../../shared/components/ProfilePicture'
 
 interface BustStartPageProps {
   handlePlayBracket: () => void
@@ -31,13 +32,20 @@ export const BustStartPage = (props: BustStartPageProps) => {
       style={{ backgroundImage: `url(${darkBracketBg})` }}
     >
       <div
-        className="tw-flex tw-flex-col tw-justify-center tw-px-20 tw-m-auto"
+        className="tw-flex tw-flex-col tw-justify-center tw-px-20 tw-m-auto tw-items-center"
         style={{ maxWidth: screenWidth }}
       >
+        <ProfilePicture
+          src={props.thumbnailUrl}
+          alt="celebrity-photo"
+          color="blue"
+          shadow={false}
+        />
         {matchTree && (
           <ScaledBracket
             BracketComponent={PickableBracket}
             matchTree={matchTree}
+            title=""
           />
         )}
         <BustablePlayPageButtons
