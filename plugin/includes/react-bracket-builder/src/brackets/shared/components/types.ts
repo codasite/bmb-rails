@@ -23,6 +23,7 @@ export interface TeamSlotProps {
   backgroundColor?: string
   borderColor?: string
   matchTree: MatchTree
+  getFontSize?: (numRounds: number, team: Team) => number
   onTeamClick?: TeamClickCallback
   setMatchTree?: (matchTree: MatchTree) => void
   getTeamClass?: (
@@ -69,7 +70,6 @@ export interface BracketProps {
   getTeamGap?: (depth: number) => number
   getTeamHeight?: (numRounds: number) => number
   getTeamWidth?: (numRounds: number) => number
-  getTeamFontSize?: (numRounds: number) => number
   getFirstRoundMatchGap?: (numRounds: number) => number
   getSubsequentMatchGap?: (
     prevMatchHeight: number,

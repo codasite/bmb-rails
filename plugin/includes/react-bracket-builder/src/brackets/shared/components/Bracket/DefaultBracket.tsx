@@ -33,7 +33,6 @@ export const DefaultBracket = (props: BracketProps) => {
     getTeamGap = getDefaultTeamGap,
     getFirstRoundMatchGap = getDefaultFirstRoundMatchGap,
     getSubsequentMatchGap = getDefaultSubsequentMatchGap,
-    getTeamFontSize = getDefaultTeamFontSize,
     matchTree,
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
@@ -109,7 +108,6 @@ export const DefaultBracket = (props: BracketProps) => {
       const roundIndex = matches.find((match) => match !== null)?.roundIndex
       const { teamHeight, teamWidth, teamGap, matchGap } =
         getBracketMeasurements(roundIndex ?? i, numRounds)
-      const fontSize = getTeamFontSize(numRounds)
       return (
         <MatchColumnComponent
           key={`${position}-${i}`}
@@ -124,7 +122,6 @@ export const DefaultBracket = (props: BracketProps) => {
           teamGap={teamGap}
           teamHeight={teamHeight}
           teamWidth={teamWidth}
-          teamFontSize={fontSize}
           onTeamClick={onTeamClick}
         />
       )

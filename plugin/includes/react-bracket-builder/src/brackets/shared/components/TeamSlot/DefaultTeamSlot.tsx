@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react'
 //@ts-ignore
 import { TeamSlotProps } from '../types'
-import { getUniqueTeamClass } from '../../utils'
+import { getUniqueTeamClass, getTeamFontSize } from '../../utils'
 
 export const DefaultTeamSlot = (props: TeamSlotProps) => {
   const {
+    matchTree,
     team,
     match,
     teamPosition,
@@ -12,9 +13,11 @@ export const DefaultTeamSlot = (props: TeamSlotProps) => {
     width = 115,
     fontWeight = 500,
     fontSize = 11,
+    getFontSize = getTeamFontSize,
     getTeamClass = getUniqueTeamClass,
   } = props
-  // console.log('winner', winner)
+  const fontSizeToUse = getFontSize(matchTree.rounds.length, team)
+  console.log('fontSizeToUse', fontSizeToUse)
   const teamClass = getTeamClass(
     match.roundIndex,
     match.matchIndex,
@@ -57,7 +60,10 @@ export const DefaultTeamSlot = (props: TeamSlotProps) => {
 
   return (
     <div className={styles}>
-      <span className={`tw-font-${fontWeight} tw-text-${fontSize}`}>
+      <span
+        className={`tw-font-${fontWeight}`}
+        style={{ fontSize: fontSizeToUse }}
+      >
         {team ? team.name : ''}
       </span>
     </div>

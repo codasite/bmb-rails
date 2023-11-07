@@ -1,6 +1,7 @@
 import { defaultBracketConstants } from './constants'
 import { BracketRes } from './api/types/bracket'
 import { BracketMeta } from './context'
+import { Team } from './models/Team'
 
 const {
   bracketHeights,
@@ -31,8 +32,9 @@ export const getTeamGap = (depth: number) => {
   return teamGaps[depth]
 }
 
-export const getTeamFontSize = (numRounds: number) => {
-  return 11;
+export const getTeamFontSize = (numRounds: number, team: Team) => {
+  console.log('getTeamFontSize', numRounds, team)
+  return 11
 
   // if (numRounds > 4) {
   //   return 12

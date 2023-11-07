@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { TeamSlotProps } from './../types'
-import { getUniqueTeamClass } from '../../utils'
+import { getTeamFontSize, getUniqueTeamClass } from '../../utils'
 
 export const BaseTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -10,7 +10,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     height,
     width = 115,
     fontWeight = 500,
-    fontSize = 16,
+    getFontSize = getTeamFontSize,
     textColor = 'white',
     backgroundColor,
     borderColor,
@@ -25,6 +25,8 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     teamPosition ? teamPosition : 'left'
   )
 
+  const fontSizeToUse = getFontSize(match.roundIndex, team)
+
   const baseStyles = [
     teamClass,
     'tw-flex',
@@ -35,7 +37,6 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     `tw-h-[${height}px]`,
     `tw-text-${textColor}`,
     `tw-font-${fontWeight}`,
-    `tw-text-${fontSize}`,
   ]
   if (onTeamClick) {
     baseStyles.push('tw-cursor-pointer')
@@ -62,7 +63,10 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
       {children ? (
         children
       ) : (
-        <span className={`tw-font-${fontWeight} tw-text-${fontSize}`}>
+        <span
+          className={`tw-font-${fontWeight}`}
+          style={{ fontSize: fontSizeToUse }}
+        >
           {team ? team.name : ''}
         </span>
       )}
