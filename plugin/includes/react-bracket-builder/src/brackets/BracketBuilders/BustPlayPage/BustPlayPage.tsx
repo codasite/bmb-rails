@@ -19,15 +19,17 @@ import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { PlayRes } from '../../shared/api/types/bracket'
 import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
 import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
-import { getBracketMeta } from '../../shared/components/Bracket/utils'
+import {
+  getBracketMeta,
+  getBracketWidth,
+} from '../../shared/components/Bracket/utils'
 import { WithMatchTree3 } from '../../shared/components/HigherOrder/WithMatchTree'
 import { getBustTrees } from './utils'
-import {
-  AddApparelButton,
-  BustBracketButton,
-  JoinTournamentButton,
-} from './buttons'
+import { BustablePlayPageButtons } from './buttons'
 import { addToApparelHandler } from '../ViewPlayPage/utils'
+import { useWindowDimensions } from '../../../utils/hooks'
+import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
+import { BustStartPage } from './PaginatedBustBuilder/BustStartPage'
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -53,6 +55,11 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 
   const [page, setPage] = useState('view')
   const { busteeTree, setBusteeTree } = getBustTrees()
+
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+
+  const showPaginated =
+    windowWidth - 100 < getBracketWidth(getNumRounds(play?.bracket?.numTeams))
 
   const handleBustPlay = async () => {
     setPage('bust')
@@ -96,6 +103,19 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       />
     )
   }
+
+  if (showPaginated) {
+    return (
+      <BustStartPage
+        handleBustPlay={handleBustPlay}
+        handlePlayBracket={handlePlayBracket}
+        handleAddApparel={handleAddApparel}
+        thumbnailUrl={thumbnailUrl}
+        matchTree={busteeTree}
+        screenWidth={windowWidth}
+      />
+    )
+  }
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
@@ -119,29 +139,11 @@ const BustPlayPage = (props: BustPlayPageProps) => {
               />
             </div>
             <PickableBracket matchTree={busteeTree} />
-            <div className="tw-flex tw-flex-col tw-justify-center tw-gap-15">
-              <div className="tw-flex tw-flex-row tw-gap-15">
-                <JoinTournamentButton
-                  size="big"
-                  fontSize={30}
-                  paddingX={0}
-                  className="tw-flex-grow"
-                  onClick={handlePlayBracket}
-                />
-                <BustBracketButton
-                  size="big"
-                  fontSize={30}
-                  paddingX={0}
-                  className="tw-flex-grow"
-                  onClick={handleBustPlay}
-                />
-              </div>
-              <AddApparelButton
-                size="big"
-                fontSize={30}
-                onClick={handleAddApparel}
-              />
-            </div>
+            <BustablePlayPageButtons
+              handleBustPlay={handleBustPlay}
+              handlePlayBracket={handlePlayBracket}
+              handleAddApparel={handleAddApparel}
+            />
           </>
         )}
       </div>
