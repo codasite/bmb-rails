@@ -3,6 +3,7 @@ import { ScaledBracketProps } from '../types'
 import { getBracketWidth as getWidthDefault } from './utils'
 import { WithSizeChangeListeners } from '../HigherOrder/WithSizeChangeListeners'
 import { SizeChangeListenerContext } from '../../context/SizeChangeListenerContext'
+import { WindowDimensionsContext } from '../../context/WindowDimensionsContext'
 
 const ScaledBracket = (props: ScaledBracketProps) => {
   const {
@@ -10,16 +11,18 @@ const ScaledBracket = (props: ScaledBracketProps) => {
     getBracketWidth = getWidthDefault,
     matchTree,
     scale = 0.3,
-    windowWidth,
-    paddingX = 0,
+    windowWidth: windowWidthProp,
+    paddingX = 20,
   } = props
   let childProps = { ...props, BracketComponent: undefined }
 
   const { addSizeChangeListener, removeSizeChangeListener } = useContext(
     SizeChangeListenerContext
   )
+  const { width: windowWidthContext } = useContext(WindowDimensionsContext)
   const [bracketHeight, setBracketHeight] = useState(0)
   const bracketWidth = getBracketWidth(matchTree.rounds.length)
+  const windowWidth = windowWidthProp || windowWidthContext
 
   useEffect(() => {
     const sizeListener = (height: number, width: number) => {

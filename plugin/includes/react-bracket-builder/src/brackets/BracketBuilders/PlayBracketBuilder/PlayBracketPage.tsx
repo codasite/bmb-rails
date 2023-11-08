@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import * as Sentry from '@sentry/react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
@@ -19,6 +19,8 @@ import {
   getBracketWidth,
 } from '../../shared/components/Bracket/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
+import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
+import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 
 interface PlayPageProps {
   redirectUrl: string
@@ -47,7 +49,9 @@ const PlayPage = (props: PlayPageProps) => {
   console.log('redirectUrl', redirectUrl)
 
   const [processing, setProcessing] = useState(false)
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+  const { width: windowWidth, height: windowHeight } = useContext(
+    WindowDimensionsContext
+  )
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
@@ -81,9 +85,7 @@ const PlayPage = (props: PlayPageProps) => {
       generateImages: true,
     }
 
-    console.log(playReq)
     setProcessing(true)
-    console.time('createPlay')
     bracketApi
       .createPlay(playReq)
       .then((res) => {
@@ -118,8 +120,8 @@ const PlayPage = (props: PlayPageProps) => {
   return <PlayBuilder {...playBuilderProps} />
 }
 
-const WrappedPlayPage = WithProvider(
-  WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage)))
+const WrappedPlayPage = WithWindowDimensions(
+  WithProvider(WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage))))
 )
 
 export default WrappedPlayPage
