@@ -74,7 +74,7 @@ function private_bracket_buttons($bracket) {
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 		<!-- This goes to the Play Bracket page -->
-		<?php echo play_bracket_btn($bracket_play_link, $bracket); ?>
+		<?php echo play_bracket_btn($bracket_play_link); ?>
 		<!-- This goes to the Score Bracket page -->
 		<?php echo go_live_btn($bracket->id); ?>
 	</div>
@@ -92,7 +92,7 @@ function live_bracket_buttons($bracket) {
 	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 			<!-- This goes to the Play Bracket page -->
-			<?php echo play_bracket_btn($bracket_play_link, $bracket); ?>
+			<?php echo play_bracket_btn($bracket_play_link); ?>
 			<!-- This goes to the Score Bracket page -->
 			<?php echo score_bracket_btn($bracket_score_link, $bracket); ?>
 		</div>
