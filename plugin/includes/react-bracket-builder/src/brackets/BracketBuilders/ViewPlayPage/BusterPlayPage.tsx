@@ -17,7 +17,7 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
     matchTree,
     setMatchTree,
     bracketPlay: play,
-    redirectUrl,
+    myPlayHistoryUrl,
   } = props
 
   const [busterTree, setBusterTree] = useState<MatchTree>()
@@ -57,7 +57,7 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
   }
 
   const handleBustAgain = async () => {
-    window.location.href = redirectUrl
+    window.location.href = myPlayHistoryUrl
   }
 
   return (

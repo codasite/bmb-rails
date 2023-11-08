@@ -7,19 +7,6 @@ $post = get_post();
 if (!$post || $post->post_type !== 'bracket') {
 	return $error_page;
 }
-$bracket_repo = new Wpbb_BracketRepo();
-$bracket = $bracket_repo->get(post: $post);
-if (!$bracket) {
-	return $error_page;
-}
-
-wp_localize_script(
-	'wpbb-bracket-builder-react',
-	'wpbb_page_obj',
-	array(
-		'bracket' => $bracket,
-	)
-);
 
 $view = get_query_var('view');
 switch ($view) {

@@ -9,15 +9,5 @@ if (!$post || $post->post_type !== 'bracket_play') {
 					Play not found.
 				</div>';
 }
-$play_repo = new Wpbb_BracketPlayRepo();
-$play = $play_repo->get($post);
-
-wp_localize_script(
-    'wpbb-bracket-builder-react',
-    'wpbb_page_obj',
-    array(
-        'play' => $play,
-    )
-);
 
 ?> <div id="wpbb-view-play"></div>

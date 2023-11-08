@@ -1,10 +1,8 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-aws-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-pdf-service.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket-config.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-config-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-repo.php';
+require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
 
@@ -49,24 +47,34 @@ class Wpbb_Public {
 	private $version;
 
 	/**
+	 * @var Wpbb_PlayRepo
+	 */
+	private $play_repo;
+
+	/**
+	 * @var Wpbb_BracketRepo
+	 */
+	private $bracket_repo;
+
+	/**
+	 * @var Wpbb_BracketProductUtils
+	 */
+	private $bracket_product_utils;
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-
-	private $utils;
-	private $bracket_config_repo;
-	private $s3;
-	private $pdf_service;
-	private $lambda_service;
-
 	public function __construct($plugin_name, $version) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-		$this->utils = new Wpbb_Utils();
+		$this->play_repo = new Wpbb_BracketPlayRepo();
+		$this->bracket_repo = new Wpbb_BracketRepo();
+		$this->bracket_product_utils = new Wpbb_BracketProductUtils();
 	}
 
 	/**
@@ -103,6 +111,7 @@ class Wpbb_Public {
 
 		$sentry_env = (defined('WP_SENTRY_ENV')) ? WP_SENTRY_ENV : 'production';
 		$sentry_dsn = (defined('WP_SENTRY_PHP_DSN')) ? WP_SENTRY_PHP_DSN : '';
+		list($bracket, $play) = $this->get_bracket_and_play();
 
 		wp_localize_script(
 			'wpbb-bracket-builder-react',
@@ -118,6 +127,8 @@ class Wpbb_Public {
 				'upgrade_account_url' => $this->get_bmb_plus_permalink(),
 				'bracket_product_archive_url' => $this->get_bracket_product_archive_url(),
 				'play_history_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
+				'play' => $play,
+				'bracket' => $bracket,
 			));
 	}
 
@@ -134,7 +145,23 @@ class Wpbb_Public {
 	}
 
 	private function get_bracket_product_archive_url() {
-		$bracket_product_utils = new Wpbb_BracketProductUtils();
-		return $bracket_product_utils->get_bracket_product_archive_url();
+		$this->bracket_product_utils->get_bracket_product_archive_url();
+	}
+
+	private function get_bracket_and_play() {
+		$play = null;
+		$bracket = null;
+		$post = get_post();
+		if (!$post) {
+			return;
+		}
+		if ($post->post_type === 'bracket_play') {
+			$play = $this->play_repo->get($post);
+			$play = $play;
+			$bracket = $play->bracket;
+		} else if ($post->post_type === 'bracket') {
+			$bracket = $this->bracket_repo->get($post);
+		}
+		return array($bracket, $play);
 	}
 }

@@ -34,7 +34,7 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
     matchTree,
     setMatchTree,
     bracketPlay: play,
-    redirectUrl,
+    addToApparelUrl,
   } = props
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
@@ -58,7 +58,7 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
   }, [play])
 
   const handleAddToApparel = async () => {
-    addToApparelHandler(play?.id, redirectUrl)
+    addToApparelHandler(play?.id, addToApparelUrl)
   }
 
   if (showPaginated) {

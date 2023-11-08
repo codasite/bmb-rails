@@ -1,6 +1,7 @@
+import { BracketRes, PlayRes } from './brackets/shared/api/types/bracket'
 import { OverlayUrlThemeMap } from './preview/Gallery'
 
-export interface WpbbAjaxObj {
+export interface wpbbAppObj {
   myBracketsUrl: string
   bracketBuilderUrl: string
   userCanShareBracket: boolean
@@ -10,12 +11,9 @@ export interface WpbbAjaxObj {
   rest_url: string
   sentryEnv: string
   sentryDsn: string
-
-  bracket: any
-  play: any
-  redirectUrl: string
+  bracket: BracketRes
+  play: PlayRes
   printOptions: PrintOptions
-  thumbnailUrl: string
 }
 
 export interface PrintOptions {

@@ -29,10 +29,10 @@ interface BustPlayPageProps {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   bracketPlay: PlayRes
-  redirectUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
-  thumbnailUrl: string
+  addApparelUrl: string
+  myPlayHistoryUrl: string
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
@@ -42,12 +42,13 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     darkMode,
     setDarkMode,
     bracketPlay: play,
-    redirectUrl,
-    thumbnailUrl,
+    addApparelUrl,
+    myPlayHistoryUrl,
   } = props
 
   const [page, setPage] = useState('view')
   const { busteeTree, setBusteeTree } = getBustTrees()
+  const thumbnailUrl = play?.thumbnailUrl
 
   const { height: windowHeight, width: windowWidth } = useContext(
     WindowDimensionsContext
@@ -65,7 +66,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   }
 
   const handleAddApparel = async () => {
-    addToApparelHandler(play?.id, 'test')
+    addToApparelHandler(play?.id, addApparelUrl)
   }
 
   useEffect(() => {
@@ -92,7 +93,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   if (page === 'bust' && busteeTree) {
     return (
       <BustPlayBuilder
-        redirectUrl={redirectUrl}
+        redirectUrl={myPlayHistoryUrl}
         busteePlay={play}
         bracket={play?.bracket}
       />
