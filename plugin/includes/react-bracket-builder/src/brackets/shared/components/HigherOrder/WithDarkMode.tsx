@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { DarkModeContext } from '../../context'
+import { DarkModeContext } from '../../context/context'
 
 export const WithDarkMode = (Component: React.ComponentType<any>) => {
   return (props: any) => {

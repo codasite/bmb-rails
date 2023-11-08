@@ -7,7 +7,7 @@ import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
-import { getBracketWidth } from '../../shared/utils'
+import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { DatePicker } from '../../shared/components/DatePicker'
 
 interface AddTeamsPageProps {

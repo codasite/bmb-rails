@@ -17,15 +17,6 @@ class Wpbb_Public_Shortcodes {
 	}
 
 	public function render_bracket_builder() {
-		wp_localize_script(
-			'wpbb-bracket-builder-react',
-			'wpbb_ajax_obj',
-			array(
-				'my_brackets_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=brackets',
-				'nonce' => wp_create_nonce('wp_rest'),
-				'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-			)
-		);
 		ob_start();
 	?>
 		<div id="wpbb-bracket-builder"></div>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { PaginatedBracketProps } from '../types'
 import { AddTeamsBracket } from './AddTeamsBracket'
-import { getTeamFontSize, getTeamHeight, getTeamWidth } from '../../utils'
+import { getTeamFontSize, getTeamHeight, getTeamWidth } from './utils'
 import { ActionButton } from '../ActionButtons'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'

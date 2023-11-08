@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import {
-  BracketMeta,
-  BracketMetaContext,
-  DarkModeContext,
-} from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ResultsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import checkIcon from '../../shared/assets/check.svg'
 import { bracketApi } from '../../shared/api/bracketApi'
 import {
   WithDarkMode,
@@ -17,41 +12,15 @@ import {
   WithMatchTree,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import { getBracketMeta, getBracketWidth } from '../../shared/utils'
+import {
+  getBracketMeta,
+  getBracketWidth,
+} from '../../shared/components/Bracket/utils'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { PaginatedResultsBuilder } from './PaginatedResultsBuilder/PaginatedResultsBuilder'
-
-const CustomCheckbox = (props: any) => {
-  const { id, checked, onChange } = props
-
-  const baseStyles = [
-    'tw-appearance-none',
-    'tw-h-32',
-    'tw-w-32',
-    'tw-rounded-8',
-    'tw-cursor-pointer',
-  ]
-
-  const uncheckedStyles = ['tw-border', 'tw-border-solid', 'tw-border-white']
-
-  const checkedStyles = ['tw-bg-white', 'tw-bg-no-repeat', 'tw-bg-center']
-
-  const styles = baseStyles
-    .concat(checked ? checkedStyles : uncheckedStyles)
-    .join(' ')
-
-  return (
-    <input
-      type="checkbox"
-      id={id}
-      className={styles}
-      checked={checked}
-      onChange={onChange}
-      style={{ backgroundImage: checked ? `url(${checkIcon})` : 'none' }}
-    />
-  )
-}
+import { CustomCheckbox } from './CustomCheckbox'
+import { BracketResultsBuilderContext } from './context'
 
 interface BracketResultsBuilderProps {
   matchTree?: MatchTree
@@ -83,6 +52,10 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
   console.log('showPaginated', showPaginated)
+
+  const toggleNotifyParticipants = () => {
+    setNotifyParticipants(!notifyParticipants)
+  }
 
   useEffect(() => {
     if (bracket) {
@@ -135,10 +108,14 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
 
   if (showPaginated) {
     return (
-      <PaginatedResultsBuilder
-        {...props}
-        handleUpdatePicks={handleUpdatePicks}
-      />
+      <BracketResultsBuilderContext.Provider
+        value={{ notifyParticipants, toggleNotifyParticipants }}
+      >
+        <PaginatedResultsBuilder
+          {...props}
+          handleUpdatePicks={handleUpdatePicks}
+        />
+      </BracketResultsBuilderContext.Provider>
     )
   }
   return (
