@@ -14,15 +14,8 @@ export interface wpbbAppObj {
   sentryDsn: string
   bracket: BracketRes
   play: PlayRes
-  printOptions: PrintOptions
 }
 
-export interface PrintOptions {
-  theme: string
-  position: string
-  inchHeight: number
-  inchWidth: number
-}
 export interface WpbbBracketProductPreviewObj {
   bracketUrlThemeMap: OverlayUrlThemeMap
   galleryImages: any

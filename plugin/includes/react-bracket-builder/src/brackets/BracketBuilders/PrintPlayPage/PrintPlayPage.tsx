@@ -37,11 +37,8 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
   const [inchWidth, setInchWidth] = React.useState(12)
 
   useEffect(() => {
-    console.log('PrintPlayPage useEffect')
-
     const urlParams = new URLSearchParams(window.location.search)
     const parsed = parseParams(urlParams)
-    console.log('parsed', parsed)
     const errors = validateParams(parsed)
 
     if (errors.length > 0) {

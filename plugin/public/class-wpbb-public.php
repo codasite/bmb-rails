@@ -145,9 +145,7 @@ class Wpbb_Public {
 	}
 
 	private function get_bracket_product_archive_url() {
-		// return $this->bracket_product_utils->get_bracket_product_archive_url();
-		// return home page
-		return get_home_url();
+		return $this->bracket_product_utils->get_bracket_product_archive_url();
 	}
 
 	private function get_bracket_and_play() {
