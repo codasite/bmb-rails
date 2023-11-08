@@ -7,16 +7,16 @@ interface RequestOptions {
   snakeCaseBody?: boolean
   camelCaseResponse?: boolean
 }
-declare var wpbb_ajax_obj: any
+declare var wpbb_app_obj: any
 class BracketApi {
   private baseUrl: string = ''
   private bracketsPath: string = 'brackets'
   private playsPath: string = 'plays'
   private nonce: string = ''
   constructor() {
-    if (typeof wpbb_ajax_obj !== 'undefined') {
-      this.baseUrl = wpbb_ajax_obj.rest_url
-      this.nonce = wpbb_ajax_obj.nonce
+    if (typeof wpbb_app_obj !== 'undefined') {
+      this.baseUrl = wpbb_app_obj.rest_url
+      this.nonce = wpbb_app_obj.nonce
     }
   }
   async createBracket(bracket: BracketReq): Promise<BracketRes> {

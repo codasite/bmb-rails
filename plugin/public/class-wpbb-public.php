@@ -126,7 +126,7 @@ class Wpbb_Public {
 				'user_can_share_bracket' => current_user_can('wpbb_share_bracket') ? true : false,
 				'upgrade_account_url' => $this->get_bmb_plus_permalink(),
 				'bracket_product_archive_url' => $this->get_bracket_product_archive_url(),
-				'play_history_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
+				'my_play_history_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
 				'play' => $play,
 				'bracket' => $bracket,
 			));
@@ -145,7 +145,9 @@ class Wpbb_Public {
 	}
 
 	private function get_bracket_product_archive_url() {
-		$this->bracket_product_utils->get_bracket_product_archive_url();
+		// return $this->bracket_product_utils->get_bracket_product_archive_url();
+		// return home page
+		return get_home_url();
 	}
 
 	private function get_bracket_and_play() {

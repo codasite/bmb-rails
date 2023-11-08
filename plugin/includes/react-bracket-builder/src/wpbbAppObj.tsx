@@ -3,6 +3,7 @@ import { OverlayUrlThemeMap } from './preview/Gallery'
 
 export interface wpbbAppObj {
   myBracketsUrl: string
+  myPlayHistoryUrl: string
   bracketBuilderUrl: string
   userCanShareBracket: boolean
   upgradeAccountUrl: string

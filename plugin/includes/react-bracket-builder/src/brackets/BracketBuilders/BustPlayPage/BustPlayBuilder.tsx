@@ -29,6 +29,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const [processing, setProcessing] = useState<boolean>(false)
 
   const { busterTree, setBusterTree } = getBustTrees()
+  console.log(redirectUrl)
 
   useEffect(() => {
     setVersus()
@@ -72,6 +73,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       picks: picks,
       bustedId: busteeId,
     }
+    console.log('playReq', playReq)
 
     setProcessing(true)
     bracketApi

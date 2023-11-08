@@ -37,10 +37,8 @@ interface BustPlayPageProps {
 
 const BustPlayPage = (props: BustPlayPageProps) => {
   const {
-    bracketMeta,
     setBracketMeta,
     darkMode,
-    setDarkMode,
     bracketPlay: play,
     addApparelUrl,
     myPlayHistoryUrl,

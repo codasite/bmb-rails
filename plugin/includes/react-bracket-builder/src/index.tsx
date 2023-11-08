@@ -138,13 +138,14 @@ function renderViewBracketPlay(ajaxObj: wpbbAppObj) {
   }
 }
 function renderBustBracketPlay(ajaxObj: wpbbAppObj) {
-  const { play, bracketProductArchiveUrl } = ajaxObj
+  const { play, bracketProductArchiveUrl, myPlayHistoryUrl } = ajaxObj
   if (play) {
     renderDiv(
       <App>
         <BustPlayPage
           bracketPlay={play}
           bracketProductArchiveUrl={bracketProductArchiveUrl}
+          myPlayHistoryUrl={myPlayHistoryUrl}
         />
       </App>,
       'wpbb-bust-play'
