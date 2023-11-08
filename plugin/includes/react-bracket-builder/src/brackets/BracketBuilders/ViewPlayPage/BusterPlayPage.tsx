@@ -6,24 +6,17 @@ import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { ViewPlayPageProps } from './types'
 import { BusterVsBustee } from '../BustPlayPage/BusterVersusBustee'
 import { BusterBracket } from '../../shared/components/Bracket'
-import {
-  BusterMatchTreeContext,
-  BusteeMatchTreeContext,
-} from '../../shared/context/context'
+import { WithMatchTree3 } from '../../shared/components/HigherOrder'
+import { getBustTrees } from '../BustPlayPage/utils'
+import { BustPlayView } from '../BustPlayPage/BustPlayView'
 
-export const BusterPlayPage = (props: ViewPlayPageProps) => {
-  const {
-    setBracketMeta,
-    matchTree,
-    setMatchTree,
-    bracketPlay: play,
-    myPlayHistoryUrl,
-  } = props
+const BusterPlayPage = (props: ViewPlayPageProps) => {
+  const { setBracketMeta, bracketPlay: play } = props
 
-  const [busterTree, setBusterTree] = useState<MatchTree>()
-  const [busteeTree, setBusteeTree] = useState<MatchTree>()
   const [busteeDisplayName, setBusteeDisplayName] = useState<string>()
   const [busteeThumbnail, setBusteeThumbnail] = useState<string>()
+  const { busterTree, busteeTree, setBusterTree, setBusteeTree } =
+    getBustTrees()
 
   useEffect(() => {
     handleBracketMeta()
@@ -50,55 +43,27 @@ export const BusterPlayPage = (props: ViewPlayPageProps) => {
     const busteePicks = play.bustedPlay?.picks
     const numTeams = bracket?.numTeams
     const busterTree = MatchTree.fromPicks(numTeams, matches, busterPicks)
+    console.log('busterTree', busterTree)
     const busteeTree = MatchTree.fromPicks(numTeams, matches, busteePicks)
+    console.log('busteeTree', busteeTree)
     setBusterTree(busterTree)
     setBusteeTree(busteeTree)
-    setMatchTree(busterTree)
   }
 
   const handleBustAgain = async () => {
-    window.location.href = myPlayHistoryUrl
+    window.location.href = play?.url + '/bust'
   }
-
   return (
-    <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark`}
-      style={{
-        backgroundImage: `url(${redBracketBg})`,
-      }}
-    >
-      <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
-      >
-        {matchTree && busteeTree && busterTree && (
-          <BusteeMatchTreeContext.Provider
-            value={{
-              matchTree: busteeTree,
-            }}
-          >
-            <BusterMatchTreeContext.Provider
-              value={{
-                matchTree: busterTree,
-              }}
-            >
-              <BusterVsBustee
-                busteeDisplayName={busteeDisplayName}
-                busteeThumbnail={busteeThumbnail}
-              />
-              <BusterBracket matchTree={matchTree} />
-              <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-                <ActionButton
-                  variant="big-red"
-                  darkMode={true}
-                  onClick={handleBustAgain}
-                >
-                  Bust Again
-                </ActionButton>
-              </div>
-            </BusterMatchTreeContext.Provider>
-          </BusteeMatchTreeContext.Provider>
-        )}
-      </div>
-    </div>
+    <BustPlayView
+      bracket={play.bracket}
+      busterTree={busterTree}
+      busteeDisplayName={busteeDisplayName}
+      busteeThumbnail={busteeThumbnail}
+      onButtonClick={handleBustAgain}
+      buttonText="Bust Again"
+    />
   )
 }
+
+const Wrapped = WithMatchTree3(BusterPlayPage)
+export { Wrapped as BusterPlayPage }

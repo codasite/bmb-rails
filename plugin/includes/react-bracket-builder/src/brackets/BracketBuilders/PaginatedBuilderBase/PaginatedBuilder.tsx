@@ -58,7 +58,7 @@ export const PaginatedBuilder = (props: PaginatedBuilderProps) => {
           matchTree={matchTree}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
-          onEditClick={onStart}
+          onEditClick={setMatchTree ? onStart : undefined}
           handleSubmit={handleSubmit}
           processing={processing}
         />

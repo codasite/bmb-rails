@@ -1,19 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import {
-  WithBracketMeta,
-  WithDarkMode,
-  WithMatchTree,
-  WithProvider,
-} from '../../shared/components/HigherOrder'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignoredododo
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { BracketMeta } from '../../shared/context/context'
 import {
   getBracketMeta,
   getBracketWidth,
@@ -22,10 +15,14 @@ import { ViewPlayPageProps } from './types'
 import { FullBracketPage } from '../PaginatedPlayBuilder/FullBracketPage'
 import { useWindowDimensions } from '../../../utils/hooks'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
-import { Spinner } from '../../shared/components/Spinner'
 import { addToApparelHandler } from './utils'
+import {
+  WithMatchTree,
+  WithProvider,
+} from '../../shared/components/HigherOrder'
+import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 
-export const BracketPlayPage = (props: ViewPlayPageProps) => {
+const BracketPlayPage = (props: ViewPlayPageProps) => {
   const {
     bracketMeta,
     setBracketMeta,
@@ -37,8 +34,9 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
     addToApparelUrl,
   } = props
 
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-  const [processing, setProcessing] = useState(false)
+  const { width: windowWidth, height: windowHeight } = useContext(
+    WindowDimensionsContext
+  )
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(play?.bracket?.numTeams))
 
@@ -106,3 +104,6 @@ export const BracketPlayPage = (props: ViewPlayPageProps) => {
     </div>
   )
 }
+
+const WrappedBracketPlayPage = WithProvider(WithMatchTree(BracketPlayPage))
+export { WrappedBracketPlayPage as BracketPlayPage }

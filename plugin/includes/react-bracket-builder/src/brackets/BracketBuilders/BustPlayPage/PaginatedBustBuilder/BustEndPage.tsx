@@ -25,6 +25,7 @@ export const BustEndPage = (props: EndPageProps) => {
     busteeThumbnail,
     busterDisplayName,
     busterThumbnail,
+    buttonText,
   } = useContext(BracketBusterContext)
 
   const { height: windowHeight, width: windowWidth } = useContext(
@@ -59,18 +60,20 @@ export const BustEndPage = (props: EndPageProps) => {
           </div>
         )}
         <div className="tw-flex tw-flex-col tw-gap-10">
-          <DefaultEditButton
-            darkMode={darkMode}
-            onClick={onEditClick}
-            disabled={processing}
-          />
+          {onEditClick && (
+            <DefaultEditButton
+              darkMode={darkMode}
+              onClick={onEditClick}
+              disabled={processing}
+            />
+          )}
           <ActionButton
             variant="red"
             size="small"
             onClick={handleSubmit}
             disabled={processing || !busterTree?.allPicked()}
           >
-            Submit
+            {buttonText}
           </ActionButton>
         </div>
       </div>

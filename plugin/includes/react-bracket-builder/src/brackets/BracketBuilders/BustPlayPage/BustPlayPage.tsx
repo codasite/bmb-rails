@@ -146,6 +146,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 }
 
 const WrappedBustPlayPage = WithWindowDimensions(
-  WithProvider(WithMatchTree3(WithBracketMeta(WithDarkMode(BustPlayPage))))
+  WithMatchTree3(WithBracketMeta(WithDarkMode(BustPlayPage)))
 )
 export default WrappedBustPlayPage

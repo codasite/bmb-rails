@@ -5,6 +5,7 @@ interface BracketBusterContext {
   busteeThumbnail?: string
   busterDisplayName?: string
   busterThumbnail?: string
+  buttonText?: string
 }
 
 export const BracketBusterContext = createContext<BracketBusterContext>({})

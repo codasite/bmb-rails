@@ -14,6 +14,7 @@ import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { getBustTrees } from './utils'
 import { BustEndPage, BustBracketPages } from './PaginatedBustBuilder'
 import { BracketBusterContext } from './context'
+import { BustPlayView } from './BustPlayView'
 
 interface BustPlayBuilderProps {
   busteePlay: PlayRes
@@ -93,66 +94,16 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
     window.location.href = redirectUrl
   }
-  console.log('buster picks', busterTree?.toMatchPicks())
-
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-
-  const showPaginated =
-    windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
-
-  if (showPaginated && busterTree) {
-    return (
-      <BracketBusterContext.Provider
-        value={{
-          busteeDisplayName,
-          busteeThumbnail,
-        }}
-      >
-        <PaginatedBuilder
-          EndPageComponent={BustEndPage}
-          BracketPagesComponent={BustBracketPages}
-          handleSubmit={handleSubmit}
-          matchTree={busterTree}
-          setMatchTree={setBusterTree}
-        />
-      </BracketBusterContext.Provider>
-    )
-  }
-
   return (
-    <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover`}
-      style={{
-        backgroundImage: `url(${redBracketBg})`,
-      }}
-    >
-      <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-mx-auto tw-gap-50 tw-pb-100 tw-pt-40`}
-      >
-        {busterTree && (
-          <>
-            <BusterVsBustee
-              busteeDisplayName={busteeDisplayName}
-              busteeThumbnail={busteeThumbnail}
-            />
-            <BusterBracket
-              matchTree={busterTree}
-              setMatchTree={setBusterTree}
-            />
-            <div className="tw-flex tw-flex-col tw-justify-center tw-items-center">
-              <ActionButton
-                variant="red"
-                size="big"
-                darkMode={true}
-                disabled={!busterTree?.allPicked() || processing}
-                onClick={handleSubmit}
-              >
-                Submit
-              </ActionButton>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
+    <BustPlayView
+      bracket={bracket}
+      busterTree={busterTree}
+      setBusterTree={setBusterTree}
+      busteeDisplayName={busteeDisplayName}
+      busteeThumbnail={busteeThumbnail}
+      onButtonClick={handleSubmit}
+      buttonText="Submit"
+      processing={processing}
+    />
   )
 }
