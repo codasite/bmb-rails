@@ -1,5 +1,5 @@
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 
 export interface PlayBuilderProps {
   matchTree?: MatchTree
@@ -11,4 +11,3 @@ export interface PlayBuilderProps {
   handleApparelClick?: () => void
   processing?: boolean
 }
-

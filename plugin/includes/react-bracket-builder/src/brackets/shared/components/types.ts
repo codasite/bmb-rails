@@ -129,6 +129,9 @@ export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
 
 export interface ScaledBracketProps extends BracketProps {
   scale?: number
+  windowWidth?: number
+  paddingX?: number
+  paddingY?: number
 }
 
 export interface MatchBoxChildProps {

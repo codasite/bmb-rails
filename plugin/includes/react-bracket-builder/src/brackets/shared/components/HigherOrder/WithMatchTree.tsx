@@ -8,7 +8,7 @@ import {
   MatchTreeContext,
   MatchTreeContext1,
   MatchTreeContext2,
-} from '../../context'
+} from '../../context/context'
 
 export const WithMatchTree = (Component: React.FC<any>) => {
   return (props: any) => {

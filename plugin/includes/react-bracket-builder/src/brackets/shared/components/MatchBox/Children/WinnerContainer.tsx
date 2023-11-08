@@ -3,7 +3,7 @@ import { defaultBracketConstants } from '../../../constants'
 import { MatchBoxChildProps } from '../../types'
 //@ts-ignore
 import { DefaultTeamSlot } from '../../TeamSlot'
-import { BracketMetaContext } from '../../../context'
+import { BracketMetaContext } from '../../../context/context'
 
 interface WinnerContainerProps extends MatchBoxChildProps {
   topText?: string

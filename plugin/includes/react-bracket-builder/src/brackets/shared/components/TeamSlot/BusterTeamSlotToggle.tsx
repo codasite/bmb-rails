@@ -4,7 +4,10 @@ import { TeamSlotProps } from '../types'
 import { InactiveTeamSlot } from './InactiveTeamSlot'
 import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
-import { BusteeMatchTreeContext, BusterMatchTreeContext } from '../../context'
+import {
+  BusteeMatchTreeContext,
+  BusterMatchTreeContext,
+} from '../../context/context'
 import { getBustTrees } from '../../../BracketBuilders/BustPlayPage/utils'
 
 export const BusterTeamSlotToggle = (props: TeamSlotProps) => {

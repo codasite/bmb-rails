@@ -6,7 +6,7 @@ import {
   BusterBracket,
   ResultsBracket,
 } from '../../../shared/components/Bracket'
-import { DarkModeContext } from '../../../shared/context'
+import { DarkModeContext } from '../../../shared/context/context'
 import { ThemeSelector } from '../../../shared/components'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { bracketApi } from '../../../shared/api/bracketApi'

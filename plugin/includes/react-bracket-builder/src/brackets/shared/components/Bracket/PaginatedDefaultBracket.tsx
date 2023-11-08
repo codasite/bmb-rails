@@ -12,7 +12,7 @@ import {
 import { DefaultMatchColumn } from '../MatchColumn'
 import { DefaultTeamSlot } from '../TeamSlot'
 import { BracketLines, RootMatchLines } from './BracketLines'
-import { DarkModeContext } from '../../context'
+import { DarkModeContext } from '../../context/context'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import {
   DefaultFinalButton,

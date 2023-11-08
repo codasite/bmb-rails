@@ -1,5 +1,5 @@
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import { PlayRes } from '../../shared/api/types/bracket'
 
 export interface ViewPlayPageProps {

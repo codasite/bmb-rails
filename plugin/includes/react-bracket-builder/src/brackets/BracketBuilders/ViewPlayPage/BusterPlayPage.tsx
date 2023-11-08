@@ -9,7 +9,7 @@ import { BusterBracket } from '../../shared/components/Bracket'
 import {
   BusterMatchTreeContext,
   BusteeMatchTreeContext,
-} from '../../shared/context'
+} from '../../shared/context/context'
 
 export const BusterPlayPage = (props: ViewPlayPageProps) => {
   const {

@@ -46,6 +46,8 @@ export const BustStartPage = (props: BustStartPageProps) => {
             BracketComponent={PickableBracket}
             matchTree={matchTree}
             title=""
+            windowWidth={screenWidth}
+            paddingX={20}
           />
         )}
         <BustablePlayPageButtons

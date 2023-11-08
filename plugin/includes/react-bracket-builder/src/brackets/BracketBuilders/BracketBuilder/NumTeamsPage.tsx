@@ -7,7 +7,7 @@ import { BracketPreview } from './BracketPreview'
 import { isPowerOfTwo } from '../../shared/components/Bracket/utils'
 import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 
 interface BracketTitleProps {

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { MatchBoxChildProps } from '../../types'
 //@ts-ignore
-import { BracketMetaContext } from '../../../context'
+import { BracketMetaContext } from '../../../context/context'
 import { WinnerContainer } from './WinnerContainer'
 import { LogoContainer } from './LogoContainer'
 

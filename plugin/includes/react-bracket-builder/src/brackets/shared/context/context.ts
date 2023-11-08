@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { MatchTree } from './models/MatchTree'
+import { MatchTree } from '../models/MatchTree'
 
 export interface BracketMeta {
   title?: string

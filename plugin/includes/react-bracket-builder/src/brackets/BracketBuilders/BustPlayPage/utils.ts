@@ -3,7 +3,7 @@ import {
   MatchTreeContext,
   MatchTreeContext1,
   MatchTreeContext2,
-} from '../../shared/context'
+} from '../../shared/context/context'
 
 export const getBustTrees = () => {
   const context1 = useContext(MatchTreeContext1)

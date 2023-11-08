@@ -12,7 +12,7 @@ import {
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import { BustPlayBuilder } from './BustPlayBuilder'
 // import { ReactComponent as UserIcon } from '../../shared/assets/user.svg'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
@@ -42,7 +42,6 @@ interface BustPlayPageProps {
 }
 
 const BustPlayPage = (props: BustPlayPageProps) => {
-  console.log('BustPlayPage')
   const {
     bracketMeta,
     setBracketMeta,

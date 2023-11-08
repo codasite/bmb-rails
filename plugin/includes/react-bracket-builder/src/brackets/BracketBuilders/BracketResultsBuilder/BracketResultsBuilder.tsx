@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ResultsBracket } from '../../shared/components/Bracket'

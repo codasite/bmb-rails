@@ -1,5 +1,5 @@
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 
 export interface BustPlayBuilderProps {
   matchTree?: MatchTree

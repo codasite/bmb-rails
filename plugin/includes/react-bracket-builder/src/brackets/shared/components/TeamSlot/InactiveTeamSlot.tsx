@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 //@ts-ignore
-import { DarkModeContext } from '../../context'
+import { DarkModeContext } from '../../context/context'
 import { TeamSlotProps } from '../types'
 import { BaseTeamSlot } from './BaseTeamSlot'
 

@@ -13,7 +13,7 @@ import {
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignoredododo
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import {
   getBracketMeta,
   getBracketWidth,

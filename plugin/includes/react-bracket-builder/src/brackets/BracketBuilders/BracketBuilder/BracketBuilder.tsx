@@ -10,7 +10,7 @@ import {
   WithMatchTree,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
 

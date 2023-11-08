@@ -1,6 +1,6 @@
 import { defaultBracketConstants } from '../../constants'
 import { BracketRes } from '../../api/types/bracket'
-import { BracketMeta } from '../../context'
+import { BracketMeta } from '../../context/context'
 import { MatchNode } from '../../models/operations/MatchNode'
 
 const {

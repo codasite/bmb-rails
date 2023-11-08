@@ -3,7 +3,7 @@ import * as Sentry from '@sentry/react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import {
   WithBracketMeta,
   WithDarkMode,
