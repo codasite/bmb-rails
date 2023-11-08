@@ -23,27 +23,43 @@ $plays = $play_repo->get_all($the_query);
 $paged_plays = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $num_plays_pages = $the_query->max_num_pages;
 
-$paged_status = get_query_var('status');
+// $paged_status = get_query_var('status');
 
-if (empty($paged_status)) {
-	$paged_status = 'all';
-}
+// if (empty($paged_status)) {
+// 	$paged_status = 'all';
+// }
 
-$all_status = ['publish', 'score', 'complete'];
-$active_status = ['publish'];
-$scored_status = ['score', 'complete'];
+// $all_status = ['publish', 'score', 'complete'];
+// $active_status = ['publish'];
+// $scored_status = ['score', 'complete'];
 
-if ($paged_status === 'all') {
-	$post_status = $all_status;
-} else if ($paged_status === 'active' || $paged_status === 'live') {
-	$post_status = $active_status;
-} else if ($paged_status === 'scored') {
-	$post_status = $scored_status;
-} else {
-	$post_status = $all_status;
-}
+// if ($paged_status === 'all') {
+// 	$post_status = $all_status;
+// } else if ($paged_status === 'active' || $paged_status === 'live') {
+// 	$post_status = $active_status;
+// } else if ($paged_status === 'scored') {
+// 	$post_status = $scored_status;
+// } else {
+// 	$post_status = $all_status;
+// }
+$query = new WP_Query([
+	'post_type' => [Wpbb_Bracket::get_post_type(), Wpbb_BracketPlay::get_post_type()],
+	'posts_per_page' => 6,
+	'paged' => $paged,
+	'tag_slug__in' => ['bmb_vip_bracket', 'bmb_vip_play'],
+]);
 
 $bracket_repo = new Wpbb_BracketRepo();
+$posts = $query->posts;
+$brackets_and_plays = [];
+foreach ($posts as $post) {
+	if ($post->post_type === Wpbb_Bracket::get_post_type()) {
+		$brackets_and_plays[] = $bracket_repo->get($post);
+	} else if ($post->post_type === Wpbb_BracketPlay::get_post_type()) {
+		$brackets_and_plays[] = $play_repo->get($post);
+	}
+}
+
 // $brackets = $bracket_repo->get_all([]);
 $brackets = $bracket_repo->get_all([
 	'post_type' => Wpbb_Bracket::get_post_type(),
@@ -113,7 +129,7 @@ function wpbb_celebrity_play_list_item($play) {
 		</div>
 		<div class="wpbb-faded-bracket-bg tw-py-30 md:tw-py-60 tw-px-20 ">
 			<div class="tw-flex tw-flex-col tw-gap-30 tw-max-w-[1160px] tw-m-auto ">
-				<h2 class="tw-text-36 md:tw-text-48 tw-font-700 ">Plays</h2>
+				<h2 class="tw-text-36 md:tw-text-48 tw-font-700 ">Featured</h2>
 				<div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10">
 					<?php foreach ($plays as $play) : ?>
 						<?php echo wpbb_celebrity_play_list_item($play); ?>
