@@ -11,23 +11,12 @@ if (!$post || $post->post_type !== 'bracket_play') {
 }
 $play_repo = new Wpbb_BracketPlayRepo();
 $play = $play_repo->get($post);
-$is_bust = $play->busted_id !== null;
-
-if ($is_bust) {
-    $redirect_url = get_permalink($play->busted_id) . '/bust';
-} else {
-    $product_utils = new Wpbb_BracketProductUtils();
-    $redirect_url = $product_utils->get_bracket_product_archive_url();
-}
 
 wp_localize_script(
     'wpbb-bracket-builder-react',
-    'wpbb_ajax_obj',
+    'wpbb_page_obj',
     array(
         'play' => $play,
-        'nonce' => wp_create_nonce('wp_rest'),
-        'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-        'redirect_url' => $redirect_url
     )
 );
 

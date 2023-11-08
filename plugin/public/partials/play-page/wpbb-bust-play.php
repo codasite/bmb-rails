@@ -16,13 +16,9 @@ $play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-hi
 
 wp_localize_script(
     'wpbb-bracket-builder-react',
-    'wpbb_ajax_obj',
+    'wpbb_page_obj',
     array(
         'play' => $play,
-        'play_history_url' => $play_history_url,
-        'nonce' => wp_create_nonce('wp_rest'),
-        'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-        'redirect_url' => $play_history_url,
         'play_again_url' => get_permalink(get_page_by_path('play')),
         'thumbnailUrl' => get_the_post_thumbnail_url($post->ID, 'thumbnail'),
     )

@@ -1,12 +1,11 @@
 import { OverlayUrlThemeMap } from './preview/Gallery'
 
 export interface WpbbAjaxObj {
-  // all
   myBracketsUrl: string
   bracketBuilderUrl: string
   userCanShareBracket: boolean
   upgradeAccountUrl: string
-  bracketProductPageUrl: string
+  bracketProductArchiveUrl: string
   nonce: string
   rest_url: string
   sentryEnv: string

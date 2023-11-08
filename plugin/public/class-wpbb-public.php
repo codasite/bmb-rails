@@ -5,6 +5,8 @@ require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-a
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/service/class-wpbb-pdf-service.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket-config.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-config-repo.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -114,8 +116,8 @@ class Wpbb_Public {
 				'bracket_builder_url' => get_permalink(get_page_by_path('bracket-builder')),
 				'user_can_share_bracket' => current_user_can('wpbb_share_bracket') ? true : false,
 				'upgrade_account_url' => $this->get_bmb_plus_permalink(),
-				'bracket_product_page_url'
-
+				'bracket_product_archive_url' => $this->get_bracket_product_archive_url(),
+				'play_history_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
 			));
 	}
 
@@ -129,5 +131,10 @@ class Wpbb_Public {
 		);
 		$bmb_plus_post = get_posts($args)[0];
 		return get_permalink($bmb_plus_post->ID);
+	}
+
+	private function get_bracket_product_archive_url() {
+		$bracket_product_utils = new Wpbb_BracketProductUtils();
+		return $bracket_product_utils->get_bracket_product_archive_url();
 	}
 }
