@@ -9,7 +9,7 @@ import { camelCaseKeys } from './brackets/shared/api/bracketApi'
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree'
 import './styles/main.css'
 import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
-import { WpbbAjaxObj } from './wpbbAjaxObj'
+import { WpbbAjaxObj, WpbbBracketProductPreviewObj } from './wpbbAjaxObj'
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
@@ -49,7 +49,7 @@ declare var wpbb_bracket_product_preview_obj: any
 if (window.hasOwnProperty('wpbb_ajax_obj')) {
   const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
   initializeSentry(ajaxObj)
-  renderProductPreview(ajaxObj)
+  renderProductPreview()
   renderBracketBuilder(ajaxObj)
   renderPlayBracket(ajaxObj)
   renderBracketResultsBuilder(ajaxObj)
@@ -97,7 +97,7 @@ function renderBracketBuilder(ajaxObj: WpbbAjaxObj) {
 }
 
 function renderPlayBracket(ajaxObj: WpbbAjaxObj) {
-  const { bracket, redirectUrl, cssUrl, userDisplayName } = ajaxObj
+  const { bracket, redirectUrl } = ajaxObj
   if (bracket) {
     renderDiv(
       <App>
@@ -135,7 +135,7 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
   }
 }
 function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
-  console.log('renderBustBracketPlay');
+  console.log('renderBustBracketPlay')
   const { play, redirectUrl } = ajaxObj
   if (play) {
     renderDiv(
@@ -168,11 +168,13 @@ function renderPrintBracketPage() {
   )
 }
 // This renders the image gallery on the bracket product preview page
-function renderProductPreview(ajaxObj: WpbbAjaxObj) {
+function renderProductPreview() {
   if (typeof wpbb_bracket_product_preview_obj === 'undefined') {
     return
   }
-  const previewObj: any = camelCaseKeys(wpbb_bracket_product_preview_obj)
+  const previewObj: WpbbBracketProductPreviewObj = camelCaseKeys(
+    wpbb_bracket_product_preview_obj
+  )
   renderDiv(
     <App>
       <Gallery
