@@ -15,6 +15,7 @@ import { BusterVsBustee } from '../BusterVersusBustee'
 import { BracketBusterContext } from '../context'
 import { getBustTrees } from '../utils'
 import { DefaultEditButton } from '../../../shared/components/Bracket/BracketActionButtons'
+import { WindowDimensionsContext } from '../../../shared/context/WindowDimensionsContext'
 
 export const BustEndPage = (props: EndPageProps) => {
   const { matchTree, darkMode, processing, handleSubmit, onEditClick } = props
@@ -26,6 +27,10 @@ export const BustEndPage = (props: EndPageProps) => {
     busterThumbnail,
   } = useContext(BracketBusterContext)
 
+  const { height: windowHeight, width: windowWidth } = useContext(
+    WindowDimensionsContext
+  )
+
   return (
     <div
       className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
@@ -35,7 +40,7 @@ export const BustEndPage = (props: EndPageProps) => {
         backgroundImage: `url(${redBracketBg})`,
       }}
     >
-      <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-mx-auto tw-flex-grow tw-my-60">
         <BusterVsBustee
           busteeDisplayName={busteeDisplayName}
           busteeThumbnail={busteeThumbnail}
@@ -43,10 +48,15 @@ export const BustEndPage = (props: EndPageProps) => {
           busterThumbnail={busterThumbnail}
         />
         {matchTree && (
-          <ScaledBracket
-            BracketComponent={BusterBracket}
-            matchTree={matchTree}
-          />
+          <div className="tw-self-center">
+            <ScaledBracket
+              BracketComponent={BusterBracket}
+              matchTree={matchTree}
+              windowWidth={windowWidth}
+              windowHeight={windowHeight}
+              paddingX={20}
+            />
+          </div>
         )}
         <div className="tw-flex tw-flex-col tw-gap-10">
           <DefaultEditButton

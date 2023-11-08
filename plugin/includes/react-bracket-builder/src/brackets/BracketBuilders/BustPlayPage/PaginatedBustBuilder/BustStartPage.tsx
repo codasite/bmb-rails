@@ -37,7 +37,7 @@ export const BustStartPage = (props: BustStartPageProps) => {
       style={{ backgroundImage: `url(${darkBracketBg})` }}
     >
       <div
-        className="tw-flex tw-flex-col tw-justify-center tw-px-20 tw-m-auto tw-items-center"
+        className="tw-flex tw-flex-col tw-gap-30 tw-pt-[79px] tw-pb-20 tw-px-20 tw-items-center"
         style={{ maxWidth: screenWidth }}
       >
         <ProfilePicture
@@ -46,7 +46,7 @@ export const BustStartPage = (props: BustStartPageProps) => {
           color="blue"
           shadow={false}
         />
-        <h1 className="tw-text-white tw-font-700 tw-text-24 tw-my-30 tw-text-center">
+        <h1 className="tw-text-white tw-font-700 tw-text-24 tw-text-center">
           {title}
         </h1>
 

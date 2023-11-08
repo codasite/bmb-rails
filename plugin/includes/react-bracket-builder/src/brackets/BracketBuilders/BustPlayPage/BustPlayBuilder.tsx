@@ -119,13 +119,13 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover$`}
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover`}
       style={{
         backgroundImage: `url(${redBracketBg})`,
       }}
     >
       <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
+        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-mx-auto tw-gap-50 tw-pb-100 tw-pt-40`}
       >
         {busterTree && (
           <>
@@ -137,7 +137,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
               matchTree={busterTree}
               setMatchTree={setBusterTree}
             />
-            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+            <div className="tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ActionButton
                 variant="red"
                 size="big"

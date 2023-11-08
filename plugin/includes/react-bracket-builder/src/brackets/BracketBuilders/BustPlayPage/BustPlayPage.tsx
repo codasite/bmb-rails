@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
-import { ActionButton } from '../../shared/components/ActionButtons'
 import {
   WithBracketMeta,
   WithDarkMode,
-  WithMatchTree,
   WithProvider,
 } from '../../shared/components/HigherOrder'
-//@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-//@ts-ignore
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { BracketMeta } from '../../shared/context/context'
 import { BustPlayBuilder } from './BustPlayBuilder'
-// import { ReactComponent as UserIcon } from '../../shared/assets/user.svg'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { PlayRes } from '../../shared/api/types/bracket'
-import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
-import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import {
   getBracketMeta,
   getBracketWidth,
@@ -27,9 +20,10 @@ import { WithMatchTree3 } from '../../shared/components/HigherOrder/WithMatchTre
 import { getBustTrees } from './utils'
 import { BustablePlayPageButtons } from './buttons'
 import { addToApparelHandler } from '../ViewPlayPage/utils'
-import { useWindowDimensions } from '../../../utils/hooks'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { BustStartPage } from './PaginatedBustBuilder/BustStartPage'
+import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
+import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 
 interface BustPlayPageProps {
   bracketMeta: BracketMeta
@@ -55,7 +49,9 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   const [page, setPage] = useState('view')
   const { busteeTree, setBusteeTree } = getBustTrees()
 
-  const { height: windowHeight, width: windowWidth } = useWindowDimensions()
+  const { height: windowHeight, width: windowWidth } = useContext(
+    WindowDimensionsContext
+  )
 
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(play?.bracket?.numTeams))
@@ -125,11 +121,11 @@ const BustPlayPage = (props: BustPlayPageProps) => {
       }}
     >
       <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-[83px]`}
+        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-gap-40`}
       >
         {busteeTree && (
           <>
-            <div className="tw-mb-40 tw-mt-40 tw-flex tw-flex-col tw-justify-center tw-items-center">
+            <div className="tw-flex tw-flex-col tw-justify-center tw-items-center">
               <ProfilePicture
                 src={thumbnailUrl}
                 alt="celebrity-photo"
@@ -150,7 +146,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   )
 }
 
-const WrappedBustPlayPage = WithProvider(
-  WithMatchTree3(WithBracketMeta(WithDarkMode(BustPlayPage)))
+const WrappedBustPlayPage = WithWindowDimensions(
+  WithProvider(WithMatchTree3(WithBracketMeta(WithDarkMode(BustPlayPage))))
 )
 export default WrappedBustPlayPage
