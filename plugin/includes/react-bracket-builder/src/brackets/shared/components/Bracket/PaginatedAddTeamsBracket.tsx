@@ -51,7 +51,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   }
   if (showFullBracket) {
     return (
-      <>
+      <div className="tw-flex tw-flex-col tw-gap-40">
         <ScaledBracket
           matchTree={props.matchTree}
           BracketComponent={AddTeamsBracket}
@@ -69,7 +69,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           <EditIcon />
           Edit
         </ActionButton>
-      </>
+      </div>
     )
   }
   return (

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ReactComponent as ArrowNarrowLeft } from '../../shared/assets/arrow-narrow-left.svg'
 import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
@@ -9,6 +9,8 @@ import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { DatePicker } from '../../shared/components/DatePicker'
+import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
+import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -21,7 +23,7 @@ interface AddTeamsPageProps {
   setYear?: (year: string) => void
   processing?: boolean
 }
-export const AddTeamsPage = (props: AddTeamsPageProps) => {
+const AddTeamsPage = (props: AddTeamsPageProps) => {
   const {
     matchTree,
     setMatchTree,
@@ -36,7 +38,7 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
   const [dateError, setDateError] = React.useState(false)
   const createDisabled =
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
-  const { width: windowWidth } = useWindowDimensions()
+  const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
     <div
@@ -107,3 +109,6 @@ export const AddTeamsPage = (props: AddTeamsPageProps) => {
     </div>
   )
 }
+
+const Wrapped = WithWindowDimensions(AddTeamsPage)
+export { Wrapped as AddTeamsPage }
