@@ -22,7 +22,7 @@ export const BustablePlayPageButtons = (
   const fontWeight = 700
   const borderWidth = 1
   return (
-    <div className="tw-flex tw-flex-col tw-justify-center tw-gap-15 tw-self-stretch tw-max-w-[900px] tw-w-full tw-mx-auto">
+    <div className="tw-flex tw-flex-col tw-justify-center md:tw-gap-15 tw-self-stretch tw-max-w-[900px] tw-w-full tw-mx-auto">
       <ActionButton
         onClick={handleAddApparel}
         backgroundColor="grey-blue"
@@ -37,7 +37,7 @@ export const BustablePlayPageButtons = (
         Add to Apparel
       </ActionButton>
       <div
-        className={`tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-gap-15 md:tw-mt-30 `}
+        className={`tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-gap-15 tw-mt-30 `}
       >
         <ActionButton
           onClick={handlePlayBracket}

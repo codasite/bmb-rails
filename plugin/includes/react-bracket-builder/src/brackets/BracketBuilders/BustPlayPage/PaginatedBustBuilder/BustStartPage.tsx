@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
@@ -7,6 +7,8 @@ import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { StartPageProps } from '../../PaginatedBuilderBase/types'
 import { BustablePlayPageButtons } from '../buttons'
 import { ProfilePicture } from '../../../shared/components/ProfilePicture'
+import { getBracketMeta } from '../../../shared/components/Bracket/utils'
+import { BracketMetaContext } from '../../../shared/context/context'
 
 interface BustStartPageProps {
   handlePlayBracket: () => void
@@ -26,6 +28,9 @@ export const BustStartPage = (props: BustStartPageProps) => {
     screenWidth,
   } = props
 
+  const { title } = useContext(BracketMetaContext)
+  console.log('title', title)
+
   return (
     <div
       className={`wpbb-reset tw-flex tw-uppercase tw-min-h-screen tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark `}
@@ -41,6 +46,10 @@ export const BustStartPage = (props: BustStartPageProps) => {
           color="blue"
           shadow={false}
         />
+        <h1 className="tw-text-white tw-font-700 tw-text-24 tw-my-30 tw-text-center">
+          {title}
+        </h1>
+
         {matchTree && (
           <ScaledBracket
             BracketComponent={PickableBracket}
