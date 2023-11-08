@@ -88,9 +88,7 @@ class Wpbb_ProductPreviewService {
   }
 
   public function get_archive_url() {
-    $category_slug = 'bracket-ready';
-    $redirect_url = get_term_link($category_slug, 'product_cat');
-    return $redirect_url;
+    return $this->bracket_product_utils->get_bracket_product_archive_url();
   }
 
   // get all attribute options for a product
