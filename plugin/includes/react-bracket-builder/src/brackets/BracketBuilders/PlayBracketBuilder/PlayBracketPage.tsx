@@ -46,7 +46,6 @@ const PlayPage = (props: PlayPageProps) => {
     darkMode,
     setDarkMode,
   } = props
-  console.log('redirectUrl', redirectUrl)
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useContext(

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef } from 'react'
+import React, { useContext, useEffect, useRef, useCallback } from 'react'
 import {
   getBracketWidth as getDefaultBracketWidth,
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
@@ -24,6 +24,7 @@ import {
   getRightMatches,
 } from '../../models/operations/GetMatchSections'
 import { SizeChangeListenerContext } from '../../context/SizeChangeListenerContext'
+import { useResizeObserver } from '../../../../utils/hooks'
 
 export const DefaultBracket = (props: BracketProps) => {
   const {
@@ -54,37 +55,20 @@ export const DefaultBracket = (props: BracketProps) => {
   const containerRef = useRef(null)
   const { sizeChangeListeners } = useContext(SizeChangeListenerContext)
 
-  // const resizeCallback = useCallback(({ height, width }) => {
-  //   if (sizeChangeListeners) {
-  //     sizeChangeListeners?.forEach((listener) => {
-  //       listener(height, width)
-  //     })
-  //   }
-  // }, [])
-
-  // useResizeObserver(containerRef, resizeCallback)
-  useEffect(() => {
-    if (!containerRef.current) {
-      return
-    }
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        const { height, width } = entry.contentRect
-        if (sizeChangeListeners) {
-          sizeChangeListeners?.forEach((listener) => {
-            listener(height, width)
-          })
-        }
+  const resizeCallback = useCallback(
+    ({ height, width }) => {
+      console.log('resizeCallback', height, width)
+      if (sizeChangeListeners && containerRef.current) {
+        sizeChangeListeners?.forEach((listener) => {
+          console.log('listener', listener)
+          listener(height, width)
+        })
       }
-    })
+    },
+    [sizeChangeListeners]
+  )
 
-    resizeObserver.observe(containerRef.current)
-
-    return () => {
-      resizeObserver.disconnect()
-    }
-  }, [sizeChangeListeners])
+  useResizeObserver(containerRef, resizeCallback)
 
   let dark = darkMode
   if (dark === undefined) {
