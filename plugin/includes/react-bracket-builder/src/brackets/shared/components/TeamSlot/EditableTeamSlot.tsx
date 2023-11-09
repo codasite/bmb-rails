@@ -17,7 +17,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
     getFontSize = getTeamFontSize,
   } = props
 
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(true)
   const [teamName, setTeamName] = useState('')
 
   const handleClick = () => {
@@ -60,6 +60,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
       textColor="white"
       onTeamClick={handleClick}
       placeholder="Add Team"
+      teamClickDisabled={() => editing}
     >
       {editing && (
         <input
