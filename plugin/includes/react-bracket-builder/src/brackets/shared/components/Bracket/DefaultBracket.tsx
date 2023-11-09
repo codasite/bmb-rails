@@ -54,6 +54,15 @@ export const DefaultBracket = (props: BracketProps) => {
   const containerRef = useRef(null)
   const { sizeChangeListeners } = useContext(SizeChangeListenerContext)
 
+  // const resizeCallback = useCallback(({ height, width }) => {
+  //   if (sizeChangeListeners) {
+  //     sizeChangeListeners?.forEach((listener) => {
+  //       listener(height, width)
+  //     })
+  //   }
+  // }, [])
+
+  // useResizeObserver(containerRef, resizeCallback)
   useEffect(() => {
     if (!containerRef.current) {
       return

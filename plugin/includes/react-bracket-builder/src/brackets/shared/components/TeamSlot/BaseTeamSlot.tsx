@@ -1,11 +1,5 @@
-import { useRef, useCallback, useState } from 'react'
 import { TeamSlotProps } from './../types'
-import {
-  getUniqueTeamClass,
-  getTeamFontSize,
-  getTeamMinFontSize,
-} from '../Bracket/utils'
-import { useResizeObserver } from '../../../../utils/hooks'
+import { getUniqueTeamClass, getTeamFontSize } from '../Bracket/utils'
 import { ScaledSpan } from './ScaledSpan'
 
 export const BaseTeamSlot = (props: TeamSlotProps) => {
