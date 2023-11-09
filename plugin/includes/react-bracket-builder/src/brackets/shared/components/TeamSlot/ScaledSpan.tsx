@@ -6,15 +6,20 @@ export interface ScaledSpanProps {
 }
 
 export const ScaledSpan = (props: any) => {
-  const { targetWidth, style, ...rest } = props
+  const { targetWidth, style, children, ...rest } = props
   const textRef = useRef(null)
   const [textScale, setTextScale] = useState(1)
 
-  const resizeCallback = useCallback(({ width: currentWidth }) => {
-    if (currentWidth <= targetWidth) return
-    const scaleFactor = targetWidth / currentWidth
-    setTextScale(scaleFactor)
-  }, [])
+  const resizeCallback = useCallback(
+    ({ width: currentWidth }) => {
+      if (currentWidth <= targetWidth) {
+        setTextScale(1)
+      }
+      const scaleFactor = targetWidth / currentWidth
+      setTextScale(scaleFactor)
+    },
+    [children]
+  )
 
   useResizeObserver(textRef, resizeCallback)
   const newStyle = {
@@ -22,5 +27,9 @@ export const ScaledSpan = (props: any) => {
     transform: `scale(${textScale})`,
   }
 
-  return <span ref={textRef} style={newStyle} {...rest} />
+  return (
+    <span ref={textRef} style={newStyle} {...rest}>
+      {children}
+    </span>
+  )
 }

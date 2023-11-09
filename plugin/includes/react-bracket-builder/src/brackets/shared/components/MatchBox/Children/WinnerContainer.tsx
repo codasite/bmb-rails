@@ -41,7 +41,7 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
         teamPosition={'winner'}
         height={52}
         width={297}
-        fontSize={32}
+        getFontSize={() => 32}
         fontWeight={700}
       />
     </div>
