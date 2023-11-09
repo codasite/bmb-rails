@@ -32,7 +32,6 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
     if (!setMatchTree) {
       return
     }
-    console.log('done editing')
     console.log(teamName)
     const team = new Team(teamName)
     if (teamPosition === 'left') {

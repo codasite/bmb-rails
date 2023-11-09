@@ -1,22 +1,25 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useRef, useState, useEffect } from 'react'
 import { useResizeObserver } from '../../../../utils/hooks'
 
 export interface ScaledSpanProps {
   targetWidth: number
+  hideToResize?: boolean
 }
 
 export const ScaledSpan = (props: any) => {
   const { targetWidth, style, children, ...rest } = props
   const textRef = useRef(null)
   const [textScale, setTextScale] = useState(1)
+  const [showText, setShowText] = useState(false)
 
   const resizeCallback = useCallback(
     ({ width: currentWidth }) => {
-      if (currentWidth <= targetWidth) {
-        setTextScale(1)
+      let scaleFactor = 1
+      if (currentWidth > targetWidth) {
+        scaleFactor = targetWidth / currentWidth
       }
-      const scaleFactor = targetWidth / currentWidth
       setTextScale(scaleFactor)
+      setShowText(true)
     },
     [children]
   )
@@ -25,6 +28,7 @@ export const ScaledSpan = (props: any) => {
   const newStyle = {
     ...style,
     transform: `scale(${textScale})`,
+    visibility: showText ? 'visible' : 'hidden',
   }
 
   return (

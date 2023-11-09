@@ -72,16 +72,16 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
       onClick={handleTeamClick}
       style={{ borderWidth: borderWidth }}
     >
-      {children ? (
-        children
-      ) : (
-        <ScaledSpan
-          style={{ fontSize: fontSizeToUse }}
-          targetWidth={targetWidth}
-        >
-          {team ? team.name : ''}
-        </ScaledSpan>
-      )}
+      {children
+        ? children
+        : team?.name && (
+            <ScaledSpan
+              style={{ fontSize: fontSizeToUse }}
+              targetWidth={targetWidth}
+            >
+              {team.name}
+            </ScaledSpan>
+          )}
     </div>
   )
 }
