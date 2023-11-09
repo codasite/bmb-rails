@@ -3,7 +3,6 @@ import { PaginatedDefaultBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
   getSubsequentMatchGap as getDefaultSubsequentMatchGap,
-  getTeamFontSize as getDefaultTeamFontSize,
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
   getTeamWidth as getDefaultTeamWidth,
@@ -29,7 +28,6 @@ export const PaginatedDefaultBracket = (
     getTeamGap = () => getDefaultTeamGap(0),
     getFirstRoundMatchGap = () => getDefaultFirstRoundMatchGap(5),
     getSubsequentMatchGap = getDefaultSubsequentMatchGap,
-    getTeamFontSize = () => getDefaultTeamFontSize(4),
     getTeamWidth = () => getDefaultTeamWidth(4),
     matchTree,
     setMatchTree,
@@ -122,7 +120,6 @@ export const PaginatedDefaultBracket = (
   const teamGap = getTeamGap(depth)
   const teamHeight = getTeamHeight(numRounds)
   const teamWidth = getTeamWidth(numRounds)
-  const teamFontSize = getTeamFontSize(numRounds)
 
   const matchHeight = teamHeight * 2 + teamGap
   const matchGap2 = getSubsequentMatchGap(matchHeight, matchGap1, matchHeight)
@@ -146,7 +143,6 @@ export const PaginatedDefaultBracket = (
       teamGap={teamGap}
       teamHeight={teamHeight}
       teamWidth={teamWidth}
-      teamFontSize={teamFontSize}
       onTeamClick={onTeamClick}
     />
   )
@@ -162,7 +158,6 @@ export const PaginatedDefaultBracket = (
       teamGap={teamGap}
       teamHeight={teamHeight}
       teamWidth={teamWidth}
-      teamFontSize={teamFontSize}
     />
   )
 

@@ -3,7 +3,6 @@ import {
   getBracketWidth as getDefaultBracketWidth,
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
   getSubsequentMatchGap as getDefaultSubsequentMatchGap,
-  getTeamFontSize as getDefaultTeamFontSize,
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
   getTeamWidth as getDefaultTeamWidth,
