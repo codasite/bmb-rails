@@ -68,7 +68,7 @@ function scored_bracket_tag() {
 /**
  * This button goes to the Play Bracket page
  */
-function play_bracket_btn($endpoint, $bracket_id) {
+function play_bracket_btn($endpoint) {
 	ob_start();
 ?>
 	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
@@ -118,7 +118,7 @@ function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
 	?>
   <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
     <!-- This goes to the Play Bracket page -->
-		<?php echo play_bracket_btn($bracket_play_link, $bracket); ?>
+		<?php echo play_bracket_btn($bracket_play_link); ?>
     <!-- This goes to the Score Bracket page -->
 		<?php echo view_leaderboard_btn($leaderboard_link); ?>
   </div>

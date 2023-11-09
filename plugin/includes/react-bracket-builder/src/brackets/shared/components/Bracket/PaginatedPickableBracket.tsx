@@ -10,8 +10,6 @@ export const PaginatedPickableBracket = (props: PaginatedBracketProps) => {
     ...props,
     page,
     setPage,
-    disableNext: (currentRoundMatches) =>
-      currentRoundMatches.some((match) => match && !match.isPicked()),
   }
 
   console.log('PaginatedPickableBracket', matchTree)

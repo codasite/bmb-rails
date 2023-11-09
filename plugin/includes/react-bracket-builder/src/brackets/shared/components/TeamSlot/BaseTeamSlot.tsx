@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { TeamSlotProps } from './../types'
-import { getTeamFontSize, getUniqueTeamClass } from '../../utils'
+import { getUniqueTeamClass, getTeamFontSize } from '../Bracket/utils'
 
 export const BaseTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -18,7 +18,6 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     onTeamClick,
     children,
   } = props
-  // console.log('winner', winner)
   const teamClass = getTeamClass(
     match.roundIndex,
     match.matchIndex,

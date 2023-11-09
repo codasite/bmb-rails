@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import {
   getBracketWidth as getDefaultBracketWidth,
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
@@ -7,10 +7,10 @@ import {
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
   getTeamWidth as getDefaultTeamWidth,
-} from '../../utils'
+} from './utils'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
-import { BracketMetaContext, DarkModeContext } from '../../context'
+import { BracketMetaContext, DarkModeContext } from '../../context/context'
 import { DefaultMatchColumn } from '../MatchColumn'
 import { DefaultTeamSlot } from '../TeamSlot'
 import { defaultBracketConstants } from '../../constants'
@@ -24,6 +24,7 @@ import {
   getLeftMatches,
   getRightMatches,
 } from '../../models/operations/GetMatchSections'
+import { SizeChangeListenerContext } from '../../context/SizeChangeListenerContext'
 
 export const DefaultBracket = (props: BracketProps) => {
   const {
@@ -50,6 +51,32 @@ export const DefaultBracket = (props: BracketProps) => {
     columnsToRender,
     renderWinnerAndLogo = true,
   }: BracketProps = props
+
+  const containerRef = useRef(null)
+  const { sizeChangeListeners } = useContext(SizeChangeListenerContext)
+
+  useEffect(() => {
+    if (!containerRef.current) {
+      return
+    }
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { height, width } = entry.contentRect
+        if (sizeChangeListeners) {
+          sizeChangeListeners?.forEach((listener) => {
+            listener(height, width)
+          })
+        }
+      }
+    })
+
+    resizeObserver.observe(containerRef.current)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [sizeChangeListeners])
 
   let dark = darkMode
   if (dark === undefined) {
@@ -167,6 +194,7 @@ export const DefaultBracket = (props: BracketProps) => {
         className={`tw-flex tw-flex-col${
           dark ? ' tw-dark' : ''
         } wpbb-default-bracket tw-relative`}
+        ref={containerRef}
       >
         {rootMatch && renderWinnerAndLogo && (
           <div className={`tw-mb-[${winnerContainerMB}px]`}>

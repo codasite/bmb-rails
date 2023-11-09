@@ -1,7 +1,7 @@
 import React from 'react'
 import { PaginatedBracketProps } from '../types'
 import { AddTeamsBracket } from './AddTeamsBracket'
-import { getTeamFontSize, getTeamHeight, getTeamWidth } from '../../utils'
+import { getTeamFontSize, getTeamHeight, getTeamWidth } from './utils'
 import { ActionButton } from '../ActionButtons'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
@@ -51,7 +51,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   }
   if (showFullBracket) {
     return (
-      <>
+      <div className="tw-flex tw-flex-col tw-gap-40">
         <ScaledBracket
           matchTree={props.matchTree}
           BracketComponent={AddTeamsBracket}
@@ -69,7 +69,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           <EditIcon />
           Edit
         </ActionButton>
-      </>
+      </div>
     )
   }
   return (

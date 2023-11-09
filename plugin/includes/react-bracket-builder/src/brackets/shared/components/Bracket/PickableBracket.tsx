@@ -19,7 +19,6 @@ export const PickableBracket = (props: BracketProps) => {
     position: string,
     team?: Nullable<Team>
   ) => {
-    console.log('handleTeamClick', match, team)
     if (!match) {
       return
     }

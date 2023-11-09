@@ -1,26 +1,4 @@
 <?php
-// use wp query to get the post
-$args = array(
-  'name'        => 'bmb',
-  'post_type'   => 'product',
-  'post_status' => 'publish',
-  'numberposts' => 1
-);
-$bmb_post = get_posts($args)[0];
-$upgrade_account_url = get_permalink($bmb_post->ID);
-
-wp_localize_script(
-  'wpbb-bracket-builder-react',
-  'wpbb_ajax_obj',
-  array(
-    'my_brackets_url' => get_permalink() . 'brackets',
-    'bracket_builder_url' => get_permalink(get_page_by_path('bracket-builder')),
-    'user_can_share_bracket' => current_user_can('wpbb_share_bracket') ? true : false,
-    'upgrade_account_url' => $upgrade_account_url,
-    'nonce' => wp_create_nonce('wp_rest'),
-    'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-  )
-);
 
 $current_tab = get_query_var('tab');
 

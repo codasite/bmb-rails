@@ -4,7 +4,7 @@ import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PickableBracket } from '../../shared/components/Bracket'
-import { DarkModeContext } from '../../shared/context'
+import { DarkModeContext } from '../../shared/context/context'
 import { ThemeSelector } from '../../shared/components'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { Spinner } from '../../shared/components/Spinner'
@@ -43,7 +43,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
-      <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
         <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
         {matchTree && (
           <ScaledBracket
@@ -51,30 +51,33 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             matchTree={matchTree}
           />
         )}
-        {canEdit && (
-          <ActionButton
-            variant="white"
-            darkMode={darkMode}
-            onClick={onEditClick}
-            disabled={processing}
-            borderWidth={1}
-          >
-            <EditIcon />
-            <span>Edit</span>
-          </ActionButton>
-        )}
-        <ActionButton
-          variant="small-green"
-          darkMode={darkMode}
-          onClick={onApparelClick}
-          disabled={processing || !matchTree?.allPicked()}
-        >
-          {processing ? (
-            <Spinner fill="white" height={32} width={32} />
-          ) : (
-            'Add to Apparel'
+        <div className="tw-flex tw-self-stretch tw-flex-col tw-gap-10 tw-max-w-[268px] tw-mx-auto tw-w-full">
+          {canEdit && (
+            <ActionButton
+              variant="white"
+              darkMode={darkMode}
+              onClick={onEditClick}
+              disabled={processing}
+              borderWidth={1}
+            >
+              <EditIcon />
+              <span>Edit</span>
+            </ActionButton>
           )}
-        </ActionButton>
+          <ActionButton
+            variant="green"
+            size="small"
+            darkMode={darkMode}
+            onClick={onApparelClick}
+            disabled={processing || !matchTree?.allPicked()}
+          >
+            {processing ? (
+              <Spinner fill="white" height={32} width={32} />
+            ) : (
+              'Add to Apparel'
+            )}
+          </ActionButton>
+        </div>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 //@ts-ignore
 import { TeamSlotProps } from '../types'
-import { getUniqueTeamClass, getTeamFontSize } from '../../utils'
+import { getUniqueTeamClass, getTeamFontSize } from '../Bracket/utils'
 
 export const DefaultTeamSlot = (props: TeamSlotProps) => {
   const {

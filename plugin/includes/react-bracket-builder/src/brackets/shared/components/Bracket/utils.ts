@@ -1,7 +1,7 @@
-import { defaultBracketConstants } from './constants'
-import { BracketRes } from './api/types/bracket'
-import { BracketMeta } from './context'
-import { Team } from './models/Team'
+import { defaultBracketConstants } from '../../constants'
+import { BracketRes } from '../../api/types/bracket'
+import { BracketMeta } from '../../context/context'
+import { MatchNode } from '../../models/operations/MatchNode'
 
 const {
   bracketHeights,
@@ -32,14 +32,11 @@ export const getTeamGap = (depth: number) => {
   return teamGaps[depth]
 }
 
-export const getTeamFontSize = (numRounds: number, team: Team) => {
-  console.log('getTeamFontSize', numRounds, team)
-  return 11
-
-  // if (numRounds > 4) {
-  //   return 12
-  // }
-  // return 16
+export const getTeamFontSize = (numRounds: number) => {
+  if (numRounds > 4) {
+    return 12
+  }
+  return 16
 }
 
 export const getFirstRoundMatchGap = (numRounds: number) => {
@@ -112,4 +109,10 @@ export const getBracketMeta = (bracket: BracketRes): BracketMeta => {
   const { title, month, year } = bracket
   const date = [month, year].filter(Boolean).join(' ')
   return { title, date }
+}
+
+export const someMatchNotPicked = (matches: MatchNode[]) => {
+  const notPicked = matches.some((match) => match && !match.isPicked())
+  console.log('notPicked', notPicked)
+  return notPicked
 }

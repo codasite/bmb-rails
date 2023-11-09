@@ -9,7 +9,7 @@ import { camelCaseKeys } from './brackets/shared/api/bracketApi'
 import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree'
 import './styles/main.css'
 import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
-import { WpbbAjaxObj } from './wpbbAjaxObj'
+import { wpbbAppObj, WpbbBracketProductPreviewObj } from './wpbbAppObj'
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
@@ -43,11 +43,12 @@ const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
 
-declare var wpbb_ajax_obj: any
+declare var wpbb_app_obj: any
 declare var wpbb_bracket_product_preview_obj: any
-// Try to get the wpbb_ajax_obj from the global scope. If it exists, then we know we are rendering in wordpress.
-if (window.hasOwnProperty('wpbb_ajax_obj')) {
-  const ajaxObj: WpbbAjaxObj = camelCaseKeys(wpbb_ajax_obj)
+// Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
+if (window.hasOwnProperty('wpbb_app_obj')) {
+  const ajaxObj: wpbbAppObj = camelCaseKeys(wpbb_app_obj)
+  console.log('ajaxObj', ajaxObj)
   initializeSentry(ajaxObj)
   renderProductPreview(ajaxObj)
   renderBracketBuilder(ajaxObj)
@@ -61,7 +62,7 @@ if (window.hasOwnProperty('wpbb_ajax_obj')) {
   renderPrintBracketPage()
 }
 
-function initializeSentry(ajaxObj: WpbbAjaxObj) {
+function initializeSentry(ajaxObj: wpbbAppObj) {
   const { sentryEnv, sentryDsn } = ajaxObj
   if (sentryDsn) {
     // Init Sentry
@@ -86,7 +87,7 @@ function initializeSentry(ajaxObj: WpbbAjaxObj) {
     })
   }
 }
-function renderBracketBuilder(ajaxObj: WpbbAjaxObj) {
+function renderBracketBuilder(ajaxObj: wpbbAppObj) {
   const { myBracketsUrl, bracket } = ajaxObj
   renderDiv(
     <App>
@@ -96,8 +97,9 @@ function renderBracketBuilder(ajaxObj: WpbbAjaxObj) {
   )
 }
 
-function renderPlayBracket(ajaxObj: WpbbAjaxObj) {
-  const { bracket, redirectUrl, cssUrl, userDisplayName } = ajaxObj
+function renderPlayBracket(ajaxObj: wpbbAppObj) {
+  const { bracket } = ajaxObj
+  const redirectUrl = ajaxObj.bracketProductArchiveUrl
   if (bracket) {
     renderDiv(
       <App>
@@ -108,7 +110,7 @@ function renderPlayBracket(ajaxObj: WpbbAjaxObj) {
   }
 }
 
-function renderBracketResultsBuilder(ajaxObj: WpbbAjaxObj) {
+function renderBracketResultsBuilder(ajaxObj: wpbbAppObj) {
   const { bracket, myBracketsUrl } = ajaxObj
 
   if (bracket) {
@@ -123,8 +125,9 @@ function renderBracketResultsBuilder(ajaxObj: WpbbAjaxObj) {
     )
   }
 }
-function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const { play, redirectUrl } = ajaxObj
+function renderViewBracketPlay(ajaxObj: wpbbAppObj) {
+  const { play } = ajaxObj
+  const redirectUrl = ajaxObj.bracketProductArchiveUrl
   if (play) {
     renderDiv(
       <App>
@@ -134,12 +137,16 @@ function renderViewBracketPlay(ajaxObj: WpbbAjaxObj) {
     )
   }
 }
-function renderBustBracketPlay(ajaxObj: WpbbAjaxObj) {
-  const { play, redirectUrl } = ajaxObj
+function renderBustBracketPlay(ajaxObj: wpbbAppObj) {
+  const { play, bracketProductArchiveUrl, myPlayHistoryUrl } = ajaxObj
   if (play) {
     renderDiv(
       <App>
-        <BustPlayPage bracketPlay={play} redirectUrl={redirectUrl} />
+        <BustPlayPage
+          bracketPlay={play}
+          bracketProductArchiveUrl={bracketProductArchiveUrl}
+          myPlayHistoryUrl={myPlayHistoryUrl}
+        />
       </App>,
       'wpbb-bust-play'
     )
@@ -167,11 +174,13 @@ function renderPrintBracketPage() {
   )
 }
 // This renders the image gallery on the bracket product preview page
-function renderProductPreview(ajaxObj: WpbbAjaxObj) {
+function renderProductPreview(ajaxObj: wpbbAppObj) {
   if (typeof wpbb_bracket_product_preview_obj === 'undefined') {
     return
   }
-  const previewObj: any = camelCaseKeys(wpbb_bracket_product_preview_obj)
+  const previewObj: WpbbBracketProductPreviewObj = camelCaseKeys(
+    wpbb_bracket_product_preview_obj
+  )
   renderDiv(
     <App>
       <Gallery
@@ -183,7 +192,7 @@ function renderProductPreview(ajaxObj: WpbbAjaxObj) {
     'wpbb-product-preview'
   )
 }
-function renderMyBracketsModals(ajaxObj: WpbbAjaxObj) {
+function renderMyBracketsModals(ajaxObj: wpbbAppObj) {
   renderDiv(
     <>
       <EditBracketModal />
@@ -197,7 +206,7 @@ function renderMyBracketsModals(ajaxObj: WpbbAjaxObj) {
     'wpbb-my-brackets-modals'
   )
 }
-function addClickHandlers(ajaxObj: WpbbAjaxObj) {
+function addClickHandlers(ajaxObj: wpbbAppObj) {
   unpublishBracketHandler()
 }
 

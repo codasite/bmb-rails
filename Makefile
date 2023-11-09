@@ -4,11 +4,11 @@ wp-pull:
 
 # Start all wordpress containers
 wp-up:
-	docker compose --profile wp up --build
+	docker compose --profile wp up --build --remove-orphans
 
 # Start all wordpress containers in detached mode for ci
 wp-up-detach:
-	docker compose --profile wp up --build --detach
+	docker compose --profile wp up --build --detach --remove-orphans
 
 # Stop and remove all wordpress containers
 wp-down:
@@ -39,11 +39,11 @@ wp-dump:
 	docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
 
 images-up:
-	docker compose --profile images up --build
+	docker compose --profile images up --build --remove-orphans
 
 # Start all containers in dev mode
 up:
-	docker compose --profile all up --build
+	docker compose --profile all up --build --remove-orphans
 
 # Stop and remove all containers
 down:
@@ -59,7 +59,7 @@ wp-build:
 	cd plugin/includes/react-bracket-builder && npm run build
 
 prod-up:
-	docker compose -f compose.yaml -f compose.prod.yaml up --build -d
+	docker compose -f compose.yaml -f compose.prod.yaml up --build -d --remove-orphans
 	
 prod-down:
 	docker compose -f compose.yaml -f compose.prod.yaml down

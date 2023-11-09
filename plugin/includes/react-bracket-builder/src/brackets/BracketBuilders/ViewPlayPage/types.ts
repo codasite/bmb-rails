@@ -1,5 +1,5 @@
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import { PlayRes } from '../../shared/api/types/bracket'
 
 export interface ViewPlayPageProps {
@@ -8,7 +8,8 @@ export interface ViewPlayPageProps {
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
   bracketPlay: PlayRes
-  redirectUrl: string
+  addToApparelUrl: string
+  myPlayHistoryUrl: string
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
 }

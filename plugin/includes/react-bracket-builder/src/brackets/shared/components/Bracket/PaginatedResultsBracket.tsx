@@ -15,7 +15,7 @@ export const PaginatedResultsBracket = (props: PaginatedBracketProps) => {
     ...props,
     page,
     setPage,
-    disableNext: (currentRoundMatches) => false,
+    forcePageAllPicked: false,
     NavButtonsComponent: ResultsNavButtons,
   }
 
