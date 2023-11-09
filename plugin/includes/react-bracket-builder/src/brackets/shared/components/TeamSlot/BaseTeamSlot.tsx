@@ -21,13 +21,13 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     textPaddingX = 4,
     backgroundColor,
     borderColor,
-    borderWidth = 2,
+    borderWidth = 0,
     getTeamClass = getUniqueTeamClass,
     onTeamClick,
     matchTree,
     children,
+    placeholder = '',
   } = props
-  const [textScale, setTextScale] = useState(1)
   const teamClass = getTeamClass(
     match.roundIndex,
     match.matchIndex,
@@ -54,7 +54,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
   if (backgroundColor) {
     baseStyles.push(`tw-bg-${backgroundColor}`)
   }
-  if (borderColor) {
+  if (borderColor && borderWidth > 0) {
     baseStyles.push(...['tw-border-solid', `tw-border-${borderColor}`])
   }
 
@@ -74,14 +74,15 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     >
       {children
         ? children
-        : team?.name && (
+        : team?.name ||
+          (placeholder && (
             <ScaledSpan
               style={{ fontSize: fontSizeToUse }}
               targetWidth={targetWidth}
             >
-              {team.name}
+              {team?.name || placeholder}
             </ScaledSpan>
-          )}
+          ))}
     </div>
   )
 }

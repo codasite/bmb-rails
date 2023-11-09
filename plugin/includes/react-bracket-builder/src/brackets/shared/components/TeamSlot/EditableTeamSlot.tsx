@@ -32,7 +32,6 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
     if (!setMatchTree) {
       return
     }
-    console.log(teamName)
     const team = new Team(teamName)
     if (teamPosition === 'left') {
       match.setTeam1(team)
@@ -49,16 +48,18 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
     setTeamName(name)
   }
 
-  const label = team ? team.name : 'Add Team'
+  const label = team?.name ? team.name : 'Add Team'
   const fontSize = getFontSize(matchTree.rounds.length)
 
   return (
     <BaseTeamSlot
       {...props}
-      backgroundColor={team && !editing ? 'transparent' : 'white/15'}
+      backgroundColor={team?.name && !editing ? 'transparent' : 'white/15'}
       borderColor="white/50"
+      borderWidth={2}
       textColor="white"
       onTeamClick={handleClick}
+      placeholder="Add Team"
     >
       {editing && (
         <input

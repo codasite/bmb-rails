@@ -34,6 +34,7 @@ export interface TeamSlotProps {
     position: string
   ) => string
   children?: React.ReactNode
+  placeholder?: React.ReactNode
 }
 
 export interface MatchBoxProps {
