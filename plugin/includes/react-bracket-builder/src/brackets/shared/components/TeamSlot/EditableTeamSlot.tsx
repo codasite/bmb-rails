@@ -59,6 +59,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
       borderWidth={2}
       textColor="white"
       onTeamClick={handleClick}
+      onTeamFocus={handleClick}
       placeholder="Add Team"
       teamClickDisabled={() => editing}
     >

@@ -33,6 +33,7 @@ export interface TeamSlotProps {
   matchTree: MatchTree
   getFontSize?: (numRounds: number) => number
   onTeamClick?: TeamClickCallback
+  onTeamFocus?: TeamClickCallback
   teamClickDisabled?: TeamClickDisabledCallback
   setMatchTree?: (matchTree: MatchTree) => void
   getTeamClass?: (

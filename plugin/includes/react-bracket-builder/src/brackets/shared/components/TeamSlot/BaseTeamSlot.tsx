@@ -7,10 +7,10 @@ import {
 import { ScaledSpan } from './ScaledSpan'
 
 const DivOrButton = (props: any) => {
-  const { onClick, ...rest } = props
-  if (onClick) {
+  const { onClick, onFocus, ...rest } = props
+  if (onClick || onFocus) {
     console.log('onClick', onClick)
-    return <button onClick={onClick} {...rest} />
+    return <button onClick={onClick} onFocus={onFocus} {...rest} />
   } else {
     console.log('no onClick', onClick)
     return <div {...rest} />
@@ -33,6 +33,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     borderWidth = 0,
     getTeamClass = getUniqueTeamClass,
     onTeamClick,
+    onTeamFocus,
     matchTree,
     children,
     placeholder = '',
@@ -80,6 +81,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     <DivOrButton
       className={styles}
       onClick={handleTeamClick}
+      onFocus={onTeamFocus}
       style={{ borderWidth: borderWidth }}
     >
       {children
