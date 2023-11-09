@@ -38,6 +38,12 @@ export const getTeamFontSize = (numRounds: number) => {
   }
   return 16
 }
+// export const getTeamFontSize = (boxWidth: number, numChars: number) => {
+//   if (boxWidth < 115) {
+//     return 12
+//   }
+//   return 16
+// }
 
 export const getFirstRoundMatchGap = (numRounds: number) => {
   return firstRoundsMatchGaps[numRounds]

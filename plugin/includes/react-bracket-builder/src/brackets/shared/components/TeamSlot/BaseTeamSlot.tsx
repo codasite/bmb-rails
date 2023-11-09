@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react'
+import { useRef, useCallback, useState } from 'react'
 import { TeamSlotProps } from './../types'
 import { getUniqueTeamClass, getTeamFontSize } from '../Bracket/utils'
+import { useResizeObserver } from '../../../../utils/hooks'
 
 export const BaseTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -16,15 +17,23 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     borderColor,
     getTeamClass = getUniqueTeamClass,
     onTeamClick,
+    matchTree,
     children,
   } = props
+  const [textScale, setTextScale] = useState(1)
   const teamClass = getTeamClass(
     match.roundIndex,
     match.matchIndex,
     teamPosition ? teamPosition : 'left'
   )
+  const textRef = useRef(null)
+  const resizeCallback = useCallback(({ height, width }) => {
+    console.log(team?.name + ' height', height)
+    console.log(team?.name + ' width', width)
+  }, [])
+  useResizeObserver(textRef, resizeCallback)
 
-  const fontSizeToUse = getFontSize(match.roundIndex, team)
+  const fontSizeToUse = getFontSize(matchTree.rounds.length)
 
   const baseStyles = [
     teamClass,
@@ -65,6 +74,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
         <span
           className={`tw-font-${fontWeight}`}
           style={{ fontSize: fontSizeToUse }}
+          ref={textRef}
         >
           {team ? team.name : ''}
         </span>

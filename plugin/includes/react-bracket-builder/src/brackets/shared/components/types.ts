@@ -23,7 +23,7 @@ export interface TeamSlotProps {
   backgroundColor?: string
   borderColor?: string
   matchTree: MatchTree
-  getFontSize?: (numRounds: number, team: Team) => number
+  getFontSize?: (numRounds: number) => number
   onTeamClick?: TeamClickCallback
   setMatchTree?: (matchTree: MatchTree) => void
   getTeamClass?: (
