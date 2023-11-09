@@ -68,15 +68,14 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     >
       {children
         ? children
-        : team?.name ||
-          (placeholder && (
+        : (team?.name || placeholder) && (
             <ScaledSpan
               style={{ fontSize: fontSizeToUse }}
               targetWidth={targetWidth}
             >
               {team?.name || placeholder}
             </ScaledSpan>
-          ))}
+          )}
     </div>
   )
 }
