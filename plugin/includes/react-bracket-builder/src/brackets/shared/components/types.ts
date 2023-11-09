@@ -20,8 +20,10 @@ export interface TeamSlotProps {
   fontSize?: number
   fontWeight?: number
   textColor?: string
+  textPaddingX?: number
   backgroundColor?: string
   borderColor?: string
+  borderWidth?: number
   matchTree: MatchTree
   getFontSize?: (numRounds: number) => number
   onTeamClick?: TeamClickCallback
