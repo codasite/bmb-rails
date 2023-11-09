@@ -5,9 +5,17 @@ import { InactiveTeamSlot } from './InactiveTeamSlot'
 import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
 import { Team } from '../../models/Team'
+import { getTeamFontSize } from '../Bracket/utils'
 
 export const EditableTeamSlot = (props: TeamSlotProps) => {
-  const { team, match, teamPosition, matchTree, setMatchTree } = props
+  const {
+    team,
+    match,
+    teamPosition,
+    matchTree,
+    setMatchTree,
+    getFontSize = getTeamFontSize,
+  } = props
 
   const [editing, setEditing] = useState(false)
   const [teamName, setTeamName] = useState('')
@@ -43,6 +51,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
   }
 
   const label = team ? team.name : 'Add Team'
+  const fontSize = getFontSize(matchTree.rounds.length)
 
   return (
     <BaseTeamSlot
@@ -52,7 +61,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
       textColor="white"
       onTeamClick={handleClick}
     >
-      {editing ? (
+      {editing && (
         <input
           type="text"
           className="tw-w-[inherit] tw-border-none tw-outline-none tw-text-white tw-bg-transparent tw-px-8 tw-font-sans tw-uppercase tw-font-500 tw-text-center"
@@ -62,14 +71,15 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           onChange={handleUpdateTeamName}
           onBlur={doneEditing}
           // maxLength={12}
+          style={{
+            fontSize: fontSize,
+          }}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
               doneEditing()
             }
           }}
         />
-      ) : (
-        <span>{label}</span>
       )}
     </BaseTeamSlot>
   )

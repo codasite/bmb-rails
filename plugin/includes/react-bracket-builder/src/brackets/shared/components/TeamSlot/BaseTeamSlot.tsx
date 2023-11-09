@@ -6,6 +6,7 @@ import {
   getTeamMinFontSize,
 } from '../Bracket/utils'
 import { useResizeObserver } from '../../../../utils/hooks'
+import { ScaledSpan } from './ScaledSpan'
 
 export const BaseTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -32,17 +33,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     match.matchIndex,
     teamPosition ? teamPosition : 'left'
   )
-  const textRef = useRef(null)
-
-  const resizeCallback = useCallback(({ width: currentWidth }) => {
-    const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
-    if (currentWidth <= targetWidth) return
-    const scaleFactor = targetWidth / currentWidth
-    setTextScale(scaleFactor)
-  }, [])
-
-  useResizeObserver(textRef, resizeCallback)
-
+  const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
   const fontSizeToUse = getFontSize(matchTree.rounds.length)
 
   const baseStyles = [
@@ -84,16 +75,12 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
       {children ? (
         children
       ) : (
-        <span
-          className={`tw-font-${fontWeight}`}
-          style={{
-            fontSize: fontSizeToUse,
-            transform: `scale(${textScale})`,
-          }}
-          ref={textRef}
+        <ScaledSpan
+          style={{ fontSize: fontSizeToUse }}
+          targetWidth={targetWidth}
         >
           {team ? team.name : ''}
-        </span>
+        </ScaledSpan>
       )}
     </div>
   )
