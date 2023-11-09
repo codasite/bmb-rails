@@ -11,7 +11,7 @@ import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
 import { BracketMetaContext, DarkModeContext } from '../../context/context'
 import { DefaultMatchColumn } from '../MatchColumn'
-import { DefaultTeamSlot } from '../TeamSlot'
+import { BaseTeamSlot } from '../TeamSlot'
 import { defaultBracketConstants } from '../../constants'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { LogoContainer } from '../MatchBox/Children/LogoContainer'
@@ -37,7 +37,7 @@ export const DefaultBracket = (props: BracketProps) => {
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
     MatchBoxComponent,
-    TeamSlotComponent = DefaultTeamSlot,
+    TeamSlotComponent = BaseTeamSlot,
     MatchBoxChildComponent,
     onTeamClick,
     lineStyle,

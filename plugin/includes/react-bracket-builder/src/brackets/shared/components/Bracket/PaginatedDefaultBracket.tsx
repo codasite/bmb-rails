@@ -9,7 +9,7 @@ import {
   someMatchNotPicked,
 } from './utils'
 import { DefaultMatchColumn } from '../MatchColumn'
-import { DefaultTeamSlot } from '../TeamSlot'
+import { BaseTeamSlot } from '../TeamSlot'
 import { BracketLines, RootMatchLines } from './BracketLines'
 import { DarkModeContext } from '../../context/context'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
@@ -33,7 +33,7 @@ export const PaginatedDefaultBracket = (
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
     MatchBoxComponent,
-    TeamSlotComponent = DefaultTeamSlot,
+    TeamSlotComponent = BaseTeamSlot,
     onTeamClick,
     lineStyle,
     onFinished,

@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { defaultBracketConstants } from '../../../constants'
 import { MatchBoxChildProps } from '../../types'
 //@ts-ignore
-import { DefaultTeamSlot } from '../../TeamSlot'
+import { BaseTeamSlot } from '../../TeamSlot'
 import { BracketMetaContext } from '../../../context/context'
 
 interface WinnerContainerProps extends MatchBoxChildProps {
@@ -17,7 +17,7 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
   const {
     match,
     matchTree,
-    TeamSlotComponent = DefaultTeamSlot,
+    TeamSlotComponent = BaseTeamSlot,
     topText,
     topTextFontSize = 48,
     topTextColor = 'dd-blue',
