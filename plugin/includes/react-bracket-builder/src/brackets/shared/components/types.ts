@@ -10,6 +10,12 @@ type TeamClickCallback = (
   team?: Nullable<Team>
 ) => void
 
+type TeamClickDisabledCallback = (
+  match: MatchNode,
+  position: string,
+  team?: Nullable<Team>
+) => boolean
+
 export interface TeamSlotProps {
   team?: Nullable<Team>
   match: MatchNode
@@ -27,6 +33,7 @@ export interface TeamSlotProps {
   matchTree: MatchTree
   getFontSize?: (numRounds: number) => number
   onTeamClick?: TeamClickCallback
+  teamClickDisabled?: TeamClickDisabledCallback
   setMatchTree?: (matchTree: MatchTree) => void
   getTeamClass?: (
     roundIndex: number,

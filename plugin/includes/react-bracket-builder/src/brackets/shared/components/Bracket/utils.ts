@@ -2,6 +2,7 @@ import { defaultBracketConstants } from '../../constants'
 import { BracketRes } from '../../api/types/bracket'
 import { BracketMeta } from '../../context/context'
 import { MatchNode } from '../../models/operations/MatchNode'
+import { Team } from '../../models/Team'
 
 const {
   bracketHeights,
@@ -128,4 +129,12 @@ export const someMatchNotPicked = (matches: MatchNode[]) => {
   const notPicked = matches.some((match) => match && !match.isPicked())
   console.log('notPicked', notPicked)
   return notPicked
+}
+
+export const defaultTeamClickDisabledCallback = (
+  match: MatchNode,
+  position: string,
+  team: Team
+) => {
+  return team ? false : true
 }

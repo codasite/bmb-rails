@@ -1,6 +1,21 @@
 import { TeamSlotProps } from './../types'
-import { getUniqueTeamClass, getTeamFontSize } from '../Bracket/utils'
+import {
+  getUniqueTeamClass,
+  getTeamFontSize,
+  defaultTeamClickDisabledCallback,
+} from '../Bracket/utils'
 import { ScaledSpan } from './ScaledSpan'
+
+const DivOrButton = (props: any) => {
+  const { onClick, ...rest } = props
+  if (onClick) {
+    console.log('onClick', onClick)
+    return <button onClick={onClick} {...rest} />
+  } else {
+    console.log('no onClick', onClick)
+    return <div {...rest} />
+  }
+}
 
 export const BaseTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -13,7 +28,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     getFontSize = getTeamFontSize,
     textColor = 'white',
     textPaddingX = 4,
-    backgroundColor,
+    backgroundColor = 'transparent',
     borderColor,
     borderWidth = 0,
     getTeamClass = getUniqueTeamClass,
@@ -21,6 +36,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     matchTree,
     children,
     placeholder = '',
+    teamClickDisabled = defaultTeamClickDisabledCallback,
   } = props
   const teamClass = getTeamClass(
     match.roundIndex,
@@ -30,6 +46,10 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
   const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
   const fontSizeToUse = getFontSize(matchTree.rounds.length)
 
+  const handleTeamClick = teamClickDisabled(match, teamPosition, team)
+    ? undefined
+    : () => onTeamClick(match, teamPosition, team)
+
   const baseStyles = [
     teamClass,
     'tw-flex',
@@ -37,31 +57,27 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     'tw-items-center',
     'tw-whitespace-nowrap',
     'tw-leading-none', // line height: 1 so that font size can be guaged by scale factor
+    'tw-uppercase',
+    'tw-font-sans',
     `tw-w-[${boxWidth}px]`,
     `tw-h-[${height}px]`,
     `tw-text-${textColor}`,
     `tw-font-${fontWeight}`,
   ]
-  if (onTeamClick) {
-    baseStyles.push('tw-cursor-pointer')
-  }
   if (backgroundColor) {
     baseStyles.push(`tw-bg-${backgroundColor}`)
   }
   if (borderColor && borderWidth > 0) {
     baseStyles.push(...['tw-border-solid', `tw-border-${borderColor}`])
   }
+  if (handleTeamClick) {
+    baseStyles.push('tw-cursor-pointer')
+  }
 
   const styles = baseStyles.join(' ')
 
-  const handleTeamClick = () => {
-    if (onTeamClick) {
-      onTeamClick(match, teamPosition, team)
-    }
-  }
-
   return (
-    <div
+    <DivOrButton
       className={styles}
       onClick={handleTeamClick}
       style={{ borderWidth: borderWidth }}
@@ -76,6 +92,6 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
               {team?.name || placeholder}
             </ScaledSpan>
           )}
-    </div>
+    </DivOrButton>
   )
 }
