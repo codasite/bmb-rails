@@ -210,9 +210,9 @@ const WhiteButton = (props: ActionButtonProps) => {
 const DefaultWhiteButton = (props: ActionButtonProps) => {
   const { disabled, darkMode } = props
   const background = 'transparent'
-  const border = disabled ? 'black/20' : 'white'
+  const border = disabled ? 'black/20' : 'black'
   const darkModeBorder = disabled ? 'white/20' : 'white'
-  const textColor = disabled ? 'black/20' : 'white'
+  const textColor = disabled ? 'black/20' : 'black'
   const darkModeTextColor = disabled ? 'white/20' : 'white'
 
   return (
