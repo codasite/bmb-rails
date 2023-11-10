@@ -210,6 +210,10 @@ function addClickHandlers(ajaxObj: wpbbAppObj) {
   unpublishBracketHandler()
 }
 
+function insertElements(ajaxObj: wpbbAppObj) {
+  insertLeaderboardElements(ajaxObj)
+}
+
 function renderDiv(element: React.FunctionComponentElement<any>, id: string) {
   const div = document.getElementById(id)
   if (div) {
