@@ -8,11 +8,14 @@ const DisabledTeamSlot = (props: TeamSlotProps) => {
 }
 
 export const EditableTeamSlotSwitch = (props: TeamSlotProps) => {
-  const { match, teamPosition } = props
+  const { match, teamPosition, setMatchTree } = props
 
   let editable =
     teamPosition === 'left' ? match.left === null : match.right === null
   if (teamPosition === 'winner') {
+    editable = false
+  }
+  if (!setMatchTree) {
     editable = false
   }
 
