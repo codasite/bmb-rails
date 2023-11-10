@@ -41,10 +41,11 @@ export const getTeamFontSize = (numRounds: number) => {
 }
 
 export const getTeamMinFontSize = (numRounds: number) => {
-  if (numRounds > 4) {
-    return 10
-  }
-  return 12
+  return 10.5
+  // if (numRounds > 4) {
+  //   return 10.5
+  // }
+  // return 12
 }
 // export const getTeamFontSize = (boxWidth: number, numChars: number) => {
 //   if (boxWidth < 115) {

@@ -5,7 +5,7 @@ import { InactiveTeamSlot } from './InactiveTeamSlot'
 import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
 import { Team } from '../../models/Team'
-import { getTeamFontSize } from '../Bracket/utils'
+import { getTeamFontSize, getTeamMinFontSize } from '../Bracket/utils'
 import { BufferedTextInput } from '../BufferedTextInput'
 import { useResizeObserver } from '../../../../utils/hooks'
 
@@ -23,10 +23,11 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
   const borderWidth = 2
   const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
   const fontSize = getFontSize(matchTree.rounds.length)
-  const minFontSize = 10.5
+  const minFontSize = getTeamMinFontSize(matchTree.rounds.length)
 
   const [editing, setEditing] = useState(false)
   const [stopEditing, setStopEditing] = useState(false)
+  console.log('stopEditing', stopEditing)
   const [shadowContent, setShadowContent] = useState('')
 
   const [inputWidth, setInputWidth] = useState(targetWidth)
@@ -41,7 +42,6 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
         scaleFactor = targetWidth / currentWidth
         setInputWidth(currentWidth)
         const currentHeight = fontSize * scaleFactor
-        console.log('currentHeight', currentHeight)
         if (currentHeight < minFontSize) {
           setStopEditing(true)
         } else if (stopEditing) {
@@ -71,7 +71,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('handleChange')
+    stopEditing && setStopEditing(false)
     const { value } = event.target
     setShadowContent(value)
   }
@@ -99,7 +99,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           initialValue={team ? team.name : ''}
           onChange={handleChange}
           onDoneEditing={doneEditing}
-          placeholderEl={<span>Add Team</span>}
+          placeholderEl={<span style={{ fontSize: fontSize }}>Add Team</span>}
           className="tw-border-none tw-outline-none tw-text-white tw-bg-transparent tw-font-sans tw-uppercase tw-font-500 tw-text-center tw-p-0"
           style={{
             transform: `scale(${scale})`,
