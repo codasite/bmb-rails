@@ -34,7 +34,7 @@ export const BustablePlayPageButtons = (
         borderWidth={borderWidth}
       >
         <PlusIcon style={{ height: iconHeight }} />
-        Back this Bracket
+        Add to Apparel
       </ActionButton>
       <div
         className={`tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-gap-15 tw-mt-30 `}
