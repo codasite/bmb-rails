@@ -12,6 +12,8 @@ export interface BufferedTextInputProps {
   inputRef?: React.RefObject<HTMLInputElement>
   onHasError?: (error: string) => void
   onErrorCleared?: () => void
+  noMoreInput?: boolean
+
   [key: string]: any
 }
 
@@ -27,6 +29,7 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
     errorText,
     onHasError,
     onErrorCleared,
+    noMoreInput,
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
@@ -72,7 +75,9 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
-
+    if (value.length > buffer.length && noMoreInput) {
+      return
+    }
     setBuffer(value)
     if (onChange) {
       onChange(event)

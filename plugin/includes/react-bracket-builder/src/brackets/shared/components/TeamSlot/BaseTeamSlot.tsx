@@ -9,10 +9,8 @@ import { ScaledSpan } from './ScaledSpan'
 const DivOrButton = (props: any) => {
   const { onClick, onFocus, ...rest } = props
   if (onClick || onFocus) {
-    console.log('onClick', onClick)
     return <button onClick={onClick} onFocus={onFocus} {...rest} />
   } else {
-    console.log('no onClick', onClick)
     return <div {...rest} />
   }
 }

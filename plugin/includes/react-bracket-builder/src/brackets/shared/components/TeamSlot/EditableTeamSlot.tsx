@@ -23,9 +23,10 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
   const borderWidth = 2
   const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
   const fontSize = getFontSize(matchTree.rounds.length)
-  const minFontSize = 10
+  const minFontSize = 10.5
 
   const [editing, setEditing] = useState(false)
+  const [stopEditing, setStopEditing] = useState(false)
   const [shadowContent, setShadowContent] = useState('')
 
   const [inputWidth, setInputWidth] = useState(targetWidth)
@@ -34,12 +35,18 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
   const spanRef = React.useRef(null)
 
   const resizeCallback = React.useCallback(
-    ({ width: currentWidth, height: currentHeight }) => {
-      console.log('resizeCallback', currentWidth)
+    ({ width: currentWidth }) => {
       let scaleFactor = 1
       if (currentWidth > targetWidth) {
         scaleFactor = targetWidth / currentWidth
         setInputWidth(currentWidth)
+        const currentHeight = fontSize * scaleFactor
+        console.log('currentHeight', currentHeight)
+        if (currentHeight < minFontSize) {
+          setStopEditing(true)
+        } else if (stopEditing) {
+          setStopEditing(false)
+        }
       }
       setScale(scaleFactor)
     },
@@ -81,12 +88,13 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
       <div className="tw-relative">
         <span
           ref={spanRef}
-          className="tw-absolute tw-invisible"
+          className="tw-absolute tw-invisible tw-leading-none"
           style={{ fontSize: fontSize }}
         >
           {shadowContent}
         </span>
         <BufferedTextInput
+          noMoreInput={stopEditing}
           inputRef={inputRef}
           initialValue={team ? team.name : ''}
           onChange={handleChange}
