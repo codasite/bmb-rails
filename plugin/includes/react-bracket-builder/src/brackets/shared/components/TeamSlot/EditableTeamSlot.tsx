@@ -6,6 +6,8 @@ import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
 import { Team } from '../../models/Team'
 import { getTeamFontSize } from '../Bracket/utils'
+import { BufferedTextInput } from '../BufferedTextInput'
+import { useResizeObserver } from '../../../../utils/hooks'
 
 export const EditableTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -15,74 +17,89 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
     matchTree,
     setMatchTree,
     getFontSize = getTeamFontSize,
+    width: boxWidth,
+    textPaddingX = 4,
   } = props
+  const borderWidth = 2
+  const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
+  const fontSize = getFontSize(matchTree.rounds.length)
+  const minFontSize = 10
 
   const [editing, setEditing] = useState(false)
-  const [teamName, setTeamName] = useState('')
+  const [shadowContent, setShadowContent] = useState('')
 
-  const handleClick = () => {
-    if (!setMatchTree) {
-      return
-    }
-    setEditing(true)
-  }
+  const [inputWidth, setInputWidth] = useState(targetWidth)
+  const [scale, setScale] = useState(1)
+  const inputRef = React.useRef(null)
+  const spanRef = React.useRef(null)
 
-  const doneEditing = () => {
+  const resizeCallback = React.useCallback(
+    ({ width: currentWidth, height: currentHeight }) => {
+      console.log('resizeCallback', currentWidth)
+      let scaleFactor = 1
+      if (currentWidth > targetWidth) {
+        scaleFactor = targetWidth / currentWidth
+        setInputWidth(currentWidth)
+      }
+      setScale(scaleFactor)
+    },
+    [shadowContent]
+  )
+
+  useResizeObserver(spanRef, resizeCallback)
+
+  const doneEditing = (value: string) => {
     setEditing(false)
     if (!setMatchTree) {
       return
     }
-    const team = new Team(teamName)
-    if (teamPosition === 'left') {
-      match.setTeam1(team)
-    } else if (teamPosition === 'right') {
-      match.setTeam2(team)
+    if (team) {
+      team.name = value
     } else {
-      console.error('Invalid team position')
+      const newTeam = new Team(value)
+      match?.setTeam(newTeam, teamPosition === 'left')
     }
+
     setMatchTree(matchTree)
   }
 
-  const handleUpdateTeamName = (e) => {
-    const name = e.target.value
-    setTeamName(name)
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('handleChange')
+    const { value } = event.target
+    setShadowContent(value)
   }
-
-  const label = team?.name ? team.name : 'Add Team'
-  const fontSize = getFontSize(matchTree.rounds.length)
 
   return (
     <BaseTeamSlot
       {...props}
       backgroundColor={team?.name && !editing ? 'transparent' : 'white/15'}
       borderColor="white/50"
-      borderWidth={2}
       textColor="white"
-      onTeamClick={handleClick}
-      onTeamFocus={handleClick}
-      placeholder="Add Team"
-      teamClickDisabled={() => editing}
+      borderWidth={borderWidth}
+      teamClickDisabled={() => true}
     >
-      {editing && (
-        <input
-          type="text"
-          className="tw-w-[inherit] tw-border-none tw-outline-none tw-text-white tw-bg-transparent tw-px-8 tw-font-sans tw-uppercase tw-font-500 tw-text-center"
-          autoFocus
-          onFocus={(e) => e.target.select()}
-          value={teamName}
-          onChange={handleUpdateTeamName}
-          onBlur={doneEditing}
-          // maxLength={12}
+      <div className="tw-relative">
+        <span
+          ref={spanRef}
+          className="tw-absolute tw-invisible"
+          style={{ fontSize: fontSize }}
+        >
+          {shadowContent}
+        </span>
+        <BufferedTextInput
+          inputRef={inputRef}
+          initialValue={team ? team.name : ''}
+          onChange={handleChange}
+          onDoneEditing={doneEditing}
+          placeholderEl={<span>Add Team</span>}
+          className="tw-border-none tw-outline-none tw-text-white tw-bg-transparent tw-font-sans tw-uppercase tw-font-500 tw-text-center tw-p-0"
           style={{
+            transform: `scale(${scale})`,
+            width: inputWidth,
             fontSize: fontSize,
           }}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              doneEditing()
-            }
-          }}
         />
-      )}
+      </div>
     </BaseTeamSlot>
   )
 }
