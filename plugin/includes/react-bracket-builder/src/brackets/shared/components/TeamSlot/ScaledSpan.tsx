@@ -37,8 +37,8 @@ export const ScaledSpan = (props: any) => {
   useResizeObserver(textRef, resizeCallback)
   const newStyle = {
     ...style,
-    transform: `scale(${textScale})`,
-    visibility: showText ? 'visible' : 'hidden',
+    // transform: `scale(${textScale})`,
+    // visibility: showText ? 'visible' : 'hidden',
   }
 
   return (
