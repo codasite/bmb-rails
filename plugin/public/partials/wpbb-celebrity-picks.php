@@ -43,7 +43,7 @@ function wpbb_vip_play_card($play) {
 	$title = $play->title;
 	$id = $play->id;
 	$thumbnail = get_the_post_thumbnail_url($id);
-	$play_link = get_permalink($id) . 'play';
+	$play_link = get_permalink($id) . 'bust';
 	$leaderboard_link = get_permalink($play->bracket_id) . 'leaderboard';
 	$buttons = [
 		view_play_btn($play_link),
