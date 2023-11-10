@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, useEffect } from 'react'
+import React, { useCallback, useRef, useState, useEffect } from 'react'
 import { useResizeObserver } from '../../../../utils/hooks'
 
 export interface ScaledSpanProps {

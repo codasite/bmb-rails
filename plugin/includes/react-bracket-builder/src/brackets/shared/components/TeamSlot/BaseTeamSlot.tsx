@@ -1,3 +1,4 @@
+import React from 'react'
 import { TeamSlotProps } from './../types'
 import {
   getUniqueTeamClass,

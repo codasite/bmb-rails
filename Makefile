@@ -41,6 +41,9 @@ wp-dump:
 images-up:
 	docker compose --profile images up --build --remove-orphans
 
+images-down:
+	docker compose --profile images down -v
+
 # Start all containers in dev mode
 up:
 	docker compose --profile all up --build --remove-orphans
