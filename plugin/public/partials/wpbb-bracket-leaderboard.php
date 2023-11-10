@@ -17,7 +17,7 @@ $show_scores = $complete || $scored;
 $query = [
 		'post_status' => 'publish',
 		'bracket_id' => $bracket->id,
-		'is_printed' => true,
+		// 'is_printed' => true,
 		'orderby' => 'accuracy_score',
 		'order' => 'DESC',
 	];
@@ -72,7 +72,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 
 	ob_start();
 ?>
-	<div class="tw-flex tw-justify-between tw-px-30<?php echo $winner ? ' tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-py-30' : '' ?>">
+	<div class="tw-flex tw-justify-between sm:tw-px-30<?php echo $winner ? ' tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-py-30' : '' ?>">
 		<div class="tw-flex tw-flex-col tw-gap-16">
 			<?php if ($show_score) : ?>
 				<div class="tw-flex tw-flex-col">
@@ -86,7 +86,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 			<?php endif; ?>
 			<div class="tw-flex tw-gap-<?php echo $winner ? '20' : '16' ?>">
 				<div class="tw-flex tw-flex-col tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
-					<span class="tw-px-16 tw-text-center tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>">
+					<span class="wpbb-lb-winning-team-name tw-px-16 tw-text-center tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>">
 						<?php echo esc_html($winning_team_name); ?>
 					</span>
 					<span class="tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500<?php echo $winner ? ' tw-text-white/50' : '' ?>">
@@ -105,7 +105,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 		</div>
 		<a href="<?php echo $view_play_link ?>" class="tw-flex tw-justify-center tw-items-center tw-gap-4 tw-self-<?php echo $winner ? 'end' : 'center' ?> tw-text-white tw-text-16 tw-font-500 hover:tw-text-<?php echo $complete ? 'green' : 'yellow' ?>">
 			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/arrow_up_right.svg'); ?>
-			<span>View Play</span>
+			<span class="tw-hidden sm:tw-inline">View Play</span>
 		</a>
 	</div>
 <?php
@@ -118,7 +118,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 
 		<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 tw-pb-<?php echo $complete ? '30' : '[53px]' ?>">
 			<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trophy.svg'); ?>
-			<h1 class="tw-mt-16 tw-mb-12">
+			<h1 class="tw-mt-16 tw-mb-12 tw-font-700 tw-text-30 md:tw-text-48 lg:tw-text-64">
 				<?php echo $complete && $bracket_winner ? "{$bracket_winner->name} Wins" : esc_html(get_the_title()); ?>
 			</h1>
 			<?php if ($complete) : ?>
