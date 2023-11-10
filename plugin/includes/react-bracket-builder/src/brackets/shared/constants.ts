@@ -82,7 +82,7 @@ export const defaultBracketConstants = {
     0, // 2 rounds
     0, // 3 rounds
     0, // 4 rounds
-    0, // 5 rounds
+    150, // 5 rounds
     225, // 6 rounds
   ],
 
@@ -104,6 +104,16 @@ export const defaultBracketConstants = {
     20, // 4 rounds
     160, // 5 rounds
     160, // 6 rounds
+  ],
+
+  logoContainerMinHeight: [
+    0, // 0 rounds
+    0, // 1 round
+    0, // 2 rounds
+    0, // 3 rounds
+    0, // 4 rounds
+    375, // 5 rounds
+    425, // 6 rounds
   ],
 
   bracketActionsMarginTop: [

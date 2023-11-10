@@ -176,13 +176,11 @@ export const DefaultBracket = (props: BracketProps) => {
   const numRounds = matchTree.rounds.length
   const winnerContainerMB =
     defaultBracketConstants.winnerContainerBottomMargin[numRounds]
-  const winnerContainerMT =
-    defaultBracketConstants.winnerContainerTopMargin[numRounds]
   const winnerContainerMinHeight =
     defaultBracketConstants.winnerContainerMinHeight[numRounds]
-  const logoContainerMB =
-    defaultBracketConstants.logoContainerBottomMargin[numRounds]
   const logoContainerMT = numRounds > 5 ? 50 : 20
+  const logoContainerMinHeight =
+    defaultBracketConstants.logoContainerMinHeight[numRounds]
 
   return (
     <DarkModeContext.Provider value={dark}>
@@ -226,7 +224,7 @@ export const DefaultBracket = (props: BracketProps) => {
           <div
             style={{
               marginTop: logoContainerMT,
-              marginBottom: logoContainerMB,
+              minHeight: logoContainerMinHeight,
             }}
           >
             <LogoContainer {...props} bottomText={bracketDate} />
