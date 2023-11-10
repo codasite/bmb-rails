@@ -5,7 +5,11 @@ import { InactiveTeamSlot } from './InactiveTeamSlot'
 import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
 import { Team } from '../../models/Team'
-import { getTeamFontSize, getTeamMinFontSize } from '../Bracket/utils'
+import {
+  getTeamFontSize,
+  getTeamMinFontSize,
+  getTeamPaddingX,
+} from '../Bracket/utils'
 import { BufferedTextInput } from '../BufferedTextInput'
 import { useResizeObserver } from '../../../../utils/hooks'
 
@@ -18,10 +22,11 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
     setMatchTree,
     getFontSize = getTeamFontSize,
     width: boxWidth,
-    textPaddingX = 4,
+    getPaddingX = getTeamPaddingX,
   } = props
+  const paddingX = getPaddingX(matchTree.rounds.length)
   const borderWidth = 2
-  const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
+  const targetWidth = boxWidth - 2 * paddingX - 2 * borderWidth
   const fontSize = getFontSize(matchTree.rounds.length)
   const minFontSize = getTeamMinFontSize(matchTree.rounds.length)
 

@@ -3,6 +3,7 @@ import {
   getUniqueTeamClass,
   getTeamFontSize,
   defaultTeamClickDisabledCallback,
+  getTeamPaddingX,
 } from '../Bracket/utils'
 import { ScaledSpan } from './ScaledSpan'
 
@@ -25,7 +26,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     fontWeight = 500,
     getFontSize = getTeamFontSize,
     textColor = 'white',
-    textPaddingX = 4,
+    getPaddingX = getTeamPaddingX,
     backgroundColor = 'transparent',
     borderColor,
     borderWidth = 0,
@@ -42,7 +43,8 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     match.matchIndex,
     teamPosition ? teamPosition : 'left'
   )
-  const targetWidth = boxWidth - 2 * textPaddingX - 2 * borderWidth
+  const paddingX = getPaddingX(matchTree.rounds.length)
+  const targetWidth = boxWidth - 2 * paddingX - 2 * borderWidth
   const fontSizeToUse = getFontSize(matchTree.rounds.length)
 
   const handleTeamClick = teamClickDisabled(match, teamPosition, team)

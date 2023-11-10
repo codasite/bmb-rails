@@ -42,17 +42,14 @@ export const getTeamFontSize = (numRounds: number) => {
 
 export const getTeamMinFontSize = (numRounds: number) => {
   return 10.5
-  // if (numRounds > 4) {
-  //   return 10.5
-  // }
-  // return 12
 }
-// export const getTeamFontSize = (boxWidth: number, numChars: number) => {
-//   if (boxWidth < 115) {
-//     return 12
-//   }
-//   return 16
-// }
+
+export const getTeamPaddingX = (numRounds: number) => {
+  if (numRounds > 4) {
+    return 2
+  }
+  return 4
+}
 
 export const getFirstRoundMatchGap = (numRounds: number) => {
   return firstRoundsMatchGaps[numRounds]
