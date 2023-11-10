@@ -1,4 +1,3 @@
-// export { Bracket } from './Bracket/Bracket'
 export { DefaultMatchColumn } from './MatchColumn/DefaultMatchColumn'
 export { DefaultMatchBox } from './MatchBox/DefaultMatchBox'
 export { DefaultBracket } from './Bracket/DefaultBracket'
