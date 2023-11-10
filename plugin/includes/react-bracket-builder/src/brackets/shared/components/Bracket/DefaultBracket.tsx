@@ -176,6 +176,10 @@ export const DefaultBracket = (props: BracketProps) => {
   const numRounds = matchTree.rounds.length
   const winnerContainerMB =
     defaultBracketConstants.winnerContainerBottomMargin[numRounds]
+  const winnerContainerMT =
+    defaultBracketConstants.winnerContainerTopMargin[numRounds]
+  const winnerContainerMinHeight =
+    defaultBracketConstants.winnerContainerMinHeight[numRounds]
   const logoContainerMB =
     defaultBracketConstants.logoContainerBottomMargin[numRounds]
   const logoContainerMT = numRounds > 5 ? 50 : 20
@@ -189,7 +193,13 @@ export const DefaultBracket = (props: BracketProps) => {
         ref={containerRef}
       >
         {rootMatch && renderWinnerAndLogo && (
-          <div className={`tw-mb-[${winnerContainerMB}px]`}>
+          <div
+            className="tw-flex tw-flex-col tw-justify-end"
+            style={{
+              marginBottom: winnerContainerMB,
+              minHeight: winnerContainerMinHeight,
+            }}
+          >
             <WinnerContainer
               match={rootMatch}
               matchTree={matchTree}

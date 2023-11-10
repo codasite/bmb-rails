@@ -66,6 +66,26 @@ export const defaultBracketConstants = {
     12, // 6 rounds
   ],
 
+  winnerContainerTopMargin: [
+    0, // 0 rounds
+    0, // 1 round
+    0, // 2 rounds
+    0, // 3 rounds
+    0, // 4 rounds
+    20, // 5 rounds
+    100, // 6 rounds
+  ],
+
+  winnerContainerMinHeight: [
+    0, // 0 rounds
+    0, // 1 round
+    0, // 2 rounds
+    0, // 3 rounds
+    0, // 4 rounds
+    0, // 5 rounds
+    225, // 6 rounds
+  ],
+
   winnerContainerBottomMargin: [
     95, // 0 rounds
     95, // 1 round
