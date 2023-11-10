@@ -81,6 +81,13 @@ export class MatchNode {
   setTeam2(team: Team): void {
     this.team2 = team
   }
+  setTeam(team: Team, isTeam1: boolean): void {
+    if (isTeam1) {
+      this.setTeam1(team)
+    } else {
+      this.setTeam2(team)
+    }
+  }
   pick(team: Nullable<Team>): void {
     if (!team) {
       return

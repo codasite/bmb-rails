@@ -1,7 +1,7 @@
 import React from 'react'
 import { PaginatedBracketProps } from '../types'
 import { AddTeamsBracket } from './AddTeamsBracket'
-import { getTeamFontSize, getTeamHeight, getTeamWidth } from './utils'
+import { getTeamHeight, getTeamWidth } from './utils'
 import { ActionButton } from '../ActionButtons'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
@@ -29,25 +29,6 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
     offset -= moveOver / 2
   } else {
     offset += moveOver / 2
-  }
-  let nextDisabled = false
-  const leftMatches = getLeftMatches(rounds)
-  if (leftMatches) {
-    for (const matches of leftMatches.slice(0, 2)) {
-      for (const match of matches) {
-        if (!match) {
-          continue
-        }
-        if (!match.left && !match.getTeam1()) {
-          nextDisabled = true
-          break
-        }
-        if (!match.right && !match.getTeam2()) {
-          nextDisabled = true
-          break
-        }
-      }
-    }
   }
   if (showFullBracket) {
     return (
@@ -88,7 +69,6 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
             getTeamHeight={() => getTeamHeight(0)}
             getTeamGap={() => 10}
             getFirstRoundMatchGap={() => 15}
-            getTeamFontSize={() => getTeamFontSize(0)}
             columnsToRender={columnsToRender}
             renderWinnerAndLogo={false}
           />
@@ -109,7 +89,6 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
               variant="white"
               borderWidth={1}
               onClick={() => setPage(page + 1)}
-              disabled={nextDisabled}
               className="tw-grow"
             >
               Next

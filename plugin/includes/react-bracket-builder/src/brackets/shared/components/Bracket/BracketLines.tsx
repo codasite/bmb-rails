@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Round, MatchNode } from '../../models/MatchTree'
+import { Round } from '../../models/Round'
 import LineTo, { SteppedLineTo } from 'react-lineto'
 import { DarkModeContext } from '../../context/context'
 import { getUniqueTeamClass } from './utils'

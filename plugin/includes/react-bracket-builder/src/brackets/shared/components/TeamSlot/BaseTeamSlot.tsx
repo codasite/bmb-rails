@@ -1,6 +1,20 @@
-import React, { useState, useContext } from 'react'
 import { TeamSlotProps } from './../types'
-import { getUniqueTeamClass } from '../Bracket/utils'
+import {
+  getUniqueTeamClass,
+  getTeamFontSize,
+  defaultTeamClickDisabledCallback,
+  getTeamPaddingX,
+} from '../Bracket/utils'
+import { ScaledSpan } from './ScaledSpan'
+
+const DivOrButton = (props: any) => {
+  const { onClick, onFocus, ...rest } = props
+  if (onClick || onFocus) {
+    return <button onClick={onClick} onFocus={onFocus} {...rest} />
+  } else {
+    return <div {...rest} />
+  }
+}
 
 export const BaseTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -8,21 +22,34 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     match,
     teamPosition,
     height,
-    width = 115,
+    width: boxWidth = 115,
     fontWeight = 500,
-    fontSize = 16,
+    getFontSize = getTeamFontSize,
     textColor = 'white',
-    backgroundColor,
+    getPaddingX = getTeamPaddingX,
+    backgroundColor = 'transparent',
     borderColor,
+    borderWidth = 0,
     getTeamClass = getUniqueTeamClass,
     onTeamClick,
+    onTeamFocus,
+    matchTree,
     children,
+    placeholder = '',
+    teamClickDisabled = defaultTeamClickDisabledCallback,
   } = props
   const teamClass = getTeamClass(
     match.roundIndex,
     match.matchIndex,
     teamPosition ? teamPosition : 'left'
   )
+  const paddingX = getPaddingX(matchTree.rounds.length)
+  const targetWidth = boxWidth - 2 * paddingX - 2 * borderWidth
+  const fontSizeToUse = getFontSize(matchTree.rounds.length)
+
+  const handleTeamClick = teamClickDisabled(match, teamPosition, team)
+    ? undefined
+    : () => onTeamClick(match, teamPosition, team)
 
   const baseStyles = [
     teamClass,
@@ -30,41 +57,43 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
     'tw-justify-center',
     'tw-items-center',
     'tw-whitespace-nowrap',
-    `tw-w-[${width}px]`,
+    'tw-leading-none', // line height: 1 so that font size can be guaged by scale factor
+    'tw-uppercase',
+    'tw-font-sans',
+    `tw-w-[${boxWidth}px]`,
     `tw-h-[${height}px]`,
     `tw-text-${textColor}`,
     `tw-font-${fontWeight}`,
-    `tw-text-${fontSize}`,
   ]
-  if (onTeamClick) {
-    baseStyles.push('tw-cursor-pointer')
-  }
   if (backgroundColor) {
     baseStyles.push(`tw-bg-${backgroundColor}`)
   }
-  if (borderColor) {
-    baseStyles.push(
-      ...['tw-border-2', 'tw-border-solid', `tw-border-${borderColor}`]
-    )
+  if (borderColor && borderWidth > 0) {
+    baseStyles.push(...['tw-border-solid', `tw-border-${borderColor}`])
+  }
+  if (handleTeamClick) {
+    baseStyles.push('tw-cursor-pointer')
   }
 
   const styles = baseStyles.join(' ')
 
-  const handleTeamClick = () => {
-    if (onTeamClick) {
-      onTeamClick(match, teamPosition, team)
-    }
-  }
-
   return (
-    <div className={styles} onClick={handleTeamClick}>
-      {children ? (
-        children
-      ) : (
-        <span className={`tw-font-${fontWeight} tw-text-${fontSize}`}>
-          {team ? team.name : ''}
-        </span>
-      )}
-    </div>
+    <DivOrButton
+      className={styles}
+      onClick={handleTeamClick}
+      onFocus={onTeamFocus}
+      style={{ borderWidth: borderWidth }}
+    >
+      {children
+        ? children
+        : (team?.name || placeholder) && (
+            <ScaledSpan
+              style={{ fontSize: fontSizeToUse }}
+              targetWidth={targetWidth}
+            >
+              {team?.name || placeholder}
+            </ScaledSpan>
+          )}
+    </DivOrButton>
   )
 }

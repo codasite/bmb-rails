@@ -13,6 +13,7 @@ export const ActiveTeamSlot = (props: TeamSlotProps) => {
       {...props}
       textColor={darkMode ? 'dd-blue' : 'white'}
       backgroundColor={darkMode ? 'white' : 'dd-blue'}
+      borderWidth={0}
     />
   )
 }

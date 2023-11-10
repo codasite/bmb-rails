@@ -11,7 +11,6 @@ import {
   WithProvider,
 } from '../../shared/components/HigherOrder'
 import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
-import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
 import {
@@ -46,7 +45,6 @@ const PlayPage = (props: PlayPageProps) => {
     darkMode,
     setDarkMode,
   } = props
-  console.log('redirectUrl', redirectUrl)
 
   const [processing, setProcessing] = useState(false)
   const { width: windowWidth, height: windowHeight } = useContext(
@@ -72,7 +70,7 @@ const PlayPage = (props: PlayPageProps) => {
   const handleApparelClick = () => {
     const picks = matchTree?.toMatchPicks()
     const bracketId = bracket?.id
-    if (!picks) {
+    if (!picks || !bracketId) {
       const msg = 'Cannot create play. Missing picks'
       console.error(msg)
       Sentry.captureException(msg)
@@ -80,7 +78,7 @@ const PlayPage = (props: PlayPageProps) => {
     }
     const playReq: PlayReq = {
       title: bracket?.title,
-      bracketId: bracket?.id,
+      bracketId: bracketId,
       picks: picks,
       generateImages: true,
     }

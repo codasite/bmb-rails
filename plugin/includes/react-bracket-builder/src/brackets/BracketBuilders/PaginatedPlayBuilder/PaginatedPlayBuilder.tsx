@@ -49,6 +49,8 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onFinished={onFinished}
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
         />
       )
       break
