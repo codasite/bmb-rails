@@ -14,6 +14,7 @@ import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
 import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublishBracketHandler'
+import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -58,6 +59,7 @@ if (window.hasOwnProperty('wpbb_app_obj')) {
   renderMyBracketsModals(ajaxObj)
   renderBustBracketPlay(ajaxObj)
   addClickHandlers(ajaxObj)
+  insertElements(ajaxObj)
 } else {
   renderPrintBracketPage()
 }
@@ -211,7 +213,7 @@ function addClickHandlers(ajaxObj: wpbbAppObj) {
 }
 
 function insertElements(ajaxObj: wpbbAppObj) {
-  insertLeaderboardElements(ajaxObj)
+  insertLeaderboardTeamName(ajaxObj)
 }
 
 function renderDiv(element: React.FunctionComponentElement<any>, id: string) {

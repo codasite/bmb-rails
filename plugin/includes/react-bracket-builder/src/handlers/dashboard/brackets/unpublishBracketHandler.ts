@@ -1,5 +1,4 @@
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
-import addClickHandlers from '../../addClickHandlers'
 
 export function unpublishBracketHandler() {
   const buttons = document.getElementsByClassName(
