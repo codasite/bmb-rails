@@ -111,7 +111,7 @@ export const defaultBracketConstants = {
     0, // 1 round
     0, // 2 rounds
     0, // 3 rounds
-    0, // 4 rounds
+    200, // 4 rounds
     375, // 5 rounds
     425, // 6 rounds
   ],
