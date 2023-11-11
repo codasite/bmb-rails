@@ -45,7 +45,6 @@ class Wpbb_NotificationService implements Wpbb_NotificationService_Interface {
       $to_email = $user->user_email;
       $to_name = $user->display_name;
       $subject = 'Bracket Results Updated';
-      $bracket_url = get_permalink($bracket_id) . '/leaderboard';
       $message = [
         'to' => [
           [
@@ -61,7 +60,7 @@ class Wpbb_NotificationService implements Wpbb_NotificationService_Interface {
       $logo_url =
         'https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png';
       $heading = $this->get_pick_result_heading($pick, $winning_pick);
-      $button_url = get_permalink($bracket_id) . '/leaderboard';
+      $button_url = get_permalink($user_pick['play_id']) . 'view';
       $button_text = 'View Bracket';
 
       ob_start();
