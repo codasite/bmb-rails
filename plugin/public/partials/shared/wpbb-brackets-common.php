@@ -143,12 +143,8 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 	$name = $bracket->title;
 	$num_teams = $bracket->num_teams;
 	$num_plays = $play_repo ? $play_repo->get_count([
-		'meta_query' => [
-			[
-				'key' => 'bracket_id',
-				'value' => $bracket->id,
-			],
-		],
+		'bracket_id' => $bracket->id,
+		'is_printed' => true,
 	]) : 0;
 
 	$id = $bracket->id;
