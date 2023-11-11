@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useMemo, useContext } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useContext,
+  useCallback,
+} from 'react'
 import { ScaledBracketProps } from '../types'
 import { getBracketWidth as getWidthDefault } from './utils'
 import { WithSizeChangeListeners } from '../HigherOrder/WithSizeChangeListeners'
@@ -24,21 +30,18 @@ const ScaledBracket = (props: ScaledBracketProps) => {
   const bracketWidth = getBracketWidth(matchTree.rounds.length)
   const windowWidth = windowWidthProp || windowWidthContext
 
-  useEffect(() => {
-    const sizeListener = (height: number, width: number) => {
-      console.log('size listener')
-      console.log('height', height)
-      if (height !== bracketHeight && height) {
-        console.log('setting bracket height')
-        setBracketHeight(height)
-      }
+  const sizeListener = useCallback((height: number, width: number) => {
+    if (height !== bracketHeight && height) {
+      setBracketHeight(height)
     }
+  }, [])
 
+  useEffect(() => {
     addSizeChangeListener?.(sizeListener)
     return () => {
       removeSizeChangeListener?.(sizeListener)
     }
-  }, [bracketHeight, addSizeChangeListener, removeSizeChangeListener])
+  }, [])
 
   const scaleFactor = useMemo(() => {
     return windowWidth ? (windowWidth - paddingX * 2) / bracketWidth : scale
