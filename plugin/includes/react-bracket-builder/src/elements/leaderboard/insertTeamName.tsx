@@ -9,8 +9,23 @@ export const insertLeaderboardTeamName = (wpbbAppObj: any) => {
   )
   for (const d of divs) {
     const teamName = d.getAttribute('data-team-name')
+    const targetWidth = parseInt(d.getAttribute('data-target-width'))
     console.log('d', d)
     console.log('teamName', teamName)
-    render(<ScaledSpan targetWidth={50}>{teamName}</ScaledSpan>, d)
+    console.log('targetWidth', targetWidth)
+    render(
+      <div
+        className="tw-flex tw-justify-center"
+        style={{ maxWidth: targetWidth }}
+      >
+        <ScaledSpan
+          className="tw-flex tw-justify-center"
+          targetWidth={targetWidth}
+        >
+          {teamName}
+        </ScaledSpan>
+      </div>,
+      d
+    )
   }
 }

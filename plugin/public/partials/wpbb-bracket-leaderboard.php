@@ -86,12 +86,7 @@ function wpbb_leaderboard_play_list_item(Wpbb_BracketPlay $play, $winner = false
 			<?php endif; ?>
 			<div class="tw-flex tw-gap-<?php echo $winner ? '20' : '16' ?>">
 				<div class="tw-flex tw-flex-col tw-gap-<?php echo $winner ? '8' : '4' ?><?php echo $winner ? ' tw-justify-between' : '' ?>">
-				<div class="wpbb-lb-winning-team-name-container" data-team-name="<?php echo esc_html($winning_team_name)?>" >
-				<!-- <div class="wpbb-lb-winning-team-name-container tw-px-16 tw-text-center tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>" data-team-name="<?php echo esc_html($winning_team_name)?>" > -->
-					<!-- <span class="tw-px-16 tw-text-center tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>">
-
-						<?php echo esc_html($winning_team_name); ?>
-					</span> -->
+				<div class="wpbb-lb-winning-team-name-container tw-px-8 tw-text-center tw-py-4 tw-bg-white tw-text-dd-blue tw-font-700 <?php echo $winner ? 'tw-text-20' : 'tw-text-16' ?>" data-team-name="<?php echo esc_html($winning_team_name)?>" data-target-width="<?php echo 115 ?>">
 				</div>
 					<span class="tw-text-<?php echo $winner ? '16' : '12' ?> tw-font-500<?php echo $winner ? ' tw-text-white/50' : '' ?>">
 						winning team
