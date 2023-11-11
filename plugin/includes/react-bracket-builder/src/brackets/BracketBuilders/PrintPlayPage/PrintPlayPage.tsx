@@ -12,6 +12,7 @@ import { camelCaseKeys } from '../../shared/api/bracketApi'
 import { parseParams } from './schema'
 import { validateParams } from './validate'
 import { PrintParams } from './types'
+import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 
 interface PrintBracketPageProps {
   bracketMeta: BracketMeta
@@ -90,11 +91,14 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
       }`}
     >
       {matchTree && bracketTitle && (
-        <PickableBracket
+        <ScaledBracket
+          BracketComponent={PickableBracket}
           matchTree={matchTree}
           darkMode={darkMode}
           title={bracketTitle}
           date={bracketDate}
+          windowWidth={widthPx}
+          paddingX={20}
         />
       )}
     </div>
