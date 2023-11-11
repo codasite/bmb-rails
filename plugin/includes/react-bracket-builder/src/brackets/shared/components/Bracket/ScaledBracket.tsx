@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useMemo, useContext } from 'react'
 import { ScaledBracketProps } from '../types'
 import { getBracketWidth as getWidthDefault } from './utils'
 import { WithSizeChangeListeners } from '../HigherOrder/WithSizeChangeListeners'
@@ -26,7 +26,10 @@ const ScaledBracket = (props: ScaledBracketProps) => {
 
   useEffect(() => {
     const sizeListener = (height: number, width: number) => {
+      console.log('size listener')
+      console.log('height', height)
       if (height !== bracketHeight && height) {
+        console.log('setting bracket height')
         setBracketHeight(height)
       }
     }
@@ -48,7 +51,7 @@ const ScaledBracket = (props: ScaledBracketProps) => {
       className={`tw-flex tw-flex-col tw-justify-center tw-items-center`}
       style={{ height: scaledBracketHeight, width: scaledBracketWidth }}
     >
-      <div className={``} style={{ transform: `scale(${scaleFactor})` }}>
+      <div style={{ transform: `scale(${scaleFactor})` }}>
         <BracketComponent lineWidth={scale} {...childProps} />
       </div>
     </div>
