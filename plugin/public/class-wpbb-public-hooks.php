@@ -5,11 +5,17 @@ require_once WPBB_PLUGIN_DIR . 'includes/service/custom-query/class-wpbb-play-qu
 class Wpbb_PublicHooks
 {
 
+	private $play_repo;
+	private $bracket_repo;
 	private $play_query;
+	private $utils;
 
 	public function __construct($opts = [])
 	{
 		$this->play_query = $opts['play_query'] ?? new Wpbb_CustomPlayQuery();
+		$this->utils = $opts['utils'] ?? new Wpbb_Utils();
+		$this->play_repo = $opts['play_repo'] ?? new Wpbb_BracketPlayRepo();
+		$this->bracket_repo = $opts['bracket_repo'] ?? new Wpbb_BracketRepo();
 	}
 
 	public function add_rewrite_tags() {
@@ -115,8 +121,63 @@ class Wpbb_PublicHooks
 		$data = [
 		  'is_printed' => true,
 		];
-		$play_repo = new Wpbb_BracketPlayRepo();
 
-		$play_repo->update($play_id, $data);
+		$this->play_repo->update($play_id, $data);
 	  }
+
+	/**
+	 * this function gets hooked to the 'wp_login' action
+	 */
+	public function link_anonymous_bracket_to_user_on_login($user_login, WP_User $user) {
+		$this->link_anonymous_post_to_user_from_cookie($user->ID, 'wpbb_anonymous_bracket_id', 'wpbb_anonymous_bracket_key');
+	}
+
+	public function link_anonymous_bracket_to_user_on_register($user_id) {
+		$this->link_anonymous_post_to_user_from_cookie($user_id, 'wpbb_anonymous_bracket_id', 'wpbb_anonymous_bracket_key');
+	}
+
+	public function link_anonymous_play_to_user_on_login($user_login, WP_User $user) {
+		$this->link_anonymous_post_to_user_from_cookie($user->ID, 'play_id', 'wpbb_anonymous_play_key');
+	}
+
+	public function link_anonymous_play_to_user_on_register($user_id) {
+		$this->link_anonymous_post_to_user_from_cookie($user_id, 'play_id', 'wpbb_anonymous_play_key');
+	}
+
+	// this is hooked by the 'wpbb_after_printed_play' action
+	public function link_anonymous_printed_play_to_user($play_id, $user_id) {
+		$this->link_anonymous_post_to_user($play_id, $user_id);
+	}
+
+	public function link_anonymous_post_to_user_from_cookie($user_id, $cookie_id_name, $cookie_verify_key_name) {
+		$post_id = $this->utils->pop_cookie($cookie_id_name);
+		$cookie_key = $this->utils->pop_cookie($cookie_verify_key_name);
+		$post_meta = get_post_meta($post_id, $cookie_verify_key_name);
+		if (isset($post_meta) && !empty($post_meta)) {
+			$meta_key = $post_meta[0];
+		} else {
+			return;
+		}
+
+		if ($cookie_key !== $meta_key) {
+			return;
+		}
+
+		$this->link_anonymous_post_to_user($post_id, $user_id);
+	}
+
+	public function link_anonymous_post_to_user($post_id, $user_id) {
+		$post = get_post($post_id);
+		if (!$post) {
+			return;
+		}
+
+		if ((int) $post->post_author === 0) {
+			wp_update_post([
+				'ID' => $post_id,
+				'post_author' => $user_id,
+			]);
+		}
+	}
+	
 }

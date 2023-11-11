@@ -1,11 +1,11 @@
-import React, { useState, useEffect, createContext, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 
-interface WindowDimensions {
+interface SizeDimensions {
   width: number
   height: number
 }
 
-function getWindowDimensions(): WindowDimensions {
+function getWindowDimensions(): SizeDimensions {
   const { innerWidth: width, innerHeight: height } = window
   return {
     width,
@@ -13,17 +13,13 @@ function getWindowDimensions(): WindowDimensions {
   }
 }
 
-export function useWindowDimensions(): WindowDimensions {
-  const [windowDimensions, setWindowDimensions] = useState<WindowDimensions>(
+export function useWindowDimensions(): SizeDimensions {
+  const [windowDimensions, setWindowDimensions] = useState<SizeDimensions>(
     getWindowDimensions()
   )
 
   useEffect(() => {
     function handleResize(): void {
-      // const { width, height } = getWindowDimensions();
-      // console.log('width: ', width);
-      // console.log('height: ', height);
-
       setWindowDimensions(getWindowDimensions())
     }
 
@@ -34,22 +30,35 @@ export function useWindowDimensions(): WindowDimensions {
   return windowDimensions
 }
 
-// const BracketContext = createContext();
+export function useResizeObserver(
+  ref: React.RefObject<Element>,
+  callback: (dimensions: SizeDimensions) => void
+): void {
+  useEffect(() => {
+    const element = ref.current
+    if (!element) return
 
-// export function BracketProvider({ children }) {
-// 	const [matchTree, setMatchTree] = useState(/* initial state */);
+    // const resizeObserver = new ResizeObserver((entries) => {
+    //   if (!Array.isArray(entries) || !entries.length) return
 
-// 	return (
-// 		<BracketContext.Provider value={{ matchTree, setMatchTree }}>
-// 			{children}
-// 		</BracketContext.Provider>
-// 	);
-// }
+    //   const entry = entries[0]
+    //   const { width, height } = entry.contentRect
+    //   callback({ width, height })
+    // })
+    // resizeObserver.observe(element)
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const { inlineSize: width, blockSize: height } = entry.borderBoxSize[0]
+        callback({ width, height })
+      }
+    })
+    resizeObserver.observe(element, { box: 'border-box' })
 
-// // Use this hook in any component to access the bracket state.
-// export function useBracket() {
-// 	return useContext(BracketContext);
-// }
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [ref, callback])
+}
 
 export function useDomContentLoaded() {
   const [domContentLoaded, setDomContentLoaded] = useState(

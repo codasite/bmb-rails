@@ -1,5 +1,5 @@
 import React from 'react'
-import { BracketMetaContext, BracketMeta } from '../../context'
+import { BracketMetaContext, BracketMeta } from '../../context/context'
 
 export const WithBracketMeta = (Component: React.ComponentType<any>) => {
   return (props: any) => {

@@ -1,6 +1,8 @@
-import { defaultBracketConstants } from './constants'
-import { BracketRes } from './api/types/bracket'
-import { BracketMeta } from './context'
+import { defaultBracketConstants } from '../../constants'
+import { BracketRes } from '../../api/types/bracket'
+import { BracketMeta } from '../../context/context'
+import { MatchNode } from '../../models/operations/MatchNode'
+import { Team } from '../../models/Team'
 
 const {
   bracketHeights,
@@ -36,6 +38,17 @@ export const getTeamFontSize = (numRounds: number) => {
     return 12
   }
   return 16
+}
+
+export const getTeamMinFontSize = (numRounds: number) => {
+  return 10.5
+}
+
+export const getTeamPaddingX = (numRounds: number) => {
+  if (numRounds > 4) {
+    return 2
+  }
+  return 4
 }
 
 export const getFirstRoundMatchGap = (numRounds: number) => {
@@ -108,4 +121,18 @@ export const getBracketMeta = (bracket: BracketRes): BracketMeta => {
   const { title, month, year } = bracket
   const date = [month, year].filter(Boolean).join(' ')
   return { title, date }
+}
+
+export const someMatchNotPicked = (matches: MatchNode[]) => {
+  const notPicked = matches.some((match) => match && !match.isPicked())
+  console.log('notPicked', notPicked)
+  return notPicked
+}
+
+export const defaultTeamClickDisabledCallback = (
+  match: MatchNode,
+  position: string,
+  team: Team
+) => {
+  return team ? false : true
 }

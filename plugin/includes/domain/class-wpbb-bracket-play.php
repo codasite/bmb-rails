@@ -45,6 +45,11 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
    */
   public $is_printed;
 
+  /**
+   * @var Wpbb_BracketPlay
+   */
+  public $busted_play;
+
   public function __construct(array $data = []) {
     parent::__construct($data);
 
@@ -66,6 +71,7 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     $this->is_printed = isset($data['is_printed'])
       ? (bool) $data['is_printed']
       : false;
+    $this->busted_play = $data['busted_play'] ?? null;
   }
 
   public static function get_post_type(): string {
@@ -110,6 +116,9 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     $play['total_score'] = $this->total_score;
     $play['accuracy_score'] = $this->accuracy_score;
     $play['busted_id'] = $this->busted_id;
+    if (!empty($this->busted_play)) {
+      $play['busted_play'] = $this->busted_play->to_array();
+    }
     $play['is_printed'] = $this->is_printed;
     if ($this->picks) {
       $play['picks'] = [];
@@ -137,7 +146,6 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
   }
 
   public function get_date(): string {
-    // return $this->bracket->date;
     return $this->bracket->get_date();
   }
 

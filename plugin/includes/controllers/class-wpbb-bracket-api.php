@@ -46,7 +46,7 @@ class Wpbb_BracketApi extends WP_REST_Controller {
    * Constructor.
    */
   public function __construct($args = []) {
-    $this->utils = new Wpbb_Utils();
+    $this->utils = $args['utils'] ?? new Wpbb_Utils();
     $this->bracket_repo = new Wpbb_BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
@@ -199,6 +199,20 @@ class Wpbb_BracketApi extends WP_REST_Controller {
     }
 
     $saved = $this->bracket_repo->add($bracket);
+    // check if user logged in
+    if (!is_user_logged_in()) {
+      // if (get_current_user_id() === 0)
+      $this->utils->set_cookie('wpbb_anonymous_bracket_id', $saved->id);
+
+      // nonce
+      // $nonce = 'fatty';
+      $bytes = random_bytes(32);
+      $nonce = base64_encode($bytes);
+      $this->utils->set_cookie('wpbb_anonymous_bracket_key', $nonce);
+
+      update_post_meta($saved->id, 'wpbb_anonymous_bracket_key', $nonce);
+    }
+    // chec
     return new WP_REST_Response($saved, 201);
   }
 

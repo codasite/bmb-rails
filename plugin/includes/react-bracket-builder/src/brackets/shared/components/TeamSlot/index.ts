@@ -1,5 +1,4 @@
 export { BaseTeamSlot } from './BaseTeamSlot'
-export { DefaultTeamSlot } from './DefaultTeamSlot'
 export { ActiveTeamSlot } from './ActiveTeamSlot'
 export { InactiveTeamSlot } from './InactiveTeamSlot'
 export { TeamSlotToggle } from './TeamSlotToggle'

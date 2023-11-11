@@ -5,6 +5,7 @@ import { PickableBracket } from '../../shared/components/Bracket'
 import { ThemeSelector } from '../../shared/components'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PlayBuilderProps } from './types'
+import { Spinner } from '../../shared/components/Spinner'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {
@@ -35,12 +36,19 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
           <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
           <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
             <ActionButton
-              variant="big-green"
+              variant="green"
+              size="big"
               darkMode={darkMode}
               onClick={handleApparelClick}
               disabled={processing || !matchTree.allPicked()}
+              height={72}
+              width={405}
             >
-              Add to Apparel
+              {processing ? (
+                <Spinner fill="white" height={50} width={50} />
+              ) : (
+                'Add to Apparel'
+              )}
             </ActionButton>
           </div>
         </div>

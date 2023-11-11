@@ -1,4 +1,3 @@
-export { Bracket } from './Bracket'
 export { DefaultBracket } from './DefaultBracket'
 export { PickableBracket } from './PickableBracket'
 export { FlexBracket } from './FlexBracket'

@@ -1,18 +1,17 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef, useCallback } from 'react'
 import {
   getBracketWidth as getDefaultBracketWidth,
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
   getSubsequentMatchGap as getDefaultSubsequentMatchGap,
-  getTeamFontSize as getDefaultTeamFontSize,
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
   getTeamWidth as getDefaultTeamWidth,
-} from '../../utils'
+} from './utils'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
-import { BracketMetaContext, DarkModeContext } from '../../context'
+import { BracketMetaContext, DarkModeContext } from '../../context/context'
 import { DefaultMatchColumn } from '../MatchColumn'
-import { DefaultTeamSlot } from '../TeamSlot'
+import { BaseTeamSlot } from '../TeamSlot'
 import { defaultBracketConstants } from '../../constants'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { LogoContainer } from '../MatchBox/Children/LogoContainer'
@@ -24,6 +23,8 @@ import {
   getLeftMatches,
   getRightMatches,
 } from '../../models/operations/GetMatchSections'
+import { SizeChangeListenerContext } from '../../context/SizeChangeListenerContext'
+import { useResizeObserver } from '../../../../utils/hooks'
 
 export const DefaultBracket = (props: BracketProps) => {
   const {
@@ -33,12 +34,11 @@ export const DefaultBracket = (props: BracketProps) => {
     getTeamGap = getDefaultTeamGap,
     getFirstRoundMatchGap = getDefaultFirstRoundMatchGap,
     getSubsequentMatchGap = getDefaultSubsequentMatchGap,
-    getTeamFontSize = getDefaultTeamFontSize,
     matchTree,
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
     MatchBoxComponent,
-    TeamSlotComponent = DefaultTeamSlot,
+    TeamSlotComponent = BaseTeamSlot,
     MatchBoxChildComponent,
     onTeamClick,
     lineStyle,
@@ -51,6 +51,24 @@ export const DefaultBracket = (props: BracketProps) => {
     columnsToRender,
     renderWinnerAndLogo = true,
   }: BracketProps = props
+
+  const containerRef = useRef(null)
+  const { sizeChangeListeners } = useContext(SizeChangeListenerContext)
+
+  const resizeCallback = useCallback(
+    ({ height, width }) => {
+      console.log('resizeCallback', height, width)
+      if (sizeChangeListeners && containerRef.current) {
+        sizeChangeListeners?.forEach((listener) => {
+          console.log('listener', listener)
+          listener(height, width)
+        })
+      }
+    },
+    [sizeChangeListeners]
+  )
+
+  useResizeObserver(containerRef, resizeCallback)
 
   let dark = darkMode
   if (dark === undefined) {
@@ -109,7 +127,6 @@ export const DefaultBracket = (props: BracketProps) => {
       const roundIndex = matches.find((match) => match !== null)?.roundIndex
       const { teamHeight, teamWidth, teamGap, matchGap } =
         getBracketMeasurements(roundIndex ?? i, numRounds)
-      const fontSize = getTeamFontSize(numRounds)
       return (
         <MatchColumnComponent
           key={`${position}-${i}`}
@@ -124,7 +141,6 @@ export const DefaultBracket = (props: BracketProps) => {
           teamGap={teamGap}
           teamHeight={teamHeight}
           teamWidth={teamWidth}
-          teamFontSize={fontSize}
           onTeamClick={onTeamClick}
         />
       )
@@ -160,9 +176,11 @@ export const DefaultBracket = (props: BracketProps) => {
   const numRounds = matchTree.rounds.length
   const winnerContainerMB =
     defaultBracketConstants.winnerContainerBottomMargin[numRounds]
-  const logoContainerMB =
-    defaultBracketConstants.logoContainerBottomMargin[numRounds]
+  const winnerContainerMinHeight =
+    defaultBracketConstants.winnerContainerMinHeight[numRounds]
   const logoContainerMT = numRounds > 5 ? 50 : 20
+  const logoContainerMinHeight =
+    defaultBracketConstants.logoContainerMinHeight[numRounds]
 
   return (
     <DarkModeContext.Provider value={dark}>
@@ -170,9 +188,16 @@ export const DefaultBracket = (props: BracketProps) => {
         className={`tw-flex tw-flex-col${
           dark ? ' tw-dark' : ''
         } wpbb-default-bracket tw-relative`}
+        ref={containerRef}
       >
         {rootMatch && renderWinnerAndLogo && (
-          <div className={`tw-mb-[${winnerContainerMB}px]`}>
+          <div
+            className="tw-flex tw-flex-col tw-justify-end"
+            style={{
+              marginBottom: winnerContainerMB,
+              minHeight: winnerContainerMinHeight,
+            }}
+          >
             <WinnerContainer
               match={rootMatch}
               matchTree={matchTree}
@@ -199,7 +224,7 @@ export const DefaultBracket = (props: BracketProps) => {
           <div
             style={{
               marginTop: logoContainerMT,
-              marginBottom: logoContainerMB,
+              minHeight: logoContainerMinHeight,
             }}
           >
             <LogoContainer {...props} bottomText={bracketDate} />

@@ -7,33 +7,6 @@ $post = get_post();
 if (!$post || $post->post_type !== 'bracket') {
 	return $error_page;
 }
-$bracket_repo = new Wpbb_BracketRepo();
-$bracket = $bracket_repo->get(post: $post);
-if (!$bracket) {
-	return $error_page;
-}
-$preview_service = new Wpbb_ProductPreviewService();
-$apparel_url = $preview_service->get_archive_url();
-$play_history_url = get_permalink(get_page_by_path('dashboard')) . '?tab=play-history';
-
-
-// $bracket_product_archive_url = $this->get_archive_url();
-
-wp_localize_script(
-	'wpbb-bracket-builder-react',
-	'wpbb_ajax_obj',
-	array(
-		'bracket' => $bracket,
-		// 'sentry_env' => $sentry_env,
-		// 'sentry_dsn' => $sentry_dsn,
-		'my_brackets_url' => get_permalink(get_page_by_path('dashboard')) . '?tab=brackets',
-		'nonce' => wp_create_nonce('wp_rest'),
-		'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-		'redirect_url' => $apparel_url, // used to redirect to bracket-ready category page
-
-		// 'bracket_product_archive_url' => $bracket_product_archive_url, // used to redirect to bracket-ready category page
-	)
-);
 
 $view = get_query_var('view');
 switch ($view) {
@@ -47,6 +20,10 @@ switch ($view) {
         echo '<div id="wpbb-bracket-builder"></div>';
         break;
     case 'results':
+		if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
+			include(WPBB_PLUGIN_DIR . 'public/error/401.php');
+			return;
+		}
         echo '<div id="wpbb-bracket-results-builder"></div>';
         break;
     default:

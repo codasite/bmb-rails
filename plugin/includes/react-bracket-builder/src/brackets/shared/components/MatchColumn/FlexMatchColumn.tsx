@@ -5,7 +5,7 @@ import { MatchColumnProps } from '../types'
 import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox'
 import { FlexMatchBox } from '../MatchBox'
 import { FlexTeamSlot } from '../TeamSlot'
-import { isPowerOfTwo } from '../../utils'
+import { isPowerOfTwo } from '../Bracket/utils'
 import { flexBracketConstants } from '../../constants'
 import { WildcardPlacement } from '../../models/WildcardPlacement'
 

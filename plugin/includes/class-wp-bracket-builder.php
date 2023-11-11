@@ -341,9 +341,44 @@ class Wp_Bracket_Builder {
     );
 
     $this->loader->add_action(
-      'wpbb_play_printed',
+      'wpbb_after_play_printed',
       $public_hooks,
       'mark_play_printed',
+      10,
+      1
+    );
+    $this->loader->add_action(
+      'wpbb_after_play_printed',
+      $public_hooks,
+      'link_anonymous_printed_play_to_user',
+      10,
+      2
+    );
+    $this->loader->add_action(
+      'wp_login',
+      $public_hooks,
+      'link_anonymous_bracket_to_user_on_login',
+      10,
+      2
+    );
+    $this->loader->add_action(
+      'user_register',
+      $public_hooks,
+      'link_anonymous_bracket_to_user_on_register',
+      10,
+      1
+    );
+    $this->loader->add_action(
+      'wp_login',
+      $public_hooks,
+      'link_anonymous_play_to_user_on_login',
+      10,
+      2
+    );
+    $this->loader->add_action(
+      'user_register',
+      $public_hooks,
+      'link_anonymous_play_to_user_on_register',
       10,
       1
     );

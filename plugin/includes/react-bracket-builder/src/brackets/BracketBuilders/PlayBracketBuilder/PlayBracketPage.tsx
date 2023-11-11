@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import * as Sentry from '@sentry/react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context'
+import { BracketMeta } from '../../shared/context/context'
 import {
   WithBracketMeta,
   WithDarkMode,
@@ -11,14 +11,18 @@ import {
   WithProvider,
 } from '../../shared/components/HigherOrder'
 import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
-import { useWindowDimensions } from '../../../utils/hooks'
-import { PaginatedPlayBuilder } from './PaginatedPlayBuilder/PaginatedPlayBuilder'
+import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
-import { getBracketMeta, getBracketWidth } from '../../shared/utils'
+import {
+  getBracketMeta,
+  getBracketWidth,
+} from '../../shared/components/Bracket/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
+import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
+import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 
 interface PlayPageProps {
-  apparelUrl: string
+  redirectUrl: string
   bracketStylesheetUrl: string
   bracket?: BracketRes
   matchTree?: MatchTree
@@ -32,7 +36,7 @@ interface PlayPageProps {
 const PlayPage = (props: PlayPageProps) => {
   const {
     bracket,
-    apparelUrl,
+    redirectUrl,
     bracketStylesheetUrl,
     matchTree,
     setMatchTree,
@@ -41,10 +45,11 @@ const PlayPage = (props: PlayPageProps) => {
     darkMode,
     setDarkMode,
   } = props
-  console.log('apparelUrl', apparelUrl)
 
   const [processing, setProcessing] = useState(false)
-  const { width: windowWidth, height: windowHeight } = useWindowDimensions()
+  const { width: windowWidth, height: windowHeight } = useContext(
+    WindowDimensionsContext
+  )
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
@@ -65,7 +70,7 @@ const PlayPage = (props: PlayPageProps) => {
   const handleApparelClick = () => {
     const picks = matchTree?.toMatchPicks()
     const bracketId = bracket?.id
-    if (!picks) {
+    if (!picks || !bracketId) {
       const msg = 'Cannot create play. Missing picks'
       console.error(msg)
       Sentry.captureException(msg)
@@ -73,18 +78,16 @@ const PlayPage = (props: PlayPageProps) => {
     }
     const playReq: PlayReq = {
       title: bracket?.title,
-      bracketId: bracket?.id,
+      bracketId: bracketId,
       picks: picks,
       generateImages: true,
     }
 
-    console.log(playReq)
     setProcessing(true)
-    console.time('createPlay')
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        window.location.href = apparelUrl
+        window.location.href = redirectUrl
       })
       .catch((err) => {
         console.error('error: ', err)
@@ -115,8 +118,8 @@ const PlayPage = (props: PlayPageProps) => {
   return <PlayBuilder {...playBuilderProps} />
 }
 
-const WrappedPlayPage = WithProvider(
-  WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage)))
+const WrappedPlayPage = WithWindowDimensions(
+  WithProvider(WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage))))
 )
 
 export default WrappedPlayPage

@@ -964,6 +964,37 @@ describe('MatchTree', () => {
     expect(tree?.allTeamsAdded()).toBe(false)
   })
 
+  test('testing allTeamsAdded with empty team names', () => {
+    const rounds = [
+      new Round(0, 2, [
+        new MatchNode({
+          roundIndex: 0,
+          matchIndex: 0,
+          depth: 1,
+          team1: new Team(''),
+          team2: new Team('Team 2'),
+        }),
+        new MatchNode({
+          roundIndex: 0,
+          matchIndex: 1,
+          depth: 1,
+          team1: new Team('Team 3'),
+          team2: new Team('Team 4'),
+        }),
+      ]),
+      new Round(1, 1, [
+        new MatchNode({ roundIndex: 1, matchIndex: 0, depth: 0 }),
+      ]),
+    ]
+
+    linkNodes(rounds)
+
+    const tree = new MatchTree()
+    tree.rounds = rounds
+
+    expect(tree?.allTeamsAdded()).toBe(false)
+  })
+
   test('testing getWildcardPlacement', () => {
     expect(
       MatchTree.fromNumTeams(

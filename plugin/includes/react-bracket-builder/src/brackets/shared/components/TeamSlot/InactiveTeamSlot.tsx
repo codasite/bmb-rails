@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 //@ts-ignore
-import { DarkModeContext } from '../../context'
+import { DarkModeContext } from '../../context/context'
 import { TeamSlotProps } from '../types'
 import { BaseTeamSlot } from './BaseTeamSlot'
 
@@ -13,6 +13,7 @@ export const InactiveTeamSlot = (props: TeamSlotProps) => {
       textColor={darkMode ? 'white' : 'dd-blue'}
       borderColor={darkMode ? 'white/50' : 'dd-blue/50'}
       onTeamClick={team ? onTeamClick : undefined}
+      borderWidth={2}
       {...props}
     />
   )

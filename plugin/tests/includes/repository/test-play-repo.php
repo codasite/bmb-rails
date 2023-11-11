@@ -566,4 +566,22 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($play1->id, $plays[0]->id);
     $this->assertEquals($play2->id, $plays[1]->id);
   }
+
+  public function test_get_with_busted_play() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $busted = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+    $buster = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'busted_id' => $busted->id,
+    ]);
+
+    $play = $this->play_repo->get($buster->id);
+
+    $this->assertEquals($busted->id, $play->busted_id);
+    $this->assertEquals($busted->id, $play->busted_play->id);
+  }
 }

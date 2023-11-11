@@ -1,8 +1,8 @@
 import React from 'react'
 import { PaginatedBracketProps } from '../types'
 import { AddTeamsBracket } from './AddTeamsBracket'
-import { getTeamFontSize, getTeamHeight, getTeamWidth } from '../../utils'
-import { WhiteButton } from '../ActionButtons'
+import { getTeamHeight, getTeamWidth } from './utils'
+import { ActionButton } from '../ActionButtons'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 import { ReactComponent as EditIcon } from '../../assets/edit-icon.svg'
@@ -30,33 +30,15 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   } else {
     offset += moveOver / 2
   }
-  let nextDisabled = false
-  const leftMatches = getLeftMatches(rounds)
-  if (leftMatches) {
-    for (const matches of leftMatches.slice(0, 2)) {
-      for (const match of matches) {
-        if (!match) {
-          continue
-        }
-        if (!match.left && !match.getTeam1()) {
-          nextDisabled = true
-          break
-        }
-        if (!match.right && !match.getTeam2()) {
-          nextDisabled = true
-          break
-        }
-      }
-    }
-  }
   if (showFullBracket) {
     return (
-      <>
+      <div className="tw-flex tw-flex-col tw-gap-40">
         <ScaledBracket
           matchTree={props.matchTree}
           BracketComponent={AddTeamsBracket}
         />
-        <WhiteButton
+        <ActionButton
+          variant="white"
           className="tw-w-full tw-mb-12"
           paddingX={10}
           borderWidth={1}
@@ -67,8 +49,8 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
         >
           <EditIcon />
           Edit
-        </WhiteButton>
-      </>
+        </ActionButton>
+      </div>
     )
   }
   return (
@@ -87,7 +69,6 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
             getTeamHeight={() => getTeamHeight(0)}
             getTeamGap={() => 10}
             getFirstRoundMatchGap={() => 15}
-            getTeamFontSize={() => getTeamFontSize(0)}
             columnsToRender={columnsToRender}
             renderWinnerAndLogo={false}
           />
@@ -104,26 +85,28 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
         </div>
         <div className={'tw-flex tw-gap-8 tw-mb-12'}>
           {page == 0 && (
-            <WhiteButton
+            <ActionButton
+              variant="white"
               borderWidth={1}
               onClick={() => setPage(page + 1)}
-              disabled={nextDisabled}
               className="tw-grow"
             >
               Next
               <ChevronRight />
-            </WhiteButton>
+            </ActionButton>
           )}
           {page == 1 && (
             <>
-              <WhiteButton
+              <ActionButton
+                variant="white"
                 paddingX={10}
                 borderWidth={1}
                 onClick={() => setPage(page - 1)}
               >
                 <ChevronLeft />
-              </WhiteButton>
-              <WhiteButton
+              </ActionButton>
+              <ActionButton
+                variant="white"
                 fontSize={14}
                 className="tw-grow"
                 borderWidth={1}
@@ -131,7 +114,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
                 onClick={() => setShowFullBracket(true)}
               >
                 View full bracket
-              </WhiteButton>
+              </ActionButton>
             </>
           )}
         </div>

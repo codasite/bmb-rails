@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { MatchTree } from './models/MatchTree'
+import { MatchTree } from '../models/MatchTree'
 
 export interface BracketMeta {
   title?: string
@@ -8,6 +8,7 @@ export interface BracketMeta {
 
 export const DarkModeContext = createContext(false)
 export const BracketMetaContext = createContext<BracketMeta>({})
+export const CallbackContext = createContext<() => void>(() => {})
 
 export interface MatchTreeContextState {
   matchTree?: MatchTree
@@ -16,3 +17,7 @@ export interface MatchTreeContextState {
 
 export const BusterMatchTreeContext = createContext<MatchTreeContextState>({})
 export const BusteeMatchTreeContext = createContext<MatchTreeContextState>({})
+
+export const MatchTreeContext = createContext<MatchTreeContextState>({})
+export const MatchTreeContext1 = createContext<MatchTreeContextState>({})
+export const MatchTreeContext2 = createContext<MatchTreeContextState>({})

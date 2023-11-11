@@ -11,17 +11,6 @@ $bracket_repo = new Wpbb_BracketRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
 
 
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['archive_bracket_id'])) {
-// 	if (wp_verify_nonce($_POST['archive_bracket_nonce'], 'archive_bracket_action')) {
-// 		$bracket_repo->update($_POST['archive_bracket_id'], [
-// 			'status' => 'private',
-// 		]);
-// 	}
-
-// 	wp_redirect(get_permalink() . "brackets");
-// 	exit;
-// }
-
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 $paged_status = get_query_var('status');
 
@@ -85,7 +74,7 @@ function private_bracket_buttons($bracket) {
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 		<!-- This goes to the Play Bracket page -->
-		<?php echo play_bracket_btn($bracket_play_link, $bracket); ?>
+		<?php echo play_bracket_btn($bracket_play_link); ?>
 		<!-- This goes to the Score Bracket page -->
 		<?php echo go_live_btn($bracket->id); ?>
 	</div>
@@ -103,7 +92,7 @@ function live_bracket_buttons($bracket) {
 	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 			<!-- This goes to the Play Bracket page -->
-			<?php echo play_bracket_btn($bracket_play_link, $bracket); ?>
+			<?php echo play_bracket_btn($bracket_play_link); ?>
 			<!-- This goes to the Score Bracket page -->
 			<?php echo score_bracket_btn($bracket_score_link, $bracket); ?>
 		</div>
@@ -274,12 +263,8 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
 	$title = $bracket->title;
 	$num_teams = $bracket->num_teams;
 	$num_plays = $play_repo ? $play_repo->get_count([
-		'meta_query' => [
-			[
-				'key' => 'bracket_id',
-				'value' => $bracket->id,
-			],
-		],
+		'bracket_id' => $bracket->id,
+		'is_printed' => true,
 	]) : 0;
 
 	$id = $bracket->id;
@@ -296,7 +281,7 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
       </div>
     </div>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
-      <h2 class="tw-text-white tw-font-700 tw-text-30"><?php echo esc_html($title) ?></h2>
+      <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html($title) ?></h2>
 			<div class="tw-flex tw-gap-10 tw-items-center">
 				<?php echo get_bracket_icon_buttons($bracket); ?>
 			</div>
@@ -313,10 +298,10 @@ function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
 
 <div id="wpbb-my-brackets-modals"></div>
 <div class="tw-flex tw-flex-col tw-gap-15">
-	<h1 class="tw-mb-8 tw-text-64 tw-font-700 tw-leading-none">My Brackets</h1>
+	<h1 class="tw-mb-8 tw-text-32 sm:tw-text-48 lg:tw-text-64 tw-font-700 tw-leading-none">My Brackets</h1>
 	<a href="<?php echo get_permalink(get_page_by_path('bracket-builder'))?>" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/signal.svg'); ?>
-		<span class="tw-font-700 tw-text-24 tw-leading-none">Create Bracket</span>
+		<span class="tw-font-700 tw-text-16 sm:tw-text-24 tw-leading-none">Create Bracket</span>
 	</a>
 	<div class="tw-flex tw-gap-10 tw-gap-10 tw-py-11">
 		<?php echo wpbb_sort_button('All', get_permalink() . "brackets/?status=all", $paged_status === 'all'); ?>

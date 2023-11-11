@@ -10,6 +10,12 @@ type TeamClickCallback = (
   team?: Nullable<Team>
 ) => void
 
+type TeamClickDisabledCallback = (
+  match: MatchNode,
+  position: string,
+  team?: Nullable<Team>
+) => boolean
+
 export interface TeamSlotProps {
   team?: Nullable<Team>
   match: MatchNode
@@ -22,8 +28,13 @@ export interface TeamSlotProps {
   textColor?: string
   backgroundColor?: string
   borderColor?: string
+  borderWidth?: number
   matchTree: MatchTree
+  getPaddingX?: (numRounds: number) => number
+  getFontSize?: (numRounds: number) => number
   onTeamClick?: TeamClickCallback
+  onTeamFocus?: TeamClickCallback
+  teamClickDisabled?: TeamClickDisabledCallback
   setMatchTree?: (matchTree: MatchTree) => void
   getTeamClass?: (
     roundIndex: number,
@@ -31,6 +42,7 @@ export interface TeamSlotProps {
     position: string
   ) => string
   children?: React.ReactNode
+  placeholder?: React.ReactNode
 }
 
 export interface MatchBoxProps {
@@ -69,7 +81,6 @@ export interface BracketProps {
   getTeamGap?: (depth: number) => number
   getTeamHeight?: (numRounds: number) => number
   getTeamWidth?: (numRounds: number) => number
-  getTeamFontSize?: (numRounds: number) => number
   getFirstRoundMatchGap?: (numRounds: number) => number
   getSubsequentMatchGap?: (
     prevMatchHeight: number,
@@ -102,18 +113,36 @@ export interface BracketActionButtonProps extends ActionButtonProps {
 
 export interface PaginatedBracketProps extends BracketProps {
   onFinished?: () => void
-  NextButtonComponent?: React.FC<ActionButtonProps>
-  FinalButtonComponent?: React.FC<ActionButtonProps>
+  NavButtonsComponent?: React.FC<PaginatedNavButtonsProps>
 }
 
+export interface PaginatedNavButtonsProps {
+  PrevButtonComponent?: React.FC<ActionButtonProps>
+  NextButtonComponent?: React.FC<ActionButtonProps>
+  FullBracketBtnComponent?: React.FC<ActionButtonProps>
+  FinalButtonComponent?: React.FC<ActionButtonProps>
+  disablePrev?: boolean
+  disableNext?: boolean
+  hasNext?: boolean
+  onPrev?: () => void
+  onNext?: () => void
+  onFinished?: () => void
+  onFullBracket?: () => void
+}
+
+// why is this different from PaginatedBracketProps?
 export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
   page: number
   setPage: (page: number) => void
-  disableNext: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
+  disableNext?: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
+  forcePageAllPicked?: boolean
 }
 
 export interface ScaledBracketProps extends BracketProps {
   scale?: number
+  windowWidth?: number
+  paddingX?: number
+  paddingY?: number
 }
 
 export interface MatchBoxChildProps {
