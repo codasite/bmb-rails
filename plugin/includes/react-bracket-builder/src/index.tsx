@@ -49,7 +49,6 @@ declare var wpbb_bracket_product_preview_obj: any
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 if (window.hasOwnProperty('wpbb_app_obj')) {
   const ajaxObj: wpbbAppObj = camelCaseKeys(wpbb_app_obj)
-  console.log('ajaxObj', ajaxObj)
   initializeSentry(ajaxObj)
   renderProductPreview(ajaxObj)
   renderBracketBuilder(ajaxObj)
@@ -146,7 +145,7 @@ function renderBustBracketPlay(ajaxObj: wpbbAppObj) {
       <App>
         <BustPlayPage
           bracketPlay={play}
-          bracketProductArchiveUrl={bracketProductArchiveUrl}
+          addApparelUrl={bracketProductArchiveUrl}
           myPlayHistoryUrl={myPlayHistoryUrl}
         />
       </App>,
