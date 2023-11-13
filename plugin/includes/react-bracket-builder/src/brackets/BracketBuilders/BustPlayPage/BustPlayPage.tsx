@@ -64,7 +64,9 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   }
 
   const handleAddApparel = async () => {
-    addToApparelHandler(play?.id, addApparelUrl)
+    console.log('id', play.id)
+    console.log('apparel', addApparelUrl)
+    // addToApparelHandler(play?.id, addApparelUrl)
   }
 
   useEffect(() => {
