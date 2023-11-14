@@ -126,43 +126,6 @@ services:
       - all
       - import
 
-  wp-test:
-    tty: true
-    build:
-      context: .
-      dockerfile: ./docker/wordpress/Dockerfile.test
-      args:
-        PLUGIN_NAME: wp-bracket-builder
-    environment:
-      WORDPRESS_DB_HOST: wp-test-db
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
-      WORDPRESS_DB_NAME: wordpress
-      WORDPRESS_DEBUG: 1
-      PLUGIN_NAME: wp-bracket-builder
-      WORDPRESS_URL: http://localhost:8008
-      WORDPRESS_TITLE: Wordpress
-      WORDPRESS_ADMIN_USER: admin
-      WORDPRESS_ADMIN_PASSWORD: admin
-      WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
-    volumes:
-      - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
-    depends_on:
-      - wp-test-db
-    profiles:
-      - test
-
-  wp-test-db:
-    tty: true
-    image: mariadb
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
-    profiles:
-      - test
-
   wp-import:
     tty: true
     container_name: wp-import
