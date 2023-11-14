@@ -173,7 +173,6 @@ class Wpbb_BracketRepo extends Wpbb_CustomPostRepoBase {
       'results_first_updated_at' => $results_updated,
       'thumbnail_url' => get_the_post_thumbnail_url($bracket_post->ID),
       'url' => get_permalink($bracket_post->ID),
-      'is_playable' => !has_tag('bmb_upcoming', $bracket_post->ID),
     ];
 
     return new Wpbb_Bracket($data);

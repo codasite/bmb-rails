@@ -18,37 +18,29 @@ if (empty($paged_status)) {
 	$paged_status = 'all';
 }
 
-$all_status = ['publish', 'score', 'complete', UPCOMING_STATUS];
+$all_statuses = ['publish', 'score', 'complete', UPCOMING_STATUS];
 $active_status = ['publish'];
 $scored_status = ['score', 'complete'];
 
 if ($paged_status === 'all') {
-	$post_status = $all_status;
-} else if ($paged_status === 'active' || $paged_status === LIVE_STATUS || $paged_status === UPCOMING_STATUS) {
-	$post_status = $active_status;
+	$status_query = $all_statuses;
+} else if ($paged_status === LIVE_STATUS) {
+	$status_query = $active_status;
+} else if ($paged_status === UPCOMING_STATUS) {
+$status_query = [UPCOMING_STATUS];
 } else if ($paged_status === 'scored') {
-	$post_status = $scored_status;
+	$status_query = $scored_status;
 } else {
-	$post_status = $all_status;
+	$status_query = $all_statuses;
 }
 
-$tags = ['bmb_official_bracket'];
-if ($paged_status === 'upcoming') {
-	$tags[] = BMB_UPCOMING;
-}
-$tags_not_in = [];
-if ($paged_status === LIVE_STATUS) {
-  $tag = get_term_by('slug', BMB_UPCOMING,'post_tag');
-  $tags_not_in[] = $tag->term_id;
-}
 
 $the_query = new WP_Query([
 	'post_type' => Wpbb_Bracket::get_post_type(),
-	'tag_slug__and' => $tags,
-  'tag__not_in' => $tags_not_in,
+	'tag_slug__and' => ['bmb_official_bracket'],
 	'posts_per_page' => 8,
 	'paged' => $paged,
-	'post_status' => $post_status,
+	'post_status' => $status_query,
 	// 'orderby' => 'date',
 	'order' => 'DESC',
 ]);

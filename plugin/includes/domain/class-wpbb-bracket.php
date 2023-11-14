@@ -45,11 +45,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
    */
   public $results_first_updated_at;
 
-  /**
-   * @var bool
-   */
-  public $is_playable;
-
   public function __construct(array $data = []) {
     parent::__construct($data);
     $this->month = $data['month'] ?? null;
@@ -60,7 +55,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $this->results = $data['results'] ?? [];
     $this->results_first_updated_at =
       $data['results_first_updated_at'] ?? false;
-    $this->is_playable = $data['is_playable'] ?? true;
   }
 
   public function get_winning_team(): ?Wpbb_Team {
@@ -190,7 +184,6 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
     $bracket['month'] = $this->month;
     $bracket['year'] = $this->year;
     $bracket['results_first_updated_at'] = $this->results_first_updated_at;
-    $bracket['is_playable'] = $this->is_playable;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {

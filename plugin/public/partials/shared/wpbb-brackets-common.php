@@ -110,6 +110,16 @@ function play_bracket_btn($endpoint) {
 	return ob_get_clean();
 }
 
+function view_bracket_button($endpoint) {
+	ob_start();
+	?>
+  <a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
+    <span class="tw-font-500">View bracket</span>
+  </a>
+	<?php
+	return ob_get_clean();
+}
+
 
 /**
  * This button goes to the Leaderboard page
@@ -157,6 +167,17 @@ function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
 	return ob_get_clean();
 }
 
+function public_bracket_upcoming_buttons(Wpbb_Bracket $bracket) {
+	$bracket_play_link = get_permalink($bracket->id) . '/play';
+	ob_start();
+	?>
+  <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
+		<?php echo view_bracket_button($bracket_play_link); ?>
+  </div>
+	<?php
+	return ob_get_clean();
+}
+
 function public_bracket_completed_buttons(Wpbb_Bracket $bracket) {
 	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
 
@@ -180,10 +201,13 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 
 	$completed = $bracket->status === 'complete';
   $status = $bracket->status;
-  if (!$bracket->is_playable) {
-    $status = 'upcoming';
-  }
   $bracket_tag = get_bracket_tag($status);
+  $bracket_buttons = public_bracket_active_buttons($bracket);
+  if ($status === 'upcoming') {
+    $bracket_buttons = public_bracket_upcoming_buttons($bracket);
+  } else if ($status === 'complete') {
+    $bracket_buttons = public_bracket_completed_buttons($bracket);
+  }
 	ob_start();
 ?>
 	<div class="tw-border-2 tw-border-solid tw-border-<?php echo $completed ? 'white/15' : 'blue' ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
@@ -200,7 +224,7 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 			<h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html($name) ?></h2>
 		</div>
 		<div class="tw-mt-10">
-			<?php echo $completed ? public_bracket_completed_buttons($bracket) : public_bracket_active_buttons($bracket); ?>
+      <?php echo $bracket_buttons; ?>
 		</div>
 	</div>
 <?php
