@@ -69,6 +69,33 @@ function scored_bracket_tag() {
 	return bracket_tag('Scored', 'yellow');
 }
 
+function archived_bracket_tag() {
+	return bracket_tag('Archive', 'white/50', false);
+}
+
+function private_bracket_tag() {
+	return bracket_tag('Private', 'blue', false);
+}
+
+function get_bracket_tag($status) {
+	switch ($status) {
+		case 'publish':
+			return live_bracket_tag();
+		case 'private':
+			return private_bracket_tag();
+    case 'upcoming':
+      return upcoming_bracket_tag();
+		case 'score':
+			return scored_bracket_tag();
+		case 'complete':
+			return completed_bracket_tag();
+		case 'archive':
+			return archived_bracket_tag();
+		default:
+			return '';
+	}
+}
+
 /**
  * This button goes to the Play Bracket page
  */
@@ -151,17 +178,12 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 		'is_printed' => true,
 	]) : 0;
 
-	$id = $bracket->id;
 	$completed = $bracket->status === 'complete';
   $status = $bracket->status;
-  $upcoming = !$bracket->is_playable;
-  $bracket_tag = live_bracket_tag();
-  if ($upcoming) {
-		$bracket_tag = upcoming_bracket_tag();
-  } else if ($completed) {
-		$bracket_tag = completed_bracket_tag();
+  if (!$bracket->is_playable) {
+    $status = 'upcoming';
   }
-
+  $bracket_tag = get_bracket_tag($status);
 	ob_start();
 ?>
 	<div class="tw-border-2 tw-border-solid tw-border-<?php echo $completed ? 'white/15' : 'blue' ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
