@@ -53,6 +53,10 @@ function bracket_tag($label, $color, $filled = true) {
 	return ob_get_clean();
 }
 
+function upcoming_bracket_tag() {
+	return bracket_tag('Upcoming', 'yellow');
+}
+
 function live_bracket_tag() {
 	return bracket_tag('Live', 'green');
 }
@@ -149,6 +153,7 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 
 	$id = $bracket->id;
 	$completed = $bracket->status === 'complete';
+  $upcoming = !$bracket->is_playable;
 
 	ob_start();
 ?>
@@ -156,7 +161,7 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
 			<span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-4 tw-items-center">
-				<?php echo $completed ? completed_bracket_tag() : live_bracket_tag(); ?>
+				<?php echo $completed ? scored_bracket_tag() : live_bracket_tag(); ?>
 				<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/bar_chart.svg'); ?>
 				<span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html($num_plays) ?></span>
 				<span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
