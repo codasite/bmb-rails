@@ -177,7 +177,6 @@ class Wp_Bracket_Builder {
     );
     $bracket_api = new Wpbb_BracketApi();
     $play_api = new Wpbb_BracketPlayApi();
-
     $gelato_product_integration = new Wpbb_GelatoProductIntegration();
 
     $this->loader->add_action(
@@ -223,6 +222,13 @@ class Wp_Bracket_Builder {
       'admin_notices',
       $gelato_product_integration,
       'admin_notices'
+    );
+    $this->loader->add_action(
+      'set_object_terms',
+      $plugin_admin,
+      'update_upcoming_status',
+      10,
+      6
     );
   }
 
