@@ -336,14 +336,9 @@ class Wpbb_Admin {
 		if ($post->post_type !== 'bracket') {
 			return;
 		}
-		$status = $post->post_status;
-		echo 'status: ' . $status;
 		$post_id = $post->ID;
-		$tags = get_the_tags($post_id);
-		print_r($tags);
 		// check if post has the tag "bmb_upcoming"
 		if (has_tag('bmb_upcoming', $post_id) && $post->post_status !== 'upcoming') {
-			echo 'updating to upcoming';
 			// update post status to "upcoming"
 			$post->post_status = 'upcoming';
 			wp_update_post($post);

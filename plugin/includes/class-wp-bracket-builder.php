@@ -478,6 +478,18 @@ class Wp_Bracket_Builder {
       ),
     ]);
 
+    register_post_status('upcoming', [
+      'label' => 'Upcoming',
+      'public' => true,
+      'exclude_from_search' => false,
+      'show_in_admin_all_list' => true,
+      'show_in_admin_status_list' => true,
+      'label_count' => _n_noop(
+        'Completed <span class="count">(%s)</span>',
+        'Archive <span class="count">(%s)</span>'
+      ),
+    ]);
+
     register_post_status('score', [
       'label' => 'Scored',
       'public' => true,
