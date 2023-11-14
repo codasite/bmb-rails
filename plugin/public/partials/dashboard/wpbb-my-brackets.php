@@ -247,6 +247,8 @@ function get_bracket_tag($status) {
 			return live_bracket_tag();
 		case 'private':
 			return private_bracket_tag();
+    case 'upcoming':
+      return upcoming_bracket_tag();
 		case 'score':
 			return scored_bracket_tag();
 		case 'complete':

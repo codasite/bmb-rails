@@ -18,13 +18,13 @@ if (empty($paged_status)) {
 	$paged_status = 'all';
 }
 
-$all_status = ['publish', 'score', 'complete', 'upcoming'];
+$all_status = ['publish', 'score', 'complete', UPCOMING_STATUS];
 $active_status = ['publish'];
 $scored_status = ['score', 'complete'];
 
 if ($paged_status === 'all') {
 	$post_status = $all_status;
-} else if ($paged_status === 'active' || $paged_status === 'live' || $paged_status === 'upcoming') {
+} else if ($paged_status === 'active' || $paged_status === LIVE_STATUS || $paged_status === UPCOMING_STATUS) {
 	$post_status = $active_status;
 } else if ($paged_status === 'scored') {
 	$post_status = $scored_status;
@@ -34,11 +34,11 @@ if ($paged_status === 'all') {
 
 $tags = ['bmb_official_bracket'];
 if ($paged_status === 'upcoming') {
-	$tags[] = 'bmb_upcoming';
+	$tags[] = BMB_UPCOMING;
 }
 $tags_not_in = [];
-if ($paged_status === 'live') {
-  $tag = get_term_by('slug', 'bmb_upcoming','post_tag');
+if ($paged_status === LIVE_STATUS) {
+  $tag = get_term_by('slug', BMB_UPCOMING,'post_tag');
   $tags_not_in[] = $tag->term_id;
 }
 
