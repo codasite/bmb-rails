@@ -179,5 +179,6 @@ class Wpbb_PublicHooks
 			]);
 		}
 	}
+
 	
 }
