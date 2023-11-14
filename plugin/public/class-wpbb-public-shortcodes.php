@@ -34,7 +34,7 @@ class Wpbb_Public_Shortcodes {
 
 	public function render_official_brackets() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wpbb-official-tournaments.php';
+		include plugin_dir_path(__FILE__) . 'partials/wpbb-official-brackets.php';
 		return ob_get_clean();
 	}
 

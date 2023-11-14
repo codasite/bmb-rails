@@ -18,13 +18,13 @@ if (empty($paged_status)) {
 	$paged_status = 'all';
 }
 
-$all_status = ['publish', 'score', 'complete'];
+$all_status = ['publish', 'score', 'complete', 'upcoming'];
 $active_status = ['publish'];
 $scored_status = ['score', 'complete'];
 
 if ($paged_status === 'all') {
 	$post_status = $all_status;
-} else if ($paged_status === 'active' || $paged_status === 'live') {
+} else if ($paged_status === 'active' || $paged_status === 'live' || $paged_status === 'upcoming') {
 	$post_status = $active_status;
 } else if ($paged_status === 'scored') {
 	$post_status = $scored_status;
@@ -32,10 +32,14 @@ if ($paged_status === 'all') {
 	$post_status = $all_status;
 }
 
+$tags = ['bmb_official_bracket'];
+if ($paged_status === 'upcoming') {
+	$tags[] = 'bmb_upcoming';
+}
 
 $the_query = new WP_Query([
 	'post_type' => Wpbb_Bracket::get_post_type(),
-	'tag' => 'bmb_official_bracket',
+	'tag_slug__and' => $tags,
 	'posts_per_page' => 8,
 	'paged' => $paged,
 	'post_status' => $post_status,

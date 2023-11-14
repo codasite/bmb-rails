@@ -45,6 +45,11 @@ class Wpbb_Bracket extends Wpbb_PostBase implements Wpbb_PostBracketInterface {
    */
   public $results_first_updated_at;
 
+  /**
+   * @var bool
+   */
+  public $is_playable;
+
   public function __construct(array $data = []) {
     parent::__construct($data);
     $this->month = $data['month'] ?? null;
