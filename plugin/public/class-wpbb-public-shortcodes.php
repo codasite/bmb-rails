@@ -63,6 +63,12 @@ class Wpbb_Public_Shortcodes {
 		return ob_get_clean();
 	}
 
+	public function render_user_profile_page() {
+		ob_start();
+		include plugin_dir_path(__FILE__) . 'partials/user-profile/wpbb-user-profile.php';
+		return ob_get_clean();
+	}
+
 	/**
 	 * Add shortcode to render events
 	 *
@@ -76,5 +82,6 @@ class Wpbb_Public_Shortcodes {
 		add_shortcode('wpbb-bracket-page', [$this, 'render_bracket_page']); // This is a single post type template for bracket_template posts
 		add_shortcode('wpbb-bracket-play', [$this, 'render_bracket_play_page']); // This is a single post type template for bracket_play posts
 		add_shortcode('wpbb-bracket-preview', [$this, 'render_bracket_product_preview']); // This is a single post type template for woocommerce product posts with the `bracket-ready` tag
+		add_shortcode('wpbb-user-profile', [$this, 'render_user_profile_page']); // This is a single post type template for woocommerce product posts with the `bracket-ready` tag
 	}
 }
