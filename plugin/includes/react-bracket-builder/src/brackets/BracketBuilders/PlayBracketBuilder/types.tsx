@@ -10,4 +10,5 @@ export interface PlayBuilderProps {
   setBracketMeta?: (bracketMeta: BracketMeta) => void
   handleApparelClick?: () => void
   processing?: boolean
+  canPlay?: boolean
 }

@@ -53,6 +53,8 @@ const PlayPage = (props: PlayPageProps) => {
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
+  const canPlay = bracket?.status !== 'upcoming'
+
   useEffect(() => {
     let tree: Nullable<MatchTree> = null
     if (bracket) {
@@ -102,13 +104,14 @@ const PlayPage = (props: PlayPageProps) => {
 
   const playBuilderProps = {
     matchTree,
-    setMatchTree,
+    setMatchTree: canPlay ? setMatchTree : undefined,
     handleApparelClick,
     processing,
     darkMode,
     setDarkMode,
     bracketMeta,
     setBracketMeta,
+    canPlay,
   }
 
   if (showPaginated) {

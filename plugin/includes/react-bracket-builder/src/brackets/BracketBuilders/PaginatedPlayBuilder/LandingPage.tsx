@@ -10,10 +10,11 @@ import { BracketMetaContext } from '../../shared/context/context'
 interface LandingPageProps {
   onStart: () => void
   matchTree?: MatchTree
+  canPlay?: boolean
 }
 
 export const LandingPage = (props: LandingPageProps) => {
-  const { onStart, matchTree } = props
+  const { onStart, matchTree, canPlay } = props
   const { title } = useContext(BracketMetaContext)
 
   return (
@@ -33,15 +34,17 @@ export const LandingPage = (props: LandingPageProps) => {
             />
           </div>
         )}
-        <ActionButton
-          darkMode={true}
-          variant="green"
-          size="small"
-          onClick={onStart}
-          className="tw-mt-80 tw-max-w-[268px] tw-w-full"
-        >
-          Start
-        </ActionButton>
+        {canPlay && (
+          <ActionButton
+            darkMode={true}
+            variant="green"
+            size="small"
+            onClick={onStart}
+            className="tw-mt-80 tw-max-w-[268px] tw-w-full"
+          >
+            Start
+          </ActionButton>
+        )}
       </div>
     </div>
   )
