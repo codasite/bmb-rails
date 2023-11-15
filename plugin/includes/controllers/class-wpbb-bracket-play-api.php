@@ -174,6 +174,14 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
    */
   public function create_item($request) {
     $params = $request->get_params();
+    $bracket_id = $params['bracket_id'];
+    if (!current_user_can('wpbb_play_bracket', $bracket_id)) {
+      return new WP_Error(
+        'unauthorized',
+        'You are not authorized to play this bracket.',
+        ['status' => 403]
+      );
+    }
     if (!isset($params['author'])) {
       $params['author'] = get_current_user_id();
     }

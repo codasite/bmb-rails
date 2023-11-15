@@ -13,12 +13,13 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
     setDarkMode,
     handleApparelClick,
     processing,
+    canPlay,
   } = props
 
   const [page, setPage] = useState('landing')
 
   useEffect(() => {
-    if (!matchTree) {
+    if (!matchTree || !canPlay) {
       return
     }
     if (matchTree.allPicked()) {
@@ -41,7 +42,13 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
 
   switch (page) {
     case 'landing':
-      element = <LandingPage matchTree={matchTree} onStart={onStart} />
+      element = (
+        <LandingPage
+          matchTree={matchTree}
+          onStart={onStart}
+          canPlay={canPlay}
+        />
+      )
       break
     case 'bracket':
       element = (

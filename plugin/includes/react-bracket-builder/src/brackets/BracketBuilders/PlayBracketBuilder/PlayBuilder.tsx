@@ -15,6 +15,7 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     setMatchTree,
     handleApparelClick,
     processing,
+    canPlay,
   } = props
 
   return (
@@ -35,21 +36,23 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
           </div>
           <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
           <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-            <ActionButton
-              variant="green"
-              size="big"
-              darkMode={darkMode}
-              onClick={handleApparelClick}
-              disabled={processing || !matchTree.allPicked()}
-              height={72}
-              width={405}
-            >
-              {processing ? (
-                <Spinner fill="white" height={50} width={50} />
-              ) : (
-                'Add to Apparel'
-              )}
-            </ActionButton>
+            {canPlay && (
+              <ActionButton
+                variant="green"
+                size="big"
+                darkMode={darkMode}
+                onClick={handleApparelClick}
+                disabled={processing || !matchTree.allPicked()}
+                height={72}
+                width={405}
+              >
+                {processing ? (
+                  <Spinner fill="white" height={50} width={50} />
+                ) : (
+                  'Add to Apparel'
+                )}
+              </ActionButton>
+            )}
           </div>
         </div>
       )}

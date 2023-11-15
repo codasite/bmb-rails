@@ -233,31 +233,6 @@ function get_bracket_icon_buttons($bracket) {
 	}
 }
 
-function archived_bracket_tag() {
-	return bracket_tag('Archive', 'white/50', false);
-}
-
-function private_bracket_tag() {
-	return bracket_tag('Private', 'blue', false);
-}
-
-function get_bracket_tag($status) {
-	switch ($status) {
-		case 'publish':
-			return live_bracket_tag();
-		case 'private':
-			return private_bracket_tag();
-		case 'score':
-			return scored_bracket_tag();
-		case 'complete':
-			return completed_bracket_tag();
-		case 'archive':
-			return archived_bracket_tag();
-		default:
-			return '';
-	}
-}
-
 function bracket_list_item($bracket, Wpbb_BracketPlayRepo $play_repo) {
 
 	$title = $bracket->title;

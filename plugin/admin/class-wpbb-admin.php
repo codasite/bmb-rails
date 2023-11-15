@@ -148,6 +148,7 @@ class Wpbb_Admin {
 		$role->add_cap('wpbb_enable_chat');
 		$role->add_cap('wpbb_delete_bracket');
 		$role->add_cap('wpbb_edit_bracket');
+		$role->add_cap('wpbb_play_bracket');
 	}
 
 	//  add a custom text field for the bmb-logo-theme in the admin product variation settings
@@ -327,6 +328,27 @@ class Wpbb_Admin {
 			echo $author_name;
 		}
 	}
+
+  // This function is a workaround for custom post status not being added to the admin panel
+  // It runs on the `set_object_terms` hook and updates the post status based on tag value
+  public function update_upcoming_status($object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids) {
+		$post = get_post($object_id);
+		//check post type is bracket
+		if ($post->post_type !== 'bracket') {
+			return;
+		}
+		$post_id = $post->ID;
+		// check if post has the tag "bmb_upcoming"
+		if (has_tag('bmb_upcoming', $post_id) && $post->post_status !== 'upcoming') {
+			// update post status to "upcoming"
+			$post->post_status = 'upcoming';
+			wp_update_post($post);
+		} else if ($post->post_status === 'upcoming' && !has_tag('bmb_upcoming', $post_id)) {
+			// update post status to "publish"
+			$post->post_status = 'publish';
+			wp_update_post($post);
+		}
+  }
 }
 ?>
 <?php

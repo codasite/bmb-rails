@@ -177,7 +177,6 @@ class Wp_Bracket_Builder {
     );
     $bracket_api = new Wpbb_BracketApi();
     $play_api = new Wpbb_BracketPlayApi();
-
     $gelato_product_integration = new Wpbb_GelatoProductIntegration();
 
     $this->loader->add_action(
@@ -223,6 +222,13 @@ class Wp_Bracket_Builder {
       'admin_notices',
       $gelato_product_integration,
       'admin_notices'
+    );
+    $this->loader->add_action(
+      'set_object_terms',
+      $plugin_admin,
+      'update_upcoming_status',
+      10,
+      6
     );
   }
 
@@ -469,6 +475,18 @@ class Wp_Bracket_Builder {
       'label_count' => _n_noop(
         'Completed <span class="count">(%s)</span>',
         'Complete <span class="count">(%s)</span>'
+      ),
+    ]);
+
+    register_post_status('upcoming', [
+      'label' => 'Upcoming',
+      'public' => true,
+      'exclude_from_search' => false,
+      'show_in_admin_all_list' => true,
+      'show_in_admin_status_list' => true,
+      'label_count' => _n_noop(
+        'Completed <span class="count">(%s)</span>',
+        'Archive <span class="count">(%s)</span>'
       ),
     ]);
 
