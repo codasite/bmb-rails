@@ -457,10 +457,23 @@ class Wp_Bracket_Builder {
       'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
       'show_ui' => true,
       'show_in_rest' => true,
-      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
-      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
       'taxonomies' => ['post_tag'],
       'rewrite' => ['slug' => 'plays'],
+    ]);
+
+    register_post_type('user_profile', [
+      'labels' => [
+        'name' => __('User profiles'),
+        'singular_name' => __('User profile'),
+      ],
+      'description' => 'User profiles for the WP Bracket Builder plugin',
+      'public' => true,
+      'has_archive' => true,
+      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
+      'show_ui' => true,
+      'show_in_rest' => true,
+      'taxonomies' => ['post_tag'],
+      'rewrite' => ['slug' => 'user-profiles'],
     ]);
   }
 
