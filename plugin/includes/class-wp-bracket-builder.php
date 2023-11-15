@@ -230,6 +230,13 @@ class Wp_Bracket_Builder {
       10,
       6
     );
+    $this->loader->add_action(
+      'add_user_role',
+      $plugin_admin,
+      'create_user_profile_post',
+      10,
+      2
+    );
   }
 
   /**
