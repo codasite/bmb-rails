@@ -34,8 +34,6 @@ class Wpbb_Activator {
     $plugin_prefix = 'bracket_builder_';
     $prefix = $wp_prefix . $plugin_prefix;
 
-    self::delete_tables($prefix);
-
     self::create_brackets_table($prefix);
     self::create_plays_table($prefix); // one-to-one table for bracket plays
     self::create_teams_table($prefix); // associated with matches
