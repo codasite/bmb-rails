@@ -248,4 +248,98 @@ class PlayAPITest extends WPBB_UnitTestCase {
 
     $this->assertEquals($user2->ID, $updated->author);
   }
+
+  public function test_author_can_play_private_bracket() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => $user->ID,
+      'status' => 'private',
+      'num_teams' => 2,
+    ]);
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'generate_images' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    wp_set_current_user($user->ID);
+    $response = rest_do_request($request);
+
+    $this->assertEquals(201, $response->get_status());
+  }
+
+  public function test_non_author_cannot_play_private_bracket() {
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'author' => $user1->ID,
+      'status' => 'private',
+      'num_teams' => 2,
+    ]);
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'generate_images' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    wp_set_current_user($user2->ID);
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(403, $response->get_status());
+  }
+
+  public function test_upcoming_bracket_cannot_be_played() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'upcoming',
+      'num_teams' => 2,
+    ]);
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'generate_images' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    wp_set_current_user($user->ID);
+    $response = rest_do_request($request);
+
+    $this->assertEquals(403, $response->get_status());
+  }
 }

@@ -62,6 +62,9 @@ class Wpbb_PublicHooks
 	}
 
 
+	/**
+	 * Authorization checks. Be sure to add any new caps to the admin role
+	 */
 	public function user_cap_filter($allcaps, $cap, $args) {
 		// check if user is admin. if so, bail
 		$requested = $args[0];
@@ -74,6 +77,7 @@ class Wpbb_PublicHooks
 		$dynamic_caps = [
 			'wpbb_delete_bracket',
 			'wpbb_edit_bracket',
+			'wpbb_play_bracket',
 		];
 		if (!in_array($requested, $dynamic_caps)) {
 			return $allcaps;
@@ -87,6 +91,19 @@ class Wpbb_PublicHooks
 				if ($post->post_type === 'bracket' && (int) $post->post_author === (int) $user_id) {
 					$allcaps[$cap[0]] = true;
 				}
+				break;
+			case 'wpbb_play_bracket':
+				$bracket = $this->bracket_repo->get($post_id);
+				$can_play = false;
+				$playable_status = ['publish', 'score', 'complete'];
+				if (in_array($bracket->status, $playable_status)) {
+					$can_play = true;
+				} else if ($bracket->status === 'private') {
+					if ($bracket->author === (int) $user_id) {
+						$can_play = true;
+					}
+				} 
+				$allcaps[$cap[0]] = $can_play;
 				break;
 			default:
 				break;

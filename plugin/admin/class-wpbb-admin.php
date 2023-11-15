@@ -148,6 +148,7 @@ class Wpbb_Admin {
 		$role->add_cap('wpbb_enable_chat');
 		$role->add_cap('wpbb_delete_bracket');
 		$role->add_cap('wpbb_edit_bracket');
+		$role->add_cap('wpbb_play_bracket');
 	}
 
 	//  add a custom text field for the bmb-logo-theme in the admin product variation settings
