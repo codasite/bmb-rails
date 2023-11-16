@@ -1,7 +1,7 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'domain/class-wpbb-bracket-play.php';
-class Wpbb_UserProfile {
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-user-profile.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-post-base.php';
+class Wpbb_UserProfile extends Wpbb_PostBase {
   /**
    * The user object.
    *
@@ -9,14 +9,31 @@ class Wpbb_UserProfile {
    */
   private $wp_user;
 
-  public function __construct(WP_User $wp_user) {
-    $this->wp_user = $wp_user;
+  public function __construct(array $data = []) {
+    parent::__construct($data);
+    $this->wp_user = $data['wp_user'];
   }
 
-  public static function get_current() {
-    $user = wp_get_current_user();
-    return new self($user);
+  public static function get_post_type(): string {
+    return 'user_profile';
   }
+
+  public function get_post_meta(): array {
+    return [];
+  }
+
+  public function get_update_post_data(): array {
+    return [];
+  }
+
+  public function get_update_post_meta(): array {
+    return [];
+  }
+
+  // public static function get_current() {
+  //   $user = wp_get_current_user();
+  //   return new self($user);
+  // }
 
   public function __get($key) {
     return $this->wp_user->$key;

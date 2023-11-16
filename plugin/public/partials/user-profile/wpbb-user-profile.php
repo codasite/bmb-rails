@@ -7,6 +7,11 @@ require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-brackets-common.php'
 require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-pagination-widget.php';
 require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-partials-constants.php';
 
+// get the current post
+$profile = get_post();
+if (!$profile || $profile->post_type !== Wpbb_UserProfile::get_post_type()) {
+	return;
+}
 $bracket_repo = new Wpbb_BracketRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
 
@@ -61,6 +66,8 @@ $brackets = $bracket_repo->get_all($the_query);
 	<div class="tw-max-w-screen-lg tw-mx-auto">
 		<!-- Profile picture VIP, name -->
 		<div class="tw-flex tw-gap-30 tw-py-60 tw-self-center">
+		<div class="tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-h-[324px]">
+
 		</div>
 	</div>
 </div>
