@@ -9,7 +9,7 @@ require_once('shared/wpbb-brackets-common.php');
 			<h1 class="tw-text-32 sm:tw-text-48 md:tw-text-64 lg:tw-text-80 tw-font-700 tw-text-center">Official Brackets</h1>
 		</div>
 		<div class="tw-flex tw-flex-col tw-gap-15">
-      <div class="tw-flex tw-justify-center tw-gap-10 tw-py-11">
+      <div class="tw-flex tw-justify-center tw-gap-10 tw-py-11 tw-flex-wrap">
         <?php echo wpbb_bracket_sort_buttons(); ?>
       </div>
       <?php echo public_bracket_list(); ?>
