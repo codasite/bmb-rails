@@ -1,5 +1,4 @@
 <?php
-// require_once('shared/wpbb-brackets-common.php');
 require_once('shared/wpbb-brackets-common.php');
 require_once('shared/wpbb-partials-common.php');
 
