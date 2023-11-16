@@ -362,6 +362,7 @@ class Wpbb_Admin {
       $username = get_the_author_meta('user_login', $user_id);
       $post = array(
         'post_title' => $username,
+				'post_name' => sanitize_title($username),
         'post_content' => '',
         'post_status' => 'publish',
         'post_author' => $user_id,

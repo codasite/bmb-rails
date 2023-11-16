@@ -480,7 +480,7 @@ class Wp_Bracket_Builder {
       'show_ui' => true,
       'show_in_rest' => true,
       'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'user-profiles'],
+      'rewrite' => ['slug' => 'users'],
     ]);
   }
 
