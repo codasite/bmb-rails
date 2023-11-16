@@ -1,6 +1,7 @@
 <?php
 require_once('wpbb-partials-common.php');
 require_once('wpbb-partials-constants.php');
+require_once('wpbb-pagination-widget.php');
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb-bracket.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb-bracket-play.php';
@@ -291,9 +292,11 @@ function public_bracket_list($author_id = null) {
 
   ob_start();
   ?>
-  <?php foreach ($brackets as $bracket) : ?>
-    <?php echo public_bracket_list_item($bracket, $play_repo); ?>
-  <?php endforeach; ?>
+  <div class="tw-flex tw-flex-col tw-gap-15">
+    <?php foreach ($brackets as $bracket) : ?>
+      <?php echo public_bracket_list_item($bracket, $play_repo); ?>
+    <?php endforeach; ?>
+  </div>
   <?php wpbb_pagination($paged, $num_pages); ?>
   <?php
   return ob_get_clean();

@@ -40,7 +40,7 @@ class Wpbb_Public_Shortcodes {
 
 	public function render_celebrity_picks() {
 		ob_start();
-		include plugin_dir_path(__FILE__) . 'partials/wpbb-celebrity-picks.php';
+		include plugin_dir_path(__FILE__) . 'partials/wpbb-celebrity-brackets.php';
 		return ob_get_clean();
 	}
 

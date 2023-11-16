@@ -26,10 +26,11 @@ $user_profile = $user_profile_repo->get_by_post();
       </div>
 		</div>
     <h1 class="tw-text-32 md:tw-text-48 tw-font-700 tw-py-30">Recent Play History</h1>
+
     <h1 class="tw-text-32 md:tw-text-48 tw-font-700">Brackets</h1>
     <div class="tw-flex tw-justify-start tw-gap-10 tw-py-24 tw-flex-wrap">
       <?php echo wpbb_bracket_sort_buttons(); ?>
     </div>
-    <?php echo public_bracket_list($user_profile->post_author); ?>
+    <?php echo public_bracket_list($user_profile->author); ?>
   </div>
 </div>
