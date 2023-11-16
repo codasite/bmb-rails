@@ -237,6 +237,13 @@ class Wp_Bracket_Builder {
       10,
       2
     );
+    $this->loader->add_action(
+      'remove_user_role',
+      $plugin_admin,
+      'remove_user_profile_post',
+      10,
+      2
+    );
   }
 
   /**
