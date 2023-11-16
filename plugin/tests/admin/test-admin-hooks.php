@@ -31,7 +31,6 @@ class AdminHooksTest extends WPBB_UnitTestCase {
     $this->assertEquals(1, count($posts));
     $this->assertEquals($user->ID, $posts[0]->post_author);
     $meta = get_post_meta($posts[0]->ID);
-    $this->assertEquals(['wpbb_profile_image_url' => ['']], $meta);
   }
 
   public function test_add_user_with_bmb_vip_role_should_add_new_user_profile_post() {

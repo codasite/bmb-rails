@@ -377,9 +377,6 @@ class Wpbb_Admin {
         'post_status' => 'publish',
         'post_author' => $user_id,
         'post_type' => 'user_profile',
-        'meta_input' => [
-          'wpbb_profile_image_url' => '',
-        ]
       );
       wp_insert_post($post);
     }
