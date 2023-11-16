@@ -152,6 +152,22 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 	return $final ? gradient_border_wrap($btn, array('wpbb-leaderboard-gradient-border tw-rounded-8')) : $btn;
 }
 
+function wpbb_bracket_sort_buttons() {
+	$all_endpoint = get_permalink();
+	$status = get_query_var('status');
+	$live_endpoint = add_query_arg('status', LIVE_STATUS, $all_endpoint);
+	$upcoming_endpoint = add_query_arg('status', UPCOMING_STATUS, $all_endpoint);
+	$scored_endpoint = add_query_arg('status', SCORED_STATUS, $all_endpoint);
+	ob_start();
+?>
+		<?php echo wpbb_sort_button('All', $all_endpoint, !($status)); ?>
+		<?php echo wpbb_sort_button('Live', $live_endpoint, $status === LIVE_STATUS); ?>
+		<?php echo wpbb_sort_button('Upcoming', $upcoming_endpoint, $status === UPCOMING_STATUS); ?>
+		<?php echo wpbb_sort_button('Scored', $scored_endpoint, $status === SCORED_STATUS); ?>
+<?php
+	return ob_get_clean();
+}
+
 function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
 	$bracket_play_link = get_permalink($bracket->id) . '/play';
 	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
@@ -229,4 +245,55 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 	</div>
 <?php
 	return ob_get_clean();
+}
+
+function public_bracket_list() {
+  $bracket_repo = new Wpbb_BracketRepo();
+  $play_repo = new Wpbb_BracketPlayRepo();
+
+  $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+  $status_filter = get_query_var('status');
+
+  if (empty($status_filter)) {
+    $status_filter = 'all';
+  }
+
+  $all_statuses = ['publish', 'score', 'complete', UPCOMING_STATUS];
+  $active_status = ['publish'];
+  $scored_status = ['score', 'complete'];
+
+  if ($status_filter === 'all') {
+    $status_query = $all_statuses;
+  } else if ($status_filter === LIVE_STATUS) {
+    $status_query = $active_status;
+  } else if ($status_filter === UPCOMING_STATUS) {
+  $status_query = [UPCOMING_STATUS];
+  } else if ($status_filter === 'scored') {
+    $status_query = $scored_status;
+  } else {
+    $status_query = $all_statuses;
+  }
+
+
+  $the_query = new WP_Query([
+    'post_type' => Wpbb_Bracket::get_post_type(),
+    'tag_slug__and' => ['bmb_official_bracket'],
+    'posts_per_page' => 8,
+    'paged' => $paged,
+    'post_status' => $status_query,
+    'order' => 'DESC',
+  ]);
+
+  $num_pages = $the_query->max_num_pages;
+
+  $brackets = $bracket_repo->get_all($the_query);
+
+  ob_start();
+  ?>
+  <?php foreach ($brackets as $bracket) : ?>
+    <?php echo public_bracket_list_item($bracket, $play_repo); ?>
+  <?php endforeach; ?>
+  <?php wpbb_pagination($paged, $num_pages); ?>
+  <?php
+  return ob_get_clean();
 }
