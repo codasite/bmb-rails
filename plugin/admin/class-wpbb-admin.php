@@ -360,7 +360,17 @@ class Wpbb_Admin {
 	public function create_user_profile_post(int $user_id, string $role) {
     if ($role === 'bmb_vip') {
       $username = get_the_author_meta('user_login', $user_id);
+      $posts = get_posts([
+        'post_type' => 'user_profile',
+        'post_status' => 'publish',
+        'author' => $user_id,
+      ]);
+      $post_id = null;
+      if (count($posts) > 0) {
+        $post_id = $posts[0]->ID;
+      }
       $post = array(
+        'ID' => $post_id,
         'post_title' => $username,
 				'post_name' => sanitize_title($username),
         'post_content' => '',
