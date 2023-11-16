@@ -7,7 +7,7 @@ class Wpbb_UserProfile extends Wpbb_PostBase {
    *
    * @var WP_User
    */
-  private $wp_user;
+  public $wp_user;
 
   public function __construct(array $data = []) {
     parent::__construct($data);
