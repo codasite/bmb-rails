@@ -43,4 +43,20 @@ class AdminHooksTest extends WPBB_UnitTestCase {
     $this->assertEquals(1, count($posts));
     $this->assertEquals($user->ID, $posts[0]->post_author);
   }
+
+  public function test_remove_vip_role_from_user_should_remove_user_profile_post() {
+    $user = self::factory()->user->create_and_get(['role' => 'bmb_vip']);
+    $posts = get_posts([
+      'post_type' => 'user_profile',
+      'author' => $user->ID,
+    ]);
+    $this->assertEquals(1, count($posts));
+    $this->assertEquals($user->ID, $posts[0]->post_author);
+    $user->remove_role('bmb_vip');
+    $posts = get_posts([
+      'post_type' => 'user_profile',
+      'author' => $user->ID,
+    ]);
+    $this->assertEquals(0, count($posts));
+  }
 }

@@ -360,7 +360,17 @@ class Wpbb_Admin {
 	public function create_user_profile_post(int $user_id, string $role) {
     if ($role === 'bmb_vip') {
       $username = get_the_author_meta('user_login', $user_id);
+      $posts = get_posts([
+        'post_type' => 'user_profile',
+        'post_status' => 'publish',
+        'author' => $user_id,
+      ]);
+      $post_id = null;
+      if (count($posts) > 0) {
+        $post_id = $posts[0]->ID;
+      }
       $post = array(
+        'ID' => $post_id,
         'post_title' => $username,
 				'post_name' => sanitize_title($username),
         'post_content' => '',
@@ -374,6 +384,25 @@ class Wpbb_Admin {
       wp_insert_post($post);
     }
 	}
+
+  /**
+   * Removes a user_profile post when a bmb_vip role is removed from a user.
+   * @param int $user_id
+   * @param string $role
+   */
+  public function remove_user_profile_post(int $user_id, string $role) {
+    if ($role != 'bmb_vip') {
+      return;
+    }
+    $posts = get_posts(array(
+      'post_type' => 'user_profile',
+      'post_status' => 'publish',
+      'author' => $user_id,
+    ));
+    foreach ($posts as $post) {
+      wp_delete_post($post->ID, true);
+    }
+  }
 }
 ?>
 <?php
