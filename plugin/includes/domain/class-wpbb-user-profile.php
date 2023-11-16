@@ -11,7 +11,7 @@ class Wpbb_UserProfile extends Wpbb_PostBase {
 
   public function __construct(array $data = []) {
     parent::__construct($data);
-    $this->wp_user = $data['wp_user'];
+    $this->wp_user = isset($data['wp_user']) ? $data['wp_user'] : null;
   }
 
   public static function get_post_type(): string {

@@ -39,7 +39,7 @@ class Wpbb_UserProfileRepo extends Wpbb_CustomPostRepoBase {
     ) {
       return null;
     }
-    $user = get_user_by('id', $post->post_author);
+    $user = get_user_by('id', $profile_post->post_author);
     return new Wpbb_UserProfile([
       'id' => $profile_post->ID,
       'title' => $profile_post->post_title,
@@ -89,5 +89,15 @@ class Wpbb_UserProfileRepo extends Wpbb_CustomPostRepoBase {
       }
     }
     return $profiles;
+  }
+
+  public function add(Wpbb_UserProfile $profile): Wpbb_UserProfile {
+    $post_id = $this->insert_post($profile, true);
+    if (!$post_id || is_wp_error($post_id)) {
+      throw new Exception('Failed to insert post');
+    }
+
+    $profile = $this->get_by_post($post_id);
+    return $profile;
   }
 }
