@@ -48,7 +48,7 @@ $num_pages = $the_query->max_num_pages;
 
 $brackets = $bracket_repo->get_all($the_query);
 
-// Profile picture VIP, name
+
 // RECENT PLAY HISTORY
 // PLAY CARDS
 
@@ -57,4 +57,10 @@ $brackets = $bracket_repo->get_all($the_query);
 // bracket cards
 // pagination
 ?>
-<h1>HIII</h1>
+<div class="wpbb-reset wpbb-faded-bracket-bg tw-flex tw-flex-col tw-gap-30 tw-pt-60 tw-pb-[150px] tw-px-20">
+	<div class="tw-max-w-screen-lg tw-mx-auto">
+		<!-- Profile picture VIP, name -->
+		<div class="tw-flex tw-gap-30 tw-py-60 tw-self-center">
+		</div>
+	</div>
+</div>
