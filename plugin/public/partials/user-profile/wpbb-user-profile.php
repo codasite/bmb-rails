@@ -1,17 +1,11 @@
 <?php
-<<<<<<< HEAD
-echo 'HIII';?>
-<h1>HELLO FROM USER PROFILE</h1>
-=======
-require_once('shared/wpbb-partials-common.php');
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/repository/class-wpbb-bracket-repo.php';
-require_once plugin_dir_path(dirname(__FILE__, 2)) . 'includes/domain/class-wpbb-bracket.php';
-require_once('shared/wpbb-partials-constants.php');
-require_once('shared/wpbb-brackets-common.php');
-require_once('shared/wpbb-pagination-widget.php');
->>>>>>> 808292c41aa43ae6a48666703faccdddbcf785f0
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-play.php';
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
+require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-brackets-common.php';
+require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-pagination-widget.php';
+require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-partials-constants.php';
 
 $bracket_repo = new Wpbb_BracketRepo();
 $play_repo = new Wpbb_BracketPlayRepo();
@@ -63,3 +57,4 @@ $brackets = $bracket_repo->get_all($the_query);
 // bracket cards
 // pagination
 ?>
+<h1>HIII</h1>
