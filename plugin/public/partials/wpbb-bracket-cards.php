@@ -40,7 +40,7 @@ function wpbb_vip_card($title, $thumbnail, array $buttons = []) {
 	ob_start();
 	?>
 	<div class="tw-flex tw-flex-col">
-		<div class="tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-h-[324px]">
+		<div class="tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-cover tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-h-[324px]">
 			<div class="tw-flex tw-flex-col tw-justify-end tw-flex-grow tw-px-30 tw-rounded-t-16 tw-bg-gradient-to-t tw-from-[#03073C] tw-to-[72%] tw-border-solid tw-border-white/20 tw-border-2 tw-border-y-none tw-h-full">
 				<h3 class="tw-text-30 tw-text-black"><?php echo esc_html($title) ?></h3>
 			</div>
