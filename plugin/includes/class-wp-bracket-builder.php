@@ -439,7 +439,13 @@ class Wp_Bracket_Builder {
       'description' => 'Brackets for the WP Bracket Builder plugin',
       'public' => true,
       'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
+      'supports' => [
+        'title',
+        'author',
+        'thumbnail',
+        'custom-fields',
+        'comments',
+      ],
       'show_ui' => true,
       'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wpbb_Bracket_Api
       'taxonomies' => ['post_tag'],
@@ -457,8 +463,6 @@ class Wp_Bracket_Builder {
       'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
       'show_ui' => true,
       'show_in_rest' => true,
-      // 'rest_controller_class' => 'Wpbb_Bracket_Api',
-      // 'rest_controller_class' => array($bracket_api, 'register_routes'),
       'taxonomies' => ['post_tag'],
       'rewrite' => ['slug' => 'plays'],
     ]);
