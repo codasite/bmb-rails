@@ -173,3 +173,11 @@ For development it's faster to use a slimmed down version of the site.
     ```
     make wp-install
     ```
+
+## WP Admin
+
+### Tags
+    A number of tags are used to organize brackets for public facing pages.
+    - 'bmb_official' - Brackets with this tag will be displayed on the official brackets page
+    - 'bmb_vip_featured' - Brackets/Plays with this tag will be displayed on the celebrity picks page
+    - 'bmb_vip_profile' - Brackets/Plays with this tag will be displayed on the author's profile page

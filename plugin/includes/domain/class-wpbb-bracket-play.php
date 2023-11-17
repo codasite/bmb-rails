@@ -51,8 +51,6 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
   public $busted_play;
 
   public function __construct(array $data = []) {
-    parent::__construct($data);
-
     if (!isset($data['bracket_id'])) {
       throw new Exception('bracket_id ');
     }

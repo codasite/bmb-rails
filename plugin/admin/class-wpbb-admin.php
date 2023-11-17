@@ -329,8 +329,10 @@ class Wpbb_Admin {
 		}
 	}
 
-  // This function is a workaround for custom post status not being added to the admin panel
-  // It runs on the `set_object_terms` hook and updates the post status based on tag value
+  /**
+   * This function is a workaround for custom post status not being added to the admin panel
+   * It runs on the `set_object_terms` hook and updates the post status based on tag value
+   */
   public function update_upcoming_status($object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids) {
 		$post = get_post($object_id);
 		//check post type is bracket
@@ -348,6 +350,55 @@ class Wpbb_Admin {
 			$post->post_status = 'publish';
 			wp_update_post($post);
 		}
+  }
+
+	/**
+   * Adds a user_profile post when a bmb_vip role is added to a user.
+	 * @param int $user_id
+	 * @param string $role
+	 */
+	public function create_user_profile_post(int $user_id, string $role) {
+    if ($role === 'bmb_vip') {
+      $username = get_the_author_meta('user_login', $user_id);
+      $posts = get_posts([
+        'post_type' => 'user_profile',
+        'post_status' => 'publish',
+        'author' => $user_id,
+      ]);
+      $post_id = null;
+      if (count($posts) > 0) {
+        $post_id = $posts[0]->ID;
+      }
+      $post = array(
+        'ID' => $post_id,
+        'post_title' => $username,
+				'post_name' => sanitize_title($username),
+        'post_content' => '',
+        'post_status' => 'publish',
+        'post_author' => $user_id,
+        'post_type' => 'user_profile',
+      );
+      wp_insert_post($post);
+    }
+	}
+
+  /**
+   * Removes a user_profile post when a bmb_vip role is removed from a user.
+   * @param int $user_id
+   * @param string $role
+   */
+  public function remove_user_profile_post(int $user_id, string $role) {
+    if ($role != 'bmb_vip') {
+      return;
+    }
+    $posts = get_posts(array(
+      'post_type' => 'user_profile',
+      'post_status' => 'publish',
+      'author' => $user_id,
+    ));
+    foreach ($posts as $post) {
+      wp_delete_post($post->ID, true);
+    }
   }
 }
 ?>

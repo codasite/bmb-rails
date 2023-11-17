@@ -59,6 +59,15 @@ class Wpbb_PublicHooks
 				'wpbb_enable_chat' => true,
 			),
 		);
+		add_role(
+			'bmb_vip',
+			'BMB VIP',
+			array(
+				'wpbb_share_bracket' => true,
+				'wpbb_bust_play' => true,
+				'wpbb_enable_chat' => true,
+			),
+		);
 	}
 
 
