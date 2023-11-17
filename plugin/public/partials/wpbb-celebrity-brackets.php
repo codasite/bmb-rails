@@ -17,7 +17,7 @@ $query = new WP_Query([
 	'post_type' => [Wpbb_Bracket::get_post_type(), Wpbb_BracketPlay::get_post_type()],
 	'posts_per_page' => 6,
 	'paged' => $paged,
-	'tag_slug__in' => ['bmb_vip_bracket', 'bmb_vip_play'],
+	'tag_slug__in' => ['bmb_vip_featured'],
 ]);
 
 $num_pages = $query->max_num_pages;

@@ -14,7 +14,7 @@ $user_profile = $user_profile_repo->get_by_post();
 $play_repo = new Wpbb_BracketPlayRepo();
 $plays = $play_repo->get_all([
 	'posts_per_page' => 6,
-	'tag_slug__in' => ['bmb_vip_play'],
+	'tag_slug__in' => ['bmb_vip_profile'],
   'author' => $user_profile->author
 ]);
 ?>
@@ -42,6 +42,6 @@ $plays = $play_repo->get_all([
     <div class="tw-flex tw-justify-start tw-gap-10 tw-py-24 tw-flex-wrap">
       <?php echo wpbb_bracket_sort_buttons(); ?>
     </div>
-    <?php echo public_bracket_list($user_profile->author); ?>
+    <?php echo public_bracket_list(['author' => $user_profile->author, 'tags' => ['bmb_vip_profile']]); ?>
   </div>
 </div>

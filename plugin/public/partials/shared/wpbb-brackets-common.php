@@ -248,7 +248,10 @@ function public_bracket_list_item(Wpbb_Bracket $bracket, Wpbb_BracketPlayRepo $p
 	return ob_get_clean();
 }
 
-function public_bracket_list($author_id = null) {
+function public_bracket_list($opts = []) {
+	$tags = $opts['tags'] ?? [];
+	$author_id = $opts['author'] ?? null;
+
   $bracket_repo = new Wpbb_BracketRepo();
   $play_repo = new Wpbb_BracketPlayRepo();
 
@@ -278,7 +281,7 @@ function public_bracket_list($author_id = null) {
 
   $the_query = new WP_Query([
     'post_type' => Wpbb_Bracket::get_post_type(),
-    'tag_slug__and' => ['bmb_official_bracket'],
+    'tag_slug__and' => $tags,
     'posts_per_page' => 8,
     'paged' => $paged,
     'post_status' => $status_query,

@@ -12,7 +12,7 @@ require_once('shared/wpbb-brackets-common.php');
       <div class="tw-flex tw-justify-center tw-gap-10 tw-py-11 tw-flex-wrap">
         <?php echo wpbb_bracket_sort_buttons(); ?>
       </div>
-      <?php echo public_bracket_list(); ?>
+      <?php echo public_bracket_list(['tags' => ['bmb_official']]); ?>
 		</div>
 	</div>
 </div>
