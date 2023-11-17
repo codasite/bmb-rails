@@ -20,8 +20,7 @@ $plays = $play_repo->get_all([
 ?>
 <div class="wpbb-reset wpbb-faded-bracket-bg tw-pt-60 tw-pb-[150px] tw-px-20">
 	<div class="wpbb-reset tw-max-w-screen-lg tw-mx-auto tw-flex-col tw-flex">
-		<!-- Profile picture VIP, name -->
-		<div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-30 tw-py-60 tw-self-center tw-items-center">
+		<div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-30 tw-pb-30 md:tw-py-60 tw-self-center tw-items-center">
       <div class="tw-w-[150px] tw-h-[150px] md:tw-w-[200px] md:tw-h-[200px] tw-rounded-full tw-border-4 tw-bg-white tw-bg-[url(<?php echo $user_profile->thumbnail_url ?>)] tw-bg-cover tw-bg-center tw-bg-no-repeat">
       </div>
       <div class="tw-flex tw-flex-col tw-items-center md:tw-items-start">
