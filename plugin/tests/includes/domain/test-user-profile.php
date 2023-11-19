@@ -44,4 +44,16 @@ class UserProfileTest extends WPBB_UnitTestCase {
     $this->assertEquals(get_permalink($profile_post), $profile->url);
     $this->assertEquals($user, $profile->wp_user);
   }
+
+  public function test_constructor_no_post_data() {
+    $user = self::factory()->user->create_and_get();
+    $args = [
+      'author_display_name' => $user->display_name,
+      'wp_user' => $user,
+    ];
+    $profile = new Wpbb_UserProfile($args);
+    $this->assertInstanceOf(Wpbb_UserProfile::class, $profile);
+    $this->assertEquals($user->display_name, $profile->author_display_name);
+    $this->assertEquals($user, $profile->wp_user);
+  }
 }
