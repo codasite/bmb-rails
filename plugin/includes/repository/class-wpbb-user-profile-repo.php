@@ -33,10 +33,7 @@ class Wpbb_UserProfileRepo extends Wpbb_CustomPostRepoBase {
       $post = $post->id;
     }
     $profile_post = get_post($post);
-    if (
-      !$profile_post ||
-      $profile_post->post_type !== Wpbb_UserProfile::get_post_type()
-    ) {
+    if ($profile_post->post_type !== Wpbb_UserProfile::get_post_type()) {
       return null;
     }
     $user = get_user_by('id', $profile_post->post_author);
@@ -74,7 +71,9 @@ class Wpbb_UserProfileRepo extends Wpbb_CustomPostRepoBase {
       ])
     );
     if (count($profile) === 0) {
-      return null;
+      return new Wpbb_UserProfile([
+        'wp_user' => $user,
+      ]);
     }
     return $profile[0];
   }
