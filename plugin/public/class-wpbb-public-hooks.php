@@ -9,10 +9,13 @@ class Wpbb_PublicHooks {
   private $bracket_repo;
   private $play_query;
   private $utils;
+  private $bracket_product_utils;
 
   public function __construct($opts = []) {
     $this->play_query = $opts['play_query'] ?? new Wpbb_CustomPlayQuery();
     $this->utils = $opts['utils'] ?? new Wpbb_Utils();
+    $this->bracket_product_utils =
+      $opts['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
     $this->play_repo = $opts['play_repo'] ?? new Wpbb_BracketPlayRepo();
     $this->bracket_repo = $opts['bracket_repo'] ?? new Wpbb_BracketRepo();
   }
@@ -257,9 +260,26 @@ class Wpbb_PublicHooks {
 
   // This hooks into `woocommerce_cart_calculate_fees` action
   public function add_paid_bracket_fee_to_cart($cart) {
-    // check if the cart contains a bracket-ready product
-    // if so, get the bracket id from the cart item data
-    // then check if the bracket is associated with one of the "fee" tags. ('bmb-fee-1', 'bmb-fee-2', etc.)
-    // if so, add the fee to the cart
+    foreach ($cart->get_cart() as $cart_item_key => $values) {
+      if (
+        !$this->bracket_product_utils->is_bracket_product(
+          wc_get_product($values['product_id'])
+        )
+      ) {
+        continue;
+      }
+      $bracket_id = $values['data']->get_meta('bracket_id');
+      $tags = wp_get_post_tags($bracket_id);
+      $fee_tags = array_filter($tags, function ($tag) {
+        return str_starts_with($tag->name, 'bmb-fee');
+      });
+      if (empty($fee_tags)) {
+        return;
+      }
+      $fee_tag = $fee_tags[0];
+      $fee_amount = (int) explode('_', $fee_tag->name)[2];
+      $bracket = $this->bracket_repo->get($bracket_id);
+      $cart->add_fee($bracket->title . ' fee', $fee_amount, false, '');
+    }
   }
 }
