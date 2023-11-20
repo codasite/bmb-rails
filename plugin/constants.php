@@ -14,3 +14,4 @@ const WPBB_SERVICE_USER = '';
 const MAILCHIMP_API_KEY = '';
 const MAILCHIMP_FROM_EMAIL = '';
 const IMAGE_GENERATOR_PATH = '';
+const BMB_PLUS_SLUG = '';
