@@ -244,6 +244,20 @@ class Wp_Bracket_Builder {
       10,
       2
     );
+    $this->loader->add_filter(
+      'manage_posts_columns',
+      $plugin_admin,
+      'add_post_id_column',
+      10,
+      1
+    );
+    $this->loader->add_filter(
+      'manage_posts_custom_column',
+      $plugin_admin,
+      'get_post_id_column_content',
+      10,
+      2
+    );
   }
 
   /**

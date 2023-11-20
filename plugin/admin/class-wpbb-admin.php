@@ -400,6 +400,16 @@ class Wpbb_Admin {
       wp_delete_post($post->ID, true);
     }
   }
+
+  function add_post_id_column($columns) {
+    $columns['post_id_clmn'] = 'ID'; // $columns['Column ID'] = 'Column Title';
+    return $columns;
+  }
+
+  function get_post_id_column_content($column, $id) {
+    if ($column === 'post_id_clmn')
+      echo $id;
+  }
 }
 ?>
 <?php
