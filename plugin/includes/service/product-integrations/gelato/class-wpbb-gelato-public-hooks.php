@@ -161,6 +161,8 @@ class Wpbb_GelatoPublicHooks {
     );
 
     $cart_item_data['bracket_config'] = $config;
+    $cart_item_data['bracket_id'] = $config->bracket_id;
+    // add just bracket id as well
 
     return $cart_item_data;
   }

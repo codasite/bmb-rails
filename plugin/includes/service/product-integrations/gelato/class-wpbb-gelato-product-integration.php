@@ -217,6 +217,7 @@ class Wpbb_GelatoProductIntegration implements
         list($placement, $theme) = explode('_', $key);
         $config = new Wpbb_BracketConfig(
           $play->id,
+          $play->bracket_id,
           $theme,
           $placement,
           $value['image_url']

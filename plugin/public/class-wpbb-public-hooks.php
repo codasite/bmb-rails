@@ -206,10 +206,11 @@ class Wpbb_PublicHooks
 		}
 	}
 
-	// This hooks into `woocommerce_add_cart_item`
-	public function add_paid_bracket_fee($cart_item_data, $cart_id) {
-
+	// This hooks into `woocommerce_cart_calculate_fees` action
+	public function add_paid_bracket_fee_to_cart($cart) {
+		// check if the cart contains a bracket-ready product
+		// if so, get the bracket id from the cart item data 
+		// then check if the bracket is associated with one of the "fee" tags. ('bmb-fee-1', 'bmb-fee-2', etc.)
+		// if so, find the fee product associated with that tag and add it to the cart
 	}
-
-	
 }

@@ -34,6 +34,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     ]);
     $bracket_config = new Wpbb_BracketConfig(
       $play->id,
+      $play->bracket_id,
       'light',
       'top',
       'https://example.com'
@@ -100,6 +101,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     ]);
     $bracket_config = new Wpbb_BracketConfig(
       $play->id,
+      $play->bracket_id,
       'light',
       'top',
       'https://example.com'
