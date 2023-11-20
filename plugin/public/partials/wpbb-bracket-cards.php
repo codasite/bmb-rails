@@ -18,7 +18,9 @@ function wpbb_vip_play_card($play, $options = []) {
 	if ($show_profile_link) {
 		$profile_repo = new Wpbb_UserProfileRepo();
 		$profile = $profile_repo->get_by_user($play->author);
-		$profile_link = $profile->url;
+		if ($profile->url) {
+			$profile_link = $profile->url;
+		}
 	}
 	$title = $play->title;
 	$id = $play->id;
@@ -39,7 +41,9 @@ function wpbb_vip_bracket_card($bracket, $options = []) {
 	if ($show_profile_link) {
 		$profile_repo = new Wpbb_UserProfileRepo();
 		$profile = $profile_repo->get_by_user($bracket->author);
-		$profile_link = $profile->url;
+		if ($profile->url) {
+			$profile_link = $profile->url;
+		}
 	}
 	$title = $bracket->title;
 	$id = $bracket->id;
@@ -54,6 +58,7 @@ function wpbb_vip_bracket_card($bracket, $options = []) {
 }
 
 function wpbb_view_profile_btn($link) {
+	ob_start();
 	?>
 	<a href="<?php echo esc_url($link) ?>" class="tw-flex tw-items-center tw-justify-center tw-gap-8 tw-text-white tw-px-16 tw-py-4 tw-rounded-8 tw-bg-dd-blue/60 hover:tw-bg-dd-blue">
 		<span class="tw-text-14 tw-font-600">View Profile</span>
