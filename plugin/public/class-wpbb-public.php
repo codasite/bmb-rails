@@ -135,13 +135,21 @@ class Wpbb_Public {
 	private function get_bmb_plus_permalink() {
 		// use wp query to get the post for the bmb subscription
 		$args = array(
-			'name'        => 'bmb-plus',
+			'name'        => $this->get_bmb_plus_slug(),
 			'post_type'   => 'product',
 			'post_status' => 'publish',
 			'numberposts' => 1
 		);
-		$bmb_plus_post = get_posts($args)[0];
-		return get_permalink($bmb_plus_post->ID);
+		$posts = get_posts($args);
+		if (empty($posts)) {
+			// return the home url if the bmb plus product is not found
+			return get_home_url();
+		}
+		return get_permalink($posts[0]);
+	}
+
+	private function get_bmb_plus_slug() {
+		return defined('BMB_PLUS_SLUG') ? BMB_PLUS_SLUG : 'bmb-plus';
 	}
 
 	private function get_bracket_product_archive_url() {
