@@ -34,9 +34,9 @@ foreach ($posts as $post) {
 ?>
 <div class="wpbb-reset tw-bg-dd-blue">
 	<div class="tw-flex tw-flex-col">
-	<div class="tw-flex tw-flex-col tw-py-60 tw-gap-15 tw-items-center ">
-		<div class="logo-svg"></div>
-		<h1 class="tw-text-32 sm:tw-text-48 md:tw-text-64 lg:tw-text-80 tw-font-700 tw-text-center">Celebrity Brackets</h1>
+		<div class="tw-flex tw-flex-col tw-py-60 tw-gap-15 tw-items-center ">
+			<div class="logo-svg"></div>
+			<h1 class="tw-text-32 sm:tw-text-48 md:tw-text-64 lg:tw-text-80 tw-font-700 tw-text-center">Celebrity Brackets</h1>
 		</div>
 		<div class="wpbb-faded-bracket-bg tw-py-30 md:tw-py-60 tw-px-20 ">
 			<div class="tw-flex tw-flex-col tw-gap-30 tw-max-w-[1160px] tw-m-auto ">
