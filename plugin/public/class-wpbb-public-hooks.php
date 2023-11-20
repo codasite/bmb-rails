@@ -211,6 +211,6 @@ class Wpbb_PublicHooks
 		// check if the cart contains a bracket-ready product
 		// if so, get the bracket id from the cart item data 
 		// then check if the bracket is associated with one of the "fee" tags. ('bmb-fee-1', 'bmb-fee-2', etc.)
-		// if so, find the fee product associated with that tag and add it to the cart
+		// if so, add the fee to the cart
 	}
 }
