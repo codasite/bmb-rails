@@ -127,12 +127,14 @@ function renderBracketResultsBuilder(ajaxObj: wpbbAppObj) {
   }
 }
 function renderViewBracketPlay(ajaxObj: wpbbAppObj) {
-  const { play } = ajaxObj
-  const redirectUrl = ajaxObj.bracketProductArchiveUrl
+  const { play, bracketProductArchiveUrl } = ajaxObj
   if (play) {
     renderDiv(
       <App>
-        <ViewPlayPage bracketPlay={play} redirectUrl={redirectUrl} />
+        <ViewPlayPage
+          bracketPlay={play}
+          addToApparelUrl={bracketProductArchiveUrl}
+        />
       </App>,
       'wpbb-view-play'
     )
