@@ -1,8 +1,8 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket-play.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/repository/class-wpbb-bracket-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) . 'includes/domain/class-wpbb-bracket.php';
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-play.php';
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
 

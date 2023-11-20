@@ -206,5 +206,10 @@ class Wpbb_PublicHooks
 		}
 	}
 
+	// This hooks into `woocommerce_add_cart_item`
+	public function add_paid_bracket_fee($cart_item_data, $cart_id) {
+
+	}
+
 	
 }
