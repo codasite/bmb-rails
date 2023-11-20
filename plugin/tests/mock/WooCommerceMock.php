@@ -11,11 +11,14 @@ interface OrderItemInterface {
   public function update_meta_data($key, $value);
   public function save();
   public function get_id();
-  // ... Any other methods you need
 }
 
 interface ProductInterface {
   public function is_type($type);
   public function get_id();
-  // ... Any other methods you need
+}
+
+interface CartInterface {
+  public function get_cart();
+  public function add_fee($name, $amount, $taxable, $tax_class);
 }
