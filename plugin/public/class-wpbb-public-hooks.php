@@ -262,26 +262,26 @@ class Wpbb_PublicHooks {
 
   // This hooks into `woocommerce_cart_calculate_fees` action
   public function add_paid_bracket_fee_to_cart($cart) {
-    foreach ($cart->get_cart() as $cart_item_key => $values) {
+    foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+	    $product = $cart_item['data'];
       if (
-        !$this->bracket_product_utils->is_bracket_product(
-          $this->wc->wc_get_product($values['product_id'])
-        )
+        $this->bracket_product_utils->is_bracket_product($product)
       ) {
-        continue;
+	      $config = $cart_item['bracket_config'] ?? null;
+	      if (!$config) continue;
+	      $bracket_id = $config->bracket_id;
+	      if (empty($bracket_id)) continue;
+	      $tags = wp_get_post_tags($bracket_id);
+	      $fee_tags = array_filter($tags, function ($tag) {
+		return str_starts_with($tag->name, 'bmb_fee');
+	      });
+	      if (empty($fee_tags)) continue;
+	      $fee_tag = $fee_tags[0];
+	      //try
+	      $fee_amount = (int) str_replace('bmb_fee_', '', $fee_tag->name);
+	      $bracket = $this->bracket_repo->get($bracket_id);
+	      $cart->add_fee($bracket->title . ' fee', $fee_amount, false, '');
       }
-      $bracket_id = $values['data']->get_meta('bracket_id');
-      $tags = wp_get_post_tags($bracket_id);
-      $fee_tags = array_filter($tags, function ($tag) {
-        return str_starts_with($tag->name, 'bmb_fee');
-      });
-      if (empty($fee_tags)) {
-        return;
-      }
-      $fee_tag = $fee_tags[0];
-      $fee_amount = (int) explode('_', $fee_tag->name)[2];
-      $bracket = $this->bracket_repo->get($bracket_id);
-      $cart->add_fee($bracket->title . ' fee', $fee_amount, false, '');
     }
   }
 }
