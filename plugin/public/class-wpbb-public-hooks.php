@@ -283,4 +283,10 @@ class Wpbb_PublicHooks {
       }
     }
   }
+
+  // A hook to customize how the bracket fee is displayed in the cart
+  // This function is hooked to the `woocommerce_cart_totals_fee_html` filter
+  public function customize_bracket_fee_html($cart_totals_fee_html, $fee) {
+    return $cart_totals_fee_html;
+  }
 }
