@@ -40,4 +40,13 @@ class Wpbb_BracketProductUtils {
       return has_term($category_slug, 'product_cat', $product->get_id());
     }
   }
+
+  public function get_bracket_fee(Wpbb_Bracket|int $bracket): float {
+    if ($bracket instanceof Wpbb_Bracket) {
+      $bracket = $bracket->id;
+    }
+    // $fee = floatval(get_post_meta($bracket, 'bmb_fee', true));
+    $fee = get_post_meta($bracket, 'bmb_fee', true);
+    return $fee ? $fee : 0;
+  }
 }

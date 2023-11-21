@@ -340,7 +340,6 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_and_get([
       'num_teams' => 4,
     ]);
-    wp_set_post_tags($bracket->id, ['bmb_fee_12'], 'product_tag');
     $cart_mock = $this->createMock(CartInterface::class);
     $cart_mock
       ->expects($this->once())
@@ -357,6 +356,13 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'item1' => [
         'data' => $wc_order_item_mock,
         'product_id' => 1,
+        'bracket_config' => new Wpbb_BracketConfig(
+          1,
+          $bracket->id,
+          'dark',
+          'center',
+          'url'
+        ),
       ],
     ]);
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
@@ -364,6 +370,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       Wpbb_BracketProductUtils::class
     );
     $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
+    $bracket_product_utils_mock->method('get_bracket_fee')->willReturn(12.0);
     $hooks = new Wpbb_PublicHooks([
       'wc' => $wc_mock,
       'bracket_product_utils' => $bracket_product_utils_mock,
