@@ -276,8 +276,10 @@ class Wpbb_PublicHooks {
         $fee_amount = $this->bracket_product_utils->get_bracket_fee(
           $bracket_id
         );
-        $bracket = $this->bracket_repo->get($bracket_id);
-        $cart->add_fee($bracket->title . ' fee', $fee_amount, false, '');
+        if ($fee_amount > 0) {
+          $bracket = $this->bracket_repo->get($bracket_id);
+          $cart->add_fee($bracket->title . ' fee', $fee_amount, false, '');
+        }
       }
     }
   }
