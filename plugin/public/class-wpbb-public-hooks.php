@@ -10,6 +10,7 @@ class Wpbb_PublicHooks {
   private $play_query;
   private $utils;
   private $bracket_product_utils;
+  private $wc;
 
   public function __construct($opts = []) {
     $this->play_query = $opts['play_query'] ?? new Wpbb_CustomPlayQuery();
@@ -18,6 +19,7 @@ class Wpbb_PublicHooks {
       $opts['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
     $this->play_repo = $opts['play_repo'] ?? new Wpbb_BracketPlayRepo();
     $this->bracket_repo = $opts['bracket_repo'] ?? new Wpbb_BracketRepo();
+    $this->wc = $opts['wc'] ?? new Wpbb_WcFunctions();
   }
 
   public function add_rewrite_tags() {
@@ -263,7 +265,7 @@ class Wpbb_PublicHooks {
     foreach ($cart->get_cart() as $cart_item_key => $values) {
       if (
         !$this->bracket_product_utils->is_bracket_product(
-          wc_get_product($values['product_id'])
+          $this->wc->wc_get_product($values['product_id'])
         )
       ) {
         continue;
@@ -271,7 +273,7 @@ class Wpbb_PublicHooks {
       $bracket_id = $values['data']->get_meta('bracket_id');
       $tags = wp_get_post_tags($bracket_id);
       $fee_tags = array_filter($tags, function ($tag) {
-        return str_starts_with($tag->name, 'bmb-fee');
+        return str_starts_with($tag->name, 'bmb_fee');
       });
       if (empty($fee_tags)) {
         return;

@@ -335,4 +335,40 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(0, $post->post_author);
   }
+
+  public function test_add_paid_bracket_fee_should_be_added() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    wp_set_post_tags($bracket->id, ['bmb_fee_12'], 'product_tag');
+    $cart_mock = $this->createMock(CartInterface::class);
+    $cart_mock
+      ->expects($this->once())
+      ->method('add_fee')
+      ->with(
+        $this->stringContains('fee'),
+        $this->equalTo(12),
+        $this->equalTo(false),
+        $this->equalTo('')
+      );
+    $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
+    $wc_order_item_mock->method('get_meta')->willReturn($bracket->id);
+    $cart_mock->method('get_cart')->willReturn([
+      'item1' => [
+        'data' => $wc_order_item_mock,
+        'product_id' => 1,
+      ],
+    ]);
+    $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
+    $bracket_product_utils_mock = $this->createMock(
+      Wpbb_BracketProductUtils::class
+    );
+    $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
+    $hooks = new Wpbb_PublicHooks([
+      'wc' => $wc_mock,
+      'bracket_product_utils' => $bracket_product_utils_mock,
+    ]);
+
+    $hooks->add_paid_bracket_fee_to_cart($cart_mock);
+  }
 }
