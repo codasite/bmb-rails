@@ -54,6 +54,6 @@ class Wpbb_BracketProductUtils {
       $bracket instanceof Wpbb_Bracket
         ? $bracket->title
         : get_the_title($bracket);
-    return $bracket_title . ' fee';
+    return 'Tournament fee: ' . $bracket_title;
   }
 }

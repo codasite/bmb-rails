@@ -141,6 +141,9 @@ class Wp_Bracket_Builder {
     require_once plugin_dir_path(dirname(__FILE__)) .
       'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
 
+    require_once WPBB_PLUGIN_DIR .
+      'includes/service/bracket-product/class-wpbb-bracket-product-hooks.php';
+
     $this->loader = new Wpbb_Loader();
   }
 
@@ -422,6 +425,10 @@ class Wp_Bracket_Builder {
       10,
       1
     );
+    $bracket_product_hooks = new Wpbb_BracketProductHooks([
+      'loader' => $this->loader,
+    ]);
+    $bracket_product_hooks->load();
   }
 
   /**

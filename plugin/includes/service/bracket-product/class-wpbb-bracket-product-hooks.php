@@ -83,6 +83,7 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
 
   // Add the fee data as meta on the order item.
   // This is needed in case the bracket title, which the fee name is derived from, is changed.
+  // This hooks into `woocommerce_checkout_create_order_line_item` action
   public function add_fee_meta_to_order_item(
     $item,
     $cart_item_key,
