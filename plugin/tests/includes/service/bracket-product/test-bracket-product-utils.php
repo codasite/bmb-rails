@@ -39,4 +39,14 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
     $fee = $utils->get_bracket_fee($bracket);
     $this->assertEquals(5.0, $fee);
   }
+
+  public function test_get_bracket_fee_name() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'title' => 'My Bracket',
+      'num_teams' => 4,
+    ]);
+    $utils = new Wpbb_BracketProductUtils();
+    $name = $utils->get_bracket_fee_name($bracket->id);
+    $this->assertEquals('Tournament fee: My Bracket', $name);
+  }
 }

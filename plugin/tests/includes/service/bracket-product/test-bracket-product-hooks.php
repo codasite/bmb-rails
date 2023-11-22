@@ -9,15 +9,6 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
     ]);
     $cart_mock = $this->createMock(CartInterface::class);
-    $cart_mock
-      ->expects($this->once())
-      ->method('add_fee')
-      ->with(
-        $this->stringContains('fee'),
-        $this->equalTo(12),
-        $this->equalTo(false),
-        $this->equalTo('')
-      );
     $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
     $wc_order_item_mock->method('get_meta')->willReturn($bracket->id);
     $cart_mock->method('get_cart')->willReturn([
@@ -39,9 +30,22 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     );
     $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
     $bracket_product_utils_mock->method('get_bracket_fee')->willReturn(12.0);
+    $bracket_product_utils_mock
+      ->method('get_bracket_fee_name')
+      ->willReturn('my bracket fee');
     $hooks = new Wpbb_BracketProductHooks([
       'bracket_product_utils' => $bracket_product_utils_mock,
     ]);
+
+    $cart_mock
+      ->expects($this->once())
+      ->method('add_fee')
+      ->with(
+        $this->equalTo('my bracket fee'),
+        $this->equalTo(12),
+        $this->equalTo(false),
+        $this->equalTo('')
+      );
 
     $hooks->add_paid_bracket_fee_to_cart($cart_mock);
   }
@@ -51,7 +55,6 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
     ]);
     $cart_mock = $this->createMock(CartInterface::class);
-    $cart_mock->expects($this->never())->method('add_fee');
     $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
     $wc_order_item_mock->method('get_meta')->willReturn($bracket->id);
     $cart_mock->method('get_cart')->willReturn([
@@ -76,6 +79,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     $hooks = new Wpbb_BracketProductHooks([
       'bracket_product_utils' => $bracket_product_utils_mock,
     ]);
+
+    $cart_mock->expects($this->never())->method('add_fee');
 
     $hooks->add_paid_bracket_fee_to_cart($cart_mock);
   }
