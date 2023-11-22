@@ -381,13 +381,6 @@ class Wp_Bracket_Builder {
       1
     );
     $this->loader->add_action(
-      'woocommerce_cart_totals_fee_html',
-      $public_hooks,
-      'customize_paid_bracket_fee_html',
-      10,
-      2
-    );
-    $this->loader->add_action(
       'wpbb_after_play_printed',
       $public_hooks,
       'mark_play_printed',
