@@ -74,8 +74,10 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
           $bracket_id
         );
         if ($fee_amount > 0) {
-          $bracket = $this->bracket_repo->get($bracket_id);
-          $cart->add_fee($bracket->title . ' fee', $fee_amount, false, '');
+          $fee_name = $this->bracket_product_utils->get_bracket_fee_name(
+            $bracket_id
+          );
+          $cart->add_fee($fee_name, $fee_amount, false, '');
         }
       }
     }
