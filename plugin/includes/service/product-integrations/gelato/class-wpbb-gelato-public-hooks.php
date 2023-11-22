@@ -248,6 +248,9 @@ class Wpbb_GelatoPublicHooks {
   }
 
   public function process_bracket_product_item($cart_item) {
+    if (defined('DISABLE_IMAGE_GENERATOR_CALLS')) {
+      return $cart_item;
+    }
     // get the url for the front design
     $front_url = get_post_meta(
       $cart_item['variation_id'],

@@ -15,3 +15,5 @@ const MAILCHIMP_API_KEY = '';
 const MAILCHIMP_FROM_EMAIL = '';
 const IMAGE_GENERATOR_PATH = '';
 const BMB_PLUS_SLUG = '';
+// Bypass all image generator calls and s3 calls so we can run locally
+const DISABLE_IMAGE_GENERATOR_CALLS = '';

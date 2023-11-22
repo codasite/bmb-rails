@@ -162,6 +162,13 @@ class Wpbb_GelatoProductIntegration implements
   public function generate_images(Wpbb_PostBracketInterface $bracket): void {
     $request_data = $this->request_factory->get_request_data($bracket);
     $responses = $this->client->send_many($request_data);
+    if (defined('DISABLE_IMAGE_GENERATOR_CALLS')) {
+      $responses = [
+        'top_light' => [
+          'image_url' => 'https://test.com/top_light.png',
+        ],
+      ];
+    }
     update_post_meta(
       $bracket->get_post_id(),
       $this->get_post_meta_key(),
