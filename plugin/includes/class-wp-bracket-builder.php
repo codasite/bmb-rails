@@ -373,13 +373,13 @@ class Wp_Bracket_Builder {
       10,
       1
     );
-    $this->loader->add_action(
-      'woocommerce_cart_calculate_fees',
-      $public_hooks,
-      'add_paid_bracket_fee_to_cart',
-      10,
-      1
-    );
+    // $this->loader->add_action(
+    //   'woocommerce_cart_calculate_fees',
+    //   $public_hooks,
+    //   'add_paid_bracket_fee_to_cart',
+    //   10,
+    //   1
+    // );
     $this->loader->add_action(
       'wpbb_after_play_printed',
       $public_hooks,

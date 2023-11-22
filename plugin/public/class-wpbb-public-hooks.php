@@ -259,28 +259,4 @@ class Wpbb_PublicHooks {
       ]);
     }
   }
-
-  // This hooks into `woocommerce_cart_calculate_fees` action
-  public function add_paid_bracket_fee_to_cart($cart) {
-    foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
-      $product = $cart_item['data'];
-      if ($this->bracket_product_utils->is_bracket_product($product)) {
-        $config = $cart_item['bracket_config'] ?? null;
-        if (!$config) {
-          continue;
-        }
-        $bracket_id = $config->bracket_id;
-        if (empty($bracket_id)) {
-          continue;
-        }
-        $fee_amount = $this->bracket_product_utils->get_bracket_fee(
-          $bracket_id
-        );
-        if ($fee_amount > 0) {
-          $bracket = $this->bracket_repo->get($bracket_id);
-          $cart->add_fee($bracket->title . ' fee', $fee_amount, false, '');
-        }
-      }
-    }
-  }
 }

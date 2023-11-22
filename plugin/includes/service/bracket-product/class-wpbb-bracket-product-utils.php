@@ -48,4 +48,12 @@ class Wpbb_BracketProductUtils {
     $fee = floatval(get_post_meta($bracket, 'bmb_fee', true));
     return $fee ? $fee : 0;
   }
+
+  public function get_bracket_fee_name(Wpbb_Bracket|int $bracket): string {
+    $bracket_title =
+      $bracket instanceof Wpbb_Bracket
+        ? $bracket->title
+        : get_the_title($bracket);
+    return $bracket_title . ' fee';
+  }
 }
