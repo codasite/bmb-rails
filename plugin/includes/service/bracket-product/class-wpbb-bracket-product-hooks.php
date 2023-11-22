@@ -28,8 +28,8 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
    */
   private $utils;
 
-  public function __construct($loader, $args = []) {
-    $this->loader = $loader;
+  public function __construct($args = []) {
+    $this->loader = $args['loader'] ?? new Wpbb_Loader();
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
     $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
