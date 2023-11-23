@@ -184,9 +184,6 @@ class Wpbb_GelatoPublicHooks {
       $item->add_meta_data('bracket_id', $bracket_id);
       $item->add_meta_data('play_id', $play_id);
     }
-    if (array_key_exists('bracket_id', $values)) {
-      $item->add_meta_data('bracket_id', $values['bracket_id']);
-    }
     if (array_key_exists('s3_url', $values)) {
       $item->add_meta_data('s3_url', $values['s3_url']);
     }

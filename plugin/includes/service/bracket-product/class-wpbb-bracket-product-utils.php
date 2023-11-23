@@ -56,7 +56,7 @@ class Wpbb_BracketProductUtils {
     if ($bracket instanceof Wpbb_Bracket) {
       $bracket = $bracket->id;
     }
-    $fee = floatval(get_post_meta($bracket, 'bmb_fee', true));
+    $fee = floatval(get_post_meta($bracket, 'bracket_fee', true));
     return $fee ? $fee : 0;
   }
 

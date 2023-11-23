@@ -5,25 +5,28 @@ require_once WPBB_PLUGIN_DIR .
 
 class BracketProductHooksTest extends WPBB_UnitTestCase {
   public function test_add_paid_bracket_fee_should_be_added() {
-    $bracket = self::factory()->bracket->create_and_get([
-      'num_teams' => 4,
-    ]);
+    $bracket_id = 2;
     $cart_mock = $this->createMock(CartInterface::class);
+    $cart_fees_mock = $this->createMock(CartFeesInterface::class);
     $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
-    $wc_order_item_mock->method('get_meta')->willReturn($bracket->id);
+    $wc_order_item_mock
+      ->method('get_meta')
+      ->with('bracket_id')
+      ->willReturn($bracket_id);
     $cart_mock->method('get_cart')->willReturn([
       'item1' => [
         'data' => $wc_order_item_mock,
         'product_id' => 1,
         'bracket_config' => new Wpbb_BracketConfig(
           1,
-          $bracket->id,
+          $bracket_id,
           'dark',
           'center',
           'url'
         ),
       ],
     ]);
+    $cart_mock->method('fees_api')->willReturn($cart_fees_mock);
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
     $bracket_product_utils_mock = $this->createMock(
       Wpbb_BracketProductUtils::class
@@ -35,35 +38,51 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
       ->willReturn('my bracket fee');
     $hooks = new Wpbb_BracketProductHooks([
       'bracket_product_utils' => $bracket_product_utils_mock,
+      'wc' => $wc_mock,
     ]);
+    $fee_mock = $this->createMock(OrderItemFeeInterface::class);
+    $fee_id = 'my-bracket-fee';
 
-    $cart_mock
+    $cart_fees_mock
       ->expects($this->once())
       ->method('add_fee')
       ->with(
-        $this->equalTo('my bracket fee'),
-        $this->equalTo(12),
-        $this->equalTo(false),
-        $this->equalTo('')
+        $this->equalTo([
+          'id' => $fee_id,
+          'name' => 'my bracket fee',
+          'amount' => 12.0,
+          'taxable' => false,
+          'tax_class' => '',
+        ])
+      )
+      ->willReturn($fee_mock);
+    $wc_mock
+      ->expects($this->once())
+      ->method('session_set')
+      ->with(
+        $this->equalTo(BRACKET_FEE_META_PREFIX . $bracket_id),
+        $this->equalTo(['fee_amount' => 12.0])
       );
 
     $hooks->add_paid_bracket_fee_to_cart($cart_mock);
   }
 
   public function test_add_paid_bracket_fee_0_should_not_be_added() {
-    $bracket = self::factory()->bracket->create_and_get([
-      'num_teams' => 4,
-    ]);
+    $bracket_id = 2;
     $cart_mock = $this->createMock(CartInterface::class);
+    $cart_fees_mock = $this->createMock(CartFeesInterface::class);
     $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
-    $wc_order_item_mock->method('get_meta')->willReturn($bracket->id);
+    $wc_order_item_mock
+      ->method('get_meta')
+      ->with('bracket_id')
+      ->willReturn($bracket_id);
     $cart_mock->method('get_cart')->willReturn([
       'item1' => [
         'data' => $wc_order_item_mock,
         'product_id' => 1,
         'bracket_config' => new Wpbb_BracketConfig(
           1,
-          $bracket->id,
+          $bracket_id,
           'dark',
           'center',
           'url'
@@ -71,6 +90,7 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
       ],
     ]);
     $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
+    $cart_mock->method('fees_api')->willReturn($cart_fees_mock);
     $bracket_product_utils_mock = $this->createMock(
       Wpbb_BracketProductUtils::class
     );
@@ -80,85 +100,83 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
       'bracket_product_utils' => $bracket_product_utils_mock,
     ]);
 
-    $cart_mock->expects($this->never())->method('add_fee');
+    $cart_fees_mock->expects($this->never())->method('add_fee');
+    $wc_mock->expects($this->never())->method('session_set');
 
     $hooks->add_paid_bracket_fee_to_cart($cart_mock);
   }
 
   public function test_add_fee_meta_to_order_item_matching_fee() {
+    // Mocks and setup
     $item_mock = $this->createMock(OrderItemInterface::class);
-    $values_mock = [
-      'bracket_id' => 1,
-    ];
-    $bracket_product_utils_mock = $this->createMock(
-      Wpbb_BracketProductUtils::class
-    );
-    $bracket_fee_name = 'my bracket fee';
-    $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
-    $bracket_product_utils_mock->method('get_bracket_fee')->willReturn(1.0);
-    $bracket_product_utils_mock
-      ->method('get_bracket_fee_name')
-      ->willReturn($bracket_fee_name);
 
-    $order_mock = $this->createMock(OrderInterface::class);
-    $order_mock->method('get_fees')->willReturn([
-      (object) [
-        'name' => $bracket_fee_name,
-        'total' => 1.0,
-      ],
-    ]);
+    $bracket_id = 1;
+    $values_mock = ['bracket_config' => (object) ['bracket_id' => $bracket_id]];
+
+    $bracket_utils_mock = $this->createMock(Wpbb_BracketProductUtils::class);
+    $bracket_utils_mock->method('is_bracket_product')->willReturn(true);
+
+    $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
+    $wc_mock
+      ->method('session_get')
+      ->with(BRACKET_FEE_META_PREFIX . $bracket_id)
+      ->willReturn(['fee_amount' => 1.0]);
 
     $hooks = new Wpbb_BracketProductHooks([
-      'bracket_product_utils' => $bracket_product_utils_mock,
+      'bracket_product_utils' => $bracket_utils_mock,
+      'wc' => $wc_mock,
     ]);
-    // expect $item_mock->add_meta_data() to be called with the following args
+
+    // Expectation: add_meta_data should be called with the fee amount
     $item_mock
       ->expects($this->once())
       ->method('add_meta_data')
-      ->with($this->equalTo('bracket_fee'), $this->equalTo(1));
+      ->with($this->equalTo('bracket_fee'), $this->equalTo(1.0));
 
+    $wc_mock
+      ->expects($this->once())
+      ->method('session_unset')
+      ->with($this->equalTo(BRACKET_FEE_META_PREFIX . $bracket_id));
+
+    // Execute the method under test
     $hooks->add_fee_meta_to_order_item(
       $item_mock,
       'cart_item_key',
       $values_mock,
-      $order_mock
+      null // Assuming $order is not used directly in your function
     );
   }
 
   public function test_add_fee_meta_to_order_item_no_matching_fee() {
+    // Mocks and setup
     $item_mock = $this->createMock(OrderItemInterface::class);
-    $values_mock = [
-      'bracket_id' => 1,
-    ];
-    $bracket_product_utils_mock = $this->createMock(
-      Wpbb_BracketProductUtils::class
-    );
-    $bracket_fee_name = 'my bracket fee';
-    $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
-    $bracket_product_utils_mock->method('get_bracket_fee')->willReturn(1.0);
-    $bracket_product_utils_mock
-      ->method('get_bracket_fee_name')
-      ->willReturn($bracket_fee_name);
 
-    $order_mock = $this->createMock(OrderInterface::class);
-    $order_mock->method('get_fees')->willReturn([
-      (object) [
-        'name' => 'some other fee',
-        'total' => 1.0,
-      ],
-    ]);
+    $bracket_id = 1;
+    $values_mock = ['bracket_config' => (object) ['bracket_id' => $bracket_id]];
+
+    $bracket_utils_mock = $this->createMock(Wpbb_BracketProductUtils::class);
+    $bracket_utils_mock->method('is_bracket_product')->willReturn(true);
+
+    $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
+    $wc_mock
+      ->method('session_get')
+      ->with(BRACKET_FEE_META_PREFIX . $bracket_id)
+      ->willReturn(null); // No session data
 
     $hooks = new Wpbb_BracketProductHooks([
-      'bracket_product_utils' => $bracket_product_utils_mock,
+      'bracket_product_utils' => $bracket_utils_mock,
+      'wc' => $wc_mock,
     ]);
-    // expect $item_mock->add_meta_data() to be called with the following args
+
+    // Expectation: add_meta_data should not be called as there is no matching fee session data
     $item_mock->expects($this->never())->method('add_meta_data');
 
+    // Execute the method under test
     $hooks->add_fee_meta_to_order_item(
       $item_mock,
       'cart_item_key',
       $values_mock,
-      $order_mock
+      null
     );
   }
 }

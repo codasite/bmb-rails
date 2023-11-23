@@ -13,4 +13,13 @@ class Wpbb_WcFunctions {
   public function wc_get_order(int $order_id) {
     return wc_get_order($order_id);
   }
+  public function session_set(string $key, $value): void {
+    WC()->session->set($key, $value);
+  }
+  public function session_get(string $key) {
+    return WC()->session->get($key);
+  }
+  public function session_unset(string $key): void {
+    WC()->session->__unset($key);
+  }
 }

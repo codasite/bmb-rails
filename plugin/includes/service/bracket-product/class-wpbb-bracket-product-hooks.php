@@ -1,6 +1,10 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-loader.php';
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-wc-functions.php';
+
+const BRACKET_FEE_META_PREFIX = 'bracket_product_fee_meta_';
 
 class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
   /**
@@ -28,12 +32,18 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
    */
   private $utils;
 
+  /**
+   * @var Wpbb_WcFunctions
+   */
+  private $wc;
+
   public function __construct($args = []) {
     $this->loader = $args['loader'] ?? new Wpbb_Loader();
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
     $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
     $this->utils = $args['utils'] ?? new Wpbb_Utils();
+    $this->wc = $args['wc'] ?? new Wpbb_WcFunctions();
   }
 
   public function load(): void {
@@ -77,14 +87,30 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
           $fee_name = $this->bracket_product_utils->get_bracket_fee_name(
             $bracket_id
           );
-          $cart->add_fee($fee_name, $fee_amount, false, '');
+          $fee_id = sanitize_title($fee_name);
+          $fee = $cart->fees_api()->add_fee([
+            'id' => $fee_id,
+            'name' => $fee_name,
+            'amount' => $fee_amount,
+            'taxable' => false,
+            'tax_class' => '',
+          ]);
+          if (!is_wp_error($fee)) {
+            $this->wc->session_set(BRACKET_FEE_META_PREFIX . $bracket_id, [
+              'fee_amount' => $fee_amount,
+            ]);
+          }
         }
       }
     }
   }
 
+  private function log($message) {
+    $this->utils->log($message);
+  }
+
   // Add the fee data as meta on the order item.
-  // This is needed in case the bracket title, which the fee name is derived from, is changed.
+  // This allows order exports to list the fee individually for each item under one header.
   // This hooks into `woocommerce_checkout_create_order_line_item` action
   public function add_fee_meta_to_order_item(
     $item,
@@ -92,25 +118,26 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
     $values,
     $order
   ) {
-    if (!array_key_exists('bracket_id', $values)) {
+    $product = $item->get_product();
+    if (
+      !$this->bracket_product_utils->is_bracket_product($product) ||
+      !array_key_exists('bracket_config', $values)
+    ) {
       return;
     }
-    $bracket_id = $values['bracket_id'];
-    $fee_amount = $this->bracket_product_utils->get_bracket_fee($bracket_id);
-    if ($fee_amount > 0) {
-      $fee_name = $this->bracket_product_utils->get_bracket_fee_name(
-        $bracket_id
-      );
-      // get the fees from the order
-      $fees = $order->get_fees();
-      // get the fee that matches the bracket fee
-      $fee = array_filter($fees, function ($fee) use ($fee_name) {
-        return $fee->name === $fee_name;
-      });
-      // if there is a fee that matches the bracket fee, add the meta data
-      if (!empty($fee)) {
-        $item->add_meta_data('bracket_fee', $fee_amount);
-      }
+
+    $bracket_id = $values['bracket_config']->bracket_id;
+    // get the fee meta from the session
+    $fee_meta = $this->wc->session_get(BRACKET_FEE_META_PREFIX . $bracket_id);
+    if (empty($fee_meta)) {
+      return;
     }
+
+    $bracket_fee = $fee_meta['fee_amount'];
+    $item->add_meta_data('bracket_fee', floatval($bracket_fee), true);
+
+    // remove the fee meta from the session
+    // this prevents the fee meta from being added to more than one order item for the same bracket
+    $this->wc->session_unset(BRACKET_FEE_META_PREFIX . $bracket_id);
   }
 }
