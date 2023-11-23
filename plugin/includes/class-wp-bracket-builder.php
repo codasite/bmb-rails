@@ -141,6 +141,9 @@ class Wp_Bracket_Builder {
     require_once plugin_dir_path(dirname(__FILE__)) .
       'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
 
+    require_once WPBB_PLUGIN_DIR .
+      'includes/service/bracket-product/class-wpbb-bracket-product-hooks.php';
+
     $this->loader = new Wpbb_Loader();
   }
 
@@ -241,6 +244,20 @@ class Wp_Bracket_Builder {
       'remove_user_role',
       $plugin_admin,
       'remove_user_profile_post',
+      10,
+      2
+    );
+    $this->loader->add_filter(
+      'manage_posts_columns',
+      $plugin_admin,
+      'add_post_id_column',
+      10,
+      1
+    );
+    $this->loader->add_filter(
+      'manage_posts_custom_column',
+      $plugin_admin,
+      'get_post_id_column_content',
       10,
       2
     );
@@ -359,7 +376,13 @@ class Wp_Bracket_Builder {
       10,
       1
     );
-
+    // $this->loader->add_action(
+    //   'woocommerce_cart_calculate_fees',
+    //   $public_hooks,
+    //   'add_paid_bracket_fee_to_cart',
+    //   10,
+    //   1
+    // );
     $this->loader->add_action(
       'wpbb_after_play_printed',
       $public_hooks,
@@ -402,6 +425,10 @@ class Wp_Bracket_Builder {
       10,
       1
     );
+    $bracket_product_hooks = new Wpbb_BracketProductHooks([
+      'loader' => $this->loader,
+    ]);
+    $bracket_product_hooks->load();
   }
 
   /**

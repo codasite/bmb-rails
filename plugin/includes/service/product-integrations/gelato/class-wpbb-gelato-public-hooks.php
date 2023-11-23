@@ -175,6 +175,14 @@ class Wpbb_GelatoPublicHooks {
   ) {
     if (array_key_exists('bracket_config', $values)) {
       $item->add_meta_data('bracket_config', $values['bracket_config']);
+      $play_id = $values['bracket_config']->play_id;
+      $bracket_id = $values['bracket_config']->bracket_id;
+      $theme = $values['bracket_config']->theme_mode;
+      $placement = $values['bracket_config']->bracket_placement;
+      $item->add_meta_data('bracket_theme', $theme);
+      $item->add_meta_data('bracket_placement', $placement);
+      $item->add_meta_data('bracket_id', $bracket_id);
+      $item->add_meta_data('play_id', $play_id);
     }
     if (array_key_exists('s3_url', $values)) {
       $item->add_meta_data('s3_url', $values['s3_url']);
@@ -237,6 +245,9 @@ class Wpbb_GelatoPublicHooks {
   }
 
   public function process_bracket_product_item($cart_item) {
+    if (defined('DISABLE_IMAGE_GENERATOR_CALLS')) {
+      return $cart_item;
+    }
     // get the url for the front design
     $front_url = get_post_meta(
       $cart_item['variation_id'],
