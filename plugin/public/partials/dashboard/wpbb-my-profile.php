@@ -1,5 +1,6 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb-user-profile.php';
+require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-user-profile-repo.php';
 /**
  * The template for displaying the user's profile.
  *
@@ -9,7 +10,8 @@ require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/domain/class-wpbb
 // // Exit if accessed directly.
 // defined('ABSPATH') || exit;
 
-$user = Wpbb_UserProfile::get_current();
+$profile_repo = new Wpbb_UserProfileRepo();
+$user = $profile_repo->get_by_user();
 $num_plays = $user->get_num_plays();
 $wins = $user->get_tournament_wins();
 $accuracy = $user->get_total_accuracy() * 100;

@@ -4,6 +4,7 @@ dist
 coverage
 composer.lock
 *.md
-plugin/public/
-plugin/admin/
+plugin/public/partials/
+plugin/public/error/
+plugin/admin/partials/
 plugin/email/

@@ -107,6 +107,7 @@ class Wpbb_Utils {
   }
 
   public function log($msg, $level = 'debug') {
+    error_log($msg);
     switch ($level) {
       case 'debug':
         $severity = \Sentry\Severity::debug();

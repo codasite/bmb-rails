@@ -1,5 +1,16 @@
 <?php
+require_once WPBB_PLUGIN_DIR .
+  'includes/repository/class-wpbb-bracket-repo.php';
+
 class Wpbb_BracketProductUtils {
+  /**
+   * @var Wpbb_BracketRepo
+   */
+  private $bracket_repo;
+
+  public function __construct($args = []) {
+    $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
+  }
   public function get_bracket_product_archive_url() {
     // $category_slug = BRACKET_PRODUCT_CATEGORY;
     // $redirect_url = get_term_link($category_slug, 'product_cat');
@@ -39,5 +50,22 @@ class Wpbb_BracketProductUtils {
     } else {
       return has_term($category_slug, 'product_cat', $product->get_id());
     }
+  }
+
+  public function get_bracket_fee(Wpbb_Bracket|int $bracket): float {
+    if ($bracket instanceof Wpbb_Bracket) {
+      $bracket = $bracket->id;
+    }
+    $fee = floatval(get_post_meta($bracket, 'bracket_fee', true));
+    return $fee ? $fee : 0;
+  }
+
+  public function get_bracket_fee_name(Wpbb_Bracket|int $bracket): string {
+    $bracket =
+      $bracket instanceof Wpbb_Bracket
+        ? $bracket
+        : $this->bracket_repo->get($bracket);
+    $bracket_title = $bracket->title;
+    return 'Tournament fee: ' . $bracket_title;
   }
 }

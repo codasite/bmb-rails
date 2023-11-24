@@ -27,3 +27,7 @@ function gradient_border_wrap($content, $class_arr = array()) {
 <?php
 	return ob_get_clean();
 }
+
+function wpbb_icon($icon_name) {
+	return file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/' . $icon_name . '.svg');
+}
