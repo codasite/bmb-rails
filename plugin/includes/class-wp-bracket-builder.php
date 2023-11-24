@@ -425,6 +425,13 @@ class Wp_Bracket_Builder {
       10,
       1
     );
+    $this->loader->add_action(
+      'comment_post_redirect',
+      $public_hooks,
+      'custom_comment_redirect',
+      10,
+      2
+    );
     $bracket_product_hooks = new Wpbb_BracketProductHooks([
       'loader' => $this->loader,
     ]);
