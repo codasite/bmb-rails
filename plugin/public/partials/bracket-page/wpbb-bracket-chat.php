@@ -13,7 +13,7 @@ require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-brackets-common.php'
 		</div>
 	</div>
 	<div class="tw-bg-[#02041d] tw-px-20 tw-py-60">
-		<h2 class="tw-text-48 lg:tw-text-64 tw-text-center">Who You Got?</h2>
+		<h2 class="tw-text-48 tw-font-700 lg:tw-font-800 lg:tw-text-64 tw-text-center">Who You Got?</h2>
 		<?php comments_template(); ?>
 	</div>
 </div>
