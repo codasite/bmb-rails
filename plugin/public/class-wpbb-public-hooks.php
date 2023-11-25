@@ -259,4 +259,15 @@ class Wpbb_PublicHooks {
       ]);
     }
   }
+
+  // hooks into 'comment_form_redirect' filter
+  public function custom_comment_redirect($location, $comment) {
+    $post_id = $comment->comment_post_ID;
+    if (get_post_type($post_id) === Wpbb_Bracket::get_post_type()) {
+      $parts = explode('/', $location);
+      $anchor = array_pop($parts);
+      $location = get_permalink($post_id) . 'chat/' . $anchor;
+    }
+    return $location;
+  }
 }

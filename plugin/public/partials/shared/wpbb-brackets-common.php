@@ -100,12 +100,12 @@ function get_bracket_tag($status) {
 /**
  * This button goes to the Play Bracket page
  */
-function play_bracket_btn($endpoint) {
+function play_bracket_btn($endpoint, $label = 'Play Bracket') {
 	ob_start();
 ?>
 	<a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/play.svg'); ?>
-		<span class="tw-font-500">Play Bracket</span>
+		<span class="tw-font-700"><?php echo $label ?></span>
 	</a>
 <?php
 	return ob_get_clean();
@@ -115,7 +115,7 @@ function view_bracket_button($endpoint) {
 	ob_start();
 	?>
   <a class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
-    <span class="tw-font-500">View bracket</span>
+    <span class="tw-font-700">View bracket</span>
   </a>
 	<?php
 	return ob_get_clean();
@@ -125,11 +125,10 @@ function view_bracket_button($endpoint) {
 /**
  * This button goes to the Leaderboard page
  */
-function view_leaderboard_btn($endpoint, $variant = 'primary') {
-	$label = 'View Leaderboard';
+function view_leaderboard_btn($endpoint, $variant = 'primary', $label = 'View Leaderboard') {
 	$final = false;
 
-	$base_cls = array('tw-flex', 'tw-justify-center', 'sm:tw-justify-start', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
+	$base_cls = array('tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
 
 	$cls_list = array(
 		'primary' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12', 'hover:tw-bg-white', 'hover:tw-text-black')),
@@ -146,7 +145,7 @@ function view_leaderboard_btn($endpoint, $variant = 'primary') {
 ?>
 	<a class="<?php echo implode(' ', $cls_list[$variant]) ?>" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'public/assets/icons/trend_up.svg'); ?>
-		<span class="tw-font-500 tw-text-16"><?php echo esc_html($label) ?></span>
+		<span class="tw-font-700 tw-text-16 tw-whitespace-nowrap"><?php echo esc_html($label) ?></span>
 	</a>
 <?php
 	$btn = ob_get_clean();
@@ -172,13 +171,13 @@ function wpbb_bracket_sort_buttons() {
 function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
 	$bracket_play_link = get_permalink($bracket->id) . '/play';
 	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
+	$chat_link = get_permalink($bracket->id) . '/chat';
 	ob_start();
 	?>
   <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-    <!-- This goes to the Play Bracket page -->
 		<?php echo play_bracket_btn($bracket_play_link); ?>
-    <!-- This goes to the Score Bracket page -->
 		<?php echo view_leaderboard_btn($leaderboard_link); ?>
+		<?php echo bracket_chat_btn($chat_link); ?>
   </div>
 <?php
 	return ob_get_clean();
@@ -186,10 +185,12 @@ function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
 
 function public_bracket_upcoming_buttons(Wpbb_Bracket $bracket) {
 	$bracket_play_link = get_permalink($bracket->id) . '/play';
+	$chat_link = get_permalink($bracket->id) . '/chat';
 	ob_start();
 	?>
   <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 		<?php echo view_bracket_button($bracket_play_link); ?>
+		<?php echo bracket_chat_btn($chat_link); ?>
   </div>
 	<?php
 	return ob_get_clean();
@@ -197,12 +198,14 @@ function public_bracket_upcoming_buttons(Wpbb_Bracket $bracket) {
 
 function public_bracket_completed_buttons(Wpbb_Bracket $bracket) {
 	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
+	$chat_link = get_permalink($bracket->id) . '/chat';
 
 	ob_start();
 	?>
   <div class="tw-flex">
     <!-- This goes to the Leaderboard page -->
 		<?php echo view_leaderboard_btn($leaderboard_link, 'final'); ?>
+		<?php echo bracket_chat_btn($chat_link); ?>
   </div>
 	<?php
 	return ob_get_clean();
@@ -303,4 +306,24 @@ function public_bracket_list($opts = []) {
   <?php wpbb_pagination($paged, $num_pages); ?>
   <?php
   return ob_get_clean();
+}
+
+function bracket_chat_btn($endpoint, $variant = 'primary') {
+	$label = 'Chat';
+
+	$base_cls = array('tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
+
+	$cls_list = array(
+		'primary' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12', 'hover:tw-bg-white', 'hover:tw-text-black')),
+	);
+
+	ob_start();
+?>
+	<a class="<?php echo implode(' ', $cls_list[$variant]) ?>" href="<?php echo esc_url($endpoint) ?>">
+		<?php echo wpbb_icon('chat'); ?>
+		<span class="tw-font-700 tw-text-16"><?php echo esc_html($label) ?></span>
+	</a>
+<?php
+	$btn = ob_get_clean();
+	return $btn;
 }

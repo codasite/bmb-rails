@@ -26,6 +26,9 @@ switch ($view) {
 		}
         echo '<div id="wpbb-bracket-results-builder"></div>';
         break;
+    case 'chat':
+        include(WPBB_PLUGIN_DIR . 'public/partials/bracket-page/wpbb-bracket-chat.php');
+        break;
     default:
         echo '<div id="wpbb-play-bracket"></div>';
         break;

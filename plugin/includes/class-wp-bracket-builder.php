@@ -425,6 +425,13 @@ class Wp_Bracket_Builder {
       10,
       1
     );
+    $this->loader->add_action(
+      'comment_post_redirect',
+      $public_hooks,
+      'custom_comment_redirect',
+      10,
+      2
+    );
     $bracket_product_hooks = new Wpbb_BracketProductHooks([
       'loader' => $this->loader,
     ]);
@@ -480,7 +487,13 @@ class Wp_Bracket_Builder {
       'description' => 'Brackets for the WP Bracket Builder plugin',
       'public' => true,
       'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
+      'supports' => [
+        'title',
+        'author',
+        'thumbnail',
+        'custom-fields',
+        'comments',
+      ],
       'show_ui' => true,
       'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wpbb_Bracket_Api
       'taxonomies' => ['post_tag'],
