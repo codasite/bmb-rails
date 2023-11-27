@@ -2,6 +2,7 @@ import { Nullable } from '../../../../utils/types'
 import { Team } from '../Team'
 import { MatchNodeArgs } from './MatchNodeArgs'
 import { MatchRepr } from '../../api/types/bracket'
+import { TeamPosition } from '../../components/types'
 
 export class MatchNode {
   id?: number
@@ -102,5 +103,13 @@ export class MatchNode {
   }
   isPicked(): boolean {
     return this.team1Wins || this.team2Wins
+  }
+  isEditable(teamPosition: TeamPosition): boolean {
+    if (teamPosition === 'left') {
+      return this.left === null
+    } else if (teamPosition === 'right') {
+      return this.right == null
+    }
+    return false
   }
 }

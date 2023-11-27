@@ -16,11 +16,13 @@ type TeamClickDisabledCallback = (
   team?: Nullable<Team>
 ) => boolean
 
+export type TeamPosition = 'left' | 'right' | 'winner'
+
 export interface TeamSlotProps {
   team?: Nullable<Team>
   match: MatchNode
   matchPosition?: string
-  teamPosition?: string
+  teamPosition?: TeamPosition
   height?: number
   width?: number
   fontSize?: number
