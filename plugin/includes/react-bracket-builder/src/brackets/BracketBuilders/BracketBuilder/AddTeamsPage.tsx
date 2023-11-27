@@ -89,10 +89,18 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
             onErrorCleared={() => setDateError(false)}
             showTitle={true}
           />
-          {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
-					<ShuffleIcon />
-					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
-				</ActionButton> */}
+          <ActionButton
+            className="tw-self-center"
+            variant="blue"
+            onClick={handleBack}
+            paddingX={16}
+            paddingY={12}
+          >
+            {/* <ShuffleIcon /> */}
+            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+              Scramble Team Order
+            </span>
+          </ActionButton>
         </div>
         <ActionButton
           variant="blue"
