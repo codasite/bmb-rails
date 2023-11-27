@@ -5,7 +5,6 @@ import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
 import { AddTeamsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
-import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { DatePicker } from '../../shared/components/DatePicker'
@@ -38,6 +37,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
   const [dateError, setDateError] = React.useState(false)
   const createDisabled =
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
+  const shuffleDisabled = !matchTree || !matchTree.allTeamsAdded() || processing
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
@@ -79,6 +79,19 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
           </div>
         </div>
         {/* <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full"> */}
+        <ActionButton
+          className="tw-self-center"
+          variant="blue"
+          onClick={handleBack}
+          paddingX={16}
+          paddingY={12}
+          disabled={shuffleDisabled}
+        >
+          {/* <ShuffleIcon /> */}
+          <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+            Scramble Team Order
+          </span>
+        </ActionButton>
         <div className="tw-flex tw-flex-col tw-gap-60 tw-max-w-[510px] tw-w-full tw-mx-auto">
           <DatePicker
             month={month}
@@ -89,18 +102,6 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
             onErrorCleared={() => setDateError(false)}
             showTitle={true}
           />
-          <ActionButton
-            className="tw-self-center"
-            variant="blue"
-            onClick={handleBack}
-            paddingX={16}
-            paddingY={12}
-          >
-            {/* <ShuffleIcon /> */}
-            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-              Scramble Team Order
-            </span>
-          </ActionButton>
         </div>
         <ActionButton
           variant="blue"
