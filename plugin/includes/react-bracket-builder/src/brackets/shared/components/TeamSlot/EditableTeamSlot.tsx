@@ -32,13 +32,14 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 
   const [editing, setEditing] = useState(false)
   const [stopEditing, setStopEditing] = useState(false)
-  console.log('stopEditing', stopEditing)
+  // shadowContent is used to measure the width of the input
   const [shadowContent, setShadowContent] = useState('')
 
   const [inputWidth, setInputWidth] = useState(targetWidth)
   const [scale, setScale] = useState(1)
   const inputRef = React.useRef(null)
   const spanRef = React.useRef(null)
+  const isBye = match.roundIndex > 0
 
   const resizeCallback = React.useCallback(
     ({ width: currentWidth }) => {
@@ -113,6 +114,17 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           }}
         />
       </div>
+      {isBye && (
+        <div
+          className={`tw-absolute ${
+            teamPosition === 'left' ? 'tw-top-[-24px]' : 'tw-bottom-[-24px]'
+          } tw-flex tw-bg-red tw-py-2 tw-px-8 tw-rounded-8`}
+        >
+          <span className="tw-text-white tw-text-10 tw-font-600 tw-leading-none">
+            Bye
+          </span>
+        </div>
+      )}
     </BaseTeamSlot>
   )
 }
