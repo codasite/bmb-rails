@@ -40,9 +40,6 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
   const inputRef = React.useRef(null)
   const spanRef = React.useRef(null)
   const isBye = match.roundIndex > 0
-  console.log('roundIndex', match.roundIndex)
-  console.log('matchIndex', match.matchIndex)
-  console.log('isBye', isBye)
 
   const resizeCallback = React.useCallback(
     ({ width: currentWidth }) => {
@@ -117,9 +114,17 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           }}
         />
       </div>
-      <div className="tw-absolute tw-top-[-10px] tw-bg-red tw-p">
-        <span className="tw-text-white">Bye</span>
-      </div>
+      {isBye && (
+        <div
+          className={`tw-absolute ${
+            teamPosition === 'left' ? 'tw-top-[-24px]' : 'tw-bottom-[-24px]'
+          } tw-flex tw-bg-red tw-py-2 tw-px-8 tw-rounded-8`}
+        >
+          <span className="tw-text-white tw-text-10 tw-font-600 tw-leading-none">
+            Bye
+          </span>
+        </div>
+      )}
     </BaseTeamSlot>
   )
 }
