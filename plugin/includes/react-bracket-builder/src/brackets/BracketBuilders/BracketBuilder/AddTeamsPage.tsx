@@ -14,6 +14,7 @@ import {
   resetTeams,
   scrambleTeams,
 } from '../../shared/models/operations/ScrambleTeams'
+import { ReactComponent as ScrambleIcon } from '../../shared/assets/scramble.svg'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -39,13 +40,14 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     processing,
   } = props
   const [dateError, setDateError] = React.useState(false)
+  const [scrambledIndices, setScrambledIndices] = React.useState<number[]>([])
   const createDisabled =
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
   const scrambleDisabled =
     !matchTree || !matchTree.allTeamsAdded() || processing
+  const showReset = !scrambleDisabled && scrambledIndices.length > 0
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
-  const [scrambledIndices, setScrambledIndices] = React.useState<number[]>([])
   function onScramble() {
     if (!matchTree) {
       return
@@ -114,23 +116,22 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
             paddingY={12}
             disabled={scrambleDisabled}
           >
-            {/* <ScrambleIcon /> */}
+            <ScrambleIcon />
             <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
               Scramble Team Order
             </span>
           </ActionButton>
-          <ActionButton
-            className="tw-self-center"
-            variant="yellow"
-            onClick={onReset}
-            paddingX={4}
-            paddingY={4}
-            disabled={scrambleDisabled || scrambledIndices.length === 0}
-          >
-            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-              Reset
-            </span>
-          </ActionButton>
+          {showReset && (
+            <ActionButton
+              className="tw-self-center"
+              backgroundColor="transparent"
+              onClick={onReset}
+            >
+              <span className="tw-font-500 tw-text-16 tw tw-uppercase tw-font-sans tw-underline tw-text-red">
+                Reset
+              </span>
+            </ActionButton>
+          )}
         </div>
         <div className="tw-flex tw-flex-col tw-gap-60 tw-max-w-[510px] tw-w-full tw-mx-auto">
           <DatePicker
