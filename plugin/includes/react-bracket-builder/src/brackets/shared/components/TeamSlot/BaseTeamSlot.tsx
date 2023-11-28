@@ -54,6 +54,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 
   const baseStyles = [
     teamClass,
+    'tw-relative',
     'tw-flex',
     'tw-justify-center',
     'tw-items-center',
