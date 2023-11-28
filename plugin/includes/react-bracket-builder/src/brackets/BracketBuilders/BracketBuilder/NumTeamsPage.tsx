@@ -200,32 +200,6 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     setWildcardPlacement(placement)
   }
 
-  // const handleShuffle = () => {
-  //   let currentTreeData = matchTree.rounds;
-  //   let size = currentTreeData.length - 1;
-  //   let shuffledData = ShuffleTeam.getTeamNames(currentTreeData, size, bracketFields?.totalWildCardGames);
-  //   let matchValue = ShuffleTeam.updateMatchTree(shuffledData, currentTreeData, size, bracketFields?.totalWildCardGames);
-  //   setMatchTree(MatchTree.fromRounds(matchValue))
-  // }
-
-  // const handleSave = () => {
-  //   setIsLoading(true)
-  //   const req = matchTree.toRequest(bracketFields?.bracketTitle, true, bracketFields?.totalRounds, bracketFields?.totalWildCardGames, bracketFields?.wildCardPos)
-  //   bracketApi.createBracket(req)
-  //     .then((bracket) => {
-  //       setIsLoading(false)
-  //       window.location.href = '/wp-admin/edit.php?post_type=bracket';
-  //     })
-  //     .catch((error) => {
-  //       MatchTree.fromOptions(4, 0, 1)
-  //       setIsLoading(false)
-  //     });
-  // }
-  // const handleRedirect = () => {
-
-  //   setShowComponent(false)
-  // }
-
   return (
     <div
       className="tw-bg-no-repeat tw-bg-top tw-bg-cover"

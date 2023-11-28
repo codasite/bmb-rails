@@ -5,12 +5,16 @@ import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
 import { AddTeamsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
-import { useWindowDimensions } from '../../../utils/hooks'
 import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { DatePicker } from '../../shared/components/DatePicker'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
+import {
+  resetTeams,
+  scrambleTeams,
+} from '../../shared/models/operations/ScrambleTeams'
+import { ReactComponent as ScrambleIcon } from '../../shared/assets/scramble.svg'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -36,10 +40,35 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     processing,
   } = props
   const [dateError, setDateError] = React.useState(false)
+  const [scrambledIndices, setScrambledIndices] = React.useState<number[]>([])
   const createDisabled =
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
+  const scrambleDisabled =
+    !matchTree || !matchTree.allTeamsAdded() || processing
+  const showReset = !scrambleDisabled && scrambledIndices.length > 0
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
+  function onScramble() {
+    if (!matchTree) {
+      return
+    }
+    let indices = scrambledIndices
+    if (indices.length === 0) {
+      // new array [0, 1, 2, ...]
+      indices = Array.from(Array(matchTree.getNumTeams()).keys())
+    }
+    const newIndices = scrambleTeams(matchTree, indices)
+    setScrambledIndices(newIndices)
+    setMatchTree(matchTree)
+  }
+  function onReset() {
+    if (!matchTree || scrambledIndices.length === 0) {
+      return
+    }
+    resetTeams(matchTree, scrambledIndices)
+    setScrambledIndices([])
+    setMatchTree(matchTree)
+  }
   return (
     <div
       className="tw-flex tw-flex-col tw-gap-1 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
@@ -78,7 +107,32 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
             )}
           </div>
         </div>
-        {/* <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full"> */}
+        <div className="tw-flex tw-flex-col tw-justify-center tw-gap-10">
+          <ActionButton
+            className="tw-self-center"
+            variant="blue"
+            onClick={onScramble}
+            paddingX={16}
+            paddingY={12}
+            disabled={scrambleDisabled}
+          >
+            <ScrambleIcon />
+            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+              Scramble Team Order
+            </span>
+          </ActionButton>
+          {showReset && (
+            <ActionButton
+              className="tw-self-center"
+              backgroundColor="transparent"
+              onClick={onReset}
+            >
+              <span className="tw-font-500 tw-text-16 tw tw-uppercase tw-font-sans tw-underline tw-text-red">
+                Reset
+              </span>
+            </ActionButton>
+          )}
+        </div>
         <div className="tw-flex tw-flex-col tw-gap-60 tw-max-w-[510px] tw-w-full tw-mx-auto">
           <DatePicker
             month={month}
@@ -89,10 +143,6 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
             onErrorCleared={() => setDateError(false)}
             showTitle={true}
           />
-          {/* <ActionButton className='tw-self-center' variant='blue' onClick={handleBack} paddingX={16} paddingY={12}>
-					<ShuffleIcon />
-					<span className='tw-font-500 tw-text-20 tw-uppercase tw-font-sans'>Scramble Team Order</span>
-				</ActionButton> */}
         </div>
         <ActionButton
           variant="blue"
