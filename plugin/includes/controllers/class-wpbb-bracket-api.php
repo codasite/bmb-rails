@@ -10,8 +10,10 @@ require_once plugin_dir_path(dirname(__FILE__)) .
 require_once plugin_dir_path(dirname(__FILE__)) .
   'service/class-wpbb-notification-service-interface.php';
 require_once plugin_dir_path(dirname(__FILE__)) . 'class-wpbb-utils.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 
-class Wpbb_BracketApi extends WP_REST_Controller {
+class Wpbb_BracketApi extends WP_REST_Controller implements
+  WPBB_HooksInterface {
   /**
    * @var Wpbb_BracketRepo
    */
@@ -57,6 +59,10 @@ class Wpbb_BracketApi extends WP_REST_Controller {
     } catch (Exception $e) {
       $this->notification_service = null;
     }
+  }
+
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_action('rest_api_init', [$this, 'register_routes']);
   }
 
   /**

@@ -38,7 +38,6 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
   private $wc;
 
   public function __construct($args = []) {
-    $this->loader = $args['loader'] ?? new Wpbb_Loader();
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
     $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
@@ -46,22 +45,16 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
     $this->wc = $args['wc'] ?? new Wpbb_WcFunctions();
   }
 
-  public function load(): void {
-    $this->define_hooks();
-  }
-
-  private function define_hooks(): void {
-    $this->loader->add_action(
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_action(
       'woocommerce_cart_calculate_fees',
-      $this,
-      'add_paid_bracket_fee_to_cart',
+      [$this, 'add_paid_bracket_fee_to_cart'],
       10,
       1
     );
-    $this->loader->add_action(
+    $loader->add_action(
       'woocommerce_checkout_create_order_line_item',
-      $this,
-      'add_fee_meta_to_order_item',
+      [$this, 'add_fee_meta_to_order_item'],
       10,
       4
     );

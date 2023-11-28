@@ -1,9 +1,7 @@
 <?php
 require_once plugin_dir_path(dirname(__FILE__)) .
   'includes/class-wpbb-utils.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
-  'includes/repository/class-wpbb-bracket-config-repo.php';
-
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 /**
  * The admin-specific functionality of the plugin.
  *
@@ -14,7 +12,7 @@ require_once plugin_dir_path(dirname(__FILE__)) .
  * @subpackage Wp_Bracket_Builder/admin
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wpbb_Admin {
+class Wpbb_Admin implements Wpbb_HooksInterface {
   /**
    * The ID of this plugin.
    *
@@ -41,11 +39,48 @@ class Wpbb_Admin {
    * @param      string    $version    The version of this plugin.
    */
 
-  private $config_repo;
-  public function __construct($plugin_name, $version) {
-    $this->plugin_name = $plugin_name;
-    $this->version = $version;
-    $this->config_repo = new Wpbb_BracketConfigRepo();
+  public function __construct($opts = []) {
+    $this->plugin_name = $opts['plugin_name'];
+    $this->version = $opts['version'];
+  }
+
+  public function load(Wpbb_Loader $loader): void {
+    // TODO: Implement load() method.
+    $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_styles']);
+    $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
+
+    $loader->add_action('admin_menu', [$this, 'bracket_builder_init_menu']);
+    $loader->add_action('init', [$this, 'add_capabilities']);
+    $loader->add_action(
+      'set_object_terms',
+      [$this, 'update_upcoming_status'],
+      10,
+      6
+    );
+    $loader->add_action(
+      'add_user_role',
+      [$this, 'create_user_profile_post'],
+      10,
+      2
+    );
+    $loader->add_action(
+      'remove_user_role',
+      [$this, 'remove_user_profile_post'],
+      10,
+      2
+    );
+    $loader->add_filter(
+      'manage_posts_columns',
+      [$this, 'add_post_id_column'],
+      10,
+      1
+    );
+    $loader->add_filter(
+      'manage_posts_custom_column',
+      [$this, 'get_post_id_column_content'],
+      10,
+      2
+    );
   }
 
   /**

@@ -1,5 +1,5 @@
 <?php
-
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 /**
  * Define the internationalization functionality
  *
@@ -24,7 +24,10 @@
  * @subpackage Wp_Bracket_Builder/includes
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wpbb_i18n {
+class Wpbb_i18n implements Wpbb_HooksInterface {
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_action('plugins_loaded', [$this, 'load_plugin_textdomain']);
+  }
   /**
    * Load the plugin text domain for translation.
    *

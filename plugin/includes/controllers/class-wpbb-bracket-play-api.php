@@ -8,7 +8,10 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 
-class Wpbb_BracketPlayApi extends WP_REST_Controller {
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
+
+class Wpbb_BracketPlayApi extends WP_REST_Controller implements
+  Wpbb_HooksInterface {
   /**
    * @var Wpbb_BracketPlayRepo
    */
@@ -49,6 +52,10 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller {
       $args['product_integration'] ?? new Wpbb_GelatoProductIntegration();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
+  }
+
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_action('rest_api_init', [$this, 'register_routes']);
   }
 
   /**

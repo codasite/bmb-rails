@@ -1,4 +1,22 @@
 <?php
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-loader.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-i18n.php';
+require_once WPBB_PLUGIN_DIR . 'admin/class-wpbb-admin.php';
+require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/controllers/class-wpbb-bracket-api.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/controllers/class-wpbb-bracket-play-api.php';
+require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public-hooks.php';
+require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public-shortcodes.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/bracket-product/class-wpbb-bracket-product-hooks.php';
+require_once WPBB_PLUGIN_DIR . 'admin/class-wpbb-custom-post-hooks.php';
+require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-enqueue-scripts-hooks.php';
 
 /**
  * The core plugin class.
@@ -58,93 +76,9 @@ class Wp_Bracket_Builder {
       $this->version = '1.0.0';
     }
     $this->plugin_name = 'wp-bracket-builder';
-
-    $this->load_dependencies();
-    $this->set_locale();
-    $this->define_admin_hooks();
-    $this->define_public_hooks();
-  }
-
-  /**
-   * Load the required dependencies for this plugin.
-   *
-   * Include the following files that make up the plugin:
-   *
-   * - Wpbb_Loader. Orchestrates the hooks of the plugin.
-   * - Wpbb_i18n. Defines internationalization functionality.
-   * - Wpbb_Admin. Defines all hooks for the admin area.
-   * - Wpbb_Public. Defines all hooks for the public side of the site.
-   *
-   * Create an instance of the loader which will be used to register the hooks
-   * with WordPress.
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-  private function load_dependencies() {
-    /**
-     * The class responsible for orchestrating the actions and filters of the
-     * core plugin.
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/class-wpbb-loader.php';
-
-    /**
-     * The class responsible for defining internationalization functionality
-     * of the plugin.
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/class-wpbb-i18n.php';
-
-    /**
-     * The class responsible for defining all actions that occur in the admin area.
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'admin/class-wpbb-admin.php';
-
-    /**
-     * The class responsible for defining all actions that occur in the public-facing
-     * side of the site.
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'public/class-wpbb-public.php';
-
-    /**
-     * The bracket api controller class
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/controllers/class-wpbb-bracket-api.php';
-
-    /**
-     * The bracket picks api controller class
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/controllers/class-wpbb-bracket-play-api.php';
-
-    /**
-     * Callbacks for hooks and filters
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'public/class-wpbb-public-hooks.php';
-
-    /**
-     * Shortcodes for the public side of the site
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'public/class-wpbb-public-shortcodes.php';
-
-    /**
-     * Bracket Product Integrations
-     */
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
-
-    require_once WPBB_PLUGIN_DIR .
-      'includes/service/bracket-product/class-wpbb-bracket-product-hooks.php';
-
     $this->loader = new Wpbb_Loader();
+    $this->set_locale();
+    $this->define_hooks();
   }
 
   /**
@@ -157,285 +91,29 @@ class Wp_Bracket_Builder {
    * @access   private
    */
   private function set_locale() {
-    $plugin_i18n = new Wpbb_i18n();
-
-    $this->loader->add_action(
-      'plugins_loaded',
-      $plugin_i18n,
-      'load_plugin_textdomain'
-    );
+    (new Wpbb_i18n())->load($this->loader);
   }
 
-  /**
-   * Register all of the hooks related to the admin area functionality
-   * of the plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-  private function define_admin_hooks() {
-    $plugin_admin = new Wpbb_Admin(
-      $this->get_plugin_name(),
-      $this->get_version()
-    );
-    $bracket_api = new Wpbb_BracketApi();
-    $play_api = new Wpbb_BracketPlayApi();
-    $gelato_product_integration = new Wpbb_GelatoProductIntegration();
-
-    $this->loader->add_action(
-      'admin_enqueue_scripts',
-      $plugin_admin,
-      'enqueue_styles'
-    );
-    $this->loader->add_action(
-      'admin_enqueue_scripts',
-      $plugin_admin,
-      'enqueue_scripts'
-    );
-
-    $this->loader->add_action(
-      'admin_menu',
-      $plugin_admin,
-      'bracket_builder_init_menu'
-    );
-    $this->loader->add_action('init', $plugin_admin, 'add_capabilities');
-
-    $this->loader->add_action('rest_api_init', $bracket_api, 'register_routes');
-    $this->loader->add_action('rest_api_init', $play_api, 'register_routes');
-
-    $this->loader->add_action('init', $this, 'register_custom_post_types');
-    $this->loader->add_action('init', $this, 'register_custom_post_status');
-
-    // custom meta for Gelato bracket product variations
-    $this->loader->add_action(
-      'woocommerce_product_after_variable_attributes',
-      $gelato_product_integration,
-      'after_variable_attributes',
-      10,
-      3
-    );
-    $this->loader->add_action(
-      'woocommerce_save_product_variation',
-      $gelato_product_integration,
-      'save_product_variation',
-      10,
-      2
-    );
-    $this->loader->add_action(
-      'admin_notices',
-      $gelato_product_integration,
-      'admin_notices'
-    );
-    $this->loader->add_action(
-      'set_object_terms',
-      $plugin_admin,
-      'update_upcoming_status',
-      10,
-      6
-    );
-    $this->loader->add_action(
-      'add_user_role',
-      $plugin_admin,
-      'create_user_profile_post',
-      10,
-      2
-    );
-    $this->loader->add_action(
-      'remove_user_role',
-      $plugin_admin,
-      'remove_user_profile_post',
-      10,
-      2
-    );
-    $this->loader->add_filter(
-      'manage_posts_columns',
-      $plugin_admin,
-      'add_post_id_column',
-      10,
-      1
-    );
-    $this->loader->add_filter(
-      'manage_posts_custom_column',
-      $plugin_admin,
-      'get_post_id_column_content',
-      10,
-      2
-    );
-  }
-
-  /**
-   * Register all of the hooks related to the public-facing functionality
-   * of the plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   */
-  private function define_public_hooks() {
-    $plugin_public = new Wpbb_Public(
-      $this->get_plugin_name(),
-      $this->get_version()
-    );
-    $shortcodes = new Wpbb_Public_Shortcodes();
-
-    $gelato_product_integration = new Wpbb_GelatoProductIntegration();
-
-    $this->loader->add_action(
-      'wp_enqueue_scripts',
-      $plugin_public,
-      'enqueue_styles'
-    );
-    $this->loader->add_action(
-      'wp_enqueue_scripts',
-      $plugin_public,
-      'enqueue_scripts'
-    );
-
-    $this->loader->add_filter(
-      'woocommerce_add_to_cart_validation',
-      $gelato_product_integration,
-      'add_to_cart_validation',
-      10,
-      5
-    );
-    $this->loader->add_action(
-      'woocommerce_add_cart_item_data',
-      $gelato_product_integration,
-      'add_cart_item_data',
-      10,
-      3
-    );
-    $this->loader->add_action(
-      'woocommerce_checkout_create_order_line_item',
-      $gelato_product_integration,
-      'checkout_create_order_line_item',
-      10,
-      4
-    );
-    $this->loader->add_action(
-      'woocommerce_before_checkout_process',
-      $gelato_product_integration,
-      'before_checkout_process'
-    );
-    $this->loader->add_action(
-      'woocommerce_payment_complete',
-      $gelato_product_integration,
-      'payment_complete'
-    );
-    $this->loader->add_filter(
-      'woocommerce_available_variation',
-      $gelato_product_integration,
-      'available_variation',
-      10,
-      3
-    );
-    $public_hooks = new Wpbb_PublicHooks();
-    $this->loader->add_action('init', $public_hooks, 'add_rewrite_tags', 10, 0);
-    $this->loader->add_action(
-      'init',
-      $public_hooks,
-      'add_rewrite_rules',
-      10,
-      0
-    );
-    $this->loader->add_action('init', $public_hooks, 'add_roles');
-    $this->loader->add_action(
-      'template_redirect',
-      $public_hooks,
-      'template_redirect'
-    );
-    $this->loader->add_filter('query_vars', $public_hooks, 'add_query_vars');
-    $this->loader->add_filter(
-      'posts_clauses',
-      $public_hooks,
-      'custom_query_fields',
-      10,
-      2
-    );
-    $this->loader->add_filter(
-      'user_has_cap',
-      $public_hooks,
-      'user_cap_filter',
-      10,
-      3
-    );
-
-    $this->loader->add_action('init', $shortcodes, 'add_shortcodes');
-
-    $this->loader->add_action(
-      'woocommerce_subscription_status_active',
-      $public_hooks,
-      'add_bmb_plus_role',
-      10,
-      1
-    );
-
-    $this->loader->add_action(
-      'woocommerce_subscription_status_cancelled',
-      $public_hooks,
-      'remove_bmb_plus_role',
-      10,
-      1
-    );
-    // $this->loader->add_action(
-    //   'woocommerce_cart_calculate_fees',
-    //   $public_hooks,
-    //   'add_paid_bracket_fee_to_cart',
-    //   10,
-    //   1
-    // );
-    $this->loader->add_action(
-      'wpbb_after_play_printed',
-      $public_hooks,
-      'mark_play_printed',
-      10,
-      1
-    );
-    $this->loader->add_action(
-      'wpbb_after_play_printed',
-      $public_hooks,
-      'link_anonymous_printed_play_to_user',
-      10,
-      2
-    );
-    $this->loader->add_action(
-      'wp_login',
-      $public_hooks,
-      'link_anonymous_bracket_to_user_on_login',
-      10,
-      2
-    );
-    $this->loader->add_action(
-      'user_register',
-      $public_hooks,
-      'link_anonymous_bracket_to_user_on_register',
-      10,
-      1
-    );
-    $this->loader->add_action(
-      'wp_login',
-      $public_hooks,
-      'link_anonymous_play_to_user_on_login',
-      10,
-      2
-    );
-    $this->loader->add_action(
-      'user_register',
-      $public_hooks,
-      'link_anonymous_play_to_user_on_register',
-      10,
-      1
-    );
-    $this->loader->add_action(
-      'comment_post_redirect',
-      $public_hooks,
-      'custom_comment_redirect',
-      10,
-      2
-    );
-    $bracket_product_hooks = new Wpbb_BracketProductHooks([
-      'loader' => $this->loader,
-    ]);
-    $bracket_product_hooks->load();
+  private function define_hooks() {
+    $name_and_version_args = [
+      'plugin_name' => $this->get_plugin_name(),
+      'version' => $this->get_version(),
+    ];
+    /** @var Wpbb_HooksInterface[] $hooks */
+    $hooks = [
+      new Wpbb_PublicHooks(),
+      new Wpbb_Admin($name_and_version_args),
+      new Wpbb_GelatoProductIntegration(),
+      new Wpbb_BracketProductHooks(),
+      new Wpbb_EnqueueScriptsHooks($name_and_version_args),
+      new Wpbb_PublicShortcodes(),
+      new Wpbb_CustomPostHooks(),
+      new Wpbb_BracketApi(),
+      new Wpbb_BracketPlayApi(),
+    ];
+    foreach ($hooks as $hook) {
+      $hook->load($this->loader);
+    }
   }
 
   /**
@@ -459,16 +137,6 @@ class Wp_Bracket_Builder {
   }
 
   /**
-   * The reference to the class that orchestrates the hooks with the plugin.
-   *
-   * @return    Wpbb_Loader    Orchestrates the hooks of the plugin.
-   * @since     1.0.0
-   */
-  public function get_loader() {
-    return $this->loader;
-  }
-
-  /**
    * Retrieve the version number of the plugin.
    *
    * @since     1.0.0
@@ -476,109 +144,5 @@ class Wp_Bracket_Builder {
    */
   public function get_version() {
     return $this->version;
-  }
-
-  public function register_custom_post_types() {
-    register_post_type('bracket', [
-      'labels' => [
-        'name' => __('Brackets'),
-        'singular_name' => __('Bracket'),
-      ],
-      'description' => 'Brackets for the WP Bracket Builder plugin',
-      'public' => true,
-      'has_archive' => true,
-      'supports' => [
-        'title',
-        'author',
-        'thumbnail',
-        'custom-fields',
-        'comments',
-      ],
-      'show_ui' => true,
-      'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wpbb_Bracket_Api
-      'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'brackets'],
-    ]);
-
-    register_post_type('bracket_play', [
-      'labels' => [
-        'name' => __('Plays'),
-        'singular_name' => __('Play'),
-      ],
-      'description' => 'Bracket plays for the WP Bracket Builder plugin',
-      'public' => true,
-      'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
-      'show_ui' => true,
-      'show_in_rest' => true,
-      'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'plays'],
-    ]);
-
-    register_post_type('user_profile', [
-      'labels' => [
-        'name' => __('User profiles'),
-        'singular_name' => __('User profile'),
-      ],
-      'description' => 'User profiles for the WP Bracket Builder plugin',
-      'public' => true,
-      'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
-      'show_ui' => true,
-      'show_in_rest' => true,
-      'taxonomies' => ['post_tag'],
-      'rewrite' => ['slug' => 'users'],
-    ]);
-  }
-
-  public function register_custom_post_status() {
-    // Custom post status for completed tournaments
-    register_post_status('complete', [
-      'label' => 'Complete',
-      'public' => true,
-      'exclude_from_search' => false,
-      'show_in_admin_all_list' => true,
-      'show_in_admin_status_list' => true,
-      'label_count' => _n_noop(
-        'Completed <span class="count">(%s)</span>',
-        'Complete <span class="count">(%s)</span>'
-      ),
-    ]);
-
-    register_post_status('upcoming', [
-      'label' => 'Upcoming',
-      'public' => true,
-      'exclude_from_search' => false,
-      'show_in_admin_all_list' => true,
-      'show_in_admin_status_list' => true,
-      'label_count' => _n_noop(
-        'Completed <span class="count">(%s)</span>',
-        'Archive <span class="count">(%s)</span>'
-      ),
-    ]);
-
-    register_post_status('score', [
-      'label' => 'Scored',
-      'public' => true,
-      'exclude_from_search' => false,
-      'show_in_admin_all_list' => true,
-      'show_in_admin_status_list' => true,
-      'label_count' => _n_noop(
-        'Scored <span class="count">(%s)</span>',
-        'Scored <span class="count">(%s)</span>'
-      ),
-    ]);
-
-    register_post_status('archive', [
-      'label' => 'Archive',
-      'public' => true,
-      'exclude_from_search' => false,
-      'show_in_admin_all_list' => true,
-      'show_in_admin_status_list' => true,
-      'label_count' => _n_noop(
-        'Completed <span class="count">(%s)</span>',
-        'Archive <span class="count">(%s)</span>'
-      ),
-    ]);
   }
 }

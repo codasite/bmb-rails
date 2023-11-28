@@ -17,9 +17,11 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 
 class Wpbb_GelatoProductIntegration implements
-  Wpbb_ProductIntegrationInterface {
+  Wpbb_ProductIntegrationInterface,
+  Wpbb_HooksInterface {
   /**
    * @var Wpbb_GelatoAdminHooks
    */
@@ -68,6 +70,54 @@ class Wpbb_GelatoProductIntegration implements
     $this->client = $args['client'] ?? new Wpbb_GuzzleClient();
     $this->utils = new Wpbb_Utils();
     $this->play_repo = new Wpbb_BracketPlayRepo();
+  }
+
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_filter(
+      'woocommerce_add_to_cart_validation',
+      [$this, 'add_to_cart_validation'],
+      10,
+      5
+    );
+    $loader->add_action(
+      'woocommerce_add_cart_item_data',
+      [$this, 'add_cart_item_data'],
+      10,
+      3
+    );
+    $loader->add_action(
+      'woocommerce_checkout_create_order_line_item',
+      [$this, 'checkout_create_order_line_item'],
+      10,
+      4
+    );
+    $loader->add_action('woocommerce_before_checkout_process', [
+      $this,
+      'before_checkout_process',
+    ]);
+    $loader->add_action('woocommerce_payment_complete', [
+      $this,
+      'payment_complete',
+    ]);
+    $loader->add_filter(
+      'woocommerce_available_variation',
+      [$this, 'available_variation'],
+      10,
+      3
+    );
+    $loader->add_action(
+      'woocommerce_product_after_variable_attributes',
+      [$this, 'after_variable_attributes'],
+      10,
+      3
+    );
+    $loader->add_action(
+      'woocommerce_save_product_variation',
+      [$this, 'save_product_variation'],
+      10,
+      2
+    );
+    $loader->add_action('admin_notices', [$this, 'admin_notices']);
   }
 
   public function get_post_meta_key(): string {

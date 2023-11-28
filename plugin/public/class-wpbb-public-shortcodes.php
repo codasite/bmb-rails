@@ -3,8 +3,12 @@ require_once plugin_dir_path(dirname(__FILE__)) .
   'includes/repository/class-wpbb-bracket-repo.php';
 require_once plugin_dir_path(dirname(__FILE__)) .
   'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 
-class Wpbb_Public_Shortcodes {
+class Wpbb_PublicShortcodes implements Wpbb_HooksInterface {
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_action('init', [$this, 'add_shortcodes']);
+  }
   /**
    * Render the bracket preview
    *

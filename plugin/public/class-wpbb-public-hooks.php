@@ -3,8 +3,9 @@ require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/custom-query/class-wpbb-play-query.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 
-class Wpbb_PublicHooks {
+class Wpbb_PublicHooks implements Wpbb_HooksInterface {
   private $play_repo;
   private $bracket_repo;
   private $play_query;
@@ -20,6 +21,72 @@ class Wpbb_PublicHooks {
     $this->play_repo = $opts['play_repo'] ?? new Wpbb_BracketPlayRepo();
     $this->bracket_repo = $opts['bracket_repo'] ?? new Wpbb_BracketRepo();
     $this->wc = $opts['wc'] ?? new Wpbb_WcFunctions();
+  }
+
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_action('init', [$this, 'add_rewrite_tags'], 10, 0);
+    $loader->add_action('init', [$this, 'add_rewrite_rules'], 10, 0);
+    $loader->add_action('init', [$this, 'add_roles']);
+    $loader->add_action('template_redirect', [$this, 'template_redirect']);
+    $loader->add_filter('query_vars', [$this, 'add_query_vars']);
+    $loader->add_filter('posts_clauses', [$this, 'custom_query_fields'], 10, 2);
+    $loader->add_filter('user_has_cap', [$this, 'user_cap_filter'], 10, 3);
+
+    $loader->add_action(
+      'woocommerce_subscription_status_active',
+      [$this, 'add_bmb_plus_role'],
+      10,
+      1
+    );
+
+    $loader->add_action(
+      'woocommerce_subscription_status_cancelled',
+      [$this, 'remove_bmb_plus_role'],
+      10,
+      1
+    );
+    $loader->add_action(
+      'wpbb_after_play_printed',
+      [$this, 'mark_play_printed'],
+      10,
+      1
+    );
+    $loader->add_action(
+      'wpbb_after_play_printed',
+      [$this, 'link_anonymous_printed_play_to_user'],
+      10,
+      2
+    );
+    $loader->add_action(
+      'wp_login',
+      [$this, 'link_anonymous_bracket_to_user_on_login'],
+      10,
+      2
+    );
+    $loader->add_action(
+      'user_register',
+      [$this, 'link_anonymous_bracket_to_user_on_register'],
+      10,
+      1
+    );
+    $loader->add_action(
+      'wp_login',
+      [$this, 'link_anonymous_play_to_user_on_login'],
+      10,
+      2
+    );
+    $loader->add_action(
+      'user_register',
+      [$this, 'link_anonymous_play_to_user_on_register'],
+      10,
+      1
+    );
+    $loader->add_action(
+      'comment_post_redirect',
+      [$this, 'custom_comment_redirect'],
+      10,
+      2
+    );
   }
 
   public function add_rewrite_tags() {
