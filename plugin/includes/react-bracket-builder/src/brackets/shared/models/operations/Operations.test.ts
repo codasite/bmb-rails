@@ -498,6 +498,4 @@ describe('MatchTree Utils', () => {
     const matches = matchReprFromNumTeams(numTeams, wildcardPlacement)
     expect(matches).toMatchSnapshot()
   })
-
-  test('testing randomizeTeams', () => {})
 })

@@ -254,10 +254,6 @@ export class MatchTree {
     return foundMatch
   }
 
-  randomizeTeams = () => {
-    // randomize team order
-  }
-
   static fromNumTeams(
     numTeams: number,
     wildcardPlacement: WildcardPlacement = WildcardPlacement.Top
