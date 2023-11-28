@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SetTeams should set the teams 1`] = `
+{
+  "rounds": [
+    [
+      {
+        "id": 9,
+        "matchIndex": 0,
+        "roundIndex": 0,
+        "team1": {
+          "id": 1,
+          "name": "Team 1",
+        },
+        "team1Wins": undefined,
+        "team2": {
+          "id": 2,
+          "name": "Team 2",
+        },
+        "team2Wins": undefined,
+      },
+      {
+        "id": 10,
+        "matchIndex": 1,
+        "roundIndex": 0,
+        "team1": {
+          "id": 3,
+          "name": "Team 3",
+        },
+        "team1Wins": undefined,
+        "team2": {
+          "id": 4,
+          "name": "Team 4",
+        },
+        "team2Wins": undefined,
+      },
+    ],
+    [
+      {
+        "id": undefined,
+        "matchIndex": 0,
+        "roundIndex": 1,
+        "team1": undefined,
+        "team1Wins": undefined,
+        "team2": undefined,
+        "team2Wins": undefined,
+      },
+    ],
+  ],
+  "wildcardPlacement": undefined,
+}
+`;
+
+exports[`SetTeams should throw error if wrong number of teams 1`] = `"Number of teams (3) does not match number of teams in bracket (4)"`;

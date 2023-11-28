@@ -17,7 +17,6 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     processing,
     canPlay,
   } = props
-
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${

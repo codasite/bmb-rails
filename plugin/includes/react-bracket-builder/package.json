@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:watch": "jest --watch",
     "build:wordpress": "APP_TYPE=wordpress wp-scripts build --config webpack.wp.config.js",
     "start:wordpress": "APP_TYPE=wordpress wp-scripts start --config webpack.wp.config.js",
     "build:standalone": "APP_TYPE=standalone webpack --mode production --config webpack.non-wp.config.js",

@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MatchTree testing MatchTree serialize 1`] = `
+{
+  "rounds": [
+    [
+      {
+        "id": undefined,
+        "matchIndex": 0,
+        "roundIndex": 0,
+        "team1": {
+          "id": undefined,
+          "name": "Team 1",
+        },
+        "team1Wins": true,
+        "team2": {
+          "id": undefined,
+          "name": "Team 2",
+        },
+        "team2Wins": undefined,
+      },
+      {
+        "id": undefined,
+        "matchIndex": 1,
+        "roundIndex": 0,
+        "team1": {
+          "id": undefined,
+          "name": "Team 3",
+        },
+        "team1Wins": undefined,
+        "team2": {
+          "id": undefined,
+          "name": "Team 4",
+        },
+        "team2Wins": true,
+      },
+      {
+        "id": undefined,
+        "matchIndex": 2,
+        "roundIndex": 0,
+        "team1": {
+          "id": undefined,
+          "name": "Team 5",
+        },
+        "team1Wins": true,
+        "team2": {
+          "id": undefined,
+          "name": "Team 6",
+        },
+        "team2Wins": undefined,
+      },
+      {
+        "id": undefined,
+        "matchIndex": 3,
+        "roundIndex": 0,
+        "team1": {
+          "id": undefined,
+          "name": "Team 7",
+        },
+        "team1Wins": undefined,
+        "team2": {
+          "id": undefined,
+          "name": "Team 8",
+        },
+        "team2Wins": true,
+      },
+    ],
+    [
+      {
+        "id": undefined,
+        "matchIndex": 0,
+        "roundIndex": 1,
+        "team1": undefined,
+        "team1Wins": true,
+        "team2": undefined,
+        "team2Wins": undefined,
+      },
+      {
+        "id": undefined,
+        "matchIndex": 1,
+        "roundIndex": 1,
+        "team1": undefined,
+        "team1Wins": undefined,
+        "team2": undefined,
+        "team2Wins": true,
+      },
+    ],
+    [
+      {
+        "id": undefined,
+        "matchIndex": 0,
+        "roundIndex": 2,
+        "team1": undefined,
+        "team1Wins": true,
+        "team2": undefined,
+        "team2Wins": undefined,
+      },
+    ],
+  ],
+  "wildcardPlacement": 0,
+}
+`;
+
+exports[`MatchTree testing to match picks 1`] = `
+[
+  {
+    "matchIndex": 0,
+    "roundIndex": 0,
+    "winningTeamId": 1,
+  },
+  {
+    "matchIndex": 2,
+    "roundIndex": 0,
+    "winningTeamId": 4,
+  },
+  {
+    "matchIndex": 0,
+    "roundIndex": 1,
+    "winningTeamId": 1,
+  },
+  {
+    "matchIndex": 1,
+    "roundIndex": 1,
+    "winningTeamId": 4,
+  },
+  {
+    "matchIndex": 0,
+    "roundIndex": 2,
+    "winningTeamId": 1,
+  },
+]
+`;
+
+exports[`MatchTree testing to match req 1`] = `
+[
+  {
+    "matchIndex": 0,
+    "roundIndex": 0,
+    "team1": {
+      "name": "Team 1",
+    },
+    "team2": {
+      "name": "Team 2",
+    },
+  },
+  {
+    "matchIndex": 1,
+    "roundIndex": 0,
+    "team1": {
+      "name": "Team 3",
+    },
+    "team2": {
+      "name": "Team 4",
+    },
+  },
+  {
+    "matchIndex": 2,
+    "roundIndex": 0,
+    "team1": {
+      "name": "Team 5",
+    },
+    "team2": {
+      "name": "Team 6",
+    },
+  },
+  {
+    "matchIndex": 3,
+    "roundIndex": 0,
+    "team1": {
+      "name": "Team 7",
+    },
+    "team2": {
+      "name": "Team 8",
+    },
+  },
+]
+`;
+
+exports[`MatchTree testing to match req with wildcards 1`] = `
+[
+  {
+    "matchIndex": 0,
+    "roundIndex": 0,
+    "team1": {
+      "name": "Team 1",
+    },
+    "team2": {
+      "name": "Team 2",
+    },
+  },
+  {
+    "matchIndex": 2,
+    "roundIndex": 0,
+    "team1": {
+      "name": "Team 3",
+    },
+    "team2": {
+      "name": "Team 4",
+    },
+  },
+  {
+    "matchIndex": 0,
+    "roundIndex": 1,
+    "team2": {
+      "name": "Team 5",
+    },
+  },
+  {
+    "matchIndex": 1,
+    "roundIndex": 1,
+    "team2": {
+      "name": "Team 6",
+    },
+  },
+]
+`;

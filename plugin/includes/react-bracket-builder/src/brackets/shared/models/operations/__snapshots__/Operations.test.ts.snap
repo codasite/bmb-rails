@@ -1,0 +1,591 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MatchTree Utils testing fillInEmptyMatches 1`] = `
+[
+  [
+    {
+      "id": 9,
+      "matchIndex": 0,
+      "roundIndex": 0,
+      "team1": {
+        "id": 17,
+        "name": "Team 1",
+      },
+      "team2": {
+        "id": 18,
+        "name": "Team 2",
+      },
+    },
+    {
+      "id": 10,
+      "matchIndex": 1,
+      "roundIndex": 0,
+      "team1": {
+        "id": 19,
+        "name": "Team 3",
+      },
+      "team2": {
+        "id": 20,
+        "name": "Team 4",
+      },
+    },
+    {
+      "id": 11,
+      "matchIndex": 2,
+      "roundIndex": 0,
+      "team1": {
+        "id": 21,
+        "name": "Team 5",
+      },
+      "team2": {
+        "id": 22,
+        "name": "Team 6",
+      },
+    },
+    {
+      "id": 12,
+      "matchIndex": 3,
+      "roundIndex": 0,
+      "team1": {
+        "id": 23,
+        "name": "Team 7",
+      },
+      "team2": {
+        "id": 24,
+        "name": "Team 8",
+      },
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 1,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 1,
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 2,
+    },
+  ],
+]
+`;
+
+exports[`MatchTree Utils testing fillInEmptyMatches 2`] = `
+[
+  [
+    {
+      "id": 9,
+      "matchIndex": 0,
+      "roundIndex": 0,
+      "team1": {
+        "id": 17,
+        "name": "Team 1",
+      },
+      "team2": {
+        "id": 18,
+        "name": "Team 2",
+      },
+    },
+    {
+      "id": 10,
+      "matchIndex": 1,
+      "roundIndex": 0,
+      "team1": {
+        "id": 19,
+        "name": "Team 3",
+      },
+      "team2": {
+        "id": 20,
+        "name": "Team 4",
+      },
+    },
+    {
+      "id": 11,
+      "matchIndex": 2,
+      "roundIndex": 0,
+      "team1": {
+        "id": 21,
+        "name": "Team 5",
+      },
+      "team2": {
+        "id": 22,
+        "name": "Team 6",
+      },
+    },
+    {
+      "id": 12,
+      "matchIndex": 3,
+      "roundIndex": 0,
+      "team1": {
+        "id": 23,
+        "name": "Team 7",
+      },
+      "team2": {
+        "id": 24,
+        "name": "Team 8",
+      },
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 1,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 1,
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 2,
+    },
+  ],
+]
+`;
+
+exports[`MatchTree Utils testing fillInEmptyMatches wildcards 1`] = `
+[
+  [
+    null,
+    {
+      "id": 10,
+      "matchIndex": 1,
+      "roundIndex": 0,
+      "team1": {
+        "id": 19,
+        "name": "Team 3",
+      },
+      "team2": {
+        "id": 20,
+        "name": "Team 4",
+      },
+    },
+    {
+      "id": 11,
+      "matchIndex": 2,
+      "roundIndex": 0,
+      "team1": {
+        "id": 21,
+        "name": "Team 5",
+      },
+      "team2": {
+        "id": 22,
+        "name": "Team 6",
+      },
+    },
+    null,
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 1,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 1,
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 2,
+    },
+  ],
+]
+`;
+
+exports[`MatchTree Utils testing getFirstRoundMatches 8 teams 1`] = `
+[
+  {
+    "matchIndex": 0,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 1,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 2,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 3,
+    "roundIndex": 0,
+  },
+]
+`;
+
+exports[`MatchTree Utils testing getFirstRoundMatches 12 teams bottom 1`] = `
+[
+  null,
+  null,
+  {
+    "matchIndex": 2,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 3,
+    "roundIndex": 0,
+  },
+  null,
+  null,
+  {
+    "matchIndex": 6,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 7,
+    "roundIndex": 0,
+  },
+]
+`;
+
+exports[`MatchTree Utils testing getFirstRoundMatches 12 teams center 1`] = `
+[
+  null,
+  {
+    "matchIndex": 1,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 2,
+    "roundIndex": 0,
+  },
+  null,
+  null,
+  {
+    "matchIndex": 5,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 6,
+    "roundIndex": 0,
+  },
+  null,
+]
+`;
+
+exports[`MatchTree Utils testing getFirstRoundMatches 12 teams split 1`] = `
+[
+  {
+    "matchIndex": 0,
+    "roundIndex": 0,
+  },
+  null,
+  null,
+  {
+    "matchIndex": 3,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 4,
+    "roundIndex": 0,
+  },
+  null,
+  null,
+  {
+    "matchIndex": 7,
+    "roundIndex": 0,
+  },
+]
+`;
+
+exports[`MatchTree Utils testing getFirstRoundMatches 12 teams top 1`] = `
+[
+  {
+    "matchIndex": 0,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 1,
+    "roundIndex": 0,
+  },
+  null,
+  null,
+  {
+    "matchIndex": 4,
+    "roundIndex": 0,
+  },
+  {
+    "matchIndex": 5,
+    "roundIndex": 0,
+  },
+  null,
+  null,
+]
+`;
+
+exports[`MatchTree Utils testing getMatchReprFromNumTeams 8 teams 1`] = `
+[
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 0,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 0,
+    },
+    {
+      "matchIndex": 2,
+      "roundIndex": 0,
+    },
+    {
+      "matchIndex": 3,
+      "roundIndex": 0,
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 1,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 1,
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 2,
+    },
+  ],
+]
+`;
+
+exports[`MatchTree Utils testing getMatchReprFromNumTeams 12 teams top 1`] = `
+[
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 0,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 0,
+    },
+    null,
+    null,
+    {
+      "matchIndex": 4,
+      "roundIndex": 0,
+    },
+    {
+      "matchIndex": 5,
+      "roundIndex": 0,
+    },
+    null,
+    null,
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 1,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 1,
+    },
+    {
+      "matchIndex": 2,
+      "roundIndex": 1,
+    },
+    {
+      "matchIndex": 3,
+      "roundIndex": 1,
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 2,
+    },
+    {
+      "matchIndex": 1,
+      "roundIndex": 2,
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 3,
+    },
+  ],
+]
+`;
+
+exports[`MatchTree Utils testing getNullMatches 1`] = `
+[
+  [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+  ],
+  [
+    null,
+    null,
+    null,
+    null,
+  ],
+  [
+    null,
+    null,
+  ],
+  [
+    null,
+  ],
+]
+`;
+
+exports[`MatchTree Utils testing getWildcardRange bottom 1`] = `
+[
+  {
+    "max": 8,
+    "min": 4,
+  },
+]
+`;
+
+exports[`MatchTree Utils testing getWildcardRange center 1`] = `
+[
+  {
+    "max": 6,
+    "min": 2,
+  },
+]
+`;
+
+exports[`MatchTree Utils testing getWildcardRange split 1`] = `
+[
+  {
+    "max": 2,
+    "min": 0,
+  },
+  {
+    "max": 8,
+    "min": 6,
+  },
+]
+`;
+
+exports[`MatchTree Utils testing getWildcardRange top 1`] = `
+[
+  {
+    "max": 4,
+    "min": 0,
+  },
+]
+`;
+
+exports[`MatchTree Utils testing matchReprFromRes 1`] = `
+[
+  [
+    {
+      "id": 9,
+      "matchIndex": 0,
+      "roundIndex": 0,
+      "team1": {
+        "id": 17,
+        "name": "Team 1",
+      },
+      "team2": {
+        "id": 18,
+        "name": "Team 2",
+      },
+    },
+    {
+      "id": 10,
+      "matchIndex": 1,
+      "roundIndex": 0,
+      "team1": {
+        "id": 19,
+        "name": "Team 3",
+      },
+      "team2": {
+        "id": 20,
+        "name": "Team 4",
+      },
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 1,
+    },
+  ],
+]
+`;
+
+exports[`MatchTree Utils testing matchReprFromRes wildcards 1`] = `
+[
+  [
+    {
+      "id": 23,
+      "matchIndex": 0,
+      "roundIndex": 0,
+      "team1": {
+        "id": 45,
+        "name": "asefe",
+      },
+      "team2": {
+        "id": 46,
+        "name": "fefe",
+      },
+    },
+    null,
+    {
+      "id": 24,
+      "matchIndex": 2,
+      "roundIndex": 0,
+      "team1": {
+        "id": 47,
+        "name": "asef",
+      },
+      "team2": {
+        "id": 48,
+        "name": "feef",
+      },
+    },
+    null,
+  ],
+  [
+    {
+      "id": 25,
+      "matchIndex": 0,
+      "roundIndex": 1,
+      "team2": {
+        "id": 49,
+        "name": "asfe",
+      },
+    },
+    {
+      "id": 26,
+      "matchIndex": 1,
+      "roundIndex": 1,
+      "team2": {
+        "id": 50,
+        "name": "afsef",
+      },
+    },
+  ],
+  [
+    {
+      "matchIndex": 0,
+      "roundIndex": 2,
+    },
+  ],
+]
+`;
