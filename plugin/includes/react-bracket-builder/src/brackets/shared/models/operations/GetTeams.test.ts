@@ -1,6 +1,7 @@
 // import jest
 import { describe, expect, it } from '@jest/globals'
 import { MatchTree } from '../MatchTree'
+import { getTeams } from './GetTeams'
 
 describe('GetTeams', () => {
   it('should get the teams', () => {
@@ -25,6 +26,6 @@ describe('GetTeams', () => {
     ]
 
     const matchTree = MatchTree.deserialize({ rounds: matches })
-    expect(matchTree.teams).toMatchSnapshot()
+    expect(getTeams(matchTree.rounds)).toMatchSnapshot()
   })
 })

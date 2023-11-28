@@ -45,18 +45,26 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     !matchTree || !matchTree.allTeamsAdded() || processing
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
+  const [scrambledIndices, setScrambledIndices] = React.useState<number[]>([])
   function onScramble() {
     if (!matchTree) {
       return
     }
-    scrambleTeams(matchTree)
+    let indices = scrambledIndices
+    if (indices.length === 0) {
+      // new array [0, 1, 2, ...]
+      indices = Array.from(Array(matchTree.getNumTeams()).keys())
+    }
+    const newIndices = scrambleTeams(matchTree, indices)
+    setScrambledIndices(newIndices)
     setMatchTree(matchTree)
   }
   function onReset() {
-    if (!matchTree) {
+    if (!matchTree || scrambledIndices.length === 0) {
       return
     }
-    resetTeams(matchTree)
+    resetTeams(matchTree, scrambledIndices)
+    setScrambledIndices([])
     setMatchTree(matchTree)
   }
   return (
@@ -117,7 +125,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
             onClick={onReset}
             paddingX={4}
             paddingY={4}
-            disabled={createDisabled}
+            disabled={scrambleDisabled || scrambledIndices.length === 0}
           >
             <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
               Reset

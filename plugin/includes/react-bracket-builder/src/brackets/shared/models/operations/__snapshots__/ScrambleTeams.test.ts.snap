@@ -10,12 +10,12 @@ exports[`ScrambleTeams should scramble the teams 1`] = `
         "roundIndex": 0,
         "team1": {
           "id": 17,
-          "name": "Team 1",
+          "name": "Team 0",
         },
         "team1Wins": undefined,
         "team2": {
           "id": 20,
-          "name": "Team 4",
+          "name": "Team 3",
         },
         "team2Wins": undefined,
       },
@@ -25,12 +25,12 @@ exports[`ScrambleTeams should scramble the teams 1`] = `
         "roundIndex": 0,
         "team1": {
           "id": 18,
-          "name": "Team 2",
+          "name": "Team 1",
         },
         "team1Wins": undefined,
         "team2": {
           "id": 19,
-          "name": "Team 3",
+          "name": "Team 2",
         },
         "team2Wins": undefined,
       },
@@ -52,6 +52,15 @@ exports[`ScrambleTeams should scramble the teams 1`] = `
 `;
 
 exports[`ScrambleTeams should scramble the teams 2`] = `
+[
+  0,
+  3,
+  1,
+  2,
+]
+`;
+
+exports[`ScrambleTeams should scramble the teams 3`] = `
 {
   "rounds": [
     [
@@ -61,12 +70,12 @@ exports[`ScrambleTeams should scramble the teams 2`] = `
         "roundIndex": 0,
         "team1": {
           "id": 17,
-          "name": "Team 1",
+          "name": "Team 0",
         },
         "team1Wins": undefined,
         "team2": {
-          "id": 18,
-          "name": "Team 2",
+          "id": 20,
+          "name": "Team 3",
         },
         "team2Wins": undefined,
       },
@@ -76,12 +85,12 @@ exports[`ScrambleTeams should scramble the teams 2`] = `
         "roundIndex": 0,
         "team1": {
           "id": 19,
-          "name": "Team 3",
+          "name": "Team 2",
         },
         "team1Wins": undefined,
         "team2": {
-          "id": 20,
-          "name": "Team 4",
+          "id": 18,
+          "name": "Team 1",
         },
         "team2Wins": undefined,
       },
@@ -101,3 +110,65 @@ exports[`ScrambleTeams should scramble the teams 2`] = `
   "wildcardPlacement": undefined,
 }
 `;
+
+exports[`ScrambleTeams should scramble the teams 4`] = `
+[
+  0,
+  3,
+  2,
+  1,
+]
+`;
+
+exports[`ScrambleTeams should scramble the teams 5`] = `
+{
+  "rounds": [
+    [
+      {
+        "id": 9,
+        "matchIndex": 0,
+        "roundIndex": 0,
+        "team1": {
+          "id": 17,
+          "name": "Team 0",
+        },
+        "team1Wins": undefined,
+        "team2": {
+          "id": 18,
+          "name": "Team 1",
+        },
+        "team2Wins": undefined,
+      },
+      {
+        "id": 10,
+        "matchIndex": 1,
+        "roundIndex": 0,
+        "team1": {
+          "id": 19,
+          "name": "Team 2",
+        },
+        "team1Wins": undefined,
+        "team2": {
+          "id": 20,
+          "name": "Team 3",
+        },
+        "team2Wins": undefined,
+      },
+    ],
+    [
+      {
+        "id": undefined,
+        "matchIndex": 0,
+        "roundIndex": 1,
+        "team1": undefined,
+        "team1Wins": undefined,
+        "team2": undefined,
+        "team2Wins": undefined,
+      },
+    ],
+  ],
+  "wildcardPlacement": undefined,
+}
+`;
+
+exports[`ScrambleTeams should throw an error if the number of teams does not match the number of scrambled indices 1`] = `"Number of scrambledIndices (0) does not match number of teams in bracket (4)"`;

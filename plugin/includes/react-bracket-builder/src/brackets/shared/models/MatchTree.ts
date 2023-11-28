@@ -13,24 +13,15 @@ import { matchReprFromNumTeams } from './operations/MatchReprFromNumTeams'
 import { getNumRounds } from './operations/GetNumRounds'
 import { matchReprFromRes } from './operations/MatchReprFromRes'
 import { linkNodes } from './operations/LinkNodes'
-import { getTeams } from './operations/GetTeams'
-import { fillInBlankTeams } from './operations/FillInBlankTeams'
 
 export class MatchTree {
   rounds: Round[]
-  teams: Team[]
   private numTeams: number
   private wildcardPlacement?: WildcardPlacement
 
-  constructor(
-    rounds: Round[] = [],
-    wildcardPlacement?: WildcardPlacement,
-    teams?: Team[]
-  ) {
+  constructor(rounds: Round[] = [], wildcardPlacement?: WildcardPlacement) {
     linkNodes(rounds)
-    fillInBlankTeams(rounds)
     this.rounds = rounds
-    this.teams = teams ?? getTeams(rounds)
     this.wildcardPlacement = wildcardPlacement
   }
 
