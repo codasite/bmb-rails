@@ -71,10 +71,10 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
   }
   return (
     <div
-      className="tw-flex tw-flex-col tw-gap-1 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
+      className="tw-flex tw-flex-col tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
       style={{ background: `url(${iconBackground}), #000225` }}
     >
-      <div className="sm:tw-px-30 sm:tw-px-60 tw-mb-16">
+      <div className="sm:tw-px-60 tw-mb-16">
         <div className="tw-flex tw-p-16">
           <a
             href="#"
@@ -88,7 +88,11 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
           </a>
         </div>
       </div>
-      <div className="tw-flex tw-flex-col tw-gap-60 tw-w-full tw-max-w-screen-lg tw-mx-auto">
+      <div
+        className={`tw-flex tw-flex-col tw-w-full tw-max-w-screen-lg tw-mx-auto ${
+          showPaginated ? 'tw-gap-30' : 'tw-gap-60'
+        }`}
+      >
         <div>
           <div
             className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-dark`}
@@ -109,7 +113,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
         </div>
         <div className="tw-flex tw-flex-col tw-justify-center tw-gap-10">
           <ActionButton
-            className="tw-self-center"
+            className={showPaginated ? '' : 'tw-self-center'}
             variant="blue"
             onClick={onScramble}
             paddingX={16}

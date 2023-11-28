@@ -83,7 +83,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
           <p>Round 1</p>
           <p>Round 2</p>
         </div>
-        <div className={'tw-flex tw-gap-8 tw-mb-12'}>
+        <div className={'tw-flex tw-gap-8'}>
           {page == 0 && (
             <ActionButton
               variant="white"
