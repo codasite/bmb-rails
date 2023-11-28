@@ -1,9 +1,9 @@
 import { TeamRepr, TeamReq } from '../api/types/bracket'
 
 export class Team {
-  name: string
+  name: string | null
   id: number | null
-  constructor(name: string, id: number | null = null) {
+  constructor(name: string | null = null, id: number | null = null) {
     this.name = name
     this.id = id
   }
