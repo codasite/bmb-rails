@@ -10,6 +10,10 @@ import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { DatePicker } from '../../shared/components/DatePicker'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
+import {
+  resetTeams,
+  scrambleTeams,
+} from '../../shared/models/operations/ScrambleTeams'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -37,9 +41,24 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
   const [dateError, setDateError] = React.useState(false)
   const createDisabled =
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
-  const shuffleDisabled = !matchTree || !matchTree.allTeamsAdded() || processing
+  const scrambleDisabled =
+    !matchTree || !matchTree.allTeamsAdded() || processing
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
+  function onScramble() {
+    if (!matchTree) {
+      return
+    }
+    scrambleTeams(matchTree)
+    setMatchTree(matchTree)
+  }
+  function onReset() {
+    if (!matchTree) {
+      return
+    }
+    resetTeams(matchTree)
+    setMatchTree(matchTree)
+  }
   return (
     <div
       className="tw-flex tw-flex-col tw-gap-1 tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
@@ -78,20 +97,33 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
             )}
           </div>
         </div>
-        {/* <div className="tw-flex tw-flex-col tw-gap-[46px] tw-max-w-screen-lg tw-m-auto tw-w-full"> */}
-        <ActionButton
-          className="tw-self-center"
-          variant="blue"
-          onClick={handleBack}
-          paddingX={16}
-          paddingY={12}
-          disabled={shuffleDisabled}
-        >
-          {/* <ShuffleIcon /> */}
-          <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-            Scramble Team Order
-          </span>
-        </ActionButton>
+        <div className="tw-flex tw-flex-col tw-justify-center tw-gap-10">
+          <ActionButton
+            className="tw-self-center"
+            variant="blue"
+            onClick={onScramble}
+            paddingX={16}
+            paddingY={12}
+            disabled={scrambleDisabled}
+          >
+            {/* <ScrambleIcon /> */}
+            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+              Scramble Team Order
+            </span>
+          </ActionButton>
+          <ActionButton
+            className="tw-self-center"
+            variant="yellow"
+            onClick={onReset}
+            paddingX={4}
+            paddingY={4}
+            disabled={createDisabled}
+          >
+            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+              Reset
+            </span>
+          </ActionButton>
+        </div>
         <div className="tw-flex tw-flex-col tw-gap-60 tw-max-w-[510px] tw-w-full tw-mx-auto">
           <DatePicker
             month={month}

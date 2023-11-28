@@ -1,10 +1,10 @@
 // import jest
 import { describe, expect, it } from '@jest/globals'
-import { shuffleTeams } from './ShuffleTeams'
+import { resetTeams, scrambleTeams } from './ScrambleTeams'
 import { MatchTree } from '../MatchTree'
 
-describe('ShuffleTeams', () => {
-  it('should shuffle the teams', () => {
+describe('ScrambleTeams', () => {
+  it('should scramble the teams', () => {
     const matches = [
       [
         {
@@ -26,7 +26,9 @@ describe('ShuffleTeams', () => {
     ]
 
     const matchTree = MatchTree.deserialize({ rounds: matches })
-    shuffleTeams(matchTree, () => 0.5)
+    scrambleTeams(matchTree, () => 0.5)
+    expect(matchTree.serialize()).toMatchSnapshot()
+    resetTeams(matchTree)
     expect(matchTree.serialize()).toMatchSnapshot()
   })
 })

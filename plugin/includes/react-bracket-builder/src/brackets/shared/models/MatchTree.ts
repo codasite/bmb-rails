@@ -28,10 +28,8 @@ export class MatchTree {
     teams?: Team[]
   ) {
     linkNodes(rounds)
-    // add teams to rounds
     fillInBlankTeams(rounds)
     this.rounds = rounds
-    // get teams from rounds
     this.teams = teams ?? getTeams(rounds)
     this.wildcardPlacement = wildcardPlacement
   }
