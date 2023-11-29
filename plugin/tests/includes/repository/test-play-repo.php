@@ -584,4 +584,52 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($busted->id, $play->busted_id);
     $this->assertEquals($busted->id, $play->busted_play->id);
   }
+
+  public function test_play_with_no_tags_is_not_bustable() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $this->assertFalse($play->is_bustable);
+  }
+
+  public function test_public_play_is_bustable() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+
+    $featured_play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+    $profile_play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+    // add the tag 'bmb_vip_featured' to the play
+    wp_set_post_tags($featured_play->id, 'bmb_vip_featured');
+    // add the tag 'bmb_vip_profile' to the play
+    wp_set_post_tags($profile_play->id, 'bmb_vip_profile');
+    $featured_play = $this->play_repo->get($featured_play->id);
+    $profile_play = $this->play_repo->get($profile_play->id);
+
+    $this->assertTrue($featured_play->is_bustable);
+    $this->assertTrue($profile_play->is_bustable);
+  }
+
+  public function test_public_play_with_no_bust_tag_is_not_bustable() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    wp_set_post_tags($play->id, ['bmb_vip_profile', 'bmb_no_bust']);
+    $play = $this->play_repo->get($play->id);
+
+    $this->assertFalse($play->is_bustable);
+  }
 }

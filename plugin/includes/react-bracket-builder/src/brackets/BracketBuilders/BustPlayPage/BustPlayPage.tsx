@@ -55,6 +55,8 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(play?.bracket?.numTeams))
 
+  const canBust = play?.isBustable
+
   const handleBustPlay = async () => {
     setPage('bust')
   }
@@ -101,7 +103,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   if (showPaginated) {
     return (
       <BustStartPage
-        handleBustPlay={handleBustPlay}
+        handleBustPlay={canBust ? handleBustPlay : undefined}
         handlePlayBracket={handlePlayBracket}
         handleAddApparel={handleAddApparel}
         thumbnailUrl={thumbnailUrl}
@@ -134,7 +136,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
             </div>
             <PickableBracket matchTree={busteeTree} />
             <BustablePlayPageButtons
-              handleBustPlay={handleBustPlay}
+              handleBustPlay={canBust ? handleBustPlay : undefined}
               handlePlayBracket={handlePlayBracket}
               handleAddApparel={handleAddApparel}
             />

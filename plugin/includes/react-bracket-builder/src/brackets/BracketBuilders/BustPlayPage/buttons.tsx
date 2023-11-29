@@ -12,6 +12,7 @@ interface BustablePlayPageButtonsProps {
   handleAddApparel: () => void
   size?: string
 }
+
 export const BustablePlayPageButtons = (
   props: BustablePlayPageButtonsProps
 ) => {
@@ -21,6 +22,7 @@ export const BustablePlayPageButtons = (
   const fontSize = size === 'small' ? 16 : 24
   const fontWeight = 700
   const borderWidth = 1
+  const showBustButton = handleBustPlay !== undefined
   return (
     <div className="tw-flex tw-flex-col tw-justify-center md:tw-gap-15 tw-self-stretch tw-max-w-[900px] tw-w-full tw-mx-auto">
       <ActionButton
@@ -37,7 +39,9 @@ export const BustablePlayPageButtons = (
         Add to Apparel
       </ActionButton>
       <div
-        className={`tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-gap-15 tw-mt-30 `}
+        className={`tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-gap-15 ${
+          showBustButton ? 'tw-mt-30' : ''
+        } `}
       >
         <ActionButton
           onClick={handlePlayBracket}
@@ -51,18 +55,20 @@ export const BustablePlayPageButtons = (
           <PlayIcon style={{ height: iconHeight }} />
           Play Bracket
         </ActionButton>
-        <ActionButton
-          onClick={handleBustPlay}
-          variant="red"
-          paddingY={paddingY}
-          fontSize={fontSize}
-          fontWeight={fontWeight}
-          borderWidth={borderWidth}
-          className="tw-flex-grow tw-basis-1/2"
-        >
-          <LightningIcon style={{ height: iconHeight }} />
-          Bust Picks
-        </ActionButton>
+        {showBustButton && (
+          <ActionButton
+            onClick={handleBustPlay}
+            variant="red"
+            paddingY={paddingY}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
+            borderWidth={borderWidth}
+            className="tw-flex-grow tw-basis-1/2"
+          >
+            <LightningIcon style={{ height: iconHeight }} />
+            Bust Picks
+          </ActionButton>
+        )}
       </div>
     </div>
   )

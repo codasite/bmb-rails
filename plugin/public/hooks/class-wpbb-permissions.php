@@ -2,6 +2,8 @@
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/permissions/class-wpbb-bracket-permissions.php';
+require_once WPBB_PLUGIN_DIR .
+  'includes/service/permissions/class-wpbb-play-permissions.php';
 
 class Wpbb_Permissions implements Wpbb_HooksInterface {
   public function load(Wpbb_Loader $loader): void {
@@ -24,15 +26,23 @@ class Wpbb_Permissions implements Wpbb_HooksInterface {
       return $allcaps;
     }
 
-    $permission_services = [new Wpbb_BracketPermissions()];
+    $permission_services = [
+      new Wpbb_BracketPermissions(),
+      new Wpbb_PlayPermissions(),
+    ];
 
     $user_id = $args[1];
     $post_id = $args[2] ?? null;
 
+    // Find the first service that grants the requested cap
     foreach ($permission_services as $service) {
       $caps = $service->get_caps();
-      if (in_array($requested, $caps)) {
-        $allcaps[$cap[0]] = $service->has_cap($requested, $user_id, $post_id);
+      if (
+        in_array($requested, $caps) &&
+        $service->has_cap($requested, $user_id, $post_id)
+      ) {
+        $allcaps[$cap[0]] = true;
+        break;
       }
     }
 

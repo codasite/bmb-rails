@@ -50,6 +50,11 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
    */
   public $busted_play;
 
+  /**
+   * @var bool
+   */
+  public $is_bustable;
+
   public function __construct(array $data = []) {
     if (!isset($data['bracket_id'])) {
       throw new Exception('bracket_id ');
@@ -70,6 +75,9 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
       ? (bool) $data['is_printed']
       : false;
     $this->busted_play = $data['busted_play'] ?? null;
+    $this->is_bustable = isset($data['is_bustable'])
+      ? (bool) $data['is_bustable']
+      : false;
   }
 
   public static function get_post_type(): string {
@@ -114,6 +122,7 @@ class Wpbb_BracketPlay extends Wpbb_PostBase implements
     $play['total_score'] = $this->total_score;
     $play['accuracy_score'] = $this->accuracy_score;
     $play['busted_id'] = $this->busted_id;
+    $play['is_bustable'] = $this->is_bustable;
     if (!empty($this->busted_play)) {
       $play['busted_play'] = $this->busted_play->to_array();
     }

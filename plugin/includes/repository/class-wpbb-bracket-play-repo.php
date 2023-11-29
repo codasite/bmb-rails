@@ -105,6 +105,11 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     $picks = $fetch_picks && $play_id ? $this->get_picks($play_id) : [];
     $author_id = (int) $play_post->post_author;
 
+    $is_bustable =
+      (has_tag('bmb_vip_profile', $play_post) ||
+        has_tag('bmb_vip_featured', $play_post)) &&
+      !has_tag('bmb_no_bust', $play_post);
+
     $data = [
       'bracket_id' => $bracket_post_id,
       'author' => $author_id,
@@ -123,6 +128,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
       'busted_id' => $busted_id,
       'busted_play' => $busted_play,
       'is_printed' => $is_printed,
+      'is_bustable' => $is_bustable,
       'thumbnail_url' => get_the_post_thumbnail_url(
         $play_post->ID,
         'thumbnail'

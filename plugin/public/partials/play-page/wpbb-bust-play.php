@@ -1,13 +1,14 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__, 3)) . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/repository/class-wpbb-bracket-play-repo.php';
+require_once WPBB_PLUGIN_DIR . 'includes/service/permissions/class-wpbb-play-permissions.php';
 
 $post = get_post();
-// if (!$post || $post->post_type !== 'bracket_play' || !has_tag('bustable', $post) || !has_tag('bmb_vip_play', $post)) {
-if (!$post || $post->post_type !== 'bracket_play') {
-    return
-        '<div class="alert alert-danger" role="alert">
-					Play not found.
-				</div>';
+$repo = new Wpbb_BracketPlayRepo();
+$play = $repo->get($post->ID);
+if (!$play) {
+	header('HTTP/1.0 404 Not Found');
+	include WPBB_PLUGIN_DIR . 'public/error/404.php';
+	return;
 }
 
 ?> <div id="wpbb-bust-play"></div>
