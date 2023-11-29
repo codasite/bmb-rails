@@ -1,7 +1,7 @@
 <?php
-require_once plugin_dir_path(dirname(__FILE__)) .
+require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-repo.php';
-require_once plugin_dir_path(dirname(__FILE__)) .
+require_once WPBB_PLUGIN_DIR .
   'includes/repository/class-wpbb-bracket-play-repo.php';
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 
@@ -16,8 +16,8 @@ class Wpbb_PublicShortcodes implements Wpbb_HooksInterface {
    */
   public function render_bracket_product_preview() {
     ob_start();
-    include plugin_dir_path(__FILE__) .
-      'partials/product-preview/wpbb-bracket-product-preview.php';
+    include WPBB_PLUGIN_DIR .
+      'public/partials/product-preview/wpbb-bracket-product-preview.php';
     return ob_get_clean();
   }
 
@@ -27,45 +27,44 @@ class Wpbb_PublicShortcodes implements Wpbb_HooksInterface {
 
   public function render_dashboard() {
     ob_start();
-    include plugin_dir_path(__FILE__) . 'partials/dashboard/wpbb-dashboard.php';
+    include WPBB_PLUGIN_DIR . 'public/partials/dashboard/wpbb-dashboard.php';
     return ob_get_clean();
   }
 
   public function render_official_brackets() {
     ob_start();
-    include plugin_dir_path(__FILE__) . 'partials/wpbb-official-brackets.php';
+    include WPBB_PLUGIN_DIR . 'public/partials/wpbb-official-brackets.php';
     return ob_get_clean();
   }
 
   public function render_celebrity_picks() {
     ob_start();
-    include plugin_dir_path(__FILE__) . 'partials/wpbb-celebrity-brackets.php';
+    include WPBB_PLUGIN_DIR . 'public/partials/wpbb-celebrity-brackets.php';
     return ob_get_clean();
   }
 
   public function render_bracket_page() {
     ob_start();
-    include plugin_dir_path(__FILE__) . 'partials/wpbb-bracket-page.php';
+    include WPBB_PLUGIN_DIR . 'public/partials/wpbb-bracket-page.php';
     return ob_get_clean();
   }
 
   public function render_bracket_play_page() {
     ob_start();
-    include plugin_dir_path(__FILE__) . 'partials/play-page/wpbb-play-page.php';
+    include WPBB_PLUGIN_DIR . 'public/partials/play-page/wpbb-play-page.php';
     return ob_get_clean();
   }
 
   public function render_print_page() {
     ob_start();
-    include plugin_dir_path(__FILE__) .
-      'partials/print-page/wpbb-print-page.php';
+    include WPBB_PLUGIN_DIR . 'public/partials/print-page/wpbb-print-page.php';
     return ob_get_clean();
   }
 
   public function render_user_profile_page() {
     ob_start();
-    include plugin_dir_path(__FILE__) .
-      'partials/user-profile/wpbb-user-profile.php';
+    include WPBB_PLUGIN_DIR .
+      'public/partials/user-profile/wpbb-user-profile.php';
     return ob_get_clean();
   }
 

@@ -241,7 +241,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     return $this->plays_from_query($query, $options);
   }
 
-  public function plays_from_query(WP_Query $query, $options): array {
+  private function plays_from_query(WP_Query $query, $options): array {
     $plays = [];
     foreach ($query->posts as $post) {
       $play = $this->get($post, $options);

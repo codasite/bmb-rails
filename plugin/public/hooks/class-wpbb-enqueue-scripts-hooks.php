@@ -7,6 +7,7 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
+require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 
 /**
  * The public-facing functionality of the plugin.
@@ -28,7 +29,7 @@ require_once WPBB_PLUGIN_DIR .
  * @subpackage Wp_Bracket_Builder/public
  * @author     Barry Molina <barry@wstrategies.co>
  */
-class Wpbb_Public {
+class Wpbb_EnqueueScriptsHooks implements Wpbb_HooksInterface {
   /**
    * The ID of this plugin.
    *
@@ -69,12 +70,18 @@ class Wpbb_Public {
    * @param      string    $plugin_name       The name of the plugin.
    * @param      string    $version    The version of this plugin.
    */
-  public function __construct($plugin_name, $version) {
-    $this->plugin_name = $plugin_name;
-    $this->version = $version;
-    $this->play_repo = new Wpbb_BracketPlayRepo();
-    $this->bracket_repo = new Wpbb_BracketRepo();
-    $this->bracket_product_utils = new Wpbb_BracketProductUtils();
+  public function __construct($args = []) {
+    $this->plugin_name = $args['plugin_name'];
+    $this->version = $args['version'];
+    $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketPlayRepo();
+    $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
+    $this->bracket_product_utils =
+      $args['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
+  }
+
+  public function load(Wpbb_Loader $loader): void {
+    $loader->add_action('wp_enqueue_scripts', [$this, 'enqueue_styles']);
+    $loader->add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
   }
 
   /**
@@ -97,14 +104,14 @@ class Wpbb_Public {
 
     wp_enqueue_style(
       $this->plugin_name,
-      plugin_dir_url(__FILE__) . 'css/wpbb-public.css',
+      plugin_dir_url(dirname(__FILE__)) . 'css/wpbb-public.css',
       [],
       $this->version,
       'all'
     );
     wp_enqueue_style(
       'index.css',
-      plugin_dir_url(dirname(__FILE__)) .
+      plugin_dir_url(dirname(__FILE__, 2)) .
         'includes/react-bracket-builder/build/wordpress/index.css',
       [],
       null,
@@ -127,7 +134,7 @@ class Wpbb_Public {
     );
     wp_enqueue_script(
       'wpbb-bracket-builder-react',
-      plugin_dir_url(dirname(__FILE__)) .
+      plugin_dir_url(dirname(__FILE__, 2)) .
         'includes/react-bracket-builder/build/wordpress/index.js',
       ['wp-element'],
       $this->version,

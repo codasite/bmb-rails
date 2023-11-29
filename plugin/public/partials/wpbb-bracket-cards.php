@@ -27,11 +27,10 @@ function wpbb_vip_play_card($play, $options = []) {
 	$thumbnail = get_the_post_thumbnail_url($id);
 	$play_link = get_permalink($id) . 'bust';
 	$leaderboard_link = get_permalink($play->bracket_id) . 'leaderboard';
-	$chat_link = get_permalink($play->bracket_id) . 'chat';
 	$buttons = [
 		view_play_btn($play_link),
 		view_leaderboard_btn($leaderboard_link, 'primary', 'Leaderboard'),
-		bracket_chat_btn($chat_link),
+		bracket_chat_btn($play->bracket_id),
 	];
 	return wpbb_vip_card($title, $thumbnail, ['buttons' => $buttons, 'profile_link' => $profile_link]);
 }
@@ -52,11 +51,10 @@ function wpbb_vip_bracket_card($bracket, $options = []) {
 	$thumbnail = get_the_post_thumbnail_url($id);
 	$play_link = get_permalink($id) . 'play';
 	$leaderboard_link = get_permalink($id) . 'leaderboard';
-	$chat_link = get_permalink($id) . 'chat';
 	$buttons = [
 		play_bracket_btn($play_link, 'Play'),
 		view_leaderboard_btn($leaderboard_link, 'primary', 'Leaderboard'),
-		bracket_chat_btn($chat_link),
+		bracket_chat_btn($id),
 	];
 	return wpbb_vip_card($title, $thumbnail, ['buttons' => $buttons, 'profile_link' => $profile_link]);
 }

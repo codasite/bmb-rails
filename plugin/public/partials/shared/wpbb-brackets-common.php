@@ -171,13 +171,12 @@ function wpbb_bracket_sort_buttons() {
 function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
 	$bracket_play_link = get_permalink($bracket->id) . '/play';
 	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
-	$chat_link = get_permalink($bracket->id) . '/chat';
 	ob_start();
 	?>
   <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 		<?php echo play_bracket_btn($bracket_play_link); ?>
 		<?php echo view_leaderboard_btn($leaderboard_link); ?>
-		<?php echo bracket_chat_btn($chat_link); ?>
+		<?php echo bracket_chat_btn($bracket->id); ?>
   </div>
 <?php
 	return ob_get_clean();
@@ -185,12 +184,10 @@ function public_bracket_active_buttons(Wpbb_Bracket $bracket) {
 
 function public_bracket_upcoming_buttons(Wpbb_Bracket $bracket) {
 	$bracket_play_link = get_permalink($bracket->id) . '/play';
-	$chat_link = get_permalink($bracket->id) . '/chat';
 	ob_start();
 	?>
   <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 		<?php echo view_bracket_button($bracket_play_link); ?>
-		<?php echo bracket_chat_btn($chat_link); ?>
   </div>
 	<?php
 	return ob_get_clean();
@@ -198,14 +195,13 @@ function public_bracket_upcoming_buttons(Wpbb_Bracket $bracket) {
 
 function public_bracket_completed_buttons(Wpbb_Bracket $bracket) {
 	$leaderboard_link = get_permalink($bracket->id) . '/leaderboard';
-	$chat_link = get_permalink($bracket->id) . '/chat';
 
 	ob_start();
 	?>
   <div class="tw-flex">
     <!-- This goes to the Leaderboard page -->
 		<?php echo view_leaderboard_btn($leaderboard_link, 'final'); ?>
-		<?php echo bracket_chat_btn($chat_link); ?>
+		<?php echo bracket_chat_btn($bracket->id); ?>
   </div>
 	<?php
 	return ob_get_clean();
@@ -308,18 +304,46 @@ function public_bracket_list($opts = []) {
   return ob_get_clean();
 }
 
-function bracket_chat_btn($endpoint, $variant = 'primary') {
-	$label = 'Chat';
-
-	$base_cls = array('tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12');
-
-	$cls_list = array(
-		'primary' => array_merge($base_cls, array('tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12', 'hover:tw-bg-white', 'hover:tw-text-black')),
+function bracket_chat_btn($bracket_id) {
+	$endpoint = get_permalink($bracket_id) . 'chat';
+	$label = 'Chatter';
+	$disabled = !current_user_can('wpbb_view_bracket_chat', $bracket_id);
+	$base_cls = array(
+		'tw-flex',
+		'tw-justify-center',
+		'tw-items-center',
+		'tw-rounded-8',
+		'tw-border',
+		'tw-border-solid',
+		'tw-px-16',
+		'tw-py-12',
+		'tw-gap-10',
+		'tw-px-16',
+		'tw-py-12',
 	);
+
+	$active_styles = [
+		'tw-text-white',
+		'tw-border-white/50',
+		'tw-bg-white/15',
+		'hover:tw-bg-white',
+		'hover:tw-text-black'
+	];
+
+	$disabled_styles = [
+		'!tw-text-white/20',
+		'tw-border-white/20',
+		'tw-bg-transparent',
+		'tw-pointer-events-none',
+	];
+
+	// merge base styles with active or disabled styles
+	$styles = $disabled ? $disabled_styles : $active_styles;
+	$cls_list = array_merge($base_cls, $styles);
 
 	ob_start();
 ?>
-	<a class="<?php echo implode(' ', $cls_list[$variant]) ?>" href="<?php echo esc_url($endpoint) ?>">
+	<a class="<?php echo implode(' ', $cls_list) ?>" href="<?php echo esc_url($endpoint) ?>">
 		<?php echo wpbb_icon('chat'); ?>
 		<span class="tw-font-700 tw-text-16"><?php echo esc_html($label) ?></span>
 	</a>

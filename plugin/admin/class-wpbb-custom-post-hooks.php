@@ -15,7 +15,13 @@ class Wpbb_CustomPostHooks implements Wpbb_HooksInterface {
       'description' => 'Brackets for the WP Bracket Builder plugin',
       'public' => true,
       'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
+      'supports' => [
+        'title',
+        'author',
+        'thumbnail',
+        'custom-fields',
+        'comments',
+      ],
       'show_ui' => true,
       'show_in_rest' => true, // Default endpoint for oxygen. React app uses Wpbb_Bracket_Api
       'taxonomies' => ['post_tag'],

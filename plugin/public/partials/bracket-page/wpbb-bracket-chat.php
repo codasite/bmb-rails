@@ -1,6 +1,10 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'public/partials/shared/wpbb-brackets-common.php';
 	$post = get_post();
+	if (!current_user_can('wpbb_view_bracket_chat', $post->ID)) {
+		header('HTTP/1.0 401 Unauthorized');
+		wp_die('You do not have permission to view this page.');
+	};
 	$title = $post->post_title;
 	$thumbnail = get_the_post_thumbnail_url($post->ID, 'full');
 ?>

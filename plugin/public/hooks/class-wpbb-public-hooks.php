@@ -7,20 +7,13 @@ require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-hooks-interface.php';
 
 class Wpbb_PublicHooks implements Wpbb_HooksInterface {
   private $play_repo;
-  private $bracket_repo;
   private $play_query;
   private $utils;
-  private $bracket_product_utils;
-  private $wc;
 
   public function __construct($opts = []) {
     $this->play_query = $opts['play_query'] ?? new Wpbb_CustomPlayQuery();
     $this->utils = $opts['utils'] ?? new Wpbb_Utils();
-    $this->bracket_product_utils =
-      $opts['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
     $this->play_repo = $opts['play_repo'] ?? new Wpbb_BracketPlayRepo();
-    $this->bracket_repo = $opts['bracket_repo'] ?? new Wpbb_BracketRepo();
-    $this->wc = $opts['wc'] ?? new Wpbb_WcFunctions();
   }
 
   public function load(Wpbb_Loader $loader): void {
@@ -30,7 +23,6 @@ class Wpbb_PublicHooks implements Wpbb_HooksInterface {
     $loader->add_action('template_redirect', [$this, 'template_redirect']);
     $loader->add_filter('query_vars', [$this, 'add_query_vars']);
     $loader->add_filter('posts_clauses', [$this, 'custom_query_fields'], 10, 2);
-    $loader->add_filter('user_has_cap', [$this, 'user_cap_filter'], 10, 3);
 
     $loader->add_action(
       'woocommerce_subscription_status_active',
@@ -159,61 +151,6 @@ class Wpbb_PublicHooks implements Wpbb_HooksInterface {
       'wpbb_bust_play' => true,
       'wpbb_enable_chat' => true,
     ]);
-  }
-
-  /**
-   * Authorization checks. Be sure to add any new caps to the admin role
-   */
-  public function user_cap_filter($allcaps, $cap, $args) {
-    // check if user is admin. if so, bail
-    $requested = $args[0];
-    if (!str_starts_with($requested, 'wpbb_')) {
-      return $allcaps;
-    }
-    if (
-      isset($allcaps['administrator']) &&
-      $allcaps['administrator'] === true
-    ) {
-      return $allcaps;
-    }
-    $dynamic_caps = [
-      'wpbb_delete_bracket',
-      'wpbb_edit_bracket',
-      'wpbb_play_bracket',
-    ];
-    if (!in_array($requested, $dynamic_caps)) {
-      return $allcaps;
-    }
-    $user_id = $args[1];
-    $post_id = $args[2];
-    switch ($requested) {
-      case 'wpbb_delete_bracket':
-      case 'wpbb_edit_bracket':
-        $post = get_post($post_id);
-        if (
-          $post->post_type === 'bracket' &&
-          (int) $post->post_author === (int) $user_id
-        ) {
-          $allcaps[$cap[0]] = true;
-        }
-        break;
-      case 'wpbb_play_bracket':
-        $bracket = $this->bracket_repo->get($post_id);
-        $can_play = false;
-        $playable_status = ['publish', 'score', 'complete'];
-        if (in_array($bracket->status, $playable_status)) {
-          $can_play = true;
-        } elseif ($bracket->status === 'private') {
-          if ($bracket->author === (int) $user_id) {
-            $can_play = true;
-          }
-        }
-        $allcaps[$cap[0]] = $can_play;
-        break;
-      default:
-        break;
-    }
-    return $allcaps;
   }
 
   public function custom_query_fields($clauses, $query_object) {

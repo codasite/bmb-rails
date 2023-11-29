@@ -2,13 +2,12 @@
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-loader.php';
 require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-i18n.php';
 require_once WPBB_PLUGIN_DIR . 'admin/class-wpbb-admin.php';
-require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/controllers/class-wpbb-bracket-api.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/controllers/class-wpbb-bracket-play-api.php';
-require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public-hooks.php';
-require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public-shortcodes.php';
+require_once WPBB_PLUGIN_DIR . 'public/hooks/class-wpbb-public-hooks.php';
+require_once WPBB_PLUGIN_DIR . 'public/hooks/class-wpbb-public-shortcodes.php';
 require_once WPBB_PLUGIN_DIR .
   'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
 require_once WPBB_PLUGIN_DIR .
@@ -16,7 +15,9 @@ require_once WPBB_PLUGIN_DIR .
 require_once WPBB_PLUGIN_DIR .
   'includes/service/bracket-product/class-wpbb-bracket-product-hooks.php';
 require_once WPBB_PLUGIN_DIR . 'admin/class-wpbb-custom-post-hooks.php';
-require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-enqueue-scripts-hooks.php';
+require_once WPBB_PLUGIN_DIR .
+  'public/hooks/class-wpbb-enqueue-scripts-hooks.php';
+require_once WPBB_PLUGIN_DIR . 'public/hooks/class-wpbb-permissions.php';
 
 /**
  * The core plugin class.
@@ -110,6 +111,7 @@ class Wp_Bracket_Builder {
       new Wpbb_CustomPostHooks(),
       new Wpbb_BracketApi(),
       new Wpbb_BracketPlayApi(),
+      new Wpbb_Permissions(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

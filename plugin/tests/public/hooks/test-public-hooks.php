@@ -1,6 +1,6 @@
 <?php
 require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'public/class-wpbb-public-hooks.php';
+require_once WPBB_PLUGIN_DIR . 'public/hooks/class-wpbb-public-hooks.php';
 
 class PublicHooksTest extends WPBB_UnitTestCase {
   public function test_role_is_added_when_sub_activated() {

@@ -177,11 +177,13 @@ class Wpbb_GelatoPublicHooks {
     if (array_key_exists('bracket_config', $values)) {
       $bracket_config = $values['bracket_config'];
       $item->add_meta_data('bracket_config', $bracket_config);
-      $item
-        ->add_meta_data('bracket_theme', $bracket_config->theme_mode)
-        ->add_meta_data('bracket_placement', $bracket_config->bracket_placement)
-        ->add_meta_data('bracket_id', $bracket_config->bracket_id)
-        ->add_meta_data('play_id', $bracket_config->play_id);
+      $item->add_meta_data('bracket_theme', $bracket_config->theme_mode);
+      $item->add_meta_data(
+        'bracket_placement',
+        $bracket_config->bracket_placement
+      );
+      $item->add_meta_data('bracket_id', $bracket_config->bracket_id);
+      $item->add_meta_data('play_id', $bracket_config->play_id);
     }
     if (array_key_exists('s3_url', $values)) {
       $item->add_meta_data('s3_url', $values['s3_url']);
