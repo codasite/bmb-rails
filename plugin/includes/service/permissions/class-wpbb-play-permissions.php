@@ -15,7 +15,6 @@ class Wpbb_PlayPermissions implements Wpbb_PermissionsServiceInterface {
     if (!$play) {
       return false;
     }
-
     switch ($cap) {
       case 'wpbb_view_play':
         return $this->user_can_view_play($user_id, $play);
@@ -43,5 +42,18 @@ class Wpbb_PlayPermissions implements Wpbb_PermissionsServiceInterface {
 
   private function is_author($user_id, $play): bool {
     return (int) $play->author === (int) $user_id;
+  }
+
+  public static function is_bustable(WP_Post|int|null $play_post): bool {
+    return self::is_play_public($play_post) && !self::bust_disabled($play_post);
+  }
+
+  public static function is_play_public(WP_Post|int|null $play_post): bool {
+    $public_tags = ['bmb_vip_profile', 'bmb_vip_featured'];
+    return has_tag($public_tags, $play_post->ID);
+  }
+
+  public static function bust_disabled(WP_Post|int|null $play_post): bool {
+    return has_tag('bmb_no_bust', $play_post);
   }
 }

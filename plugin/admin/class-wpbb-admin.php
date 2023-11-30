@@ -195,6 +195,8 @@ class Wpbb_Admin implements Wpbb_HooksInterface {
     $role->add_cap('wpbb_edit_bracket');
     $role->add_cap('wpbb_play_bracket');
     $role->add_cap('wpbb_view_bracket_chat');
+    $role->add_cap('wpbb_view_play');
+    $role->add_cap('wpbb_print_play');
   }
 
   //  add a custom text field for the bmb-logo-theme in the admin product variation settings

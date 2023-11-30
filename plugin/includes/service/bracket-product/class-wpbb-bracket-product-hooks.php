@@ -8,16 +8,6 @@ const BRACKET_FEE_META_PREFIX = 'bracket_product_fee_meta_';
 
 class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
   /**
-   * The loader that's responsible for maintaining and registering all hooks that power
-   * the plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      Wpbb_Loader $loader Maintains and registers all hooks for the plugin.
-   */
-  private $loader;
-
-  /**
    * @var Wpbb_BracketProductUtils
    */
   private $bracket_product_utils;
@@ -28,9 +18,9 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
   private $bracket_repo;
 
   /**
-   * @var Wpbb_Utils
+   * @var Wpbb_BracketPlayRepo
    */
-  private $utils;
+  private $play_repo;
 
   /**
    * @var Wpbb_WcFunctions
@@ -41,7 +31,7 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new Wpbb_BracketProductUtils();
     $this->bracket_repo = $args['bracket_repo'] ?? new Wpbb_BracketRepo();
-    $this->utils = $args['utils'] ?? new Wpbb_Utils();
+    $this->play_repo = $args['play_repo'] ?? new Wpbb_BracketPlayRepo();
     $this->wc = $args['wc'] ?? new Wpbb_WcFunctions();
   }
 
@@ -69,10 +59,15 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
         if (!$config) {
           continue;
         }
+
         $bracket_id = $config->bracket_id;
-        if (empty($bracket_id)) {
+        $play = $this->play_repo->get($config->play_id);
+
+        // do not add fees to printed plays
+        if (empty($bracket_id) || empty($play) || $play->is_printed) {
           continue;
         }
+
         $fee_amount = $this->bracket_product_utils->get_bracket_fee(
           $bracket_id
         );
@@ -96,10 +91,6 @@ class Wpbb_BracketProductHooks implements Wpbb_HooksInterface {
         }
       }
     }
-  }
-
-  private function log($message) {
-    $this->utils->log($message);
   }
 
   // Add the fee data as meta on the order item.

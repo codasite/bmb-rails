@@ -130,6 +130,17 @@ class Wpbb_GelatoPublicHooks {
       return false;
     }
 
+    $can_print = current_user_can('wpbb_print_play', $config->play_id);
+    if (!$can_print) {
+      $this->handle_add_to_cart_error(
+        $product,
+        $variation_id,
+        $product_id,
+        'User does not have permission to print this bracket play.'
+      );
+      return false;
+    }
+
     return $passed;
   }
 

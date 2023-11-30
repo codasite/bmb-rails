@@ -105,10 +105,7 @@ class Wpbb_BracketPlayRepo extends Wpbb_CustomPostRepoBase {
     $picks = $fetch_picks && $play_id ? $this->get_picks($play_id) : [];
     $author_id = (int) $play_post->post_author;
 
-    $is_bustable =
-      (has_tag('bmb_vip_profile', $play_post) ||
-        has_tag('bmb_vip_featured', $play_post)) &&
-      !has_tag('bmb_no_bust', $play_post);
+    $is_bustable = Wpbb_PlayPermissions::is_bustable($play_post);
 
     $data = [
       'bracket_id' => $bracket_post_id,

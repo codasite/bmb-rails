@@ -20,6 +20,7 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
     $this->default_generation_definitions = [
       'title' => new WP_UnitTest_Generator_Sequence('Bracket %s'),
       'author' => 1,
+      'num_teams' => 4,
     ];
   }
 

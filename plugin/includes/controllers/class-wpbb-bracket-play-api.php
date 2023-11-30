@@ -189,6 +189,14 @@ class Wpbb_BracketPlayApi extends WP_REST_Controller implements
         ['status' => 403]
       );
     }
+    if (isset($params['busted_id']) && $params['busted_id'] !== null) {
+      $busted_play = $this->play_repo->get($params['busted_id']);
+      if (!$busted_play->is_bustable) {
+        return new WP_Error('unauthorized', 'This bracket cannot be busted.', [
+          'status' => 403,
+        ]);
+      }
+    }
     if (!isset($params['author'])) {
       $params['author'] = get_current_user_id();
     }

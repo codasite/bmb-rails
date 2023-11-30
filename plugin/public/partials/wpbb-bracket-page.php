@@ -21,7 +21,8 @@ switch ($view) {
         break;
     case 'results':
 		if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
-			include(WPBB_PLUGIN_DIR . 'public/error/401.php');
+            header('HTTP/1.0 403 Forbidden');
+			include(WPBB_PLUGIN_DIR . 'public/error/403.php');
 			return;
 		}
         echo '<div id="wpbb-bracket-results-builder"></div>';
