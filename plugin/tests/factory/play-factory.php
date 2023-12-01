@@ -1,7 +1,7 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-play.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-bracket-play-repo.php';
+
+use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 
 /**
  * Class WPBB_UnitTest_Factory_For_Play
@@ -13,13 +13,13 @@ class WPBB_UnitTest_Factory_For_Play extends WP_UnitTest_Factory_For_Thing {
 
   function __construct($factory = null) {
     parent::__construct($factory);
-    $this->play_repo = new Wpbb_BracketPlayRepo();
+    $this->play_repo = new BracketPlayRepo();
 
     $this->default_generation_definitions = ['author' => 1];
   }
 
   function create_object($args) {
-    $play = new Wpbb_BracketPlay($args);
+    $play = new BracketPlay($args);
     $play = $this->play_repo->add($play);
     return $play;
   }

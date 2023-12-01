@@ -1,1 +1,3 @@
-<?php // Silence is golden
+<?php
+namespace WStrategies\BMB\Public;
+// Silence is golden

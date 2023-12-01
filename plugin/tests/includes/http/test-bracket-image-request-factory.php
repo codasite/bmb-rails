@@ -1,62 +1,64 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/object-storage/class-wpbb-object-storage-interface.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/http/class-wpbb-bracket-image-request-factory.php';
+
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\PostBracketInterface;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
+use WStrategies\BMB\Includes\Service\ObjectStorage\ObjectStorageInterface;
 
 class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
   public function test_get_request_data() {
-    $bracket_mock = $this->createMock(Wpbb_PostBracketInterface::class);
+    $bracket_mock = $this->createMock(PostBracketInterface::class);
     $bracket_mock->method('get_post_id')->willReturn(1);
     $bracket_mock->method('get_title')->willReturn('Test Bracket');
     $bracket_mock->method('get_date')->willReturn('2020-01-01');
     $bracket_mock->method('get_num_teams')->willReturn(4);
     $bracket_mock->method('get_matches')->willReturn([
-      new Wpbb_Match([
+      new BracketMatch([
         'round_index' => 0,
         'match_index' => 0,
-        'team1' => new Wpbb_Team([
+        'team1' => new Team([
           'id' => 1,
           'name' => 'Team 1',
         ]),
-        'team2' => new Wpbb_Team([
+        'team2' => new Team([
           'id' => 2,
           'name' => 'Team 2',
         ]),
       ]),
-      new Wpbb_Match([
+      new BracketMatch([
         'round_index' => 0,
         'match_index' => 1,
-        'team1' => new Wpbb_Team([
+        'team1' => new Team([
           'id' => 3,
           'name' => 'Team 3',
         ]),
-        'team2' => new Wpbb_Team([
+        'team2' => new Team([
           'id' => 4,
           'name' => 'Team 4',
         ]),
       ]),
     ]);
     $bracket_mock->method('get_picks')->willReturn([
-      new Wpbb_MatchPick([
+      new MatchPick([
         'round_index' => 0,
         'match_index' => 0,
         'winning_team_id' => $bracket_mock->get_matches()[0]->team1->id,
       ]),
-      new Wpbb_MatchPick([
+      new MatchPick([
         'round_index' => 0,
         'match_index' => 1,
         'winning_team_id' => $bracket_mock->get_matches()[1]->team2->id,
       ]),
-      new Wpbb_MatchPick([
+      new MatchPick([
         'round_index' => 1,
         'match_index' => 0,
         'winning_team_id' => $bracket_mock->get_matches()[0]->team1->id,
       ]),
     ]);
 
-    $object_storage = $this->createMock(Wpbb_ObjectStorageInterface::class);
+    $object_storage = $this->createMock(ObjectStorageInterface::class);
 
     $object_storage->method('get_upload_options')->willReturn([
       'test' => 'test',
@@ -64,7 +66,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
 
     $object_storage->method('get_service_name')->willReturn('testServiceName');
 
-    $request_factory = new Wpbb_BracketImageRequestFactory([
+    $request_factory = new BracketImageRequestFactory([
       'object_storage' => $object_storage,
     ]);
 
@@ -164,34 +166,34 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_request_data_pdf() {
-    $bracket_mock = $this->createMock(Wpbb_PostBracketInterface::class);
+    $bracket_mock = $this->createMock(PostBracketInterface::class);
     $bracket_mock->method('get_post_id')->willReturn(1);
     $bracket_mock->method('get_title')->willReturn('Test Bracket');
     $bracket_mock->method('get_date')->willReturn('2020-01-01');
     $bracket_mock->method('get_num_teams')->willReturn(4);
     $bracket_mock->method('get_matches')->willReturn([
-      new Wpbb_Match([
+      new BracketMatch([
         'round_index' => 0,
         'match_index' => 0,
-        'team1' => new Wpbb_Team([
+        'team1' => new Team([
           'id' => 1,
           'name' => 'Team 1',
         ]),
-        'team2' => new Wpbb_Team([
+        'team2' => new Team([
           'id' => 2,
           'name' => 'Team 2',
         ]),
       ]),
     ]);
     $bracket_mock->method('get_picks')->willReturn([
-      new Wpbb_MatchPick([
+      new MatchPick([
         'round_index' => 0,
         'match_index' => 0,
         'winning_team_id' => 1,
       ]),
     ]);
 
-    $object_storage = $this->createMock(Wpbb_ObjectStorageInterface::class);
+    $object_storage = $this->createMock(ObjectStorageInterface::class);
 
     $object_storage->method('get_upload_options')->willReturn([
       'test' => 'test',
@@ -199,7 +201,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
 
     $object_storage->method('get_service_name')->willReturn('testServiceName');
 
-    $request_factory = new Wpbb_BracketImageRequestFactory([
+    $request_factory = new BracketImageRequestFactory([
       'object_storage' => $object_storage,
     ]);
 
@@ -279,33 +281,31 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
       'date' => '2020-01-01',
       'num_teams' => 4,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 1,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 3',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 4',
           ]),
         ]),
       ],
     ]);
-    $object_storage = $this->createMock(Wpbb_ObjectStorageInterface::class);
+    $object_storage = $this->createMock(ObjectStorageInterface::class);
 
-    $request_factory = $this->getMockBuilder(
-      Wpbb_BracketImageRequestFactory::class
-    )
+    $request_factory = $this->getMockBuilder(BracketImageRequestFactory::class)
       ->onlyMethods(['create_body'])
       ->setConstructorArgs([
         'args' => [

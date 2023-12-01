@@ -1,20 +1,15 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/product-integrations/gelato/class-wpbb-gelato-product-integration.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/product-integrations/class-wpbb-product-integration-interface.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/product-integrations/class-wpbb-wc-functions.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/object-storage/class-wpbb-s3-storage.php';
-require_once WPBB_PLUGIN_DIR . 'includes/class-wpbb-utils.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/product-integrations/class-wpbb-wc-functions.php';
+
+use WStrategies\BMB\Includes\Domain\BracketConfig;
+use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
+use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoPublicHooks;
+use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
+use WStrategies\BMB\Includes\Service\S3Service;
+use WStrategies\BMB\Includes\Utils;
+
 require_once WPBB_PLUGIN_DIR . 'tests/mock/WooCommerceMock.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-config.php';
 
 class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   public function test_play_marked_printed_when_payment_complete() {
@@ -25,14 +20,14 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
       ],
     ]);
-    $bracket_config = new Wpbb_BracketConfig(
+    $bracket_config = new BracketConfig(
       $play->id,
       $play->bracket_id,
       'light',
@@ -40,14 +35,14 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       'https://example.com'
     );
     // Create necessary mocks and stubs
-    $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
+    $wc_mock = $this->createMock(WcFunctions::class);
     $wc_order_item_stub = $this->createMock(OrderItemInterface::class);
     $wc_order_stub = $this->createMock(OrderInterface::class);
     $wc_product_stub = $this->createMock(ProductInterface::class);
-    $integration_mock = $this->createMock(Wpbb_GelatoProductIntegration::class);
-    $s3_mock = $this->createMock(Wpbb_S3Service::class);
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
-    $product_utils_mock = $this->createMock(Wpbb_BracketProductUtils::class);
+    $integration_mock = $this->createMock(GelatoProductIntegration::class);
+    $s3_mock = $this->createMock(S3Service::class);
+    $utils_mock = $this->createMock(Utils::class);
+    $product_utils_mock = $this->createMock(BracketProductUtils::class);
 
     $wc_order_stub->method('get_items')->willReturn([$wc_order_item_stub]);
     $wc_order_stub->method('get_id')->willReturn(99);
@@ -68,7 +63,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $s3_mock->method('rename_from_url')->willReturn('sample-renamed-s3-url');
     $wc_mock->method('wc_get_order')->willReturn($wc_order_stub);
 
-    $hooks = new Wpbb_GelatoPublicHooks($integration_mock, [
+    $hooks = new GelatoPublicHooks($integration_mock, [
       'wc' => $wc_mock,
       's3' => $s3_mock,
       'utils' => $utils_mock,
@@ -92,14 +87,14 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
       ],
     ]);
-    $bracket_config = new Wpbb_BracketConfig(
+    $bracket_config = new BracketConfig(
       $play->id,
       $play->bracket_id,
       'light',
@@ -107,15 +102,15 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       'https://example.com'
     );
     // Create necessary mocks and stubs
-    $wc_mock = $this->createMock(Wpbb_WcFunctions::class);
+    $wc_mock = $this->createMock(WcFunctions::class);
     $wc_order_item_stub = $this->createMock(OrderItemInterface::class);
     $wc_order_stub = $this->createMock(OrderInterface::class);
     $wc_order_stub->method('get_user_id')->willReturn($user->ID);
     $wc_product_stub = $this->createMock(ProductInterface::class);
-    $integration_mock = $this->createMock(Wpbb_GelatoProductIntegration::class);
-    $s3_mock = $this->createMock(Wpbb_S3Service::class);
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
-    $product_utils_mock = $this->createMock(Wpbb_BracketProductUtils::class);
+    $integration_mock = $this->createMock(GelatoProductIntegration::class);
+    $s3_mock = $this->createMock(S3Service::class);
+    $utils_mock = $this->createMock(Utils::class);
+    $product_utils_mock = $this->createMock(BracketProductUtils::class);
 
     $wc_order_stub->method('get_items')->willReturn([$wc_order_item_stub]);
     $wc_order_stub->method('get_id')->willReturn(99);
@@ -136,7 +131,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $s3_mock->method('rename_from_url')->willReturn('sample-renamed-s3-url');
     $wc_mock->method('wc_get_order')->willReturn($wc_order_stub);
 
-    $hooks = new Wpbb_GelatoPublicHooks($integration_mock, [
+    $hooks = new GelatoPublicHooks($integration_mock, [
       'wc' => $wc_mock,
       's3' => $s3_mock,
       'utils' => $utils_mock,

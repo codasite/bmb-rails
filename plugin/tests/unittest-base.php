@@ -1,8 +1,8 @@
 <?php
 
+use WStrategies\BMB\Includes\Activator;
+
 include_once 'factory/unittest-factory.php';
-// @karlmolina What does this do? Throwing warnings for me
-// include_once 'phpunit/includes/bootstrap.php';
 
 /**
  * Class WPBB_UnitTestCase
@@ -24,9 +24,7 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   public static function set_up_before_class() {
     parent::set_up_before_class();
 
-    require_once plugin_dir_path(dirname(__FILE__)) .
-      'includes/class-wpbb-activator.php';
-    $activator = new Wpbb_Activator();
+    $activator = new Activator();
     $activator->activate();
   }
 

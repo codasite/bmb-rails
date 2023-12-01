@@ -1,7 +1,7 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-team.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-bracket-team-repo.php';
+
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
 
 /**
  * Class WPBB_UnitTest_Factory_For_Team
@@ -13,13 +13,13 @@ class WPBB_UnitTest_Factory_For_Team extends WP_UnitTest_Factory_For_Thing {
 
   function __construct($factory = null) {
     parent::__construct($factory);
-    $this->repo = new Wpbb_BracketTeamRepo();
+    $this->repo = new BracketTeamRepo();
 
     $this->default_generation_definitions = ['author' => 1];
   }
 
   function create_object($args) {
-    $team = new Wpbb_BracketTeam($args);
+    $team = new Team($args);
     $team = $this->repo->add($team);
     return $team;
   }

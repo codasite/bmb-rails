@@ -1,6 +1,4 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'public/hooks/class-wpbb-permissions.php';
 
 class PermissionsTest extends WPBB_UnitTestCase {
   public function test_admin_can_view_bracket_chat() {

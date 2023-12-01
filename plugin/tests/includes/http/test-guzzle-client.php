@@ -1,15 +1,13 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/http/class-wpbb-guzzle-client.php';
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7\Response;
+use WStrategies\BMB\Includes\Service\Http\GuzzleClient;
 
 class GuzzleClientTest extends WPBB_UnitTestCase {
   public function test_send_many() {
@@ -59,7 +57,7 @@ class GuzzleClientTest extends WPBB_UnitTestCase {
 
     $client = new Client(['handler' => $handler]);
 
-    $http_service = new Wpbb_GuzzleClient(['client' => $client]);
+    $http_service = new GuzzleClient(['client' => $client]);
 
     $responses = $http_service->send_many($requests);
 

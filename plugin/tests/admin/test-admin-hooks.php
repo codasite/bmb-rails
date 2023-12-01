@@ -1,5 +1,4 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
 
 class AdminHooksTest extends WPBB_UnitTestCase {
   public function test_add_upcoming_tag_should_change_status_to_upcoming() {

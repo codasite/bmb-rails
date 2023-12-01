@@ -1,11 +1,9 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket-play.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-bracket-play-repo.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-bracket-repo.php';
+
+use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
 
 class BracketRepoTest extends WPBB_UnitTestCase {
   private $bracket_repo;
@@ -13,32 +11,32 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   public function set_up() {
     parent::set_up();
 
-    $this->bracket_repo = new Wpbb_BracketRepo();
+    $this->bracket_repo = new BracketRepo();
   }
 
   public function test_add() {
-    $bracket = new Wpbb_Bracket([
+    $bracket = new Bracket([
       'title' => 'Test Bracket',
       'status' => 'publish',
       'author' => 1,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 1,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 3',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 4',
           ]),
         ]),
@@ -66,7 +64,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_by_id() {
-    $bracket = new Wpbb_Bracket([
+    $bracket = new Bracket([
       'title' => 'Test Bracket',
       'status' => 'publish',
       'author' => 1,
@@ -83,20 +81,20 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_update() {
-    $bracket = new Wpbb_Bracket([
+    $bracket = new Bracket([
       'title' => 'Test Bracket',
       'month' => 'January',
       'year' => '2019',
       'status' => 'publish',
       'author' => 1,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -121,18 +119,18 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_update_results() {
-    $bracket = new Wpbb_Bracket([
+    $bracket = new Bracket([
       'title' => 'Test Bracket',
       'status' => 'publish',
       'author' => 1,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -233,7 +231,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
     ]);
 
-    $repo = new Wpbb_BracketRepo();
+    $repo = new BracketRepo();
 
     $time = '2019-01-01 00:00:00';
     $datetime = new DateTimeImmutable($time);
@@ -255,7 +253,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
       'author' => $user1->ID,
     ]);
 
-    $repo = new Wpbb_BracketRepo();
+    $repo = new BracketRepo();
 
     $repo->update($bracket->id, [
       'author' => $user2->ID,

@@ -46,7 +46,7 @@ services:
 
   react-client:
     build:
-      context: plugin/includes/react-bracket-builder
+      context: plugin/Includes/react-bracket-builder
       dockerfile: Dockerfile
     command: npm run build:standalone
     volumes:

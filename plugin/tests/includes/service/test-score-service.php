@@ -1,8 +1,11 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-score-service.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-match-pick.php';
 
-class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Service\ScoreService;
+
+class Test_ScoreService extends WPBB_UnitTestCase {
   public function set_up() {
     parent::set_up();
   }
@@ -11,14 +14,14 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_object([
       'num_teams' => 2,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'id' => 1,
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'id' => 2,
             'name' => 'Team 2',
           ]),
@@ -41,7 +44,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $play1 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -49,7 +52,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
@@ -66,13 +69,13 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_object([
       'num_teams' => 2,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -94,7 +97,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $play1 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,
@@ -102,7 +105,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
@@ -119,13 +122,13 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $bracket1 = self::factory()->bracket->create_object([
       'num_teams' => 2,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -145,13 +148,13 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $bracket2 = self::factory()->bracket->create_object([
       'num_teams' => 2,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -163,7 +166,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       'total_score' => 5,
       'accuracy_score' => 0.5,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket2->matches[0]->team1->id,
@@ -171,7 +174,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
@@ -236,7 +239,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
     $play_picks = array_map(function ($pick) {
-      return new Wpbb_MatchPick($pick);
+      return new MatchPick($pick);
     }, $picks);
 
     $play = self::factory()->play->create_object([
@@ -244,7 +247,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       'picks' => $play_picks,
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
@@ -308,37 +311,37 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $play = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team2->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 2,
           'winning_team_id' => $bracket->matches[2]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 3,
           'winning_team_id' => $bracket->matches[3]->team2->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[2]->team2->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 1,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[2]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 2,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[2]->team1->id,
@@ -346,7 +349,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
@@ -362,14 +365,14 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_object([
       'num_teams' => 2,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'id' => 1,
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'id' => 2,
             'name' => 'Team 2',
           ]),
@@ -392,7 +395,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $play1 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -404,7 +407,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $play2 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -412,7 +415,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => true,
       'ignore_late_plays' => false,
     ]);
@@ -451,17 +454,17 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $play = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -475,7 +478,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => false,
       'ignore_late_plays' => true,
     ]);
@@ -510,17 +513,17 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
     $play = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -535,7 +538,7 @@ class Test_Wpbb_ScoreService extends WPBB_UnitTestCase {
       'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
     ]);
 
-    $score_service = new Wpbb_ScoreService([
+    $score_service = new ScoreService([
       'ignore_unprinted_plays' => false,
       'ignore_late_plays' => true,
     ]);

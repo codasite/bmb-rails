@@ -6,6 +6,11 @@
       "email": "barry@wstrategies.co"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "WStrategies\\BMB\\": ""
+    }
+  },
   "require-dev": {
     "phpunit/phpunit": "^9.5",
     "yoast/phpunit-polyfills": "^1.0"

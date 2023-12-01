@@ -1,9 +1,8 @@
 
 <?php
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/class-wpbb-mailchimp-email-service.php';
+use WStrategies\BMB\Includes\Service\MailchimpEmailService;
+
 require_once WPBB_PLUGIN_DIR . 'tests/mock/MailchimpApiClientMock.php';
-require_once WPBB_PLUGIN_DIR . 'vendor/autoload.php';
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
   public function test_client_send_is_called() {
@@ -23,7 +22,7 @@ class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
 
     $client->messages = $messagesMock;
 
-    $mailchimp = new Wpbb_MailchimpEmailService([
+    $mailchimp = new MailchimpEmailService([
       'api_client' => $client,
       'api_key' => '123',
       'from_email' => 'test@test.com',

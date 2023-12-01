@@ -1,9 +1,7 @@
 <?php
 
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-user-profile.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-user-profile-repo.php';
+use WStrategies\BMB\Includes\Domain\UserProfile;
+use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 
 class ProfileRepoTest extends WPBB_UnitTestCase {
   private $profile_repo;
@@ -11,17 +9,17 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   public function set_up() {
     parent::set_up();
 
-    $this->profile_repo = new Wpbb_UserProfileRepo();
+    $this->profile_repo = new UserProfileRepo();
   }
 
   public function test_get_by_post() {
     $user = self::factory()->user->create_and_get();
     $profile_post = self::factory()->post->create_and_get([
-      'post_type' => Wpbb_UserProfile::get_post_type(),
+      'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);
     $profile = $this->profile_repo->get_by_post($profile_post);
-    $this->assertInstanceOf(Wpbb_UserProfile::class, $profile);
+    $this->assertInstanceOf(UserProfile::class, $profile);
     $this->assertEquals($profile_post->ID, $profile->id);
     $this->assertEquals($profile_post->post_title, $profile->title);
     $this->assertEquals($profile_post->post_author, $profile->author);
@@ -43,11 +41,11 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   public function test_get_by_user_with_user() {
     $user = self::factory()->user->create_and_get();
     $profile_post = self::factory()->post->create_and_get([
-      'post_type' => Wpbb_UserProfile::get_post_type(),
+      'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);
     $profile = $this->profile_repo->get_by_user($user);
-    $this->assertInstanceOf(Wpbb_UserProfile::class, $profile);
+    $this->assertInstanceOf(UserProfile::class, $profile);
     $this->assertEquals($profile_post->ID, $profile->id);
     $this->assertEquals($profile_post->post_title, $profile->title);
     $this->assertEquals($profile_post->post_author, $profile->author);
@@ -69,12 +67,12 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   public function test_get_by_user_current_user() {
     $user = self::factory()->user->create_and_get();
     $profile_post = self::factory()->post->create_and_get([
-      'post_type' => Wpbb_UserProfile::get_post_type(),
+      'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);
     wp_set_current_user($user->ID);
     $profile = $this->profile_repo->get_by_user();
-    $this->assertInstanceOf(Wpbb_UserProfile::class, $profile);
+    $this->assertInstanceOf(UserProfile::class, $profile);
     $this->assertEquals($profile_post->ID, $profile->id);
     $this->assertEquals($profile_post->post_title, $profile->title);
     $this->assertEquals($profile_post->post_author, $profile->author);
@@ -95,7 +93,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
 
   public function test_add() {
     $user = self::factory()->user->create_and_get();
-    $profile = new Wpbb_UserProfile([
+    $profile = new UserProfile([
       'title' => 'Test Profile',
       'status' => 'publish',
       'author' => $user->ID,
@@ -112,7 +110,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   public function test_get_by_user_no_post() {
     $user = self::factory()->user->create_and_get();
     $profile = $this->profile_repo->get_by_user($user);
-    $this->assertInstanceOf(Wpbb_UserProfile::class, $profile);
+    $this->assertInstanceOf(UserProfile::class, $profile);
     $this->assertNull($profile->id);
     $this->assertEquals($profile->wp_user, $user);
   }

@@ -1,5 +1,4 @@
 <?php
-require_once 'unittest-base.php';
 
 /**
  * Class SampleTest

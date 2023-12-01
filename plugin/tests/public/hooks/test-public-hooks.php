@@ -1,6 +1,8 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'public/hooks/class-wpbb-public-hooks.php';
+
+use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Utils;
+use WStrategies\BMB\Public\Hooks\PublicHooks;
 
 class PublicHooksTest extends WPBB_UnitTestCase {
   public function test_role_is_added_when_sub_activated() {
@@ -8,13 +10,13 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     // check that the role is added when the subscription is activated
     //standard class mock
-    $sub_mock = $this->getMockBuilder('WC_Subscription')
+    $sub_mock = $this->getMockBuilder(WC_Subscription::class)
       ->setMethods(['get_user_id'])
       ->getMock();
 
     $sub_mock->method('get_user_id')->willReturn($user->ID);
 
-    $hooks = new Wpbb_PublicHooks();
+    $hooks = new PublicHooks();
     $hooks->add_bmb_plus_role($sub_mock);
 
     $user = get_user_by('id', $user->ID);
@@ -28,13 +30,13 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     // check that the role is added when the subscription is activated
     //standard class mock
-    $sub_mock = $this->getMockBuilder('WC_Subscription')
+    $sub_mock = $this->getMockBuilder(WC_Subscription::class)
       ->setMethods(['get_user_id'])
       ->getMock();
 
     $sub_mock->method('get_user_id')->willReturn($user->ID);
 
-    $hooks = new Wpbb_PublicHooks();
+    $hooks = new PublicHooks();
     $hooks->remove_bmb_plus_role($sub_mock);
 
     $user = get_user_by('id', $user_id);
@@ -48,13 +50,13 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     // check that the role is added when the subscription is activated
     //standard class mock
-    $sub_mock = $this->getMockBuilder('WC_Subscription')
+    $sub_mock = $this->getMockBuilder(WC_Subscription::class)
       ->setMethods(['get_user_id'])
       ->getMock();
 
     $sub_mock->method('get_user_id')->willReturn($user->ID);
 
-    $hooks = new Wpbb_PublicHooks();
+    $hooks = new PublicHooks();
     $hooks->add_bmb_plus_role($sub_mock);
 
     $user = get_user_by('id', $user->ID);
@@ -68,13 +70,13 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     // check that the role is added when the subscription is activated
     //standard class mock
-    $sub_mock = $this->getMockBuilder('WC_Subscription')
+    $sub_mock = $this->getMockBuilder(WC_Subscription::class)
       ->setMethods(['get_user_id'])
       ->getMock();
 
     $sub_mock->method('get_user_id')->willReturn($user->ID);
 
-    $hooks = new Wpbb_PublicHooks();
+    $hooks = new PublicHooks();
     $hooks->remove_bmb_plus_role($sub_mock);
 
     $user = get_user_by('id', $user->ID);
@@ -90,7 +92,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -98,7 +100,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $hooks = new Wpbb_PublicHooks();
+    $hooks = new PublicHooks();
     $hooks->mark_play_printed($play);
 
     $play = self::factory()->play->get_object_by_id($play->id);
@@ -118,7 +120,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     update_post_meta($bracket->id, 'wpbb_anonymous_bracket_key', 'test_key');
 
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock = $this->createMock(Utils::class);
     $utils_mock
       ->expects($this->exactly(2))
       ->method('pop_cookie')
@@ -128,7 +130,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       )
       ->willReturnOnConsecutiveCalls($bracket->id, 'test_key');
 
-    $hooks = new Wpbb_PublicHooks([
+    $hooks = new PublicHooks([
       'utils' => $utils_mock,
     ]);
     $hooks->link_anonymous_bracket_to_user_on_login('test_login', $user);
@@ -146,7 +148,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     update_post_meta($bracket->id, 'wpbb_anonymous_bracket_key', 'test_key');
 
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock = $this->createMock(Utils::class);
     $utils_mock
       ->expects($this->exactly(2))
       ->method('pop_cookie')
@@ -156,7 +158,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       )
       ->willReturnOnConsecutiveCalls($bracket->id, 'test_key');
 
-    $hooks = new Wpbb_PublicHooks([
+    $hooks = new PublicHooks([
       'utils' => $utils_mock,
     ]);
     $hooks->link_anonymous_bracket_to_user_on_register($user->ID);
@@ -176,7 +178,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -185,7 +187,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
 
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock = $this->createMock(Utils::class);
     $utils_mock
       ->expects($this->exactly(2))
       ->method('pop_cookie')
@@ -195,7 +197,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       )
       ->willReturnOnConsecutiveCalls($play->id, 'test_key');
 
-    $hooks = new Wpbb_PublicHooks([
+    $hooks = new PublicHooks([
       'utils' => $utils_mock,
     ]);
     $hooks->link_anonymous_play_to_user_on_login('test_login', $user);
@@ -215,7 +217,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -224,7 +226,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
 
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock = $this->createMock(Utils::class);
     $utils_mock
       ->expects($this->exactly(2))
       ->method('pop_cookie')
@@ -234,7 +236,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       )
       ->willReturnOnConsecutiveCalls($play->id, 'test_key');
 
-    $hooks = new Wpbb_PublicHooks([
+    $hooks = new PublicHooks([
       'utils' => $utils_mock,
     ]);
     $hooks->link_anonymous_play_to_user_on_register($user->ID);
@@ -251,7 +253,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     update_post_meta($post->ID, 'wpbb_anonymous_key', 'test_key');
 
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock = $this->createMock(Utils::class);
     $utils_mock
       ->expects($this->exactly(2))
       ->method('pop_cookie')
@@ -261,7 +263,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       )
       ->willReturnOnConsecutiveCalls($post->ID, 'test_key');
 
-    $hooks = new Wpbb_PublicHooks([
+    $hooks = new PublicHooks([
       'utils' => $utils_mock,
     ]);
     $hooks->link_anonymous_post_to_user_from_cookie(
@@ -280,7 +282,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'post_author' => 0,
     ]);
 
-    $hooks = new Wpbb_PublicHooks();
+    $hooks = new PublicHooks();
     $hooks->link_anonymous_post_to_user($post->ID, $user->ID);
 
     $post = self::factory()->post->get_object_by_id($post->ID);
@@ -295,7 +297,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'post_author' => $user->ID,
     ]);
 
-    $hooks = new Wpbb_PublicHooks();
+    $hooks = new PublicHooks();
     $hooks->link_anonymous_post_to_user($post->ID, $user2->ID);
 
     $post = self::factory()->post->get_object_by_id($post->ID);
@@ -310,7 +312,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     update_post_meta($post->ID, 'wpbb_anonymous_bracket_key', 'test_key');
 
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock = $this->createMock(Utils::class);
 
     $utils_mock
       ->expects($this->exactly(2))
@@ -321,7 +323,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       )
       ->willReturnOnConsecutiveCalls($post->ID, 'invalid_key');
 
-    $hooks = new Wpbb_PublicHooks([
+    $hooks = new PublicHooks([
       'utils' => $utils_mock,
     ]);
 

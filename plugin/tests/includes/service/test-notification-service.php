@@ -1,27 +1,31 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'includes/service/class-wpbb-score-service.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-match-pick.php';
+
+use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Service\EmailServiceInterface;
+use WStrategies\BMB\Includes\Service\NotificationService;
 
 class NotificationServiceTest extends WPBB_UnitTestCase {
   public function test_correct_picked() {
-    $email_mock = $this->getMockBuilder('Wpbb_EmailServiceInterface')
+    $email_mock = $this->getMockBuilder(EmailServiceInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $notification_service = new Wpbb_NotificationService([
+    $notification_service = new NotificationService([
       'email_service' => $email_mock,
     ]);
-    $correct_pick = new Wpbb_MatchPick([
+    $correct_pick = new MatchPick([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team_id' => 1,
     ]);
-    $incorrect_pick = new Wpbb_MatchPick([
+    $incorrect_pick = new MatchPick([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team_id' => 2,
     ]);
 
-    $winning_pick = new Wpbb_MatchPick([
+    $winning_pick = new MatchPick([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team_id' => 1,
@@ -36,29 +40,29 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_pick_result_heading() {
-    $email_mock = $this->getMockBuilder('Wpbb_EmailServiceInterface')
+    $email_mock = $this->getMockBuilder(EmailServiceInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $notification_service = new Wpbb_NotificationService([
+    $notification_service = new NotificationService([
       'email_service' => $email_mock,
     ]);
-    $winning_pick = new Wpbb_MatchPick([
+    $winning_pick = new MatchPick([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team_id' => 1,
-      'winning_team' => new Wpbb_Team(['name' => 'Team 1']),
+      'winning_team' => new Team(['name' => 'Team 1']),
     ]);
-    $correct_pick = new Wpbb_MatchPick([
+    $correct_pick = new MatchPick([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team_id' => 1,
-      'winning_team' => new Wpbb_Team(['name' => 'Team 1']),
+      'winning_team' => new Team(['name' => 'Team 1']),
     ]);
-    $incorrect_pick = new Wpbb_MatchPick([
+    $incorrect_pick = new MatchPick([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team_id' => 2,
-      'winning_team' => new Wpbb_Team(['name' => 'Team 2']),
+      'winning_team' => new Team(['name' => 'Team 2']),
     ]);
 
     $this->assertEquals(
@@ -115,17 +119,17 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => $user1->ID,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -137,17 +141,17 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => $user2->ID,
       'picks' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team2->id,
         ]),
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,
@@ -168,14 +172,14 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    $play_repo_mock = $this->getMockBuilder(Wpbb_BracketPlayRepo::class)
+    $play_repo_mock = $this->getMockBuilder(BracketPlayRepo::class)
       ->onlyMethods(['get_user_picks_for_result'])
       ->getMock();
     $play_repo_mock
       ->method('get_user_picks_for_result')
       ->willReturn($user_picks);
 
-    $email_mock = $this->getMockBuilder('Wpbb_EmailServiceInterface')
+    $email_mock = $this->getMockBuilder(EmailServiceInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
     $email_mock
@@ -198,7 +202,7 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
         ]
       );
 
-    $notification_service = new Wpbb_NotificationService([
+    $notification_service = new NotificationService([
       'email_service' => $email_mock,
       'play_repo' => $play_repo_mock,
     ]);

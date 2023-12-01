@@ -1,9 +1,9 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-bracket-repo.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-match.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-team.php';
+
+use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
 
 /**
  * Class WPBB_UnitTest_Factory_For_Play
@@ -15,7 +15,7 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
 
   function __construct($factory = null) {
     parent::__construct($factory);
-    $this->bracket_repo = new Wpbb_BracketRepo();
+    $this->bracket_repo = new BracketRepo();
 
     $this->default_generation_definitions = [
       'title' => new WP_UnitTest_Generator_Sequence('Bracket %s'),
@@ -28,7 +28,7 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
     if (isset($args['num_teams']) && !isset($args['matches'])) {
       $args['matches'] = $this->generateMatches($args['num_teams']);
     }
-    $bracket = new Wpbb_Bracket($args);
+    $bracket = new Bracket($args);
     $bracket = $this->bracket_repo->add($bracket);
     return $bracket;
   }
@@ -48,14 +48,14 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
     $num_matches = $numberOfTeams / 2;
 
     for ($i = 0; $i < $num_matches; $i++) {
-      $matches[] = new Wpbb_Match([
+      $matches[] = new BracketMatch([
         'round_index' => 0,
         'match_index' => $i,
-        'team1' => new Wpbb_Team([
+        'team1' => new Team([
           'id' => $i * 2,
           'name' => 'Team ' . $i * 2 + 1,
         ]),
-        'team2' => new Wpbb_Team([
+        'team2' => new Team([
           'id' => $i * 2 + 1,
           'name' => 'Team ' . ($i * 2 + 2),
         ]),

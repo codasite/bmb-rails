@@ -1,14 +1,12 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-bracket-repo.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/controllers/class-wpbb-bracket-api.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/class-wpbb-notification-service-interface.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/class-wpbb-score-service-interface.php';
+
+use WStrategies\BMB\Includes\Controllers\BracketApi;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Service\NotificationServiceInterface;
+use WStrategies\BMB\Includes\Service\ScoreServiceInterface;
+use WStrategies\BMB\Includes\Utils;
 
 //namespace phpunit
 
@@ -19,7 +17,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function set_up() {
     parent::set_up();
 
-    $this->bracket_repo = new Wpbb_BracketRepo();
+    $this->bracket_repo = new BracketRepo();
   }
 
   public function test_create_bracket() {
@@ -142,23 +140,23 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_update_bracket() {
     $bracket = self::factory()->bracket->create_and_get([
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 1,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 3',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 4',
           ]),
         ]),
@@ -232,13 +230,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_and_get([
       'author' => $user->ID,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -279,13 +277,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_and_get([
       'author' => $user->ID + 1,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -320,13 +318,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_delete_bracket_is_soft() {
     $bracket = self::factory()->bracket->create_and_get([
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -356,13 +354,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_and_get([
       'author' => $user->ID,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -392,13 +390,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_and_get([
       'author' => $user->ID + 1,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -424,24 +422,24 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
   public function test_notification_is_sent_when_results_are_updated() {
     $notification_service = $this->getMockBuilder(
-      'Wpbb_NotificationService_Interface'
+      NotificationServiceInterface::class
     )
       ->disableOriginalConstructor()
       ->getMock();
 
-    $api = new Wpbb_BracketApi([
+    $api = new BracketApi([
       'notification_service' => $notification_service,
     ]);
 
     $bracket = self::factory()->bracket->create_and_get([
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -477,21 +475,21 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_bracket_is_scored_on_update_results() {
-    $score_service = $this->getMockBuilder('Wpbb_ScoreServiceInterface')
+    $score_service = $this->getMockBuilder(ScoreServiceInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
 
-    $api = new Wpbb_BracketApi(['score_service' => $score_service]);
+    $api = new BracketApi(['score_service' => $score_service]);
 
     $bracket = self::factory()->bracket->create_and_get([
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -599,13 +597,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'status' => 'private',
       'author' => $user->ID,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -638,13 +636,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'status' => 'private',
       'author' => $user->ID,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -677,13 +675,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'status' => 'publish',
       'author' => $user->ID,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -725,13 +723,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'status' => 'publish',
       'author' => $user->ID,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -766,23 +764,23 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_and_get([
       'status' => 'publish',
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 1,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 3',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 4',
           ]),
         ]),
@@ -818,23 +816,23 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'status' => 'publish',
       'num_teams' => 4,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 1,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 3',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 4',
           ]),
         ]),
@@ -946,7 +944,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_anonymous_bracket_sets_cookies() {
-    $utils_mock = $this->createMock(Wpbb_Utils::class);
+    $utils_mock = $this->createMock(Utils::class);
 
     $utils_mock
       ->expects($this->exactly(2))
@@ -956,7 +954,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
         [$this->equalTo('wpbb_anonymous_bracket_key'), $this->isType('string')]
       );
 
-    $bracket_api = new Wpbb_BracketApi([
+    $bracket_api = new BracketApi([
       'utils' => $utils_mock,
     ]);
 

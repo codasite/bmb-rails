@@ -1,16 +1,16 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-user-profile.php';
+
+use WStrategies\BMB\Includes\Domain\UserProfile;
 
 class UserProfileTest extends WPBB_UnitTestCase {
   public function test_get_post_type() {
-    $this->assertEquals('user_profile', Wpbb_UserProfile::get_post_type());
+    $this->assertEquals('user_profile', UserProfile::get_post_type());
   }
 
   public function test_constructor() {
     $user = self::factory()->user->create_and_get();
     $profile_post = self::factory()->post->create_and_get([
-      'post_type' => Wpbb_UserProfile::get_post_type(),
+      'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);
     $args = [
@@ -25,8 +25,8 @@ class UserProfileTest extends WPBB_UnitTestCase {
       'url' => get_permalink($profile_post),
       'wp_user' => $user,
     ];
-    $profile = new Wpbb_UserProfile($args);
-    $this->assertInstanceOf(Wpbb_UserProfile::class, $profile);
+    $profile = new UserProfile($args);
+    $this->assertInstanceOf(UserProfile::class, $profile);
     $this->assertEquals($profile_post->ID, $profile->id);
     $this->assertEquals($profile_post->post_title, $profile->title);
     $this->assertEquals($profile_post->post_author, $profile->author);
@@ -51,8 +51,8 @@ class UserProfileTest extends WPBB_UnitTestCase {
       'author_display_name' => $user->display_name,
       'wp_user' => $user,
     ];
-    $profile = new Wpbb_UserProfile($args);
-    $this->assertInstanceOf(Wpbb_UserProfile::class, $profile);
+    $profile = new UserProfile($args);
+    $this->assertInstanceOf(UserProfile::class, $profile);
     $this->assertEquals($user->display_name, $profile->author_display_name);
     $this->assertEquals($user, $profile->wp_user);
   }

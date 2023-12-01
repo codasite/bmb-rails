@@ -25,11 +25,16 @@
  * Domain Path:       /languages
  */
 
+namespace WStrategies\BMB;
+use WStrategies\BMB\Includes\Activator;
+use WStrategies\BMB\Includes\BracketBuilder;
+use WStrategies\BMB\Includes\Deactivator;
+
 // If this file is called directly, abort.
 if (!defined('WPINC')) {
   die();
 }
-
+require_once __DIR__ . '/vendor/autoload.php';
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
@@ -40,31 +45,36 @@ define('WPBB_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in includes/class-wpbb-activator.php
+ * This action is documented in Includes/class-wpbb-activator.php
  */
 function activate_wp_bracket_builder() {
-  require_once plugin_dir_path(__FILE__) . 'includes/class-wpbb-activator.php';
-  Wpbb_Activator::activate();
+  require_once plugin_dir_path(__FILE__) . 'Includes/Activator.php';
+  Activator::activate();
 }
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in includes/class-wpbb-deactivator.php
+ * This action is documented in Includes/class-wpbb-deactivator.php
  */
 function deactivate_wp_bracket_builder() {
-  require_once plugin_dir_path(__FILE__) .
-    'includes/class-wpbb-deactivator.php';
-  Wpbb_Deactivator::deactivate();
+  require_once plugin_dir_path(__FILE__) . 'Includes/Deactivator.php';
+  Deactivator::deactivate();
 }
 
-register_activation_hook(__FILE__, 'activate_wp_bracket_builder');
-register_deactivation_hook(__FILE__, 'deactivate_wp_bracket_builder');
+register_activation_hook(
+  __FILE__,
+  'WStrategies\BMB\activate_wp_bracket_builder'
+);
+register_deactivation_hook(
+  __FILE__,
+  'WStrategies\BMB\deactivate_wp_bracket_builder'
+);
 
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path(__FILE__) . 'includes/class-wp-bracket-builder.php';
+require plugin_dir_path(__FILE__) . 'Includes/BracketBuilder.php';
 
 /**
  * Begins execution of the plugin.
@@ -76,7 +86,7 @@ require plugin_dir_path(__FILE__) . 'includes/class-wp-bracket-builder.php';
  * @since    1.0.0
  */
 function run_wp_bracket_builder() {
-  $plugin = new Wp_Bracket_Builder();
+  $plugin = new BracketBuilder();
   $plugin->run();
 }
 run_wp_bracket_builder();

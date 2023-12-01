@@ -1,7 +1,6 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/service/bracket-product/class-wpbb-bracket-product-utils.php';
+
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketProductUtilsTest extends WPBB_UnitTestCase {
   public function test_get_bracket_fee() {
@@ -9,7 +8,7 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
     ]);
     update_post_meta($bracket->id, 'bracket_fee', 5.0);
-    $utils = new Wpbb_BracketProductUtils();
+    $utils = new BracketProductUtils();
     $fee = $utils->get_bracket_fee($bracket->id);
     $this->assertEquals(5.0, $fee);
   }
@@ -18,13 +17,13 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
     $bracket = self::factory()->bracket->create_and_get([
       'num_teams' => 4,
     ]);
-    $utils = new Wpbb_BracketProductUtils();
+    $utils = new BracketProductUtils();
     $fee = $utils->get_bracket_fee($bracket->id);
     $this->assertEquals(0, $fee);
   }
 
   public function test_get_bracket_fee_invalid() {
-    $utils = new Wpbb_BracketProductUtils();
+    $utils = new BracketProductUtils();
     update_post_meta(0, 'bracket_fee', 'five');
     $fee = $utils->get_bracket_fee(0);
     $this->assertEquals(0, $fee);
@@ -35,7 +34,7 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
     ]);
     update_post_meta($bracket->id, 'bracket_fee', 5);
-    $utils = new Wpbb_BracketProductUtils();
+    $utils = new BracketProductUtils();
     $fee = $utils->get_bracket_fee($bracket);
     $this->assertEquals(5.0, $fee);
   }
@@ -45,7 +44,7 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
       'title' => 'My Bracket',
       'num_teams' => 4,
     ]);
-    $utils = new Wpbb_BracketProductUtils();
+    $utils = new BracketProductUtils();
     $name = $utils->get_bracket_fee_name($bracket->id);
     $this->assertEquals('Tournament fee: My Bracket', $name);
   }

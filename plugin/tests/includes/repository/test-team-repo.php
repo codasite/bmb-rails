@@ -1,8 +1,9 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-team.php';
-require_once WPBB_PLUGIN_DIR .
-  'includes/repository/class-wpbb-bracket-team-repo.php';
+
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
 
 class TeamRepoTest extends WPBB_UnitTestCase {
   private $team_repo;
@@ -11,20 +12,20 @@ class TeamRepoTest extends WPBB_UnitTestCase {
   public function set_up() {
     parent::set_up();
 
-    $this->team_repo = new Wpbb_BracketTeamRepo();
-    $this->bracket_repo = new Wpbb_BracketRepo();
+    $this->team_repo = new BracketTeamRepo();
+    $this->bracket_repo = new BracketRepo();
   }
 
   public function test_add() {
     $bracket = self::factory()->bracket->create_and_get([
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
@@ -33,7 +34,7 @@ class TeamRepoTest extends WPBB_UnitTestCase {
 
     $dirty_name = "Rosie O'Donnell";
     $clean_name = "Rosie O\'Donnell";
-    $team = new Wpbb_Team([
+    $team = new Team([
       'name' => $dirty_name,
     ]);
 

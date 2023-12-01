@@ -1,10 +1,13 @@
 <?php
-require_once WPBB_PLUGIN_DIR . 'tests/unittest-base.php';
-require_once WPBB_PLUGIN_DIR . 'includes/domain/class-wpbb-bracket.php';
+
+use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Team;
 
 class BracketTest extends WPBB_UnitTestCase {
   public function test_get_post_type() {
-    $this->assertEquals('bracket', Wpbb_Bracket::get_post_type());
+    $this->assertEquals('bracket', Bracket::get_post_type());
   }
 
   public function test_constructor() {
@@ -17,27 +20,27 @@ class BracketTest extends WPBB_UnitTestCase {
       'wildcard_placement' => 0,
       'results_first_updated_at' => $now,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
       ],
       'results' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 1,
         ]),
       ],
     ];
-    $bracket = new Wpbb_Bracket($args);
-    $this->assertInstanceOf(Wpbb_Bracket::class, $bracket);
+    $bracket = new Bracket($args);
+    $this->assertInstanceOf(Bracket::class, $bracket);
     $this->assertEquals(2, $bracket->num_teams);
     $this->assertEquals(0, $bracket->wildcard_placement);
     $this->assertEquals(1, count($bracket->matches));
@@ -74,8 +77,8 @@ class BracketTest extends WPBB_UnitTestCase {
         ],
       ],
     ];
-    $bracket = Wpbb_Bracket::from_array($args);
-    $this->assertInstanceOf(Wpbb_Bracket::class, $bracket);
+    $bracket = Bracket::from_array($args);
+    $this->assertInstanceOf(Bracket::class, $bracket);
     $this->assertEquals(1, $bracket->id);
     $this->assertEquals('Test Template', $bracket->title);
     $this->assertEquals('publish', $bracket->status);
@@ -101,26 +104,26 @@ class BracketTest extends WPBB_UnitTestCase {
       'wildcard_placement' => 0,
       'results_first_updated_at' => $now,
       'matches' => [
-        new Wpbb_Match([
+        new BracketMatch([
           'round_index' => 0,
           'match_index' => 0,
-          'team1' => new Wpbb_Team([
+          'team1' => new Team([
             'name' => 'Team 1',
           ]),
-          'team2' => new Wpbb_Team([
+          'team2' => new Team([
             'name' => 'Team 2',
           ]),
         ]),
       ],
       'results' => [
-        new Wpbb_MatchPick([
+        new MatchPick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 1,
         ]),
       ],
     ];
-    $bracket = new Wpbb_Bracket($args);
+    $bracket = new Bracket($args);
     $array = $bracket->to_array();
     $this->assertEquals(1, $array['id']);
     $this->assertEquals('Test Template', $array['title']);
