@@ -12,6 +12,93 @@ use WStrategies\BMB\Includes\Utils;
 require_once WPBB_PLUGIN_DIR . 'tests/mock/WooCommerceMock.php';
 
 class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
+  public function test_add_bracket_to_cart_item_data() {
+    // Create necessary mocks and stubs
+    $wc_mock = $this->createMock(WcFunctions::class);
+    $gelato_mock = $this->createMock(GelatoProductIntegration::class);
+    $product_stub = $this->createMock(ProductInterface::class);
+    $bracket_product_utils_mock = $this->createMock(BracketProductUtils::class);
+
+    // Configure the mocks
+    $product_id = 123;
+    $variation_id = 456;
+    $bracket_id = 2;
+
+    $bracket_config = new BracketConfig(
+      1,
+      $bracket_id,
+      'dark',
+      'top',
+      'https://example.com'
+    );
+
+    $wc_mock->method('wc_get_product')->willReturn($product_stub);
+    $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
+    $gelato_mock->method('has_bracket_config')->willReturn(true);
+    $gelato_mock->method('get_bracket_config')->willReturn($bracket_config);
+
+    $hooks = new GelatoPublicHooks($gelato_mock, [
+      'wc' => $wc_mock,
+      'bracket_product_utils' => $bracket_product_utils_mock,
+    ]);
+
+    // Call the method
+    $cart_item_data = [];
+    $result = $hooks->add_bracket_to_cart_item_data(
+      $cart_item_data,
+      $product_id,
+      $variation_id
+    );
+
+    // Assertions
+    $this->assertArrayHasKey('bracket_config', $result);
+    $this->assertEquals($bracket_config, $result['bracket_config']);
+    $this->assertEquals($bracket_id, $result['bracket_id']);
+  }
+
+  public function test_add_bracket_to_order_item() {
+    // Create mocks for order item and order
+    $order_item_stub = $this->createMock(OrderItemInterface::class);
+    $order_stub = $this->createMock(OrderInterface::class);
+    $gelato_mock = $this->createMock(GelatoProductIntegration::class);
+
+    // Simulate cart item values with bracket configuration and S3 URL
+    $values = [
+      'bracket_config' => new BracketConfig(
+        1,
+        2,
+        'dark',
+        'top',
+        'https://example.com'
+      ),
+      's3_url' => 'https://example-s3-url.com',
+    ];
+
+    // Expectations for the order item meta data additions
+    $order_item_stub
+      ->expects($this->exactly(6))
+      ->method('add_meta_data')
+      ->withConsecutive(
+        ['bracket_config', $values['bracket_config']],
+        ['bracket_theme', $values['bracket_config']->theme_mode],
+        ['bracket_placement', $values['bracket_config']->bracket_placement],
+        ['bracket_id', $values['bracket_config']->bracket_id],
+        ['play_id', $values['bracket_config']->play_id],
+        ['s3_url', $values['s3_url']]
+      );
+
+    // Instantiate your class (replace with your actual class name and constructor as needed)
+    $hooks = new GelatoPublicHooks($gelato_mock);
+
+    // Call the method
+    $hooks->add_bracket_to_order_item(
+      $order_item_stub,
+      'dummy_cart_item_key',
+      $values,
+      $order_stub
+    );
+  }
+
   public function test_play_marked_printed_when_payment_complete() {
     $bracket = self::factory()->bracket->create_and_get([
       'num_teams' => 4,
