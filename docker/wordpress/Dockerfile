@@ -35,3 +35,11 @@ RUN echo "#!/bin/bash" > /usr/local/bin/install-wp-tests \
         && chmod ugo+x /usr/local/bin/install-wp-test* \
         # && su www-data -c "/usr/local/bin/install-wp-tests.sh ${WORDPRESS_DB_NAME}_test root root '' latest true" \
         && echo "*** install-wp-tests installed"
+
+# Install xdebug
+RUN pecl install xdebug \
+        && docker-php-ext-enable xdebug \
+        && echo "*** xdebug installed"
+
+# create the info.php file
+RUN echo "<?php phpinfo(); ?>" > /var/www/html/info.php

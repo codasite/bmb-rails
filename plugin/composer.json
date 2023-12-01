@@ -23,6 +23,7 @@
     "mailchimp/transactional": "^1.0"
   },
   "scripts": {
-    "test": "phpunit --colors=always"
+    "test": "phpunit --colors=always",
+    "coverage": "mkdir -p /var/www/html/coverage && phpunit --colors=always --coverage-html /var/www/html/coverage"
   }
 }

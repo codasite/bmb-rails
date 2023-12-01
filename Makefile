@@ -30,6 +30,10 @@ wp-init:
 wp-test:
 	docker exec wp-dev composer test
 
+# Run tests with coverage
+wp-cover:
+	docker exec wp-dev composer coverage
+
 # Read out debug log (ignore deprecated warnings)
 wp-log:
 	docker exec wp-dev tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
