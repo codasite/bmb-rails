@@ -117,7 +117,9 @@ Tests should be run via docker-compose. To run the tests:
 
 1. `make wp-up` to start the local wordpress services
 2. `make wp-install` installs wordpress and the test directory
-2. `make wp-test` to run the tests
+3. `make wp-test` to run the tests
+4. `make wp-cover` to run the tests with code coverage. The coverage report is available at localhost:8080/coverage
+
 
 Resources:
 https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/
