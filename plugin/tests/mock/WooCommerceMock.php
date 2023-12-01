@@ -24,6 +24,7 @@ interface CartInterface {
   public function get_cart();
   public function add_fee($name, $amount, $taxable, $tax_class);
   public function fees_api();
+  public function set_cart_contents($cart_contents);
 }
 
 interface CartFeesInterface {

@@ -99,6 +99,64 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     );
   }
 
+  public function test_handle_before_checkout_process() {
+    // Mocking WooCommerce Cart and its methods
+    $cart_mock = $this->createMock(CartInterface::class);
+    $wc_functions_mock = $this->createMock(WcFunctions::class);
+    $wc_functions_mock
+      ->method('WC')
+      ->willReturn((object) ['cart' => $cart_mock]);
+
+    // Simulate cart items with a bracket product and a regular product
+    $bracket_product_mock = $this->createMock(ProductInterface::class);
+    $regular_product_mock = $this->createMock(ProductInterface::class);
+    $original_cart_items = [
+      'bracket_item_key' => ['data' => $bracket_product_mock],
+      'regular_item_key' => ['data' => $regular_product_mock],
+    ];
+
+    $cart_mock->method('get_cart')->willReturn($original_cart_items);
+
+    // Setup bracket product utils mock
+    $bracket_product_utils_mock = $this->createMock(BracketProductUtils::class);
+    $bracket_product_utils_mock->method('is_bracket_product')->will(
+      $this->returnCallback(function ($product) use ($bracket_product_mock) {
+        return $product === $bracket_product_mock;
+      })
+    );
+
+    $hooks = $this->getMockBuilder(GelatoPublicHooks::class)
+      ->setConstructorArgs([
+        $this->createMock(GelatoProductIntegration::class),
+        [
+          'wc' => $wc_functions_mock,
+          'bracket_product_utils' => $bracket_product_utils_mock,
+        ],
+      ])
+      ->onlyMethods(['process_bracket_product_item'])
+      ->getMock();
+
+    $hooks
+      ->expects($this->once())
+      ->method('process_bracket_product_item')
+      ->with($this->equalTo($original_cart_items['bracket_item_key']))
+      ->willReturn(['processed_bracket_item']);
+
+    // Assert that cart contents are set correctly
+    $expected_cart_items = [
+      'bracket_item_key' => ['processed_bracket_item'],
+      'regular_item_key' => $original_cart_items['regular_item_key'],
+    ];
+
+    $cart_mock
+      ->expects($this->once())
+      ->method('set_cart_contents')
+      ->with($this->equalTo($expected_cart_items));
+
+    // Call the method
+    $hooks->handle_before_checkout_process();
+  }
+
   public function test_play_marked_printed_when_payment_complete() {
     $bracket = self::factory()->bracket->create_and_get([
       'num_teams' => 4,
