@@ -30,7 +30,7 @@ class GelatoProductIntegration implements
   /**
    * @var HttpClientInterface
    */
-  public $client;
+  private $client;
 
   /**
    * @var ObjectStorageInterface
@@ -40,7 +40,7 @@ class GelatoProductIntegration implements
   /**
    * @var BracketImageRequestFactory
    */
-  public $request_factory;
+  private $request_factory;
 
   /**
    * @var Utils
@@ -50,7 +50,7 @@ class GelatoProductIntegration implements
   /**
    * @var BracketPlayRepo
    */
-  public $play_repo;
+  private $play_repo;
 
   public function __construct($args = []) {
     $this->object_storage = $args['object_storage'] ?? new S3Storage();
@@ -64,6 +64,18 @@ class GelatoProductIntegration implements
     $this->client = $args['client'] ?? new GuzzleClient();
     $this->utils = new Utils();
     $this->play_repo = new BracketPlayRepo();
+  }
+
+  public function get_http_client(): HttpClientInterface {
+    return $this->client;
+  }
+
+  public function get_request_factory(): BracketImageRequestFactory {
+    return $this->request_factory;
+  }
+
+  public function get_play_repo(): BracketPlayRepo {
+    return $this->play_repo;
   }
 
   public function load(Loader $loader): void {
