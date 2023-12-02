@@ -249,7 +249,10 @@ class GelatoPublicHooks {
   }
 
   public function process_bracket_product_item($cart_item) {
-    if (defined('DISABLE_IMAGE_GENERATOR_CALLS')) {
+    if (
+      defined('DISABLE_IMAGE_GENERATOR_CALLS') &&
+      DISABLE_IMAGE_GENERATOR_CALLS
+    ) {
       return $cart_item;
     }
     // get the url for the front design
@@ -259,16 +262,15 @@ class GelatoPublicHooks {
       true
     );
 
+    if (empty($front_url)) {
+      $this->handle_throw_error([
+        'error' => 'Error getting front design from S3',
+        'front_url' => $front_url,
+      ]);
+    }
+
     // a random filename for uploaded file
     $temp_filename = 'temp-' . uniqid() . '.pdf';
-
-    if (empty($front_url)) {
-      $error_data = [
-        'error' => 'Front design not found',
-        'front_url' => $front_url,
-      ];
-      throw new Exception(json_encode($error_data));
-    }
 
     // Extract config from the cart item
     $bracket_config = $cart_item['bracket_config'] ?? null;
@@ -313,6 +315,13 @@ class GelatoPublicHooks {
     // However, Gelato still requires a two page PDF so we append a blank page to the front design
     // $result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
     $front = $this->s3->get_from_url($front_url);
+    if (!$front) {
+      $this->handle_throw_error([
+        'error' => 'Error getting front design from S3',
+        'front_url' => $front_url,
+      ]);
+    }
+
     $merged = $this->pdf_service->merge_pdfs([
       [
         'content' => $front,
@@ -322,11 +331,23 @@ class GelatoPublicHooks {
         'size' => [$back_width, $back_height],
       ],
     ]);
+    if (!$merged) {
+      $this->handle_throw_error([
+        'error' => 'Error merging PDFs',
+        'front_url' => $front_url,
+      ]);
+    }
     $result = $this->s3->put(
       BRACKET_BUILDER_S3_ORDER_BUCKET,
       $temp_filename,
       $merged
     );
+    if (!$result) {
+      $this->handle_throw_error([
+        'error' => 'Error putting PDF to S3',
+        'front_url' => $front_url,
+      ]);
+    }
     return $result;
   }
 
@@ -337,44 +358,36 @@ class GelatoPublicHooks {
   ) {
     // Use config to generate the back design and merge it with the front design in a two-page PDF
     $play_id = $bracket_config->play_id;
-    $play = $this->gelato->play_repo->get($play_id);
+    $play = $this->gelato->get_play_repo()->get($play_id);
     $theme = $bracket_config->theme_mode;
     $placement = $bracket_config->bracket_placement;
 
-    $request_data = $this->gelato->request_factory->get_request_data($play, [
-      'themes' => [$theme],
-      'positions' => [$placement],
-      'inch_height' => 16,
-      'inch_width' => 12,
-      'pdf' => true,
-    ]);
+    $request_data = $this->gelato
+      ->get_request_factory()
+      ->get_request_data($play, [
+        'themes' => [$theme],
+        'positions' => [$placement],
+        'inch_height' => 16,
+        'inch_width' => 12,
+        'pdf' => true,
+      ]);
 
-    $response = null;
-    try {
-      $response = $this->gelato->client->send_many($request_data);
-    } catch (Exception $e) {
-      $this->log_error('Error sending request to Gelato: ' . $e->getMessage());
-      throw new Exception(
-        'An error occurred while processing your order. Please contact the site administrator.'
-      );
-    }
+    $response = $this->gelato->get_http_client()->send_many($request_data);
 
-    if (!$response) {
-      $error_data = [
-        'error' => 'Error converting bracket to PDF. No response found.',
-        'response' => $response,
-      ];
-      throw new Exception(json_encode($error_data));
+    if (empty($response)) {
+      $this->handle_throw_error([
+        'error' => 'Error getting back design from Gelato',
+        'request_data' => $request_data,
+      ]);
     }
 
     $convert_res = reset($response);
     // check if convert res is wp_error
     if (!isset($convert_res['image_url']) || empty($convert_res['image_url'])) {
-      $error_data = [
-        'error' => 'Error converting bracket to PDF. No image_url found.',
+      $this->handle_throw_error([
+        'error' => 'Error converting bracket to PDF',
         'convert_res' => $convert_res,
-      ];
-      throw new Exception(json_encode($error_data));
+      ]);
     }
 
     $back_url = $convert_res['image_url'];
@@ -382,6 +395,15 @@ class GelatoPublicHooks {
     // merge pdfs
     $front = $this->s3->get_from_url($front_url);
     $back = $this->s3->get_from_url($back_url);
+
+    if (!$front || !$back) {
+      $this->handle_throw_error([
+        'error' => 'Error getting front or back design from S3',
+        'front_url' => $front_url,
+        'back_url' => $back_url,
+      ]);
+    }
+
     $merged = $this->pdf_service->merge_pdfs([
       [
         'content' => $front,
@@ -390,12 +412,32 @@ class GelatoPublicHooks {
         'content' => $back,
       ],
     ]);
+
+    if (!$merged) {
+      $this->handle_throw_error([
+        'error' => 'Error merging PDFs',
+        'front_url' => $front_url,
+        'back_url' => $back_url,
+      ]);
+    }
+
     $result = $this->s3->put(
       BRACKET_BUILDER_S3_ORDER_BUCKET,
       $temp_filename,
       $merged
     );
+    if (!$result) {
+      $this->handle_throw_error([
+        'error' => 'Error putting PDF to S3',
+        'front_url' => $front_url,
+        'back_url' => $back_url,
+      ]);
+    }
     return $result;
+  }
+
+  private function handle_throw_error($error_data) {
+    throw new Exception(json_encode($error_data));
   }
 
   // this function hooks into woocommerce_payment_complete

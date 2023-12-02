@@ -2,12 +2,16 @@
 
 use WStrategies\BMB\Includes\Domain\BracketConfig;
 use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
+use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoPublicHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 use WStrategies\BMB\Includes\Service\S3Service;
 use WStrategies\BMB\Includes\Utils;
+use WStrategies\BMB\Includes\Service\PdfService;
 
 require_once WPBB_PLUGIN_DIR . 'tests/mock/WooCommerceMock.php';
 
@@ -96,6 +100,396 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       'dummy_cart_item_key',
       $values,
       $order_stub
+    );
+  }
+
+  public function test_handle_before_checkout_process() {
+    // Mocking WooCommerce Cart and its methods
+    $cart_mock = $this->createMock(CartInterface::class);
+    $wc_functions_mock = $this->createMock(WcFunctions::class);
+    $wc_functions_mock
+      ->method('WC')
+      ->willReturn((object) ['cart' => $cart_mock]);
+
+    // Simulate cart items with a bracket product and a regular product
+    $bracket_product_mock = $this->createMock(ProductInterface::class);
+    $regular_product_mock = $this->createMock(ProductInterface::class);
+    $original_cart_items = [
+      'bracket_item_key' => ['data' => $bracket_product_mock],
+      'regular_item_key' => ['data' => $regular_product_mock],
+    ];
+
+    $cart_mock->method('get_cart')->willReturn($original_cart_items);
+
+    // Setup bracket product utils mock
+    $bracket_product_utils_mock = $this->createMock(BracketProductUtils::class);
+    $bracket_product_utils_mock->method('is_bracket_product')->will(
+      $this->returnCallback(function ($product) use ($bracket_product_mock) {
+        return $product === $bracket_product_mock;
+      })
+    );
+
+    $hooks = $this->getMockBuilder(GelatoPublicHooks::class)
+      ->setConstructorArgs([
+        $this->createMock(GelatoProductIntegration::class),
+        [
+          'wc' => $wc_functions_mock,
+          'bracket_product_utils' => $bracket_product_utils_mock,
+        ],
+      ])
+      ->onlyMethods(['process_bracket_product_item'])
+      ->getMock();
+
+    $hooks
+      ->expects($this->once())
+      ->method('process_bracket_product_item')
+      ->with($this->equalTo($original_cart_items['bracket_item_key']))
+      ->willReturn(['processed_bracket_item']);
+
+    // Assert that cart contents are set correctly
+    $expected_cart_items = [
+      'bracket_item_key' => ['processed_bracket_item'],
+      'regular_item_key' => $original_cart_items['regular_item_key'],
+    ];
+
+    $cart_mock
+      ->expects($this->once())
+      ->method('set_cart_contents')
+      ->with($this->equalTo($expected_cart_items));
+
+    // Call the method
+    $hooks->handle_before_checkout_process();
+  }
+  public function test_process_bracket_product_item_with_missing_front_design() {
+    // Create a cart item mock
+    $cart_item = ['variation_id' => 456];
+
+    // Instantiate the class under test
+    $hooks = new GelatoPublicHooks(
+      $this->createMock(GelatoProductIntegration::class)
+    );
+
+    // Expect an exception
+    $this->expectException(Exception::class);
+
+    // Call the method
+    $hooks->process_bracket_product_item($cart_item);
+  }
+
+  public function test_process_bracket_product_item_with_bracket_config() {
+    $product_post = self::factory()->post->create_and_get([
+      'post_type' => 'product_variation',
+    ]);
+    // set the wpbb_font_design meta key
+    update_post_meta($product_post->ID, 'wpbb_front_design', 'front-design');
+    // Create a cart item mock with a bracket configuration
+    $cart_item = [
+      'variation_id' => $product_post->ID,
+      'bracket_config' => new BracketConfig(
+        1,
+        2,
+        'dark',
+        'top',
+        'https://example.com'
+      ),
+    ];
+
+    // Mocking the handle_front_and_back_design method
+    $hooks = $this->getMockBuilder(GelatoPublicHooks::class)
+      ->setConstructorArgs([$this->createMock(GelatoProductIntegration::class)])
+      ->onlyMethods(['handle_front_and_back_design'])
+      ->getMock();
+
+    $hooks
+      ->method('handle_front_and_back_design')
+      ->willReturn('s3-url-front-back');
+
+    // Call the method
+    $result = $hooks->process_bracket_product_item($cart_item);
+
+    // Assert that the S3 URL is correctly set
+    $this->assertEquals('s3-url-front-back', $result['s3_url']);
+  }
+
+  public function test_process_bracket_product_item_without_bracket_config() {
+    $product_post = self::factory()->post->create_and_get([
+      'post_type' => 'product_variation',
+    ]);
+    // set the wpbb_font_design meta key
+    update_post_meta($product_post->ID, 'wpbb_front_design', 'front-design');
+    // Create a cart item mock without a bracket configuration
+    $cart_item = [
+      'variation_id' => $product_post->ID,
+    ];
+
+    // Mocking the handle_front_and_back_design method
+    $hooks = $this->getMockBuilder(GelatoPublicHooks::class)
+      ->setConstructorArgs([$this->createMock(GelatoProductIntegration::class)])
+      ->onlyMethods(['handle_front_design_only'])
+      ->getMock();
+
+    $hooks->method('handle_front_design_only')->willReturn('s3-url-front-only');
+
+    // Call the method
+    $result = $hooks->process_bracket_product_item($cart_item);
+
+    // Assert that the S3 URL is correctly set
+    $this->assertEquals('s3-url-front-only', $result['s3_url']);
+  }
+
+  public function test_handle_front_design_only_success() {
+    // Setup test data
+    $front_url = 'http://example.com/front.pdf';
+    $temp_filename = 'temp-uniqueid.pdf';
+    $back_width = 12;
+    $back_height = 16;
+    if (!defined('BRACKET_BUILDER_S3_ORDER_BUCKET')) {
+      define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'test-bucket');
+    }
+
+    // Mock S3 and PDF service
+    $s3_mock = $this->createMock(S3Service::class);
+    $pdf_service_mock = $this->createMock(PdfService::class);
+
+    // Mock methods
+    $s3_mock
+      ->method('get_from_url')
+      ->with($front_url)
+      ->willReturn('front_pdf_content');
+    $pdf_service_mock->method('merge_pdfs')->willReturn('merged_pdf_content');
+    $s3_mock
+      ->method('put')
+      ->with(
+        BRACKET_BUILDER_S3_ORDER_BUCKET,
+        $temp_filename,
+        'merged_pdf_content'
+      )
+      ->willReturn('s3_upload_url');
+
+    // Instantiate the class with mocked dependencies
+    $hooks = new GelatoPublicHooks(
+      $this->createMock(GelatoProductIntegration::class),
+      [
+        's3' => $s3_mock,
+        'pdf_service' => $pdf_service_mock,
+      ]
+    );
+
+    // Call the function
+    $result = $hooks->handle_front_design_only(
+      $front_url,
+      $temp_filename,
+      $back_width,
+      $back_height
+    );
+
+    // Assert the expected result
+    $this->assertEquals('s3_upload_url', $result);
+  }
+
+  public function test_handle_front_design_only_failure_in_getting_front() {
+    // Setup test data
+    $front_url = 'http://example.com/invalid_front.pdf';
+    $temp_filename = 'temp-uniqueid.pdf';
+    $back_width = 12;
+    $back_height = 16;
+
+    // Mock S3 and PDF service
+    $s3_mock = $this->createMock(S3Service::class);
+    $pdf_service_mock = $this->createMock(PDFService::class);
+
+    // Mock methods to simulate failure in retrieving front design
+    $s3_mock
+      ->method('get_from_url')
+      ->with($front_url)
+      ->willReturn(null); // Simulate failure
+
+    // Instantiate the class with mocked dependencies
+    $hooks = new GelatoPublicHooks(
+      $this->createMock(GelatoProductIntegration::class),
+      [
+        's3' => $s3_mock,
+        'pdf_service' => $pdf_service_mock,
+      ]
+    );
+
+    // Expect an exception
+    $this->expectException(Exception::class);
+
+    // Call the function
+    $hooks->handle_front_design_only(
+      $front_url,
+      $temp_filename,
+      $back_width,
+      $back_height
+    );
+  }
+
+  public function test_handle_front_design_only_failure_in_merge_or_upload() {
+    // Setup test data
+    $front_url = 'http://example.com/front.pdf';
+    $temp_filename = 'temp-uniqueid.pdf';
+    $back_width = 12;
+    $back_height = 16;
+
+    // Mock S3 and PDF service
+    $s3_mock = $this->createMock(S3Service::class);
+    $pdf_service_mock = $this->createMock(PdfService::class);
+
+    // Mock methods for front retrieval and failure in PDF merge
+    $s3_mock
+      ->method('get_from_url')
+      ->with($front_url)
+      ->willReturn('front_pdf_content');
+    $pdf_service_mock->method('merge_pdfs')->willReturn(false); // Simulate merge failure
+
+    // Instantiate the class with mocked dependencies
+    $hooks = new GelatoPublicHooks(
+      $this->createMock(GelatoProductIntegration::class),
+      [
+        's3' => $s3_mock,
+        'pdf_service' => $pdf_service_mock,
+      ]
+    );
+
+    // Expect an exception
+    $this->expectException(Exception::class);
+
+    // Call the function
+    $hooks->handle_front_design_only(
+      $front_url,
+      $temp_filename,
+      $back_width,
+      $back_height
+    );
+  }
+
+  public function test_handle_front_and_back_design_success() {
+    if (!defined('BRACKET_BUILDER_S3_ORDER_BUCKET')) {
+      define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'test-bucket');
+    }
+    // Setup test data
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+    $front_url = 'http://example.com/front.pdf';
+    $bracket_config = new BracketConfig(
+      $play->id,
+      $play->bracket_id,
+      'dark',
+      'top',
+      'https://example.com'
+    );
+    $temp_filename = 'temp-uniqueid.pdf';
+
+    // Mock necessary services
+    $s3_mock = $this->createMock(S3Service::class);
+    $pdf_service_mock = $this->createMock(PdfService::class);
+    $client_mock = $this->createMock(HttpClientInterface::class);
+    $request_factory_mock = $this->createMock(
+      BracketImageRequestFactory::class
+    );
+    $gelato_mock = $this->createMock(GelatoProductIntegration::class);
+    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+
+    // Setup mocks for successful operations
+    $s3_mock
+      ->method('get_from_url')
+      ->willReturnOnConsecutiveCalls('front_pdf_content', 'back_pdf_content');
+    $pdf_service_mock->method('merge_pdfs')->willReturn('merged_pdf_content');
+    $s3_mock
+      ->method('put')
+      ->with(
+        BRACKET_BUILDER_S3_ORDER_BUCKET,
+        $temp_filename,
+        'merged_pdf_content'
+      )
+      ->willReturn('s3_upload_url');
+    $play_repo_mock->method('get')->willReturn($play);
+    $client_mock
+      ->method('send_many')
+      ->willReturn([['image_url' => 's3_upload_url']]);
+    $gelato_mock->method('get_http_client')->willReturn($client_mock);
+    $gelato_mock
+      ->method('get_request_factory')
+      ->willReturn($request_factory_mock);
+    $gelato_mock->method('get_play_repo')->willReturn($play_repo_mock);
+
+    // Instantiate the class with mocked dependencies
+    $hooks = new GelatoPublicHooks($gelato_mock, [
+      's3' => $s3_mock,
+      'pdf_service' => $pdf_service_mock,
+    ]);
+
+    // Call the function
+    $result = $hooks->handle_front_and_back_design(
+      $front_url,
+      $bracket_config,
+      $temp_filename
+    );
+
+    // Assert the expected result
+    $this->assertEquals('s3_upload_url', $result);
+  }
+
+  public function test_handle_front_and_back_design_failure_in_back_design() {
+    if (!defined('BRACKET_BUILDER_S3_ORDER_BUCKET')) {
+      define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'test-bucket');
+    }
+
+    // Setup test data
+    $front_url = 'http://example.com/front.pdf';
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+    $bracket_config = new BracketConfig(
+      $play->id,
+      $play->bracket_id,
+      'dark',
+      'top',
+      'https://example.com'
+    );
+    $temp_filename = 'temp-uniqueid.pdf';
+
+    // Mock necessary services
+    $s3_mock = $this->createMock(S3Service::class);
+    $pdf_service_mock = $this->createMock(PdfService::class);
+    $client_mock = $this->createMock(HttpClientInterface::class);
+    $request_factory_mock = $this->createMock(
+      BracketImageRequestFactory::class
+    );
+    $gelato_mock = $this->createMock(GelatoProductIntegration::class);
+    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+
+    // Setup mock for failure in getting back design
+    $client_mock->method('send_many')->willReturn([]); // Simulate failure
+    $play_repo_mock->method('get')->willReturn($play);
+    $gelato_mock->method('get_http_client')->willReturn($client_mock);
+    $gelato_mock
+      ->method('get_request_factory')
+      ->willReturn($request_factory_mock);
+    $gelato_mock->method('get_play_repo')->willReturn($play_repo_mock);
+
+    // Instantiate the class with mocked dependencies
+    $hooks = new GelatoPublicHooks($gelato_mock, [
+      's3' => $s3_mock,
+      'pdf_service' => $pdf_service_mock,
+    ]);
+
+    // Expect an exception
+    $this->expectException(Exception::class);
+
+    // Call the function
+    $hooks->handle_front_and_back_design(
+      $front_url,
+      $bracket_config,
+      $temp_filename
     );
   }
 
