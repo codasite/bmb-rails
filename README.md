@@ -26,8 +26,8 @@ cd /Users/karl/Local Sites/bracket-builder/app/public/wp-content/plugins
 ln -s /Users/karl/Documents/repos/wp-bracket-builder/plugin wp-bracket-builder
 ```
 
-3. From the plugin root `wp-bracket-builder/plugin`, install composer dependencies `composer install`
-4. In `wp-bracket-builder/plugin/includes/react-bracket-builder` run `npm install`
+3. Run `make composer-install` to install php dependencies. 
+4. Run `make react-install` to install npm dependencies.
 5. Install and activate Oxygen Builder 4.5
 6. Install and activate the WooCommerce Plugin
 7. Activate the WP Bracket Builder Plugin
@@ -59,7 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ```
 
 12. Enable debugging in `wp-config.php` https://wordpress.org/documentation/article/debugging-in-wordpress/
-13. Run `npm start` in `plugin/includes/react-bracket-builder` to start the react app.
+13. Run `make react-start` to start the react app.
 
 ## Image Generation
 

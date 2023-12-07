@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\BracketProduct;
 
-use WStrategies\BMB\Includes\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;

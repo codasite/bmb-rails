@@ -1,15 +1,18 @@
 <?php
 namespace WStrategies\BMB\Includes;
-use WStrategies\BMB\Admin\Admin;
-use WStrategies\BMB\Admin\CustomPostHooks;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
+use WStrategies\BMB\Includes\Controllers\NotificationApi;
+use WStrategies\BMB\Includes\Hooks\AdminHooks;
+use WStrategies\BMB\Includes\Hooks\CustomPostHooks;
+use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
+use WStrategies\BMB\Includes\Hooks\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\Permissions;
+use WStrategies\BMB\Includes\Hooks\PublicHooks;
+use WStrategies\BMB\Includes\Hooks\PublicShortcodes;
+use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
-use WStrategies\BMB\Public\Hooks\EnqueueScriptsHooks;
-use WStrategies\BMB\Public\Hooks\Permissions;
-use WStrategies\BMB\Public\Hooks\PublicHooks;
-use WStrategies\BMB\Public\Hooks\PublicShortcodes;
 
 /**
  * The core plugin class.
@@ -95,7 +98,7 @@ class BracketBuilder {
     /** @var HooksInterface[] $hooks */
     $hooks = [
       new PublicHooks(),
-      new Admin($name_and_version_args),
+      new AdminHooks($name_and_version_args),
       new GelatoProductIntegration(),
       new BracketProductHooks(),
       new EnqueueScriptsHooks($name_and_version_args),
@@ -103,7 +106,9 @@ class BracketBuilder {
       new CustomPostHooks(),
       new BracketApi(),
       new BracketPlayApi(),
+      new NotificationApi(),
       new Permissions(),
+      new UpcomingBracketHooks(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

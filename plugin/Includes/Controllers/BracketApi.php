@@ -9,11 +9,11 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\ValidationException;
-use WStrategies\BMB\Includes\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\NotificationService;
-use WStrategies\BMB\Includes\Service\NotificationServiceInterface;
+use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
+use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceInterface;
 use WStrategies\BMB\Includes\Service\ScoreService;
 use WStrategies\BMB\Includes\Utils;
 
@@ -39,9 +39,9 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
   private $score_service;
 
   /**
-   * @var NotificationServiceInterface
+   * @var BracketResultsNotificationServiceInterface
    */
-  private ?NotificationServiceInterface $notification_service;
+  private ?BracketResultsNotificationServiceInterface $notification_service;
 
   /**
    * @var Utils
@@ -59,8 +59,16 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     $this->score_service = $args['score_service'] ?? new ScoreService();
     try {
       $this->notification_service =
-        $args['notification_service'] ?? new NotificationService();
+        $args['notification_service'] ??
+        new BracketResultsNotificationService();
     } catch (Exception $e) {
+      error_log(
+        'Caught error: ' .
+          $e->getMessage() .
+          '\nSetting ' .
+          __CLASS__ .
+          '::$notification_service to null'
+      );
       $this->notification_service = null;
     }
   }
@@ -129,35 +137,6 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
             'type' => 'boolean',
           ],
         ],
-      ],
-    ]);
-    register_rest_route($namespace, '/' . $base . '/(?P<id>[\d]+)/activate', [
-      'methods' => 'POST',
-      'callback' => [$this, 'activate_bracket'],
-      'permission_callback' => [$this, 'admin_permission_check'],
-      'args' => [
-        'id' => [
-          'description' => __('Unique identifier for the object.'),
-          'type' => 'integer',
-        ],
-      ],
-    ]);
-
-    register_rest_route($namespace, '/' . $base . '/matches', [
-      [
-        'methods' => WP_REST_Server::READABLE,
-        'callback' => [$this, 'get_matches'],
-        'permission_callback' => [$this, 'customer_permission_check'],
-        'args' => [],
-      ],
-    ]);
-
-    register_rest_route($namespace, '/' . $base . '/teams', [
-      [
-        'methods' => WP_REST_Server::READABLE,
-        'callback' => [$this, 'get_teams'],
-        'permission_callback' => [$this, 'customer_permission_check'],
-        'args' => [],
       ],
     ]);
   }

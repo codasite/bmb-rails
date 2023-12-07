@@ -9,7 +9,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\ValidationException;
-use WStrategies\BMB\Includes\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
@@ -132,17 +132,6 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
             ),
             'type' => 'boolean',
           ],
-        ],
-      ],
-    ]);
-    register_rest_route($namespace, '/' . $base . '/html-to-image', [
-      'methods' => 'POST',
-      'callback' => [$this, 'html_to_image'],
-      'permission_callback' => [$this, 'customer_permission_check'],
-      'args' => [
-        'id' => [
-          'description' => __('Unique identifier for the object.'),
-          'type' => 'integer',
         ],
       ],
     ]);

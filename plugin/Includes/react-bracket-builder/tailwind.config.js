@@ -11,12 +11,16 @@ module.exports = {
     extend: {
       opacity: {
         15: '0.15',
+        85: '0.85',
       },
       scale: {
         25: '.25',
         30: '.3',
         35: '.35',
         40: '.4',
+      },
+      borderWidth: {
+        1: '1px',
       },
     },
     spacing: {

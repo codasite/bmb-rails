@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
+use WStrategies\BMB\Includes\Hooks\HooksInterface;
+
 /**
  * Define the internationalization functionality
  *

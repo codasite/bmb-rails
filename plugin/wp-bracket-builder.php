@@ -75,6 +75,7 @@ register_deactivation_hook(
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path(__FILE__) . 'Includes/BracketBuilder.php';
+require __DIR__ . '/Includes/Domain/Wpbb_BracketConfig.php';
 
 /**
  * Begins execution of the plugin.

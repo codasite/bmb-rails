@@ -4,7 +4,7 @@ use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\NotificationServiceInterface;
+use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceInterface;
 use WStrategies\BMB\Includes\Service\ScoreServiceInterface;
 use WStrategies\BMB\Includes\Utils;
 
@@ -422,7 +422,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
   public function test_notification_is_sent_when_results_are_updated() {
     $notification_service = $this->getMockBuilder(
-      NotificationServiceInterface::class
+      BracketResultsNotificationServiceInterface::class
     )
       ->disableOriginalConstructor()
       ->getMock();

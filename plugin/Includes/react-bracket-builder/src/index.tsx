@@ -3,10 +3,7 @@ import React from 'react'
 import App from './App'
 import { render } from 'react-dom'
 import * as Sentry from '@sentry/react'
-import { bracketBuilderStore } from './brackets/shared/app/store'
-import { Provider } from 'react-redux'
 import { camelCaseKeys } from './brackets/shared/api/bracketApi'
-import withMatchTree from './brackets/shared/components/HigherOrder/WithMatchTree'
 import './styles/main.css'
 import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
 import { wpbbAppObj, WpbbBracketProductPreviewObj } from './wpbbAppObj'
@@ -15,6 +12,8 @@ import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
 import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublishBracketHandler'
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
+import EnableUpcomingNotificationModal from './modals/dashboard/brackets/EnableUpcomingNotificationModal'
+import DisableUpcomingNotificationModal from './modals/dashboard/brackets/DisableUpcomingNotificationModal'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -57,6 +56,7 @@ if (window.hasOwnProperty('wpbb_app_obj')) {
   renderViewBracketPlay(ajaxObj)
   renderMyBracketsModals(ajaxObj)
   renderBustBracketPlay(ajaxObj)
+  renderPublicBracketsModals(ajaxObj)
   addClickHandlers(ajaxObj)
   insertElements(ajaxObj)
 } else {
@@ -207,6 +207,15 @@ function renderMyBracketsModals(ajaxObj: wpbbAppObj) {
       />
     </>,
     'wpbb-my-brackets-modals'
+  )
+}
+function renderPublicBracketsModals(ajaxObj: wpbbAppObj) {
+  renderDiv(
+    <>
+      <EnableUpcomingNotificationModal />
+      <DisableUpcomingNotificationModal />
+    </>,
+    'wpbb-public-bracket-modals'
   )
 }
 function addClickHandlers(ajaxObj: wpbbAppObj) {

@@ -1,4 +1,7 @@
-import { ActionButton } from '../brackets/shared/components/ActionButtons'
+import {
+  ActionButton,
+  ActionButtonProps,
+} from '../brackets/shared/components/ActionButtons'
 import * as React from 'react'
 
 export const DangerButton = (props: {
@@ -24,11 +27,7 @@ export const DangerButton = (props: {
   )
 }
 
-export const ConfirmButton = (props: {
-  disabled: boolean
-  onClick: () => void
-  children?: React.ReactNode
-}) => {
+export const ConfirmButton = (props: ActionButtonProps) => {
   return (
     <ActionButton
       variant="green"
@@ -36,14 +35,11 @@ export const ConfirmButton = (props: {
       paddingX={16}
       fontSize={16}
       fontWeight={700}
-      disabled={props.disabled}
-      onClick={props.onClick}
       className={
         (props.disabled ? '' : 'hover:tw-text-white/75') + ' tw-w-full'
       }
-    >
-      {props.children}
-    </ActionButton>
+      {...props}
+    />
   )
 }
 export const CancelButton = (props: { onClick: () => void }) => {

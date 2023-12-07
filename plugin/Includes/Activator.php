@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
+use WStrategies\BMB\Includes\Repository\NotificationRepo;
+
 /**
  * Fired during plugin activation
  *
@@ -41,6 +43,7 @@ class Activator {
     self::create_matches_table($prefix); // associated with bracket templates
     self::create_match_picks_table($prefix); // associated with bracket plays
     self::create_bracket_results_table($prefix); // associated with bracket tournaments
+    (new NotificationRepo())->create_notification_table();
   }
 
   // WARNING: This function will delete all bracket data

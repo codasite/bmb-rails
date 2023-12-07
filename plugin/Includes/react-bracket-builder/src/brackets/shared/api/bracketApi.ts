@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react'
-import { PlayReq, PlayRes, BracketReq, BracketRes } from './types/bracket'
+import { BracketReq, BracketRes, PlayReq, PlayRes } from './types/bracket'
+import { NotificationReq } from './types/notification'
 
 interface RequestOptions {
   method?: string
@@ -11,6 +12,7 @@ declare var wpbb_app_obj: any
 class BracketApi {
   private baseUrl: string = ''
   private bracketsPath: string = 'brackets'
+  private notificationsPath: string = 'notifications'
   private playsPath: string = 'plays'
   private nonce: string = ''
   constructor() {
@@ -18,6 +20,20 @@ class BracketApi {
       this.baseUrl = wpbb_app_obj.rest_url
       this.nonce = wpbb_app_obj.nonce
     }
+  }
+  async removeNotification(notificationId: number): Promise<boolean> {
+    const options: RequestOptions = { method: 'DELETE' }
+    return await this.performRequest(
+      `${this.notificationsPath}/${notificationId}`,
+      options
+    )
+  }
+
+  async createNotification(
+    notification: Partial<NotificationReq>
+  ): Promise<NotificationReq> {
+    const options: RequestOptions = { method: 'POST', body: notification }
+    return await this.performRequest(this.notificationsPath, options)
   }
   async createBracket(bracket: BracketReq): Promise<BracketRes> {
     const options: RequestOptions = { method: 'POST', body: bracket }

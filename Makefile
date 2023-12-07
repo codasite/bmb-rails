@@ -4,7 +4,7 @@ wp-pull:
 
 # Start all wordpress containers
 wp-up:
-	docker compose --profile wp up --build --remove-orphans
+	docker compose --profile wp up --build --remove-orphans;
 
 # Start all wordpress containers in detached mode for ci
 wp-up-detach:
@@ -27,8 +27,9 @@ wp-init:
 	docker exec wp-dev create-admin-user.sh
 
 # Run tests
+# run a single test like this: make wp-test args="--filter NotificationRepoTest"
 wp-test:
-	docker exec wp-dev composer test
+	docker exec wp-dev composer test -- $(args)
 
 # Run tests with coverage
 wp-cover:
@@ -59,11 +60,17 @@ down:
 pretty:
 	npm run pretty
 
-wp-start:
-	cd plugin/includes/react-bracket-builder && npm run start
+react-start:
+	cd plugin/Includes/react-bracket-builder && npm run start
 
-wp-build:
-	cd plugin/includes/react-bracket-builder && npm run build
+react-build:
+	cd plugin/Includes/react-bracket-builder && npm run build
+
+react-install:
+	cd plugin/Includes/react-bracket-builder && npm install
+
+composer-install:
+	cd plugin && composer install
 
 prod-up:
 	docker compose -f compose.yaml -f compose.prod.yaml up --build -d --remove-orphans

@@ -37,7 +37,6 @@ class ProductPreviewService {
   }
 
   public function get_ajax_obj() {
-    $this->utils->log('get_ajax_obj');
     $post = get_post();
     // check if post is product
     if (!$post || $post->post_type !== 'product') {

@@ -303,6 +303,8 @@ export const ActionButton = (props: ActionButtonProps) => {
       return <WhiteButton {...props} />
     case 'red':
       return <RedButton {...props} />
+    // case 'grey':
+    //   return <GreyButton {...props} />
     default:
       return <ActionButtonBase {...props} />
   }
