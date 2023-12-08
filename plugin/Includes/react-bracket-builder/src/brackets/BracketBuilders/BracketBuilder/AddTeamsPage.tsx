@@ -95,7 +95,9 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
       >
         <div>
           <div
-            className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-dark`}
+            className={`tw-flex tw-flex-col tw-justify-center tw-items-center tw-dark ${
+              showPaginated ? 'tw-overflow-hidden' : ''
+            }`}
           >
             {matchTree && !showPaginated && (
               <AddTeamsBracket
