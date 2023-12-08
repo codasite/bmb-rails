@@ -49,3 +49,4 @@ class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
     );
   }
 }
+
