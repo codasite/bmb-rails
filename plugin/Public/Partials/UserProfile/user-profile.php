@@ -39,4 +39,5 @@ $plays = $play_repo->get_all([
     </div>
     <?php echo BracketsCommon::public_bracket_list( [ 'author' => $user_profile->author, 'tags' => [ 'bmb_vip_profile' ] ] ); ?>
   </div>
+  <div id='wpbb-public-bracket-modals'></div>
 </div>
