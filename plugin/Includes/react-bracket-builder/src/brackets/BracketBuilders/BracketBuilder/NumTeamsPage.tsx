@@ -189,7 +189,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
           }`}
         >
           <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24">
-            How Many total teams in Your Bracket?
+            How Many Teams in Your Bracket?
           </span>
           <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-24">
             {teamPickerState.map((pickerState, i) => {
