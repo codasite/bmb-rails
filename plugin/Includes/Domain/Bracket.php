@@ -177,7 +177,9 @@ class Bracket extends PostBase implements PostBracketInterface {
     $bracket['wildcard_placement'] = $this->wildcard_placement;
     $bracket['month'] = $this->month;
     $bracket['year'] = $this->year;
-    $bracket['results_first_updated_at'] = $this->results_first_updated_at;
+    $bracket['results_first_updated_at'] = $this->results_first_updated_at
+      ? $this->results_first_updated_at->format('Y-m-d H:i:s')
+      : false;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {

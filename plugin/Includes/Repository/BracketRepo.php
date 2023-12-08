@@ -131,7 +131,7 @@ class BracketRepo extends CustomPostRepoBase {
       return null;
     }
 
-    $bracket_data = $this->get_bracket_data($bracket_post);
+    $bracket_data = $this->get_bracket_data($bracket_post->ID);
     if (!isset($bracket_data['id'])) {
       return null;
     }
@@ -180,14 +180,14 @@ class BracketRepo extends CustomPostRepoBase {
     Bracket|int|null $bracket,
     array|null $data = null
   ): ?Bracket {
-    if ($bracket === null || empty($data)) {
+    if ($bracket === null) {
       return null;
     }
     if (!($bracket instanceof Bracket)) {
       $bracket = $this->get($bracket);
     }
     $array = $bracket->to_array();
-    $updated_array = array_merge($array, $data);
+    $updated_array = empty($data) ? $array : array_merge($array, $data);
 
     $bracket = Bracket::from_array($updated_array);
 
@@ -197,7 +197,8 @@ class BracketRepo extends CustomPostRepoBase {
       return null;
     }
 
-    $this->update_bracket_data($post_id, $data, true);
+    $this->update_bracket_data($post_id, $updated_array);
+    // $this->update_teams($bracket->matches);
 
     $bracket_data = $this->get_bracket_data($post_id);
     $bracket_id = $bracket_data['id'];
@@ -237,15 +238,17 @@ class BracketRepo extends CustomPostRepoBase {
             $new_result->match_index === $old_result->match_index
           ) {
             $pick_exists = true;
-            $this->wpdb->update(
-              $this->results_table(),
-              [
-                'winning_team_id' => $new_result->winning_team_id,
-              ],
-              [
-                'id' => $old_result->id,
-              ]
-            );
+            if ($new_result->winning_team_id !== $old_result->winning_team_id) {
+              $this->wpdb->update(
+                $this->results_table(),
+                [
+                  'winning_team_id' => $new_result->winning_team_id,
+                ],
+                [
+                  'id' => $old_result->id,
+                ]
+              );
+            }
           }
         }
         if (!$pick_exists) {
@@ -259,16 +262,24 @@ class BracketRepo extends CustomPostRepoBase {
     }
   }
 
+  private function update_teams(array $new_matches): void {
+    foreach ($new_matches as $match) {
+      $this->team_repo->update($match->team1->id, $match->team1);
+      $this->team_repo->update($match->team2->id, $match->team2);
+    }
+  }
+
   private function update_bracket_data(
     int $id,
     array $data,
-    bool $use_post_id = false
+    bool $use_post_id = true
   ): void {
+    $old_data = $this->get_bracket_data($id, $use_post_id);
     $id_field = $use_post_id ? 'post_id' : 'id';
     $update_fields = ['results_first_updated_at'];
     $update_data = [];
     foreach ($data as $key => $value) {
-      if (in_array($key, $update_fields)) {
+      if (in_array($key, $update_fields) && $value !== $old_data[$key]) {
         $update_data[$key] = $value;
       }
     }
@@ -280,24 +291,13 @@ class BracketRepo extends CustomPostRepoBase {
     ]);
   }
 
-  public function get_bracket_data(int|WP_Post|null $bracket_post): array {
-    if (
-      !$bracket_post ||
-      ($bracket_post instanceof WP_Post &&
-        $bracket_post->post_type !== Bracket::get_post_type())
-    ) {
-      return [];
-    }
-
-    if ($bracket_post instanceof WP_Post) {
-      $bracket_post = $bracket_post->ID;
-    }
-
+  public function get_bracket_data(int|null $id, $use_post_id = true): array {
+    $id_field = $use_post_id ? 'post_id' : 'id';
     $table_name = $this->brackets_table();
     $bracket_data = $this->wpdb->get_row(
       $this->wpdb->prepare(
-        "SELECT * FROM $table_name WHERE post_id = %d",
-        $bracket_post
+        "SELECT * FROM $table_name WHERE $id_field = %d",
+        $id
       ),
       ARRAY_A
     );

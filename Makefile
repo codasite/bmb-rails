@@ -39,6 +39,9 @@ wp-cover:
 wp-log:
 	docker exec wp-dev tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
 
+wp-log-watch:
+	docker exec wp-dev tail -f /var/www/html/wp-content/debug.log | grep -v 'deprecated'
+
 # Dump the database into the mariadb init folder
 wp-dump:
 	docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'

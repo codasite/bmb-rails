@@ -11,11 +11,6 @@ use WStrategies\BMB\Includes\Utils;
  */
 class BracketTeamRepo {
   /**
-   * @var Utils
-   */
-  private $utils;
-
-  /**
    * @var wpdb
    */
   private $wpdb;
@@ -23,7 +18,6 @@ class BracketTeamRepo {
   public function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
-    $this->utils = new Utils();
   }
 
   /**
@@ -70,8 +64,25 @@ class BracketTeamRepo {
     return $team;
   }
 
-  public function update(int $id, Team $team): ?Team {
-    throw new Exception('Not implemented');
+  public function update(int|null $id, Team|null $new_team): ?Team {
+    if ($id === null || empty($new_team)) {
+      return null;
+    }
+    $old_team = $this->get($id);
+    if (!$old_team) {
+      return null;
+    }
+    if ($new_team->name !== $old_team->name) {
+      $this->wpdb->update(
+        $this->team_table(),
+        ['name' => $new_team->name],
+        ['id' => $id]
+      );
+      $updated = $this->get($id);
+      return $this->get($id);
+    } else {
+    }
+    return $old_team;
   }
 
   public function team_table(): string {

@@ -2,3 +2,26 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+.wpbb-bracket-teams-table {
+  border: 1px solid #dcdcde;
+  border-spacing: 0;
+  background-color: #f6f7f7;
+  width: 100%;
+  max-width: 600px;
+}
+
+.wpbb-bracket-teams-table input {
+  margin: 8px;
+}
+
+.wpbb-bracket-teams-table th {
+  background-color: #f0f0f1;
+  padding: 5px 8px 8px;
+}
+
+.wpbb-bracket-teams-table th,
+.wpbb-bracket-teams-table td {
+  /* padding: 5px; */
+  text-align: center;
+}

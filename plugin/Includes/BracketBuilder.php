@@ -4,6 +4,7 @@ use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Controllers\NotificationApi;
 use WStrategies\BMB\Includes\Hooks\AdminHooks;
+use WStrategies\BMB\Includes\Hooks\BracketAdminHooks;
 use WStrategies\BMB\Includes\Hooks\CustomPostHooks;
 use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
@@ -109,6 +110,7 @@ class BracketBuilder {
       new NotificationApi(),
       new Permissions(),
       new UpcomingBracketHooks(),
+      new BracketAdminHooks(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

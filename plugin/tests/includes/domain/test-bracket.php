@@ -133,6 +133,9 @@ class BracketTest extends WPBB_UnitTestCase {
     $this->assertEquals(0, $array['wildcard_placement']);
     $this->assertEquals(1, count($array['matches']));
     $this->assertEquals(1, count($array['results']));
-    $this->assertEquals($now, $array['results_first_updated_at']);
+    $this->assertEquals(
+      $now->format('Y-m-d H:i:s'),
+      $array['results_first_updated_at']
+    );
   }
 }

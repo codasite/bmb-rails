@@ -202,6 +202,10 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $bracket = $this->bracket_repo->get($bracket->id);
 
     $this->assertEquals(2, count($bracket->results));
+    $this->assertEquals(
+      $bracket->matches[0]->team1->id,
+      $bracket->results[0]->winning_team_id
+    );
   }
 
   public function test_update_empty_results_sets_results_first_updated_at() {
@@ -263,4 +267,19 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $this->assertEquals($user2->ID, $updated->author);
   }
+
+  // public function test_update_teams() {
+  //   $bracket = self::factory()->bracket->create_object([
+  //     'status' => 'publish',
+  //     'num_teams' => 4,
+  //   ]);
+
+  //   $bracket->matches[0]->team1->name = 'New Team 1';
+  //   $bracket->matches[0]->team2->name = 'New Team 2';
+
+  //   $updated = $this->bracket_repo->update($bracket);
+
+  //   $this->assertEquals('New Team 1', $updated->matches[0]->team1->name);
+  //   $this->assertEquals('New Team 2', $updated->matches[0]->team2->name);
+  // }
 }

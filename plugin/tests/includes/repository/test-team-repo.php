@@ -44,4 +44,29 @@ class TeamRepoTest extends WPBB_UnitTestCase {
     $this->assertNotNull($team->id);
     $this->assertEquals($dirty_name, $team->name);
   }
+
+  public function test_update() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $team1 = $bracket->matches[0]->team1;
+    $team1->name = 'Team 1 Updated';
+    $this->team_repo->update($team1->id, $team1);
+
+    $team1 = $this->team_repo->get($team1->id);
+
+    $this->assertEquals('Team 1 Updated', $team1->name);
+  }
 }
