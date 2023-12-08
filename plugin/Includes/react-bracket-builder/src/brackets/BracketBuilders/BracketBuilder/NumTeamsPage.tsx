@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { NumTeamsPicker } from './NumTeamsPicker'
 import { MatchTree } from '../../shared/models/MatchTree'
-//@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import { BracketPreview } from './BracketPreview'
 import { isPowerOfTwo } from '../../shared/components/Bracket/utils'
