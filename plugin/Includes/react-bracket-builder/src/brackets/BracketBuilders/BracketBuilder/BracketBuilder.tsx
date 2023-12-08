@@ -14,7 +14,6 @@ import { BracketMeta } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
 
-const defaultBracketName = 'MY BRACKET NAME'
 const defaultInitialPickerIndex = 0
 const teamPickerDefaults = [16, 32, 64]
 const teamPickerMin = [4, 17, 33]
@@ -64,7 +63,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
 
   useEffect(() => {
     setBracketMeta?.({
-      title: bracketMeta?.title || defaultBracketName,
+      title: bracketMeta?.title || '',
       date: bracketMeta?.date || '',
     })
   }, [])
