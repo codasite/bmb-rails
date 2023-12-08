@@ -8,61 +8,12 @@ import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { BracketMeta } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
-
-interface BracketTitleProps {
-  title: string
-  setTitle: (title: string) => void
-}
-
-const BracketTitle = (props: BracketTitleProps) => {
-  const { title, setTitle } = props
-
-  const [editing, setEditing] = useState(false)
-  const [textBuffer, setTextBuffer] = useState(title)
-
-  const startEditing = () => {
-    setEditing(true)
-    setTextBuffer(title)
-  }
-  const doneEditing = (event: any) => {
-    setTitle(textBuffer)
-    setEditing(false)
-  }
-
-  return (
-    <div
-      className="tw-flex tw-justify-center tw-border-b-solid tw-border-white/30 tw-p-16 "
-      onClick={startEditing}
-    >
-      {editing ? (
-        <input
-          className="tw-py-0 tw-outline-none tw-border-none tw-bg-transparent tw-text-24 sm:tw-text-32 tw-text-white tw-text-center tw-font-sans tw-w-full tw-uppercase"
-          autoFocus
-          onFocus={(e) => e.target.select()}
-          type="text"
-          value={textBuffer}
-          onChange={(e) => setTextBuffer(e.target.value)}
-          onBlur={doneEditing}
-          onKeyUp={(e) => {
-            if (e.key === 'Enter') {
-              doneEditing(e)
-            }
-          }}
-        />
-      ) : (
-        <h1 className="tw-font-500 tw-text-24 sm:tw-text-32 !tw-text-white/20 tw-text-center">
-          {title}
-        </h1>
-      )}
-    </div>
-  )
-}
+import { BracketTitle } from './BracketTitle'
 
 export interface NumTeamsPickerState {
   currentValue: number
   selected: boolean
 }
-
 interface NumTeamsPageProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
@@ -98,7 +49,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     setTeamPickerState,
   } = props
 
-  // const [numTeams, setNumTeams] = useState(teamPickerDefaults[initialPickerIndex])
+  const [showTitleError, setShowTitleError] = useState(false)
 
   // Update the global `numTeams` variable whenever picker state changes
   useEffect(() => {
@@ -199,6 +150,20 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     setWildcardPlacement(placement)
   }
 
+  const handleAddTeamsClick = () => {
+    if (!bracketMeta.title) {
+      setShowTitleError(true)
+      // scroll to top of page
+      window.scrollTo(0, 0)
+    } else {
+      onAddTeamsClick()
+    }
+  }
+
+  const onTitleChange = (event: any) => {
+    setShowTitleError(false)
+  }
+
   return (
     <div
       className="tw-bg-no-repeat tw-bg-top tw-bg-cover"
@@ -207,7 +172,11 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
       <div className="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
         <BracketTitle
           title={bracketMeta.title}
+          placeholder="Name Your Bracket"
           setTitle={(title) => setBracketMeta({ ...bracketMeta, title })}
+          onChange={onTitleChange}
+          showError={showTitleError}
+          errorMessage="Bracket name is required."
         />
         {matchTree && (
           <div>
@@ -220,7 +189,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
           }`}
         >
           <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24">
-            How Many total teams in Your Bracket
+            How Many total teams in Your Bracket?
           </span>
           <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-24">
             {teamPickerState.map((pickerState, i) => {
@@ -251,7 +220,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
         {/* <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
           <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans '>Add Your Teams</span>
         </button> */}
-        <ActionButton variant="green" onClick={onAddTeamsClick}>
+        <ActionButton variant="green" onClick={handleAddTeamsClick}>
           <span className="tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
             Add Your Teams
           </span>
