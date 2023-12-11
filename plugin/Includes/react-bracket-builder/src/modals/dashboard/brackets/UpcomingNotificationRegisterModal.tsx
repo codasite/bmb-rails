@@ -27,7 +27,7 @@ export default function UpcomingNotificationRegisterModal() {
             window.location.href = '/my-account'
           }}
         >
-          <span>Sign in or register</span>
+          <span>Sign in/register</span>
         </ConfirmButton>
         <CancelButton onClick={() => setShow(false)} />
       </div>
