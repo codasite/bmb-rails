@@ -158,6 +158,10 @@ class UpcomingBracketHooks implements HooksInterface {
   public function create_upcoming_bracket_notification($user_id) {
     $upcoming_bracket_id = $this->utils->pop_cookie('wpbb_upcoming_bracket_id');
 
+    if (!$upcoming_bracket_id) {
+      return;
+    }
+
     $bracket = $this->bracket_repo->get($upcoming_bracket_id);
 
     if (!$bracket) {
