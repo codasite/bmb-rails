@@ -203,4 +203,23 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
       $notification->notification_type
     );
   }
+
+  public function test_notification_is_not_created_when_bracket_does_not_exist() {
+    $user = self::factory()->user->create_and_get();
+    $user_id = $user->ID;
+
+    $utils_mock = $this->createMock(Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('pop_cookie')
+      ->with($this->equalTo('wpbb_upcoming_bracket_id'))
+      ->willReturn(999);
+    $hooks = new UpcomingBracketHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->create_upcoming_bracket_notification($user_id);
+
+    $notification_repo_mock = $this->createMock(NotificationRepo::class);
+    $notification_repo_mock->expects($this->never())->method('add');
+  }
 }
