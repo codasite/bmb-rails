@@ -14,6 +14,7 @@ import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublish
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
 import EnableUpcomingNotificationModal from './modals/dashboard/brackets/EnableUpcomingNotificationModal'
 import DisableUpcomingNotificationModal from './modals/dashboard/brackets/DisableUpcomingNotificationModal'
+import UpcomingNotificationRegisterModal from './modals/dashboard/brackets/UpcomingNotificationRegisterModal'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -210,13 +211,22 @@ function renderMyBracketsModals(ajaxObj: wpbbAppObj) {
   )
 }
 function renderPublicBracketsModals(ajaxObj: wpbbAppObj) {
-  renderDiv(
-    <>
-      <EnableUpcomingNotificationModal />
-      <DisableUpcomingNotificationModal />
-    </>,
-    'wpbb-public-bracket-modals'
-  )
+  if (!ajaxObj.isUserLoggedIn) {
+    renderDiv(
+      <>
+        <UpcomingNotificationRegisterModal />
+      </>,
+      'wpbb-public-bracket-modals'
+    )
+  } else {
+    renderDiv(
+      <>
+        <EnableUpcomingNotificationModal />
+        <DisableUpcomingNotificationModal />
+      </>,
+      'wpbb-public-bracket-modals'
+    )
+  }
 }
 function addClickHandlers(ajaxObj: wpbbAppObj) {
   unpublishBracketHandler()

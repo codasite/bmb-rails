@@ -5,13 +5,24 @@ namespace WStrategies\BMB\Includes\Hooks;
 use Exception;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
+use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\Includes\Factory\NotificationFactory;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
+use WStrategies\BMB\Includes\Utils;
 
 class UpcomingBracketHooks implements HooksInterface {
+  private $utils;
   private $notification_service;
+  private $notification_repo;
+  private $bracket_repo;
   public const UPCOMING_NOTIFICATION_SENT_META_KEY = 'bmb_upcoming_notification_sent';
   public function __construct($args = []) {
+    $this->notification_repo =
+      $opts['notification_repo'] ?? new NotificationRepo();
+    $this->utils = $args['utils'] ?? new Utils();
+    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     try {
       $this->notification_service =
         $args['notification_service'] ??
@@ -40,6 +51,18 @@ class UpcomingBracketHooks implements HooksInterface {
       [$this, 'transition_from_upcoming_status'],
       10,
       3
+    );
+    $loader->add_action(
+      'wp_login',
+      [$this, 'create_upcoming_bracket_notification_on_login'],
+      10,
+      2
+    );
+    $loader->add_action(
+      'user_register',
+      [$this, 'create_upcoming_bracket_notification_on_register'],
+      10,
+      1
     );
   }
   /**
@@ -119,5 +142,38 @@ class UpcomingBracketHooks implements HooksInterface {
         true
       );
     }
+  }
+
+  public function create_upcoming_bracket_notification_on_login(
+    $user_login,
+    \WP_User $user
+  ) {
+    $this->create_upcoming_bracket_notification($user->ID);
+  }
+
+  public function create_upcoming_bracket_notification_on_register($user_id) {
+    $this->create_upcoming_bracket_notification($user_id);
+  }
+
+  public function create_upcoming_bracket_notification($user_id) {
+    $upcoming_bracket_id = $this->utils->pop_cookie('wpbb_upcoming_bracket_id');
+
+    if (!$upcoming_bracket_id) {
+      return;
+    }
+
+    $bracket = $this->bracket_repo->get($upcoming_bracket_id);
+
+    if (!$bracket) {
+      return;
+    }
+
+    $this->notification_repo->add(
+      NotificationFactory::create([
+        'user_id' => $user_id,
+        'post_id' => $upcoming_bracket_id,
+        'notification_type' => NotificationType::BRACKET_UPCOMING,
+      ])
+    );
   }
 }

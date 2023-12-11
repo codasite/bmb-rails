@@ -158,6 +158,7 @@ class EnqueueScriptsHooks implements HooksInterface {
         get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
       'play' => $play,
       'bracket' => $bracket,
+      'is_user_logged_in' => is_user_logged_in(),
     ]);
   }
 

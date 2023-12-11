@@ -5,6 +5,7 @@ use WP_User;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\CustomQuery\CustomPlayQuery;
 use WStrategies\BMB\Includes\Utils;
 
@@ -163,13 +164,13 @@ class PublicHooks implements HooksInterface {
     return $clauses;
   }
 
-  public function add_bmb_plus_role(\WC_Subscription $subscription) {
+  public function add_bmb_plus_role($subscription) {
     $user_id = $subscription->get_user_id();
     $user = get_user_by('id', $user_id);
     $user->add_role('bmb_plus');
   }
 
-  public function remove_bmb_plus_role(\WC_Subscription $subscription) {
+  public function remove_bmb_plus_role($subscription) {
     $user_id = $subscription->get_user_id();
     $user = get_user_by('id', $user_id);
     $user->remove_role('bmb_plus');
