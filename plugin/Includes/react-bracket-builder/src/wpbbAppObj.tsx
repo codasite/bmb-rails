@@ -14,6 +14,7 @@ export interface wpbbAppObj {
   sentryDsn: string
   bracket: BracketRes
   play: PlayRes
+  isUserLoggedIn: boolean
 }
 
 export interface WpbbBracketProductPreviewObj {
