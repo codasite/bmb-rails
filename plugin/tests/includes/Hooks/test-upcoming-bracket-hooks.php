@@ -1,16 +1,18 @@
 <?php
 
-use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
 use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
+use WStrategies\BMB\Includes\Utils;
 
 class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
   public function test_load() {
     $hooks = new UpcomingBracketHooks();
     $loader = $this->createMock(Loader::class);
     $loader
-      ->expects($this->exactly(2))
+      ->expects($this->exactly(4))
       ->method('add_action')
       ->withConsecutive(
         ['set_object_terms', [$hooks, 'update_upcoming_status'], 10, 6],
@@ -19,6 +21,18 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
           [$hooks, 'transition_from_upcoming_status'],
           10,
           3,
+        ],
+        [
+          'wp_login',
+          [$hooks, 'create_upcoming_bracket_notification_on_login'],
+          10,
+          2,
+        ],
+        [
+          'user_register',
+          [$hooks, 'create_upcoming_bracket_notification_on_register'],
+          10,
+          1,
         ]
       );
     $hooks->load($loader);
@@ -119,6 +133,74 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
       'publish',
       'upcoming',
       get_post($bracket->id)
+    );
+  }
+
+  public function test_create_upcoming_bracket_notification_on_login() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $user = self::factory()->user->create_and_get();
+    $user_id = $user->ID;
+
+    $utils_mock = $this->createMock(Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('pop_cookie')
+      ->with($this->equalTo('wpbb_upcoming_bracket_id'))
+      ->willReturn($bracket->id);
+    $hooks = new UpcomingBracketHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->create_upcoming_bracket_notification_on_login('test_login', $user);
+
+    $notification_repo = new NotificationRepo();
+    $notifications = $notification_repo->get([
+      'user_id' => $user_id,
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $this->assertEquals(1, count($notifications));
+
+    $notification = $notifications[0];
+
+    $this->assertEquals($user_id, $notification->user_id);
+    $this->assertEquals($bracket->id, $notification->post_id);
+    $this->assertEquals(
+      NotificationType::BRACKET_UPCOMING,
+      $notification->notification_type
+    );
+  }
+
+  public function test_create_upcoming_bracket_notification_on_register() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $user = self::factory()->user->create_and_get();
+    $user_id = $user->ID;
+
+    $utils_mock = $this->createMock(Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('pop_cookie')
+      ->with($this->equalTo('wpbb_upcoming_bracket_id'))
+      ->willReturn($bracket->id);
+    $hooks = new UpcomingBracketHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->create_upcoming_bracket_notification_on_register($user_id);
+
+    $notification_repo = new NotificationRepo();
+    $notifications = $notification_repo->get([
+      'user_id' => $user_id,
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $this->assertEquals(1, count($notifications));
+
+    $notification = $notifications[0];
+
+    $this->assertEquals($user_id, $notification->user_id);
+    $this->assertEquals($bracket->id, $notification->post_id);
+    $this->assertEquals(
+      NotificationType::BRACKET_UPCOMING,
+      $notification->notification_type
     );
   }
 }

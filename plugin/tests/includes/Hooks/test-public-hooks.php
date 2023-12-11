@@ -1,7 +1,9 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
+use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Utils;
 
 class PublicHooksTest extends WPBB_UnitTestCase {
