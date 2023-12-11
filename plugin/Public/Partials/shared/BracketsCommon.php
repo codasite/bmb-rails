@@ -103,7 +103,7 @@ class BracketsCommon {
 
   public static function base_btn($content, $extra_cls = []) {
     $base_cls = array( 'tw-cursor-pointer', 'tw-uppercase', 'tw-font-sans' );
-    $styles = array_merge( $base_cls, $extra_cls );
+    $styles = array_merge( $extra_cls, $base_cls );
     ob_start();
     ?>
     <button class="<?php echo implode( ' ', $styles) ?>">
@@ -115,6 +115,7 @@ class BracketsCommon {
 
   public static function red_gradient_btn($content, $extra_cls = []) {
     $btn_cls = array( 'wpbb-bg-gradient-red', 'tw-p-1', 'tw-rounded-8', 'tw-border-none' );
+    $btn_cls = array_merge( $extra_cls, $btn_cls );
     $inner_cls = array( 'tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-px-16', 'tw-py-12', 'tw-font-700', 'tw-text-16', 'tw-whitespace-nowrap', 'tw-bg-dd-blue/80', 'hover:tw-bg-transparent', 'hover:tw-text-dd-blue' );
 
     ob_start();
@@ -160,21 +161,21 @@ class BracketsCommon {
     $label = 'Notify Me';
     ob_start();
     ?> 
-    <div class="wpbb-enable-upcoming-notification-button tw-flex tw-justify-center tw-items-center tw-gap-10" data-bracket-id="<?php echo $bracket->id ?>">
+    <div class="tw-flex tw-justify-center tw-items-center tw-gap-10" data-bracket-id="<?php echo $bracket->id ?>">
       <?php echo PartialsCommon::icon( 'bell' ); ?>
       <span><?php echo esc_html( $label ) ?></span>
     </div>
     <?php
     $content = ob_get_clean();
-    return self::red_gradient_btn($content, $bracket->url);
+    return self::red_gradient_btn($content, ['wpbb-enable-upcoming-notification-button']);
   }
 
   public static function disable_upcoming_notification_btn(int $notification_id) {
-    $btn_styles = array( 'tw-bg-white/30', 'tw-text-white', 'tw-border-solid', 'tw-border-1', 'tw-border-white', 'tw-rounded-8', 'tw-px-16', 'tw-py-12', 'tw-font-700', 'tw-text-16', 'hover:tw-bg-white', 'hover:tw-text-black' );
+    $btn_styles = array( 'wpbb-disable-upcoming-notification-button', 'tw-bg-white/30', 'tw-text-white', 'tw-border-solid', 'tw-border-1', 'tw-border-white', 'tw-rounded-8', 'tw-px-16', 'tw-py-12', 'tw-font-700', 'tw-text-16', 'hover:tw-bg-white', 'hover:tw-text-black');
     $label = 'Notifying';
     ob_start();
     ?> 
-    <div class="wpbb-disable-upcoming-notification-button tw-flex tw-justify-center tw-items-center tw-gap-10" data-notification-id="<?php echo $notification_id; ?>">
+    <div class="tw-flex tw-justify-center tw-items-center tw-gap-10" data-notification-id="<?php echo $notification_id; ?>">
       <?php echo PartialsCommon::icon( 'bell_ringing' ); ?>
       <span><?php echo esc_html( $label ) ?></span>
     </div>
