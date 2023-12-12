@@ -99,14 +99,14 @@ const PlayPage = (props: PlayPageProps) => {
     bracketApi
       .createPlay(playReq)
       .then((res) => {
-        window.location.href = redirectUrl
+        window.location.assign(redirectUrl)
       })
       .catch((err) => {
         console.error('error: ', err)
+        setProcessing(false)
         Sentry.captureException(err)
       })
       .finally(() => {
-        setProcessing(false)
         console.timeEnd('createPlay')
         console.log('createPlay')
       })

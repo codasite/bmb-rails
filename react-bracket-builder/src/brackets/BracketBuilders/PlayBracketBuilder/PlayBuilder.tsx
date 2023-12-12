@@ -35,6 +35,11 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
           </div>
           <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
           <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+            {processing && (
+              <span className="tw-mb-32 tw-text-24">
+                Just a moment while we generate your bracket.
+              </span>
+            )}
             {canPlay && (
               <ActionButton
                 variant="green"
