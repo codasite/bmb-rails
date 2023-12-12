@@ -190,29 +190,33 @@ class BracketsCommon {
   public static function view_leaderboard_btn( $endpoint, $variant = 'primary', $label = 'View Leaderboard' ) {
     $final = false;
 
+    ob_start();
+    ?>
+      <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/trend_up.svg' ); ?>
+      <span class="tw-font-700 tw-text-16 tw-whitespace-nowrap"><?php echo esc_html( $label ) ?></span>
+    <?php
+    $content = ob_get_clean();
+
+    if ( $variant === 'final' ) {
+      return self::red_gradient_btn($content, ['tw-gap-10']);
+    }
+
     $base_cls = array( 'tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12' );
 
     $cls_list = array(
       'primary' => array_merge( $base_cls, array( 'tw-border-white/50', 'tw-bg-white/15', 'tw-gap-10', 'tw-px-16', 'tw-py-12', 'hover:tw-bg-white', 'hover:tw-text-black' ) ),
       'compact' => array_merge( $base_cls, array( 'tw-border-white/50', 'tw-bg-white/15', 'tw-gap-4', 'sm:tw-px-8', 'sm:tw-py-4', 'hover:tw-bg-white', 'hover:tw-text-black' ) ),
-      'final'   => array_merge( $base_cls, array( 'wpbb-view-final-leaderboard-btn', 'tw-border-transparent', 'tw-bg-clip-padding', 'tw-gap-10', 'tw-px-16', 'tw-py-12' ) ),
     );
-
-    if ( $variant === 'final' ) {
-      $label = 'View Final Leaderboard';
-      $final = true;
-    }
 
     ob_start();
     ?>
     <a class="<?php echo implode( ' ', $cls_list[ $variant ] ) ?>" href="<?php echo esc_url( $endpoint ) ?>">
-      <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/trend_up.svg' ); ?>
-      <span class="tw-font-700 tw-text-16 tw-whitespace-nowrap"><?php echo esc_html( $label ) ?></span>
+      <?php echo $content ?>
     </a>
     <?php
     $btn = ob_get_clean();
 
-    return $final ? PartialsCommon::gradient_border_wrap( $btn, array( 'wpbb-leaderboard-gradient-border tw-rounded-8' ) ) : $btn;
+    return $btn;
   }
 
   public static function bracket_sort_buttons() {
@@ -270,7 +274,7 @@ class BracketsCommon {
 
     ob_start();
     ?>
-    <div class="tw-flex">
+    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
       <!-- This goes to the Leaderboard page -->
       <?php echo self::view_leaderboard_btn( $leaderboard_link, 'final' ); ?>
       <?php echo self::bracket_chat_btn( $bracket->id ); ?>
