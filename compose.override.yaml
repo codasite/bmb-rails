@@ -132,7 +132,7 @@ services:
     container_name: wp-import
     build:
       context: .
-      dockerfile: ./docker/wordpress/Dockerfile.import
+      dockerfile: docker/wordpress/import.Dockerfile
       args:
         PLUGIN_NAME: wp-bracket-builder
     restart: unless-stopped

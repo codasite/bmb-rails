@@ -5,7 +5,7 @@ services:
     tty: true
     build:
       context: .
-      dockerfile: ./docker/wordpress/Dockerfile.test
+      dockerfile: docker/wordpress/test.Dockerfile
       args:
         PLUGIN_NAME: wp-bracket-builder
     environment:

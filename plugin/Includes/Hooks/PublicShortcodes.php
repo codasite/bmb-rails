@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 class PublicShortcodes implements HooksInterface {
   public function load(Loader $loader): void {
@@ -16,12 +17,6 @@ class PublicShortcodes implements HooksInterface {
 
   public function render_bracket_builder() {
     return '<div id="wpbb-bracket-builder"></div>';
-  }
-
-  public function render_dashboard() {
-    ob_start();
-    include WPBB_PLUGIN_DIR . 'Public/Partials/dashboard/dashboard.php';
-    return ob_get_clean();
   }
 
   public function render_official_brackets() {
@@ -61,7 +56,7 @@ class PublicShortcodes implements HooksInterface {
    */
   public function add_shortcodes() {
     add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']); // This is a page with slug `bracket-template-builder
-    add_shortcode('wpbb-dashboard', [$this, 'render_dashboard']); // This is a page with slug `dashboard`
+    add_shortcode('wpbb-dashboard', [DashboardPage::class, 'render']); // This is a page with slug `dashboard`
     add_shortcode('wpbb-official-brackets', [
       $this,
       'render_official_brackets',
