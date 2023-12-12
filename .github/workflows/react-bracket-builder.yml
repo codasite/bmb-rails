@@ -3,12 +3,9 @@ name: react-bracket-builder workflow
 on:
   push:
     branches: ['main']
-    paths:
-      - 'plugin/includes/react-bracket-builder/**'
   pull_request:
-    branches: ['main']
     paths:
-      - 'plugin/includes/react-bracket-builder/**'
+      - 'react-bracket-builder/**'
 
 jobs:
   test:
@@ -19,5 +16,5 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-      - run: npm ci --prefix plugin/includes/react-bracket-builder
-      - run: npm run test --prefix plugin/includes/react-bracket-builder
+      - run: npm ci --prefix react-bracket-builder
+      - run: npm run test --prefix react-bracket-builder

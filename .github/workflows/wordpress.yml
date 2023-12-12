@@ -1,0 +1,24 @@
+name: wordpress workflow
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    paths:
+      - 'plugin/**'
+
+env:
+  PROJECT_NAME: github_runner
+  SERVICE_NAME: wp-test-1
+
+jobs:
+  wordpress:
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v3
+      - run: docker compose -f compose.runner.yaml -p $PROJECT_NAME up --build --detach --remove-orphans
+      - run: docker exec  ${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} composer install
+      - run: docker exec ${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} install-wp-tests
+      - run: docker exec ${{ env.PROJECT_NAME }}-${{ env.SERVICE_NAME }} composer test
+      - run: docker compose -p $PROJECT_NAME down -v
+        if: ${{ always() }}

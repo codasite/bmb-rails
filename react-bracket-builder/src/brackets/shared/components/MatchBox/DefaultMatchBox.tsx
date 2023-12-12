@@ -1,5 +1,5 @@
 import React from 'react'
-import { MatchBoxProps } from '../types'
+import { MatchBoxProps, TeamPosition } from '../types'
 import { Nullable } from '../../../../utils/types'
 //@ts-ignore
 import { BaseTeamSlot } from '../TeamSlot'
@@ -32,7 +32,7 @@ export const DefaultMatchBox = (props: MatchBoxProps) => {
 
   const getTeamSlot = (
     team: Nullable<Team> | undefined,
-    teamPosition: string
+    teamPosition: TeamPosition
   ) => {
     return (
       <TeamSlotComponent

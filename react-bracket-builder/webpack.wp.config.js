@@ -6,7 +6,10 @@ module.exports = {
   ...defaults,
   output: {
     ...defaults.output,
-    path: path.resolve(__dirname, 'build', 'wordpress'),
+    path: path.resolve(
+      __dirname,
+      '../plugin/Includes/react-bracket-builder/build/wordpress'
+    ),
   },
   externals: {
     react: 'React',

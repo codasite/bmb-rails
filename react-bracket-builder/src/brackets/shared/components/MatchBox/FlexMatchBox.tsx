@@ -1,5 +1,5 @@
 import React from 'react'
-import { MatchBoxProps } from '../types'
+import { MatchBoxProps, TeamPosition } from '../types'
 import { Nullable } from '../../../../utils/types'
 //@ts-ignore
 import { FlexTeamSlot } from '../TeamSlot'
@@ -31,7 +31,7 @@ export const FlexMatchBox = (props: MatchBoxProps) => {
 
   const getTeamSlot = (
     team: Nullable<Team> | undefined,
-    teamPosition: string
+    teamPosition: TeamPosition
   ) => {
     return (
       <TeamSlotComponent

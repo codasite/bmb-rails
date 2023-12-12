@@ -20,6 +20,7 @@ import {
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
+import { MatchTreeStorage } from './MatchTreeStorage'
 
 interface PlayPageProps {
   redirectUrl: string
@@ -54,13 +55,17 @@ const PlayPage = (props: PlayPageProps) => {
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
   const canPlay = bracket?.status !== 'upcoming'
+  const matchTreeStorage = new MatchTreeStorage(
+    'loadStoredPicks',
+    'wpbb_play_data_'
+  )
 
   useEffect(() => {
-    let tree: Nullable<MatchTree> = null
+    let tree: Nullable<MatchTree> = matchTreeStorage.loadMatchTree(bracket?.id)
     if (bracket) {
       const numTeams = bracket.numTeams
       const matches = bracket.matches
-      tree = MatchTree.fromMatchRes(numTeams, matches)
+      tree = tree ?? MatchTree.fromMatchRes(numTeams, matches)
       const meta = getBracketMeta(bracket)
       setBracketMeta?.(meta)
     }
@@ -68,6 +73,11 @@ const PlayPage = (props: PlayPageProps) => {
       setMatchTree(tree)
     }
   }, [])
+
+  const setMatchTreeAndSaveInStorage = (tree: MatchTree) => {
+    setMatchTree(tree)
+    matchTreeStorage.storeMatchTree(tree, bracket?.id)
+  }
 
   const handleApparelClick = () => {
     const picks = matchTree?.toMatchPicks()
@@ -104,7 +114,7 @@ const PlayPage = (props: PlayPageProps) => {
 
   const playBuilderProps = {
     matchTree,
-    setMatchTree: canPlay ? setMatchTree : undefined,
+    setMatchTree: canPlay ? setMatchTreeAndSaveInStorage : undefined,
     handleApparelClick,
     processing,
     darkMode,

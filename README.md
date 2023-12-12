@@ -100,7 +100,7 @@ Serves an express api that image-generator can query to generate the screenshot.
 
 |             |                                          |     |
 | ----------- | ---------------------------------------- | --- |
-| root dir    | `/plugin/includes/react-bracket-builder` |     |
+| root dir    | `/react-bracket-builder` |     |
 | port        | :8080                                    |     |
 | dev script  | `npm run dev:standalone`                 |     |
 | prod script | `npm run build:standalone`               |     |

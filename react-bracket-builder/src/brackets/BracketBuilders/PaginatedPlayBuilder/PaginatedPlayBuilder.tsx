@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { PlayBuilderProps } from '../PlayBracketBuilder/types'
-import { PaginatedPickableBracket } from '../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
 import { PickableBracketPage } from './PickableBracketPage'
 import { FullBracketPage } from './FullBracketPage'
@@ -16,19 +15,16 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
     canPlay,
   } = props
 
-  const [page, setPage] = useState('landing')
-
-  useEffect(() => {
-    if (!matchTree || !canPlay) {
-      return
+  const [page, setPage] = useState(() => {
+    if (matchTree && canPlay) {
+      if (matchTree.allPicked()) {
+        return 'final'
+      } else if (matchTree.anyPicked()) {
+        return 'bracket'
+      }
     }
-    if (matchTree.allPicked()) {
-      console.log('all picked')
-      setPage('final')
-    } else if (matchTree.anyPicked()) {
-      setPage('bracket')
-    }
-  }, [])
+    return 'landing'
+  })
 
   const onStart = () => {
     setPage('bracket')

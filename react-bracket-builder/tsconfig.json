@@ -1,5 +1,9 @@
 {
-  "include": ["./**/*.tsx", "src/custom.d.ts"],
+  "include": [
+    "./**/*.tsx",
+    "src/custom.d.ts",
+    "node_modules/ts-jest/globals.d.ts"
+  ],
   "compilerOptions": {
     "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,

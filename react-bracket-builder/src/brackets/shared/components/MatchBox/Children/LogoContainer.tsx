@@ -1,5 +1,4 @@
 import React from 'react'
-//@ts-ignore
 import { ReactComponent as BracketLogo } from '../../../assets/BMB-ICON-CURRENT.svg'
 
 interface LogoContainerProps {

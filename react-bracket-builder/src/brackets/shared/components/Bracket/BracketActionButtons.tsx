@@ -1,10 +1,8 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { ActionButton, ActionButtonProps } from '../ActionButtons'
-import { BracketActionButtonProps, PaginatedNavButtonsProps } from '../types'
-import { CallbackContext } from '../../context/context'
+import { PaginatedNavButtonsProps } from '../types'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
-import { Next } from 'react-bootstrap/esm/PageItem'
 import { ReactComponent as EditIcon } from '../../assets/edit-icon.svg'
 
 export const PaginatedBracketButton = (props: ActionButtonProps) => {

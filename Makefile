@@ -64,13 +64,16 @@ pretty:
 	npm run pretty
 
 react-start:
-	cd plugin/Includes/react-bracket-builder && npm run start
+	cd react-bracket-builder && npm run start
 
 react-build:
-	cd plugin/Includes/react-bracket-builder && npm run build
+	cd react-bracket-builder && npm run build
 
 react-install:
-	cd plugin/Includes/react-bracket-builder && npm install
+	cd react-bracket-builder && npm install
+
+react-test:
+	cd react-bracket-builder && npm run test
 
 composer-install:
 	cd plugin && composer install
