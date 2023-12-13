@@ -192,13 +192,15 @@ class BracketsCommon {
 
     ob_start();
     ?>
-      <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/trend_up.svg' ); ?>
-      <span class="tw-font-700 tw-text-16 tw-whitespace-nowrap"><?php echo esc_html( $label ) ?></span>
+      <div class="tw-flex tw-justify-center tw-items-center tw-gap-10">
+        <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/trend_up.svg' ); ?>
+        <span class="tw-font-700 tw-text-16 tw-whitespace-nowrap"><?php echo esc_html( $label ) ?></span>
+      </div>
     <?php
     $content = ob_get_clean();
 
     if ( $variant === 'final' ) {
-      return self::red_gradient_btn($content, ['tw-gap-10']);
+      return self::red_gradient_btn($content);
     }
 
     $base_cls = array( 'tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12' );
