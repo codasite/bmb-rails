@@ -3,15 +3,17 @@ import userEvent from '@testing-library/user-event'
 import PlayBracketPage from './PlayBracketPage'
 import { MatchTree } from '../../shared/models/MatchTree'
 import '@testing-library/jest-dom/jest-globals'
-import { MatchTreeStorage } from './MatchTreeStorage'
+import { PlayStorage } from '../../shared/storages/PlayStorage'
+import { MatchPick, MatchRes } from '../../shared/api/types/bracket'
+import { BracketApi, bracketApi } from '../../shared/api/bracketApi'
+import { jest } from '@jest/globals'
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve(),
-    ok: true,
-  } as Response)
-)
+jest.mock('../../shared/api/bracketApi')
+
 describe('PlayBracketPage', () => {
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
   test('renders PlayBracketPage correctly', () => {
     const { asFragment } = render(
       <PlayBracketPage matchTree={MatchTree.fromNumTeams(10)} />
@@ -19,22 +21,70 @@ describe('PlayBracketPage', () => {
     expect(asFragment()).toMatchSnapshot()
   })
   test('renders PlayBracketPage from sessionStorage', () => {
-    const matchTreeStorage = new MatchTreeStorage(
-      'loadStoredPicks',
-      'wpbb_play_data_'
+    const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
+    const matches: MatchRes[] = [
+      {
+        id: 9,
+        roundIndex: 0,
+        matchIndex: 0,
+        team1: { id: 17, name: 'Team 1' },
+        team2: { id: 18, name: 'Team 2' },
+      },
+      {
+        id: 10,
+        roundIndex: 0,
+        matchIndex: 1,
+        team1: { id: 19, name: 'Team 3' },
+        team2: { id: 20, name: 'Team 4' },
+      },
+      { roundIndex: 1, matchIndex: 1 },
+    ]
+    const picks: MatchPick[] = [
+      { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
+      { roundIndex: 0, matchIndex: 1, winningTeamId: 19 },
+      { roundIndex: 1, matchIndex: 1, winningTeamId: 19 },
+    ]
+
+    playStorage.storePlay(
+      {
+        bracketId: 1,
+        picks: picks,
+      },
+      1
     )
-    matchTreeStorage.storeMatchTree(MatchTree.fromNumTeams(10), 1)
     expect(window.location.search).toContain('loadStoredPicks=true')
     expect(sessionStorage.getItem('wpbb_play_data_1')).toBeTruthy()
     const { asFragment: asFragmentSession } = render(
-      <PlayBracketPage bracket={{ id: 1 }} />
+      <PlayBracketPage bracket={{ id: 1, numTeams: 4, matches: matches }} />
     )
     const { asFragment } = render(
-      <PlayBracketPage matchTree={MatchTree.fromNumTeams(10)} />
+      <PlayBracketPage matchTree={MatchTree.fromPicks(4, matches, picks)} />
     )
     expect(asFragmentSession()).toEqual(asFragment())
   })
   test('click add to apparel button', async () => {
+    jest.mock('../../shared/storages/PlayStorage')
+    PlayStorage.prototype.storePlay = jest.fn()
+    const createPlayMock = bracketApi.createPlay as jest.MockedFunction<
+      typeof bracketApi.createPlay
+    >
+    const playResMock = {
+      bracketId: 1,
+      id: 2,
+      picks: [],
+      title: 'title',
+      url: 'url',
+      status: 'status',
+      author: 3,
+      authorDisplayName: 'authorDisplayName',
+      publishedDate: {
+        date: 'date',
+        timezone_type: 1,
+        timezone: 'timezone',
+      },
+    }
+    createPlayMock.mockResolvedValue(playResMock)
+
     const matches = [
       [
         {
@@ -57,12 +107,13 @@ describe('PlayBracketPage', () => {
       [{ roundIndex: 1, matchIndex: 1, team2Wins: true }],
     ]
     const matchTree = MatchTree.deserialize({ rounds: matches })
-    const matchTreeStorage = new MatchTreeStorage(
-      'loadStoredPicks',
-      'wpbb_play_data_'
+    const { asFragment } = render(
+      <PlayBracketPage
+        matchTree={matchTree}
+        bracket={{ id: 1 }}
+        redirectUrl="#"
+      />
     )
-    matchTreeStorage.storeMatchTree(matchTree, 1)
-    const { asFragment } = render(<PlayBracketPage bracket={{ id: 1 }} />)
     expect(screen.getByText('Add to Apparel')).toBeEnabled()
     const location = window.location
     delete window.location

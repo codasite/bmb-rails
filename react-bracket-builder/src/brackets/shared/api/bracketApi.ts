@@ -9,11 +9,11 @@ interface RequestOptions {
   camelCaseResponse?: boolean
 }
 declare var wpbb_app_obj: any
-class BracketApi {
+export class BracketApi {
   private baseUrl: string = ''
   private bracketsPath: string = 'brackets'
   private notificationsPath: string = 'notifications'
-  private playsPath: string = 'plays'
+  private playPath: string = 'plays'
   private nonce: string = ''
   constructor() {
     if (typeof wpbb_app_obj !== 'undefined') {
@@ -58,7 +58,10 @@ class BracketApi {
   }
   async createPlay(play: PlayReq): Promise<PlayRes> {
     const options: RequestOptions = { method: 'POST', body: play }
-    return await this.performRequest(this.playsPath, options)
+    return await this.performRequest(this.playPath, options)
+  }
+  async getPlay(playId: number): Promise<PlayRes> {
+    return await this.performRequest(`${this.playPath}/${playId}`)
   }
   async performRequest(
     path: string,

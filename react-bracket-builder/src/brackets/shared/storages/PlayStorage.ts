@@ -1,6 +1,6 @@
-import { MatchTree } from '../../shared/models/MatchTree'
+import { PlayReq } from '../api/types/bracket'
 
-export class MatchTreeStorage {
+export class PlayStorage {
   private _searchParam: string
   private _storageKeyPrefix: string
   constructor(searchParam: string, storageKeyPrefix: string) {
@@ -8,25 +8,26 @@ export class MatchTreeStorage {
     this._storageKeyPrefix = storageKeyPrefix
   }
 
-  loadMatchTree(bracketId: number): MatchTree | null {
-    const loadStoredPicks = new URLSearchParams(window.location.search).get(
+  loadPlay(bracketId: number): PlayReq | null {
+    const shouldLoad = new URLSearchParams(window.location.search).get(
       this._searchParam
     )
-    if (!loadStoredPicks) {
+    if (!shouldLoad) {
       return null
     }
-    const storedMatchTree = sessionStorage.getItem(
+    const storedPlay = sessionStorage.getItem(
       `${this._storageKeyPrefix}${bracketId}`
     )
-    if (storedMatchTree) {
-      return MatchTree.deserialize(JSON.parse(storedMatchTree))
+    if (storedPlay) {
+      return JSON.parse(storedPlay)
     }
+    return null
   }
 
-  storeMatchTree(tree: MatchTree, bracketId: number) {
+  storePlay(play: PlayReq, bracketId: number) {
     sessionStorage.setItem(
       `${this._storageKeyPrefix}${bracketId}`,
-      JSON.stringify(tree.serialize())
+      JSON.stringify(play)
     )
     const currentUrl = new URL(window.location.href)
     currentUrl.searchParams.set(this._searchParam, 'true')

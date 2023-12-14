@@ -117,7 +117,10 @@ export const getSubsequentMatchGap = (
   return 2 * (prevMatchHeight + prevMatchGap) - matchHeight
 }
 
-export const getBracketMeta = (bracket: BracketRes): BracketMeta => {
+export const getBracketMeta = (bracket?: BracketRes): BracketMeta => {
+  if (!bracket) {
+    return null
+  }
   const { title, month, year } = bracket
   const date = [month, year].filter(Boolean).join(' ')
   return { title, date }

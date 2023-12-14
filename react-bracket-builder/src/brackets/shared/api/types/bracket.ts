@@ -31,7 +31,7 @@ export interface MatchReq {
   team2?: TeamReq
 }
 
-export interface MatchPicks {
+export interface MatchPick {
   roundIndex: number
   matchIndex: number
   winningTeamId: number
@@ -73,7 +73,7 @@ export interface BracketReq {
   status?: string
   wildcardPlacement: WildcardPlacement
   matches: MatchReq[]
-  results?: MatchPicks[]
+  results?: MatchPick[]
   updateNotifyPlayers?: boolean
 }
 export interface BracketRes extends PostBase {
@@ -84,16 +84,17 @@ export interface BracketRes extends PostBase {
   matches?: MatchRes[]
 }
 export interface PlayReq {
+  id?: number
   bracketId?: number
   title?: string
   status?: string
-  picks: MatchPicks[]
+  picks: MatchPick[]
   bustedId?: number
   generateImages?: boolean
 }
 export interface PlayRes extends PostBase {
   bracketId: number
-  picks: MatchPicks[]
+  picks: MatchPick[]
   bracket?: BracketRes
   bustedId?: number
   bustedPlay?: PlayRes

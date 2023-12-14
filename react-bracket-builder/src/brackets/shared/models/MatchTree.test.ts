@@ -1,5 +1,5 @@
 import { MatchTree } from './MatchTree'
-import { MatchPicks } from '../api/types/bracket'
+import { MatchPick } from '../api/types/bracket'
 import { describe, expect, test } from '@jest/globals'
 import { WildcardPlacement } from './WildcardPlacement'
 import { Team } from './Team'
@@ -393,7 +393,7 @@ describe('MatchTree', () => {
         team2: { id: 24, name: 'Team 8' },
       },
     ]
-    const picks: MatchPicks[] = [
+    const picks: MatchPick[] = [
       { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
       { roundIndex: 0, matchIndex: 1, winningTeamId: 20 },
       { roundIndex: 0, matchIndex: 2, winningTeamId: 21 },
@@ -942,7 +942,7 @@ describe('MatchTree', () => {
         team2: { id: 24, name: 'Team 8' },
       },
     ]
-    const picks: MatchPicks[] = [
+    const picks: MatchPick[] = [
       { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
       { roundIndex: 0, matchIndex: 1, winningTeamId: 20 },
       { roundIndex: 0, matchIndex: 2, winningTeamId: 21 },
@@ -960,5 +960,65 @@ describe('MatchTree', () => {
     expect(tree2?.rounds[0].matches[0]?.getWinner()?.id).toBe(17)
     expect(tree2?.rounds[1].matches[0]?.getWinner()?.id).toBe(17)
     expect(tree2?.rounds[2].matches[0]?.getWinner()?.id).toBe(17)
+  })
+
+  test('testing matchTree equals true', () => {
+    const matches = [
+      [
+        {
+          id: 9,
+          roundIndex: 0,
+          matchIndex: 0,
+          team1: { id: 17, name: 'Team 1' },
+          team2: { id: 18, name: 'Team 2' },
+          team1Wins: true,
+        },
+        {
+          id: 10,
+          roundIndex: 0,
+          matchIndex: 1,
+          team1: { id: 19, name: 'Team 3' },
+          team2: { id: 20, name: 'Team 4' },
+          team1Wins: true,
+        },
+      ],
+      [{ roundIndex: 1, matchIndex: 1, team2Wins: true }],
+    ]
+
+    const matchTree = MatchTree.deserialize({ rounds: matches })
+    const matchTree2 = MatchTree.deserialize({ rounds: matches })
+
+    expect(matchTree?.equals(matchTree2)).toBe(true)
+  })
+
+  test('testing matchTree equals false', () => {
+    const matches = [
+      [
+        {
+          id: 9,
+          roundIndex: 0,
+          matchIndex: 0,
+          team1: { id: 17, name: 'Team 1' },
+          team2: { id: 18, name: 'Team 2' },
+          team1Wins: true,
+        },
+        {
+          id: 10,
+          roundIndex: 0,
+          matchIndex: 1,
+          team1: { id: 19, name: 'Team 3' },
+          team2: { id: 20, name: 'Team 4' },
+          team1Wins: true,
+        },
+      ],
+      [{ roundIndex: 1, matchIndex: 1 }],
+    ]
+
+    const matchTree = MatchTree.deserialize({ rounds: matches })
+    const matchTree2 = MatchTree.deserialize({ rounds: matches })
+
+    matchTree2?.advanceTeam(0, 1, true)
+
+    expect(matchTree?.equals(matchTree2)).toBe(false)
   })
 })

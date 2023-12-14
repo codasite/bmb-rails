@@ -1,6 +1,6 @@
 import { Nullable } from '../../../utils/types'
 import {
-  MatchPicks,
+  MatchPick,
   MatchReq,
   MatchRes,
   MatchTreeRepr,
@@ -35,6 +35,12 @@ export class MatchTree {
 
   clone(): MatchTree {
     return MatchTree.deserialize(this.serialize())
+  }
+
+  equals(other: MatchTree): boolean {
+    return (
+      JSON.stringify(this.serialize()) === JSON.stringify(other.serialize())
+    )
   }
 
   syncPick(otherMatch?: Nullable<MatchNode>): void {
@@ -176,8 +182,8 @@ export class MatchTree {
     return matches
   }
 
-  toMatchPicks = (): MatchPicks[] => {
-    const picks: MatchPicks[] = []
+  toMatchPicks = (): MatchPick[] => {
+    const picks: MatchPick[] = []
     this.rounds.forEach((round, roundIndex) => {
       round.matches.forEach((match, matchIndex) => {
         if (!match) {
@@ -204,7 +210,6 @@ export class MatchTree {
         }
       })
     })
-    console.log('picks', picks)
     return picks
   }
 
@@ -279,7 +284,6 @@ export class MatchTree {
         wildcardPlacement,
       })
     } catch (e) {
-      console.log(e)
       return null
     }
   }
@@ -287,7 +291,7 @@ export class MatchTree {
   static fromPicks(
     numTeams: number,
     matches: MatchRes[],
-    picks: MatchPicks[],
+    picks: MatchPick[],
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
     const matchTree = MatchTree.fromMatchRes(

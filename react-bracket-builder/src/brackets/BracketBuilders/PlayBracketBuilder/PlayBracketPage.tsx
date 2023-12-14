@@ -20,7 +20,7 @@ import {
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
-import { MatchTreeStorage } from './MatchTreeStorage'
+import { PlayStorage } from '../../shared/storages/PlayStorage'
 
 interface PlayPageProps {
   redirectUrl: string
@@ -38,7 +38,6 @@ const PlayPage = (props: PlayPageProps) => {
   const {
     bracket,
     redirectUrl,
-    bracketStylesheetUrl,
     matchTree,
     setMatchTree,
     bracketMeta,
@@ -48,6 +47,7 @@ const PlayPage = (props: PlayPageProps) => {
   } = props
 
   const [processing, setProcessing] = useState(false)
+  const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
   const { width: windowWidth, height: windowHeight } = useContext(
     WindowDimensionsContext
   )
@@ -55,19 +55,23 @@ const PlayPage = (props: PlayPageProps) => {
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
   const canPlay = bracket?.status !== 'upcoming'
-  const matchTreeStorage = new MatchTreeStorage(
-    'loadStoredPicks',
-    'wpbb_play_data_'
-  )
+  const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
 
   useEffect(() => {
-    let tree: Nullable<MatchTree> = matchTreeStorage.loadMatchTree(bracket?.id)
-    if (bracket) {
-      const numTeams = bracket.numTeams
-      const matches = bracket.matches
+    if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
+      return
+    }
+    const meta = getBracketMeta(bracket)
+    setBracketMeta?.(meta ?? {})
+    let tree: Nullable<MatchTree> = null
+    const numTeams = bracket.numTeams
+    const matches = bracket.matches
+    const play = playStorage.loadPlay(bracket.id)
+    if (play) {
+      tree = MatchTree.fromPicks(numTeams, matches, play.picks)
+      setStoredPlay(play)
+    } else {
       tree = tree ?? MatchTree.fromMatchRes(numTeams, matches)
-      const meta = getBracketMeta(bracket)
-      setBracketMeta?.(meta)
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
@@ -76,7 +80,13 @@ const PlayPage = (props: PlayPageProps) => {
 
   const setMatchTreeAndSaveInStorage = (tree: MatchTree) => {
     setMatchTree(tree)
-    matchTreeStorage.storeMatchTree(tree, bracket?.id)
+    playStorage.storePlay(
+      {
+        bracketId: bracket?.id,
+        picks: tree.toMatchPicks(),
+      },
+      bracket?.id
+    )
   }
 
   const handleApparelClick = () => {
@@ -88,27 +98,37 @@ const PlayPage = (props: PlayPageProps) => {
       Sentry.captureException(msg)
       return
     }
+    if (
+      JSON.stringify(storedPlay?.picks) === JSON.stringify(picks) &&
+      storedPlay?.id
+    ) {
+      window.location.assign(redirectUrl)
+      return
+    }
     const playReq: PlayReq = {
       title: bracket?.title,
       bracketId: bracketId,
       picks: picks,
-      generateImages: true,
+      // generateImages: true,
+      generateImages: false,
     }
 
     setProcessing(true)
     bracketApi
       .createPlay(playReq)
       .then((res) => {
+        const playId = res.id
+        const newReq = {
+          ...playReq,
+          id: playId,
+        }
+        playStorage.storePlay(newReq, bracketId)
         window.location.assign(redirectUrl)
       })
       .catch((err) => {
         console.error('error: ', err)
         setProcessing(false)
         Sentry.captureException(err)
-      })
-      .finally(() => {
-        console.timeEnd('createPlay')
-        console.log('createPlay')
       })
   }
 

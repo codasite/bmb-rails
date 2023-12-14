@@ -1,4 +1,4 @@
-import { MatchPicks, MatchRes } from '../../shared/api/types/bracket'
+import { MatchPick, MatchRes } from '../../shared/api/types/bracket'
 
 export interface PrintSchema {
   queryName: string
@@ -14,7 +14,7 @@ export interface PrintParams {
   inchWidth?: number
   title?: string
   date?: string
-  picks?: MatchPicks[]
+  picks?: MatchPick[]
   matches?: MatchRes[]
   numTeams?: number
 }
