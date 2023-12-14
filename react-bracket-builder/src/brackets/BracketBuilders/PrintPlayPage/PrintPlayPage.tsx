@@ -1,17 +1,14 @@
 import React, { useEffect } from 'react'
-import { BracketMeta, DarkModeContext } from '../../shared/context/context'
+import { BracketMeta } from '../../shared/context/context'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
 import {
   WithBracketMeta,
-  WithMatchTree,
-  WithProvider,
   WithDarkMode,
+  WithMatchTree,
 } from '../../shared/components/HigherOrder'
-import { camelCaseKeys } from '../../shared/api/bracketApi'
 import { parseParams } from './schema'
 import { validateParams } from './validate'
-import { PrintParams } from './types'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 
 interface PrintBracketPageProps {
@@ -105,8 +102,8 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
   )
 }
 
-const WrappedPrintPlayPage = WithProvider(
-  WithDarkMode(WithBracketMeta(WithMatchTree(PrintPlayPage)))
+const WrappedPrintPlayPage = WithDarkMode(
+  WithBracketMeta(WithMatchTree(PrintPlayPage))
 )
 
 export default WrappedPrintPlayPage

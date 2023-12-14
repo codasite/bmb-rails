@@ -5,8 +5,19 @@ import { MatchTree } from '../../shared/models/MatchTree'
 import '@testing-library/jest-dom/jest-globals'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
 import { MatchPick, MatchRes } from '../../shared/api/types/bracket'
-import { BracketApi, bracketApi } from '../../shared/api/bracketApi'
 import { jest } from '@jest/globals'
+import { bracketApi } from '../../shared/api/bracketApi'
+jest.mock('react-lineto', () => {
+  return {
+    __esModule: true,
+    default: () => {
+      return <div />
+    },
+    SteppedLineTo: () => {
+      return <div className={'mock-react-lineto'} />
+    },
+  }
+})
 
 jest.mock('../../shared/api/bracketApi')
 

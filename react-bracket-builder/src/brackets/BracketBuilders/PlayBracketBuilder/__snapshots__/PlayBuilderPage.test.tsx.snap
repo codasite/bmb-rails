@@ -231,10 +231,62 @@ exports[`PlayBuilderPage renders PlayBuilderPage correctly 1`] = `
         </div>
         <div
           class="tw-absolute"
-        />
+        >
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+          <div
+            class="mock-react-lineto"
+          />
+        </div>
         <div
           class="tw-absolute"
-        />
+        >
+          <div />
+          <div />
+        </div>
       </div>
       <div
         class="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center"

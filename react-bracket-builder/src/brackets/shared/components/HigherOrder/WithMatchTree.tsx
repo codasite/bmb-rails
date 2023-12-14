@@ -1,9 +1,5 @@
-import React, { useState, useEffect, createContext, useContext } from 'react'
+import React, { useState } from 'react'
 import { MatchTree } from '../../models/MatchTree'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
-import { setMatchTree, selectMatchTree } from '../../features/matchTreeSlice'
-import { bracketBuilderStore } from '../../app/store'
-import { Provider } from 'react-redux'
 import {
   MatchTreeContext,
   MatchTreeContext1,
@@ -12,14 +8,23 @@ import {
 
 export const WithMatchTree = (Component: React.FC<any>) => {
   return (props: any) => {
-    const matchTree = useAppSelector(selectMatchTree)
-    const dispatch = useAppDispatch()
-    const setTree = (matchTree: MatchTree) =>
-      dispatch(setMatchTree(matchTree.serialize()))
+    const [matchTree, setMatchTree] = useState<MatchTree>()
+    const setClonedMatchTree = (tree: MatchTree) => {
+      setMatchTree(tree.clone())
+    }
     return (
-      <Provider store={bracketBuilderStore}>
-        <Component matchTree={matchTree} setMatchTree={setTree} {...props} />
-      </Provider>
+      <MatchTreeContext.Provider
+        value={{
+          matchTree: matchTree,
+          setMatchTree: setClonedMatchTree,
+        }}
+      >
+        <Component
+          matchTree={matchTree}
+          setMatchTree={setClonedMatchTree}
+          {...props}
+        />
+      </MatchTreeContext.Provider>
     )
   }
 }

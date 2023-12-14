@@ -8,7 +8,6 @@ import {
   WithBracketMeta,
   WithDarkMode,
   WithMatchTree,
-  WithProvider,
 } from '../../shared/components/HigherOrder'
 import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
@@ -150,8 +149,8 @@ const PlayPage = (props: PlayPageProps) => {
   return <PlayBuilder {...playBuilderProps} />
 }
 
-const WrappedPlayPage = WithWindowDimensions(
-  WithProvider(WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage))))
+const WrappedPlayBuilderPage = WithWindowDimensions(
+  WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage)))
 )
 
-export default WrappedPlayPage
+export default WrappedPlayBuilderPage

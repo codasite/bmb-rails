@@ -8,7 +8,6 @@ import {
   WithBracketMeta,
   WithDarkMode,
   WithMatchTree,
-  WithProvider,
 } from '../../shared/components/HigherOrder'
 import { BracketMeta } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
@@ -188,7 +187,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
     </div>
   )
 }
-const WrappedBracketBuilder = WithProvider(
-  WithDarkMode(WithMatchTree(WithBracketMeta(BracketBuilder)))
+const WrappedBracketBuilder = WithDarkMode(
+  WithMatchTree(WithBracketMeta(BracketBuilder))
 )
 export default WrappedBracketBuilder

@@ -1,5 +1,4 @@
 export { WithDarkMode } from './WithDarkMode'
 export { WithBracketMeta } from './WithBracketMeta'
 export { WithMatchTree } from './WithMatchTree'
-export { WithProvider } from './WithProvider'
 export { WithMatchTree3 } from './WithMatchTree'

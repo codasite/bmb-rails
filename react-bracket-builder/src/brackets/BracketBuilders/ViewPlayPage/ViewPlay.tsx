@@ -15,10 +15,7 @@ import { ViewPlayPageProps } from './types'
 import { FullBracketPage } from '../PaginatedPlayBuilder/FullBracketPage'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { addToApparelHandler } from './utils'
-import {
-  WithMatchTree,
-  WithProvider,
-} from '../../shared/components/HigherOrder'
+import { WithMatchTree } from '../../shared/components/HigherOrder'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 
 const ViewPlay = (props: ViewPlayPageProps) => {
@@ -104,5 +101,5 @@ const ViewPlay = (props: ViewPlayPageProps) => {
   )
 }
 
-const WrappedBracketPlayPage = WithProvider(WithMatchTree(ViewPlay))
-export { WrappedBracketPlayPage as ViewPlay }
+const WrappedViewPlay = WithMatchTree(ViewPlay)
+export { WrappedViewPlay as ViewPlay }
