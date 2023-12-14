@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
@@ -13,7 +13,6 @@ import {
 } from '../../shared/components/Bracket/utils'
 import { ViewPlayPageProps } from './types'
 import { FullBracketPage } from '../PaginatedPlayBuilder/FullBracketPage'
-import { useWindowDimensions } from '../../../utils/hooks'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { addToApparelHandler } from './utils'
 import {
@@ -22,7 +21,7 @@ import {
 } from '../../shared/components/HigherOrder'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 
-const BracketPlayPage = (props: ViewPlayPageProps) => {
+const ViewPlay = (props: ViewPlayPageProps) => {
   const {
     bracketMeta,
     setBracketMeta,
@@ -105,5 +104,5 @@ const BracketPlayPage = (props: ViewPlayPageProps) => {
   )
 }
 
-const WrappedBracketPlayPage = WithProvider(WithMatchTree(BracketPlayPage))
-export { WrappedBracketPlayPage as BracketPlayPage }
+const WrappedBracketPlayPage = WithProvider(WithMatchTree(ViewPlay))
+export { WrappedBracketPlayPage as ViewPlay }

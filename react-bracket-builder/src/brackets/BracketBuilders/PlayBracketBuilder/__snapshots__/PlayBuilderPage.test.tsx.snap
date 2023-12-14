@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PlayBracketPage renders PlayBracketPage correctly 1`] = `
+exports[`PlayBuilderPage renders PlayBuilderPage correctly 1`] = `
 <DocumentFragment>
   <div
     class="wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark"

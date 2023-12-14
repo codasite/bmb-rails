@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import PlayBracketPage from './PlayBracketPage'
+import PlayBuilderPage from './PlayBuilderPage'
 import { MatchTree } from '../../shared/models/MatchTree'
 import '@testing-library/jest-dom/jest-globals'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
@@ -10,17 +10,17 @@ import { jest } from '@jest/globals'
 
 jest.mock('../../shared/api/bracketApi')
 
-describe('PlayBracketPage', () => {
+describe('PlayBuilderPage', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
-  test('renders PlayBracketPage correctly', () => {
+  test('renders PlayBuilderPage correctly', () => {
     const { asFragment } = render(
-      <PlayBracketPage matchTree={MatchTree.fromNumTeams(10)} />
+      <PlayBuilderPage matchTree={MatchTree.fromNumTeams(10)} />
     )
     expect(asFragment()).toMatchSnapshot()
   })
-  test('renders PlayBracketPage from sessionStorage', () => {
+  test('renders PlayBuilderPage from sessionStorage', () => {
     const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
     const matches: MatchRes[] = [
       {
@@ -55,10 +55,10 @@ describe('PlayBracketPage', () => {
     expect(window.location.search).toContain('loadStoredPicks=true')
     expect(sessionStorage.getItem('wpbb_play_data_1')).toBeTruthy()
     const { asFragment: asFragmentSession } = render(
-      <PlayBracketPage bracket={{ id: 1, numTeams: 4, matches: matches }} />
+      <PlayBuilderPage bracket={{ id: 1, numTeams: 4, matches: matches }} />
     )
     const { asFragment } = render(
-      <PlayBracketPage matchTree={MatchTree.fromPicks(4, matches, picks)} />
+      <PlayBuilderPage matchTree={MatchTree.fromPicks(4, matches, picks)} />
     )
     expect(asFragmentSession()).toEqual(asFragment())
   })
@@ -108,7 +108,7 @@ describe('PlayBracketPage', () => {
     ]
     const matchTree = MatchTree.deserialize({ rounds: matches })
     const { asFragment } = render(
-      <PlayBracketPage
+      <PlayBuilderPage
         matchTree={matchTree}
         bracket={{ id: 1 }}
         redirectUrl="#"

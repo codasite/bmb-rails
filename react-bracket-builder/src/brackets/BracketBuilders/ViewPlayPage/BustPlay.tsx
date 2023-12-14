@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { ActionButton } from '../../shared/components/ActionButtons'
-import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { ViewPlayPageProps } from './types'
-import { BusterVsBustee } from '../BustPlayPage/BusterVersusBustee'
-import { BusterBracket } from '../../shared/components/Bracket'
 import { WithMatchTree3 } from '../../shared/components/HigherOrder'
 import { getBustTrees } from '../BustPlayPage/utils'
 import { BustPlayView } from '../BustPlayPage/BustPlayView'
 
-const BusterPlayPage = (props: ViewPlayPageProps) => {
+const BustPlay = (props: ViewPlayPageProps) => {
   const { setBracketMeta, bracketPlay: play } = props
 
   const [busteeDisplayName, setBusteeDisplayName] = useState<string>()
@@ -65,5 +61,5 @@ const BusterPlayPage = (props: ViewPlayPageProps) => {
   )
 }
 
-const Wrapped = WithMatchTree3(BusterPlayPage)
-export { Wrapped as BusterPlayPage }
+const Wrapped = WithMatchTree3(BustPlay)
+export { Wrapped as BustPlay }

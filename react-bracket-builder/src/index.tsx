@@ -20,8 +20,8 @@ declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
 tailwind.config.corePlugins.preflight = typeof wp === 'undefined'
 // Dynamically render components to avoid loading unused modules
-const PlayBracketPage = React.lazy(
-  () => import('./brackets/BracketBuilders/PlayBracketBuilder/PlayBracketPage')
+const PlayBuilderPage = React.lazy(
+  () => import('./brackets/BracketBuilders/PlayBracketBuilder/PlayBuilderPage')
 )
 const Gallery = React.lazy(() => import('./preview/Gallery'))
 const BracketBuilder = React.lazy(
@@ -105,7 +105,7 @@ function renderPlayBracket(ajaxObj: wpbbAppObj) {
   if (bracket) {
     renderDiv(
       <App>
-        <PlayBracketPage bracket={bracket} redirectUrl={redirectUrl} />
+        <PlayBuilderPage bracket={bracket} redirectUrl={redirectUrl} />
       </App>,
       'wpbb-play-bracket'
     )

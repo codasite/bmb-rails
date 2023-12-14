@@ -1,6 +1,6 @@
 import { ViewPlayPageProps } from './types'
-import { BusterPlayPage } from './BusterPlayPage'
-import { BracketPlayPage } from './BracketPlayPage'
+import { BustPlay } from './BustPlay'
+import { ViewPlay } from './ViewPlay'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import {
   WithBracketMeta,
@@ -13,9 +13,9 @@ const ViewPlayPage = (props: ViewPlayPageProps) => {
   if (!play) {
     return <div>Play not found</div>
   } else if (play.bustedPlay) {
-    return <BusterPlayPage {...props} />
+    return <BustPlay {...props} />
   } else {
-    return <BracketPlayPage {...props} />
+    return <ViewPlay {...props} />
   }
 }
 
