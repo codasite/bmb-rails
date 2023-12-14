@@ -113,19 +113,44 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
+  public static function base_link_btn($content, $href, $extra_cls = []) {
+    $base_cls = array( 'tw-cursor-pointer', 'tw-uppercase', 'tw-font-sans' );
+    $styles = array_merge( $extra_cls, $base_cls );
+    ob_start();
+    ?>
+    <a class="<?php echo implode( ' ', $styles) ?>" href="<?php echo esc_url( $href ) ?>">
+      <?php echo $content ?>
+    </a>
+    <?php
+    return ob_get_clean();
+  }
+
   public static function red_gradient_btn($content, $extra_cls = [], $attributes = []) {
-    $btn_cls = array( 'wpbb-bg-gradient-red', 'tw-p-1', 'tw-rounded-8', 'tw-border-none' );
-    $btn_cls = array_merge( $extra_cls, $btn_cls );
-    $inner_cls = array( 'tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-px-16', 'tw-py-12', 'tw-font-700', 'tw-text-16', 'tw-whitespace-nowrap', 'tw-bg-dd-blue/80', 'hover:tw-bg-transparent', 'hover:tw-text-dd-blue' );
+    $styles = array( 'wpbb-bg-gradient-red', 'tw-p-1', 'tw-rounded-8', 'tw-border-none' );
+    $styles = array_merge( $extra_cls, $styles );
+    $content = self::red_gradient_content($content);
+    return self::base_btn($content, $styles, $attributes);
+  }
+
+  public static function red_gradient_link($content, $href, $extra_cls = []) {
+    $styles = array( 'wpbb-bg-gradient-red', 'tw-p-1', 'tw-rounded-8', 'tw-border-none' );
+    $styles = array_merge( $extra_cls, $styles );
+    $content = self::red_gradient_content($content);
+    return self::base_link_btn($content, $href, $styles);
+  }
+  
+  public static function red_gradient_content($content, $extra_cls = []) {
+    $styles = array( 'tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-px-16', 'tw-py-12', 'tw-font-700', 'tw-text-16', 'tw-whitespace-nowrap', 'tw-bg-dd-blue/80', 'hover:tw-bg-transparent', 'hover:tw-text-dd-blue' );
+    $styles = array_merge( $extra_cls, $styles );
 
     ob_start();
     ?>
-      <div class="<?php echo implode( ' ', $inner_cls) ?>">
+      <div class="<?php echo implode( ' ', $styles) ?>">
         <?php echo $content ?>
       </div>
     <?php
     $content = ob_get_clean();
-    return self::base_btn($content, $btn_cls, $attributes);
+    return $content;
   }
 
   /**
@@ -200,7 +225,7 @@ class BracketsCommon {
     $content = ob_get_clean();
 
     if ( $variant === 'final' ) {
-      return self::red_gradient_btn($content);
+      return self::red_gradient_link($content, $endpoint);
     }
 
     $base_cls = array( 'tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-border', 'tw-border-solid', 'tw-px-16', 'tw-py-12' );
