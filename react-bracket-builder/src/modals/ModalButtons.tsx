@@ -52,3 +52,21 @@ export const CancelButton = (props: { onClick: () => void }) => {
     </button>
   )
 }
+
+export const Link = (props: {
+  children: React.ReactNode
+  href: string
+  openInNewTab?: boolean
+}) => {
+  return (
+    <a
+      {...(props.openInNewTab
+        ? { target: '_blank', rel: 'noopener noreferrer' }
+        : {})}
+      href={props.href}
+      className="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer tw-border-solid tw-border tw-border-white"
+    >
+      {props.children}
+    </a>
+  )
+}

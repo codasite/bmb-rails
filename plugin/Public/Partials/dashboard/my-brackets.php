@@ -170,7 +170,7 @@ function edit_bracket_btn($bracket) {
 
 function share_bracket_btn($bracket) {
 	$play_link = get_permalink($bracket->id) . 'play';
-	return DashboardCommon::icon_btn( 'link.svg', 'submit', classes: "wpbb-share-bracket-button", attributes: "data-play-bracket-url=$play_link" );
+	return DashboardCommon::icon_btn( 'share.svg', 'submit', classes: "wpbb-share-bracket-button", attributes: "data-play-bracket-url='$play_link' data-bracket-title='$bracket->title'" );
 }
 
 function duplicate_bracket_btn($bracket) {

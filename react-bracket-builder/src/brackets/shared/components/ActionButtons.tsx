@@ -286,26 +286,24 @@ const BigRedButton = (props: ActionButtonProps) => {
 }
 
 export const ActionButton = (props: ActionButtonProps) => {
-  const { variant } = props
+  const { variant, darkMode = true } = props
 
-  if (props.darkMode === undefined) {
-    props.darkMode = true
-  }
+  const newProps = { ...props, darkMode }
 
   switch (variant) {
     case 'green':
-      return <GreenButton {...props} />
+      return <GreenButton {...newProps} />
     case 'blue':
-      return <BlueButton {...props} />
+      return <BlueButton {...newProps} />
     case 'yellow':
-      return <YellowButton {...props} />
+      return <YellowButton {...newProps} />
     case 'white':
-      return <WhiteButton {...props} />
+      return <WhiteButton {...newProps} />
     case 'red':
-      return <RedButton {...props} />
+      return <RedButton {...newProps} />
     // case 'grey':
-    //   return <GreyButton {...props} />
+    //   return <GreyButton {...newProps} />
     default:
-      return <ActionButtonBase {...props} />
+      return <ActionButtonBase {...newProps} />
   }
 }
