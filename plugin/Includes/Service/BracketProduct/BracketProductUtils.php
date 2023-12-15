@@ -62,6 +62,10 @@ class BracketProductUtils {
     return $fee ? $fee : 0;
   }
 
+  public function has_bracket_fee(Bracket|int $bracket): bool {
+    return $this->get_bracket_fee($bracket) > 0;
+  }
+
   public function get_bracket_fee_name(Bracket|int $bracket): string {
     $bracket =
       $bracket instanceof Bracket

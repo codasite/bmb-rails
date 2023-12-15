@@ -8,6 +8,7 @@ use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketsCommon {
 
@@ -80,6 +81,16 @@ class BracketsCommon {
 
   public static function private_bracket_tag() {
     return self::bracket_tag( 'Private', 'blue', false );
+  }
+
+  public static function paid_bracket_tag() {
+    ob_start();
+    ?>
+    <div class="tw-text-white tw-bg-blue tw-px-8 tw-py-4 tw-flex tw-items-center tw-rounded-8">
+      <?php echo PartialsCommon::icon('currency_dollar') ?>
+    </div>
+    <?php
+    return ob_get_clean();
   }
 
   public static function get_bracket_tag( $status ) {
@@ -317,21 +328,27 @@ class BracketsCommon {
       'bracket_id' => $bracket->id,
       'is_printed' => true,
     ] ) : 0;
-
     $completed       = $bracket->status === 'complete';
     $status          = $bracket->status;
     $bracket_tag     = self::get_bracket_tag( $status );
+    $is_paid = 
     $bracket_buttons = self::public_bracket_active_buttons( $bracket );
     if ( $status === 'upcoming' ) {
       $bracket_buttons = self::public_bracket_upcoming_buttons( $bracket );
     } else if ( $status === 'complete' ) {
       $bracket_buttons = self::public_bracket_completed_buttons( $bracket );
     }
+
+    $bracket_product_utils = new BracketProductUtils();
+    $is_paid = $bracket_product_utils->has_bracket_fee($bracket->id);
     ob_start();
     ?>
     <div class="tw-border-2 tw-border-solid tw-border-<?php echo $completed ? 'white/15' : 'blue' ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
-        <span class="tw-font-500 tw-text-12"><?php echo esc_html( $num_teams ) ?>-Team Bracket</span>
+        <div class="tw-flex tw-gap-8 tw-items-center">
+          <?php echo $is_paid ? self::paid_bracket_tag() : ''?>
+          <span class="tw-font-500 tw-text-12"><?php echo esc_html( $num_teams ) ?>-Team Bracket</span>
+        </div>
         <div class="tw-flex tw-gap-4 tw-items-center">
           <?php echo $bracket_tag ?>
           <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/bar_chart.svg' ); ?>

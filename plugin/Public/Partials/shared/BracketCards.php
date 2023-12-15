@@ -5,6 +5,7 @@ namespace WStrategies\BMB\Public\Partials\shared;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketCards {
 
@@ -27,18 +28,24 @@ class BracketCards {
         $profile_link = $profile->url;
       }
     }
+    $product_utils = new BracketProductUtils();
     $title            = $play->title;
     $id               = $play->id;
     $thumbnail        = get_the_post_thumbnail_url( $id );
     $play_link        = get_permalink( $id ) . 'bust';
     $leaderboard_link = get_permalink( $play->bracket_id ) . 'leaderboard';
+    $show_paid_tag    = $product_utils->has_bracket_fee( $play->bracket_id );
     $buttons          = [
       PartialsCommon::view_play_btn( $play_link ),
       BracketsCommon::view_leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
       BracketsCommon::bracket_chat_btn( $play->bracket_id ),
     ];
 
-    return self::vip_card( $title, $thumbnail, [ 'buttons' => $buttons, 'profile_link' => $profile_link ] );
+    return self::vip_card( $title, $thumbnail, [ 
+      'buttons' => $buttons, 
+      'profile_link' => $profile_link, 
+      'show_paid_tag' => $show_paid_tag 
+    ] );
   }
 
   public static function vip_bracket_card( $bracket, $options = [] ) {
@@ -52,6 +59,7 @@ class BracketCards {
         $profile_link = $profile->url;
       }
     }
+    $product_utils = new BracketProductUtils();
     $title            = $bracket->title;
     $id               = $bracket->id;
     $thumbnail        = get_the_post_thumbnail_url( $id );
@@ -59,6 +67,7 @@ class BracketCards {
     $leaderboard_link = get_permalink( $id ) . 'leaderboard';
     $buttons          = [];
     $bracket_tag      = '';
+    $show_paid_tag    = $product_utils->has_bracket_fee( $bracket->id );
     switch ( $bracket->status ) {
       case 'upcoming':
         $buttons = [
@@ -81,7 +90,12 @@ class BracketCards {
         break;
     }
 
-    return self::vip_card( $title, $thumbnail, [ 'buttons' => $buttons, 'profile_link' => $profile_link, 'tag' => $bracket_tag ] );
+    return self::vip_card( $title, $thumbnail, [ 
+      'buttons' => $buttons, 
+      'profile_link' => $profile_link, 
+      'tag' => $bracket_tag,
+      'show_paid_tag' => $show_paid_tag
+    ] );
   }
 
   public static function view_profile_btn( $link ) {
@@ -100,10 +114,16 @@ class BracketCards {
     $buttons      = $options['buttons'] ?? [];
     $profile_link = $options['profile_link'] ?? '';
     $tag = $options['tag'] ?? '';
+    $show_paid_tag = $options['show_paid_tag'] ?? false;
     ob_start();
     ?>
     <div class="tw-flex tw-flex-col">
       <div class="tw-relative tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-cover tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-min-h-[324px] sm:tw-grow">
+        <?php if ( $show_paid_tag ) : ?>
+          <div class="tw-absolute tw-top-20 tw-left-20">
+            <?php echo BracketsCommon::paid_bracket_tag() ?>
+          </div>
+        <?php endif; ?>
         <?php if ( $profile_link ) : ?>
           <div class="tw-absolute tw-top-20 tw-right-20">
             <?php echo self::view_profile_btn( $profile_link ) ?>
