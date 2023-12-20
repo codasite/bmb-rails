@@ -35,7 +35,7 @@ class Bracket extends PostBase implements PostBracketInterface {
   public $results;
 
   /**
-   * @var DateTimeImmutable|false
+   * @var DateTimeImmutable|null
    */
   public $results_first_updated_at;
 
@@ -47,8 +47,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->wildcard_placement = (int) ($data['wildcard_placement'] ?? null);
     $this->matches = $data['matches'] ?? [];
     $this->results = $data['results'] ?? [];
-    $this->results_first_updated_at =
-      $data['results_first_updated_at'] ?? false;
+    $this->results_first_updated_at = $data['results_first_updated_at'] ?? null;
   }
 
   public function get_winning_team(): ?Team {
@@ -179,7 +178,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     $bracket['year'] = $this->year;
     $bracket['results_first_updated_at'] = $this->results_first_updated_at
       ? $this->results_first_updated_at->format('Y-m-d H:i:s')
-      : false;
+      : null;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {
