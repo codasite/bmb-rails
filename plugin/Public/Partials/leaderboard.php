@@ -18,7 +18,6 @@ $show_scores = $complete || $scored;
 $query = [
 		'post_status' => 'publish',
 		'bracket_id' => $bracket->id,
-		'is_printed' => true,
 		'orderby' => 'accuracy_score',
 		'order' => 'DESC',
 	];

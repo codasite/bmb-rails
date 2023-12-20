@@ -53,7 +53,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
@@ -106,7 +105,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
@@ -175,7 +173,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($bracket1);
@@ -248,7 +245,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
@@ -350,7 +346,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_unprinted_plays' => false,
       'ignore_late_plays' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
@@ -359,77 +354,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
 
     $this->assertEquals(4, $updated->total_score);
     $this->assertEquals(0.333333, $updated->accuracy_score);
-  }
-
-  public function test_ignore_unprinted_plays() {
-    $bracket = self::factory()->bracket->create_object([
-      'num_teams' => 2,
-      'matches' => [
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => new Team([
-            'id' => 1,
-            'name' => 'Team 1',
-          ]),
-          'team2' => new Team([
-            'id' => 2,
-            'name' => 'Team 2',
-          ]),
-        ]),
-      ],
-    ]);
-
-    self::factory()->bracket->update_object($bracket, [
-      'results' => [
-        [
-          'round_index' => 0,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ],
-      ],
-    ]);
-
-    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
-
-    $play1 = self::factory()->play->create_object([
-      'bracket_id' => $bracket->id,
-      'picks' => [
-        new MatchPick([
-          'round_index' => 0,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ]),
-      ],
-      'is_printed' => true,
-    ]);
-
-    $play2 = self::factory()->play->create_object([
-      'bracket_id' => $bracket->id,
-      'picks' => [
-        new MatchPick([
-          'round_index' => 0,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ]),
-      ],
-    ]);
-
-    $score_service = new ScoreService([
-      'ignore_unprinted_plays' => true,
-      'ignore_late_plays' => false,
-    ]);
-    $affected = $score_service->score_bracket_plays($update_bracket);
-
-    $scored = $score_service->play_repo->get($play1->id);
-
-    $this->assertEquals(1, $scored->total_score);
-    $this->assertEquals(1, $scored->accuracy_score);
-    $this->assertEquals(1, $affected);
-
-    $unscored = $score_service->play_repo->get($play2->id);
-    $this->assertEquals(null, $unscored->total_score);
-    $this->assertEquals(null, $unscored->accuracy_score);
   }
 
   public function test_play_created_before_results_update_is_scored() {
@@ -479,7 +403,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_unprinted_plays' => false,
       'ignore_late_plays' => true,
     ]);
 
@@ -539,7 +462,6 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_unprinted_plays' => false,
       'ignore_late_plays' => true,
     ]);
 

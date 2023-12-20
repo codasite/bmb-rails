@@ -37,11 +37,6 @@ class ScoreService implements ScoreServiceInterface {
   /**
    * @var bool
    */
-  private $ignore_unprinted_plays;
-
-  /**
-   * @var bool
-   */
   private $ignore_late_plays;
 
   public function __construct($opts = []) {
@@ -50,7 +45,6 @@ class ScoreService implements ScoreServiceInterface {
     $this->play_repo = new BracketPlayRepo();
     $this->bracket_repo = new BracketRepo();
     $this->utils = new Utils();
-    $this->ignore_unprinted_plays = $opts['ignore_unprinted_plays'] ?? true;
     $this->ignore_late_plays = $opts['ignore_late_plays'] ?? true;
   }
 
@@ -170,9 +164,6 @@ class ScoreService implements ScoreServiceInterface {
   ): string {
     $where = " WHERE p0.bracket_id = $bracket_id";
 
-    if ($this->ignore_unprinted_plays) {
-      $where .= ' AND p0.is_printed = 1';
-    }
     if ($this->ignore_late_plays && $first_updated) {
       $updated = $first_updated->format('Y-m-d H:i:s');
       $where .= " AND p3.post_date_gmt < '$updated'";
