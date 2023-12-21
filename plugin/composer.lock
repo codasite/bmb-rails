@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "888967a0086338365782a280c529431a",
+    "content-hash": "8a1ab3c3775a4af9d987cfbc7e2c559b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -3738,6 +3738,16 @@
             "time": "2023-11-20T00:12:19+00:00"
         },
         {
+            "name": "wordpress/wordpress",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/WordPress/wordpress-develop",
+                "reference": "origin/trunk"
+            },
+            "type": "library"
+        },
+        {
             "name": "wpackagist-plugin/woocommerce",
             "version": "8.4.0",
             "source": {
@@ -3818,7 +3828,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "wordpress/wordpress": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
