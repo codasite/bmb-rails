@@ -322,16 +322,14 @@ class BracketsCommon {
   }
 
   public static function public_bracket_list_item( Bracket $bracket, BracketPlayRepo $play_repo = null ) {
-    $name      = $bracket->title;
+    $name = $bracket->title;
     $num_teams = $bracket->num_teams;
     $num_plays = $play_repo ? $play_repo->get_count( [
       'bracket_id' => $bracket->id,
-      'is_printed' => true,
     ] ) : 0;
-    $completed       = $bracket->status === 'complete';
-    $status          = $bracket->status;
-    $bracket_tag     = self::get_bracket_tag( $status );
-    $is_paid = 
+    $completed = $bracket->status === 'complete';
+    $status = $bracket->status;
+    $bracket_tag = self::get_bracket_tag( $status );
     $bracket_buttons = self::public_bracket_active_buttons( $bracket );
     if ( $status === 'upcoming' ) {
       $bracket_buttons = self::public_bracket_upcoming_buttons( $bracket );

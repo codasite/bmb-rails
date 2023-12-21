@@ -18,18 +18,18 @@ $show_scores = $complete || $scored;
 $query = [
 		'post_status' => 'publish',
 		'bracket_id' => $bracket->id,
-		'is_printed' => true,
 		'orderby' => 'accuracy_score',
 		'order' => 'DESC',
 	];
 
 if ($bracket->results_first_updated_at) {
-	$query['date_query'] = [
-		[
-			'column' => 'post_modified_gmt',
-			'before' => $bracket->results_first_updated_at->format('Y-m-d H:i:s'),
-		]
-	];
+  $query['date_query'] = [
+    [
+      'column' => 'post_modified_gmt',
+      'before' => $bracket->results_first_updated_at->format( 'Y-m-d H:i:s' ),
+      'inclusive' => true,
+    ]
+  ];
 }
 $plays = $play_repo->get_all(
 	$query,

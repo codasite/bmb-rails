@@ -1,16 +1,12 @@
 <?php
+namespace WStrategies\BMB\tests\includes\Hooks;
 
 use Spatie\Snapshots\MatchesSnapshots;
-use WStrategies\BMB\Includes\Hooks\PublicShortcodes;
+use WPBB_UnitTestCase;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
-class PublicShortcodesTest extends WPBB_UnitTestCase {
+class RenderDashboardTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
-  private PublicShortcodes $shortcodes;
-  public function setUp(): void {
-    parent::setUp();
-    $this->shortcodes = new PublicShortcodes();
-  }
 
   public function test_render_dashboard() {
     $bracket = self::factory()->bracket->create_and_get([
