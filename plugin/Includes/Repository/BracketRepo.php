@@ -86,10 +86,10 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     }
 
     $bracket_data = $this->get_custom_table_data($bracket_post->ID);
-    if (!isset($bracket_data['id'])) {
+    $bracket_id = $bracket_data['id'] ?? null;
+    if (!$bracket_id) {
       return null;
     }
-    $bracket_id = $bracket_data['id'];
     $results_updated = isset($bracket_data['results_first_updated_at'])
       ? new DateTimeImmutable($bracket_data['results_first_updated_at'])
       : false;
@@ -129,6 +129,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       'results_first_updated_at' => $results_updated,
       'thumbnail_url' => get_the_post_thumbnail_url($bracket_post->ID),
       'url' => get_permalink($bracket_post->ID),
+      'winning_play_id' => $bracket_data['winning_play_id'] ?? null,
     ];
 
     return new Bracket($data);
@@ -225,7 +226,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   ): void {
     $old_data = $this->get_custom_table_data($id, $use_post_id);
     $id_field = $use_post_id ? 'post_id' : 'id';
-    $update_fields = ['results_first_updated_at'];
+    $update_fields = ['results_first_updated_at', 'winning_play_id'];
     $update_data = [];
     foreach ($data as $key => $value) {
       if (in_array($key, $update_fields) && $value !== $old_data[$key]) {
@@ -263,7 +264,6 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
 			post_id bigint(20) UNSIGNED NOT NULL,
       results_first_updated_at datetime,
       winning_play_id bigint(20) UNSIGNED,
-      winning_play_post_id bigint(20) UNSIGNED,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE
@@ -280,8 +280,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     $plays_table = BracketPlayRepo::table_name();
     $posts_table = $wpdb->posts;
     $sql = "ALTER TABLE $table_name
-      ADD FOREIGN KEY (winning_play_id) REFERENCES {$plays_table}(id) ON DELETE SET NULL,
-      ADD FOREIGN KEY (winning_play_post_id) REFERENCES {$posts_table}(ID) ON DELETE SET NULL
+      ADD FOREIGN KEY (winning_play_id) REFERENCES {$posts_table}(ID) ON DELETE SET NULL
     ";
     $wpdb->query($sql);
   }

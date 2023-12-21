@@ -112,6 +112,16 @@ class BracketPlayRepo extends CustomPostRepoBase implements
     $author_id = (int) $play_post->post_author;
 
     $is_bustable = PlayPermissions::is_bustable($play_post);
+    if ($fetch_bracket && $bracket) {
+      $winning_play_id = $bracket->winning_play_id;
+    } else {
+      $bracket_data = $this->bracket_repo->get_custom_table_data(
+        $bracket_post_id
+      );
+      $winning_play_id = $bracket_data['winning_play_id'] ?? null;
+    }
+
+    $is_winner = $winning_play_id === (int) $play_post->ID;
 
     $data = [
       'bracket_id' => $bracket_post_id,
@@ -132,6 +142,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'busted_play' => $busted_play,
       'is_printed' => $is_printed,
       'is_bustable' => $is_bustable,
+      'is_winner' => $is_winner,
       'thumbnail_url' => get_the_post_thumbnail_url(
         $play_post->ID,
         'thumbnail'
