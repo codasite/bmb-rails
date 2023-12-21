@@ -3,21 +3,69 @@ namespace WStrategies\BMB\tests\includes\Hooks;
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WPBB_UnitTestCase;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Service\ScoreService;
 
 class RenderLeaderboardTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
+  private $bracket_repo;
+
+  public function set_up() {
+    parent::set_up();
+
+    $this->bracket_repo = new BracketRepo();
+  }
 
   public function test_render_leaderboard() {
-    $bracket = self::factory()->bracket->create_and_get([
-      'status' => 'publish',
-      'num_teams' => 4,
-      'author' => get_current_user_id(),
+    $bracket = self::factory()->bracket->create_object([
+      'num_teams' => 2,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'id' => 1,
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'id' => 2,
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
       'title' => 'Test Bracket',
+      'status' => 'score',
     ]);
-    self::factory()->play->create_object([
+
+    $play1 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
-      'author' => get_current_user_id(),
+      'picks' => [
+        new MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
     ]);
+    $updated_bracket = self::factory()->bracket->update_object($bracket, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ]);
+    $score_service = new ScoreService([
+      'ignore_late_plays' => true,
+    ]);
+
+    $affected = $score_service->score_bracket_plays($updated_bracket);
+    $this->assertEquals(1, $affected);
+
     global $post;
     $post = get_post($bracket->id);
     set_query_var('view', 'leaderboard');

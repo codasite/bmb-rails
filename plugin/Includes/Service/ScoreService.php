@@ -166,7 +166,7 @@ class ScoreService implements ScoreServiceInterface {
 
     if ($this->ignore_late_plays && $first_updated) {
       $updated = $first_updated->format('Y-m-d H:i:s');
-      $where .= " AND p3.post_date_gmt < '$updated'";
+      $where .= " AND p3.post_date_gmt <= '$updated'";
     }
 
     return $where;
