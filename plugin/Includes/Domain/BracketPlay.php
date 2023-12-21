@@ -49,6 +49,11 @@ class BracketPlay extends PostBase implements PostBracketInterface {
    */
   public $is_bustable;
 
+  /**
+   * @var bool
+   */
+  public $is_winner;
+
   public function __construct(array $data = []) {
     if (!isset($data['bracket_id'])) {
       throw new Exception('bracket_id ');
@@ -71,6 +76,9 @@ class BracketPlay extends PostBase implements PostBracketInterface {
     $this->busted_play = $data['busted_play'] ?? null;
     $this->is_bustable = isset($data['is_bustable'])
       ? (bool) $data['is_bustable']
+      : false;
+    $this->is_winner = isset($data['is_winner'])
+      ? (bool) $data['is_winner']
       : false;
   }
 
@@ -120,6 +128,7 @@ class BracketPlay extends PostBase implements PostBracketInterface {
     $play['accuracy_score'] = $this->accuracy_score;
     $play['busted_id'] = $this->busted_id;
     $play['is_bustable'] = $this->is_bustable;
+    $play['is_winner'] = $this->is_winner;
     if (!empty($this->busted_play)) {
       $play['busted_play'] = $this->busted_play->to_array();
     }

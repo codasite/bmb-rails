@@ -42,6 +42,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  */
 define('WP_BRACKET_BUILDER_VERSION', '1.0.0');
 define('WPBB_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('WPBB_DB_PREFIX', 'bracket_builder_');
 
 /**
  * The code that runs during plugin activation.

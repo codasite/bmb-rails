@@ -39,7 +39,7 @@ class BracketResultsNotificationService implements
 
     foreach ($user_picks as $user_pick) {
       $user = get_user_by('id', $user_pick['user_id']);
-      $pick = $this->play_repo->get_pick($user_pick['pick_id']);
+      $pick = $this->play_repo->pick_repo->get_pick($user_pick['pick_id']);
       $to_email = $user->user_email;
       $to_name = $user->display_name;
       $subject = 'Bracket Results Updated';

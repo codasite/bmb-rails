@@ -12,7 +12,8 @@ use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Utils;
 
-class BracketPlayRepo extends CustomPostRepoBase {
+class BracketPlayRepo extends CustomPostRepoBase implements
+  CustomTableInterface {
   /**
    * @var Utils
    */
@@ -26,7 +27,12 @@ class BracketPlayRepo extends CustomPostRepoBase {
   /**
    * @var BracketTeamRepo
    */
-  private $team_repo;
+  public $team_repo;
+
+  /**
+   * @var BracketMatchPickRepo
+   */
+  public BracketMatchPickRepo $pick_repo;
 
   /**
    * @var wpdb
@@ -38,6 +44,7 @@ class BracketPlayRepo extends CustomPostRepoBase {
     $this->wpdb = $wpdb;
     $this->bracket_repo = new BracketRepo();
     $this->team_repo = new BracketTeamRepo();
+    $this->pick_repo = new BracketMatchPickRepo($this->team_repo);
     $this->utils = new Utils();
     parent::__construct();
   }
@@ -100,10 +107,21 @@ class BracketPlayRepo extends CustomPostRepoBase {
           $fetch_matches
         )
         : null;
-    $picks = $fetch_picks && $play_id ? $this->get_picks($play_id) : [];
+    $picks =
+      $fetch_picks && $play_id ? $this->pick_repo->get_picks($play_id) : [];
     $author_id = (int) $play_post->post_author;
 
     $is_bustable = PlayPermissions::is_bustable($play_post);
+    if ($fetch_bracket && $bracket) {
+      $winning_play_id = $bracket->winning_play_id;
+    } else {
+      $bracket_data = $this->bracket_repo->get_custom_table_data(
+        $bracket_post_id
+      );
+      $winning_play_id = $bracket_data['winning_play_id'] ?? null;
+    }
+
+    $is_winner = $winning_play_id === (int) $play_post->ID;
 
     $data = [
       'bracket_id' => $bracket_post_id,
@@ -124,6 +142,7 @@ class BracketPlayRepo extends CustomPostRepoBase {
       'busted_play' => $busted_play,
       'is_printed' => $is_printed,
       'is_bustable' => $is_bustable,
+      'is_winner' => $is_winner,
       'thumbnail_url' => get_the_post_thumbnail_url(
         $play_post->ID,
         'thumbnail'
@@ -150,45 +169,6 @@ class BracketPlayRepo extends CustomPostRepoBase {
     ];
   }
 
-  public function get_pick(int $pick_id): ?MatchPick {
-    $table_name = $this->picks_table();
-    $sql = "SELECT * FROM $table_name WHERE id = $pick_id";
-    $data = $this->wpdb->get_row($sql, ARRAY_A);
-    if (!$data) {
-      return null;
-    }
-    $winning_team_id = $data['winning_team_id'];
-    $winning_team = $this->team_repo->get($winning_team_id);
-    return new MatchPick([
-      'round_index' => $data['round_index'],
-      'match_index' => $data['match_index'],
-      'winning_team_id' => $winning_team_id,
-      'id' => $data['id'],
-      'winning_team' => $winning_team,
-    ]);
-  }
-
-  private function get_picks(int $play_id): array {
-    $table_name = $this->picks_table();
-    $where = $play_id ? "WHERE bracket_play_id = $play_id" : '';
-    $sql = "SELECT * FROM $table_name $where ORDER BY round_index, match_index ASC";
-    $data = $this->wpdb->get_results($sql, ARRAY_A);
-
-    $picks = [];
-    foreach ($data as $pick) {
-      $winning_team_id = $pick['winning_team_id'];
-      $winning_team = $this->team_repo->get($winning_team_id);
-      $picks[] = new MatchPick([
-        'round_index' => $pick['round_index'],
-        'match_index' => $pick['match_index'],
-        'winning_team_id' => $winning_team_id,
-        'id' => $pick['id'],
-        'winning_team' => $winning_team,
-      ]);
-    }
-    return $picks;
-  }
-
   public function get_play_data(int|WP_Post|null $play_post): array {
     if (
       !$play_post ||
@@ -202,7 +182,7 @@ class BracketPlayRepo extends CustomPostRepoBase {
       $play_post = $play_post->ID;
     }
 
-    $table_name = $this->plays_table();
+    $table_name = self::table_name();
     $play_data = $this->wpdb->get_row(
       $this->wpdb->prepare(
         "SELECT * FROM $table_name WHERE post_id = %d",
@@ -283,7 +263,7 @@ class BracketPlayRepo extends CustomPostRepoBase {
       throw new ValidationException('bracket_id is required');
     }
 
-    $bracket = $this->bracket_repo->get_bracket_data($bracket_post_id);
+    $bracket = $this->bracket_repo->get_custom_table_data($bracket_post_id);
     $bracket_id = $bracket['id'] ?? null;
     if (!$bracket_id) {
       throw new Exception('bracket_id not found');
@@ -307,32 +287,16 @@ class BracketPlayRepo extends CustomPostRepoBase {
     ]);
 
     if ($play_id && $play->picks) {
-      $this->insert_picks($play_id, $play->picks);
+      $this->pick_repo->insert_picks($play_id, $play->picks);
     }
 
     return $this->get($post_id);
   }
 
   private function insert_play_data(array $data): int {
-    $table_name = $this->plays_table();
+    $table_name = self::table_name();
     $this->wpdb->insert($table_name, $data);
     return $this->wpdb->insert_id;
-  }
-
-  private function insert_picks(int $play_id, array $picks): void {
-    foreach ($picks as $pick) {
-      $this->insert_pick($play_id, $pick);
-    }
-  }
-
-  private function insert_pick(int $play_id, MatchPick $pick): void {
-    $table_name = $this->picks_table();
-    $this->wpdb->insert($table_name, [
-      'bracket_play_id' => $play_id,
-      'round_index' => $pick->round_index,
-      'match_index' => $pick->match_index,
-      'winning_team_id' => $pick->winning_team_id,
-    ]);
   }
 
   /**
@@ -354,8 +318,8 @@ class BracketPlayRepo extends CustomPostRepoBase {
       $bracket_id = $bracket_id->id;
     }
     global $wpdb;
-    $plays_table = $this->plays_table();
-    $picks_table = $this->picks_table();
+    $plays_table = self::table_name();
+    $picks_table = $this->pick_repo->table_name();
     $posts_table = $wpdb->prefix . 'posts';
     $users_table = $wpdb->prefix . 'users';
 
@@ -435,7 +399,7 @@ class BracketPlayRepo extends CustomPostRepoBase {
     if (empty($update_fields)) {
       return;
     }
-    $this->wpdb->update($this->plays_table(), $update_data, [
+    $this->wpdb->update(self::table_name(), $update_data, [
       $id_field => $play_id,
     ]);
   }
@@ -444,11 +408,50 @@ class BracketPlayRepo extends CustomPostRepoBase {
     return ['is_printed'];
   }
 
-  public function picks_table() {
-    return $this->wpdb->prefix . 'bracket_builder_match_picks';
+  public static function table_name(): string {
+    return CustomTableNames::table_name('plays');
   }
 
-  public function plays_table() {
-    return $this->wpdb->prefix . 'bracket_builder_plays';
+  public static function create_table(): void {
+    /**
+     * Create the play meta table
+     */
+
+    global $wpdb;
+    $table_name = self::table_name();
+    $brackets_table = BracketRepo::table_name();
+    $posts_table = $wpdb->posts;
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			post_id bigint(20) UNSIGNED NOT NULL,
+			total_score int(11),
+			accuracy_score float,
+			bracket_post_id bigint(20) UNSIGNED,
+      bracket_id bigint(20) UNSIGNED,
+			busted_play_post_id bigint(20) UNSIGNED,
+			busted_play_id bigint(20) UNSIGNED,
+      is_printed tinyint(1) NOT NULL DEFAULT 0,
+			PRIMARY KEY (id),
+			UNIQUE KEY (post_id),
+			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE,
+			FOREIGN KEY (bracket_id) REFERENCES {$brackets_table}(id) ON DELETE CASCADE,
+			FOREIGN KEY (busted_play_post_id) REFERENCES {$posts_table}(ID) ON DELETE SET NULL,
+			FOREIGN KEY (busted_play_id) REFERENCES {$table_name}(id) ON DELETE SET NULL
+
+		) $charset_collate;";
+
+    // import dbDelta
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta($sql);
+  }
+
+  public static function drop_table(): void {
+    global $wpdb;
+    $table_name = self::table_name();
+    $sql = "DROP TABLE IF EXISTS {$table_name}";
+    $wpdb->query($sql);
   }
 }
