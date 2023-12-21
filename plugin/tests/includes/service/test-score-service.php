@@ -472,4 +472,29 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     $this->assertNull($updated->total_score);
     $this->assertNull($updated->accuracy_score);
   }
+
+  public function test_set_winners() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $play_winner = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 5,
+    ]);
+    $play_loser = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 3,
+    ]);
+    $score_service = new ScoreService([
+      'ignore_late_plays' => false,
+    ]);
+
+    $score_service->set_winners($bracket);
+
+    $winner = $score_service->play_repo->get($play_winner->id);
+    $loser = $score_service->play_repo->get($play_loser->id);
+
+    $this->assertTrue($winner->is_winner);
+    $this->assertFalse($loser->is_winner);
+  }
 }
