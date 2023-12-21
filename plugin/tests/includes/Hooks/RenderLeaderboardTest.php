@@ -39,6 +39,13 @@ class RenderLeaderboardTest extends WPBB_UnitTestCase {
       'title' => 'Test Bracket',
       'status' => 'score',
     ]);
+    $user = self::factory()->user->create_object([
+      'user_login' => 'test_user',
+      'user_email' => 'test',
+      'user_pass' => 'test',
+      'first_name' => 'Test',
+      'last_name' => 'User',
+    ]);
 
     $play1 = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
@@ -49,6 +56,7 @@ class RenderLeaderboardTest extends WPBB_UnitTestCase {
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
       ],
+      'author' => $user,
     ]);
     $updated_bracket = self::factory()->bracket->update_object($bracket, [
       'results' => [
