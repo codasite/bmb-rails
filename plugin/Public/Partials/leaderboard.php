@@ -74,6 +74,8 @@ function leaderboard_play_list_item(BracketPlay $play, $winner = false, $show_sc
 	$play_id = $play->id;
 	$play_author = $play->author;
 	$author_name = get_the_author_meta('user_login', $play_author);
+  $customer = new \WC_Customer($play_author);
+  $state = $customer->get_billing_state();
 	$time_ago = human_time_diff(get_the_time('U', $play_id), current_time('timestamp')) . ' ago';
 	$winning_team = $play->get_winning_team();
 	$winning_team_name = $winning_team ? $winning_team->name : '';
@@ -104,9 +106,14 @@ function leaderboard_play_list_item(BracketPlay $play, $winner = false, $show_sc
 					</span>
 				</div>
 				<div class="tw-flex tw-flex-col tw-flex-grow">
-					<span class="<?php echo $winner ? 'tw-text-24 sm:tw-text-32' : 'tw-text-20 sm:tw-text-24' ?> tw-font-700">
-						<?php echo esc_html($author_name); ?>
-					</span>
+          <div class="<?php echo $winner ? 'tw-text-24 sm:tw-text-32' : 'tw-text-20 sm:tw-text-24'?>">
+            <span class="tw-font-700">
+              <?php echo esc_html($author_name); ?>
+            </span>
+            <span class="tw-font-400">
+              <?php echo $state ? "- $state" : '' ?>
+            </span>
+          </div>
 					<span class="tw-text-white/50 <?php echo $winner ? 'tw-text-16' : 'tw-text-12' ?> tw-font-500">
 						<?php echo "played " . esc_html($time_ago); ?>
 					</span>

@@ -11,10 +11,20 @@
       "WStrategies\\BMB\\": ""
     }
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://wpackagist.org",
+      "only": [
+        "wpackagist-plugin/*"
+      ]
+    }
+  ],
   "require-dev": {
     "phpunit/phpunit": "^9.5",
     "yoast/phpunit-polyfills": "^1.0",
-    "spatie/phpunit-snapshot-assertions": "^4.2"
+    "spatie/phpunit-snapshot-assertions": "^4.2",
+    "wpackagist-plugin/woocommerce": "8.4.0"
   },
   "require": {
     "aws/aws-sdk-php": "^3.270",
@@ -26,5 +36,17 @@
   "scripts": {
     "test": "phpunit --colors=always",
     "coverage": "mkdir -p /var/www/html/coverage && phpunit --colors=always --coverage-html /var/www/html/coverage"
+  },
+  "config": {
+    "allow-plugins": {
+      "composer/installers": true
+    }
+  },
+  "extra": {
+    "installer-paths": {
+      "vendor/{$vendor}/{$name}": [
+        "wpackagist-plugin/woocommerce"
+      ]
+    }
   }
 }
