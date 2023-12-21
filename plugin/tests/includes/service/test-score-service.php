@@ -497,4 +497,36 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     $this->assertTrue($winner->is_winner);
     $this->assertFalse($loser->is_winner);
   }
+
+  public function test_set_multiple_winners() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $play_winner1 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 5,
+    ]);
+    $play_winner2 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 5,
+    ]);
+    $play_loser = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 3,
+    ]);
+    $score_service = new ScoreService([
+      'ignore_late_plays' => false,
+    ]);
+
+    $score_service->set_winners($bracket);
+
+    $winner1 = $score_service->play_repo->get($play_winner1->id);
+    $winner2 = $score_service->play_repo->get($play_winner2->id);
+    $loser = $score_service->play_repo->get($play_loser->id);
+
+    $this->assertTrue($winner1->is_winner);
+    $this->assertTrue($winner2->is_winner);
+    $this->assertFalse($loser->is_winner);
+  }
 }
