@@ -30,12 +30,12 @@ $accuracy = $user->get_total_accuracy() * 100;
 				<h3 class="tw-text-20 tw-text-white/50">Accuracy Score</h3>
 			</div>
 		</div> -->
-		<!-- <div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-end">
+		<div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-end">
 			<div class="tw-flex tw-flex-col tw-gap-4">
-				<h1><?php echo $wins ?></h1>
-				<h3 class="tw-text-20 tw-text-white/50">Tournament Wins</h3>
+				<h1 class="tw-text-48 sm:tw-text-64"><?php echo $wins ?></h1>
+				<h3 class="tw-text-20 tw-text-white/50 tw-font-500">Tournament Wins</h3>
 			</div>
-		</div> -->
+		</div>
 		<div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-between">
 			<a href="<?php echo get_permalink() . 'play-history'; ?>" class="tw-flex tw-gap-16 tw-items-center hover:tw-text-blue">
 				<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'Public/assets/icons/arrow_up_right.svg'); ?>

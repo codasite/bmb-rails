@@ -7,7 +7,7 @@ use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 
-class NotificationRepo {
+class NotificationRepo implements CustomTableInterface {
   private \wpdb $wpdb;
 
   function __construct() {
@@ -39,7 +39,7 @@ class NotificationRepo {
         $params[] = $args['notification_type'];
       }
     }
-    $table_name = $this->notification_table();
+    $table_name = self::table_name();
     $query = $this->wpdb->prepare(
       "SELECT * FROM {$table_name} {$where}",
       $params
@@ -95,7 +95,7 @@ class NotificationRepo {
     if ($existing) {
       return $existing;
     }
-    $table_name = $this->notification_table();
+    $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
       'post_id' => $notification->post_id,
       'user_id' => $notification->user_id,
@@ -107,7 +107,7 @@ class NotificationRepo {
   }
 
   public function delete($id): bool {
-    $table_name = $this->notification_table();
+    $table_name = self::table_name();
     $this->wpdb->delete($table_name, ['id' => $id]);
     if ($this->wpdb->last_error) {
       return false;
@@ -115,25 +115,34 @@ class NotificationRepo {
     return true;
   }
 
-  public function notification_table(): string {
-    return $this->wpdb->prefix . 'bracket_builder_notifications';
+  public static function table_name(): string {
+    return CustomTableNames::table_name('notifications');
   }
 
-  public function create_notification_table(): void {
-    $table_name = $this->notification_table();
-    $charset_collate = $this->wpdb->get_charset_collate();
-    $prefix = $this->wpdb->prefix;
+  public static function create_table(): void {
+    global $wpdb;
+    $table_name = self::table_name();
+    $posts_table = $wpdb->posts;
+    $users_table = $wpdb->users;
+    $charset_collate = $wpdb->get_charset_collate();
     $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
       id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			post_id bigint UNSIGNED NOT NULL,
       user_id bigint UNSIGNED NOT NULL,
       notification_type varchar(50) NOT NULL,
 			PRIMARY KEY (id),
-			FOREIGN KEY (post_id) REFERENCES {$this->wpdb->prefix}posts(ID) ON DELETE CASCADE,
-			FOREIGN KEY (user_id) REFERENCES {$this->wpdb->prefix}users(ID) ON DELETE CASCADE,
+			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE,
+			FOREIGN KEY (user_id) REFERENCES {$users_table}(ID) ON DELETE CASCADE,
       UNIQUE (post_id, user_id, notification_type)
     ) $charset_collate;";
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
+  }
+
+  public static function drop_table(): void {
+    global $wpdb;
+    $table_name = self::table_name();
+    $sql = "DROP TABLE IF EXISTS {$table_name}";
+    $wpdb->query($sql);
   }
 }

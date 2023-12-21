@@ -4,10 +4,12 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 
 class PlayRepoTest extends WPBB_UnitTestCase {
-  private $play_repo;
+  private BracketPlayRepo $play_repo;
+  private BracketMatchPickRepo $pick_repo;
 
   public function set_up() {
     parent::set_up();
@@ -254,7 +256,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($user->ID, $user_pick['user_id']);
     $this->assertEquals($play->picks[0]->id, $user_pick['pick_id']);
 
-    $pick = $this->play_repo->get_pick($user_picks[0]['pick_id']);
+    $pick = $this->play_repo->pick_repo->get_pick($user_picks[0]['pick_id']);
     $this->assertEquals($result->round_index, $pick->round_index);
     $this->assertEquals($result->match_index, $pick->match_index);
     $this->assertEquals($result->winning_team_id, $pick->winning_team_id);
@@ -328,7 +330,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $user_pick1 = $user_picks[0];
     $this->assertEquals($user1->ID, $user_pick1['user_id']);
     $this->assertEquals($play1->picks[2]->id, $user_pick1['pick_id']);
-    $pick1 = $this->play_repo->get_pick($user_pick1['pick_id']);
+    $pick1 = $this->play_repo->pick_repo->get_pick($user_pick1['pick_id']);
     $this->assertEquals($result->round_index, $pick1->round_index);
     $this->assertEquals($result->match_index, $pick1->match_index);
     $this->assertEquals($result->winning_team_id, $pick1->winning_team_id);
@@ -336,7 +338,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $user_pick2 = $user_picks[1];
     $this->assertEquals($user2->ID, $user_pick2['user_id']);
     $this->assertEquals($play2->picks[2]->id, $user_pick2['pick_id']);
-    $pick2 = $this->play_repo->get_pick($user_pick2['pick_id']);
+    $pick2 = $this->play_repo->pick_repo->get_pick($user_pick2['pick_id']);
     $this->assertEquals($result->round_index, $pick2->round_index);
     $this->assertEquals($result->match_index, $pick2->match_index);
     $this->assertNotEquals($result->winning_team_id, $pick2->winning_team_id);

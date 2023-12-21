@@ -9,7 +9,7 @@ use WStrategies\BMB\Includes\Utils;
 /**
  * Repository for BracketMatches, Match Picks, and Teams
  */
-class BracketTeamRepo {
+class BracketTeamRepo implements CustomTableInterface {
   /**
    * @var wpdb
    */
@@ -29,7 +29,7 @@ class BracketTeamRepo {
       return null;
     }
 
-    $table_name = $this->team_table();
+    $table_name = self::table_name();
     $team = $this->wpdb->get_row(
       $this->wpdb->prepare("SELECT * FROM {$table_name} WHERE id = %d", $id),
       ARRAY_A
@@ -38,7 +38,7 @@ class BracketTeamRepo {
   }
 
   public function get_all(): array {
-    $table_name = $this->team_table();
+    $table_name = self::table_name();
     $team_results = $this->wpdb->get_results(
       "SELECT * FROM {$table_name}",
       ARRAY_A
@@ -55,7 +55,7 @@ class BracketTeamRepo {
       return $team;
     }
 
-    $table_name = $this->team_table();
+    $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
       'name' => $team->name,
       'bracket_id' => $bracket_id,
@@ -74,7 +74,7 @@ class BracketTeamRepo {
     }
     if ($new_team->name !== $old_team->name) {
       $this->wpdb->update(
-        $this->team_table(),
+        self::table_name(),
         ['name' => $new_team->name],
         ['id' => $id]
       );
@@ -85,7 +85,37 @@ class BracketTeamRepo {
     return $old_team;
   }
 
-  public function team_table(): string {
-    return $this->wpdb->prefix . 'bracket_builder_teams';
+  public static function table_name(): string {
+    return CustomTableNames::table_name('teams');
+  }
+
+  public static function create_table(): void {
+    /**
+     * Create the teams table
+     */
+
+    global $wpdb;
+    $table_name = self::table_name();
+    $charset_collate = $wpdb->get_charset_collate();
+    $brackets_table = BracketRepo::table_name();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			name varchar(255) NOT NULL,
+			bracket_id bigint(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			FOREIGN KEY (bracket_id) REFERENCES {$brackets_table}(id) ON DELETE CASCADE
+		) $charset_collate;";
+
+    // import dbDelta
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta($sql);
+  }
+
+  public static function drop_table(): void {
+    global $wpdb;
+    $table_name = self::table_name();
+    $sql = "DROP TABLE IF EXISTS {$table_name}";
+    $wpdb->query($sql);
   }
 }

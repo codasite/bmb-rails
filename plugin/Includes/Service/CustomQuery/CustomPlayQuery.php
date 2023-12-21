@@ -111,7 +111,7 @@ class CustomPlayQuery {
 
   private function join_plays_table() {
     $plays_alias = self::$plays_alias;
-    return "JOIN {$this->play_repo->plays_table()} $plays_alias ON plays.post_id = {$this->wpdb->posts}.ID";
+    return "JOIN {$this->play_repo->table_name()} $plays_alias ON plays.post_id = {$this->wpdb->posts}.ID";
   }
 
   private function map_query_fields(&$query) {

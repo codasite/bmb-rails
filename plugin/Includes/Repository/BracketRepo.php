@@ -2,19 +2,26 @@
 namespace WStrategies\BMB\Includes\Repository;
 
 use DateTimeImmutable;
-use Exception;
 use WP_Post;
 use WP_Query;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
 
-class BracketRepo extends CustomPostRepoBase {
+class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   /**
    * @var BracketTeamRepo
    */
   private $team_repo;
+
+  /**
+   * @var BracketMatchRepo
+   */
+  private $match_repo;
+
+  /**
+   * @var BracketResultsRepo
+   */
+  private $results_repo;
 
   /**
    * @var wpdb
@@ -25,6 +32,8 @@ class BracketRepo extends CustomPostRepoBase {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = new BracketTeamRepo();
+    $this->match_repo = new BracketMatchRepo($this->team_repo);
+    $this->results_repo = new BracketResultsRepo($this, $this->team_repo);
     parent::__construct();
   }
 
@@ -35,16 +44,16 @@ class BracketRepo extends CustomPostRepoBase {
       return null;
     }
 
-    $bracket_id = $this->insert_bracket_data([
+    $bracket_id = $this->insert_custom_table_data([
       'post_id' => $post_id,
     ]);
 
     if ($bracket->matches) {
-      $this->insert_matches($bracket_id, $bracket->matches);
+      $this->match_repo->insert_matches($bracket_id, $bracket->matches);
     }
 
     if ($bracket->results) {
-      $this->insert_results($bracket_id, $bracket->results);
+      $this->results_repo->insert_results($bracket_id, $bracket->results);
     }
 
     # refresh from db
@@ -52,65 +61,10 @@ class BracketRepo extends CustomPostRepoBase {
     return $bracket;
   }
 
-  public function insert_bracket_data(array $data): int {
-    $table_name = $this->brackets_table();
+  public function insert_custom_table_data(array $data): int {
+    $table_name = self::table_name();
     $this->wpdb->insert($table_name, $data);
     return $this->wpdb->insert_id;
-  }
-
-  public function insert_matches(int $bracket_id, array $matches): void {
-    $table_name = $this->match_table();
-    foreach ($matches as $match) {
-      // Skip if match is null
-      if ($match === null) {
-        continue;
-      }
-      // First, insert teams
-      $team1 = $this->team_repo->add($bracket_id, $match->team1);
-      $team2 = $this->team_repo->add($bracket_id, $match->team2);
-
-      $this->wpdb->insert($table_name, [
-        'bracket_id' => $bracket_id,
-        'round_index' => $match->round_index,
-        'match_index' => $match->match_index,
-        'team1_id' => $team1?->id,
-        'team2_id' => $team2?->id,
-      ]);
-      $match->id = $this->wpdb->insert_id;
-    }
-  }
-
-  public function insert_results(int $bracket_id, array $results): void {
-    $this->wpdb->query('START TRANSACTION');
-    try {
-      foreach ($results as $result) {
-        $this->insert_result($bracket_id, $result);
-      }
-      // assuming all went well, update the results_first_updated_at field
-      $this->update_bracket_data(
-        $bracket_id,
-        [
-          'results_first_updated_at' => (new DateTimeImmutable())->format(
-            'Y-m-d H:i:s'
-          ),
-        ],
-        false
-      );
-      $this->wpdb->query('COMMIT');
-    } catch (Exception $e) {
-      $this->wpdb->query('ROLLBACK');
-      throw $e;
-    }
-  }
-
-  public function insert_result(int $bracket_id, MatchPick $pick): void {
-    $table_name = $this->results_table();
-    $this->wpdb->insert($table_name, [
-      'bracket_id' => $bracket_id,
-      'round_index' => $pick->round_index,
-      'match_index' => $pick->match_index,
-      'winning_team_id' => $pick->winning_team_id,
-    ]);
   }
 
   public function get(
@@ -131,7 +85,7 @@ class BracketRepo extends CustomPostRepoBase {
       return null;
     }
 
-    $bracket_data = $this->get_bracket_data($bracket_post->ID);
+    $bracket_data = $this->get_custom_table_data($bracket_post->ID);
     if (!isset($bracket_data['id'])) {
       return null;
     }
@@ -141,10 +95,14 @@ class BracketRepo extends CustomPostRepoBase {
       : false;
 
     $matches =
-      $fetch_matches && $bracket_id ? $this->get_matches($bracket_id) : [];
+      $fetch_matches && $bracket_id
+        ? $this->match_repo->get_matches($bracket_id)
+        : [];
 
     $results =
-      $fetch_results && $bracket_id ? $this->get_results($bracket_id) : [];
+      $fetch_results && $bracket_id
+        ? $this->results_repo->get_results($bracket_id)
+        : [];
 
     $author_id = (int) $bracket_post->post_author;
 
@@ -176,124 +134,12 @@ class BracketRepo extends CustomPostRepoBase {
     return new Bracket($data);
   }
 
-  public function update(
-    Bracket|int|null $bracket,
-    array|null $data = null
-  ): ?Bracket {
-    if ($bracket === null) {
-      return null;
-    }
-    if (!($bracket instanceof Bracket)) {
-      $bracket = $this->get($bracket);
-    }
-    $array = $bracket->to_array();
-    $updated_array = empty($data) ? $array : array_merge($array, $data);
-
-    $bracket = Bracket::from_array($updated_array);
-
-    $post_id = $this->update_post($bracket, true);
-
-    if (is_wp_error($post_id)) {
-      return null;
-    }
-
-    $this->update_bracket_data($post_id, $updated_array);
-    // $this->update_teams($bracket->matches);
-
-    $bracket_data = $this->get_bracket_data($post_id);
-    $bracket_id = $bracket_data['id'];
-
-    if ($bracket_id && $bracket->results) {
-      $this->update_results($bracket_id, $bracket->results);
-    }
-
-    # refresh from db
-    $bracket = $this->get($post_id);
-    return $bracket;
-  }
-
-  public function update_results(
-    int $bracket_id,
-    array|null $new_results
-  ): void {
-    if ($new_results === null) {
-      return;
-    }
-
-    $old_results = $this->get_results($bracket_id);
-
-    if (empty($old_results)) {
-      $this->insert_results($bracket_id, $new_results);
-      return;
-    }
-
-    $this->wpdb->query('START TRANSACTION');
-
-    try {
-      foreach ($new_results as $new_result) {
-        $pick_exists = false;
-        foreach ($old_results as $old_result) {
-          if (
-            $new_result->round_index === $old_result->round_index &&
-            $new_result->match_index === $old_result->match_index
-          ) {
-            $pick_exists = true;
-            if ($new_result->winning_team_id !== $old_result->winning_team_id) {
-              $this->wpdb->update(
-                $this->results_table(),
-                [
-                  'winning_team_id' => $new_result->winning_team_id,
-                ],
-                [
-                  'id' => $old_result->id,
-                ]
-              );
-            }
-          }
-        }
-        if (!$pick_exists) {
-          $this->insert_result($bracket_id, $new_result);
-        }
-      }
-      $this->wpdb->query('COMMIT');
-    } catch (Exception $e) {
-      $this->wpdb->query('ROLLBACK');
-      throw $e;
-    }
-  }
-
-  private function update_teams(array $new_matches): void {
-    foreach ($new_matches as $match) {
-      $this->team_repo->update($match->team1->id, $match->team1);
-      $this->team_repo->update($match->team2->id, $match->team2);
-    }
-  }
-
-  private function update_bracket_data(
-    int $id,
-    array $data,
-    bool $use_post_id = true
-  ): void {
-    $old_data = $this->get_bracket_data($id, $use_post_id);
+  public function get_custom_table_data(
+    int|null $id,
+    $use_post_id = true
+  ): array {
     $id_field = $use_post_id ? 'post_id' : 'id';
-    $update_fields = ['results_first_updated_at'];
-    $update_data = [];
-    foreach ($data as $key => $value) {
-      if (in_array($key, $update_fields) && $value !== $old_data[$key]) {
-        $update_data[$key] = $value;
-      }
-    }
-    if (empty($update_data)) {
-      return;
-    }
-    $this->wpdb->update($this->brackets_table(), $update_data, [
-      $id_field => $id,
-    ]);
-  }
-
-  public function get_bracket_data(int|null $id, $use_post_id = true): array {
-    $id_field = $use_post_id ? 'post_id' : 'id';
-    $table_name = $this->brackets_table();
+    $table_name = self::table_name();
     $bracket_data = $this->wpdb->get_row(
       $this->wpdb->prepare(
         "SELECT * FROM $table_name WHERE $id_field = %d",
@@ -307,51 +153,6 @@ class BracketRepo extends CustomPostRepoBase {
     }
 
     return $bracket_data;
-  }
-
-  public function get_matches(int $bracket_id): array {
-    $table_name = $this->match_table();
-    $where = $bracket_id ? "WHERE bracket_id = $bracket_id" : '';
-    $match_results = $this->wpdb->get_results(
-      "SELECT * FROM {$table_name} $where ORDER BY round_index, match_index ASC",
-      ARRAY_A
-    );
-    $matches = [];
-    foreach ($match_results as $match) {
-      $team1 = $this->team_repo->get($match['team1_id']);
-      $team2 = $this->team_repo->get($match['team2_id']);
-
-      $matches[] = new BracketMatch([
-        'round_index' => $match['round_index'],
-        'match_index' => $match['match_index'],
-        'team1' => $team1,
-        'team2' => $team2,
-        'id' => $match['id'],
-      ]);
-    }
-
-    return $matches;
-  }
-
-  public function get_results(int|null $bracket_id): array {
-    $table_name = $this->results_table();
-    $where = $bracket_id ? "WHERE bracket_id = $bracket_id" : '';
-    $sql = "SELECT * FROM $table_name $where ORDER BY round_index, match_index ASC";
-    $data = $this->wpdb->get_results($sql, ARRAY_A);
-
-    $bracket_results = [];
-    foreach ($data as $result) {
-      $winning_team_id = $result['winning_team_id'];
-      $winning_team = $this->team_repo->get($winning_team_id);
-      $bracket_results[] = new MatchPick([
-        'round_index' => $result['round_index'],
-        'match_index' => $result['match_index'],
-        'winning_team_id' => $winning_team_id,
-        'id' => $result['id'],
-        'winning_team' => $winning_team,
-      ]);
-    }
-    return $bracket_results;
   }
 
   public function get_all(array|WP_Query $query = []): array {
@@ -381,19 +182,114 @@ class BracketRepo extends CustomPostRepoBase {
     return $brackets;
   }
 
+  public function update(
+    Bracket|int|null $bracket,
+    array|null $data = null
+  ): ?Bracket {
+    if ($bracket === null) {
+      return null;
+    }
+    if (!($bracket instanceof Bracket)) {
+      $bracket = $this->get($bracket);
+    }
+    $array = $bracket->to_array();
+    $updated_array = empty($data) ? $array : array_merge($array, $data);
+
+    $bracket = Bracket::from_array($updated_array);
+
+    $post_id = $this->update_post($bracket, true);
+
+    if (is_wp_error($post_id)) {
+      return null;
+    }
+
+    $this->update_custom_table_data($post_id, $updated_array);
+    // $this->update_teams($bracket->matches);
+
+    $bracket_data = $this->get_custom_table_data($post_id);
+    $bracket_id = $bracket_data['id'];
+
+    if ($bracket_id && $bracket->results) {
+      $this->results_repo->update_results($bracket_id, $bracket->results);
+    }
+
+    # refresh from db
+    $bracket = $this->get($post_id);
+    return $bracket;
+  }
+
+  public function update_custom_table_data(
+    int $id,
+    array $data,
+    bool $use_post_id = true
+  ): void {
+    $old_data = $this->get_custom_table_data($id, $use_post_id);
+    $id_field = $use_post_id ? 'post_id' : 'id';
+    $update_fields = ['results_first_updated_at'];
+    $update_data = [];
+    foreach ($data as $key => $value) {
+      if (in_array($key, $update_fields) && $value !== $old_data[$key]) {
+        $update_data[$key] = $value;
+      }
+    }
+    if (empty($update_data)) {
+      return;
+    }
+    $this->wpdb->update(self::table_name(), $update_data, [
+      $id_field => $id,
+    ]);
+  }
+
   public function delete(int $id, $force = false): bool {
     return $this->delete_post($id, $force);
   }
 
-  public function results_table(): string {
-    return $this->wpdb->prefix . 'bracket_builder_bracket_results';
+  public static function table_name(): string {
+    return CustomTableNames::table_name('brackets');
   }
 
-  public function match_table(): string {
-    return $this->wpdb->prefix . 'bracket_builder_matches';
+  public static function create_table(): void {
+    global $wpdb;
+    /**
+     * Create the bracket brackets table
+     */
+
+    $table_name = self::table_name();
+    $posts_table = $wpdb->posts;
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS $table_name (
+			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			post_id bigint(20) UNSIGNED NOT NULL,
+      results_first_updated_at datetime,
+      winning_play_id bigint(20) UNSIGNED,
+      winning_play_post_id bigint(20) UNSIGNED,
+			PRIMARY KEY (id),
+			UNIQUE KEY (post_id),
+			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE
+		) $charset_collate;";
+
+    // import dbDelta
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta($sql);
   }
 
-  public function brackets_table(): string {
-    return $this->wpdb->prefix . 'bracket_builder_brackets';
+  public static function add_constraints() {
+    global $wpdb;
+    $table_name = self::table_name();
+    $plays_table = BracketPlayRepo::table_name();
+    $posts_table = $wpdb->posts;
+    $sql = "ALTER TABLE $table_name
+      ADD FOREIGN KEY (winning_play_id) REFERENCES {$plays_table}(id) ON DELETE SET NULL,
+      ADD FOREIGN KEY (winning_play_post_id) REFERENCES {$posts_table}(ID) ON DELETE SET NULL
+    ";
+    $wpdb->query($sql);
+  }
+
+  public static function drop_table(): void {
+    global $wpdb;
+    $table_name = self::table_name();
+    $sql = "DROP TABLE IF EXISTS {$table_name}";
+    $wpdb->query($sql);
   }
 }

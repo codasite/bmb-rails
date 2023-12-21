@@ -38,7 +38,7 @@ class TeamRepoTest extends WPBB_UnitTestCase {
       'name' => $dirty_name,
     ]);
 
-    $bracket_data = $this->bracket_repo->get_bracket_data($bracket->id);
+    $bracket_data = $this->bracket_repo->get_custom_table_data($bracket->id);
     $team = $this->team_repo->add($bracket_data['id'], $team);
 
     $this->assertNotNull($team->id);

@@ -5,8 +5,10 @@ use DateTimeImmutable;
 use Exception;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Utils;
 
 class ScoreService implements ScoreServiceInterface {
@@ -77,7 +79,7 @@ class ScoreService implements ScoreServiceInterface {
       throw new Exception('Cannot find bracket');
     }
 
-    $bracket_data = $this->bracket_repo->get_bracket_data($bracket->id);
+    $bracket_data = $this->bracket_repo->get_custom_table_data($bracket->id);
     $bracket_id = $bracket_data['id'];
 
     if (!$bracket_id) {
@@ -92,7 +94,7 @@ class ScoreService implements ScoreServiceInterface {
 
     $high_score = $bracket->highest_possible_score();
 
-    $plays_table = $this->play_repo->plays_table();
+    $plays_table = $this->play_repo->table_name();
 
     $join = $this->get_join_clause($bracket_id, $num_rounds);
     $total_score_exp = $this->get_total_score_exp($num_rounds, $point_values);
@@ -114,10 +116,9 @@ class ScoreService implements ScoreServiceInterface {
   }
 
   private function get_join_clause($bracket_id, $num_rounds): string {
-    $picks_table = $this->play_repo->picks_table();
-    $results_table = $this->bracket_repo->results_table();
+    $picks_table = BracketMatchPickRepo::table_name();
+    $results_table = BracketResultsRepo::table_name();
     $posts_table = $this->wpdb->posts;
-    $brackets_table = $this->bracket_repo->brackets_table();
 
     $num_correct_select = $this->get_num_correct_select($num_rounds);
 
