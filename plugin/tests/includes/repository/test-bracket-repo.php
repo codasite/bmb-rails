@@ -279,19 +279,4 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $updated = self::factory()->bracket->get_object_by_id($bracket->id);
     $this->assertEquals(null, $updated->results_first_updated_at);
   }
-
-  public function test_update_winning_play() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
-      'bracket_id' => $bracket->id,
-    ]);
-    $bracket->winning_play_id = $play->id;
-    $this->bracket_repo->update($bracket->id, [
-      'winning_play_id' => $play->id,
-    ]);
-
-    $updated = self::factory()->bracket->get_object_by_id($bracket->id);
-
-    $this->assertEquals($play->id, $updated->winning_play_id);
-  }
 }

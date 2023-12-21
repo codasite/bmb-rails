@@ -39,11 +39,6 @@ class Bracket extends PostBase implements PostBracketInterface {
    */
   public $results_first_updated_at;
 
-  /**
-   * @var int|null
-   */
-  public $winning_play_id;
-
   public function __construct(array $data = []) {
     parent::__construct($data);
     $this->month = $data['month'] ?? null;
@@ -53,9 +48,6 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->matches = $data['matches'] ?? [];
     $this->results = $data['results'] ?? [];
     $this->results_first_updated_at = $data['results_first_updated_at'] ?? null;
-    $this->winning_play_id = isset($data['winning_play_id'])
-      ? (int) $data['winning_play_id']
-      : null;
   }
 
   public function get_winning_team(): ?Team {
@@ -184,7 +176,6 @@ class Bracket extends PostBase implements PostBracketInterface {
     $bracket['wildcard_placement'] = $this->wildcard_placement;
     $bracket['month'] = $this->month;
     $bracket['year'] = $this->year;
-    $bracket['winning_play_id'] = $this->winning_play_id;
     $bracket['results_first_updated_at'] = $this->results_first_updated_at
       ? $this->results_first_updated_at->format('Y-m-d H:i:s')
       : null;

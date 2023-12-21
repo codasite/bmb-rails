@@ -44,7 +44,6 @@ class Activator {
 
     BracketRepo::create_table();
     BracketPlayRepo::create_table();
-    BracketRepo::add_constraints();
     BracketTeamRepo::create_table();
     BracketMatchRepo::create_table();
     BracketMatchPickRepo::create_table();
