@@ -73,7 +73,7 @@ function share_bracket_btn($endpoint) {
 function leaderboard_play_list_item(BracketPlay $play, $winner = false, $show_score = false, $complete = false) {
 	$play_id = $play->id;
 	$play_author = $play->author;
-	$author_name = get_the_author_meta('display_name', $play_author);
+	$author_name = get_the_author_meta('user_login', $play_author);
 	$time_ago = human_time_diff(get_the_time('U', $play_id), current_time('timestamp')) . ' ago';
 	$winning_team = $play->get_winning_team();
 	$winning_team_name = $winning_team ? $winning_team->name : '';
