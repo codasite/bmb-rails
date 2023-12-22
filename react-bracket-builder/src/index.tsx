@@ -100,9 +100,13 @@ function renderBracketBuilder(ajaxObj: wpbbAppObj) {
 }
 
 function renderPlayBracket(ajaxObj: wpbbAppObj) {
-  const { bracket } = ajaxObj
-  const bracketProductArchiveUrl = ajaxObj.bracketProductArchiveUrl
-  const myPlayHistoryUrl = ajaxObj.myPlayHistoryUrl
+  const {
+    bracket,
+    bracketProductArchiveUrl,
+    myPlayHistoryUrl,
+    isUserLoggedIn,
+  } = ajaxObj
+
   if (bracket) {
     renderDiv(
       <App>
@@ -110,6 +114,7 @@ function renderPlayBracket(ajaxObj: wpbbAppObj) {
           bracket={bracket}
           bracketProductArchiveUrl={bracketProductArchiveUrl}
           myPlayHistoryUrl={myPlayHistoryUrl}
+          isUserLoggedIn={isUserLoggedIn}
         />
       </App>,
       'wpbb-play-bracket'

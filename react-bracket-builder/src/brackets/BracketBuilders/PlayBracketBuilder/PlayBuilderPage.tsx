@@ -24,6 +24,7 @@ import { PlayStorage } from '../../shared/storages/PlayStorage'
 interface PlayPageProps {
   bracketProductArchiveUrl: string
   myPlayHistoryUrl: string
+  isUserLoggedIn: boolean
   bracketStylesheetUrl: string
   bracket?: BracketRes
   matchTree?: MatchTree
@@ -39,6 +40,7 @@ const PlayPage = (props: PlayPageProps) => {
     bracket,
     bracketProductArchiveUrl,
     myPlayHistoryUrl,
+    isUserLoggedIn,
     matchTree,
     setMatchTree,
     bracketMeta,
@@ -49,6 +51,7 @@ const PlayPage = (props: PlayPageProps) => {
 
   const [processing, setProcessing] = useState(false)
   const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
+  const [showRegisterModal, setShowRegisterModal] = useState(false)
   const { width: windowWidth, height: windowHeight } = useContext(
     WindowDimensionsContext
   )
@@ -157,7 +160,11 @@ const PlayPage = (props: PlayPageProps) => {
           ...playReq,
           id: playId,
         }
-        window.location.assign(myPlayHistoryUrl)
+        if (isUserLoggedIn) {
+          window.location.assign(myPlayHistoryUrl)
+        } else {
+          setShowRegisterModal(true)
+        }
       })
       .catch((err) => {
         console.error('error: ', err)
@@ -177,6 +184,8 @@ const PlayPage = (props: PlayPageProps) => {
     bracketMeta,
     setBracketMeta,
     canPlay,
+    showRegisterModal,
+    setShowRegisterModal,
   }
 
   if (showPaginated) {

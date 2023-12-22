@@ -13,6 +13,8 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
     handleApparelClick,
     processing,
     canPlay,
+    showRegisterModal,
+    setShowRegisterModal,
   } = props
 
   const [page, setPage] = useState(() => {

@@ -12,4 +12,6 @@ export interface PlayBuilderProps {
   handleSubmitPicksClick?: () => void
   processing?: boolean
   canPlay?: boolean
+  showRegisterModal?: boolean
+  setShowRegisterModal?: (showRegisterModal: boolean) => void
 }

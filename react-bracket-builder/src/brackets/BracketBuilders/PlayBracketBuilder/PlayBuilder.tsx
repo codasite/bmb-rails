@@ -7,6 +7,7 @@ import { ActionButton } from '../../shared/components/ActionButtons'
 import { PlayBuilderProps } from './types'
 import { Spinner } from '../../shared/components/Spinner'
 import { CircleCheckBrokenIcon, PlusIcon } from '../../shared'
+import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {
@@ -18,6 +19,8 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     handleSubmitPicksClick,
     processing,
     canPlay,
+    showRegisterModal,
+    setShowRegisterModal,
   } = props
   return (
     <div
@@ -28,6 +31,10 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
+      <SubmitPicksRegisterModal
+        show={showRegisterModal}
+        setShow={setShowRegisterModal}
+      />
       {matchTree && (
         <div
           className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
