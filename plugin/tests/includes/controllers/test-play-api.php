@@ -397,4 +397,35 @@ class PlayAPITest extends WPBB_UnitTestCase {
 
     $this->assertEquals(403, $response->get_status());
   }
+
+  public function test_play_for_bmb_official_bracket_is_bmb_official() {
+    $bracket = self::factory()->bracket->create_and_get();
+    // add tag bmb_official
+    wp_add_post_tags($bracket->id, 'bmb_official');
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'generate_images' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(201, $response->get_status());
+
+    $play = $this->play_repo->get($response->get_data()->id);
+
+    $this->assertTrue($play->bmb_official);
+  }
 }
