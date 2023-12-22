@@ -40,11 +40,10 @@ class Activator {
    * @since    1.0.0
    */
   public static function activate() {
-    // self::delete_tables($prefix);
+    self::delete_tables();
 
     BracketRepo::create_table();
     BracketPlayRepo::create_table();
-    BracketRepo::add_constraints();
     BracketTeamRepo::create_table();
     BracketMatchRepo::create_table();
     BracketMatchPickRepo::create_table();
@@ -54,7 +53,7 @@ class Activator {
 
   // WARNING: This function will delete all bracket data
   // DO NOT USE IN PRODUCTION
-  private static function delete_tables(string $prefix) {
+  private static function delete_tables() {
     BracketResultsRepo::drop_table();
     BracketMatchPickRepo::drop_table();
     BracketMatchRepo::drop_table();

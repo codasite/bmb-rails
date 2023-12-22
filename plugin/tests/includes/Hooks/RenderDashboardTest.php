@@ -36,6 +36,7 @@ class RenderDashboardTest extends WPBB_UnitTestCase {
     $play = self::factory()->play->create_object([
       'bracket_id' => $bracket->id,
       'author' => get_current_user_id(),
+      'is_winner' => true,
     ]);
     $rendered = DashboardPage::render('profile');
     $this->assertMatchesHtmlSnapshot($rendered);

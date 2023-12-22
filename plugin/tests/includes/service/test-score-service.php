@@ -472,4 +472,87 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     $this->assertNull($updated->total_score);
     $this->assertNull($updated->accuracy_score);
   }
+
+  public function test_set_winners() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $play_winner = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 5,
+    ]);
+    $play_loser = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 3,
+    ]);
+    $score_service = new ScoreService([
+      'ignore_late_plays' => false,
+    ]);
+
+    $score_service->set_winners($bracket);
+
+    $winner = $score_service->play_repo->get($play_winner->id);
+    $loser = $score_service->play_repo->get($play_loser->id);
+
+    $this->assertTrue($winner->is_winner);
+    $this->assertFalse($loser->is_winner);
+  }
+
+  public function test_set_multiple_winners() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $play_winner1 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 5,
+    ]);
+    $play_winner2 = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 5,
+    ]);
+    $play_loser = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+      'total_score' => 3,
+    ]);
+    $score_service = new ScoreService([
+      'ignore_late_plays' => false,
+    ]);
+
+    $score_service->set_winners($bracket);
+
+    $winner1 = $score_service->play_repo->get($play_winner1->id);
+    $winner2 = $score_service->play_repo->get($play_winner2->id);
+    $loser = $score_service->play_repo->get($play_loser->id);
+
+    $this->assertTrue($winner1->is_winner);
+    $this->assertTrue($winner2->is_winner);
+    $this->assertFalse($loser->is_winner);
+  }
+
+  public function test_winners_set_when_bracket_complete() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'complete',
+    ]);
+    $score_service_mock = $this->getMockBuilder(ScoreService::class)
+      ->onlyMethods(['set_winners'])
+      ->getMock();
+    $score_service_mock
+      ->expects($this->once())
+      ->method('set_winners')
+      ->with($bracket);
+
+    $score_service_mock->score_bracket_plays($bracket);
+  }
+  public function test_winners_not_set_when_bracket_scored() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'score',
+    ]);
+    $score_service_mock = $this->getMockBuilder(ScoreService::class)
+      ->onlyMethods(['set_winners'])
+      ->getMock();
+    $score_service_mock->expects($this->never())->method('set_winners');
+
+    $score_service_mock->score_bracket_plays($bracket);
+  }
 }

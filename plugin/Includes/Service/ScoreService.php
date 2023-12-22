@@ -56,22 +56,29 @@ class ScoreService implements ScoreServiceInterface {
    */
   public function score_bracket_plays(Bracket|int|null $bracket): int {
     try {
+      $bracket = $this->get_bracket($bracket);
       $affected_rows = $this->score_plays($bracket);
+      if ($bracket->status === 'complete') {
+        $this->set_winners($bracket);
+      }
       return $affected_rows;
     } catch (Exception $e) {
       return 0;
     }
   }
 
-  private function score_plays(Bracket|int|null $bracket): int {
-    $point_values = [1, 2, 4, 8, 16, 32];
-
+  private function get_bracket(Bracket|int|null $bracket) {
     if (is_int($bracket)) {
       $bracket = $this->bracket_repo->get($bracket);
     }
     if (!$bracket instanceof Bracket) {
       throw new Exception('Cannot find bracket');
     }
+    return $bracket;
+  }
+
+  private function score_plays(Bracket $bracket): int {
+    $point_values = [1, 2, 4, 8, 16, 32];
 
     $bracket_data = $this->bracket_repo->get_custom_table_data($bracket->id);
     $bracket_id = $bracket_data['id'];
@@ -171,5 +178,22 @@ class ScoreService implements ScoreServiceInterface {
     }
 
     return $where;
+  }
+
+  public function set_winners(Bracket $bracket) {
+    $plays_table = $this->play_repo->table_name();
+    $bracket_id = $bracket->id;
+    $sql = "
+        UPDATE {$plays_table} 
+        SET is_winner = 1
+        WHERE bracket_post_id = {$bracket_id}
+        AND total_score = (
+            SELECT MAX(total_score)
+            FROM {$plays_table}
+            WHERE bracket_post_id = {$bracket_id}
+        )
+      ";
+    $this->wpdb->query($sql);
+    return $this->wpdb->rows_affected;
   }
 }

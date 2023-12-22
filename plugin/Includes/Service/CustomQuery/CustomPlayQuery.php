@@ -20,6 +20,7 @@ class CustomPlayQuery {
     'bracket_post_id',
     'is_printed',
     'is_winner',
+    'bmb_official',
   ];
   // This is a mapping of query fields to the actual field names in the database
   public static $alternate_field_mappings = [

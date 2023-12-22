@@ -632,19 +632,27 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertFalse($play->is_bustable);
   }
 
-  public function test_is_winner_true() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+  public function test_query_is_winner() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+
+    $winner = self::factory()->play->create_and_get([
       'bracket_id' => $bracket->id,
-    ]);
-    self::factory()->bracket->update_object($bracket->id, [
-      'winning_play_id' => $play->id,
+      'is_winner' => true,
     ]);
 
-    $bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+    $loser = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+    ]);
 
-    $play = $this->play_repo->get($play->id);
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'is_winner' => true,
+    ]);
 
-    $this->assertTrue($play->is_winner);
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($winner->id, $plays[0]->id);
   }
 }
