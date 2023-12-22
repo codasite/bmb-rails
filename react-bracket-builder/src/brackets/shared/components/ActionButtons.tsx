@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { DarkModeContext } from '../context/context'
 
 export interface ActionButtonProps {
   disabled?: boolean
@@ -90,19 +91,22 @@ const ActionButtonBase = (props: ActionButtonProps) => {
 }
 
 const BlueButton = (props: ActionButtonProps) => {
-  const { disabled } = props
-  const background = disabled ? 'transparent' : 'blue/15'
-  const border = disabled ? 'white/20' : 'blue'
-  const textColor = disabled ? 'white/20' : 'white'
+  const { disabled, darkMode } = props
+  const background = disabled ? 'transparent' : 'blue'
+  const darkModeBackground = disabled ? 'transparent' : 'blue/15'
+  const border = disabled ? 'black/20' : undefined
+  const darkModeBorder = disabled ? 'white/20' : 'blue'
+  const textColor = disabled ? 'black/20' : 'white'
+  const darkModeTextColor = disabled ? 'white/20' : 'white'
 
   return (
     <ActionButtonBase
       {...props}
-      backgroundColor={background}
+      backgroundColor={darkMode ? darkModeBackground : background}
       padding={16}
-      textColor={textColor}
+      textColor={darkMode ? darkModeTextColor : textColor}
       borderRadius={8}
-      borderColor={border}
+      borderColor={darkMode ? darkModeBorder : border}
     />
   )
 }
@@ -286,9 +290,9 @@ const BigRedButton = (props: ActionButtonProps) => {
 }
 
 export const ActionButton = (props: ActionButtonProps) => {
-  const { variant, darkMode = true } = props
-
-  const newProps = { ...props, darkMode }
+  const { variant, darkMode } = props
+  const darkModeContext = useContext(DarkModeContext)
+  const newProps = { ...props, darkMode: darkMode ?? darkModeContext ?? true }
 
   switch (variant) {
     case 'green':

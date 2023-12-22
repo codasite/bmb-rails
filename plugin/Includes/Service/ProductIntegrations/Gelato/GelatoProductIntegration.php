@@ -62,8 +62,8 @@ class GelatoProductIntegration implements
     $this->admin_hooks = $args['admin_hooks'] ?? new GelatoAdminHooks();
     $this->public_hooks = $args['public_hooks'] ?? new GelatoPublicHooks($this);
     $this->client = $args['client'] ?? new GuzzleClient();
-    $this->utils = new Utils();
-    $this->play_repo = new BracketPlayRepo();
+    $this->utils = $args['utils'] ?? new Utils();
+    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
   }
 
   public function get_http_client(): HttpClientInterface {
@@ -76,6 +76,14 @@ class GelatoProductIntegration implements
 
   public function get_play_repo(): BracketPlayRepo {
     return $this->play_repo;
+  }
+
+  public function get_themes(): array {
+    return ['light', 'dark'];
+  }
+
+  public function get_positions(): array {
+    return ['top', 'center'];
   }
 
   public function load(Loader $loader): void {
@@ -216,7 +224,10 @@ class GelatoProductIntegration implements
   }
 
   public function generate_images(PostBracketInterface $bracket): void {
-    $request_data = $this->request_factory->get_request_data($bracket);
+    $request_data = $this->request_factory->get_request_data($bracket, [
+      'themes' => $this->get_themes(),
+      'positions' => $this->get_positions(),
+    ]);
     $responses = $this->client->send_many($request_data);
     if (defined('DISABLE_IMAGE_GENERATOR_CALLS')) {
       $responses = [
@@ -261,7 +272,26 @@ class GelatoProductIntegration implements
     return $overlay_map;
   }
 
-  public function has_bracket_config() {
+  public function has_all_configs(): bool {
+    $themes = $this->get_themes();
+    $placements = $this->get_positions();
+    $play = $this->play_repo->get();
+    if (!$play) {
+      return false;
+    }
+    $meta = $this->get_meta($play);
+    foreach ($placements as $placement) {
+      foreach ($themes as $theme) {
+        $key = $placement . '_' . $theme;
+        if (!array_key_exists($key, $meta)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  public function play_exists() {
     $play = $this->play_repo->get();
     return $play !== null;
   }
@@ -277,7 +307,6 @@ class GelatoProductIntegration implements
         strpos($key, $placement) !== false &&
         strpos($key, $theme) !== false
       ) {
-        list($placement, $theme) = explode('_', $key);
         $config = new BracketConfig(
           $play->id,
           $play->bracket_id,

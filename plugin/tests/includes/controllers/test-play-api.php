@@ -146,65 +146,6 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $this->assertEquals(get_current_user_id(), $play->author);
   }
 
-  public function test_create_play_generate_images() {
-    $integration = $this->createMock(ProductIntegrationInterface::class);
-    $integration->expects($this->once())->method('generate_images');
-
-    $bracket = self::factory()->bracket->create_and_get([
-      'matches' => [
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => new Team([
-            'name' => 'Team 1',
-          ]),
-          'team2' => new Team([
-            'name' => 'Team 2',
-          ]),
-        ]),
-      ],
-    ]);
-
-    $data = [
-      'bracket_id' => $bracket->id,
-      'author' => 1,
-      'generate_images' => true,
-      'picks' => [
-        [
-          'round_index' => 0,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ],
-      ],
-    ];
-
-    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
-    $request->set_body_params($data);
-    $request->set_header('Content-Type', 'application/json');
-    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
-
-    $utils_mock = $this->createMock(Utils::class);
-    $utils_mock
-      ->expects($this->once())
-      ->method('set_cookie')
-      ->with(
-        $this->equalTo('play_id'),
-        $this->equalTo($bracket->id + 1),
-        $this->equalTo([
-          'days' => 30,
-        ])
-      );
-
-    $api = new BracketPlayAPI([
-      'product_integration' => $integration,
-      'utils' => $utils_mock,
-    ]);
-
-    $response = $api->create_item($request);
-
-    $this->assertEquals(201, $response->get_status());
-  }
-
   public function test_update_play_author() {
     $user1 = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
@@ -427,5 +368,151 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $play = $this->play_repo->get($response->get_data()->id);
 
     $this->assertTrue($play->bmb_official);
+  }
+
+  public function test_create_play_generate_images_if_no_configs() {
+    $integration = $this->createMock(ProductIntegrationInterface::class);
+    $integration->method('has_all_configs')->willReturn(false);
+    $integration->expects($this->once())->method('generate_images');
+
+    $bracket = self::factory()->bracket->create_and_get();
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'generate_images' => true,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $utils_mock = $this->createMock(Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('set_cookie')
+      ->with(
+        $this->equalTo('play_id'),
+        $this->equalTo($bracket->id + 1),
+        $this->equalTo([
+          'days' => 30,
+        ])
+      );
+
+    $api = new BracketPlayAPI([
+      'product_integration' => $integration,
+      'utils' => $utils_mock,
+    ]);
+
+    $response = $api->create_item($request);
+
+    $this->assertEquals(201, $response->get_status());
+  }
+
+  public function test_images_are_not_generated_if_configs_exist() {
+    $integration = $this->createMock(ProductIntegrationInterface::class);
+    $integration->method('has_all_configs')->willReturn(true);
+    $integration->expects($this->never())->method('generate_images');
+
+    $bracket = self::factory()->bracket->create_and_get();
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'generate_images' => true,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $utils_mock = $this->createMock(Utils::class);
+
+    $api = new BracketPlayAPI([
+      'product_integration' => $integration,
+      'utils' => $utils_mock,
+    ]);
+
+    $response = $api->create_item($request);
+
+    $this->assertEquals(201, $response->get_status());
+  }
+
+  public function test_generate_images_endpoint_no_configs() {
+    $integration = $this->createMock(ProductIntegrationInterface::class);
+    $integration->method('has_all_configs')->willReturn(false);
+    $integration->expects($this->once())->method('generate_images');
+
+    $bracket = self::factory()->bracket->create_and_get();
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $request = new WP_REST_Request(
+      'POST',
+      '/wp-bracket-builder/v1/plays/' . $play->id . '/generate-images'
+    );
+
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_param('item_id', $play->id);
+
+    $utils_mock = $this->createMock(Utils::class);
+
+    $api = new BracketPlayAPI([
+      'product_integration' => $integration,
+      'utils' => $utils_mock,
+    ]);
+
+    $response = $api->generate_images($request);
+
+    $this->assertEquals(200, $response->get_status());
+  }
+
+  public function test_generate_images_endpoint_has_configs() {
+    $integration = $this->createMock(ProductIntegrationInterface::class);
+    $integration->method('has_all_configs')->willReturn(true);
+    $integration->expects($this->never())->method('generate_images');
+
+    $bracket = self::factory()->bracket->create_and_get();
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $request = new WP_REST_Request(
+      'POST',
+      '/wp-bracket-builder/v1/plays/' . $play->id . '/generate-images'
+    );
+
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_param('item_id', $play->id);
+
+    $utils_mock = $this->createMock(Utils::class);
+
+    $api = new BracketPlayAPI([
+      'product_integration' => $integration,
+      'utils' => $utils_mock,
+    ]);
+
+    $response = $api->generate_images($request);
+
+    $this->assertEquals(200, $response->get_status());
   }
 }

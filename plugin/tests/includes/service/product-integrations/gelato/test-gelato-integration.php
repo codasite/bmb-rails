@@ -4,6 +4,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
@@ -143,5 +144,103 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       $center_overlay,
       $integration->get_overlay_map($bracket_mock, 'center')
     );
+  }
+
+  public function test_get_bracket_config() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock->method('get')->willReturn($play);
+
+    $integration = new GelatoProductIntegration([
+      'play_repo' => $play_repo_mock,
+    ]);
+
+    $meta_key = $integration->get_post_meta_key();
+
+    $image_urls = [
+      'top_light' => [
+        'image_url' => 'https://test.com/top_light.png',
+      ],
+    ];
+
+    update_post_meta($play->id, $meta_key, json_encode($image_urls));
+
+    $config = $integration->get_bracket_config('light', 'top');
+    $this->assertEquals($config->play_id, $play->id);
+    $this->assertEquals($config->bracket_id, $bracket->id);
+    $this->assertEquals($config->theme_mode, 'light');
+    $this->assertEquals($config->bracket_placement, 'top');
+    $this->assertEquals($config->img_url, 'https://test.com/top_light.png');
+  }
+
+  public function test_has_all_configs_true() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock->method('get')->willReturn($play);
+
+    $integration = new GelatoProductIntegration([
+      'play_repo' => $play_repo_mock,
+    ]);
+
+    $meta_key = $integration->get_post_meta_key();
+
+    $image_urls = [
+      'top_light' => [
+        'image_url' => 'https://test.com/top_light.png',
+      ],
+      'top_dark' => [
+        'image_url' => 'https://test.com/top_dark.png',
+      ],
+      'center_light' => [
+        'image_url' => 'https://test.com/center_light.png',
+      ],
+      'center_dark' => [
+        'image_url' => 'https://test.com/center_dark.png',
+      ],
+    ];
+
+    update_post_meta($play->id, $meta_key, json_encode($image_urls));
+
+    $this->assertTrue($integration->has_all_configs());
+  }
+
+  public function test_has_all_configs_false() {
+    $bracket = self::factory()->bracket->create_and_get();
+    $play = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock->method('get')->willReturn($play);
+
+    $integration = new GelatoProductIntegration([
+      'play_repo' => $play_repo_mock,
+    ]);
+
+    $meta_key = $integration->get_post_meta_key();
+
+    $image_urls = [
+      'top_light' => [
+        'image_url' => 'https://test.com/top_light.png',
+      ],
+      'top_dark' => [
+        'image_url' => 'https://test.com/top_dark.png',
+      ],
+      'center_light' => [
+        'image_url' => 'https://test.com/center_light.png',
+      ],
+    ];
+
+    update_post_meta($play->id, $meta_key, json_encode($image_urls));
+
+    $this->assertFalse($integration->has_all_configs());
   }
 }

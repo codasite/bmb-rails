@@ -7,6 +7,7 @@ import { PlayStorage } from '../../shared/storages/PlayStorage'
 import { MatchPick, MatchRes } from '../../shared/api/types/bracket'
 import { jest } from '@jest/globals'
 import { bracketApi } from '../../shared/api/bracketApi'
+
 jest.mock('react-lineto', () => {
   return {
     __esModule: true,
@@ -122,7 +123,8 @@ describe('PlayBuilderPage', () => {
       <PlayBuilderPage
         matchTree={matchTree}
         bracket={{ id: 1 }}
-        redirectUrl="#"
+        bracketProductArchiveUrl="#"
+        myPlayHistoryUrl="#"
       />
     )
     expect(screen.getByText('Add to Apparel')).toBeEnabled()
@@ -131,8 +133,6 @@ describe('PlayBuilderPage', () => {
     window.location = { assign: jest.fn() as any } as Location
     await userEvent.click(screen.getByText('Add to Apparel'))
     window.location = location
-    expect(
-      screen.getByText('Just a moment while we generate your bracket.')
-    ).toBeVisible()
+    expect(screen.getByText('Generating your bracket...')).toBeVisible()
   })
 })

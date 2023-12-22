@@ -63,6 +63,13 @@ export class BracketApi {
   async getPlay(playId: number): Promise<PlayRes> {
     return await this.performRequest(`${this.playPath}/${playId}`)
   }
+  async generatePlayImages(playId: number): Promise<PlayRes> {
+    const options: RequestOptions = { method: 'POST' }
+    return await this.performRequest(
+      `${this.playPath}/${playId}/generate-images`,
+      options
+    )
+  }
   async performRequest(
     path: string,
     options: RequestOptions = {}

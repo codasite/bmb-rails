@@ -101,11 +101,16 @@ function renderBracketBuilder(ajaxObj: wpbbAppObj) {
 
 function renderPlayBracket(ajaxObj: wpbbAppObj) {
   const { bracket } = ajaxObj
-  const redirectUrl = ajaxObj.bracketProductArchiveUrl
+  const bracketProductArchiveUrl = ajaxObj.bracketProductArchiveUrl
+  const myPlayHistoryUrl = ajaxObj.myPlayHistoryUrl
   if (bracket) {
     renderDiv(
       <App>
-        <PlayBuilderPage bracket={bracket} redirectUrl={redirectUrl} />
+        <PlayBuilderPage
+          bracket={bracket}
+          bracketProductArchiveUrl={bracketProductArchiveUrl}
+          myPlayHistoryUrl={myPlayHistoryUrl}
+        />
       </App>,
       'wpbb-play-bracket'
     )

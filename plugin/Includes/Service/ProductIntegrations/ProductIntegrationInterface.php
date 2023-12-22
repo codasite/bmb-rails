@@ -49,6 +49,8 @@ interface ProductIntegrationInterface {
 
   public function get_post_meta_key(): string;
 
+  public function has_all_configs(): bool;
+
   public function generate_images(PostBracketInterface $bracket): void;
 
   /**

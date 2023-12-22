@@ -135,6 +135,27 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         ],
       ],
     ]);
+    register_rest_route(
+      $this->namespace,
+      '/' . $base . '/(?P<item_id>[\d]+)/generate-images',
+      [
+        [
+          'methods' => WP_REST_Server::CREATABLE,
+          'callback' => [$this, 'generate_images'],
+          'permission_callback' => [$this, 'admin_permission_check'],
+          'args' => array_merge(
+            [
+              'item_id' => [
+                'description' => __('Unique identifier for the object.'),
+                'type' => 'integer',
+                'required' => true,
+              ],
+            ],
+            $this->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE)
+          ),
+        ],
+      ]
+    );
   }
 
   /**
@@ -210,7 +231,9 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       isset($params['generate_images']) &&
       $params['generate_images'] === true
     ) {
-      $this->product_integration->generate_images($saved);
+      if (!$this->product_integration->has_all_configs()) {
+        $this->product_integration->generate_images($saved);
+      }
       // set the play id in the session
       $this->utils->set_cookie('play_id', $saved->id, ['days' => 30]);
     }
@@ -229,6 +252,30 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     }
 
     return new WP_REST_Response($saved, 201);
+  }
+
+  public function generate_images($request) {
+    $params = $request->get_params();
+    $play_id = $params['item_id'];
+    $play = $this->play_repo->get($play_id);
+    if (!$play) {
+      return new WP_Error(
+        'not-found',
+        'The requested play could not be found.',
+        ['status' => 404]
+      );
+    }
+    if (!current_user_can('wpbb_play_bracket', $play->bracket_id)) {
+      return new WP_Error(
+        'unauthorized',
+        'You are not authorized to play this bracket.',
+        ['status' => 403]
+      );
+    }
+    if (!$this->product_integration->has_all_configs()) {
+      $this->product_integration->generate_images($play);
+    }
+    return new WP_REST_Response($play, 200);
   }
 
   /**
