@@ -99,6 +99,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       : null;
     $is_printed = (bool) $play_data['is_printed'];
     $is_winner = (bool) $play_data['is_winner'];
+    $bmb_official = (bool) $play_data['bmb_official'];
 
     $bracket =
       $bracket_post_id && $fetch_bracket
@@ -134,6 +135,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'is_printed' => $is_printed,
       'is_bustable' => $is_bustable,
       'is_winner' => $is_winner,
+      'bmb_official' => $bmb_official,
       'thumbnail_url' => get_the_post_thumbnail_url(
         $play_post->ID,
         'thumbnail'
@@ -276,6 +278,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'accuracy_score' => $play->accuracy_score,
       'is_printed' => $play->is_printed ?? false,
       'is_winner' => $play->is_winner ?? false,
+      'bmb_official' => $play->bmb_official ?? false,
     ]);
 
     if ($play_id && $play->picks) {
@@ -426,6 +429,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
 			busted_play_id bigint(20) UNSIGNED,
       is_printed tinyint(1) NOT NULL DEFAULT 0,
       is_winner tinyint(1) NOT NULL DEFAULT 0,
+      bmb_official tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE,

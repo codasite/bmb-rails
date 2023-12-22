@@ -78,7 +78,7 @@ class UserProfileTest extends WPBB_UnitTestCase {
     $this->assertEquals(2, $profile->get_num_plays());
   }
 
-  public function test_get_num_wins() {
+  public function test_get_num_bmb_wins() {
     $user = self::factory()->user->create_and_get();
     $bracket1 = self::factory()->bracket->create_and_get();
     $bracket2 = self::factory()->bracket->create_and_get();
@@ -86,13 +86,19 @@ class UserProfileTest extends WPBB_UnitTestCase {
       'author' => $user->ID,
       'bracket_id' => $bracket1->id,
       'is_winner' => true,
+      'bmb_official' => true,
     ]);
     $play2 = self::factory()->play->create_and_get([
       'author' => $user->ID,
       'bracket_id' => $bracket2->id,
     ]);
+    $play3 = self::factory()->play->create_and_get([
+      'author' => $user->ID,
+      'bracket_id' => $bracket2->id,
+      'bmb_official' => true,
+    ]);
     $profile = new UserProfile(['wp_user' => $user]);
 
-    $this->assertEquals(1, $profile->get_tournament_wins());
+    $this->assertEquals(1, $profile->get_bmb_tournament_wins());
   }
 }

@@ -15,7 +15,7 @@ use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 $profile_repo = new UserProfileRepo();
 $user = $profile_repo->get_by_user();
 $num_plays = $user->get_num_plays();
-$wins = $user->get_tournament_wins();
+$wins = $user->get_bmb_tournament_wins();
 $accuracy = $user->get_total_accuracy() * 100;
 
 ?>

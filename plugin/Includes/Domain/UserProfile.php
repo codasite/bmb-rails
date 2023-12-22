@@ -51,12 +51,13 @@ class UserProfile extends PostBase {
     return $query->found_posts;
   }
 
-  public function get_tournament_wins() {
+  public function get_bmb_tournament_wins() {
     $query = new WP_Query([
       'post_type' => BracketPlay::get_post_type(),
       'author' => $this->wp_user->ID,
       'posts_per_page' => -1,
       'is_winner' => true,
+      'bmb_official' => true,
     ]);
     return $query->found_posts;
   }
