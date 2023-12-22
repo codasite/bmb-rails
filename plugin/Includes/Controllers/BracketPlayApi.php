@@ -137,7 +137,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     ]);
     register_rest_route(
       $this->namespace,
-      '/' . $base . '/(?P<item_id>[\d]+)/generate_images',
+      '/' . $base . '/(?P<item_id>[\d]+)/generate-images',
       [
         [
           'methods' => WP_REST_Server::CREATABLE,
