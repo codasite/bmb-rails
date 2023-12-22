@@ -40,8 +40,6 @@ class Activator {
    * @since    1.0.0
    */
   public static function activate() {
-    self::delete_tables();
-
     BracketRepo::create_table();
     BracketPlayRepo::create_table();
     BracketTeamRepo::create_table();
