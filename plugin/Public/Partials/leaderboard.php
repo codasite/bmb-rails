@@ -18,6 +18,9 @@ $show_scores = $complete || $scored;
 $query = [
 		'post_status' => 'publish',
 		'bracket_id' => $bracket->id,
+		'busted_play_id' => [
+			'compare' => 'NOT EXISTS',
+		],
 		'orderby' => 'accuracy_score',
 		'order' => 'DESC',
 	];

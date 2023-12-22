@@ -124,4 +124,23 @@ class UserProfileTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(1, $profile->get_bmb_tournament_wins());
   }
+
+  public function test_get_num_tournament_wins_excludes_buster_plays() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get();
+    $play1 = self::factory()->play->create_and_get([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+      'is_winner' => true,
+    ]);
+    $play2 = self::factory()->play->create_and_get([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+      'is_winner' => true,
+      'busted_id' => $play1->id,
+    ]);
+    $profile = new UserProfile(['wp_user' => $user]);
+
+    $this->assertEquals(1, $profile->get_tournament_wins());
+  }
 }

@@ -21,16 +21,19 @@ class CustomPlayQuery {
     'is_printed',
     'is_winner',
     'bmb_official',
+    'busted_play_id',
+    'busted_play_post_id',
   ];
   // This is a mapping of query fields to the actual field names in the database
   public static $alternate_field_mappings = [
     'bracket_id' => 'bracket_post_id',
+    'busted_play_id' => 'busted_play_post_id',
   ];
 
   private static $plays_alias = 'plays';
 
   public function handle_custom_query($clauses, $query_object) {
-    if (!$query_object->get('post_type') === 'bracket_play') {
+    if (!($query_object->get('post_type') === 'bracket_play')) {
       return $clauses;
     }
     if (
@@ -69,7 +72,11 @@ class CustomPlayQuery {
       $this->key_value_intersect($query_object->query, self::$filter_fields)
       as $key => $value
     ) {
-      $where .= " AND $alias.$key = {$query_object->query[$key]}";
+      if (is_array($value)) {
+        $where .= $this->where_from_array($alias, $key, $value);
+      } else {
+        $where .= " AND $alias.$key = {$query_object->query[$key]}";
+      }
     }
 
     return $clauses;
@@ -123,5 +130,18 @@ class CustomPlayQuery {
         unset($query[$key]);
       }
     }
+  }
+
+  private function where_from_array($alias, $key, $value) {
+    if (isset($value['compare'])) {
+      $compare = $value['compare'];
+      switch ($compare) {
+        case 'NOT EXISTS':
+          return " AND $alias.$key IS NULL";
+        default:
+          return " AND $alias.$key $compare {$value['value']}";
+      }
+    }
+    return '';
   }
 }
