@@ -72,10 +72,7 @@ class GelatoPublicHooks {
   ): bool {
     $product = $this->wc->wc_get_product($product_id);
 
-    if (
-      !$this->is_bracket_product($product) ||
-      !$this->gelato->has_bracket_config()
-    ) {
+    if (!$this->is_bracket_product($product) || !$this->gelato->play_exists()) {
       // Not a bracket product. Treat as a normal product.
       return $passed;
     }
@@ -147,10 +144,7 @@ class GelatoPublicHooks {
     $product = $this->wc->wc_get_product($product_id);
 
     // Perform similar checks as above to make sure we are dealing with a bracket product and that we have a bracket config
-    if (
-      !$this->is_bracket_product($product) ||
-      !$this->gelato->has_bracket_config()
-    ) {
+    if (!$this->is_bracket_product($product) || !$this->gelato->play_exists()) {
       return $cart_item_data;
     }
 
@@ -515,7 +509,7 @@ class GelatoPublicHooks {
       return $available_array;
     }
     // Check if config exists
-    $custom_back = !!$this->gelato->has_bracket_config(); // If config is not empty, the product has a custom back design so bracket theme is needed
+    $custom_back = !!$this->gelato->play_exists(); // If config is not empty, the product has a custom back design so bracket theme is needed
     $front_design = get_post_meta(
       $variation->get_id(),
       'wpbb_front_design',

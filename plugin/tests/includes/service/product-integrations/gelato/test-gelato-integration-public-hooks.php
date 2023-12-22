@@ -38,7 +38,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
 
     $wc_mock->method('wc_get_product')->willReturn($product_stub);
     $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
-    $gelato_mock->method('has_bracket_config')->willReturn(true);
+    $gelato_mock->method('play_exists')->willReturn(true);
     $gelato_mock->method('get_bracket_config')->willReturn($bracket_config);
 
     $hooks = new GelatoPublicHooks($gelato_mock, [
