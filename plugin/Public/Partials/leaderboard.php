@@ -154,7 +154,7 @@ function leaderboard_play_list_item(BracketPlay $play, $winner = false, $show_sc
 			<div class="tw-flex tw-flex-col tw-gap-20">
 				<?php
 				foreach ($plays as $i => $play) {
-					echo leaderboard_play_list_item($play, $has_winner && $i === 0 && $complete, $show_scores, $complete);
+					echo leaderboard_play_list_item($play, $play->is_winner, $show_scores, $complete);
 				}
 				?>
 			</div>
