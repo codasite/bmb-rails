@@ -9,6 +9,7 @@ import { ThemeSelector } from '../../shared/components'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { Spinner } from '../../shared/components/Spinner'
 import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
+import SubmitPicksRegisterModal from '../PlayBracketBuilder/SubmitPicksRegisterModal'
 
 interface FullBracketPageProps {
   onEditClick?: () => void
@@ -18,6 +19,8 @@ interface FullBracketPageProps {
   setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
   canEdit?: boolean
+  showRegisterModal?: boolean
+  setShowRegisterModal?: (showRegisterModal: boolean) => void
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
@@ -28,6 +31,8 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
     darkMode,
     setDarkMode,
     processing,
+    showRegisterModal,
+    setShowRegisterModal,
   } = props
 
   const canEdit = !!onEditClick
@@ -43,6 +48,10 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
+      <SubmitPicksRegisterModal
+        show={showRegisterModal}
+        setShow={setShowRegisterModal}
+      />
       <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
         <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
         {matchTree && (
