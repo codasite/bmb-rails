@@ -54,11 +54,14 @@ class ScoreService implements ScoreServiceInterface {
    * @param Bracket|int|null $bracket
    * @return int returns the number of plays scored
    */
-  public function score_bracket_plays(Bracket|int|null $bracket): int {
+  public function score_bracket_plays(
+    Bracket|int|null $bracket,
+    bool $set_winners = false
+  ): int {
     try {
       $bracket = $this->get_bracket($bracket);
       $affected_rows = $this->score_plays($bracket);
-      if ($bracket->status === 'complete') {
+      if ($set_winners) {
         $this->set_winners($bracket);
       }
       return $affected_rows;
