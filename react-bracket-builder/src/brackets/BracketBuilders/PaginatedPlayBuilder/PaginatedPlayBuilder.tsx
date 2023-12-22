@@ -62,6 +62,8 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
     case 'final':
       element = (
         <FullBracketPage
+          showRegisterModal={showRegisterModal}
+          setShowRegisterModal={setShowRegisterModal}
           matchTree={matchTree}
           darkMode={darkMode}
           setDarkMode={setDarkMode}
