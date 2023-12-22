@@ -52,7 +52,7 @@ const ViewPlay = (props: ViewPlayPageProps) => {
   }, [play])
 
   const handleAddToApparel = async () => {
-    addToApparelHandler(play?.id, addToApparelUrl)
+    await addToApparelHandler(play?.id, addToApparelUrl)
   }
 
   if (showPaginated) {
