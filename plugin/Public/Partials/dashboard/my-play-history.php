@@ -82,7 +82,7 @@ function play_list_item(BracketPlay $play) {
 	$show_score = $play->accuracy_score !== null;
 	$buster_play = $play->busted_id !== null;
 	$printed = $play->is_printed;
-	$winner = $play->is_winner;
+	$winner = $play->is_winner && !$buster_play;
 	$num_teams = $play->bracket?->num_teams;
 	ob_start();
 ?>
