@@ -212,6 +212,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * @return WP_Error|WP_REST_Response
    */
   public function update_item($request) {
+    $can_set_results = false;
+    $set_winners = false;
     $bracket_id = $request->get_param('item_id');
     if (!current_user_can('wpbb_edit_bracket', $bracket_id)) {
       return new WP_Error(
@@ -220,7 +222,9 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
         ['status' => 403]
       );
     }
-    if (!current_user_can('wpbb_share_bracket')) {
+    if (current_user_can('wpbb_share_bracket')) {
+      $can_set_results = true;
+    } else {
       $request['status'] = 'private';
       if (isset($request['status']) && $request['status'] === 'publish') {
         $request['status'] = 'private';
@@ -240,6 +244,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       $old_status = $updated->status;
       if (count($updated_results) === $num_teams - 1) {
         $updated->status = 'complete';
+        $set_winners = true;
       } else {
         $updated->status = 'score';
       }
@@ -248,8 +253,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
           'status' => $updated->status,
         ]);
       }
-      if (current_user_can('wpbb_share_bracket')) {
-        $this->score_service->score_bracket_plays($updated);
+      if ($can_set_results) {
+        $this->score_service->score_bracket_plays($updated, $set_winners);
         $notify = $request->get_param('update_notify_players');
         if ($this->notification_service && $notify) {
           $this->notification_service->notify_bracket_results_updated(
