@@ -108,7 +108,7 @@ const PlayPage = (props: PlayPageProps) => {
       title: bracket?.title,
       bracketId: bracketId,
       picks: picks,
-      generateImages: false,
+      generateImages: true,
     }
 
     setProcessing(true)
