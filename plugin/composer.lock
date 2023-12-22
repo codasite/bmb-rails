@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a1ab3c3775a4af9d987cfbc7e2c559b",
+    "content-hash": "809adde645b0a4465f387351886ded9d",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1569,6 +1569,46 @@
                 "source": "https://github.com/phar-io/version/tree/3.2.1"
             },
             "time": "2022-02-21T01:04:05+00:00"
+        },
+        {
+            "name": "php-stubs/wordpress-tests-stubs",
+            "version": "v6.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-stubs/wordpress-tests-stubs.git",
+                "reference": "c603908a8e70895ba3d5b5050ed791511cabc60f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-stubs/wordpress-tests-stubs/zipball/c603908a8e70895ba3d5b5050ed791511cabc60f",
+                "reference": "c603908a8e70895ba3d5b5050ed791511cabc60f",
+                "shasum": ""
+            },
+            "require-dev": {
+                "php": "~7.3 || ~8.0",
+                "php-stubs/generator": "^0.8.0"
+            },
+            "suggest": {
+                "symfony/polyfill-php73": "Symfony polyfill backporting some PHP 7.3+ features to lower PHP versions",
+                "szepeviktor/phpstan-wordpress": "WordPress extensions for PHPStan"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "WordPress Tests function and class declaration stubs for static analysis.",
+            "homepage": "https://github.com/php-stubs/wordpress-tests-stubs",
+            "keywords": [
+                "PHPStan",
+                "static analysis",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/php-stubs/wordpress-tests-stubs/issues",
+                "source": "https://github.com/php-stubs/wordpress-tests-stubs/tree/v6.3.0"
+            },
+            "time": "2023-08-10T16:09:20+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3738,16 +3778,6 @@
             "time": "2023-11-20T00:12:19+00:00"
         },
         {
-            "name": "wordpress/wordpress",
-            "version": "dev-main",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/WordPress/wordpress-develop",
-                "reference": "origin/trunk"
-            },
-            "type": "library"
-        },
-        {
             "name": "wpackagist-plugin/woocommerce",
             "version": "8.4.0",
             "source": {
@@ -3828,9 +3858,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "wordpress/wordpress": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
