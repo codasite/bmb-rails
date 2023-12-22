@@ -73,6 +73,9 @@ class RenderLeaderboardTest extends WPBB_UnitTestCase {
 
     $affected = $score_service->score_bracket_plays($updated_bracket);
     $this->assertEquals(1, $affected);
+    $customer = new \WC_Customer($user);
+    $customer->set_billing_state('CA');
+    $customer->save();
 
     global $post;
     $post = get_post($bracket->id);
