@@ -208,7 +208,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     // Generate the bracket images
     if (
       isset($params['generate_images']) &&
-      $params['generate_images'] === true
+      $params['generate_images'] === true &&
+      !$this->product_integration->has_all_configs()
     ) {
       $this->product_integration->generate_images($saved);
       // set the play id in the session
