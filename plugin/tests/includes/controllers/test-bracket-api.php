@@ -1,6 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Controllers\BracketApi;
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
@@ -474,51 +475,6 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $res = $api->update_item($request);
   }
 
-  public function test_bracket_is_scored_on_update_results() {
-    $score_service = $this->getMockBuilder(ScoreServiceInterface::class)
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $api = new BracketApi(['score_service' => $score_service]);
-
-    $bracket = self::factory()->bracket->create_and_get([
-      'matches' => [
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => new Team([
-            'name' => 'Team 1',
-          ]),
-          'team2' => new Team([
-            'name' => 'Team 2',
-          ]),
-        ]),
-      ],
-    ]);
-
-    $data = [
-      'title' => 'Test Bracket',
-      'results' => [
-        [
-          'round_index' => 0,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ],
-      ],
-    ];
-
-    $request = new WP_REST_Request(
-      'PATCH',
-      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
-    );
-
-    $request->set_body_params($data);
-    $request->set_param('item_id', $bracket->id);
-
-    $score_service->expects($this->once())->method('score_bracket_plays');
-
-    $api->update_item($request);
-  }
   public function test_user_with_permission_can_create_published_bracket() {
     $user = self::factory()->user->create_and_get();
     $user->add_cap('wpbb_share_bracket');
@@ -811,68 +767,6 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals('score', $updated->status);
   }
 
-  public function test_update_all_results_sets_status_to_complete() {
-    $bracket = self::factory()->bracket->create_and_get([
-      'status' => 'publish',
-      'num_teams' => 4,
-      'matches' => [
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => new Team([
-            'name' => 'Team 1',
-          ]),
-          'team2' => new Team([
-            'name' => 'Team 2',
-          ]),
-        ]),
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 1,
-          'team1' => new Team([
-            'name' => 'Team 3',
-          ]),
-          'team2' => new Team([
-            'name' => 'Team 4',
-          ]),
-        ]),
-      ],
-    ]);
-
-    $data = [
-      'results' => [
-        [
-          'round_index' => 0,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ],
-        [
-          'round_index' => 0,
-          'match_index' => 1,
-          'winning_team_id' => $bracket->matches[1]->team2->id,
-        ],
-        [
-          'round_index' => 1,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ],
-      ],
-    ];
-
-    $request = new WP_REST_Request(
-      'PATCH',
-      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
-    );
-    $request->set_body_params($data);
-    $request->set_param('item_id', $bracket->id);
-    $request->set_header('Content-Type', 'application/json');
-    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
-    $response = rest_do_request($request);
-    $this->assertEquals(200, $response->get_status());
-    $updated = $this->bracket_repo->get($bracket->id);
-    $this->assertEquals('complete', $updated->status);
-  }
-
   public function test_update_all_partial_results_sets_status_to_complete() {
     $bracket = self::factory()->bracket->create_and_get([
       'status' => 'publish',
@@ -943,6 +837,68 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals(3, count($updated->results));
   }
 
+  public function test_update_all_results_sets_status_to_complete() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'num_teams' => 4,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    $updated = $this->bracket_repo->get($bracket->id);
+    $this->assertEquals('complete', $updated->status);
+  }
+
   public function test_anonymous_bracket_sets_cookies() {
     $utils_mock = $this->createMock(Utils::class);
 
@@ -991,5 +947,188 @@ class BracketAPITest extends WPBB_UnitTestCase {
     ]);
 
     $res = $bracket_api->create_item($request);
+  }
+
+  public function test_bracket_is_scored_on_update_results() {
+    $score_service = $this->getMockBuilder(ScoreServiceInterface::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $api = new BracketApi(['score_service' => $score_service]);
+
+    $bracket = self::factory()->bracket->create_and_get([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'title' => 'Test Bracket',
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+
+    $score_service->expects($this->once())->method('score_bracket_plays');
+
+    $api->update_item($request);
+  }
+
+  public function test_winners_are_set_when_all_results_updated() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'num_teams' => 4,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $score_service_mock = $this->createMock(ScoreServiceInterface::class);
+    $score_service_mock
+      ->expects($this->once())
+      ->method('score_bracket_plays')
+      ->with($this->isInstanceOf(Bracket::class), true);
+
+    $api = new BracketApi([
+      'score_service' => $score_service_mock,
+    ]);
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+
+    $response = $api->update_item($request);
+    $this->assertEquals(200, $response->get_status());
+    $updated = $this->bracket_repo->get($bracket->id);
+    $this->assertEquals('complete', $updated->status);
+  }
+
+  public function test_winners_not_set_when_not_all_results_updated() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'status' => 'publish',
+      'num_teams' => 4,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ],
+      ],
+    ];
+
+    $score_service_mock = $this->createMock(ScoreServiceInterface::class);
+    $score_service_mock
+      ->expects($this->once())
+      ->method('score_bracket_plays')
+      ->with($this->isInstanceOf(Bracket::class), false);
+
+    $api = new BracketApi([
+      'score_service' => $score_service_mock,
+    ]);
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+
+    $response = $api->update_item($request);
+    $this->assertEquals(200, $response->get_status());
+    $updated = $this->bracket_repo->get($bracket->id);
+    $this->assertEquals('score', $updated->status);
   }
 }

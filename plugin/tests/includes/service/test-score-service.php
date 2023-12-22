@@ -530,10 +530,8 @@ class Test_ScoreService extends WPBB_UnitTestCase {
     $this->assertFalse($loser->is_winner);
   }
 
-  public function test_winners_set_when_bracket_complete() {
-    $bracket = self::factory()->bracket->create_and_get([
-      'status' => 'complete',
-    ]);
+  public function test_winners_set() {
+    $bracket = self::factory()->bracket->create_and_get();
     $score_service_mock = $this->getMockBuilder(ScoreService::class)
       ->onlyMethods(['set_winners'])
       ->getMock();
@@ -542,12 +540,10 @@ class Test_ScoreService extends WPBB_UnitTestCase {
       ->method('set_winners')
       ->with($bracket);
 
-    $score_service_mock->score_bracket_plays($bracket);
+    $score_service_mock->score_bracket_plays($bracket, true);
   }
-  public function test_winners_not_set_when_bracket_scored() {
-    $bracket = self::factory()->bracket->create_and_get([
-      'status' => 'score',
-    ]);
+  public function test_winners_not_set() {
+    $bracket = self::factory()->bracket->create_and_get();
     $score_service_mock = $this->getMockBuilder(ScoreService::class)
       ->onlyMethods(['set_winners'])
       ->getMock();

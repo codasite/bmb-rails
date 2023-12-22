@@ -58,6 +58,9 @@ class UserProfile extends PostBase {
       'posts_per_page' => -1,
       'is_winner' => true,
       'bmb_official' => true,
+      'busted_play_id' => [
+        'compare' => 'NOT EXISTS',
+      ],
     ]);
     return $query->found_posts;
   }
@@ -68,6 +71,9 @@ class UserProfile extends PostBase {
       'author' => $this->wp_user->ID,
       'posts_per_page' => -1,
       'is_winner' => true,
+      'busted_play_id' => [
+        'compare' => 'NOT EXISTS',
+      ],
     ]);
     return $query->found_posts;
   }
