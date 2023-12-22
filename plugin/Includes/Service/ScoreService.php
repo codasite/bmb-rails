@@ -183,20 +183,32 @@ class ScoreService implements ScoreServiceInterface {
     return $where;
   }
 
-  public function set_winners(Bracket $bracket) {
+  public function set_winners(Bracket $bracket): int {
+    $top_score = $this->get_top_score($bracket);
+    if (!$top_score) {
+      return 0;
+    }
     $plays_table = $this->play_repo->table_name();
     $bracket_id = $bracket->id;
     $sql = "
         UPDATE {$plays_table} 
         SET is_winner = 1
         WHERE bracket_post_id = {$bracket_id}
-        AND total_score = (
-            SELECT MAX(total_score)
-            FROM {$plays_table}
-            WHERE bracket_post_id = {$bracket_id}
-        )
+        AND total_score = {$top_score}
       ";
     $this->wpdb->query($sql);
     return $this->wpdb->rows_affected;
+  }
+
+  private function get_top_score(Bracket $bracket): int|null {
+    $plays_table = $this->play_repo->table_name();
+    $bracket_id = $bracket->id;
+    $sql = "
+        SELECT MAX(total_score) AS top_score
+        FROM {$plays_table}
+        WHERE bracket_post_id = {$bracket_id}
+      ";
+    $result = $this->wpdb->get_var($sql);
+    return $result;
   }
 }
