@@ -6,6 +6,7 @@ import { ThemeSelector } from '../../shared/components'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PlayBuilderProps } from './types'
 import { Spinner } from '../../shared/components/Spinner'
+import { CircleCheckBrokenIcon, PlusIcon } from '../../shared'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {
@@ -14,6 +15,7 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     matchTree,
     setMatchTree,
     handleApparelClick,
+    handleSubmitPicksClick,
     processing,
     canPlay,
   } = props
@@ -34,28 +36,42 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
             <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
           </div>
           <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
-          <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+          <div className="tw-mt-60 tw-flex tw-flex-col tw-items-stretch tw-self-stretch">
             {processing && (
-              <span className="tw-mb-32 tw-text-24">
-                Just a moment while we generate your bracket.
+              <span className="tw-mb-32 tw-text-24 tw-text-center">
+                Generating your bracket...
               </span>
             )}
             {canPlay && (
-              <ActionButton
-                variant="green"
-                size="big"
-                darkMode={darkMode}
-                onClick={handleApparelClick}
-                disabled={processing || !matchTree.allPicked()}
-                height={72}
-                width={405}
-              >
-                {processing ? (
-                  <Spinner fill="white" height={50} width={50} />
-                ) : (
-                  'Add to Apparel'
-                )}
-              </ActionButton>
+              <>
+                <ActionButton
+                  variant="green"
+                  onClick={handleApparelClick}
+                  disabled={processing || !matchTree.allPicked()}
+                  fontSize={24}
+                  fontWeight={700}
+                  className={'tw-mb-16'}
+                >
+                  {processing ? (
+                    <Spinner fill="white" height={24} width={24} />
+                  ) : (
+                    <>
+                      <PlusIcon style={{ height: 24 }} />
+                      <span>Add to Apparel</span>
+                    </>
+                  )}
+                </ActionButton>
+                <ActionButton
+                  variant="blue"
+                  onClick={handleSubmitPicksClick}
+                  disabled={processing || !matchTree.allPicked()}
+                  fontSize={24}
+                  fontWeight={700}
+                >
+                  <CircleCheckBrokenIcon style={{ height: 24 }} />
+                  Submit picks
+                </ActionButton>
+              </>
             )}
           </div>
         </div>

@@ -22,7 +22,8 @@ import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsCo
 import { PlayStorage } from '../../shared/storages/PlayStorage'
 
 interface PlayPageProps {
-  redirectUrl: string
+  bracketProductArchiveUrl: string
+  myPlayHistoryUrl: string
   bracketStylesheetUrl: string
   bracket?: BracketRes
   matchTree?: MatchTree
@@ -36,7 +37,8 @@ interface PlayPageProps {
 const PlayPage = (props: PlayPageProps) => {
   const {
     bracket,
-    redirectUrl,
+    bracketProductArchiveUrl,
+    myPlayHistoryUrl,
     matchTree,
     setMatchTree,
     bracketMeta,
@@ -101,7 +103,7 @@ const PlayPage = (props: PlayPageProps) => {
       JSON.stringify(storedPlay?.picks) === JSON.stringify(picks) &&
       storedPlay?.id
     ) {
-      window.location.assign(redirectUrl)
+      window.location.assign(bracketProductArchiveUrl)
       return
     }
     const playReq: PlayReq = {
@@ -121,7 +123,41 @@ const PlayPage = (props: PlayPageProps) => {
           id: playId,
         }
         playStorage.storePlay(newReq, bracketId)
-        window.location.assign(redirectUrl)
+        window.location.assign(bracketProductArchiveUrl)
+      })
+      .catch((err) => {
+        console.error('error: ', err)
+        setProcessing(false)
+        Sentry.captureException(err)
+      })
+  }
+
+  const handleSubmitPicksClick = () => {
+    const picks = matchTree?.toMatchPicks()
+    const bracketId = bracket?.id
+    if (!picks || !bracketId) {
+      const msg = 'Cannot create play. Missing picks'
+      console.error(msg)
+      Sentry.captureException(msg)
+      return
+    }
+    const playReq: PlayReq = {
+      title: bracket?.title,
+      bracketId: bracketId,
+      picks: picks,
+      generateImages: false,
+    }
+
+    setProcessing(true)
+    bracketApi
+      .createPlay(playReq)
+      .then((res) => {
+        const playId = res.id
+        const newReq = {
+          ...playReq,
+          id: playId,
+        }
+        window.location.assign(myPlayHistoryUrl)
       })
       .catch((err) => {
         console.error('error: ', err)
@@ -134,6 +170,7 @@ const PlayPage = (props: PlayPageProps) => {
     matchTree,
     setMatchTree: canPlay ? setMatchTreeAndSaveInStorage : undefined,
     handleApparelClick,
+    handleSubmitPicksClick,
     processing,
     darkMode,
     setDarkMode,
