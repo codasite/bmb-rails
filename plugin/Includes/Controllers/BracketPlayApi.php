@@ -194,7 +194,6 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     if (!isset($params['author'])) {
       $params['author'] = get_current_user_id();
     }
-    // check if post with id bracket_id has tag 'bmb_official'
     if (has_tag('bmb_official', $bracket_id)) {
       $params['bmb_official'] = true;
     }

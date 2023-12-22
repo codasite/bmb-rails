@@ -78,6 +78,29 @@ class UserProfileTest extends WPBB_UnitTestCase {
     $this->assertEquals(2, $profile->get_num_plays());
   }
 
+  public function test_get_num_wins() {
+    $user = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $bracket = self::factory()->bracket->create_and_get();
+    $play1 = self::factory()->play->create_and_get([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+      'is_winner' => true,
+    ]);
+    $play2 = self::factory()->play->create_and_get([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+    ]);
+    $play3 = self::factory()->play->create_and_get([
+      'author' => $user2->ID,
+      'bracket_id' => $bracket->id,
+      'is_winner' => true,
+    ]);
+    $profile = new UserProfile(['wp_user' => $user]);
+
+    $this->assertEquals(1, $profile->get_tournament_wins());
+  }
+
   public function test_get_num_bmb_wins() {
     $user = self::factory()->user->create_and_get();
     $bracket1 = self::factory()->bracket->create_and_get();
