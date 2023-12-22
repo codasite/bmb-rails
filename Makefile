@@ -46,6 +46,10 @@ wp-log-watch:
 wp-dump:
 	docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
 
+# Run sql query
+wp-sql:
+	docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress -e "$(query)"'
+
 images-up:
 	docker compose --profile images up --build --remove-orphans
 
