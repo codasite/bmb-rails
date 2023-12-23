@@ -15,7 +15,8 @@ switch ($view) {
         echo '<div id="wpbb-play-bracket"></div>';
         break;
     case 'leaderboard':
-        include 'leaderboard.php';
+        $leaderboard = new LeaderboardPage();
+        echo $leaderboard->render();
         break;
     case 'copy':
         echo '<div id="wpbb-bracket-builder"></div>';
