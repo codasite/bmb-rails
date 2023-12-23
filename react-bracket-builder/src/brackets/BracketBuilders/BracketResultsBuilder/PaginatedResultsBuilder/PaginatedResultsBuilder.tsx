@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ResultsBuilderProps } from '../types'
-import { PaginatedPickableBracket } from '../../../shared/components/Bracket'
 import { LandingPage } from './LandingPage'
 import { ResultsBracketPage } from './ResultsBracketPage'
 import { FullBracketPage } from './FullBracketPage'
@@ -22,7 +21,6 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
       return
     }
     if (matchTree.allPicked()) {
-      console.log('all picked')
       setPage('final')
     } else if (matchTree.anyPicked()) {
       setPage('bracket')

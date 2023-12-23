@@ -6,7 +6,7 @@ export interface BracketMeta {
   date?: string
 }
 
-export const DarkModeContext = createContext(false)
+export const DarkModeContext = createContext(true)
 export const BracketMetaContext = createContext<BracketMeta>({})
 export const CallbackContext = createContext<() => void>(() => {})
 

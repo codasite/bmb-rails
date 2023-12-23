@@ -113,7 +113,6 @@ describe('MatchTree Utils', () => {
 
   test('testing matchReprFromRes wildcards', () => {
     const numRounds = getNumRounds(6)
-    console.log('numRounds', numRounds)
     const matches = [
       {
         id: 23,

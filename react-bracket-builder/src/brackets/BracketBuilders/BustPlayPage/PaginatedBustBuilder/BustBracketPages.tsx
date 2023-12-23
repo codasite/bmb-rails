@@ -4,7 +4,6 @@ import { BracketPagesProps } from '../../PaginatedBuilderBase/types'
 import { getBustTrees } from '../utils'
 
 export const BustBracketPages = (props: BracketPagesProps) => {
-  console.log('BustBracketPages')
   const { matchTree, setMatchTree, onFinished } = props
   const { busterTree } = getBustTrees()
 

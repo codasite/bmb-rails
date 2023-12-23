@@ -5,8 +5,8 @@ import { PickableBracket } from '../../shared/components/Bracket'
 import { ThemeSelector } from '../../shared/components'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PlayBuilderProps } from './types'
-import { Spinner } from '../../shared/components/Spinner'
-import { CircleCheckBrokenIcon, PlusIcon } from '../../shared'
+import { AddToApparel } from '../AddToApparel'
+import { CircleCheckBrokenIcon } from '../../shared'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
@@ -43,31 +43,13 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
             <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
           </div>
           <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
-          <div className="tw-mt-60 tw-flex tw-flex-col tw-items-stretch tw-self-stretch">
-            {processing && (
-              <span className="tw-mb-32 tw-text-24 tw-text-center">
-                Generating your bracket...
-              </span>
-            )}
+          <div className="tw-px-24 tw-mt-60 tw-flex tw-gap-15 tw-flex-col tw-items-stretch tw-self-stretch">
             {canPlay && (
               <>
-                <ActionButton
-                  variant="green"
-                  onClick={handleApparelClick}
+                <AddToApparel
+                  handleApparelClick={handleApparelClick}
                   disabled={processing || !matchTree.allPicked()}
-                  fontSize={24}
-                  fontWeight={700}
-                  className={'tw-mb-16'}
-                >
-                  {processing ? (
-                    <Spinner fill="white" height={24} width={24} />
-                  ) : (
-                    <>
-                      <PlusIcon style={{ height: 24 }} />
-                      <span>Add to Apparel</span>
-                    </>
-                  )}
-                </ActionButton>
+                />
                 <ActionButton
                   variant="blue"
                   onClick={handleSubmitPicksClick}

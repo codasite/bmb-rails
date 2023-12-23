@@ -8,8 +8,8 @@ export interface PlayBuilderProps {
   setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  handleApparelClick?: () => void
-  handleSubmitPicksClick?: () => void
+  handleApparelClick?: () => Promise<void>
+  handleSubmitPicksClick?: () => Promise<void>
   processing?: boolean
   canPlay?: boolean
   showRegisterModal?: boolean

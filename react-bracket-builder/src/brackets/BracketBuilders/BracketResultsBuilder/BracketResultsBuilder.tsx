@@ -44,13 +44,10 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
 
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
-  console.log('bracket', bracket)
 
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
-
-  console.log('showPaginated', showPaginated)
 
   const toggleNotifyParticipants = () => {
     setNotifyParticipants(!notifyParticipants)

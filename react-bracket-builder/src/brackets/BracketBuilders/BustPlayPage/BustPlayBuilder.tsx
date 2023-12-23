@@ -1,19 +1,9 @@
 import { useEffect, useState } from 'react'
 import * as Sentry from '@sentry/react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BusterBracket } from '../../shared/components/Bracket'
-import { ActionButton } from '../../shared/components/ActionButtons'
-import redBracketBg from '../../shared/assets/bracket-bg-red.png'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { PlayReq, PlayRes } from '../../shared/api/types/bracket'
-import { BusterVsBustee } from './BusterVersusBustee'
-import { useWindowDimensions } from '../../../utils/hooks'
-import { getBracketWidth } from '../../shared/components/Bracket/utils'
-import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
-import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { getBustTrees } from './utils'
-import { BustEndPage, BustBracketPages } from './PaginatedBustBuilder'
-import { BracketBusterContext } from './context'
 import { BustPlayView } from './BustPlayView'
 
 interface BustPlayBuilderProps {
@@ -30,7 +20,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   const [processing, setProcessing] = useState<boolean>(false)
 
   const { busterTree, setBusterTree } = getBustTrees()
-  console.log(redirectUrl)
 
   useEffect(() => {
     setVersus()
@@ -45,12 +34,10 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
   }
 
   const buildMatchTrees = () => {
-    console.log('buildMatchTrees')
     const bracket = busteePlay?.bracket
     const matches = bracket?.matches
     const numTeams = bracket?.numTeams
     const buster = MatchTree.fromMatchRes(numTeams, matches)
-    console.log('buster', buster)
     setBusterTree(buster)
   }
 
@@ -74,7 +61,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       picks: picks,
       bustedId: busteeId,
     }
-    console.log('playReq', playReq)
 
     setProcessing(true)
     bracketApi

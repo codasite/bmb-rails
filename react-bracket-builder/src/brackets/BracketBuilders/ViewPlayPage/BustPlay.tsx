@@ -39,9 +39,7 @@ const BustPlay = (props: ViewPlayPageProps) => {
     const busteePicks = play.bustedPlay?.picks
     const numTeams = bracket?.numTeams
     const busterTree = MatchTree.fromPicks(numTeams, matches, busterPicks)
-    console.log('busterTree', busterTree)
     const busteeTree = MatchTree.fromPicks(numTeams, matches, busteePicks)
-    console.log('busteeTree', busteeTree)
     setBusterTree(busterTree)
     setBusteeTree(busteeTree)
   }

@@ -62,7 +62,6 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
     setBracketMeta({ title, date })
 
     const tree = MatchTree.fromPicks(numTeams, matches, picks)
-    console.log('tree', tree)
 
     if (tree) {
       setMatchTree(tree)

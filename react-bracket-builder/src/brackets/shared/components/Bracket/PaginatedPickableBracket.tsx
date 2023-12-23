@@ -12,7 +12,6 @@ export const PaginatedPickableBracket = (props: PaginatedBracketProps) => {
     setPage,
   }
 
-  console.log('PaginatedPickableBracket', matchTree)
   useEffect(() => {
     // try to determine page from matchTree
     if (!matchTree.anyPicked()) {

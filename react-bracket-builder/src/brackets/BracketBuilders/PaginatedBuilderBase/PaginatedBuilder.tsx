@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { PaginatedBuilderProps } from './types'
 
 export const PaginatedBuilder = (props: PaginatedBuilderProps) => {
@@ -29,7 +29,6 @@ export const PaginatedBuilder = (props: PaginatedBuilderProps) => {
   }, [])
 
   const onStart = () => {
-    console.log('onStart')
     setPage('bracket')
   }
 

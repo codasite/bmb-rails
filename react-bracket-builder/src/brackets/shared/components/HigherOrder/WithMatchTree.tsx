@@ -47,7 +47,6 @@ export const WithMatchTree3 = (Component: React.ComponentType<any>) => {
           value={{
             matchTree: matchTree1,
             setMatchTree: (tree) => {
-              console.log('setMatchTree1', tree)
               setMatchTree1(tree.clone())
             },
           }}

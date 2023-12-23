@@ -292,7 +292,7 @@ const BigRedButton = (props: ActionButtonProps) => {
 export const ActionButton = (props: ActionButtonProps) => {
   const { variant, darkMode } = props
   const darkModeContext = useContext(DarkModeContext)
-  const newProps = { ...props, darkMode: darkMode ?? darkModeContext ?? true }
+  const newProps = { ...props, darkMode: darkMode ?? darkModeContext }
 
   switch (variant) {
     case 'green':

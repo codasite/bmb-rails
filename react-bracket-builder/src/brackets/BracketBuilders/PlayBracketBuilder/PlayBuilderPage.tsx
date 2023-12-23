@@ -93,7 +93,7 @@ const PlayPage = (props: PlayPageProps) => {
     )
   }
 
-  const handleApparelClick = () => {
+  const handleApparelClick = async () => {
     const picks = matchTree?.toMatchPicks()
     const bracketId = bracket?.id
     if (!picks || !bracketId) {
@@ -117,7 +117,7 @@ const PlayPage = (props: PlayPageProps) => {
     }
 
     setProcessing(true)
-    bracketApi
+    return bracketApi
       .createPlay(playReq)
       .then((res) => {
         const playId = res.id
@@ -125,7 +125,7 @@ const PlayPage = (props: PlayPageProps) => {
           ...playReq,
           id: playId,
         }
-        playStorage.storePlay(newReq, bracketId)
+        playStorage.storePlay(newReq, bracket?.id)
         window.location.assign(bracketProductArchiveUrl)
       })
       .catch((err) => {
@@ -135,7 +135,7 @@ const PlayPage = (props: PlayPageProps) => {
       })
   }
 
-  const handleSubmitPicksClick = () => {
+  const handleSubmitPicksClick = async () => {
     const picks = matchTree?.toMatchPicks()
     const bracketId = bracket?.id
     if (!picks || !bracketId) {
@@ -150,9 +150,8 @@ const PlayPage = (props: PlayPageProps) => {
       picks: picks,
       generateImages: false,
     }
-
     setProcessing(true)
-    bracketApi
+    return bracketApi
       .createPlay(playReq)
       .then((res) => {
         const playId = res.id

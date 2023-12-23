@@ -1,10 +1,8 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { BracketProps } from '../types'
 import { DefaultBracket } from './DefaultBracket'
-import { BusterTeamSlotToggle, TeamSlotToggle } from '../TeamSlot'
+import { BusterTeamSlotToggle } from '../TeamSlot'
 import { Nullable } from '../../../../utils/types'
-import { PickableBracket } from './PickableBracket'
-import { BusterMatchTreeContext } from '../../context/context'
 import { Team } from '../../models/Team'
 import { MatchNode } from '../../models/operations/MatchNode'
 import { getBustTrees } from '../../../BracketBuilders/BustPlayPage/utils'
@@ -17,8 +15,6 @@ export const BusterBracket = (props: BracketProps) => {
     TeamSlotComponent = BusterTeamSlotToggle,
   } = props
   const { busterTree } = getBustTrees()
-  console.log('in BusterBracket')
-  console.log('busterTree', busterTree)
 
   const handleTeamClick = (
     match: MatchNode,

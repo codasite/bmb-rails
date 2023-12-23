@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { PlaceholderWrapper } from './PlaceholderWrap'
 
 export interface BufferedTextInputProps {
@@ -49,7 +49,6 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
     if (validate) {
       const isValid = validate(buffer)
       if (isValid && hasError) {
-        console.log('clearing error')
         setHasError(false)
         onErrorCleared?.()
       } else if (!isValid && !hasError) {

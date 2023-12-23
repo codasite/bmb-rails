@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { ReactComponent as CalendarIcon } from '../assets/calendar.svg'
 import { BufferedTextInput } from './BufferedTextInput'
 
@@ -28,8 +28,6 @@ const MonthOpt = (props: MonthOptProps) => {
   const classes = `tw-p-16 tw-font-sans tw-uppercase tw-w-full tw-border-none tw-border-b tw-border-b-solid hover:tw-cursor-pointer tw-border-b-white/5 tw-bg-transparent hover:tw-bg-white/15 tw-text-center tw-text-24 tw-font-600 tw-text-white/50`
   const className = [classes, extraClass].join(' ')
   const handleMonthClick = (e) => {
-    console.log('handle month click')
-    console.log(value)
     e.preventDefault()
     onClick && onClick()
   }
@@ -86,14 +84,11 @@ const MonthPicker = (props: MonthPickerProps) => {
   }
 
   const onStartEditing = () => {
-    console.log('start editing')
     setEditing(true)
   }
 
   const handleMonthClick = async (month: string) => {
     handleDoneEditing(month)
-    console.log('handle month click')
-    console.log(inputRef.current)
     setTimeout(() => {
       inputRef.current?.blur()
     }, 500)
@@ -101,10 +96,7 @@ const MonthPicker = (props: MonthPickerProps) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
-    console.log('handle change')
-    console.log(value)
     const filtered = searchArray(months, value)
-    console.log(filtered)
     setFoundMonths(filtered)
   }
 

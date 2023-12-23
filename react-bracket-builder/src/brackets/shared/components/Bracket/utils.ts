@@ -128,7 +128,6 @@ export const getBracketMeta = (bracket?: BracketRes): BracketMeta => {
 
 export const someMatchNotPicked = (matches: MatchNode[]) => {
   const notPicked = matches.some((match) => match && !match.isPicked())
-  console.log('notPicked', notPicked)
   return notPicked
 }
 

@@ -11,6 +11,7 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
     darkMode,
     setDarkMode,
     handleApparelClick,
+    handleSubmitPicksClick,
     processing,
     canPlay,
     showRegisterModal,
@@ -70,6 +71,8 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
           onEditClick={onStart}
           onApparelClick={handleApparelClick}
           processing={processing}
+          showSubmitPicksButton={true}
+          handleSubmitPicksClick={handleSubmitPicksClick}
         />
       )
       break

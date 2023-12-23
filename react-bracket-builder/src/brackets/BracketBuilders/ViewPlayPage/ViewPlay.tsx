@@ -2,7 +2,6 @@ import { useContext, useEffect } from 'react'
 import { ThemeSelector } from '../../shared/components'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
-import { ActionButton } from '../../shared/components/ActionButtons'
 //@ts-ignore
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 //@ts-ignoredododo
@@ -17,6 +16,7 @@ import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { addToApparelHandler } from './utils'
 import { WithMatchTree } from '../../shared/components/HigherOrder'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
+import { AddToApparel } from '../AddToApparel'
 
 const ViewPlay = (props: ViewPlayPageProps) => {
   const {
@@ -84,15 +84,11 @@ const ViewPlay = (props: ViewPlayPageProps) => {
               <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
             </div>
             <PickableBracket matchTree={matchTree} />
-            <div className="tw-h-[260px] tw-flex tw-flex-col tw-justify-center tw-items-center">
-              <ActionButton
-                variant="green"
-                size="big"
-                darkMode={darkMode}
-                onClick={handleAddToApparel}
-              >
-                Add to Apparel
-              </ActionButton>
+            <div className="tw-px-24 tw-mt-60 tw-flex tw-flex-col tw-items-stretch tw-self-stretch">
+              <AddToApparel
+                handleApparelClick={handleAddToApparel}
+                disabled={false}
+              />
             </div>
           </>
         )}

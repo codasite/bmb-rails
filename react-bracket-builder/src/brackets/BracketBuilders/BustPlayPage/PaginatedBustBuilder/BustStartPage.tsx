@@ -1,13 +1,10 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
-import { ActionButton } from '../../../shared/components/ActionButtons'
 import { PickableBracket } from '../../../shared/components/Bracket'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
-import { StartPageProps } from '../../PaginatedBuilderBase/types'
 import { BustablePlayPageButtons } from '../buttons'
 import { ProfilePicture } from '../../../shared/components/ProfilePicture'
-import { getBracketMeta } from '../../../shared/components/Bracket/utils'
 import { BracketMetaContext } from '../../../shared/context/context'
 
 interface BustStartPageProps {
@@ -29,7 +26,6 @@ export const BustStartPage = (props: BustStartPageProps) => {
   } = props
 
   const { title } = useContext(BracketMetaContext)
-  console.log('title', title)
 
   return (
     <div

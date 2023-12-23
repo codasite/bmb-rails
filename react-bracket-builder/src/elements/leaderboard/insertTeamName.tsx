@@ -1,9 +1,9 @@
 import React from 'react'
 import { render } from 'react-dom'
 import { ScaledSpan } from '../../brackets/shared/components/TeamSlot/ScaledSpan'
+
 export const insertLeaderboardTeamName = (wpbbAppObj: any) => {
   //get all elements with class name "wpbb-lb-winning-team-name-container"
-  console.log('running')
   const divs = document.getElementsByClassName(
     'wpbb-lb-winning-team-name-container'
   )
