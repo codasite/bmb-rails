@@ -28,12 +28,14 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
    */
   private $wpdb;
 
-  public function __construct() {
+  public function __construct($args = []) {
     global $wpdb;
-    $this->wpdb = $wpdb;
-    $this->team_repo = new BracketTeamRepo();
-    $this->match_repo = new BracketMatchRepo($this->team_repo);
-    $this->results_repo = new BracketResultsRepo($this, $this->team_repo);
+    $this->wpdb = $args['wpdb'] ?? $wpdb;
+    $this->team_repo = $args['team_repo'] ?? new BracketTeamRepo();
+    $this->match_repo =
+      $args['match_repo'] ?? new BracketMatchRepo($this->team_repo);
+    $this->results_repo =
+      $args['results_repo'] ?? new BracketResultsRepo($this, $this->team_repo);
     parent::__construct();
   }
 

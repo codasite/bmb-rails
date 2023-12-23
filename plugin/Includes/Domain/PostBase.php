@@ -77,6 +77,7 @@ abstract class PostBase implements CustomPostInterface {
       'post_title' => $this->title,
       'post_author' => $this->author,
       'post_status' => $this->status,
+      'post_name' => $this->slug,
       'post_type' => static::get_post_type(),
     ];
   }

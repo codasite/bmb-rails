@@ -39,13 +39,14 @@ class BracketPlayRepo extends CustomPostRepoBase implements
    */
   private $wpdb;
 
-  public function __construct() {
+  public function __construct($args = []) {
     global $wpdb;
     $this->wpdb = $wpdb;
-    $this->bracket_repo = new BracketRepo();
-    $this->team_repo = new BracketTeamRepo();
-    $this->pick_repo = new BracketMatchPickRepo($this->team_repo);
-    $this->utils = new Utils();
+    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->team_repo = $args['team_repo'] ?? new BracketTeamRepo();
+    $this->pick_repo =
+      $args['pick_repo'] ?? new BracketMatchPickRepo($this->team_repo);
+    $this->utils = $args['utils'] ?? new Utils();
     parent::__construct();
   }
 
