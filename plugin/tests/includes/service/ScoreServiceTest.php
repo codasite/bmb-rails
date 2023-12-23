@@ -408,7 +408,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
 
     $affected = $score_service->score_bracket_plays($bracket);
 
-    $updated = self::factory()->play->get_object_by_id($play->id);
+    $updated = $this->get_play($play->id);
     $this->assertEquals(1, $affected);
     $this->assertNotNull($updated->total_score);
     $this->assertNotNull($updated->accuracy_score);

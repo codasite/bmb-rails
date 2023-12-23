@@ -394,7 +394,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
   }
 
   private function play_data_update_fields() {
-    return ['is_printed'];
+    return ['is_printed', 'is_tournament_entry'];
   }
 
   public static function table_name(): string {

@@ -52,4 +52,8 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   public function update_play($play, $args = []) {
     return self::factory()->play->update_object($play, $args);
   }
+
+  public function get_play($play_id) {
+    return self::factory()->play->get_object_by_id($play_id);
+  }
 }

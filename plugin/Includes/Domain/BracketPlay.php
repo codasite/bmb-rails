@@ -127,13 +127,20 @@ class BracketPlay extends PostBase implements PostBracketInterface {
       'bracket_id',
       'author',
     ]);
+    $data['picks'] = self::get_picks_from_array($data);
+
+    return new BracketPlay($data);
+  }
+
+  private static function get_picks_from_array($data): array {
     $picks = [];
+    if (!isset($data['picks'])) {
+      return $picks;
+    }
     foreach ($data['picks'] as $pick) {
       $picks[] = MatchPick::from_array($pick);
     }
-    $data['picks'] = $picks;
-
-    return new BracketPlay($data);
+    return $picks;
   }
 
   public function to_array(): array {

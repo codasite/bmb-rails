@@ -105,7 +105,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $hooks = new PublicHooks();
     $hooks->mark_play_printed($play);
 
-    $play = self::factory()->play->get_object_by_id($play->id);
+    $play = $this->get_play($play->id);
 
     $this->assertTrue($play->is_printed);
   }
@@ -204,7 +204,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     $hooks->link_anonymous_play_to_user_on_login('test_login', $user);
 
-    $play = self::factory()->play->get_object_by_id($play->id);
+    $play = $this->get_play($play->id);
 
     $this->assertEquals($user->ID, $play->author);
   }
@@ -243,7 +243,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
     $hooks->link_anonymous_play_to_user_on_register($user->ID);
 
-    $play = self::factory()->play->get_object_by_id($play->id);
+    $play = $this->get_play($play->id);
 
     $this->assertEquals($user->ID, $play->author);
   }

@@ -2,10 +2,12 @@
 
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
+use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
 class PlayAPITest extends WPBB_UnitTestCase {
@@ -180,7 +182,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
       'author' => $user2->ID,
     ]);
 
-    $updated = self::factory()->play->get_object_by_id($play->id);
+    $updated = $this->get_play($play->id);
 
     $this->assertEquals($user2->ID, $updated->author);
   }
@@ -514,5 +516,77 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $response = $api->generate_images($request);
 
     $this->assertEquals(200, $response->get_status());
+  }
+
+  public function test_play_is_marked_as_tournament_entry() {
+    $entry_service_mock = $this->createMock(TournamentEntryService::class);
+    $entry_service_mock
+      ->expects($this->once())
+      ->method('mark_play_as_tournament_entry')
+      ->with($this->isInstanceOf(BracketPlay::class));
+
+    $bracket = $this->create_bracket();
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'generate_images' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $api = new BracketPlayAPI([
+      'tournament_entry_service' => $entry_service_mock,
+    ]);
+
+    $response = $api->create_item($request);
+  }
+
+  //test buster play is not marked tournament entry
+  public function test_buster_play_is_not_marked_as_tournament_entry() {
+    $entry_service_mock = $this->createMock(TournamentEntryService::class);
+    $entry_service_mock
+      ->expects($this->never())
+      ->method('mark_play_as_tournament_entry');
+
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $data = [
+      'busted_id' => $play->id,
+      'bracket_id' => $bracket->id,
+      'generate_images' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_param('item_id', $play->id);
+
+    $api = new BracketPlayAPI([
+      'tournament_entry_service' => $entry_service_mock,
+    ]);
+
+    $response = $api->create_item($request);
   }
 }
