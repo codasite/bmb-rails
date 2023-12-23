@@ -134,7 +134,4 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
 
     $this->assertMatchesHtmlSnapshot($leaderboard_page->render());
   }
-  /**
-   * TODO: To add more tests to this file you need to move leaderboard.php to a class so you don't get function already defined errors
-   */
 }
