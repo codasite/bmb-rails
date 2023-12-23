@@ -37,7 +37,7 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
       />
       {matchTree && (
         <div
-          className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
+          className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80`}
         >
           <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
             <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />

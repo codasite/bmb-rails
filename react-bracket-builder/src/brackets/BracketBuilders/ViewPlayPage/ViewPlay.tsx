@@ -76,7 +76,7 @@ const ViewPlay = (props: ViewPlayPageProps) => {
       }}
     >
       <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto`}
+        className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80`}
       >
         {matchTree && (
           <>
