@@ -18,7 +18,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_create_play_for_bracket() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -105,7 +105,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_create_play_current_user_is_author() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -149,7 +149,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
   public function test_update_play_author() {
     $user1 = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -163,7 +163,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
         ]),
       ],
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -187,7 +187,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
 
   public function test_author_can_play_private_bracket() {
     $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID,
       'status' => 'private',
       'num_teams' => 2,
@@ -219,7 +219,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
   public function test_non_author_cannot_play_private_bracket() {
     $user1 = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user1->ID,
       'status' => 'private',
       'num_teams' => 2,
@@ -251,7 +251,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
 
   public function test_upcoming_bracket_cannot_be_played() {
     $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'upcoming',
       'num_teams' => 2,
     ]);
@@ -280,8 +280,8 @@ class PlayAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_public_play_can_be_busted() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     // set post tag for play
@@ -311,8 +311,8 @@ class PlayAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_non_public_play_cannot_be_busted() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 
@@ -340,7 +340,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_play_for_bmb_official_bracket_is_bmb_official() {
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = $this->create_bracket();
     // add tag bmb_official
     wp_add_post_tags($bracket->id, 'bmb_official');
 
@@ -375,7 +375,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $integration->method('has_all_configs')->willReturn(false);
     $integration->expects($this->once())->method('generate_images');
 
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = $this->create_bracket();
 
     $data = [
       'bracket_id' => $bracket->id,
@@ -422,7 +422,7 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $integration->method('has_all_configs')->willReturn(true);
     $integration->expects($this->never())->method('generate_images');
 
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = $this->create_bracket();
 
     $data = [
       'bracket_id' => $bracket->id,
@@ -459,8 +459,8 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $integration->method('has_all_configs')->willReturn(false);
     $integration->expects($this->once())->method('generate_images');
 
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 
@@ -490,8 +490,8 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $integration->method('has_all_configs')->willReturn(true);
     $integration->expects($this->never())->method('generate_images');
 
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 

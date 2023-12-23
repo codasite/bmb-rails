@@ -60,16 +60,16 @@ class UserProfileTest extends WPBB_UnitTestCase {
   public function test_get_num_plays() {
     $user = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get();
-    $play1 = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play1 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket->id,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket->id,
     ]);
-    $play3 = self::factory()->play->create_and_get([
+    $play3 = $this->create_play([
       'author' => $user2->ID,
       'bracket_id' => $bracket->id,
     ]);
@@ -81,17 +81,17 @@ class UserProfileTest extends WPBB_UnitTestCase {
   public function test_get_num_wins() {
     $user = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get();
-    $play1 = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play1 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket->id,
       'is_winner' => true,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket->id,
     ]);
-    $play3 = self::factory()->play->create_and_get([
+    $play3 = $this->create_play([
       'author' => $user2->ID,
       'bracket_id' => $bracket->id,
       'is_winner' => true,
@@ -103,19 +103,19 @@ class UserProfileTest extends WPBB_UnitTestCase {
 
   public function test_get_num_bmb_wins() {
     $user = self::factory()->user->create_and_get();
-    $bracket1 = self::factory()->bracket->create_and_get();
-    $bracket2 = self::factory()->bracket->create_and_get();
-    $play1 = self::factory()->play->create_and_get([
+    $bracket1 = $this->create_bracket();
+    $bracket2 = $this->create_bracket();
+    $play1 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket1->id,
       'is_winner' => true,
       'bmb_official' => true,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket2->id,
     ]);
-    $play3 = self::factory()->play->create_and_get([
+    $play3 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket2->id,
       'bmb_official' => true,
@@ -127,13 +127,13 @@ class UserProfileTest extends WPBB_UnitTestCase {
 
   public function test_get_num_tournament_wins_excludes_buster_plays() {
     $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get();
-    $play1 = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play1 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket->id,
       'is_winner' => true,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'author' => $user->ID,
       'bracket_id' => $bracket->id,
       'is_winner' => true,

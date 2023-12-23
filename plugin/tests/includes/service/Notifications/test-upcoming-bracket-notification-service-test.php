@@ -7,8 +7,8 @@ use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationSe
 
 class UpcomingBracketNotificationServiceTest extends WPBB_UnitTestCase {
   public function test_notify_upcoming_bracket_live() {
-    $bracket1 = self::factory()->bracket->create_and_get();
-    $bracket2 = self::factory()->bracket->create_and_get();
+    $bracket1 = $this->create_bracket();
+    $bracket2 = $this->create_bracket();
     $user1 = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
     $notif1 = self::factory()->notification->create_object([

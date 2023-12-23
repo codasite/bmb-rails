@@ -11,7 +11,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_round1_correct_pick_is_scored() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 2,
       'matches' => [
         new BracketMatch([
@@ -29,7 +29,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    self::factory()->bracket->update_object($bracket, [
+    $this->update_bracket($bracket, [
       'results' => [
         [
           'round_index' => 0,
@@ -41,7 +41,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
 
     $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
-    $play1 = self::factory()->play->create_object([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -65,7 +65,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_round1_incorrect_pick_is_not_scored() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 2,
       'matches' => [
         new BracketMatch([
@@ -81,7 +81,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    self::factory()->bracket->update_object($bracket, [
+    $this->update_bracket($bracket, [
       'results' => [
         [
           'round_index' => 0,
@@ -93,7 +93,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
 
     $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
-    $play1 = self::factory()->play->create_object([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -117,7 +117,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_play_for_different_bracket_is_not_scored() {
-    $bracket1 = self::factory()->bracket->create_object([
+    $bracket1 = $this->create_bracket([
       'num_teams' => 2,
       'matches' => [
         new BracketMatch([
@@ -133,7 +133,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    self::factory()->bracket->update_object($bracket1, [
+    $this->update_bracket($bracket1, [
       'results' => [
         [
           'round_index' => 0,
@@ -143,7 +143,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $bracket2 = self::factory()->bracket->create_object([
+    $bracket2 = $this->create_bracket([
       'num_teams' => 2,
       'matches' => [
         new BracketMatch([
@@ -159,7 +159,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play = self::factory()->play->create_object([
+    $play = $this->create_play([
       'bracket_id' => $bracket2->id,
       'total_score' => 5,
       'accuracy_score' => 0.5,
@@ -185,7 +185,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_score_all_picked() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 8,
     ]);
 
@@ -229,7 +229,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    self::factory()->bracket->update_object($bracket, [
+    $this->update_bracket($bracket, [
       'results' => $picks,
     ]);
 
@@ -239,7 +239,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       return new MatchPick($pick);
     }, $picks);
 
-    $play = self::factory()->play->create_object([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => $play_picks,
     ]);
@@ -256,13 +256,13 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_score_third_picked() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 8,
     ]);
 
     $point_values = [1, 2, 4, 8, 16, 32];
 
-    self::factory()->bracket->update_object($bracket, [
+    $this->update_bracket($bracket, [
       'results' => [
         [
           'round_index' => 0,
@@ -304,7 +304,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
 
     $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
 
-    $play = self::factory()->play->create_object([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -357,10 +357,10 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_play_created_before_results_update_is_scored() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $bracket = self::factory()->bracket->update_object($bracket, [
+    $bracket = $this->update_bracket($bracket, [
       'results' => [
         [
           'round_index' => 0,
@@ -375,7 +375,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play = self::factory()->play->create_object([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -398,7 +398,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $play_time = $play->published_date;
     $bracket_time = $play_time->modify('+1 second');
 
-    $bracket = self::factory()->bracket->update_object($bracket, [
+    $bracket = $this->update_bracket($bracket, [
       'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
     ]);
 
@@ -415,10 +415,10 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_play_created_after_results_updated_not_scored() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $bracket = self::factory()->bracket->update_object($bracket, [
+    $bracket = $this->update_bracket($bracket, [
       'results' => [
         [
           'round_index' => 0,
@@ -433,7 +433,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play = self::factory()->play->create_object([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -457,7 +457,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $play_time = $play->published_date;
     $bracket_time = $play_time->modify('-1 second');
 
-    $bracket = self::factory()->bracket->update_object($bracket, [
+    $bracket = $this->update_bracket($bracket, [
       'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
     ]);
 
@@ -474,13 +474,13 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_set_winners() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play_winner = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play_winner = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_winner' => false,
       'total_score' => 5,
     ]);
-    $play_loser = self::factory()->play->create_and_get([
+    $play_loser = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_winner' => false,
       'total_score' => 3,
@@ -499,18 +499,18 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_set_multiple_winners() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play_winner1 = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play_winner1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_winner' => false,
       'total_score' => 5,
     ]);
-    $play_winner2 = self::factory()->play->create_and_get([
+    $play_winner2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_winner' => false,
       'total_score' => 5,
     ]);
-    $play_loser = self::factory()->play->create_and_get([
+    $play_loser = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_winner' => false,
       'total_score' => 3,
@@ -531,7 +531,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_winners_set() {
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = $this->create_bracket();
     $score_service_mock = $this->getMockBuilder(ScoreService::class)
       ->onlyMethods(['set_winners'])
       ->getMock();
@@ -543,7 +543,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $score_service_mock->score_bracket_plays($bracket, true);
   }
   public function test_winners_not_set() {
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = $this->create_bracket();
     $score_service_mock = $this->getMockBuilder(ScoreService::class)
       ->onlyMethods(['set_winners'])
       ->getMock();

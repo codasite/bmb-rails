@@ -4,7 +4,7 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketProductUtilsTest extends WPBB_UnitTestCase {
   public function test_get_bracket_fee() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
     update_post_meta($bracket->id, 'bracket_fee', 5.0);
@@ -14,7 +14,7 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_bracket_fee_none() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
     $utils = new BracketProductUtils();
@@ -30,7 +30,7 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_bracket_fee_int() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
     update_post_meta($bracket->id, 'bracket_fee', 5);
@@ -40,7 +40,7 @@ class BracketProductUtilsTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_bracket_fee_name() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'title' => 'My Bracket',
       'num_teams' => 4,
     ]);

@@ -58,7 +58,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_add_upcoming_tag_resets_notify_flag() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
     ]);
     // update meta
@@ -80,7 +80,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_upcoming_notifications_are_sent() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'upcoming',
     ]);
     $notification_service_mock = $this->createMock(
@@ -110,7 +110,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_upcoming_notifications_are_not_sent() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'upcoming',
     ]);
     // update post meta
@@ -137,7 +137,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_create_upcoming_bracket_notification_on_login() {
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = $this->create_bracket();
     $user = self::factory()->user->create_and_get();
     $user_id = $user->ID;
 
@@ -171,7 +171,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_create_upcoming_bracket_notification_on_register() {
-    $bracket = self::factory()->bracket->create_and_get();
+    $bracket = $this->create_bracket();
     $user = self::factory()->user->create_and_get();
     $user_id = $user->ID;
 

@@ -276,7 +276,7 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_multiple_requests() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'title' => 'Test Bracket',
       'date' => '2020-01-01',
       'num_teams' => 4,

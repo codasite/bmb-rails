@@ -369,10 +369,10 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'test-bucket');
     }
     // Setup test data
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     $front_url = 'http://example.com/front.pdf';
@@ -442,10 +442,10 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
 
     // Setup test data
     $front_url = 'http://example.com/front.pdf';
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     $bracket_config = new BracketConfig(
@@ -494,10 +494,10 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_play_marked_printed_when_payment_complete() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
@@ -561,10 +561,10 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $user = self::factory()->user->create_and_get([
       'user_email' => 'test@test.com',
     ]);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [

@@ -9,7 +9,7 @@ class RenderDashboardTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
 
   public function test_render_dashboard() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'author' => get_current_user_id(),
@@ -30,10 +30,10 @@ class RenderDashboardTest extends WPBB_UnitTestCase {
   }
 
   public function test_render_dashboard_my_profile() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_object([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => get_current_user_id(),
       'is_winner' => true,

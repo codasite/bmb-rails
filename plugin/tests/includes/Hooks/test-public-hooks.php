@@ -87,10 +87,10 @@ class PublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_mark_play_printed() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
@@ -116,7 +116,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
   public function test_anonymous_bracket_is_linked_to_user_on_login() {
     $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => 0,
       'num_teams' => 4,
     ]);
@@ -144,7 +144,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
   public function test_anonymous_bracket_is_linked_to_user_on_register() {
     $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => 0,
       'num_teams' => 4,
     ]);
@@ -172,11 +172,11 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
   public function test_anonymous_play_is_linked_to_user_on_login() {
     $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => 0,
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [
@@ -211,11 +211,11 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
   public function test_anonymous_play_is_linked_to_user_on_register() {
     $user = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => 0,
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [

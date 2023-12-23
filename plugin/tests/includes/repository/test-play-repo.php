@@ -18,7 +18,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_add() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -99,7 +99,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -123,7 +123,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
         ]),
       ],
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => 1,
       'picks' => [
@@ -175,7 +175,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_all() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -190,7 +190,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play1 = self::factory()->play->create_and_get([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => 1,
       'picks' => [
@@ -202,7 +202,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => 1,
       'picks' => [
@@ -221,13 +221,13 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($play2->id, $plays[1]->id);
   }
   public function test_get_user_picks_for_result() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
     $user = self::factory()->user->create_and_get();
 
-    $play = self::factory()->play->create_object([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user->ID,
       'picks' => [
@@ -263,14 +263,14 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_multiple_user_picks_for_result() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
     $user1 = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
 
-    $play1 = self::factory()->play->create_object([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user1->ID,
       'picks' => [
@@ -292,7 +292,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play2 = self::factory()->play->create_object([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user2->ID,
       'picks' => [
@@ -348,10 +348,10 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     );
   }
   public function test_update_is_printed() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
@@ -378,10 +378,10 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_plays_for_bracket_id() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play1 = self::factory()->play->create_and_get([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -391,7 +391,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
         ]),
       ],
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -402,11 +402,11 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $bracket2 = self::factory()->bracket->create_and_get([
+    $bracket2 = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
-    $play3 = self::factory()->play->create_and_get([
+    $play3 = $this->create_play([
       'bracket_id' => $bracket2->id,
       'picks' => [
         new MatchPick([
@@ -427,18 +427,18 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_sort_plays_by_total_score() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play1 = self::factory()->play->create_and_get([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'total_score' => 5,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'total_score' => 10,
     ]);
-    $play3 = self::factory()->play->create_and_get([
+    $play3 = $this->create_play([
       'bracket_id' => $bracket->id,
       'total_score' => 15,
     ]);
@@ -456,18 +456,18 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_sort_plays_by_accuracy_score() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play1 = self::factory()->play->create_and_get([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'accuracy_score' => 0.5,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'accuracy_score' => 0.75,
     ]);
-    $play3 = self::factory()->play->create_and_get([
+    $play3 = $this->create_play([
       'bracket_id' => $bracket->id,
       'accuracy_score' => 0.25,
     ]);
@@ -485,14 +485,14 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_query_printed() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play1 = self::factory()->play->create_and_get([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => true,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
     ]);
@@ -507,7 +507,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_query_printed_ignore_late_plays() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
@@ -516,19 +516,19 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $ontime_date = '2020-03-01 11:59:59';
     $late_date = '2020-03-01 12:00:01';
 
-    $play1 = self::factory()->play->create_and_get([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => true,
     ]);
-    $play2 = self::factory()->play->create_and_get([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => true,
     ]);
-    $play3 = self::factory()->play->create_and_get([
+    $play3 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
     ]);
-    $play4 = self::factory()->play->create_and_get([
+    $play4 = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => false,
     ]);
@@ -567,13 +567,13 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_with_busted_play() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $busted = self::factory()->play->create_and_get([
+    $busted = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
-    $buster = self::factory()->play->create_and_get([
+    $buster = $this->create_play([
       'bracket_id' => $bracket->id,
       'busted_id' => $busted->id,
     ]);
@@ -585,10 +585,10 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_play_with_no_tags_is_not_bustable() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 
@@ -596,14 +596,14 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_public_play_is_bustable() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
-    $featured_play = self::factory()->play->create_and_get([
+    $featured_play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
-    $profile_play = self::factory()->play->create_and_get([
+    $profile_play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     // add the tag 'bmb_vip_featured' to the play
@@ -618,11 +618,11 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_public_play_with_no_bust_tag_is_not_bustable() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
-    $play = self::factory()->play->create_and_get([
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 
@@ -633,16 +633,16 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_query_is_winner() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
-    $winner = self::factory()->play->create_and_get([
+    $winner = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_winner' => true,
     ]);
 
-    $loser = self::factory()->play->create_and_get([
+    $loser = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_winner' => false,
     ]);
@@ -657,16 +657,16 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_query_bmb_official() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
-    $official = self::factory()->play->create_and_get([
+    $official = $this->create_play([
       'bracket_id' => $bracket->id,
       'bmb_official' => true,
     ]);
 
-    $unofficial = self::factory()->play->create_and_get([
+    $unofficial = $this->create_play([
       'bracket_id' => $bracket->id,
       'bmb_official' => false,
     ]);
@@ -681,16 +681,16 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_query_is_tournament_entry() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
-    $entry = self::factory()->play->create_and_get([
+    $entry = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_tournament_entry' => true,
     ]);
 
-    $non_entry = self::factory()->play->create_and_get([
+    $non_entry = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_tournament_entry' => false,
     ]);

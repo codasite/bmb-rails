@@ -139,7 +139,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_bracket() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -228,7 +228,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_author_can_edit_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID,
       'matches' => [
         new BracketMatch([
@@ -275,7 +275,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_non_author_cannot_edit_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID + 1,
       'matches' => [
         new BracketMatch([
@@ -317,7 +317,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_delete_bracket_is_soft() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -352,7 +352,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_author_can_delete_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID,
       'matches' => [
         new BracketMatch([
@@ -388,7 +388,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_non_author_cannot_delete_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID + 1,
       'matches' => [
         new BracketMatch([
@@ -432,7 +432,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'notification_service' => $notification_service,
     ]);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -549,7 +549,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->add_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'private',
       'author' => $user->ID,
       'matches' => [
@@ -588,7 +588,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->remove_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'private',
       'author' => $user->ID,
       'matches' => [
@@ -627,7 +627,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->add_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'author' => $user->ID,
       'matches' => [
@@ -675,7 +675,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->remove_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'author' => $user->ID,
       'matches' => [
@@ -717,7 +717,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_some_results_sets_status_to_score() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'matches' => [
         new BracketMatch([
@@ -768,7 +768,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_all_partial_results_sets_status_to_complete() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
     ]);
@@ -838,7 +838,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_all_results_sets_status_to_complete() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'matches' => [
@@ -956,7 +956,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $api = new BracketApi(['score_service' => $score_service]);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -996,7 +996,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_winners_are_set_when_all_results_updated() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'matches' => [
@@ -1067,7 +1067,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_winners_not_set_when_not_all_results_updated() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'matches' => [
