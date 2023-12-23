@@ -33,24 +33,11 @@ class BracketLeaderboardService {
     $query = [
       'post_status' => 'publish',
       'bracket_id' => $this->bracket->id,
-      'busted_play_id' => [
-        'compare' => 'NOT EXISTS',
-      ],
+      'is_tournament_entry' => true,
       'orderby' => 'accuracy_score',
       'order' => 'DESC',
     ];
 
-    if ($this->bracket->results_first_updated_at) {
-      $query['date_query'] = [
-        [
-          'column' => 'post_modified_gmt',
-          'before' => $this->bracket->results_first_updated_at->format(
-            'Y-m-d H:i:s'
-          ),
-          'inclusive' => true,
-        ],
-      ];
-    }
     $plays = $this->play_repo->get_all($query, [
       'fetch_picks' => true,
     ]);

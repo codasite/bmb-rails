@@ -23,6 +23,7 @@ class CustomPlayQuery {
     'bmb_official',
     'busted_play_id',
     'busted_play_post_id',
+    'is_tournament_entry',
   ];
   // This is a mapping of query fields to the actual field names in the database
   public static $alternate_field_mappings = [

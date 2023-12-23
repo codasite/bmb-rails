@@ -5,7 +5,7 @@ use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\ScoreService;
 
-class Test_ScoreService extends WPBB_UnitTestCase {
+class ScoreServiceTest extends WPBB_UnitTestCase {
   public function set_up() {
     parent::set_up();
   }

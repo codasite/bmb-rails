@@ -22,7 +22,7 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
   }
 
   public function test_leadboard_shortcode() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 2,
       'matches' => [
         new BracketMatch([
@@ -49,7 +49,7 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
       'last_name' => 'User',
     ]);
 
-    $play1 = self::factory()->play->create_object([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -59,8 +59,9 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
         ]),
       ],
       'author' => $user,
+      'is_tournament_entry' => true,
     ]);
-    $updated_bracket = self::factory()->bracket->update_object($bracket, [
+    $updated_bracket = $this->update_bracket($bracket, [
       'results' => [
         [
           'round_index' => 0,
@@ -97,7 +98,7 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
   }
 
   public function test_render_leaderboard() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
       'title' => 'Test Bracket',
       'status' => 'score',
@@ -113,17 +114,19 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
     $customer->set_billing_state('CA');
     $customer->save();
 
-    $play1 = self::factory()->play->create_object([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user,
       'accuracy_score' => 1,
       'slug' => 'test-play-1',
+      'is_tournament_entry' => true,
     ]);
-    $play2 = self::factory()->play->create_object([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user,
       'accuracy_score' => 0.5,
       'slug' => 'test-play-2',
+      'is_tournament_entry' => true,
     ]);
 
     $leaderboard_service = new BracketLeaderboardService($bracket->id);

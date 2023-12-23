@@ -655,4 +655,52 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(1, count($plays));
     $this->assertEquals($winner->id, $plays[0]->id);
   }
+
+  public function test_query_bmb_official() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+
+    $official = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'bmb_official' => true,
+    ]);
+
+    $unofficial = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'bmb_official' => false,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'bmb_official' => true,
+    ]);
+
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($official->id, $plays[0]->id);
+  }
+
+  public function test_query_is_tournament_entry() {
+    $bracket = self::factory()->bracket->create_and_get([
+      'num_teams' => 4,
+    ]);
+
+    $entry = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+    ]);
+
+    $non_entry = self::factory()->play->create_and_get([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+    ]);
+
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($entry->id, $plays[0]->id);
+  }
 }

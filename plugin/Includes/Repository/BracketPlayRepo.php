@@ -128,7 +128,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'is_bustable' => PlayPermissions::is_bustable($play_post),
       'is_winner' => (bool) $play_data['is_winner'],
       'bmb_official' => (bool) $play_data['bmb_official'],
-      'is_entry' => (bool) $play_data['is_entry'],
+      'is_tournament_entry' => (bool) $play_data['is_tournament_entry'],
       'thumbnail_url' => get_the_post_thumbnail_url(
         $play_post->ID,
         'thumbnail'
@@ -272,7 +272,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'is_printed' => $play->is_printed ?? false,
       'is_winner' => $play->is_winner ?? false,
       'bmb_official' => $play->bmb_official ?? false,
-      'is_entry' => $play->is_entry ?? false,
+      'is_tournament_entry' => $play->is_tournament_entry ?? false,
     ]);
 
     if ($play_id && $play->picks) {
@@ -424,7 +424,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       is_printed tinyint(1) NOT NULL DEFAULT 0,
       is_winner tinyint(1) NOT NULL DEFAULT 0,
       bmb_official tinyint(1) NOT NULL DEFAULT 0,
-      is_entry tinyint(1) NOT NULL DEFAULT 0,
+      is_tournament_entry tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE,
