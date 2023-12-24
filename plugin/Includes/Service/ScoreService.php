@@ -36,10 +36,7 @@ class ScoreService implements ScoreServiceInterface {
    */
   private $utils;
 
-  /**
-   * @var bool
-   */
-  private $ignore_late_plays;
+  private $tournament_entries_only;
 
   public function __construct($opts = []) {
     global $wpdb;
@@ -47,7 +44,7 @@ class ScoreService implements ScoreServiceInterface {
     $this->play_repo = new BracketPlayRepo();
     $this->bracket_repo = new BracketRepo();
     $this->utils = new Utils();
-    $this->ignore_late_plays = $opts['ignore_late_plays'] ?? true;
+    $this->tournament_entries_only = $opts['tournament_entries_only'] ?? true;
   }
 
   /**
@@ -102,10 +99,7 @@ class ScoreService implements ScoreServiceInterface {
 
     $join = $this->get_join_clause($bracket_id, $num_rounds);
     $total_score_exp = $this->get_total_score_exp($num_rounds, $point_values);
-    $where = $this->get_where_clause(
-      $bracket_id,
-      $bracket->results_first_updated_at
-    );
+    $where = $this->get_where_clause($bracket_id);
 
     $sql = "
         UPDATE $plays_table p0
@@ -138,12 +132,6 @@ class ScoreService implements ScoreServiceInterface {
         ) agg ON p0.id = agg.bracket_play_id
     ";
 
-    if ($this->ignore_late_plays) {
-      $join .= "
-        JOIN $posts_table p3 ON p0.post_id = p3.ID
-      ";
-    }
-
     return $join;
   }
 
@@ -169,15 +157,11 @@ class ScoreService implements ScoreServiceInterface {
     return $total_score_exp;
   }
 
-  private function get_where_clause(
-    int $bracket_id,
-    DateTimeImmutable|false $first_updated = false
-  ): string {
-    $where = " WHERE p0.bracket_id = $bracket_id";
+  private function get_where_clause(int $bracket_id): string {
+    $where = "WHERE p0.bracket_id = $bracket_id";
 
-    if ($this->ignore_late_plays && $first_updated) {
-      $updated = $first_updated->format('Y-m-d H:i:s');
-      $where .= " AND p3.post_date_gmt <= '$updated'";
+    if ($this->tournament_entries_only) {
+      $where .= ' AND p0.is_tournament_entry = 1';
     }
 
     return $where;

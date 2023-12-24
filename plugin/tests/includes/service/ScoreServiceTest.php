@@ -53,7 +53,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_late_plays' => false,
+      'tournament_entries_only' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -105,7 +105,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_late_plays' => false,
+      'tournament_entries_only' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -173,7 +173,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_late_plays' => false,
+      'tournament_entries_only' => false,
     ]);
     $affected = $score_service->score_bracket_plays($bracket1);
 
@@ -245,7 +245,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_late_plays' => false,
+      'tournament_entries_only' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -346,7 +346,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     ]);
 
     $score_service = new ScoreService([
-      'ignore_late_plays' => false,
+      'tournament_entries_only' => false,
     ]);
     $affected = $score_service->score_bracket_plays($update_bracket);
 
@@ -356,7 +356,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $this->assertEquals(0.333333, $updated->accuracy_score);
   }
 
-  public function test_play_created_before_results_update_is_scored() {
+  public function test_tournament_entries_are_scored() {
     $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
@@ -377,6 +377,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
 
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
       'picks' => [
         new MatchPick([
           'round_index' => 0,
@@ -395,15 +396,9 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
         ]),
       ],
     ]);
-    $play_time = $play->published_date;
-    $bracket_time = $play_time->modify('+1 second');
-
-    $bracket = $this->update_bracket($bracket, [
-      'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
-    ]);
 
     $score_service = new ScoreService([
-      'ignore_late_plays' => true,
+      'tournament_entries_only' => true,
     ]);
 
     $affected = $score_service->score_bracket_plays($bracket);
@@ -414,7 +409,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $this->assertNotNull($updated->accuracy_score);
   }
 
-  public function test_play_created_after_results_updated_not_scored() {
+  public function test_non_tournament_entries_are_not_scored() {
     $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
@@ -435,6 +430,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
 
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
       'picks' => [
         new MatchPick([
           'round_index' => 0,
@@ -454,15 +450,8 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play_time = $play->published_date;
-    $bracket_time = $play_time->modify('-1 second');
-
-    $bracket = $this->update_bracket($bracket, [
-      'results_first_updated_at' => $bracket_time->format('Y-m-d H:i:s'),
-    ]);
-
     $score_service = new ScoreService([
-      'ignore_late_plays' => true,
+      'tournament_entries_only' => true,
     ]);
 
     $affected = $score_service->score_bracket_plays($bracket);
@@ -486,7 +475,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       'total_score' => 3,
     ]);
     $score_service = new ScoreService([
-      'ignore_late_plays' => false,
+      'tournament_entries_only' => false,
     ]);
 
     $score_service->set_winners($bracket);
@@ -516,7 +505,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       'total_score' => 3,
     ]);
     $score_service = new ScoreService([
-      'ignore_late_plays' => false,
+      'tournament_entries_only' => false,
     ]);
 
     $score_service->set_winners($bracket);
