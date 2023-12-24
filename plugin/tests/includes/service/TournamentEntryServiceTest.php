@@ -68,4 +68,135 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
     $this->assertTrue($play1->is_tournament_entry);
     $this->assertFalse($play2->is_tournament_entry);
   }
+
+  public function test_should_mark_play_as_tournament_entry() {
+    $bracket = $this->create_bracket();
+    $user = self::factory()->user->create_and_get();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+      'author' => $user->ID,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_mark_play_as_tournament_entry($play);
+
+    $this->assertTrue($should);
+  }
+  public function test_buster_plays_should_not_be_marked_as_tournament_entry() {
+    $bracket = $this->create_bracket();
+    $user = self::factory()->user->create_and_get();
+    $busted_play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+      'busted_id' => $busted_play->id,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_mark_play_as_tournament_entry($play);
+
+    $this->assertFalse($should);
+  }
+  // test that exisiting entries should not be marked
+  public function test_existing_tournament_entries_should_not_be_marked_as_tournament_entry() {
+    $bracket = $this->create_bracket();
+    $user = self::factory()->user->create_and_get();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+      'author' => $user->ID,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_mark_play_as_tournament_entry($play);
+
+    $this->assertFalse($should);
+  }
+  // test that closed brackets should not be marked
+  public function test_closed_brackets_should_not_be_marked_as_tournament_entry() {
+    $bracket = $this->create_bracket([
+      'status' => 'scored',
+    ]);
+    $user = self::factory()->user->create_and_get();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+      'author' => $user->ID,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_mark_play_as_tournament_entry($play);
+
+    $this->assertFalse($should);
+  }
+  // test that open brackets should be marked
+  public function test_open_brackets_should_be_marked_as_tournament_entry() {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+    ]);
+    $user = self::factory()->user->create_and_get();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+      'author' => $user->ID,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_mark_play_as_tournament_entry($play);
+
+    $this->assertTrue($should);
+  }
+
+  public function test_try_mark_play_as_tournament_entry_marks_play() {
+    $entry_service_mock = $this->getMockBuilder(TournamentEntryService::class)
+      ->onlyMethods([
+        'should_mark_play_as_tournament_entry',
+        'mark_play_as_tournament_entry',
+      ])
+      ->getMock();
+
+    $entry_service_mock
+      ->expects($this->once())
+      ->method('should_mark_play_as_tournament_entry')
+      ->willReturn(true);
+
+    $entry_service_mock
+      ->expects($this->once())
+      ->method('mark_play_as_tournament_entry');
+
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $entry_service_mock->try_mark_play_as_tournament_entry($play);
+  }
+
+  public function test_try_mark_play_as_tournament_entry_does_not_mark_play() {
+    $entry_service_mock = $this->getMockBuilder(TournamentEntryService::class)
+      ->onlyMethods([
+        'should_mark_play_as_tournament_entry',
+        'mark_play_as_tournament_entry',
+      ])
+      ->getMock();
+
+    $entry_service_mock
+      ->expects($this->once())
+      ->method('should_mark_play_as_tournament_entry')
+      ->willReturn(false);
+
+    $entry_service_mock
+      ->expects($this->never())
+      ->method('mark_play_as_tournament_entry');
+
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $entry_service_mock->try_mark_play_as_tournament_entry($play);
+  }
 }

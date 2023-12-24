@@ -232,9 +232,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       ]);
     }
     $saved = $this->play_repo->add($play);
-    if (!$buster_play) {
-      $this->tournament_entry_service->mark_play_as_tournament_entry($saved);
-    }
+    $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
     // Generate the bracket images
     if (
       isset($params['generate_images']) &&

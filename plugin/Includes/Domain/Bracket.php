@@ -216,4 +216,12 @@ class Bracket extends PostBase implements PostBracketInterface {
   public function get_post_id(): int {
     return $this->id;
   }
+
+  public function is_open(): bool {
+    return $this->status === 'publish';
+  }
+
+  public function is_closed(): bool {
+    return !$this->is_open();
+  }
 }

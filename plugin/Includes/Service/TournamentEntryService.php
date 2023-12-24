@@ -12,6 +12,28 @@ class TournamentEntryService {
     $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
   }
 
+  public function try_mark_play_as_tournament_entry(BracketPlay $play): void {
+    if (!$this->should_mark_play_as_tournament_entry($play)) {
+      return;
+    }
+    $this->mark_play_as_tournament_entry($play);
+  }
+
+  public function should_mark_play_as_tournament_entry(
+    BracketPlay $play
+  ): bool {
+    if ($play->is_tournament_entry) {
+      return false;
+    }
+    if ($play->busted_id) {
+      return false;
+    }
+    if ($play->bracket->is_closed()) {
+      return false;
+    }
+    return true;
+  }
+
   public function mark_play_as_tournament_entry(BracketPlay $play): void {
     $author_id = $play->author;
     $bracket_id = $play->bracket_id;
