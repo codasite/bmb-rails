@@ -23,6 +23,10 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
     $serializer = $value['serializer'];
     $many = $value['many'] ?? false;
 
+    if (!isset($obj->$field)) {
+      return [];
+    }
+
     if ($many) {
       $serialized_items = [];
       foreach ($obj->$field as $item) {

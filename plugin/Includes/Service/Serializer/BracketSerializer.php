@@ -5,8 +5,9 @@ namespace WStrategies\BMB\Includes\Service\Serializer;
 use WStrategies\BMB\Includes\Domain\Bracket;
 
 class BracketSerializer extends PostBaseSerializer {
-  private $match_serializer;
-  private $results_serializer;
+  private BracketMatchSerializer $match_serializer;
+  private MatchPickSerializer $results_serializer;
+
   public function __construct($args = []) {
     $this->match_serializer =
       $args['match_serializer'] ?? new BracketMatchSerializer();
@@ -27,16 +28,6 @@ class BracketSerializer extends PostBaseSerializer {
         'serializer' => $this->results_serializer,
         'many' => true,
       ],
-      // 'results_first_updated_at' => [
-      //   'value' => [$this, 'serialize_results_first_updated_at'],
-      // ],
     ]);
-  }
-  public function serialize_results_first_updated_at(
-    Bracket $bracket
-  ): ?string {
-    return $bracket->results_first_updated_at
-      ? $bracket->results_first_updated_at->format('Y-m-d H:i:s')
-      : null;
   }
 }
