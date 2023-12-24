@@ -1,5 +1,6 @@
 <?php
 
+use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
@@ -12,6 +13,7 @@ use WStrategies\BMB\Includes\Utils;
 //namespace phpunit
 
 class BracketAPITest extends WPBB_UnitTestCase {
+  use MatchesSnapshots;
   const BRACKET_API_ENDPOINT = '/wp-bracket-builder/v1/brackets';
   private $bracket_repo;
 
@@ -1130,5 +1132,44 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals(200, $response->get_status());
     $updated = $this->bracket_repo->get($bracket->id);
     $this->assertEquals('score', $updated->status);
+  }
+
+  public function test_get_bracket_snapshot() {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+      'num_teams' => 4,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+    // get the bracket through api
+    $request = new WP_REST_Request(
+      'GET',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_param('item_id', $bracket->id);
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    // get the response data
+    $data = $response->get_data();
   }
 }

@@ -43,7 +43,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     $post_id = $this->insert_post($bracket, true, true);
 
     if (is_wp_error($post_id)) {
-      return null;
+      throw new \Exception($post_id->get_error_message());
     }
 
     $bracket_id = $this->insert_custom_table_data([

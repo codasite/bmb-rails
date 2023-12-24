@@ -56,4 +56,12 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   public function get_play($play_id) {
     return self::factory()->play->get_object_by_id($play_id);
   }
+
+  public function create_post($args = []) {
+    return self::factory()->post->create_and_get($args);
+  }
+
+  public function create_user($args = []) {
+    return self::factory()->user->create_and_get($args);
+  }
 }

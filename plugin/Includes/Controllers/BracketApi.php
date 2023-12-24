@@ -162,7 +162,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     // get id from request
     $id = $request->get_param('item_id');
     $bracket = $this->bracket_repo->get($id);
-    return new WP_REST_Response($bracket, 200);
+    return new WP_REST_Response((array) $bracket, 200);
   }
 
   /**
@@ -187,7 +187,13 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       ]);
     }
 
-    $saved = $this->bracket_repo->add($bracket);
+    try {
+      $saved = $this->bracket_repo->add($bracket);
+    } catch (Exception $e) {
+      return new WP_Error('server-error', $e->getMessage(), [
+        'status' => 500,
+      ]);
+    }
     // check if user logged in
     if (!is_user_logged_in()) {
       // if (get_current_user_id() === 0)
