@@ -58,6 +58,7 @@ class BracketResultsRepo implements CustomTableInterface {
   public function insert_result(int $bracket_id, MatchPick $pick): void {
     $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
+      'id' => $pick->id,
       'bracket_id' => $bracket_id,
       'round_index' => $pick->round_index,
       'match_index' => $pick->match_index,

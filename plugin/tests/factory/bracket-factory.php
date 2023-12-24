@@ -52,11 +52,9 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
         'round_index' => 0,
         'match_index' => $i,
         'team1' => new Team([
-          'id' => $i * 2,
           'name' => 'Team ' . $i * 2 + 1,
         ]),
         'team2' => new Team([
-          'id' => $i * 2 + 1,
           'name' => 'Team ' . ($i * 2 + 2),
         ]),
       ]);

@@ -15,8 +15,9 @@ class TeamSerializer extends ApiSerializerBase {
   //   }
   // }
 
-  // public function deserialize($data): object {
-  // }
+  public function deserialize($data): object {
+    throw new \Exception('Not implemented');
+  }
   public function get_serialized_fields(): array {
     return ['id', 'name'];
   }

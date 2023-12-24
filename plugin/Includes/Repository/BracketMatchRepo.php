@@ -33,6 +33,7 @@ class BracketMatchRepo implements CustomTableInterface {
       $team2 = $this->team_repo->add($bracket_id, $match->team2);
 
       $this->wpdb->insert($table_name, [
+        'id' => $match->id,
         'bracket_id' => $bracket_id,
         'round_index' => $match->round_index,
         'match_index' => $match->match_index,

@@ -57,6 +57,7 @@ class BracketTeamRepo implements CustomTableInterface {
 
     $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
+      'id' => $team->id,
       'name' => $team->name,
       'bracket_id' => $bracket_id,
     ]);
