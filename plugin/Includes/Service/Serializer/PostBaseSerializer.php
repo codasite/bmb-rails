@@ -3,10 +3,6 @@
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
 class PostBaseSerializer extends ApiSerializerBase {
-  public function deserialize(array $data): object {
-    throw new \Exception('Not implemented');
-  }
-
   public function get_serialized_fields(): array {
     return [
       'id',
