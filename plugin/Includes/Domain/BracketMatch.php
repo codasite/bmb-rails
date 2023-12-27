@@ -29,7 +29,7 @@ class BracketMatch {
    */
   public $team2;
 
-  public function __construct($args) {
+  public function __construct($args = []) {
     $this->round_index = (int) $args['round_index'];
     $this->match_index = (int) $args['match_index'];
     $this->team1 = $args['team1'] ?? null;

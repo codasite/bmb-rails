@@ -17,8 +17,9 @@ class BracketMatchSerializer extends ApiSerializerBase {
   //   }
   // }
 
-  public function deserialize($data): object {
-    throw new \Exception('Not implemented');
+  public function deserialize($data): BracketMatch {
+    $obj_data = $this->get_object_data($data);
+    return new BracketMatch($obj_data);
   }
 
   public function get_serialized_fields(): array {

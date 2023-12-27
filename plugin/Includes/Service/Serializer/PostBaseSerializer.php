@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
-class PostBaseSerializer extends ApiSerializerBase {
+abstract class PostBaseSerializer extends ApiSerializerBase {
   public function get_serialized_fields(): array {
     return [
       'id',

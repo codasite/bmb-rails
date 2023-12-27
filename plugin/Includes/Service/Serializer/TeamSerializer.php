@@ -9,14 +9,9 @@ use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 
 class TeamSerializer extends ApiSerializerBase {
-  // public function serialize(object $bracket): array {
-  //   if (!$bracket instanceof Team) {
-  //     throw new \Exception('Invalid data type');
-  //   }
-  // }
-
   public function deserialize($data): object {
-    throw new \Exception('Not implemented');
+    $obj_data = $this->get_object_data($data);
+    return new Team($obj_data);
   }
   public function get_serialized_fields(): array {
     return ['id', 'name'];

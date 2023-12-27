@@ -17,6 +17,11 @@ class BracketPlaySerializer extends PostBaseSerializer {
       $args['bracket_serializer'] ?? new BracketSerializer();
   }
 
+  public function deserialize(array $data): BracketPlay {
+    $obj_data = $this->get_object_data($data);
+    return new BracketPlay($obj_data);
+  }
+
   public function get_serialized_fields(): array {
     return array_merge(parent::get_serialized_fields(), [
       'bracket_id',

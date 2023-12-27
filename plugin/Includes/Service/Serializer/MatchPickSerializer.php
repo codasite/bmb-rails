@@ -14,8 +14,9 @@ class MatchPickSerializer extends ApiSerializerBase {
   //   }
   // }
 
-  public function deserialize($data): object {
-    throw new \Exception('Not implemented');
+  public function deserialize($data): MatchPick {
+    $obj_data = $this->get_object_data($data);
+    return new MatchPick($obj_data);
   }
   public function get_serialized_fields(): array {
     return ['id', 'round_index', 'match_index', 'winning_team_id'];

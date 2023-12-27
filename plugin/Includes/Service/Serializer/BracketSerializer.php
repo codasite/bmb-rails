@@ -14,6 +14,10 @@ class BracketSerializer extends PostBaseSerializer {
     $this->results_serializer =
       $args['results_serializer'] ?? new MatchPickSerializer();
   }
+  public function deserialize(array $data): Bracket {
+    $validated_data = $this->get_validated_data($data);
+    return new Bracket($validated_data);
+  }
   public function get_serialized_fields(): array {
     return array_merge(parent::get_serialized_fields(), [
       'num_teams',
