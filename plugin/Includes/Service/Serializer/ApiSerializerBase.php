@@ -2,6 +2,9 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
+use WStrategies\BMB\Includes\Service\Serializer\SerializedFieldBuilder\SerializedFieldDirector;
+use WStrategies\BMB\Includes\Service\Serializer\SerializedFieldBuilder\SerializerBuilder;
+
 abstract class ApiSerializerBase implements ApiSerializerInterface {
   protected function get_object_data(array $serialized): array {
     $data = [];
@@ -39,16 +42,23 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
   }
 
   public function serialize(object $obj): array {
-    $serialized = [];
-    foreach ($this->get_serialized_fields() as $field => $value) {
-      if (is_string($value)) {
-        $serialized[$value] = $obj->$value;
-      } else {
-        $serialized[$field] = $this->serialize_field($obj, $field, $value);
-      }
-    }
-    return $serialized;
+    $serializer_builder = new SerializerBuilder($obj);
+    $director = new SerializedFieldDirector($serializer_builder);
+    $director->build($this->get_serialized_fields());
+    return $serializer_builder->get_serialized();
   }
+
+  // public function serialize(object $obj): array {
+  //   $serialized = [];
+  //   foreach ($this->get_serialized_fields() as $field => $value) {
+  //     if (is_string($value)) {
+  //       $serialized[$value] = $obj->$value;
+  //     } else {
+  //       $serialized[$field] = $this->serialize_field($obj, $field, $value);
+  //     }
+  //   }
+  //   return $serialized;
+  // }
 
   private function serialize_field(
     object $obj,
