@@ -2,6 +2,7 @@
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
@@ -199,5 +200,38 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
     $serializer = new BracketPlaySerializer();
     $serialized = $serializer->serialize($play);
     $this->assertMatchesSnapshot($serialized);
+  }
+
+  public function test_deserialize() {
+    $data = [
+      'bracket_id' => 1,
+      'author' => 1,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => 1,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => 2,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => 3,
+        ],
+      ],
+    ];
+    $serializer = new BracketPlaySerializer();
+    $play = $serializer->deserialize($data);
+    $this->assertInstanceOf(BracketPlay::class, $play);
+    $picks = $play->picks;
+    $this->assertCount(3, $picks);
+    $this->assertInstanceOf(MatchPick::class, $picks[0]);
+    $this->assertInstanceOf(MatchPick::class, $picks[1]);
+    $this->assertInstanceOf(MatchPick::class, $picks[2]);
+    $this->assertMatchesSnapshot((array) $play);
   }
 }

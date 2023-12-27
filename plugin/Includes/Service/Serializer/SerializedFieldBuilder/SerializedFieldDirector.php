@@ -16,7 +16,6 @@ class SerializedFieldDirector {
       } elseif (is_array($value)) {
         $serializer = $value['serializer'];
         $many = $value['many'] ?? false;
-
         if ($many) {
           $this->builder->build_serializer_field_many($key, $serializer);
         } else {

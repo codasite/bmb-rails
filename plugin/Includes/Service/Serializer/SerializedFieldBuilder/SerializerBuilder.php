@@ -2,6 +2,8 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer\SerializedFieldBuilder;
 
+use WStrategies\BMB\Includes\Service\Serializer\ApiSerializerInterface;
+
 class SerializerBuilder extends SerializedFieldBuilderBase {
   private object $obj;
   private array $serialized;
@@ -16,7 +18,7 @@ class SerializerBuilder extends SerializedFieldBuilderBase {
 
   public function build_serializer_field(
     string $field_name,
-    object $serializer
+    ApiSerializerInterface $serializer
   ) {
     if (isset($this->obj->$field_name)) {
       $this->serialized[$field_name] = $serializer->serialize(
@@ -27,7 +29,7 @@ class SerializerBuilder extends SerializedFieldBuilderBase {
 
   public function build_serializer_field_many(
     string $field_name,
-    object $serializer
+    ApiSerializerInterface $serializer
   ) {
     if (isset($this->obj->$field_name)) {
       $serialized_items = [];
