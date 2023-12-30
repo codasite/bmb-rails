@@ -2,21 +2,15 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer\SerializedFieldBuilder;
 
-use WStrategies\BMB\Includes\Service\Serializer\ApiSerializerInterface;
-
-abstract class SerializedFieldBuilderBase {
-  public function build_string_field(string $field_name): void {
+abstract class SerializedFieldBuilderBase implements
+  SerializedFieldBuilderInterface {
+  public function build_field(string $field_name, array $options = []) {
   }
-
-  public function build_serializer_field(
-    string $field_name,
-    ApiSerializerInterface $serializer
-  ) {
-  }
-
-  public function build_serializer_field_many(
-    string $field_name,
-    ApiSerializerInterface $serializer
-  ) {
+  public function parse_serializer_options(array $options): array {
+    $serializer = $options['serializer'] ?? null;
+    $many = $options['many'] ?? false;
+    $required = $options['required'] ?? false;
+    $readonly = $options['readonly'] ?? false;
+    return [$serializer, $many, $required, $readonly];
   }
 }

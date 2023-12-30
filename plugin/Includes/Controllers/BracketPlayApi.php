@@ -234,7 +234,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       $params['bmb_official'] = true;
     }
     try {
-      $play = BracketPlay::from_array($params);
+      $play = $this->serializer->deserialize($params);
     } catch (ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,

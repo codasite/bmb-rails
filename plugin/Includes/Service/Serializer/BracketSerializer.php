@@ -20,17 +20,25 @@ class BracketSerializer extends PostBaseSerializer {
   }
   public function get_serialized_fields(): array {
     return array_merge(parent::get_serialized_fields(), [
-      'num_teams',
-      'wildcard_placement',
+      'num_teams' => [
+        'required' => true,
+      ],
+      'wildcard_placement' => [
+        'required' => true,
+      ],
       'month',
       'year',
       'matches' => [
         'serializer' => $this->match_serializer,
         'many' => true,
+        'required' => true,
       ],
       'results' => [
         'serializer' => $this->results_serializer,
         'many' => true,
+      ],
+      'title' => [
+        'required' => true,
       ],
     ]);
   }

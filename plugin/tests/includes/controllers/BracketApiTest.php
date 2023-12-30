@@ -135,7 +135,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
     $this->assertEquals(400, $response->get_status());
     $this->assertEquals(
-      'num_teams, wildcard_placement, title, matches is required',
+      'Missing required fields: title, num_teams, wildcard_placement, matches',
       $response->get_data()['message']
     );
   }

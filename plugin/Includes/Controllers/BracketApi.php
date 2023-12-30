@@ -189,7 +189,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       $params['status'] = 'private';
     }
     try {
-      $bracket = Bracket::from_array($params);
+      $bracket = $this->serializer->deserialize($params);
     } catch (ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,
