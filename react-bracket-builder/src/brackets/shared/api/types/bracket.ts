@@ -83,6 +83,7 @@ export interface BracketRes extends PostBase {
   wildcardPlacement: WildcardPlacement
   matches?: MatchRes[]
   isOpen?: boolean
+  isPrintable?: boolean
 }
 export interface PlayReq {
   id?: number

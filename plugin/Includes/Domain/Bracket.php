@@ -220,4 +220,8 @@ class Bracket extends PostBase implements PostBracketInterface {
   public function is_open(): bool {
     return $this->status === 'publish';
   }
+
+  public function is_printable(): bool {
+    return $this->status !== 'upcoming';
+  }
 }

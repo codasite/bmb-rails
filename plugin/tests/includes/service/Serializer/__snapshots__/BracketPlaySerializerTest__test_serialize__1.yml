@@ -32,6 +32,7 @@ bracket:
     matches: [{ id: 100001, round_index: 0, match_index: 0, team1: { id: 100002, name: 'Team 1' }, team2: { id: 100003, name: 'Team 2' } }, { id: 100004, round_index: 0, match_index: 1, team1: { id: 100005, name: 'Team 3' }, team2: { id: 100006, name: 'Team 4' } }]
     results: {  }
     is_open: true
+    is_printable: true
 picks:
     - { id: 100007, round_index: 0, match_index: 0, winning_team_id: 100002 }
     - { id: 100008, round_index: 0, match_index: 1, winning_team_id: 100006 }
