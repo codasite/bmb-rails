@@ -5,6 +5,7 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\PostBaseSerializer;
 
@@ -77,8 +78,6 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
   public function test_deserialize() {
     $data = [
       'title' => 'Test Bracket',
-      'status' => 'publish',
-      'author' => 1,
       'month' => 'test month',
       'year' => 'test year',
       'num_teams' => 8,
@@ -144,6 +143,81 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
     $this->assertInstanceOf(MatchPick::class, $results[0]);
     $this->assertInstanceOf(MatchPick::class, $results[1]);
     $this->assertInstanceOf(MatchPick::class, $results[2]);
+    $this->assertMatchesSnapshot((array) $bracket);
+  }
+
+  public function test_deserialize_required_fields() {
+    $data = [];
+
+    $serializer = new BracketSerializer();
+    $this->expectException(ValidationException::class);
+    $this->expectExceptionMessage(
+      'Missing required fields: title, num_teams, wildcard_placement, matches'
+    );
+    $bracket = $serializer->deserialize($data);
+  }
+
+  public function test_deserialize_readonly_fields() {
+    $data = [
+      'id' => 100000,
+      'title' => 'Test Bracket',
+      'author' => 100001,
+      'status' => 'score',
+      'published_date' => '2020-01-01 00:00:00',
+      'slug' => 'test-bracket',
+      'author_display_name' => 'Test Author',
+      'thumbnail_url' => 'https://example.com/test.jpg',
+      'url' => 'https://example.com/test-bracket',
+      'month' => 'test month',
+      'year' => 'test year',
+      'num_teams' => 8,
+      'wildcard_placement' => 0,
+      'matches' => [
+        [
+          'id' => 100002,
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => [
+            'id' => 100003,
+            'name' => 'Team 1',
+          ],
+          'team2' => [
+            'id' => 100004,
+            'name' => 'Team 2',
+          ],
+        ],
+        [
+          'id' => 100005,
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => [
+            'id' => 100006,
+            'name' => 'Team 3',
+          ],
+          'team2' => [
+            'id' => 100007,
+            'name' => 'Team 4',
+          ],
+        ],
+      ],
+    ];
+
+    $serializer = new BracketSerializer();
+    $bracket = $serializer->deserialize($data);
+    $this->assertNull($bracket->id);
+    $this->assertNull($bracket->author);
+    $this->assertEquals('publish', $bracket->status);
+    $this->assertFalse($bracket->published_date);
+    $this->assertEquals('', $bracket->slug);
+    $this->assertEquals('', $bracket->author_display_name);
+    $this->assertFalse($bracket->thumbnail_url);
+    $this->assertFalse($bracket->url);
+    $this->assertEquals('test month', $bracket->month);
+    $this->assertEquals('test year', $bracket->year);
+    $this->assertEquals(8, $bracket->num_teams);
+    $this->assertEquals(0, $bracket->wildcard_placement);
+    $this->assertCount(2, $bracket->matches);
+
     $this->assertMatchesSnapshot((array) $bracket);
   }
 }

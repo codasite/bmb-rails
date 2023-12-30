@@ -10,7 +10,7 @@ use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInter
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
-class PlayAPITest extends WPBB_UnitTestCase {
+class BracketPlayApiTest extends WPBB_UnitTestCase {
   private $play_repo;
 
   public function set_up() {
@@ -48,7 +48,6 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $data = [
       'generate_images' => false,
       'bracket_id' => $bracket->id,
-      'author' => 1,
       'picks' => [
         [
           'round_index' => 0,
@@ -81,7 +80,6 @@ class PlayAPITest extends WPBB_UnitTestCase {
     $new_play = $this->play_repo->get($response->get_data()->id);
 
     $this->assertEquals($bracket->id, $new_play->bracket_id);
-    $this->assertEquals($data['author'], $new_play->author);
 
     $new_picks = $new_play->picks;
 

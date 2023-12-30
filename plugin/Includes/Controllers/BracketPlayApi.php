@@ -227,12 +227,6 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         ]);
       }
     }
-    if (!isset($params['author'])) {
-      $params['author'] = get_current_user_id();
-    }
-    if (has_tag('bmb_official', $bracket_id)) {
-      $params['bmb_official'] = true;
-    }
     try {
       $play = $this->serializer->deserialize($params);
     } catch (ValidationException $e) {
@@ -240,6 +234,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         'status' => 400,
       ]);
     }
+    $play->author = get_current_user_id();
+    $play->bmb_official = has_tag('bmb_official', $bracket_id);
     $saved = $this->play_repo->add($play);
     $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
     // Generate the bracket images

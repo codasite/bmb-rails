@@ -5,6 +5,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\PostBaseSerializer;
@@ -205,7 +206,6 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
   public function test_deserialize() {
     $data = [
       'bracket_id' => 1,
-      'author' => 1,
       'picks' => [
         [
           'round_index' => 0,
@@ -232,6 +232,78 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
     $this->assertInstanceOf(MatchPick::class, $picks[0]);
     $this->assertInstanceOf(MatchPick::class, $picks[1]);
     $this->assertInstanceOf(MatchPick::class, $picks[2]);
+    $this->assertMatchesSnapshot((array) $play);
+  }
+
+  public function test_deserialize_required_fields() {
+    $data = [];
+    $serializer = new BracketPlaySerializer();
+    $this->expectException(ValidationException::class);
+    // assert exception message
+    $this->expectExceptionMessage('Missing required fields: bracket_id, picks');
+    $play = $serializer->deserialize($data);
+  }
+
+  public function test_deserialize_readonly_fields() {
+    $data = [
+      'id' => 1,
+      'slug' => 'test-play',
+      'published_date' => '2020-01-01 00:00:00',
+      'bracket_id' => 1,
+      'total_score' => 100,
+      'accuracy_score' => 0.5,
+      'is_printed' => true,
+      'is_bustable' => true,
+      'is_winner' => true,
+      'bmb_official' => true,
+      'picks' => [
+        [
+          'id' => 1,
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => 1,
+        ],
+        [
+          'id' => 2,
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => 2,
+        ],
+        [
+          'id' => 3,
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => 3,
+        ],
+      ],
+    ];
+    $serializer = new BracketPlaySerializer();
+    $play = $serializer->deserialize($data);
+
+    $this->assertNull($play->id);
+    $this->assertNull($play->author);
+    $this->assertEquals('publish', $play->status);
+    $this->assertFalse($play->published_date);
+    $this->assertEquals('', $play->slug);
+    $this->assertEquals('', $play->author_display_name);
+    $this->assertFalse($play->thumbnail_url);
+    $this->assertFalse($play->url);
+    $this->assertEquals(1, $play->bracket_id);
+    $this->assertNull($play->bracket);
+    $this->assertCount(3, $play->picks);
+    $this->assertInstanceOf(MatchPick::class, $play->picks[0]);
+    $this->assertInstanceOf(MatchPick::class, $play->picks[1]);
+    $this->assertInstanceOf(MatchPick::class, $play->picks[2]);
+    $this->assertNull($play->total_score);
+    $this->assertNull($play->accuracy_score);
+    $this->assertNull($play->busted_id);
+    $this->assertFalse($play->is_printed);
+    $this->assertNull($play->busted_play);
+    $this->assertFalse($play->is_bustable);
+    $this->assertFalse($play->is_winner);
+    $this->assertFalse($play->bmb_official);
+    $this->assertFalse($play->is_tournament_entry);
+
     $this->assertMatchesSnapshot((array) $play);
   }
 }

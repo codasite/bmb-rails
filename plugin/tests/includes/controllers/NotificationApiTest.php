@@ -2,7 +2,7 @@
 
 use WStrategies\BMB\Includes\Domain\NotificationType;
 
-class NotificationAPITest extends \WPBB_UnitTestCase {
+class NotificationApiTest extends \WPBB_UnitTestCase {
   const NOTIFICATION_API_ENDPOINT = '/wp-bracket-builder/v1/notifications';
   public function test_get_notification() {
     $user = self::factory()->user->create_and_get();

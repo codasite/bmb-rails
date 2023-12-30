@@ -12,7 +12,7 @@ use WStrategies\BMB\Includes\Utils;
 
 //namespace phpunit
 
-class BracketAPITest extends WPBB_UnitTestCase {
+class BracketApiTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
   const BRACKET_API_ENDPOINT = '/wp-bracket-builder/v1/brackets';
   private $bracket_repo;
@@ -26,8 +26,6 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_create_bracket() {
     $data = [
       'title' => 'Test Bracket',
-      'status' => 'publish',
-      'author' => 1,
       'month' => 'test month',
       'year' => 'test year',
       'num_teams' => 8,
@@ -62,8 +60,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
     $this->assertEquals(201, $response->get_status());
     $this->assertEquals('Test Bracket', $response->get_data()->title);
-    $this->assertEquals('publish', $response->get_data()->status);
-    $this->assertEquals(1, $response->get_data()->author);
+    $this->assertEquals('private', $response->get_data()->status);
     $this->assertEquals('test month', $response->get_data()->month);
     $this->assertEquals('test year', $response->get_data()->year);
     $this->assertEquals(8, $response->get_data()->num_teams);
@@ -477,40 +474,6 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $res = $api->update_item($request);
   }
 
-  public function test_user_with_permission_can_create_published_bracket() {
-    $user = self::factory()->user->create_and_get();
-    $user->add_cap('wpbb_share_bracket');
-    wp_set_current_user($user->ID);
-
-    $data = [
-      'title' => 'Test Bracket',
-      'status' => 'publish',
-      'month' => 'test month',
-      'year' => 'test year',
-      'num_teams' => 8,
-      'wildcard_placement' => 0,
-      'matches' => [
-        [
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => [
-            'name' => 'Team 1',
-          ],
-          'team2' => [
-            'name' => 'Team 2',
-          ],
-        ],
-      ],
-    ];
-
-    $request = new WP_REST_Request('POST', self::BRACKET_API_ENDPOINT);
-    $request->set_body_params($data);
-    $request->set_header('Content-Type', 'application/json');
-    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
-    $response = rest_do_request($request);
-    $this->assertEquals(201, $response->get_status());
-    $this->assertEquals('publish', $response->get_data()->status);
-  }
   public function test_user_without_permission_cannot_create_published_bracket() {
     $user = self::factory()->user->create_and_get();
     $user->remove_cap('wpbb_share_bracket');

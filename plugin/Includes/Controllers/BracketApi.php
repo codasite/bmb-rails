@@ -182,12 +182,6 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    */
   public function create_item($request) {
     $params = $request->get_params();
-    if (!isset($params['author'])) {
-      $params['author'] = get_current_user_id();
-    }
-    if (!current_user_can('wpbb_share_bracket')) {
-      $params['status'] = 'private';
-    }
     try {
       $bracket = $this->serializer->deserialize($params);
     } catch (ValidationException $e) {
@@ -195,6 +189,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
         'status' => 400,
       ]);
     }
+    $bracket->author = get_current_user_id();
+    $bracket->status = 'private';
 
     try {
       $saved = $this->bracket_repo->add($bracket);

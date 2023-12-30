@@ -15,11 +15,6 @@ class BracketPlayTest extends WPBB_UnitTestCase {
     $this->assertInstanceOf(BracketPlay::class, $play);
   }
 
-  public function test_bracket_id_is_required() {
-    $this->expectException(Exception::class);
-    $play = new BracketPlay([]);
-  }
-
   public function test_from_array() {
     $args = [
       'bracket_id' => 716,

@@ -65,10 +65,6 @@ class BracketPlay extends PostBase implements PostBracketInterface {
   public $is_tournament_entry;
 
   public function __construct(array $data = []) {
-    if (!isset($data['bracket_id'])) {
-      throw new Exception('bracket_id ');
-    }
-
     parent::__construct($data);
     $this->bracket_id = isset($data['bracket_id'])
       ? (int) $data['bracket_id']
