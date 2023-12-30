@@ -5,6 +5,8 @@ use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
+use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 
 /**
  * The public-facing functionality of the plugin.
@@ -58,6 +60,16 @@ class EnqueueScriptsHooks implements HooksInterface {
   private $bracket_product_utils;
 
   /**
+   * @var BracketPlaySerializer
+   */
+  private BracketPlaySerializer $play_serializer;
+
+  /**
+   * @var BracketSerializer
+   */
+  private BracketSerializer $bracket_serializer;
+
+  /**
    * Initialize the class and set its properties.
    *
    * @since    1.0.0
@@ -71,6 +83,10 @@ class EnqueueScriptsHooks implements HooksInterface {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
+    $this->play_serializer =
+      $args['play_serializer'] ?? new BracketPlaySerializer();
+    $this->bracket_serializer =
+      $args['bracket_serializer'] ?? new BracketSerializer();
   }
 
   public function load(Loader $loader): void {
@@ -194,11 +210,12 @@ class EnqueueScriptsHooks implements HooksInterface {
       return;
     }
     if ($post->post_type === 'bracket_play') {
-      $play = $this->play_repo->get($post);
-      $play = $play;
-      $bracket = $play->bracket;
+      $play = $this->play_serializer->serialize($this->play_repo->get($post));
+      $bracket = $play['bracket'];
     } elseif ($post->post_type === 'bracket') {
-      $bracket = $this->bracket_repo->get($post);
+      $bracket = $this->bracket_serializer->serialize(
+        $this->bracket_repo->get($post)
+      );
     }
     return [$bracket, $play];
   }

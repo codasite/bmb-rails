@@ -32,6 +32,7 @@ bracket:
     year: '2020'
     matches: [{ id: 100001, round_index: 0, match_index: 0, team1: { id: 100002, name: 'Team 1' }, team2: { id: 100003, name: 'Team 2' } }, { id: 100004, round_index: 0, match_index: 1, team1: { id: 100005, name: 'Team 3' }, team2: { id: 100006, name: 'Team 4' } }]
     results: {  }
+    is_open: true
 busted_play:
     id: 200008
     title: ''
@@ -45,7 +46,6 @@ busted_play:
     bracket_id: 100000
     total_score: '100'
     accuracy_score: '0.5'
-    busted_id: null
     is_printed: true
     is_bustable: false
     is_winner: true

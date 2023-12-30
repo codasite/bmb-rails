@@ -59,6 +59,7 @@ const PlayPage = (props: PlayPageProps) => {
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
   const canPlay = bracket?.status !== 'upcoming'
+  console.log('bracket: ', bracket)
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
 
   useEffect(() => {
