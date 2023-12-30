@@ -40,6 +40,7 @@ class BracketSerializer extends PostBaseSerializer {
       'title' => [
         'required' => true,
       ],
+      'is_open',
     ]);
   }
 }

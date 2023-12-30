@@ -220,4 +220,13 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
 
     $this->assertMatchesSnapshot((array) $bracket);
   }
+
+  public function test_published_bracket_is_open() {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+    ]);
+    $serializer = new BracketSerializer();
+    $serialized = $serializer->serialize($bracket);
+    $this->assertTrue($serialized['is_open']);
+  }
 }

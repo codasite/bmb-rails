@@ -13,7 +13,11 @@ class SerializerBuilder extends SerializedFieldBuilderBase {
   }
 
   private function build_simple_field(string $field_name): void {
-    $this->serialized[$field_name] = $this->obj->$field_name;
+    if (isset($this->obj->$field_name)) {
+      $this->serialized[$field_name] = $this->obj->$field_name;
+    } elseif (method_exists($this->obj, $field_name)) {
+      $this->serialized[$field_name] = $this->obj->{$field_name}();
+    }
   }
 
   private function build_serializer_field(

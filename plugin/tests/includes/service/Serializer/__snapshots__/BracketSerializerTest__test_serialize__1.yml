@@ -18,3 +18,4 @@ results:
     - { id: 100007, round_index: 0, match_index: 0, winning_team_id: 100002 }
     - { id: 100008, round_index: 0, match_index: 1, winning_team_id: 100006 }
     - { id: 100009, round_index: 1, match_index: 0, winning_team_id: 100006 }
+is_open: true

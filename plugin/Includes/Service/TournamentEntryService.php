@@ -28,7 +28,7 @@ class TournamentEntryService {
     if ($play->busted_id) {
       return false;
     }
-    if ($play->bracket->is_closed()) {
+    if (!$play->bracket->is_open()) {
       return false;
     }
     return true;
