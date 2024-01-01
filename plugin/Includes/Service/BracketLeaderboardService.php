@@ -13,12 +13,14 @@ class BracketLeaderboardService {
   private Bracket $bracket;
   private array $plays;
 
-  public function __construct(int $bracket_id, array $args = []) {
+  public function __construct(int $bracket_id = null, array $args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
-    $this->bracket = $this->bracket_repo->get($bracket_id);
-    if (!$this->bracket) {
-      throw new \Exception('Bracket not found');
+    if ($bracket_id) {
+      $this->bracket = $this->bracket_repo->get($bracket_id);
+      if (!$this->bracket) {
+        throw new \Exception('Bracket not found');
+      }
     }
   }
 
@@ -26,13 +28,17 @@ class BracketLeaderboardService {
     return $this->bracket;
   }
 
-  public function get_plays(): array {
+  public function get_plays($bracket_id = null): array {
+    $bracket_id = $bracket_id ?? $this->bracket->id;
+    if (!$bracket_id) {
+      throw new \Exception('Bracket ID is required');
+    }
     if (isset($this->plays)) {
       return $this->plays;
     }
     $query = [
       'post_status' => 'publish',
-      'bracket_id' => $this->bracket->id,
+      'bracket_id' => $bracket_id,
       'is_tournament_entry' => true,
       'orderby' => 'accuracy_score',
       'order' => 'DESC',
@@ -44,5 +50,17 @@ class BracketLeaderboardService {
 
     $this->plays = $plays;
     return $plays;
+  }
+
+  public function get_num_plays($bracket_id = null): int {
+    $bracket_id = $bracket_id ?? $this->bracket->id;
+    if (!$bracket_id) {
+      throw new \Exception('Bracket ID is required');
+    }
+    return $this->play_repo->get_count([
+      'post_status' => 'publish',
+      'bracket_id' => $bracket_id,
+      'is_tournament_entry' => true,
+    ]);
   }
 }

@@ -321,12 +321,10 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function public_bracket_list_item( Bracket $bracket, BracketPlayRepo $play_repo = null ) {
+  public static function public_bracket_list_item( Bracket $bracket) {
     $name = $bracket->title;
     $num_teams = $bracket->num_teams;
-    $num_plays = $play_repo ? $play_repo->get_count( [
-      'bracket_id' => $bracket->id,
-    ] ) : 0;
+    $num_plays = $bracket->num_plays;
     $completed = $bracket->status === 'complete';
     $status = $bracket->status;
     $bracket_tag = self::get_bracket_tag( $status );
@@ -370,7 +368,6 @@ class BracketsCommon {
     $author_id = $opts['author'] ?? null;
 
     $bracket_repo = new BracketRepo();
-    $play_repo    = new BracketPlayRepo();
 
     $paged         = get_query_var( 'paged' ) ? absint( get_query_var( 'paged' ) ) : 1;
     $status_filter = get_query_var( 'status' );
@@ -414,7 +411,7 @@ class BracketsCommon {
     ?>
     <div class="tw-flex tw-flex-col tw-gap-15">
       <?php foreach ( $brackets as $bracket ) : ?>
-        <?php echo self::public_bracket_list_item( $bracket, $play_repo ); ?>
+        <?php echo self::public_bracket_list_item( $bracket); ?>
       <?php endforeach; ?>
     </div>
     <?php PaginationWidget::pagination( $paged, $num_pages ); ?>
