@@ -16,6 +16,24 @@ class DashboardPage {
     return ob_get_clean();
   }
 
+  public static function get_account_settings_link(): string|bool {
+    $account_page = get_page_by_path( 'my-account' );
+    $account_url = '';
+    if ($account_page instanceof \WP_Post) {
+      $page_id = $account_page->ID;
+      $account_url = get_permalink( $page_id );
+    }
+    ob_start();
+    ?>
+    <a class="tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue tw-bg-white/10"
+       href="<?php echo $account_url; ?>">
+      <?php echo file_get_contents( WPBB_PLUGIN_DIR . '/Public/assets/icons/settings.svg' ); ?>
+      <span>My Account</span>
+    </a>
+    <?php
+    return ob_get_clean();
+  }
+
   public static function render($current_tab = null) {
     $current_tab = $current_tab == null ? get_query_var( 'tab' ): $current_tab;
 
@@ -42,6 +60,8 @@ class DashboardPage {
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link( 'brackets', $current_tab, 'My Brackets', '../../assets/icons/signal.svg' ); ?></li>
             <li
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link( 'play-history', $current_tab, 'My Play History', '../../assets/icons/clock.svg' ); ?></li>
+            <li
+              class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_account_settings_link(); ?></li>
           </ul>
         </nav>
         <div class="tw-flex-grow">
