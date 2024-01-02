@@ -23,7 +23,7 @@ export const AddToApparel = (props: {
     <div className={'tw-flex tw-self-stretch tw-flex-col tw-items-stretch'}>
       {processingAddToApparel && (
         <span
-          className={`tw-mt-20 tw-mb-10 tw-text-16 md:tw-text-24 tw-text-center ${
+          className={`tw-m-20 tw-text-12 tw-text-center tw-font-600 ${
             darkMode ? 'tw-text-white' : 'tw-text-black'
           }`}
         >

@@ -7,7 +7,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage correctly 1`] = `
     style="background-image: url(undefined);"
   >
     <div
-      class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto"
+      class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80"
     >
       <div
         class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"
@@ -306,15 +306,6 @@ exports[`PlayBuilderPage renders PlayBuilderPage correctly 1`] = `
             </span>
           </button>
         </div>
-        <button
-          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-bg-transparent tw-text-white/20 tw-gap-10 tw-text-24 tw-font-700 tw-rounded-8 tw-py-16 tw-border-solid tw-border tw-border-white/20"
-          disabled=""
-        >
-          <svg
-            style="height: 24px;"
-          />
-          Submit picks
-        </button>
       </div>
     </div>
   </div>
