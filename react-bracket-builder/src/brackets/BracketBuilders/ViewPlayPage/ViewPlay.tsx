@@ -58,7 +58,7 @@ const ViewPlay = (props: ViewPlayPageProps) => {
   if (showPaginated) {
     return (
       <FullBracketPage
-        onApparelClick={handleAddToApparel}
+        handleApparelClick={handleAddToApparel}
         matchTree={matchTree}
         darkMode={darkMode}
         setDarkMode={setDarkMode}

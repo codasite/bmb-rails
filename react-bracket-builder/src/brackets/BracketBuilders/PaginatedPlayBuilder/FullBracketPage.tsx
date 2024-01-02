@@ -10,10 +10,11 @@ import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
 import SubmitPicksRegisterModal from '../PlayBracketBuilder/SubmitPicksRegisterModal'
 import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
+import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
 
 interface FullBracketPageProps {
   onEditClick?: () => void
-  onApparelClick: () => Promise<void>
+  handleApparelClick: () => Promise<void>
   handleSubmitPicksClick?: () => Promise<void>
   showSubmitPicksButton?: boolean
   matchTree?: MatchTree
@@ -28,9 +29,6 @@ interface FullBracketPageProps {
 export const FullBracketPage = (props: FullBracketPageProps) => {
   const {
     onEditClick,
-    onApparelClick,
-    handleSubmitPicksClick,
-    showSubmitPicksButton,
     matchTree,
     darkMode,
     setDarkMode,
@@ -74,22 +72,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
               <span>Edit</span>
             </ActionButton>
           )}
-          <AddToApparel
-            handleApparelClick={onApparelClick}
-            disabled={processing || !matchTree?.allPicked()}
-          />
-          {showSubmitPicksButton && (
-            <ActionButton
-              variant="blue"
-              onClick={handleSubmitPicksClick}
-              disabled={processing || !matchTree.allPicked()}
-              fontSize={24}
-              fontWeight={700}
-            >
-              <CircleCheckBrokenIcon style={{ height: 24 }} />
-              Submit picks
-            </ActionButton>
-          )}
+          <PlayBuilderButtons {...props} />
         </div>
       </div>
     </div>
