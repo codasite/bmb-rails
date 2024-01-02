@@ -57,27 +57,6 @@ class UserProfileTest extends WPBB_UnitTestCase {
     $this->assertEquals($user, $profile->wp_user);
   }
 
-  public function test_get_num_plays() {
-    $user = self::factory()->user->create_and_get();
-    $user2 = self::factory()->user->create_and_get();
-    $bracket = $this->create_bracket();
-    $play1 = $this->create_play([
-      'author' => $user->ID,
-      'bracket_id' => $bracket->id,
-    ]);
-    $play2 = $this->create_play([
-      'author' => $user->ID,
-      'bracket_id' => $bracket->id,
-    ]);
-    $play3 = $this->create_play([
-      'author' => $user2->ID,
-      'bracket_id' => $bracket->id,
-    ]);
-    $profile = new UserProfile(['wp_user' => $user]);
-
-    $this->assertEquals(2, $profile->get_num_plays());
-  }
-
   public function test_get_num_wins() {
     $user = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();

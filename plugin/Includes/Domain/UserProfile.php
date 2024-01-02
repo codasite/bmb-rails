@@ -3,6 +3,7 @@ namespace WStrategies\BMB\Includes\Domain;
 
 use WP_Query;
 use WP_User;
+use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 
 class UserProfile extends PostBase {
   /**
@@ -11,10 +12,13 @@ class UserProfile extends PostBase {
    * @var WP_User
    */
   public $wp_user;
+  private $leaderboard_service;
 
   public function __construct(array $data = []) {
     parent::__construct($data);
     $this->wp_user = isset($data['wp_user']) ? $data['wp_user'] : null;
+    $this->leaderboard_service =
+      $data['leaderboard_service'] ?? new BracketLeaderboardService();
   }
 
   public static function get_post_type(): string {
@@ -43,12 +47,9 @@ class UserProfile extends PostBase {
   }
 
   public function get_num_plays() {
-    $query = new WP_Query([
-      'post_type' => BracketPlay::get_post_type(),
+    return $this->leaderboard_service->get_num_plays([
       'author' => $this->wp_user->ID,
-      'posts_per_page' => -1,
     ]);
-    return $query->found_posts;
   }
 
   public function get_bmb_tournament_wins() {

@@ -6,6 +6,7 @@ use WP_Post;
 use WP_Query;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 
 class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   /**
@@ -28,6 +29,11 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
    */
   private $wpdb;
 
+  /**
+   * @var BracketLeaderboardService
+   */
+  private BracketLeaderboardService $leaderboard_service;
+
   public function __construct($args = []) {
     global $wpdb;
     $this->wpdb = $args['wpdb'] ?? $wpdb;
@@ -36,6 +42,12 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       $args['match_repo'] ?? new BracketMatchRepo($this->team_repo);
     $this->results_repo =
       $args['results_repo'] ?? new BracketResultsRepo($this, $this->team_repo);
+    $this->leaderboard_service =
+      $args['leaderboard_service'] ??
+      new BracketLeaderboardService(null, [
+        'bracket_repo' => $this,
+        'play_repo' => new BracketPlayRepo(['bracket_repo' => $this]),
+      ]);
     parent::__construct();
   }
 
@@ -131,6 +143,9 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       'results_first_updated_at' => $results_updated,
       'thumbnail_url' => get_the_post_thumbnail_url($bracket_post->ID),
       'url' => get_permalink($bracket_post->ID),
+      'num_plays' => $this->leaderboard_service->get_num_plays([
+        'bracket_id' => $bracket_post->ID,
+      ]),
     ];
 
     return new Bracket($data);
