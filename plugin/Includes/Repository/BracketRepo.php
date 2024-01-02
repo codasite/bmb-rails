@@ -46,7 +46,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       $args['leaderboard_service'] ??
       new BracketLeaderboardService(null, [
         'bracket_repo' => $this,
-        'play_repo' => new BracketPlayRepo(),
+        'play_repo' => new BracketPlayRepo(['bracket_repo' => $this]),
       ]);
     parent::__construct();
   }
