@@ -82,7 +82,7 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_notify_bracket_results_updated() {
-    $bracket = self::factory()->bracket->create_object([
+    $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
 
@@ -104,7 +104,7 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    $bracket = self::factory()->bracket->update_object($bracket->id, [
+    $bracket = $this->update_bracket($bracket->id, [
       'results' => $results,
     ]);
 
@@ -115,7 +115,7 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       'user_email' => 'user2@test.com',
     ]);
 
-    $play1 = self::factory()->play->create_object([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user1->ID,
       'picks' => [
@@ -137,7 +137,7 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play2 = self::factory()->play->create_object([
+    $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user2->ID,
       'picks' => [

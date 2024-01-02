@@ -8,8 +8,8 @@ use const WStrategies\BMB\Includes\Service\BracketProduct\BRACKET_FEE_META_PREFI
 
 class BracketProductHooksTest extends WPBB_UnitTestCase {
   public function test_add_paid_bracket_fee_should_be_added() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     $bracket_id = $bracket->id;
@@ -75,8 +75,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_add_paid_bracket_fee_0_should_not_be_added() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     $bracket_id = $bracket->id;
@@ -120,8 +120,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     // Mocks and setup
     $item_mock = $this->createMock(OrderItemInterface::class);
 
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     $bracket_id = $bracket->id;
@@ -172,8 +172,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     // Mocks and setup
     $item_mock = $this->createMock(OrderItemInterface::class);
 
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
     $bracket_id = $bracket->id;
@@ -213,8 +213,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_fee_is_not_added_to_printed_play() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'is_printed' => true,
     ]);

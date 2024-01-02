@@ -1,0 +1,48 @@
+<?php
+
+namespace WStrategies\BMB\Includes\Service;
+
+use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Domain\Team;
+
+class BracketLeaderboardService {
+  private BracketRepo $bracket_repo;
+  private BracketPlayRepo $play_repo;
+  private Bracket $bracket;
+  private array $plays;
+
+  public function __construct(int $bracket_id, array $args = []) {
+    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->bracket = $this->bracket_repo->get($bracket_id);
+    if (!$this->bracket) {
+      throw new \Exception('Bracket not found');
+    }
+  }
+
+  public function get_bracket(): Bracket {
+    return $this->bracket;
+  }
+
+  public function get_plays(): array {
+    if (isset($this->plays)) {
+      return $this->plays;
+    }
+    $query = [
+      'post_status' => 'publish',
+      'bracket_id' => $this->bracket->id,
+      'is_tournament_entry' => true,
+      'orderby' => 'accuracy_score',
+      'order' => 'DESC',
+    ];
+
+    $plays = $this->play_repo->get_all($query, [
+      'fetch_picks' => true,
+    ]);
+
+    $this->plays = $plays;
+    return $plays;
+  }
+}

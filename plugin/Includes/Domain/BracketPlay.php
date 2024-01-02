@@ -59,11 +59,12 @@ class BracketPlay extends PostBase implements PostBracketInterface {
    */
   public $bmb_official;
 
-  public function __construct(array $data = []) {
-    if (!isset($data['bracket_id'])) {
-      throw new Exception('bracket_id ');
-    }
+  /**
+   * @var bool
+   */
+  public $is_tournament_entry;
 
+  public function __construct(array $data = []) {
     parent::__construct($data);
     $this->bracket_id = isset($data['bracket_id'])
       ? (int) $data['bracket_id']
@@ -87,6 +88,9 @@ class BracketPlay extends PostBase implements PostBracketInterface {
       : false;
     $this->bmb_official = isset($data['bmb_official'])
       ? (bool) $data['bmb_official']
+      : false;
+    $this->is_tournament_entry = isset($data['is_tournament_entry'])
+      ? (bool) $data['is_tournament_entry']
       : false;
   }
 
@@ -119,13 +123,20 @@ class BracketPlay extends PostBase implements PostBracketInterface {
       'bracket_id',
       'author',
     ]);
+    $data['picks'] = self::get_picks_from_array($data);
+
+    return new BracketPlay($data);
+  }
+
+  private static function get_picks_from_array($data): array {
     $picks = [];
+    if (!isset($data['picks'])) {
+      return $picks;
+    }
     foreach ($data['picks'] as $pick) {
       $picks[] = MatchPick::from_array($pick);
     }
-    $data['picks'] = $picks;
-
-    return new BracketPlay($data);
+    return $picks;
   }
 
   public function to_array(): array {
@@ -138,6 +149,7 @@ class BracketPlay extends PostBase implements PostBracketInterface {
     $play['is_bustable'] = $this->is_bustable;
     $play['is_winner'] = $this->is_winner;
     $play['bmb_official'] = $this->bmb_official;
+    $play['is_tournament_entry'] = $this->is_tournament_entry;
     if (!empty($this->busted_play)) {
       $play['busted_play'] = $this->busted_play->to_array();
     }

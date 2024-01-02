@@ -17,7 +17,7 @@ class TeamRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_add() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -46,7 +46,7 @@ class TeamRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_update() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,

@@ -8,6 +8,7 @@ import { PlayBuilderProps } from './types'
 import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
+import { PlayBuilderButtons } from './PlayBuilderButtons'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {
@@ -18,10 +19,12 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     handleApparelClick,
     handleSubmitPicksClick,
     processing,
-    canPlay,
     showRegisterModal,
     setShowRegisterModal,
   } = props
+  const disableButtons = processing || (matchTree && !matchTree.allPicked())
+  const disableApparel = disableButtons || !handleApparelClick
+  const showSubmitPicks = handleSubmitPicksClick !== undefined
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
@@ -44,24 +47,7 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
           </div>
           <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
           <div className="tw-px-24 tw-mt-60 tw-flex tw-gap-15 tw-flex-col tw-items-stretch tw-self-stretch">
-            {canPlay && (
-              <>
-                <AddToApparel
-                  handleApparelClick={handleApparelClick}
-                  disabled={processing || !matchTree.allPicked()}
-                />
-                <ActionButton
-                  variant="blue"
-                  onClick={handleSubmitPicksClick}
-                  disabled={processing || !matchTree.allPicked()}
-                  fontSize={24}
-                  fontWeight={700}
-                >
-                  <CircleCheckBrokenIcon style={{ height: 24 }} />
-                  Submit picks
-                </ActionButton>
-              </>
-            )}
+            <PlayBuilderButtons {...props} />
           </div>
         </div>
       )}

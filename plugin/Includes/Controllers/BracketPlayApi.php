@@ -14,6 +14,8 @@ use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
+use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
+use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
 class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
@@ -48,13 +50,20 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   private $product_integration;
 
   /**
-   * Constructor.
+   * @var TournamentEntryService
    */
+  private TournamentEntryService $tournament_entry_service;
+
+  private BracketPlaySerializer $serializer;
+
   public function __construct($args = []) {
     $this->utils = $args['utils'] ?? new Utils();
     $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
     $this->product_integration =
       $args['product_integration'] ?? new GelatoProductIntegration();
+    $this->tournament_entry_service =
+      $args['tournament_entry_service'] ?? new TournamentEntryService();
+    $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
   }
@@ -170,9 +179,13 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       'post_type' => BracketPlay::get_post_type(),
       'post_status' => 'any',
     ]);
-
     $plays = $this->play_repo->get_all($the_query);
-    return new WP_REST_Response($plays, 200);
+    $serialized = [];
+    foreach ($plays as $play) {
+      $serialized[] = $this->serializer->serialize($play);
+    }
+
+    return new WP_REST_Response($serialized, 200);
   }
 
   /**
@@ -185,7 +198,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     // get id from request
     $id = $request->get_param('item_id');
     $play = $this->play_repo->get($id);
-    return new WP_REST_Response($play, 200);
+    $serialized = $this->serializer->serialize($play);
+    return new WP_REST_Response($serialized, 200);
   }
 
   /**
@@ -196,6 +210,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    */
   public function create_item($request) {
     $params = $request->get_params();
+    $buster_play = isset($params['busted_id']) && $params['busted_id'] !== null;
     $bracket_id = $params['bracket_id'];
     if (!current_user_can('wpbb_play_bracket', $bracket_id)) {
       return new WP_Error(
@@ -204,7 +219,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         ['status' => 403]
       );
     }
-    if (isset($params['busted_id']) && $params['busted_id'] !== null) {
+    if ($buster_play) {
       $busted_play = $this->play_repo->get($params['busted_id']);
       if (!$busted_play->is_bustable) {
         return new WP_Error('unauthorized', 'This bracket cannot be busted.', [
@@ -212,20 +227,17 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         ]);
       }
     }
-    if (!isset($params['author'])) {
-      $params['author'] = get_current_user_id();
-    }
-    if (has_tag('bmb_official', $bracket_id)) {
-      $params['bmb_official'] = true;
-    }
     try {
-      $play = BracketPlay::from_array($params);
+      $play = $this->serializer->deserialize($params);
     } catch (ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,
       ]);
     }
+    $play->author = get_current_user_id();
+    $play->bmb_official = has_tag('bmb_official', $bracket_id);
     $saved = $this->play_repo->add($play);
+    $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
     // Generate the bracket images
     if (
       isset($params['generate_images']) &&

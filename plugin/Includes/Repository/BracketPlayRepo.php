@@ -39,13 +39,14 @@ class BracketPlayRepo extends CustomPostRepoBase implements
    */
   private $wpdb;
 
-  public function __construct() {
+  public function __construct($args = []) {
     global $wpdb;
     $this->wpdb = $wpdb;
-    $this->bracket_repo = new BracketRepo();
-    $this->team_repo = new BracketTeamRepo();
-    $this->pick_repo = new BracketMatchPickRepo($this->team_repo);
-    $this->utils = new Utils();
+    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->team_repo = $args['team_repo'] ?? new BracketTeamRepo();
+    $this->pick_repo =
+      $args['pick_repo'] ?? new BracketMatchPickRepo($this->team_repo);
+    $this->utils = $args['utils'] ?? new Utils();
     parent::__construct();
   }
 
@@ -90,30 +91,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
     $play_id = $play_data['id'];
     $bracket_post_id = $play_data['bracket_post_id'];
     $busted_id = $play_data['busted_play_post_id'];
-    $busted_play = $busted_id
-      ? $this->get($busted_id, [
-        'fetch_bracket' => false,
-        'fetch_results' => false,
-        'fetch_matches' => false,
-      ])
-      : null;
-    $is_printed = (bool) $play_data['is_printed'];
-    $is_winner = (bool) $play_data['is_winner'];
-    $bmb_official = (bool) $play_data['bmb_official'];
-
-    $bracket =
-      $bracket_post_id && $fetch_bracket
-        ? $this->bracket_repo->get(
-          $bracket_post_id,
-          $fetch_results,
-          $fetch_matches
-        )
-        : null;
-    $picks =
-      $fetch_picks && $play_id ? $this->pick_repo->get_picks($play_id) : [];
     $author_id = (int) $play_post->post_author;
-
-    $is_bustable = PlayPermissions::is_bustable($play_post);
 
     $data = [
       'bracket_id' => $bracket_post_id,
@@ -122,8 +100,16 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'title' => $play_post->post_title,
       'status' => $play_post->post_status,
       'published_date' => get_post_datetime($play_post->ID, 'date', 'gmt'),
-      'picks' => $picks,
-      'bracket' => $bracket,
+      'picks' =>
+        $fetch_picks && $play_id ? $this->pick_repo->get_picks($play_id) : [],
+      'bracket' =>
+        $bracket_post_id && $fetch_bracket
+          ? $this->bracket_repo->get(
+            $bracket_post_id,
+            $fetch_results,
+            $fetch_matches
+          )
+          : null,
       'total_score' => $play_data['total_score'] ?? null,
       'accuracy_score' => $play_data['accuracy_score'] ?? null,
       'slug' => $play_post->post_name,
@@ -131,11 +117,18 @@ class BracketPlayRepo extends CustomPostRepoBase implements
         ? get_the_author_meta('display_name', $author_id)
         : '',
       'busted_id' => $busted_id,
-      'busted_play' => $busted_play,
-      'is_printed' => $is_printed,
-      'is_bustable' => $is_bustable,
-      'is_winner' => $is_winner,
-      'bmb_official' => $bmb_official,
+      'busted_play' => $busted_id
+        ? $this->get($busted_id, [
+          'fetch_bracket' => false,
+          'fetch_results' => false,
+          'fetch_matches' => false,
+        ])
+        : null,
+      'is_printed' => (bool) $play_data['is_printed'],
+      'is_bustable' => PlayPermissions::is_bustable($play_post),
+      'is_winner' => (bool) $play_data['is_winner'],
+      'bmb_official' => (bool) $play_data['bmb_official'],
+      'is_tournament_entry' => (bool) $play_data['is_tournament_entry'],
       'thumbnail_url' => get_the_post_thumbnail_url(
         $play_post->ID,
         'thumbnail'
@@ -279,6 +272,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'is_printed' => $play->is_printed ?? false,
       'is_winner' => $play->is_winner ?? false,
       'bmb_official' => $play->bmb_official ?? false,
+      'is_tournament_entry' => $play->is_tournament_entry ?? false,
     ]);
 
     if ($play_id && $play->picks) {
@@ -400,7 +394,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
   }
 
   private function play_data_update_fields() {
-    return ['is_printed'];
+    return ['is_printed', 'is_tournament_entry'];
   }
 
   public static function table_name(): string {
@@ -430,6 +424,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       is_printed tinyint(1) NOT NULL DEFAULT 0,
       is_winner tinyint(1) NOT NULL DEFAULT 0,
       bmb_official tinyint(1) NOT NULL DEFAULT 0,
+      is_tournament_entry tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE,
@@ -437,7 +432,6 @@ class BracketPlayRepo extends CustomPostRepoBase implements
 			FOREIGN KEY (bracket_id) REFERENCES {$brackets_table}(id) ON DELETE CASCADE,
 			FOREIGN KEY (busted_play_post_id) REFERENCES {$posts_table}(ID) ON DELETE SET NULL,
 			FOREIGN KEY (busted_play_id) REFERENCES {$table_name}(id) ON DELETE SET NULL
-
 		) $charset_collate;";
 
     // import dbDelta

@@ -1,0 +1,24 @@
+id: null
+title: ''
+author: null
+status: publish
+published_date: false
+slug: ''
+author_display_name: ''
+thumbnail_url: false
+url: false
+bracket_id: 1
+bracket: null
+picks:
+    - { id: 1, round_index: 0, match_index: 0, winning_team: null, winning_team_id: 1 }
+    - { id: 2, round_index: 0, match_index: 1, winning_team: null, winning_team_id: 2 }
+    - { id: 3, round_index: 1, match_index: 0, winning_team: null, winning_team_id: 3 }
+total_score: null
+accuracy_score: null
+busted_id: null
+is_printed: false
+busted_play: null
+is_bustable: false
+is_winner: false
+bmb_official: false
+is_tournament_entry: false

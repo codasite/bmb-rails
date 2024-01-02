@@ -15,6 +15,7 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceInterface;
 use WStrategies\BMB\Includes\Service\ScoreService;
+use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Utils;
 
 class BracketApi extends WP_REST_Controller implements HooksInterface {
@@ -48,6 +49,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    */
   private $utils;
 
+  private BracketSerializer $serializer;
+
   /**
    * Constructor.
    */
@@ -57,6 +60,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
     $this->score_service = $args['score_service'] ?? new ScoreService();
+    $this->serializer = $args['serializer'] ?? new BracketSerializer();
     try {
       $this->notification_service =
         $args['notification_service'] ??
@@ -149,7 +153,11 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    */
   public function get_items($request) {
     $brackets = $this->bracket_repo->get_all();
-    return new WP_REST_Response($brackets, 200);
+    $serialized = [];
+    foreach ($brackets as $bracket) {
+      $serialized[] = $this->serializer->serialize($bracket);
+    }
+    return new WP_REST_Response($serialized, 200);
   }
 
   /**
@@ -162,7 +170,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     // get id from request
     $id = $request->get_param('item_id');
     $bracket = $this->bracket_repo->get($id);
-    return new WP_REST_Response($bracket, 200);
+    $serialized = $this->serializer->serialize($bracket);
+    return new WP_REST_Response($serialized, 200);
   }
 
   /**
@@ -173,21 +182,23 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    */
   public function create_item($request) {
     $params = $request->get_params();
-    if (!isset($params['author'])) {
-      $params['author'] = get_current_user_id();
-    }
-    if (!current_user_can('wpbb_share_bracket')) {
-      $params['status'] = 'private';
-    }
     try {
-      $bracket = Bracket::from_array($params);
+      $bracket = $this->serializer->deserialize($params);
     } catch (ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,
       ]);
     }
+    $bracket->author = get_current_user_id();
+    $bracket->status = 'private';
 
-    $saved = $this->bracket_repo->add($bracket);
+    try {
+      $saved = $this->bracket_repo->add($bracket);
+    } catch (Exception $e) {
+      return new WP_Error('server-error', $e->getMessage(), [
+        'status' => 500,
+      ]);
+    }
     // check if user logged in
     if (!is_user_logged_in()) {
       // if (get_current_user_id() === 0)

@@ -19,9 +19,9 @@ abstract class CustomPostRepoBase {
     CustomPostInterface $post,
     $wp_error = false,
     $random_slug = false
-  ): int {
+  ): int|WP_Error {
     $post_data = $post->get_post_data();
-    if ($random_slug) {
+    if ($random_slug && empty($post_data['post_name'])) {
       $post_data['post_name'] = $this->slug_service->generate();
     }
     $post_id = wp_insert_post($post_data, $wp_error);

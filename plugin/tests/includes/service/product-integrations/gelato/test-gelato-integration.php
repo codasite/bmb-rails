@@ -147,8 +147,8 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_bracket_config() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 
@@ -178,8 +178,8 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
   }
 
   public function test_has_all_configs_true() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 
@@ -213,8 +213,8 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
   }
 
   public function test_has_all_configs_false() {
-    $bracket = self::factory()->bracket->create_and_get();
-    $play = self::factory()->play->create_and_get([
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
       'bracket_id' => $bracket->id,
     ]);
 

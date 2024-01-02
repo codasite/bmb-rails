@@ -58,7 +58,8 @@ const PlayPage = (props: PlayPageProps) => {
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
-  const canPlay = bracket?.status !== 'upcoming'
+  const canPrint = bracket?.isPrintable
+  const canSubmit = bracket?.isOpen
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
 
   useEffect(() => {
@@ -174,15 +175,16 @@ const PlayPage = (props: PlayPageProps) => {
 
   const playBuilderProps = {
     matchTree,
-    setMatchTree: canPlay ? setMatchTreeAndSaveInStorage : undefined,
-    handleApparelClick,
-    handleSubmitPicksClick,
+    setMatchTree:
+      canPrint || canSubmit ? setMatchTreeAndSaveInStorage : undefined,
+    handleApparelClick: canPrint ? handleApparelClick : undefined,
+    handleSubmitPicksClick: canSubmit ? handleSubmitPicksClick : undefined,
+    canPlay: canPrint || canSubmit,
     processing,
     darkMode,
     setDarkMode,
     bracketMeta,
     setBracketMeta,
-    canPlay,
     showRegisterModal,
     setShowRegisterModal,
   }

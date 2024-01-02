@@ -1,5 +1,6 @@
 <?php
 
+use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
@@ -11,7 +12,8 @@ use WStrategies\BMB\Includes\Utils;
 
 //namespace phpunit
 
-class BracketAPITest extends WPBB_UnitTestCase {
+class BracketApiTest extends WPBB_UnitTestCase {
+  use MatchesSnapshots;
   const BRACKET_API_ENDPOINT = '/wp-bracket-builder/v1/brackets';
   private $bracket_repo;
 
@@ -24,8 +26,6 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_create_bracket() {
     $data = [
       'title' => 'Test Bracket',
-      'status' => 'publish',
-      'author' => 1,
       'month' => 'test month',
       'year' => 'test year',
       'num_teams' => 8,
@@ -60,8 +60,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
     $this->assertEquals(201, $response->get_status());
     $this->assertEquals('Test Bracket', $response->get_data()->title);
-    $this->assertEquals('publish', $response->get_data()->status);
-    $this->assertEquals(1, $response->get_data()->author);
+    $this->assertEquals('private', $response->get_data()->status);
     $this->assertEquals('test month', $response->get_data()->month);
     $this->assertEquals('test year', $response->get_data()->year);
     $this->assertEquals(8, $response->get_data()->num_teams);
@@ -133,13 +132,13 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
     $this->assertEquals(400, $response->get_status());
     $this->assertEquals(
-      'num_teams, wildcard_placement, title, matches is required',
+      'Missing required fields: title, num_teams, wildcard_placement, matches',
       $response->get_data()['message']
     );
   }
 
   public function test_update_bracket() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -228,7 +227,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_author_can_edit_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID,
       'matches' => [
         new BracketMatch([
@@ -275,7 +274,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_non_author_cannot_edit_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID + 1,
       'matches' => [
         new BracketMatch([
@@ -317,7 +316,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_delete_bracket_is_soft() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -352,7 +351,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_author_can_delete_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID,
       'matches' => [
         new BracketMatch([
@@ -388,7 +387,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   public function test_non_author_cannot_delete_bracket() {
     $user = self::factory()->user->create_and_get();
     wp_set_current_user($user->ID);
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'author' => $user->ID + 1,
       'matches' => [
         new BracketMatch([
@@ -432,7 +431,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
       'notification_service' => $notification_service,
     ]);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -475,40 +474,6 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $res = $api->update_item($request);
   }
 
-  public function test_user_with_permission_can_create_published_bracket() {
-    $user = self::factory()->user->create_and_get();
-    $user->add_cap('wpbb_share_bracket');
-    wp_set_current_user($user->ID);
-
-    $data = [
-      'title' => 'Test Bracket',
-      'status' => 'publish',
-      'month' => 'test month',
-      'year' => 'test year',
-      'num_teams' => 8,
-      'wildcard_placement' => 0,
-      'matches' => [
-        [
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => [
-            'name' => 'Team 1',
-          ],
-          'team2' => [
-            'name' => 'Team 2',
-          ],
-        ],
-      ],
-    ];
-
-    $request = new WP_REST_Request('POST', self::BRACKET_API_ENDPOINT);
-    $request->set_body_params($data);
-    $request->set_header('Content-Type', 'application/json');
-    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
-    $response = rest_do_request($request);
-    $this->assertEquals(201, $response->get_status());
-    $this->assertEquals('publish', $response->get_data()->status);
-  }
   public function test_user_without_permission_cannot_create_published_bracket() {
     $user = self::factory()->user->create_and_get();
     $user->remove_cap('wpbb_share_bracket');
@@ -549,7 +514,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->add_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'private',
       'author' => $user->ID,
       'matches' => [
@@ -588,7 +553,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->remove_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'private',
       'author' => $user->ID,
       'matches' => [
@@ -627,7 +592,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->add_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'author' => $user->ID,
       'matches' => [
@@ -675,7 +640,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $user->remove_cap('wpbb_share_bracket');
     wp_set_current_user($user->ID);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'author' => $user->ID,
       'matches' => [
@@ -717,7 +682,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_some_results_sets_status_to_score() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'matches' => [
         new BracketMatch([
@@ -768,7 +733,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_all_partial_results_sets_status_to_complete() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
     ]);
@@ -838,7 +803,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_update_all_results_sets_status_to_complete() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'matches' => [
@@ -956,7 +921,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
 
     $api = new BracketApi(['score_service' => $score_service]);
 
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'matches' => [
         new BracketMatch([
           'round_index' => 0,
@@ -996,7 +961,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_winners_are_set_when_all_results_updated() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'matches' => [
@@ -1067,7 +1032,7 @@ class BracketAPITest extends WPBB_UnitTestCase {
   }
 
   public function test_winners_not_set_when_not_all_results_updated() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'matches' => [
@@ -1130,5 +1095,44 @@ class BracketAPITest extends WPBB_UnitTestCase {
     $this->assertEquals(200, $response->get_status());
     $updated = $this->bracket_repo->get($bracket->id);
     $this->assertEquals('score', $updated->status);
+  }
+
+  public function test_get_bracket_snapshot() {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+      'num_teams' => 4,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+    // get the bracket through api
+    $request = new WP_REST_Request(
+      'GET',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_param('item_id', $bracket->id);
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    // get the response data
+    $data = $response->get_data();
   }
 }

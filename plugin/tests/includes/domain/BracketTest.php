@@ -138,4 +138,68 @@ class BracketTest extends WPBB_UnitTestCase {
       $array['results_first_updated_at']
     );
   }
+
+  public function test_published_bracket_open() {
+    $bracket = new Bracket([
+      'status' => 'publish',
+    ]);
+
+    $this->assertTrue($bracket->is_open());
+  }
+  public function test_scored_bracket_is_not_open() {
+    $bracket = new Bracket([
+      'status' => 'score',
+    ]);
+
+    $this->assertFalse($bracket->is_open());
+  }
+  public function test_private_bracket_is_not_open() {
+    $bracket = new Bracket([
+      'status' => 'private',
+    ]);
+
+    $this->assertFalse($bracket->is_open());
+  }
+  public function test_complete_bracket_is_not_open() {
+    $bracket = new Bracket([
+      'status' => 'complete',
+    ]);
+
+    $this->assertFalse($bracket->is_open());
+  }
+  public function test_published_bracket_is_printable() {
+    $bracket = new Bracket([
+      'status' => 'publish',
+    ]);
+
+    $this->assertTrue($bracket->is_printable());
+  }
+  public function test_scored_bracket_is_printable() {
+    $bracket = new Bracket([
+      'status' => 'score',
+    ]);
+
+    $this->assertTrue($bracket->is_printable());
+  }
+  public function test_private_bracket_is_printable() {
+    $bracket = new Bracket([
+      'status' => 'private',
+    ]);
+
+    $this->assertTrue($bracket->is_printable());
+  }
+  public function test_complete_bracket_is_printable() {
+    $bracket = new Bracket([
+      'status' => 'complete',
+    ]);
+
+    $this->assertTrue($bracket->is_printable());
+  }
+  public function test_upcoming_bracket_is_not_printable() {
+    $bracket = new Bracket([
+      'status' => 'upcoming',
+    ]);
+
+    $this->assertFalse($bracket->is_printable());
+  }
 }

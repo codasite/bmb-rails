@@ -1,0 +1,9 @@
+id: 99999999
+title: 'Test Bracket'
+author: 1
+status: publish
+published_date: '2020-01-01T00:00:00+00:00'
+slug: test-bracket
+author_display_name: admin
+thumbnail_url: false
+url: 'http://example.org/?bracket=test-bracket'

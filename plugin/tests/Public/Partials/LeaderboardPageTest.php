@@ -7,9 +7,11 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Includes\Service\ScoreService;
+use WStrategies\BMB\Public\Partials\LeaderboardPage;
 
-class RenderLeaderboardTest extends WPBB_UnitTestCase {
+class LeaderboardPageTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
   private $bracket_repo;
 
@@ -19,8 +21,8 @@ class RenderLeaderboardTest extends WPBB_UnitTestCase {
     $this->bracket_repo = new BracketRepo();
   }
 
-  public function test_render_leaderboard() {
-    $bracket = self::factory()->bracket->create_object([
+  public function test_leadboard_shortcode() {
+    $bracket = $this->create_bracket([
       'num_teams' => 2,
       'matches' => [
         new BracketMatch([
@@ -47,7 +49,7 @@ class RenderLeaderboardTest extends WPBB_UnitTestCase {
       'last_name' => 'User',
     ]);
 
-    $play1 = self::factory()->play->create_object([
+    $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
         new MatchPick([
@@ -57,8 +59,9 @@ class RenderLeaderboardTest extends WPBB_UnitTestCase {
         ]),
       ],
       'author' => $user,
+      'is_tournament_entry' => true,
     ]);
-    $updated_bracket = self::factory()->bracket->update_object($bracket, [
+    $updated_bracket = $this->update_bracket($bracket, [
       'results' => [
         [
           'round_index' => 0,
@@ -93,7 +96,45 @@ class RenderLeaderboardTest extends WPBB_UnitTestCase {
     );
     $this->assertMatchesHtmlSnapshot($rendered);
   }
-  /**
-   * TODO: To add more tests to this file you need to move leaderboard.php to a class so you don't get function already defined errors
-   */
+
+  public function test_render_leaderboard() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+      'title' => 'Test Bracket',
+      'status' => 'score',
+    ]);
+    $user = self::factory()->user->create_object([
+      'user_login' => 'test_user2',
+      'user_email' => 'test2',
+      'user_pass' => 'test',
+      'first_name' => 'Test',
+      'last_name' => 'User',
+    ]);
+    $customer = new \WC_Customer($user);
+    $customer->set_billing_state('CA');
+    $customer->save();
+
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user,
+      'accuracy_score' => 1,
+      'slug' => 'test-play-1',
+      'is_tournament_entry' => true,
+    ]);
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user,
+      'accuracy_score' => 0.5,
+      'slug' => 'test-play-2',
+      'is_tournament_entry' => true,
+    ]);
+
+    $leaderboard_service = new BracketLeaderboardService($bracket->id);
+
+    $leaderboard_page = new LeaderboardPage([
+      'leaderboard_service' => $leaderboard_service,
+    ]);
+
+    $this->assertMatchesHtmlSnapshot($leaderboard_page->render());
+  }
 }

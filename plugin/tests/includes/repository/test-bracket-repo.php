@@ -165,7 +165,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_update_result_deletes_old_results() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
     ]);
@@ -209,7 +209,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_update_empty_results_sets_results_first_updated_at() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
     ]);
@@ -230,7 +230,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_update_results_first_updated_at() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
     ]);
@@ -251,7 +251,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   public function test_update_bracket_author() {
     $user1 = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
       'author' => $user1->ID,
@@ -269,7 +269,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_update_bracket_results_first_updated_at_stays_null() {
-    $bracket = self::factory()->bracket->create_and_get([
+    $bracket = $this->create_bracket([
       'status' => 'publish',
       'num_teams' => 4,
     ]);

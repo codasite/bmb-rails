@@ -14,6 +14,7 @@ use WStrategies\BMB\Includes\Hooks\PublicShortcodes;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
+use WStrategies\BMB\Includes\Service\TournamentEntryService;
 
 /**
  * The core plugin class.

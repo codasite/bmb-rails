@@ -74,10 +74,13 @@ abstract class PostBase implements CustomPostInterface {
 
   public function get_post_data(): array {
     return [
+      'import_id' => $this->id,
       'post_title' => $this->title,
       'post_author' => $this->author,
       'post_status' => $this->status,
+      'post_name' => $this->slug,
       'post_type' => static::get_post_type(),
+      'post_date_gmt' => $this->published_date,
     ];
   }
 
