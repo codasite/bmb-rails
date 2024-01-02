@@ -6,7 +6,7 @@ class NotificationApiTest extends \WPBB_UnitTestCase {
   const NOTIFICATION_API_ENDPOINT = '/wp-bracket-builder/v1/notifications';
   public function test_get_notification() {
     $user = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get();
+    $post = $this->create_post();
     $notification = self::factory()->notification->create_object([
       'user_id' => $user->ID,
       'post_id' => $post->ID,
@@ -43,7 +43,7 @@ class NotificationApiTest extends \WPBB_UnitTestCase {
 
   public function test_create_notification() {
     $user = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get();
+    $post = $this->create_post();
     $request = new WP_REST_Request('POST', self::NOTIFICATION_API_ENDPOINT);
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
@@ -82,7 +82,7 @@ class NotificationApiTest extends \WPBB_UnitTestCase {
   }
 
   public function test_create_notification_nonexistent_user() {
-    $post = self::factory()->post->create_and_get();
+    $post = $this->create_post();
     $request = new WP_REST_Request('POST', self::NOTIFICATION_API_ENDPOINT);
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
@@ -114,7 +114,7 @@ class NotificationApiTest extends \WPBB_UnitTestCase {
   }
 
   public function test_create_notification_no_user() {
-    $post = self::factory()->post->create_and_get();
+    $post = $this->create_post();
     $request = new WP_REST_Request('POST', self::NOTIFICATION_API_ENDPOINT);
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
@@ -138,7 +138,7 @@ class NotificationApiTest extends \WPBB_UnitTestCase {
 
   public function test_owner_can_delete_notification() {
     $user = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get();
+    $post = $this->create_post();
     $notification = self::factory()->notification->create_object([
       'user_id' => $user->ID,
       'post_id' => $post->ID,
@@ -157,7 +157,7 @@ class NotificationApiTest extends \WPBB_UnitTestCase {
 
   public function test_non_owner_cannot_delete_notification() {
     $user = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get();
+    $post = $this->create_post();
     $notification = self::factory()->notification->create_object([
       'user_id' => $user->ID,
       'post_id' => $post->ID,

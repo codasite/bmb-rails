@@ -14,8 +14,8 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_add() {
-    $user = $this->factory->user->create_and_get();
-    $post = $this->factory->post->create_and_get();
+    $user = self::factory()->user->create_and_get();
+    $post = $this->create_post();
     $notification = $this->notification_repo->add(
       new Notification([
         'user_id' => $user->ID,
@@ -33,8 +33,8 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_single() {
-    $user = $this->factory->user->create_and_get();
-    $post = $this->factory->post->create_and_get();
+    $user = self::factory()->user->create_and_get();
+    $post = $this->create_post();
     $notification = $this->notification_repo->add(
       new Notification([
         'user_id' => $user->ID,
@@ -57,9 +57,9 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_by_user() {
-    $user1 = $this->factory->user->create_and_get();
-    $user2 = $this->factory->user->create_and_get();
-    $post = $this->factory->post->create_and_get();
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $post = $this->create_post();
     $notification1 = $this->notification_repo->add(
       new Notification([
         'user_id' => $user1->ID,
@@ -88,9 +88,9 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     );
   }
   public function test_get_by_post_id() {
-    $user = $this->factory->user->create_and_get();
-    $post1 = $this->factory->post->create_and_get();
-    $post2 = $this->factory->post->create_and_get();
+    $user = self::factory()->user->create_and_get();
+    $post1 = $this->create_post();
+    $post2 = $this->create_post();
     $notification1 = $this->notification_repo->add(
       new Notification([
         'user_id' => $user->ID,
@@ -120,10 +120,10 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     );
   }
   public function test_get_by_user_notification_type_and_post() {
-    $user1 = $this->factory->user->create_and_get();
-    $user2 = $this->factory->user->create_and_get();
-    $post1 = $this->factory->post->create_and_get();
-    $post2 = $this->factory->post->create_and_get();
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $post1 = $this->create_post();
+    $post2 = $this->create_post();
     $notification1 = $this->notification_repo->add(
       new Notification([
         'user_id' => $user1->ID,
@@ -162,10 +162,10 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_by_post_and_type() {
-    $user1 = $this->factory->user->create_and_get();
-    $user2 = $this->factory->user->create_and_get();
-    $post1 = $this->factory->post->create_and_get();
-    $post2 = $this->factory->post->create_and_get();
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+    $post1 = $this->create_post();
+    $post2 = $this->create_post();
     $notification1 = $this->notification_repo->add(
       new Notification([
         'user_id' => $user1->ID,
@@ -211,8 +211,8 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_delete() {
-    $user = $this->factory->user->create_and_get();
-    $post = $this->factory->post->create_and_get();
+    $user = self::factory()->user->create_and_get();
+    $post = $this->create_post();
     $notification = $this->notification_repo->add(
       new Notification([
         'user_id' => $user->ID,
@@ -229,8 +229,8 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_create_duplicate_notification() {
-    $user = $this->factory->user->create_and_get();
-    $post = $this->factory->post->create_and_get();
+    $user = self::factory()->user->create_and_get();
+    $post = $this->create_post();
     $notification = $this->notification_repo->add(
       new Notification([
         'user_id' => $user->ID,

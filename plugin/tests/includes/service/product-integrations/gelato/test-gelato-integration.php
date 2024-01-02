@@ -11,7 +11,7 @@ use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductInt
 
 class GelatoIntgrationTest extends WPBB_UnitTestCase {
   public function test_generate_images() {
-    $post = self::factory()->post->create_and_get([
+    $post = $this->create_post([
       'post_type' => 'bracket_play',
     ]);
     $bracket_mock = $this->createMock(PostBracketInterface::class);
@@ -99,7 +99,7 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_overlay_map() {
-    $post = self::factory()->post->create_and_get([
+    $post = $this->create_post([
       'post_type' => 'bracket_play',
     ]);
     $bracket_mock = $this->createMock(PostBracketInterface::class);

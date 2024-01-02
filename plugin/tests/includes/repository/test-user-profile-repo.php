@@ -14,7 +14,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
 
   public function test_get_by_post() {
     $user = self::factory()->user->create_and_get();
-    $profile_post = self::factory()->post->create_and_get([
+    $profile_post = $this->create_post([
       'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);
@@ -40,7 +40,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
 
   public function test_get_by_user_with_user() {
     $user = self::factory()->user->create_and_get();
-    $profile_post = self::factory()->post->create_and_get([
+    $profile_post = $this->create_post([
       'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);
@@ -66,7 +66,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
 
   public function test_get_by_user_current_user() {
     $user = self::factory()->user->create_and_get();
-    $profile_post = self::factory()->post->create_and_get([
+    $profile_post = $this->create_post([
       'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);

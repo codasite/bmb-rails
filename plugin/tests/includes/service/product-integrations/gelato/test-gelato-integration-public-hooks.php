@@ -177,7 +177,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_process_bracket_product_item_with_bracket_config() {
-    $product_post = self::factory()->post->create_and_get([
+    $product_post = $this->create_post([
       'post_type' => 'product_variation',
     ]);
     // set the wpbb_font_design meta key
@@ -212,7 +212,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_process_bracket_product_item_without_bracket_config() {
-    $product_post = self::factory()->post->create_and_get([
+    $product_post = $this->create_post([
       'post_type' => 'product_variation',
     ]);
     // set the wpbb_font_design meta key

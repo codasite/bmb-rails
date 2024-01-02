@@ -250,7 +250,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
   public function test_link_anonymous_post_to_user_from_cookie() {
     $user = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get([
+    $post = $this->create_post([
       'post_author' => 0,
     ]);
     update_post_meta($post->ID, 'wpbb_anonymous_key', 'test_key');
@@ -280,7 +280,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
   }
   public function test_link_anonymous_post_to_user() {
     $user = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get([
+    $post = $this->create_post([
       'post_author' => 0,
     ]);
 
@@ -295,7 +295,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
   public function test_post_with_author_is_not_linked() {
     $user = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get([
+    $post = $this->create_post([
       'post_author' => $user->ID,
     ]);
 
@@ -309,7 +309,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
   public function test_link_post_from_cookie_with_invalid_key() {
     $user = self::factory()->user->create_and_get();
-    $post = self::factory()->post->create_and_get([
+    $post = $this->create_post([
       'post_author' => 0,
     ]);
     update_post_meta($post->ID, 'wpbb_anonymous_bracket_key', 'test_key');

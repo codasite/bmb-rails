@@ -9,7 +9,7 @@ class UserProfileTest extends WPBB_UnitTestCase {
 
   public function test_constructor() {
     $user = self::factory()->user->create_and_get();
-    $profile_post = self::factory()->post->create_and_get([
+    $profile_post = $this->create_post([
       'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
     ]);
