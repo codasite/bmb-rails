@@ -31,6 +31,9 @@ wp-init:
 wp-test:
 	docker exec wp-dev composer test -- $(args)
 
+wp-test-update-snapshots:
+	docker exec wp-dev composer test -- -d --update-snapshots
+
 # Run tests with coverage
 wp-cover:
 	docker exec wp-dev composer coverage
@@ -81,6 +84,9 @@ react-test:
 
 composer-install:
 	cd plugin && composer install
+
+phpstan:
+	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G .
 
 prod-up:
 	docker compose -f compose.yaml -f compose.prod.yaml up --build -d --remove-orphans

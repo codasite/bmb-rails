@@ -25,7 +25,11 @@
     "yoast/phpunit-polyfills": "^1.0",
     "spatie/phpunit-snapshot-assertions": "^4.2",
     "wpackagist-plugin/woocommerce": "8.4.0",
-    "php-stubs/wordpress-tests-stubs": "^6.3"
+    "php-stubs/wordpress-tests-stubs": "^6.3",
+    "phpstan/phpstan": "^1.10",
+    "php-stubs/wordpress-stubs": "^6.4",
+    "sentry/sentry": "^4.3",
+    "php-stubs/woocommerce-stubs": "^8.4"
   },
   "require": {
     "aws/aws-sdk-php": "^3.270",
