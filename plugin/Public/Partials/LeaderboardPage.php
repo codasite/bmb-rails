@@ -23,7 +23,7 @@ class LeaderboardPage implements TemplateInterface {
 
 		?>
 		<div class="wpbb-reset tw-bg-dd-blue tw-flex tw-justify-center">
-			<div class="tw-max-w-screen-lg tw-flex tw-flex-grow tw-flex-col tw-gap-30 tw-px-20 lg:tw-px-0 tw-py-60">
+			<div class="tw-max-w-screen-lg tw-flex tw-flex-grow tw-flex-col tw-gap-30 tw-px-20 lg:tw-px-0 tw-py-60 tw-overflow-hidden">
 
 				<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 <?php echo $complete ? 'tw-pb-30' : 'tw-pb-[53px]' ?>">
 					<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'Public/assets/icons/trophy.svg'); ?>
@@ -91,8 +91,8 @@ class LeaderboardPage implements TemplateInterface {
 
 		ob_start();
 	?>
-		<div class="tw-flex tw-justify-between <?php echo $winner ? 'tw-flex-col sm:tw-flex-row tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-p-20 sm:tw-p-30 tw-gap-16' : 'sm:tw-px-30' ?>">
-			<div class="tw-flex tw-flex-col tw-gap-16">
+		<div class="tw-flex tw-justify-between <?php echo $winner ? 'tw-flex-col sm:tw-flex-row tw-border-2 tw-border-solid tw-border-green tw-rounded-16 tw-p-20 sm:tw-p-30 tw-gap-16' : 'sm:tw-px-30' ?> tw-overflow-hidden">
+			<div class="tw-flex tw-flex-col tw-gap-16 tw-overflow-hidden">
 				<?php if ($show_score) : ?>
 					<div class="tw-flex tw-flex-col">
 						<?php if ($winner) : ?>
@@ -111,9 +111,9 @@ class LeaderboardPage implements TemplateInterface {
 							winning team
 						</span>
 					</div>
-					<div class="tw-flex tw-flex-col tw-flex-grow">
+					<div class="tw-flex tw-flex-col tw-flex-grow tw-overflow-hidden">
 						<div class="<?php echo $winner ? 'tw-text-24 sm:tw-text-32' : 'tw-text-20 sm:tw-text-24'?>">
-							<span class="tw-font-700">
+							<span class="tw-font-700 tw-block tw-text-ellipsis tw-truncate">
 								<?php echo esc_html($author_name); ?>
 							</span>
 							<span class="tw-font-400">
