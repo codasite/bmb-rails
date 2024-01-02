@@ -57,7 +57,7 @@ class DashboardPage {
           <ul class="tw-flex tw-flex-col tw-gap-15 tw-p-0 tw-m-0">
             <li class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link( 'profile', $current_tab, 'Profile', '../../assets/icons/user.svg' ); ?></li>
             <li
-              class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link( 'brackets', $current_tab, 'My Brackets', '../../assets/icons/signal.svg' ); ?></li>
+              class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link( 'brackets', $current_tab, 'My Tournaments', '../../assets/icons/signal.svg' ); ?></li>
             <li
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link( 'play-history', $current_tab, 'My Play History', '../../assets/icons/clock.svg' ); ?></li>
             <li
