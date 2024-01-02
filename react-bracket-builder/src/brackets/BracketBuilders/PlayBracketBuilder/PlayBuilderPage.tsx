@@ -179,6 +179,7 @@ const PlayPage = (props: PlayPageProps) => {
       canPrint || canSubmit ? setMatchTreeAndSaveInStorage : undefined,
     handleApparelClick: canPrint ? handleApparelClick : undefined,
     handleSubmitPicksClick: canSubmit ? handleSubmitPicksClick : undefined,
+    canPlay: canPrint || canSubmit,
     processing,
     darkMode,
     setDarkMode,
