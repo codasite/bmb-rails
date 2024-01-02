@@ -83,7 +83,7 @@ class BracketLeaderboardServiceTest extends WPBB_UnitTestCase {
     $this->assertEquals($play1->id, $plays[0]->id);
   }
 
-  public function get_get_num_plays() {
+  public function test_get_num_plays_for_bracket() {
     $bracket = $this->create_bracket();
     $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
@@ -100,5 +100,28 @@ class BracketLeaderboardServiceTest extends WPBB_UnitTestCase {
 
     $leaderboard = new BracketLeaderboardService($bracket->id);
     $this->assertEquals(2, $leaderboard->get_num_plays());
+  }
+
+  public function test_get_num_plays_for_user() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = $this->create_bracket();
+    $play1 = $this->create_play([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+    ]);
+    $play2 = $this->create_play([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+    ]);
+
+    $leaderboard = new BracketLeaderboardService($bracket->id);
+    $this->assertEquals(
+      1,
+      $leaderboard->get_num_plays([
+        'author' => $user->ID,
+      ])
+    );
   }
 }

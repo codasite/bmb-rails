@@ -3,14 +3,16 @@ namespace WStrategies\BMB\Includes\Service\Permissions;
 
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 
 class BracketPermissions implements PermissionsServiceInterface {
   private $bracket_repo;
-  private $play_repo;
+  private $leaderboard_service;
 
   public function __construct($opts = []) {
     $this->bracket_repo = $opts['bracket_repo'] ?? new BracketRepo();
-    $this->play_repo = $opts['play_repo'] ?? new BracketPlayRepo();
+    $this->leaderboard_service =
+      $opts['leaderboard_service'] ?? new BracketLeaderboardService();
   }
 
   public function has_cap($cap, $user_id, $post_id): bool {
@@ -52,10 +54,9 @@ class BracketPermissions implements PermissionsServiceInterface {
   }
 
   private function user_can_view_bracket_chat($user_id, $bracket): bool {
-    $num_plays = $this->play_repo->get_count([
+    $num_plays = $this->leaderboard_service->get_num_plays([
       'author' => $user_id,
       'bracket_id' => $bracket->id,
-      'is_printed' => true,
     ]);
     if ($num_plays > 0) {
       return true;

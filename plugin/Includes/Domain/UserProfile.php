@@ -42,15 +42,6 @@ class UserProfile extends PostBase {
     return $this->wp_user->$key;
   }
 
-  public function get_num_plays() {
-    $query = new WP_Query([
-      'post_type' => BracketPlay::get_post_type(),
-      'author' => $this->wp_user->ID,
-      'posts_per_page' => -1,
-    ]);
-    return $query->found_posts;
-  }
-
   public function get_bmb_tournament_wins() {
     $query = new WP_Query([
       'post_type' => BracketPlay::get_post_type(),

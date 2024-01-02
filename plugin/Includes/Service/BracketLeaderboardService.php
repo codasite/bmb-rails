@@ -52,15 +52,15 @@ class BracketLeaderboardService {
     return $plays;
   }
 
-  public function get_num_plays($bracket_id = null): int {
-    $bracket_id = $bracket_id ?? $this->bracket->id;
-    if (!$bracket_id) {
-      throw new \Exception('Bracket ID is required');
-    }
-    return $this->play_repo->get_count([
+  public function get_num_plays(array $args = []): int {
+    $base_query = [
       'post_status' => 'publish',
-      'bracket_id' => $bracket_id,
       'is_tournament_entry' => true,
-    ]);
+    ];
+    if (isset($this->bracket)) {
+      $base_query['bracket_id'] = $this->bracket->id;
+    }
+    $query = array_merge($base_query, $args);
+    return $this->play_repo->get_count($query);
   }
 }

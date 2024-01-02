@@ -11,10 +11,14 @@ namespace WStrategies\BMB\Public\Partials\dashboard;
 // defined('ABSPATH') || exit;
 
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
+use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 
 $profile_repo = new UserProfileRepo();
+$leaderboard_service = new BracketLeaderboardService();
 $user = $profile_repo->get_by_user();
-$num_plays = $user->get_num_plays();
+$num_plays = $leaderboard_service->get_num_plays([
+	'author' => $user->id,
+]);
 $wins = $user->get_tournament_wins();
 $accuracy = $user->get_total_accuracy() * 100;
 

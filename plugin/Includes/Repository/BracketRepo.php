@@ -143,7 +143,9 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       'results_first_updated_at' => $results_updated,
       'thumbnail_url' => get_the_post_thumbnail_url($bracket_post->ID),
       'url' => get_permalink($bracket_post->ID),
-      'num_plays' => $this->leaderboard_service->get_num_plays($bracket_id),
+      'num_plays' => $this->leaderboard_service->get_num_plays([
+        'bracket_id' => $bracket_post->ID,
+      ]),
     ];
 
     return new Bracket($data);
