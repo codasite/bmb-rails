@@ -77,7 +77,7 @@ function private_bracket_buttons($bracket) {
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
 		<!-- This goes to the Play Bracket page -->
-		<?php echo BracketsCommon::play_bracket_btn( $bracket_play_link ); ?>
+		<?php echo DashboardCommon::add_to_apparel_btn( $bracket_play_link ); ?>
 		<!-- This goes to the Score Bracket page -->
 		<?php echo go_live_btn($bracket->id); ?>
 	</div>
@@ -240,12 +240,7 @@ function bracket_list_item($bracket, BracketPlayRepo $play_repo) {
 
 	$title = $bracket->title;
 	$num_teams = $bracket->num_teams;
-	$num_plays = $play_repo ? $play_repo->get_count([
-		'bracket_id' => $bracket->id,
-		'is_printed' => true,
-	]) : 0;
-
-	$id = $bracket->id;
+	$num_plays = $bracket->num_plays;
 	ob_start();
 ?>
 	<div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">

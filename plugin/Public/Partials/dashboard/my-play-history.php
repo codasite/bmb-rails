@@ -83,7 +83,9 @@ function play_list_item(BracketPlay $play) {
 	$buster_play = $play->busted_id !== null;
 	$printed = $play->is_printed;
 	$winner = $play->is_winner && !$buster_play;
+	$entry = $play->is_tournament_entry;
 	$num_teams = $play->bracket?->num_teams;
+	$official = $play->bmb_official;
 	ob_start();
 ?>
 
@@ -94,7 +96,12 @@ function play_list_item(BracketPlay $play) {
 				<h2 class="tw-font-700 tw-text-20 sm:tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
         <div class="tw-flex tw-gap-10 tw-flex-wrap">
 					<?php echo $buster_play ? BracketsCommon::bracket_tag( 'buster', 'red' ) : '' ?>
-					<?php echo $winner ? BracketsCommon::bracket_tag( 'winner', 'yellow' ) : '' ?>
+					<?php echo $official ? BracketsCommon::bracket_tag( 'official', 'blue' ) : '' ?>
+					<?php if ($winner) : ?>
+						<?php echo $winner ? BracketsCommon::bracket_tag( 'winner', 'yellow' ) : '' ?>
+					<?php elseif ($entry) : ?>
+						<?php echo $entry ? BracketsCommon::bracket_tag( 'submitted', 'yellow', false ) : '' ?>
+					<?php endif; ?>
           <?php echo $printed ? BracketsCommon::bracket_tag( 'printed', 'green' ) : '' ?>
         </div>
       </div>

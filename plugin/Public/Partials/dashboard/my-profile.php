@@ -16,9 +16,7 @@ use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 $profile_repo = new UserProfileRepo();
 $leaderboard_service = new BracketLeaderboardService();
 $user = $profile_repo->get_by_user();
-$num_plays = $leaderboard_service->get_num_plays([
-	'author' => $user->id,
-]);
+$num_plays = $user->get_num_plays();
 $wins = $user->get_tournament_wins();
 $accuracy = $user->get_total_accuracy() * 100;
 
@@ -48,7 +46,7 @@ $accuracy = $user->get_total_accuracy() * 100;
 			<div class="tw-flex tw-flex-col tw-gap-4">
 				<!-- This is the number of tournaments the user has played -->
 				<h1 class="tw-text-48 sm:tw-text-64"><?php echo $num_plays; ?></h1>
-				<h3 class="tw-text-20 tw-text-white/50 tw-font-500">Total Brackets Played</h3>
+				<h3 class="tw-text-20 tw-text-white/50 tw-font-500">Total Tournaments Played</h3>
 			</div>
 		</div>
 	</div>
