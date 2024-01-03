@@ -89,7 +89,7 @@ function play_list_item(BracketPlay $play) {
 	ob_start();
 ?>
 
-	<div class="tw-flex tw-justify-between tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
+	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-16 tw-p-20 sm:tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
 		<div class="tw-flex tw-w-full tw-flex-col tw-gap-20">
       <span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-10 tw-flex-wrap">
@@ -109,15 +109,15 @@ function play_list_item(BracketPlay $play) {
 				<?php echo $buster_play ? get_buster_play_buttons($play) : get_default_play_buttons($play) ?>
       </div>
     </div>
-    <div class="tw-flex tw-flex-col tw-justify-between tw-items-end">
+    <div class="tw-flex tw-flex-col tw-justify-between sm:tw-items-end">
       <!-- <div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo file_get_contents(WPBB_PLUGIN_DIR . "Public/assets/icons/$trend_icon"); ?>
 				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html($user_rank) ?></span>
 				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
 			</div> -->
 			<?php if ($show_score) : ?>
-        <div class="tw-flex tw-flex-col tw-items-end">
-					<h2 class="tw-font-700 tw-text-48 tw-text-white"><?php echo esc_html($accuracy_score) ?>%</h2>
+        <div class="tw-flex tw-flex-col sm:tw-items-end">
+					<h2 class="tw-font-700 tw-text-32 sm:tw-text-48 tw-text-white"><?php echo esc_html($accuracy_score) ?>%</h2>
 					<span class="tw-font-500 tw-text-12 tw-text-white">My Score</span>
 				</div>
 			<?php endif; ?>
@@ -127,7 +127,7 @@ function play_list_item(BracketPlay $play) {
 	return ob_get_clean();
 }
 ?>
-<div class="tw-flex tw-flex-col tw-gap-30">
+<div class="tw-flex tw-flex-col tw-gap-15 md:tw-gap-30">
 	<h1 class="tw-text-32 sm:tw-text-48 lg:tw-text-64">My Play History</h1>
 	<div class="tw-flex tw-flex-col tw-gap-16">
 		<?php foreach ($plays as $play) {

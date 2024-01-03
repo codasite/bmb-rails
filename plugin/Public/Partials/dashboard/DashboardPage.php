@@ -51,7 +51,7 @@ class DashboardPage {
     ?>
     <div class="tw-bg-dd-blue tw-py-60">
       <div
-        class="wpbb-dashboard tw-text-white tw-font-sans tw-flex tw-flex-col md:tw-flex-row tw-gap-30 lg:tw-gap-60 leading-none tw-uppercase tw-max-w-screen-xl tw-mx-auto tw-px-20">
+        class="wpbb-dashboard tw-text-white tw-font-sans tw-flex tw-flex-col md:tw-flex-row tw-gap-60 md:tw-gap-30 lg:tw-gap-60 leading-none tw-uppercase tw-max-w-screen-xl tw-mx-auto tw-px-20">
         <nav>
           <h4 class="tw-text-white/50 tw-text-16 tw-font-500 tw-mb-15">Dashboard</h4>
           <ul class="tw-flex tw-flex-col tw-gap-15 tw-p-0 tw-m-0">
