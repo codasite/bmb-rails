@@ -179,7 +179,7 @@ function duplicate_bracket_btn($bracket) {
 }
 
 function unpublish_bracket_btn($bracket) {
-	return DashboardCommon::icon_btn( 'archive.svg', 'submit', classes: "wpbb-unpublish-bracket-button", attributes: "data-bracket-id='$bracket->id'" );
+	return DashboardCommon::icon_btn( 'lock.svg', 'submit', classes: "wpbb-unpublish-bracket-button", attributes: "data-bracket-id='$bracket->id'" );
 }
 
 function delete_bracket_btn($bracket) {
