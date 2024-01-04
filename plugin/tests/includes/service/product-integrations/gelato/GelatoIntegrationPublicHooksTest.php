@@ -527,6 +527,8 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
 
     $wc_order_stub->method('get_items')->willReturn([$wc_order_item_stub]);
     $wc_order_stub->method('get_id')->willReturn(99);
+    $wc_order_stub->method('get_user_id')->willReturn(999);
+
     $wc_order_item_stub->method('get_product')->willReturn($wc_product_stub);
     $wc_order_item_stub
       ->method('get_meta')

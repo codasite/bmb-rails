@@ -57,6 +57,10 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
     return self::factory()->play->get_object_by_id($play_id);
   }
 
+  public function get_bracket(int $bracket_id): Bracket {
+    return self::factory()->bracket->get_object_by_id($bracket_id);
+  }
+
   public function create_post($args = []) {
     return self::factory()->post->create_and_get($args);
   }

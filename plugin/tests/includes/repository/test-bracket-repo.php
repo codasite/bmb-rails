@@ -243,7 +243,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
       'results_first_updated_at' => $time,
     ]);
 
-    $updated = self::factory()->bracket->get_object_by_id($bracket->id);
+    $updated = $this->get_bracket($bracket->id);
 
     $this->assertEquals($datetime, $updated->results_first_updated_at);
   }
@@ -263,7 +263,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
       'author' => $user2->ID,
     ]);
 
-    $updated = self::factory()->bracket->get_object_by_id($bracket->id);
+    $updated = $this->get_bracket($bracket->id);
 
     $this->assertEquals($user2->ID, $updated->author);
   }
@@ -276,7 +276,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(null, $bracket->results_first_updated_at);
     $repo = new BracketRepo();
     $repo->update($bracket->id, []);
-    $updated = self::factory()->bracket->get_object_by_id($bracket->id);
+    $updated = $this->get_bracket($bracket->id);
     $this->assertEquals(null, $updated->results_first_updated_at);
   }
 }

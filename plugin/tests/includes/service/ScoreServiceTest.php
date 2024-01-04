@@ -39,7 +39,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+    $update_bracket = $this->get_bracket($bracket->id);
 
     $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
@@ -91,7 +91,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+    $update_bracket = $this->get_bracket($bracket->id);
 
     $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
@@ -233,7 +233,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       'results' => $picks,
     ]);
 
-    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+    $update_bracket = $this->get_bracket($bracket->id);
 
     $play_picks = array_map(function ($pick) {
       return new MatchPick($pick);
@@ -302,7 +302,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $update_bracket = self::factory()->bracket->get_object_by_id($bracket->id);
+    $update_bracket = $this->get_bracket($bracket->id);
 
     $play = $this->create_play([
       'bracket_id' => $bracket->id,

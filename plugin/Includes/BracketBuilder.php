@@ -4,6 +4,7 @@ use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Controllers\NotificationApi;
 use WStrategies\BMB\Includes\Hooks\AdminHooks;
+use WStrategies\BMB\Includes\Hooks\AnonymousUserHooks;
 use WStrategies\BMB\Includes\Hooks\BracketAdminHooks;
 use WStrategies\BMB\Includes\Hooks\CustomPostHooks;
 use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
@@ -11,6 +12,7 @@ use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Permissions;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
 use WStrategies\BMB\Includes\Hooks\PublicShortcodes;
+use WStrategies\BMB\Includes\Hooks\RedirectHooks;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
@@ -112,6 +114,8 @@ class BracketBuilder {
       new Permissions(),
       new UpcomingBracketHooks(),
       new BracketAdminHooks(),
+      new AnonymousUserHooks(),
+      new RedirectHooks(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

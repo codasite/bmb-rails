@@ -3,9 +3,9 @@ namespace WStrategies\BMB\Includes\Hooks;
 
 use WP_User;
 use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Helpers\Wordpress\Navigation;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\CustomQuery\CustomPlayQuery;
 use WStrategies\BMB\Includes\Utils;
 
@@ -24,7 +24,6 @@ class PublicHooks implements HooksInterface {
     $loader->add_action('init', [$this, 'add_rewrite_tags'], 10, 0);
     $loader->add_action('init', [$this, 'add_rewrite_rules'], 10, 0);
     $loader->add_action('init', [$this, 'add_roles']);
-    $loader->add_action('template_redirect', [$this, 'template_redirect']);
     $loader->add_filter('query_vars', [$this, 'add_query_vars']);
     $loader->add_filter('posts_clauses', [$this, 'custom_query_fields'], 10, 2);
 
@@ -46,42 +45,6 @@ class PublicHooks implements HooksInterface {
       [$this, 'mark_play_printed'],
       10,
       1
-    );
-    $loader->add_action(
-      'wpbb_after_play_printed',
-      [$this, 'link_anonymous_printed_play_to_user'],
-      10,
-      2
-    );
-    $loader->add_action(
-      'wp_login',
-      [$this, 'link_anonymous_bracket_to_user_on_login'],
-      10,
-      2
-    );
-    $loader->add_action(
-      'user_register',
-      [$this, 'link_anonymous_bracket_to_user_on_register'],
-      10,
-      1
-    );
-    $loader->add_action(
-      'wp_login',
-      [$this, 'link_anonymous_play_to_user_on_login'],
-      10,
-      2
-    );
-    $loader->add_action(
-      'user_register',
-      [$this, 'link_anonymous_play_to_user_on_register'],
-      10,
-      1
-    );
-    $loader->add_action(
-      'comment_post_redirect',
-      [$this, 'custom_comment_redirect'],
-      10,
-      2
     );
   }
 
@@ -136,14 +99,6 @@ class PublicHooks implements HooksInterface {
     return $vars;
   }
 
-  public function template_redirect() {
-    if (is_page('dashboard') && !is_user_logged_in()) {
-      global $wp;
-      wp_redirect(wp_login_url($wp->request));
-      exit();
-    }
-  }
-
   public function add_roles() {
     add_role('bmb_plus', 'BMB Plus', [
       'wpbb_share_bracket' => true,
@@ -185,97 +140,5 @@ class PublicHooks implements HooksInterface {
     ];
 
     $this->play_repo->update($play_id, $data);
-  }
-
-  /**
-   * this function gets hooked to the 'wp_login' action
-   */
-  public function link_anonymous_bracket_to_user_on_login(
-    $user_login,
-    WP_User $user
-  ) {
-    $this->link_anonymous_post_to_user_from_cookie(
-      $user->ID,
-      'wpbb_anonymous_bracket_id',
-      'wpbb_anonymous_bracket_key'
-    );
-  }
-
-  public function link_anonymous_bracket_to_user_on_register($user_id) {
-    $this->link_anonymous_post_to_user_from_cookie(
-      $user_id,
-      'wpbb_anonymous_bracket_id',
-      'wpbb_anonymous_bracket_key'
-    );
-  }
-
-  public function link_anonymous_play_to_user_on_login(
-    $user_login,
-    WP_User $user
-  ) {
-    $this->link_anonymous_post_to_user_from_cookie(
-      $user->ID,
-      'play_id',
-      'wpbb_anonymous_play_key'
-    );
-  }
-
-  public function link_anonymous_play_to_user_on_register($user_id) {
-    $this->link_anonymous_post_to_user_from_cookie(
-      $user_id,
-      'play_id',
-      'wpbb_anonymous_play_key'
-    );
-  }
-
-  // this is hooked by the 'wpbb_after_printed_play' action
-  public function link_anonymous_printed_play_to_user($play_id, $user_id) {
-    $this->link_anonymous_post_to_user($play_id, $user_id);
-  }
-
-  public function link_anonymous_post_to_user_from_cookie(
-    $user_id,
-    $cookie_id_name,
-    $cookie_verify_key_name
-  ) {
-    $post_id = $this->utils->pop_cookie($cookie_id_name);
-    $cookie_key = $this->utils->pop_cookie($cookie_verify_key_name);
-    $post_meta = get_post_meta($post_id, $cookie_verify_key_name);
-    if (isset($post_meta) && !empty($post_meta)) {
-      $meta_key = $post_meta[0];
-    } else {
-      return;
-    }
-
-    if ($cookie_key !== $meta_key) {
-      return;
-    }
-
-    $this->link_anonymous_post_to_user($post_id, $user_id);
-  }
-
-  public function link_anonymous_post_to_user($post_id, $user_id) {
-    $post = get_post($post_id);
-    if (!$post) {
-      return;
-    }
-
-    if ((int) $post->post_author === 0) {
-      wp_update_post([
-        'ID' => $post_id,
-        'post_author' => $user_id,
-      ]);
-    }
-  }
-
-  // hooks into 'comment_form_redirect' filter
-  public function custom_comment_redirect($location, $comment) {
-    $post_id = $comment->comment_post_ID;
-    if (get_post_type($post_id) === Bracket::get_post_type()) {
-      $parts = explode('/', $location);
-      $anchor = array_pop($parts);
-      $location = get_permalink($post_id) . 'chat/' . $anchor;
-    }
-    return $location;
   }
 }
