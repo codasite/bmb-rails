@@ -6,7 +6,9 @@ interface SizeDimensions {
 }
 
 function getWindowDimensions(): SizeDimensions {
-  const { innerWidth: width, innerHeight: height } = window
+  // outerwidth is the width of the browser window.
+  // Using the value prevents a resize event from firing when the user pinches to zoom on a mobile device.
+  const { outerWidth: width, innerHeight: height } = window
   return {
     width,
     height,
