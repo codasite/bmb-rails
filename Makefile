@@ -28,11 +28,24 @@ wp-init:
 
 # Run tests
 # run a single test like this: make wp-test args="--filter NotificationRepoTest"
-wp-test:
-	docker exec wp-dev composer test -- $(args)
 
-wp-test-update-snapshots:
-	docker exec wp-dev composer test -- -d --update-snapshots
+# Run all tests in plugin/unit-tests. Uses WP_Mock to mock wordpress functions
+wp-unit:
+	docker exec wp-dev composer test-unit -- $(args)
+
+wp-unit-update-snapshots:
+	docker exec wp-dev composer test-unit -- -d --update-snapshots
+
+# Run all tests in plugin/integration-tests. Loads the full wordpress environment.
+wp-integration:
+	docker exec wp-dev composer test-integration -- $(args)
+
+wp-integration-update-snapshots:
+	docker exec wp-dev composer test-integration -- -d --update-snapshots
+
+# Run all tests 
+wp-test:
+	docker exec wp-dev composer test-unit && docker exec wp-dev composer test-integration
 
 # Run tests with coverage
 wp-cover:

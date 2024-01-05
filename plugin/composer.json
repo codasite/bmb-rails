@@ -11,6 +11,11 @@
       "WStrategies\\BMB\\": ""
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "WStrategies\\BMB\\": ""
+    }
+  },
   "repositories": [
     {
       "type": "composer",
@@ -29,7 +34,8 @@
     "phpstan/phpstan": "^1.10",
     "php-stubs/wordpress-stubs": "^6.4",
     "sentry/sentry": "^4.3",
-    "php-stubs/woocommerce-stubs": "^8.4"
+    "php-stubs/woocommerce-stubs": "^8.4",
+    "10up/wp_mock": "^1.0"
   },
   "require": {
     "aws/aws-sdk-php": "^3.270",
@@ -39,7 +45,8 @@
     "mailchimp/transactional": "^1.0"
   },
   "scripts": {
-    "test": "phpunit --colors=always",
+    "test-integration": "phpunit --colors=always --bootstrap=integration-tests/bootstrap.php --configuration=integration-tests/phpunit.xml.dist",
+    "test-unit": "phpunit --colors=always --bootstrap=unit-tests/bootstrap.php --configuration=unit-tests/phpunit.xml.dist",
     "coverage": "mkdir -p /var/www/html/coverage && phpunit --colors=always --coverage-html /var/www/html/coverage"
   },
   "extra": {

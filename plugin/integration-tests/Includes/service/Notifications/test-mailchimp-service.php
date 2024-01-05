@@ -2,7 +2,8 @@
 <?php
 use WStrategies\BMB\Includes\Service\Notifications\MailchimpEmailService;
 
-require_once WPBB_PLUGIN_DIR . 'tests/mock/MailchimpApiClientMock.php';
+require_once WPBB_PLUGIN_DIR .
+  'integration-tests/mock/MailchimpApiClientMock.php';
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
   public function test_client_send_is_called() {
