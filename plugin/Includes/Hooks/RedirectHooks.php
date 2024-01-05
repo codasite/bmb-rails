@@ -12,7 +12,12 @@ use WStrategies\BMB\Includes\Utils;
 
 class RedirectHooks implements HooksInterface {
   public function load(Loader $loader): void {
-    $loader->add_action('template_redirect', [$this, 'template_redirect']);
+    $loader->add_action(
+      'template_redirect',
+      [$this, 'dashboard_redirect'],
+      10,
+      0
+    );
     $loader->add_action(
       'comment_post_redirect',
       [$this, 'custom_comment_redirect'],
@@ -22,10 +27,11 @@ class RedirectHooks implements HooksInterface {
     $loader->add_action('wp_login', [$this, 'redirect_after_login'], 10, 0);
   }
 
-  public function template_redirect(): void {
+  public function dashboard_redirect(): void {
     if (is_page('dashboard') && !is_user_logged_in()) {
       global $wp;
-      wp_redirect(wp_login_url($wp->request));
+      $login_url = wp_login_url($wp->request);
+      wp_redirect($login_url);
       exit();
     }
   }
