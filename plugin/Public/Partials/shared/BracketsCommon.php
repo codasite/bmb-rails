@@ -420,6 +420,9 @@ class BracketsCommon {
   }
 
   public static function bracket_chat_btn( $bracket_id ) {
+    if ( ! comments_open( $bracket_id ) ) {
+      return '';
+    }
     $endpoint = get_permalink( $bracket_id ) . 'chat';
     $label    = 'Chatter';
     $disabled = ! current_user_can( 'wpbb_view_bracket_chat', $bracket_id );

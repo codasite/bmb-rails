@@ -58,6 +58,7 @@ function get_default_play_buttons($play) {
 	?>
 		<?php echo PartialsCommon::view_play_btn( $view_link ); ?>
 		<?php echo $bracket_id && $show_leaderboard ? BracketsCommon::view_leaderboard_btn( $leaderboard_link, $leaderboard_variant ) : null; ?>
+		<?php echo $bracket_id ? BracketsCommon::bracket_chat_btn( $bracket_id ) : null; ?>
 	<?php
 	return ob_get_clean();
 }

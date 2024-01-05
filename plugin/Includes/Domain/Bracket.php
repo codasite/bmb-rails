@@ -230,4 +230,8 @@ class Bracket extends PostBase implements PostBracketInterface {
   public function is_printable(): bool {
     return $this->status !== 'upcoming';
   }
+
+  public function is_chat_enabled(): bool {
+    return $this->status === 'publish';
+  }
 }

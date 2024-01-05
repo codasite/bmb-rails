@@ -76,9 +76,7 @@ function private_bracket_buttons($bracket) {
 	ob_start();
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-		<!-- This goes to the Play Bracket page -->
 		<?php echo DashboardCommon::add_to_apparel_btn( $bracket_play_link ); ?>
-		<!-- This goes to the Score Bracket page -->
 		<?php echo go_live_btn($bracket->id); ?>
 	</div>
 <?php
@@ -94,12 +92,10 @@ function live_bracket_buttons($bracket) {
 ?>
 	<div class="tw-flex tw-flex-col sm:tw-flex-row sm:tw-items-end sm:tw-justify-between tw-flex-wrap tw-gap-8 sm:tw-gap-16">
 		<div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-			<!-- This goes to the Play Bracket page -->
-			<?php echo BracketsCommon::play_bracket_btn( $bracket_play_link ); ?>
-			<!-- This goes to the Score Bracket page -->
+			<?php echo BracketsCommon::play_bracket_btn( $bracket_play_link, 'Play' ); ?>
 			<?php echo score_bracket_btn($bracket_score_link, $bracket); ?>
+			<?php echo BracketsCommon::bracket_chat_btn( $bracket->id ); ?>
 		</div>
-		<!-- This goes to the Leaderboard page -->
 		<?php echo BracketsCommon::view_leaderboard_btn( $leaderboard_link, 'compact' ); ?>
 	</div>
 <?php
