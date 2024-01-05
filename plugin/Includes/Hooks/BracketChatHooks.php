@@ -2,26 +2,19 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
+use WStrategies\BMB\Includes\Helpers\ConstructorArgs;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 
 class BracketChatHooks implements HooksInterface {
-  public BracketRepo $bracket_repo;
+  private BracketRepo $bracket_repo;
 
   /**
    * @param array<string, mixed> $opts
    */
   public function __construct($opts = []) {
-    // ConstructorArgs::load($this, $opts);
-    if (
-      isset($opts['bracket_repo']) &&
-      $opts['bracket_repo'] instanceof BracketRepo
-    ) {
-      $this->bracket_repo = $opts['bracket_repo'];
-    } else {
-      $this->bracket_repo = new BracketRepo();
-    }
+    $this->bracket_repo = $opts['bracket_repo'] ?? new BracketRepo();
   }
   public function load(Loader $loader): void {
     add_action('comments_open', [$this, 'filter_comments_open'], 10, 3);
