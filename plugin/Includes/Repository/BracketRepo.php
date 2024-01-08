@@ -7,6 +7,7 @@ use WP_Query;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   /**
@@ -34,6 +35,8 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
    */
   private BracketLeaderboardService $leaderboard_service;
 
+  private BracketProductUtils $bracket_product_utils;
+
   public function __construct($args = []) {
     global $wpdb;
     $this->wpdb = $args['wpdb'] ?? $wpdb;
@@ -47,6 +50,11 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       new BracketLeaderboardService(null, [
         'bracket_repo' => $this,
         'play_repo' => new BracketPlayRepo(['bracket_repo' => $this]),
+      ]);
+    $this->bracket_product_utils =
+      $args['bracket_product_utils'] ??
+      new BracketProductUtils([
+        'bracket_repo' => $this,
       ]);
     parent::__construct();
   }
@@ -146,6 +154,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       'num_plays' => $this->leaderboard_service->get_num_plays([
         'bracket_id' => $bracket_post->ID,
       ]),
+      'fee' => $this->bracket_product_utils->get_bracket_fee($bracket_post->ID),
     ];
 
     return new Bracket($data);

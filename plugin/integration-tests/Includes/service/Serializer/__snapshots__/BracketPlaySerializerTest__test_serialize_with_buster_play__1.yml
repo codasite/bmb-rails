@@ -34,6 +34,7 @@ bracket:
     results: {  }
     is_open: true
     is_printable: true
+    fee: 0.0
 busted_play:
     id: 200008
     title: ''

@@ -20,3 +20,4 @@ results:
     - { id: null, round_index: 1, match_index: 0, winning_team: null, winning_team_id: 100006 }
 results_first_updated_at: null
 num_plays: 0
+fee: 0.0

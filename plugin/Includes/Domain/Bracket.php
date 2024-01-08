@@ -44,6 +44,11 @@ class Bracket extends PostBase implements PostBracketInterface {
    */
   public $num_plays;
 
+  /**
+   * @var float|null
+   */
+  public $fee;
+
   public function __construct(array $data = []) {
     parent::__construct($data);
     $this->month = $data['month'] ?? null;
@@ -54,6 +59,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->results = $data['results'] ?? [];
     $this->results_first_updated_at = $data['results_first_updated_at'] ?? null;
     $this->num_plays = (int) ($data['num_plays'] ?? null);
+    $this->fee = (float) ($data['fee'] ?? null);
   }
 
   public function get_winning_team(): ?Team {
