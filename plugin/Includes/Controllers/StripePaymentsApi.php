@@ -83,7 +83,6 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): bool|WP_Error {
     return true;
-    // return current_user_can('read');
   }
 
   /**
@@ -97,6 +96,5 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_Error|bool {
     return true;
-    // return current_user_can('read');
   }
 }
