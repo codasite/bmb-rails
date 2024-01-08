@@ -1,10 +1,10 @@
 <?php
 
-class StripeWebhookApiTest extends \WPBB_UnitTestCase {
+class StripePaymentsApiTest extends \WPBB_UnitTestCase {
   public function test_webhook_handler() {
     $request = new WP_REST_Request(
       'POST',
-      '/wp-bracket-builder/v1/stripe-webhooks'
+      '/wp-bracket-builder/v1/stripe/webhook'
     );
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
