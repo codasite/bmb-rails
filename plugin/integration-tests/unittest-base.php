@@ -14,7 +14,7 @@ include_once 'factory/unittest-factory.php';
 abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   protected $plugin_path = '/var/www/html/wp-content/plugins/wp-bracket-builder/';
 
-  protected static function factory() {
+  protected static function factory(): ?WPBB_UnitTest_Factory {
     static $factory = null;
     if (!$factory) {
       $factory = new WPBB_UnitTest_Factory();
@@ -22,14 +22,14 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
     return $factory;
   }
 
-  public static function set_up_before_class() {
+  public static function set_up_before_class(): void {
     parent::set_up_before_class();
 
     $activator = new Activator();
     $activator->activate();
   }
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
     $admin_user = self::factory()->user->create([
       'role' => 'administrator',
@@ -45,11 +45,17 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
     return self::factory()->play->create_and_get($args);
   }
 
-  public function update_bracket($bracket, $args = []) {
+  public function update_bracket(
+    $bracket,
+    $args = []
+  ): WP_Error|Bracket|int|null {
     return self::factory()->bracket->update_object($bracket, $args);
   }
 
-  public function update_play($play, $args = []) {
+  public function update_play(
+    $play,
+    $args = []
+  ): \WStrategies\BMB\Includes\Domain\BracketPlay|WP_Error|int|null {
     return self::factory()->play->update_object($play, $args);
   }
 
@@ -61,11 +67,11 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
     return self::factory()->bracket->get_object_by_id($bracket_id);
   }
 
-  public function create_post($args = []) {
+  public function create_post($args = []): WP_Error|WP_Post {
     return self::factory()->post->create_and_get($args);
   }
 
-  public function create_user($args = []) {
+  public function create_user($args = []): WP_Error|WP_User {
     return self::factory()->user->create_and_get($args);
   }
 }

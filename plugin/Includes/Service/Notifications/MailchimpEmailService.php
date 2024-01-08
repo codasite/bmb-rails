@@ -2,10 +2,9 @@
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use Exception;
-use MailchimpTransactional\ApiClient;
 
 class MailchimpEmailService implements EmailServiceInterface {
-  protected ApiClient $client;
+  protected MailchimpApiClient $client;
 
   public $from_email;
 
@@ -19,7 +18,7 @@ class MailchimpEmailService implements EmailServiceInterface {
     if (!$api_key || !$this->from_email) {
       throw new Exception('API Key and From Email must be defined');
     }
-    $this->client = $args['api_client'] ?? new ApiClient();
+    $this->client = $args['api_client'] ?? new MailchimpApiClient();
     $this->client->setApiKey($api_key);
   }
 

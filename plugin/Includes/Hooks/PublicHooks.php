@@ -48,12 +48,12 @@ class PublicHooks implements HooksInterface {
     );
   }
 
-  public function add_rewrite_tags() {
+  public function add_rewrite_tags(): void {
     add_rewrite_tag('%tab%', '([^&]+)');
     add_rewrite_tag('%view%', '([^&]+)');
   }
 
-  public function add_rewrite_rules() {
+  public function add_rewrite_rules(): void {
     // Be sure to flush the rewrite rules after adding new rules
     add_rewrite_rule(
       '^dashboard/profile/?',
@@ -99,7 +99,7 @@ class PublicHooks implements HooksInterface {
     return $vars;
   }
 
-  public function add_roles() {
+  public function add_roles(): void {
     add_role('bmb_plus', 'BMB Plus', [
       'wpbb_share_bracket' => true,
       'wpbb_bust_play' => true,
@@ -119,19 +119,19 @@ class PublicHooks implements HooksInterface {
     return $clauses;
   }
 
-  public function add_bmb_plus_role($subscription) {
+  public function add_bmb_plus_role($subscription): void {
     $user_id = $subscription->get_user_id();
     $user = get_user_by('id', $user_id);
     $user->add_role('bmb_plus');
   }
 
-  public function remove_bmb_plus_role($subscription) {
+  public function remove_bmb_plus_role($subscription): void {
     $user_id = $subscription->get_user_id();
     $user = get_user_by('id', $user_id);
     $user->remove_role('bmb_plus');
   }
 
-  public function mark_play_printed($play_id) {
+  public function mark_play_printed($play_id): void {
     if (!$play_id) {
       return;
     }

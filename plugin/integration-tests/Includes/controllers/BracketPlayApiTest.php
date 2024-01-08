@@ -13,7 +13,7 @@ use WStrategies\BMB\Includes\Utils;
 class BracketPlayApiTest extends WPBB_UnitTestCase {
   private $play_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->play_repo = new BracketPlayRepo();

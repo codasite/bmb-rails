@@ -54,18 +54,19 @@ class Loader {
   /**
    * Add a new action to the collection to be registered with WordPress.
    *
-   * @since    1.0.0
-   * @param    string               $hook             The name of the WordPress action that is being registered.
-   * @param    callable               $callback         The name of the function definition on the $component.
-   * @param    int                  $priority         Optional. The priority at which the function should be fired. Default is 10.
-   * @param    int                  $accepted_args    Optional. The number of arguments that should be passed to the $callback. Default is 1.
+   * @param string $hook             The name of the WordPress action that is being registered.
+   * @param callable $callback         The name of the function definition on the $component.
+   * @param int $priority         Optional. The priority at which the function should be fired. Default is 10.
+   * @param    int $accepted_args Optional. The number of arguments that should be passed to the $callback. Default is 1.
+   *
+   *@since    1.0.0
    */
   public function add_action(
-    $hook,
-    $callback,
-    $priority = 10,
-    $accepted_args = 1
-  ) {
+    string $hook,
+    callable $callback,
+    int $priority = 10,
+    int $accepted_args = 1
+  ): void {
     $this->actions = $this->add(
       $this->actions,
       $hook,
@@ -78,18 +79,19 @@ class Loader {
   /**
    * Add a new filter to the collection to be registered with WordPress.
    *
-   * @since    1.0.0
-   * @param    string               $hook             The name of the WordPress filter that is being registered.
-   * @param    callable             $callback         The name of the function definition on the $component.
-   * @param    int                  $priority         Optional. The priority at which the function should be fired. Default is 10.
-   * @param    int                  $accepted_args    Optional. The number of arguments that should be passed to the $callback. Default is 1
+   * @param string $hook             The name of the WordPress filter that is being registered.
+   * @param callable $callback         The name of the function definition on the $component.
+   * @param int $priority         Optional. The priority at which the function should be fired. Default is 10.
+   * @param    int $accepted_args Optional. The number of arguments that should be passed to the $callback. Default is 1
+   *
+   *@since    1.0.0
    */
   public function add_filter(
-    $hook,
-    $callback,
-    $priority = 10,
-    $accepted_args = 1
-  ) {
+    string $hook,
+    callable $callback,
+    int $priority = 10,
+    int $accepted_args = 1
+  ): void {
     $this->filters = $this->add(
       $this->filters,
       $hook,
@@ -103,16 +105,23 @@ class Loader {
    * A utility function that is used to register the actions and hooks into a single
    * collection.
    *
-   * @since    1.0.0
-   * @access   private
-   * @param    array                $hooks            The collection of hooks that is being registered (that is, actions or filters).
-   * @param    string               $hook             The name of the WordPress filter that is being registered.
-   * @param    callable               $callback         The name of the function definition on the $component.
-   * @param    int                  $priority         The priority at which the function should be fired.
+   * @param array $hooks            The collection of hooks that is being registered (that is, actions or filters).
+   * @param string $hook             The name of the WordPress filter that is being registered.
+   * @param callable $callback         The name of the function definition on the $component.
+   * @param int $priority         The priority at which the function should be fired.
    * @param    int                  $accepted_args    The number of arguments that should be passed to the $callback.
+   *
    * @return   array                                  The collection of actions and filters registered with WordPress.
+   *@since    1.0.0
+   * @access   private
    */
-  private function add($hooks, $hook, $callback, $priority, $accepted_args) {
+  private function add(
+    array $hooks,
+    string $hook,
+    callable $callback,
+    int $priority,
+    int $accepted_args
+  ): array {
     $hooks[] = [
       'hook' => $hook,
       'callback' => $callback,
@@ -128,7 +137,7 @@ class Loader {
    *
    * @since    1.0.0
    */
-  public function run() {
+  public function run(): void {
     foreach ($this->filters as $hook) {
       add_filter(
         $hook['hook'],

@@ -28,7 +28,6 @@ class GuzzleClient implements HttpClientInterface {
    * Given an array of request data mapped to a key, make a request for each
    * and return an array of responses mapped to the same key
    *
-   * @param string $url
    * @param array $requests
    * @example $requests = [
    * 	'top_light' => [

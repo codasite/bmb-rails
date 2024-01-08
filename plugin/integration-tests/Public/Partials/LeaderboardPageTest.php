@@ -15,7 +15,7 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
   private $bracket_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->bracket_repo = new BracketRepo();

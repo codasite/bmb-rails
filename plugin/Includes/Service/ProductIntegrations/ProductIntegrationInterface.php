@@ -56,8 +56,8 @@ interface ProductIntegrationInterface {
   /**
    * Given a placement ('top' or 'center') returns an overlay map that can get passed direcly to the bracket preview page
    *
-   * @var PostBracketInterface $bracket
-   * @var string $placement - 'top' or 'center'
+   * @param PostBracketInterface $bracket
+   * @param string $placement - 'top' or 'center'
    *
    * @return array - an array of overlay maps
    *

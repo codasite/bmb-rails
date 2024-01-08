@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Service;
 
-use Aws\Lambda\LambdaClient;
 use Aws\S3\S3Client;
 use Aws\S3\S3UriParser;
 
@@ -29,13 +28,14 @@ class S3Service {
 
   /**
    * Put an object in an Amazon S3 bucket.
+   *
    * @param string $bucket bucket name
    * @param string $key object key
    * @param string $body object body
    *
    * @return string URI of the object
    */
-  public function put($bucket, $key, $body): string {
+  public function put(string $bucket, string $key, string $body): string {
     $result = $this->s3Client->putObject([
       'Bucket' => $bucket,
       'Key' => $key,
@@ -46,12 +46,13 @@ class S3Service {
 
   /**
    * Get an object from an Amazon S3 bucket.
+   *
    * @param string $bucket bucket name
    * @param string $key object key
    *
    * @return string object body
    */
-  public function get($bucket, $key): string {
+  public function get(string $bucket, string $key): string {
     $result = $this->s3Client->getObject([
       'Bucket' => $bucket,
       'Key' => $key,
@@ -61,11 +62,12 @@ class S3Service {
 
   /**
    * Get an object from an Amazon S3 bucket given the object's URL.
+   *
    * @param string $url object url
    *
    * @return string object body
    */
-  public function get_from_url($url) {
+  public function get_from_url(string $url): string {
     $parser = new S3UriParser();
     $parsed = $parser->parse($url);
     $result = $this->get($parsed['bucket'], $parsed['key']);
@@ -74,6 +76,7 @@ class S3Service {
 
   /**
    * Copy an object from a source S3 URL to a destination bucket and key.
+   *
    * @param string $sourceUrl The S3 URL of the source object
    * @param string $destinationBucket The destination bucket
    * @param string $destinationKey The destination key
@@ -81,9 +84,9 @@ class S3Service {
    * @return string The URI of the copied object
    */
   public function copy_from_url(
-    $sourceUrl,
-    $destinationBucket,
-    $destinationKey
+    string $sourceUrl,
+    string $destinationBucket,
+    string $destinationKey
   ): string {
     // Parse the source URL to get the bucket and key
     $parser = new S3UriParser();
@@ -104,13 +107,13 @@ class S3Service {
 
   /**
    * Rename an object in an Amazon S3 bucket.
+   *
    * @param string $url existing object url
-   * @param string $newBucket new bucket name
    * @param string $newKey new object key
    *
    * @return string new object URL
    */
-  public function rename_from_url($url, $newKey): string {
+  public function rename_from_url(string $url, string $newKey): string {
     // Parse the bucket and key from the url
     $parser = new S3UriParser();
     $parsed = $parser->parse($url);

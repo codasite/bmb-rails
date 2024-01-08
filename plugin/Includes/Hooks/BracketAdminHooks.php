@@ -23,7 +23,7 @@ class BracketAdminHooks implements HooksInterface {
     ]);
   }
 
-  public function add_meta_boxes() {
+  public function add_meta_boxes(): void {
     add_meta_box(
       'bracket_teams_meta_box',
       'Teams',
@@ -34,7 +34,7 @@ class BracketAdminHooks implements HooksInterface {
     );
   }
 
-  public function display_bracket_teams_meta_box($post) {
+  public function display_bracket_teams_meta_box($post): void {
     $bracket = $this->bracket_repo->get($post->ID);
     if (!$bracket) {
       return;
@@ -85,7 +85,7 @@ class BracketAdminHooks implements HooksInterface {
 		<?php
   }
 
-  public function save_bracket_teams_meta_box($post_id) {
+  public function save_bracket_teams_meta_box($post_id): void {
     // Check if our nonce is set.
     if (!isset($_POST['bracket_teams_meta_box_nonce'])) {
       return;

@@ -193,7 +193,7 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     $wc_mock
       ->method('session_get')
       ->with(BRACKET_FEE_META_PREFIX . $bracket_id)
-      ->willReturn(null); // No session data
+      ->willReturn([]); // No session data
 
     $hooks = new BracketProductHooks([
       'bracket_product_utils' => $bracket_utils_mock,

@@ -35,7 +35,7 @@ class MatchPick {
     $this->id = isset($data['id']) ? (int) $data['id'] : null;
   }
 
-  public static function from_array($data) {
+  public static function from_array($data): MatchPick {
     if (isset($data['winning_team'])) {
       $data['winning_team'] = Team::from_array($data['winning_team']);
     }

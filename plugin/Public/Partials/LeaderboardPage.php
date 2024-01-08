@@ -54,7 +54,7 @@ class LeaderboardPage implements TemplateInterface {
 		return ob_get_clean();
 	}
 
-	public function score_bracket_btn($endpoint) {
+	public function score_bracket_btn($endpoint): false|string {
 		ob_start();
 	?>
 		<a href="<?php echo $endpoint; ?>" class="tw-flex tw-justify-center tw-items-center !tw-text-off-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-yellow tw-font-500 tw-mt-16">
@@ -65,7 +65,7 @@ class LeaderboardPage implements TemplateInterface {
 		return ob_get_clean();
 	}
 
-	public function share_bracket_btn($endpoint) {
+	public function share_bracket_btn($endpoint): false|string {
 		ob_start();
 	?>
 		<a href="#" class="tw-flex tw-justify-center tw-items-center tw-text-black tw-gap-8 tw-py-12 tw-px-16 tw-rounded-8 tw-bg-white tw-font-500 tw-mt-16">
@@ -76,7 +76,7 @@ class LeaderboardPage implements TemplateInterface {
 		return ob_get_clean();
 	}
 
-	public function leaderboard_play_list_item(BracketPlay $play, $winner = false, $show_score = false, $complete = false) {
+	public function leaderboard_play_list_item(BracketPlay $play, $winner = false, $show_score = false, $complete = false): false|string {
 		$play_id = $play->id;
 		$play_author = $play->author;
 		$author_name = get_the_author_meta('user_login', $play_author);
@@ -135,6 +135,3 @@ class LeaderboardPage implements TemplateInterface {
 		return ob_get_clean();
 	}
 }
-
-
-

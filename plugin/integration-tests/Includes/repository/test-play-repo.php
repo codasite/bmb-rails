@@ -11,7 +11,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
   private BracketPlayRepo $play_repo;
   private BracketMatchPickRepo $pick_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->play_repo = new BracketPlayRepo();

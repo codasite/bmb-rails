@@ -13,7 +13,7 @@ class AnonymousUserHooks implements HooksInterface {
    * @param array<string, mixed> $opts
    * @return void
    */
-  public function __construct($opts = []) {
+  public function __construct(array $opts = []) {
     if (isset($opts['utils']) && $opts['utils'] instanceof Utils) {
       $this->utils = $opts['utils'];
     } else {

@@ -47,7 +47,7 @@ class TournamentEntryService {
   public function clear_tournament_entries_for_author(
     int $bracket_id,
     int $author_id
-  ) {
+  ): void {
     global $wpdb;
     $posts_table = $wpdb->posts;
     $plays_table = BracketPlayRepo::table_name();

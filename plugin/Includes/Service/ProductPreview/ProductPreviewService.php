@@ -85,7 +85,7 @@ class ProductPreviewService {
     ];
   }
 
-  public function get_archive_url() {
+  public function get_archive_url(): false|string {
     return $this->bracket_product_utils->get_bracket_product_archive_url();
   }
 
@@ -107,16 +107,17 @@ class ProductPreviewService {
    * Get all gallery images for the product
    *
    * @param WC_Product $product
+   *
    * @return array
    */
 
-  public function get_product_gallery($product) {
+  public function get_product_gallery(WC_Product $product): array {
     // get all gallery images for the product
     $attachment_ids = $product->get_gallery_image_ids();
     $gallery_images = $this->get_images($attachment_ids);
     return $gallery_images;
   }
-  public function get_images($image_ids) {
+  public function get_images($image_ids): array {
     $images = [];
 
     foreach ($image_ids as $imageId) {

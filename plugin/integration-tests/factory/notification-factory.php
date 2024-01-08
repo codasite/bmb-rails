@@ -20,7 +20,7 @@ class WPBB_UnitTest_Factory_For_Notification extends
     $this->default_generation_definitions = [];
   }
 
-  function create_object($args) {
+  function create_object($args): WP_Error|int|Notification|null {
     $notification = $this->notification_repo->add(
       NotificationFactory::create($args)
     );

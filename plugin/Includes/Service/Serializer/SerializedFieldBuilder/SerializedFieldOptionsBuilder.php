@@ -14,7 +14,7 @@ class SerializedFieldOptionsBuilder implements SerializedFieldBuilderInterface {
     $this->readonly_fields = $readonly_fields;
     $this->required_fields = $required_fields;
   }
-  public function build_field(string $field_name, array $options = []) {
+  public function build_field(string $field_name, array $options = []): void {
     if (in_array($field_name, $this->readonly_fields)) {
       $options['readonly'] = true;
     }
@@ -25,7 +25,7 @@ class SerializedFieldOptionsBuilder implements SerializedFieldBuilderInterface {
 
     $this->fields[$field_name] = $options;
   }
-  public function get_fields() {
+  public function get_fields(): array {
     return $this->fields;
   }
 }

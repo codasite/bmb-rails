@@ -23,7 +23,7 @@ class ObjectDataBuilder extends SerializedFieldBuilderBase {
   private function build_serializer_field(
     string $field_name,
     ApiSerializerInterface $serializer
-  ) {
+  ): void {
     if (isset($this->serialized[$field_name])) {
       $this->obj_data[$field_name] = $serializer->deserialize(
         $this->serialized[$field_name]
@@ -34,7 +34,7 @@ class ObjectDataBuilder extends SerializedFieldBuilderBase {
   private function build_serializer_field_many(
     string $field_name,
     ApiSerializerInterface $serializer
-  ) {
+  ): void {
     if (isset($this->serialized[$field_name])) {
       $data = [];
       foreach ($this->serialized[$field_name] as $item) {

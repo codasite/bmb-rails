@@ -9,7 +9,7 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 class BracketRepoTest extends WPBB_UnitTestCase {
   private $bracket_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->bracket_repo = new BracketRepo();

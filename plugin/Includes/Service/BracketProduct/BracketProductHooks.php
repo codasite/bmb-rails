@@ -54,7 +54,7 @@ class BracketProductHooks implements HooksInterface {
   }
 
   // This hooks into `woocommerce_cart_calculate_fees` action
-  public function add_paid_bracket_fee_to_cart($cart) {
+  public function add_paid_bracket_fee_to_cart($cart): void {
     foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
       $product = $cart_item['data'];
       if ($this->bracket_product_utils->is_bracket_product($product)) {
@@ -104,7 +104,7 @@ class BracketProductHooks implements HooksInterface {
     $cart_item_key,
     $values,
     $order
-  ) {
+  ): void {
     $product = $item->get_product();
     if (
       !$this->bracket_product_utils->is_bracket_product($product) ||

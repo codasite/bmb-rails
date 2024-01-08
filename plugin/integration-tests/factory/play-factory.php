@@ -18,13 +18,13 @@ class WPBB_UnitTest_Factory_For_Play extends WP_UnitTest_Factory_For_Thing {
     $this->default_generation_definitions = ['author' => 1];
   }
 
-  function create_object($args) {
+  function create_object($args): BracketPlay|WP_Error|int|null {
     $play = new BracketPlay($args);
     $play = $this->play_repo->add($play);
     return $play;
   }
 
-  function update_object($play_id, $fields) {
+  function update_object($play_id, $fields): BracketPlay|WP_Error|int|null {
     $play = $this->play_repo->update($play_id, $fields);
     return $play;
   }

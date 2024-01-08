@@ -13,7 +13,7 @@ class BracketProductUtils {
   public function __construct($args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
   }
-  public function get_bracket_product_archive_url() {
+  public function get_bracket_product_archive_url(): false|string {
     // $category_slug = BRACKET_PRODUCT_CATEGORY;
     // $redirect_url = get_term_link($category_slug, 'product_cat');
     // return $redirect_url;
@@ -23,7 +23,7 @@ class BracketProductUtils {
     return get_permalink(get_page_by_path($shop_slug));
   }
   // Helper method to check if product is a bracket product
-  public function is_bracket_product($product) {
+  public function is_bracket_product($product): bool {
     if (!$product) {
       return false;
     }
@@ -36,7 +36,7 @@ class BracketProductUtils {
   }
 
   // Helper method to get the bracket placement
-  public function get_bracket_placement($product) {
+  public function get_bracket_placement($product): string {
     if (
       $product &&
       $this->product_has_category($product, BRACKET_PLACEMENT_CENTER_CAT)
@@ -46,7 +46,7 @@ class BracketProductUtils {
     return 'top';
   }
 
-  public function product_has_category($product, $category_slug) {
+  public function product_has_category($product, $category_slug): bool {
     if ($product->is_type('variation')) {
       return has_term($category_slug, 'product_cat', $product->get_parent_id());
     } else {

@@ -24,7 +24,7 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
     ];
   }
 
-  function create_object($args) {
+  function create_object($args): WP_Error|Bracket|int|null {
     if (isset($args['num_teams']) && !isset($args['matches'])) {
       $args['matches'] = $this->generateMatches($args['num_teams']);
     }
@@ -33,7 +33,7 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
     return $bracket;
   }
 
-  function update_object($bracket_id, $fields) {
+  function update_object($bracket_id, $fields): WP_Error|Bracket|int|null {
     $bracket = $this->bracket_repo->update($bracket_id, $fields);
     return $bracket;
   }
@@ -42,7 +42,7 @@ class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
     return $this->bracket_repo->get($bracket_id);
   }
 
-  function generateMatches($numberOfTeams) {
+  function generateMatches($numberOfTeams): array {
     $matches = [];
 
     $num_matches = $numberOfTeams / 2;

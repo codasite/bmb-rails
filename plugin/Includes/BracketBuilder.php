@@ -92,11 +92,11 @@ class BracketBuilder {
    * @since    1.0.0
    * @access   private
    */
-  private function set_locale() {
+  private function set_locale(): void {
     (new i18n())->load($this->loader);
   }
 
-  private function define_hooks() {
+  private function define_hooks(): void {
     $name_and_version_args = [
       'plugin_name' => $this->get_plugin_name(),
       'version' => $this->get_version(),
@@ -131,7 +131,7 @@ class BracketBuilder {
    *
    * @since    1.0.0
    */
-  public function run() {
+  public function run(): void {
     $this->loader->run();
   }
 
@@ -142,7 +142,7 @@ class BracketBuilder {
    * @since     1.0.0
    * @return    string    The name of the plugin.
    */
-  public function get_plugin_name() {
+  public function get_plugin_name(): string {
     return $this->plugin_name;
   }
 
@@ -152,7 +152,7 @@ class BracketBuilder {
    * @since     1.0.0
    * @return    string    The version number of the plugin.
    */
-  public function get_version() {
+  public function get_version(): string {
     return $this->version;
   }
 }

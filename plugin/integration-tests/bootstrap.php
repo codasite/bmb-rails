@@ -12,6 +12,7 @@ if (!$_tests_dir) {
 }
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
+DG\BypassFinals::enable();
 
 // Forward custom PHPUnit Polyfills configuration to PHPUnit bootstrap file.
 $_phpunit_polyfills_path = getenv('WP_TESTS_PHPUNIT_POLYFILLS_PATH');
@@ -31,7 +32,7 @@ require_once "{$_tests_dir}/includes/functions.php";
 /**
  * Manually load the plugin being tested.
  */
-function _manually_load_plugin() {
+function _manually_load_plugin(): void {
   require dirname(dirname(__FILE__)) . '/wp-bracket-builder.php';
 }
 

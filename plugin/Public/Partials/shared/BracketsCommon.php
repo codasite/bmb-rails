@@ -12,7 +12,7 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketsCommon {
 
-  public static function sort_button( $label, $endpoint, $active = false ) {
+  public static function sort_button( $label, $endpoint, $active = false ): false|string {
     $base_cls = [
       'tw-flex',
       'tw-items-center',
@@ -46,7 +46,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function bracket_tag( $label, $color, $filled = true ) {
+  public static function bracket_tag( $label, $color, $filled = true ): false|string {
     $filled_path = WPBB_PLUGIN_DIR . 'Public/assets/icons/ellipse.svg';
     $empty_path  = WPBB_PLUGIN_DIR . 'Public/assets/icons/ellipse_empty.svg';
     ob_start();
@@ -59,31 +59,31 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function upcoming_bracket_tag() {
+  public static function upcoming_bracket_tag(): false|string {
     return self::bracket_tag( 'Upcoming', 'yellow' );
   }
 
-  public static function live_bracket_tag() {
+  public static function live_bracket_tag(): false|string {
     return self::bracket_tag( 'Live', 'green' );
   }
 
-  public static function completed_bracket_tag() {
+  public static function completed_bracket_tag(): false|string {
     return self::bracket_tag( 'Complete', 'yellow' );
   }
 
-  public static function scored_bracket_tag() {
+  public static function scored_bracket_tag(): false|string {
     return self::bracket_tag( 'Scored', 'yellow' );
   }
 
-  public static function archived_bracket_tag() {
+  public static function archived_bracket_tag(): false|string {
     return self::bracket_tag( 'Archive', 'white/50', false );
   }
 
-  public static function private_bracket_tag() {
+  public static function private_bracket_tag(): false|string {
     return self::bracket_tag( 'Private', 'blue', false );
   }
 
-  public static function paid_bracket_tag() {
+  public static function paid_bracket_tag(): false|string {
     ob_start();
     ?>
     <div class="tw-text-white tw-bg-blue tw-px-8 tw-py-4 tw-flex tw-items-center tw-rounded-8">
@@ -93,7 +93,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function get_bracket_tag( $status ) {
+  public static function get_bracket_tag( $status ): false|string {
     switch ( $status ) {
       case 'publish':
         return self::live_bracket_tag();
@@ -112,7 +112,7 @@ class BracketsCommon {
     }
   }
 
-  public static function base_btn($content, $extra_cls = [], $attributes = []) {
+  public static function base_btn($content, $extra_cls = [], $attributes = []): false|string {
     $base_cls = array( 'tw-cursor-pointer', 'tw-uppercase', 'tw-font-sans' );
     $styles = array_merge( $extra_cls, $base_cls );
     ob_start();
@@ -124,7 +124,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function base_link_btn($content, $href, $extra_cls = []) {
+  public static function base_link_btn($content, $href, $extra_cls = []): false|string {
     $base_cls = array( 'tw-cursor-pointer', 'tw-uppercase', 'tw-font-sans' );
     $styles = array_merge( $extra_cls, $base_cls );
     ob_start();
@@ -136,21 +136,21 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function red_gradient_btn($content, $extra_cls = [], $attributes = []) {
+  public static function red_gradient_btn($content, $extra_cls = [], $attributes = []): false|string {
     $styles = array( 'wpbb-bg-gradient-red', 'tw-p-1', 'tw-rounded-8', 'tw-border-none' );
     $styles = array_merge( $extra_cls, $styles );
     $content = self::red_gradient_content($content);
     return self::base_btn($content, $styles, $attributes);
   }
 
-  public static function red_gradient_link($content, $href, $extra_cls = []) {
+  public static function red_gradient_link($content, $href, $extra_cls = []): false|string {
     $styles = array( 'wpbb-bg-gradient-red', 'tw-p-1', 'tw-rounded-8', 'tw-border-none' );
     $styles = array_merge( $extra_cls, $styles );
     $content = self::red_gradient_content($content);
     return self::base_link_btn($content, $href, $styles);
   }
   
-  public static function red_gradient_content($content, $extra_cls = []) {
+  public static function red_gradient_content($content, $extra_cls = []): false|string {
     $styles = array( 'tw-flex', 'tw-justify-center', 'tw-items-center', 'tw-text-white', 'tw-rounded-8', 'tw-px-16', 'tw-py-12', 'tw-font-700', 'tw-text-16', 'tw-whitespace-nowrap', 'tw-bg-dd-blue/80', 'hover:tw-bg-transparent', 'hover:tw-text-dd-blue' );
     $styles = array_merge( $extra_cls, $styles );
 
@@ -167,7 +167,7 @@ class BracketsCommon {
   /**
    * This button goes to the Play Bracket page
    */
-  public static function play_bracket_btn( $endpoint, $label = 'Play Bracket' ) {
+  public static function play_bracket_btn( $endpoint, $label = 'Play Bracket' ): false|string {
     ob_start();
     ?>
     <a
@@ -180,7 +180,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function view_bracket_button( $bracket ) {
+  public static function view_bracket_button( $bracket ): false|string {
     $bracket_play_link = get_permalink( $bracket->id ) . '/play';
     ob_start();
     ?>
@@ -193,7 +193,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function enable_upcoming_notification_btn(Bracket $bracket) {
+  public static function enable_upcoming_notification_btn(Bracket $bracket): false|string {
     $label = 'Notify Me';
     ob_start();
     ?> 
@@ -206,7 +206,7 @@ class BracketsCommon {
     return self::red_gradient_btn($content, ['wpbb-enable-upcoming-notification-button'], ['data-bracket-id' => $bracket->id]);
   }
 
-  public static function disable_upcoming_notification_btn(int $notification_id) {
+  public static function disable_upcoming_notification_btn(int $notification_id): false|string {
     $btn_styles = array( 'wpbb-disable-upcoming-notification-button', 'tw-bg-white/30', 'tw-text-white', 'tw-border-solid', 'tw-border-1', 'tw-border-white', 'tw-rounded-8', 'tw-px-16', 'tw-py-12', 'tw-font-700', 'tw-text-16', 'hover:tw-bg-white', 'hover:tw-text-black');
     $label = 'Notifying';
     ob_start();
@@ -223,7 +223,7 @@ class BracketsCommon {
   /**
    * This button goes to the Leaderboard page
    */
-  public static function view_leaderboard_btn( $endpoint, $variant = 'primary', $label = 'View Leaderboard' ) {
+  public static function view_leaderboard_btn( $endpoint, $variant = 'primary', $label = 'View Leaderboard' ): false|string {
     $final = false;
 
     ob_start();
@@ -257,7 +257,7 @@ class BracketsCommon {
     return $btn;
   }
 
-  public static function bracket_sort_buttons() {
+  public static function bracket_sort_buttons(): false|string {
     $all_endpoint      = get_permalink();
     $status            = get_query_var( 'status' );
     $live_endpoint     = add_query_arg( 'status', PartialsContants::LIVE_STATUS, $all_endpoint );
@@ -273,7 +273,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function public_bracket_active_buttons( Bracket $bracket ) {
+  public static function public_bracket_active_buttons( Bracket $bracket ): false|string {
     $bracket_play_link = get_permalink( $bracket->id ) . '/play';
     $leaderboard_link  = get_permalink( $bracket->id ) . '/leaderboard';
     ob_start();
@@ -287,7 +287,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function public_bracket_upcoming_buttons( Bracket $bracket ) {
+  public static function public_bracket_upcoming_buttons( Bracket $bracket ): false|string {
     ob_start();
     ?>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
@@ -297,7 +297,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function upcoming_notification_btn(Bracket $bracket) {
+  public static function upcoming_notification_btn(Bracket $bracket): false|string {
     $notification_repo = new NotificationRepo();
     $notification_id = $notification_repo->current_user_notification_id( $bracket->id, NotificationType::BRACKET_UPCOMING);
     if ($notification_id) {
@@ -307,7 +307,7 @@ class BracketsCommon {
     }
   }
 
-  public static function public_bracket_completed_buttons( Bracket $bracket ) {
+  public static function public_bracket_completed_buttons( Bracket $bracket ): false|string {
     $leaderboard_link = get_permalink( $bracket->id ) . '/leaderboard';
 
     ob_start();
@@ -321,7 +321,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function public_bracket_list_item( Bracket $bracket) {
+  public static function public_bracket_list_item( Bracket $bracket): false|string {
     $name = $bracket->title;
     $num_teams = $bracket->num_teams;
     $num_plays = $bracket->num_plays;
@@ -363,7 +363,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function public_bracket_list( $opts = [] ) {
+  public static function public_bracket_list( $opts = [] ): false|string {
     $tags      = $opts['tags'] ?? [];
     $author_id = $opts['author'] ?? null;
 
@@ -419,7 +419,7 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function bracket_chat_btn( $bracket_id ) {
+  public static function bracket_chat_btn( $bracket_id ): false|string {
     if ( ! comments_open( $bracket_id ) ) {
       return '';
     }

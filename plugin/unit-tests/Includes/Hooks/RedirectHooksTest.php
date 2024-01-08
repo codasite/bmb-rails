@@ -6,7 +6,7 @@ use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Hooks\RedirectHooks;
 
 class RedirectHooksTest extends TestCase {
-  public function test_dashboard_redirect_not_logged_in() {
+  public function test_dashboard_redirect_not_logged_in(): void {
     $login_url = 'http://example.com/login';
     // Set expectations for the WordPress functions
     WP_Mock::userFunction('is_page', [
@@ -44,7 +44,7 @@ class RedirectHooksTest extends TestCase {
     $this->assertConditionsMet();
   }
 
-  public function test_dashboard_redirect_logged_in() {
+  public function test_dashboard_redirect_logged_in(): void {
     // Set expectations for the WordPress functions
     WP_Mock::userFunction('is_page', [
       'args' => 'dashboard',
@@ -73,7 +73,7 @@ class RedirectHooksTest extends TestCase {
     $this->assertConditionsMet();
   }
 
-  public function test_dashboard_redirect_not_dashboard() {
+  public function test_dashboard_redirect_not_dashboard(): void {
     // Set expectations for the WordPress functions
     WP_Mock::userFunction('is_page', [
       'args' => 'dashboard',

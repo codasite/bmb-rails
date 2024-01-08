@@ -8,7 +8,7 @@ class CustomPostHooks implements HooksInterface {
     $loader->add_action('init', [$this, 'register_custom_post_types']);
     $loader->add_filter('init', [$this, 'register_custom_post_status']);
   }
-  public function register_custom_post_types() {
+  public function register_custom_post_types(): void {
     register_post_type('bracket', [
       'labels' => [
         'name' => __('Brackets'),
@@ -60,7 +60,7 @@ class CustomPostHooks implements HooksInterface {
       'rewrite' => ['slug' => 'users'],
     ]);
   }
-  public function register_custom_post_status() {
+  public function register_custom_post_status(): void {
     // Custom post status for completed tournaments
     register_post_status('complete', [
       'label' => 'Complete',

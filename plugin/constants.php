@@ -18,3 +18,7 @@ const BMB_PLUS_SLUG = '';
 // Bypass all image generator calls and s3 calls so we can run locally
 const DISABLE_IMAGE_GENERATOR_CALLS = '';
 const WPBB_PLUGIN_DIR = '';
+
+const ABSPATH = '';
+const ARRAY_A = '';
+const COOKIE_DOMAIN = '';

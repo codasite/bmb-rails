@@ -6,7 +6,7 @@ use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\ScoreService;
 
 class ScoreServiceTest extends WPBB_UnitTestCase {
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
   }
 

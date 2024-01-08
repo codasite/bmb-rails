@@ -69,13 +69,6 @@ class EnqueueScriptsHooks implements HooksInterface {
    */
   private BracketSerializer $bracket_serializer;
 
-  /**
-   * Initialize the class and set its properties.
-   *
-   * @since    1.0.0
-   * @param      string    $plugin_name       The name of the plugin.
-   * @param      string    $version    The version of this plugin.
-   */
   public function __construct($args = []) {
     $this->plugin_name = $args['plugin_name'];
     $this->version = $args['version'];
@@ -99,7 +92,7 @@ class EnqueueScriptsHooks implements HooksInterface {
    *
    * @since    1.0.0
    */
-  public function enqueue_styles() {
+  public function enqueue_styles(): void {
     /**
      * This function is provided for demonstration purposes only.
      *
@@ -134,7 +127,7 @@ class EnqueueScriptsHooks implements HooksInterface {
    *
    * @since    1.0.0
    */
-  public function enqueue_scripts() {
+  public function enqueue_scripts(): void {
     wp_enqueue_script(
       'tailwind',
       'https://cdn.tailwindcss.com',
@@ -178,7 +171,7 @@ class EnqueueScriptsHooks implements HooksInterface {
     ]);
   }
 
-  private function get_bmb_plus_permalink() {
+  private function get_bmb_plus_permalink(): false|string {
     // use wp query to get the post for the bmb subscription
     $args = [
       'name' => $this->get_bmb_plus_slug(),
@@ -194,11 +187,11 @@ class EnqueueScriptsHooks implements HooksInterface {
     return get_permalink($posts[0]);
   }
 
-  private function get_bmb_plus_slug() {
+  private function get_bmb_plus_slug(): string {
     return defined('BMB_PLUS_SLUG') ? BMB_PLUS_SLUG : 'bmb-plus';
   }
 
-  private function get_bracket_product_archive_url() {
+  private function get_bracket_product_archive_url(): false|string {
     return $this->bracket_product_utils->get_bracket_product_archive_url();
   }
 

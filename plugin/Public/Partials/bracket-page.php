@@ -22,7 +22,7 @@ switch ($view) {
         echo '<div id="wpbb-bracket-builder"></div>';
         break;
     case 'results':
-		if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
+		if (!current_user_can('wpbb_edit_bracket', $post->ID)) {
             header('HTTP/1.0 403 Forbidden');
 			include(WPBB_PLUGIN_DIR . 'Public/Error/403.php');
 			return;

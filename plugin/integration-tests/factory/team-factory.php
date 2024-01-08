@@ -18,13 +18,13 @@ class WPBB_UnitTest_Factory_For_Team extends WP_UnitTest_Factory_For_Thing {
     $this->default_generation_definitions = ['author' => 1];
   }
 
-  function create_object($args) {
+  function create_object($args): WP_Error|Team|int|null {
     $team = new Team($args);
     $team = $this->repo->add($team);
     return $team;
   }
 
-  function update_object($team_id, $fields) {
+  function update_object($team_id, $fields): WP_Error|Team|int|null {
     $team = $this->repo->update($team_id, $fields);
     return $team;
   }

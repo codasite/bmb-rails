@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Email\Template;
 class BracketEmailTemplate {
-  public static function render( string $heading, string $button_url, string $button_text ) {
+  public static function render( string $heading, string $button_url, string $button_text ): false|string {
     ob_start();
     ?>
     <!DOCTYPE html>

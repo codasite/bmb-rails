@@ -34,18 +34,18 @@ wp-unit:
 	docker exec wp-dev composer test-unit -- $(args)
 
 wp-unit-update-snapshots:
-	docker exec wp-dev composer test-unit -- -d --update-snapshots
+	make wp-unit args="-d --update-snapshots"
 
 # Run all tests in plugin/integration-tests. Loads the full wordpress environment.
 wp-integration:
 	docker exec wp-dev composer test-integration -- $(args)
 
 wp-integration-update-snapshots:
-	docker exec wp-dev composer test-integration -- -d --update-snapshots
+	make wp-integration args="-d --update-snapshots"
 
 # Run all tests 
 wp-test:
-	docker exec wp-dev composer test-unit && docker exec wp-dev composer test-integration
+	make wp-integration wp-unit
 
 # Run tests with coverage
 wp-cover:
@@ -100,6 +100,12 @@ composer-install:
 
 phpstan:
 	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G .
+
+phpstan-ci:
+	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon.dist --memory-limit 1G .
+
+phpstan-generate-baseline:
+	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon.dist --memory-limit 1G . --generate-baseline
 
 prod-up:
 	docker compose -f compose.yaml -f compose.prod.yaml up --build -d --remove-orphans

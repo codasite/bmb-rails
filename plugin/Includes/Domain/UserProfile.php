@@ -46,13 +46,13 @@ class UserProfile extends PostBase {
     return $this->wp_user->$key;
   }
 
-  public function get_num_plays() {
+  public function get_num_plays(): int {
     return $this->leaderboard_service->get_num_plays([
       'author' => $this->wp_user->ID,
     ]);
   }
 
-  public function get_bmb_tournament_wins() {
+  public function get_bmb_tournament_wins(): int {
     $query = new WP_Query([
       'post_type' => BracketPlay::get_post_type(),
       'author' => $this->wp_user->ID,
@@ -66,7 +66,7 @@ class UserProfile extends PostBase {
     return $query->found_posts;
   }
 
-  public function get_tournament_wins() {
+  public function get_tournament_wins(): int {
     $query = new WP_Query([
       'post_type' => BracketPlay::get_post_type(),
       'author' => $this->wp_user->ID,
@@ -79,7 +79,7 @@ class UserProfile extends PostBase {
     return $query->found_posts;
   }
 
-  public function get_total_accuracy() {
+  public function get_total_accuracy(): float {
     return 0.5;
   }
 }

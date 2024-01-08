@@ -4,9 +4,9 @@ namespace WStrategies\BMB\Includes\Hooks;
 
 use Exception;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
+use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
@@ -20,7 +20,7 @@ class UpcomingBracketHooks implements HooksInterface {
   public const UPCOMING_NOTIFICATION_SENT_META_KEY = 'bmb_upcoming_notification_sent';
   public function __construct($args = []) {
     $this->notification_repo =
-      $opts['notification_repo'] ?? new NotificationRepo();
+      $args['notification_repo'] ?? new NotificationRepo();
     $this->utils = $args['utils'] ?? new Utils();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     try {
@@ -76,7 +76,7 @@ class UpcomingBracketHooks implements HooksInterface {
     $taxonomy,
     $append,
     $old_tt_ids
-  ) {
+  ): void {
     $upcoming_term_id = ($upcoming_term = get_term_by(
       'slug',
       'bmb_upcoming',
@@ -124,7 +124,7 @@ class UpcomingBracketHooks implements HooksInterface {
     $new_status,
     $old_status,
     $post
-  ) {
+  ): void {
     if ($post->post_type !== Bracket::get_post_type()) {
       return;
     }
@@ -147,15 +147,17 @@ class UpcomingBracketHooks implements HooksInterface {
   public function create_upcoming_bracket_notification_on_login(
     $user_login,
     \WP_User $user
-  ) {
+  ): void {
     $this->create_upcoming_bracket_notification($user->ID);
   }
 
-  public function create_upcoming_bracket_notification_on_register($user_id) {
+  public function create_upcoming_bracket_notification_on_register(
+    $user_id
+  ): void {
     $this->create_upcoming_bracket_notification($user_id);
   }
 
-  public function create_upcoming_bracket_notification($user_id) {
+  public function create_upcoming_bracket_notification($user_id): void {
     $upcoming_bracket_id = $this->utils->pop_cookie('wpbb_upcoming_bracket_id');
 
     if (!$upcoming_bracket_id) {

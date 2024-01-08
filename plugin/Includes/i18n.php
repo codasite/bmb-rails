@@ -36,7 +36,7 @@ class i18n implements HooksInterface {
    *
    * @since    1.0.0
    */
-  public function load_plugin_textdomain() {
+  public function load_plugin_textdomain(): void {
     load_plugin_textdomain(
       'wp-bracket-builder',
       false,

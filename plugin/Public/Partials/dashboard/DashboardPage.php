@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
 class DashboardPage {
-  public static function get_nav_link( $tab, $current_tab, $label, $icon ) {
+  public static function get_nav_link( $tab, $current_tab, $label, $icon ): false|string {
     $active = $tab === $current_tab;
     ob_start();
     ?>
@@ -34,7 +34,7 @@ class DashboardPage {
     return ob_get_clean();
   }
 
-  public static function render($current_tab = null) {
+  public static function render($current_tab = null): false|string {
     $current_tab = $current_tab == null ? get_query_var( 'tab' ): $current_tab;
 
     if ( empty( $current_tab ) ) {

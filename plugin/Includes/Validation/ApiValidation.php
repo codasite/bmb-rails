@@ -11,7 +11,7 @@ class ApiValidation {
   private $bracket;
   private $wpdb;
 
-  public function validate_bracket_api($bracket) {
+  public function validate_bracket_api($bracket): ?WP_Error {
     $this->bracket = $bracket;
     $this->total_rounds = $this->bracket->num_rounds;
     $this->wildcards = $this->bracket->num_wildcards;
@@ -36,7 +36,7 @@ class ApiValidation {
   }
 
   //Method to check team names at initial level
-  private function check_team_names() {
+  private function check_team_names(): ?WP_Error {
     $total_no_of_teams = $this->get_team_count(
       $this->total_rounds,
       $this->wildcards
@@ -110,21 +110,21 @@ class ApiValidation {
   }
 
   //Checks whether the given number of wildcards matches with the number of teams
-  public function is_valid_wildcard() {
+  public function is_valid_wildcard(): bool {
     $total_teams = 2 ** $this->total_rounds;
     return $this->wildcards >= 0 &&
       $this->wildcards <= $total_teams / 2 &&
       $this->wildcards % 2 === 0;
   }
 
-  private function createError($message) {
+  private function createError($message): WP_Error {
     return new WP_Error('cant-create', __($message, 'text-domain'), [
       'status' => 400,
     ]);
   }
 
   // To get the total of teams count in bracket
-  public function get_team_count($rounds, $wildcards) {
+  public function get_team_count($rounds, $wildcards): float|int {
     $total_no_of_teams = 2 ** $rounds;
 
     if ($wildcards != 0) {

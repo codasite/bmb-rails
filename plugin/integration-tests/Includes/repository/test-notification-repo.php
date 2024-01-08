@@ -7,7 +7,7 @@ use WStrategies\BMB\Includes\Repository\NotificationRepo;
 class NotificationRepoTest extends WPBB_UnitTestCase {
   private NotificationRepo $notification_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->notification_repo = new NotificationRepo();

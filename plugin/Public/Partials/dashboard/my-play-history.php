@@ -32,11 +32,11 @@ $plays = $play_repo->get_all(
 	]
 );
 
-function view_bust_btn($endpoint) {
+function view_bust_btn($endpoint): false|string {
 	return PartialsCommon::view_play_btn( $endpoint, 'View Bust' );
 }
 
-function bust_again_btn($endpoint) {
+function bust_again_btn($endpoint): false|string {
 	ob_start();
 ?>
 	<a class="tw-border-red tw-border-solid tw-border tw-bg-red/15 hover:tw-bg-red hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center tw-rounded-8 tw-text-white" href="<?php echo esc_url($endpoint) ?>">
@@ -46,7 +46,7 @@ function bust_again_btn($endpoint) {
 	return ob_get_clean();
 }
 
-function get_default_play_buttons($play) {
+function get_default_play_buttons($play): false|string {
 	$complete = $play->bracket?->status === 'complete';
 	$play_id = $play->id;
 	$bracket_id = $play->bracket_id;
@@ -63,7 +63,7 @@ function get_default_play_buttons($play) {
 	return ob_get_clean();
 }
 
-function get_buster_play_buttons($play) {
+function get_buster_play_buttons($play): false|string {
 	$view_link = get_permalink($play->id) . 'view';
 	$bust_again_link = get_permalink($play->busted_id) . 'bust';
 	ob_start();
@@ -74,7 +74,7 @@ function get_buster_play_buttons($play) {
 	return ob_get_clean();
 }
 
-function play_list_item(BracketPlay $play) {
+function play_list_item(BracketPlay $play): false|string {
 	$title = $play->bracket?->title;
 	$user_rank = 99999;
 	$trend_up = true;

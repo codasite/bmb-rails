@@ -246,8 +246,8 @@ class GelatoProductIntegration implements
   /**
    * Given a placement ('top' or 'center') returns an overlay map that can get passed direcly to the bracket preview page
    *
-   * @var PostBracketInterface $bracket
-   * @var string $placement - 'top' or 'center'
+   * @param PostBracketInterface $bracket
+   * @param string $placement - 'top' or 'center'
    *
    * @return array - an array of overlay maps
    *
@@ -291,12 +291,12 @@ class GelatoProductIntegration implements
     return true;
   }
 
-  public function play_exists() {
+  public function play_exists(): bool {
     $play = $this->play_repo->get();
     return $play !== null;
   }
 
-  public function get_bracket_config($theme, $placement) {
+  public function get_bracket_config($theme, $placement): ?BracketConfig {
     $play = $this->play_repo->get();
     if (!$play) {
       return null;

@@ -67,7 +67,7 @@ class ScoreService implements ScoreServiceInterface {
     }
   }
 
-  private function get_bracket(Bracket|int|null $bracket) {
+  private function get_bracket(Bracket|int|null $bracket): Bracket {
     if (is_int($bracket)) {
       $bracket = $this->bracket_repo->get($bracket);
     }
