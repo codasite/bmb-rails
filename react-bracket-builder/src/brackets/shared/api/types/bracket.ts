@@ -84,6 +84,7 @@ export interface BracketRes extends PostBase {
   matches?: MatchRes[]
   isOpen?: boolean
   isPrintable?: boolean
+  fee?: number
 }
 export interface PlayReq {
   id?: number
