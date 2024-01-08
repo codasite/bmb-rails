@@ -20,7 +20,7 @@ class PdfService {
    * 	]
    * ]
    */
-  public function merge_pdfs(array $pdfParams) {
+  public function merge_pdfs(array $pdfParams): string {
     // Initiate FPDI
     $pdf = new Fpdi('P', 'in');
 

@@ -1,39 +1,9 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Email\\\\Template\\\\BracketEmailTemplate\\:\\:render\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Email/Template/BracketEmailTemplate.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Activator\\:\\:activate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Activator.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Activator\\:\\:delete_tables\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Activator.php
-
-		-
 			message: "#^Static method WStrategies\\\\BMB\\\\Includes\\\\Activator\\:\\:delete_tables\\(\\) is unused\\.$#"
 			count: 1
 			path: Includes/Activator.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\BracketBuilder\\:\\:define_hooks\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/BracketBuilder.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\BracketBuilder\\:\\:run\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/BracketBuilder.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\BracketBuilder\\:\\:set_locale\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/BracketBuilder.php
 
 		-
 			message: "#^Cannot access property \\$id on WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\|null\\.$#"
@@ -96,37 +66,12 @@ parameters:
 			path: Includes/Controllers/BracketApi.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Controllers\\\\BracketApi\\:\\:register_routes\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Controllers/BracketApi.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Controllers\\\\BracketApi\\:\\:update_item\\(\\) has parameter \\$request with generic class WP_REST_Request but does not specify its types\\: T$#"
 			count: 1
 			path: Includes/Controllers/BracketApi.php
 
 		-
-			message: "#^Parameter \\#1 \\$bracket of method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketRepo\\:\\:update\\(\\) expects int\\|WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\|null, mixed given\\.$#"
-			count: 2
-			path: Includes/Controllers/BracketApi.php
-
-		-
-			message: "#^Parameter \\#1 \\$bracket of method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Notifications\\\\BracketResultsNotificationServiceInterface\\:\\:notify_bracket_results_updated\\(\\) expects int\\|WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\|null, mixed given\\.$#"
-			count: 1
-			path: Includes/Controllers/BracketApi.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketRepo\\:\\:delete\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: Includes/Controllers/BracketApi.php
-
-		-
 			message: "#^Parameter \\#1 \\$obj of method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\ApiSerializerBase\\:\\:serialize\\(\\) expects object, WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\|null given\\.$#"
-			count: 1
-			path: Includes/Controllers/BracketApi.php
-
-		-
-			message: "#^Parameter \\#1 \\$post of method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketRepo\\:\\:get\\(\\) expects int\\|WP_Post\\|WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\|null, mixed given\\.$#"
 			count: 1
 			path: Includes/Controllers/BracketApi.php
 
@@ -166,11 +111,6 @@ parameters:
 			path: Includes/Controllers/BracketPlayApi.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Controllers\\\\BracketPlayApi\\:\\:generate_images\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Controllers/BracketPlayApi.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Controllers\\\\BracketPlayApi\\:\\:generate_images\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: Includes/Controllers/BracketPlayApi.php
@@ -186,11 +126,6 @@ parameters:
 			path: Includes/Controllers/BracketPlayApi.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Controllers\\\\BracketPlayApi\\:\\:register_routes\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Controllers/BracketPlayApi.php
-
-		-
 			message: "#^Parameter \\#1 \\$bracket of method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\ProductIntegrationInterface\\:\\:generate_images\\(\\) expects WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\PostBracketInterface, WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\|null given\\.$#"
 			count: 1
 			path: Includes/Controllers/BracketPlayApi.php
@@ -202,11 +137,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$play of method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\TournamentEntryService\\:\\:try_mark_play_as_tournament_entry\\(\\) expects WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay, WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\|null given\\.$#"
-			count: 1
-			path: Includes/Controllers/BracketPlayApi.php
-
-		-
-			message: "#^Parameter \\#1 \\$post of method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get\\(\\) expects int\\|WP_Post\\|WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\|null, mixed given\\.$#"
 			count: 1
 			path: Includes/Controllers/BracketPlayApi.php
 
@@ -246,16 +176,6 @@ parameters:
 			path: Includes/Controllers/NotificationApi.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Controllers\\\\NotificationApi\\:\\:register_routes\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Controllers/NotificationApi.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Deactivator\\:\\:deactivate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Deactivator.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 2
 			path: Includes/Domain/Bracket.php
@@ -282,11 +202,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\:\\:get_update_post_meta\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Includes/Domain/Bracket.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\:\\:highest_possible_score\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Domain/Bracket.php
 
@@ -421,11 +336,6 @@ parameters:
 			path: Includes/Domain/MatchPick.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\MatchPick\\:\\:from_array\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Domain/MatchPick.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\MatchPick\\:\\:from_array\\(\\) has parameter \\$data with no type specified\\.$#"
 			count: 1
 			path: Includes/Domain/MatchPick.php
@@ -521,27 +431,7 @@ parameters:
 			path: Includes/Domain/UserProfile.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\UserProfile\\:\\:get_bmb_tournament_wins\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Domain/UserProfile.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\UserProfile\\:\\:get_num_plays\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Domain/UserProfile.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\UserProfile\\:\\:get_post_meta\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Includes/Domain/UserProfile.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\UserProfile\\:\\:get_total_accuracy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Domain/UserProfile.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\UserProfile\\:\\:get_tournament_wins\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Domain/UserProfile.php
 
@@ -591,37 +481,12 @@ parameters:
 			path: Includes/Hooks/AdminHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:add_capabilities\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:add_post_id_column\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/AdminHooks.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:add_post_id_column\\(\\) has parameter \\$columns with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:create_user_profile_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:enqueue_scripts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:enqueue_styles\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:get_post_id_column_content\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/AdminHooks.php
 
@@ -636,21 +501,6 @@ parameters:
 			path: Includes/Hooks/AdminHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\AdminHooks\\:\\:remove_user_profile_post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$plugin_name$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$version$#"
-			count: 1
-			path: Includes/Hooks/AdminHooks.php
-
-		-
 			message: "#^Parameter \\#1 \\$postarr of function wp_insert_post expects array\\{ID\\?\\: int, post_author\\?\\: int, post_date\\?\\: string, post_date_gmt\\?\\: string, post_content\\?\\: string, post_content_filtered\\?\\: string, post_title\\?\\: string, post_excerpt\\?\\: string, \\.\\.\\.\\}, array\\{ID\\: int\\|null, post_title\\: string, post_name\\: string, post_content\\: '', post_status\\: 'publish', post_author\\: int, post_type\\: 'user_profile'\\} given\\.$#"
 			count: 1
 			path: Includes/Hooks/AdminHooks.php
@@ -661,22 +511,7 @@ parameters:
 			path: Includes/Hooks/BracketAdminHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\BracketAdminHooks\\:\\:add_meta_boxes\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/BracketAdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\BracketAdminHooks\\:\\:display_bracket_teams_meta_box\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/BracketAdminHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\BracketAdminHooks\\:\\:display_bracket_teams_meta_box\\(\\) has parameter \\$post with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/BracketAdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\BracketAdminHooks\\:\\:save_bracket_teams_meta_box\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/BracketAdminHooks.php
 
@@ -696,16 +531,6 @@ parameters:
 			path: Includes/Hooks/BracketAdminHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\CustomPostHooks\\:\\:register_custom_post_status\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/CustomPostHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\CustomPostHooks\\:\\:register_custom_post_types\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/CustomPostHooks.php
-
-		-
 			message: "#^Cannot access property \\$post_type on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
 			count: 2
 			path: Includes/Hooks/EnqueueScriptsHooks.php
@@ -716,42 +541,7 @@ parameters:
 			path: Includes/Hooks/EnqueueScriptsHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\EnqueueScriptsHooks\\:\\:enqueue_scripts\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/EnqueueScriptsHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\EnqueueScriptsHooks\\:\\:enqueue_styles\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/EnqueueScriptsHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\EnqueueScriptsHooks\\:\\:get_bmb_plus_permalink\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/EnqueueScriptsHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\EnqueueScriptsHooks\\:\\:get_bmb_plus_slug\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/EnqueueScriptsHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\EnqueueScriptsHooks\\:\\:get_bracket_and_play\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/EnqueueScriptsHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\EnqueueScriptsHooks\\:\\:get_bracket_product_archive_url\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/EnqueueScriptsHooks.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$plugin_name$#"
-			count: 1
-			path: Includes/Hooks/EnqueueScriptsHooks.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$version$#"
 			count: 1
 			path: Includes/Hooks/EnqueueScriptsHooks.php
 
@@ -796,16 +586,6 @@ parameters:
 			path: Includes/Hooks/Permissions.php
 
 		-
-			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Cannot access property \\$post_author on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
 			message: "#^Cannot call method add_role\\(\\) on WP_User\\|false\\.$#"
 			count: 1
 			path: Includes/Hooks/PublicHooks.php
@@ -817,11 +597,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:__construct\\(\\) has parameter \\$opts with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:add_bmb_plus_role\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/PublicHooks.php
 
@@ -841,36 +616,6 @@ parameters:
 			path: Includes/Hooks/PublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:add_rewrite_rules\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:add_rewrite_tags\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:add_roles\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:custom_comment_redirect\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:custom_comment_redirect\\(\\) has parameter \\$comment with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:custom_comment_redirect\\(\\) has parameter \\$location with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:custom_query_fields\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/PublicHooks.php
@@ -886,117 +631,12 @@ parameters:
 			path: Includes/Hooks/PublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_bracket_to_user_on_login\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_bracket_to_user_on_login\\(\\) has parameter \\$user_login with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_bracket_to_user_on_register\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_bracket_to_user_on_register\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_play_to_user_on_login\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_play_to_user_on_login\\(\\) has parameter \\$user_login with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_play_to_user_on_register\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_play_to_user_on_register\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_post_to_user\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_post_to_user\\(\\) has parameter \\$post_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_post_to_user\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_post_to_user_from_cookie\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_post_to_user_from_cookie\\(\\) has parameter \\$cookie_id_name with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_post_to_user_from_cookie\\(\\) has parameter \\$cookie_verify_key_name with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_post_to_user_from_cookie\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_printed_play_to_user\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_printed_play_to_user\\(\\) has parameter \\$play_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:link_anonymous_printed_play_to_user\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:mark_play_printed\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:mark_play_printed\\(\\) has parameter \\$play_id with no type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/PublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:remove_bmb_plus_role\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:remove_bmb_plus_role\\(\\) has parameter \\$subscription with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:template_redirect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/PublicHooks.php
 
@@ -1016,39 +656,9 @@ parameters:
 			path: Includes/Hooks/PublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicShortcodes\\:\\:render_bracket_builder\\(\\) has no return type specified\\.$#"
+			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicHooks\\:\\:\\$utils is never read, only written\\.$#"
 			count: 1
-			path: Includes/Hooks/PublicShortcodes.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicShortcodes\\:\\:render_bracket_page\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicShortcodes.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicShortcodes\\:\\:render_bracket_play_page\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicShortcodes.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicShortcodes\\:\\:render_bracket_product_preview\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicShortcodes.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicShortcodes\\:\\:render_celebrity_picks\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicShortcodes.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicShortcodes\\:\\:render_official_brackets\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicShortcodes.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\PublicShortcodes\\:\\:render_user_profile_page\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/PublicShortcodes.php
+			path: Includes/Hooks/PublicHooks.php
 
 		-
 			message: "#^Cannot access property \\$ID on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
@@ -1076,17 +686,7 @@ parameters:
 			path: Includes/Hooks/UpcomingBracketHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:create_upcoming_bracket_notification\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/UpcomingBracketHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:create_upcoming_bracket_notification\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/UpcomingBracketHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:create_upcoming_bracket_notification_on_login\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/UpcomingBracketHooks.php
 
@@ -1096,17 +696,7 @@ parameters:
 			path: Includes/Hooks/UpcomingBracketHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:create_upcoming_bracket_notification_on_register\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/UpcomingBracketHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:create_upcoming_bracket_notification_on_register\\(\\) has parameter \\$user_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/UpcomingBracketHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:transition_from_upcoming_status\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/UpcomingBracketHooks.php
 
@@ -1122,11 +712,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:transition_from_upcoming_status\\(\\) has parameter \\$post with no type specified\\.$#"
-			count: 1
-			path: Includes/Hooks/UpcomingBracketHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Hooks\\\\UpcomingBracketHooks\\:\\:update_upcoming_status\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Hooks/UpcomingBracketHooks.php
 
@@ -1186,32 +771,12 @@ parameters:
 			path: Includes/Hooks/UpcomingBracketHooks.php
 
 		-
-			message: "#^Variable \\$opts on left side of \\?\\? is never defined\\.$#"
-			count: 1
-			path: Includes/Hooks/UpcomingBracketHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Loader\\:\\:add\\(\\) has parameter \\$hooks with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Loader.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Loader\\:\\:add\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Includes/Loader.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Loader\\:\\:add_action\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Loader.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Loader\\:\\:add_filter\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Loader.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Loader\\:\\:run\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Loader.php
 
@@ -1236,58 +801,28 @@ parameters:
 			path: Includes/Repository/BracketConfigRepo.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int\\|string, mixed\\>\\|stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
+			message: "#^Argument of an invalid type stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
+			message: "#^Cannot access offset 'id' on stdClass\\.$#"
 			count: 1
 			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
-			message: "#^Cannot access offset 'id' on non\\-empty\\-array\\<int\\|string, mixed\\>\\|stdClass\\.$#"
+			message: "#^Cannot access offset 'match_index' on stdClass\\.$#"
 			count: 1
 			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
-			message: "#^Cannot access offset 'match_index' on mixed\\.$#"
+			message: "#^Cannot access offset 'round_index' on stdClass\\.$#"
 			count: 1
 			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
-			message: "#^Cannot access offset 'match_index' on non\\-empty\\-array\\<int\\|string, mixed\\>\\|stdClass\\.$#"
+			message: "#^Cannot access offset 'winning_team_id' on stdClass\\.$#"
 			count: 1
-			path: Includes/Repository/BracketMatchPickRepo.php
-
-		-
-			message: "#^Cannot access offset 'round_index' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchPickRepo.php
-
-		-
-			message: "#^Cannot access offset 'round_index' on non\\-empty\\-array\\<int\\|string, mixed\\>\\|stdClass\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchPickRepo.php
-
-		-
-			message: "#^Cannot access offset 'winning_team_id' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchPickRepo.php
-
-		-
-			message: "#^Cannot access offset 'winning_team_id' on non\\-empty\\-array\\<int\\|string, mixed\\>\\|stdClass\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchPickRepo.php
-
-		-
-			message: "#^Constant ABSPATH not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchPickRepo.php
-
-		-
-			message: "#^Constant ARRAY_A not found\\.$#"
-			count: 2
 			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
@@ -1301,47 +836,17 @@ parameters:
 			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketTeamRepo\\:\\:get\\(\\) expects int\\|null, mixed given\\.$#"
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_results\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT'\\|'OBJECT_K', '' given\\.$#"
 			count: 1
 			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int\\|string, mixed\\>\\|stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_row\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT', '' given\\.$#"
 			count: 1
-			path: Includes/Repository/BracketMatchRepo.php
+			path: Includes/Repository/BracketMatchPickRepo.php
 
 		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchRepo.php
-
-		-
-			message: "#^Cannot access offset 'match_index' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchRepo.php
-
-		-
-			message: "#^Cannot access offset 'round_index' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchRepo.php
-
-		-
-			message: "#^Cannot access offset 'team1_id' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchRepo.php
-
-		-
-			message: "#^Cannot access offset 'team2_id' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchRepo.php
-
-		-
-			message: "#^Constant ABSPATH not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketMatchRepo.php
-
-		-
-			message: "#^Constant ARRAY_A not found\\.$#"
+			message: "#^Argument of an invalid type stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: Includes/Repository/BracketMatchRepo.php
 
@@ -1356,8 +861,8 @@ parameters:
 			path: Includes/Repository/BracketMatchRepo.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketTeamRepo\\:\\:get\\(\\) expects int\\|null, mixed given\\.$#"
-			count: 2
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_results\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT'\\|'OBJECT_K', '' given\\.$#"
+			count: 1
 			path: Includes/Repository/BracketMatchRepo.php
 
 		-
@@ -1401,16 +906,6 @@ parameters:
 			path: Includes/Repository/BracketPlayRepo.php
 
 		-
-			message: "#^Constant ABSPATH not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
-
-		-
-			message: "#^Constant ARRAY_A not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:__construct\\(\\) has parameter \\$args with no type specified\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
@@ -1441,12 +936,12 @@ parameters:
 			path: Includes/Repository/BracketPlayRepo.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get_defaults\\(\\) has no return type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get_defaults\\(\\) has parameter \\$user_opts with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get_defaults\\(\\) has parameter \\$user_opts with no value type specified in iterable type array\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get_defaults\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
 
@@ -1461,7 +956,7 @@ parameters:
 			path: Includes/Repository/BracketPlayRepo.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get_play_data\\(\\) should return array but returns array\\<int\\|string, mixed\\>\\|stdClass\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get_play_data\\(\\) should return array but returns stdClass\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
 
@@ -1476,7 +971,7 @@ parameters:
 			path: Includes/Repository/BracketPlayRepo.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:play_data_update_fields\\(\\) has no return type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:play_data_update_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
 
@@ -1491,17 +986,7 @@ parameters:
 			path: Includes/Repository/BracketPlayRepo.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:update\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:update\\(\\) has parameter \\$data with no type specified\\.$#"
-			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:update_play_data\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
 
@@ -1536,6 +1021,11 @@ parameters:
 			path: Includes/Repository/BracketPlayRepo.php
 
 		-
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_row\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT', '' given\\.$#"
+			count: 1
+			path: Includes/Repository/BracketPlayRepo.php
+
+		-
 			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\:\\:\\$bmb_official \\(bool\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
@@ -1552,21 +1042,6 @@ parameters:
 
 		-
 			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\:\\:\\$is_winner \\(bool\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
-
-		-
-			message: "#^Variable \\$bracket_id on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
-
-		-
-			message: "#^Variable \\$bracket_post_id on left side of \\?\\? always exists and is not nullable\\.$#"
-			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
-
-		-
-			message: "#^Variable \\$busted_post_id on left side of \\?\\? always exists and is not nullable\\.$#"
 			count: 1
 			path: Includes/Repository/BracketPlayRepo.php
 
@@ -1611,16 +1086,6 @@ parameters:
 			path: Includes/Repository/BracketRepo.php
 
 		-
-			message: "#^Constant ABSPATH not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketRepo.php
-
-		-
-			message: "#^Constant ARRAY_A not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketRepo.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketRepo\\:\\:__construct\\(\\) has parameter \\$args with no type specified\\.$#"
 			count: 1
 			path: Includes/Repository/BracketRepo.php
@@ -1656,7 +1121,7 @@ parameters:
 			path: Includes/Repository/BracketRepo.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketRepo\\:\\:get_custom_table_data\\(\\) should return array but returns array\\<int\\|string, mixed\\>\\|stdClass\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketRepo\\:\\:get_custom_table_data\\(\\) should return array but returns stdClass\\.$#"
 			count: 1
 			path: Includes/Repository/BracketRepo.php
 
@@ -1681,42 +1146,17 @@ parameters:
 			path: Includes/Repository/BracketRepo.php
 
 		-
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_row\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT', '' given\\.$#"
+			count: 1
+			path: Includes/Repository/BracketRepo.php
+
+		-
 			message: "#^Right side of && is always true\\.$#"
 			count: 2
 			path: Includes/Repository/BracketRepo.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int\\|string, mixed\\>\\|stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: Includes/Repository/BracketResultsRepo.php
-
-		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketResultsRepo.php
-
-		-
-			message: "#^Cannot access offset 'match_index' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketResultsRepo.php
-
-		-
-			message: "#^Cannot access offset 'round_index' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketResultsRepo.php
-
-		-
-			message: "#^Cannot access offset 'winning_team_id' on mixed\\.$#"
-			count: 1
-			path: Includes/Repository/BracketResultsRepo.php
-
-		-
-			message: "#^Constant ABSPATH not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketResultsRepo.php
-
-		-
-			message: "#^Constant ARRAY_A not found\\.$#"
+			message: "#^Argument of an invalid type stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: Includes/Repository/BracketResultsRepo.php
 
@@ -1736,23 +1176,13 @@ parameters:
 			path: Includes/Repository/BracketResultsRepo.php
 
 		-
-			message: "#^Parameter \\#1 \\$id of method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketTeamRepo\\:\\:get\\(\\) expects int\\|null, mixed given\\.$#"
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_results\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT'\\|'OBJECT_K', '' given\\.$#"
 			count: 1
 			path: Includes/Repository/BracketResultsRepo.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int\\|string, mixed\\>\\|stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
+			message: "#^Argument of an invalid type stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
-			path: Includes/Repository/BracketTeamRepo.php
-
-		-
-			message: "#^Constant ABSPATH not found\\.$#"
-			count: 1
-			path: Includes/Repository/BracketTeamRepo.php
-
-		-
-			message: "#^Constant ARRAY_A not found\\.$#"
-			count: 2
 			path: Includes/Repository/BracketTeamRepo.php
 
 		-
@@ -1762,6 +1192,16 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$query of method wpdb\\:\\:prepare\\(\\) expects literal\\-string, non\\-falsy\\-string given\\.$#"
+			count: 1
+			path: Includes/Repository/BracketTeamRepo.php
+
+		-
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_results\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT'\\|'OBJECT_K', '' given\\.$#"
+			count: 1
+			path: Includes/Repository/BracketTeamRepo.php
+
+		-
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_row\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT', '' given\\.$#"
 			count: 1
 			path: Includes/Repository/BracketTeamRepo.php
 
@@ -1791,17 +1231,7 @@ parameters:
 			path: Includes/Repository/CustomPostRepoBase.php
 
 		-
-			message: "#^Argument of an invalid type array\\<int\\|string, mixed\\>\\|stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: Includes/Repository/NotificationRepo.php
-
-		-
-			message: "#^Constant ABSPATH not found\\.$#"
-			count: 1
-			path: Includes/Repository/NotificationRepo.php
-
-		-
-			message: "#^Constant ARRAY_A not found\\.$#"
+			message: "#^Argument of an invalid type stdClass\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: Includes/Repository/NotificationRepo.php
 
@@ -1837,6 +1267,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$query of method wpdb\\:\\:prepare\\(\\) expects literal\\-string, non\\-falsy\\-string given\\.$#"
+			count: 1
+			path: Includes/Repository/NotificationRepo.php
+
+		-
+			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_results\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT'\\|'OBJECT_K', '' given\\.$#"
 			count: 1
 			path: Includes/Repository/NotificationRepo.php
 
@@ -1951,11 +1386,6 @@ parameters:
 			path: Includes/Service/BracketProduct/BracketProductHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductHooks\\:\\:add_fee_meta_to_order_item\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/BracketProduct/BracketProductHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductHooks\\:\\:add_fee_meta_to_order_item\\(\\) has parameter \\$cart_item_key with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/BracketProduct/BracketProductHooks.php
@@ -1976,12 +1406,12 @@ parameters:
 			path: Includes/Service/BracketProduct/BracketProductHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductHooks\\:\\:add_paid_bracket_fee_to_cart\\(\\) has no return type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductHooks\\:\\:add_paid_bracket_fee_to_cart\\(\\) has parameter \\$cart with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/BracketProduct/BracketProductHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductHooks\\:\\:add_paid_bracket_fee_to_cart\\(\\) has parameter \\$cart with no type specified\\.$#"
+			message: "#^Offset 'fee_amount' does not exist on non\\-empty\\-array\\|non\\-falsy\\-string\\.$#"
 			count: 1
 			path: Includes/Service/BracketProduct/BracketProductHooks.php
 
@@ -2001,17 +1431,7 @@ parameters:
 			path: Includes/Service/BracketProduct/BracketProductUtils.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductUtils\\:\\:get_bracket_placement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/BracketProduct/BracketProductUtils.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductUtils\\:\\:get_bracket_placement\\(\\) has parameter \\$product with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/BracketProduct/BracketProductUtils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductUtils\\:\\:get_bracket_product_archive_url\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/BracketProduct/BracketProductUtils.php
 
@@ -2026,17 +1446,7 @@ parameters:
 			path: Includes/Service/BracketProduct/BracketProductUtils.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductUtils\\:\\:is_bracket_product\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/BracketProduct/BracketProductUtils.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductUtils\\:\\:is_bracket_product\\(\\) has parameter \\$product with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/BracketProduct/BracketProductUtils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\BracketProduct\\\\BracketProductUtils\\:\\:product_has_category\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/BracketProduct/BracketProductUtils.php
 
@@ -2056,17 +1466,7 @@ parameters:
 			path: Includes/Service/BracketProduct/BracketProductUtils.php
 
 		-
-			message: "#^Parameter \\#1 \\$value of function floatval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 1
-			path: Includes/Service/BracketProduct/BracketProductUtils.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:__construct\\(\\) has parameter \\$opts with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/CustomQuery/CustomPlayQuery.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:add_join\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/CustomQuery/CustomPlayQuery.php
 
@@ -2106,22 +1506,7 @@ parameters:
 			path: Includes/Service/CustomQuery/CustomPlayQuery.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:init_clause\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/CustomQuery/CustomPlayQuery.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:init_clause\\(\\) has parameter \\$clause with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/CustomQuery/CustomPlayQuery.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:join_plays_table\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/CustomQuery/CustomPlayQuery.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:key_value_intersect\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/CustomQuery/CustomPlayQuery.php
 
@@ -2136,7 +1521,7 @@ parameters:
 			path: Includes/Service/CustomQuery/CustomPlayQuery.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:map_query_fields\\(\\) has no return type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:key_value_intersect\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/CustomQuery/CustomPlayQuery.php
 
@@ -2157,11 +1542,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:sort\\(\\) has parameter \\$query_object with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/CustomQuery/CustomPlayQuery.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\CustomQuery\\\\CustomPlayQuery\\:\\:where_from_array\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/CustomQuery/CustomPlayQuery.php
 
@@ -2222,11 +1602,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Http\\\\BracketImageRequestFactory\\:\\:create_base_query\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Includes/Service/Http/BracketImageRequestFactory.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Http\\\\BracketImageRequestFactory\\:\\:create_body\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/Http/BracketImageRequestFactory.php
 
@@ -2306,11 +1681,6 @@ parameters:
 			path: Includes/Service/Http/BracketImageRequestFactory.php
 
 		-
-			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
-			count: 1
-			path: Includes/Service/Http/BracketImageRequestFactory.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Http\\\\GuzzleClient\\:\\:__construct\\(\\) has parameter \\$args with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/Http/GuzzleClient.php
@@ -2322,11 +1692,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Http\\\\GuzzleClient\\:\\:send_many\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Includes/Service/Http/GuzzleClient.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$url$#"
 			count: 1
 			path: Includes/Service/Http/GuzzleClient.php
 
@@ -2356,17 +1721,7 @@ parameters:
 			path: Includes/Service/Logger/SentryLogger.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Logger\\\\SentryLogger\\:\\:log_error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/Logger/SentryLogger.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Logger\\\\SentryLogger\\:\\:log_error\\(\\) has parameter \\$msg with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/Logger/SentryLogger.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Logger\\\\SentryLogger\\:\\:warn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/Logger/SentryLogger.php
 
@@ -2397,11 +1752,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Notifications\\\\BracketResultsNotificationService\\:\\:__construct\\(\\) has parameter \\$args with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/Notifications/BracketResultsNotificationService.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Notifications\\\\BracketResultsNotificationService\\:\\:correct_picked\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/Notifications/BracketResultsNotificationService.php
 
@@ -2451,14 +1801,14 @@ parameters:
 			path: Includes/Service/Notifications/EmailServiceInterface.php
 
 		-
-			message: "#^Access to an undefined property MailchimpTransactional\\\\ApiClient\\:\\:\\$messages\\.$#"
+			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Notifications\\\\MailchimpApiClient\\:\\:\\$messages has no type specified\\.$#"
 			count: 1
-			path: Includes/Service/Notifications/MailchimpEmailService.php
+			path: Includes/Service/Notifications/MailchimpApiClient.php
 
 		-
-			message: "#^Access to an undefined property MailchimpTransactional\\\\ApiClient\\:\\:\\$users\\.$#"
+			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Notifications\\\\MailchimpApiClient\\:\\:\\$users has no type specified\\.$#"
 			count: 1
-			path: Includes/Service/Notifications/MailchimpEmailService.php
+			path: Includes/Service/Notifications/MailchimpApiClient.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Notifications\\\\MailchimpEmailService\\:\\:__construct\\(\\) has parameter \\$args with no type specified\\.$#"
@@ -2751,16 +2101,6 @@ parameters:
 			path: Includes/Service/Permissions/PlayPermissions.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoAdminHooks\\:\\:display_custom_admin_error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoAdminHooks\\:\\:save_variation_settings_fields\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoAdminHooks\\:\\:save_variation_settings_fields\\(\\) has parameter \\$i with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
@@ -2771,22 +2111,12 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoAdminHooks\\:\\:validate_variation_fields\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoAdminHooks\\:\\:validate_variation_fields\\(\\) has parameter \\$i with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoAdminHooks\\:\\:validate_variation_fields\\(\\) has parameter \\$variation_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoAdminHooks\\:\\:variation_settings_fields\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoAdminHooks.php
 
@@ -2916,11 +2246,6 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoProductIntegration\\:\\:get_bracket_config\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoProductIntegration\\:\\:get_bracket_config\\(\\) has parameter \\$placement with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
@@ -2932,11 +2257,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoProductIntegration\\:\\:get_meta\\(\\) return type has no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoProductIntegration\\:\\:get_meta\\(\\) should return array but returns mixed\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
 
@@ -2961,27 +2281,12 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoProductIntegration\\:\\:play_exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoProductIntegration\\:\\:save_product_variation\\(\\) has parameter \\$i with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoProductIntegration\\:\\:save_product_variation\\(\\) has parameter \\$variation_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
-
-		-
-			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
 
@@ -2994,6 +2299,21 @@ parameters:
 			message: "#^Parameter \\#2 \\$bracket_id of class WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketConfig constructor expects string, int given\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoProductIntegration.php
+
+		-
+			message: "#^Cannot access property \\$bracket_id on WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketConfig\\|null\\.$#"
+			count: 1
+			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
+
+		-
+			message: "#^Cannot call method get_items\\(\\) on WC_Order\\|WC_Order_Refund\\|true\\.$#"
+			count: 1
+			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
+
+		-
+			message: "#^Cannot call method get_user_id\\(\\) on WC_Order\\|WC_Order_Refund\\|true\\.$#"
+			count: 1
+			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:__construct\\(\\) has parameter \\$opts with no type specified\\.$#"
@@ -3017,11 +2337,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:add_bracket_to_cart_item_data\\(\\) has parameter \\$variation_id with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:add_bracket_to_order_item\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
@@ -3091,11 +2406,6 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:get_bracket_placement\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:get_bracket_placement\\(\\) has parameter \\$product with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
@@ -3111,22 +2421,12 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:get_gelato_order_filename\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:get_gelato_order_filename\\(\\) has parameter \\$item with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:get_gelato_order_filename\\(\\) has parameter \\$order with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_add_to_cart_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
@@ -3151,16 +2451,6 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_before_checkout_process\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_front_and_back_design\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_front_and_back_design\\(\\) has parameter \\$bracket_config with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
@@ -3172,11 +2462,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_front_and_back_design\\(\\) has parameter \\$temp_filename with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_front_design_only\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
@@ -3201,11 +2486,6 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_payment_complete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:handle_payment_complete\\(\\) has parameter \\$order_id with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
@@ -3221,17 +2501,7 @@ parameters:
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:is_bracket_product\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:is_bracket_product\\(\\) has parameter \\$product with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:log\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
@@ -3242,11 +2512,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:log\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:log_error\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
@@ -3262,6 +2527,11 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\Gelato\\\\GelatoPublicHooks\\:\\:process_bracket_product_item\\(\\) has parameter \\$cart_item with no type specified\\.$#"
+			count: 1
+			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
+
+		-
+			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/Gelato/GelatoPublicHooks.php
 
@@ -3401,32 +2671,12 @@ parameters:
 			path: Includes/Service/ProductIntegrations/ProductIntegrationInterface.php
 
 		-
-			message: "#^PHPDoc tag @var above a method has no effect\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/ProductIntegrationInterface.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\WcFunctions\\:\\:WC\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/WcFunctions.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\WcFunctions\\:\\:session_get\\(\\) has no return type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\WcFunctions\\:\\:session_get\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/WcFunctions.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\WcFunctions\\:\\:session_set\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/WcFunctions.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\WcFunctions\\:\\:wc_get_order\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductIntegrations/WcFunctions.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductIntegrations\\\\WcFunctions\\:\\:wc_get_product\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductIntegrations/WcFunctions.php
 
@@ -3441,17 +2691,7 @@ parameters:
 			path: Includes/Service/ProductPreview/ProductPreviewService.php
 
 		-
-			message: "#^Cannot call method get_attributes\\(\\) on mixed\\.$#"
-			count: 1
-			path: Includes/Service/ProductPreview/ProductPreviewService.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductPreview\\\\ProductPreviewService\\:\\:get_ajax_obj\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/ProductPreview/ProductPreviewService.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductPreview\\\\ProductPreviewService\\:\\:get_archive_url\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductPreview/ProductPreviewService.php
 
@@ -3461,12 +2701,12 @@ parameters:
 			path: Includes/Service/ProductPreview/ProductPreviewService.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductPreview\\\\ProductPreviewService\\:\\:get_images\\(\\) has no return type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductPreview\\\\ProductPreviewService\\:\\:get_images\\(\\) has parameter \\$image_ids with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/ProductPreview/ProductPreviewService.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductPreview\\\\ProductPreviewService\\:\\:get_images\\(\\) has parameter \\$image_ids with no type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ProductPreview\\\\ProductPreviewService\\:\\:get_images\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/ProductPreview/ProductPreviewService.php
 
@@ -3481,11 +2721,6 @@ parameters:
 			path: Includes/Service/ProductPreview/ProductPreviewService.php
 
 		-
-			message: "#^Cannot access offset 'effectiveUri' on mixed\\.$#"
-			count: 3
-			path: Includes/Service/S3Service.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\S3Service\\:\\:__construct\\(\\) has parameter \\$region with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/S3Service.php
@@ -3496,37 +2731,7 @@ parameters:
 			path: Includes/Service/S3Service.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\S3Service\\:\\:copy_from_url\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: Includes/Service/S3Service.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\S3Service\\:\\:get\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: Includes/Service/S3Service.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\S3Service\\:\\:put\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: Includes/Service/S3Service.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\S3Service\\:\\:rename_from_url\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: Includes/Service/S3Service.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$newBucket$#"
-			count: 1
-			path: Includes/Service/S3Service.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ScoreService\\:\\:__construct\\(\\) has parameter \\$opts with no type specified\\.$#"
-			count: 1
-			path: Includes/Service/ScoreService.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\ScoreService\\:\\:get_bracket\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/ScoreService.php
 
@@ -3721,16 +2926,6 @@ parameters:
 			path: Includes/Service/Serializer/SerializedFieldBuilder/ObjectDataBuilder.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\ObjectDataBuilder\\:\\:build_serializer_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/Serializer/SerializedFieldBuilder/ObjectDataBuilder.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\ObjectDataBuilder\\:\\:build_serializer_field_many\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/Serializer/SerializedFieldBuilder/ObjectDataBuilder.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\ObjectDataBuilder\\:\\:get_object_data\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/Serializer/SerializedFieldBuilder/ObjectDataBuilder.php
@@ -3781,11 +2976,6 @@ parameters:
 			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldBuilderInterface.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializedFieldDirector\\:\\:build\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldDirector.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializedFieldDirector\\:\\:build\\(\\) has parameter \\$serialized_fields with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldDirector.php
@@ -3801,17 +2991,12 @@ parameters:
 			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldOptionsBuilder.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializedFieldOptionsBuilder\\:\\:build_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldOptionsBuilder.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializedFieldOptionsBuilder\\:\\:build_field\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldOptionsBuilder.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializedFieldOptionsBuilder\\:\\:get_fields\\(\\) has no return type specified\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializedFieldOptionsBuilder\\:\\:get_fields\\(\\) return type has no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldOptionsBuilder.php
 
@@ -3831,22 +3016,7 @@ parameters:
 			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializedFieldOptionsBuilder.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializerBuilder\\:\\:build_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializerBuilder.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializerBuilder\\:\\:build_field\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
-			count: 1
-			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializerBuilder.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializerBuilder\\:\\:build_serializer_field\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializerBuilder.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\Serializer\\\\SerializedFieldBuilder\\\\SerializerBuilder\\:\\:build_serializer_field_many\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Service/Serializer/SerializedFieldBuilder/SerializerBuilder.php
 
@@ -3876,11 +3046,6 @@ parameters:
 			path: Includes/Service/SlugService.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\SlugService\\:\\:slug_exists\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/SlugService.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\SlugService\\:\\:slug_exists\\(\\) has parameter \\$slug with no type specified\\.$#"
 			count: 1
 			path: Includes/Service/SlugService.php
@@ -3894,16 +3059,6 @@ parameters:
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\TournamentEntryService\\:\\:__construct\\(\\) has parameter \\$args with no value type specified in iterable type array\\.$#"
 			count: 1
 			path: Includes/Service/TournamentEntryService.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Service\\\\TournamentEntryService\\:\\:clear_tournament_entries_for_author\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Service/TournamentEntryService.php
-
-		-
-			message: "#^Constant COOKIE_DOMAIN not found\\.$#"
-			count: 1
-			path: Includes/Utils.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:get_cookie\\(\\) has no return type specified\\.$#"
@@ -3926,72 +3081,12 @@ parameters:
 			path: Includes/Utils.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log\\(\\) has parameter \\$msg with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log_error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log_error\\(\\) has parameter \\$msg with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log_sentry_error\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log_sentry_error\\(\\) has parameter \\$error with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log_sentry_message\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log_sentry_message\\(\\) has parameter \\$level with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:log_sentry_message\\(\\) has parameter \\$msg with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:now\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:pop_cookie\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Utils.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:pop_cookie\\(\\) has parameter \\$key with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:set_cookie\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Utils.php
 
@@ -4016,11 +3111,6 @@ parameters:
 			path: Includes/Utils.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:set_session_value\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:set_session_value\\(\\) has parameter \\$key with no type specified\\.$#"
 			count: 1
 			path: Includes/Utils.php
@@ -4031,37 +3121,12 @@ parameters:
 			path: Includes/Utils.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:warn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Utils\\:\\:warn\\(\\) has parameter \\$msg with no type specified\\.$#"
-			count: 1
-			path: Includes/Utils.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:check_inner_round_teams\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Validation/ApiValidation.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:check_team_names\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Validation/ApiValidation.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:createError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Validation/ApiValidation.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:createError\\(\\) has parameter \\$message with no type specified\\.$#"
-			count: 1
-			path: Includes/Validation/ApiValidation.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:get_team_count\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Validation/ApiValidation.php
 
@@ -4072,16 +3137,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:get_team_count\\(\\) has parameter \\$wildcards with no type specified\\.$#"
-			count: 1
-			path: Includes/Validation/ApiValidation.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:is_valid_wildcard\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/Validation/ApiValidation.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Validation\\\\ApiValidation\\:\\:validate_bracket_api\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Includes/Validation/ApiValidation.php
 
@@ -4116,11 +3171,6 @@ parameters:
 			path: Includes/Validation/ApiValidation.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\i18n\\:\\:load_plugin_textdomain\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Includes/i18n.php
-
-		-
 			message: "#^Cannot access property \\$ID on array\\<int\\|string, mixed\\>\\|WP_Post\\|null\\.$#"
 			count: 2
 			path: Public/Partials/BracketPage/bracket-chat.php
@@ -4132,11 +3182,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\LeaderboardPage\\:\\:__construct\\(\\) has parameter \\$args with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/LeaderboardPage.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\LeaderboardPage\\:\\:leaderboard_play_list_item\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/LeaderboardPage.php
 
@@ -4161,17 +3206,7 @@ parameters:
 			path: Public/Partials/LeaderboardPage.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\LeaderboardPage\\:\\:score_bracket_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/LeaderboardPage.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\LeaderboardPage\\:\\:score_bracket_btn\\(\\) has parameter \\$endpoint with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/LeaderboardPage.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\LeaderboardPage\\:\\:share_bracket_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/LeaderboardPage.php
 
@@ -4216,12 +3251,12 @@ parameters:
 			path: Public/Partials/UserProfile/user-profile.php
 
 		-
-			message: "#^Cannot access property \\$post_type on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
+			message: "#^Cannot access property \\$ID on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
 			count: 1
 			path: Public/Partials/bracket-page.php
 
 		-
-			message: "#^Variable \\$bracket might not be defined\\.$#"
+			message: "#^Cannot access property \\$post_type on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
 			count: 1
 			path: Public/Partials/bracket-page.php
 
@@ -4231,17 +3266,7 @@ parameters:
 			path: Public/Partials/celebrity-brackets.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:add_to_apparel_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:add_to_apparel_btn\\(\\) has parameter \\$endpoint with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:delete_post_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/DashboardCommon.php
 
@@ -4271,22 +3296,12 @@ parameters:
 			path: Public/Partials/dashboard/DashboardCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:delete_tournament_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:delete_tournament_btn\\(\\) has parameter \\$endpoint with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/DashboardCommon.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:delete_tournament_btn\\(\\) has parameter \\$post_id with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:icon_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/DashboardCommon.php
 
@@ -4316,22 +3331,12 @@ parameters:
 			path: Public/Partials/dashboard/DashboardCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:icon_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:icon_link\\(\\) has parameter \\$endpoint with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/DashboardCommon.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:icon_link\\(\\) has parameter \\$icon_path with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:restore_tournament_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/DashboardCommon.php
 
@@ -4344,11 +3349,6 @@ parameters:
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardCommon\\:\\:restore_tournament_btn\\(\\) has parameter \\$post_id with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/DashboardCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardPage\\:\\:get_nav_link\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardPage.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardPage\\:\\:get_nav_link\\(\\) has parameter \\$current_tab with no type specified\\.$#"
@@ -4371,27 +3371,12 @@ parameters:
 			path: Public/Partials/dashboard/DashboardPage.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardPage\\:\\:render\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/DashboardPage.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\DashboardPage\\:\\:render\\(\\) has parameter \\$current_tab with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/DashboardPage.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\bracket_list_item\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\bracket_list_item\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\completed_bracket_buttons\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4401,17 +3386,7 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\delete_bracket_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\delete_bracket_btn\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\duplicate_bracket_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4421,17 +3396,7 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\edit_bracket_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\edit_bracket_btn\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\get_bracket_buttons\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4441,22 +3406,7 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\get_bracket_icon_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\get_bracket_icon_buttons\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\go_live_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\live_bracket_buttons\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4466,17 +3416,7 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\live_bracket_icon_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\live_bracket_icon_buttons\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\private_bracket_buttons\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4486,17 +3426,7 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\private_bracket_icon_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\private_bracket_icon_buttons\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\score_bracket_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4511,17 +3441,7 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\scored_bracket_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\scored_bracket_buttons\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\scored_bracket_icon_buttons\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4531,17 +3451,7 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\share_bracket_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\share_bracket_btn\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\unpublish_bracket_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
@@ -4551,27 +3461,12 @@ parameters:
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketRepo\\:\\:get_all\\(\\) invoked with 2 parameters, 0\\-1 required\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-brackets.php
-
-		-
 			message: "#^Parameter \\#1 \\$post of function get_permalink expects int\\|WP_Post, array\\<int\\|string, mixed\\>\\|WP_Post\\|null given\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-brackets.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\bust_again_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-play-history.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\bust_again_btn\\(\\) has parameter \\$endpoint with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-play-history.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\get_buster_play_buttons\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-play-history.php
 
@@ -4581,22 +3476,7 @@ parameters:
 			path: Public/Partials/dashboard/my-play-history.php
 
 		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\get_default_play_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-play-history.php
-
-		-
 			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\get_default_play_buttons\\(\\) has parameter \\$play with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-play-history.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\play_list_item\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/dashboard/my-play-history.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\Public\\\\Partials\\\\dashboard\\\\view_bust_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/dashboard/my-play-history.php
 
@@ -4651,17 +3531,7 @@ parameters:
 			path: Public/Partials/shared/BracketCards.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketCards\\:\\:view_profile_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketCards.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketCards\\:\\:view_profile_btn\\(\\) has parameter \\$link with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketCards.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketCards\\:\\:vip_bracket_card\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketCards.php
 
@@ -4672,11 +3542,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketCards\\:\\:vip_bracket_card\\(\\) has parameter \\$options with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketCards.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketCards\\:\\:vip_card\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketCards.php
 
@@ -4692,11 +3557,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketCards\\:\\:vip_card\\(\\) has parameter \\$title with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketCards.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketCards\\:\\:vip_play_card\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketCards.php
 
@@ -4721,16 +3581,6 @@ parameters:
 			path: Public/Partials/shared/BracketCards.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:archived_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:base_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:base_btn\\(\\) has parameter \\$attributes with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
@@ -4742,11 +3592,6 @@ parameters:
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:base_btn\\(\\) has parameter \\$extra_cls with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:base_link_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
 
@@ -4766,22 +3611,7 @@ parameters:
 			path: Public/Partials/shared/BracketsCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:bracket_chat_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:bracket_chat_btn\\(\\) has parameter \\$bracket_id with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:bracket_sort_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:bracket_tag\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
 
@@ -4801,42 +3631,7 @@ parameters:
 			path: Public/Partials/shared/BracketsCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:completed_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:disable_upcoming_notification_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:enable_upcoming_notification_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:get_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:get_bracket_tag\\(\\) has parameter \\$status with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:live_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:paid_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:play_bracket_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
 
@@ -4851,42 +3646,7 @@ parameters:
 			path: Public/Partials/shared/BracketsCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:private_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:public_bracket_active_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:public_bracket_completed_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:public_bracket_list\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:public_bracket_list\\(\\) has parameter \\$opts with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:public_bracket_list_item\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:public_bracket_upcoming_buttons\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:red_gradient_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
 
@@ -4906,22 +3666,12 @@ parameters:
 			path: Public/Partials/shared/BracketsCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:red_gradient_content\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:red_gradient_content\\(\\) has parameter \\$content with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
 
 		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:red_gradient_content\\(\\) has parameter \\$extra_cls with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:red_gradient_link\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
 
@@ -4941,16 +3691,6 @@ parameters:
 			path: Public/Partials/shared/BracketsCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:scored_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:sort_button\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:sort_button\\(\\) has parameter \\$active with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
@@ -4966,27 +3706,7 @@ parameters:
 			path: Public/Partials/shared/BracketsCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:upcoming_bracket_tag\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:upcoming_notification_btn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:view_bracket_button\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:view_bracket_button\\(\\) has parameter \\$bracket with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/BracketsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\BracketsCommon\\:\\:view_leaderboard_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/BracketsCommon.php
 
@@ -5021,11 +3741,6 @@ parameters:
 			path: Public/Partials/shared/PaginationWidget.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PaginationWidget\\:\\:pagination\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/PaginationWidget.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PaginationWidget\\:\\:pagination\\(\\) has parameter \\$justify with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/PaginationWidget.php
@@ -5046,11 +3761,6 @@ parameters:
 			path: Public/Partials/shared/PaginationWidget.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PartialsCommon\\:\\:gradient_border_wrap\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/PartialsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PartialsCommon\\:\\:gradient_border_wrap\\(\\) has parameter \\$class_arr with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/PartialsCommon.php
@@ -5061,17 +3771,7 @@ parameters:
 			path: Public/Partials/shared/PartialsCommon.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PartialsCommon\\:\\:icon\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/PartialsCommon.php
-
-		-
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PartialsCommon\\:\\:icon\\(\\) has parameter \\$icon_name with no type specified\\.$#"
-			count: 1
-			path: Public/Partials/shared/PartialsCommon.php
-
-		-
-			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PartialsCommon\\:\\:view_play_btn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/PartialsCommon.php
 
@@ -5084,23 +3784,3 @@ parameters:
 			message: "#^Method WStrategies\\\\BMB\\\\Public\\\\Partials\\\\shared\\\\PartialsCommon\\:\\:view_play_btn\\(\\) has parameter \\$label with no type specified\\.$#"
 			count: 1
 			path: Public/Partials/shared/PartialsCommon.php
-
-		-
-			message: "#^Function delete_tables\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: uninstall.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\activate_wp_bracket_builder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: wp-bracket-builder.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\deactivate_wp_bracket_builder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: wp-bracket-builder.php
-
-		-
-			message: "#^Function WStrategies\\\\BMB\\\\run_wp_bracket_builder\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: wp-bracket-builder.php

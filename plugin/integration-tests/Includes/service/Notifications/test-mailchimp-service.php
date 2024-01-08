@@ -1,9 +1,7 @@
 
 <?php
+use WStrategies\BMB\Includes\Service\Notifications\MailchimpApiClient;
 use WStrategies\BMB\Includes\Service\Notifications\MailchimpEmailService;
-
-require_once WPBB_PLUGIN_DIR .
-  'integration-tests/mock/MailchimpApiClientMock.php';
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
   public function test_client_send_is_called() {
@@ -19,7 +17,7 @@ class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
         'id' => '123',
       ]);
 
-    $client = $this->createMock(MailchimpApiClientMock::class);
+    $client = $this->createMock(MailchimpApiClient::class);
 
     $client->messages = $messagesMock;
 

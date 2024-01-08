@@ -17,7 +17,7 @@ class BracketCards {
     }
   }
 
-  public static function vip_play_card( $play, $options = [] ) {
+  public static function vip_play_card( $play, $options = [] ): false|string {
     $show_profile_link = $options['show_profile_link'] ?? false;
     // Should probably handle this differently
     $profile_link = '';
@@ -48,7 +48,7 @@ class BracketCards {
     ] );
   }
 
-  public static function vip_bracket_card( $bracket, $options = [] ) {
+  public static function vip_bracket_card( $bracket, $options = [] ): false|string {
     $show_profile_link = $options['show_profile_link'] ?? false;
     // Should probably handle this differently
     $profile_link = '';
@@ -98,7 +98,7 @@ class BracketCards {
     ] );
   }
 
-  public static function view_profile_btn( $link ) {
+  public static function view_profile_btn( $link ): false|string {
     ob_start();
     ?>
     <a href="<?php echo esc_url( $link ) ?>"
@@ -110,7 +110,7 @@ class BracketCards {
     return ob_get_clean();
   }
 
-  public static function vip_card( $title, $thumbnail, array $options = [] ) {
+  public static function vip_card( $title, $thumbnail, array $options = [] ): false|string {
     $buttons      = $options['buttons'] ?? [];
     $profile_link = $options['profile_link'] ?? '';
     $tag = $options['tag'] ?? '';

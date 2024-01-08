@@ -17,7 +17,7 @@ class BracketApiTest extends WPBB_UnitTestCase {
   const BRACKET_API_ENDPOINT = '/wp-bracket-builder/v1/brackets';
   private $bracket_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->bracket_repo = new BracketRepo();

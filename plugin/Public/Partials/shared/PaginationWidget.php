@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Public\Partials\shared;
 
 class PaginationWidget {
 
-  public static function pagination( $page, $num_pages, $justify = 'start' ) {
+  public static function pagination( $page, $num_pages, $justify = 'start' ): void {
     // Don't print empty markup if there's only one page.
     if ( $num_pages <= 1 ) {
       return;

@@ -8,42 +8,42 @@ class PublicShortcodes implements HooksInterface {
   public function load(Loader $loader): void {
     $loader->add_action('init', [$this, 'add_shortcodes']);
   }
-  public function render_bracket_product_preview() {
+  public function render_bracket_product_preview(): false|string {
     ob_start();
     include WPBB_PLUGIN_DIR .
       'Public/Partials/ProductPreview/bracket-product-preview.php';
     return ob_get_clean();
   }
 
-  public function render_bracket_builder() {
+  public function render_bracket_builder(): string {
     return '<div id="wpbb-bracket-builder"></div>';
   }
 
-  public function render_official_brackets() {
+  public function render_official_brackets(): false|string {
     ob_start();
     include WPBB_PLUGIN_DIR . 'Public/Partials/official-brackets.php';
     return ob_get_clean();
   }
 
-  public function render_celebrity_picks() {
+  public function render_celebrity_picks(): false|string {
     ob_start();
     include WPBB_PLUGIN_DIR . 'Public/Partials/celebrity-brackets.php';
     return ob_get_clean();
   }
 
-  public function render_bracket_page() {
+  public function render_bracket_page(): false|string {
     ob_start();
     include WPBB_PLUGIN_DIR . 'Public/Partials/bracket-page.php';
     return ob_get_clean();
   }
 
-  public function render_bracket_play_page() {
+  public function render_bracket_play_page(): false|string {
     ob_start();
     include WPBB_PLUGIN_DIR . 'Public/Partials/PlayPage/play-page.php';
     return ob_get_clean();
   }
 
-  public function render_user_profile_page() {
+  public function render_user_profile_page(): false|string {
     ob_start();
     include WPBB_PLUGIN_DIR . 'Public/Partials/UserProfile/user-profile.php';
     return ob_get_clean();
@@ -54,7 +54,7 @@ class PublicShortcodes implements HooksInterface {
    *
    * @return void
    */
-  public function add_shortcodes() {
+  public function add_shortcodes(): void {
     add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']); // This is a page with slug `bracket-template-builder
     add_shortcode('wpbb-dashboard', [DashboardPage::class, 'render']); // This is a page with slug `dashboard`
     add_shortcode('wpbb-official-brackets', [

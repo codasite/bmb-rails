@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato;
 
 use Exception;
+use WC_Order_Item_Product;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\PdfService;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
@@ -49,7 +50,7 @@ class GelatoPublicHooks {
     $this->wc = $opts['wc'] ?? new WcFunctions();
   }
 
-  private function is_bracket_product($product) {
+  private function is_bracket_product($product): bool {
     return $this->bracket_product_utils->is_bracket_product($product);
   }
 
@@ -57,7 +58,7 @@ class GelatoPublicHooks {
     return $this->bracket_product_utils->get_bracket_theme($variation_id);
   }
 
-  private function get_bracket_placement($product) {
+  private function get_bracket_placement($product): string {
     return $this->bracket_product_utils->get_bracket_placement($product);
   }
 
@@ -170,7 +171,7 @@ class GelatoPublicHooks {
     $cart_item_key,
     $values,
     $order
-  ) {
+  ): void {
     if (array_key_exists('bracket_config', $values)) {
       $bracket_config = $values['bracket_config'];
       $item->add_meta_data('bracket_config', $bracket_config);
@@ -193,7 +194,7 @@ class GelatoPublicHooks {
     $variation_id,
     $product_id,
     $error_message
-  ) {
+  ): void {
     $product_name = $product->get_name();
     $msg =
       'Error adding ' .
@@ -215,7 +216,7 @@ class GelatoPublicHooks {
   }
 
   // this function hooks into woocommerce_before_checkout_process
-  public function handle_before_checkout_process() {
+  public function handle_before_checkout_process(): void {
     $cart = $this->wc->WC()->cart;
     if (!$cart) {
       return;
@@ -291,11 +292,11 @@ class GelatoPublicHooks {
     return $cart_item;
   }
 
-  public function log_error($message) {
+  public function log_error($message): void {
     $this->log($message, 'error');
   }
 
-  public function log($message, $log_level = 'debug') {
+  public function log($message, $log_level = 'debug'): void {
     $this->utils->log($message, $log_level);
   }
 
@@ -304,7 +305,7 @@ class GelatoPublicHooks {
     $temp_filename,
     $back_width,
     $back_height
-  ) {
+  ): string {
     // If no config was found, use only the front design
     // However, Gelato still requires a two page PDF so we append a blank page to the front design
     // $result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
@@ -349,7 +350,7 @@ class GelatoPublicHooks {
     $front_url,
     $bracket_config,
     $temp_filename
-  ) {
+  ): string {
     // Use config to generate the back design and merge it with the front design in a two-page PDF
     $play_id = $bracket_config->play_id;
     $play = $this->gelato->get_play_repo()->get($play_id);
@@ -435,7 +436,7 @@ class GelatoPublicHooks {
   }
 
   // this function hooks into woocommerce_payment_complete
-  public function handle_payment_complete($order_id) {
+  public function handle_payment_complete($order_id): void {
     $order = $this->wc->wc_get_order($order_id);
     if ($order) {
       // Find user associated with order
@@ -443,6 +444,9 @@ class GelatoPublicHooks {
 
       $items = $order->get_items();
       foreach ($items as $item) {
+        if (!$item instanceof WC_Order_Item_Product) {
+          continue;
+        }
         $product = $item->get_product();
         if ($this->is_bracket_product($product)) {
           try {
@@ -490,7 +494,7 @@ class GelatoPublicHooks {
     }
   }
 
-  private function get_gelato_order_filename($order, $item) {
+  private function get_gelato_order_filename($order, $item): string {
     $order_id = $order->get_id();
     $item_id = $item->get_id();
     $filename = $order_id . '_' . $item_id . '.pdf';

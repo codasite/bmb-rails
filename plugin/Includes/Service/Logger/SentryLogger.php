@@ -35,11 +35,11 @@ class SentryLogger {
     }
   }
 
-  public static function log_error($msg) {
+  public static function log_error($msg): null {
     return self::log($msg, 'error');
   }
 
-  public static function warn($msg) {
+  public static function warn($msg): null {
     return self::log($msg, 'warning');
   }
 }

@@ -14,31 +14,9 @@ use WStrategies\BMB\Includes\Loader;
  * @author     Barry Molina <barry@wstrategies.co>
  */
 class AdminHooks implements HooksInterface {
-  /**
-   * The ID of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string $plugin_name The ID of this plugin.
-   */
-  private $plugin_name;
+  private string $plugin_name;
 
-  /**
-   * The version of this plugin.
-   *
-   * @since    1.0.0
-   * @access   private
-   * @var      string    $version    The current version of this plugin.
-   */
-  private $version;
-
-  /**
-   * Initialize the class and set its properties.
-   *
-   * @since    1.0.0
-   * @param      string    $plugin_name       The name of this plugin.
-   * @param      string    $version    The version of this plugin.
-   */
+  private string $version;
 
   public function __construct($opts = []) {
     $this->plugin_name = $opts['plugin_name'];
@@ -81,7 +59,7 @@ class AdminHooks implements HooksInterface {
    *
    * @since    1.0.0
    */
-  public function enqueue_styles() {
+  public function enqueue_styles(): void {
     /**
      * This function is provided for demonstration purposes only.
      *
@@ -108,7 +86,7 @@ class AdminHooks implements HooksInterface {
    *
    * @since    1.0.0
    */
-  public function enqueue_scripts() {
+  public function enqueue_scripts(): void {
     wp_enqueue_script(
       'wpbb-bracket-builder-react',
       plugin_dir_url(dirname(__FILE__, 2)) .
@@ -126,7 +104,7 @@ class AdminHooks implements HooksInterface {
     );
   }
 
-  public function add_capabilities() {
+  public function add_capabilities(): void {
     $role = get_role('administrator');
     $role->add_cap('wpbb_share_bracket');
     $role->add_cap('wpbb_bust_play');
@@ -145,7 +123,7 @@ class AdminHooks implements HooksInterface {
    * @param int $user_id
    * @param string $role
    */
-  public function create_user_profile_post(int $user_id, string $role) {
+  public function create_user_profile_post(int $user_id, string $role): void {
     if ($role === 'bmb_vip') {
       $username = get_the_author_meta('user_login', $user_id);
       $posts = get_posts([
@@ -175,7 +153,7 @@ class AdminHooks implements HooksInterface {
    * @param int $user_id
    * @param string $role
    */
-  public function remove_user_profile_post(int $user_id, string $role) {
+  public function remove_user_profile_post(int $user_id, string $role): void {
     if ($role != 'bmb_vip') {
       return;
     }
@@ -194,7 +172,7 @@ class AdminHooks implements HooksInterface {
     return $columns;
   }
 
-  function get_post_id_column_content($column, $id) {
+  function get_post_id_column_content($column, $id): void {
     if ($column === 'post_id_clmn') {
       echo $id;
     }

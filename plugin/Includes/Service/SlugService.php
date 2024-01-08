@@ -10,7 +10,7 @@ class SlugService {
     return $slug;
   }
 
-  private function slug_exists($slug) {
+  private function slug_exists($slug): bool {
     global $wpdb;
     $query = "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_name = %s";
     $count = $wpdb->get_var($wpdb->prepare($query, $slug));

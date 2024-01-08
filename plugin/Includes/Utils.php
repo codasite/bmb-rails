@@ -3,9 +3,10 @@ namespace WStrategies\BMB\Includes;
 
 use DateTimeImmutable;
 use DateTimeZone;
+use Sentry\Severity;
 
 class Utils {
-  static function now() {
+  static function now(): DateTimeImmutable {
     return new DateTimeImmutable('now', new DateTimeZone('UTC'));
   }
 
@@ -14,7 +15,7 @@ class Utils {
     $value,
     array $expires = ['days' => 1],
     array $options = []
-  ) {
+  ): void {
     $expiration = time();
     if (isset($expires['years'])) {
       $expiration += 60 * 60 * 24 * 365 * $expires['years'];
@@ -69,7 +70,7 @@ class Utils {
     return $value;
   }
 
-  public function set_session_value($key, $value) {
+  public function set_session_value($key, $value): void {
     if (!session_id()) {
       session_start();
     }
@@ -87,7 +88,7 @@ class Utils {
     return null;
   }
 
-  public function log_sentry_error($error) {
+  public function log_sentry_error(\Throwable $error): void {
     if (function_exists('wp_sentry_safe')) {
       wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
         $error
@@ -97,58 +98,48 @@ class Utils {
     }
   }
 
-  public function log_sentry_message($msg, $level = null) {
+  public function log_sentry_message(
+    string $msg,
+    Severity $level = null
+  ): void {
     if (function_exists('wp_sentry_safe')) {
-      return wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
+      wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
         $msg,
         $level
       ) {
         if ($level === null) {
           $level = \Sentry\Severity::info();
         }
-        return $client->captureMessage($msg, $level);
+        $client->captureMessage($msg, $level);
       });
     }
   }
 
-  public function log($msg, $level = 'debug') {
+  public function log(string $msg, string $level = 'debug'): void {
     error_log($msg);
-    switch ($level) {
-      case 'debug':
-        $severity = \Sentry\Severity::debug();
-        break;
-      case 'info':
-        $severity = \Sentry\Severity::info();
-        break;
-      case 'warning':
-        $severity = \Sentry\Severity::warning();
-        break;
-      case 'error':
-        $severity = \Sentry\Severity::error();
-        break;
-      case 'fatal':
-        $severity = \Sentry\Severity::fatal();
-        break;
-      default:
-        $severity = \Sentry\Severity::info();
-        break;
-    }
+    $severity = match ($level) {
+      'debug' => \Sentry\Severity::debug(),
+      'warning' => \Sentry\Severity::warning(),
+      'error' => \Sentry\Severity::error(),
+      'fatal' => \Sentry\Severity::fatal(),
+      default => \Sentry\Severity::info(),
+    };
 
     if (function_exists('wp_sentry_safe')) {
-      return wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
+      wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
         $msg,
         $severity
       ) {
-        return $client->captureMessage($msg, $severity);
+        $client->captureMessage($msg, $severity);
       });
     }
   }
 
-  public function log_error($msg) {
-    return $this->log($msg, 'error');
+  public function log_error(string $msg): void {
+    $this->log($msg, 'error');
   }
 
-  public function warn($msg) {
-    return $this->log($msg, 'warning');
+  public function warn(string $msg): void {
+    $this->log($msg, 'warning');
   }
 }

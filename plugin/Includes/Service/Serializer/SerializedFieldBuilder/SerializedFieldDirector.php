@@ -9,7 +9,7 @@ class SerializedFieldDirector {
     $this->builder = $builder;
   }
 
-  public function build(array $serialized_fields) {
+  public function build(array $serialized_fields): void {
     foreach ($serialized_fields as $key => $value) {
       if (is_string($value)) {
         $this->builder->build_field($value);

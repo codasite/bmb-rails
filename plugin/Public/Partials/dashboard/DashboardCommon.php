@@ -9,7 +9,7 @@ class DashboardCommon {
   /**
    * Icon Buttons DO something (make post request, execute JS, etc.)
    */
-  public static function icon_btn( $icon_path, $type = '', $id = '', $classes = '', $attributes = '' ) {
+  public static function icon_btn( $icon_path, $type = '', $id = '', $classes = '', $attributes = '' ): false|string {
     ob_start();
     ?>
     <button <?php echo ! empty( $type ) ? "type=$type" : '' ?> <?php echo ! empty( $id ) ? "id=$id" : '' ?>
@@ -24,7 +24,7 @@ class DashboardCommon {
   /**
    * Icon Links GO somewhere. (To another page, etc.)
    */
-  public static function icon_link( $icon_path, $endpoint ) {
+  public static function icon_link( $icon_path, $endpoint ): false|string {
     ob_start();
     ?>
     <a
@@ -39,7 +39,7 @@ class DashboardCommon {
   /**
    * This button sends a POST request to delete the template
    */
-  public static function delete_post_btn( $endpoint, $post_id, $post_id_field, $nonce_action, $nonce_name ) {
+  public static function delete_post_btn( $endpoint, $post_id, $post_id_field, $nonce_action, $nonce_name ): false|string {
     ob_start();
     ?>
     <form method="post" action="<?php echo esc_url( $endpoint ) ?>">
@@ -54,7 +54,7 @@ class DashboardCommon {
   /**
    * This button goes to the Play Bracket page
    */
-  public static function add_to_apparel_btn( $endpoint ) {
+  public static function add_to_apparel_btn( $endpoint ): false|string {
     ob_start();
     ?>
     <a
@@ -70,7 +70,7 @@ class DashboardCommon {
   /**
    * This button sends a POST request to delete the tournament
    */
-  public static function delete_tournament_btn( $endpoint, $post_id ) {
+  public static function delete_tournament_btn( $endpoint, $post_id ): false|string {
     ob_start();
     ?>
     <form method="post" action="<?php echo esc_url( $endpoint ) ?>">
@@ -85,7 +85,7 @@ class DashboardCommon {
     return ob_get_clean();
   }
 
-  public static function restore_tournament_btn( $endpoint, $post_id ) {
+  public static function restore_tournament_btn( $endpoint, $post_id ): false|string {
     ob_start();
     ?>
     <form method="post" action="<?php echo esc_url( $endpoint ) ?>">

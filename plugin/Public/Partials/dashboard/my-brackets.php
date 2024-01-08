@@ -45,9 +45,9 @@ $the_query = new WP_Query([
 
 $num_pages = $the_query->max_num_pages;
 
-$brackets = $bracket_repo->get_all($the_query, ['fetch_template' => true]);
+$brackets = $bracket_repo->get_all($the_query);
 
-function score_bracket_btn($endpoint, $bracket) {
+function score_bracket_btn($endpoint, $bracket): false|string {
 
 	ob_start();
 ?>
@@ -59,7 +59,7 @@ function score_bracket_btn($endpoint, $bracket) {
 	return ob_get_clean();
 }
 
-function go_live_btn(string $id) {
+function go_live_btn(string $id): false|string {
 	ob_start();
 	?>
   <button data-bracket-id="<?php echo $id ?>"
@@ -71,7 +71,7 @@ function go_live_btn(string $id) {
 	return ob_get_clean();
 }
 
-function private_bracket_buttons($bracket) {
+function private_bracket_buttons($bracket): false|string {
 	$bracket_play_link = get_permalink($bracket->id) . 'play';
 	ob_start();
 ?>
@@ -84,7 +84,7 @@ function private_bracket_buttons($bracket) {
 	return ob_get_clean();
 }
 
-function live_bracket_buttons($bracket) {
+function live_bracket_buttons($bracket): false|string {
 	$bracket_play_link = get_permalink($bracket->id) . 'play';
 	$bracket_score_link = get_permalink($bracket->id) . 'results';
 	$leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
@@ -103,7 +103,7 @@ function live_bracket_buttons($bracket) {
 	return ob_get_clean();
 }
 
-function scored_bracket_buttons($bracket) {
+function scored_bracket_buttons($bracket): false|string {
 	$bracket_play_link = get_permalink($bracket->id) . 'play';
 	$bracket_score_link = get_permalink($bracket->id) . 'results';
 	$leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
@@ -125,7 +125,7 @@ function scored_bracket_buttons($bracket) {
 }
 
 
-function completed_bracket_buttons($bracket) {
+function completed_bracket_buttons($bracket): false|string {
 	$play_link = get_permalink($bracket->id) . 'play';
 	$leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
 	ob_start();
@@ -138,7 +138,7 @@ function completed_bracket_buttons($bracket) {
 	return ob_get_clean();
 }
 
-function get_bracket_buttons($bracket) {
+function get_bracket_buttons($bracket): false|string {
 	switch ($bracket->status) {
 		case 'publish':
 			return live_bracket_buttons($bracket);
@@ -155,7 +155,7 @@ function get_bracket_buttons($bracket) {
 	}
 }
 
-function edit_bracket_btn($bracket) {
+function edit_bracket_btn($bracket): false|string {
 	$id = $bracket->id;
 	$title = $bracket->title;
 	$month = $bracket->month;
@@ -164,26 +164,26 @@ function edit_bracket_btn($bracket) {
 }
 
 
-function share_bracket_btn($bracket) {
+function share_bracket_btn($bracket): false|string {
 	$play_link = get_permalink($bracket->id) . 'play';
 	return DashboardCommon::icon_btn( 'share.svg', 'submit', classes: "wpbb-share-bracket-button", attributes: "data-play-bracket-url='$play_link' data-bracket-title='$bracket->title'" );
 }
 
-function duplicate_bracket_btn($bracket) {
+function duplicate_bracket_btn($bracket): false|string {
 	$copy_link = get_permalink($bracket->id) . 'copy';
 	return DashboardCommon::icon_link( 'copy.svg', $copy_link );
 }
 
-function unpublish_bracket_btn($bracket) {
+function unpublish_bracket_btn($bracket): false|string {
 	return DashboardCommon::icon_btn( 'lock.svg', 'submit', classes: "wpbb-unpublish-bracket-button", attributes: "data-bracket-id='$bracket->id'" );
 }
 
-function delete_bracket_btn($bracket) {
+function delete_bracket_btn($bracket): false|string {
 	$bracket_id = $bracket->id;
 	return DashboardCommon::icon_btn( 'trash.svg', 'submit', classes: "wpbb-delete-bracket-button", attributes: "data-bracket-id='$bracket_id' data-bracket-title='$bracket->title'" );
 }
 
-function private_bracket_icon_buttons($bracket) {
+function private_bracket_icon_buttons($bracket): false|string {
 	ob_start();
 	?>
 		<?php echo edit_bracket_btn($bracket); ?>
@@ -193,7 +193,7 @@ function private_bracket_icon_buttons($bracket) {
 	return ob_get_clean();
 }
 
-function live_bracket_icon_buttons($bracket) {
+function live_bracket_icon_buttons($bracket): false|string {
 	ob_start();
 	?>
 		<?php echo edit_bracket_btn($bracket); ?>
@@ -205,7 +205,7 @@ function live_bracket_icon_buttons($bracket) {
 	return ob_get_clean();
 }
 
-function scored_bracket_icon_buttons($bracket) {
+function scored_bracket_icon_buttons($bracket): false|string {
 	ob_start();
 	?>
 		<?php echo edit_bracket_btn($bracket); ?>
@@ -216,7 +216,7 @@ function scored_bracket_icon_buttons($bracket) {
 	return ob_get_clean();
 }
 
-function get_bracket_icon_buttons($bracket) {
+function get_bracket_icon_buttons($bracket): false|string {
 	switch ($bracket->status) {
 		case 'publish':
 			return live_bracket_icon_buttons($bracket);
@@ -232,7 +232,7 @@ function get_bracket_icon_buttons($bracket) {
 	}
 }
 
-function bracket_list_item($bracket, BracketPlayRepo $play_repo) {
+function bracket_list_item($bracket, BracketPlayRepo $play_repo): false|string {
 
 	$title = $bracket->title;
 	$num_teams = $bracket->num_teams;

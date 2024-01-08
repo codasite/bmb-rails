@@ -76,7 +76,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    * Register the routes for bracket objects.
    * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
    */
-  public function register_routes() {
+  public function register_routes(): void {
     $namespace = $this->namespace;
     $base = $this->rest_base;
     register_rest_route($namespace, '/' . $base, [
@@ -173,7 +173,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_items($request) {
+  public function get_items($request): WP_Error|WP_REST_Response {
     // $bracket_id = $request->get_param('bracket_id');
     $the_query = new WP_Query([
       'post_type' => BracketPlay::get_post_type(),
@@ -194,7 +194,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_item($request) {
+  public function get_item($request): WP_Error|WP_REST_Response {
     // get id from request
     $id = $request->get_param('item_id');
     $play = $this->play_repo->get($id);
@@ -208,7 +208,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function create_item($request) {
+  public function create_item($request): WP_Error|WP_REST_Response {
     $params = $request->get_params();
     $buster_play = isset($params['busted_id']) && $params['busted_id'] !== null;
     $bracket_id = $params['bracket_id'];
@@ -266,7 +266,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     return new WP_REST_Response($saved, 201);
   }
 
-  public function generate_images($request) {
+  public function generate_images($request): WP_Error|WP_REST_Response {
     $params = $request->get_params();
     $play_id = $params['item_id'];
     $play = $this->play_repo->get($play_id);
@@ -294,9 +294,12 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    * Check if a given request has admin access to this plugin
    *
    * @param WP_REST_Request $request Full details about the request.
+   *
    * @return WP_Error|bool
    */
-  public function admin_permission_check($request) {
+  public function admin_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
     return true; // TODO: Disable this for production
     // return current_user_can('manage_options');
   }
@@ -305,9 +308,12 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
    * @param WP_REST_Request $request Full details about the request.
+   *
    * @return WP_Error|bool
    */
-  public function customer_permission_check($request) {
+  public function customer_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
     return true; // TODO: Disable this for production
     // return current_user_can('read');
   }

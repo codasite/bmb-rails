@@ -6,7 +6,7 @@ use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 class ProfileRepoTest extends WPBB_UnitTestCase {
   private $profile_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->profile_repo = new UserProfileRepo();

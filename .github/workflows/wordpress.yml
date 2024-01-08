@@ -28,4 +28,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: make composer-install
-      - run: make phpstan
+      - run: make phpstan-ci

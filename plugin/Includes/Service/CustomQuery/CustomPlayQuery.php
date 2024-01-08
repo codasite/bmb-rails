@@ -50,7 +50,7 @@ class CustomPlayQuery {
     return $clauses;
   }
 
-  private function key_value_intersect(array $keys, array $values) {
+  private function key_value_intersect(array $keys, array $values): array {
     return array_intersect_key($keys, array_flip($values));
   }
 
@@ -104,7 +104,7 @@ class CustomPlayQuery {
     return $clauses;
   }
 
-  private function add_join(&$clauses) {
+  private function add_join(&$clauses): void {
     $join = &$clauses['join'];
     $this->init_clause($join);
     // check if plays table has been joined
@@ -113,18 +113,18 @@ class CustomPlayQuery {
     }
   }
 
-  private function init_clause(&$clause) {
+  private function init_clause(&$clause): void {
     if (!empty($clause)) {
       $clause .= ' ';
     } // Add space only if we need to
   }
 
-  private function join_plays_table() {
+  private function join_plays_table(): string {
     $plays_alias = self::$plays_alias;
     return "JOIN {$this->play_repo->table_name()} $plays_alias ON plays.post_id = {$this->wpdb->posts}.ID";
   }
 
-  private function map_query_fields(&$query) {
+  private function map_query_fields(&$query): void {
     foreach ($query as $key => $value) {
       if (array_key_exists($key, self::$alternate_field_mappings)) {
         $query[self::$alternate_field_mappings[$key]] = $value;
@@ -133,7 +133,7 @@ class CustomPlayQuery {
     }
   }
 
-  private function where_from_array($alias, $key, $value) {
+  private function where_from_array($alias, $key, $value): string {
     if (isset($value['compare'])) {
       $compare = $value['compare'];
       switch ($compare) {

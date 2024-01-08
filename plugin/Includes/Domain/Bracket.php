@@ -98,7 +98,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     return $num_rounds;
   }
 
-  public function highest_possible_score() {
+  public function highest_possible_score(): int {
     $point_values = [1, 2, 4, 8, 16, 32];
 
     $score = 0;

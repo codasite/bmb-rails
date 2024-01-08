@@ -139,7 +139,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
     return new BracketPlay($data);
   }
 
-  private function get_defaults(array $user_opts = []) {
+  private function get_defaults(array $user_opts = []): array {
     $default_opts = [
       'fetch_picks' => true,
       'fetch_bracket' => true,
@@ -263,9 +263,9 @@ class BracketPlayRepo extends CustomPostRepoBase implements
 
     $play_id = $this->insert_play_data([
       'post_id' => $post_id,
-      'bracket_post_id' => $bracket_post_id ?? null,
-      'bracket_id' => $bracket_id ?? null,
-      'busted_play_post_id' => $busted_post_id ?? null,
+      'bracket_post_id' => $bracket_post_id,
+      'bracket_id' => $bracket_id,
+      'busted_play_post_id' => $busted_post_id,
       'busted_play_id' => $busted_play_id ?? null,
       'total_score' => $play->total_score,
       'accuracy_score' => $play->accuracy_score,
@@ -299,7 +299,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
   public function get_user_picks_for_result(
     Bracket|int|null $bracket_id,
     MatchPick $bracket_result
-  ) {
+  ): array {
     if (!$bracket_id) {
       return [];
     }
@@ -347,7 +347,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
     return $user_picks;
   }
 
-  public function update(BracketPlay|int|null $play, $data) {
+  public function update(BracketPlay|int|null $play, $data): ?BracketPlay {
     if ($play === null || empty($data)) {
       return null;
     }
@@ -375,7 +375,11 @@ class BracketPlayRepo extends CustomPostRepoBase implements
     return $this->get($post_id);
   }
 
-  private function update_play_data($play_id, $data, $use_post_id = false) {
+  private function update_play_data(
+    $play_id,
+    $data,
+    $use_post_id = false
+  ): void {
     $id_field = $use_post_id ? 'post_id' : 'id';
     $update_fields = [];
     $update_data = [];
@@ -393,7 +397,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
     ]);
   }
 
-  private function play_data_update_fields() {
+  private function play_data_update_fields(): array {
     return ['is_printed', 'is_tournament_entry'];
   }
 

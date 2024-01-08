@@ -8,7 +8,7 @@ class GelatoAdminHooks {
     $loop,
     $variation_data,
     $variation
-  ) {
+  ): void {
     // Get the parent product
     $parent_product_id = wp_get_post_parent_id($variation->ID);
 
@@ -57,7 +57,7 @@ class GelatoAdminHooks {
 
   // save the value of this field when the product variation is saved
   // Attach to `woocommerce_save_product_variation` hook
-  public function save_variation_settings_fields($variation_id, $i) {
+  public function save_variation_settings_fields($variation_id, $i): void {
     if (isset($_POST['wpbb_front_design'][$variation_id])) {
       $front_design = $_POST['wpbb_front_design'][$variation_id];
       update_post_meta(
@@ -76,7 +76,7 @@ class GelatoAdminHooks {
     }
   }
 
-  public function validate_variation_fields($variation_id, $i) {
+  public function validate_variation_fields($variation_id, $i): void {
     // Check for Front Design URL
     if (empty(get_post_meta($variation_id, 'wpbb_front_design', true))) {
       update_option(
@@ -100,7 +100,7 @@ class GelatoAdminHooks {
 
   // Display the custom error message
   // hooked to `admin_notices` action hook
-  public function display_custom_admin_error() {
+  public function display_custom_admin_error(): void {
     $message = get_option('custom_admin_error');
     if ($message) {
       echo '<div class="error notice">

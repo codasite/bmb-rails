@@ -7,7 +7,7 @@ class PartialsCommon {
   /**
    * This button goes to the View Play page
    */
-  public static function view_play_btn( $endpoint, $label = 'View Play' ) {
+  public static function view_play_btn( $endpoint, $label = 'View Play' ): false|string {
     ob_start();
     ?>
     <a
@@ -23,7 +23,7 @@ class PartialsCommon {
   /**
    * This is a utility wrapper for buttons that have a gradient border
    */
-  public static function gradient_border_wrap( $content, $class_arr = array() ) {
+  public static function gradient_border_wrap( $content, $class_arr = array() ): false|string {
     $classes = implode( ' ', $class_arr );
     ob_start();
     ?>
@@ -34,7 +34,7 @@ class PartialsCommon {
     return ob_get_clean();
   }
 
-  public static function icon( $icon_name ) {
+  public static function icon( $icon_name ): false|string {
     return file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/' . $icon_name . '.svg' );
   }
 }

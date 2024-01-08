@@ -6,12 +6,12 @@ use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
+use WStrategies\BMB\Includes\Service\PdfService;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoPublicHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 use WStrategies\BMB\Includes\Service\S3Service;
 use WStrategies\BMB\Includes\Utils;
-use WStrategies\BMB\Includes\Service\PdfService;
 
 require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/WooCommerceMock.php';
 
@@ -20,7 +20,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     // Create necessary mocks and stubs
     $wc_mock = $this->createMock(WcFunctions::class);
     $gelato_mock = $this->createMock(GelatoProductIntegration::class);
-    $product_stub = $this->createMock(ProductInterface::class);
+    $product_stub = $this->createMock(WC_Product::class);
     $bracket_product_utils_mock = $this->createMock(BracketProductUtils::class);
 
     // Configure the mocks
@@ -107,9 +107,11 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     // Mocking WooCommerce Cart and its methods
     $cart_mock = $this->createMock(CartInterface::class);
     $wc_functions_mock = $this->createMock(WcFunctions::class);
-    $wc_functions_mock
-      ->method('WC')
-      ->willReturn((object) ['cart' => $cart_mock]);
+    $woocommerceMock = $this->getMockBuilder(WooCommerce::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $woocommerceMock->cart = $cart_mock;
+    $wc_functions_mock->method('WC')->willReturn($woocommerceMock);
 
     // Simulate cart items with a bracket product and a regular product
     $bracket_product_mock = $this->createMock(ProductInterface::class);
@@ -302,7 +304,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $s3_mock
       ->method('get_from_url')
       ->with($front_url)
-      ->willReturn(null); // Simulate failure
+      ->willReturn(''); // Simulate failure
 
     // Instantiate the class with mocked dependencies
     $hooks = new GelatoPublicHooks(
@@ -341,7 +343,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       ->method('get_from_url')
       ->with($front_url)
       ->willReturn('front_pdf_content');
-    $pdf_service_mock->method('merge_pdfs')->willReturn(false); // Simulate merge failure
+    $pdf_service_mock->method('merge_pdfs')->willReturn(''); // Simulate merge failure
 
     // Instantiate the class with mocked dependencies
     $hooks = new GelatoPublicHooks(
@@ -517,8 +519,8 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     );
     // Create necessary mocks and stubs
     $wc_mock = $this->createMock(WcFunctions::class);
-    $wc_order_item_stub = $this->createMock(OrderItemInterface::class);
-    $wc_order_stub = $this->createMock(OrderInterface::class);
+    $wc_order_item_stub = $this->createMock(WC_Order_Item_Product::class);
+    $wc_order_stub = $this->createMock(WC_Order::class);
     $wc_product_stub = $this->createMock(ProductInterface::class);
     $integration_mock = $this->createMock(GelatoProductIntegration::class);
     $s3_mock = $this->createMock(S3Service::class);
@@ -586,8 +588,8 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     );
     // Create necessary mocks and stubs
     $wc_mock = $this->createMock(WcFunctions::class);
-    $wc_order_item_stub = $this->createMock(OrderItemInterface::class);
-    $wc_order_stub = $this->createMock(OrderInterface::class);
+    $wc_order_item_stub = $this->createMock(WC_Order_Item_Product::class);
+    $wc_order_stub = $this->createMock(WC_Order::class);
     $wc_order_stub->method('get_user_id')->willReturn($user->ID);
     $wc_product_stub = $this->createMock(ProductInterface::class);
     $integration_mock = $this->createMock(GelatoProductIntegration::class);

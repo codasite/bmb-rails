@@ -9,7 +9,7 @@ class TeamRepoTest extends WPBB_UnitTestCase {
   private $team_repo;
   private $bracket_repo;
 
-  public function set_up() {
+  public function set_up(): void {
     parent::set_up();
 
     $this->team_repo = new BracketTeamRepo();

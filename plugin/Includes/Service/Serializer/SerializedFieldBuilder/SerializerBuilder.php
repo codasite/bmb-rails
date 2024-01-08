@@ -23,7 +23,7 @@ class SerializerBuilder extends SerializedFieldBuilderBase {
   private function build_serializer_field(
     string $field_name,
     ApiSerializerInterface $serializer
-  ) {
+  ): void {
     if (isset($this->obj->$field_name)) {
       $this->serialized[$field_name] = $serializer->serialize(
         $this->obj->$field_name
@@ -34,7 +34,7 @@ class SerializerBuilder extends SerializedFieldBuilderBase {
   private function build_serializer_field_many(
     string $field_name,
     ApiSerializerInterface $serializer
-  ) {
+  ): void {
     if (isset($this->obj->$field_name)) {
       $serialized_items = [];
       foreach ($this->obj->$field_name as $item) {
@@ -44,7 +44,7 @@ class SerializerBuilder extends SerializedFieldBuilderBase {
     }
   }
 
-  public function build_field(string $field_name, array $options = []) {
+  public function build_field(string $field_name, array $options = []): void {
     list($serializer, $many) = $this->parse_serializer_options($options);
     if ($serializer) {
       if ($many) {

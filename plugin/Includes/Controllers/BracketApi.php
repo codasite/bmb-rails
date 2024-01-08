@@ -7,7 +7,6 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
-use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
@@ -85,7 +84,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * Register the routes for bracket objects.
    * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
    */
-  public function register_routes() {
+  public function register_routes(): void {
     $namespace = $this->namespace;
     $base = $this->rest_base;
     register_rest_route($namespace, '/' . $base, [
@@ -151,7 +150,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_items($request) {
+  public function get_items($request): WP_Error|WP_REST_Response {
     $brackets = $this->bracket_repo->get_all();
     $serialized = [];
     foreach ($brackets as $bracket) {
@@ -166,7 +165,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function get_item($request) {
+  public function get_item($request): WP_Error|WP_REST_Response {
     // get id from request
     $id = $request->get_param('item_id');
     $bracket = $this->bracket_repo->get($id);
@@ -180,7 +179,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function create_item($request) {
+  public function create_item($request): WP_Error|WP_REST_Response {
     $params = $request->get_params();
     try {
       $bracket = $this->serializer->deserialize($params);
@@ -222,7 +221,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function update_item($request) {
+  public function update_item($request): WP_Error|WP_REST_Response {
     $can_set_results = false;
     $set_winners = false;
     $bracket_id = $request->get_param('item_id');
@@ -284,7 +283,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request Full details about the request.
    * @return WP_Error|WP_REST_Response
    */
-  public function delete_item($request) {
+  public function delete_item($request): WP_Error|WP_REST_Response {
     // get id from request
     $id = $request->get_param('item_id');
     if (current_user_can('wpbb_delete_bracket', $id)) {
@@ -303,9 +302,12 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * Check if a given request has admin access to this plugin
    *
    * @param WP_REST_Request $request Full details about the request.
+   *
    * @return WP_Error|bool
    */
-  public function admin_permission_check($request) {
+  public function admin_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
     return true;
     // return current_user_can('edit_others_posts');
   }
@@ -314,9 +316,12 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
    * @param WP_REST_Request $request Full details about the request.
+   *
    * @return WP_Error|bool
    */
-  public function customer_permission_check($request) {
+  public function customer_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
     return true;
     // return current_user_can('read');
   }

@@ -87,7 +87,10 @@ class BracketResultsNotificationService implements
     }
   }
 
-  public function correct_picked(MatchPick $pick, MatchPick $correct_pick) {
+  public function correct_picked(
+    MatchPick $pick,
+    MatchPick $correct_pick
+  ): bool {
     return $pick->winning_team_id === $correct_pick->winning_team_id;
   }
 }
