@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1fb6729004b5aafcf8dbd1d1f03ac574",
+    "content-hash": "b7dd95ae591f7be57b2554b62b4074b3",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.295.6",
+            "version": "3.295.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "9b0b2daf46d5e6a4600575917cea0764e4dbb6b5"
+                "reference": "dc23d1d1e2e0413a3707d5dd90d8c43cb6c7521b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/9b0b2daf46d5e6a4600575917cea0764e4dbb6b5",
-                "reference": "9b0b2daf46d5e6a4600575917cea0764e4dbb6b5",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/dc23d1d1e2e0413a3707d5dd90d8c43cb6c7521b",
+                "reference": "dc23d1d1e2e0413a3707d5dd90d8c43cb6c7521b",
                 "shasum": ""
             },
             "require": {
@@ -151,9 +151,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.295.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.295.8"
             },
-            "time": "2024-01-04T19:43:02+00:00"
+            "time": "2024-01-08T19:04:58+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -1131,31 +1131,31 @@
     "packages-dev": [
         {
             "name": "10up/wp_mock",
-            "version": "1.0.0",
+            "version": "dev-trunk",
             "source": {
                 "type": "git",
                 "url": "https://github.com/10up/wp_mock.git",
-                "reference": "de812e445e17832703571081aa40f39140497117"
+                "reference": "4249c87c763679eecfac29a192dd88d30cfd4058"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/10up/wp_mock/zipball/de812e445e17832703571081aa40f39140497117",
-                "reference": "de812e445e17832703571081aa40f39140497117",
+                "url": "https://api.github.com/repos/10up/wp_mock/zipball/4249c87c763679eecfac29a192dd88d30cfd4058",
+                "reference": "4249c87c763679eecfac29a192dd88d30cfd4058",
                 "shasum": ""
             },
             "require": {
                 "antecedent/patchwork": "^2.1",
                 "mockery/mockery": "^1.6",
-                "php": ">=7.4 < 8.3",
+                "php": ">=7.4 < 9",
                 "phpunit/phpunit": "^9.6"
             },
             "require-dev": {
                 "behat/behat": "^v3.11.0",
                 "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
                 "friendsofphp/php-cs-fixer": "^3.4",
-                "php-coveralls/php-coveralls": "^v2.5",
+                "php-coveralls/php-coveralls": "^v2.7",
                 "php-stubs/wordpress-globals": "^0.2",
-                "php-stubs/wordpress-stubs": "^6.2",
+                "php-stubs/wordpress-stubs": "^6.3",
                 "phpcompatibility/php-compatibility": "^9.3",
                 "phpstan/phpstan": "^1.10",
                 "phpstan/phpstan-mockery": "^1.1",
@@ -1163,6 +1163,7 @@
                 "sebastian/comparator": "^4.0.8",
                 "sempro/phpunit-pretty-print": "^1.4"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-4": {
@@ -1179,9 +1180,9 @@
             "description": "A mocking library to take the pain out of unit testing for WordPress",
             "support": {
                 "issues": "https://github.com/10up/wp_mock/issues",
-                "source": "https://github.com/10up/wp_mock/tree/1.0.0"
+                "source": "https://github.com/10up/wp_mock/tree/1.0.1"
             },
-            "time": "2023-07-26T03:03:21+00:00"
+            "time": "2024-01-04T03:23:45+00:00"
         },
         {
             "name": "antecedent/patchwork",
@@ -1700,25 +1701,27 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v4.18.0",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "1bcbb2179f97633e98bbbc87044ee2611c7d7999"
+                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/1bcbb2179f97633e98bbbc87044ee2611c7d7999",
-                "reference": "1bcbb2179f97633e98bbbc87044ee2611c7d7999",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
+                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
                 "shasum": ""
             },
             "require": {
+                "ext-ctype": "*",
+                "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": ">=7.0"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "ircmaxell/php-yacc": "^0.0.7",
-                "phpunit/phpunit": "^6.5 || ^7.0 || ^8.0 || ^9.0"
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0"
             },
             "bin": [
                 "bin/php-parse"
@@ -1726,7 +1729,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.9-dev"
+                    "dev-master": "5.0-dev"
                 }
             },
             "autoload": {
@@ -1750,9 +1753,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v4.18.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.0"
             },
-            "time": "2023-12-10T21:03:43+00:00"
+            "time": "2024-01-07T17:17:35+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -1998,16 +2001,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.10.53",
+            "version": "1.10.55",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "0c48595cce15f67d6a7faf30e9d13c775e6e9875"
+                "reference": "9a88f9d18ddf4cf54c922fbeac16c4cb164c5949"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0c48595cce15f67d6a7faf30e9d13c775e6e9875",
-                "reference": "0c48595cce15f67d6a7faf30e9d13c775e6e9875",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9a88f9d18ddf4cf54c922fbeac16c4cb164c5949",
+                "reference": "9a88f9d18ddf4cf54c922fbeac16c4cb164c5949",
                 "shasum": ""
             },
             "require": {
@@ -2056,7 +2059,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-05T13:55:38+00:00"
+            "time": "2024-01-08T12:32:40+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4512,10 +4515,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "10up/wp_mock": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
