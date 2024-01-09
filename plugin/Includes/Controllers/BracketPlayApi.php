@@ -238,6 +238,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $play->bmb_official = has_tag('bmb_official', $bracket_id);
     $saved = $this->play_repo->add($play);
     $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
+    $this->stripe_service->create_payment_intent($saved);
     // Generate the bracket images
     if (
       isset($params['generate_images']) &&

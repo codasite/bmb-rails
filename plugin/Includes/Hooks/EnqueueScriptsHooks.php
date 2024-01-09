@@ -168,6 +168,8 @@ class EnqueueScriptsHooks implements HooksInterface {
       'play' => $play,
       'bracket' => $bracket,
       'is_user_logged_in' => is_user_logged_in(),
+      'stripe_publishable_key' =>
+        'pk_test_51OWPu0GLKms5oOW8z8oolF9mn5sO2jOhXdkAbxgOSGkLe1F7U8yF5ChZ5NeaWAicb6EJjuGdIJ4JN2gUyj0euVZ000N53Gxru2',
     ]);
   }
 

@@ -9,6 +9,7 @@ import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
+import SubmitPicksPaymentModal from './SubmitPicksPaymentModal'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {
@@ -21,6 +22,8 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     processing,
     showRegisterModal,
     setShowRegisterModal,
+    showPaymentModal,
+    setShowPaymentModal,
   } = props
   const disableButtons = processing || (matchTree && !matchTree.allPicked())
   const disableApparel = disableButtons || !handleApparelClick
@@ -34,10 +37,6 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
-      <SubmitPicksRegisterModal
-        show={showRegisterModal}
-        setShow={setShowRegisterModal}
-      />
       {matchTree && (
         <div
           className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80`}

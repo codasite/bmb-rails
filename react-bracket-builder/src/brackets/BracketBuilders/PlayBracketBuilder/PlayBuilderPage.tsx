@@ -20,6 +20,10 @@ import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
+import { PaymentIntentReq } from '../../shared/api/types/stripe'
+import { loadStripe } from '@stripe/stripe-js'
+import { Elements } from '@stripe/react-stripe-js'
+import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 
 interface PlayPageProps {
   bracketProductArchiveUrl: string
@@ -52,6 +56,8 @@ const PlayPage = (props: PlayPageProps) => {
   const [processing, setProcessing] = useState(false)
   const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(true)
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>('')
   const { width: windowWidth, height: windowHeight } = useContext(
     WindowDimensionsContext
   )
@@ -68,6 +74,7 @@ const PlayPage = (props: PlayPageProps) => {
     }
     const meta = getBracketMeta(bracket)
     setBracketMeta?.(meta ?? {})
+    handleStripeInit(bracket)
     let tree: Nullable<MatchTree> = null
     const numTeams = bracket.numTeams
     const matches = bracket.matches
@@ -82,6 +89,19 @@ const PlayPage = (props: PlayPageProps) => {
       setMatchTree(tree)
     }
   }, [])
+
+  const handleStripeInit = async (bracket: BracketRes) => {
+    if (bracket?.fee > 0 && bracket?.isOpen) {
+      const req: PaymentIntentReq = {
+        bracketId: bracket.id,
+      }
+      const res = await bracketApi.createStripePaymentIntent({
+        bracketId: bracket.id,
+      })
+      const { clientSecret } = res
+      setStripeClientSecret(clientSecret)
+    }
+  }
 
   const setMatchTreeAndSaveInStorage = (tree: MatchTree) => {
     setMatchTree(tree)
@@ -185,15 +205,25 @@ const PlayPage = (props: PlayPageProps) => {
     setDarkMode,
     bracketMeta,
     setBracketMeta,
-    showRegisterModal,
-    setShowRegisterModal,
   }
 
-  if (showPaginated) {
-    return <PaginatedPlayBuilder {...playBuilderProps} />
-  }
-
-  return <PlayBuilder {...playBuilderProps} />
+  return (
+    <>
+      <SubmitPicksRegisterModal
+        show={showRegisterModal}
+        setShow={setShowRegisterModal}
+      />
+      <SubmitPicksRegisterModal
+        show={showPaymentModal}
+        setShow={setShowPaymentModal}
+      />
+      {showPaginated ? (
+        <PaginatedPlayBuilder {...playBuilderProps} />
+      ) : (
+        <PlayBuilder {...playBuilderProps} />
+      )}
+    </>
+  )
 }
 
 const WrappedPlayBuilderPage = WithWindowDimensions(

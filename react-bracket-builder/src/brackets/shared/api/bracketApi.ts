@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/react'
 import { BracketReq, BracketRes, PlayReq, PlayRes } from './types/bracket'
+import { PaymentIntentReq, PaymentIntentRes } from './types/stripe'
 import { NotificationReq } from './types/notification'
 
 interface RequestOptions {
@@ -69,6 +70,12 @@ export class BracketApi {
       `${this.playPath}/${playId}/generate-images`,
       options
     )
+  }
+  async createStripePaymentIntent(
+    req: PaymentIntentReq
+  ): Promise<PaymentIntentRes> {
+    const options: RequestOptions = { method: 'POST', body: req }
+    return await this.performRequest(`stripe/payment-intent`, options)
   }
   async performRequest(
     path: string,
