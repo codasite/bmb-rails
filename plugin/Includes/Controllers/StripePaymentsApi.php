@@ -76,16 +76,16 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
-   * @param WP_REST_Request<array{item_id: int}> $request
+   * @param WP_REST_Request<array{bracket_id: int}> $request
    */
   public function create_payment_intent(
     WP_REST_Request $request
   ): WP_REST_Response {
-    if (!isset($request['item_id'])) {
-      return new WP_REST_Response('item_id is required', 400);
+    if (!isset($request['bracket_id'])) {
+      return new WP_REST_Response('bracket_id is required', 400);
     }
     try {
-      $bracket_id = $request['item_id'];
+      $bracket_id = $request['bracket_id'];
       $client_secret = $this->stripe_payments->create_payment_intent_for_paid_bracket(
         $bracket_id
       );

@@ -60,7 +60,7 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $request->set_body(
       wp_json_encode([
-        'item_id' => 1,
+        'bracket_id' => 1,
       ])
     );
     $response = $api->create_payment_intent($request);
