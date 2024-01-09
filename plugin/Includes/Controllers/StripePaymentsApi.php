@@ -28,7 +28,11 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   public function __construct(array $args = []) {
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'stripe';
-    $this->stripe_payments = $args['stripe_payments'] ?? new StripePayments();
+    try {
+      $this->stripe_payments = $args['stripe_payments'] ?? new StripePayments();
+    } catch (\Exception $e) {
+      error_log('Caught error: ' . $e->getMessage());
+    }
   }
 
   public function load(Loader $loader): void {
@@ -38,7 +42,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   public function register_routes(): void {
     $namespace = $this->namespace;
     $base = $this->rest_base;
-    register_rest_route($namespace, '/webhook' . $base, [
+    register_rest_route($namespace, '/' . $base . '/webhook', [
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'handle_webhook'],
@@ -49,7 +53,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       ],
       'schema' => [$this, 'get_public_item_schema'],
     ]);
-    register_rest_route($namespace, '/create-payment-intent' . $base, [
+    register_rest_route($namespace, '/' . $base . '/create-payment-intent', [
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'create_payment_intent'],

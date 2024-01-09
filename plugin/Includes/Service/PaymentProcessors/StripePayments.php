@@ -6,14 +6,19 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class StripePayments {
-  private $bracket_repo;
-  private $bracket_product_utils;
+  private BracketRepo $bracket_repo;
+  private BracketProductUtils $bracket_product_utils;
   private StripeClient $stripe;
 
-  public function __construct() {
+  /**
+   * @param array{stripe_client?: StripeClient} $args
+   */
+  public function __construct(array $args = []) {
     $this->bracket_repo = new BracketRepo();
     $this->bracket_product_utils = new BracketProductUtils();
-    $this->stripe = new StripeClient(STRIPE_SECRET_KEY);
+    $this->stripe =
+      $args['stripe_client'] ??
+      new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
   }
 
   public function create_payment_intent_for_paid_bracket(
