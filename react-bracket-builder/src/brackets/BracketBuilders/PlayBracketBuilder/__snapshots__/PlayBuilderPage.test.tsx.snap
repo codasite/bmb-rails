@@ -306,6 +306,15 @@ exports[`PlayBuilderPage renders PlayBuilderPage correctly 1`] = `
             </span>
           </button>
         </div>
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-bg-transparent tw-text-white/20 tw-gap-10 tw-text-24 tw-font-700 tw-rounded-8 tw-py-16 tw-border-solid tw-border tw-border-white/20"
+          disabled=""
+        >
+          <svg
+            style="height: 24px;"
+          />
+          Submit picks
+        </button>
       </div>
     </div>
   </div>
