@@ -1,4 +1,5 @@
 <?php
+namespace WStrategies\BMB\Includes\Service\PaymentProcessors;
 
 class StripePayments {
   // public function create_payment_intent_for_paid_bracket($bracket_id) {
