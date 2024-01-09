@@ -8,6 +8,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Service\PaymentProcessors\StripePayments;
 
 class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
@@ -19,13 +20,15 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    * @var string
    */
   protected $rest_base;
+  private StripePayments $stripe_payments;
 
   /**
-   * Constructor.
+   * @param array{stripe_payments?: StripePayments} $args
    */
-  public function __construct($args = []) {
+  public function __construct(array $args = []) {
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'stripe';
+    $this->stripe_payments = $args['stripe_payments'] ?? new StripePayments();
   }
 
   public function load(Loader $loader): void {
@@ -65,12 +68,21 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     return new WP_REST_Response('hello from webhook', 200);
   }
 
+  /**
+   * @param WP_REST_Request<array{item_id: int}> $request
+   */
   public function create_payment_intent(
     WP_REST_Request $request
   ): WP_REST_Response {
-    $body = $request->get_body();
-    $body = json_decode($body, true);
-    return new WP_REST_Response('hello from webhook', 200);
+    try {
+      $bracket_id = $request['item_id'];
+      $client_secret = $this->stripe_payments->create_payment_intent_for_paid_bracket(
+        $bracket_id
+      );
+      return new WP_REST_Response(['client_secret' => $client_secret], 200);
+    } catch (\Exception $e) {
+      return new WP_REST_Response($e->getMessage(), 500);
+    }
   }
 
   /**

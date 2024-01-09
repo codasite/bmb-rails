@@ -22,3 +22,4 @@ const WPBB_PLUGIN_DIR = '';
 const ABSPATH = '';
 const ARRAY_A = '';
 const COOKIE_DOMAIN = '';
+const STRIPE_SECRET_KEY = '';
