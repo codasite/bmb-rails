@@ -1,0 +1,9 @@
+<?php
+namespace WStrategies\BMB\tests\Includes\Service\PaymentProcessors;
+
+use Stripe\Service\PaymentIntentService;
+use Stripe\StripeClient;
+
+class StripeMock extends StripeClient {
+  public PaymentIntentService $paymentIntents;
+}

@@ -66,6 +66,9 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     ]);
   }
 
+  /**
+   * @param WP_REST_Request<array{}> $request
+   */
   public function handle_webhook(WP_REST_Request $request): WP_REST_Response {
     $body = $request->get_body();
     $body = json_decode($body, true);
@@ -78,6 +81,9 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   public function create_payment_intent(
     WP_REST_Request $request
   ): WP_REST_Response {
+    if (!isset($request['item_id'])) {
+      return new WP_REST_Response('item_id is required', 400);
+    }
     try {
       $bracket_id = $request['item_id'];
       $client_secret = $this->stripe_payments->create_payment_intent_for_paid_bracket(
@@ -92,7 +98,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
    * Verify that the request is coming from Stripe
    *
-   * @param WP_REST_Request $request Full details about the request.
+   * @param WP_REST_Request<array{}> $request Full details about the request.
    * @return bool|WP_Error
    */
   public function webhook_verification(
@@ -104,7 +110,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
-   * @param WP_REST_Request $request Full details about the request.
+   * @param WP_REST_Request<array{}> $request Full details about the request.
    *
    * @return WP_Error|bool
    */

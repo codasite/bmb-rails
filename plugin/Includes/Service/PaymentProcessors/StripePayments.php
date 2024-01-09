@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaymentProcessors;
 
+use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
@@ -21,6 +22,9 @@ class StripePayments {
       new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
   }
 
+  /**
+   * @throws ApiErrorException
+   */
   public function create_payment_intent_for_paid_bracket(
     int $bracket_id
   ): ?string {
@@ -34,7 +38,6 @@ class StripePayments {
         'bracket_id' => $bracket_id,
       ],
     ]);
-
     return $intent->client_secret;
   }
 }

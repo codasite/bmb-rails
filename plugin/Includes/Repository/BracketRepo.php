@@ -99,6 +99,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     }
 
     $bracket_post = get_post($post);
+    assert($bracket_post instanceof WP_Post || $bracket_post === null);
 
     if (
       !$bracket_post ||

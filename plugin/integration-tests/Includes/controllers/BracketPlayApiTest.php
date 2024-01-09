@@ -9,7 +9,6 @@ use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
-use WStrategies\BMB\tests\WPBB_UnitTestCase;
 
 class BracketPlayApiTest extends WPBB_UnitTestCase {
   private $play_repo;

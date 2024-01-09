@@ -1,9 +1,12 @@
 <?php
 
-use Stripe\StripeClient;
+use Stripe\Service\PaymentIntentService;
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripePayments;
+use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;
+
+require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/StripeMock.php';
 
 class StripePaymentsApiTest extends \WPBB_UnitTestCase {
   public function test_webhook_handler() {
@@ -24,7 +27,25 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
   }
 
   public function test_create_payment_intent() {
-    $stripe_mock = $this->createMock(StripeClient::class);
+    $bracket = $this->create_bracket([
+      'id' => 1,
+    ]);
+    update_post_meta($bracket->id, 'bracket_fee', 1.0);
+    $stripe_mock = $this->createMock(StripeMock::class);
+    $stripe_mock->paymentIntents = $this->createMock(
+      PaymentIntentService::class
+    );
+    $stripe_mock->paymentIntents
+      ->expects($this->once())
+      ->method('create')
+      ->with([
+        'amount' => 100,
+        'currency' => 'usd',
+        'metadata' => [
+          'bracket_id' => 1,
+        ],
+      ])
+      ->willReturn((object) ['client_secret' => 'test_secret']);
     $api = new StripePaymentsApi([
       'stripe_payments' => new StripePayments([
         'stripe_client' => $stripe_mock,
@@ -39,11 +60,14 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $request->set_body(
       wp_json_encode([
-        'foo' => 'bar',
+        'item_id' => 1,
       ])
     );
-    $response = rest_do_request($request);
+    $response = $api->create_payment_intent($request);
+    $this->assertSame(
+      ['client_secret' => 'test_secret'],
+      $response->get_data()
+    );
     $this->assertSame(200, $response->get_status());
-    $this->assertSame('hello from webhook', $response->get_data());
   }
 }

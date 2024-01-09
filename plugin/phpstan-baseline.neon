@@ -1051,36 +1051,6 @@ parameters:
 			path: Includes/Repository/BracketRepo.php
 
 		-
-			message: "#^Cannot access property \\$ID on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
-			count: 10
-			path: Includes/Repository/BracketRepo.php
-
-		-
-			message: "#^Cannot access property \\$post_author on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
-			count: 1
-			path: Includes/Repository/BracketRepo.php
-
-		-
-			message: "#^Cannot access property \\$post_name on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
-			count: 1
-			path: Includes/Repository/BracketRepo.php
-
-		-
-			message: "#^Cannot access property \\$post_status on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
-			count: 1
-			path: Includes/Repository/BracketRepo.php
-
-		-
-			message: "#^Cannot access property \\$post_title on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
-			count: 1
-			path: Includes/Repository/BracketRepo.php
-
-		-
-			message: "#^Cannot access property \\$post_type on array\\<int\\|string, mixed\\>\\|WP_Post\\.$#"
-			count: 1
-			path: Includes/Repository/BracketRepo.php
-
-		-
 			message: "#^Cannot call method to_array\\(\\) on WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\Bracket\\|null\\.$#"
 			count: 1
 			path: Includes/Repository/BracketRepo.php
