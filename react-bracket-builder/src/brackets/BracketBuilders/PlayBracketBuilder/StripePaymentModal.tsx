@@ -16,6 +16,7 @@ interface StripePaymentModalProps {
   show: boolean
   setShow: (show: boolean) => void
   clientSecret: string
+  paymentAmount: number
   myPlayHistoryUrl: string
 }
 
@@ -37,7 +38,10 @@ export default function StripePaymentModal(props: StripePaymentModalProps) {
           <Modal show={show} setShow={setShow}>
             <ModalHeader text={title} />
             <div className="tw-flex tw-flex-col tw-gap-10">
-              <StripePaymentForm myPlayHistoryUrl={props.myPlayHistoryUrl} />
+              <StripePaymentForm
+                myPlayHistoryUrl={props.myPlayHistoryUrl}
+                paymentAmount={props.paymentAmount}
+              />
               <CancelButton onClick={() => setShow(false)} />
             </div>
           </Modal>

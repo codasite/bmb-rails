@@ -141,7 +141,10 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
           $play
         );
       return new WP_REST_Response(
-        ['client_secret' => $payment_intent->client_secret],
+        [
+          'client_secret' => $payment_intent->client_secret,
+          'amount' => $payment_intent->amount,
+        ],
         200
       );
     } catch (\Exception $e) {

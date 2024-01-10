@@ -3,7 +3,10 @@ import { Layout, LayoutObject } from '@stripe/stripe-js'
 import React, { useEffect, useState } from 'react'
 import { ConfirmButton } from '../../../modals/ModalButtons'
 
-export default function StripePaymentForm(props: { myPlayHistoryUrl: string }) {
+export default function StripePaymentForm(props: {
+  myPlayHistoryUrl: string
+  paymentAmount: number
+}) {
   const stripe = useStripe()
   const elements = useElements()
 
@@ -75,8 +78,13 @@ export default function StripePaymentForm(props: { myPlayHistoryUrl: string }) {
       {message && (
         <p className={'tw-text-red tw-font-sans tw-my-0'}>{message}</p>
       )}
-      <ConfirmButton disabled={loading || !stripe || !elements}>
-        <span>Pay Now</span>
+      <ConfirmButton
+        disabled={loading || !stripe || !elements}
+        fontWeight={600}
+        gap={4}
+      >
+        <span>Pay</span>
+        <span>${props.paymentAmount / 100}</span>
       </ConfirmButton>
     </form>
   )

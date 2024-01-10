@@ -3,5 +3,6 @@ export interface PaymentIntentReq {
 }
 
 export interface PaymentIntentRes {
+  amount: number
   clientSecret: string
 }

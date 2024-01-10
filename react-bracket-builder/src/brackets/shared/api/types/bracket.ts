@@ -104,4 +104,5 @@ export interface PlayRes extends PostBase {
   bustedPlay?: PlayRes
   isBustable?: boolean
   stripePaymentIntentClientSecret?: string
+  stripePaymentAmount?: number
 }

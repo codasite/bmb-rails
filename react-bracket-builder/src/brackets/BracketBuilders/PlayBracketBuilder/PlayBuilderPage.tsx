@@ -56,6 +56,7 @@ const PlayPage = (props: PlayPageProps) => {
   const [showRegisterModal, setShowRegisterModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [stripeClientSecret, setStripeClientSecret] = useState<string>('')
+  const [stripePaymentAmount, setStripePaymentAmount] = useState<number>(null)
   const { width: windowWidth, height: windowHeight } = useContext(
     WindowDimensionsContext
   )
@@ -162,6 +163,7 @@ const PlayPage = (props: PlayPageProps) => {
         .createStripePaymentIntent({ playId: storedPlay.id })
         .then((res) => {
           setStripeClientSecret(res.clientSecret)
+          setStripePaymentAmount(res.amount)
           setShowPaymentModal(true)
         })
         .catch((err) => {
@@ -184,6 +186,7 @@ const PlayPage = (props: PlayPageProps) => {
         setStoredPlay(newReq)
         if (paymentRequired) {
           setStripeClientSecret(res.stripePaymentIntentClientSecret)
+          setStripePaymentAmount(res.stripePaymentAmount)
           setShowPaymentModal(true)
           setProcessing(false)
         } else if (isUserLoggedIn) {
@@ -224,6 +227,7 @@ const PlayPage = (props: PlayPageProps) => {
         show={showPaymentModal}
         setShow={setShowPaymentModal}
         clientSecret={stripeClientSecret}
+        paymentAmount={stripePaymentAmount}
         myPlayHistoryUrl={myPlayHistoryUrl}
       />
       {showPaginated ? (

@@ -155,6 +155,12 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
 
   public function test_create_payment_intent_play_exists() {
     $mock_payment_intent = $this->createMock(\Stripe\PaymentIntent::class);
+    $mock_payment_intent
+      ->method('__get')
+      ->willReturnMap([
+        ['client_secret', 'test_client_secret'],
+        ['amount', 1000],
+      ]);
     $bracket = $this->create_bracket();
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
@@ -188,18 +194,24 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $request->set_body(wp_json_encode($data));
 
     $res = $api->create_payment_intent($request);
-
-    $this->assertSame(200, $res->get_status());
     $this->assertEquals(
       [
-        'client_secret' => $mock_payment_intent->client_secret,
+        'client_secret' => 'test_client_secret',
+        'amount' => 1000,
       ],
       $res->get_data()
     );
+    $this->assertSame(200, $res->get_status());
   }
 
   public function test_author_can_create_payment_intent() {
     $mock_payment_intent = $this->createMock(\Stripe\PaymentIntent::class);
+    $mock_payment_intent
+      ->method('__get')
+      ->willReturnMap([
+        ['client_secret', 'test_client_secret'],
+        ['amount', 1000],
+      ]);
     $user = $this->create_user();
     $bracket = $this->create_bracket();
     $play = $this->create_play([
@@ -241,7 +253,8 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $this->assertSame(200, $res->get_status());
     $this->assertEquals(
       [
-        'client_secret' => $mock_payment_intent->client_secret,
+        'client_secret' => 'test_client_secret',
+        'amount' => 1000,
       ],
       $res->get_data()
     );

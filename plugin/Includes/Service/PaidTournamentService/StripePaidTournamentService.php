@@ -13,6 +13,7 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
   public static string $SHOULD_CREATE_STRIPE_PAYMENT_INTENT_REQUEST_DATA_KEY = 'create_stripe_payment_intent';
   public static string $CLIENT_SECRET_RESPONSE_DATA_KEY = 'stripe_payment_intent_client_secret';
   public static string $INTENT_ID_KEY = 'stripe_payment_intent_id';
+  public static string $AMOUNT_KEY = 'stripe_payment_amount';
 
   private StripeClient $stripe;
   private BracketProductUtils $bracket_product_utils;
@@ -68,6 +69,7 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
     $data[self::$CLIENT_SECRET_RESPONSE_DATA_KEY] =
       $this->stripe_payment_intent->client_secret;
     $data[self::$INTENT_ID_KEY] = $this->stripe_payment_intent->id;
+    $data[self::$AMOUNT_KEY] = $this->stripe_payment_intent->amount;
     return $data;
   }
 
