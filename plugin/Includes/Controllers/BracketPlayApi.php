@@ -109,7 +109,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'create_item'],
-        'permission_callback' => [$this, 'customer_permission_check'],
+        'permission_callback' => [$this, 'create_play_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
         ),
@@ -220,23 +220,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    */
   public function create_item($request): WP_Error|WP_REST_Response {
     $params = $request->get_params();
-    $buster_play = isset($params['busted_id']) && $params['busted_id'] !== null;
     $bracket_id = $params['bracket_id'];
-    if (!current_user_can('wpbb_play_bracket', $bracket_id)) {
-      return new WP_Error(
-        'unauthorized',
-        'You are not authorized to play this bracket.',
-        ['status' => 403]
-      );
-    }
-    if ($buster_play) {
-      $busted_play = $this->play_repo->get($params['busted_id']);
-      if (!$busted_play->is_bustable) {
-        return new WP_Error('unauthorized', 'This bracket cannot be busted.', [
-          'status' => 403,
-        ]);
-      }
-    }
     try {
       $play = $this->serializer->deserialize($params);
     } catch (ValidationException $e) {
@@ -316,5 +300,29 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_Error|bool {
     return current_user_can('read');
+  }
+
+  public function create_play_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
+    $params = $request->get_params();
+    $buster_play = isset($params['busted_id']) && $params['busted_id'] !== null;
+    $bracket_id = $params['bracket_id'];
+    if (!current_user_can('wpbb_play_bracket', $bracket_id)) {
+      return new WP_Error(
+        'unauthorized',
+        'You are not authorized to play this bracket.',
+        ['status' => 403]
+      );
+    }
+    if ($buster_play) {
+      $busted_play = $this->play_repo->get($params['busted_id']);
+      if (!$busted_play->is_bustable) {
+        return new WP_Error('unauthorized', 'This bracket cannot be busted.', [
+          'status' => 403,
+        ]);
+      }
+    }
+    return true;
   }
 }
