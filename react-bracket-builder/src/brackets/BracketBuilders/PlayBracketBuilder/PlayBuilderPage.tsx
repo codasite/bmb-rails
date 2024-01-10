@@ -148,6 +148,7 @@ const PlayPage = (props: PlayPageProps) => {
   const handleSubmitPicksClick = async () => {
     const playReq = getPlayReq()
     playReq.generateImages = false
+    playReq.createStripePaymentIntent = paymentRequired
     setProcessing(true)
     return bracketApi
       .createPlay(playReq)
