@@ -84,32 +84,6 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
-   * @param WP_REST_Request<array{play_id: int}> $request
-   */
-  public function get_payment_intent(
-    WP_REST_Request $request
-  ): WP_REST_Response {
-    if (!isset($request['play_id'])) {
-      return new WP_REST_Response('play_id is required', 400);
-    }
-    try {
-      $play_id = $request['play_id'];
-      $payment_intent = $this->stripe_paid_tournament_service->get_play_payment_intent(
-        $play_id
-      );
-      if (!$payment_intent) {
-        return new WP_REST_Response('payment intent not found', 404);
-      }
-      return new WP_REST_Response(
-        ['client_secret' => $payment_intent->client_secret],
-        200
-      );
-    } catch (\Exception $e) {
-      return new WP_REST_Response($e->getMessage(), 500);
-    }
-  }
-
-  /**
    * Verify that the request is coming from Stripe
    *
    * @param WP_REST_Request<array{}> $request Full details about the request.

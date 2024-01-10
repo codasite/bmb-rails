@@ -79,19 +79,6 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
     );
   }
 
-  /**
-   * @throws ApiErrorException
-   */
-  public function get_play_payment_intent(
-    int $play_post_id
-  ): ?\Stripe\PaymentIntent {
-    $payment_intent_id = $this->get_play_payment_intent_id($play_post_id);
-    if (!$payment_intent_id) {
-      return null;
-    }
-    return $this->stripe->paymentIntents->retrieve($payment_intent_id);
-  }
-
   public function requires_payment(BracketPlay $play): bool {
     $fee = $this->bracket_product_utils->get_bracket_fee($play->bracket_id);
     return $fee > 0;
