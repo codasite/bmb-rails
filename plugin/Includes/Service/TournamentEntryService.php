@@ -22,11 +22,13 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
     return $play;
   }
 
-  public function try_mark_play_as_tournament_entry(BracketPlay $play): void {
+  public function try_mark_play_as_tournament_entry(
+    BracketPlay $play
+  ): ?BracketPlay {
     if (!$this->should_mark_play_as_tournament_entry($play)) {
-      return;
+      return $play;
     }
-    $this->mark_play_as_tournament_entry($play);
+    return $this->mark_play_as_tournament_entry($play);
   }
 
   public function should_mark_play_as_tournament_entry(
@@ -47,16 +49,19 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
     return true;
   }
 
-  public function mark_play_as_tournament_entry(BracketPlay $play): void {
+  public function mark_play_as_tournament_entry(
+    BracketPlay $play
+  ): ?BracketPlay {
     $author_id = $play->author;
     $bracket_id = $play->bracket_id;
     $play_id = $play->id;
     if ($this->should_clear_tournament_entries($bracket_id)) {
       $this->clear_tournament_entries_for_author($bracket_id, $author_id);
     }
-    $this->play_repo->update($play_id, [
+    $updated = $this->play_repo->update($play_id, [
       'is_tournament_entry' => true,
     ]);
+    return $updated;
   }
 
   public function should_clear_tournament_entries(int $bracket_id): bool {

@@ -5,14 +5,18 @@ use Stripe\Exception\SignatureVerificationException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\TournamentEntryService;
 
 class StripeWebhookService {
   private PlayRepo $play_repo;
+  private TournamentEntryService $tournament_entry_service;
   private string $webhook_secret;
   private StripeWebhookFunctions $stripe_webhook_functions;
 
   public function __construct($args = []) {
-    $this->play_repo = new PlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
+    $this->tournament_entry_service =
+      $args['tournament_entry_service'] ?? new TournamentEntryService();
     $api_key = defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '';
     Stripe::setApiKey($api_key);
     $this->webhook_secret = defined('STRIPE_WEBHOOK_SECRET')
@@ -59,12 +63,23 @@ class StripeWebhookService {
     if (!$play) {
       throw new \Exception($message . 'No play found with id ' . $play_id);
     }
-    $result = $this->play_repo->update($play, [
+    $paid_play = $this->play_repo->update($play, [
       'is_paid' => true,
     ]);
-    if (!$result || !$result->is_paid) {
+    if (!$paid_play || !$paid_play->is_paid) {
       throw new \Exception(
-        $message . 'Failed to update play with id ' . $play_id
+        $message . 'Failed to update play with id ' . $play_id . ' to paid'
+      );
+    }
+    $entry = $this->tournament_entry_service->try_mark_play_as_tournament_entry(
+      $paid_play
+    );
+    if (!$entry || !$entry->is_tournament_entry) {
+      throw new \Exception(
+        $message .
+          'Failed to mark play with id ' .
+          $play_id .
+          ' as tournament entry'
       );
     }
   }
