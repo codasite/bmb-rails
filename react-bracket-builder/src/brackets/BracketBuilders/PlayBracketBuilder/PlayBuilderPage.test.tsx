@@ -28,7 +28,10 @@ describe('PlayBuilderPage', () => {
   })
   test('renders PlayBuilderPage correctly', () => {
     const { asFragment } = render(
-      <PlayBuilderPage matchTree={MatchTree.fromNumTeams(10)} />
+      <PlayBuilderPage
+        matchTree={MatchTree.fromNumTeams(10)}
+        bracket={{ isPrintable: true, isOpen: true }}
+      />
     )
     expect(asFragment()).toMatchSnapshot()
   })
@@ -122,7 +125,7 @@ describe('PlayBuilderPage', () => {
     const { asFragment } = render(
       <PlayBuilderPage
         matchTree={matchTree}
-        bracket={{ id: 1 }}
+        bracket={{ id: 1, isPrintable: true }}
         bracketProductArchiveUrl="#"
         myPlayHistoryUrl="#"
       />

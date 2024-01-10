@@ -16,12 +16,15 @@ export const PlayBuilderButtons = (props: PlayBuilderButtonProps) => {
   const disableButtons = processing || (matchTree && !matchTree.allPicked())
   const disableApparel = disableButtons || !handleApparelClick
   const showSubmitPicks = handleSubmitPicksClick !== undefined
+  const showAddToApparel = handleApparelClick !== undefined
   return (
     <>
-      <AddToApparel
-        handleApparelClick={handleApparelClick}
-        disabled={disableApparel}
-      />
+      {showAddToApparel && (
+        <AddToApparel
+          handleApparelClick={handleApparelClick}
+          disabled={disableApparel}
+        />
+      )}
       {showSubmitPicks && (
         <ActionButton
           variant="blue"

@@ -3,10 +3,7 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { PickableBracket } from '../../shared/components/Bracket'
 import { ThemeSelector } from '../../shared/components'
-import { ActionButton } from '../../shared/components/ActionButtons'
 import { PlayBuilderProps } from './types'
-import { AddToApparel } from '../AddToApparel'
-import { CircleCheckBrokenIcon } from '../../shared'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
 import StripePaymentModal from './StripePaymentModal'
@@ -26,8 +23,6 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     setShowPaymentModal,
   } = props
   const disableButtons = processing || (matchTree && !matchTree.allPicked())
-  const disableApparel = disableButtons || !handleApparelClick
-  const showSubmitPicks = handleSubmitPicksClick !== undefined
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
