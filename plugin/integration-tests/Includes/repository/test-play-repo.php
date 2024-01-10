@@ -703,4 +703,18 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(1, count($plays));
     $this->assertEquals($entry->id, $plays[0]->id);
   }
+
+  public function test_update_is_paid() {
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_paid' => false,
+    ]);
+
+    $updated = $this->play_repo->update($play->id, [
+      'is_paid' => true,
+    ]);
+
+    $this->assertTrue($updated->is_paid);
+  }
 }
