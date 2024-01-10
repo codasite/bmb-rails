@@ -3,14 +3,20 @@ namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
 use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\InvalidArgumentException;
+use Stripe\PaymentIntent;
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class StripePaidTournamentService implements PaidTournamentServiceInterface {
+  public static string $PAYMENT_INTENT_ID_META_KEY = 'payment_intent_id';
+  public static string $CLIENT_SECRET_RESPONSE_DATA_KEY = 'stripe_payment_intent_client_secret';
+
   private StripeClient $stripe;
   private BracketProductUtils $bracket_product_utils;
-  public static string $PAYMENT_INTENT_ID_META_KEY = 'payment_intent_id';
+  // This is set after the payment intent is created for a paid play,
+  // and then the client secret appended to the play response data
+  private PaymentIntent $stripe_payment_intent;
 
   /**
    * @param array<string, mixed> $args
@@ -33,7 +39,7 @@ class StripePaidTournamentService implements PaidTournamentServiceInterface {
       return;
     }
     $intent = $this->create_payment_intent_for_paid_tournament_play($play);
-    // update the play post meta with the payment intent id
+    $this->stripe_payment_intent = $intent;
     $this->set_play_payment_intent_id($play->id, $intent->id);
   }
 
@@ -42,6 +48,12 @@ class StripePaidTournamentService implements PaidTournamentServiceInterface {
    * @return array<mixed>
    */
   public function filter_play_created_response_data(array $data): array {
+    $secret = isset($this->stripe_payment_intent)
+      ? $this->stripe_payment_intent->client_secret
+      : null;
+    if ($secret) {
+      $data[self::$CLIENT_SECRET_RESPONSE_DATA_KEY] = $secret;
+    }
     return $data;
   }
 

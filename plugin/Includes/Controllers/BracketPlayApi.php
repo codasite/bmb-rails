@@ -274,6 +274,9 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       update_post_meta($saved->id, 'wpbb_anonymous_play_key', $nonce);
     }
     $serialized = $this->serializer->serialize($saved);
+    $serialized = $this->paid_tournament_service->filter_play_created_response_data(
+      $serialized
+    );
     return new WP_REST_Response($serialized, 201);
   }
 
