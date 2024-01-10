@@ -1,19 +1,17 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
-use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\InvalidArgumentException;
 use Stripe\PaymentIntent;
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerInterface;
-use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class StripePaidTournamentService extends BracketPlayCreateListenerBase {
   public static string $PAYMENT_INTENT_ID_META_KEY = 'payment_intent_id';
   public static string $CLIENT_SECRET_RESPONSE_DATA_KEY = 'stripe_payment_intent_client_secret';
+  public static string $INTENT_ID_KEY = 'stripe_payment_intent_id';
 
   private StripeClient $stripe;
   private BracketProductUtils $bracket_product_utils;
@@ -51,12 +49,12 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
    * @return array<mixed>
    */
   public function filter_after_play_serialized(array $data): array {
-    $secret = isset($this->stripe_payment_intent)
-      ? $this->stripe_payment_intent->client_secret
-      : null;
-    if ($secret) {
-      $data[self::$CLIENT_SECRET_RESPONSE_DATA_KEY] = $secret;
+    if (!isset($this->stripe_payment_intent)) {
+      return $data;
     }
+    $data[self::$CLIENT_SECRET_RESPONSE_DATA_KEY] =
+      $this->stripe_payment_intent->client_secret;
+    $data[self::$INTENT_ID_KEY] = $this->stripe_payment_intent->id;
     return $data;
   }
 

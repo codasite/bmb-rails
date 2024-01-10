@@ -3,7 +3,6 @@
 use Stripe\PaymentIntent;
 use Stripe\Service\PaymentIntentService;
 use Stripe\StripeClient;
-
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
@@ -185,6 +184,11 @@ class StripePaidTournamentServiceTest extends TestCase {
     $this->assertSame(
       'test_secret',
       $data[StripePaidTournamentService::$CLIENT_SECRET_RESPONSE_DATA_KEY]
+    );
+    // assert that the id is added to the response data
+    $this->assertSame(
+      'test_id',
+      $data[StripePaidTournamentService::$INTENT_ID_KEY]
     );
   }
 }
