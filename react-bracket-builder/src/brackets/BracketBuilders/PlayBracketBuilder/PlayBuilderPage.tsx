@@ -20,9 +20,6 @@ import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
-import { PaymentIntentReq } from '../../shared/api/types/stripe'
-import { loadStripe } from '@stripe/stripe-js'
-import { Elements } from '@stripe/react-stripe-js'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import StripePaymentModal from './StripePaymentModal'
 
@@ -166,6 +163,7 @@ const PlayPage = (props: PlayPageProps) => {
         if (paymentRequired) {
           setStripeClientSecret(res.stripePaymentIntentClientSecret)
           setShowPaymentModal(true)
+          setProcessing(false)
         } else if (isUserLoggedIn) {
           window.location.assign(myPlayHistoryUrl)
         } else {
