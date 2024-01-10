@@ -4,15 +4,15 @@ namespace WStrategies\BMB\Includes\Service\PaymentProcessors;
 use Stripe\Exception\SignatureVerificationException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class StripeWebhookService {
-  private BracketPlayRepo $play_repo;
+  private PlayRepo $play_repo;
   private string $webhook_secret;
   private StripeWebhookFunctions $stripe_webhook_functions;
 
   public function __construct($args = []) {
-    $this->play_repo = new BracketPlayRepo();
+    $this->play_repo = new PlayRepo();
     $api_key = defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '';
     Stripe::setApiKey($api_key);
     $this->webhook_secret = defined('STRIPE_WEBHOOK_SECRET')

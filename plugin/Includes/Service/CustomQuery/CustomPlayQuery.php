@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\CustomQuery;
 
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class CustomPlayQuery {
   private $play_repo;
@@ -10,7 +10,7 @@ class CustomPlayQuery {
 
   public function __construct($opts = []) {
     global $wpdb;
-    $this->play_repo = $opts['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $opts['play_repo'] ?? new PlayRepo();
     $this->wpdb = $opts['wpdb'] ?? $wpdb;
   }
 

@@ -4,7 +4,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
@@ -152,7 +152,7 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
     ]);
 
-    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock = $this->createMock(PlayRepo::class);
     $play_repo_mock->method('get')->willReturn($play);
 
     $integration = new GelatoProductIntegration([
@@ -183,7 +183,7 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
     ]);
 
-    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock = $this->createMock(PlayRepo::class);
     $play_repo_mock->method('get')->willReturn($play);
 
     $integration = new GelatoProductIntegration([
@@ -218,7 +218,7 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
     ]);
 
-    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock = $this->createMock(PlayRepo::class);
     $play_repo_mock->method('get')->willReturn($play);
 
     $integration = new GelatoProductIntegration([

@@ -2,7 +2,7 @@
 
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
 
@@ -172,7 +172,7 @@ class NotificationServiceTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    $play_repo_mock = $this->getMockBuilder(BracketPlayRepo::class)
+    $play_repo_mock = $this->getMockBuilder(PlayRepo::class)
       ->onlyMethods(['get_user_picks_for_result'])
       ->getMock();
     $play_repo_mock

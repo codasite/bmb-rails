@@ -1,7 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
@@ -17,7 +17,7 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
       'id' => 123,
       'paid' => false,
     ]);
-    $play_repo = new BracketPlayRepo();
+    $play_repo = new PlayRepo();
     $mock_stripe_webhook_functions = $this->createMock(
       StripeWebhookFunctions::class
     );

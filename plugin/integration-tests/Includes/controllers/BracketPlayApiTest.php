@@ -5,7 +5,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
@@ -16,7 +16,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
   public function set_up(): void {
     parent::set_up();
 
-    $this->play_repo = new BracketPlayRepo();
+    $this->play_repo = new PlayRepo();
   }
 
   public function test_create_play_for_bracket() {
@@ -176,7 +176,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $repo = new BracketPlayRepo();
+    $repo = new PlayRepo();
 
     $repo->update($play->id, [
       'author' => $user2->ID,

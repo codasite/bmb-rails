@@ -2,13 +2,13 @@
 namespace WStrategies\BMB\Includes\Service\Permissions;
 
 use WP_Post;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class PlayPermissions implements PermissionsServiceInterface {
   private $play_repo;
 
   public function __construct($opts = []) {
-    $this->play_repo = $opts['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $opts['play_repo'] ?? new PlayRepo();
   }
 
   public function has_cap($cap, $user_id, $post_id): bool {

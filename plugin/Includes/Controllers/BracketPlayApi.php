@@ -13,7 +13,7 @@ use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\AnonymousPlayService;
 use WStrategies\BMB\Includes\Service\CurrentPlayService;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\PaidTournamentServiceInterface;
@@ -26,7 +26,7 @@ use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
 class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
-  private BracketPlayRepo $play_repo;
+  private PlayRepo $play_repo;
   protected string $rest_namespace;
   protected string $base_path;
   private ProductIntegrationInterface $product_integration;
@@ -40,7 +40,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   public function __construct($args = []) {
     $this->create_listeners =
       $args['create_listeners'] ?? $this->init_create_listeners($args);
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->product_integration =
       $args['product_integration'] ?? new GelatoProductIntegration();
     $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();

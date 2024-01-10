@@ -73,37 +73,37 @@ parameters:
 		-
 			message: "#^Call to function is_wp_error\\(\\) with int will always evaluate to false\\.$#"
 			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
+			path: Includes/Repository/PlayRepo.php
 
 		-
-			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\BracketPlayRepo\\:\\:get_play_data\\(\\) should return array but returns stdClass\\.$#"
+			message: "#^Method WStrategies\\\\BMB\\\\Includes\\\\Repository\\\\PlayRepo\\:\\:get_play_data\\(\\) should return array but returns stdClass\\.$#"
 			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
+			path: Includes/Repository/PlayRepo.php
 
 		-
 			message: "#^Parameter \\#2 \\$output of method wpdb\\:\\:get_row\\(\\) expects 'ARRAY_A'\\|'ARRAY_N'\\|'OBJECT', '' given\\.$#"
 			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
+			path: Includes/Repository/PlayRepo.php
 
 		-
 			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\:\\:\\$bmb_official \\(bool\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
+			path: Includes/Repository/PlayRepo.php
 
 		-
 			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\:\\:\\$is_printed \\(bool\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
+			path: Includes/Repository/PlayRepo.php
 
 		-
 			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\:\\:\\$is_tournament_entry \\(bool\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
+			path: Includes/Repository/PlayRepo.php
 
 		-
 			message: "#^Property WStrategies\\\\BMB\\\\Includes\\\\Domain\\\\BracketPlay\\:\\:\\$is_winner \\(bool\\) on left side of \\?\\? is not nullable\\.$#"
 			count: 1
-			path: Includes/Repository/BracketPlayRepo.php
+			path: Includes/Repository/PlayRepo.php
 
 		-
 			message: "#^Call to function is_wp_error\\(\\) with int will always evaluate to false\\.$#"

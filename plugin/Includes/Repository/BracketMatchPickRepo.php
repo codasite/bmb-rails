@@ -89,7 +89,7 @@ class BracketMatchPickRepo implements CustomTableInterface {
 
     global $wpdb;
     $table_name = self::table_name();
-    $plays_table = BracketPlayRepo::table_name();
+    $plays_table = PlayRepo::table_name();
     $teams_table = BracketTeamRepo::table_name();
     $charset_collate = $wpdb->get_charset_collate();
 

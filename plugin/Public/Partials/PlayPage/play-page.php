@@ -2,10 +2,10 @@
 namespace WStrategies\BMB\Public\Partials\PlayPage;
 
 
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 $post = get_post();
-$repo = new BracketPlayRepo();
+$repo = new PlayRepo();
 $play = $repo->get($post->ID);
 if (!$play) {
 	header('HTTP/1.0 404 Not Found');

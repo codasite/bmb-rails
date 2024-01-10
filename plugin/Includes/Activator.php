@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
 use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
@@ -41,7 +41,7 @@ class Activator {
    */
   public static function activate(): void {
     BracketRepo::create_table();
-    BracketPlayRepo::create_table();
+    PlayRepo::create_table();
     BracketTeamRepo::create_table();
     BracketMatchRepo::create_table();
     BracketMatchPickRepo::create_table();
@@ -57,7 +57,7 @@ class Activator {
     BracketMatchRepo::drop_table();
     BracketTeamRepo::drop_table();
     NotificationRepo::drop_table();
-    BracketPlayRepo::drop_table();
+    PlayRepo::drop_table();
     BracketRepo::drop_table();
   }
 }

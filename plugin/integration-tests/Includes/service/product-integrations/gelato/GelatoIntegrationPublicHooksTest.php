@@ -2,7 +2,7 @@
 
 use WStrategies\BMB\Includes\Domain\BracketConfig;
 use WStrategies\BMB\Includes\Domain\MatchPick;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
@@ -395,7 +395,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       BracketImageRequestFactory::class
     );
     $gelato_mock = $this->createMock(GelatoProductIntegration::class);
-    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock = $this->createMock(PlayRepo::class);
 
     // Setup mocks for successful operations
     $s3_mock
@@ -467,7 +467,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       BracketImageRequestFactory::class
     );
     $gelato_mock = $this->createMock(GelatoProductIntegration::class);
-    $play_repo_mock = $this->createMock(BracketPlayRepo::class);
+    $play_repo_mock = $this->createMock(PlayRepo::class);
 
     // Setup mock for failure in getting back design
     $client_mock->method('send_many')->willReturn([]); // Simulate failure

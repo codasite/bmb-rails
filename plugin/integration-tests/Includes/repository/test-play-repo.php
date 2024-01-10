@@ -5,16 +5,16 @@ use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class PlayRepoTest extends WPBB_UnitTestCase {
-  private BracketPlayRepo $play_repo;
+  private PlayRepo $play_repo;
   private BracketMatchPickRepo $pick_repo;
 
   public function set_up(): void {
     parent::set_up();
 
-    $this->play_repo = new BracketPlayRepo();
+    $this->play_repo = new PlayRepo();
   }
 
   public function test_add() {

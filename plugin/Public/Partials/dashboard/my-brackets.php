@@ -4,14 +4,14 @@ namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 
 
 $bracket_repo = new BracketRepo();
-$play_repo = new BracketPlayRepo();
+$play_repo = new PlayRepo();
 
 
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
@@ -232,7 +232,7 @@ function get_bracket_icon_buttons($bracket): false|string {
 	}
 }
 
-function bracket_list_item($bracket, BracketPlayRepo $play_repo): false|string {
+function bracket_list_item($bracket, PlayRepo $play_repo): false|string {
 
 	$title = $bracket->title;
 	$num_teams = $bracket->num_teams;

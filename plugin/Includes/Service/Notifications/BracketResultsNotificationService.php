@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes\Service\Notifications;
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\MatchPick;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 
 class BracketResultsNotificationService implements
@@ -12,12 +12,12 @@ class BracketResultsNotificationService implements
   protected EmailServiceInterface $email_service;
 
   protected BracketRepo $bracket_repo;
-  protected BracketPlayRepo $play_repo;
+  protected PlayRepo $play_repo;
 
   public function __construct($args = []) {
     $this->email_service =
       $args['email_service'] ?? new MailchimpEmailService();
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
   }
 

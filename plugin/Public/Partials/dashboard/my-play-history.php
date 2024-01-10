@@ -4,13 +4,13 @@ namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 use WStrategies\BMB\Public\Partials\shared\PartialsCommon;
 
 
-$play_repo = new BracketPlayRepo();
+$play_repo = new PlayRepo();
 
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 

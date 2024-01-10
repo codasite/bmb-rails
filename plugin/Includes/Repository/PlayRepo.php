@@ -12,8 +12,7 @@ use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Utils;
 
-class BracketPlayRepo extends CustomPostRepoBase implements
-  CustomTableInterface {
+class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
   /**
    * @var Utils
    */
