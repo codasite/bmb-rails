@@ -92,7 +92,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::READABLE,
         'callback' => [$this, 'get_items'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => [
           'bracket_id' => [
             'description' => 'The ID of the bracket.',
@@ -133,7 +133,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::EDITABLE,
         'callback' => [$this, 'update_item'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::EDITABLE
         ),
@@ -141,7 +141,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::DELETABLE,
         'callback' => [$this, 'delete_item'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => [
           'force' => [
             'default' => false,
@@ -160,7 +160,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         [
           'methods' => WP_REST_Server::CREATABLE,
           'callback' => [$this, 'generate_images'],
-          'permission_callback' => [$this, 'admin_permission_check'],
+          'permission_callback' => [$this, 'customer_permission_check'],
           'args' => array_merge(
             [
               'item_id' => [
@@ -302,20 +302,6 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
-   * Check if a given request has admin access to this plugin
-   *
-   * @param WP_REST_Request $request Full details about the request.
-   *
-   * @return WP_Error|bool
-   */
-  public function admin_permission_check(
-    WP_REST_Request $request
-  ): WP_Error|bool {
-    return true; // TODO: Disable this for production
-    // return current_user_can('manage_options');
-  }
-
-  /**
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
    * @param WP_REST_Request $request Full details about the request.
@@ -325,7 +311,6 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   public function customer_permission_check(
     WP_REST_Request $request
   ): WP_Error|bool {
-    return true; // TODO: Disable this for production
-    // return current_user_can('read');
+    return current_user_can('read');
   }
 }
