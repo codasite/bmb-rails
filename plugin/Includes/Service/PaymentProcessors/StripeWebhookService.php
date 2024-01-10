@@ -62,7 +62,7 @@ class StripeWebhookService {
     $result = $this->play_repo->update($play, [
       'is_paid' => true,
     ]);
-    if (!$result) {
+    if (!$result || !$result->is_paid) {
       throw new \Exception(
         $message . 'Failed to update play with id ' . $play_id
       );

@@ -129,6 +129,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'is_winner' => (bool) $play_data['is_winner'],
       'bmb_official' => (bool) $play_data['bmb_official'],
       'is_tournament_entry' => (bool) $play_data['is_tournament_entry'],
+      'is_paid' => (bool) $play_data['is_paid'],
       'thumbnail_url' => get_the_post_thumbnail_url(
         $play_post->ID,
         'thumbnail'
