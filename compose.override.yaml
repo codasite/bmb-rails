@@ -70,6 +70,7 @@ services:
         define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
         define('STRIPE_SECRET_KEY', '${STRIPE_SECRET_KEY}');
         define('STRIPE_WEBHOOK_SECRET', '${STRIPE_WEBHOOK_SECRET}');
+        define('STRIPE_PUBLISHABLE_KEY', '${STRIPE_PUBLISHABLE_KEY}');
         define('WP_MEMORY_LIMIT', '512M');
         define('IMAGE_GENERATOR_PATH', 'http://image-generator:3000/generate');
       PLUGIN_NAME: wp-bracket-builder

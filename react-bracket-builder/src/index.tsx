@@ -6,7 +6,11 @@ import * as Sentry from '@sentry/react'
 import { camelCaseKeys } from './brackets/shared/api/bracketApi'
 import './styles/main.css'
 import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
-import { wpbbAppObj, WpbbBracketProductPreviewObj } from './wpbbAppObj'
+import {
+  getAppObj,
+  wpbbAppObj,
+  WpbbBracketProductPreviewObj,
+} from './wpbbAppObj'
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
@@ -44,11 +48,10 @@ const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
 
-declare var wpbb_app_obj: any
 declare var wpbb_bracket_product_preview_obj: any
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 if (window.hasOwnProperty('wpbb_app_obj')) {
-  const ajaxObj: wpbbAppObj = camelCaseKeys(wpbb_app_obj)
+  const ajaxObj = getAppObj()
   initializeSentry(ajaxObj)
   renderProductPreview(ajaxObj)
   renderBracketBuilder(ajaxObj)
