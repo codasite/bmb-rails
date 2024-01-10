@@ -72,6 +72,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   public function handle_webhook(WP_REST_Request $request): WP_REST_Response {
     $body = $request->get_body();
     $body = json_decode($body, true);
+    $this->stripe_payments->process_webhook($body);
     return new WP_REST_Response('hello from webhook', 200);
   }
 

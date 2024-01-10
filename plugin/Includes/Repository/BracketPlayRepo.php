@@ -273,6 +273,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       'is_winner' => $play->is_winner ?? false,
       'bmb_official' => $play->bmb_official ?? false,
       'is_tournament_entry' => $play->is_tournament_entry ?? false,
+      'is_paid' => $play->is_paid ?? false,
     ]);
 
     if ($play_id && $play->picks) {
@@ -429,6 +430,7 @@ class BracketPlayRepo extends CustomPostRepoBase implements
       is_winner tinyint(1) NOT NULL DEFAULT 0,
       bmb_official tinyint(1) NOT NULL DEFAULT 0,
       is_tournament_entry tinyint(1) NOT NULL DEFAULT 0,
+      is_paid tinyint(1) NOT NULL DEFAULT 0,
 			PRIMARY KEY (id),
 			UNIQUE KEY (post_id),
 			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE,

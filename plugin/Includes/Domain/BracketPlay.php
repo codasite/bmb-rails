@@ -1,8 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
-use Exception;
-
 class BracketPlay extends PostBase implements PostBracketInterface {
   /**
    * @var int
@@ -63,6 +61,7 @@ class BracketPlay extends PostBase implements PostBracketInterface {
    * @var bool
    */
   public $is_tournament_entry;
+  public bool $is_paid;
 
   public function __construct(array $data = []) {
     parent::__construct($data);
@@ -92,6 +91,7 @@ class BracketPlay extends PostBase implements PostBracketInterface {
     $this->is_tournament_entry = isset($data['is_tournament_entry'])
       ? (bool) $data['is_tournament_entry']
       : false;
+    $this->is_paid = isset($data['is_paid']) ? (bool) $data['is_paid'] : false;
   }
 
   public static function get_post_type(): string {
