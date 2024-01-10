@@ -146,6 +146,9 @@ class EnqueueScriptsHooks implements HooksInterface {
 
     $sentry_env = defined('WP_SENTRY_ENV') ? WP_SENTRY_ENV : 'production';
     $sentry_dsn = defined('WP_SENTRY_PHP_DSN') ? WP_SENTRY_PHP_DSN : '';
+    $stripe_publishable_key = defined('STRIPE_PUBLISHABLE_KEY')
+      ? STRIPE_PUBLISHABLE_KEY
+      : '';
     list($bracket, $play) = $this->get_bracket_and_play();
 
     wp_localize_script('wpbb-bracket-builder-react', 'wpbb_app_obj', [
@@ -168,8 +171,7 @@ class EnqueueScriptsHooks implements HooksInterface {
       'play' => $play,
       'bracket' => $bracket,
       'is_user_logged_in' => is_user_logged_in(),
-      'stripe_publishable_key' =>
-        'pk_test_51OWPu0GLKms5oOW8z8oolF9mn5sO2jOhXdkAbxgOSGkLe1F7U8yF5ChZ5NeaWAicb6EJjuGdIJ4JN2gUyj0euVZ000N53Gxru2',
+      'stripe_publishable_key' => $stripe_publishable_key,
     ]);
   }
 
