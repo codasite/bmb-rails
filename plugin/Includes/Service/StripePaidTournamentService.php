@@ -1,4 +1,5 @@
 <?php
+namespace WStrategies\BMB\Includes\Service;
 
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
