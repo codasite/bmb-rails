@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Controllers;
 
+use Stripe\Exception\InvalidArgumentException;
+use Stripe\StripeClient;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -8,9 +10,11 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
-class StripeWebhooksApi extends WP_REST_Controller implements HooksInterface {
+class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
    * @var string
    */
@@ -21,6 +25,9 @@ class StripeWebhooksApi extends WP_REST_Controller implements HooksInterface {
    */
   protected $rest_base;
   private StripeWebhookService $webhook_service;
+  private StripePaidTournamentService $tournament_service;
+  private PlayRepo $play_repo;
+  private StripeClient $stripe;
 
   /**
    * @param array<string, mixed> $args
@@ -30,6 +37,17 @@ class StripeWebhooksApi extends WP_REST_Controller implements HooksInterface {
     $this->rest_base = 'stripe';
     $this->webhook_service =
       $args['webhook_service'] ?? new StripeWebhookService();
+    $this->tournament_service =
+      $args['tournament_service'] ?? new StripePaidTournamentService();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
+    try {
+      $this->stripe =
+        $args['stripe_client'] ??
+        new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
+    } catch (InvalidArgumentException $e) {
+      error_log('Stripe API key not set');
+      $this->stripe = $args['stripe_client'] ?? new StripeClient();
+    }
   }
 
   public function load(Loader $loader): void {
@@ -50,9 +68,12 @@ class StripeWebhooksApi extends WP_REST_Controller implements HooksInterface {
     ]);
     register_rest_route($namespace, '/' . $base . '/payment-intent', [
       [
-        'methods' => WP_REST_Server::READABLE,
-        'callback' => [$this, 'get_payment_intent'],
-        'permission_callback' => [$this, 'customer_permission_check'],
+        'methods' => WP_REST_Server::CREATABLE,
+        'callback' => [$this, 'create_payment_intent'],
+        'permission_callback' => [$this, 'author_permission_check'],
+        'args' => $this->get_endpoint_args_for_item_schema(
+          WP_REST_Server::CREATABLE
+        ),
       ],
       'schema' => [$this, 'get_public_item_schema'],
     ]);
@@ -91,15 +112,53 @@ class StripeWebhooksApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
+   * @param WP_REST_Request<array{play_id: int}> $request
+   */
+  public function create_payment_intent(
+    WP_REST_Request $request
+  ): WP_REST_Response {
+    if (!isset($request['play_id'])) {
+      return new WP_REST_Response('play_id is required', 400);
+    }
+    try {
+      $play_id = $request['play_id'];
+      $play = $this->play_repo->get($play_id);
+      if (!$play) {
+        return new WP_REST_Response('play not found', 404);
+      }
+      $existing_payment_intent_id = $this->tournament_service->get_play_payment_intent_id(
+        $play_id
+      );
+      $payment_intent = null;
+      if ($existing_payment_intent_id) {
+        $payment_intent = $this->stripe->paymentIntents->retrieve(
+          $existing_payment_intent_id
+        );
+      }
+      $payment_intent =
+        $payment_intent ??
+        $this->tournament_service->create_payment_intent_for_paid_tournament_play(
+          $play
+        );
+      return new WP_REST_Response(
+        ['client_secret' => $payment_intent->client_secret],
+        200
+      );
+    } catch (\Exception $e) {
+      return new WP_REST_Response($e->getMessage(), 500);
+    }
+  }
+
+  /**
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
    * @param WP_REST_Request<array{}> $request Full details about the request.
    *
    * @return WP_Error|bool
    */
-  public function customer_permission_check(
+  public function author_permission_check(
     WP_REST_Request $request
   ): WP_Error|bool {
-    return true;
+    return current_user_can('wpbb_create_payment_intent', $request['play_id']);
   }
 }

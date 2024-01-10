@@ -94,6 +94,7 @@ const PlayPage = (props: PlayPageProps) => {
       {
         bracketId: bracket?.id,
         picks: tree.toMatchPicks(),
+        id: playStorage.loadPlay(bracket?.id)?.id,
       },
       bracket?.id
     )
@@ -149,10 +150,38 @@ const PlayPage = (props: PlayPageProps) => {
     const playReq = getPlayReq()
     playReq.generateImages = false
     playReq.createStripePaymentIntent = paymentRequired
+    if (
+      JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
+      storedPlay.id
+    ) {
+      if (stripeClientSecret) {
+        setShowPaymentModal(true)
+        return
+      }
+      await bracketApi
+        .createStripePaymentIntent({ playId: storedPlay.id })
+        .then((res) => {
+          setStripeClientSecret(res.clientSecret)
+          setShowPaymentModal(true)
+        })
+        .catch((err) => {
+          console.error('error: ', err)
+          Sentry.captureException(err)
+        })
+
+      return
+    }
     setProcessing(true)
     return bracketApi
       .createPlay(playReq)
       .then((res) => {
+        const playId = res.id
+        const newReq = {
+          ...playReq,
+          id: playId,
+        }
+        playStorage.storePlay(newReq, bracket?.id)
+        setStoredPlay(newReq)
         if (paymentRequired) {
           setStripeClientSecret(res.stripePaymentIntentClientSecret)
           setShowPaymentModal(true)

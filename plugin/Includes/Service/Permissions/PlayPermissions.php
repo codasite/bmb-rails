@@ -22,13 +22,15 @@ class PlayPermissions implements PermissionsServiceInterface {
         return $this->user_can_view_play($user_id, $play);
       case 'wpbb_print_play':
         return $this->user_can_print_play($user_id, $play);
+      case 'wpbb_create_payment_intent':
+        return $this->is_author($user_id, $play);
       default:
         return false;
     }
   }
 
   public static function get_caps(): array {
-    return ['wpbb_view_play', 'wpbb_print_play'];
+    return ['wpbb_view_play', 'wpbb_print_play', 'wpbb_create_payment_intent'];
   }
 
   private function user_can_view_play($user_id, $play): bool {
