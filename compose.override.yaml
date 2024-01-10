@@ -68,6 +68,7 @@ services:
         define('AWS_SECRET_ACCESS_KEY', '${AWS_SECRET_ACCESS_KEY}');
         define('MAILCHIMP_API_KEY','${MAILCHIMP_API_KEY}');
         define('MAILCHIMP_FROM_EMAIL','${MAILCHIMP_FROM_EMAIL}');
+        define('STRIPE_SECRET_KEY', '${STRIPE_SECRET_KEY}');
         define('WP_MEMORY_LIMIT', '512M');
         define('IMAGE_GENERATOR_PATH', 'http://image-generator:3000/generate');
       PLUGIN_NAME: wp-bracket-builder
