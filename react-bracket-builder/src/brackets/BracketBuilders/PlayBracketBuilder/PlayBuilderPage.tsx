@@ -99,7 +99,7 @@ const PlayPage = (props: PlayPageProps) => {
     )
   }
 
-  const handleApparelClick = async () => {
+  const getPlayReq = () => {
     const picks = matchTree?.toMatchPicks()
     const bracketId = bracket?.id
     if (!picks || !bracketId) {
@@ -108,20 +108,24 @@ const PlayPage = (props: PlayPageProps) => {
       Sentry.captureException(msg)
       return
     }
+    const playReq: PlayReq = {
+      title: bracket?.title,
+      bracketId: bracketId,
+      picks: picks,
+    }
+    return playReq
+  }
+
+  const handleApparelClick = async () => {
+    const playReq = getPlayReq()
+    playReq.generateImages = true
     if (
-      JSON.stringify(storedPlay?.picks) === JSON.stringify(picks) &&
+      JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
       storedPlay?.id
     ) {
       window.location.assign(bracketProductArchiveUrl)
       return
     }
-    const playReq: PlayReq = {
-      title: bracket?.title,
-      bracketId: bracketId,
-      picks: picks,
-      generateImages: true,
-    }
-
     setProcessing(true)
     return bracketApi
       .createPlay(playReq)
@@ -142,20 +146,8 @@ const PlayPage = (props: PlayPageProps) => {
   }
 
   const handleSubmitPicksClick = async () => {
-    const picks = matchTree?.toMatchPicks()
-    const bracketId = bracket?.id
-    if (!picks || !bracketId) {
-      const msg = 'Cannot create play. Missing picks'
-      console.error(msg)
-      Sentry.captureException(msg)
-      return
-    }
-    const playReq: PlayReq = {
-      title: bracket?.title,
-      bracketId: bracketId,
-      picks: picks,
-      generateImages: false,
-    }
+    const playReq = getPlayReq()
+    playReq.generateImages = false
     setProcessing(true)
     return bracketApi
       .createPlay(playReq)
