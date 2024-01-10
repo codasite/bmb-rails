@@ -2,9 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
-use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Domain\MatchPick;
 
 class BracketPlaySerializer extends PostBaseSerializer {
   private MatchPickSerializer $match_pick_serializer;
@@ -35,6 +33,7 @@ class BracketPlaySerializer extends PostBaseSerializer {
       'is_winner',
       'bmb_official',
       'is_tournament_entry',
+      'is_paid',
       'bracket' => [
         'serializer' => $this->bracket_serializer,
         'many' => false,
@@ -60,6 +59,7 @@ class BracketPlaySerializer extends PostBaseSerializer {
       'is_winner',
       'bmb_official',
       'is_tournament_entry',
+      'is_paid',
       'bracket',
       'busted_play',
     ]);
