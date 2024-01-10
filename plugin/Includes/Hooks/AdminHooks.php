@@ -116,6 +116,7 @@ class AdminHooks implements HooksInterface {
     $role->add_cap('wpbb_view_play');
     $role->add_cap('wpbb_print_play');
     $role->add_cap('wpbb_delete_notification');
+    $role->add_cap('wpbb_create_payment_intent');
   }
 
   /**
