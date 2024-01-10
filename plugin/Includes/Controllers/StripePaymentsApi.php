@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Controllers;
 
+use Stripe\Exception\InvalidArgumentException;
+use Stripe\StripeClient;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -25,6 +27,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   private StripeWebhookService $webhook_service;
   private StripePaidTournamentService $tournament_service;
   private PlayRepo $play_repo;
+  private StripeClient $stripe;
 
   /**
    * @param array<string, mixed> $args
@@ -37,6 +40,14 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     $this->tournament_service =
       $args['tournament_service'] ?? new StripePaidTournamentService();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
+    try {
+      $this->stripe =
+        $args['stripe_client'] ??
+        new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
+    } catch (InvalidArgumentException $e) {
+      error_log('Stripe API key not set');
+      $this->stripe = $args['stripe_client'] ?? new StripeClient();
+    }
   }
 
   public function load(Loader $loader): void {
@@ -115,9 +126,20 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       if (!$play) {
         return new WP_REST_Response('play not found', 404);
       }
-      $payment_intent = $this->tournament_service->create_payment_intent_for_paid_tournament_play(
-        $play
+      $existing_payment_intent_id = $this->tournament_service->get_play_payment_intent_id(
+        $play_id
       );
+      $payment_intent = null;
+      if ($existing_payment_intent_id) {
+        $payment_intent = $this->stripe->paymentIntents->retrieve(
+          $existing_payment_intent_id
+        );
+      }
+      $payment_intent =
+        $payment_intent ??
+        $this->tournament_service->create_payment_intent_for_paid_tournament_play(
+          $play
+        );
       return new WP_REST_Response(
         ['client_secret' => $payment_intent->client_secret],
         200
