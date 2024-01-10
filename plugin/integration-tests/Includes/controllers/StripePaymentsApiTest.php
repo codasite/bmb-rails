@@ -1,6 +1,6 @@
 <?php
 
-use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
+use WStrategies\BMB\Includes\Controllers\StripeWebhooksApi;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
@@ -39,7 +39,7 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
           ],
         ]
       );
-    $api = new StripePaymentsApi([
+    $api = new StripeWebhooksApi([
       'webhook_service' => new StripeWebhookService([
         'stripe_webhook_functions' => $mock_stripe_webhook_functions,
       ]),

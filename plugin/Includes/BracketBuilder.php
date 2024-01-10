@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Controllers\NotificationApi;
-use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
+use WStrategies\BMB\Includes\Controllers\StripeWebhooksApi;
 use WStrategies\BMB\Includes\Hooks\AdminHooks;
 use WStrategies\BMB\Includes\Hooks\AnonymousUserHooks;
 use WStrategies\BMB\Includes\Hooks\BracketAdminHooks;
@@ -113,7 +113,7 @@ class BracketBuilder {
       new BracketApi(),
       new BracketPlayApi(),
       new NotificationApi(),
-      new StripePaymentsApi(),
+      new StripeWebhooksApi(),
       new Permissions(),
       new UpcomingBracketHooks(),
       new BracketAdminHooks(),

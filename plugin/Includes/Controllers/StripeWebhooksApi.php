@@ -10,7 +10,7 @@ use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
-class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
+class StripeWebhooksApi extends WP_REST_Controller implements HooksInterface {
   /**
    * @var string
    */
