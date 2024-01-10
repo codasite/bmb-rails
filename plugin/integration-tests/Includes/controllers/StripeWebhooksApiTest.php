@@ -7,7 +7,7 @@ use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
 require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/StripeMock.php';
 
-class StripePaymentsApiTest extends \WPBB_UnitTestCase {
+class StripeWebhooksApiTest extends \WPBB_UnitTestCase {
   public function test_webhook_handler_should_set_is_paid_to_true() {
     $this->create_bracket([
       'id' => 2,
