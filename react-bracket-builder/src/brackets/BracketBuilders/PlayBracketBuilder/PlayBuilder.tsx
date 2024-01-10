@@ -9,7 +9,7 @@ import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
-import SubmitPicksPaymentModal from './SubmitPicksPaymentModal'
+import StripePaymentModal from './StripePaymentModal'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {

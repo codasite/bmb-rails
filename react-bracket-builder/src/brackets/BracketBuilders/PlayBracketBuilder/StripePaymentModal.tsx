@@ -8,27 +8,27 @@ const stripePromise = loadStripe(
   'pk_test_51OWPu0GLKms5oOW8z8oolF9mn5sO2jOhXdkAbxgOSGkLe1F7U8yF5ChZ5NeaWAicb6EJjuGdIJ4JN2gUyj0euVZ000N53Gxru2'
 )
 
-interface SubmitPicksPaymentModalProps {
+interface StripePaymentModalProps {
+  title: string
   show: boolean
   setShow: (show: boolean) => void
+  clientSecret: string
 }
 
-export default function SubmitPicksPaymentModal(
-  props: SubmitPicksPaymentModalProps
-) {
-  const { show, setShow } = props
+export default function StripePaymentModal(props: StripePaymentModalProps) {
+  const { title, show, setShow, clientSecret } = props
 
   const stripeOptions = {
-    clientSecret: stripeClientSecret,
+    clientSecret,
     apperance: {
       theme: 'stripe',
     },
   }
 
   return (
-    <Elements stripe={stripePromise}>
+    <Elements stripe={stripePromise} options={stripeOptions}>
       <Modal show={show} setShow={setShow}>
-        <ModalHeader text={'Submit Your Picks'} />
+        <ModalHeader text={title} />
         <div className="tw-flex tw-flex-col tw-gap-10">
           <CancelButton onClick={() => setShow(false)} />
         </div>

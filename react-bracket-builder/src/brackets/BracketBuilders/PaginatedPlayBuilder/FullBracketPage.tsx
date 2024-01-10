@@ -11,7 +11,7 @@ import SubmitPicksRegisterModal from '../PlayBracketBuilder/SubmitPicksRegisterM
 import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
-import SubmitPicksPaymentModal from '../PlayBracketBuilder/SubmitPicksPaymentModal'
+import StripePaymentModal from '../PlayBracketBuilder/StripePaymentModal'
 
 interface FullBracketPageProps {
   onEditClick?: () => void

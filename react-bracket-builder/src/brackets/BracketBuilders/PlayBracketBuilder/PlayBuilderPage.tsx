@@ -24,6 +24,7 @@ import { PaymentIntentReq } from '../../shared/api/types/stripe'
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
+import StripePaymentModal from './StripePaymentModal'
 
 interface PlayPageProps {
   bracketProductArchiveUrl: string
@@ -56,7 +57,7 @@ const PlayPage = (props: PlayPageProps) => {
   const [processing, setProcessing] = useState(false)
   const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
-  const [showPaymentModal, setShowPaymentModal] = useState(true)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [stripeClientSecret, setStripeClientSecret] = useState<string>('')
   const { width: windowWidth, height: windowHeight } = useContext(
     WindowDimensionsContext
@@ -67,6 +68,7 @@ const PlayPage = (props: PlayPageProps) => {
   const canPrint = bracket?.isPrintable
   const canSubmit = bracket?.isOpen
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
+  const paymentRequired = bracket?.fee > 0 && bracket?.isOpen
 
   useEffect(() => {
     if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
@@ -74,7 +76,6 @@ const PlayPage = (props: PlayPageProps) => {
     }
     const meta = getBracketMeta(bracket)
     setBracketMeta?.(meta ?? {})
-    handleStripeInit(bracket)
     let tree: Nullable<MatchTree> = null
     const numTeams = bracket.numTeams
     const matches = bracket.matches
@@ -89,19 +90,6 @@ const PlayPage = (props: PlayPageProps) => {
       setMatchTree(tree)
     }
   }, [])
-
-  const handleStripeInit = async (bracket: BracketRes) => {
-    if (bracket?.fee > 0 && bracket?.isOpen) {
-      const req: PaymentIntentReq = {
-        bracketId: bracket.id,
-      }
-      const res = await bracketApi.createStripePaymentIntent({
-        bracketId: bracket.id,
-      })
-      const { clientSecret } = res
-      setStripeClientSecret(clientSecret)
-    }
-  }
 
   const setMatchTreeAndSaveInStorage = (tree: MatchTree) => {
     setMatchTree(tree)
@@ -175,12 +163,10 @@ const PlayPage = (props: PlayPageProps) => {
     return bracketApi
       .createPlay(playReq)
       .then((res) => {
-        const playId = res.id
-        const newReq = {
-          ...playReq,
-          id: playId,
-        }
-        if (isUserLoggedIn) {
+        if (paymentRequired) {
+          setStripeClientSecret(res.stripePaymentIntentClientSecret)
+          setShowPaymentModal(true)
+        } else if (isUserLoggedIn) {
           window.location.assign(myPlayHistoryUrl)
         } else {
           setShowRegisterModal(true)
@@ -213,9 +199,11 @@ const PlayPage = (props: PlayPageProps) => {
         show={showRegisterModal}
         setShow={setShowRegisterModal}
       />
-      <SubmitPicksRegisterModal
+      <StripePaymentModal
+        title={'Submit Your Picks'}
         show={showPaymentModal}
         setShow={setShowPaymentModal}
+        clientSecret={stripeClientSecret}
       />
       {showPaginated ? (
         <PaginatedPlayBuilder {...playBuilderProps} />
