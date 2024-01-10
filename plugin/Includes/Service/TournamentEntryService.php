@@ -5,12 +5,16 @@ namespace WStrategies\BMB\Includes\Service;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class TournamentEntryService extends BracketPlayCreateListenerBase {
   private PlayRepo $play_repo;
+  private BracketProductUtils $bracket_product_utils;
 
   public function __construct(array $args = []) {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
+    $this->bracket_product_utils =
+      $args['bracket_product_utils'] ?? new BracketProductUtils();
   }
 
   public function filter_after_play_added(BracketPlay $play): BracketPlay {
@@ -47,10 +51,16 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
     $author_id = $play->author;
     $bracket_id = $play->bracket_id;
     $play_id = $play->id;
-    $this->clear_tournament_entries_for_author($bracket_id, $author_id);
+    if ($this->should_clear_tournament_entries($bracket_id)) {
+      $this->clear_tournament_entries_for_author($bracket_id, $author_id);
+    }
     $this->play_repo->update($play_id, [
       'is_tournament_entry' => true,
     ]);
+  }
+
+  public function should_clear_tournament_entries(int $bracket_id): bool {
+    return !$this->bracket_product_utils->has_bracket_fee($bracket_id);
   }
 
   public function clear_tournament_entries_for_author(

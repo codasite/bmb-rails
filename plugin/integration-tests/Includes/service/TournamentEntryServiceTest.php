@@ -1,5 +1,8 @@
 <?php
 
+use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 
 class TournamentEntryServiceTest extends WPBB_UnitTestCase {
@@ -215,5 +218,59 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
     $should = $service->should_mark_play_as_tournament_entry($play);
 
     $this->assertFalse($should);
+  }
+
+  public function test_should_not_clear_tournament_entries_for_paid_bracket() {
+    $bracket = $this->create_bracket([
+      'fee' => 10.0,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_clear_tournament_entries($bracket->id);
+
+    $this->assertFalse($should);
+  }
+
+  public function test_should_clear_tournament_entries_for_free_bracket() {
+    $bracket = $this->create_bracket([
+      'fee' => 0.0,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_clear_tournament_entries($bracket->id);
+
+    $this->assertTrue($should);
+  }
+
+  public function test_tournament_entries_are_not_cleared() {
+    $play_mock = $this->createMock(BracketPlay::class);
+    $play_mock->bracket_id = 1;
+    $play_mock->author = 2;
+    $play_mock->id = 3;
+    $play_repo_mock = $this->createMock(PlayRepo::class);
+    $play_repo_mock
+      ->expects($this->once())
+      ->method('update')
+      ->with($play_mock->id, ['is_tournament_entry' => true]);
+    $entry_service_mock = $this->getMockBuilder(TournamentEntryService::class)
+      ->onlyMethods([
+        'should_clear_tournament_entries',
+        'clear_tournament_entries_for_author',
+      ])
+      ->setConstructorArgs([
+        [
+          'play_repo' => $play_repo_mock,
+        ],
+      ])
+      ->getMock();
+    $entry_service_mock
+      ->expects($this->once())
+      ->method('should_clear_tournament_entries')
+      ->willReturn(false);
+    $entry_service_mock
+      ->expects($this->never())
+      ->method('clear_tournament_entries_for_author');
+
+    $entry_service_mock->mark_play_as_tournament_entry($play_mock);
   }
 }
