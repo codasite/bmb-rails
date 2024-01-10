@@ -53,11 +53,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       ],
       'schema' => [$this, 'get_public_item_schema'],
     ]);
-<<<<<<< HEAD
     register_rest_route($namespace, '/' . $base . '/create-payment-intent', [
-=======
-    register_rest_route($namespace, '/payment-intent' . $base, [
->>>>>>> b53701db (add SubmitPicksPaymentModal)
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'create_payment_intent'],

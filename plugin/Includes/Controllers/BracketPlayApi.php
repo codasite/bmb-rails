@@ -12,6 +12,7 @@ use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Service\PaymentProcessors\StripePayments;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
@@ -56,6 +57,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
 
   private BracketPlaySerializer $serializer;
 
+  private StripePayments $stripe_service;
+
   public function __construct($args = []) {
     $this->utils = $args['utils'] ?? new Utils();
     $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
@@ -64,6 +67,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $this->tournament_entry_service =
       $args['tournament_entry_service'] ?? new TournamentEntryService();
     $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();
+    $this->stripe_service = $args['stripe_service'] ?? new StripePayments();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
   }
@@ -237,8 +241,9 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $play->author = get_current_user_id();
     $play->bmb_official = has_tag('bmb_official', $bracket_id);
     $saved = $this->play_repo->add($play);
+    $this->paid_tournament_service->on_play_created($saved);
     $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
-    $this->stripe_service->create_payment_intent($saved);
+    // $this->stripe_service->create_payment_intent($saved);
     // Generate the bracket images
     if (
       isset($params['generate_images']) &&
@@ -289,6 +294,12 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       $this->product_integration->generate_images($play);
     }
     return new WP_REST_Response($play, 200);
+  }
+
+  private function handle_stripe_payment_intent(
+    BracketPlay $play
+  ): BracketPlay {
+    // determine if the play must be paid for
   }
 
   /**

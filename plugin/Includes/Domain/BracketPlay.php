@@ -12,7 +12,7 @@ class BracketPlay extends PostBase implements PostBracketInterface {
   /**
    * @var Bracket| null
    */
-  public mixed $bracket;
+  public $bracket;
 
   /**
    * @var MatchPick[]
