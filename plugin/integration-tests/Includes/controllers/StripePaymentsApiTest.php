@@ -1,13 +1,13 @@
 <?php
 
-use WStrategies\BMB\Includes\Controllers\StripeWebhooksApi;
+use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
 require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/StripeMock.php';
 
-class StripeWebhooksApiTest extends \WPBB_UnitTestCase {
+class StripePaymentsApiTest extends \WPBB_UnitTestCase {
   public function test_webhook_handler_should_set_is_paid_to_true() {
     $this->create_bracket([
       'id' => 2,
@@ -39,7 +39,7 @@ class StripeWebhooksApiTest extends \WPBB_UnitTestCase {
           ],
         ]
       );
-    $api = new StripeWebhooksApi([
+    $api = new StripePaymentsApi([
       'webhook_service' => new StripeWebhookService([
         'stripe_webhook_functions' => $mock_stripe_webhook_functions,
       ]),
@@ -94,7 +94,7 @@ class StripeWebhooksApiTest extends \WPBB_UnitTestCase {
           ],
         ]
       );
-    $api = new StripeWebhooksApi([
+    $api = new StripePaymentsApi([
       'webhook_service' => new StripeWebhookService([
         'stripe_webhook_functions' => $mock_stripe_webhook_functions,
       ]),
