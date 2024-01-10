@@ -8,8 +8,9 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\PaidTournamentServiceInterface;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
-use WStrategies\BMB\Includes\Service\StripePaidTournamentService;
 
 class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
@@ -22,8 +23,11 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    */
   protected $rest_base;
   private StripeWebhookService $webhook_service;
-  private StripePaidTournamentService $stripe_paid_tournament_service;
+  private PaidTournamentServiceInterface $stripe_paid_tournament_service;
 
+  /**
+   * @param array<string, mixed> $args
+   */
   public function __construct(array $args = []) {
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'stripe';

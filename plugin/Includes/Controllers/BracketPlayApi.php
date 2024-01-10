@@ -12,10 +12,11 @@ use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\PaidTournamentServiceInterface;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
-use WStrategies\BMB\Includes\Service\StripePaidTournamentService;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
@@ -57,7 +58,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
 
   private BracketPlaySerializer $serializer;
 
-  private StripePaidTournamentService $paid_tournament_service;
+  private PaidTournamentServiceInterface $paid_tournament_service;
 
   public function __construct($args = []) {
     $this->utils = $args['utils'] ?? new Utils();

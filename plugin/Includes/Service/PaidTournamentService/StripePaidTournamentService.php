@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Includes\Service;
+namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
 use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\InvalidArgumentException;
@@ -7,11 +7,14 @@ use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
-class StripePaidTournamentService {
+class StripePaidTournamentService implements PaidTournamentServiceInterface {
   private StripeClient $stripe;
   private BracketProductUtils $bracket_product_utils;
   public static string $PAYMENT_INTENT_ID_META_KEY = 'payment_intent_id';
 
+  /**
+   * @param array<string, mixed> $args
+   */
   public function __construct(array $args = []) {
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
@@ -32,6 +35,14 @@ class StripePaidTournamentService {
     $intent = $this->create_payment_intent_for_paid_tournament_play($play);
     // update the play post meta with the payment intent id
     $this->set_play_payment_intent_id($play->id, $intent->id);
+  }
+
+  /**
+   * @param array<mixed> $data
+   * @return array<mixed>
+   */
+  public function filter_play_created_response_data(array $data): array {
+    return $data;
   }
 
   public function set_play_payment_intent_id(
