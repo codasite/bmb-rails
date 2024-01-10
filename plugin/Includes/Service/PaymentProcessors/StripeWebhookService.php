@@ -1,57 +1,32 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaymentProcessors;
 
-use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\SignatureVerificationException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
-use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
-use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
-class StripePayments {
-  private BracketProductUtils $bracket_product_utils;
-  private StripeClient $stripe;
+class StripeWebhookService {
   private BracketPlayRepo $play_repo;
   private string $webhook_secret;
+  private StripeWebhookFunctions $stripe_webhook_functions;
 
-  /**
-   * @param array{stripe_client?: StripeClient} $args
-   */
-  public function __construct(array $args = []) {
-    $this->bracket_product_utils = new BracketProductUtils();
+  public function __construct($args = []) {
     $this->play_repo = new BracketPlayRepo();
     $api_key = defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '';
-    $this->stripe = $args['stripe_client'] ?? new StripeClient($api_key);
     Stripe::setApiKey($api_key);
     $this->webhook_secret = defined('STRIPE_WEBHOOK_SECRET')
       ? STRIPE_WEBHOOK_SECRET
       : '';
-  }
-
-  /**
-   * @throws ApiErrorException
-   */
-  public function create_payment_intent_for_paid_bracket(
-    int $bracket_id
-  ): ?string {
-    $fee = $this->bracket_product_utils->get_bracket_fee($bracket_id);
-    $amount = $fee * 100;
-    $intent = $this->stripe->paymentIntents->create([
-      'amount' => $amount,
-      'currency' => 'usd',
-      'metadata' => [
-        'bracket_id' => $bracket_id,
-      ],
-    ]);
-    return $intent->client_secret;
+    $this->stripe_webhook_functions =
+      $args['stripe_webhook_functions'] ?? new StripeWebhookFunctions();
   }
 
   /**
    * @throws SignatureVerificationException
    */
   public function process_webhook(string $payload, string $sig_header): void {
-    $event = \Stripe\Webhook::constructEvent(
+    $event = $this->stripe_webhook_functions->constructEvent(
       $payload,
       $sig_header,
       $this->webhook_secret

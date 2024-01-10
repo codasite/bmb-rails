@@ -16,6 +16,7 @@ is_bustable: false
 is_winner: false
 bmb_official: false
 is_tournament_entry: false
+is_paid: false
 bracket:
     id: 100000
     title: 'Test Bracket'
@@ -53,6 +54,7 @@ busted_play:
     is_winner: true
     bmb_official: true
     is_tournament_entry: false
+    is_paid: false
     picks: [{ id: 200007, round_index: 0, match_index: 0, winning_team_id: 100002 }, { id: 200008, round_index: 0, match_index: 1, winning_team_id: 100006 }, { id: 200009, round_index: 1, match_index: 0, winning_team_id: 100006 }]
 picks:
     - { id: 100007, round_index: 0, match_index: 0, winning_team_id: 100002 }

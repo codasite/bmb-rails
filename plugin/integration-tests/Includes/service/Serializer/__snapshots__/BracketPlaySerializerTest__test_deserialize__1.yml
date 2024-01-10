@@ -22,3 +22,4 @@ is_bustable: false
 is_winner: false
 bmb_official: false
 is_tournament_entry: false
+is_paid: false

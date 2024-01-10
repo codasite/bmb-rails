@@ -8,7 +8,8 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Service\PaymentProcessors\StripePayments;
+use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
+use WStrategies\BMB\Includes\Service\StripePaidTournamentService;
 
 class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
@@ -20,19 +21,17 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    * @var string
    */
   protected $rest_base;
-  private StripePayments $stripe_payments;
+  private StripeWebhookService $webhook_service;
+  private StripePaidTournamentService $stripe_paid_tournament_service;
 
-  /**
-   * @param array{stripe_payments?: StripePayments} $args
-   */
   public function __construct(array $args = []) {
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'stripe';
-    try {
-      $this->stripe_payments = $args['stripe_payments'] ?? new StripePayments();
-    } catch (\Exception $e) {
-      error_log('Caught error: ' . $e->getMessage());
-    }
+    $this->stripe_paid_tournament_service =
+      $args['stripe_paid_tournament_service'] ??
+      new StripePaidTournamentService();
+    $this->webhook_service =
+      $args['webhook_service'] ?? new StripeWebhookService();
   }
 
   public function load(Loader $loader): void {
@@ -47,20 +46,15 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'handle_webhook'],
         'permission_callback' => [$this, 'webhook_verification'],
-        'args' => $this->get_endpoint_args_for_item_schema(
-          WP_REST_Server::CREATABLE
-        ),
+        'args' => $this->get_endpoint_args_for_item_schema(),
       ],
       'schema' => [$this, 'get_public_item_schema'],
     ]);
-    register_rest_route($namespace, '/' . $base . '/create-payment-intent', [
+    register_rest_route($namespace, '/' . $base . '/payment-intent', [
       [
-        'methods' => WP_REST_Server::CREATABLE,
-        'callback' => [$this, 'create_payment_intent'],
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => [$this, 'get_payment_intent'],
         'permission_callback' => [$this, 'customer_permission_check'],
-        'args' => $this->get_endpoint_args_for_item_schema(
-          WP_REST_Server::CREATABLE
-        ),
       ],
       'schema' => [$this, 'get_public_item_schema'],
     ]);
@@ -75,7 +69,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       return new WP_REST_Response('body is required', 400);
     }
     try {
-      $this->stripe_payments->process_webhook(
+      $this->webhook_service->process_webhook(
         $body,
         $request->get_header('Stripe-Signature')
       );
@@ -86,20 +80,26 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
-   * @param WP_REST_Request<array{bracket_id: int}> $request
+   * @param WP_REST_Request<array{play_id: int}> $request
    */
-  public function create_payment_intent(
+  public function get_payment_intent(
     WP_REST_Request $request
   ): WP_REST_Response {
-    if (!isset($request['bracket_id'])) {
-      return new WP_REST_Response('bracket_id is required', 400);
+    if (!isset($request['play_id'])) {
+      return new WP_REST_Response('play_id is required', 400);
     }
     try {
-      $bracket_id = $request['bracket_id'];
-      $client_secret = $this->stripe_payments->create_payment_intent_for_paid_bracket(
-        $bracket_id
+      $play_id = $request['play_id'];
+      $payment_intent = $this->stripe_paid_tournament_service->get_play_payment_intent(
+        $play_id
       );
-      return new WP_REST_Response(['client_secret' => $client_secret], 200);
+      if (!$payment_intent) {
+        return new WP_REST_Response('payment intent not found', 404);
+      }
+      return new WP_REST_Response(
+        ['client_secret' => $payment_intent->client_secret],
+        200
+      );
     } catch (\Exception $e) {
       return new WP_REST_Response($e->getMessage(), 500);
     }

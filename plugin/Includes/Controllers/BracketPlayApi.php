@@ -12,10 +12,10 @@ use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
-use WStrategies\BMB\Includes\Service\PaymentProcessors\StripePayments;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
+use WStrategies\BMB\Includes\Service\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
@@ -57,7 +57,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
 
   private BracketPlaySerializer $serializer;
 
-  private StripePayments $stripe_service;
+  private StripePaidTournamentService $paid_tournament_service;
 
   public function __construct($args = []) {
     $this->utils = $args['utils'] ?? new Utils();
@@ -67,7 +67,12 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $this->tournament_entry_service =
       $args['tournament_entry_service'] ?? new TournamentEntryService();
     $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();
-    $this->stripe_service = $args['stripe_service'] ?? new StripePayments();
+    try {
+      $this->paid_tournament_service =
+        $args['paid_tournament_service'] ?? new StripePaidTournamentService();
+    } catch (\Exception $e) {
+      error_log('Caught error: ' . $e->getMessage());
+    }
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'plays';
   }
@@ -243,7 +248,6 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $saved = $this->play_repo->add($play);
     $this->paid_tournament_service->on_play_created($saved);
     $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
-    // $this->stripe_service->create_payment_intent($saved);
     // Generate the bracket images
     if (
       isset($params['generate_images']) &&
