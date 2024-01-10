@@ -99,7 +99,7 @@ class StripePaidTournamentServiceTest extends TestCase {
     $this->assertConditionsMet();
   }
 
-  public function test_on_play_created_does_not_require_payment() {
+  public function test_filter_after_play_added_does_not_require_payment() {
     $playMock = $this->createMock(BracketPlay::class);
     $playMock->id = 123;
 
@@ -119,10 +119,10 @@ class StripePaidTournamentServiceTest extends TestCase {
       ->method('create_payment_intent_for_paid_tournament_play');
     $sot->expects($this->never())->method('set_play_payment_intent_id');
 
-    $sot->on_play_created($playMock);
+    $sot->filter_after_play_added($playMock);
   }
 
-  public function test_on_play_created_requires_payment() {
+  public function test_filter_after_play_added_requires_payment() {
     $playMock = $this->createMock(BracketPlay::class);
     $playMock->id = 123;
     $payment_intent_mock = $this->createMock(PaymentIntent::class);
@@ -152,10 +152,10 @@ class StripePaidTournamentServiceTest extends TestCase {
       ->method('set_play_payment_intent_id')
       ->with($playMock->id, 'test_id');
 
-    $sot->on_play_created($playMock);
+    $sot->filter_after_play_added($playMock);
   }
 
-  public function test_filter_play_created_response_data() {
+  public function test_filter_after_play_serialized() {
     $playMock = $this->createMock(BracketPlay::class);
     $playMock->id = 123;
     $payment_intent_mock = $this->createMock(PaymentIntent::class);
@@ -179,8 +179,8 @@ class StripePaidTournamentServiceTest extends TestCase {
       ->with($playMock)
       ->willReturn($payment_intent_mock);
 
-    $sot->on_play_created($playMock);
-    $data = $sot->filter_play_created_response_data([]);
+    $sot->filter_after_play_added($playMock);
+    $data = $sot->filter_after_play_serialized([]);
     // assert that the client secret is added to the response data
     $this->assertSame(
       'test_secret',

@@ -7,6 +7,7 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
+use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerInterface;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
@@ -59,6 +60,11 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   private BracketPlaySerializer $serializer;
 
   private PaidTournamentServiceInterface $paid_tournament_service;
+
+  /**
+   * @var array<BracketPlayCreateListenerInterface>
+   */
+  private array $create_listeners = [];
 
   public function __construct($args = []) {
     $this->utils = $args['utils'] ?? new Utils();
@@ -220,19 +226,33 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    */
   public function create_item($request): WP_Error|WP_REST_Response {
     $params = $request->get_params();
-    $bracket_id = $params['bracket_id'];
+    foreach ($this->create_listeners as $listener) {
+      $params = $listener->filter_request_params($params);
+    }
     try {
       $play = $this->serializer->deserialize($params);
+      foreach ($this->create_listeners as $listener) {
+        $play = $listener->filter_before_play_added($play);
+      }
+      $saved = $this->play_repo->add($play);
+      foreach ($this->create_listeners as $listener) {
+        $saved = $listener->filter_after_play_added($saved);
+      }
+      $serialized = $this->serializer->serialize($saved);
+      foreach ($this->create_listeners as $listener) {
+        $serialized = $listener->filter_after_play_serialized($serialized);
+      }
+      return new WP_REST_Response($serialized, 201);
     } catch (ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,
       ]);
     }
-    $play->author = get_current_user_id();
-    $play->bmb_official = has_tag('bmb_official', $bracket_id);
+    // $play->author = get_current_user_id();
+    // $play->bmb_official = has_tag('bmb_official', $bracket_id);
     $saved = $this->play_repo->add($play);
-    $this->paid_tournament_service->on_play_created($saved);
-    $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
+    // $this->paid_tournament_service->on_play_created($saved);
+    // $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
     // Generate the bracket images
     if (
       isset($params['generate_images']) &&

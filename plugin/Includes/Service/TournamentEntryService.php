@@ -2,14 +2,20 @@
 
 namespace WStrategies\BMB\Includes\Service;
 
+use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 
-class TournamentEntryService {
+class TournamentEntryService extends BracketPlayCreateListenerBase {
   private BracketPlayRepo $play_repo;
 
   public function __construct(array $args = []) {
     $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+  }
+
+  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+    $this->try_mark_play_as_tournament_entry($play);
+    return $play;
   }
 
   public function try_mark_play_as_tournament_entry(BracketPlay $play): void {
