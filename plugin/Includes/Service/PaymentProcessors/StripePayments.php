@@ -1,8 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaymentProcessors;
 
-use Stripe\Event;
 use Stripe\Exception\ApiErrorException;
+use Stripe\Exception\SignatureVerificationException;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
 use Stripe\StripeClient;
@@ -13,6 +13,7 @@ class StripePayments {
   private BracketProductUtils $bracket_product_utils;
   private StripeClient $stripe;
   private BracketPlayRepo $play_repo;
+  private string $webhook_secret;
 
   /**
    * @param array{stripe_client?: StripeClient} $args
@@ -23,6 +24,9 @@ class StripePayments {
     $api_key = defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '';
     $this->stripe = $args['stripe_client'] ?? new StripeClient($api_key);
     Stripe::setApiKey($api_key);
+    $this->webhook_secret = defined('STRIPE_WEBHOOK_SECRET')
+      ? STRIPE_WEBHOOK_SECRET
+      : '';
   }
 
   /**
@@ -43,9 +47,15 @@ class StripePayments {
     return $intent->client_secret;
   }
 
-  public function process_webhook(mixed $payload): void {
-    $event = Event::constructFrom($payload);
-    // Handle the event
+  /**
+   * @throws SignatureVerificationException
+   */
+  public function process_webhook(string $payload, string $sig_header): void {
+    $event = \Stripe\Webhook::constructEvent(
+      $payload,
+      $sig_header,
+      $this->webhook_secret
+    );
     switch ($event->type) {
       case 'payment_intent.succeeded':
         $paymentIntent = $event->data->object; // contains a \Stripe\PaymentIntent

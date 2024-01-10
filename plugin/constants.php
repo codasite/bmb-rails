@@ -23,3 +23,4 @@ const ABSPATH = '';
 const ARRAY_A = '';
 const COOKIE_DOMAIN = '';
 const STRIPE_SECRET_KEY = '';
+const STRIPE_WEBHOOK_SECRET = '';
