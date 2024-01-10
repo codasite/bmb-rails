@@ -199,11 +199,26 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
   }
 
   public function test_author_can_create_payment_intent() {
+    $mock_payment_intent = $this->createMock(\Stripe\PaymentIntent::class);
     $user = $this->create_user();
     $bracket = $this->create_bracket();
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user->ID,
+    ]);
+    $tournament_service_mock = $this->getMockBuilder(
+      StripePaidTournamentService::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+    $tournament_service_mock
+      ->expects($this->once())
+      ->method('create_payment_intent_for_paid_tournament_play')
+      ->with($play)
+      ->willReturn($mock_payment_intent);
+
+    $api = new StripePaymentsApi([
+      'tournament_service' => $tournament_service_mock,
     ]);
 
     $data = [
@@ -219,8 +234,45 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $request->set_body(wp_json_encode($data));
 
-    $res = rest_do_request($request);
+    wp_set_current_user($user->ID);
+
+    $res = $api->create_payment_intent($request);
 
     $this->assertSame(200, $res->get_status());
+    $this->assertEquals(
+      [
+        'client_secret' => $mock_payment_intent->client_secret,
+      ],
+      $res->get_data()
+    );
+  }
+
+  public function test_non_author_cannot_create_payment_intent() {
+    $author = $this->create_user();
+    $non_author = $this->create_user();
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $author->ID,
+    ]);
+
+    $data = [
+      'play_id' => $play->id,
+    ];
+
+    $request = new WP_REST_Request(
+      'POST',
+      '/wp-bracket-builder/v1/stripe/payment-intent'
+    );
+
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($data));
+
+    wp_set_current_user($non_author->ID);
+
+    $res = rest_do_request($request);
+
+    $this->assertSame(403, $res->get_status());
   }
 }
