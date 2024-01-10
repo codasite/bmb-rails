@@ -13,7 +13,7 @@ class StripePaidTournamentServiceTest extends TestCase {
     $product_utils_mock = $this->getMockBuilder(BracketProductUtils::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $product_utils_mock->method('get_bracket_fee')->willReturn(1.0);
+    $product_utils_mock->method('has_bracket_fee')->willReturn(true);
     $sot = new StripePaidTournamentService([
       'bracket_product_utils' => $product_utils_mock,
     ]);
@@ -26,7 +26,7 @@ class StripePaidTournamentServiceTest extends TestCase {
     $product_utils_mock = $this->getMockBuilder(BracketProductUtils::class)
       ->disableOriginalConstructor()
       ->getMock();
-    $product_utils_mock->method('get_bracket_fee')->willReturn(0.0);
+    $product_utils_mock->method('has_bracket_fee')->willReturn(false);
     $sot = new StripePaidTournamentService([
       'bracket_product_utils' => $product_utils_mock,
     ]);
@@ -132,13 +132,13 @@ class StripePaidTournamentServiceTest extends TestCase {
 
     $sot = $this->getMockBuilder(StripePaidTournamentService::class)
       ->onlyMethods([
-        'requires_payment',
+        'should_create_payment_intent_for_play',
         'create_payment_intent_for_paid_tournament_play',
         'set_play_payment_intent_id',
       ])
       ->getMock();
 
-    $sot->method('requires_payment')->willReturn(true);
+    $sot->method('should_create_payment_intent_for_play')->willReturn(true);
 
     // Expect that other methods are called
     $sot
@@ -164,13 +164,13 @@ class StripePaidTournamentServiceTest extends TestCase {
 
     $sot = $this->getMockBuilder(StripePaidTournamentService::class)
       ->onlyMethods([
-        'requires_payment',
+        'should_create_payment_intent_for_play',
         'create_payment_intent_for_paid_tournament_play',
         'set_play_payment_intent_id',
       ])
       ->getMock();
 
-    $sot->method('requires_payment')->willReturn(true);
+    $sot->method('should_create_payment_intent_for_play')->willReturn(true);
 
     // Expect that other methods are called
     $sot
@@ -190,5 +190,49 @@ class StripePaidTournamentServiceTest extends TestCase {
       'test_id',
       $data[StripePaidTournamentService::$INTENT_ID_KEY]
     );
+  }
+
+  public function test_should_create_payment_intent_for_play_true_after_filter_request_params() {
+    $product_utils_mock = $this->getMockBuilder(BracketProductUtils::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $product_utils_mock->method('has_bracket_fee')->willReturn(true);
+
+    $playMock = $this->createMock(BracketPlay::class);
+    $playMock->id = 123;
+    $playMock->bracket_id = 1;
+
+    $play_data = [
+      StripePaidTournamentService::$SHOULD_CREATE_STRIPE_PAYMENT_INTENT_REQUEST_DATA_KEY => true,
+    ];
+
+    $sot = new StripePaidTournamentService([
+      'bracket_product_utils' => $product_utils_mock,
+    ]);
+    $data = $sot->filter_request_params($play_data);
+
+    $this->assertTrue($sot->should_create_payment_intent_for_play($playMock));
+  }
+
+  public function test_should_create_payment_intent_for_play_false_after_filter_request_params() {
+    $product_utils_mock = $this->getMockBuilder(BracketProductUtils::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $product_utils_mock->method('has_bracket_fee')->willReturn(true);
+
+    $playMock = $this->createMock(BracketPlay::class);
+    $playMock->id = 123;
+    $playMock->bracket_id = 1;
+
+    $play_data = [];
+
+    $sot = new StripePaidTournamentService([
+      'bracket_product_utils' => $product_utils_mock,
+    ]);
+    $data = $sot->filter_request_params($play_data);
+
+    $this->assertFalse($sot->should_create_payment_intent_for_play($playMock));
   }
 }

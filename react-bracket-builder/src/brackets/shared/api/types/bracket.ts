@@ -94,6 +94,7 @@ export interface PlayReq {
   picks: MatchPick[]
   bustedId?: number
   generateImages?: boolean
+  createStripePaymentIntent?: boolean
 }
 export interface PlayRes extends PostBase {
   bracketId: number
