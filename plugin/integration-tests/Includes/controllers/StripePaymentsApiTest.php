@@ -1,13 +1,23 @@
 <?php
 
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
+use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
 require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/StripeMock.php';
 
 class StripePaymentsApiTest extends \WPBB_UnitTestCase {
-  public function test_webhook_handler() {
+  public function test_webhook_handler_should_set_is_paid_to_true() {
+    $this->create_bracket([
+      'id' => 2,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => 2,
+      'id' => 123,
+      'paid' => false,
+    ]);
+    $play_repo = new BracketPlayRepo();
     $mock_stripe_webhook_functions = $this->createMock(
       StripeWebhookFunctions::class
     );
@@ -49,5 +59,7 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $response = $api->handle_webhook($request);
     $this->assertSame('webhook success', $response->get_data());
     $this->assertSame(200, $response->get_status());
+    $play = $play_repo->get(123);
+    $this->assertTrue($play->is_paid);
   }
 }
