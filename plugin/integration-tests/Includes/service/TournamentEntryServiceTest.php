@@ -199,4 +199,21 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
 
     $entry_service_mock->try_mark_play_as_tournament_entry($play);
   }
+
+  public function test_unpaid_play_for_paid_bracket_is_not_marked() {
+    $bracket = $this->create_bracket([
+      'fee' => 10.0,
+    ]);
+    $user = self::factory()->user->create_and_get();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_paid' => false,
+      'author' => $user->ID,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_mark_play_as_tournament_entry($play);
+
+    $this->assertFalse($should);
+  }
 }

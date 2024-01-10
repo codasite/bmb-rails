@@ -126,6 +126,7 @@ class Bracket extends PostBase implements PostBracketInterface {
       'wildcard_placement' => $this->wildcard_placement,
       'month' => $this->month,
       'year' => $this->year,
+      'bracket_fee' => $this->fee,
     ];
   }
 

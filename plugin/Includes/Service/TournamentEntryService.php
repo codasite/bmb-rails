@@ -37,6 +37,9 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
     if (!$play->bracket->is_open()) {
       return false;
     }
+    if ($play->bracket->fee > 0 && !$play->is_paid) {
+      return false;
+    }
     return true;
   }
 
