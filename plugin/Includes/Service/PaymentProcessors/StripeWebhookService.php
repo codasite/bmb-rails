@@ -47,19 +47,25 @@ class StripeWebhookService {
   private function handlePaymentIntentSucceeded(
     PaymentIntent $paymentIntent
   ): void {
+    $message =
+      'Attempting to handle payment intent succeeded and set play to paid. ';
     $play_id = $paymentIntent->metadata['play_id'];
     if (!$play_id) {
-      throw new \Exception('No play_id found in payment intent metadata');
+      throw new \Exception(
+        $message . 'No play_id found in payment intent metadata'
+      );
     }
     $play = $this->play_repo->get($play_id);
     if (!$play) {
-      throw new \Exception('No play found with id ' . $play_id);
+      throw new \Exception($message . 'No play found with id ' . $play_id);
     }
     $result = $this->play_repo->update($play, [
       'is_paid' => true,
     ]);
     if (!$result) {
-      throw new \Exception('Failed to update play with id ' . $play_id);
+      throw new \Exception(
+        $message . 'Failed to update play with id ' . $play_id
+      );
     }
   }
 }
