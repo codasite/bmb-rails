@@ -48,6 +48,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'generate_images' => false,
       'bracket_id' => $bracket->id,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -123,6 +124,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'generate_images' => false,
       'bracket_id' => $bracket->id,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -196,6 +198,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -228,6 +231,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -259,6 +263,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -291,6 +296,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'busted_id' => $play->id,
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -320,6 +326,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'busted_id' => $play->id,
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -347,6 +354,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -381,6 +389,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 1,
       'generate_images' => true,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -395,21 +404,8 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
 
-    $utils_mock = $this->createMock(Utils::class);
-    $utils_mock
-      ->expects($this->once())
-      ->method('set_cookie')
-      ->with(
-        $this->equalTo('play_id'),
-        $this->equalTo($bracket->id + 1),
-        $this->equalTo([
-          'days' => 30,
-        ])
-      );
-
     $api = new BracketPlayAPI([
       'product_integration' => $integration,
-      'utils' => $utils_mock,
     ]);
 
     $response = $api->create_item($request);
@@ -428,6 +424,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 1,
       'generate_images' => true,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -517,13 +514,49 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
   }
 
   public function test_play_is_marked_as_tournament_entry() {
-    $entry_service_mock = $this->createMock(TournamentEntryService::class);
-    $entry_service_mock
-      ->expects($this->once())
-      ->method('try_mark_play_as_tournament_entry')
-      ->with($this->isInstanceOf(BracketPlay::class));
-
     $bracket = $this->create_bracket();
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'generate_images' => false,
+      'set_cookie' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $res = rest_do_request($request);
+
+    $this->assertEquals(201, $res->get_status());
+
+    $play = $this->play_repo->get($res->get_data()['id']);
+
+    $this->assertTrue($play->is_tournament_entry);
+  }
+
+  public function test_create_play_sets_cookie() {
+    $bracket = $this->create_bracket();
+    $utils_mock = $this->createMock(Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('set_cookie')
+      ->with(
+        $this->equalTo('play_id'),
+        $this->equalTo($bracket->id + 1),
+        $this->equalTo([
+          'days' => 30,
+        ])
+      );
 
     $data = [
       'bracket_id' => $bracket->id,
@@ -539,14 +572,18 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     ];
 
     $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+
     $request->set_body_params($data);
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_param('item_id', $bracket->id);
 
     $api = new BracketPlayAPI([
-      'tournament_entry_service' => $entry_service_mock,
+      'utils' => $utils_mock,
     ]);
 
     $response = $api->create_item($request);
+
+    $this->assertEquals(201, $response->get_status());
   }
 }
