@@ -4,6 +4,7 @@ namespace WStrategies\BMB\Includes\Service\PaymentProcessors;
 use Stripe\Event;
 use Stripe\Exception\ApiErrorException;
 use Stripe\PaymentIntent;
+use Stripe\Stripe;
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
@@ -19,9 +20,9 @@ class StripePayments {
   public function __construct(array $args = []) {
     $this->bracket_product_utils = new BracketProductUtils();
     $this->play_repo = new BracketPlayRepo();
-    $this->stripe =
-      $args['stripe_client'] ??
-      new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
+    $api_key = defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '';
+    $this->stripe = $args['stripe_client'] ?? new StripeClient($api_key);
+    Stripe::setApiKey($api_key);
   }
 
   /**
@@ -43,7 +44,7 @@ class StripePayments {
   }
 
   public function process_webhook(mixed $payload): void {
-    $event = Event::constructFrom($payload, $this->stripe);
+    $event = Event::constructFrom($payload);
     // Handle the event
     switch ($event->type) {
       case 'payment_intent.succeeded':
@@ -51,7 +52,6 @@ class StripePayments {
         $this->handlePaymentIntentSucceeded($paymentIntent);
         break;
       default:
-        echo 'Received unknown event type ' . $event->type;
     }
   }
 
@@ -60,5 +60,8 @@ class StripePayments {
   ): void {
     $play_id = $paymentIntent->metadata['play_id'];
     $play = $this->play_repo->get($play_id);
+    $this->play_repo->update($play, [
+      'is_paid' => true,
+    ]);
   }
 }
