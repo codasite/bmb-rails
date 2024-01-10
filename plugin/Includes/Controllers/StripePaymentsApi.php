@@ -76,9 +76,10 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
         $body,
         $request->get_header('Stripe-Signature')
       );
-    } catch (\Stripe\Exception\SignatureVerificationException $e) {
+    } catch (\Exception $e) {
       return new WP_REST_Response($e->getMessage(), 400);
     }
+
     return new WP_REST_Response('webhook success', 200);
   }
 

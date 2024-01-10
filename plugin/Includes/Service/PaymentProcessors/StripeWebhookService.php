@@ -24,6 +24,7 @@ class StripeWebhookService {
 
   /**
    * @throws SignatureVerificationException
+   * @throws \Exception
    */
   public function process_webhook(string $payload, string $sig_header): void {
     $event = $this->stripe_webhook_functions->constructEvent(
@@ -40,13 +41,25 @@ class StripeWebhookService {
     }
   }
 
+  /**
+   * @throws \Exception
+   */
   private function handlePaymentIntentSucceeded(
     PaymentIntent $paymentIntent
   ): void {
     $play_id = $paymentIntent->metadata['play_id'];
+    if (!$play_id) {
+      throw new \Exception('No play_id found in payment intent metadata');
+    }
     $play = $this->play_repo->get($play_id);
-    $this->play_repo->update($play, [
+    if (!$play) {
+      throw new \Exception('No play found with id ' . $play_id);
+    }
+    $result = $this->play_repo->update($play, [
       'is_paid' => true,
     ]);
+    if (!$result) {
+      throw new \Exception('Failed to update play with id ' . $play_id);
+    }
   }
 }
