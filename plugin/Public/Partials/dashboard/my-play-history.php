@@ -4,13 +4,13 @@ namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 use WStrategies\BMB\Public\Partials\shared\PartialsCommon;
 
 
-$play_repo = new BracketPlayRepo();
+$play_repo = new PlayRepo();
 
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
@@ -87,6 +87,7 @@ function play_list_item(BracketPlay $play): false|string {
 	$entry = $play->is_tournament_entry;
 	$num_teams = $play->bracket?->num_teams;
 	$official = $play->bmb_official;
+	$paid = $play->is_paid;
 	ob_start();
 ?>
 
@@ -104,6 +105,7 @@ function play_list_item(BracketPlay $play): false|string {
 						<?php echo $entry ? BracketsCommon::bracket_tag( 'submitted', 'yellow', false ) : '' ?>
 					<?php endif; ?>
           <?php echo $printed ? BracketsCommon::bracket_tag( 'printed', 'green' ) : '' ?>
+					<?php echo $paid ? BracketsCommon::bracket_tag( 'paid', 'green' ) : '' ?>
         </div>
       </div>
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8">

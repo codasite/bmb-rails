@@ -20,6 +20,8 @@ import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
+import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
+import StripePaymentModal from './StripePaymentModal'
 
 interface PlayPageProps {
   bracketProductArchiveUrl: string
@@ -52,6 +54,8 @@ const PlayPage = (props: PlayPageProps) => {
   const [processing, setProcessing] = useState(false)
   const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>('')
   const { width: windowWidth, height: windowHeight } = useContext(
     WindowDimensionsContext
   )
@@ -61,6 +65,7 @@ const PlayPage = (props: PlayPageProps) => {
   const canPrint = bracket?.isPrintable
   const canSubmit = bracket?.isOpen
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
+  const paymentRequired = bracket?.fee > 0 && bracket?.isOpen
 
   useEffect(() => {
     if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
@@ -94,7 +99,7 @@ const PlayPage = (props: PlayPageProps) => {
     )
   }
 
-  const handleApparelClick = async () => {
+  const getPlayReq = () => {
     const picks = matchTree?.toMatchPicks()
     const bracketId = bracket?.id
     if (!picks || !bracketId) {
@@ -103,20 +108,24 @@ const PlayPage = (props: PlayPageProps) => {
       Sentry.captureException(msg)
       return
     }
+    const playReq: PlayReq = {
+      title: bracket?.title,
+      bracketId: bracketId,
+      picks: picks,
+    }
+    return playReq
+  }
+
+  const handleApparelClick = async () => {
+    const playReq = getPlayReq()
+    playReq.generateImages = true
     if (
-      JSON.stringify(storedPlay?.picks) === JSON.stringify(picks) &&
+      JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
       storedPlay?.id
     ) {
       window.location.assign(bracketProductArchiveUrl)
       return
     }
-    const playReq: PlayReq = {
-      title: bracket?.title,
-      bracketId: bracketId,
-      picks: picks,
-      generateImages: true,
-    }
-
     setProcessing(true)
     return bracketApi
       .createPlay(playReq)
@@ -137,30 +146,18 @@ const PlayPage = (props: PlayPageProps) => {
   }
 
   const handleSubmitPicksClick = async () => {
-    const picks = matchTree?.toMatchPicks()
-    const bracketId = bracket?.id
-    if (!picks || !bracketId) {
-      const msg = 'Cannot create play. Missing picks'
-      console.error(msg)
-      Sentry.captureException(msg)
-      return
-    }
-    const playReq: PlayReq = {
-      title: bracket?.title,
-      bracketId: bracketId,
-      picks: picks,
-      generateImages: false,
-    }
+    const playReq = getPlayReq()
+    playReq.generateImages = false
+    playReq.createStripePaymentIntent = paymentRequired
     setProcessing(true)
     return bracketApi
       .createPlay(playReq)
       .then((res) => {
-        const playId = res.id
-        const newReq = {
-          ...playReq,
-          id: playId,
-        }
-        if (isUserLoggedIn) {
+        if (paymentRequired) {
+          setStripeClientSecret(res.stripePaymentIntentClientSecret)
+          setShowPaymentModal(true)
+          setProcessing(false)
+        } else if (isUserLoggedIn) {
           window.location.assign(myPlayHistoryUrl)
         } else {
           setShowRegisterModal(true)
@@ -185,15 +182,28 @@ const PlayPage = (props: PlayPageProps) => {
     setDarkMode,
     bracketMeta,
     setBracketMeta,
-    showRegisterModal,
-    setShowRegisterModal,
   }
 
-  if (showPaginated) {
-    return <PaginatedPlayBuilder {...playBuilderProps} />
-  }
-
-  return <PlayBuilder {...playBuilderProps} />
+  return (
+    <>
+      <SubmitPicksRegisterModal
+        show={showRegisterModal}
+        setShow={setShowRegisterModal}
+      />
+      <StripePaymentModal
+        title={'Submit Your Picks'}
+        show={showPaymentModal}
+        setShow={setShowPaymentModal}
+        clientSecret={stripeClientSecret}
+        myPlayHistoryUrl={myPlayHistoryUrl}
+      />
+      {showPaginated ? (
+        <PaginatedPlayBuilder {...playBuilderProps} />
+      ) : (
+        <PlayBuilder {...playBuilderProps} />
+      )}
+    </>
+  )
 }
 
 const WrappedPlayBuilderPage = WithWindowDimensions(

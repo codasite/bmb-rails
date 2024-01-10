@@ -3,19 +3,19 @@
 namespace WStrategies\BMB\Includes\Service;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Domain\Team;
 
 class BracketLeaderboardService {
   private BracketRepo $bracket_repo;
-  private BracketPlayRepo $play_repo;
+  private PlayRepo $play_repo;
   private Bracket $bracket;
   private array $plays;
 
   public function __construct(int $bracket_id = null, array $args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     if ($bracket_id) {
       $this->bracket = $this->bracket_repo->get($bracket_id);
       if (!$this->bracket) {

@@ -5,7 +5,7 @@ use WStrategies\BMB\Includes\Domain\BracketConfig;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\GuzzleClient;
 use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
@@ -48,7 +48,7 @@ class GelatoProductIntegration implements
   public $utils;
 
   /**
-   * @var BracketPlayRepo
+   * @var PlayRepo
    */
   private $play_repo;
 
@@ -63,7 +63,7 @@ class GelatoProductIntegration implements
     $this->public_hooks = $args['public_hooks'] ?? new GelatoPublicHooks($this);
     $this->client = $args['client'] ?? new GuzzleClient();
     $this->utils = $args['utils'] ?? new Utils();
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
   }
 
   public function get_http_client(): HttpClientInterface {
@@ -74,7 +74,7 @@ class GelatoProductIntegration implements
     return $this->request_factory;
   }
 
-  public function get_play_repo(): BracketPlayRepo {
+  public function get_play_repo(): PlayRepo {
     return $this->play_repo;
   }
 

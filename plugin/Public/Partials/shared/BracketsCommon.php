@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Public\Partials\shared;
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\NotificationType;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;

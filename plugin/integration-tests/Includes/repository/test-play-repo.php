@@ -5,16 +5,16 @@ use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class PlayRepoTest extends WPBB_UnitTestCase {
-  private BracketPlayRepo $play_repo;
+  private PlayRepo $play_repo;
   private BracketMatchPickRepo $pick_repo;
 
   public function set_up(): void {
     parent::set_up();
 
-    $this->play_repo = new BracketPlayRepo();
+    $this->play_repo = new PlayRepo();
   }
 
   public function test_add() {
@@ -702,5 +702,19 @@ class PlayRepoTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(1, count($plays));
     $this->assertEquals($entry->id, $plays[0]->id);
+  }
+
+  public function test_update_is_paid() {
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_paid' => false,
+    ]);
+
+    $updated = $this->play_repo->update($play->id, [
+      'is_paid' => true,
+    ]);
+
+    $this->assertTrue($updated->is_paid);
   }
 }

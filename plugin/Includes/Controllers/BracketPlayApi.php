@@ -7,65 +7,59 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
+use WStrategies\BMB\Includes\Controllers\ApiListeners\BeforePlayAddedListener;
+use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerInterface;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\AnonymousPlayService;
+use WStrategies\BMB\Includes\Service\CurrentPlayService;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\PaidTournamentServiceInterface;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
+use WStrategies\BMB\Includes\Service\PlayImageService;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
 class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
-  /**
-   * @var BracketPlayRepo
-   */
-  private $play_repo;
-
-  /**
-   * @var Utils
-   */
-  private $utils;
-
-  // /**
-  //  * @var Bracket_Pick_Service
-  //  */
-  // private $bracket_pick_service;
-
-  /**
-   * @var string
-   */
-  protected $namespace;
-
-  /**
-   * @var string
-   */
-  protected $rest_base;
-
-  /**
-   * @var ProductIntegrationInterface
-   */
-  private $product_integration;
-
-  /**
-   * @var TournamentEntryService
-   */
-  private TournamentEntryService $tournament_entry_service;
-
+  private PlayRepo $play_repo;
+  protected string $rest_namespace;
+  protected string $base_path;
+  private ProductIntegrationInterface $product_integration;
   private BracketPlaySerializer $serializer;
 
+  /**
+   * @var array<BracketPlayCreateListenerInterface>
+   */
+  private array $create_listeners = [];
+
   public function __construct($args = []) {
-    $this->utils = $args['utils'] ?? new Utils();
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->create_listeners =
+      $args['create_listeners'] ?? $this->init_create_listeners($args);
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->product_integration =
       $args['product_integration'] ?? new GelatoProductIntegration();
-    $this->tournament_entry_service =
-      $args['tournament_entry_service'] ?? new TournamentEntryService();
     $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();
-    $this->namespace = 'wp-bracket-builder/v1';
-    $this->rest_base = 'plays';
+    $this->rest_namespace = 'wp-bracket-builder/v1';
+    $this->base_path = 'plays';
+  }
+
+  /**
+   * @return array<BracketPlayCreateListenerInterface>
+   */
+  private function init_create_listeners(array $args): array {
+    return [
+      new BeforePlayAddedListener($args),
+      new AnonymousPlayService($args),
+      new CurrentPlayService($args),
+      new PlayImageService($args),
+      new TournamentEntryService($args),
+      new StripePaidTournamentService($args),
+    ];
   }
 
   public function load(Loader $loader): void {
@@ -77,13 +71,13 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    * Adapted from: https://developer.wordpress.org/rest-api/extending-the-rest-api/adding-custom-endpoints/
    */
   public function register_routes(): void {
-    $namespace = $this->namespace;
-    $base = $this->rest_base;
+    $namespace = $this->rest_namespace;
+    $base = $this->base_path;
     register_rest_route($namespace, '/' . $base, [
       [
         'methods' => WP_REST_Server::READABLE,
         'callback' => [$this, 'get_items'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => [
           'bracket_id' => [
             'description' => 'The ID of the bracket.',
@@ -99,7 +93,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'create_item'],
-        'permission_callback' => [$this, 'customer_permission_check'],
+        'permission_callback' => [$this, 'create_play_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
         ),
@@ -124,7 +118,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::EDITABLE,
         'callback' => [$this, 'update_item'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::EDITABLE
         ),
@@ -132,7 +126,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::DELETABLE,
         'callback' => [$this, 'delete_item'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => [
           'force' => [
             'default' => false,
@@ -145,13 +139,13 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       ],
     ]);
     register_rest_route(
-      $this->namespace,
+      $namespace,
       '/' . $base . '/(?P<item_id>[\d]+)/generate-images',
       [
         [
           'methods' => WP_REST_Server::CREATABLE,
           'callback' => [$this, 'generate_images'],
-          'permission_callback' => [$this, 'admin_permission_check'],
+          'permission_callback' => [$this, 'customer_permission_check'],
           'args' => array_merge(
             [
               'item_id' => [
@@ -210,60 +204,28 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    */
   public function create_item($request): WP_Error|WP_REST_Response {
     $params = $request->get_params();
-    $buster_play = isset($params['busted_id']) && $params['busted_id'] !== null;
-    $bracket_id = $params['bracket_id'];
-    if (!current_user_can('wpbb_play_bracket', $bracket_id)) {
-      return new WP_Error(
-        'unauthorized',
-        'You are not authorized to play this bracket.',
-        ['status' => 403]
-      );
-    }
-    if ($buster_play) {
-      $busted_play = $this->play_repo->get($params['busted_id']);
-      if (!$busted_play->is_bustable) {
-        return new WP_Error('unauthorized', 'This bracket cannot be busted.', [
-          'status' => 403,
-        ]);
-      }
+    foreach ($this->create_listeners as $listener) {
+      $params = $listener->filter_request_params($params);
     }
     try {
       $play = $this->serializer->deserialize($params);
+      foreach ($this->create_listeners as $listener) {
+        $play = $listener->filter_before_play_added($play);
+      }
+      $saved = $this->play_repo->add($play);
+      foreach ($this->create_listeners as $listener) {
+        $saved = $listener->filter_after_play_added($saved);
+      }
+      $serialized = $this->serializer->serialize($saved);
+      foreach ($this->create_listeners as $listener) {
+        $serialized = $listener->filter_after_play_serialized($serialized);
+      }
+      return new WP_REST_Response($serialized, 201);
     } catch (ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,
       ]);
     }
-    $play->author = get_current_user_id();
-    $play->bmb_official = has_tag('bmb_official', $bracket_id);
-    $saved = $this->play_repo->add($play);
-    $this->tournament_entry_service->try_mark_play_as_tournament_entry($saved);
-    // Generate the bracket images
-    if (
-      isset($params['generate_images']) &&
-      $params['generate_images'] === true
-    ) {
-      if (!$this->product_integration->has_all_configs()) {
-        $this->product_integration->generate_images($saved);
-      }
-      // set the play id in the session
-      $this->utils->set_cookie('play_id', $saved->id, ['days' => 30]);
-    }
-
-    // check if user logged in
-    if (!is_user_logged_in()) {
-      // if (get_current_user_id() === 0)
-      $this->utils->set_cookie('play_id', $saved->id, ['days' => 30]);
-
-      // nonce
-      $bytes = random_bytes(32);
-      $nonce = base64_encode($bytes);
-      $this->utils->set_cookie('wpbb_anonymous_play_key', $nonce);
-
-      update_post_meta($saved->id, 'wpbb_anonymous_play_key', $nonce);
-    }
-
-    return new WP_REST_Response($saved, 201);
   }
 
   public function generate_images($request): WP_Error|WP_REST_Response {
@@ -287,21 +249,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     if (!$this->product_integration->has_all_configs()) {
       $this->product_integration->generate_images($play);
     }
-    return new WP_REST_Response($play, 200);
-  }
-
-  /**
-   * Check if a given request has admin access to this plugin
-   *
-   * @param WP_REST_Request $request Full details about the request.
-   *
-   * @return WP_Error|bool
-   */
-  public function admin_permission_check(
-    WP_REST_Request $request
-  ): WP_Error|bool {
-    return true; // TODO: Disable this for production
-    // return current_user_can('manage_options');
+    $serialized = $this->serializer->serialize($play);
+    return new WP_REST_Response($serialized, 201);
   }
 
   /**
@@ -314,7 +263,30 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   public function customer_permission_check(
     WP_REST_Request $request
   ): WP_Error|bool {
-    return true; // TODO: Disable this for production
-    // return current_user_can('read');
+    return current_user_can('read');
+  }
+
+  public function create_play_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
+    $params = $request->get_params();
+    $buster_play = isset($params['busted_id']) && $params['busted_id'] !== null;
+    $bracket_id = $params['bracket_id'];
+    if (!current_user_can('wpbb_play_bracket', $bracket_id)) {
+      return new WP_Error(
+        'unauthorized',
+        'You are not authorized to play this bracket.',
+        ['status' => 403]
+      );
+    }
+    if ($buster_play) {
+      $busted_play = $this->play_repo->get($params['busted_id']);
+      if (!$busted_play->is_bustable) {
+        return new WP_Error('unauthorized', 'This bracket cannot be busted.', [
+          'status' => 403,
+        ]);
+      }
+    }
+    return true;
   }
 }

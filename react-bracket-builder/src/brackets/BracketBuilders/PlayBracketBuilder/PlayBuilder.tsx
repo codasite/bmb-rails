@@ -6,6 +6,7 @@ import { ThemeSelector } from '../../shared/components'
 import { PlayBuilderProps } from './types'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
+import StripePaymentModal from './StripePaymentModal'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const {
@@ -18,6 +19,8 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
     processing,
     showRegisterModal,
     setShowRegisterModal,
+    showPaymentModal,
+    setShowPaymentModal,
   } = props
   const disableButtons = processing || (matchTree && !matchTree.allPicked())
   return (
@@ -29,10 +32,6 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
-      <SubmitPicksRegisterModal
-        show={showRegisterModal}
-        setShow={setShowRegisterModal}
-      />
       {matchTree && (
         <div
           className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80`}

@@ -84,6 +84,7 @@ export interface BracketRes extends PostBase {
   matches?: MatchRes[]
   isOpen?: boolean
   isPrintable?: boolean
+  fee?: number
 }
 export interface PlayReq {
   id?: number
@@ -93,6 +94,7 @@ export interface PlayReq {
   picks: MatchPick[]
   bustedId?: number
   generateImages?: boolean
+  createStripePaymentIntent?: boolean
 }
 export interface PlayRes extends PostBase {
   bracketId: number
@@ -101,4 +103,5 @@ export interface PlayRes extends PostBase {
   bustedId?: number
   bustedPlay?: PlayRes
   isBustable?: boolean
+  stripePaymentIntentClientSecret?: string
 }

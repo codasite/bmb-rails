@@ -99,13 +99,13 @@ composer-install:
 	cd plugin && composer install
 
 phpstan:
-	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 1G .
+	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 2G .
 
 phpstan-ci:
-	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon.dist --memory-limit 1G .
+	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon.dist --memory-limit 2G .
 
 phpstan-generate-baseline:
-	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon.dist --memory-limit 1G . --generate-baseline
+	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon.dist --memory-limit 2G . --generate-baseline
 
 prod-up:
 	docker compose -f compose.yaml -f compose.prod.yaml up --build -d --remove-orphans

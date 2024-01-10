@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\ProductPreview;
 
 use WC_Product;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
@@ -15,7 +15,7 @@ class ProductPreviewService {
   private $bracket_product_utils;
 
   /**
-   * @var BracketPlayRepo
+   * @var PlayRepo
    */
   private $play_repo;
 
@@ -31,7 +31,7 @@ class ProductPreviewService {
 
   public function __construct() {
     $this->bracket_product_utils = new BracketProductUtils();
-    $this->play_repo = new BracketPlayRepo();
+    $this->play_repo = new PlayRepo();
     $this->product_integration = new GelatoProductIntegration();
     $this->utils = new Utils();
   }

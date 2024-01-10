@@ -5,7 +5,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
@@ -16,7 +16,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
   public function set_up(): void {
     parent::set_up();
 
-    $this->play_repo = new BracketPlayRepo();
+    $this->play_repo = new PlayRepo();
   }
 
   public function test_create_play_for_bracket() {
@@ -48,6 +48,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'generate_images' => false,
       'bracket_id' => $bracket->id,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -77,7 +78,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(201, $response->get_status());
 
-    $new_play = $this->play_repo->get($response->get_data()->id);
+    $new_play = $this->play_repo->get($response->get_data()['id']);
 
     $this->assertEquals($bracket->id, $new_play->bracket_id);
 
@@ -123,6 +124,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'generate_images' => false,
       'bracket_id' => $bracket->id,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -139,9 +141,9 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $response = rest_do_request($request);
     $this->assertEquals(201, $response->get_status());
-    $this->assertEquals(get_current_user_id(), $response->get_data()->author);
+    $this->assertEquals(get_current_user_id(), $response->get_data()['author']);
 
-    $play = $this->play_repo->get($response->get_data()->id);
+    $play = $this->play_repo->get($response->get_data()['id']);
     $this->assertNotNull($play);
     $this->assertEquals(get_current_user_id(), $play->author);
   }
@@ -174,7 +176,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $repo = new BracketPlayRepo();
+    $repo = new PlayRepo();
 
     $repo->update($play->id, [
       'author' => $user2->ID,
@@ -196,6 +198,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -228,6 +231,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -259,6 +263,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -291,6 +296,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'busted_id' => $play->id,
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -320,6 +326,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'busted_id' => $play->id,
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -347,6 +354,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $data = [
       'bracket_id' => $bracket->id,
       'generate_images' => false,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -365,7 +373,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(201, $response->get_status());
 
-    $play = $this->play_repo->get($response->get_data()->id);
+    $play = $this->play_repo->get($response->get_data()['id']);
 
     $this->assertTrue($play->bmb_official);
   }
@@ -381,6 +389,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 1,
       'generate_images' => true,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -395,21 +404,8 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
 
-    $utils_mock = $this->createMock(Utils::class);
-    $utils_mock
-      ->expects($this->once())
-      ->method('set_cookie')
-      ->with(
-        $this->equalTo('play_id'),
-        $this->equalTo($bracket->id + 1),
-        $this->equalTo([
-          'days' => 30,
-        ])
-      );
-
     $api = new BracketPlayAPI([
       'product_integration' => $integration,
-      'utils' => $utils_mock,
     ]);
 
     $response = $api->create_item($request);
@@ -428,6 +424,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 1,
       'generate_images' => true,
+      'set_cookie' => false,
       'picks' => [
         [
           'round_index' => 0,
@@ -482,7 +479,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $response = $api->generate_images($request);
 
-    $this->assertEquals(200, $response->get_status());
+    $this->assertEquals(201, $response->get_status());
   }
 
   public function test_generate_images_endpoint_has_configs() {
@@ -513,17 +510,53 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $response = $api->generate_images($request);
 
-    $this->assertEquals(200, $response->get_status());
+    $this->assertEquals(201, $response->get_status());
   }
 
   public function test_play_is_marked_as_tournament_entry() {
-    $entry_service_mock = $this->createMock(TournamentEntryService::class);
-    $entry_service_mock
-      ->expects($this->once())
-      ->method('try_mark_play_as_tournament_entry')
-      ->with($this->isInstanceOf(BracketPlay::class));
-
     $bracket = $this->create_bracket();
+
+    $data = [
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'generate_images' => false,
+      'set_cookie' => false,
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $res = rest_do_request($request);
+
+    $this->assertEquals(201, $res->get_status());
+
+    $play = $this->play_repo->get($res->get_data()['id']);
+
+    $this->assertTrue($play->is_tournament_entry);
+  }
+
+  public function test_create_play_sets_cookie() {
+    $bracket = $this->create_bracket();
+    $utils_mock = $this->createMock(Utils::class);
+    $utils_mock
+      ->expects($this->once())
+      ->method('set_cookie')
+      ->with(
+        $this->equalTo('play_id'),
+        $this->equalTo($bracket->id + 1),
+        $this->equalTo([
+          'days' => 30,
+        ])
+      );
 
     $data = [
       'bracket_id' => $bracket->id,
@@ -539,14 +572,18 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     ];
 
     $request = new WP_REST_Request('POST', '/wp-bracket-builder/v1/plays');
+
     $request->set_body_params($data);
     $request->set_header('Content-Type', 'application/json');
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_param('item_id', $bracket->id);
 
     $api = new BracketPlayAPI([
-      'tournament_entry_service' => $entry_service_mock,
+      'utils' => $utils_mock,
     ]);
 
     $response = $api->create_item($request);
+
+    $this->assertEquals(201, $response->get_status());
   }
 }

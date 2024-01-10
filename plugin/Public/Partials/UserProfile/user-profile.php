@@ -1,14 +1,14 @@
 <?php
 namespace WStrategies\BMB\Public\Partials\UserProfile;
 
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketCards;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 
 $user_profile_repo = new UserProfileRepo();
 $user_profile = $user_profile_repo->get_by_post();
-$play_repo = new BracketPlayRepo();
+$play_repo = new PlayRepo();
 $plays = $play_repo->get_all([
 	'posts_per_page' => 6,
 	'tag_slug__in' => ['bmb_vip_profile'],

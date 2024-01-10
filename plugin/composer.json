@@ -43,7 +43,8 @@
     "setasign/fpdf": "^1.8",
     "setasign/fpdi": "^2.3",
     "mailchimp/marketing": "^3.0",
-    "mailchimp/transactional": "^1.0"
+    "mailchimp/transactional": "^1.0",
+    "stripe/stripe-php": "^13.8"
   },
   "scripts": {
     "test-integration": "phpunit --configuration=integration-tests/phpunit.xml.dist",

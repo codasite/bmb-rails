@@ -14,4 +14,6 @@ export interface PlayBuilderProps {
   canPlay?: boolean
   showRegisterModal?: boolean
   setShowRegisterModal?: (showRegisterModal: boolean) => void
+  showPaymentModal?: boolean
+  setShowPaymentModal?: (showPaymentModal: boolean) => void
 }

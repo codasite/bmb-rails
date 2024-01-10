@@ -11,6 +11,7 @@ import SubmitPicksRegisterModal from '../PlayBracketBuilder/SubmitPicksRegisterM
 import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
+import StripePaymentModal from '../PlayBracketBuilder/StripePaymentModal'
 
 interface FullBracketPageProps {
   onEditClick?: () => void
@@ -22,20 +23,10 @@ interface FullBracketPageProps {
   setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
   canEdit?: boolean
-  showRegisterModal?: boolean
-  setShowRegisterModal?: (showRegisterModal: boolean) => void
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const {
-    onEditClick,
-    matchTree,
-    darkMode,
-    setDarkMode,
-    processing,
-    showRegisterModal,
-    setShowRegisterModal,
-  } = props
+  const { onEditClick, matchTree, darkMode, setDarkMode, processing } = props
 
   const canEdit = !!onEditClick
   return (
@@ -47,10 +38,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
-      <SubmitPicksRegisterModal
-        show={showRegisterModal}
-        setShow={setShowRegisterModal}
-      />
       <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
         <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
         {matchTree && (

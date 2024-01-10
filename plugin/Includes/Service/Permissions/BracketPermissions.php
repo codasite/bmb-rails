@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Permissions;
 
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 

@@ -59,7 +59,7 @@ class BracketProductUtils {
       $bracket = $bracket->id;
     }
     $fee = floatval(get_post_meta($bracket, 'bracket_fee', true));
-    return $fee ? $fee : 0;
+    return $fee ?: 0;
   }
 
   public function has_bracket_fee(Bracket|int $bracket): bool {

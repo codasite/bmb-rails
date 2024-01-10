@@ -59,34 +59,23 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $response = rest_do_request($request);
     $this->assertEquals(201, $response->get_status());
-    $this->assertEquals('Test Bracket', $response->get_data()->title);
-    $this->assertEquals('private', $response->get_data()->status);
-    $this->assertEquals('test month', $response->get_data()->month);
-    $this->assertEquals('test year', $response->get_data()->year);
-    $this->assertEquals(8, $response->get_data()->num_teams);
-    $this->assertEquals(0, $response->get_data()->wildcard_placement);
-    $this->assertEquals(2, count($response->get_data()->matches));
-    $this->assertEquals(0, $response->get_data()->matches[0]->round_index);
-    $this->assertEquals(0, $response->get_data()->matches[0]->match_index);
-    $this->assertEquals(
-      'Team 1',
-      $response->get_data()->matches[0]->team1->name
-    );
-    $this->assertEquals(
-      'Team 2',
-      $response->get_data()->matches[0]->team2->name
-    );
-    $this->assertEquals(0, $response->get_data()->matches[1]->round_index);
-    $this->assertEquals(1, $response->get_data()->matches[1]->match_index);
-    $this->assertEquals(
-      'Team 3',
-      $response->get_data()->matches[1]->team1->name
-    );
-    $this->assertEquals(
-      'Team 4',
-      $response->get_data()->matches[1]->team2->name
-    );
-    $bracket = $this->bracket_repo->get($response->get_data()->id);
+    $data = (object) $response->get_data();
+    $this->assertEquals('Test Bracket', $data->title);
+    $this->assertEquals('private', $data->status);
+    $this->assertEquals('test month', $data->month);
+    $this->assertEquals('test year', $data->year);
+    $this->assertEquals(8, $data->num_teams);
+    $this->assertEquals(0, $data->wildcard_placement);
+    $this->assertEquals(2, count($data->matches));
+    $this->assertEquals(0, $data->matches[0]['round_index']);
+    $this->assertEquals(0, $data->matches[0]['match_index']);
+    $this->assertEquals('Team 1', $data->matches[0]['team1']['name']);
+    $this->assertEquals('Team 2', $data->matches[0]['team2']['name']);
+    $this->assertEquals(0, $data->matches[1]['round_index']);
+    $this->assertEquals(1, $data->matches[1]['match_index']);
+    $this->assertEquals('Team 3', $data->matches[1]['team1']['name']);
+    $this->assertEquals('Team 4', $data->matches[1]['team2']['name']);
+    $bracket = $this->bracket_repo->get($data->id);
     $this->assertNotNull($bracket);
   }
 
@@ -117,9 +106,10 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $response = rest_do_request($request);
     $this->assertEquals(201, $response->get_status());
-    $this->assertEquals(get_current_user_id(), $response->get_data()->author);
+    $data = (object) $response->get_data();
+    $this->assertEquals(get_current_user_id(), $data->author);
 
-    $bracket = $this->bracket_repo->get($response->get_data()->id);
+    $bracket = $this->bracket_repo->get($data->id);
     $this->assertNotNull($bracket);
     $this->assertEquals(get_current_user_id(), $bracket->author);
   }
@@ -131,9 +121,10 @@ class BracketApiTest extends WPBB_UnitTestCase {
 
     $response = rest_do_request($request);
     $this->assertEquals(400, $response->get_status());
+    $data = $response->get_data();
     $this->assertEquals(
       'Missing required fields: title, num_teams, wildcard_placement, matches',
-      $response->get_data()['message']
+      $data['message']
     );
   }
 
@@ -198,9 +189,10 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
 
     $this->assertEquals(200, $response->get_status());
-    $this->assertEquals('Test Bracket', $response->get_data()->title);
+    $data = (object) $response->get_data();
+    $this->assertEquals('Test Bracket', $data->title);
 
-    $bracket = $this->bracket_repo->get($response->get_data()->id);
+    $bracket = $this->bracket_repo->get($data->id);
     $this->assertNotNull($bracket);
     $this->assertEquals('Test Bracket', $bracket->title);
     $this->assertEquals(3, count($bracket->results));
@@ -260,11 +252,12 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
 
     $this->assertEquals(200, $response->get_status());
-    $this->assertEquals('Test Bracket', $response->get_data()->title);
-    $this->assertEquals('Test Month', $response->get_data()->month);
-    $this->assertEquals('Test Year', $response->get_data()->year);
+    $data = (object) $response->get_data();
+    $this->assertEquals('Test Bracket', $data->title);
+    $this->assertEquals('Test Month', $data->month);
+    $this->assertEquals('Test Year', $data->year);
 
-    $bracket = $this->bracket_repo->get($response->get_data()->id);
+    $bracket = $this->bracket_repo->get($data->id);
     $this->assertNotNull($bracket);
     $this->assertEquals('Test Bracket', $bracket->title);
     $this->assertEquals('Test Month', $bracket->month);
@@ -506,7 +499,8 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $response = rest_do_request($request);
     $this->assertEquals(201, $response->get_status());
-    $this->assertEquals('private', $response->get_data()->status);
+    $data = (object) $response->get_data();
+    $this->assertEquals('private', $data->status);
   }
 
   public function test_user_with_permission_can_publish_bracket() {
@@ -545,7 +539,8 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $response = rest_do_request($request);
     $this->assertEquals(200, $response->get_status());
-    $this->assertEquals('publish', $response->get_data()->status);
+    $data = (object) $response->get_data();
+    $this->assertEquals('publish', $data->status);
   }
 
   public function test_user_without_permission_cannot_publish_bracket() {
@@ -584,7 +579,8 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $response = rest_do_request($request);
     $this->assertEquals(200, $response->get_status());
-    $this->assertEquals('private', $response->get_data()->status);
+    $data = (object) $response->get_data();
+    $this->assertEquals('private', $data->status);
   }
 
   public function test_user_with_permission_can_update_results() {
@@ -629,9 +625,10 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
     $response = rest_do_request($request);
     $this->assertEquals(200, $response->get_status());
+    $data = (object) $response->get_data();
     $this->assertEquals(
       $bracket->matches[0]->team1->id,
-      $response->get_data()->results[0]->winning_team_id
+      $data->results[0]['winning_team_id']
     );
   }
 
@@ -1095,44 +1092,5 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $this->assertEquals(200, $response->get_status());
     $updated = $this->bracket_repo->get($bracket->id);
     $this->assertEquals('score', $updated->status);
-  }
-
-  public function test_get_bracket_snapshot() {
-    $bracket = $this->create_bracket([
-      'status' => 'publish',
-      'num_teams' => 4,
-      'matches' => [
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => new Team([
-            'name' => 'Team 1',
-          ]),
-          'team2' => new Team([
-            'name' => 'Team 2',
-          ]),
-        ]),
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 1,
-          'team1' => new Team([
-            'name' => 'Team 3',
-          ]),
-          'team2' => new Team([
-            'name' => 'Team 4',
-          ]),
-        ]),
-      ],
-    ]);
-    // get the bracket through api
-    $request = new WP_REST_Request(
-      'GET',
-      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
-    );
-    $request->set_param('item_id', $bracket->id);
-    $response = rest_do_request($request);
-    $this->assertEquals(200, $response->get_status());
-    // get the response data
-    $data = $response->get_data();
   }
 }

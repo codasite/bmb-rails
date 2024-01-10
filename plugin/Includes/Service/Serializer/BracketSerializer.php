@@ -42,6 +42,7 @@ class BracketSerializer extends PostBaseSerializer {
       ],
       'is_open',
       'is_printable',
+      'fee',
     ]);
   }
 }

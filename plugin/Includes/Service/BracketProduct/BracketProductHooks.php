@@ -3,7 +3,7 @@ namespace WStrategies\BMB\Includes\Service\BracketProduct;
 
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 
@@ -21,7 +21,7 @@ class BracketProductHooks implements HooksInterface {
   private $bracket_repo;
 
   /**
-   * @var BracketPlayRepo
+   * @var PlayRepo
    */
   private $play_repo;
 
@@ -34,7 +34,7 @@ class BracketProductHooks implements HooksInterface {
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->wc = $args['wc'] ?? new WcFunctions();
   }
 

@@ -2,21 +2,33 @@
 
 namespace WStrategies\BMB\Includes\Service;
 
+use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
-class TournamentEntryService {
-  private BracketPlayRepo $play_repo;
+class TournamentEntryService extends BracketPlayCreateListenerBase {
+  private PlayRepo $play_repo;
+  private BracketProductUtils $bracket_product_utils;
 
   public function __construct(array $args = []) {
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
+    $this->bracket_product_utils =
+      $args['bracket_product_utils'] ?? new BracketProductUtils();
   }
 
-  public function try_mark_play_as_tournament_entry(BracketPlay $play): void {
+  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+    $this->try_mark_play_as_tournament_entry($play);
+    return $play;
+  }
+
+  public function try_mark_play_as_tournament_entry(
+    BracketPlay $play
+  ): ?BracketPlay {
     if (!$this->should_mark_play_as_tournament_entry($play)) {
-      return;
+      return $play;
     }
-    $this->mark_play_as_tournament_entry($play);
+    return $this->mark_play_as_tournament_entry($play);
   }
 
   public function should_mark_play_as_tournament_entry(
@@ -31,17 +43,29 @@ class TournamentEntryService {
     if (!$play->bracket->is_open()) {
       return false;
     }
+    if ($play->bracket->fee > 0 && !$play->is_paid) {
+      return false;
+    }
     return true;
   }
 
-  public function mark_play_as_tournament_entry(BracketPlay $play): void {
+  public function mark_play_as_tournament_entry(
+    BracketPlay $play
+  ): ?BracketPlay {
     $author_id = $play->author;
     $bracket_id = $play->bracket_id;
     $play_id = $play->id;
-    $this->clear_tournament_entries_for_author($bracket_id, $author_id);
-    $this->play_repo->update($play_id, [
+    if ($this->should_clear_tournament_entries($bracket_id)) {
+      $this->clear_tournament_entries_for_author($bracket_id, $author_id);
+    }
+    $updated = $this->play_repo->update($play_id, [
       'is_tournament_entry' => true,
     ]);
+    return $updated;
+  }
+
+  public function should_clear_tournament_entries(int $bracket_id): bool {
+    return !$this->bracket_product_utils->has_bracket_fee($bracket_id);
   }
 
   public function clear_tournament_entries_for_author(
@@ -50,7 +74,7 @@ class TournamentEntryService {
   ): void {
     global $wpdb;
     $posts_table = $wpdb->posts;
-    $plays_table = BracketPlayRepo::table_name();
+    $plays_table = PlayRepo::table_name();
 
     $query = "
 			UPDATE {$plays_table}

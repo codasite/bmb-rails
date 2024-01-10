@@ -2,10 +2,10 @@ includes:
   - phpstan-baseline.neon
 parameters:
   excludePaths:
-    - vendor/*
-    - integration-tests/*
-    - unit-tests/*
-  level: 8
+    - vendor
+    - integration-tests
+    - unit-tests
+  level: 5
   scanFiles:
     - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
     - vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php

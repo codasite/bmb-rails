@@ -91,7 +91,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::READABLE,
         'callback' => [$this, 'get_items'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => [],
       ],
       [
@@ -114,7 +114,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::READABLE,
         'callback' => [$this, 'get_item'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => [
           'context' => $this->get_context_param(['default' => 'view']),
         ],
@@ -122,7 +122,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::EDITABLE,
         'callback' => [$this, 'update_item'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::EDITABLE
         ),
@@ -130,7 +130,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::DELETABLE,
         'callback' => [$this, 'delete_item'],
-        'permission_callback' => [$this, 'admin_permission_check'],
+        'permission_callback' => [$this, 'customer_permission_check'],
         'args' => [
           'force' => [
             'default' => false,
@@ -211,8 +211,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
 
       update_post_meta($saved->id, 'wpbb_anonymous_bracket_key', $nonce);
     }
-    // chec
-    return new WP_REST_Response($saved, 201);
+    $serialized = $this->serializer->serialize($saved);
+    return new WP_REST_Response($serialized, 201);
   }
 
   /**
@@ -273,8 +273,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
         }
       }
     }
-
-    return new WP_REST_Response($updated, 200);
+    $serialized = $this->serializer->serialize($updated);
+    return new WP_REST_Response($serialized, 200);
   }
 
   /**
@@ -299,20 +299,6 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
-   * Check if a given request has admin access to this plugin
-   *
-   * @param WP_REST_Request $request Full details about the request.
-   *
-   * @return WP_Error|bool
-   */
-  public function admin_permission_check(
-    WP_REST_Request $request
-  ): WP_Error|bool {
-    return true;
-    // return current_user_can('edit_others_posts');
-  }
-
-  /**
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
    * @param WP_REST_Request $request Full details about the request.
@@ -322,7 +308,6 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
   public function customer_permission_check(
     WP_REST_Request $request
   ): WP_Error|bool {
-    return true;
-    // return current_user_can('read');
+    return current_user_can('read');
   }
 }

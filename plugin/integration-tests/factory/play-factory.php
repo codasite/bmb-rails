@@ -1,7 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 /**
  * Class WPBB_UnitTest_Factory_For_Play
@@ -13,7 +13,7 @@ class WPBB_UnitTest_Factory_For_Play extends WP_UnitTest_Factory_For_Thing {
 
   function __construct($factory = null) {
     parent::__construct($factory);
-    $this->play_repo = new BracketPlayRepo();
+    $this->play_repo = new PlayRepo();
 
     $this->default_generation_definitions = ['author' => 1];
   }

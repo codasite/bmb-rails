@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Repository\BracketPlayRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
@@ -72,7 +72,7 @@ class EnqueueScriptsHooks implements HooksInterface {
   public function __construct($args = []) {
     $this->plugin_name = $args['plugin_name'];
     $this->version = $args['version'];
-    $this->play_repo = $args['play_repo'] ?? new BracketPlayRepo();
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
@@ -168,6 +168,8 @@ class EnqueueScriptsHooks implements HooksInterface {
       'play' => $play,
       'bracket' => $bracket,
       'is_user_logged_in' => is_user_logged_in(),
+      'stripe_publishable_key' =>
+        'pk_test_51OWPu0GLKms5oOW8z8oolF9mn5sO2jOhXdkAbxgOSGkLe1F7U8yF5ChZ5NeaWAicb6EJjuGdIJ4JN2gUyj0euVZ000N53Gxru2',
     ]);
   }
 

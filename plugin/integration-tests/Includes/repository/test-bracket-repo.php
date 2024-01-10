@@ -4,6 +4,7 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketRepoTest extends WPBB_UnitTestCase {
   private $bracket_repo;
@@ -278,5 +279,24 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $repo->update($bracket->id, []);
     $updated = $this->get_bracket($bracket->id);
     $this->assertEquals(null, $updated->results_first_updated_at);
+  }
+
+  public function test_get_with_fee() {
+    $bracket = $this->create_bracket();
+    $product_utils_mock = $this->getMockBuilder(BracketProductUtils::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $product_utils_mock
+      ->expects($this->once())
+      ->method('get_bracket_fee')
+      ->with($bracket->id)
+      ->willReturn(5.0);
+
+    $repo = new BracketRepo(['bracket_product_utils' => $product_utils_mock]);
+
+    $bracket = $repo->get($bracket->id);
+
+    $this->assertEquals(5.0, $bracket->fee);
   }
 }
