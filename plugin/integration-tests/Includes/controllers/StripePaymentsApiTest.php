@@ -2,6 +2,7 @@
 
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
@@ -116,5 +117,110 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $this->assertSame(200, $response->get_status());
     $play = $play_repo->get(123);
     $this->assertTrue($play->is_tournament_entry);
+  }
+
+  public function test_create_payment_intent_no_play_id() {
+    $data = [];
+
+    $request = new WP_REST_Request(
+      'POST',
+      '/wp-bracket-builder/v1/stripe/payment-intent'
+    );
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($data));
+
+    $res = rest_do_request($request);
+    $this->assertSame(400, $res->get_status());
+    $this->assertSame('play_id is required', $res->get_data());
+  }
+
+  public function test_create_payment_intent_play_not_found() {
+    $data = [
+      'play_id' => 123,
+    ];
+
+    $request = new WP_REST_Request(
+      'POST',
+      '/wp-bracket-builder/v1/stripe/payment-intent'
+    );
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($data));
+
+    $res = rest_do_request($request);
+    $this->assertSame(404, $res->get_status());
+    $this->assertSame('play not found', $res->get_data());
+  }
+
+  public function test_create_payment_intent_play_exists() {
+    $mock_payment_intent = $this->createMock(\Stripe\PaymentIntent::class);
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+    $tournament_service_mock = $this->getMockBuilder(
+      StripePaidTournamentService::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+    $tournament_service_mock
+      ->expects($this->once())
+      ->method('create_payment_intent_for_paid_tournament_play')
+      ->with($play)
+      ->willReturn($mock_payment_intent);
+
+    $api = new StripePaymentsApi([
+      'tournament_service' => $tournament_service_mock,
+    ]);
+
+    $data = [
+      'play_id' => $play->id,
+    ];
+
+    $request = new WP_REST_Request(
+      'POST',
+      '/wp-bracket-builder/v1/stripe/payment-intent'
+    );
+
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($data));
+
+    $res = $api->create_payment_intent($request);
+
+    $this->assertSame(200, $res->get_status());
+    $this->assertEquals(
+      [
+        'client_secret' => $mock_payment_intent->client_secret,
+      ],
+      $res->get_data()
+    );
+  }
+
+  public function test_author_can_create_payment_intent() {
+    $user = $this->create_user();
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user->ID,
+    ]);
+
+    $data = [
+      'play_id' => $play->id,
+    ];
+
+    $request = new WP_REST_Request(
+      'POST',
+      '/wp-bracket-builder/v1/stripe/payment-intent'
+    );
+
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($data));
+
+    $res = rest_do_request($request);
+
+    $this->assertSame(200, $res->get_status());
   }
 }
