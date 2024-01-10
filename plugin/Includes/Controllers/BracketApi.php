@@ -211,8 +211,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
 
       update_post_meta($saved->id, 'wpbb_anonymous_bracket_key', $nonce);
     }
-    // chec
-    return new WP_REST_Response($saved, 201);
+    $serialized = $this->serializer->serialize($saved);
+    return new WP_REST_Response($serialized, 201);
   }
 
   /**
@@ -273,8 +273,8 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
         }
       }
     }
-
-    return new WP_REST_Response($updated, 200);
+    $serialized = $this->serializer->serialize($updated);
+    return new WP_REST_Response($serialized, 200);
   }
 
   /**

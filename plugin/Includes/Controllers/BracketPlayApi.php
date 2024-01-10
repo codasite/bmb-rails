@@ -272,8 +272,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
 
       update_post_meta($saved->id, 'wpbb_anonymous_play_key', $nonce);
     }
-
-    return new WP_REST_Response($saved, 201);
+    $serialized = $this->serializer->serialize($saved);
+    return new WP_REST_Response($serialized, 201);
   }
 
   public function generate_images($request): WP_Error|WP_REST_Response {
@@ -297,13 +297,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     if (!$this->product_integration->has_all_configs()) {
       $this->product_integration->generate_images($play);
     }
-    return new WP_REST_Response($play, 200);
-  }
-
-  private function handle_stripe_payment_intent(
-    BracketPlay $play
-  ): BracketPlay {
-    // determine if the play must be paid for
+    $serialized = $this->serializer->serialize($play);
+    return new WP_REST_Response($serialized, 201);
   }
 
   /**
