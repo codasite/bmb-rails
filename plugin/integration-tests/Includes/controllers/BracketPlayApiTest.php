@@ -77,7 +77,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(201, $response->get_status());
 
-    $new_play = $this->play_repo->get($response->get_data()->id);
+    $new_play = $this->play_repo->get($response->get_data()['id']);
 
     $this->assertEquals($bracket->id, $new_play->bracket_id);
 
@@ -139,9 +139,9 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $response = rest_do_request($request);
     $this->assertEquals(201, $response->get_status());
-    $this->assertEquals(get_current_user_id(), $response->get_data()->author);
+    $this->assertEquals(get_current_user_id(), $response->get_data()['author']);
 
-    $play = $this->play_repo->get($response->get_data()->id);
+    $play = $this->play_repo->get($response->get_data()['id']);
     $this->assertNotNull($play);
     $this->assertEquals(get_current_user_id(), $play->author);
   }
@@ -365,7 +365,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(201, $response->get_status());
 
-    $play = $this->play_repo->get($response->get_data()->id);
+    $play = $this->play_repo->get($response->get_data()['id']);
 
     $this->assertTrue($play->bmb_official);
   }
@@ -482,7 +482,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $response = $api->generate_images($request);
 
-    $this->assertEquals(200, $response->get_status());
+    $this->assertEquals(201, $response->get_status());
   }
 
   public function test_generate_images_endpoint_has_configs() {
@@ -513,7 +513,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $response = $api->generate_images($request);
 
-    $this->assertEquals(200, $response->get_status());
+    $this->assertEquals(201, $response->get_status());
   }
 
   public function test_play_is_marked_as_tournament_entry() {
