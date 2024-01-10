@@ -1,5 +1,5 @@
 export interface PaymentIntentReq {
-  bracketId: number
+  playId: number
 }
 
 export interface PaymentIntentRes {
