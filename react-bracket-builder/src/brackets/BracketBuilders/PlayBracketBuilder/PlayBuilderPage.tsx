@@ -202,6 +202,7 @@ const PlayPage = (props: PlayPageProps) => {
         show={showPaymentModal}
         setShow={setShowPaymentModal}
         clientSecret={stripeClientSecret}
+        myPlayHistoryUrl={myPlayHistoryUrl}
       />
       {showPaginated ? (
         <PaginatedPlayBuilder {...playBuilderProps} />

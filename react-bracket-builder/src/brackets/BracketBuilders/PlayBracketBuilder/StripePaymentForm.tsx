@@ -3,7 +3,7 @@ import { Layout, LayoutObject } from '@stripe/stripe-js'
 import React, { useEffect, useState } from 'react'
 import { ConfirmButton } from '../../../modals/ModalButtons'
 
-export default function StripePaymentForm() {
+export default function StripePaymentForm(props: { myPlayHistoryUrl: string }) {
   const stripe = useStripe()
   const elements = useElements()
 
@@ -53,7 +53,7 @@ export default function StripePaymentForm() {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        return_url: 'http://localhost:8008/dashboard',
+        return_url: props.myPlayHistoryUrl,
       },
     })
     if (error.type === 'card_error' || error.type === 'validation_error') {
@@ -72,6 +72,9 @@ export default function StripePaymentForm() {
   return (
     <form className="tw-flex tw-flex-col tw-gap-32" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
+      {message && (
+        <p className={'tw-text-red tw-font-sans tw-my-0'}>{message}</p>
+      )}
       <ConfirmButton disabled={loading || !stripe || !elements}>
         <span>Pay Now</span>
       </ConfirmButton>

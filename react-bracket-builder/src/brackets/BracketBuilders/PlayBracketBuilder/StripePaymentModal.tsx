@@ -1,6 +1,6 @@
 import { Elements } from '@stripe/react-stripe-js'
 import { Modal } from '../../../modals/Modal'
-import { CancelButton, ConfirmButton } from '../../../modals/ModalButtons'
+import { CancelButton } from '../../../modals/ModalButtons'
 import { ModalHeader } from '../../../modals/ModalHeader'
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js'
 import StripePaymentForm from './StripePaymentForm'
@@ -14,6 +14,7 @@ interface StripePaymentModalProps {
   show: boolean
   setShow: (show: boolean) => void
   clientSecret: string
+  myPlayHistoryUrl: string
 }
 
 export default function StripePaymentModal(props: StripePaymentModalProps) {
@@ -34,7 +35,7 @@ export default function StripePaymentModal(props: StripePaymentModalProps) {
           <Modal show={show} setShow={setShow}>
             <ModalHeader text={title} />
             <div className="tw-flex tw-flex-col tw-gap-10">
-              <StripePaymentForm />
+              <StripePaymentForm myPlayHistoryUrl={props.myPlayHistoryUrl} />
               <CancelButton onClick={() => setShow(false)} />
             </div>
           </Modal>
