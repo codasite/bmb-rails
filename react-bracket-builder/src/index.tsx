@@ -50,8 +50,8 @@ const PrintPlayPage = React.lazy(
 
 declare var wpbb_bracket_product_preview_obj: any
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
-if (window.hasOwnProperty('wpbb_app_obj')) {
-  const ajaxObj = getAppObj()
+const ajaxObj = getAppObj()
+if (ajaxObj) {
   initializeSentry(ajaxObj)
   renderProductPreview(ajaxObj)
   renderBracketBuilder(ajaxObj)

@@ -9,7 +9,7 @@ import { camelCaseKeys } from '../../shared/api/bracketApi'
 
 const appObj = getAppObj()
 
-const stripePromise = loadStripe(appObj.stripePublishableKey)
+const stripePromise = loadStripe(appObj?.stripePublishableKey)
 
 interface StripePaymentModalProps {
   title: string
