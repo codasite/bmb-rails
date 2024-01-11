@@ -27,7 +27,10 @@ export interface WpbbBracketProductPreviewObj {
   colorOptions: any
 }
 
-export function getAppObj(): wpbbAppObj {
-  const ajaxObj: wpbbAppObj = camelCaseKeys(wpbb_app_obj)
-  return ajaxObj
+export function getAppObj(): wpbbAppObj | null {
+  if (window.hasOwnProperty('wpbb_app_obj')) {
+    const ajaxObj: wpbbAppObj = camelCaseKeys(wpbb_app_obj)
+    return ajaxObj
+  }
+  return null
 }

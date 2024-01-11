@@ -8,6 +8,17 @@ import { MatchPick, MatchRes } from '../../shared/api/types/bracket'
 import { jest } from '@jest/globals'
 import { bracketApi } from '../../shared/api/bracketApi'
 
+// jest.mock('wpbb_app_obj', () => {
+//   return {
+//     bracketProductArchiveUrl: '#',
+//     myPlayHistoryUrl: '#',
+//   }
+// })
+global.wpbb_app_obj = {
+  bracketProductArchiveUrl: '#',
+  myPlayHistoryUrl: '#',
+}
+
 jest.mock('react-lineto', () => {
   return {
     __esModule: true,
