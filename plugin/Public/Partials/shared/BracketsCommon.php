@@ -180,19 +180,6 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function view_bracket_button( $bracket ): false|string {
-    $bracket_play_link = get_permalink( $bracket->id ) . '/play';
-    ob_start();
-    ?>
-    <a
-      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
-      href="<?php echo esc_url( $bracket_play_link ) ?>">
-      <span class="tw-font-700">View bracket</span>
-    </a>
-    <?php
-    return ob_get_clean();
-  }
-
   public static function enable_upcoming_notification_btn(Bracket $bracket): false|string {
     $label = 'Notify Me';
     ob_start();
@@ -292,6 +279,7 @@ class BracketsCommon {
     ?>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
       <?php echo self::upcoming_notification_btn( $bracket ); ?>
+      <?php echo self::view_bracket_btn( $bracket ); ?>
     </div>
     <?php
     return ob_get_clean();
@@ -305,6 +293,20 @@ class BracketsCommon {
     } else {
       return self::enable_upcoming_notification_btn( $bracket );
     }
+  }
+
+  public static function view_bracket_btn( $bracket ): false|string {
+    $bracket_play_link = get_permalink( $bracket->id ) . '/play';
+    ob_start();
+    ?>
+    <a
+      class="tw-border-white/50 tw-border-solid tw-border tw-bg-white/15 hover:tw-bg-white hover:tw-text-black tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      href="<?php echo esc_url( $bracket_play_link ) ?>">
+      <?php echo PartialsCommon::icon('eye') ?>
+      <span class="tw-font-700">Preview</span>
+    </a>
+    <?php
+    return ob_get_clean();
   }
 
   public static function public_bracket_completed_buttons( Bracket $bracket ): false|string {
