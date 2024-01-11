@@ -29,6 +29,5 @@ export interface WpbbBracketProductPreviewObj {
 
 export function getAppObj(): wpbbAppObj {
   const ajaxObj: wpbbAppObj = camelCaseKeys(wpbb_app_obj)
-  console.log('ajaxObj', ajaxObj)
   return ajaxObj
 }
