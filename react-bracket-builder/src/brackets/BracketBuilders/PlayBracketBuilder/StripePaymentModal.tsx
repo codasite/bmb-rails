@@ -25,6 +25,9 @@ export default function StripePaymentModal(props: StripePaymentModalProps) {
 
   const appearance: StripeElementsOptions['appearance'] = {
     theme: 'night',
+    variables: {
+      colorBackground: '#3D4376',
+    },
   }
   const stripeOptions = {
     clientSecret,
