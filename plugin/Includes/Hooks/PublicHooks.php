@@ -104,11 +104,13 @@ class PublicHooks implements HooksInterface {
       'wpbb_share_bracket' => true,
       'wpbb_bust_play' => true,
       'wpbb_enable_chat' => true,
+      'read' => true,
     ]);
     add_role('bmb_vip', 'BMB VIP', [
       'wpbb_share_bracket' => true,
       'wpbb_bust_play' => true,
       'wpbb_enable_chat' => true,
+      'read' => true,
     ]);
   }
 
