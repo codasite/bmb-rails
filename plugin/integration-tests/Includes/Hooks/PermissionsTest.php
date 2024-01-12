@@ -151,4 +151,16 @@ class PermissionsTest extends WPBB_UnitTestCase {
     wp_set_current_user($user->ID);
     $this->assertFalse(current_user_can('wpbb_print_play', $play->id));
   }
+
+  public function test_bmb_vip_can_read() {
+    $user = self::factory()->user->create_and_get(['role' => 'bmb_vip']);
+    wp_set_current_user($user->ID);
+    $this->assertTrue(current_user_can('read'));
+  }
+
+  public function test_bmb_plus_can_read() {
+    $user = self::factory()->user->create_and_get(['role' => 'bmb_plus']);
+    wp_set_current_user($user->ID);
+    $this->assertTrue(current_user_can('read'));
+  }
 }
