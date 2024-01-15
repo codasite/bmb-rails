@@ -1,22 +1,16 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WP_User;
-use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Helpers\Wordpress\Navigation;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\CustomQuery\CustomPlayQuery;
-use WStrategies\BMB\Includes\Utils;
 
 class PublicHooks implements HooksInterface {
   private $play_repo;
   private $play_query;
-  private $utils;
 
   public function __construct($opts = []) {
     $this->play_query = $opts['play_query'] ?? new CustomPlayQuery();
-    $this->utils = $opts['utils'] ?? new Utils();
     $this->play_repo = $opts['play_repo'] ?? new PlayRepo();
   }
 

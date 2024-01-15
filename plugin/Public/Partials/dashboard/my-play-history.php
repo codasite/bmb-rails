@@ -77,8 +77,7 @@ function get_buster_play_buttons($play): false|string {
 function play_list_item(BracketPlay $play): false|string {
 	$title = $play->bracket?->title;
 	$user_rank = 99999;
-	$trend_up = true;
-	$trend_icon = $trend_up ? 'arrow_up.svg' : 'arrow_down.svg';
+	$trend_icon = 'arrow_up.svg';
 	$accuracy_score = round($play->accuracy_score * 100);
 	$show_score = $play->accuracy_score !== null;
 	$buster_play = $play->busted_id !== null;
@@ -93,16 +92,16 @@ function play_list_item(BracketPlay $play): false|string {
 
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-16 tw-p-20 sm:tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
 		<div class="tw-flex tw-w-full tw-flex-col tw-gap-20">
-      <span class="tw-font-500 tw-text-12"><?php echo esc_html($num_teams) ?>-Team Bracket</span>
+      <span class="tw-font-500 tw-text-12"><?php echo esc_html(strval($num_teams)) ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-10 tw-flex-wrap">
 				<h2 class="tw-font-700 tw-text-20 sm:tw-text-30 tw-text-white"><?php echo esc_html($title) ?></h2>
         <div class="tw-flex tw-gap-10 tw-flex-wrap">
 					<?php echo $buster_play ? BracketsCommon::bracket_tag( 'buster', 'red' ) : '' ?>
 					<?php echo $official ? BracketsCommon::bracket_tag( 'official', 'blue' ) : '' ?>
 					<?php if ($winner) : ?>
-						<?php echo $winner ? BracketsCommon::bracket_tag( 'winner', 'yellow' ) : '' ?>
+						<?php echo BracketsCommon::bracket_tag( 'winner', 'yellow' ) ?>
 					<?php elseif ($entry) : ?>
-						<?php echo $entry ? BracketsCommon::bracket_tag( 'submitted', 'yellow', false ) : '' ?>
+						<?php echo BracketsCommon::bracket_tag( 'submitted', 'yellow', false ) ?>
 					<?php endif; ?>
           <?php echo $printed ? BracketsCommon::bracket_tag( 'printed', 'green' ) : '' ?>
 					<?php echo $paid ? BracketsCommon::bracket_tag( 'paid', 'green' ) : '' ?>
@@ -115,12 +114,12 @@ function play_list_item(BracketPlay $play): false|string {
     <div class="tw-flex tw-flex-col tw-justify-between sm:tw-items-end">
       <!-- <div class="tw-flex tw-gap-4 tw-items-center">
 				<?php echo file_get_contents(WPBB_PLUGIN_DIR . "Public/assets/icons/$trend_icon"); ?>
-				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html($user_rank) ?></span>
+				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html(strval($user_rank)) ?></span>
 				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
 			</div> -->
 			<?php if ($show_score) : ?>
         <div class="tw-flex tw-flex-col sm:tw-items-end">
-					<h2 class="tw-font-700 tw-text-32 sm:tw-text-48 tw-text-white"><?php echo esc_html($accuracy_score) ?>%</h2>
+					<h2 class="tw-font-700 tw-text-32 sm:tw-text-48 tw-text-white"><?php echo esc_html(strval($accuracy_score)) ?>%</h2>
 					<span class="tw-font-500 tw-text-12 tw-text-white">My Score</span>
 				</div>
 			<?php endif; ?>

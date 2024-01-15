@@ -38,7 +38,7 @@ class BracketPlay extends PostBase implements PostBracketInterface {
   public $is_printed;
 
   /**
-   * @var BracketPlay
+   * @var BracketPlay|null
    */
   public $busted_play;
 
@@ -75,23 +75,14 @@ class BracketPlay extends PostBase implements PostBracketInterface {
     $this->busted_id = isset($data['busted_id'])
       ? (int) $data['busted_id']
       : null;
-    $this->is_printed = isset($data['is_printed'])
-      ? (bool) $data['is_printed']
-      : false;
+    $this->is_printed = isset($data['is_printed']) && $data['is_printed'];
     $this->busted_play = $data['busted_play'] ?? null;
-    $this->is_bustable = isset($data['is_bustable'])
-      ? (bool) $data['is_bustable']
-      : false;
-    $this->is_winner = isset($data['is_winner'])
-      ? (bool) $data['is_winner']
-      : false;
-    $this->bmb_official = isset($data['bmb_official'])
-      ? (bool) $data['bmb_official']
-      : false;
-    $this->is_tournament_entry = isset($data['is_tournament_entry'])
-      ? (bool) $data['is_tournament_entry']
-      : false;
-    $this->is_paid = isset($data['is_paid']) ? (bool) $data['is_paid'] : false;
+    $this->is_bustable = isset($data['is_bustable']) && $data['is_bustable'];
+    $this->is_winner = isset($data['is_winner']) && $data['is_winner'];
+    $this->bmb_official = isset($data['bmb_official']) && $data['bmb_official'];
+    $this->is_tournament_entry =
+      isset($data['is_tournament_entry']) && $data['is_tournament_entry'];
+    $this->is_paid = isset($data['is_paid']) && $data['is_paid'];
   }
 
   public static function get_post_type(): string {

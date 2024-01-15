@@ -5,7 +5,6 @@ namespace WStrategies\BMB\Public\Partials\shared;
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\NotificationType;
-use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
@@ -345,12 +344,12 @@ class BracketsCommon {
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
         <div class="tw-flex tw-gap-8 tw-items-center">
           <?php echo $is_paid ? self::paid_bracket_tag() : ''?>
-          <span class="tw-font-500 tw-text-12"><?php echo esc_html( $num_teams ) ?>-Team Bracket</span>
+          <span class="tw-font-500 tw-text-12"><?php echo esc_html(strval($num_teams)) ?>-Team Bracket</span>
         </div>
         <div class="tw-flex tw-gap-4 tw-items-center">
           <?php echo $bracket_tag ?>
           <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/bar_chart.svg' ); ?>
-          <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html( $num_plays ) ?></span>
+          <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html( strval($num_plays) ) ?></span>
           <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
         </div>
       </div>

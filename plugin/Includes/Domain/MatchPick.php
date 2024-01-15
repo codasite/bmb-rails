@@ -18,7 +18,7 @@ class MatchPick {
   public $match_index;
 
   /**
-   * @var Team
+   * @var Team|null
    */
   public $winning_team;
 

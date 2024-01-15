@@ -16,14 +16,12 @@ use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\AnonymousPlayService;
 use WStrategies\BMB\Includes\Service\CurrentPlayService;
-use WStrategies\BMB\Includes\Service\PaidTournamentService\PaidTournamentServiceInterface;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
+use WStrategies\BMB\Includes\Service\PlayImageService;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
-use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
-use WStrategies\BMB\Includes\Service\PlayImageService;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
-use WStrategies\BMB\Includes\Utils;
 
 class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   private PlayRepo $play_repo;
@@ -53,7 +51,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
    */
   private function init_create_listeners(array $args): array {
     return [
-      new BeforePlayAddedListener($args),
+      new BeforePlayAddedListener(),
       new AnonymousPlayService($args),
       new CurrentPlayService($args),
       new PlayImageService($args),

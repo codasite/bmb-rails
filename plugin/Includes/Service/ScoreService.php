@@ -1,15 +1,13 @@
 <?php
 namespace WStrategies\BMB\Includes\Service;
 
-use DateTimeImmutable;
 use Exception;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
-use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
-use WStrategies\BMB\Includes\Utils;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class ScoreService implements ScoreServiceInterface {
   /**
@@ -31,11 +29,6 @@ class ScoreService implements ScoreServiceInterface {
    */
   private $wpdb;
 
-  /**
-   * @var Utils
-   */
-  private $utils;
-
   private $tournament_entries_only;
 
   public function __construct($opts = []) {
@@ -43,7 +36,6 @@ class ScoreService implements ScoreServiceInterface {
     $this->wpdb = $wpdb;
     $this->play_repo = new PlayRepo();
     $this->bracket_repo = new BracketRepo();
-    $this->utils = new Utils();
     $this->tournament_entries_only = $opts['tournament_entries_only'] ?? true;
   }
 
@@ -184,7 +176,7 @@ class ScoreService implements ScoreServiceInterface {
     return $this->wpdb->rows_affected;
   }
 
-  private function get_top_score(Bracket $bracket): int|null {
+  private function get_top_score(Bracket $bracket): string|null {
     $plays_table = $this->play_repo->table_name();
     $bracket_id = $bracket->id;
     $sql = "

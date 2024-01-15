@@ -4,7 +4,6 @@ namespace WStrategies\BMB\Includes\Service\BracketProduct;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
-use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 
 const BRACKET_FEE_META_PREFIX = 'bracket_product_fee_meta_';
@@ -14,11 +13,6 @@ class BracketProductHooks implements HooksInterface {
    * @var BracketProductUtils
    */
   private $bracket_product_utils;
-
-  /**
-   * @var BracketRepo
-   */
-  private $bracket_repo;
 
   /**
    * @var PlayRepo
@@ -33,7 +27,6 @@ class BracketProductHooks implements HooksInterface {
   public function __construct($args = []) {
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
-    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->wc = $args['wc'] ?? new WcFunctions();
   }

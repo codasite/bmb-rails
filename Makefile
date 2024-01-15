@@ -93,7 +93,7 @@ react-install:
 	cd react-bracket-builder && npm install
 
 react-test:
-	cd react-bracket-builder && npm run test
+	cd react-bracket-builder && npm run test $(args)
 
 composer-install:
 	cd plugin && composer install

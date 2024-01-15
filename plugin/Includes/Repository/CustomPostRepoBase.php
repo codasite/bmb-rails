@@ -40,7 +40,7 @@ abstract class CustomPostRepoBase {
   protected function update_post(
     CustomPostInterface $post,
     $wp_error = false
-  ): int {
+  ): int|WP_Error {
     $post_id = wp_update_post($post->get_update_post_data(), $wp_error);
 
     if (0 === $post_id || $post_id instanceof WP_Error) {

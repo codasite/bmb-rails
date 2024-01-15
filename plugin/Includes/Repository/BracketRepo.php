@@ -117,15 +117,13 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       ? new DateTimeImmutable($bracket_data['results_first_updated_at'])
       : false;
 
-    $matches =
-      $fetch_matches && $bracket_id
-        ? $this->match_repo->get_matches($bracket_id)
-        : [];
+    $matches = $fetch_matches
+      ? $this->match_repo->get_matches($bracket_id)
+      : [];
 
-    $results =
-      $fetch_results && $bracket_id
-        ? $this->results_repo->get_results($bracket_id)
-        : [];
+    $results = $fetch_results
+      ? $this->results_repo->get_results($bracket_id)
+      : [];
 
     $author_id = (int) $bracket_post->post_author;
 

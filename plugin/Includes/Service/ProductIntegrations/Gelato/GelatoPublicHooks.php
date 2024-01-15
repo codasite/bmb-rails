@@ -217,6 +217,7 @@ class GelatoPublicHooks {
 
   // this function hooks into woocommerce_before_checkout_process
   public function handle_before_checkout_process(): void {
+    /** @var null|\WC_Cart $cart */
     $cart = $this->wc->WC()->cart;
     if (!$cart) {
       return;
@@ -246,6 +247,7 @@ class GelatoPublicHooks {
   public function process_bracket_product_item($cart_item) {
     if (
       defined('DISABLE_IMAGE_GENERATOR_CALLS') &&
+      // @phpstan-ignore-next-line
       DISABLE_IMAGE_GENERATOR_CALLS
     ) {
       return $cart_item;

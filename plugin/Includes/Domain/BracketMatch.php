@@ -20,12 +20,12 @@ class BracketMatch {
   public $match_index;
 
   /**
-   * @var Team
+   * @var Team|null
    */
   public $team1;
 
   /**
-   * @var Team
+   * @var Team|null
    */
   public $team2;
 

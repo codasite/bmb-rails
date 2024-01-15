@@ -71,9 +71,10 @@ class NotificationRepo implements CustomTableInterface {
     int $post_id,
     NotificationType $notification_type
   ): null|int {
+    /** @var \WP_User|null $user */
     $user = wp_get_current_user();
     if (!$user) {
-      return false;
+      return null;
     }
     $notification = $this->get([
       'user_id' => $user->ID,

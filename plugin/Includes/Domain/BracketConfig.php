@@ -28,8 +28,8 @@ class BracketConfig {
   public $bracket_placement;
 
   public function __construct(
-    string $play_id,
-    string $bracket_id,
+    string|int $play_id,
+    string|int $bracket_id,
     string $theme_mode,
     string $bracket_placement,
     string $img_url

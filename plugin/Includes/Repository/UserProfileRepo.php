@@ -5,28 +5,9 @@ use Exception;
 use WP_Post;
 use WP_Query;
 use WP_User;
-use wpdb;
 use WStrategies\BMB\Includes\Domain\UserProfile;
-use WStrategies\BMB\Includes\Utils;
 
 class UserProfileRepo extends CustomPostRepoBase {
-  /**
-   * @var Utils
-   */
-  private $utils;
-
-  /**
-   * @var wpdb
-   */
-  private $wpdb;
-
-  public function __construct() {
-    global $wpdb;
-    $this->wpdb = $wpdb;
-    $this->utils = new Utils();
-    parent::__construct();
-  }
-
   /**
    * Get the user profile for the given post
    */
@@ -47,7 +28,7 @@ class UserProfileRepo extends CustomPostRepoBase {
       'title' => $profile_post->post_title,
       'author' => $profile_post->post_author,
       'status' => $profile_post->post_status,
-      'published_date' => get_post_datetime($profile_post->ID, 'data', 'utc'),
+      'published_date' => get_post_datetime($profile_post->ID, 'date', 'gmt'),
       'slug' => $profile_post->post_name,
       'author_display_name' => $user->display_name,
       'thumbnail_url' => get_the_post_thumbnail_url($profile_post),

@@ -269,10 +269,10 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
       'busted_play_id' => $busted_play_id ?? null,
       'total_score' => $play->total_score,
       'accuracy_score' => $play->accuracy_score,
-      'is_printed' => $play->is_printed ?? false,
-      'is_winner' => $play->is_winner ?? false,
-      'bmb_official' => $play->bmb_official ?? false,
-      'is_tournament_entry' => $play->is_tournament_entry ?? false,
+      'is_printed' => $play->is_printed,
+      'is_winner' => $play->is_winner,
+      'bmb_official' => $play->bmb_official,
+      'is_tournament_entry' => $play->is_tournament_entry,
       'is_paid' => $play->is_paid ?? false,
     ]);
 

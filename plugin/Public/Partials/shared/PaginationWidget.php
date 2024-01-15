@@ -11,7 +11,7 @@ class PaginationWidget {
     }
     $big   = 999999999; // an unlikely page number
     $links = paginate_links( array(
-      'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
+      'base'      => str_replace( strval($big), '%#%', esc_url( get_pagenum_link( $big ) ) ),
       // 'format' => '?paged=#%#',
       'format'    => '?paged=%#%',
       'type'      => 'array',

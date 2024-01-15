@@ -235,7 +235,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     if (current_user_can('wpbb_share_bracket')) {
       $can_set_results = true;
     } else {
-      $request['status'] = 'private';
+      $request->set_param('status', 'private');
       if (isset($request['status']) && $request['status'] === 'publish') {
         $request['status'] = 'private';
       }

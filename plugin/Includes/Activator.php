@@ -1,15 +1,14 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
-use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
+use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
+use WStrategies\BMB\Includes\Repository\BracketPickRepo;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
+use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
-use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
-use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
-use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
-use WStrategies\BMB\Includes\Repository\BracketPickRepo;
 
 /**
  * Fired during plugin activation
@@ -51,6 +50,7 @@ class Activator {
 
   // WARNING: This function will delete all bracket data
   // DO NOT USE IN PRODUCTION
+  // @phpstan-ignore-next-line
   private static function delete_tables(): void {
     BracketResultsRepo::drop_table();
     BracketMatchPickRepo::drop_table();
