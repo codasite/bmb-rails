@@ -24,7 +24,18 @@ class RedirectHooks implements HooksInterface {
       10,
       2
     );
-    $loader->add_action('wp_login', [$this, 'redirect_after_login'], 10, 0);
+    $loader->add_action(
+      'woocommerce_login_redirect',
+      [$this, 'redirect_after_login'],
+      10,
+      0
+    );
+    $loader->add_action(
+      'woocommerce_registration_redirect',
+      [$this, 'redirect_after_register'],
+      10,
+      0
+    );
   }
 
   public function dashboard_redirect(): void {
@@ -49,12 +60,19 @@ class RedirectHooks implements HooksInterface {
     return $location;
   }
 
-  public function redirect_after_login(): void {
+  public function redirect_after_login(): string {
+    return $this->get_login_redirect_url();
+  }
+
+  public function redirect_after_register(): string {
+    return $this->get_login_redirect_url();
+  }
+
+  private function get_login_redirect_url(): string {
     $redirect_to = $_REQUEST['redirect_to'] ?? '';
     if (empty($redirect_to)) {
       $redirect_to = Navigation::get_page_permalink_by_path('dashboard');
     }
-    wp_redirect($redirect_to);
-    exit();
+    return $redirect_to;
   }
 }
