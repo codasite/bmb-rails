@@ -222,4 +222,20 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
     $notification_repo_mock = $this->createMock(NotificationRepo::class);
     $notification_repo_mock->expects($this->never())->method('add');
   }
+
+  public function test_status_should_not_change_to_published_if_updated_and_has_upcoming_tag() {
+    $factory = self::factory()->bracket;
+    $bracket = $factory->create_and_get([
+      'status' => 'publish',
+    ]);
+    wp_add_post_tags($bracket->id, 'bmb_upcoming');
+    $updated_bracket = $factory->get_object_by_id($bracket->id);
+    $this->assertEquals('upcoming', $updated_bracket->status);
+    wp_update_post([
+      'ID' => $bracket->id,
+      'post_status' => 'publish',
+    ]);
+    $updated_bracket = $factory->get_object_by_id($bracket->id);
+    $this->assertEquals('upcoming', $updated_bracket->status);
+  }
 }

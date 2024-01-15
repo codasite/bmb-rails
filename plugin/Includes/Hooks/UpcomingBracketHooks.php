@@ -64,6 +64,12 @@ class UpcomingBracketHooks implements HooksInterface {
       10,
       1
     );
+    $loader->add_filter(
+      'wp_insert_post_data',
+      [$this, 'dont_set_status_to_published'],
+      10,
+      2
+    );
   }
   /**
    * This function is a workaround for custom post status not being added to the admin panel
@@ -177,5 +183,15 @@ class UpcomingBracketHooks implements HooksInterface {
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
+  }
+
+  /**
+   * Stop status from being set to published when you save the post with the upcoming post status.
+   */
+  public function dont_set_status_to_published($data, $postarr) {
+    if (has_tag('bmb_upcoming', $postarr['ID'])) {
+      $data['post_status'] = 'upcoming';
+    }
+    return $data;
   }
 }
