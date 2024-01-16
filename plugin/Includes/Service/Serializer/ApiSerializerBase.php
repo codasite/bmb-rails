@@ -15,7 +15,10 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
     return $data_builder->get_object_data();
   }
 
-  public function serialize(object $obj): array {
+  public function serialize(object|null $obj): array {
+    if (!$obj) {
+      return [];
+    }
     $serializer_builder = new SerializerBuilder($obj);
     $director = new SerializedFieldDirector($serializer_builder);
     $director->build($this->filter_serialized_fields());
