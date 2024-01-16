@@ -17,7 +17,7 @@ class WcFunctions {
   public function session_set(string $key, $value): void {
     WC()->session->set($key, $value);
   }
-  public function session_get(string $key): array|string {
+  public function session_get(string $key): array|string|null {
     return WC()->session->get($key);
   }
   public function session_unset(string $key): void {
