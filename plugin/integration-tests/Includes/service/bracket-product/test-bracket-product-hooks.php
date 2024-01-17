@@ -212,11 +212,11 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     );
   }
 
-  public function test_fee_is_not_added_to_printed_play() {
+  public function test_fee_is_not_added_to_paid_play() {
     $bracket = $this->create_bracket();
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
-      'is_printed' => true,
+      'is_paid' => true,
     ]);
     $bracket_id = $bracket->id;
     $play_id = $play->id;

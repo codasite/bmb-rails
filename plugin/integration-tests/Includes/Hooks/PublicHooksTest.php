@@ -4,6 +4,7 @@ use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Utils;
 
 class PublicHooksTest extends WPBB_UnitTestCase {
@@ -86,7 +87,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertTrue(in_array('subscriber', $user->roles));
   }
 
-  public function test_mark_play_printed() {
+  public function test_after_play_printed_sets_printed_true() {
     $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
@@ -103,10 +104,123 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     ]);
 
     $hooks = new PublicHooks();
-    $hooks->mark_play_printed($play);
+    $hooks->after_play_printed($play);
 
     $play = $this->get_play($play->id);
 
     $this->assertTrue($play->is_printed);
+  }
+
+  public function test_after_play_printed_sets_is_paid_true_for_paid_bracket() {
+    $bracket_utils_mock = $this->createMock(BracketProductUtils::class);
+    $bracket_utils_mock->method('has_bracket_fee')->willReturn(true);
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_paid' => false,
+      'picks' => [
+        new MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $hooks = new PublicHooks([
+      'bracket_product_utils' => $bracket_utils_mock,
+    ]);
+    $hooks->after_play_printed($play);
+
+    $play = $this->get_play($play->id);
+
+    $this->assertTrue($play->is_paid);
+  }
+
+  public function test_after_play_printed_does_not_sets_is_paid_true_for_free_bracket() {
+    $bracket_utils_mock = $this->createMock(BracketProductUtils::class);
+    $bracket_utils_mock->method('has_bracket_fee')->willReturn(false);
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_paid' => false,
+      'picks' => [
+        new MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $hooks = new PublicHooks([
+      'bracket_product_utils' => $bracket_utils_mock,
+    ]);
+    $hooks->after_play_printed($play);
+
+    $play = $this->get_play($play->id);
+
+    $this->assertFalse($play->is_paid);
+  }
+
+  public function test_after_play_printed_marks_play_as_tournament_entry_no_fee() {
+    $bracket_utils_mock = $this->createMock(BracketProductUtils::class);
+    $bracket_utils_mock->method('has_bracket_fee')->willReturn(false);
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+      'picks' => [
+        new MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $hooks = new PublicHooks([
+      'bracket_product_utils' => $bracket_utils_mock,
+    ]);
+    $hooks->after_play_printed($play);
+
+    $play = $this->get_play($play->id);
+
+    $this->assertTrue($play->is_tournament_entry);
+  }
+
+  public function test_after_play_printed_marks_play_as_tournament_entry_with_fee() {
+    $bracket_utils_mock = $this->createMock(BracketProductUtils::class);
+    $bracket_utils_mock->method('has_bracket_fee')->willReturn(true);
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+      'is_paid' => true,
+      'picks' => [
+        new MatchPick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $hooks = new PublicHooks([
+      'bracket_product_utils' => $bracket_utils_mock,
+    ]);
+    $hooks->after_play_printed($play);
+
+    $play = $this->get_play($play->id);
+
+    $this->assertTrue($play->is_tournament_entry);
   }
 }

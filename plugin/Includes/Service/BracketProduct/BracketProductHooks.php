@@ -59,8 +59,8 @@ class BracketProductHooks implements HooksInterface {
         $bracket_id = $config->bracket_id;
         $play = $this->play_repo->get($config->play_id);
 
-        // do not add fees to printed plays
-        if (empty($bracket_id) || empty($play) || $play->is_printed) {
+        // do not add fees to plays already paid for
+        if (empty($bracket_id) || empty($play) || $play->is_paid) {
           continue;
         }
 

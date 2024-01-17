@@ -3,15 +3,26 @@ namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\CustomQuery\CustomPlayQuery;
+use WStrategies\BMB\Includes\Service\TournamentEntryService;
+use WStrategies\BMB\Includes\Utils;
 
 class PublicHooks implements HooksInterface {
   private $play_repo;
   private $play_query;
+  private Utils $utils;
+  private BracketProductUtils $bracket_product_utils;
+  private TournamentEntryService $tournament_entry_service;
 
   public function __construct($opts = []) {
     $this->play_query = $opts['play_query'] ?? new CustomPlayQuery();
     $this->play_repo = $opts['play_repo'] ?? new PlayRepo();
+    $this->bracket_product_utils =
+      $opts['bracket_product_utils'] ?? new BracketProductUtils();
+    $this->utils = $opts['utils'] ?? new Utils();
+    $this->tournament_entry_service =
+      $opts['tournament_entry_service'] ?? new TournamentEntryService();
   }
 
   public function load(Loader $loader): void {
@@ -36,7 +47,7 @@ class PublicHooks implements HooksInterface {
     );
     $loader->add_action(
       'wpbb_after_play_printed',
-      [$this, 'mark_play_printed'],
+      [$this, 'after_play_printed'],
       10,
       1
     );
@@ -127,14 +138,26 @@ class PublicHooks implements HooksInterface {
     $user->remove_role('bmb_plus');
   }
 
-  public function mark_play_printed($play_id): void {
-    if (!$play_id) {
+  public function after_play_printed($play_id): void {
+    $play = $this->play_repo->get($play_id);
+    if (!$play) {
+      $this->utils->log_error(
+        'ERROR: trying to mark play as printed but play not found for play: ' .
+          $play_id
+      );
       return;
     }
     $data = [
       'is_printed' => true,
     ];
+    // Assume that if the bracket has a bracket fee and the play was printed, the tournament fee was paid
+    if ($this->bracket_product_utils->has_bracket_fee($play->bracket_id)) {
+      $data['is_paid'] = true;
+    }
 
-    $this->play_repo->update($play_id, $data);
+    $printed_play = $this->play_repo->update($play_id, $data);
+    $this->tournament_entry_service->try_mark_play_as_tournament_entry(
+      $printed_play
+    );
   }
 }
