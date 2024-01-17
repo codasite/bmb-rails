@@ -163,4 +163,24 @@ class PermissionsTest extends WPBB_UnitTestCase {
     wp_set_current_user($user->ID);
     $this->assertTrue(current_user_can('read'));
   }
+
+  public function test_customer_can_view_tournament_entry() {
+    $user = self::factory()->user->create_and_get(['role' => 'customer']);
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+    ]);
+    wp_set_current_user($user->ID);
+    $this->assertTrue(current_user_can('wpbb_view_play', $play->id));
+  }
+  public function test_customer_cannot_view_non_tournament_entry() {
+    $user = self::factory()->user->create_and_get(['role' => 'customer']);
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+    wp_set_current_user($user->ID);
+    $this->assertFalse(current_user_can('wpbb_view_play', $play->id));
+  }
 }

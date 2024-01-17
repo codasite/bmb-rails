@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\Permissions;
 
 use WP_Post;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class PlayPermissions implements PermissionsServiceInterface {
@@ -33,11 +34,11 @@ class PlayPermissions implements PermissionsServiceInterface {
     return ['wpbb_view_play', 'wpbb_print_play', 'wpbb_create_payment_intent'];
   }
 
-  private function user_can_view_play($user_id, $play): bool {
+  private function user_can_view_play($user_id, BracketPlay $play): bool {
     if ($this->is_author($user_id, $play)) {
       return true;
     }
-    return $play->is_printed;
+    return $play->is_printed || $play->is_tournament_entry;
   }
 
   private function user_can_print_play($user_id, $play): bool {
