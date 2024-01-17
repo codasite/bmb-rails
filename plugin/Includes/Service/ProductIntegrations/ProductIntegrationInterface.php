@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\ProductIntegrations;
 
+use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 
 interface ProductIntegrationInterface {
@@ -49,7 +50,7 @@ interface ProductIntegrationInterface {
 
   public function get_post_meta_key(): string;
 
-  public function has_all_configs(): bool;
+  public function has_all_configs(BracketPlay $play): bool;
 
   public function generate_images(PostBracketInterface $bracket): void;
 

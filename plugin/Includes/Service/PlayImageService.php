@@ -28,10 +28,7 @@ class PlayImageService extends BracketPlayCreateListenerBase {
   }
 
   public function filter_after_play_added(BracketPlay $play): BracketPlay {
-    if (
-      $this->should_generate_play_image &&
-      !$this->product_integration->has_all_configs()
-    ) {
+    if ($this->should_generate_play_image) {
       $this->product_integration->generate_images($play);
     }
     return $play;

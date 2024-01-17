@@ -209,7 +209,7 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
 
     update_post_meta($play->id, $meta_key, json_encode($image_urls));
 
-    $this->assertTrue($integration->has_all_configs());
+    $this->assertTrue($integration->has_all_configs($play));
   }
 
   public function test_has_all_configs_false() {
@@ -241,6 +241,6 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
 
     update_post_meta($play->id, $meta_key, json_encode($image_urls));
 
-    $this->assertFalse($integration->has_all_configs());
+    $this->assertFalse($integration->has_all_configs($play));
   }
 }

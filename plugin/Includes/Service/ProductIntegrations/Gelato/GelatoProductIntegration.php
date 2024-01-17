@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato;
 
 use WStrategies\BMB\Includes\Domain\BracketConfig;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Loader;
@@ -272,13 +273,9 @@ class GelatoProductIntegration implements
     return $overlay_map;
   }
 
-  public function has_all_configs(): bool {
+  public function has_all_configs(BracketPlay $play): bool {
     $themes = $this->get_themes();
     $placements = $this->get_positions();
-    $play = $this->play_repo->get();
-    if (!$play) {
-      return false;
-    }
     $meta = $this->get_meta($play);
     foreach ($placements as $placement) {
       foreach ($themes as $theme) {
