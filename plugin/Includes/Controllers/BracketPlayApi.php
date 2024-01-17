@@ -22,6 +22,7 @@ use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductInt
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
+use WStrategies\BMB\Includes\Utils;
 
 class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   private PlayRepo $play_repo;
@@ -29,6 +30,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   protected string $base_path;
   private ProductIntegrationInterface $product_integration;
   private BracketPlaySerializer $serializer;
+  private Utils $utils;
 
   /**
    * @var array<BracketPlayCreateListenerInterface>
@@ -42,6 +44,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $this->product_integration =
       $args['product_integration'] ?? new GelatoProductIntegration();
     $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();
+    $this->utils = $args['utils'] ?? new Utils();
     $this->rest_namespace = 'wp-bracket-builder/v1';
     $this->base_path = 'plays';
   }
@@ -244,9 +247,8 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         ['status' => 403]
       );
     }
-    if (!$this->product_integration->has_all_configs()) {
-      $this->product_integration->generate_images($play);
-    }
+    $this->product_integration->generate_images($play);
+    $this->utils->set_cookie('play_id', $play->id, ['days' => 30]);
     $serialized = $this->serializer->serialize($play);
     return new WP_REST_Response($serialized, 201);
   }
