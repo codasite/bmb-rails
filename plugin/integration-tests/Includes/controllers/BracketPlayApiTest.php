@@ -2,17 +2,19 @@
 
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
-use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
 class BracketPlayApiTest extends WPBB_UnitTestCase {
+  use SetupAdminUser;
   private $play_repo;
 
+  /**
+   * @before
+   */
   public function set_up(): void {
     parent::set_up();
 

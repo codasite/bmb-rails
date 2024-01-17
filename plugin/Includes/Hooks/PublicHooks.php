@@ -66,6 +66,16 @@ class PublicHooks implements HooksInterface {
       'top'
     );
     add_rewrite_rule(
+      '^dashboard/tournaments/page/([0-9]+)/?',
+      'index.php?pagename=dashboard&tab=tournaments&paged=$matches[1]',
+      'top'
+    );
+    add_rewrite_rule(
+      '^dashboard/tournaments/?',
+      'index.php?pagename=dashboard&tab=tournaments',
+      'top'
+    );
+    add_rewrite_rule(
       '^dashboard/brackets/page/([0-9]+)/?',
       'index.php?pagename=dashboard&tab=brackets&paged=$matches[1]',
       'top'

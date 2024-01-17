@@ -1,6 +1,7 @@
 <?php
 
 class PermissionsTest extends WPBB_UnitTestCase {
+  use SetupAdminUser;
   public function test_admin_can_view_bracket_chat() {
     $admin = self::factory()->user->create_and_get(['role' => 'administrator']);
     $bracket = $this->create_bracket([

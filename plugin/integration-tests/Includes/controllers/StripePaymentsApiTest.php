@@ -9,6 +9,7 @@ use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/StripeMock.php';
 
 class StripePaymentsApiTest extends \WPBB_UnitTestCase {
+  use SetupAdminUser;
   public function test_webhook_handler_should_set_is_paid_to_true() {
     $this->create_bracket([
       'id' => 2,
@@ -137,7 +138,7 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
 
   public function test_create_payment_intent_play_not_found() {
     $data = [
-      'play_id' => 123,
+      'play_id' => 124,
     ];
 
     $request = new WP_REST_Request(
@@ -149,8 +150,8 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $request->set_body(wp_json_encode($data));
 
     $res = rest_do_request($request);
-    $this->assertSame(404, $res->get_status());
     $this->assertSame('play not found', $res->get_data());
+    $this->assertSame(404, $res->get_status());
   }
 
   public function test_create_payment_intent_play_exists() {

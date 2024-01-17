@@ -220,7 +220,7 @@ function renderMyBracketsModals(ajaxObj: wpbbAppObj) {
         canCreateBracket={ajaxObj.userCanShareBracket}
       />
     </>,
-    'wpbb-my-brackets-modals'
+    'wpbb-manage-brackets-modals'
   )
 }
 function renderPublicBracketsModals(ajaxObj: wpbbAppObj) {

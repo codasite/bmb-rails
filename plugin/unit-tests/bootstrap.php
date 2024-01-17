@@ -6,5 +6,6 @@
  */
 
 require_once dirname(__DIR__) . '/vendor/autoload.php';
+define('WPBB_PLUGIN_DIR', dirname(__DIR__) . '/');
 
 WP_Mock::bootstrap();

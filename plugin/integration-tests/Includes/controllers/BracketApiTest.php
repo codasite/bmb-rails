@@ -13,10 +13,14 @@ use WStrategies\BMB\Includes\Utils;
 //namespace phpunit
 
 class BracketApiTest extends WPBB_UnitTestCase {
+  use SetupAdminUser;
   use MatchesSnapshots;
   const BRACKET_API_ENDPOINT = '/wp-bracket-builder/v1/brackets';
   private $bracket_repo;
 
+  /**
+   * @before
+   */
   public function set_up(): void {
     parent::set_up();
 

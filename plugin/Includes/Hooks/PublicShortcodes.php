@@ -56,7 +56,7 @@ class PublicShortcodes implements HooksInterface {
    */
   public function add_shortcodes(): void {
     add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']); // This is a page with slug `bracket-template-builder
-    add_shortcode('wpbb-dashboard', [DashboardPage::class, 'render']); // This is a page with slug `dashboard`
+    add_shortcode('wpbb-dashboard', [new DashboardPage(), 'render']); // This is a page with slug `dashboard`
     add_shortcode('wpbb-official-brackets', [
       $this,
       'render_official_brackets',
