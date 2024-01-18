@@ -275,11 +275,9 @@ class BracketsCommon {
     $leaderboard_link  = get_permalink( $bracket->id ) . '/leaderboard';
     ob_start();
     ?>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-      <?php echo self::play_bracket_btn( $bracket_play_link ); ?>
-      <?php echo self::leaderboard_btn( $leaderboard_link ); ?>
-      <?php echo self::bracket_chat_btn( $bracket->id ); ?>
-    </div>
+    <?php echo self::play_bracket_btn( $bracket_play_link ); ?>
+    <?php echo self::leaderboard_btn( $leaderboard_link ); ?>
+    <?php echo self::bracket_chat_btn( $bracket->id ); ?>
     <?php
     return ob_get_clean();
   }
@@ -287,10 +285,8 @@ class BracketsCommon {
   public static function public_bracket_upcoming_buttons( Bracket $bracket ): false|string {
     ob_start();
     ?>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-      <?php echo self::upcoming_notification_btn( $bracket ); ?>
-      <?php echo self::view_bracket_btn( $bracket ); ?>
-    </div>
+    <?php echo self::upcoming_notification_btn( $bracket ); ?>
+    <?php echo self::view_bracket_btn( $bracket ); ?>
     <?php
     return ob_get_clean();
   }
@@ -324,11 +320,8 @@ class BracketsCommon {
 
     ob_start();
     ?>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-      <!-- This goes to the Leaderboard page -->
-      <?php echo self::leaderboard_btn( $leaderboard_link, 'final' ); ?>
-      <?php echo self::bracket_chat_btn( $bracket->id ); ?>
-    </div>
+    <?php echo self::leaderboard_btn( $leaderboard_link, 'final' ); ?>
+    <?php echo self::bracket_chat_btn( $bracket->id ); ?>
     <?php
     return ob_get_clean();
   }
@@ -367,7 +360,7 @@ class BracketsCommon {
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
         <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html( $name ) ?></h2>
       </div>
-      <div class="tw-mt-10">
+      <div class="tw-mt-10 tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
         <?php echo $bracket_buttons; ?>
       </div>
     </div>

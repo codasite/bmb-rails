@@ -72,13 +72,14 @@ class ManageBracketsPageCommon {
     switch ($bracket->status) {
       case 'publish':
         return self::live_bracket_icon_buttons($bracket);
+      case 'archive':
       case 'private':
         return self::private_bracket_icon_buttons($bracket);
       case 'score':
       case 'complete':
         return self::scored_bracket_icon_buttons($bracket);
-      case 'archive':
-        return self::private_bracket_icon_buttons($bracket);
+      case 'upcoming':
+        return self::upcoming_bracket_icon_buttons($bracket);
       default:
         return '';
     }
@@ -148,10 +149,8 @@ class ManageBracketsPageCommon {
     $bracket_play_link = get_permalink($bracket->id) . 'play';
     ob_start();
     ?>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-      <?php echo DashboardCommon::add_to_apparel_btn($bracket_play_link); ?>
-      <?php echo self::go_live_btn($bracket->id); ?>
-    </div>
+    <?php echo DashboardCommon::add_to_apparel_btn($bracket_play_link); ?>
+    <?php echo self::go_live_btn($bracket->id); ?>
     <?php return ob_get_clean();
   }
 
@@ -184,14 +183,15 @@ class ManageBracketsPageCommon {
     switch ($bracket->status) {
       case 'publish':
         return self::live_bracket_buttons($bracket);
+      case 'archive':
       case 'private':
         return self::private_bracket_buttons($bracket);
       case 'score':
         return self::scored_bracket_buttons($bracket);
       case 'complete':
         return self::completed_bracket_buttons($bracket);
-      case 'archive':
-        return self::private_bracket_buttons($bracket);
+      case 'upcoming':
+        return BracketsCommon::public_bracket_upcoming_buttons($bracket);
       default:
         return '';
     }
@@ -240,6 +240,12 @@ class ManageBracketsPageCommon {
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::unpublish_bracket_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
+    <?php return ob_get_clean();
+  }
+
+  private static function upcoming_bracket_icon_buttons($bracket) {
+    ob_start(); ?>
+    <?php echo self::share_bracket_btn($bracket); ?>
     <?php return ob_get_clean();
   }
 }

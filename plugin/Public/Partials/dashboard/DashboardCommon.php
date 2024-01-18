@@ -72,7 +72,7 @@ class DashboardCommon {
   public static function add_to_apparel_btn($endpoint): false|string {
     ob_start(); ?>
     <a
-      class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 hover:tw-cursor-pointer tw-leading-[1.15] tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
+      class="wpbb-add-apparel-btn tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-rounded-8 hover:tw-cursor-pointer tw-leading-[1.15] tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
       href="<?php echo esc_url($endpoint); ?>">
       <?php echo file_get_contents(
         WPBB_PLUGIN_DIR . 'Public/assets/icons/plus.svg'
