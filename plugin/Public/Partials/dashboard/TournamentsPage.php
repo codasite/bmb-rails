@@ -38,11 +38,6 @@ class TournamentsPage {
         <p class="tw-text-24 tw-my-0 tw-font-500 tw-opacity-50">All tournaments you are participating in</p>
         <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
           <?php echo BracketsCommon::sort_button(
-            'All',
-            get_permalink() . 'tournaments/?status=all',
-            $paged_status === 'all'
-          ); ?>
-          <?php echo BracketsCommon::sort_button(
             'Live',
             get_permalink() . 'tournaments/?status=live',
             $paged_status === 'live',
