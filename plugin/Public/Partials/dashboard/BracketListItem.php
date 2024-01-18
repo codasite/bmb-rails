@@ -3,7 +3,44 @@
 namespace WStrategies\BMB\Public\Partials\dashboard;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 
-class ManageBracketsPageCommon {
+class BracketListItem {
+  public static function bracket_list_item($bracket): false|string {
+    $title = $bracket->title;
+    $num_teams = $bracket->num_teams;
+    $num_plays = $bracket->num_plays;
+    ob_start();
+    ?>
+    <div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
+      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
+        <span class="tw-font-500 tw-text-12"><?php echo esc_html(
+          $num_teams
+        ); ?>-Team Bracket</span>
+        <div class="tw-flex tw-gap-4 tw-items-center">
+          <?php echo BracketsCommon::get_bracket_tag($bracket->status); ?>
+          <?php echo file_get_contents(
+            WPBB_PLUGIN_DIR . 'Public/assets/icons/bar_chart.svg'
+          ); ?>
+          <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html(
+            $num_plays
+          ); ?></span>
+          <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
+        </div>
+      </div>
+      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15">
+        <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html(
+          $title
+        ); ?></h2>
+        <div class="tw-flex tw-gap-10 tw-items-center">
+          <?php echo self::get_bracket_icon_buttons($bracket); ?>
+        </div>
+      </div>
+      <div class="tw-mt-10 tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16 tw-flex-wrap">
+        <?php echo self::get_bracket_buttons($bracket); ?>
+      </div>
+    </div>
+    <?php return ob_get_clean();
+  }
+
   public static function share_bracket_btn($bracket): false|string {
     $play_link = get_permalink($bracket->id) . 'play';
 
@@ -83,43 +120,6 @@ class ManageBracketsPageCommon {
       default:
         return '';
     }
-  }
-
-  public static function bracket_list_item($bracket): false|string {
-    $title = $bracket->title;
-    $num_teams = $bracket->num_teams;
-    $num_plays = $bracket->num_plays;
-    ob_start();
-    ?>
-    <div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
-      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
-        <span class="tw-font-500 tw-text-12"><?php echo esc_html(
-          $num_teams
-        ); ?>-Team Bracket</span>
-        <div class="tw-flex tw-gap-4 tw-items-center">
-          <?php echo BracketsCommon::get_bracket_tag($bracket->status); ?>
-          <?php echo file_get_contents(
-            WPBB_PLUGIN_DIR . 'Public/assets/icons/bar_chart.svg'
-          ); ?>
-          <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html(
-            $num_plays
-          ); ?></span>
-          <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
-        </div>
-      </div>
-      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15">
-        <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html(
-          $title
-        ); ?></h2>
-        <div class="tw-flex tw-gap-10 tw-items-center">
-          <?php echo self::get_bracket_icon_buttons($bracket); ?>
-        </div>
-      </div>
-      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16 tw-flex-wrap">
-        <?php echo self::get_bracket_buttons($bracket); ?>
-      </div>
-    </div>
-    <?php return ob_get_clean();
   }
 
   public static function delete_bracket_btn($bracket): false|string {

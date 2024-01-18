@@ -66,7 +66,7 @@ class TournamentsPage {
         </div>
         <div class="tw-flex tw-flex-col tw-gap-15">
           <?php foreach ($brackets as $bracket) {
-            echo ManageBracketsPageCommon::bracket_list_item($bracket);
+            echo BracketListItem::bracket_list_item($bracket);
           } ?>
           <?php PaginationWidget::pagination($paged, $num_pages); ?>
         </div>
