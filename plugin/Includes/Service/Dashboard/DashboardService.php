@@ -11,26 +11,24 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 class DashboardService {
   private BracketRepo $bracket_repo;
   private \wpdb $wpdb;
+  public static $bracket_status_mapping = [
+    'live' => ['publish'],
+    'private' => ['private'],
+    'upcoming' => ['upcoming'],
+    'closed' => ['score', 'complete'],
+  ];
 
   public function __construct($args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     global $wpdb;
     $this->wpdb = $args['wpdb'] ?? $wpdb;
   }
-  public function get_managed_brackets(int $paged, string $status) {
-    $all_status = ['publish', 'private', 'score', 'complete', 'upcoming'];
-    $active_status = ['publish', 'private'];
-    $scored_status = ['score', 'complete'];
 
-    if ($status === 'all') {
-      $post_status = $all_status;
-    } elseif ($status === 'active') {
-      $post_status = $active_status;
-    } elseif ($status === 'scored') {
-      $post_status = $scored_status;
-    } else {
-      $post_status = $all_status;
-    }
+  /**
+   * Get all brackets hosted by the current user
+   */
+  public function get_hosted_brackets(int $paged, string $status) {
+    $post_status = self::$bracket_status_mapping[$status];
 
     $the_query = new WP_Query([
       'post_type' => Bracket::get_post_type(),
@@ -48,12 +46,7 @@ class DashboardService {
   }
 
   public function get_tournaments(int $paged, int $per_page, string $status) {
-    $post_status = match ($status) {
-      'live' => ['publish'],
-      'upcoming' => ['upcoming'],
-      'closed' => ['score', 'complete'],
-      default => ['publish', 'score', 'complete', 'upcoming'],
-    };
+    $post_status = self::$bracket_status_mapping[$status];
     $offset = ($paged - 1) * $per_page;
     $user_id = get_current_user_id();
     $bracket_table = BracketRepo::table_name();

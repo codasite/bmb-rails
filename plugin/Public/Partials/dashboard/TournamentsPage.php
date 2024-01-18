@@ -52,10 +52,10 @@ class TournamentsPage {
           </div>
           <div class="tw-flex tw-gap-10 tw-flex-wrap">
             <?php echo BracketsCommon::sort_button(
-              'Live',
-              get_permalink() . 'tournaments/?status=live',
-              $paged_status === 'live',
-              'green',
+              'Upcoming',
+              get_permalink() . 'tournaments/?status=upcoming',
+              $paged_status === 'upcoming',
+              'yellow',
               true
             ); ?>
             <?php echo BracketsCommon::sort_button(
@@ -66,10 +66,10 @@ class TournamentsPage {
               true
             ); ?>
             <?php echo BracketsCommon::sort_button(
-              'Upcoming',
-              get_permalink() . 'tournaments/?status=upcoming',
-              $paged_status === 'upcoming',
-              'yellow',
+              'Live',
+              get_permalink() . 'tournaments/?status=live',
+              $paged_status === 'live',
+              'green',
               true
             ); ?>
             <?php echo BracketsCommon::sort_button(

@@ -6,16 +6,24 @@ use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\Dashboard\DashboardService;
 
 class DashboardServiceTest extends WPBB_UnitTestCase {
-  public function test_get_all_managed_brackets() {
+  public function test_get_live_hosted_brackets() {
     $user = $this->create_user();
     $user2 = $this->create_user();
-    $user_bracket1 = $this->create_bracket([
+    $live_bracket = $this->create_bracket([
       'author' => $user->ID,
       'status' => 'publish',
     ]);
-    $user_bracket2 = $this->create_bracket([
+    $private_bracket = $this->create_bracket([
       'author' => $user->ID,
       'status' => 'private',
+    ]);
+    $upcoming_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'upcoming',
+    ]);
+    $closed_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'score',
     ]);
     $non_user_bracket = $this->create_bracket([
       'author' => $user2->ID,
@@ -24,11 +32,116 @@ class DashboardServiceTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardService();
-    $brackets = $service->get_managed_brackets(1, 'all')['brackets'];
+    $brackets = $service->get_hosted_brackets(1, 'live')['brackets'];
+
+    $this->assertCount(1, $brackets);
+
+    $this->assertEquals($live_bracket->id, $brackets[0]->id);
+  }
+
+  public function test_get_private_hosted_brackets() {
+    $user = $this->create_user();
+    $user2 = $this->create_user();
+    $live_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'publish',
+    ]);
+    $private_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'private',
+    ]);
+    $upcoming_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'upcoming',
+    ]);
+    $closed_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'score',
+    ]);
+    $non_user_bracket = $this->create_bracket([
+      'author' => $user2->ID,
+      'status' => 'publish',
+    ]);
+
+    wp_set_current_user($user->ID);
+    $service = new DashboardService();
+    $brackets = $service->get_hosted_brackets(1, 'private')['brackets'];
+
+    $this->assertCount(1, $brackets);
+
+    $this->assertEquals($private_bracket->id, $brackets[0]->id);
+  }
+
+  public function test_get_upcoming_hosted_brackets() {
+    $user = $this->create_user();
+    $user2 = $this->create_user();
+    $live_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'publish',
+    ]);
+    $private_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'private',
+    ]);
+    $upcoming_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'upcoming',
+    ]);
+    $closed_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'score',
+    ]);
+    $non_user_bracket = $this->create_bracket([
+      'author' => $user2->ID,
+      'status' => 'publish',
+    ]);
+
+    wp_set_current_user($user->ID);
+    $service = new DashboardService();
+    $brackets = $service->get_hosted_brackets(1, 'upcoming')['brackets'];
+
+    $this->assertCount(1, $brackets);
+
+    $this->assertEquals($upcoming_bracket->id, $brackets[0]->id);
+  }
+
+  public function test_get_closed_hosted_brackets() {
+    $user = $this->create_user();
+    $user2 = $this->create_user();
+    $live_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'publish',
+    ]);
+    $private_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'private',
+    ]);
+    $upcoming_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'upcoming',
+    ]);
+    $scored_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'score',
+    ]);
+    $complete_bracket = $this->create_bracket([
+      'author' => $user->ID,
+      'status' => 'complete',
+    ]);
+    $non_user_bracket = $this->create_bracket([
+      'author' => $user2->ID,
+      'status' => 'publish',
+    ]);
+
+    wp_set_current_user($user->ID);
+    $service = new DashboardService();
+
+    $brackets = $service->get_hosted_brackets(1, 'closed')['brackets'];
 
     $this->assertCount(2, $brackets);
-    $this->assertEquals($user_bracket1->id, $brackets[0]->id);
-    $this->assertEquals($user_bracket2->id, $brackets[1]->id);
+
+    $this->assertEquals($scored_bracket->id, $brackets[0]->id);
+    $this->assertEquals($complete_bracket->id, $brackets[1]->id);
   }
 
   public function test_get_all_tournaments() {
