@@ -21,7 +21,7 @@ class BracketsCommon {
       'tw-text-16',
       'tw-font-500',
       'tw-rounded-8',
-      'tw-py-4',
+      'tw-py-8',
       'tw-px-16',
     ];
 
