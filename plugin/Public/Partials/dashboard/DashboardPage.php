@@ -93,13 +93,6 @@ class DashboardPage {
               ); ?></li>
             <li
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
-                'brackets',
-                $current_tab,
-                'Manage Brackets',
-                '../../assets/icons/cursor-box.svg'
-              ); ?></li>
-            <li
-              class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
                 'play-history',
                 $current_tab,
                 'My Play History',
