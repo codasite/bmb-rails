@@ -22,7 +22,13 @@ class TournamentsPage {
       $paged_status = 'all';
     }
 
-    $brackets = [];
+    $result = $this->dashboard_service->get_tournaments(
+      $paged,
+      5,
+      $paged_status
+    );
+    $brackets = $result['brackets'];
+    $num_pages = $result['max_num_pages'];
 
     ob_start();
     ?>
@@ -33,18 +39,29 @@ class TournamentsPage {
         <div class="tw-flex tw-gap-10 tw-py-24">
           <?php echo BracketsCommon::sort_button(
             'All',
-            get_permalink() . 'brackets/?status=all',
+            get_permalink() . 'tournaments/?status=all',
             $paged_status === 'all'
           ); ?>
           <?php echo BracketsCommon::sort_button(
-            'Active',
-            get_permalink() . 'brackets/?status=active',
-            $paged_status === 'active'
+            'Live',
+            get_permalink() . 'tournaments/?status=live',
+            $paged_status === 'live',
+            'green',
+            true
           ); ?>
           <?php echo BracketsCommon::sort_button(
-            'Scored',
-            get_permalink() . 'brackets/?status=scored',
-            $paged_status === 'scored'
+            'Upcoming',
+            get_permalink() . 'tournaments/?status=upcoming',
+            $paged_status === 'upcoming',
+            'yellow',
+            true
+          ); ?>
+          <?php echo BracketsCommon::sort_button(
+            'Complete',
+            get_permalink() . 'tournaments/?status=complete',
+            $paged_status === 'complete',
+            'white',
+            true
           ); ?>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-15">

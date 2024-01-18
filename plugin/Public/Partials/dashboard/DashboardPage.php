@@ -84,14 +84,13 @@ class DashboardPage {
               'Profile',
               '../../assets/icons/user.svg'
             ); ?></li>
-<!--            <li-->
-<!--              class="tw-font-500 tw-text-20 tw-list-none">--><?php //echo self::get_nav_link(
-    //                'tournaments',
-    //                $current_tab,
-    //                'Tournaments',
-    //                '../../assets/icons/signal.svg'
-    //              );
-    ?><!--</li>-->
+            <li
+              class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
+                'tournaments',
+                $current_tab,
+                'Tournaments',
+                '../../assets/icons/signal.svg'
+              ); ?></li>
             <li
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
                 'brackets',

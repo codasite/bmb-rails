@@ -119,7 +119,7 @@ class ManageBracketsPageCommon {
           <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
         </div>
       </div>
-      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
+      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15">
         <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html(
           $title
         ); ?></h2>

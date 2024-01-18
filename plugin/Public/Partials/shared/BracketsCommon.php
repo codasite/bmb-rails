@@ -11,25 +11,31 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketsCommon {
 
-  public static function sort_button( $label, $endpoint, $active = false ): false|string {
+  public static function sort_button( $label, $endpoint, $active = false, $color = 'white', $showCircle = false): false|string {
     $base_cls = [
       'tw-flex',
       'tw-items-center',
+      'tw-gap-4',
       'tw-justify-center',
       'tw-text-16',
       'tw-font-500',
       'tw-rounded-8',
-      'tw-py-8',
+      'tw-py-4',
       'tw-px-16',
     ];
 
     $inactive_cls = [
       'tw-border',
       'tw-border-solid',
-      'tw-border-white/50',
       'hover:tw-bg-white',
       'hover:tw-text-dark-blue',
+      ...match ($color) {
+        'green' => ['!tw-text-green', 'tw-bg-green/15'],
+        'yellow' => ['!tw-text-yellow tw-bg-yellow/15'],
+        default => ['tw-border-white', 'tw-bg-white/15'],
+      },
     ];
+
     $active_cls   = [
       'tw-bg-white',
       '!tw-text-dark-blue',
@@ -39,6 +45,11 @@ class BracketsCommon {
     ob_start();
     ?>
     <a class="<?php echo implode( ' ', $cls_list ) ?>" href="<?php echo esc_url( $endpoint ) ?>">
+      <?php if ( $showCircle ) : ?>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="6" cy="6" r="6" fill="currentcolor"/>
+  </svg>
+      <?php endif; ?>
       <?php echo esc_html( $label ) ?>
     </a>
     <?php
