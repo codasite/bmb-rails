@@ -32,6 +32,7 @@ class BracketsCommon {
       ...match ($color) {
         'green' => ['tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green'],
         'yellow' => ['tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow'],
+        'blue' => ['tw-text-blue', 'tw-bg-blue/15', 'hover:tw-bg-blue'],
         default => ['tw-text-white', 'tw-border-white', 'tw-bg-white/15', 'hover:tw-bg-white'],
       },
     ];
@@ -40,6 +41,7 @@ class BracketsCommon {
       ...match ($color) {
         'green' => ['tw-text-black', 'tw-bg-green', 'hover:tw-bg-green'],
         'yellow' => ['tw-text-black', 'tw-bg-yellow', 'hover:tw-bg-yellow'],
+        'blue' => ['tw-text-black', 'tw-bg-blue', 'hover:tw-bg-blue'],
         default => ['tw-text-black', 'tw-bg-white', 'hover:tw-bg-white'],
       }
     ];

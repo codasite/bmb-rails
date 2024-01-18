@@ -47,8 +47,8 @@ class TournamentsPage {
         </div>
         <div class="tw-flex tw-flex-col tw-gap-24">
           <div class="tw-flex tw-justify-start tw-gap-40">
-            <a class="tw-text-white tw-text-24 tw-font-500">Created</a>
-            <a class="tw-text-white tw-text-24 tw-font-500 tw-opacity-50">Playing</a>
+            <a class="tw-text-white tw-text-24 tw-font-500 hover:tw-cursor-pointer">Hosting</a>
+            <a class="tw-text-white tw-text-24 tw-font-500 tw-opacity-50 hover:tw-cursor-pointer">Playing</a>
           </div>
           <div class="tw-flex tw-gap-10 tw-flex-wrap">
             <?php echo BracketsCommon::sort_button(
@@ -56,6 +56,13 @@ class TournamentsPage {
               get_permalink() . 'tournaments/?status=live',
               $paged_status === 'live',
               'green',
+              true
+            ); ?>
+            <?php echo BracketsCommon::sort_button(
+              'Private',
+              get_permalink() . 'tournaments/?status=private',
+              $paged_status === 'private',
+              'blue',
               true
             ); ?>
             <?php echo BracketsCommon::sort_button(
