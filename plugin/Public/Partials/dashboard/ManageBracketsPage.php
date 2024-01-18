@@ -40,7 +40,7 @@ class ManageBracketsPage {
       ); ?>
       <span class="tw-font-700 tw-text-16 sm:tw-text-24 tw-leading-none">Create Bracket</span>
     </a>
-    <div class="tw-flex tw-gap-10 tw-py-24">
+    <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
       <?php echo BracketsCommon::sort_button(
         'All',
         get_permalink() . 'brackets/?status=all',

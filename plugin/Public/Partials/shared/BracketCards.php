@@ -37,7 +37,7 @@ class BracketCards {
     $show_paid_tag    = $product_utils->has_bracket_fee( $play->bracket_id );
     $buttons          = [
       PartialsCommon::view_play_btn( $play_link ),
-      BracketsCommon::view_leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
+      BracketsCommon::leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
       BracketsCommon::bracket_chat_btn( $play->bracket_id ),
     ];
 
@@ -79,13 +79,13 @@ class BracketCards {
       case 'publish':
         $buttons = [
           BracketsCommon::play_bracket_btn( $play_link, 'Play' ),
-          BracketsCommon::view_leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
+          BracketsCommon::leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
           BracketsCommon::bracket_chat_btn( $id ),
         ];
         break;
       case 'complete':
         $buttons = [
-          BracketsCommon::view_leaderboard_btn( $leaderboard_link, 'final', 'Leaderboard' ),
+          BracketsCommon::leaderboard_btn( $leaderboard_link, 'final', 'Leaderboard' ),
           BracketsCommon::bracket_chat_btn( $id ),
         ];
         break;

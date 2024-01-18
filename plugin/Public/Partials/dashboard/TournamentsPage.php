@@ -36,7 +36,7 @@ class TournamentsPage {
       <div class="tw-flex tw-flex-col">
         <h1 class="tw-text-24 sm:tw-text-48 lg:tw-text-64 tw-font-700 tw-leading-none">Tournaments</h1>
         <p class="tw-text-24 tw-my-0 tw-font-500 tw-opacity-50">All tournaments you are participating in</p>
-        <div class="tw-flex tw-gap-10 tw-py-24">
+        <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
           <?php echo BracketsCommon::sort_button(
             'All',
             get_permalink() . 'tournaments/?status=all',

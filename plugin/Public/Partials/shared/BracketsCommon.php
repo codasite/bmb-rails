@@ -220,7 +220,7 @@ class BracketsCommon {
   /**
    * This button goes to the Leaderboard page
    */
-  public static function view_leaderboard_btn( $endpoint, $variant = 'primary', $label = 'View Leaderboard' ): false|string {
+  public static function leaderboard_btn( $endpoint, $variant = 'primary', $label = 'Leaderboard' ): false|string {
     $final = false;
 
     ob_start();
@@ -277,7 +277,7 @@ class BracketsCommon {
     ?>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
       <?php echo self::play_bracket_btn( $bracket_play_link ); ?>
-      <?php echo self::view_leaderboard_btn( $leaderboard_link ); ?>
+      <?php echo self::leaderboard_btn( $leaderboard_link ); ?>
       <?php echo self::bracket_chat_btn( $bracket->id ); ?>
     </div>
     <?php
@@ -326,7 +326,7 @@ class BracketsCommon {
     ?>
     <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
       <!-- This goes to the Leaderboard page -->
-      <?php echo self::view_leaderboard_btn( $leaderboard_link, 'final' ); ?>
+      <?php echo self::leaderboard_btn( $leaderboard_link, 'final' ); ?>
       <?php echo self::bracket_chat_btn( $bracket->id ); ?>
     </div>
     <?php
