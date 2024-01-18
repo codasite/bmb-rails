@@ -8,6 +8,7 @@ use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Public\Partials\dashboard\BracketListItem;
 
 class BracketsCommon {
 
@@ -27,12 +28,11 @@ class BracketsCommon {
     $inactive_cls = [
       'tw-border',
       'tw-border-solid',
-      'hover:tw-bg-white',
-      'hover:tw-text-dark-blue',
+      'hover:!tw-text-dd-blue',
       ...match ($color) {
-        'green' => ['!tw-text-green', 'tw-bg-green/15'],
-        'yellow' => ['!tw-text-yellow tw-bg-yellow/15'],
-        default => ['tw-border-white', 'tw-bg-white/15'],
+        'green' => ['!tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green'],
+        'yellow' => ['!tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow'],
+        default => ['tw-border-white', 'tw-bg-white/15', 'hover:tw-bg-white'],
       },
     ];
 
@@ -78,11 +78,11 @@ class BracketsCommon {
   }
 
   public static function completed_bracket_tag(): false|string {
-    return self::bracket_tag( 'Complete', 'yellow' );
+    return self::bracket_tag( 'Complete', 'white' );
   }
 
   public static function scored_bracket_tag(): false|string {
-    return self::bracket_tag( 'Scored', 'yellow' );
+    return self::bracket_tag( 'In progress', 'white' );
   }
 
   public static function archived_bracket_tag(): false|string {
@@ -416,7 +416,7 @@ class BracketsCommon {
     ?>
     <div class="tw-flex tw-flex-col tw-gap-15">
       <?php foreach ( $brackets as $bracket ) : ?>
-        <?php echo self::public_bracket_list_item( $bracket); ?>
+        <?php echo BracketListItem::bracket_list_item( $bracket); ?>
       <?php endforeach; ?>
     </div>
     <?php PaginationWidget::pagination( $paged, $num_pages ); ?>

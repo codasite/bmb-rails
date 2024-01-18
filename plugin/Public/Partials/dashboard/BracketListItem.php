@@ -10,7 +10,10 @@ class BracketListItem {
     $num_plays = $bracket->num_plays;
     ob_start();
     ?>
-    <div class="tw-border-2 tw-border-solid tw-border-white/15 tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
+    <div class="tw-border-2 tw-border-solid <?php echo $bracket->status ==
+    'publish'
+      ? 'tw-border-blue'
+      : 'tw-border-white/15'; ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
         <span class="tw-font-500 tw-text-12"><?php echo esc_html(
           $num_teams

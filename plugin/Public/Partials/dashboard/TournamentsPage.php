@@ -57,9 +57,9 @@ class TournamentsPage {
             true
           ); ?>
           <?php echo BracketsCommon::sort_button(
-            'Complete',
-            get_permalink() . 'tournaments/?status=complete',
-            $paged_status === 'complete',
+            'Closed',
+            get_permalink() . 'tournaments/?status=closed',
+            $paged_status === 'closed',
             'white',
             true
           ); ?>

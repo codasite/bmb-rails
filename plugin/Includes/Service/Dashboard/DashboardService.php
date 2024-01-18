@@ -49,9 +49,9 @@ class DashboardService {
 
   public function get_tournaments(int $paged, int $per_page, string $status) {
     $post_status = match ($status) {
-      'live' => ['publish', 'score'],
+      'live' => ['publish'],
       'upcoming' => ['upcoming'],
-      'completed' => ['complete'],
+      'closed' => ['score', 'complete'],
       default => ['publish', 'score', 'complete', 'upcoming'],
     };
     $offset = ($paged - 1) * $per_page;
