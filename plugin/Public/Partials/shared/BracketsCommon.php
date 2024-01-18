@@ -28,17 +28,20 @@ class BracketsCommon {
     $inactive_cls = [
       'tw-border',
       'tw-border-solid',
-      'hover:!tw-text-dd-blue',
+      'hover:tw-text-dd-blue',
       ...match ($color) {
-        'green' => ['!tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green'],
-        'yellow' => ['!tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow'],
-        default => ['tw-border-white', 'tw-bg-white/15', 'hover:tw-bg-white'],
+        'green' => ['tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green'],
+        'yellow' => ['tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow'],
+        default => ['tw-text-white', 'tw-border-white', 'tw-bg-white/15', 'hover:tw-bg-white'],
       },
     ];
 
     $active_cls   = [
-      'tw-bg-white',
-      '!tw-text-dark-blue',
+      ...match ($color) {
+        'green' => ['tw-text-black', 'tw-bg-green', 'hover:tw-bg-green'],
+        'yellow' => ['tw-text-black', 'tw-bg-yellow', 'hover:tw-bg-yellow'],
+        default => ['tw-text-black', 'tw-bg-white', 'hover:tw-bg-white'],
+      }
     ];
 
     $cls_list = array_merge( $base_cls, $active ? $active_cls : $inactive_cls );
