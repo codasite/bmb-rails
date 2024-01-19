@@ -12,7 +12,7 @@ class DashboardService {
   private BracketRepo $bracket_repo;
   private \wpdb $wpdb;
   public static $bracket_status_mapping = [
-    'live' => ['publish'],
+    'live' => ['publish', 'score'],
     'private' => ['private'],
     'upcoming' => ['upcoming'],
     'closed' => ['score', 'complete'],
@@ -24,16 +24,32 @@ class DashboardService {
     $this->wpdb = $args['wpdb'] ?? $wpdb;
   }
 
+  public function get_tournaments(
+    int $paged,
+    int $per_page,
+    string $status,
+    bool $hosting
+  ) {
+    if ($hosting) {
+      return $this->get_hosted_tournaments($paged, $per_page, $status);
+    }
+    return $this->get_played_tournaments($paged, $per_page, $status);
+  }
+
   /**
    * Get all brackets hosted by the current user
    */
-  public function get_hosted_brackets(int $paged, string $status) {
+  public function get_hosted_tournaments(
+    int $paged,
+    int $per_page,
+    string $status
+  ) {
     $post_status = self::$bracket_status_mapping[$status];
 
     $the_query = new WP_Query([
       'post_type' => Bracket::get_post_type(),
       'author' => get_current_user_id(),
-      'posts_per_page' => 6,
+      'posts_per_page' => $per_page,
       'paged' => $paged,
       'post_status' => $post_status,
     ]);
@@ -45,7 +61,11 @@ class DashboardService {
     ];
   }
 
-  public function get_tournaments(int $paged, int $per_page, string $status) {
+  public function get_played_tournaments(
+    int $paged,
+    int $per_page,
+    string $status
+  ) {
     $post_status = self::$bracket_status_mapping[$status];
     $offset = ($paged - 1) * $per_page;
     $user_id = get_current_user_id();

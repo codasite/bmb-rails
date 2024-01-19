@@ -14,18 +14,25 @@ class TournamentsPage {
       $args['dashboard_service'] ?? new DashboardService();
   }
 
+  public function get_role_link(string $label, bool $active, string $url) {
+    ob_start(); ?>
+    <a class="tw-text-white tw-text-24 tw-font-500<?php echo $active
+      ? ''
+      : ' tw-opacity-50'; ?> hover:tw-cursor-pointer"
+       href="<?php echo $url; ?>"><?php echo $label; ?></a>
+    <?php return ob_get_clean();
+  }
+
   public function render() {
     $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
-    $paged_status = get_query_var('status');
-
-    if (empty($paged_status)) {
-      $paged_status = 'all';
-    }
+    $paged_status = get_query_var('status', 'live');
+    $role = get_query_var('role', 'hosting');
 
     $result = $this->dashboard_service->get_tournaments(
       $paged,
       5,
-      $paged_status
+      $paged_status,
+      $role === 'hosting'
     );
     $brackets = $result['brackets'];
     $num_pages = $result['max_num_pages'];
@@ -47,34 +54,46 @@ class TournamentsPage {
         </div>
         <div class="tw-flex tw-flex-col tw-gap-24">
           <div class="tw-flex tw-justify-start tw-gap-40">
-            <a class="tw-text-white tw-text-24 tw-font-500 hover:tw-cursor-pointer">Hosting</a>
-            <a class="tw-text-white tw-text-24 tw-font-500 tw-opacity-50 hover:tw-cursor-pointer">Playing</a>
+            <?php echo $this->get_role_link(
+              'Hosting',
+              $role === 'hosting',
+              get_permalink() .
+                'tournaments/?role=hosting&status=' .
+                $paged_status
+            ); ?>
+            <?php echo $this->get_role_link(
+              'Playing',
+              $role === 'playing',
+              get_permalink() .
+                'tournaments/?role=playing&status=' .
+                $paged_status
+            ); ?>
           </div>
           <div class="tw-flex tw-gap-10 tw-flex-wrap">
             <?php echo BracketsCommon::sort_button(
-              'Upcoming',
-              get_permalink() . 'tournaments/?status=upcoming',
-              $paged_status === 'upcoming',
-              'yellow',
-              true
-            ); ?>
-            <?php echo BracketsCommon::sort_button(
               'Private',
-              get_permalink() . 'tournaments/?status=private',
+              get_permalink() . 'tournaments/?status=private&role=' . $role,
               $paged_status === 'private',
               'blue',
               true
             ); ?>
             <?php echo BracketsCommon::sort_button(
+              'Upcoming',
+              get_permalink() . 'tournaments/?status=upcoming&role=' . $role,
+              $paged_status === 'upcoming',
+              'yellow',
+              true
+            ); ?>
+            <?php echo BracketsCommon::sort_button(
               'Live',
-              get_permalink() . 'tournaments/?status=live',
+              get_permalink() . 'tournaments/?status=live&role=' . $role,
               $paged_status === 'live',
               'green',
               true
             ); ?>
             <?php echo BracketsCommon::sort_button(
               'Closed',
-              get_permalink() . 'tournaments/?status=closed',
+              get_permalink() . 'tournaments/?status=closed&role=' . $role,
               $paged_status === 'closed',
               'white',
               true

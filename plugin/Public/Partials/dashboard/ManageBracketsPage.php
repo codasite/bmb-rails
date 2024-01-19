@@ -20,7 +20,7 @@ class ManageBracketsPage {
     if (empty($paged_status)) {
       $paged_status = 'all';
     }
-    $result = $this->dashboard_service->get_hosted_brackets(
+    $result = $this->dashboard_service->get_hosted_tournaments(
       $paged,
       $paged_status
     );
