@@ -2,8 +2,8 @@
 namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
@@ -157,7 +157,7 @@ class EnqueueScriptsHooks implements HooksInterface {
       'nonce' => wp_create_nonce('wp_rest'),
       'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
       'my_brackets_url' =>
-        get_permalink(get_page_by_path('dashboard')) . '?tab=brackets',
+        get_permalink(get_page_by_path('dashboard')) . '?tab=tournaments',
       'bracket_builder_url' => get_permalink(
         get_page_by_path('bracket-builder')
       ),

@@ -9,7 +9,7 @@ use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 
 class TournamentsPage {
   private DashboardService $dashboard_service;
-  private string $paged;
+  private int $paged;
   private string $role;
   private string $paged_status;
   private static int $PER_PAGE = 5;
@@ -23,7 +23,9 @@ class TournamentsPage {
   }
 
   public function init() {
-    $this->paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+    $this->paged = (int) get_query_var('paged')
+      ? absint(get_query_var('paged'))
+      : 1;
     $role = get_query_var('role', self::$DEFAULT_ROLE);
     $paged_status = get_query_var('status', $this->get_default_status($role));
     if (!$this->dashboard_service->has_tournaments($paged_status, $role)) {
@@ -41,9 +43,9 @@ class TournamentsPage {
 
   public function get_role_link(string $label, bool $active, string $url) {
     ob_start(); ?>
-    <a class="tw-text-white tw-text-24 tw-font-500<?php echo $active
-      ? ''
-      : ' tw-opacity-50'; ?> hover:tw-cursor-pointer"
+    <a class="tw-text-white tw-text-20 tw-font-500<?php echo $active
+      ? ' tw-underline'
+      : ' tw-opacity-50'; ?> hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-dd-blue hover:tw-opacity-100 tw-rounded-8 tw-px-16 tw-py-4"
        href="<?php echo $url; ?>"><?php echo $label; ?></a>
     <?php return ob_get_clean();
   }
@@ -67,7 +69,9 @@ class TournamentsPage {
   }
 
   public function render_filter_buttons() {
-    $show_private = true;
+    $show_private =
+      $this->role === 'hosting' ||
+      $this->dashboard_service->has_tournaments('private', $this->role);
     $show_upcoming = $this->dashboard_service->has_tournaments(
       'upcoming',
       $this->role
@@ -134,12 +138,12 @@ class TournamentsPage {
     ob_start();
     ?>
     <div id="wpbb-tournaments-modals"></div>
-      <div class="tw-flex tw-flex-col tw-gap-40">
+      <div class="tw-flex tw-flex-col tw-gap-60">
         <div class="tw-flex tw-flex-col tw-gap-16">
           <h1 class="tw-text-24 sm:tw-text-48 lg:tw-text-64 tw-font-700 tw-leading-none">Tournaments</h1>
           <a href="<?php echo get_permalink(
             get_page_by_path('bracket-builder')
-          ); ?>" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white">
+          ); ?>" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white tw-mt-20">
             <?php echo file_get_contents(
               WPBB_PLUGIN_DIR . 'Public/assets/icons/signal.svg'
             ); ?>
@@ -147,7 +151,7 @@ class TournamentsPage {
           </a>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-24">
-          <div class="tw-flex tw-justify-start tw-gap-40">
+          <div class="tw-flex tw-justify-start">
             <?php echo $this->get_role_link(
               'Hosting',
               $hosting,
@@ -166,6 +170,9 @@ class TournamentsPage {
             } ?>
             <?php PaginationWidget::pagination($this->paged, $num_pages); ?>
           </div>
+          <? if(!$brackets): ?>
+            <p class='tw-text-24 tw-font-500 tw-my-0'>No <?php echo $this->paged_status; ?> tournaments found.</p>
+          <? endif; ?>
         </div>
       </div>
     <?php return ob_get_clean();

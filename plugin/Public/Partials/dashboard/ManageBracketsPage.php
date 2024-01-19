@@ -3,6 +3,7 @@
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WStrategies\BMB\Includes\Service\Dashboard\DashboardService;
+use WStrategies\BMB\Public\Partials\shared\BracketListItem;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 
@@ -22,6 +23,7 @@ class ManageBracketsPage {
     }
     $result = $this->dashboard_service->get_hosted_tournaments(
       $paged,
+      5,
       $paged_status
     );
     $num_pages = $result['max_num_pages'];

@@ -128,11 +128,7 @@ class DashboardService {
       $query_args['posts_per_page'] = $per_page;
     }
 
-    $the_query = new WP_Query([
-      'post_type' => Bracket::get_post_type(),
-      'author' => get_current_user_id(),
-      'post_status' => $post_status,
-    ]);
+    $the_query = new WP_Query($query_args);
 
     return $the_query;
   }
