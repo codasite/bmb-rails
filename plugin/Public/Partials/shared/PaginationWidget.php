@@ -28,7 +28,7 @@ class PaginationWidget {
           $current = true;
         } ?>
         <div
-          class="tw-flex tw-justify-center tw-items-center tw-px-4 tw-text-white tw-font-500 tw-text-16 tw-min-w-[24px] tw-min-h-[24px] tw-rounded-4<?php echo $current ? ' tw-bg-blue' : '' ?>">
+          class="tw-flex tw-justify-center tw-items-center tw-px-4 [&_a]:tw-text-white tw-font-500 tw-text-16 tw-min-w-[24px] tw-min-h-[24px] tw-rounded-4<?php echo $current ? ' tw-bg-blue' : '' ?>">
           <?php echo $link; ?>
         </div>
       <?php endforeach; ?>
