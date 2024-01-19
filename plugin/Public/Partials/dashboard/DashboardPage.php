@@ -61,7 +61,7 @@ class DashboardPage {
     $current_tab = $current_tab == null ? get_query_var('tab') : $current_tab;
 
     if (empty($current_tab)) {
-      $current_tab = 'brackets';
+      $current_tab = 'tournaments';
     }
 
     $template = match ($current_tab) {
