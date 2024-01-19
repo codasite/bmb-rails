@@ -67,16 +67,12 @@ class TournamentsPage {
   }
 
   public function render_filter_buttons() {
-    $show_private =
-      $this->role === 'hosting' ||
-      $this->dashboard_service->has_tournaments('private', $this->role);
+    $show_private = true;
     $show_upcoming = $this->dashboard_service->has_tournaments(
       'upcoming',
       $this->role
     );
-    $show_live =
-      $this->role === 'playing' ||
-      $this->dashboard_service->has_tournaments('live', $this->role);
+    $show_live = true;
     $show_closed = $this->dashboard_service->has_tournaments(
       'closed',
       $this->role
