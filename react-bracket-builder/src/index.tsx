@@ -19,6 +19,7 @@ import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName
 import EnableUpcomingNotificationModal from './modals/dashboard/brackets/EnableUpcomingNotificationModal'
 import DisableUpcomingNotificationModal from './modals/dashboard/brackets/DisableUpcomingNotificationModal'
 import UpcomingNotificationRegisterModal from './modals/dashboard/brackets/UpcomingNotificationRegisterModal'
+import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingNotificationModal'
 
 declare var wp, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -219,27 +220,16 @@ function renderMyBracketsModals(ajaxObj: wpbbAppObj) {
         upgradeAccountUrl={ajaxObj.upgradeAccountUrl}
         canCreateBracket={ajaxObj.userCanShareBracket}
       />
+      <UpcomingNotificationModal isUserLoggedIn={ajaxObj.isUserLoggedIn} />
     </>,
-    'wpbb-manage-brackets-modals'
+    'wpbb-tournaments-modals'
   )
 }
 function renderPublicBracketsModals(ajaxObj: wpbbAppObj) {
-  if (!ajaxObj.isUserLoggedIn) {
-    renderDiv(
-      <>
-        <UpcomingNotificationRegisterModal />
-      </>,
-      'wpbb-public-bracket-modals'
-    )
-  } else {
-    renderDiv(
-      <>
-        <EnableUpcomingNotificationModal />
-        <DisableUpcomingNotificationModal />
-      </>,
-      'wpbb-public-bracket-modals'
-    )
-  }
+  renderDiv(
+    <UpcomingNotificationModal isUserLoggedIn={ajaxObj.isUserLoggedIn} />,
+    'wpbb-public-bracket-modals'
+  )
 }
 function addClickHandlers(ajaxObj: wpbbAppObj) {
   unpublishBracketHandler()
