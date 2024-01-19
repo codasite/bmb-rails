@@ -20,7 +20,7 @@ class ManageBracketsPage {
     if (empty($paged_status)) {
       $paged_status = 'all';
     }
-    $result = $this->dashboard_service->get_managed_brackets(
+    $result = $this->dashboard_service->get_hosted_tournaments(
       $paged,
       $paged_status
     );
@@ -40,18 +40,18 @@ class ManageBracketsPage {
       ); ?>
       <span class="tw-font-700 tw-text-16 sm:tw-text-24 tw-leading-none">Create Bracket</span>
     </a>
-    <div class="tw-flex tw-gap-10 tw-py-24">
-      <?php echo BracketsCommon::sort_button(
+    <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
+      <?php echo BracketsCommon::filter_button(
         'All',
         get_permalink() . 'brackets/?status=all',
         $paged_status === 'all'
       ); ?>
-      <?php echo BracketsCommon::sort_button(
+      <?php echo BracketsCommon::filter_button(
         'Active',
         get_permalink() . 'brackets/?status=active',
         $paged_status === 'active'
       ); ?>
-      <?php echo BracketsCommon::sort_button(
+      <?php echo BracketsCommon::filter_button(
         'Scored',
         get_permalink() . 'brackets/?status=scored',
         $paged_status === 'scored'
@@ -59,7 +59,7 @@ class ManageBracketsPage {
     </div>
     <div class="tw-flex tw-flex-col tw-gap-15">
       <?php foreach ($brackets as $bracket) {
-        echo ManageBracketsPageCommon::bracket_list_item($bracket);
+        echo BracketListItem::bracket_list_item($bracket);
       } ?>
       <?php PaginationWidget::pagination($paged, $num_pages); ?>
     </div>

@@ -49,7 +49,7 @@ class DashboardPageTest extends TestCase {
     $rendered = (new DashboardPage([
       'manage_brackets_page' => new ManageBracketsPage([
         'dashboard_service' => new class extends DashboardService {
-          public function get_managed_brackets(int $paged, string $status) {
+          public function get_hosted_tournaments(int $paged, string $status) {
             return [
               'brackets' => [new Bracket(['title' => 'Bracket 1'])],
               'max_num_pages' => 1,

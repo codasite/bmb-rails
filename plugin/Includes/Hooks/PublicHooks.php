@@ -111,6 +111,7 @@ class PublicHooks implements HooksInterface {
     $vars[] = 'tab';
     $vars[] = 'status';
     $vars[] = 'view';
+    $vars[] = 'role';
     return $vars;
   }
 

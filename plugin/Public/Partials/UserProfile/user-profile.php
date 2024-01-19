@@ -35,7 +35,7 @@ $plays = $play_repo->get_all([
     </div>
     <h1 class="tw-text-32 md:tw-text-48 tw-font-700 tw-pt-60">Brackets</h1>
     <div class="tw-flex tw-justify-start tw-gap-10 tw-py-24 tw-flex-wrap">
-      <?php echo BracketsCommon::bracket_sort_buttons(); ?>
+      <?php echo BracketsCommon::bracket_filter_buttons(); ?>
     </div>
     <?php echo BracketsCommon::public_bracket_list( [ 'author' => $user_profile->author, 'tags' => [ 'bmb_vip_profile' ] ] ); ?>
   </div>

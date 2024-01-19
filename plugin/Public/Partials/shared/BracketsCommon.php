@@ -11,10 +11,11 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketsCommon {
 
-  public static function sort_button( $label, $endpoint, $active = false ): false|string {
+  public static function filter_button( $label, $endpoint, $active = false, $color = 'white', $showCircle = false): false|string {
     $base_cls = [
       'tw-flex',
       'tw-items-center',
+      'tw-gap-4',
       'tw-justify-center',
       'tw-text-16',
       'tw-font-500',
@@ -26,19 +27,33 @@ class BracketsCommon {
     $inactive_cls = [
       'tw-border',
       'tw-border-solid',
-      'tw-border-white/50',
-      'hover:tw-bg-white',
-      'hover:tw-text-dark-blue',
+      'hover:tw-text-black',
+      ...match ($color) {
+        'green' => ['tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green'],
+        'yellow' => ['tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow'],
+        'blue' => ['tw-text-blue', 'tw-bg-blue/15', 'hover:tw-bg-blue'],
+        default => ['tw-text-white', 'tw-border-white', 'tw-bg-white/15', 'hover:tw-bg-white'],
+      },
     ];
+
     $active_cls   = [
-      'tw-bg-white',
-      '!tw-text-dark-blue',
+      ...match ($color) {
+        'green' => ['tw-text-black', 'tw-bg-green', 'hover:tw-bg-green'],
+        'yellow' => ['tw-text-black', 'tw-bg-yellow', 'hover:tw-bg-yellow'],
+        'blue' => ['tw-text-white', 'tw-bg-blue', 'hover:tw-bg-blue'],
+        default => ['tw-text-black', 'tw-bg-white', 'hover:tw-bg-white'],
+      }
     ];
 
     $cls_list = array_merge( $base_cls, $active ? $active_cls : $inactive_cls );
     ob_start();
     ?>
     <a class="<?php echo implode( ' ', $cls_list ) ?>" href="<?php echo esc_url( $endpoint ) ?>">
+      <?php if ( $showCircle ) : ?>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="6" cy="6" r="6" fill="currentcolor"/>
+  </svg>
+      <?php endif; ?>
       <?php echo esc_html( $label ) ?>
     </a>
     <?php
@@ -67,11 +82,11 @@ class BracketsCommon {
   }
 
   public static function completed_bracket_tag(): false|string {
-    return self::bracket_tag( 'Complete', 'yellow' );
+    return self::bracket_tag( 'Complete', 'white' );
   }
 
   public static function scored_bracket_tag(): false|string {
-    return self::bracket_tag( 'Scored', 'yellow' );
+    return self::bracket_tag( 'In progress', 'white' );
   }
 
   public static function archived_bracket_tag(): false|string {
@@ -170,7 +185,7 @@ class BracketsCommon {
     ob_start();
     ?>
     <a
-      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
       href="<?php echo esc_url( $endpoint ) ?>">
       <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/play.svg' ); ?>
       <span class="tw-font-700"><?php echo $label ?></span>
@@ -209,7 +224,7 @@ class BracketsCommon {
   /**
    * This button goes to the Leaderboard page
    */
-  public static function view_leaderboard_btn( $endpoint, $variant = 'primary', $label = 'View Leaderboard' ): false|string {
+  public static function leaderboard_btn( $endpoint, $variant = 'primary', $label = 'Leaderboard' ): false|string {
     $final = false;
 
     ob_start();
@@ -243,7 +258,7 @@ class BracketsCommon {
     return $btn;
   }
 
-  public static function bracket_sort_buttons(): false|string {
+  public static function bracket_filter_buttons(): false|string {
     $all_endpoint      = get_permalink();
     $status            = get_query_var( 'status' );
     $live_endpoint     = add_query_arg( 'status', PartialsContants::LIVE_STATUS, $all_endpoint );
@@ -251,10 +266,10 @@ class BracketsCommon {
     $scored_endpoint   = add_query_arg( 'status', PartialsContants::SCORED_STATUS, $all_endpoint );
     ob_start();
     ?>
-    <?php echo self::sort_button( 'All', $all_endpoint, ! ( $status ) ); ?>
-    <?php echo self::sort_button( 'Live', $live_endpoint, $status === PartialsContants::LIVE_STATUS ); ?>
-    <?php echo self::sort_button( 'Upcoming', $upcoming_endpoint, $status === PartialsContants::UPCOMING_STATUS ); ?>
-    <?php echo self::sort_button( 'Scored', $scored_endpoint, $status === PartialsContants::SCORED_STATUS ); ?>
+    <?php echo self::filter_button( 'All', $all_endpoint, ! ( $status ) ); ?>
+    <?php echo self::filter_button( 'Live', $live_endpoint, $status === PartialsContants::LIVE_STATUS ); ?>
+    <?php echo self::filter_button( 'Upcoming', $upcoming_endpoint, $status === PartialsContants::UPCOMING_STATUS ); ?>
+    <?php echo self::filter_button( 'Scored', $scored_endpoint, $status === PartialsContants::SCORED_STATUS ); ?>
     <?php
     return ob_get_clean();
   }
@@ -264,11 +279,9 @@ class BracketsCommon {
     $leaderboard_link  = get_permalink( $bracket->id ) . '/leaderboard';
     ob_start();
     ?>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-      <?php echo self::play_bracket_btn( $bracket_play_link ); ?>
-      <?php echo self::view_leaderboard_btn( $leaderboard_link ); ?>
-      <?php echo self::bracket_chat_btn( $bracket->id ); ?>
-    </div>
+    <?php echo self::play_bracket_btn( $bracket_play_link ); ?>
+    <?php echo self::leaderboard_btn( $leaderboard_link ); ?>
+    <?php echo self::bracket_chat_btn( $bracket->id ); ?>
     <?php
     return ob_get_clean();
   }
@@ -276,10 +289,8 @@ class BracketsCommon {
   public static function public_bracket_upcoming_buttons( Bracket $bracket ): false|string {
     ob_start();
     ?>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-      <?php echo self::upcoming_notification_btn( $bracket ); ?>
-      <?php echo self::view_bracket_btn( $bracket ); ?>
-    </div>
+    <?php echo self::upcoming_notification_btn( $bracket ); ?>
+    <?php echo self::view_bracket_btn( $bracket ); ?>
     <?php
     return ob_get_clean();
   }
@@ -313,11 +324,8 @@ class BracketsCommon {
 
     ob_start();
     ?>
-    <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-      <!-- This goes to the Leaderboard page -->
-      <?php echo self::view_leaderboard_btn( $leaderboard_link, 'final' ); ?>
-      <?php echo self::bracket_chat_btn( $bracket->id ); ?>
-    </div>
+    <?php echo self::leaderboard_btn( $leaderboard_link, 'final' ); ?>
+    <?php echo self::bracket_chat_btn( $bracket->id ); ?>
     <?php
     return ob_get_clean();
   }
@@ -356,7 +364,7 @@ class BracketsCommon {
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
         <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html( $name ) ?></h2>
       </div>
-      <div class="tw-mt-10">
+      <div class="tw-mt-10 tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
         <?php echo $bracket_buttons; ?>
       </div>
     </div>
@@ -412,7 +420,7 @@ class BracketsCommon {
     ?>
     <div class="tw-flex tw-flex-col tw-gap-15">
       <?php foreach ( $brackets as $bracket ) : ?>
-        <?php echo self::public_bracket_list_item( $bracket); ?>
+        <?php echo BracketListItem::bracket_list_item( $bracket ); ?>
       <?php endforeach; ?>
     </div>
     <?php PaginationWidget::pagination( $paged, $num_pages ); ?>

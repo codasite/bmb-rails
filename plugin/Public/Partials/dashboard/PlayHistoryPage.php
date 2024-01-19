@@ -41,10 +41,7 @@ class PlayHistoryPage {
     ?>
 		<?php echo PartialsCommon::view_play_btn($view_link); ?>
 		<?php echo $bracket_id && $show_leaderboard
-    ? BracketsCommon::view_leaderboard_btn(
-      $leaderboard_link,
-      $leaderboard_variant
-    )
+    ? BracketsCommon::leaderboard_btn($leaderboard_link, $leaderboard_variant)
     : null; ?>
 		<?php echo $bracket_id
     ? BracketsCommon::bracket_chat_btn($bracket_id)
