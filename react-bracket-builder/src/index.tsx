@@ -227,7 +227,10 @@ function renderMyBracketsModals(ajaxObj: wpbbAppObj) {
 }
 function renderPublicBracketsModals(ajaxObj: wpbbAppObj) {
   renderDiv(
-    <UpcomingNotificationModal isUserLoggedIn={ajaxObj.isUserLoggedIn} />,
+    <>
+      <UpcomingNotificationModal isUserLoggedIn={ajaxObj.isUserLoggedIn} />
+      <ShareBracketModal />
+    </>,
     'wpbb-public-bracket-modals'
   )
 }

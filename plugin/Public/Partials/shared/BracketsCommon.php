@@ -11,7 +11,7 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketsCommon {
 
-  public static function sort_button( $label, $endpoint, $active = false, $color = 'white', $showCircle = false): false|string {
+  public static function filter_button( $label, $endpoint, $active = false, $color = 'white', $showCircle = false): false|string {
     $base_cls = [
       'tw-flex',
       'tw-items-center',
@@ -27,7 +27,7 @@ class BracketsCommon {
     $inactive_cls = [
       'tw-border',
       'tw-border-solid',
-      'hover:tw-text-dd-blue',
+      'hover:tw-text-black',
       ...match ($color) {
         'green' => ['tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green'],
         'yellow' => ['tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow'],
@@ -185,7 +185,7 @@ class BracketsCommon {
     ob_start();
     ?>
     <a
-      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
       href="<?php echo esc_url( $endpoint ) ?>">
       <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/play.svg' ); ?>
       <span class="tw-font-700"><?php echo $label ?></span>
@@ -258,7 +258,7 @@ class BracketsCommon {
     return $btn;
   }
 
-  public static function bracket_sort_buttons(): false|string {
+  public static function bracket_filter_buttons(): false|string {
     $all_endpoint      = get_permalink();
     $status            = get_query_var( 'status' );
     $live_endpoint     = add_query_arg( 'status', PartialsContants::LIVE_STATUS, $all_endpoint );
@@ -266,10 +266,10 @@ class BracketsCommon {
     $scored_endpoint   = add_query_arg( 'status', PartialsContants::SCORED_STATUS, $all_endpoint );
     ob_start();
     ?>
-    <?php echo self::sort_button( 'All', $all_endpoint, ! ( $status ) ); ?>
-    <?php echo self::sort_button( 'Live', $live_endpoint, $status === PartialsContants::LIVE_STATUS ); ?>
-    <?php echo self::sort_button( 'Upcoming', $upcoming_endpoint, $status === PartialsContants::UPCOMING_STATUS ); ?>
-    <?php echo self::sort_button( 'Scored', $scored_endpoint, $status === PartialsContants::SCORED_STATUS ); ?>
+    <?php echo self::filter_button( 'All', $all_endpoint, ! ( $status ) ); ?>
+    <?php echo self::filter_button( 'Live', $live_endpoint, $status === PartialsContants::LIVE_STATUS ); ?>
+    <?php echo self::filter_button( 'Upcoming', $upcoming_endpoint, $status === PartialsContants::UPCOMING_STATUS ); ?>
+    <?php echo self::filter_button( 'Scored', $scored_endpoint, $status === PartialsContants::SCORED_STATUS ); ?>
     <?php
     return ob_get_clean();
   }
@@ -420,7 +420,7 @@ class BracketsCommon {
     ?>
     <div class="tw-flex tw-flex-col tw-gap-15">
       <?php foreach ( $brackets as $bracket ) : ?>
-        <?php echo BracketListItem::bracket_list_item( $bracket); ?>
+        <?php echo BracketListItem::bracket_list_item( $bracket ); ?>
       <?php endforeach; ?>
     </div>
     <?php PaginationWidget::pagination( $paged, $num_pages ); ?>

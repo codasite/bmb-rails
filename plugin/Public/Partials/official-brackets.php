@@ -12,7 +12,7 @@ use WStrategies\BMB\Public\Partials\shared\PartialsContants;
 		</div>
 		<div class="tw-flex tw-flex-col tw-gap-15">
       <div class="tw-flex tw-justify-center tw-gap-10 tw-py-11 tw-flex-wrap">
-        <?php echo BracketsCommon::bracket_sort_buttons(); ?>
+        <?php echo BracketsCommon::bracket_filter_buttons(); ?>
       </div>
       <?php echo BracketsCommon::public_bracket_list( [ 'tags' => [ PartialsContants::BMB_OFFICIAL ] ] ); ?>
 		</div>
