@@ -8,7 +8,6 @@ use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
-use WStrategies\BMB\Public\Partials\dashboard\BracketListItem;
 
 class BracketsCommon {
 

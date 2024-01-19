@@ -3,15 +3,29 @@
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WStrategies\BMB\Includes\Service\Dashboard\DashboardService;
-use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
+use WStrategies\BMB\Public\Partials\shared\BracketListItem;
+use WStrategies\BMB\Public\Partials\shared\PagedStatusFilterButtons;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 
 class TournamentsPage {
   private DashboardService $dashboard_service;
+  private static int $per_page = 5;
 
   public function __construct($args = []) {
     $this->dashboard_service =
       $args['dashboard_service'] ?? new DashboardService();
+  }
+
+  public function get_paged_status() {
+    return get_query_var('status', 'live');
+  }
+
+  public function get_role() {
+    return get_query_var('role', 'hosting');
+  }
+
+  public function get_paged() {
+    return get_query_var('paged') ? absint(get_query_var('paged')) : 1;
   }
 
   public function get_role_link(string $label, bool $active, string $url) {
@@ -23,19 +37,89 @@ class TournamentsPage {
     <?php return ob_get_clean();
   }
 
-  public function render() {
-    $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
-    $paged_status = get_query_var('status', 'live');
-    $role = get_query_var('role', 'hosting');
+  public function get_tournament_counts(bool $hosting) {
+    return [
+      'private' => $this->dashboard_service->get_tournaments_count(
+        'private',
+        $hosting
+      ),
+      'upcoming' => $this->dashboard_service->get_tournaments_count(
+        'upcoming',
+        $hosting
+      ),
+      'live' => $this->dashboard_service->get_tournaments_count(
+        'live',
+        $hosting
+      ),
+      'closed' => $this->dashboard_service->get_tournaments_count(
+        'closed',
+        $hosting
+      ),
+    ];
+  }
 
-    $result = $this->dashboard_service->get_tournaments(
+  public function render_filter_buttons(
+    bool $private = false,
+    bool $upcoming = false,
+    bool $live = false,
+    bool $closed = false
+  ) {
+    $role = $this->get_role();
+    $paged_status = $this->get_paged_status();
+    ob_start();
+    ?>
+    <div class="tw-flex tw-gap-10 tw-flex-wrap">
+      <?php if ($private) {
+        echo PagedStatusFilterButtons::private_filter_button(
+          $this->get_filtered_url($role, 'private'),
+          $paged_status === 'private'
+        );
+      } ?>
+      <?php if ($upcoming) {
+        echo PagedStatusFilterButtons::upcoming_filter_button(
+          $this->get_filtered_url($role, 'upcoming'),
+          $paged_status === 'upcoming'
+        );
+      } ?>
+      <?php if ($live) {
+        echo PagedStatusFilterButtons::live_filter_button(
+          $this->get_filtered_url($role, 'live'),
+          $paged_status === 'live'
+        );
+      } ?>
+      <?php if ($closed) {
+        echo PagedStatusFilterButtons::closed_filter_button(
+          $this->get_filtered_url($role, 'closed'),
+          $paged_status === 'closed'
+        );
+      } ?>
+    </div>
+    <?php return ob_get_clean();
+  }
+
+  public function get_filtered_url(string $role, string $status) {
+    return get_permalink() . 'tournaments?role=' . $role . '&status=' . $status;
+  }
+
+  public function render() {
+    $role = $this->get_role();
+    $paged_status = $this->get_paged_status();
+    $paged = $this->get_paged();
+    $hosting = $role === 'hosting';
+
+    $brackets = $this->dashboard_service->get_tournaments(
       $paged,
-      5,
+      self::$per_page,
       $paged_status,
-      $role === 'hosting'
+      $hosting
     );
-    $brackets = $result['brackets'];
-    $num_pages = $result['max_num_pages'];
+    $counts = $this->get_tournament_counts($hosting);
+    $num_pages = ceil($counts[$paged_status] / self::$per_page);
+
+    $show_private_filter = $counts['private'] > 0;
+    $show_upcoming_filter = $counts['upcoming'] > 0;
+    $show_live_filter = $counts['live'] > 0;
+    $show_closed_filter = $counts['closed'] > 0;
 
     ob_start();
     ?>
@@ -56,49 +140,21 @@ class TournamentsPage {
           <div class="tw-flex tw-justify-start tw-gap-40">
             <?php echo $this->get_role_link(
               'Hosting',
-              $role === 'hosting',
-              get_permalink() .
-                'tournaments/?role=hosting&status=' .
-                $paged_status
+              $hosting,
+              $this->get_filtered_url('hosting', $paged_status)
             ); ?>
             <?php echo $this->get_role_link(
               'Playing',
               $role === 'playing',
-              get_permalink() .
-                'tournaments/?role=playing&status=' .
-                $paged_status
+              $this->get_filtered_url('playing', $paged_status)
             ); ?>
           </div>
-          <div class="tw-flex tw-gap-10 tw-flex-wrap">
-            <?php echo BracketsCommon::sort_button(
-              'Private',
-              get_permalink() . 'tournaments/?status=private&role=' . $role,
-              $paged_status === 'private',
-              'blue',
-              true
-            ); ?>
-            <?php echo BracketsCommon::sort_button(
-              'Upcoming',
-              get_permalink() . 'tournaments/?status=upcoming&role=' . $role,
-              $paged_status === 'upcoming',
-              'yellow',
-              true
-            ); ?>
-            <?php echo BracketsCommon::sort_button(
-              'Live',
-              get_permalink() . 'tournaments/?status=live&role=' . $role,
-              $paged_status === 'live',
-              'green',
-              true
-            ); ?>
-            <?php echo BracketsCommon::sort_button(
-              'Closed',
-              get_permalink() . 'tournaments/?status=closed&role=' . $role,
-              $paged_status === 'closed',
-              'white',
-              true
-            ); ?>
-          </div>
+          <?php echo $this->render_filter_buttons(
+            $show_private_filter,
+            $show_upcoming_filter,
+            $show_live_filter,
+            $show_closed_filter
+          ); ?>
           <div class="tw-flex tw-flex-col tw-gap-15">
             <?php foreach ($brackets as $bracket) {
               echo BracketListItem::bracket_list_item($bracket);

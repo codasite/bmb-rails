@@ -1,6 +1,8 @@
 <?php
 
-namespace WStrategies\BMB\Public\Partials\dashboard;
+namespace WStrategies\BMB\Public\Partials\shared;
+
+use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 
 class BracketListItem {

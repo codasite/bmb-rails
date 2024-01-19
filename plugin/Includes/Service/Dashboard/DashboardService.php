@@ -12,7 +12,7 @@ class DashboardService {
   private BracketRepo $bracket_repo;
   private \wpdb $wpdb;
   public static $bracket_status_mapping = [
-    'live' => ['publish', 'score'],
+    'live' => ['publish'],
     'private' => ['private'],
     'upcoming' => ['upcoming'],
     'closed' => ['score', 'complete'],
@@ -36,6 +36,18 @@ class DashboardService {
     return $this->get_played_tournaments($paged, $per_page, $status);
   }
 
+  public function get_tournaments_count(string $status, bool $hosting) {
+    if ($hosting) {
+      return $this->get_hosted_tournaments_count($status);
+    }
+    return $this->get_played_tournaments_count($status);
+  }
+
+  public function has_tournaments(string $status, bool $hosting) {
+    $count = $this->get_tournaments_count($status, $hosting);
+    return $count > 0;
+  }
+
   /**
    * Get all brackets hosted by the current user
    */
@@ -44,24 +56,75 @@ class DashboardService {
     int $per_page,
     string $status
   ) {
+    $query = $this->get_hosted_tournaments_query($status, $paged, $per_page);
+
+    return $this->bracket_repo->get_all($query);
+  }
+
+  public function get_hosted_tournaments_count(string $status) {
+    $query = $this->get_hosted_tournaments_query($status);
+    return $query->found_posts;
+  }
+
+  public function get_hosted_tournaments_query(
+    string $status,
+    int $paged = 0,
+    int $per_page = 0
+  ) {
     $post_status = self::$bracket_status_mapping[$status];
+    $query_args = [
+      'post_type' => Bracket::get_post_type(),
+      'author' => get_current_user_id(),
+      'post_status' => $post_status,
+    ];
+    if ($paged) {
+      $query_args['paged'] = $paged;
+    }
+    if ($per_page) {
+      $query_args['posts_per_page'] = $per_page;
+    }
 
     $the_query = new WP_Query([
       'post_type' => Bracket::get_post_type(),
       'author' => get_current_user_id(),
-      'posts_per_page' => $per_page,
-      'paged' => $paged,
       'post_status' => $post_status,
     ]);
 
-    $brackets = $this->bracket_repo->get_all($the_query);
-    return [
-      'brackets' => $brackets,
-      'max_num_pages' => $the_query->max_num_pages,
-    ];
+    return $the_query;
   }
 
   public function get_played_tournaments(
+    int $paged,
+    int $per_page,
+    string $status
+  ) {
+    $results = $this->wpdb->get_results(
+      $this->get_played_tournaments_sql($paged, $per_page, $status),
+      ARRAY_A
+    );
+    $brackets = [];
+    foreach ($results as $result) {
+      $bracket = $this->bracket_repo->get($result['id'], false);
+      if ($bracket) {
+        $brackets[] = $bracket;
+      }
+    }
+    return $brackets;
+  }
+
+  public function get_played_tournaments_count(string $status) {
+    $sql = $this->get_played_tournaments_sql(1, 0, $status);
+    $sql_arr = explode("\n", trim($sql));
+    // remove last two lines
+    $sql_arr = array_slice($sql_arr, 0, -2);
+    $count_sql = implode("\n", $sql_arr);
+    $count_sql = "SELECT COUNT(*) FROM ($count_sql) AS count";
+    $count = $this->wpdb->get_var($count_sql);
+    // $max_num_pages = ceil((int) $count / $per_page);
+    return (int) $count;
+  }
+
+  public function get_played_tournaments_sql(
     int $paged,
     int $per_page,
     string $status
@@ -92,24 +155,7 @@ LIMIT %d OFFSET %d
 ",
       ...[$user_id, $user_id, ...$post_status, $per_page, $offset]
     );
-    $results = $this->wpdb->get_results($sql, ARRAY_A);
-    $sql_arr = explode("\n", trim($sql));
-    // remove last two lines
-    $sql_arr = array_slice($sql_arr, 0, -2);
-    $count_sql = implode("\n", $sql_arr);
-    $count_sql = "SELECT COUNT(*) FROM ($count_sql) AS count";
-    $count = $this->wpdb->get_var($count_sql);
-    $max_num_pages = ceil((int) $count / $per_page);
-    $brackets = [];
-    foreach ($results as $result) {
-      $bracket = $this->bracket_repo->get($result['id'], false);
-      if ($bracket) {
-        $brackets[] = $bracket;
-      }
-    }
-    return [
-      'brackets' => $brackets,
-      'max_num_pages' => $max_num_pages,
-    ];
+
+    return $sql;
   }
 }
