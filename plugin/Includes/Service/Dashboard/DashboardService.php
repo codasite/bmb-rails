@@ -11,12 +11,14 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 class DashboardService {
   private BracketRepo $bracket_repo;
   private \wpdb $wpdb;
-  public static $bracket_status_mapping = [
+  public static $tournament_roles = ['hosting', 'playing'];
+  public static $paged_status_mapping = [
     'live' => ['publish'],
     'private' => ['private'],
     'upcoming' => ['upcoming'],
     'closed' => ['score', 'complete'],
   ];
+  private array $tournament_counts = [];
 
   public function __construct($args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
@@ -24,27 +26,69 @@ class DashboardService {
     $this->wpdb = $args['wpdb'] ?? $wpdb;
   }
 
+  public function tournament_role_is_valid(string $role) {
+    return in_array($role, self::$tournament_roles);
+  }
+
+  public function paged_status_is_valid(string $status) {
+    return array_key_exists($status, self::$paged_status_mapping);
+  }
+
   public function get_tournaments(
     int $paged,
     int $per_page,
     string $status,
-    bool $hosting
+    string $role
   ) {
+    if (
+      !$this->paged_status_is_valid($status) ||
+      !$this->tournament_role_is_valid($role)
+    ) {
+      return [];
+    }
+    $hosting = $role === 'hosting';
     if ($hosting) {
       return $this->get_hosted_tournaments($paged, $per_page, $status);
     }
     return $this->get_played_tournaments($paged, $per_page, $status);
   }
 
-  public function get_tournaments_count(string $status, bool $hosting) {
-    if ($hosting) {
-      return $this->get_hosted_tournaments_count($status);
+  /**
+   * Tournament counts are cached in this class
+   */
+  public function get_tournaments_count(string $status, string $role) {
+    if (
+      !$this->paged_status_is_valid($status) ||
+      !$this->tournament_role_is_valid($role)
+    ) {
+      return 0;
     }
-    return $this->get_played_tournaments_count($status);
+
+    $hosting = $role === 'hosting';
+
+    if (isset($this->tournament_counts[$hosting][$status])) {
+      return $this->tournament_counts[$hosting][$status];
+    }
+    if ($hosting) {
+      $count = $this->get_hosted_tournaments_count($status);
+    } else {
+      $count = $this->get_played_tournaments_count($status);
+    }
+    $this->tournament_counts[$hosting][$status] = $count;
+    return $count;
   }
 
-  public function has_tournaments(string $status, bool $hosting) {
-    $count = $this->get_tournaments_count($status, $hosting);
+  public function get_max_num_pages(
+    int $per_page,
+    string $status,
+    string $role
+  ) {
+    $count = $this->get_tournaments_count($status, $role);
+    return ceil($count / $per_page);
+  }
+
+  public function has_tournaments(string $status, string $role) {
+    $count = $this->get_tournaments_count($status, $role);
     return $count > 0;
   }
 
@@ -71,7 +115,7 @@ class DashboardService {
     int $paged = 0,
     int $per_page = 0
   ) {
-    $post_status = self::$bracket_status_mapping[$status];
+    $post_status = self::$paged_status_mapping[$status];
     $query_args = [
       'post_type' => Bracket::get_post_type(),
       'author' => get_current_user_id(),
@@ -129,7 +173,7 @@ class DashboardService {
     int $per_page,
     string $status
   ) {
-    $post_status = self::$bracket_status_mapping[$status];
+    $post_status = self::$paged_status_mapping[$status];
     $offset = ($paged - 1) * $per_page;
     $user_id = get_current_user_id();
     $bracket_table = BracketRepo::table_name();

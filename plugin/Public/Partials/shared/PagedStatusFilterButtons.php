@@ -64,9 +64,9 @@ class PagedStatusFilterButtons {
       'tw-border-solid',
       'hover:tw-text-dd-blue',
       ...match ($color) {
-        'green' => ['tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green'],
-        'yellow' => ['tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow'],
-        'blue' => ['tw-text-blue', 'tw-bg-blue/15', 'hover:tw-bg-blue'],
+        'green' => ['tw-text-green', 'tw-bg-green/15', 'hover:tw-bg-green', 'hover:tw-border-green'],
+        'yellow' => ['tw-text-yellow', 'tw-bg-yellow/15', 'hover:tw-bg-yellow', 'hover:tw-border-yellow'],
+        'blue' => ['tw-text-blue', 'tw-bg-blue/15', 'hover:tw-bg-blue', 'hover:tw-text-white', 'hover:tw-border-blue'],
         default => ['tw-text-white', 'tw-border-white', 'tw-bg-white/15', 'hover:tw-bg-white'],
       },
     ];
