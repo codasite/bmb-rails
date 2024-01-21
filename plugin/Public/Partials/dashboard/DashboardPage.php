@@ -3,13 +3,10 @@
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
 class DashboardPage {
-  private ManageBracketsPage $manage_brackets_page;
   private PlayHistoryPage $play_history_page;
   private TournamentsPage $tournaments_page;
 
   public function __construct($args = []) {
-    $this->manage_brackets_page =
-      $args['manage_brackets_page'] ?? new ManageBracketsPage();
     $this->play_history_page =
       $args['play_history_page'] ?? new PlayHistoryPage();
     $this->tournaments_page =
@@ -67,8 +64,7 @@ class DashboardPage {
     $template = match ($current_tab) {
       'profile' => [ProfilePage::class, 'render'],
       'play-history' => [$this->play_history_page, 'render'],
-      'tournaments' => [$this->tournaments_page, 'render'],
-      default => [$this->manage_brackets_page, 'render'],
+      default => [$this->tournaments_page, 'render'],
     };
     ob_start();
     ?>

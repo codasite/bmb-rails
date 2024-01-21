@@ -5,10 +5,11 @@ use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
-use WStrategies\BMB\Includes\Service\Dashboard\DashboardService;
+use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 use WStrategies\BMB\Public\Partials\dashboard\ManageBracketsPage;
 use WStrategies\BMB\Public\Partials\dashboard\PlayHistoryPage;
+use WStrategies\BMB\Public\Partials\dashboard\TournamentsPage;
 
 class DashboardPageTest extends TestCase {
   use MatchesSnapshots;
@@ -46,18 +47,28 @@ class DashboardPageTest extends TestCase {
     WP_Mock::userFunction('get_post', [
       'return' => $post_mock,
     ]);
+    $tournament_query_mock = $this->getMockBuilder(
+      DashboardTournamentsQuery::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+    $tournament_query_mock->method('get_tournaments')->willReturn([
+      new Bracket([
+        'title' => 'Bracket 1',
+        'num_teams' => 64,
+        'status' => 'live',
+        'id' => 1,
+      ]),
+    ]);
+    $tournament_query_mock->method('has_tournaments')->willReturn(true);
+    $tournament_query_mock->method('get_max_num_pages')->willReturn(1);
+    $tournament_query_mock->method('get_tournaments_count')->willReturn(1);
     $rendered = (new DashboardPage([
-      'manage_brackets_page' => new ManageBracketsPage([
-        'dashboard_service' => new class extends DashboardService {
-          public function get_hosted_tournaments(int $paged, string $status) {
-            return [
-              'brackets' => [new Bracket(['title' => 'Bracket 1'])],
-              'max_num_pages' => 1,
-            ];
-          }
-        },
+      'tournaments_page' => new TournamentsPage([
+        'tournament_query' => $tournament_query_mock,
       ]),
     ]))->render();
+
     $rendered = preg_replace(
       '/\?bracket=[a-zA-Z0-9_-]{8}/',
       '?bracket=test/',
@@ -86,7 +97,12 @@ class DashboardPageTest extends TestCase {
       ->shouldReceive('__construct')
       ->andSet('found_posts', 1)
       ->andSet('posts', []);
-    $rendered = (new DashboardPage())->render('profile');
+    $tournament_page_mock = $this->getMockBuilder(TournamentsPage::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $rendered = (new DashboardPage([
+      'tournaments_page' => $tournament_page_mock,
+    ]))->render('my-profile');
     $this->assertMatchesHtmlSnapshot($rendered);
   }
 
@@ -108,7 +124,11 @@ class DashboardPageTest extends TestCase {
     ]);
     $wp_query_mock = Mockery::mock('overload:WP_Query');
     $wp_query_mock->shouldReceive('__construct')->andSet('max_num_pages', 1);
+    $tournament_page_mock = $this->getMockBuilder(TournamentsPage::class)
+      ->disableOriginalConstructor()
+      ->getMock();
     $rendered = (new DashboardPage([
+      'tournaments_page' => $tournament_page_mock,
       'play_history_page' => new PlayHistoryPage([
         'play_repo' => new class extends PlayRepo {
           public function get_all(

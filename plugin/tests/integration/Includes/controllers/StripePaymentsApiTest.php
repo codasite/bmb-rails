@@ -6,7 +6,7 @@ use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentS
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 
-require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/StripeMock.php';
+require_once WPBB_PLUGIN_DIR . 'tests/integration/mock/StripeMock.php';
 
 class StripePaymentsApiTest extends \WPBB_UnitTestCase {
   use SetupAdminUser;

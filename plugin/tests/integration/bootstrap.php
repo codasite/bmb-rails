@@ -11,7 +11,7 @@ if (!$_tests_dir) {
   $_tests_dir = rtrim(sys_get_temp_dir(), '/\\') . '/wordpress-tests-lib';
 }
 
-require_once dirname(__DIR__) . '/vendor/autoload.php';
+require_once dirname(__DIR__, 2) . '/vendor/autoload.php';
 DG\BypassFinals::enable();
 
 // Forward custom PHPUnit Polyfills configuration to PHPUnit bootstrap file.
@@ -33,7 +33,7 @@ require_once "{$_tests_dir}/includes/functions.php";
  * Manually load the plugin being tested.
  */
 function _manually_load_plugin(): void {
-  require dirname(dirname(__FILE__)) . '/wp-bracket-builder.php';
+  require dirname(__FILE__, 3) . '/wp-bracket-builder.php';
 }
 
 tests_add_filter('muplugins_loaded', '_manually_load_plugin');
@@ -41,5 +41,5 @@ tests_add_filter('muplugins_loaded', '_manually_load_plugin');
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
 require_once __DIR__ . '/unittest-base.php';
-require_once dirname(__DIR__) .
+require_once dirname(__DIR__, 2) .
   '/vendor/wpackagist-plugin/woocommerce/woocommerce.php';

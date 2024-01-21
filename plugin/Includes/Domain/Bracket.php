@@ -239,6 +239,7 @@ class Bracket extends PostBase implements PostBracketInterface {
   }
 
   public function is_chat_enabled(): bool {
-    return $this->status === 'publish';
+    $enabled_status = ['publish', 'score', 'complete'];
+    return in_array($this->status, $enabled_status);
   }
 }

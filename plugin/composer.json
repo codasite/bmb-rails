@@ -47,8 +47,8 @@
     "stripe/stripe-php": "^13.8"
   },
   "scripts": {
-    "test-integration": "phpunit --configuration=integration-tests/phpunit.xml.dist",
-    "test-unit": "phpunit --configuration=unit-tests/phpunit.xml.dist",
+    "test-integration": "phpunit --configuration=tests/integration/phpunit.xml.dist",
+    "test-unit": "phpunit --configuration=tests/unit/phpunit.xml.dist",
     "coverage": "mkdir -p /var/www/html/coverage && phpunit --colors=always --coverage-html /var/www/html/coverage"
   },
   "extra": {

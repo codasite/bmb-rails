@@ -13,7 +13,7 @@ use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 use WStrategies\BMB\Includes\Service\S3Service;
 use WStrategies\BMB\Includes\Utils;
 
-require_once WPBB_PLUGIN_DIR . 'integration-tests/mock/WooCommerceMock.php';
+require_once WPBB_PLUGIN_DIR . 'tests/integration/mock/WooCommerceMock.php';
 
 class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   public function test_add_bracket_to_cart_item_data() {

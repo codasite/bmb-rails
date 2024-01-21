@@ -1,6 +1,6 @@
 <?php
 
-namespace WStrategies\BMB\Includes\Service\Dashboard;
+namespace WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard;
 
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\Bracket;
@@ -8,11 +8,12 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 
-class DashboardService {
+class DashboardTournamentsQuery {
   private BracketRepo $bracket_repo;
   private \wpdb $wpdb;
   public static $tournament_roles = ['hosting', 'playing'];
   public static $paged_status_mapping = [
+    'all' => ['publish', 'private', 'upcoming', 'score', 'complete'],
     'live' => ['publish'],
     'private' => ['private'],
     'upcoming' => ['upcoming'],
@@ -95,7 +96,7 @@ class DashboardService {
   /**
    * Get all brackets hosted by the current user
    */
-  public function get_hosted_tournaments(
+  private function get_hosted_tournaments(
     int $paged,
     int $per_page,
     string $status
@@ -105,12 +106,12 @@ class DashboardService {
     return $this->bracket_repo->get_all($query);
   }
 
-  public function get_hosted_tournaments_count(string $status) {
+  private function get_hosted_tournaments_count(string $status) {
     $query = $this->get_hosted_tournaments_query($status);
     return $query->found_posts;
   }
 
-  public function get_hosted_tournaments_query(
+  private function get_hosted_tournaments_query(
     string $status,
     int $paged = 0,
     int $per_page = 0
@@ -133,7 +134,7 @@ class DashboardService {
     return $the_query;
   }
 
-  public function get_played_tournaments(
+  private function get_played_tournaments(
     int $paged,
     int $per_page,
     string $status
@@ -152,7 +153,7 @@ class DashboardService {
     return $brackets;
   }
 
-  public function get_played_tournaments_count(string $status) {
+  private function get_played_tournaments_count(string $status) {
     $sql = $this->get_played_tournaments_sql(1, 0, $status);
     $sql_arr = explode("\n", trim($sql));
     // remove last two lines
@@ -164,7 +165,7 @@ class DashboardService {
     return (int) $count;
   }
 
-  public function get_played_tournaments_sql(
+  private function get_played_tournaments_sql(
     int $paged,
     int $per_page,
     string $status

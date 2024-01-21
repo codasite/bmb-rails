@@ -157,7 +157,8 @@ class EnqueueScriptsHooks implements HooksInterface {
       'nonce' => wp_create_nonce('wp_rest'),
       'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
       'my_brackets_url' =>
-        get_permalink(get_page_by_path('dashboard')) . '?tab=tournaments',
+        get_permalink(get_page_by_path('dashboard')) .
+        '?tab=tournaments&role=hosting',
       'bracket_builder_url' => get_permalink(
         get_page_by_path('bracket-builder')
       ),
