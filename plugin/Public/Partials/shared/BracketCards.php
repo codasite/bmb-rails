@@ -83,6 +83,12 @@ class BracketCards {
           BracketsCommon::bracket_chat_btn( $id ),
         ];
         break;
+      case 'score':
+        $buttons = [
+          BracketsCommon::leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
+          BracketsCommon::bracket_chat_btn( $id ),
+        ];
+        break;
       case 'complete':
         $buttons = [
           BracketsCommon::leaderboard_btn( $leaderboard_link, 'final', 'Leaderboard' ),
