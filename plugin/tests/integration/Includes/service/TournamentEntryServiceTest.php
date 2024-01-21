@@ -121,7 +121,7 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
   // test that closed brackets should not be marked
   public function test_closed_brackets_should_not_be_marked_as_tournament_entry() {
     $bracket = $this->create_bracket([
-      'status' => 'scored',
+      'status' => 'score',
     ]);
     $user = self::factory()->user->create_and_get();
     $play = $this->create_play([
