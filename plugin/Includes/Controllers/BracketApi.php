@@ -97,7 +97,7 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'create_item'],
-        'permission_callback' => [$this, 'customer_permission_check'],
+        'permission_callback' => [$this, 'create_bracket_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
         ),
@@ -309,5 +309,11 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_Error|bool {
     return current_user_can('read');
+  }
+
+  public function create_bracket_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
+    return true;
   }
 }

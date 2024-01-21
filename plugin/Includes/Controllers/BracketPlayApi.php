@@ -146,7 +146,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         [
           'methods' => WP_REST_Server::CREATABLE,
           'callback' => [$this, 'generate_images'],
-          'permission_callback' => [$this, 'customer_permission_check'],
+          'permission_callback' => [$this, 'generate_images_permission_check'],
           'args' => array_merge(
             [
               'item_id' => [
@@ -264,6 +264,12 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_Error|bool {
     return current_user_can('read');
+  }
+
+  public function generate_images_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
+    return true;
   }
 
   public function create_play_permission_check(
