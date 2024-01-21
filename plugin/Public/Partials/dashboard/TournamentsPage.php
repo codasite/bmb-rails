@@ -193,9 +193,9 @@ class TournamentsPage {
             } ?>
             <?php PaginationWidget::pagination($this->paged, $num_pages); ?>
           </div>
-          <? if(!$brackets): ?>
+          <?php if (empty($brackets)): ?>
             <p class='tw-text-24 tw-font-500 tw-my-0'>No tournaments found.</p>
-          <? endif; ?>
+          <?php endif; ?>
         </div>
       </div>
     <?php return ob_get_clean();
