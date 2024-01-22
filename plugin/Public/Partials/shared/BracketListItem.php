@@ -106,6 +106,7 @@ class BracketListItem {
     ?>
     <?php echo DashboardCommon::add_to_apparel_btn($bracket_play_link); ?>
     <?php echo self::score_bracket_btn($bracket_score_link, $bracket); ?>
+    <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();
   }
@@ -217,6 +218,7 @@ class BracketListItem {
     ob_start();
     ?>
     <?php echo DashboardCommon::add_to_apparel_btn($play_link); ?>
+    <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();
   }
