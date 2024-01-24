@@ -12,6 +12,7 @@ use WStrategies\BMB\Includes\Hooks\BracketChatHooks;
 use WStrategies\BMB\Includes\Hooks\CustomPostHooks;
 use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\Permissions;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
 use WStrategies\BMB\Includes\Hooks\PublicShortcodes;

@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Includes;
+namespace WStrategies\BMB\Includes\Hooks;
 
 /**
  * Register all actions and filters for the plugin

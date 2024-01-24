@@ -36,6 +36,10 @@ class DashboardPageTest extends TestCase {
     WP_Mock::userFunction('get_current_user_id', [
       'return' => 1,
     ]);
+    WP_Mock::userFunction('get_post_meta', [
+      'return' => 5,
+    ]);
+
     $post_mock = $this->mockPost([
       'ID' => 1,
       'post_author' => 1,

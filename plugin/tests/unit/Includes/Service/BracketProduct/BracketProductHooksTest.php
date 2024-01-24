@@ -1,20 +1,33 @@
 <?php
 
+use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\BracketConfig;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 use const WStrategies\BMB\Includes\Service\BracketProduct\BRACKET_FEE_META_PREFIX;
 
-class BracketProductHooksTest extends WPBB_UnitTestCase {
-  public function test_add_paid_bracket_fee_should_be_added() {
-    $bracket = $this->create_bracket();
-    $play = $this->create_play([
-      'bracket_id' => $bracket->id,
-    ]);
-    $bracket_id = $bracket->id;
-    $play_id = $play->id;
+require_once WPBB_PLUGIN_DIR . 'tests/integration/mock/WooCommerceMock.php';
 
+class BracketProductHooksTest extends TestCase {
+  public function test_add_paid_bracket_fee_should_be_added() {
+    $bracket_id = 1;
+    $play_id = 2;
+    WP_Mock::userFunction('current_user_can', [
+      'times' => 1,
+      'args' => ['wpbb_play_paid_bracket_for_free'],
+      'return' => false,
+    ]);
+    WP_Mock::userFunction('sanitize_title', [
+      'times' => 1,
+      'args' => ['my bracket fee'],
+      'return' => 'my-bracket-fee',
+    ]);
+    WP_Mock::userFunction('is_wp_error', [
+      'return' => false,
+    ]);
     $cart_mock = $this->createMock(CartInterface::class);
     $cart_fees_mock = $this->createMock(CartFeesInterface::class);
     $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
@@ -46,6 +59,17 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     $hooks = new BracketProductHooks([
       'bracket_product_utils' => $bracket_product_utils_mock,
       'wc' => $wc_mock,
+      'play_repo' => new class extends PlayRepo {
+        public function get(
+          int|WP_Post|null|BracketPlay $post = null,
+          array $opts = []
+        ): BracketPlay {
+          return new BracketPlay([
+            'bracket_id' => 1,
+            'is_paid' => false,
+          ]);
+        }
+      },
     ]);
     $fee_mock = $this->createMock(OrderItemFeeInterface::class);
     $fee_id = 'my-bracket-fee';
@@ -75,12 +99,62 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_add_paid_bracket_fee_0_should_not_be_added() {
-    $bracket = $this->create_bracket();
-    $play = $this->create_play([
-      'bracket_id' => $bracket->id,
+    $bracket_id = 1;
+    $play_id = 2;
+    WP_Mock::userFunction('current_user_can', [
+      'times' => 1,
+      'args' => ['wpbb_play_paid_bracket_for_free'],
+      'return' => true,
     ]);
-    $bracket_id = $bracket->id;
-    $play_id = $play->id;
+    $cart_mock = $this->createMock(CartInterface::class);
+    $cart_fees_mock = $this->createMock(CartFeesInterface::class);
+    $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
+    $wc_order_item_mock
+      ->method('get_meta')
+      ->with('bracket_id')
+      ->willReturn($bracket_id);
+    $cart_mock->method('get_cart')->willReturn([
+      'item1' => [
+        'data' => $wc_order_item_mock,
+        'product_id' => 1,
+        'bracket_config' => new BracketConfig(
+          $play_id,
+          $bracket_id,
+          'dark',
+          'center',
+          'url'
+        ),
+      ],
+    ]);
+    $wc_mock = $this->createMock(WcFunctions::class);
+    $cart_mock->method('fees_api')->willReturn($cart_fees_mock);
+    $bracket_product_utils_mock = $this->createMock(BracketProductUtils::class);
+    $bracket_product_utils_mock->method('is_bracket_product')->willReturn(true);
+    $bracket_product_utils_mock->method('get_bracket_fee')->willReturn(12.0);
+    $hooks = new BracketProductHooks([
+      'bracket_product_utils' => $bracket_product_utils_mock,
+      'play_repo' => new class extends PlayRepo {
+        public function get(
+          int|WP_Post|null|BracketPlay $post = null,
+          array $opts = []
+        ): BracketPlay {
+          return new BracketPlay([
+            'bracket_id' => 1,
+            'is_paid' => false,
+          ]);
+        }
+      },
+    ]);
+
+    $cart_fees_mock->expects($this->never())->method('add_fee');
+    $wc_mock->expects($this->never())->method('session_set');
+
+    $hooks->add_paid_bracket_fee_to_cart($cart_mock);
+  }
+
+  public function test_add_paid_bracket_fee_should_not_add_fee_when_user_has_play_paid_for_free_capability() {
+    $bracket_id = 1;
+    $play_id = 2;
     $cart_mock = $this->createMock(CartInterface::class);
     $cart_fees_mock = $this->createMock(CartFeesInterface::class);
     $wc_order_item_mock = $this->createMock(OrderItemInterface::class);
@@ -108,6 +182,17 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     $bracket_product_utils_mock->method('get_bracket_fee')->willReturn(0.0);
     $hooks = new BracketProductHooks([
       'bracket_product_utils' => $bracket_product_utils_mock,
+      'play_repo' => new class extends PlayRepo {
+        public function get(
+          int|WP_Post|null|BracketPlay $post = null,
+          array $opts = []
+        ): BracketPlay {
+          return new BracketPlay([
+            'bracket_id' => 1,
+            'is_paid' => false,
+          ]);
+        }
+      },
     ]);
 
     $cart_fees_mock->expects($this->never())->method('add_fee');
@@ -120,12 +205,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     // Mocks and setup
     $item_mock = $this->createMock(OrderItemInterface::class);
 
-    $bracket = $this->create_bracket();
-    $play = $this->create_play([
-      'bracket_id' => $bracket->id,
-    ]);
-    $bracket_id = $bracket->id;
-    $play_id = $play->id;
+    $bracket_id = 1;
+    $play_id = 2;
 
     $values_mock = [
       'bracket_config' => (object) [
@@ -146,6 +227,17 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     $hooks = new BracketProductHooks([
       'bracket_product_utils' => $bracket_utils_mock,
       'wc' => $wc_mock,
+      'play_repo' => new class extends PlayRepo {
+        public function get(
+          int|WP_Post|null|BracketPlay $post = null,
+          array $opts = []
+        ): BracketPlay {
+          return new BracketPlay([
+            'bracket_id' => 1,
+            'is_paid' => false,
+          ]);
+        }
+      },
     ]);
 
     // Expectation: add_meta_data should be called with the fee amount
@@ -172,12 +264,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     // Mocks and setup
     $item_mock = $this->createMock(OrderItemInterface::class);
 
-    $bracket = $this->create_bracket();
-    $play = $this->create_play([
-      'bracket_id' => $bracket->id,
-    ]);
-    $bracket_id = $bracket->id;
-    $play_id = $play->id;
+    $bracket_id = 1;
+    $play_id = 2;
 
     $values_mock = [
       'bracket_config' => (object) [
@@ -198,6 +286,17 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     $hooks = new BracketProductHooks([
       'bracket_product_utils' => $bracket_utils_mock,
       'wc' => $wc_mock,
+      'play_repo' => new class extends PlayRepo {
+        public function get(
+          int|WP_Post|null|BracketPlay $post = null,
+          array $opts = []
+        ): BracketPlay {
+          return new BracketPlay([
+            'bracket_id' => 1,
+            'is_paid' => false,
+          ]);
+        }
+      },
     ]);
 
     // Expectation: add_meta_data should not be called as there is no matching fee session data
@@ -213,13 +312,8 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_fee_is_not_added_to_paid_play() {
-    $bracket = $this->create_bracket();
-    $play = $this->create_play([
-      'bracket_id' => $bracket->id,
-      'is_paid' => true,
-    ]);
-    $bracket_id = $bracket->id;
-    $play_id = $play->id;
+    $bracket_id = 1;
+    $play_id = 2;
 
     $cart_mock = $this->createMock(CartInterface::class);
     $cart_fees_mock = $this->createMock(CartFeesInterface::class);
@@ -252,6 +346,17 @@ class BracketProductHooksTest extends WPBB_UnitTestCase {
     $hooks = new BracketProductHooks([
       'bracket_product_utils' => $bracket_product_utils_mock,
       'wc' => $wc_mock,
+      'play_repo' => new class extends PlayRepo {
+        public function get(
+          int|WP_Post|null|BracketPlay $post = null,
+          array $opts = []
+        ): BracketPlay {
+          return new BracketPlay([
+            'bracket_id' => 1,
+            'is_paid' => true,
+          ]);
+        }
+      },
     ]);
 
     $cart_fees_mock->expects($this->never())->method('add_fee');

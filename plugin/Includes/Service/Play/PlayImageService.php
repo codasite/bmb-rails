@@ -1,12 +1,11 @@
 <?php
 
-namespace WStrategies\BMB\Includes\Service;
+namespace WStrategies\BMB\Includes\Service\Play;
 
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
-use WStrategies\BMB\Includes\Utils;
 
 class PlayImageService extends BracketPlayCreateListenerBase {
   private ProductIntegrationInterface $product_integration;

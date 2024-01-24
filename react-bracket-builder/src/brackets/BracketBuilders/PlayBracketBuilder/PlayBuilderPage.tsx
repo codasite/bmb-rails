@@ -35,6 +35,7 @@ interface PlayPageProps {
   setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
+  userCanPlayPaidBracketForFree?: boolean
 }
 
 const PlayPage = (props: PlayPageProps) => {
@@ -49,6 +50,7 @@ const PlayPage = (props: PlayPageProps) => {
     setBracketMeta,
     darkMode,
     setDarkMode,
+    userCanPlayPaidBracketForFree,
   } = props
 
   const [processing, setProcessing] = useState(false)
@@ -66,7 +68,8 @@ const PlayPage = (props: PlayPageProps) => {
   const canPrint = bracket?.isPrintable
   const canSubmit = bracket?.isOpen
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
-  const paymentRequired = bracket?.fee > 0 && bracket?.isOpen
+  const paymentRequired =
+    bracket?.fee > 0 && bracket?.isOpen && !userCanPlayPaidBracketForFree
 
   useEffect(() => {
     if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
@@ -155,6 +158,14 @@ const PlayPage = (props: PlayPageProps) => {
       JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
       storedPlay.id
     ) {
+      if (!paymentRequired) {
+        if (isUserLoggedIn) {
+          window.location.assign(myPlayHistoryUrl)
+        } else {
+          setShowRegisterModal(true)
+        }
+        return
+      }
       if (stripeClientSecret) {
         setShowPaymentModal(true)
         return

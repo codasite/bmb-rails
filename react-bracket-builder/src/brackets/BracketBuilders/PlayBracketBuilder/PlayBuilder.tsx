@@ -4,25 +4,10 @@ import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { PickableBracket } from '../../shared/components/Bracket'
 import { ThemeSelector } from '../../shared/components'
 import { PlayBuilderProps } from './types'
-import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
-import StripePaymentModal from './StripePaymentModal'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
-  const {
-    darkMode,
-    setDarkMode,
-    matchTree,
-    setMatchTree,
-    handleApparelClick,
-    handleSubmitPicksClick,
-    processing,
-    showRegisterModal,
-    setShowRegisterModal,
-    showPaymentModal,
-    setShowPaymentModal,
-  } = props
-  const disableButtons = processing || (matchTree && !matchTree.allPicked())
+  const { darkMode, setDarkMode, matchTree, setMatchTree } = props
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${

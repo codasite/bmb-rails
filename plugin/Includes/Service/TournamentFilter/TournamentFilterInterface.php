@@ -3,9 +3,6 @@
 namespace WStrategies\BMB\Includes\Service\TournamentFilter;
 
 interface TournamentFilterInterface {
-  /**
-   * @return array<Bracket>
-   */
   public function get_tournaments(int $page): array;
   public function has_tournaments(): bool;
   public function get_count(): int;

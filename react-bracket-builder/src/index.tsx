@@ -16,9 +16,6 @@ import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
 import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublishBracketHandler'
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
-import EnableUpcomingNotificationModal from './modals/dashboard/brackets/EnableUpcomingNotificationModal'
-import DisableUpcomingNotificationModal from './modals/dashboard/brackets/DisableUpcomingNotificationModal'
-import UpcomingNotificationRegisterModal from './modals/dashboard/brackets/UpcomingNotificationRegisterModal'
 import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingNotificationModal'
 
 declare var wp, tailwind: any
@@ -109,8 +106,8 @@ function renderPlayBracket(ajaxObj: wpbbAppObj) {
     bracketProductArchiveUrl,
     myPlayHistoryUrl,
     isUserLoggedIn,
+    userCanPlayPaidBracketForFree,
   } = ajaxObj
-
   if (bracket) {
     renderDiv(
       <App>
@@ -119,6 +116,7 @@ function renderPlayBracket(ajaxObj: wpbbAppObj) {
           bracketProductArchiveUrl={bracketProductArchiveUrl}
           myPlayHistoryUrl={myPlayHistoryUrl}
           isUserLoggedIn={isUserLoggedIn}
+          userCanPlayPaidBracketForFree={userCanPlayPaidBracketForFree}
         />
       </App>,
       'wpbb-play-bracket'

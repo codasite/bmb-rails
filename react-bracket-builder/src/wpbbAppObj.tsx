@@ -9,6 +9,7 @@ export interface wpbbAppObj {
   myPlayHistoryUrl: string
   bracketBuilderUrl: string
   userCanShareBracket: boolean
+  userCanPlayPaidBracketForFree: boolean
   upgradeAccountUrl: string
   bracketProductArchiveUrl: string
   nonce: string

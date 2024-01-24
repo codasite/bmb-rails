@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes;
 
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\Loader;
 
 /**
  * Define the internationalization functionality

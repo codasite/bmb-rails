@@ -5,7 +5,7 @@ use WStrategies\BMB\Includes\Domain\BracketConfig;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
-use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\GuzzleClient;

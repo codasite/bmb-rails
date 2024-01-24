@@ -1,8 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Loader;
-
 class CustomPostHooks implements HooksInterface {
   public function load(Loader $loader): void {
     $loader->add_action('init', [$this, 'register_custom_post_types']);

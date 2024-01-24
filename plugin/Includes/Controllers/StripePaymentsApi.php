@@ -9,7 +9,7 @@ use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
-use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;

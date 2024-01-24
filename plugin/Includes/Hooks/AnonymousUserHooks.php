@@ -3,7 +3,6 @@ namespace WStrategies\BMB\Includes\Hooks;
 
 use WP_Post;
 use WP_User;
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Utils;
 
 class AnonymousUserHooks implements HooksInterface {

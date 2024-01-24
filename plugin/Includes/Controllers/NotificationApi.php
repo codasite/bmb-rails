@@ -9,7 +9,7 @@ use WP_REST_Server;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
-use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 
 class NotificationApi extends WP_REST_Controller implements HooksInterface {

@@ -40,7 +40,7 @@ class DashboardTournamentsQuery {
     int $per_page,
     string $status,
     string $role
-  ) {
+  ): array {
     if (
       !$this->paged_status_is_valid($status) ||
       !$this->tournament_role_is_valid($role)

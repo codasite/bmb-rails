@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\BracketProduct;
 
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
-use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 
@@ -67,6 +67,9 @@ class BracketProductHooks implements HooksInterface {
         $fee_amount = $this->bracket_product_utils->get_bracket_fee(
           $bracket_id
         );
+        if (current_user_can('wpbb_play_paid_bracket_for_free')) {
+          $fee_amount = 0;
+        }
         if ($fee_amount > 0) {
           $fee_name = $this->bracket_product_utils->get_bracket_fee_name(
             $bracket_id

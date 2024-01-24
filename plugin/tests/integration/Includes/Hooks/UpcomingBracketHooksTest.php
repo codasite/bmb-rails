@@ -1,8 +1,8 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
 use WStrategies\BMB\Includes\Utils;

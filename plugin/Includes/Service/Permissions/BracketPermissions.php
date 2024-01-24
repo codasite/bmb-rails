@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Permissions;
 
-use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 
@@ -41,6 +40,7 @@ class BracketPermissions implements PermissionsServiceInterface {
       'wpbb_delete_bracket',
       'wpbb_edit_bracket',
       'wpbb_play_bracket',
+      'wpbb_play_paid_bracket_for_free',
       'wpbb_view_bracket_chat',
     ];
   }

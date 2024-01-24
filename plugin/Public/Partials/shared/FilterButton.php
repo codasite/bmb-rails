@@ -4,12 +4,11 @@ namespace WStrategies\BMB\Public\Partials\shared;
 use WStrategies\BMB\Includes\Service\TournamentFilter\TournamentFilterInterface;
 
 class FilterButton {
-	private TournamentFilterInterface $filter;
+	private TournamentFilterInterface|null $filter;
 	private string $label;
 	private string $color;
   private string $url;
 	private bool $show_circle;
-	private bool $fill_circle;
 
 	public function __construct($args = []) {
 		$this->filter = $args['tournament_filter'] ?? null;
@@ -17,7 +16,6 @@ class FilterButton {
 		$this->color = $args['color'] ?? '';
     $this->url = $args['url'] ?? '';
 		$this->show_circle = $args['show_circle'] ?? false;
-		$this->fill_circle = $args['fill_circle'] ?? false;
 	}
 
   public function get_filter(): TournamentFilterInterface {

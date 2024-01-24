@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Includes\Service\CustomQuery;
+namespace WStrategies\BMB\Includes\Hooks\CustomQuery;
 
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 

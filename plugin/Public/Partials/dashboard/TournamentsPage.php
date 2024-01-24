@@ -4,6 +4,7 @@ namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentFilter;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
+use WStrategies\BMB\Includes\Service\TournamentFilter\TournamentFilterInterface;
 use WStrategies\BMB\Public\Partials\shared\BracketListItem;
 use WStrategies\BMB\Public\Partials\shared\FilterButton;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;

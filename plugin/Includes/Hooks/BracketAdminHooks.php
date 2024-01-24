@@ -2,9 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
-use Error;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
 

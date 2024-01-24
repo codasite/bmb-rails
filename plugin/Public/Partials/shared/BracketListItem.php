@@ -2,8 +2,8 @@
 
 namespace WStrategies\BMB\Public\Partials\shared;
 
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
-use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 
 class BracketListItem {
   public static function bracket_list_item($bracket): false|string {
@@ -11,15 +11,20 @@ class BracketListItem {
     $num_teams = $bracket->num_teams;
     $num_plays = $bracket->num_plays;
     ob_start();
+    $bracket_product_utils = new BracketProductUtils();
+    $is_paid = $bracket_product_utils->has_bracket_fee($bracket->id);
     ?>
     <div class="tw-border-2 tw-border-solid <?php echo $bracket->status ==
     'publish'
       ? 'tw-border-blue'
       : 'tw-border-white/15'; ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
-        <span class="tw-font-500 tw-text-12"><?php echo esc_html(
-          $num_teams
-        ); ?>-Team Bracket</span>
+        <div class="tw-flex tw-gap-8 tw-items-center">
+          <?php echo $is_paid ? self::paid_bracket_tag() : ''?>
+          <span class="tw-font-500 tw-text-12"><?php echo esc_html(
+            $num_teams
+          ); ?>-Team Bracket</span>
+        </div>
         <div class="tw-flex tw-gap-4 tw-items-center">
           <?php echo BracketsCommon::get_bracket_tag($bracket->status); ?>
           <?php echo file_get_contents(
@@ -45,6 +50,17 @@ class BracketListItem {
     </div>
     <?php return ob_get_clean();
   }
+
+  public static function paid_bracket_tag(): false|string {
+    ob_start();
+    ?>
+    <div class="tw-text-white tw-bg-blue tw-px-8 tw-py-4 tw-flex tw-items-center tw-rounded-8">
+      <?php echo PartialsCommon::icon('currency_dollar') ?>
+    </div>
+    <?php
+    return ob_get_clean();
+  }
+
 
   public static function share_bracket_btn($bracket): false|string {
     $play_link = get_permalink($bracket->id) . 'play';

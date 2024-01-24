@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
@@ -162,9 +161,10 @@ class EnqueueScriptsHooks implements HooksInterface {
       'bracket_builder_url' => get_permalink(
         get_page_by_path('bracket-builder')
       ),
-      'user_can_share_bracket' => current_user_can('wpbb_share_bracket')
-        ? true
-        : false,
+      'user_can_share_bracket' => current_user_can('wpbb_share_bracket'),
+      'user_can_play_paid_bracket_for_free' => current_user_can(
+        'wpbb_play_paid_bracket_for_free'
+      ),
       'upgrade_account_url' => $this->get_bmb_plus_permalink(),
       'bracket_product_archive_url' => $this->get_bracket_product_archive_url(),
       'my_play_history_url' =>

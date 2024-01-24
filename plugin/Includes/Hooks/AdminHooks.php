@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Service\Permissions\BracketPermissions;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -109,10 +109,9 @@ class AdminHooks implements HooksInterface {
     $role->add_cap('wpbb_share_bracket');
     $role->add_cap('wpbb_bust_play');
     $role->add_cap('wpbb_enable_chat');
-    $role->add_cap('wpbb_delete_bracket');
-    $role->add_cap('wpbb_edit_bracket');
-    $role->add_cap('wpbb_play_bracket');
-    $role->add_cap('wpbb_view_bracket_chat');
+    foreach (BracketPermissions::get_caps() as $cap) {
+      $role->add_cap($cap);
+    }
     $role->add_cap('wpbb_view_play');
     $role->add_cap('wpbb_print_play');
     $role->add_cap('wpbb_delete_notification');

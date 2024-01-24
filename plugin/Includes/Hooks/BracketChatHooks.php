@@ -2,7 +2,6 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 
 class BracketChatHooks implements HooksInterface {

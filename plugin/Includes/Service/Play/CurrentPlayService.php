@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Includes\Service;
+namespace WStrategies\BMB\Includes\Service\Play;
 
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;

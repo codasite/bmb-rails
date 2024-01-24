@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Includes\Service\Permissions\BracketPermissions;
 use WStrategies\BMB\Includes\Service\Permissions\NotificationPermissions;
 use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;

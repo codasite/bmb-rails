@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Loader;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 class PublicShortcodes implements HooksInterface {

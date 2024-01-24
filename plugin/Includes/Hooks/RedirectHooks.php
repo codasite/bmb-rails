@@ -2,13 +2,8 @@
 namespace WStrategies\BMB\Includes\Hooks;
 
 use WP_Comment;
-use WP_User;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Helpers\Wordpress\Navigation;
-use WStrategies\BMB\Includes\Loader;
-use WStrategies\BMB\Includes\Repository\PlayRepo;
-use WStrategies\BMB\Includes\Service\CustomQuery\CustomPlayQuery;
-use WStrategies\BMB\Includes\Utils;
 
 class RedirectHooks implements HooksInterface {
   public function load(Loader $loader): void {

@@ -1,10 +1,9 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Hooks\CustomQuery\CustomPlayQuery;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
-use WStrategies\BMB\Includes\Service\CustomQuery\CustomPlayQuery;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
@@ -126,6 +125,7 @@ class PublicHooks implements HooksInterface {
       'wpbb_share_bracket' => true,
       'wpbb_bust_play' => true,
       'wpbb_enable_chat' => true,
+      'wpbb_play_paid_bracket_for_free' => true,
       'read' => true,
     ]);
   }

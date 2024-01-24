@@ -12,12 +12,13 @@ use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerI
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
-use WStrategies\BMB\Includes\Loader;
+use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
-use WStrategies\BMB\Includes\Service\AnonymousPlayService;
-use WStrategies\BMB\Includes\Service\CurrentPlayService;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
-use WStrategies\BMB\Includes\Service\PlayImageService;
+use WStrategies\BMB\Includes\Service\Play\AnonymousPlayService;
+use WStrategies\BMB\Includes\Service\Play\CurrentPlayService;
+use WStrategies\BMB\Includes\Service\Play\FreePaidPlayService;
+use WStrategies\BMB\Includes\Service\Play\PlayImageService;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
@@ -58,6 +59,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       new AnonymousPlayService($args),
       new CurrentPlayService($args),
       new PlayImageService($args),
+      new FreePaidPlayService($args),
       new TournamentEntryService($args),
       new StripePaidTournamentService($args),
     ];
