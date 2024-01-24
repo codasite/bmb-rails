@@ -13,11 +13,7 @@ import { BaseTeamSlot } from '../TeamSlot'
 import { BracketLines, RootMatchLines } from './BracketLines'
 import { DarkModeContext } from '../../context/context'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
-import {
-  DefaultFinalButton,
-  DefaultNavButtons,
-  DefaultNextButton,
-} from './BracketActionButtons'
+import { DefaultNavButtons } from './BracketActionButtons'
 
 export const PaginatedDefaultBracket = (
   props: PaginatedDefaultBracketProps
@@ -153,7 +149,11 @@ export const PaginatedDefaultBracket = (
       matchPosition={nextMatchPosition}
       matchTree={matchTree}
       MatchBoxComponent={MatchBoxComponent}
-      TeamSlotComponent={TeamSlotComponent}
+      TeamSlotComponent={(props) => (
+        <div className={`tw-opacity-50`}>
+          <TeamSlotComponent {...props} />
+        </div>
+      )}
       matchGap={matchGap2}
       teamGap={teamGap}
       teamHeight={teamHeight}

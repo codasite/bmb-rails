@@ -1,10 +1,10 @@
 import React from 'react'
 import { TeamSlotProps } from '../types'
 import {
-  getUniqueTeamClass,
-  getTeamFontSize,
   defaultTeamClickDisabledCallback,
+  getTeamFontSize,
   getTeamPaddingX,
+  getUniqueTeamClass,
 } from '../Bracket/utils'
 import { ScaledSpan } from './ScaledSpan'
 
@@ -48,9 +48,10 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
   const targetWidth = boxWidth - 2 * paddingX - 2 * borderWidth
   const fontSizeToUse = getFontSize(matchTree.rounds.length)
 
-  const handleTeamClick = teamClickDisabled(match, teamPosition, team)
-    ? undefined
-    : () => onTeamClick(match, teamPosition, team)
+  const handleTeamClick =
+    teamClickDisabled(match, teamPosition, team) || !onTeamClick
+      ? undefined
+      : () => onTeamClick(match, teamPosition, team)
 
   const baseStyles = [
     teamClass,
