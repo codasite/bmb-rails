@@ -1,8 +1,4 @@
-import {
-  ActionButton,
-  ActionButtonProps,
-} from '../../shared/components/ActionButtons'
-import { ReactComponent as LightningIcon } from '../../shared/assets/lightning.svg'
+import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as PlayIcon } from '../../shared/assets/play.svg'
 import { ReactComponent as PlusIcon } from '../../shared/assets/plus.svg'
 
@@ -55,20 +51,20 @@ export const BustablePlayPageButtons = (
           <PlayIcon style={{ height: iconHeight }} />
           Play Bracket
         </ActionButton>
-        {showBustButton && (
-          <ActionButton
-            onClick={handleBustPlay}
-            variant="red"
-            paddingY={paddingY}
-            fontSize={fontSize}
-            fontWeight={fontWeight}
-            borderWidth={borderWidth}
-            className="tw-flex-grow tw-basis-1/2"
-          >
-            <LightningIcon style={{ height: iconHeight }} />
-            Bust Picks
-          </ActionButton>
-        )}
+        {/*{showBustButton && (*/}
+        {/*  <ActionButton*/}
+        {/*    onClick={handleBustPlay}*/}
+        {/*    variant="red"*/}
+        {/*    paddingY={paddingY}*/}
+        {/*    fontSize={fontSize}*/}
+        {/*    fontWeight={fontWeight}*/}
+        {/*    borderWidth={borderWidth}*/}
+        {/*    className="tw-flex-grow tw-basis-1/2"*/}
+        {/*  >*/}
+        {/*    <LightningIcon style={{ height: iconHeight }} />*/}
+        {/*    Bust Picks*/}
+        {/*  </ActionButton>*/}
+        {/*)}*/}
       </div>
     </div>
   )
