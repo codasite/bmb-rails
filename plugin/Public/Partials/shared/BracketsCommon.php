@@ -194,6 +194,20 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
+  public static function view_results_btn( Bracket $bracket): false|string {
+    $url = $bracket->url . '/results/view';
+    ob_start();
+    ?>
+    <a
+      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      href="<?php echo esc_url( $url ) ?>">
+      <?php echo PartialsCommon::icon( 'eye' ); ?>
+      <span class="tw-font-700">View Results</span>
+    </a>
+    <?php
+    return ob_get_clean();
+  }
+
   public static function enable_upcoming_notification_btn(Bracket $bracket): false|string {
     $label = 'Notify Me';
     ob_start();
@@ -290,7 +304,7 @@ class BracketsCommon {
     ob_start();
     ?>
     <?php echo self::upcoming_notification_btn( $bracket ); ?>
-    <?php echo self::view_bracket_btn( $bracket ); ?>
+    <?php echo self::preview_bracket_btn( $bracket ); ?>
     <?php
     return ob_get_clean();
   }
@@ -305,7 +319,7 @@ class BracketsCommon {
     }
   }
 
-  public static function view_bracket_btn( $bracket ): false|string {
+  public static function preview_bracket_btn( $bracket ): false|string {
     $bracket_play_link = get_permalink( $bracket->id ) . '/play';
     ob_start();
     ?>
@@ -326,48 +340,6 @@ class BracketsCommon {
     ?>
     <?php echo self::leaderboard_btn( $leaderboard_link, 'final' ); ?>
     <?php echo self::bracket_chat_btn( $bracket->id ); ?>
-    <?php
-    return ob_get_clean();
-  }
-
-  public static function public_bracket_list_item( Bracket $bracket): false|string {
-    $name = $bracket->title;
-    $num_teams = $bracket->num_teams;
-    $num_plays = $bracket->num_plays;
-    $completed = $bracket->status === 'complete';
-    $status = $bracket->status;
-    $bracket_tag = self::get_bracket_tag( $status );
-    $bracket_buttons = self::public_bracket_active_buttons( $bracket );
-    if ( $status === 'upcoming' ) {
-      $bracket_buttons = self::public_bracket_upcoming_buttons( $bracket );
-    } else if ( $status === 'complete' ) {
-      $bracket_buttons = self::public_bracket_completed_buttons( $bracket );
-    }
-
-    $bracket_product_utils = new BracketProductUtils();
-    $is_paid = $bracket_product_utils->has_bracket_fee($bracket->id);
-    ob_start();
-    ?>
-    <div class="tw-border-2 tw-border-solid tw-border-<?php echo $completed ? 'white/15' : 'blue' ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
-      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
-        <div class="tw-flex tw-gap-8 tw-items-center">
-          <?php echo $is_paid ? self::paid_bracket_tag() : ''?>
-          <span class="tw-font-500 tw-text-12"><?php echo esc_html(strval($num_teams)) ?>-Team Bracket</span>
-        </div>
-        <div class="tw-flex tw-gap-4 tw-items-center">
-          <?php echo $bracket_tag ?>
-          <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/bar_chart.svg' ); ?>
-          <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html( strval($num_plays) ) ?></span>
-          <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
-        </div>
-      </div>
-      <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15 md:tw-justify-start sm:tw-items-center">
-        <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html( $name ) ?></h2>
-      </div>
-      <div class="tw-mt-10 tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16">
-        <?php echo $bracket_buttons; ?>
-      </div>
-    </div>
     <?php
     return ob_get_clean();
   }

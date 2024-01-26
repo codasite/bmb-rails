@@ -8,8 +8,8 @@ author_display_name: admin
 thumbnail_url: false
 url: 'http://example.org/?bracket_play=test-play'
 bracket_id: 100000
-total_score: '100'
-accuracy_score: '0.5'
+total_score: 100
+accuracy_score: 0.5
 busted_id: 200008
 is_printed: false
 is_bustable: false
@@ -47,8 +47,8 @@ busted_play:
     thumbnail_url: false
     url: 'http://example.org/?bracket_play=test-play-busted'
     bracket_id: 100000
-    total_score: '100'
-    accuracy_score: '0.5'
+    total_score: 100
+    accuracy_score: 0.5
     is_printed: true
     is_bustable: false
     is_winner: true

@@ -72,7 +72,7 @@ class BracketCards {
       case 'upcoming':
         $buttons = [
           BracketsCommon::upcoming_notification_btn( $bracket ),
-          BracketsCommon::view_bracket_btn($bracket),
+          BracketsCommon::preview_bracket_btn($bracket),
         ];
         $bracket_tag = BracketsCommon::upcoming_bracket_tag();
         break;

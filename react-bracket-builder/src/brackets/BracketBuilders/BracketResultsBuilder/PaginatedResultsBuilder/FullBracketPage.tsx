@@ -16,7 +16,6 @@ interface FullBracketPageProps {
   darkMode?: boolean
   setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
-  myBracketsUrl?: string
   handleUpdatePicks: () => void
   onEditClick: () => void
 }

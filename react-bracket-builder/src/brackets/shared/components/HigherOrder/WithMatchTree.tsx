@@ -29,6 +29,40 @@ export const WithMatchTree = (Component: React.FC<any>) => {
   }
 }
 
+export const WithMatchTree2 = (Component: React.ComponentType<any>) => {
+  return (props: any) => {
+    const [matchTree0, setMatchTree0] = useState<MatchTree>()
+    const [matchTree1, setMatchTree1] = useState<MatchTree>()
+    return (
+      <MatchTreeContext.Provider
+        value={{
+          matchTree: matchTree0,
+          setMatchTree: (tree) => {
+            setMatchTree0(tree.clone())
+          },
+        }}
+      >
+        <MatchTreeContext1.Provider
+          value={{
+            matchTree: matchTree1,
+            setMatchTree: (tree) => {
+              setMatchTree1(tree.clone())
+            },
+          }}
+        >
+          <Component
+            matchTree={matchTree0}
+            matchTree1={matchTree1}
+            setMatchTree={setMatchTree0}
+            setMatchTree1={setMatchTree1}
+            {...props}
+          />
+        </MatchTreeContext1.Provider>
+      </MatchTreeContext.Provider>
+    )
+  }
+}
+
 export const WithMatchTree3 = (Component: React.ComponentType<any>) => {
   return (props: any) => {
     const [matchTree0, setMatchTree0] = useState<MatchTree>()

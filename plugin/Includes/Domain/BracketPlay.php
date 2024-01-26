@@ -70,8 +70,13 @@ class BracketPlay extends PostBase implements PostBracketInterface {
       : null;
     $this->bracket = $data['bracket'] ?? null;
     $this->picks = $data['picks'] ?? [];
-    $this->total_score = $data['total_score'] ?? null;
-    $this->accuracy_score = $data['accuracy_score'] ?? null;
+    // Null coalescing operator doesn't work here the values should be null if not set
+    $this->total_score = isset($data['total_score'])
+      ? (int) $data['total_score']
+      : null;
+    $this->accuracy_score = isset($data['accuracy_score'])
+      ? (float) $data['accuracy_score']
+      : null;
     $this->busted_id = isset($data['busted_id'])
       ? (int) $data['busted_id']
       : null;

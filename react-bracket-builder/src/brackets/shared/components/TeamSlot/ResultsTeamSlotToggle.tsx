@@ -10,7 +10,7 @@ export const ResultsTeamSlotToggle = (props: TeamSlotProps) => {
   const active = team && match.getWinner() === team ? true : false
 
   return active ? (
-    <BaseTeamSlot {...props} textColor={'dd-blue'} backgroundColor={'yellow'} />
+    <BaseTeamSlot {...props} textColor={'dd-blue'} backgroundColor={'green'} />
   ) : (
     <InactiveTeamSlot {...props} />
   )

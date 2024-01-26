@@ -124,4 +124,27 @@ class BracketLeaderboardServiceTest extends WPBB_UnitTestCase {
       ])
     );
   }
+
+  public function test_get_plays_for_user() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = $this->create_bracket();
+    $play1 = $this->create_play([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+    ]);
+    $play2 = $this->create_play([
+      'author' => $user->ID,
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+    ]);
+
+    $leaderboard = new BracketLeaderboardService();
+    $plays = $leaderboard->get_plays([
+      'bracket_id' => $bracket->id,
+      'author' => $user->ID,
+    ]);
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+  }
 }

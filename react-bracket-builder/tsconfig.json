@@ -2,7 +2,8 @@
   "include": [
     "./**/*.tsx",
     "src/custom.d.ts",
-    "node_modules/ts-jest/globals.d.ts"
+    "node_modules/ts-jest/globals.d.ts",
+    "src/utils/WpbbApp.ts"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

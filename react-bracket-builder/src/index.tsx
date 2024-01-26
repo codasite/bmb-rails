@@ -7,10 +7,10 @@ import { camelCaseKeys } from './brackets/shared/api/bracketApi'
 import './styles/main.css'
 import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
 import {
-  getAppObj,
-  wpbbAppObj,
+  wpbbAjax,
+  WpbbAppObj,
   WpbbBracketProductPreviewObj,
-} from './wpbbAppObj'
+} from './utils/WpbbAjax'
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
@@ -35,9 +35,14 @@ const BracketResultsBuilder = React.lazy(
       './brackets/BracketBuilders/BracketResultsBuilder/BracketResultsBuilder'
     )
 )
-
-const ViewPlayPage = React.lazy(
-  () => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayPage')
+const ViewBracketResultsPage = React.lazy(
+  () =>
+    import(
+      './brackets/BracketBuilders/ViewBracketResultsPage/ViewBracketResultsPage'
+    )
+)
+const ViewPlayRouter = React.lazy(
+  () => import('./brackets/BracketBuilders/ViewPlayPage/ViewPlayRouter')
 )
 const BustPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/BustPlayPage/BustPlayPage')
@@ -46,27 +51,27 @@ const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
 
-declare var wpbb_bracket_product_preview_obj: any
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
-const ajaxObj = getAppObj()
-if (ajaxObj) {
-  initializeSentry(ajaxObj)
-  renderProductPreview(ajaxObj)
-  renderBracketBuilder(ajaxObj)
-  renderPlayBracket(ajaxObj)
-  renderBracketResultsBuilder(ajaxObj)
-  renderViewBracketPlay(ajaxObj)
-  renderMyBracketsModals(ajaxObj)
-  renderBustBracketPlay(ajaxObj)
-  renderPublicBracketsModals(ajaxObj)
-  addClickHandlers(ajaxObj)
-  insertElements(ajaxObj)
+const appObj = wpbbAjax.getAppObj()
+if (Object.keys(appObj).length !== 0) {
+  initializeSentry(appObj)
+  renderProductPreview(appObj)
+  renderBracketBuilder(appObj)
+  renderPlayBracket(appObj)
+  renderUpdateBracketResultsPage(appObj)
+  renderViewBracketResultsPage(appObj)
+  renderViewBracketPlay(appObj)
+  renderMyBracketsModals(appObj)
+  renderBustBracketPlay(appObj)
+  renderPublicBracketsModals(appObj)
+  addClickHandlers(appObj)
+  insertElements(appObj)
 } else {
   renderPrintBracketPage()
 }
 
-function initializeSentry(ajaxObj: wpbbAppObj) {
-  const { sentryEnv, sentryDsn } = ajaxObj
+function initializeSentry(appObj: WpbbAppObj) {
+  const { sentryEnv, sentryDsn } = appObj
   if (sentryDsn) {
     // Init Sentry
     Sentry.init({
@@ -90,24 +95,24 @@ function initializeSentry(ajaxObj: wpbbAppObj) {
     })
   }
 }
-function renderBracketBuilder(ajaxObj: wpbbAppObj) {
-  const { myBracketsUrl, bracket } = ajaxObj
+function renderBracketBuilder(appObj: WpbbAppObj) {
+  const { bracket } = appObj
   renderDiv(
     <App>
-      <BracketBuilder bracket={bracket} saveBracketLink={myBracketsUrl} />
+      <BracketBuilder bracket={bracket} />
     </App>,
     'wpbb-bracket-builder'
   )
 }
 
-function renderPlayBracket(ajaxObj: wpbbAppObj) {
+function renderPlayBracket(appObj: WpbbAppObj) {
   const {
     bracket,
     bracketProductArchiveUrl,
     myPlayHistoryUrl,
     isUserLoggedIn,
     userCanPlayPaidBracketForFree,
-  } = ajaxObj
+  } = appObj
   if (bracket) {
     renderDiv(
       <App>
@@ -124,27 +129,33 @@ function renderPlayBracket(ajaxObj: wpbbAppObj) {
   }
 }
 
-function renderBracketResultsBuilder(ajaxObj: wpbbAppObj) {
-  const { bracket, myBracketsUrl } = ajaxObj
-
-  if (bracket) {
+function renderUpdateBracketResultsPage(appObj: WpbbAppObj) {
+  if (appObj.bracket) {
     renderDiv(
       <App>
-        <BracketResultsBuilder
-          bracket={bracket}
-          myBracketsUrl={myBracketsUrl}
-        />
+        <BracketResultsBuilder bracket={appObj.bracket} />
       </App>,
-      'wpbb-bracket-results-builder'
+      'wpbb-update-bracket-results'
     )
   }
 }
-function renderViewBracketPlay(ajaxObj: wpbbAppObj) {
-  const { play, bracketProductArchiveUrl } = ajaxObj
+
+function renderViewBracketResultsPage(appObj: WpbbAppObj) {
+  if (appObj.bracket) {
+    renderDiv(
+      <App>
+        <ViewBracketResultsPage bracket={appObj.bracket} />
+      </App>,
+      'wpbb-view-bracket-results'
+    )
+  }
+}
+function renderViewBracketPlay(appObj: WpbbAppObj) {
+  const { play, bracketProductArchiveUrl } = appObj
   if (play) {
     renderDiv(
       <App>
-        <ViewPlayPage
+        <ViewPlayRouter
           bracketPlay={play}
           addToApparelUrl={bracketProductArchiveUrl}
         />
@@ -153,8 +164,8 @@ function renderViewBracketPlay(ajaxObj: wpbbAppObj) {
     )
   }
 }
-function renderBustBracketPlay(ajaxObj: wpbbAppObj) {
-  const { play, bracketProductArchiveUrl, myPlayHistoryUrl } = ajaxObj
+function renderBustBracketPlay(appObj: WpbbAppObj) {
+  const { play, bracketProductArchiveUrl, myPlayHistoryUrl } = appObj
   if (play) {
     renderDiv(
       <App>
@@ -190,13 +201,16 @@ function renderPrintBracketPage() {
   )
 }
 // This renders the image gallery on the bracket product preview page
-function renderProductPreview(ajaxObj: wpbbAppObj) {
-  if (typeof wpbb_bracket_product_preview_obj === 'undefined') {
+function renderProductPreview(appObj: WpbbAppObj) {
+  const previewObj: WpbbBracketProductPreviewObj = wpbbAjax.getPreviewObj()
+  if (
+    !previewObj ||
+    !previewObj.bracketUrlThemeMap ||
+    !previewObj.galleryImages ||
+    !previewObj.colorOptions
+  ) {
     return
   }
-  const previewObj: WpbbBracketProductPreviewObj = camelCaseKeys(
-    wpbb_bracket_product_preview_obj
-  )
   renderDiv(
     <App>
       <Gallery
@@ -208,36 +222,36 @@ function renderProductPreview(ajaxObj: wpbbAppObj) {
     'wpbb-product-preview'
   )
 }
-function renderMyBracketsModals(ajaxObj: wpbbAppObj) {
+function renderMyBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
       <EditBracketModal />
       <ShareBracketModal />
       <DeleteBracketModal />
       <PublishBracketModal
-        upgradeAccountUrl={ajaxObj.upgradeAccountUrl}
-        canCreateBracket={ajaxObj.userCanShareBracket}
+        upgradeAccountUrl={appObj.upgradeAccountUrl}
+        canCreateBracket={appObj.userCanShareBracket}
       />
-      <UpcomingNotificationModal isUserLoggedIn={ajaxObj.isUserLoggedIn} />
+      <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} />
     </>,
     'wpbb-tournaments-modals'
   )
 }
-function renderPublicBracketsModals(ajaxObj: wpbbAppObj) {
+function renderPublicBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
-      <UpcomingNotificationModal isUserLoggedIn={ajaxObj.isUserLoggedIn} />
+      <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} />
       <ShareBracketModal />
     </>,
     'wpbb-public-bracket-modals'
   )
 }
-function addClickHandlers(ajaxObj: wpbbAppObj) {
+function addClickHandlers(appObj: WpbbAppObj) {
   unpublishBracketHandler()
 }
 
-function insertElements(ajaxObj: wpbbAppObj) {
-  insertLeaderboardTeamName(ajaxObj)
+function insertElements(appObj: WpbbAppObj) {
+  insertLeaderboardTeamName(appObj)
 }
 
 function renderDiv(element: React.FunctionComponentElement<any>, id: string) {

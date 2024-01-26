@@ -1,19 +1,17 @@
 <?php
 namespace WStrategies\BMB\Public\Partials;
 
-$error_page = '<div class="alert alert-danger" role="alert">
-		Bracket not found.
-	</div>';
 $post = get_post();
 if (!$post || $post->post_type !== 'bracket') {
-	return $error_page;
+    header('HTTP/1.0 404 Not Found');
+    include(WPBB_PLUGIN_DIR . 'Public/Error/404.php');
+    return;
 }
 
-$view = get_query_var('view');
+$view = get_query_var('view', 'play');
+$action = get_query_var('action');
+
 switch ($view) {
-    case 'play':
-        echo '<div id="wpbb-play-bracket"></div>';
-        break;
     case 'leaderboard':
         $leaderboard = new LeaderboardPage();
         echo $leaderboard->render();
@@ -22,12 +20,19 @@ switch ($view) {
         echo '<div id="wpbb-bracket-builder"></div>';
         break;
     case 'results':
-		if (!current_user_can('wpbb_edit_bracket', $post->ID)) {
-            header('HTTP/1.0 403 Forbidden');
-			include(WPBB_PLUGIN_DIR . 'Public/Error/403.php');
-			return;
-		}
-        echo '<div id="wpbb-bracket-results-builder"></div>';
+        switch ($action) {
+            case 'update':
+                if (!current_user_can('wpbb_edit_bracket', $post->ID)) {
+                    header('HTTP/1.0 403 Forbidden');
+                    include(WPBB_PLUGIN_DIR . 'Public/Error/403.php');
+                    return;
+                }
+                echo '<div id="wpbb-update-bracket-results"></div>';
+                break;
+            default:
+                echo '<div id="wpbb-view-bracket-results"></div>';
+                break;
+        }
         break;
     case 'chat':
         include(WPBB_PLUGIN_DIR . 'Public/Partials/BracketPage/bracket-chat.php');

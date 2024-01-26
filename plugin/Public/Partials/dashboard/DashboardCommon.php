@@ -110,27 +110,4 @@ class DashboardCommon {
     </form>
     <?php return ob_get_clean();
   }
-
-  public static function restore_tournament_btn(
-    $endpoint,
-    $post_id
-  ): false|string {
-    ob_start(); ?>
-    <form method="post" action="<?php echo esc_url($endpoint); ?>">
-      <input type="hidden" name="restore_tournament_id" value="<?php echo esc_attr(
-        $post_id
-      ); ?>">
-      <?php wp_nonce_field(
-        'restore_tournament_action',
-        'restore_tournament_nonce'
-      ); ?>
-      <?php echo self::icon_btn('trash.svg', 'submit'); ?>
-      <!-- <button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
-			<?php echo file_get_contents(
-     WPBB_PLUGIN_DIR . 'Public/assets/icons/trash.svg'
-   ); ?>
-		</button> -->
-    </form>
-    <?php return ob_get_clean();
-  }
 }

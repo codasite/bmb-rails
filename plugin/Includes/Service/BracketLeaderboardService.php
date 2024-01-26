@@ -28,21 +28,22 @@ class BracketLeaderboardService {
     return $this->bracket;
   }
 
-  public function get_plays($bracket_id = null): array {
-    $bracket_id = $bracket_id ?? $this->bracket->id;
+  public function get_plays(array $query_args = []): array {
+    $bracket_id = $query_args['bracket_id'] ?? ($this->bracket->id ?? null);
     if (!$bracket_id) {
       throw new \Exception('Bracket ID is required');
     }
     if (isset($this->plays)) {
       return $this->plays;
     }
-    $query = [
+    $defaults = [
       'post_status' => 'publish',
       'bracket_id' => $bracket_id,
       'is_tournament_entry' => true,
       'orderby' => 'accuracy_score',
       'order' => 'DESC',
     ];
+    $query = array_merge($defaults, $query_args);
 
     $plays = $this->play_repo->get_all($query, [
       'fetch_picks' => true,
@@ -52,15 +53,15 @@ class BracketLeaderboardService {
     return $plays;
   }
 
-  public function get_num_plays(array $args = []): int {
-    $base_query = [
+  public function get_num_plays(array $query_args = []): int {
+    $defaults = [
       'post_status' => 'publish',
       'is_tournament_entry' => true,
     ];
     if (isset($this->bracket)) {
       $base_query['bracket_id'] = $this->bracket->id;
     }
-    $query = array_merge($base_query, $args);
+    $query = array_merge($defaults, $query_args);
     return $this->play_repo->get_count($query);
   }
 }

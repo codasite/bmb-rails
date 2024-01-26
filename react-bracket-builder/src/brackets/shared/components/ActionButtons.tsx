@@ -25,6 +25,18 @@ export interface ActionButtonProps {
   filled?: boolean
 }
 
+export const baseButtonStyles = [
+  'tw-flex',
+  'tw-flex-row',
+  'tw-items-center',
+  'tw-justify-center',
+  'tw-font-sans',
+  'tw-uppercase',
+  'tw-whitespace-nowrap',
+  'tw-cursor-pointer',
+  'disabled:tw-cursor-default',
+]
+
 const ActionButtonBase = (props: ActionButtonProps) => {
   const {
     onClick,
@@ -46,15 +58,7 @@ const ActionButtonBase = (props: ActionButtonProps) => {
     width,
   } = props
 
-  const baseStyles = [
-    'tw-flex',
-    'tw-flex-row',
-    'tw-items-center',
-    'tw-justify-center',
-    'tw-font-sans',
-    'tw-uppercase',
-    'tw-whitespace-nowrap',
-  ]
+  const baseStyles = [...baseButtonStyles]
 
   if (!disabled) baseStyles.push('tw-cursor-pointer')
   if (backgroundColor) baseStyles.push(`tw-bg-${backgroundColor}`)

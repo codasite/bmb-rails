@@ -18,6 +18,7 @@ const ScaledBracket = (props: ScaledBracketProps) => {
     matchTree,
     scale = 0.3,
     windowWidth: windowWidthProp,
+    maxScale = 1,
     paddingX = 20,
   } = props
   let childProps = { ...props, BracketComponent: undefined }
@@ -44,7 +45,10 @@ const ScaledBracket = (props: ScaledBracketProps) => {
   }, [])
 
   const scaleFactor = useMemo(() => {
-    return windowWidth ? (windowWidth - paddingX * 2) / bracketWidth : scale
+    const factor = windowWidth
+      ? (windowWidth - paddingX * 2) / bracketWidth
+      : scale
+    return Math.min(factor, maxScale)
   }, [windowWidth, bracketWidth, paddingX])
   const scaledBracketHeight = bracketHeight * scaleFactor
   const scaledBracketWidth = bracketWidth * scaleFactor

@@ -35,8 +35,6 @@ class LeaderboardPage implements TemplateInterface {
 							<?php echo esc_html(get_the_title()); ?>
 						</h3>
 					<?php endif; ?>
-					<!-- <?php echo $complete ? $this->share_bracket_btn(get_permalink()) : $this->score_bracket_btn(get_permalink() . 'results'); ?> -->
-					<!-- <?php echo $complete ? '' : $this->score_bracket_btn(get_permalink() . 'results'); ?> -->
 				</div>
 				<div class="tw-flex tw-flex-col tw-gap-20">
 				<h2 class="!tw-text-white/50 tw-text-24 tw-font-500"><?php echo count($plays) > 0 ? "Bracket Plays" : "No Players in this Bracket"?></h2>

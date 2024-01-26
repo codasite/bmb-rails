@@ -20,12 +20,12 @@ import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { PaginatedResultsBuilder } from './PaginatedResultsBuilder/PaginatedResultsBuilder'
 import { CustomCheckbox } from './CustomCheckbox'
 import { BracketResultsBuilderContext } from './context'
+import { getDashboardPath } from '../../shared'
 
 interface BracketResultsBuilderProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   bracket?: any
-  myBracketsUrl?: string
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
   darkMode?: boolean
@@ -33,14 +33,7 @@ interface BracketResultsBuilderProps {
 }
 
 const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    bracket,
-    myBracketsUrl,
-    setBracketMeta,
-    darkMode,
-  } = props
+  const { matchTree, setMatchTree, bracket, setBracketMeta, darkMode } = props
 
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
@@ -97,7 +90,8 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
           console.log(err)
         })
         .finally(() => {
-          if (myBracketsUrl) window.location.href = myBracketsUrl || ''
+          const dashboardUrl = getDashboardPath('hosting', 'closed')
+          if (dashboardUrl) window.location.href = dashboardUrl
         })
     }
   }
@@ -136,7 +130,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
             }`}
           >
             <ActionButton
-              variant="yellow"
+              variant="green"
               size="big"
               onClick={handleUpdatePicks}
             >

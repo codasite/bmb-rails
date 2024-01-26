@@ -12,6 +12,7 @@ import {
 import { BracketMeta } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
+import { getDashboardPath } from '../../shared'
 
 const defaultInitialPickerIndex = 0
 const teamPickerDefaults = [16, 32, 64]
@@ -21,20 +22,13 @@ interface BracketBuilderProps {
   bracket?: BracketRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
-  saveBracketLink?: string
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
 const BracketBuilder = (props: BracketBuilderProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    saveBracketLink,
-    bracket,
-    bracketMeta,
-    setBracketMeta,
-  } = props
+  const { matchTree, setMatchTree, bracket, bracketMeta, setBracketMeta } =
+    props
   const [currentPage, setCurrentPage] = useState('num-teams')
   // const [currentPage, setCurrentPage] = useState('add-teams')
   const [numTeams, setNumTeams] = useState(
@@ -140,8 +134,9 @@ const BracketBuilder = (props: BracketBuilderProps) => {
     bracketApi
       .createBracket(getBracketReq())
       .then((res) => {
-        if (saveBracketLink) {
-          window.location.href = saveBracketLink
+        const dashboardUrl = getDashboardPath('hosting', 'private')
+        if (dashboardUrl) {
+          window.location.href = dashboardUrl
         }
       })
       .catch((err) => {

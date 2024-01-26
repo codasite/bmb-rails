@@ -100,8 +100,8 @@ class PublicHooks implements HooksInterface {
       'top'
     );
     add_rewrite_rule(
-      '^brackets/([^/]+)/([^/]+)/?',
-      'index.php?bracket=$matches[1]&view=$matches[2]',
+      '^brackets/([^/]+)/([^/]+)/?([^/]+/?)?',
+      'index.php?bracket=$matches[1]&view=$matches[2]&action=$matches[3]',
       'top'
     );
   }
@@ -111,6 +111,7 @@ class PublicHooks implements HooksInterface {
     $vars[] = 'status';
     $vars[] = 'view';
     $vars[] = 'role';
+    $vars[] = 'action';
     return $vars;
   }
 

@@ -91,7 +91,7 @@ class BracketListItem {
 
   public static function live_bracket_buttons($bracket): false|string {
     $bracket_play_link = get_permalink($bracket->id) . 'play';
-    $bracket_score_link = get_permalink($bracket->id) . 'results';
+    $bracket_score_link = get_permalink($bracket->id) . 'results/update';
     $leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
     ob_start();
     ?>
@@ -115,12 +115,11 @@ class BracketListItem {
   }
 
   public static function scored_bracket_buttons($bracket): false|string {
-    $bracket_play_link = get_permalink($bracket->id) . 'play';
-    $bracket_score_link = get_permalink($bracket->id) . 'results';
+    $bracket_score_link = get_permalink($bracket->id) . 'results/update';
     $leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
     ob_start();
     ?>
-    <?php echo DashboardCommon::add_to_apparel_btn($bracket_play_link); ?>
+    <?php echo BracketsCommon::view_results_btn($bracket); ?>
     <?php echo self::score_bracket_btn($bracket_score_link, $bracket); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
@@ -233,7 +232,7 @@ class BracketListItem {
     $leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
     ob_start();
     ?>
-    <?php echo DashboardCommon::add_to_apparel_btn($play_link); ?>
+    <?php echo BracketsCommon::view_results_btn($bracket); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();

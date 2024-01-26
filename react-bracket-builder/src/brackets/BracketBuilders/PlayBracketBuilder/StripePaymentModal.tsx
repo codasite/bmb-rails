@@ -4,10 +4,9 @@ import { CancelButton } from '../../../modals/ModalButtons'
 import { ModalHeader } from '../../../modals/ModalHeader'
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js'
 import StripePaymentForm from './StripePaymentForm'
-import { getAppObj, wpbbAppObj } from '../../../wpbbAppObj'
-import { camelCaseKeys } from '../../shared/api/bracketApi'
+import { wpbbAjax } from '../../../utils/WpbbAjax'
 
-const appObj = getAppObj()
+const appObj = wpbbAjax.getAppObj()
 
 const stripePromise = loadStripe(appObj?.stripePublishableKey)
 

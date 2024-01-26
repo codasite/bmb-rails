@@ -145,6 +145,7 @@ export interface ScaledBracketProps extends BracketProps {
   windowWidth?: number
   paddingX?: number
   paddingY?: number
+  maxScale?: number
 }
 
 export interface MatchBoxChildProps {
