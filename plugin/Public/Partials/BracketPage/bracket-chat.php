@@ -11,7 +11,7 @@ namespace WStrategies\BMB\Public\Partials\BracketPage;
 ?>
 <div class="wpbb-reset tw-flex tw-flex-col">
 	<div class="tw-bg-dark-blue tw-flex tw-flex-col tw-items-center tw-gap-30 tw-px-20 tw-pt-60 tw-pb-60">
-		<div class="tw-h-100 tw-w-100 tw-rounded-full tw-bg-white tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-cover tw-bg-center tw-bg-no-repeat"></div>
+		<div class="tw-h-100 tw-w-100 tw-rounded-full tw-bg-white tw-bg-cover tw-bg-center tw-bg-no-repeat" style="background-image: url(<?php echo $thumbnail?>)"></div>
 		<div class="tw-flex tw-flex-col tw-items-center tw-gap-10">
 			<h1 class="tw-text-24 tw-text-center"><?php echo $title?></h1>
 			<h3 class="tw-leading-none tw-text-14 tw-font-600 tw-px-10 tw-py-[6px] tw-rounded-16 tw-bg-blue">Chatter</h3>

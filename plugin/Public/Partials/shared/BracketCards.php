@@ -127,7 +127,7 @@ class BracketCards {
     ob_start();
     ?>
     <div class="tw-flex tw-flex-col">
-      <div class="tw-relative tw-bg-[url(<?php echo $thumbnail ?>)] tw-bg-center tw-bg-cover tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-min-h-[324px] sm:tw-grow">
+      <div class="tw-relative tw-bg-center tw-bg-cover tw-bg-no-repeat tw-bg-white tw-rounded-t-16 tw-min-h-[324px] sm:tw-grow" style="background-image: url(<?php echo $thumbnail ?>)">
         <?php if ( $show_paid_tag ) : ?>
           <div class="tw-absolute tw-top-20 tw-left-20">
             <?php echo BracketsCommon::paid_bracket_tag() ?>
