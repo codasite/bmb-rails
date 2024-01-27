@@ -67,7 +67,7 @@ export const ScoredPlayTeamSlot = (props: TeamSlotProps) => {
   // whether the results picked this team
   const resultsPicked = resultsTeam && resultsMatch.getWinner() === resultsTeam
 
-  if (playPicked && resultsPicked) {
+  if (playPicked && resultsPicked && playTeam.equals(resultsTeam)) {
     // if play pick matches results, show green checkmark
     return <CorrectPickTeamSlot {...props} />
   }
