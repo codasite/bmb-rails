@@ -10,10 +10,7 @@ import {
 } from '../../shared'
 import { addToApparelHandler } from './utils'
 
-export const ViewPlayPageButtons = (props: {
-  play?: PlayRes
-  addApparelUrl: string
-}) => {
+export const ViewPlayPageButtons = (props: { play?: PlayRes }) => {
   const play = props.play
   const bracket = play?.bracket
   const playBracketUrl = bracket?.isOpen
@@ -22,7 +19,7 @@ export const ViewPlayPageButtons = (props: {
   const viewResultsUrl =
     bracket?.results?.length > 0 ? getBracketResultsUrl(bracket) : undefined
   const handleAddApparel = async () => {
-    await addToApparelHandler(props.play?.id, props.addApparelUrl)
+    await addToApparelHandler(props.play?.id)
   }
   // const showBustButton = props.handleBustPlay !== undefined
   const showBustButton = false

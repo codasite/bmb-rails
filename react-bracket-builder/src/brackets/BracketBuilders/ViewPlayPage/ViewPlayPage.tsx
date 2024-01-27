@@ -37,9 +37,6 @@ const ViewPlayPage = (props: {
   bracketPlay: PlayRes
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
-  addApparelUrl: string
-  myPlayHistoryUrl: string
-  handleAddApparel: () => void
 }) => {
   const { bracketPlay: play } = props
 
@@ -47,8 +44,6 @@ const ViewPlayPage = (props: {
 
   const isScored = play?.accuracyScore !== undefined
   const showProfilePicture = play?.thumbnailUrl ? true : false
-  console.log('play', play)
-  console.log('showProfilePicture', showProfilePicture)
 
   const { playTree, setPlayTree, setResultsTree } = getScoredPlayTrees()
 
@@ -119,10 +114,7 @@ const ViewPlayPage = (props: {
               paddingX={20}
             />
             <div className="tw-w-full tw-mt-40">
-              <ViewPlayPageButtons
-                play={play}
-                addApparelUrl={props.addApparelUrl}
-              />
+              <ViewPlayPageButtons play={play} />
             </div>
           </>
         )}
