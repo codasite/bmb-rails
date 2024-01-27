@@ -1,8 +1,10 @@
 <?php
 namespace WStrategies\BMB\Public\Partials;
 
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
+use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 
 class LeaderboardPage implements TemplateInterface {
 	private BracketLeaderboardService $leaderboard;
@@ -13,11 +15,16 @@ class LeaderboardPage implements TemplateInterface {
 
 	public function render(): string {
 		$plays = $this->leaderboard->get_plays();
-		$bracket_winner = $this->leaderboard->get_bracket()->get_winning_team();
-		$post_status = get_post_status();
-		$complete = $post_status === 'complete';
-		$scored = $post_status === 'score';
+		$bracket = $this->leaderboard->get_bracket();
+		$bracket_winner = $bracket->get_winning_team();
+		$complete = $bracket->status === 'complete';
+		$scored = $bracket->status === 'score';
 		$show_scores = $complete || $scored;
+		$button = match ($bracket->status) {
+			'complete' => BracketsCommon::view_results_btn($bracket, ['color' => 'white']),
+			'score' => BracketsCommon::view_results_btn($bracket, ['color' => 'yellow']),
+			'publish' => BracketsCommon::play_bracket_btn($bracket, ['color' => 'white']),
+		};
 
 		ob_start();
 
@@ -25,19 +32,22 @@ class LeaderboardPage implements TemplateInterface {
 		<div class="wpbb-reset tw-bg-dd-blue tw-flex tw-justify-center">
 			<div class="tw-max-w-screen-lg tw-flex tw-flex-grow tw-flex-col tw-gap-30 tw-px-20 lg:tw-px-0 tw-py-60 tw-overflow-hidden">
 
-				<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 <?php echo $complete ? 'tw-pb-30' : 'tw-pb-[53px]' ?>">
-					<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'Public/assets/icons/trophy.svg'); ?>
-					<h1 class="tw-mt-16 tw-mb-12 tw-font-700 tw-text-30 md:tw-text-48 lg:tw-text-64">
-						<?php echo $complete && $bracket_winner ? "{$bracket_winner->name} Wins" : esc_html(get_the_title()); ?>
-					</h1>
-					<?php if ($complete) : ?>
-						<h3 class="tw-text-20 tw-font-400 ">
-							<?php echo esc_html(get_the_title()); ?>
-						</h3>
-					<?php endif; ?>
+				<div class="wpbb-leaderboard-header<?php echo $complete ? ' wpbb-tourney-complete tw-border-2 tw-border-solid tw-border-green' : '' ?> tw-flex tw-flex-col tw-gap-16 tw-items-start tw-rounded-16 tw-pt-[66px] tw-px-30 <?php echo $complete ? 'tw-pb-30' : 'tw-pb-[53px]' ?>">
+					<div class="tw-flex tw-flex-col">
+						<?php echo file_get_contents(WPBB_PLUGIN_DIR . 'Public/assets/icons/trophy.svg'); ?>
+						<h1 class="tw-mt-16 tw-mb-12 tw-font-700 tw-text-30 md:tw-text-48 lg:tw-text-64">
+							<?php echo $complete && $bracket_winner ? "{$bracket_winner->name} Wins" : esc_html(get_the_title()); ?>
+						</h1>
+						<?php if ($complete) : ?>
+							<h3 class="tw-text-20 tw-font-400 ">
+								<?php echo esc_html(get_the_title()); ?>
+							</h3>
+						<?php endif; ?>
+					</div>
+					<?= $button ?>
 				</div>
 				<div class="tw-flex tw-flex-col tw-gap-20">
-				<h2 class="!tw-text-white/50 tw-text-24 tw-font-500"><?php echo count($plays) > 0 ? "Bracket Plays" : "No Players in this Bracket"?></h2>
+					<h2 class="!tw-text-white/50 tw-text-24 tw-font-500"><?php echo count($plays) > 0 ? "Bracket Plays" : "No Players in this Bracket"?></h2>
 					<div class="tw-flex tw-flex-col tw-gap-20">
 						<?php
 						foreach ($plays as $i => $play) {

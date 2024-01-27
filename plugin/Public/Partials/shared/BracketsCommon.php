@@ -181,28 +181,95 @@ class BracketsCommon {
   /**
    * This button goes to the Play Bracket page
    */
-  public static function play_bracket_btn( $endpoint, $label = 'Play Bracket' ): false|string {
+  public static function play_bracket_btn( Bracket $bracket, array $args=[]): false|string {
+    $label = $args['label'] ?? 'Play Tournament';
+    $endpoint = $bracket->url . 'play';
+    $color = $args['color'] ?? 'green';
+    $base_styles = [
+      'tw-flex',
+      'tw-justify-center',
+      'tw-items-center',
+      'tw-rounded-8',
+      'tw-gap-10',
+      'tw-px-16',
+      'tw-py-12',
+    ];
+    $color_styles = match ($color) {
+      'green' => [
+        'tw-border',
+        'tw-border-solid',
+        'tw-border-green',
+        'tw-bg-green/15',
+        'hover:tw-bg-green',
+        'hover:tw-text-dd-blue',
+        'tw-text-white',
+        'tw-font-700',
+      ],
+      'white' => [
+        'tw-text-black',
+        'tw-bg-white',
+        'tw-font-500',
+      ],
+      'yellow' => [
+        'tw-text-black',
+        'tw-bg-yellow',
+        'tw-font-500',
+      ]
+    };
     ob_start();
     ?>
     <a
-      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      class="<?php echo implode( ' ', array_merge($base_styles, $color_styles) ) ?>"
       href="<?php echo esc_url( $endpoint ) ?>">
       <?php echo file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/play.svg' ); ?>
-      <span class="tw-font-700"><?php echo $label ?></span>
+      <span><?php echo $label ?></span>
     </a>
     <?php
     return ob_get_clean();
   }
 
-  public static function view_results_btn( Bracket $bracket): false|string {
+  public static function view_results_btn( Bracket $bracket, array $args=[]): false|string {
+    $label = $args['label'] ?? 'View Results';
+    $color = $args['color'] ?? 'green';
     $url = $bracket->url . '/results/view';
+    $base_styles = [
+      'tw-flex',
+      'tw-justify-center',
+      'tw-items-center',
+      'tw-rounded-8',
+      'tw-gap-10',
+      'tw-px-16',
+      'tw-py-12',
+    ];
+    $color_styles = match ($color) {
+      'green' => [
+        'tw-border',
+        'tw-border-solid',
+        'tw-border-green',
+        'tw-bg-green/15',
+        'hover:tw-bg-green',
+        'hover:tw-text-dd-blue',
+        'tw-text-white',
+        'tw-font-700',
+      ],
+      'white' => [
+        'tw-text-black',
+        'tw-bg-white',
+        'tw-font-500',
+      ],
+      'yellow' => [
+        'tw-text-black',
+        'tw-bg-yellow',
+        'tw-font-500',
+      ]
+    };
     ob_start();
     ?>
     <a
-      class="tw-border-green tw-border-solid tw-border tw-bg-green/15 hover:tw-bg-green hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      class="<?php echo implode( ' ', array_merge($base_styles, $color_styles) ) ?>"
       href="<?php echo esc_url( $url ) ?>">
       <?php echo PartialsCommon::icon( 'eye' ); ?>
-      <span class="tw-font-700">View Results</span>
+      <span><?= $label ?></span>
     </a>
     <?php
     return ob_get_clean();
@@ -289,11 +356,10 @@ class BracketsCommon {
   }
 
   public static function public_bracket_active_buttons( Bracket $bracket ): false|string {
-    $bracket_play_link = get_permalink( $bracket->id ) . '/play';
     $leaderboard_link  = get_permalink( $bracket->id ) . '/leaderboard';
     ob_start();
     ?>
-    <?php echo self::play_bracket_btn( $bracket_play_link ); ?>
+    <?php echo self::play_bracket_btn( $bracket ); ?>
     <?php echo self::leaderboard_btn( $leaderboard_link ); ?>
     <?php echo self::bracket_chat_btn( $bracket->id ); ?>
     <?php

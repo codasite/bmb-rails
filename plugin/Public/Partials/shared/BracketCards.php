@@ -78,19 +78,21 @@ class BracketCards {
         break;
       case 'publish':
         $buttons = [
-          BracketsCommon::play_bracket_btn( $play_link, 'Play' ),
+          BracketsCommon::play_bracket_btn( $bracket, ['label' => 'Play'] ),
           BracketsCommon::leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
           BracketsCommon::bracket_chat_btn( $id ),
         ];
         break;
       case 'score':
         $buttons = [
+          BracketsCommon::view_results_btn( $bracket, ['label' => 'Results'] ),
           BracketsCommon::leaderboard_btn( $leaderboard_link, 'primary', 'Leaderboard' ),
           BracketsCommon::bracket_chat_btn( $id ),
         ];
         break;
       case 'complete':
         $buttons = [
+          BracketsCommon::view_results_btn( $bracket, ['label' => 'Results'] ),
           BracketsCommon::leaderboard_btn( $leaderboard_link, 'final', 'Leaderboard' ),
           BracketsCommon::bracket_chat_btn( $id ),
         ];

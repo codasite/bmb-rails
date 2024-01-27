@@ -95,7 +95,7 @@ class BracketListItem {
     $leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
     ob_start();
     ?>
-    <?php echo BracketsCommon::play_bracket_btn($bracket_play_link, 'Play'); ?>
+    <?php echo BracketsCommon::play_bracket_btn($bracket, ['label' => 'Play']); ?>
     <?php echo self::score_bracket_btn($bracket_score_link, $bracket); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>

@@ -102,6 +102,7 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
       'num_teams' => 4,
       'title' => 'Test Bracket',
       'status' => 'score',
+      'slug' => 'test-bracket',
     ]);
     $user = self::factory()->user->create_object([
       'user_login' => 'test_user2',
