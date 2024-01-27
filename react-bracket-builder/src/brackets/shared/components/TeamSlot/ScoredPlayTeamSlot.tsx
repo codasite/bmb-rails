@@ -62,16 +62,17 @@ export const ScoredPlayTeamSlot = (props: TeamSlotProps) => {
   const resultsTeam =
     teamPosition === 'left' ? resultsMatch.getTeam1() : resultsMatch.getTeam2()
 
-  // whether the player picked this team
+  // whether this team slot was picked in play
   const playPicked = playTeam && playMatch.getWinner() === playTeam
-  // whether the results picked this team
+  // whether this team slot was picked in results
   const resultsPicked = resultsTeam && resultsMatch.getWinner() === resultsTeam
 
   if (playPicked && resultsPicked && playTeam.equals(resultsTeam)) {
     // if play pick matches results, show green checkmark
     return <CorrectPickTeamSlot {...props} />
-  }
-  if (resultsMatch.getWinner() && playPicked && !resultsPicked) {
+  } else if (playPicked && resultsMatch.getWinner()) {
+    // else if this team slot was picked and there is a match winner, show red x
+    // if (resultsMatch.getWinner() && playPicked && !resultsPicked) {
     // if results has a winner and play pick does not match, show red x
     return <IncorrectPickTeamSlot {...props} />
   }
