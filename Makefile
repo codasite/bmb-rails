@@ -95,6 +95,9 @@ react-install:
 react-test:
 	cd react-bracket-builder && npm run test $(args)
 
+react-test-update-snapshots:
+	cd react-bracket-builder && npm run test -- -u
+
 composer-install:
 	cd plugin && composer install
 

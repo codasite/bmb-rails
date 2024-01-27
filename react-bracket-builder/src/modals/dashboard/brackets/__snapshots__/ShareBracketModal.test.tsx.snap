@@ -45,7 +45,7 @@ exports[`ShareBracketModal renders modal correctly 1`] = `
           </a>
         </div>
         <button
-          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer tw-bg-green/15 tw-text-white tw-gap-10 tw-text-16 tw-font-700 tw-rounded-8 tw-px-16 tw-py-12 tw-border-solid tw-border tw-border-green hover:tw-text-white/75 tw-w-full"
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-cursor-pointer tw-bg-green/15 tw-text-white tw-gap-10 tw-text-16 tw-font-700 tw-rounded-8 tw-px-16 tw-py-12 tw-border-solid tw-border tw-border-green hover:tw-text-white/75 tw-w-full"
         >
           <svg />
           <span>
