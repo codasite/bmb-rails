@@ -36,7 +36,7 @@ class ProfilePage {
         </div>
         <div class="tw-flex tw-flex-col tw-w-[340px] tw-h-[308px] tw-p-30 tw-border-2 tw-border-solid tw-border-white/10 tw-rounded-16 tw-justify-between">
           <a href="<?php echo get_permalink() .
-            'play-history'; ?>" class="tw-flex tw-gap-16 tw-items-center hover:tw-text-blue">
+            'play-history'; ?>" class="tw-flex tw-gap-16 tw-items-center tw-text-white hover:tw-text-blue">
             <?php echo file_get_contents(
               WPBB_PLUGIN_DIR . 'Public/assets/icons/arrow_up_right.svg'
             ); ?>

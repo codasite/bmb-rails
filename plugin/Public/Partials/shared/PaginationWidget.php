@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Public\Partials\shared;
 
 class PaginationWidget {
 
-  public static function pagination( $page, $num_pages, $justify = 'start' ): void {
+  public static function pagination( $page, $num_pages): void {
     // Don't print empty markup if there's only one page.
     if ( $num_pages <= 1 ) {
       return;
@@ -17,7 +17,7 @@ class PaginationWidget {
       'next_text' => '<div class="tw-flex tw-items-center">' . file_get_contents( WPBB_PLUGIN_DIR . 'Public/assets/icons/chevron_right.svg' ) . '</div>',
     ) );
     ?>
-    <div class="tw-flex tw-items-center tw-justify-<?php echo $justify; ?> tw-gap-10 tw-py-14 tw-px-12">
+    <div class="tw-flex tw-items-center tw-justify-start tw-gap-10 tw-py-14 tw-px-12">
       <?php foreach ( $links as $link ) :
         $current = false;
         if ( strpos( $link, 'current' ) !== false ) {

@@ -80,6 +80,10 @@ up:
 down:
 	docker compose down -v
 
+test:
+	make wp-test
+	make react-test
+
 pretty:
 	npm run pretty
 

@@ -63,9 +63,26 @@ class BracketsCommon {
   public static function bracket_tag( $label, $color, $filled = true ): false|string {
     $filled_path = WPBB_PLUGIN_DIR . 'Public/assets/icons/ellipse.svg';
     $empty_path  = WPBB_PLUGIN_DIR . 'Public/assets/icons/ellipse_empty.svg';
+    $base_styles = [
+      'tw-border',
+      'tw-border-solid',
+      'tw-px-8',
+      'tw-py-4',
+      'tw-flex',
+      'tw-gap-4',
+      'tw-items-center',
+      'tw-rounded-8',
+    ];
+    $color_styles = match ($color) {
+      'yellow' => ['tw-text-yellow', 'tw-bg-yellow/15'],
+      'green' => ['tw-text-green', 'tw-bg-green/15'],
+      'white' => ['tw-text-white', 'tw-bg-white/15'],
+      'blue' => ['tw-text-blue', 'tw-bg-blue/15'],
+      'red' => ['tw-text-red', 'tw-bg-red/15'],
+    };
     ob_start();
     ?>
-    <div class="tw-text-<?php echo $color ?> tw-bg-<?php echo $color; ?>/15 tw-border tw-border-solid tw-px-8 tw-py-4 tw-flex tw-gap-4 tw-items-center tw-rounded-8">
+    <div class="<?php echo implode( ' ', array_merge( $base_styles, $color_styles ) ) ?>">
       <?php echo $filled ? file_get_contents( $filled_path ) : file_get_contents( ( $empty_path ) ); ?>
       <span class="tw-font-500 tw-text-12"><?php echo $label ?></span>
     </div>
@@ -87,10 +104,6 @@ class BracketsCommon {
 
   public static function scored_bracket_tag(): false|string {
     return self::bracket_tag( 'In progress', 'white' );
-  }
-
-  public static function archived_bracket_tag(): false|string {
-    return self::bracket_tag( 'Archive', 'white/50', false );
   }
 
   public static function private_bracket_tag(): false|string {
@@ -119,8 +132,6 @@ class BracketsCommon {
         return self::scored_bracket_tag();
       case 'complete':
         return self::completed_bracket_tag();
-      case 'archive':
-        return self::archived_bracket_tag();
       default:
         return '';
     }
