@@ -127,13 +127,13 @@ class EnqueueScriptsHooks implements HooksInterface {
    * @since    1.0.0
    */
   public function enqueue_scripts(): void {
-    // wp_enqueue_script(
-    //   'tailwind',
-    //   'https://cdn.tailwindcss.com',
-    //   [],
-    //   $this->version,
-    //   false
-    // );
+    wp_enqueue_script(
+      'tailwind',
+      'https://cdn.tailwindcss.com',
+      [],
+      $this->version,
+      false
+    );
     wp_enqueue_script(
       'wpbb-bracket-builder-react',
       plugin_dir_url(dirname(__FILE__, 2)) .
