@@ -4,8 +4,22 @@
     {
       "name": "Barry Molina",
       "email": "barry@wstrategies.co"
+    },
+    {
+      "name": "Karl Molina",
+      "email": "karlgmolina@gmail.com"
+    },
+    {
+      "name": "Mark MacEachen",
+      "email": "mark.maceachen@gmail.com"
     }
   ],
+  "keywords": [
+    "wordpress",
+    "plugin"
+  ],
+  "homepage": "https://github.com/wstrategies/wp-bracket-builder",
+  "type": "wordpress-plugin",
   "autoload": {
     "psr-4": {
       "WStrategies\\BMB\\": ""
