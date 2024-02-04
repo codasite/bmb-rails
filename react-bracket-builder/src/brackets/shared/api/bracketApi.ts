@@ -108,7 +108,7 @@ export class BracketApi {
           .join('&')
     }
     try {
-      const response = await fetch(`${this.baseUrl}${path}`, request)
+      const response = await fetch(`${this.baseUrl}${path}/`, request)
       if (!response.ok) {
         const text = await response.text()
         throw new Error(
