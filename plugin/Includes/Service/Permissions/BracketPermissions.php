@@ -54,6 +54,9 @@ class BracketPermissions implements PermissionsServiceInterface {
   }
 
   private function user_can_view_bracket_chat($user_id, $bracket): bool {
+    if (!$user_id) {
+      return false;
+    }
     $num_plays = $this->leaderboard_service->get_num_plays([
       'author' => $user_id,
       'bracket_id' => $bracket->id,
