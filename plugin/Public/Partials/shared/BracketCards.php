@@ -32,7 +32,7 @@ class BracketCards {
     $title            = $play->title;
     $id               = $play->id;
     $thumbnail        = get_the_post_thumbnail_url( $id );
-    $play_link        = get_permalink( $id ) . 'bust';
+    $play_link        = get_permalink( $id ) . 'view';
     $leaderboard_link = get_permalink( $play->bracket_id ) . 'leaderboard';
     $show_paid_tag    = $product_utils->has_bracket_fee( $play->bracket_id );
     $buttons          = [
