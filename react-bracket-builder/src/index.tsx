@@ -18,7 +18,7 @@ import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublish
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
 import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingNotificationModal'
 
-declare var wp, tailwind: any
+declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
 tailwind.config.corePlugins.preflight = typeof wp === 'undefined'
 // Dynamically render components to avoid loading unused modules

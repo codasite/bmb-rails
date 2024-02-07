@@ -16,8 +16,8 @@ services:
     environment:
       - CLIENT_URL=http://react-server:3001
       - AWS_REGION=us-east-1
-    env_file:
-      - .env
+      - WP_SENTRY_ENV=production
+      - WP_SENTRY_DSN=https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752
     volumes:
       - ~/.aws/credentials:/home/pptruser/.aws/credentials:ro
     healthcheck:
