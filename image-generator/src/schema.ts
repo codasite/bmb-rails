@@ -18,7 +18,6 @@ const S3StorageOptionsSchema = Joi.object({
 })
 
 export const generatorImageSchema = Joi.object({
-  url: Joi.string().uri().optional(),
   queryParams: queryParms.required(),
   storageService: Joi.string().valid('s3').required(),
   storageOptions: S3StorageOptionsSchema.required(),

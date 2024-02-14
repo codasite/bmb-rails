@@ -36,6 +36,30 @@ app.get('/ping', async (req, res) => {
   res.send('pong')
 })
 
+app.get('/ping-react', async (req, res) => {
+  const url = process.env.CLIENT_URL
+  try {
+    const response = await fetch(url + '/ping')
+    const data = await response.text()
+    res.send('react says: ' + data)
+  } catch (err: any) {
+    res.send('error: ' + err.message || 'unknown error')
+  }
+})
+
+app.get('/ping-react-browser', async (req, res) => {
+  const browser = await puppeteer.launch({ headless: 'new' })
+  try {
+    const page = await browser.newPage()
+    await page.goto(process.env.CLIENT_URL || '')
+    res.send('opened browser')
+  } catch (err: any) {
+    res.send('error opening browser: ' + err.message || 'unknown error')
+  } finally {
+    await browser.close()
+  }
+})
+
 interface S3StorageOptions {
   bucket: string
   key: string
@@ -79,13 +103,9 @@ interface GenerateRequest {
 }
 
 const takeScreenshot = async (req: GenerateRequest) => {
-  const {
-    deviceScaleFactor = 1,
-    inchHeight = 16,
-    inchWidth = 12,
-    url = process.env.CLIENT_URL,
-  } = req
+  const { deviceScaleFactor = 1, inchHeight = 16, inchWidth = 12 } = req
 
+  const url = process.env.CLIENT_URL
   const pxHeight = inchHeight * 96
   const pxWidth = inchWidth * 96
   const browser = await puppeteer.launch({ headless: HEADLESS })

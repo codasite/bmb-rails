@@ -1,0 +1,6 @@
+# this excludes build files from the main plugin docker image
+
+plugin/vendor
+plugin/Includes/react-bracket-builder/build
+react-bracket-builder/build
+react-bracket-builder/node_modules

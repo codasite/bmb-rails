@@ -1,11 +1,13 @@
 version: '3.9'
 
 services:
+  # Entry point for image generation. This is called by code in the plugin
   image-generator:
     build:
       context: image-generator
       dockerfile: Dockerfile
-    command: npm run start
+      args:
+        NODE_ENV: production
     restart: always
     ports:
       - 3000:3000
@@ -13,44 +15,81 @@ services:
       - SYS_ADMIN
     depends_on:
       - react-server
+    env_file:
+      - .env
     environment:
       - CLIENT_URL=http://react-server:3001
-      - AWS_REGION=us-east-1
-      - WP_SENTRY_ENV=production
-      - WP_SENTRY_DSN=https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752
-    volumes:
-      - ~/.aws/credentials:/home/pptruser/.aws/credentials:ro
+      # These are ultimately set based on trellis variables and vault secrets
+      - WP_SENTRY_ENV=${WP_SENTRY_ENV}
+      - WP_SENTRY_DSN=${WP_SENTRY_DSN}
+      - NODE_ENV=${NODE_ENV}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000/ping']
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 30s
 
+  # Hosts the standalone react app. Visited by image-generator using puppeteer to take a screenshot
   react-server:
     build:
       context: standalone-react
       dockerfile: Dockerfile
-    command: npm run start
+      args:
+        NODE_ENV: production
     restart: always
     depends_on:
       - react-client
     volumes:
-      - react_dist:/usr/src/app/client/dist
+      - standalone_react:/usr/src/app/client/dist
     ports:
       - 3001:3001
+    env_file:
+      - .env
+    environment:
+      - WP_SENTRY_ENV=${WP_SENTRY_ENV}
+      - WP_SENTRY_DSN=${WP_SENTRY_DSN}
+      - NODE_ENV=${NODE_ENV}
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3001/ping']
       interval: 30s
       timeout: 10s
       retries: 5
+      start_period: 30s
 
+  # Builds and serves the standalone react app. In development, accessed by react-server over the network
+  # In production, react-server mounts the build directory and serves it
   react-client:
     build:
       context: react-bracket-builder
       dockerfile: Dockerfile
-    command: npm run build:standalone
+      args:
+        NODE_ENV: production
+    env_file:
+      - .env
+    environment:
+      - WP_SENTRY_ENV=${WP_SENTRY_ENV}
+      - WP_SENTRY_DSN=${WP_SENTRY_DSN}
+      - NODE_ENV=${NODE_ENV}
     volumes:
-      - react_dist:/usr/src/app/build/standalone
+      - standalone_react:/usr/src/app/build/standalone
+
+  # The actual wordpress plugin. Copy /usr/src/app to the plugins directory on a wordpress site
+  plugin:
+    build:
+      context: .
+      dockerfile: plugin/Dockerfile
 
 volumes:
-  react_dist:
+  standalone_react:
+
+networks:
+  default:
+    driver: bridge
+    name: wp-bracket-builder
+    driver_opts:
+      # A custom interface name is needed so that we can reference it in the trellis ferm configuration
+      com.docker.network.bridge.name: wpbb0

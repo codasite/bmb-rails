@@ -1,0 +1,9 @@
+"@development":
+  ssh: "backmybracket.test"
+  path: "/srv/www/backmybracket.com/current/web/wp"
+"@production":
+  ssh: "web@your_server_hostname:22"
+  path: "/srv/www/backmybracket.com/current/web/wp"
+"@staging":
+  ssh: "web@64.225.40.129:22"
+  path: "/srv/www/backmybracket.com/current/web/wp"

@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\ObjectStorage;
 
+use WP;
+
 class S3Storage implements ObjectStorageInterface {
   /**
    * Upload a file to the object storage.
@@ -16,8 +18,11 @@ class S3Storage implements ObjectStorageInterface {
   }
 
   public function get_upload_options($file_name): array {
+    if (!defined('WPBB_S3_IMAGE_BUCKET')) {
+      throw new \Exception('S3 bucket not defined');
+    }
     return [
-      'bucket' => 'wpbb-bracket-images',
+      'bucket' => WPBB_S3_IMAGE_BUCKET,
       'key' => $file_name,
     ];
   }

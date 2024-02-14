@@ -1,19 +1,33 @@
-FROM ghcr.io/puppeteer/puppeteer:latest
-# Create app directory
+# Build stage
+FROM ghcr.io/puppeteer/puppeteer:latest as builder
 USER root
 WORKDIR /usr/src/app
-# Install app dependencies
-# RUN chown -R node:node /usr/src/app
+
+# Install dependencies
 COPY package*.json ./
 COPY tsconfig.json ./
 RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
-# Bundle app source
+# Copy your source code and perform the build
 COPY . .
-# Build app
-EXPOSE 3000
+RUN npm run build
+
+RUN npm prune --production
+
+# Change ownership to pptruser for all application files
 RUN chown -R pptruser:pptruser /usr/src/app
+
+# Runtime stage
+FROM ghcr.io/puppeteer/puppeteer:latest
 USER pptruser
+WORKDIR /usr/src/app
+
+# Copy built application from the builder stage
+COPY --from=builder /usr/src/app/dist /usr/src/app/dist
+COPY --from=builder /usr/src/app/node_modules /usr/src/app/node_modules
+COPY --from=builder /usr/src/app/package.json /usr/src/app/package.json
+
 RUN node /usr/src/app/node_modules/puppeteer/install.mjs
-CMD ["npm", "start"]
+
+# Expose port and define the CMD as per your requirements
+EXPOSE 3000
+CMD ["node", "dist/index.js"]

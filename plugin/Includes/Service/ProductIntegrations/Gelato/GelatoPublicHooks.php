@@ -310,7 +310,7 @@ class GelatoPublicHooks {
   ): string {
     // If no config was found, use only the front design
     // However, Gelato still requires a two page PDF so we append a blank page to the front design
-    // $result = $this->s3->copy_from_url($front_url, BRACKET_BUILDER_S3_ORDER_BUCKET, $temp_filename);
+    // $result = $this->s3->copy_from_url($front_url, WPBB_S3_ORDER_BUCKET, $temp_filename);
     $front = $this->s3->get_from_url($front_url);
     if (!$front) {
       $this->handle_throw_error([
@@ -334,11 +334,7 @@ class GelatoPublicHooks {
         'front_url' => $front_url,
       ]);
     }
-    $result = $this->s3->put(
-      BRACKET_BUILDER_S3_ORDER_BUCKET,
-      $temp_filename,
-      $merged
-    );
+    $result = $this->s3->put(WPBB_S3_ORDER_BUCKET, $temp_filename, $merged);
     if (!$result) {
       $this->handle_throw_error([
         'error' => 'Error putting PDF to S3',
@@ -418,11 +414,7 @@ class GelatoPublicHooks {
       ]);
     }
 
-    $result = $this->s3->put(
-      BRACKET_BUILDER_S3_ORDER_BUCKET,
-      $temp_filename,
-      $merged
-    );
+    $result = $this->s3->put(WPBB_S3_ORDER_BUCKET, $temp_filename, $merged);
     if (!$result) {
       $this->handle_throw_error([
         'error' => 'Error putting PDF to S3',

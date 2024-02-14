@@ -3,19 +3,28 @@ version: '3.9'
 services:
   image-generator:
     container_name: image-generator
+    build:
+      dockerfile: dev.Dockerfile
+      args:
+        NODE_ENV: development
     tty: true
     command: npm run dev
     volumes:
       - ./image-generator/src:/usr/src/app/src # To serve the image generator code in development
+      # - ~/.aws/credentials:/home/pptruser/.aws/credentials:ro
     profiles:
       - images
       - all
       - generator
     environment:
       - WP_SENTRY_ENV=development
+      - NODE_ENV=development
 
   react-server:
     container_name: react-server
+    build:
+      args:
+        NODE_ENV: development
     tty: true
     command: npm run dev
     volumes:
@@ -23,10 +32,17 @@ services:
     profiles:
       - images
       - all
+    environment:
+      - WP_SENTRY_ENV=development
+      - NODE_ENV=development
 
   react-client:
     tty: true
     container_name: react-client
+    build:
+      dockerfile: dev.Dockerfile
+      args:
+        NODE_ENV: development
     command: npm run dev:standalone
     volumes:
       - ./react-bracket-builder/src:/usr/src/app/src # To serve the react client code in development
@@ -40,6 +56,9 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    environment:
+      - WP_SENTRY_ENV=development
+      - NODE_ENV=development
 
   wp-dev:
     tty: true
@@ -59,8 +78,8 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_DEBUG_LOG', true );
         define('WP_DEBUG_DISPLAY', false );
-        define('BRACKET_BUILDER_S3_IMAGE_BUCKET', 'wpbb-bracket-images-test1');
-        define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
+        define('WPBB_S3_IMAGE_BUCKET', 'wpbb-bracket-images-test1');
+        define('WPBB_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
         define('BRACKET_PRODUCT_CATEGORY', 'bracket-ready');
         define('BRACKET_PLACEMENT_CENTER_CAT', 'wpbb-placement-center');
         define('WP_SENTRY_ENV', 'development');
@@ -150,8 +169,8 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define( 'WP_DEBUG_LOG', true );
         define( 'WP_DEBUG_DISPLAY', false );
-        define('BRACKET_BUILDER_S3_IMAGE_BUCKET', 'wpbb-bracket-images-test1');
-        define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
+        define('WPBB_S3_IMAGE_BUCKET', 'wpbb-bracket-images-test1');
+        define('WPBB_S3_ORDER_BUCKET', 'wpbb-gelato-orders-test1');
         define('BRACKET_PRODUCT_CATEGORY', 'bracket-ready');
         define('BRACKET_PLACEMENT_CENTER_CAT', 'wpbb-placement-center');
         define('WP_SENTRY_ENV', 'development');

@@ -1,0 +1,34 @@
+# Created by trellis-cli v1.11.1
+# Documentation: https://roots.io/trellis/docs/wordpress-sites/
+
+wordpress_sites:
+  backmybracket.com:
+    site_hosts:
+      - canonical: backmybracket.com
+        redirects:
+          - www.backmybracket.com
+    local_path: ../site
+    repo_path: ..
+    branch: main
+    repo: git@github.com:wstrategies/backmybracket.com.git
+    repo_subtree_path: site
+    multisite:
+      enabled: false
+    ssl:
+      enabled: false
+      provider: letsencrypt
+    cache:
+      enabled: false
+    env:
+      # wp-bracket-builder settings
+      # Mailchimp
+      mailchimp_from_email: 'notifications@backmybracket.com'
+      # Image generation
+      image_generator_path: 'http://localhost:3000/generate'
+      wpbb_s3_image_bucket: 'wpbb-bracket-images'
+      wpbb_s3_order_bucket: 'wpbb-gelato-orders'
+      # Sentry
+      wp_sentry_env: 'production'
+      wp_sentry_php_dsn: 'https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752'
+      aws_region: 'us-east-1'
+      node_env: 'production'

@@ -1,1 +1,16 @@
 version: '3.9'
+
+services:
+  image-generator:
+    image: docker-registry.wstrategies.co/wpbb/image-generator:latest
+
+  react-server:
+    image: docker-registry.wstrategies.co/wpbb/react-server:latest
+
+  react-client:
+    image: docker-registry.wstrategies.co/wpbb/react-client:latest
+
+  plugin:
+    image: docker-registry.wstrategies.co/wpbb/plugin:latest
+    # explicit container name so that we can reference in the trellis build hook
+    container_name: wpbb-plugin

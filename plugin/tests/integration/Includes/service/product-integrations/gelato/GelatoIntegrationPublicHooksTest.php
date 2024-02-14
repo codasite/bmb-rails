@@ -245,8 +245,8 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $temp_filename = 'temp-uniqueid.pdf';
     $back_width = 12;
     $back_height = 16;
-    if (!defined('BRACKET_BUILDER_S3_ORDER_BUCKET')) {
-      define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'test-bucket');
+    if (!defined('WPBB_S3_ORDER_BUCKET')) {
+      define('WPBB_S3_ORDER_BUCKET', 'test-bucket');
     }
 
     // Mock S3 and PDF service
@@ -261,11 +261,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $pdf_service_mock->method('merge_pdfs')->willReturn('merged_pdf_content');
     $s3_mock
       ->method('put')
-      ->with(
-        BRACKET_BUILDER_S3_ORDER_BUCKET,
-        $temp_filename,
-        'merged_pdf_content'
-      )
+      ->with(WPBB_S3_ORDER_BUCKET, $temp_filename, 'merged_pdf_content')
       ->willReturn('s3_upload_url');
 
     // Instantiate the class with mocked dependencies
@@ -367,8 +363,8 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_handle_front_and_back_design_success() {
-    if (!defined('BRACKET_BUILDER_S3_ORDER_BUCKET')) {
-      define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'test-bucket');
+    if (!defined('WPBB_S3_ORDER_BUCKET')) {
+      define('WPBB_S3_ORDER_BUCKET', 'test-bucket');
     }
     // Setup test data
     $bracket = $this->create_bracket([
@@ -404,11 +400,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $pdf_service_mock->method('merge_pdfs')->willReturn('merged_pdf_content');
     $s3_mock
       ->method('put')
-      ->with(
-        BRACKET_BUILDER_S3_ORDER_BUCKET,
-        $temp_filename,
-        'merged_pdf_content'
-      )
+      ->with(WPBB_S3_ORDER_BUCKET, $temp_filename, 'merged_pdf_content')
       ->willReturn('s3_upload_url');
     $play_repo_mock->method('get')->willReturn($play);
     $client_mock
@@ -438,8 +430,8 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
   }
 
   public function test_handle_front_and_back_design_failure_in_back_design() {
-    if (!defined('BRACKET_BUILDER_S3_ORDER_BUCKET')) {
-      define('BRACKET_BUILDER_S3_ORDER_BUCKET', 'test-bucket');
+    if (!defined('WPBB_S3_ORDER_BUCKET')) {
+      define('WPBB_S3_ORDER_BUCKET', 'test-bucket');
     }
 
     // Setup test data
