@@ -115,10 +115,10 @@ phpstan-generate-baseline:
 	cd plugin && vendor/bin/phpstan analyse -c phpstan.neon.dist --memory-limit 2G . --generate-baseline
 
 prod-pull:
-	docker compose -f compose.yaml -f compose.prod.yaml pull
+	docker compose -f compose.yaml -f compose.prod.yaml --profile all pull
 
 prod-up:
-	docker compose -f compose.yaml -f compose.prod.yaml -p wpbb up -d --no-build --remove-orphans --force-recreate --pull always
+	docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb up -d --no-build --remove-orphans --force-recreate --pull always
 
 prod-build-plugin:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile wp -p wpbb build
