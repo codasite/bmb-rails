@@ -78,6 +78,7 @@
     "wstrategies/wp-mail-smtp-pro": "^3.7.0",
     "wstrategies/oxygen-mobile-sub-menu-master": "^1.1.0",
     "wstrategies/social-login-pro-woocommerce": "^1.0.10",
+    "wstrategies/oxygen-woocommerce": "^2.0",
     "wpackagist-plugin/woo-order-export-lite": "^3.4.5",
     "wpackagist-plugin/all-in-one-wp-migration": "^7.79",
     "wpackagist-plugin/auto-image-attributes-from-filename-with-bulk-updater": "^4.4",
