@@ -120,11 +120,25 @@ prod-pull:
 prod-up:
 	docker compose -f compose.yaml -f compose.prod.yaml -p wpbb up -d --no-build --remove-orphans --force-recreate --pull always
 
+prod-build-plugin:
+	docker compose -f compose.yaml -f compose.prod.yaml --profile wp -p wpbb build
+
+prod-build-images:
+	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb build
+
 prod-build:
-	docker compose -f compose.yaml -f compose.prod.yaml -p wpbb build
+	make prod-build-plugin
+	make prod-build-images
+
+prod-push-plugin:
+	docker compose -f compose.yaml -f compose.prod.yaml --profile wp -p wpbb push plugin
+
+prod-push-images:
+	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb push
 
 prod-push:
-	docker compose -f compose.yaml -f compose.prod.yaml -p wpbb push
+	make prod-push-wp
+	make prod-push-images
 	
 prod-down:
 	docker compose -f compose.yaml -f compose.prod.yaml -p wpbb down -v

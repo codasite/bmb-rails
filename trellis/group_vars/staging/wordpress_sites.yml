@@ -9,7 +9,7 @@ wordpress_sites:
           - www.dev.backmybracket.com
     local_path: ../site
     repo_path: ..
-    branch: trellis-docker
+    branch: staging
     repo: git@github.com:wstrategies/wp-bracket-builder.git
     repo_subtree_path: site
     multisite:

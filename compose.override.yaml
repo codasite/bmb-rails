@@ -12,10 +12,6 @@ services:
     volumes:
       - ./image-generator/src:/usr/src/app/src # To serve the image generator code in development
       # - ~/.aws/credentials:/home/pptruser/.aws/credentials:ro
-    profiles:
-      - images
-      - all
-      - generator
     environment:
       - WP_SENTRY_ENV=development
       - NODE_ENV=development
@@ -29,9 +25,6 @@ services:
     command: npm run dev
     volumes:
       - ./standalone-react/src:/usr/src/app/src # To serve the react server code in development
-    profiles:
-      - images
-      - all
     environment:
       - WP_SENTRY_ENV=development
       - NODE_ENV=development
@@ -48,9 +41,6 @@ services:
       - ./react-bracket-builder/src:/usr/src/app/src # To serve the react client code in development
     ports:
       - 8080:8080
-    profiles:
-      - images
-      - all
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080']
       interval: 30s
