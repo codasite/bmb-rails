@@ -32,6 +32,10 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+    profiles:
+      - images
+      - all
+      - generator
 
   # Hosts the standalone react app. Visited by image-generator using puppeteer to take a screenshot
   react-server:
@@ -59,6 +63,9 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+    profiles:
+      - images
+      - all
 
   # Builds and serves the standalone react app. In development, accessed by react-server over the network
   # In production, react-server mounts the build directory and serves it
@@ -76,12 +83,18 @@ services:
       - NODE_ENV=${NODE_ENV}
     volumes:
       - standalone_react:/usr/src/app/build/standalone
+    profiles:
+      - images
+      - all
 
   # The actual wordpress plugin. Copy /usr/src/app to the plugins directory on a wordpress site
   plugin:
     build:
       context: .
       dockerfile: plugin/Dockerfile
+    profiles:
+      - wp
+      - all
 
 volumes:
   standalone_react:
