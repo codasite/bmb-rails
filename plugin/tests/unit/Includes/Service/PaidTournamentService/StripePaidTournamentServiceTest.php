@@ -4,8 +4,10 @@ use Stripe\PaymentIntent;
 use Stripe\Service\PaymentIntentService;
 use Stripe\StripeClient;
 use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 
 class StripePaidTournamentServiceTest extends TestCase {
@@ -65,6 +67,16 @@ class StripePaidTournamentServiceTest extends TestCase {
           ->getMock()
       );
 
+    $connected_account_mock = $this->getMockBuilder(
+      StripeConnectedAccount::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $connected_account_mock
+      ->method('should_create_destination_charge')
+      ->willReturn(false);
+
     // Set the PaymentIntentService mock as the paymentIntents property on the StripeClient mock
     $stripe_mock->paymentIntents = $payment_intent_service_mock;
 
@@ -76,10 +88,96 @@ class StripePaidTournamentServiceTest extends TestCase {
     $sot = new StripePaidTournamentService([
       'stripe_client' => $stripe_mock,
       'bracket_product_utils' => $product_utils_mock,
+      'connected_account' => $connected_account_mock,
     ]);
     $play = new BracketPlay([
       'id' => 1,
       'bracket_id' => 1,
+      'bracket' => new Bracket([
+        'id' => 1,
+        'author' => 1,
+      ]),
+    ]);
+    $intent = $sot->create_payment_intent_for_paid_tournament_play($play);
+    $this->assertInstanceOf(PaymentIntent::class, $intent);
+  }
+  public function test_create_payment_intent_for_connected_account() {
+    $stripe_mock = $this->getMockBuilder(StripeClient::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    // Mock the PaymentIntentService
+    $payment_intent_service_mock = $this->getMockBuilder(
+      PaymentIntentService::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    // Configure the PaymentIntentService mock
+    $payment_intent_service_mock
+      ->expects($this->once())
+      ->method('create')
+      ->with([
+        'amount' => 100.0,
+        'currency' => 'usd',
+        'metadata' => [
+          'bracket_id' => 1,
+          'play_id' => 2,
+        ],
+        'application_fee_amount' => 125,
+        'transfer_data' => [
+          'destination' => 'acct_1',
+        ],
+      ])
+      ->willReturn(
+        $this->getMockBuilder(PaymentIntent::class)
+          ->disableOriginalConstructor()
+          ->getMock()
+      );
+
+    $connected_account_mock = $this->getMockBuilder(
+      StripeConnectedAccount::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $connected_account_mock
+      ->expects($this->once())
+      ->method('set_owner_id')
+      ->with(1);
+
+    $connected_account_mock
+      ->method('should_create_destination_charge')
+      ->willReturn(true);
+
+    $connected_account_mock
+      ->method('calculate_application_fee')
+      ->willReturn(125);
+
+    $connected_account_mock
+      ->method('get_connected_account_id')
+      ->willReturn('acct_1');
+
+    // Set the PaymentIntentService mock as the paymentIntents property on the StripeClient mock
+    $stripe_mock->paymentIntents = $payment_intent_service_mock;
+
+    $product_utils_mock = $this->getMockBuilder(BracketProductUtils::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $product_utils_mock->method('get_bracket_fee')->willReturn(1.0);
+    $sot = new StripePaidTournamentService([
+      'stripe_client' => $stripe_mock,
+      'bracket_product_utils' => $product_utils_mock,
+      'connected_account' => $connected_account_mock,
+    ]);
+    $play = new BracketPlay([
+      'id' => 2,
+      'bracket_id' => 1,
+      'bracket' => new Bracket([
+        'id' => 1,
+        'author' => 1,
+      ]),
     ]);
     $intent = $sot->create_payment_intent_for_paid_tournament_play($play);
     $this->assertInstanceOf(PaymentIntent::class, $intent);

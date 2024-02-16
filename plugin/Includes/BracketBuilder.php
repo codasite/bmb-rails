@@ -18,6 +18,7 @@ use WStrategies\BMB\Includes\Hooks\PublicHooks;
 use WStrategies\BMB\Includes\Hooks\PublicShortcodes;
 use WStrategies\BMB\Includes\Hooks\RedirectHooks;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
+use WStrategies\BMB\Includes\Hooks\UserAdminHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 
@@ -121,6 +122,7 @@ class BracketBuilder {
       new AnonymousUserHooks(),
       new RedirectHooks(),
       new BracketChatHooks(),
+      new UserAdminHooks(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

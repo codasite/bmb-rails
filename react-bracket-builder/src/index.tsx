@@ -53,6 +53,7 @@ const PrintPlayPage = React.lazy(
 
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 const appObj = wpbbAjax.getAppObj()
+console.log('appObj', appObj)
 if (Object.keys(appObj).length !== 0) {
   initializeSentry(appObj)
   renderProductPreview(appObj)
