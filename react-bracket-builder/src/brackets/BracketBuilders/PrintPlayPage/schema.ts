@@ -1,5 +1,5 @@
-import { PrintSchema, PrintParams } from './types'
-import { camelCaseKeys } from '../../shared/api/bracketApi'
+import { PrintParams, PrintSchema } from './types'
+import { camelCaseKeys } from '../../shared/utils/caseUtils'
 
 export const printBracketSchema: PrintSchema[] = [
   {

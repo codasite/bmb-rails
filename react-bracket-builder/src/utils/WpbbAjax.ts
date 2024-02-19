@@ -1,6 +1,6 @@
-import { camelCaseKeys } from '../brackets/shared/api/bracketApi'
 import { BracketRes, PlayRes } from '../brackets/shared/api/types/bracket'
 import { OverlayUrlThemeMap } from '../preview/Gallery'
+import { camelCaseKeys } from '../brackets/shared/utils/caseUtils'
 
 declare var wpbb_app_obj: any
 declare var wpbb_bracket_product_preview_obj: any
