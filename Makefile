@@ -116,16 +116,9 @@ phpstan-generate-baseline:
 
 prod-pull:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile all pull
-	docker compose -f compose.yaml -f compose.prod.yaml --profile all pull
 
 prod-up:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb up -d --no-build --remove-orphans --force-recreate --pull always
-
-prod-build-plugin:
-	docker compose -f compose.yaml -f compose.prod.yaml --profile wp -p wpbb build
-
-prod-build-images:
-	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb build
 
 prod-build-plugin:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile wp -p wpbb build
@@ -142,18 +135,8 @@ prod-push-plugin:
 
 prod-push-images:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb push
-	make prod-build-plugin
-	make prod-build-images
-
-prod-push-plugin:
-	docker compose -f compose.yaml -f compose.prod.yaml --profile wp -p wpbb push plugin
-
-prod-push-images:
-	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb push
 
 prod-push:
-	make prod-push-wp
-	make prod-push-images
 	make prod-push-wp
 	make prod-push-images
 	

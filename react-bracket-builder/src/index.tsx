@@ -3,7 +3,6 @@ import React from 'react'
 import App from './App'
 import { render } from 'react-dom'
 import * as Sentry from '@sentry/react'
-import { camelCaseKeys } from './brackets/shared/api/bracketApi'
 import './styles/main.css'
 import { EditBracketModal } from './modals/dashboard/brackets/EditBracketModal'
 import {
@@ -51,9 +50,12 @@ const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
 
+const StripeOnboardingRedirect = React.lazy(
+  () => import('./redirects/StripeOnboardingRedirect')
+)
+
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 const appObj = wpbbAjax.getAppObj()
-console.log('appObj', appObj)
 if (Object.keys(appObj).length !== 0) {
   initializeSentry(appObj)
   renderProductPreview(appObj)
@@ -65,6 +67,7 @@ if (Object.keys(appObj).length !== 0) {
   renderMyBracketsModals(appObj)
   renderBustBracketPlay(appObj)
   renderPublicBracketsModals(appObj)
+  renderStripeOnboardingRedirect(appObj)
   addClickHandlers(appObj)
   insertElements(appObj)
 } else {
@@ -245,6 +248,15 @@ function renderPublicBracketsModals(appObj: WpbbAppObj) {
       <ShareBracketModal />
     </>,
     'wpbb-public-bracket-modals'
+  )
+}
+
+function renderStripeOnboardingRedirect(appObj: WpbbAppObj) {
+  renderDiv(
+    <App>
+      <StripeOnboardingRedirect />
+    </App>,
+    'wpbb-stripe-onboarding-redirect'
   )
 }
 function addClickHandlers(appObj: WpbbAppObj) {
