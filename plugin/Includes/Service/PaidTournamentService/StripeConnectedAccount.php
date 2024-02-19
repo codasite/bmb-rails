@@ -8,6 +8,7 @@ use WP_User;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 class StripeConnectedAccount {
   public static string $CONNECTED_ACCOUNT_ID_META_KEY = 'stripe_connected_account_id';
@@ -49,8 +50,8 @@ class StripeConnectedAccount {
     }
     $res = $this->stripe->accountLinks->create([
       'account' => $acct_id,
-      'refresh_url' => home_url('/account-link-refresh'),
-      'return_url' => home_url('/account-link-return'),
+      'refresh_url' => DashboardPage::get_url(),
+      'return_url' => DashboardPage::get_url(),
       'type' => 'account_onboarding',
     ]);
     return $res->url;

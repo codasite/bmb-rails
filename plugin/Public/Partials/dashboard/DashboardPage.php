@@ -15,6 +15,10 @@ class DashboardPage {
       $args['tournaments_page'] ?? new TournamentsPage();
   }
 
+  public static function get_url(): string {
+    return get_permalink(get_page_by_path('dashboard'));
+  }
+
   public static function get_nav_link(
     $tab,
     $current_tab,

@@ -6,6 +6,7 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
+use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 /**
  * The public-facing functionality of the plugin.
@@ -155,7 +156,7 @@ class EnqueueScriptsHooks implements HooksInterface {
       'sentry_dsn' => $sentry_dsn,
       'nonce' => wp_create_nonce('wp_rest'),
       'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-      'dashboard_url' => get_permalink(get_page_by_path('dashboard')),
+      'dashboard_url' => DashboardPage::get_url(),
       'bracket_builder_url' => get_permalink(
         get_page_by_path('bracket-builder')
       ),
