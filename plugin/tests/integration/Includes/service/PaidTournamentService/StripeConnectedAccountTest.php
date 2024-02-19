@@ -1,5 +1,6 @@
 
 <?php
+use Stripe\Service\AccountLinkService;
 use Stripe\Service\AccountService;
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
@@ -72,6 +73,44 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
     ]);
     $acct_id = $service->create_or_get_connected_account_id();
     $this->assertEquals('acct_1', $acct_id);
+  }
+
+  public function test_get_onboarding_link() {
+    $user = $this->create_user();
+    $stripe_mock = $this->createMock(StripeMock::class);
+
+    $stripe_accounts_mock = $this->getMockBuilder(AccountService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $stripe_accounts_mock
+      ->method('create')
+      ->willReturn((object) ['id' => 'acct_1']);
+
+    $links_mock = $this->getMockBuilder(AccountLinkService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $links_mock
+      ->expects($this->once())
+      ->method('create')
+      ->with([
+        'account' => 'acct_1',
+        'refresh_url' => home_url('/account-link-refresh'),
+        'return_url' => home_url('/account-link-return'),
+        'type' => 'account_onboarding',
+      ])
+      ->willReturn((object) ['url' => 'http://example.com']);
+
+    $stripe_mock->accountLinks = $links_mock;
+    $stripe_mock->accounts = $stripe_accounts_mock;
+
+    $service = new StripeConnectedAccount([
+      'owner_id' => $user->ID,
+      'stripe_client' => $stripe_mock,
+    ]);
+    $link = $service->get_onboarding_link();
+    $this->assertEquals('http://example.com', $link);
   }
 }
 
