@@ -29,7 +29,9 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
   public function __construct(array $args = []) {
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
-    $this->stripe = $args['stripe_client'] = (new StripeClientFactory())->createStripeClient();
+    $this->stripe =
+      $args['stripe_client'] ??
+      (new StripeClientFactory())->createStripeClient();
     $this->connected_account =
       $args['connected_account'] ??
       new StripeConnectedAccount([
