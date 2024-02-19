@@ -50,6 +50,10 @@ const PrintPlayPage = React.lazy(
   () => import('./brackets/BracketBuilders/PrintPlayPage/PrintPlayPage')
 )
 
+const StripeOnboardingRedirect = React.lazy(
+  () => import('./redirects/StripeOnboardingRedirect')
+)
+
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 const appObj = wpbbAjax.getAppObj()
 if (Object.keys(appObj).length !== 0) {
@@ -63,6 +67,7 @@ if (Object.keys(appObj).length !== 0) {
   renderMyBracketsModals(appObj)
   renderBustBracketPlay(appObj)
   renderPublicBracketsModals(appObj)
+  renderStripeOnboardingRedirect(appObj)
   addClickHandlers(appObj)
   insertElements(appObj)
 } else {
@@ -243,6 +248,15 @@ function renderPublicBracketsModals(appObj: WpbbAppObj) {
       <ShareBracketModal />
     </>,
     'wpbb-public-bracket-modals'
+  )
+}
+
+function renderStripeOnboardingRedirect(appObj: WpbbAppObj) {
+  renderDiv(
+    <App>
+      <StripeOnboardingRedirect />
+    </App>,
+    'wpbb-stripe-onboarding-redirect'
   )
 }
 function addClickHandlers(appObj: WpbbAppObj) {
