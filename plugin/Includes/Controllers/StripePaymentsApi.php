@@ -42,7 +42,9 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     $this->tournament_service =
       $args['tournament_service'] ?? new StripePaidTournamentService();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
-    $this->stripe = $args['stripe_client'] = (new StripeClientFactory())->createStripeClient();
+    $this->stripe = $args[
+      'stripe_client'
+    ] = (new StripeClientFactory())->createStripeClient();
     $this->connected_account =
       $args['connected_account'] ??
       new StripeConnectedAccount([
@@ -168,15 +170,15 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    *
    * @return WP_REST_Response
    */
-  public function onboarding_link(
-    WP_REST_Request $request
-  ): WP_REST_Response {
+  public function onboarding_link(WP_REST_Request $request): WP_REST_Response {
     try {
+      $this->connected_account->set_owner_id(get_current_user_id());
       return new WP_REST_Response(
         [
           'url' => $this->connected_account->get_onboarding_link(),
         ],
-        200);
+        200
+      );
     } catch (\Exception $e) {
       return new WP_REST_Response($e->getMessage(), 500);
     }
