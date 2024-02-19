@@ -1,6 +1,9 @@
 
 <?php
+use Stripe\Service\AccountService;
+use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
+use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;
 
 class StripeConnectedAccountTest extends WPBB_UnitTestCase {
   public function test_get_connected_account_id() {
@@ -40,6 +43,35 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
     $service = new StripeConnectedAccount(['owner_id' => $user->ID]);
     $fee = $service->calculate_application_fee(100);
     $this->assertEquals(100, $fee);
+  }
+
+  public function test_create_connected_account() {
+    $user = $this->create_user();
+    $stripe_mock = $this->getMockBuilder(StripeMock::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $stripe_accounts_mock = $this->getMockBuilder(AccountService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $stripe_accounts_mock
+      ->expects($this->once())
+      ->method('create')
+      ->with([
+        'type' => 'express',
+        'email' => $user->user_email,
+      ])
+      ->willReturn((object) ['id' => 'acct_1']);
+
+    $stripe_mock->accounts = $stripe_accounts_mock;
+
+    $service = new StripeConnectedAccount([
+      'owner_id' => $user->ID,
+      'stripe_client' => $stripe_mock,
+    ]);
+    $acct_id = $service->create_or_get_connected_account_id();
+    $this->assertEquals('acct_1', $acct_id);
   }
 }
 

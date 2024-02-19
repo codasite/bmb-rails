@@ -14,13 +14,21 @@ class StripeConnectedAccount {
   public static float $APPLICATION_FEE_PERCENTAGE = 0.125;
   // The minimum application fee to charge in cents
   public static float $APPLICATION_FEE_MINIMUM = 100;
+  private StripeClient $stripe;
   private int|null $owner_id;
-
   /**
    * @param array<string, mixed> $args
    */
   public function __construct(array $args = []) {
     $this->owner_id = $args['owner_id'] ?? null;
+    try {
+      $this->stripe =
+        $args['stripe_client'] ??
+        new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
+    } catch (InvalidArgumentException $e) {
+      error_log('Stripe API key not set');
+      $this->stripe = $args['stripe_client'] ?? new StripeClient();
+    }
   }
 
   public function set_owner_id(int $owner_id): void {
@@ -33,9 +41,31 @@ class StripeConnectedAccount {
     }
   }
 
-  public function get_connected_account_id(): string {
+  public function create_or_get_connected_account_id(): string {
     $this->validate_owner_id();
-    // get user meta
+    $acct_id = $this->get_connected_account_id();
+    if (empty($acct_id)) {
+      $acct_id = $this->create_connected_account();
+      $this->set_connected_account_id($acct_id);
+    }
+    return $acct_id;
+  }
+
+  public function create_connected_account(): string {
+    $this->validate_owner_id();
+    $user = new WP_User($this->owner_id);
+    $email = $user->user_email;
+    if (empty($email)) {
+      throw new InvalidArgumentException('User email not set');
+    }
+    $res = $this->stripe->accounts->create([
+      'type' => 'express',
+      'email' => $email,
+    ]);
+    return $res->id;
+  }
+
+  public function get_connected_account_id(): string {
     $acct_id = get_user_meta(
       $this->owner_id,
       self::$CONNECTED_ACCOUNT_ID_META_KEY,
