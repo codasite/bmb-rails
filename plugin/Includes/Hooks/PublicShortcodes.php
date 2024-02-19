@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
+use WStrategies\BMB\Public\Partials\StripeOnboardingRedirect;
 
 class PublicShortcodes implements HooksInterface {
   public function load(Loader $loader): void {
@@ -48,6 +49,12 @@ class PublicShortcodes implements HooksInterface {
     return ob_get_clean();
   }
 
+  public function render_stripe_onboarding_redirect(): void {
+    ob_start();
+    include WPBB_PLUGIN_DIR . 'Public/Partials/stripe-onboarding-redirect.php';
+    ob_get_clean();
+  }
+
   /**
    * Add shortcode to render events
    *
@@ -68,5 +75,9 @@ class PublicShortcodes implements HooksInterface {
       'render_bracket_product_preview',
     ]); // This is a single post type template for woocommerce product posts with the `bracket-ready` tag
     add_shortcode('wpbb-user-profile', [$this, 'render_user_profile_page']); // This is a single post type template for user_profile posts
+    add_shortcode('wpbb-stripe-onboarding-redirect', [
+      new StripeOnboardingRedirect(),
+      'render',
+    ]);
   }
 }

@@ -115,6 +115,12 @@ class Utils {
     }
   }
 
+  /**
+   * @param string $msg
+   * @param 'debug'|'warning'|'error'|'fatal'|'info' $level
+   *
+   * @return void
+   */
   public function log(string $msg, string $level = 'debug'): void {
     error_log($msg);
     $severity = match ($level) {

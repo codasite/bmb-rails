@@ -2,13 +2,12 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
-use Exception;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
-use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
+use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceFactory;
 use WStrategies\BMB\Includes\Utils;
 
 class UpcomingBracketHooks implements HooksInterface {
@@ -22,20 +21,7 @@ class UpcomingBracketHooks implements HooksInterface {
       $args['notification_repo'] ?? new NotificationRepo();
     $this->utils = $args['utils'] ?? new Utils();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    try {
-      $this->notification_service =
-        $args['notification_service'] ??
-        new UpcomingBracketNotificationService();
-    } catch (Exception $e) {
-      error_log(
-        'Caught error: ' .
-          $e->getMessage() .
-          '\nSetting ' .
-          __CLASS__ .
-          '::$notification_service to null'
-      );
-      $this->notification_service = null;
-    }
+    $this->notification_service = $args['notification_service'] ?? (new BracketResultsNotificationServiceFactory())->create();
   }
 
   public function load(Loader $loader): void {
