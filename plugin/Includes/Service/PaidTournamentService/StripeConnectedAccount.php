@@ -41,6 +41,21 @@ class StripeConnectedAccount {
     }
   }
 
+  public function get_onboarding_link(): string {
+    $this->validate_owner_id();
+    $acct_id = $this->create_or_get_connected_account_id();
+    if (empty($acct_id)) {
+      throw new InvalidArgumentException('Connected account ID not set');
+    }
+    $res = $this->stripe->accountLinks->create([
+      'account' => $acct_id,
+      'refresh_url' => home_url('/account-link-refresh'),
+      'return_url' => home_url('/account-link-return'),
+      'type' => 'account_onboarding',
+    ]);
+    return $res->url;
+  }
+
   public function create_or_get_connected_account_id(): string {
     $this->validate_owner_id();
     $acct_id = $this->get_connected_account_id();
