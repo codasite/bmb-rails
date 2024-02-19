@@ -112,5 +112,43 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
     $link = $service->get_onboarding_link();
     $this->assertEquals('http://example.com', $link);
   }
+
+  public function test_create_or_get_account_id_existing_id() {
+    $user = $this->create_user();
+    update_user_meta(
+      $user->ID,
+      StripeConnectedAccount::$CONNECTED_ACCOUNT_ID_META_KEY,
+      'acct_1'
+    );
+
+    $stripe_mock = $this->createMock(StripeMock::class);
+    $service = new StripeConnectedAccount([
+      'owner_id' => $user->ID,
+      'stripe_client' => $stripe_mock,
+    ]);
+    $acct_id = $service->create_or_get_connected_account_id();
+    $this->assertEquals('acct_1', $acct_id);
+  }
+
+  public function test_create_or_get_account_id_new_id() {
+    $user = $this->create_user();
+    $stripe_mock = $this->createMock(StripeMock::class);
+    $stripe_accounts_mock = $this->getMockBuilder(AccountService::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $stripe_accounts_mock
+      ->method('create')
+      ->willReturn((object) ['id' => 'acct_1']);
+
+    $stripe_mock->accounts = $stripe_accounts_mock;
+
+    $service = new StripeConnectedAccount([
+      'owner_id' => $user->ID,
+      'stripe_client' => $stripe_mock,
+    ]);
+    $acct_id = $service->create_or_get_connected_account_id();
+    $this->assertEquals('acct_1', $acct_id);
+  }
 }
 
