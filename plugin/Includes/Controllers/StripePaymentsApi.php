@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Controllers;
 
-use Stripe\Exception\InvalidArgumentException;
 use Stripe\StripeClient;
 use WP_Error;
 use WP_REST_Controller;
@@ -13,6 +12,7 @@ use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
+use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 
 class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
@@ -40,14 +40,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     $this->tournament_service =
       $args['tournament_service'] ?? new StripePaidTournamentService();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
-    try {
-      $this->stripe =
-        $args['stripe_client'] ??
-        new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
-    } catch (InvalidArgumentException $e) {
-      error_log('Stripe API key not set');
-      $this->stripe = $args['stripe_client'] ?? new StripeClient();
-    }
+    $this->stripe = $args['stripe_client'] = (new StripeClientFactory())->createStripeClient();
   }
 
   public function load(Loader $loader): void {

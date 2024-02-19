@@ -1,13 +1,12 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
+use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\InvalidArgumentException;
-use Stripe\PaymentIntent;
 use Stripe\StripeClient;
+use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
+use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 use WP_User;
-use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 class StripeConnectedAccount {
@@ -22,14 +21,7 @@ class StripeConnectedAccount {
    */
   public function __construct(array $args = []) {
     $this->owner_id = $args['owner_id'] ?? null;
-    try {
-      $this->stripe =
-        $args['stripe_client'] ??
-        new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
-    } catch (InvalidArgumentException $e) {
-      error_log('Stripe API key not set');
-      $this->stripe = $args['stripe_client'] ?? new StripeClient();
-    }
+    $this->stripe = $args['stripe_client'] ?? (new StripeClientFactory())->createStripeClient();
   }
 
   public function set_owner_id(int $owner_id): void {
@@ -101,7 +93,7 @@ class StripeConnectedAccount {
 
   public function should_create_destination_charge(): bool {
     $this->validate_owner_id();
-    $acct_id = $this->get_connected_account_id($this->owner_id);
+    $acct_id = $this->get_connected_account_id();
     return !empty($acct_id);
   }
 
@@ -114,5 +106,14 @@ class StripeConnectedAccount {
       self::$APPLICATION_FEE_MINIMUM,
       (int) $amount * self::$APPLICATION_FEE_PERCENTAGE
     );
+  }
+
+  public function charges_enabled(): bool {
+    try {
+      return $this->stripe->accounts->retrieve($this->get_connected_account_id())->charges_enabled;
+    } catch (ApiErrorException $e) {
+      SentryLogger::log_error($e);
+      return false;
+    }
   }
 }

@@ -1,12 +1,12 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
-use Stripe\Exception\InvalidArgumentException;
 use Stripe\PaymentIntent;
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 
 class StripePaidTournamentService extends BracketPlayCreateListenerBase {
   public static string $PAYMENT_INTENT_ID_META_KEY = 'payment_intent_id';
@@ -29,14 +29,7 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
   public function __construct(array $args = []) {
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
-    try {
-      $this->stripe =
-        $args['stripe_client'] ??
-        new StripeClient(defined('STRIPE_SECRET_KEY') ? STRIPE_SECRET_KEY : '');
-    } catch (InvalidArgumentException $e) {
-      error_log('Stripe API key not set');
-      $this->stripe = $args['stripe_client'] ?? new StripeClient();
-    }
+    $this->stripe = $args['stripe_client'] = (new StripeClientFactory())->createStripeClient();
     $this->connected_account =
       $args['connected_account'] ??
       new StripeConnectedAccount([
