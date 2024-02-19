@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Controllers;
 
+use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use WP_Error;
 use WP_REST_Controller;
@@ -10,6 +11,7 @@ use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
@@ -28,6 +30,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   private StripePaidTournamentService $tournament_service;
   private PlayRepo $play_repo;
   private StripeClient $stripe;
+  private StripeConnectedAccount $connected_account;
 
   /**
    * @param array<string, mixed> $args
@@ -41,6 +44,11 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       $args['tournament_service'] ?? new StripePaidTournamentService();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->stripe = $args['stripe_client'] = (new StripeClientFactory())->createStripeClient();
+    $this->connected_account =
+      $args['connected_account'] ??
+      new StripeConnectedAccount([
+        'stripe_client' => $this->stripe,
+      ]);
   }
 
   public function load(Loader $loader): void {
@@ -63,6 +71,17 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'create_payment_intent'],
+        'permission_callback' => [$this, 'author_permission_check'],
+        'args' => $this->get_endpoint_args_for_item_schema(
+          WP_REST_Server::CREATABLE
+        ),
+      ],
+      'schema' => [$this, 'get_public_item_schema'],
+    ]);
+    register_rest_route($namespace, '/' . $base . '/onboarding-link', [
+      [
+        'methods' => WP_REST_Server::CREATABLE,
+        'callback' => [$this, 'onboarding_link'],
         'permission_callback' => [$this, 'author_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
@@ -143,6 +162,22 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     } catch (\Exception $e) {
       return new WP_REST_Response($e->getMessage(), 500);
     }
+  }
+
+  /**
+   * @param WP_REST_Request<array> $request
+   *
+   * @return WP_REST_Response
+   * @throws ApiErrorException
+   */
+  public function onboarding_link(
+    WP_REST_Request $request
+  ): WP_REST_Response {
+    return new WP_REST_Response(
+      [
+        'url' => $this->connected_account->get_onboarding_link(),
+      ],
+      200);
   }
 
   /**

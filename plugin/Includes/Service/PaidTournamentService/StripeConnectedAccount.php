@@ -4,9 +4,9 @@ namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 use Stripe\Exception\ApiErrorException;
 use Stripe\Exception\InvalidArgumentException;
 use Stripe\StripeClient;
+use WP_User;
 use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
-use WP_User;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 class StripeConnectedAccount {
@@ -34,6 +34,9 @@ class StripeConnectedAccount {
     }
   }
 
+  /**
+   * @throws ApiErrorException
+   */
   public function get_onboarding_link(): string {
     $this->validate_owner_id();
     $acct_id = $this->create_or_get_connected_account_id();
@@ -59,6 +62,9 @@ class StripeConnectedAccount {
     return $acct_id;
   }
 
+  /**
+   * @throws ApiErrorException
+   */
   public function create_connected_account(): string {
     $this->validate_owner_id();
     $user = new WP_User($this->owner_id);
@@ -102,7 +108,7 @@ class StripeConnectedAccount {
    * @return int The application fee to charge in cents
    */
   public function calculate_application_fee(int $amount): int {
-    return max(
+    return (int) max(
       self::$APPLICATION_FEE_MINIMUM,
       (int) $amount * self::$APPLICATION_FEE_PERCENTAGE
     );
