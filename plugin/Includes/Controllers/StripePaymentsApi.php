@@ -168,16 +168,19 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request<array> $request
    *
    * @return WP_REST_Response
-   * @throws ApiErrorException
    */
   public function onboarding_link(
     WP_REST_Request $request
   ): WP_REST_Response {
-    return new WP_REST_Response(
-      [
-        'url' => $this->connected_account->get_onboarding_link(),
-      ],
-      200);
+    try {
+      return new WP_REST_Response(
+        [
+          'url' => $this->connected_account->get_onboarding_link(),
+        ],
+        200);
+    } catch (ApiErrorException $e) {
+      return new WP_REST_Response($e->getMessage(), 500);
+    }
   }
 
   /**
