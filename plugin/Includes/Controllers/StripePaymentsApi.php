@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Controllers;
 
-use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use WP_Error;
 use WP_REST_Controller;
@@ -178,7 +177,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
           'url' => $this->connected_account->get_onboarding_link(),
         ],
         200);
-    } catch (ApiErrorException $e) {
+    } catch (\Exception $e) {
       return new WP_REST_Response($e->getMessage(), 500);
     }
   }

@@ -28,6 +28,9 @@ class StripeConnectedAccount {
     $this->owner_id = $owner_id;
   }
 
+  /**
+   * @throws InvalidArgumentException
+   */
   private function validate_owner_id(): void {
     if (is_null($this->owner_id) || $this->owner_id === 0) {
       throw new InvalidArgumentException('Owner ID not set');
@@ -35,7 +38,7 @@ class StripeConnectedAccount {
   }
 
   /**
-   * @throws ApiErrorException
+   * @throws ApiErrorException|InvalidArgumentException
    */
   public function get_onboarding_link(): string {
     $this->validate_owner_id();
