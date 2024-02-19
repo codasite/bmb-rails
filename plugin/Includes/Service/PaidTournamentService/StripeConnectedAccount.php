@@ -8,6 +8,7 @@ use WP_User;
 use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
+use WStrategies\BMB\Public\Partials\StripeOnboardingRedirect;
 
 class StripeConnectedAccount {
   public static string $CONNECTED_ACCOUNT_ID_META_KEY = 'stripe_connected_account_id';
@@ -21,7 +22,9 @@ class StripeConnectedAccount {
    */
   public function __construct(array $args = []) {
     $this->owner_id = $args['owner_id'] ?? null;
-    $this->stripe = $args['stripe_client'] ?? (new StripeClientFactory())->createStripeClient();
+    $this->stripe =
+      $args['stripe_client'] ??
+      (new StripeClientFactory())->createStripeClient();
   }
 
   public function set_owner_id(int $owner_id): void {
@@ -48,8 +51,8 @@ class StripeConnectedAccount {
     }
     $res = $this->stripe->accountLinks->create([
       'account' => $acct_id,
-      'refresh_url' => DashboardPage::get_url(),
       'return_url' => DashboardPage::get_url(),
+      'refresh_url' => StripeOnboardingRedirect::get_url(),
       'type' => 'account_onboarding',
     ]);
     return $res->url;
@@ -119,7 +122,9 @@ class StripeConnectedAccount {
 
   public function charges_enabled(): bool {
     try {
-      return $this->stripe->accounts->retrieve($this->get_connected_account_id())->charges_enabled;
+      return $this->stripe->accounts->retrieve(
+        $this->get_connected_account_id()
+      )->charges_enabled;
     } catch (ApiErrorException $e) {
       SentryLogger::log_error($e);
       return false;
