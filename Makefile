@@ -127,12 +127,6 @@ prod-build-plugin:
 prod-build-images:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb build
 
-prod-build-plugin:
-	docker compose -f compose.yaml -f compose.prod.yaml --profile wp -p wpbb build
-
-prod-build-images:
-	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb build
-
 prod-build:
 	make prod-build-plugin
 	make prod-build-images
