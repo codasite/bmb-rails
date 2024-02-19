@@ -2,6 +2,8 @@
 
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
+use WStrategies\BMB\Public\Partials\shared\PartialsCommon;
+
 class DashboardPage {
   private PlayHistoryPage $play_history_page;
   private TournamentsPage $tournaments_page;
@@ -54,6 +56,15 @@ class DashboardPage {
     <?php return ob_get_clean();
   }
 
+  private static function payments_button(): string|bool {
+    ob_start(); ?>
+    <button class="tw-text-white tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue tw-font-sans tw-uppercase tw-border-none tw-bg-white/10 tw-font-500 tw-w-full tw-cursor-pointer tw-leading-[1.6]">
+      <?php echo PartialsCommon::icon('card'); ?>
+      <span>Payments</span>
+    </button>
+    <?php return ob_get_clean();
+  }
+
   public function render($current_tab = null): false|string {
     $current_tab = $current_tab == null ? get_query_var('tab') : $current_tab;
 
@@ -96,6 +107,8 @@ class DashboardPage {
               ); ?></li>
             <li
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_account_settings_link(); ?></li>
+            <li
+              class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::payments_button(); ?></li>
           </ul>
         </nav>
         <div class="tw-flex-grow">
