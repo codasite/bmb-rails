@@ -21,7 +21,7 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
   // and then the client secret appended to the play response data
   private PaymentIntent $stripe_payment_intent;
   private bool $should_create_stripe_payment_intent = false;
-  private StripeConnectedAccount $connected_account;
+  private StripeConnectedAccountFactory $connected_account_factory;
 
   /**
    * @param array<string, mixed> $args
@@ -32,9 +32,9 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
     $this->stripe =
       $args['stripe_client'] ??
       (new StripeClientFactory())->createStripeClient();
-    $this->connected_account =
-      $args['connected_account'] ??
-      new StripeConnectedAccount([
+    $this->connected_account_factory =
+      $args['connected_account_factory'] ??
+      new StripeConnectedAccountFactory([
         'stripe_client' => $this->stripe,
       ]);
   }
@@ -109,7 +109,8 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
   ): \Stripe\PaymentIntent {
     # Stripe expects the amount in cents
     $amount =
-      $this->bracket_product_utils->get_bracket_fee($play->bracket_id) * 100;
+      (int) $this->bracket_product_utils->get_bracket_fee($play->bracket_id) *
+      100;
     $intent_data = [
       'amount' => $amount,
       'currency' => 'usd',
@@ -124,13 +125,13 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
         'Bracket author not found. Cannot determine whether to create destination charge.'
       );
     }
-    $this->connected_account->set_owner_id($bracket_author);
-    if ($this->connected_account->should_create_destination_charge()) {
+    $account = $this->connected_account_factory->getAccount($bracket_author);
+    if ($account->should_create_destination_charge()) {
       $intent_data[
         'application_fee_amount'
-      ] = $this->connected_account->calculate_application_fee($amount);
+      ] = StripeConnectedAccount::calculate_application_fee($amount);
       $intent_data['transfer_data'] = [
-        'destination' => $this->connected_account->get_connected_account_id(),
+        'destination' => $account->get_account_id(),
       ];
     }
     $intent = $this->stripe->paymentIntents->create($intent_data);

@@ -2,14 +2,14 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 
 class UserAdminHooks implements HooksInterface {
-  private StripeConnectedAccount $connected_account;
+  private StripeConnectedAccountFactory $connected_account_factory;
 
   public function __construct($opts = []) {
-    $this->connected_account =
-      $opts['connected_account'] ?? new StripeConnectedAccount();
+    $this->connected_account_factory =
+      $opts['connected_account_factory'] ?? new StripeConnectedAccountFactory();
   }
 
   public function load(Loader $loader): void {
@@ -40,7 +40,7 @@ class UserAdminHooks implements HooksInterface {
   }
 
   public function display_stripe_connected_acct_meta_box($user): void {
-    $this->connected_account->set_owner_id($user->ID);
+    $account = $this->connected_account_factory->getAccount($user->ID);
     wp_nonce_field(
       'stripe_connected_acct_meta_box',
       'stripe_connected_acct_meta_box_nonce'
@@ -58,9 +58,7 @@ class UserAdminHooks implements HooksInterface {
               type="text"
               name="acct_id"
               id="acct_id"
-              value="<?php echo esc_attr(
-                $this->connected_account->get_connected_account_id()
-              ); ?>"
+              value="<?php echo esc_attr($account->get_account_id()); ?>"
               class="regular-text ltr"
             />
           </td>
@@ -84,10 +82,8 @@ class UserAdminHooks implements HooksInterface {
       return;
     }
     if (isset($_POST['acct_id'])) {
-      $this->connected_account->set_owner_id($user_id);
-      $this->connected_account->set_connected_account_id(
-        sanitize_text_field($_POST['acct_id'])
-      );
+      $account = $this->connected_account_factory->getAccount($user_id);
+      $account->set_account_id(sanitize_text_field($_POST['acct_id']));
     }
   }
 }

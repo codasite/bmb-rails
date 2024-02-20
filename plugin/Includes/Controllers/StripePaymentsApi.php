@@ -10,10 +10,11 @@ use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
-use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
+use WStrategies\BMB\Includes\Utils;
 
 class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   /**
@@ -29,7 +30,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   private StripePaidTournamentService $tournament_service;
   private PlayRepo $play_repo;
   private StripeClient $stripe;
-  private StripeConnectedAccount $connected_account;
+  private StripeConnectedAccountFactory $connected_account_factory;
 
   /**
    * @param array<string, mixed> $args
@@ -45,9 +46,9 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     $this->stripe = $args[
       'stripe_client'
     ] = (new StripeClientFactory())->createStripeClient();
-    $this->connected_account =
-      $args['connected_account'] ??
-      new StripeConnectedAccount([
+    $this->connected_account_factory =
+      $args['connected_account_factory'] ??
+      new StripeConnectedAccountFactory([
         'stripe_client' => $this->stripe,
       ]);
   }
@@ -171,15 +172,16 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    * @return WP_REST_Response
    */
   public function onboarding_link(WP_REST_Request $request): WP_REST_Response {
+    $account = $this->connected_account_factory->getAccountForCurrentUser();
     try {
-      $this->connected_account->set_owner_id(get_current_user_id());
       return new WP_REST_Response(
         [
-          'url' => $this->connected_account->get_onboarding_link(),
+          'url' => $account->get_onboarding_link(),
         ],
         200
       );
     } catch (\Exception $e) {
+      (new Utils())->log_error($e->getTraceAsString());
       return new WP_REST_Response($e->getMessage(), 500);
     }
   }

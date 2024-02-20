@@ -2,17 +2,21 @@
 
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 use WStrategies\BMB\Public\Partials\shared\PartialsCommon;
 
 class DashboardPage {
   private PlayHistoryPage $play_history_page;
   private TournamentsPage $tournaments_page;
+  private StripeConnectedAccountFactory $account_factory;
 
   public function __construct($args = []) {
     $this->play_history_page =
       $args['play_history_page'] ?? new PlayHistoryPage();
     $this->tournaments_page =
       $args['tournaments_page'] ?? new TournamentsPage();
+    $this->account_factory =
+      $args['account_factory'] ?? new StripeConnectedAccountFactory();
   }
 
   public static function get_url(): string {
@@ -28,7 +32,7 @@ class DashboardPage {
     $active = $tab === $current_tab;
     ob_start();
     ?>
-    <a class="tw-text-white tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue<?php echo $active
+    <a class="tw-text-white tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue/90<?php echo $active
       ? ' tw-bg-blue'
       : ' tw-bg-white/10'; ?>"
        href="<?php echo get_permalink() .
@@ -60,11 +64,18 @@ class DashboardPage {
     <?php return ob_get_clean();
   }
 
-  private static function payments_button(): string|bool {
-    ob_start(); ?>
-    <button class="tw-text-white tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue tw-font-sans tw-uppercase tw-border-none tw-bg-white/10 tw-font-500 tw-w-full tw-cursor-pointer tw-leading-[1.6]">
+  private function payments_button(): string|bool {
+    $account = $this->account_factory->getAccountForCurrentUser();
+    $classes = $account->charges_enabled()
+      ? 'tw-bg-white/10'
+      : 'tw-bg-red hover:tw-bg-red/90';
+    ob_start();
+    ?>
+    <button class="wpbb-payments-button tw-text-white tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue tw-font-sans tw-uppercase tw-border-none tw-font-500 tw-w-full tw-cursor-pointer tw-leading-[1.6] <?php echo $classes; ?>">
       <?php echo PartialsCommon::icon('card'); ?>
-      <span>Payments</span>
+      <span><?php echo $account->charges_enabled()
+        ? 'Payments'
+        : 'Set up payments'; ?></span>
     </button>
     <?php return ob_get_clean();
   }

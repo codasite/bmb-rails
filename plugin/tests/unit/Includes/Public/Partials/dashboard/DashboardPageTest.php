@@ -14,7 +14,7 @@ use WStrategies\BMB\Public\Partials\dashboard\TournamentsPage;
 class DashboardPageTest extends TestCase {
   use MatchesSnapshots;
 
-  public function test_render_dashboard() {
+  public function setUp(): void {
     WP_Mock::userFunction('get_permalink', [
       'return' => 'http://example.com',
     ]);
@@ -39,7 +39,15 @@ class DashboardPageTest extends TestCase {
     WP_Mock::userFunction('get_post_meta', [
       'return' => 5,
     ]);
+    WP_Mock::userFunction('get_user_meta', [
+      'return' => 5,
+    ]);
+    WP_Mock::userFunction('wp_get_current_user', [
+      'return' => (object) ['ID' => 1],
+    ]);
+  }
 
+  public function test_render_dashboard() {
     $post_mock = $this->mockPost([
       'ID' => 1,
       'post_author' => 1,
@@ -87,15 +95,6 @@ class DashboardPageTest extends TestCase {
   }
 
   public function test_render_dashboard_my_profile() {
-    WP_Mock::userFunction('get_permalink', [
-      'return' => 'http://example.com',
-    ]);
-    WP_Mock::userFunction('get_page_by_path', [
-      'return' => (object) ['ID' => 1],
-    ]);
-    WP_Mock::userFunction('wp_get_current_user', [
-      'return' => (object) ['ID' => 1],
-    ]);
     $wp_query_mock = Mockery::mock('overload:WP_Query');
     $wp_query_mock
       ->shouldReceive('__construct')
@@ -111,21 +110,6 @@ class DashboardPageTest extends TestCase {
   }
 
   public function test_render_play_history_page() {
-    WP_Mock::userFunction('get_permalink', [
-      'return' => 'http://example.com',
-    ]);
-    WP_Mock::userFunction('get_page_by_path', [
-      'return' => (object) ['ID' => 1],
-    ]);
-    WP_Mock::userFunction('get_query_var', [
-      'return' => '1',
-    ]);
-    WP_Mock::userFunction('absint', [
-      'return' => 1,
-    ]);
-    WP_Mock::userFunction('get_current_user_id', [
-      'return' => 1,
-    ]);
     $wp_query_mock = Mockery::mock('overload:WP_Query');
     $wp_query_mock->shouldReceive('__construct')->andSet('max_num_pages', 1);
     $tournament_page_mock = $this->getMockBuilder(TournamentsPage::class)
