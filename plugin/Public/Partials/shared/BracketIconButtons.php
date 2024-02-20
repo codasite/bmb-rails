@@ -70,7 +70,7 @@ class BracketIconButtons {
   }
 
   public static function set_fee_btn($bracket): false|string {
-    if (!current_user_can('wpbb_create_paid_bracket', $bracket->id)) {
+    if (!current_user_can('wpbb_add_bracket_fee', $bracket->id)) {
       return '';
     }
     return DashboardCommon::icon_btn(
