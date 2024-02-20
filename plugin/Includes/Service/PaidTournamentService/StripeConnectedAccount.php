@@ -7,6 +7,7 @@ use WP_User;
 use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
+use WStrategies\BMB\Public\Partials\StripeOnboardingRedirect;
 
 class StripeConnectedAccount {
   public static string $CONNECTED_ACCOUNT_ID_META_KEY = 'stripe_connected_account_id';
@@ -43,7 +44,7 @@ class StripeConnectedAccount {
     $acct_id = $this->get_or_create_account_id();
     $res = $this->stripe->accountLinks->create([
       'account' => $acct_id,
-      'refresh_url' => DashboardPage::get_url(),
+      'refresh_url' => StripeOnboardingRedirect::get_url(),
       'return_url' => DashboardPage::get_url(),
       'type' => 'account_onboarding',
     ]);

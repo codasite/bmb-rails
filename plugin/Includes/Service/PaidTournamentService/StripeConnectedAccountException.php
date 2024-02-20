@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
-use _PHPStan_8b6260c21\Nette\Neon\Exception;
+use Exception;
 
 class StripeConnectedAccountException extends Exception {
 }
