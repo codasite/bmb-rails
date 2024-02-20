@@ -7,7 +7,6 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
-use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketsCommon {
 
@@ -60,7 +59,14 @@ class BracketsCommon {
     return ob_get_clean();
   }
 
-  public static function bracket_tag( $label, $color, $filled = true ): false|string {
+  /**
+   * @param $label
+   * @param 'yellow'|'green'|'white'|'blue'|'red' $color
+   * @param $filled
+   *
+   * @return false|string
+   */
+  public static function bracket_tag( $label, string $color, $filled = true ): false|string {
     $filled_path = WPBB_PLUGIN_DIR . 'Public/assets/icons/ellipse.svg';
     $empty_path  = WPBB_PLUGIN_DIR . 'Public/assets/icons/ellipse_empty.svg';
     $base_styles = [
@@ -195,6 +201,9 @@ class BracketsCommon {
   public static function play_bracket_btn( Bracket $bracket, array $args=[]): false|string {
     $label = $args['label'] ?? 'Play Tournament';
     $endpoint = $bracket->url . 'play';
+    /**
+     * @var 'green'|'white'|'yellow' $color
+     */
     $color = $args['color'] ?? 'green';
     $base_styles = [
       'tw-flex',
@@ -241,6 +250,9 @@ class BracketsCommon {
 
   public static function view_results_btn( Bracket $bracket, array $args=[]): false|string {
     $label = $args['label'] ?? 'View Results';
+    /**
+     * @var 'green'|'white'|'yellow' $color
+     */
     $color = $args['color'] ?? 'green';
     $url = $bracket->url . '/results/view';
     $base_styles = [

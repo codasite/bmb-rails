@@ -1,22 +1,17 @@
-import { bracketApi } from '../../../brackets/shared/api/bracketApi'
+import { bracketApi } from '../../../brackets/shared'
 
 export function paymentsHandler() {
   const buttons = document.getElementsByClassName('wpbb-payments-button')
   for (const button of buttons) {
-    button.addEventListener('click', (e) => {
-      const el = e.currentTarget as HTMLButtonElement
-      const bracketId = parseInt(el.dataset.bracketId)
-      if (!bracketId) {
-        return
+    button.addEventListener('click', async (e) => {
+      const button = e.currentTarget as HTMLButtonElement
+      button.disabled = true
+      try {
+        const { url } = await bracketApi.getStripeOnboardingLink()
+        window.location.href = url
+      } catch (error) {
+        button.disabled = false
       }
-      bracketApi
-        .updateBracket(bracketId, { status: 'private' })
-        .then((res) => {
-          window.location.reload()
-        })
-        .catch((err) => {
-          console.error(err)
-        })
     })
   }
 }

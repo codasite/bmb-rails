@@ -60,7 +60,9 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     $this->rest_base = 'brackets';
     $this->score_service = $args['score_service'] ?? new ScoreService();
     $this->serializer = $args['serializer'] ?? new BracketSerializer();
-    $this->notification_service = $args['notification_service'] ?? (new BracketResultsNotificationServiceFactory())->create();
+    $this->notification_service =
+      $args['notification_service'] ??
+      (new BracketResultsNotificationServiceFactory())->create();
   }
 
   public function load(Loader $loader): void {

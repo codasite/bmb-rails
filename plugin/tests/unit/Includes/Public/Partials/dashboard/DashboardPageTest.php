@@ -1,20 +1,23 @@
 <?php
 
 use Spatie\Snapshots\MatchesSnapshots;
+use Stripe\Service\AccountService;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StubStripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 use WStrategies\BMB\Public\Partials\dashboard\ManageBracketsPage;
 use WStrategies\BMB\Public\Partials\dashboard\PlayHistoryPage;
 use WStrategies\BMB\Public\Partials\dashboard\TournamentsPage;
+use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;
 
 class DashboardPageTest extends TestCase {
   use MatchesSnapshots;
 
-  public function test_render_dashboard() {
+  public function setUp(): void {
     WP_Mock::userFunction('get_permalink', [
       'return' => 'http://example.com',
     ]);
@@ -39,7 +42,15 @@ class DashboardPageTest extends TestCase {
     WP_Mock::userFunction('get_post_meta', [
       'return' => 5,
     ]);
+    WP_Mock::userFunction('get_user_meta', [
+      'return' => 5,
+    ]);
+    WP_Mock::userFunction('wp_get_current_user', [
+      'return' => (object) ['ID' => 1],
+    ]);
+  }
 
+  public function test_render_dashboard() {
     $post_mock = $this->mockPost([
       'ID' => 1,
       'post_author' => 1,
@@ -67,10 +78,13 @@ class DashboardPageTest extends TestCase {
     $tournament_query_mock->method('has_tournaments')->willReturn(true);
     $tournament_query_mock->method('get_max_num_pages')->willReturn(1);
     $tournament_query_mock->method('get_tournaments_count')->willReturn(1);
+    $stripe_mock = $this->createMock(StripeMock::class);
+    $stripe_mock->accounts = $this->createMock(AccountService::class);
     $rendered = (new DashboardPage([
       'tournaments_page' => new TournamentsPage([
         'tournament_query' => $tournament_query_mock,
       ]),
+      'account_factory' => new StubStripeConnectedAccountFactory(),
     ]))->render();
 
     $rendered = preg_replace(
@@ -87,15 +101,6 @@ class DashboardPageTest extends TestCase {
   }
 
   public function test_render_dashboard_my_profile() {
-    WP_Mock::userFunction('get_permalink', [
-      'return' => 'http://example.com',
-    ]);
-    WP_Mock::userFunction('get_page_by_path', [
-      'return' => (object) ['ID' => 1],
-    ]);
-    WP_Mock::userFunction('wp_get_current_user', [
-      'return' => (object) ['ID' => 1],
-    ]);
     $wp_query_mock = Mockery::mock('overload:WP_Query');
     $wp_query_mock
       ->shouldReceive('__construct')
@@ -106,26 +111,12 @@ class DashboardPageTest extends TestCase {
       ->getMock();
     $rendered = (new DashboardPage([
       'tournaments_page' => $tournament_page_mock,
+      'account_factory' => new StubStripeConnectedAccountFactory(),
     ]))->render('my-profile');
     $this->assertMatchesHtmlSnapshot($rendered);
   }
 
   public function test_render_play_history_page() {
-    WP_Mock::userFunction('get_permalink', [
-      'return' => 'http://example.com',
-    ]);
-    WP_Mock::userFunction('get_page_by_path', [
-      'return' => (object) ['ID' => 1],
-    ]);
-    WP_Mock::userFunction('get_query_var', [
-      'return' => '1',
-    ]);
-    WP_Mock::userFunction('absint', [
-      'return' => 1,
-    ]);
-    WP_Mock::userFunction('get_current_user_id', [
-      'return' => 1,
-    ]);
     $wp_query_mock = Mockery::mock('overload:WP_Query');
     $wp_query_mock->shouldReceive('__construct')->andSet('max_num_pages', 1);
     $tournament_page_mock = $this->getMockBuilder(TournamentsPage::class)
@@ -158,6 +149,7 @@ class DashboardPageTest extends TestCase {
           }
         },
       ]),
+      'account_factory' => new StubStripeConnectedAccountFactory(),
     ]))->render('play-history');
     $this->assertMatchesHtmlSnapshot($rendered);
   }
