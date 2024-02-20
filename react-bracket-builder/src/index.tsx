@@ -239,7 +239,9 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
         canCreateBracket={appObj.userCanShareBracket}
       />
       <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} />
-      <SetTournamentFeeModal chargesEnabled={appObj.chargesEnabled} />
+      <SetTournamentFeeModal
+        chargesEnabled={appObj.userStripeAccountChargesEnabled}
+      />
     </>,
     'wpbb-tournaments-modals'
   )

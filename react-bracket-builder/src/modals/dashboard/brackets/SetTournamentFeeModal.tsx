@@ -92,7 +92,13 @@ export default function SetTournamentFeeModal(props: {
           </ConfirmButton>
         </>
       )}
-      <CancelButton onClick={() => setShow(false)} />
+      <CancelButton
+        onClick={() => {
+          setShowConfirm(false)
+          setShow(false)
+        }}
+        className={'tw-mt-10'}
+      />
     </Modal>
   )
 }
