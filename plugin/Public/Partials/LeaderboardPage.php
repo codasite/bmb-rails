@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\Public\Partials;
 
-use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
@@ -24,6 +23,7 @@ class LeaderboardPage implements TemplateInterface {
 			'complete' => BracketsCommon::view_results_btn($bracket, ['color' => 'white']),
 			'score' => BracketsCommon::view_results_btn($bracket, ['color' => 'yellow']),
 			'publish' => BracketsCommon::play_bracket_btn($bracket, ['color' => 'white']),
+      default => BracketsCommon::view_results_btn($bracket, ['color' => 'white']),
 		};
 
 		ob_start();
