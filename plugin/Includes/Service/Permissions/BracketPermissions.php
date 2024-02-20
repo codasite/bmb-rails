@@ -21,7 +21,7 @@ class BracketPermissions implements PermissionsServiceInterface {
       return false;
     }
 
-    if ($cap = 'wpbb_add_bracket_fee') {
+    if ($cap == 'wpbb_add_bracket_fee') {
       return current_user_can('wpbb_create_paid_bracket') &&
         $this->is_bracket_author($user_id, $bracket);
     }

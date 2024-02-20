@@ -73,7 +73,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'create_payment_intent'],
-        'permission_callback' => [$this, 'author_permission_check'],
+        'permission_callback' => [$this, 'create_payment_intent_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
         ),
@@ -84,7 +84,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'onboarding_link'],
-        'permission_callback' => [$this, 'stripe_payments_permission_check'],
+        'permission_callback' => [$this, 'create_paid_bracket_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
         ),
@@ -95,7 +95,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'payments_link'],
-        'permission_callback' => [$this, 'stripe_payments_permission_check'],
+        'permission_callback' => [$this, 'create_paid_bracket_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
         ),
@@ -224,15 +224,15 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    *
    * @return WP_Error|bool
    */
-  public function author_permission_check(
+  public function create_payment_intent_check(
     WP_REST_Request $request
   ): WP_Error|bool {
     return current_user_can('wpbb_create_payment_intent', $request['play_id']);
   }
 
-  public function stripe_payments_permission_check(
+  public function create_paid_bracket_check(
     WP_REST_Request $request
   ): WP_Error|bool {
-    return true;
+    return current_user_can('wpbb_create_paid_bracket');
   }
 }
