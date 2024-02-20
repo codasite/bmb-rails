@@ -95,8 +95,8 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
       ->method('create')
       ->with([
         'account' => 'acct_1',
-        'refresh_url' => home_url('/account-link-refresh'),
-        'return_url' => home_url('/account-link-return'),
+        'refresh_url' => '',
+        'return_url' => '',
         'type' => 'account_onboarding',
       ])
       ->willReturn((object) ['url' => 'http://example.com']);
