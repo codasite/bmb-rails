@@ -61,6 +61,23 @@ class BracketListItem {
     return ob_get_clean();
   }
 
+  public static function get_bracket_buttons($bracket): false|string {
+    switch ($bracket->status) {
+      case 'publish':
+        return self::live_bracket_buttons($bracket);
+      case 'archive':
+      case 'private':
+        return self::private_bracket_buttons($bracket);
+      case 'score':
+        return self::scored_bracket_buttons($bracket);
+      case 'complete':
+        return self::completed_bracket_buttons($bracket);
+      case 'upcoming':
+        return BracketsCommon::public_bracket_upcoming_buttons($bracket);
+      default:
+        return '';
+    }
+  }
 
   public static function go_live_btn(string $id): false|string {
     if (!current_user_can('wpbb_edit_bracket', $id)) {
@@ -97,24 +114,6 @@ class BracketListItem {
     <?php echo DashboardCommon::add_to_apparel_btn($bracket_play_link); ?>
     <?php echo self::go_live_btn($bracket->id); ?>
     <?php return ob_get_clean();
-  }
-
-  public static function get_bracket_buttons($bracket): false|string {
-    switch ($bracket->status) {
-      case 'publish':
-        return self::live_bracket_buttons($bracket);
-      case 'archive':
-      case 'private':
-        return self::private_bracket_buttons($bracket);
-      case 'score':
-        return self::scored_bracket_buttons($bracket);
-      case 'complete':
-        return self::completed_bracket_buttons($bracket);
-      case 'upcoming':
-        return BracketsCommon::public_bracket_upcoming_buttons($bracket);
-      default:
-        return '';
-    }
   }
 
   public static function completed_bracket_buttons($bracket): false|string {
