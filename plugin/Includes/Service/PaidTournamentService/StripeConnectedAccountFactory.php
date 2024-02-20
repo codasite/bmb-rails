@@ -16,14 +16,11 @@ class StripeConnectedAccountFactory {
   public function getAccount(int $userId): StripeConnectedAccount {
     return new StripeConnectedAccount([
       'stripe_client' => $this->stripe,
-      'owner_id' => $userId,
+      'user_id' => $userId,
     ]);
   }
 
   public function getAccountForCurrentUser(): StripeConnectedAccount {
-    return new StripeConnectedAccount([
-      'stripe_client' => $this->stripe,
-      'owner_id' => get_current_user_id(),
-    ]);
+    return self::getAccount(get_current_user_id());
   }
 }

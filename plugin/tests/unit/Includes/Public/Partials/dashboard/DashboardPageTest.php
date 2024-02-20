@@ -1,15 +1,18 @@
 <?php
 
 use Spatie\Snapshots\MatchesSnapshots;
+use Stripe\Service\AccountService;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StubStripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 use WStrategies\BMB\Public\Partials\dashboard\ManageBracketsPage;
 use WStrategies\BMB\Public\Partials\dashboard\PlayHistoryPage;
 use WStrategies\BMB\Public\Partials\dashboard\TournamentsPage;
+use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;
 
 class DashboardPageTest extends TestCase {
   use MatchesSnapshots;
@@ -75,10 +78,13 @@ class DashboardPageTest extends TestCase {
     $tournament_query_mock->method('has_tournaments')->willReturn(true);
     $tournament_query_mock->method('get_max_num_pages')->willReturn(1);
     $tournament_query_mock->method('get_tournaments_count')->willReturn(1);
+    $stripe_mock = $this->createMock(StripeMock::class);
+    $stripe_mock->accounts = $this->createMock(AccountService::class);
     $rendered = (new DashboardPage([
       'tournaments_page' => new TournamentsPage([
         'tournament_query' => $tournament_query_mock,
       ]),
+      'account_factory' => new StubStripeConnectedAccountFactory(),
     ]))->render();
 
     $rendered = preg_replace(
@@ -105,6 +111,7 @@ class DashboardPageTest extends TestCase {
       ->getMock();
     $rendered = (new DashboardPage([
       'tournaments_page' => $tournament_page_mock,
+      'account_factory' => new StubStripeConnectedAccountFactory(),
     ]))->render('my-profile');
     $this->assertMatchesHtmlSnapshot($rendered);
   }
@@ -142,6 +149,7 @@ class DashboardPageTest extends TestCase {
           }
         },
       ]),
+      'account_factory' => new StubStripeConnectedAccountFactory(),
     ]))->render('play-history');
     $this->assertMatchesHtmlSnapshot($rendered);
   }

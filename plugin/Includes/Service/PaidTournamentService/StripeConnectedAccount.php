@@ -19,7 +19,7 @@ class StripeConnectedAccount {
    * @param array<string, mixed> $args
    */
   public function __construct(array $args = []) {
-    $this->user_id = $args['owner_id'];
+    $this->user_id = $args['user_id'];
     $this->stripe =
       $args['stripe_client'] ??
       (new StripeClientFactory())->createStripeClient();

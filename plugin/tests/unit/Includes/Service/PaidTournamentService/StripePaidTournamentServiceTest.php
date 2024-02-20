@@ -40,7 +40,7 @@ class StripePaidTournamentServiceTest extends TestCase {
   }
   public function test_create_payment_intent_for_paid_tournament_play() {
     WP_Mock::userFunction('get_user_meta', [
-      'return' => 5,
+      'return' => 'acct_1',
     ]);
     $stripe_mock = $this->getMockBuilder(StripeClient::class)
       ->disableOriginalConstructor()
@@ -58,11 +58,15 @@ class StripePaidTournamentServiceTest extends TestCase {
       ->expects($this->once())
       ->method('create')
       ->with([
-        'amount' => 100.0,
+        'amount' => 100,
         'currency' => 'usd',
+        'application_fee_amount' => 100,
         'metadata' => [
           'bracket_id' => 1,
           'play_id' => 1,
+        ],
+        'transfer_data' => [
+          'destination' => 'acct_1',
         ],
       ])
       ->willReturn(
@@ -122,13 +126,13 @@ class StripePaidTournamentServiceTest extends TestCase {
       ->expects($this->once())
       ->method('create')
       ->with([
-        'amount' => 100.0,
+        'amount' => 100,
         'currency' => 'usd',
         'metadata' => [
           'bracket_id' => 1,
           'play_id' => 2,
         ],
-        'application_fee_amount' => 125,
+        'application_fee_amount' => 100,
         'transfer_data' => [
           'destination' => 'acct_1',
         ],
