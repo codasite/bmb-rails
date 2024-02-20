@@ -40,7 +40,7 @@ class UserAdminHooks implements HooksInterface {
   }
 
   public function display_stripe_connected_acct_meta_box($user): void {
-    $account = $this->connected_account_factory->getAccount($user->ID);
+    $account = $this->connected_account_factory->get_account($user->ID);
     wp_nonce_field(
       'stripe_connected_acct_meta_box',
       'stripe_connected_acct_meta_box_nonce'
@@ -82,7 +82,7 @@ class UserAdminHooks implements HooksInterface {
       return;
     }
     if (isset($_POST['acct_id'])) {
-      $account = $this->connected_account_factory->getAccount($user_id);
+      $account = $this->connected_account_factory->get_account($user_id);
       $account->set_account_id(sanitize_text_field($_POST['acct_id']));
     }
   }

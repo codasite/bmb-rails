@@ -172,7 +172,7 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
    * @return WP_REST_Response
    */
   public function onboarding_link(WP_REST_Request $request): WP_REST_Response {
-    $account = $this->connected_account_factory->getAccountForCurrentUser();
+    $account = $this->connected_account_factory->get_account_for_current_user();
     try {
       return new WP_REST_Response(
         [

@@ -18,11 +18,11 @@ class StubStripeConnectedAccountFactory extends StripeConnectedAccountFactory {
     };
   }
 
-  public function getAccountForCurrentUser(): StripeConnectedAccount {
+  public function get_account_for_current_user(): StripeConnectedAccount {
     return $this->stub_account;
   }
 
-  public function getAccount(int $userId): StripeConnectedAccount {
+  public function get_account(int $userId): StripeConnectedAccount {
     return $this->stub_account;
   }
 }

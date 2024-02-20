@@ -65,17 +65,23 @@ class DashboardPage {
   }
 
   private function payments_button(): string|bool {
-    $account = $this->account_factory->getAccountForCurrentUser();
+    $account = $this->account_factory->get_account_for_current_user();
     $classes = $account->charges_enabled()
       ? 'tw-bg-white/10'
       : 'tw-bg-red hover:tw-bg-red/90';
     ob_start();
     ?>
-    <button class="wpbb-payments-button tw-text-white tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue tw-font-sans tw-uppercase tw-border-none tw-font-500 tw-w-full tw-cursor-pointer tw-leading-[1.6] <?php echo $classes; ?>">
-      <?php echo PartialsCommon::icon('card'); ?>
-      <span><?php echo $account->charges_enabled()
-        ? 'Payments'
-        : 'Set up payments'; ?></span>
+    <div></div>
+    <button class="wpbb-payments-button tw-group tw-text-white tw-flex tw-gap-10 tw-items-center tw-rounded-8 tw-p-16 tw-whitespace-nowrap hover:tw-bg-blue tw-font-sans tw-uppercase tw-border-none tw-font-500 tw-w-full tw-cursor-pointer tw-leading-[1.6] <?php echo $classes; ?>">
+      <span class="group-disabled:tw-hidden">
+        <?php echo PartialsCommon::icon('card'); ?>
+        <span><?php echo $account->charges_enabled()
+          ? 'Payments'
+          : 'Set up payments'; ?></span>
+      </span>
+      <span class="group-disabled:tw-visible tw-hidden tw-animate-spin"><?php echo PartialsCommon::icon(
+        'spinner'
+      ); ?></span>
     </button>
     <?php return ob_get_clean();
   }

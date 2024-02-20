@@ -175,7 +175,7 @@ class StripePaidTournamentServiceTest extends TestCase {
           $this->connected_account_mock = $args['connected_account_mock'];
         }
 
-        public function getAccount(int $userId): StripeConnectedAccount {
+        public function get_account(int $userId): StripeConnectedAccount {
           return $this->connected_account_mock;
         }
       },

@@ -125,7 +125,7 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
         'Bracket author not found. Cannot determine whether to create destination charge.'
       );
     }
-    $account = $this->connected_account_factory->getAccount($bracket_author);
+    $account = $this->connected_account_factory->get_account($bracket_author);
     if ($account->should_create_destination_charge()) {
       $intent_data[
         'application_fee_amount'
