@@ -130,8 +130,10 @@ class DashboardPage {
               ); ?></li>
             <li
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_account_settings_link(); ?></li>
-            <li
-              class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::payments_button(); ?></li>
+              <?php if (current_user_can('wpbb_create_paid_bracket')): ?>
+                <li
+                  class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::payments_button(); ?></li>
+              <?php endif; ?>
           </ul>
         </nav>
         <div class="tw-flex-grow">
