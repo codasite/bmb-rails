@@ -102,7 +102,7 @@ class BracketListItem {
   public static function get_bracket_buttons($bracket): false|string {
     switch ($bracket->status) {
       case 'publish':
-        return BracketIconButtons::live_bracket_buttons($bracket);
+        return self::live_bracket_buttons($bracket);
       case 'archive':
       case 'private':
         return self::private_bracket_buttons($bracket);
@@ -142,6 +142,18 @@ class BracketListItem {
       ); ?>
       <span class="tw-font-500">Score tournament</span>
     </a>
+    <?php return ob_get_clean();
+  }
+
+  public static function live_bracket_buttons($bracket): false|string {
+    $bracket_score_link = get_permalink($bracket->id) . 'results/update';
+    $leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
+    ob_start();
+    ?>
+    <?php echo BracketsCommon::play_bracket_btn($bracket, [ 'label' => 'Play' ]); ?>
+    <?php echo BracketListItem::score_bracket_btn($bracket_score_link, $bracket); ?>
+    <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
+    <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();
   }
 }
