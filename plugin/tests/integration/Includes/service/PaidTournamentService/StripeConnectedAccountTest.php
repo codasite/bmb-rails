@@ -150,3 +150,4 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
     $this->assertEquals('acct_1', $acct_id);
   }
 }
+

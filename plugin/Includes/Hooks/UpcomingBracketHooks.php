@@ -21,7 +21,9 @@ class UpcomingBracketHooks implements HooksInterface {
       $args['notification_repo'] ?? new NotificationRepo();
     $this->utils = $args['utils'] ?? new Utils();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    $this->notification_service = $args['notification_service'] ?? (new BracketResultsNotificationServiceFactory())->create();
+    $this->notification_service =
+      $args['notification_service'] ??
+      (new BracketResultsNotificationServiceFactory())->create();
   }
 
   public function load(Loader $loader): void {
