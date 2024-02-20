@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
+use Stripe\Account;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use WP_User;
@@ -15,6 +16,7 @@ class StripeConnectedAccount {
   // The minimum application fee to charge in cents
   public static float $APPLICATION_FEE_MINIMUM = 100;
   private StripeClient $stripe;
+  private ?Account $stripe_account;
   private int $user_id;
   /**
    * @param array<string, mixed> $args
@@ -49,6 +51,17 @@ class StripeConnectedAccount {
       'type' => 'account_onboarding',
     ]);
     return $res->url;
+  }
+
+  /**
+   * @throws ApiErrorException
+   */
+  public function get_onboarding_or_login_link(): string {
+    if ($this->charges_enabled()) {
+      $res = $this->stripe->accounts->createLoginLink($this->get_account_id());
+      return $res->url;
+    }
+    return $this->get_onboarding_link();
   }
 
   /**
@@ -91,7 +104,7 @@ class StripeConnectedAccount {
   }
 
   public function has_account(): bool {
-    return !empty($this->get_account_id());
+    return $this->get_stripe_account() !== null;
   }
 
   public function set_account_id(string $acct_id): void {
@@ -103,20 +116,29 @@ class StripeConnectedAccount {
   }
 
   public function should_create_destination_charge(): bool {
-    $acct_id = $this->get_account_id();
-    return !empty($acct_id);
+    return $this->charges_enabled();
   }
 
   public function charges_enabled(): bool {
     if (!$this->has_account()) {
       return false;
     }
+    return $this->get_stripe_account()->charges_enabled;
+  }
+
+  public function get_stripe_account() {
+    if (isset($this->stripe_account)) {
+      return $this->stripe_account;
+    }
+    $acct_id = $this->get_account_id();
+    if (empty($acct_id)) {
+      return null;
+    }
     try {
-      return $this->stripe->accounts->retrieve($this->get_account_id())
-        ->charges_enabled;
+      $this->stripe_account = $this->stripe->accounts->retrieve($acct_id);
+      return $this->stripe_account;
     } catch (ApiErrorException $e) {
-      SentryLogger::log_error($e);
-      return false;
+      return null;
     }
   }
 }
