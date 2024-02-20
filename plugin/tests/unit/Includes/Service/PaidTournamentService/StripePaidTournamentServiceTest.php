@@ -60,13 +60,9 @@ class StripePaidTournamentServiceTest extends TestCase {
       ->with([
         'amount' => 100,
         'currency' => 'usd',
-        'application_fee_amount' => 100,
         'metadata' => [
           'bracket_id' => 1,
           'play_id' => 1,
-        ],
-        'transfer_data' => [
-          'destination' => 'acct_1',
         ],
       ])
       ->willReturn(
@@ -85,6 +81,16 @@ class StripePaidTournamentServiceTest extends TestCase {
       ->method('should_create_destination_charge')
       ->willReturn(false);
 
+    $connected_account_factory_mock = $this->getMockBuilder(
+      StripeConnectedAccountFactory::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $connected_account_factory_mock
+      ->method('get_account')
+      ->willReturn($connected_account_mock);
+
     // Set the PaymentIntentService mock as the paymentIntents property on the StripeClient mock
     $stripe_mock->paymentIntents = $payment_intent_service_mock;
 
@@ -96,7 +102,7 @@ class StripePaidTournamentServiceTest extends TestCase {
     $sot = new StripePaidTournamentService([
       'stripe_client' => $stripe_mock,
       'bracket_product_utils' => $product_utils_mock,
-      'connected_account' => $connected_account_mock,
+      'connected_account_factory' => $connected_account_factory_mock,
     ]);
     $play = new BracketPlay([
       'id' => 1,

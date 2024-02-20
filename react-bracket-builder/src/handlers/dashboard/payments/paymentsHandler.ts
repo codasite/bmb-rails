@@ -7,7 +7,7 @@ export function paymentsHandler() {
       const button = e.currentTarget as HTMLButtonElement
       button.disabled = true
       try {
-        const { url } = await bracketApi.getStripeOnboardingLink()
+        const { url } = await bracketApi.getStripePaymentsLink()
         window.location.href = url
       } catch (error) {
         button.disabled = false

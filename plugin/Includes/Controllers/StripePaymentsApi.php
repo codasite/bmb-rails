@@ -84,7 +84,18 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
       [
         'methods' => WP_REST_Server::CREATABLE,
         'callback' => [$this, 'onboarding_link'],
-        'permission_callback' => [$this, 'author_permission_check'],
+        'permission_callback' => [$this, 'stripe_payments_permission_check'],
+        'args' => $this->get_endpoint_args_for_item_schema(
+          WP_REST_Server::CREATABLE
+        ),
+      ],
+      'schema' => [$this, 'get_public_item_schema'],
+    ]);
+    register_rest_route($namespace, '/' . $base . '/payments-link', [
+      [
+        'methods' => WP_REST_Server::CREATABLE,
+        'callback' => [$this, 'payments_link'],
+        'permission_callback' => [$this, 'stripe_payments_permission_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
         ),
@@ -187,6 +198,26 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
+   * @param WP_REST_Request<array> $request
+   *
+   * @return WP_REST_Response
+   */
+  public function payments_link(WP_REST_Request $request): WP_REST_Response {
+    $account = $this->connected_account_factory->get_account_for_current_user();
+    try {
+      return new WP_REST_Response(
+        [
+          'url' => $account->get_onboarding_or_login_link(),
+        ],
+        200
+      );
+    } catch (\Exception $e) {
+      (new Utils())->log_error($e->getTraceAsString());
+      return new WP_REST_Response($e->getMessage(), 500);
+    }
+  }
+
+  /**
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
    * @param WP_REST_Request<array{}> $request Full details about the request.
@@ -197,5 +228,11 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_Error|bool {
     return current_user_can('wpbb_create_payment_intent', $request['play_id']);
+  }
+
+  public function stripe_payments_permission_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
+    return true;
   }
 }
