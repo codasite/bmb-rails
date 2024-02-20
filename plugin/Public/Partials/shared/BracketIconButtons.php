@@ -70,6 +70,9 @@ class BracketIconButtons {
   }
 
   public static function set_fee_btn($bracket): false|string {
+    if (!current_user_can('wpbb_create_paid_bracket', $bracket->id)) {
+      return '';
+    }
     return DashboardCommon::icon_btn(
       'dollar_shield.svg',
       classes: 'wpbb-set-tournament-fee-button',
@@ -80,6 +83,7 @@ class BracketIconButtons {
   public static function private_bracket_icon_buttons($bracket): false|string {
     ob_start(); ?>
     <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
     <?php return ob_get_clean();
@@ -104,6 +108,7 @@ class BracketIconButtons {
 
   public static function upcoming_bracket_icon_buttons($bracket) {
     ob_start(); ?>
+    <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php return ob_get_clean();
   }
@@ -111,6 +116,7 @@ class BracketIconButtons {
   public static function live_bracket_icon_buttons($bracket): false|string {
     ob_start(); ?>
     <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::unpublish_bracket_btn($bracket); ?>

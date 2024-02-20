@@ -41,6 +41,7 @@ class BracketPermissions implements PermissionsServiceInterface {
       'wpbb_edit_bracket',
       'wpbb_play_bracket',
       'wpbb_play_paid_bracket_for_free',
+      'wpbb_create_paid_bracket',
       'wpbb_view_bracket_chat',
     ];
   }

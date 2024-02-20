@@ -4,6 +4,7 @@ namespace WStrategies\BMB\Includes\Hooks;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
@@ -68,6 +69,7 @@ class EnqueueScriptsHooks implements HooksInterface {
    * @var BracketSerializer
    */
   private BracketSerializer $bracket_serializer;
+  private StripeConnectedAccountFactory $account_factory;
 
   public function __construct($args = []) {
     $this->plugin_name = $args['plugin_name'];
@@ -80,6 +82,8 @@ class EnqueueScriptsHooks implements HooksInterface {
       $args['play_serializer'] ?? new BracketPlaySerializer();
     $this->bracket_serializer =
       $args['bracket_serializer'] ?? new BracketSerializer();
+    $this->account_factory =
+      $args['account_factory'] ?? new StripeConnectedAccountFactory();
   }
 
   public function load(Loader $loader): void {
@@ -164,6 +168,9 @@ class EnqueueScriptsHooks implements HooksInterface {
       'user_can_play_paid_bracket_for_free' => current_user_can(
         'wpbb_play_paid_bracket_for_free'
       ),
+      'user_stripe_account_charges_enabled' => $this->account_factory
+        ->get_account_for_current_user()
+        ->charges_enabled(),
       'upgrade_account_url' => $this->get_bmb_plus_permalink(),
       'bracket_product_archive_url' => $this->get_bracket_product_archive_url(),
       'my_play_history_url' =>
