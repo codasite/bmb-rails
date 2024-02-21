@@ -6,12 +6,14 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build:wordpress": "APP_TYPE=wordpress wp-scripts build --config webpack.wp.config.js",
-    "start:wordpress": "APP_TYPE=wordpress wp-scripts start --config webpack.wp.config.js",
+    "build:plugin": "APP_TYPE=wordpress wp-scripts build --config webpack.plugin.config.js",
+    "start:plugin": "APP_TYPE=wordpress wp-scripts start --config webpack.plugin.config.js",
+    "build:local": "APP_TYPE=wordpress wp-scripts build --config webpack.local.config.js",
+    "start:local": "APP_TYPE=wordpress wp-scripts start --config webpack.local.config.js",
     "build:standalone": "APP_TYPE=standalone webpack --mode production --config webpack.non-wp.config.js",
     "dev:standalone": "APP_TYPE=standalone webpack serve --mode development --config webpack.non-wp.config.js",
-    "build": "npm run build:wordpress",
-    "start": "npm run start:wordpress"
+    "build": "npm run build:plugin",
+    "start": "npm run start:plugin"
   },
   "keywords": [],
   "author": "",

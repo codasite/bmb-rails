@@ -27,7 +27,7 @@ COPY react-bracket-builder/package*.json .
 RUN npm install
 COPY react-bracket-builder .
 # Build the app for standalone and wordpress environments
-RUN npm run build:wordpress
+RUN npm run build:local
 
 FROM alpine:latest as final
 WORKDIR /usr/src/app

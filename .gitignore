@@ -145,4 +145,3 @@ docker/wordpress/plugins/*
 !docker/wordpress/plugins/.gitkeep
 docker/db/import/1bmb_import.sql
 !docker/wordpress/db/import/.gitkeep
-!plugin/Includes/react-bracket-builder/build/

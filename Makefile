@@ -88,10 +88,10 @@ pretty:
 	npm run pretty
 
 react-start:
-	cd react-bracket-builder && npm run start
+	cd react-bracket-builder && npm run start:plugin
 
 react-build:
-	cd react-bracket-builder && npm run build
+	cd react-bracket-builder && npm run build:plugin
 
 react-install:
 	cd react-bracket-builder && npm install
