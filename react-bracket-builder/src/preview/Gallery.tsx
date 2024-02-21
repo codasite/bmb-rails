@@ -5,6 +5,11 @@ import 'react-image-gallery/styles/css/image-gallery.css'
 import { Spinner } from '../brackets/shared/components/Spinner'
 
 const SCALE_FACTOR = 3
+const COLOR_SELECTOR_ID = 'color'
+const THEME_SELECTOR_ID = 'pa_bracket-theme'
+const ADD_TO_CART_BUTTON_CLASS = 'single_add_to_cart_button'
+// I can't decide if I want to wait for all images to load before displaying the gallery.
+const WAIT_FOR_ALL_IMAGES = true
 
 // maps the theme name to the url of the overlay image
 export interface OverlayUrlThemeMap {
@@ -66,6 +71,9 @@ const Gallery: React.FC<GalleryProps> = ({
   const [imageConfigs, setImageConfigs] = useState<ProductImageConfig[]>([])
   const [loadingImages, setLoadingImages] = useState<boolean>(true)
 
+  const hasBracketImages = overlayThemeMap.light && overlayThemeMap.dark
+
+  // This function is not needed if WAIT_FOR_ALL_IMAGES is true
   const insertImageConfig = (imageConfig: ProductImageConfig) => {
     setImageConfigs((prev) => {
       const newImageConfigs = [...prev, imageConfig]
@@ -80,12 +88,21 @@ const Gallery: React.FC<GalleryProps> = ({
   }
 
   useEffect(() => {
+    // Don't allow the user to add the product to the cart if the bracket doesn't have any images.
+    if (!hasBracketImages) {
+      setAddToCartButtonDisabled(true)
+      setLoadingImages(false)
+      return
+    }
     const imageConfigsPromise = buildImageConfigs()
     const domContentLoadedPromise = createDomContentLoadedPromise()
 
     // Wait for both the image configs and the DOM content to be ready before we attach the select listener.
     Promise.all([imageConfigsPromise, domContentLoadedPromise])
       .then(([imageConfigs]) => {
+        if (WAIT_FOR_ALL_IMAGES) {
+          setImageConfigs(imageConfigs)
+        }
         initChangeHandlers()
         setLoadingImages(false)
       })
@@ -128,6 +145,16 @@ const Gallery: React.FC<GalleryProps> = ({
       }
       return false
     })
+  }
+
+  const setAddToCartButtonDisabled = (disabled: boolean) => {
+    const addToCartButton = document.querySelector(
+      `.${ADD_TO_CART_BUTTON_CLASS}`
+    ) as HTMLButtonElement | null
+    console.log('addToCartButton', addToCartButton)
+    if (addToCartButton) {
+      addToCartButton.disabled = disabled
+    }
   }
 
   const initChangeHandlers = () => {
@@ -229,7 +256,9 @@ const Gallery: React.FC<GalleryProps> = ({
       originalIndex,
     }
 
-    insertImageConfig(config)
+    if (!WAIT_FOR_ALL_IMAGES) {
+      insertImageConfig(config)
+    }
     return config
   }
 
@@ -241,15 +270,22 @@ const Gallery: React.FC<GalleryProps> = ({
   })
 
   return (
-    //@ts-ignore
     <>
       {loadingImages ? (
         <div className="tw-flex tw-h-[400px] tw-items-center tw-justify-center">
           <Spinner />
         </div>
-      ) : (
+      ) : hasBracketImages ? (
         <div className="wpbb-gallery-container">
           <ImageGallery items={images} showPlayButton={false} />
+        </div>
+      ) : (
+        <div className="tw-flex tw-flex-col tw-items-center tw-justify-center tw-text-center">
+          <p className="tw-font-700 tw-text-20">
+            Sorry, we couldn't find your bracket.
+          </p>
+          <p>Play a tournament and then click "Add to Apparel".</p>
+          <p>If you think this is a mistake, please contact us.</p>
         </div>
       )}
     </>
