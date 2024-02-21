@@ -7,6 +7,10 @@ on:
     paths:
       - 'plugin/**'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 env:
   PROJECT_NAME: github_runner
   SERVICE_NAME: wp-test-1

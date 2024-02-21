@@ -16,6 +16,7 @@ import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketM
 import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublishBracketHandler'
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
 import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingNotificationModal'
+import { paymentsHandler } from './handlers/dashboard/payments/paymentsHandler'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -261,6 +262,7 @@ function renderStripeOnboardingRedirect(appObj: WpbbAppObj) {
 }
 function addClickHandlers(appObj: WpbbAppObj) {
   unpublishBracketHandler()
+  paymentsHandler()
 }
 
 function insertElements(appObj: WpbbAppObj) {

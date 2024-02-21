@@ -73,6 +73,10 @@ export class BracketApi {
     const options: RequestOptions = { method: 'POST' }
     return await this.client.performRequest(`stripe/onboarding-link`, options)
   }
+  async getStripePaymentsLink(): Promise<{ url: string }> {
+    const options: RequestOptions = { method: 'POST' }
+    return await this.client.performRequest(`stripe/payments-link`, options)
+  }
 }
 
 export const bracketApi = new BracketApi()

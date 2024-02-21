@@ -1,8 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 
+use Stripe\Account;
 use Stripe\Exception\ApiErrorException;
-use Stripe\Exception\InvalidArgumentException;
 use Stripe\StripeClient;
 use WP_User;
 use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
@@ -16,67 +16,77 @@ class StripeConnectedAccount {
   // The minimum application fee to charge in cents
   public static float $APPLICATION_FEE_MINIMUM = 100;
   private StripeClient $stripe;
-  private int|null $owner_id;
+  private ?Account $stripe_account;
+  private int $user_id;
   /**
    * @param array<string, mixed> $args
    */
   public function __construct(array $args = []) {
-    $this->owner_id = $args['owner_id'] ?? null;
+    $this->user_id = $args['user_id'];
     $this->stripe =
       $args['stripe_client'] ??
       (new StripeClientFactory())->createStripeClient();
   }
 
-  public function set_owner_id(int $owner_id): void {
-    $this->owner_id = $owner_id;
-  }
-
   /**
-   * @throws InvalidArgumentException
+   * @param int $amount The total amount to charge in cents
+   * @return int The application fee to charge in cents
    */
-  private function validate_owner_id(): void {
-    if (is_null($this->owner_id) || $this->owner_id === 0) {
-      throw new InvalidArgumentException('Owner ID not set');
-    }
+  static function calculate_application_fee(int $amount): int {
+    return (int) max(
+      self::$APPLICATION_FEE_MINIMUM,
+      $amount * self::$APPLICATION_FEE_PERCENTAGE
+    );
   }
 
   /**
-   * @throws ApiErrorException|InvalidArgumentException
+   * @throws ApiErrorException|StripeConnectedAccountException
    */
   public function get_onboarding_link(): string {
-    $this->validate_owner_id();
-    $acct_id = $this->create_or_get_connected_account_id();
-    if (empty($acct_id)) {
-      throw new InvalidArgumentException('Connected account ID not set');
-    }
+    $acct_id = $this->get_or_create_account_id();
     $res = $this->stripe->accountLinks->create([
       'account' => $acct_id,
-      'return_url' => DashboardPage::get_url(),
       'refresh_url' => StripeOnboardingRedirect::get_url(),
+      'return_url' => DashboardPage::get_url(),
       'type' => 'account_onboarding',
     ]);
     return $res->url;
   }
 
-  public function create_or_get_connected_account_id(): string {
-    $this->validate_owner_id();
-    $acct_id = $this->get_connected_account_id();
-    if (empty($acct_id)) {
-      $acct_id = $this->create_connected_account();
-      $this->set_connected_account_id($acct_id);
+  /**
+   * @throws ApiErrorException
+   */
+  public function get_onboarding_or_login_link(): string {
+    if ($this->charges_enabled()) {
+      $res = $this->stripe->accounts->createLoginLink($this->get_account_id());
+      return $res->url;
     }
-    return $acct_id;
+    return $this->get_onboarding_link();
   }
 
   /**
    * @throws ApiErrorException
+   * @throws StripeConnectedAccountException
    */
-  public function create_connected_account(): string {
-    $this->validate_owner_id();
-    $user = new WP_User($this->owner_id);
+  public function get_or_create_account_id(): string {
+    if ($this->has_account()) {
+      return $this->get_account_id();
+    } else {
+      $acct_id = $this->create_account();
+      $this->set_account_id($acct_id);
+      return $acct_id;
+    }
+  }
+
+  /**
+   * @throws ApiErrorException
+   * @throws StripeConnectedAccountException
+   */
+  public function create_account(): string {
+    $user = new WP_User($this->user_id);
     $email = $user->user_email;
     if (empty($email)) {
-      throw new InvalidArgumentException('User email not set');
+      throw new StripeConnectedAccountException('User email not set');
     }
     $res = $this->stripe->accounts->create([
       'type' => 'express',
@@ -85,49 +95,50 @@ class StripeConnectedAccount {
     return $res->id;
   }
 
-  public function get_connected_account_id(): string {
-    $acct_id = get_user_meta(
-      $this->owner_id,
+  public function get_account_id(): string {
+    return get_user_meta(
+      $this->user_id,
       self::$CONNECTED_ACCOUNT_ID_META_KEY,
       true
     );
-    return $acct_id;
   }
 
-  public function set_connected_account_id(string $acct_id): void {
-    $this->validate_owner_id();
+  public function has_account(): bool {
+    return $this->get_stripe_account() !== null;
+  }
+
+  public function set_account_id(string $acct_id): void {
     update_user_meta(
-      $this->owner_id,
+      $this->user_id,
       self::$CONNECTED_ACCOUNT_ID_META_KEY,
       $acct_id
     );
   }
 
   public function should_create_destination_charge(): bool {
-    $this->validate_owner_id();
-    $acct_id = $this->get_connected_account_id();
-    return !empty($acct_id);
-  }
-
-  /**
-   * @param int $amount The total amount to charge in cents
-   * @return int The application fee to charge in cents
-   */
-  public function calculate_application_fee(int $amount): int {
-    return (int) max(
-      self::$APPLICATION_FEE_MINIMUM,
-      (int) $amount * self::$APPLICATION_FEE_PERCENTAGE
-    );
+    return $this->charges_enabled();
   }
 
   public function charges_enabled(): bool {
-    try {
-      return $this->stripe->accounts->retrieve(
-        $this->get_connected_account_id()
-      )->charges_enabled;
-    } catch (ApiErrorException $e) {
-      SentryLogger::log_error($e);
+    if (!$this->has_account()) {
       return false;
+    }
+    return $this->get_stripe_account()->charges_enabled;
+  }
+
+  public function get_stripe_account() {
+    if (isset($this->stripe_account)) {
+      return $this->stripe_account;
+    }
+    $acct_id = $this->get_account_id();
+    if (empty($acct_id)) {
+      return null;
+    }
+    try {
+      $this->stripe_account = $this->stripe->accounts->retrieve($acct_id);
+      return $this->stripe_account;
+    } catch (ApiErrorException $e) {
+      return null;
     }
   }
 }
