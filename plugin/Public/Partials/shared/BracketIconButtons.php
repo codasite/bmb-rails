@@ -70,6 +70,7 @@ class BracketIconButtons {
   }
 
   public static function set_fee_btn($bracket): false|string {
+    return ''; # disable this button for now
     if (!current_user_can('wpbb_add_bracket_fee', $bracket->id)) {
       return '';
     }
