@@ -1,4 +1,5 @@
 import { bracketApi } from '../../../brackets/shared'
+import * as Sentry from '@sentry/browser'
 
 export function paymentsHandler() {
   const buttons = document.getElementsByClassName('wpbb-payments-button')
@@ -10,6 +11,7 @@ export function paymentsHandler() {
         const { url } = await bracketApi.getStripePaymentsLink()
         window.location.href = url
       } catch (error) {
+        Sentry.captureException(error)
         button.disabled = false
       }
     })

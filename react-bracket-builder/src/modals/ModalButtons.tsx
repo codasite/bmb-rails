@@ -42,11 +42,16 @@ export const ConfirmButton = (props: ActionButtonProps) => {
     />
   )
 }
-export const CancelButton = (props: { onClick: () => void }) => {
+export const CancelButton = (props: {
+  onClick: () => void
+  className?: string
+}) => {
   return (
     <button
       onClick={props.onClick}
-      className="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer"
+      className={`tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer ${
+        props.className ?? ''
+      }`}
     >
       Cancel
     </button>

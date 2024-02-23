@@ -17,6 +17,7 @@ import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublish
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
 import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingNotificationModal'
 import { paymentsHandler } from './handlers/dashboard/payments/paymentsHandler'
+import SetTournamentFeeModal from './modals/dashboard/brackets/SetTournamentFeeModal'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -238,6 +239,9 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
         canCreateBracket={appObj.userCanShareBracket}
       />
       <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} />
+      <SetTournamentFeeModal
+        chargesEnabled={appObj.userStripeAccountChargesEnabled}
+      />
     </>,
     'wpbb-tournaments-modals'
   )

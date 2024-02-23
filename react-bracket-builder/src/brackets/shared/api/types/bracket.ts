@@ -75,6 +75,7 @@ export interface BracketReq {
   matches: MatchReq[]
   results?: MatchPick[]
   updateNotifyPlayers?: boolean
+  fee?: number
 }
 export interface BracketRes extends PostBase {
   month: string

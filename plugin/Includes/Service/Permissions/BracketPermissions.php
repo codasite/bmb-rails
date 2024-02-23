@@ -21,7 +21,12 @@ class BracketPermissions implements PermissionsServiceInterface {
       return false;
     }
 
-    if ((int) $bracket->author === (int) $user_id) {
+    if ($cap == 'wpbb_add_bracket_fee') {
+      return current_user_can('wpbb_create_paid_bracket') &&
+        $this->is_bracket_author($user_id, $bracket);
+    }
+
+    if ($this->is_bracket_author($user_id, $bracket)) {
       return true;
     }
 
@@ -41,6 +46,7 @@ class BracketPermissions implements PermissionsServiceInterface {
       'wpbb_edit_bracket',
       'wpbb_play_bracket',
       'wpbb_play_paid_bracket_for_free',
+      'wpbb_add_bracket_fee',
       'wpbb_view_bracket_chat',
     ];
   }
@@ -65,5 +71,9 @@ class BracketPermissions implements PermissionsServiceInterface {
       return true;
     }
     return false;
+  }
+
+  private function is_bracket_author($user_id, $bracket): bool {
+    return (int) $bracket->author === (int) $user_id;
   }
 }

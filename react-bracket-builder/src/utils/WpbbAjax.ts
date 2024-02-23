@@ -6,6 +6,7 @@ declare var wpbb_app_obj: any
 declare var wpbb_bracket_product_preview_obj: any
 
 export interface WpbbAppObj {
+  userStripeAccountChargesEnabled: boolean
   dashboardUrl?: string
   myPlayHistoryUrl?: string
   bracketBuilderUrl?: string
