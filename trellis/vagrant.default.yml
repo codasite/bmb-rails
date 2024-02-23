@@ -26,4 +26,15 @@ vagrant_plugins:
 #   mount_options: []
 #   bindfs_options: {}
 # See https://www.vagrantup.com/docs/synced-folders/basic_usage.html#mount_options
-vagrant_synced_folders: []
+
+# NOTE: When updating synced folders, be sure to run `vagrant halt` and `vagrant up` to apply changes.
+# It may also be necessary to destroy the VM and recreate it.
+vagrant_synced_folders:
+  - local_path: ../plugin
+    destination: /srv/www/backmybracket.com/current/web/app/plugins/wp-bracket-builder
+    create: false
+    type: nfs
+    nfs_udp: false
+    bindfs: true
+    mount_options: []
+    bindfs_options: {}

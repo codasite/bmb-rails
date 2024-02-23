@@ -10,7 +10,10 @@ export interface PlayBuilderProps {
   setBracketMeta?: (bracketMeta: BracketMeta) => void
   handleApparelClick?: () => Promise<void>
   handleSubmitPicksClick?: () => Promise<void>
-  processing?: boolean
+  processingAddToApparel?: boolean
+  addToApparelError?: boolean
+  processingSubmitPicks?: boolean
+  submitPicksError?: boolean
   canPlay?: boolean
   showRegisterModal?: boolean
   setShowRegisterModal?: (showRegisterModal: boolean) => void

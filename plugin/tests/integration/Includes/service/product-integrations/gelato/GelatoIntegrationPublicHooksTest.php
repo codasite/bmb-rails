@@ -213,7 +213,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
     $this->assertEquals('s3-url-front-back', $result['s3_url']);
   }
 
-  public function test_process_bracket_product_item_without_bracket_config() {
+  public function test_process_bracket_product_item_without_bracket_config_throws_error() {
     $product_post = $this->create_post([
       'post_type' => 'product_variation',
     ]);
@@ -230,13 +230,9 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       ->onlyMethods(['handle_front_design_only'])
       ->getMock();
 
-    $hooks->method('handle_front_design_only')->willReturn('s3-url-front-only');
-
+    $this->expectException(Exception::class);
     // Call the method
-    $result = $hooks->process_bracket_product_item($cart_item);
-
-    // Assert that the S3 URL is correctly set
-    $this->assertEquals('s3-url-front-only', $result['s3_url']);
+    $hooks->process_bracket_product_item($cart_item);
   }
 
   public function test_handle_front_design_only_success() {

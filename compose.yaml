@@ -93,7 +93,7 @@ services:
       context: .
       dockerfile: plugin/Dockerfile
     profiles:
-      - wp
+      - plugin
       - all
 
 volumes:
