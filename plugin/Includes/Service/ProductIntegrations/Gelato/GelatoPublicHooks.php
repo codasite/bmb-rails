@@ -271,22 +271,25 @@ class GelatoPublicHooks {
 
     // Extract config from the cart item
     $bracket_config = $cart_item['bracket_config'] ?? null;
-
-    if ($bracket_config) {
-      $result = $this->handle_front_and_back_design(
-        $front_url,
-        $bracket_config,
-        $temp_filename
-      );
-    } else {
-      // If no config was found, use only the front design
-      $result = $this->handle_front_design_only(
-        $front_url,
-        $temp_filename,
-        12,
-        16
-      );
+    if (empty($bracket_config)) {
+      $this->handle_throw_error([
+        'error' =>
+          'No bracket config found in cart item. Front design only is disabled.',
+      ]);
     }
+
+    $result = $this->handle_front_and_back_design(
+      $front_url,
+      $bracket_config,
+      $temp_filename
+    );
+    // If no config was found, use only the front design. DISABLED
+    // $result = $this->handle_front_design_only(
+    //   $front_url,
+    //   $temp_filename,
+    //   12,
+    //   16
+    // );
 
     // Store the S3 URL in the cart item
     $cart_item['s3_url'] = $result; // The S3 URL of the final PDF

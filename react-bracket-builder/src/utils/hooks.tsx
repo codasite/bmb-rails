@@ -40,20 +40,17 @@ export function useResizeObserver(
     const element = ref.current
     if (!element) return
 
-    // const resizeObserver = new ResizeObserver((entries) => {
-    //   if (!Array.isArray(entries) || !entries.length) return
-
-    //   const entry = entries[0]
-    //   const { width, height } = entry.contentRect
-    //   callback({ width, height })
-    // })
-    // resizeObserver.observe(element)
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (let entry of entries) {
-        const { inlineSize: width, blockSize: height } = entry.borderBoxSize[0]
-        callback({ width, height })
-      }
-    })
+    const resizeObserver = new ResizeObserver((entries) =>
+      // wrap in setTimeout to avoid `ResizeObserver loop completed with undelivered notifications` error
+      // https://github.com/juggle/resize-observer/issues/103
+      setTimeout(() => {
+        for (let entry of entries) {
+          const { inlineSize: width, blockSize: height } =
+            entry.borderBoxSize[0]
+          callback({ width, height })
+        }
+      }, 0)
+    )
     resizeObserver.observe(element, { box: 'border-box' })
 
     return () => {

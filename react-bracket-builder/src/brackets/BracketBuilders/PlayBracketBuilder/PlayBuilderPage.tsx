@@ -53,7 +53,10 @@ const PlayPage = (props: PlayPageProps) => {
     userCanPlayPaidBracketForFree,
   } = props
 
-  const [processing, setProcessing] = useState(false)
+  const [processingAddToApparel, setProcessingAddToApparel] = useState(false)
+  const [addToApparelError, setAddToApparelError] = useState(false)
+  const [submitPicksError, setSubmitPicksError] = useState(false)
+  const [processingSubmitPicks, setProcessingSubmitPicks] = useState(false)
   const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
   const [showRegisterModal, setShowRegisterModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
@@ -92,6 +95,11 @@ const PlayPage = (props: PlayPageProps) => {
     }
   }, [])
 
+  const clearError = () => {
+    setAddToApparelError(false)
+    setSubmitPicksError(false)
+  }
+
   const setMatchTreeAndSaveInStorage = (tree: MatchTree) => {
     setMatchTree(tree)
     playStorage.storePlay(
@@ -122,35 +130,47 @@ const PlayPage = (props: PlayPageProps) => {
   }
 
   const handleApparelClick = async () => {
+    clearError()
+    setProcessingAddToApparel(true)
     const playReq = getPlayReq()
     playReq.generateImages = true
-    if (
-      JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
-      storedPlay?.id
-    ) {
+    try {
+      if (
+        JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
+        storedPlay?.id
+      ) {
+        // regenerate play images anyway (in case they don't exist)
+        await bracketApi.generatePlayImages(storedPlay.id)
+      } else {
+        await bracketApi
+          .createPlay(playReq)
+          .then((res) => {
+            const playId = res.id
+            const newReq = {
+              ...playReq,
+              id: playId,
+            }
+            playStorage.storePlay(newReq, bracket?.id)
+          })
+          .catch((err) => {
+            console.error('error: ', err)
+            setProcessingAddToApparel(false)
+            setAddToApparelError(true)
+            Sentry.captureException(err)
+          })
+      }
       window.location.assign(bracketProductArchiveUrl)
-      return
+    } catch (err) {
+      console.error('error: ', err)
+      setProcessingAddToApparel(false)
+      setAddToApparelError(true)
+      Sentry.captureException(err)
     }
-    setProcessing(true)
-    return bracketApi
-      .createPlay(playReq)
-      .then((res) => {
-        const playId = res.id
-        const newReq = {
-          ...playReq,
-          id: playId,
-        }
-        playStorage.storePlay(newReq, bracket?.id)
-        window.location.assign(bracketProductArchiveUrl)
-      })
-      .catch((err) => {
-        console.error('error: ', err)
-        setProcessing(false)
-        Sentry.captureException(err)
-      })
   }
 
   const handleSubmitPicksClick = async () => {
+    clearError()
+    setProcessingSubmitPicks(true)
     const playReq = getPlayReq()
     playReq.generateImages = false
     playReq.createStripePaymentIntent = paymentRequired
@@ -175,16 +195,18 @@ const PlayPage = (props: PlayPageProps) => {
         .then((res) => {
           setStripeClientSecret(res.clientSecret)
           setStripePaymentAmount(res.amount)
+          setProcessingSubmitPicks(false)
           setShowPaymentModal(true)
         })
         .catch((err) => {
           console.error('error: ', err)
+          setProcessingSubmitPicks(false)
+          setSubmitPicksError(true)
           Sentry.captureException(err)
         })
 
       return
     }
-    setProcessing(true)
     return bracketApi
       .createPlay(playReq)
       .then((res) => {
@@ -199,7 +221,7 @@ const PlayPage = (props: PlayPageProps) => {
           setStripeClientSecret(res.stripePaymentIntentClientSecret)
           setStripePaymentAmount(res.stripePaymentAmount)
           setShowPaymentModal(true)
-          setProcessing(false)
+          setProcessingSubmitPicks(false)
         } else if (isUserLoggedIn) {
           window.location.assign(myPlayHistoryUrl)
         } else {
@@ -208,7 +230,7 @@ const PlayPage = (props: PlayPageProps) => {
       })
       .catch((err) => {
         console.error('error: ', err)
-        setProcessing(false)
+        setProcessingSubmitPicks(false)
         Sentry.captureException(err)
       })
   }
@@ -220,7 +242,10 @@ const PlayPage = (props: PlayPageProps) => {
     handleApparelClick: canPrint ? handleApparelClick : undefined,
     handleSubmitPicksClick: canSubmit ? handleSubmitPicksClick : undefined,
     canPlay: canPrint || canSubmit,
-    processing,
+    processingAddToApparel,
+    processingSubmitPicks,
+    addToApparelError,
+    submitPicksError,
     darkMode,
     setDarkMode,
     bracketMeta,

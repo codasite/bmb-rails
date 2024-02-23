@@ -21,8 +21,9 @@ wordpress_sites:
       # wp-bracket-builder settings
       # Mailchimp
       mailchimp_from_email: 'notifications@backmybracket.com' # TODO: Change this to the notifications@dev.backmybracket.com
-      # Image generation
-      image_generator_path: 'http://localhost:3000/generate'
+      # Image generation. VirtualBox maps the host machine to 10.0.2.2
+      # This assumes the image generator is running on the host machine
+      image_generator_path: 'http://10.0.2.2:3000/generate'
       wpbb_s3_image_bucket: 'wpbb-bracket-images-dev'
       wpbb_s3_order_bucket: 'wpbb-gelato-orders-dev'
       # Sentry
