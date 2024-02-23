@@ -132,9 +132,10 @@ prod-build:
 prod-push-plugin:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile plugin -p wpbb push
 
-build-push-plugin:
+deploy-plugin-staging:
 	make prod-build-plugin
 	make prod-push-plugin
+	trellis deploy staging
 
 prod-push-images:
 	docker compose -f compose.yaml -f compose.prod.yaml --profile images -p wpbb push
