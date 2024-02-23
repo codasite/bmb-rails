@@ -12,7 +12,6 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
     setDarkMode,
     handleApparelClick,
     handleSubmitPicksClick,
-    processing,
     canPlay,
   } = props
 
@@ -59,18 +58,7 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
       )
       break
     case 'final':
-      element = (
-        <FullBracketPage
-          matchTree={matchTree}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
-          onEditClick={onStart}
-          handleApparelClick={handleApparelClick}
-          processing={processing}
-          showSubmitPicksButton={true}
-          handleSubmitPicksClick={handleSubmitPicksClick}
-        />
-      )
+      element = <FullBracketPage {...props} onEditClick={onStart} />
       break
   }
 

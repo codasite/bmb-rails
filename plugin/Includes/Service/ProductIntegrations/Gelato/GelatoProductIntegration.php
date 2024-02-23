@@ -237,6 +237,12 @@ class GelatoProductIntegration implements
         ],
       ];
     }
+    // if (empty($responses)) {
+    if (true) {
+      throw new \Exception(
+        'Error Generating Images. No responses returned by image generator'
+      );
+    }
     update_post_meta(
       $bracket->get_post_id(),
       $this->get_post_meta_key(),

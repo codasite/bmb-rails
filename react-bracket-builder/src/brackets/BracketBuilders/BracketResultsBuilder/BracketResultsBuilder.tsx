@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import * as Sentry from '@sentry/react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { BracketMeta } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
@@ -83,15 +84,13 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       }
       bracketApi
         .updateBracket(bracketId, data)
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-        .finally(() => {
+        .then(() => {
           const dashboardUrl = getDashboardPath('hosting', 'closed')
           if (dashboardUrl) window.location.href = dashboardUrl
+        })
+        .catch((err) => {
+          console.error(err)
+          Sentry.captureException(err)
         })
     }
   }

@@ -9,7 +9,7 @@ use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 
-class GelatoIntgrationTest extends WPBB_UnitTestCase {
+class GelatoIntegrationTest extends WPBB_UnitTestCase {
   public function test_generate_images() {
     $post = $this->create_post([
       'post_type' => 'bracket_play',
@@ -96,6 +96,24 @@ class GelatoIntgrationTest extends WPBB_UnitTestCase {
       'https://test.com/top_dark.png',
       $meta->top_dark->image_url
     );
+  }
+
+  public function test_generate_images_empty_response_throws() {
+    $bracket_mock = $this->createMock(PostBracketInterface::class);
+    $request_factory = $this->createMock(BracketImageRequestFactory::class);
+    $request_factory
+      ->method('get_request_data')
+      ->willReturn(['test' => 'test']);
+    $client = $this->createMock(HttpClientInterface::class);
+    $client->method('send_many')->willReturn([]);
+
+    $gelato = new GelatoProductIntegration([
+      'request_factory' => $request_factory,
+      'client' => $client,
+    ]);
+
+    $this->expectException(\Exception::class);
+    $gelato->generate_images($bracket_mock);
   }
 
   public function test_get_overlay_map() {

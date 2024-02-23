@@ -2,18 +2,23 @@ import { ActionButton } from '../../shared/components/ActionButtons'
 import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
 import { MatchTree } from '../../shared/models/MatchTree'
+import { SubmitPicksButton } from './SubmitPicksButton'
+import { PlayBuilderProps } from './types'
 
-interface PlayBuilderButtonProps {
-  matchTree?: MatchTree
-  handleApparelClick?: () => Promise<void>
-  handleSubmitPicksClick?: () => Promise<void>
-  processing?: boolean
-}
-
-export const PlayBuilderButtons = (props: PlayBuilderButtonProps) => {
-  const { matchTree, handleApparelClick, handleSubmitPicksClick, processing } =
-    props
-  const disableButtons = processing || (matchTree && !matchTree.allPicked())
+export const PlayBuilderButtons = (props: PlayBuilderProps) => {
+  const {
+    matchTree,
+    handleApparelClick,
+    handleSubmitPicksClick,
+    processingAddToApparel,
+    processingSubmitPicks,
+    addToApparelError,
+    submitPicksError,
+  } = props
+  const disableButtons =
+    processingAddToApparel ||
+    processingSubmitPicks ||
+    (matchTree && !matchTree.allPicked())
   const disableApparel = disableButtons || !handleApparelClick
   const showSubmitPicks = handleSubmitPicksClick !== undefined
   const showAddToApparel = handleApparelClick !== undefined
@@ -23,19 +28,17 @@ export const PlayBuilderButtons = (props: PlayBuilderButtonProps) => {
         <AddToApparel
           handleApparelClick={handleApparelClick}
           disabled={disableApparel}
+          processing={processingAddToApparel}
+          error={addToApparelError}
         />
       )}
       {showSubmitPicks && (
-        <ActionButton
-          variant="blue"
+        <SubmitPicksButton
           onClick={handleSubmitPicksClick}
           disabled={disableButtons}
-          fontSize={24}
-          fontWeight={700}
-        >
-          <CircleCheckBrokenIcon style={{ height: 24 }} />
-          Submit picks
-        </ActionButton>
+          processing={processingSubmitPicks}
+          error={submitPicksError}
+        />
       )}
     </>
   )

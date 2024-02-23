@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Controllers;
 
+use Exception;
 use WP_Error;
 use WP_Query;
 use WP_REST_Controller;
@@ -20,6 +21,7 @@ use WStrategies\BMB\Includes\Service\Play\CurrentPlayService;
 use WStrategies\BMB\Includes\Service\Play\FreePaidPlayService;
 use WStrategies\BMB\Includes\Service\Play\PlayImageService;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
+use WStrategies\BMB\Includes\Service\ProductIntegrations\ImageGeneratorException;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
@@ -228,6 +230,14 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       return new WP_Error('validation-error', $e->getMessage(), [
         'status' => 400,
       ]);
+    } catch (ImageGeneratorException $e) {
+      return new WP_Error('image-generation-error', $e->getMessage(), [
+        'status' => 500,
+      ]);
+      $this->utils->log_error($e->getMessage());
+    } catch (Exception $e) {
+      return new WP_Error('error', $e->getMessage(), ['status' => 500]);
+      $this->utils->log_error($e->getMessage());
     }
   }
 
@@ -249,10 +259,20 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         ['status' => 403]
       );
     }
-    $this->product_integration->generate_images($play);
-    $this->utils->set_cookie('play_id', $play->id, ['days' => 30]);
-    $serialized = $this->serializer->serialize($play);
-    return new WP_REST_Response($serialized, 201);
+    try {
+      $this->product_integration->generate_images($play);
+      $this->utils->set_cookie('play_id', $play->id, ['days' => 30]);
+      $serialized = $this->serializer->serialize($play);
+      return new WP_REST_Response($serialized, 201);
+    } catch (ImageGeneratorException $e) {
+      return new WP_Error('image-generation-error', $e->getMessage(), [
+        'status' => 500,
+      ]);
+      $this->utils->log_error($e->getMessage());
+    } catch (Exception $e) {
+      return new WP_Error('error', $e->getMessage(), ['status' => 500]);
+      $this->utils->log_error($e->getMessage());
+    }
   }
 
   /**

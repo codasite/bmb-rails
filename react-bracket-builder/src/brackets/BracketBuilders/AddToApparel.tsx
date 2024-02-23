@@ -9,18 +9,11 @@ export const AddToApparel = (props: {
   disabled?: boolean
   darkMode?: boolean
   variant?: 'green' | 'grey'
+  processing?: boolean
+  error?: boolean
 }) => {
   const darkMode = useContext(DarkModeContext)
-  const { handleApparelClick, disabled } = props
-  const [processingAddToApparel, setProcessingAddToApparel] = useState(false)
-  const wrappedHandleApparelClick = async () => {
-    setProcessingAddToApparel(true)
-    try {
-      await handleApparelClick()
-    } catch {
-      setProcessingAddToApparel(false)
-    }
-  }
+  const { handleApparelClick, disabled, processing, error } = props
   const greenStyles = [
     'tw-bg-green',
     'tw-text-dd-blue',
@@ -52,21 +45,23 @@ export const AddToApparel = (props: {
   const buttonStyles = [...baseButtonStyles, ...styles, ...colorStyles]
   return (
     <div className={'tw-flex tw-self-stretch tw-flex-col tw-items-stretch'}>
-      {processingAddToApparel && (
+      {(processing || error) && (
         <span
           className={`tw-m-20 tw-text-12 tw-text-center tw-font-600 ${
             darkMode ? 'tw-text-white' : 'tw-text-black'
           }`}
         >
-          Generating your bracket...
+          {error
+            ? 'Sorry, we encountered an error while generating your bracket. Please try again later.'
+            : 'Generating your bracket...'}
         </span>
       )}
       <button
-        onClick={wrappedHandleApparelClick}
-        disabled={disabled || processingAddToApparel}
+        onClick={handleApparelClick}
+        disabled={disabled || processing}
         className={buttonStyles.join(' ')}
       >
-        {processingAddToApparel ? (
+        {processing ? (
           <Spinner fill={darkMode ? 'white' : 'black'} height={24} width={24} />
         ) : (
           <>

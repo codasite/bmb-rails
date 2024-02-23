@@ -12,23 +12,17 @@ import { AddToApparel } from '../AddToApparel'
 import { CircleCheckBrokenIcon } from '../../shared'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
 import StripePaymentModal from '../PlayBracketBuilder/StripePaymentModal'
+import { PlayBuilderProps } from '../PlayBracketBuilder/types'
 
-interface FullBracketPageProps {
+interface FullBracketPageProps extends PlayBuilderProps {
   onEditClick?: () => void
-  handleApparelClick: () => Promise<void>
-  handleSubmitPicksClick?: () => Promise<void>
-  showSubmitPicksButton?: boolean
-  matchTree?: MatchTree
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
-  processing?: boolean
-  canEdit?: boolean
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { onEditClick, matchTree, darkMode, setDarkMode, processing } = props
+  const { onEditClick, matchTree, darkMode, setDarkMode } = props
 
   const canEdit = !!onEditClick
+  const processing = props.processingAddToApparel || props.processingSubmitPicks
   return (
     <div
       className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${

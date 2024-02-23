@@ -151,7 +151,6 @@ const Gallery: React.FC<GalleryProps> = ({
     const addToCartButton = document.querySelector(
       `.${ADD_TO_CART_BUTTON_CLASS}`
     ) as HTMLButtonElement | null
-    console.log('addToCartButton', addToCartButton)
     if (addToCartButton) {
       addToCartButton.disabled = disabled
     }
