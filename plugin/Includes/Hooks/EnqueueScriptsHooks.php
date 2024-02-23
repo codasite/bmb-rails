@@ -168,9 +168,6 @@ class EnqueueScriptsHooks implements HooksInterface {
       'user_can_play_paid_bracket_for_free' => current_user_can(
         'wpbb_play_paid_bracket_for_free'
       ),
-      'user_stripe_account_charges_enabled' => $this->account_factory
-        ->get_account_for_current_user()
-        ->charges_enabled(),
       'upgrade_account_url' => $this->get_bmb_plus_permalink(),
       'bracket_product_archive_url' => $this->get_bracket_product_archive_url(),
       'my_play_history_url' =>

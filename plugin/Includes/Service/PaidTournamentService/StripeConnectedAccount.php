@@ -103,6 +103,10 @@ class StripeConnectedAccount {
     );
   }
 
+  public function account_id_exists(): bool {
+    return !empty($this->get_account_id());
+  }
+
   public function has_account(): bool {
     return $this->get_stripe_account() !== null;
   }

@@ -66,7 +66,7 @@ class DashboardPage {
 
   private function payments_button(): string|bool {
     $account = $this->account_factory->get_account_for_current_user();
-    $classes = $account->charges_enabled()
+    $classes = $account->account_id_exists()
       ? 'tw-bg-white/10 disabled:tw-bg-white/20'
       : 'tw-bg-red hover:tw-bg-red/90 disabled:tw-bg-red/80';
     ob_start();
@@ -80,7 +80,7 @@ class DashboardPage {
         <?php echo PartialsCommon::icon('spinner'); ?>
       </span>
       <span class='tw-block'>
-        <?php echo $account->charges_enabled()
+        <?php echo $account->account_id_exists()
           ? 'Payments'
           : 'Set up payments'; ?>
       </span>
