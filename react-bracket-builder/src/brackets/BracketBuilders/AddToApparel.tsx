@@ -52,7 +52,7 @@ export const AddToApparel = (props: {
           }`}
         >
           {error
-            ? 'Sorry, we encountered an error while generating your bracket. Please try again later.'
+            ? 'Sorry, we encountered an error. Please try again later.'
             : 'Generating your bracket...'}
         </span>
       )}

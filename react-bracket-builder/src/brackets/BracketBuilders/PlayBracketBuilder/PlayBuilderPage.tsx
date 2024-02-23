@@ -130,33 +130,42 @@ const PlayPage = (props: PlayPageProps) => {
   }
 
   const handleApparelClick = async () => {
+    clearError()
+    setProcessingAddToApparel(true)
     const playReq = getPlayReq()
     playReq.generateImages = true
-    if (
-      JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
-      storedPlay?.id
-    ) {
+    try {
+      if (
+        JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
+        storedPlay?.id
+      ) {
+        // regenerate play images anyway (in case they don't exist)
+        await bracketApi.generatePlayImages(storedPlay.id)
+      } else {
+        await bracketApi
+          .createPlay(playReq)
+          .then((res) => {
+            const playId = res.id
+            const newReq = {
+              ...playReq,
+              id: playId,
+            }
+            playStorage.storePlay(newReq, bracket?.id)
+          })
+          .catch((err) => {
+            console.error('error: ', err)
+            setProcessingAddToApparel(false)
+            setAddToApparelError(true)
+            Sentry.captureException(err)
+          })
+      }
       window.location.assign(bracketProductArchiveUrl)
-      return
+    } catch (err) {
+      console.error('error: ', err)
+      setProcessingAddToApparel(false)
+      setAddToApparelError(true)
+      Sentry.captureException(err)
     }
-    clearError()
-    return bracketApi
-      .createPlay(playReq)
-      .then((res) => {
-        const playId = res.id
-        const newReq = {
-          ...playReq,
-          id: playId,
-        }
-        playStorage.storePlay(newReq, bracket?.id)
-        window.location.assign(bracketProductArchiveUrl)
-      })
-      .catch((err) => {
-        console.error('error: ', err)
-        setProcessingAddToApparel(false)
-        setAddToApparelError(true)
-        Sentry.captureException(err)
-      })
   }
 
   const handleSubmitPicksClick = async () => {

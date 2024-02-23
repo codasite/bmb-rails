@@ -237,8 +237,7 @@ class GelatoProductIntegration implements
         ],
       ];
     }
-    // if (empty($responses)) {
-    if (true) {
+    if (empty($responses)) {
       throw new \Exception(
         'Error Generating Images. No responses returned by image generator'
       );
