@@ -14,10 +14,10 @@ class DashboardTournamentsQuery {
   public static $tournament_roles = ['hosting', 'playing'];
   public static $paged_status_mapping = [
     'all' => ['publish', 'private', 'upcoming', 'score', 'complete'],
-    'live' => ['publish'],
+    'live' => ['publish', 'score'],
     'private' => ['private'],
     'upcoming' => ['upcoming'],
-    'closed' => ['score', 'complete'],
+    'complete' => ['complete'],
   ];
   private array $tournament_counts = [];
 

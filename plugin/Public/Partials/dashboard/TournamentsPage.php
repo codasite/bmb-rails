@@ -39,8 +39,8 @@ class TournamentsPage {
       'fill_circle' => true,
     ],
     [
-      'paged_status' => 'closed',
-      'label' => 'Closed',
+      'paged_status' => 'complete',
+      'label' => 'Complete',
       'color' => 'white',
       'show_circle' => true,
       'fill_circle' => true,

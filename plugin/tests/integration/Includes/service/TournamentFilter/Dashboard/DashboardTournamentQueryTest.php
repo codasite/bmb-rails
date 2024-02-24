@@ -21,7 +21,7 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
       'author' => $user->ID,
       'status' => 'upcoming',
     ]);
-    $closed_bracket = $this->create_bracket([
+    $scored_bracket = $this->create_bracket([
       'author' => $user->ID,
       'status' => 'score',
     ]);
@@ -35,10 +35,11 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
     $brackets = $service->get_tournaments(1, 10, 'live', 'hosting');
     $count = $service->get_tournaments_count('live', 'hosting');
 
-    $this->assertCount(1, $brackets);
-    $this->assertEquals(1, $count);
+    $this->assertCount(2, $brackets);
+    $this->assertEquals(2, $count);
 
     $this->assertEquals($live_bracket->id, $brackets[0]->id);
+    $this->assertEquals($scored_bracket->id, $brackets[1]->id);
   }
 
   public function test_get_private_hosted_brackets() {
@@ -111,7 +112,7 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
     $this->assertEquals($upcoming_bracket->id, $brackets[0]->id);
   }
 
-  public function test_get_closed_hosted_brackets() {
+  public function test_get_complete_hosted_brackets() {
     $user = $this->create_user();
     $user2 = $this->create_user();
     $live_bracket = $this->create_bracket([
@@ -142,14 +143,13 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
 
-    $brackets = $service->get_tournaments(1, 10, 'closed', 'hosting');
-    $count = $service->get_tournaments_count('closed', 'hosting');
+    $brackets = $service->get_tournaments(1, 10, 'complete', 'hosting');
+    $count = $service->get_tournaments_count('complete', 'hosting');
 
-    $this->assertCount(2, $brackets);
-    $this->assertEquals(2, $count);
+    $this->assertCount(1, $brackets);
+    $this->assertEquals(1, $count);
 
-    $this->assertEquals($scored_bracket->id, $brackets[0]->id);
-    $this->assertEquals($complete_bracket->id, $brackets[1]->id);
+    $this->assertEquals($complete_bracket->id, $brackets[0]->id);
   }
 
   public function test_get_all_tournaments() {
@@ -261,11 +261,11 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
     $brackets = $service->get_tournaments(1, 10, 'live', 'playing');
     $count = $service->get_tournaments_count('live', 'playing');
 
-    $this->assertCount(1, $brackets);
-    $this->assertEquals(1, $count);
+    $this->assertCount(2, $brackets);
+    $this->assertEquals(2, $count);
   }
 
-  public function test_get_closed_tournaments() {
+  public function test_get_complete_tournaments() {
     $user = $this->create_user();
     $user2 = $this->create_user();
     $live_tourney = $this->create_bracket([
@@ -295,11 +295,11 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'closed', 'playing');
-    $count = $service->get_tournaments_count('closed', 'playing');
+    $brackets = $service->get_tournaments(1, 10, 'complete', 'playing');
+    $count = $service->get_tournaments_count('complete', 'playing');
 
-    $this->assertCount(2, $brackets);
-    $this->assertEquals(2, $count);
+    $this->assertCount(1, $brackets);
+    $this->assertEquals(1, $count);
   }
 
   public function test_get_upcoming_tournaments() {
