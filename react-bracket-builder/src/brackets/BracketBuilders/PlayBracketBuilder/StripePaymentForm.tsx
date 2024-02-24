@@ -80,8 +80,7 @@ export default function StripePaymentForm(props: {
       )}
       <ConfirmButton
         disabled={loading || !stripe || !elements}
-        fontWeight={600}
-        gap={4}
+        className="tw-gap-4"
       >
         <span>Pay</span>
         <span>${props.paymentAmount / 100}</span>

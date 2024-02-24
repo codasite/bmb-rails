@@ -1,0 +1,1 @@
+export { SetTournamentFeeModal } from './SetTournamentFeeModal'

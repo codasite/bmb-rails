@@ -66,16 +66,23 @@ export class BracketApi {
   async createStripePaymentIntent(
     req: PaymentIntentReq
   ): Promise<PaymentIntentRes> {
-    const options: RequestOptions = { method: 'POST', body: req }
-    return await this.client.performRequest(`stripe/payment-intent`, options)
+    return await this.client.performRequest(`stripe/payment-intent`, {
+      method: 'POST',
+      body: req,
+    })
   }
   async getStripeOnboardingLink(): Promise<{ url: string }> {
-    const options: RequestOptions = { method: 'POST' }
-    return await this.client.performRequest(`stripe/onboarding-link`, options)
+    return await this.client.performRequest(`stripe/onboarding-link`, {
+      method: 'POST',
+    })
   }
   async getStripePaymentsLink(): Promise<{ url: string }> {
-    const options: RequestOptions = { method: 'POST' }
-    return await this.client.performRequest(`stripe/payments-link`, options)
+    return await this.client.performRequest(`stripe/payments-link`, {
+      method: 'POST',
+    })
+  }
+  async getStripeAccount(): Promise<any> {
+    return await this.client.performRequest(`stripe/account`)
   }
 }
 

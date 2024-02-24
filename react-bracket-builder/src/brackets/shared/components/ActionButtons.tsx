@@ -35,6 +35,7 @@ export const baseButtonStyles = [
   'tw-whitespace-nowrap',
   'tw-cursor-pointer',
   'disabled:tw-cursor-default',
+  'tw-leading-none',
 ]
 
 const ActionButtonBase = (props: ActionButtonProps) => {

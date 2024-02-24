@@ -1097,4 +1097,26 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $updated = $this->bracket_repo->get($bracket->id);
     $this->assertEquals('score', $updated->status);
   }
+
+  public function test_update_bracket_fee() {
+    $bracket = $this->create_bracket();
+
+    $data = [
+      'fee' => 100,
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $response = rest_do_request($request);
+    $this->assertEquals(200, $response->get_status());
+    $updated = $this->bracket_repo->get($bracket->id);
+
+    $this->assertEquals(100, $updated->fee);
+  }
 }

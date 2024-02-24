@@ -134,6 +134,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     return [
       'month' => $this->month,
       'year' => $this->year,
+      'bracket_fee' => $this->fee,
     ];
   }
 

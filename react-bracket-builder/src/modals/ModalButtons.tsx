@@ -1,6 +1,7 @@
 import {
   ActionButton,
   ActionButtonProps,
+  baseButtonStyles,
 } from '../brackets/shared/components/ActionButtons'
 import * as React from 'react'
 
@@ -27,33 +28,73 @@ export const DangerButton = (props: {
   )
 }
 
-export const ConfirmButton = (props: ActionButtonProps) => {
+export const ConfirmButton = (props: {
+  onClick?: () => void
+  children?: React.ReactNode
+  disabled?: boolean
+  className?: string
+  variant?: 'green' | 'white'
+}) => {
+  const defaultStyles = [
+    props.variant === 'white' ? 'tw-bg-white/15' : 'tw-bg-green/15',
+    'tw-gap-16',
+    'tw-rounded-8',
+    'tw-p-12',
+    'tw-border-1',
+    'tw-border-solid',
+    props.variant === 'white' ? 'tw-border-white' : 'tw-border-green',
+    'hover:tw-text-white/75',
+    'tw-text-white',
+    'tw-w-full',
+    'tw-text-16',
+    'tw-font-700',
+    'disabled:tw-bg-transparent',
+    'disabled:tw-text-white/20',
+    'disabled:tw-border-white/20',
+  ]
+  const styles = [
+    ...baseButtonStyles,
+    ...defaultStyles,
+    ...(props.className ? props.className.split(' ') : []),
+  ].join(' ')
+
   return (
-    <ActionButton
-      variant="green"
-      paddingY={12}
-      paddingX={16}
-      fontSize={16}
-      fontWeight={700}
-      className={
-        (props.disabled ? '' : 'hover:tw-text-white/75') + ' tw-w-full'
-      }
-      {...props}
-    />
+    <button
+      onClick={props.onClick}
+      disabled={props.disabled}
+      className={styles}
+    >
+      {props.children}
+    </button>
   )
 }
 export const CancelButton = (props: {
   onClick: () => void
-  className?: string
+  children?: React.ReactNode
+  disabled?: boolean
 }) => {
+  const defaultStyles = [
+    'tw-bg-white/15',
+    'tw-gap-16',
+    'tw-rounded-8',
+    'tw-p-12',
+    'tw-border-none',
+    'hover:tw-text-white/75',
+    'tw-text-white',
+    'tw-w-full',
+    'tw-text-16',
+    'tw-font-500',
+    'disabled:tw-bg-white/15',
+    'disabled:tw-text-white/50',
+  ]
+  const styles = [...baseButtonStyles, ...defaultStyles].join(' ')
   return (
     <button
+      disabled={props.disabled}
       onClick={props.onClick}
-      className={`tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer ${
-        props.className ?? ''
-      }`}
+      className={styles}
     >
-      Cancel
+      {props.children ?? 'Cancel'}
     </button>
   )
 }

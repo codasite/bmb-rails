@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Controllers;
 
 use Stripe\StripeClient;
+use WP;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -98,6 +99,17 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
         'permission_callback' => [$this, 'create_paid_bracket_check'],
         'args' => $this->get_endpoint_args_for_item_schema(
           WP_REST_Server::CREATABLE
+        ),
+      ],
+      'schema' => [$this, 'get_public_item_schema'],
+    ]);
+    register_rest_route($namespace, '/' . $base . '/account', [
+      [
+        'methods' => WP_REST_Server::READABLE,
+        'callback' => [$this, 'get_stripe_account'],
+        'permission_callback' => [$this, 'get_stripe_account_check'],
+        'args' => $this->get_endpoint_args_for_item_schema(
+          WP_REST_Server::READABLE
         ),
       ],
       'schema' => [$this, 'get_public_item_schema'],
@@ -217,6 +229,13 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     }
   }
 
+  public function get_stripe_account(
+    WP_REST_Request $request
+  ): WP_REST_Response {
+    $account = $this->connected_account_factory->get_account_for_current_user();
+    return new WP_REST_Response($account->get_stripe_account(), 200);
+  }
+
   /**
    * Check if a given request has customer access to this plugin. Anyone can view the data.
    *
@@ -234,5 +253,12 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_Error|bool {
     return current_user_can('wpbb_create_paid_bracket');
+  }
+
+  public function get_stripe_account_check(
+    WP_REST_Request $request
+  ): WP_Error|bool {
+    // check if user is logged in
+    return is_user_logged_in();
   }
 }

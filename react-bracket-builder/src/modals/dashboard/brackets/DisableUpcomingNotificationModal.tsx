@@ -21,7 +21,6 @@ export default function DisableUpcomingNotificationModal() {
       <div className="tw-flex tw-flex-col tw-gap-10">
         <ConfirmButton
           variant="white"
-          backgroundColor="white/15"
           onClick={() => {
             bracketApi
               .removeNotification(notificationId)

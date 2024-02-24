@@ -2,6 +2,8 @@
 
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
@@ -288,5 +290,50 @@ class StripePaymentsApiTest extends \WPBB_UnitTestCase {
     $res = rest_do_request($request);
 
     $this->assertSame(403, $res->get_status());
+  }
+
+  public function test_get_stripe_account() {
+    $account_mock = $this->createMock(StripeConnectedAccount::class);
+    $account_mock->method('get_stripe_account')->willReturn([
+      'foo' => 'bar',
+    ]);
+
+    $account_factory = $this->createMock(StripeConnectedAccountFactory::class);
+    $account_factory
+      ->method('get_account_for_current_user')
+      ->willReturn($account_mock);
+
+    $api = new StripePaymentsApi([
+      'connected_account_factory' => $account_factory,
+    ]);
+
+    $request = new WP_REST_Request(
+      'GET',
+      '/wp-bracket-builder/v1/stripe/account'
+    );
+
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $res = $api->get_stripe_account($request);
+
+    $this->assertSame(200, $res->get_status());
+    $this->assertEquals(
+      [
+        'foo' => 'bar',
+      ],
+      $res->get_data()
+    );
+  }
+  public function test_get_stripe_account_not_logged_in() {
+    wp_set_current_user(0);
+
+    $request = new WP_REST_Request(
+      'GET',
+      '/wp-bracket-builder/v1/stripe/account'
+    );
+
+    $res = rest_do_request($request);
+
+    $this->assertSame(401, $res->get_status());
   }
 }
