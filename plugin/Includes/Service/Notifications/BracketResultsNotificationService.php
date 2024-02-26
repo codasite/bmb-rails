@@ -21,6 +21,33 @@ class BracketResultsNotificationService implements
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
   }
 
+  public function get_updated_bracket_results(
+    Bracket|int|null $old_bracket,
+    Bracket|int|null $new_bracket
+  ): void {
+    $new_results = $new_bracket->results;
+    $old_results = $old_bracket->results;
+    $updated_results = [];
+    foreach ($new_results as $new_result) {
+      foreach ($old_results as $old_result) {
+        if (
+          $new_result->round_index === $old_result->round_index &&
+          $new_result->match_index === $old_result->match_index
+        ) {
+          if ($new_result->winning_team_id !== $old_result->winning_team_id) {
+            $updated_results[] = $new_result;
+          }
+        }
+      }
+    }
+  }
+
+  // foreach NEW result:
+  //   if my_team plays and my_team wins:
+  //     “You picked {my_team} and they won!”
+  //   if my_team plays and my_team loses:
+  //     “You picked {my_team} but {winning_team} won the round!”
+
   public function notify_bracket_results_updated(
     Bracket|int|null $bracket
   ): void {
