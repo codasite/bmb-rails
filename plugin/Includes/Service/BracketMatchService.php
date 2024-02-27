@@ -9,6 +9,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatchNodeInterface;
 class BracketMatchService {
   /**
    * @param array<BracketMatchNodeInterface> $nodes_flat
+   * @return array<array<BracketMatchNodeInterface>>
    */
   public function match_node_2d(array $nodes_flat) {
     $arr_2d = [];
@@ -19,12 +20,31 @@ class BracketMatchService {
   }
 
   /**
+   * @param array<BracketMatchNodeInterface> $nodes_flat
+   * @return array<BracketMatchNodeInterface>
+   */
+  public function sort_match_node(array $nodes_flat) {
+    usort($nodes_flat, function ($a, $b) {
+      if ($a->get_round_index() === $b->get_round_index()) {
+        return $a->get_match_index() - $b->get_match_index();
+      }
+      return $a->get_round_index() - $b->get_round_index();
+    });
+    return $nodes_flat;
+  }
+
+  /**
+   * Create a 2D array of matches to represent the bracket together with a set of picks.
+   * NOTE: Because this method loops over the picks, it will only create matches that have been picked
+   *
    * @param array<BracketMatch> $matches
    * @param array<MatchPick> $picks
    */
   public function matches_from_picks(array $matches_flat, array $picks_flat) {
     $matches_2d = $this->match_node_2d($matches_flat);
-    // Assume picks are sorted by round_index and match_index
+    // Ensure picks are sorted by round_index and match_index
+    $picks_flat = $this->sort_match_node($picks_flat);
+    // Sorts picks by round_index and match_index
     foreach ($picks_flat as $pick) {
       // Check if the match for this pick exists
       if (isset($matches_2d[$pick->round_index][$pick->match_index])) {

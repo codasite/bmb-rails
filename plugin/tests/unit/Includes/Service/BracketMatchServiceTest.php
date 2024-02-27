@@ -232,4 +232,54 @@ class BracketMatchServiceTest extends TestCase {
     $picked_matches = $service->matches_from_picks($base_matches, $picks);
     $this->assertMatchesJsonSnapshot($picked_matches);
   }
+  public function test_matches_from_picks_6_team_partial() {
+    $base_matches = [
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 0,
+        'team1' => new Team(['name' => 'Team 1', 'id' => 1]),
+        'team2' => new Team(['name' => 'Team 2', 'id' => 2]),
+      ]),
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 2,
+        'team1' => new Team(['name' => 'Team 3', 'id' => 3]),
+        'team2' => new Team(['name' => 'Team 4', 'id' => 4]),
+      ]),
+      new BracketMatch([
+        'round_index' => 1,
+        'match_index' => 0,
+        'team1' => null,
+        'team2' => new Team(['name' => 'Team 5', 'id' => 5]),
+      ]),
+      new BracketMatch([
+        'round_index' => 1,
+        'match_index' => 1,
+        'team1' => null,
+        'team2' => new Team(['name' => 'Team 6', 'id' => 6]),
+      ]),
+    ];
+
+    $picks = [
+      new MatchPick([
+        'round_index' => 0,
+        'match_index' => 0,
+        'winning_team_id' => 1,
+      ]),
+      new MatchPick([
+        'round_index' => 0,
+        'match_index' => 2,
+        'winning_team_id' => 4,
+      ]),
+      new MatchPick([
+        'round_index' => 1,
+        'match_index' => 0,
+        'winning_team_id' => 1,
+      ]),
+    ];
+
+    $service = new BracketMatchService();
+    $picked_matches = $service->matches_from_picks($base_matches, $picks);
+    $this->assertMatchesJsonSnapshot($picked_matches);
+  }
 }
