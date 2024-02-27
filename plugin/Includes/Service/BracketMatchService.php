@@ -26,35 +26,54 @@ class BracketMatchService {
     $matches_2d = $this->match_node_2d($matches_flat);
     // Assume picks are sorted by round_index and match_index
     foreach ($picks_flat as $pick) {
+      // Check if the match for this pick exists
       if (isset($matches_2d[$pick->round_index][$pick->match_index])) {
         $match = $matches_2d[$pick->round_index][$pick->match_index];
-        if ($pick->winning_team_id === $match->team1->id) {
+        // Populate missing teams
+        if (!$match->team1) {
+          $match->team1 = $this->get_prev_match(
+            $matches_2d,
+            $pick->round_index,
+            $pick->match_index,
+            0
+          )->get_winning_team();
+        }
+        if (!$match->team2) {
+          $match->team2 = $this->get_prev_match(
+            $matches_2d,
+            $pick->round_index,
+            $pick->match_index,
+            1
+          )->get_winning_team();
+        }
+        if ($match->team1 && $pick->winning_team_id === $match->team1->id) {
           $match->team1_wins = true;
-        } elseif ($pick->winning_team_id === $match->team2->id) {
+        } elseif (
+          $match->team2 &&
+          $pick->winning_team_id === $match->team2->id
+        ) {
           $match->team2_wins = true;
         }
       } else {
-        $team1_match = $this->get_prev_match(
+        $team1 = $this->get_prev_match(
           $matches_2d,
           $pick->round_index,
           $pick->match_index,
           0
-        );
-        $team2_match = $this->get_prev_match(
+        )->get_winning_team();
+        $team2 = $this->get_prev_match(
           $matches_2d,
           $pick->round_index,
           $pick->match_index,
           1
-        );
+        )->get_winning_team();
         $matches_2d[$pick->round_index][$pick->match_index] = new BracketMatch([
           'round_index' => $pick->round_index,
           'match_index' => $pick->match_index,
-          'team1' => $team1_match->get_winning_team(),
-          'team2' => $team2_match->get_winning_team(),
-          'team1_wins' =>
-            $pick->winning_team_id === $team1_match->get_winning_team()->id,
-          'team2_wins' =>
-            $pick->winning_team_id === $team2_match->get_winning_team()->id,
+          'team1' => $team1,
+          'team2' => $team2,
+          'team1_wins' => $team1 && $pick->winning_team_id === $team1->id,
+          'team2_wins' => $team2 && $pick->winning_team_id === $team2->id,
         ]);
       }
     }
