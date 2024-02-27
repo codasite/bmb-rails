@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
-class MatchPick {
+class MatchPick implements BracketMatchNodeInterface {
   /**
    * @var int
    */
@@ -53,5 +53,13 @@ class MatchPick {
         ? $this->winning_team->to_array()
         : null,
     ];
+  }
+
+  public function get_round_index(): int {
+    return $this->round_index;
+  }
+
+  public function get_match_index(): int {
+    return $this->match_index;
   }
 }

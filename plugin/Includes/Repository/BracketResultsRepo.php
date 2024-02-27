@@ -18,18 +18,25 @@ class BracketResultsRepo implements CustomTableInterface {
   private BracketRepo $bracket_repo;
 
   /**
+   * @var MatchRepo
+   */
+  private BracketMatchRepo $match_repo;
+
+  /**
    * @var wpdb
    */
   private $wpdb;
 
   public function __construct(
     BracketRepo $bracket_repo,
-    BracketTeamRepo $team_repo
+    BracketTeamRepo $team_repo,
+    BracketMatchRepo $match_repo
   ) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->bracket_repo = $bracket_repo;
     $this->team_repo = $team_repo;
+    $this->match_repo = $match_repo;
   }
 
   public function insert_results(int $bracket_id, array $results): void {

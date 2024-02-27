@@ -42,6 +42,32 @@ class BracketResultsNotificationService implements
     }
   }
 
+  /**
+   * Returns an array of results indexed by the winning team id
+   *
+   * @param array $results
+   * @return array
+   */
+  public function map_winning_team_id_to_result($results): array {
+    $team_id_result_mapping = [];
+    foreach ($results as $result) {
+      $team_id_result_mapping[$result->winning_team_id] = $result;
+    }
+    return $team_id_result_mapping;
+  }
+
+  public function map_losing_team_id_to_result($results): array {
+    $team_id_result_mapping = [];
+    foreach ($results as $result) {
+      $team_id_result_mapping[$result->losing_team_id] = $result;
+    }
+    return $team_id_result_mapping;
+  }
+
+  // $ranked_play_teams = [5, 1, 0, 2, 3];
+  // foreach result:
+  //   if result is in $ranked_play_teams:
+
   // foreach NEW result:
   //   if my_team plays and my_team wins:
   //     “You picked {my_team} and they won!”
