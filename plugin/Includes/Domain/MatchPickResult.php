@@ -8,7 +8,7 @@ class MatchPickResult implements BracketMatchNodeInterface {
   public Team $losing_team;
   public bool $correct_picked;
 
-  public function construct($args = []) {
+  public function __construct(array $args = []) {
     $this->round_index = (int) $args['round_index'];
     $this->match_index = (int) $args['match_index'];
     $this->winning_team = $args['winning_team'];

@@ -1,5 +1,7 @@
 <?php
+namespace WStrategies\BMB\Includes\Factory;
 
+use ValueError;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
@@ -35,9 +37,7 @@ class MatchPickResultFactory {
       'winning_team' => $match->get_winning_team(),
       'losing_team' => $match->get_losing_team(),
       'correct_picked' =>
-        $match->get_winning_team()->id === $pick->winning_team_id
-          ? true
-          : false,
+        $match->get_winning_team()->id === $pick->winning_team_id,
     ]);
   }
 
