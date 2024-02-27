@@ -49,13 +49,16 @@ class BracketMatchService {
         $matches_2d[$pick->round_index][$pick->match_index] = new BracketMatch([
           'round_index' => $pick->round_index,
           'match_index' => $pick->match_index,
-          'team1' => $team1_match->team1,
-          'team2' => $team2_match->team2,
-          'team1_wins' => $pick->winning_team_id === $team1_match->team1->id,
-          'team2_wins' => $pick->winning_team_id === $team2_match->team2->id,
+          'team1' => $team1_match->get_winning_team(),
+          'team2' => $team2_match->get_winning_team(),
+          'team1_wins' =>
+            $pick->winning_team_id === $team1_match->get_winning_team()->id,
+          'team2_wins' =>
+            $pick->winning_team_id === $team2_match->get_winning_team()->id,
         ]);
       }
     }
+    return $matches_2d;
   }
 
   /**
@@ -69,7 +72,7 @@ class BracketMatchService {
     int $round_index,
     int $match_index,
     int $team
-  ) {
+  ): BracketMatch {
     if ($team < 0 || $team > 1) {
       throw new InvalidArgumentException('team must be 0 or 1');
     }

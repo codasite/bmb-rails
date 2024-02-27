@@ -83,4 +83,16 @@ class BracketMatch implements BracketMatchNodeInterface {
   public function get_match_index(): int {
     return $this->match_index;
   }
+
+  public function get_winning_team(): ?Team {
+    if ($this->team1_wins) {
+      return $this->team1;
+    }
+
+    if ($this->team2_wins) {
+      return $this->team2;
+    }
+
+    return null;
+  }
 }

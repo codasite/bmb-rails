@@ -4,8 +4,11 @@ use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
+use Spatie\Snapshots\MatchesSnapshots;
+use WStrategies\BMB\Includes\Domain\MatchPick;
 
 class BracketMatchServiceTest extends TestCase {
+  use MatchesSnapshots;
   public function test_matches_to_2d_array_8_team() {
     $matches = [
       new BracketMatch([
@@ -96,5 +99,76 @@ class BracketMatchServiceTest extends TestCase {
     $this->assertEquals(2, count($arr));
     $this->assertEquals(4, count($arr[0]));
     $this->assertEquals(4, count($arr[1]));
+  }
+
+  public function test_matches_from_picks() {
+    $matches = [
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 0,
+        'team1' => new Team(['name' => 'Team 1', 'id' => 1]),
+        'team2' => new Team(['name' => 'Team 2', 'id' => 2]),
+      ]),
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 1,
+        'team1' => new Team(['name' => 'Team 3', 'id' => 3]),
+        'team2' => new Team(['name' => 'Team 4', 'id' => 4]),
+      ]),
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 2,
+        'team1' => new Team(['name' => 'Team 5', 'id' => 5]),
+        'team2' => new Team(['name' => 'Team 6', 'id' => 6]),
+      ]),
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 3,
+        'team1' => new Team(['name' => 'Team 7', 'id' => 7]),
+        'team2' => new Team(['name' => 'Team 8', 'id' => 8]),
+      ]),
+    ];
+
+    $picks = [
+      new MatchPick([
+        'round_index' => 0,
+        'match_index' => 0,
+        'winning_team_id' => 1,
+      ]),
+      new MatchPick([
+        'round_index' => 0,
+        'match_index' => 1,
+        'winning_team_id' => 3,
+      ]),
+      new MatchPick([
+        'round_index' => 0,
+        'match_index' => 2,
+        'winning_team_id' => 6,
+      ]),
+      new MatchPick([
+        'round_index' => 0,
+        'match_index' => 3,
+        'winning_team_id' => 7,
+      ]),
+      new MatchPick([
+        'round_index' => 1,
+        'match_index' => 0,
+        'winning_team_id' => 1,
+      ]),
+      new MatchPick([
+        'round_index' => 1,
+        'match_index' => 1,
+        'winning_team_id' => 7,
+      ]),
+      new MatchPick([
+        'round_index' => 2,
+        'match_index' => 0,
+        'winning_team_id' => 7,
+      ]),
+    ];
+
+    $service = new BracketMatchService();
+    $picked_matches = $service->matches_from_picks($matches, $picks);
+    $this->assertMatchesJsonSnapshot($picked_matches);
   }
 }
