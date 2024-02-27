@@ -95,4 +95,22 @@ class BracketMatch implements BracketMatchNodeInterface {
 
     return null;
   }
+
+  public function get_losing_team(): ?Team {
+    if ($this->team1_wins) {
+      return $this->team2;
+    }
+
+    if ($this->team2_wins) {
+      return $this->team1;
+    }
+
+    return null;
+  }
+
+  public function has_results(): bool {
+    return $this->team1 &&
+      $this->team2 &&
+      ($this->team1_wins || $this->team2_wins);
+  }
 }
