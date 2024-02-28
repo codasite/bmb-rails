@@ -166,6 +166,7 @@ class BracketResultsRepo implements CustomTableInterface {
 			round_index tinyint(4) NOT NULL,
 			match_index tinyint(4) NOT NULL,
 			winning_team_id bigint(20) UNSIGNED NOT NULL,
+			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			FOREIGN KEY (bracket_id) REFERENCES {$brackets_table}(id) ON DELETE CASCADE,
 			FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE

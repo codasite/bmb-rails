@@ -14,5 +14,8 @@ class NotificationCronHooks implements HooksInterface {
   }
 
   public function wpbb_notification_cron_exec() {
+    // add last notification date sent to bracket table
+    // get all brackets that have updated since last notification
+    // get
   }
 }
