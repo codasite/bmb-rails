@@ -27,6 +27,8 @@ class BracketResultsRepo implements CustomTableInterface {
    */
   private $wpdb;
 
+  public const SHOULD_SEND_NOTIFICATIONS_META_KEY = 'should_send_notifications';
+
   public function __construct(
     BracketRepo $bracket_repo,
     BracketTeamRepo $team_repo,
@@ -40,6 +42,11 @@ class BracketResultsRepo implements CustomTableInterface {
   }
 
   public function insert_results(int $bracket_id, array $results): void {
+    update_post_meta(
+      $bracket_id,
+      $this::SHOULD_SEND_NOTIFICATIONS_META_KEY,
+      true
+    );
     $this->wpdb->query('START TRANSACTION');
     try {
       foreach ($results as $result) {
