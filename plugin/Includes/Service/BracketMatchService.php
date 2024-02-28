@@ -5,6 +5,7 @@ namespace WStrategies\BMB\Includes\Service;
 use InvalidArgumentException;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\BracketMatchNodeInterface;
+use WStrategies\BMB\Includes\Domain\MatchPick;
 
 class BracketMatchService {
   /**
@@ -37,8 +38,8 @@ class BracketMatchService {
    * Create a 2D array of matches to represent the bracket together with a set of picks.
    * NOTE: Because this method loops over the picks, it will only create matches that have been picked
    *
-   * @param array<BracketMatch> $matches
-   * @param array<MatchPick> $picks
+   * @param array<BracketMatch> $matches_flat
+   * @param array<MatchPick> $picks_flat
    */
   public function matches_from_picks(array $matches_flat, array $picks_flat) {
     /**
@@ -46,26 +47,29 @@ class BracketMatchService {
      */
     $matches_2d = $this->match_node_2d($matches_flat);
     // Ensure picks are sorted by round_index and match_index
-    $picks_flat = $this->sort_match_node($picks_flat);
+    $sorted_picks_flat = $this->sort_match_node($picks_flat);
     // Sorts picks by round_index and match_index
-    foreach ($picks_flat as $pick) {
+    foreach ($sorted_picks_flat as $pick) {
       // Check if the match for this pick exists
-      if (isset($matches_2d[$pick->round_index][$pick->match_index])) {
-        $match = $matches_2d[$pick->round_index][$pick->match_index];
+      if (
+        isset($matches_2d[$pick->get_round_index()][$pick->get_match_index()])
+      ) {
+        $match =
+          $matches_2d[$pick->get_round_index()][$pick->get_match_index()];
         // Populate missing teams
         if (!$match->team1) {
           $match->team1 = $this->get_prev_match(
             $matches_2d,
-            $pick->round_index,
-            $pick->match_index,
+            $pick->get_round_index(),
+            $pick->get_match_index(),
             0
           )->get_winning_team();
         }
         if (!$match->team2) {
           $match->team2 = $this->get_prev_match(
             $matches_2d,
-            $pick->round_index,
-            $pick->match_index,
+            $pick->get_round_index(),
+            $pick->get_match_index(),
             1
           )->get_winning_team();
         }
@@ -80,19 +84,21 @@ class BracketMatchService {
       } else {
         $team1 = $this->get_prev_match(
           $matches_2d,
-          $pick->round_index,
-          $pick->match_index,
+          $pick->get_round_index(),
+          $pick->get_match_index(),
           0
         )->get_winning_team();
         $team2 = $this->get_prev_match(
           $matches_2d,
-          $pick->round_index,
-          $pick->match_index,
+          $pick->get_round_index(),
+          $pick->get_match_index(),
           1
         )->get_winning_team();
-        $matches_2d[$pick->round_index][$pick->match_index] = new BracketMatch([
-          'round_index' => $pick->round_index,
-          'match_index' => $pick->match_index,
+        $matches_2d[$pick->get_round_index()][
+          $pick->get_match_index()
+        ] = new BracketMatch([
+          'round_index' => $pick->get_round_index(),
+          'match_index' => $pick->get_match_index(),
           'team1' => $team1,
           'team2' => $team2,
           'team1_wins' => $team1 && $pick->winning_team_id === $team1->id,
@@ -104,7 +110,7 @@ class BracketMatchService {
   }
 
   /**
-   * @param array<BracketMatch> $matches_2d
+   * @param array<array<BracketMatch>> $matches_2d
    * @param int $round_index
    * @param int $match_index
    * @param int $team 0 or 1
