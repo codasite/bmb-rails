@@ -26,13 +26,18 @@ class MatchPick implements BracketMatchNodeInterface {
    * @var int
    */
   public $winning_team_id;
+  public \DateTimeImmutable $updated_at;
 
+  /**
+   * @throws \Exception
+   */
   public function __construct($data = []) {
     $this->round_index = (int) $data['round_index'];
     $this->match_index = (int) $data['match_index'];
     $this->winning_team_id = (int) $data['winning_team_id'];
     $this->winning_team = $data['winning_team'] ?? null;
     $this->id = isset($data['id']) ? (int) $data['id'] : null;
+    $this->updated_at = new \DateTimeImmutable($data['updated_at']);
   }
 
   public static function from_array($data): MatchPick {
@@ -52,6 +57,7 @@ class MatchPick implements BracketMatchNodeInterface {
       'winning_team' => $this->winning_team
         ? $this->winning_team->to_array()
         : null,
+      'updated_at' => $this->updated_at,
     ];
   }
 

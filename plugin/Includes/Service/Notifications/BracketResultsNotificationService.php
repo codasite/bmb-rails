@@ -1,13 +1,15 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
-use WStrategies\BMB\Email\Template\BracketEmailTemplate;
+use DateTimeImmutable;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
-use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 
 class BracketResultsNotificationService implements
@@ -39,12 +41,31 @@ class BracketResultsNotificationService implements
   //   if my_team plays and my_team loses:
   //     “You picked {my_team} but {winning_team} won the round!”
 
+  /**
+   * @param array<MatchPickResult> $results
+   */
   public function get_result_notification_for_play(
     array $results,
     BracketPlay $play
-  ) {
+  ): MatchPickResult|null {
+    $result = null;
+    $final_winning_team = $play->get_winning_team();
+    foreach ($results as $match_pick_result) {
+      // if final_winning_team is in the match_pick_result
+      if (
+        $match_pick_result->winning_team->id === $final_winning_team->id ||
+        $match_pick_result->losing_team->id === $final_winning_team->id
+      ) {
+        $result = $match_pick_result;
+        break;
+      }
+    }
+    return $result;
   }
 
+  /**
+   * @throws \Exception
+   */
   public function notify_bracket_results_updated(
     Bracket|int|null $bracket
   ): void {
@@ -60,6 +81,12 @@ class BracketResultsNotificationService implements
     );
     $matches = $bracket->get_matches();
     $results = $bracket->get_picks();
+    $results_sent_at = $this->get_results_sent_at($bracket);
+    $results = array_filter($results, function ($result) use (
+      $results_sent_at
+    ) {
+      return $result->updated_at > $results_sent_at;
+    });
     $matches = $this->match_service->matches_from_picks($matches, $results);
     foreach ($plays as $play) {
       $match_pick_results = $this->match_pick_result_factory->create_match_pick_results(
@@ -67,8 +94,21 @@ class BracketResultsNotificationService implements
         $play->picks
       );
       // TODO: find the match pick result to notify for
+      $result = $this->get_result_notification_for_play(
+        $match_pick_results,
+        $play
+      );
+      if ($result) {
+        $this->notify_play_result($play, $result);
+      }
+
       // Send the email update
     }
+    update_post_meta(
+      $bracket->id,
+      BracketResultsRepo::RESULTS_NOTIFICATIONS_SENT_AT_META_KEY,
+      (new DateTimeImmutable())->format('Y-m-d H:i:s')
+    );
   }
 
   public function get_pick_result_heading(
@@ -93,5 +133,32 @@ class BracketResultsNotificationService implements
     MatchPick $correct_pick
   ): bool {
     return $pick->winning_team_id === $correct_pick->winning_team_id;
+  }
+
+  private function notify_play_result(
+    BracketPlay $play,
+    MatchPickResult $result
+  ) {
+  }
+
+  /**
+   * @param Bracket|int|null $bracket
+   *
+   * @return DateTimeImmutable
+   * @throws \Exception
+   */
+  public function get_results_sent_at(
+    Bracket|int|null $bracket
+  ): DateTimeImmutable {
+    $results_sent_at = get_post_meta(
+      $bracket->id,
+      BracketResultsRepo::RESULTS_NOTIFICATIONS_SENT_AT_META_KEY,
+      true
+    );
+    if ($results_sent_at) {
+      return new DateTimeImmutable($results_sent_at);
+    } else {
+      return new DateTimeImmutable('1970-01-01');
+    }
   }
 }

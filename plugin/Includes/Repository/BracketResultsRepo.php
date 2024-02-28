@@ -17,9 +17,6 @@ class BracketResultsRepo implements CustomTableInterface {
    */
   private BracketRepo $bracket_repo;
 
-  /**
-   * @var MatchRepo
-   */
   private BracketMatchRepo $match_repo;
 
   /**
@@ -28,6 +25,7 @@ class BracketResultsRepo implements CustomTableInterface {
   private $wpdb;
 
   public const SHOULD_SEND_NOTIFICATIONS_META_KEY = 'should_send_notifications';
+  public const RESULTS_NOTIFICATIONS_SENT_AT_META_KEY = 'results_notifications_sent_at';
 
   public function __construct(
     BracketRepo $bracket_repo,
