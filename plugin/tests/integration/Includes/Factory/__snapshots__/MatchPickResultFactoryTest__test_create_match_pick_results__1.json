@@ -1,0 +1,41 @@
+[
+    {
+        "round_index": 0,
+        "match_index": 0,
+        "winning_team": {
+            "id": 1,
+            "name": "Team 1"
+        },
+        "losing_team": {
+            "id": 2,
+            "name": "Team 2"
+        },
+        "correct_picked": true
+    },
+    {
+        "round_index": 0,
+        "match_index": 1,
+        "winning_team": {
+            "id": 4,
+            "name": "Team 4"
+        },
+        "losing_team": {
+            "id": 3,
+            "name": "Team 3"
+        },
+        "correct_picked": true
+    },
+    {
+        "round_index": 1,
+        "match_index": 0,
+        "winning_team": {
+            "id": 4,
+            "name": "Team 4"
+        },
+        "losing_team": {
+            "id": 1,
+            "name": "Team 1"
+        },
+        "correct_picked": false
+    }
+]

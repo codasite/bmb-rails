@@ -50,6 +50,7 @@ class MatchPickResultFactory {
     $picks = $play->get_picks();
 
     $matches = $this->match_service->matches_from_picks($matches, $results);
+
     $match_pick_results = [];
 
     foreach ($picks as $pick) {

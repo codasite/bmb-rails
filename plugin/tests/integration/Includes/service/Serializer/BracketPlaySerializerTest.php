@@ -232,7 +232,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
     $this->assertInstanceOf(MatchPick::class, $picks[0]);
     $this->assertInstanceOf(MatchPick::class, $picks[1]);
     $this->assertInstanceOf(MatchPick::class, $picks[2]);
-    $this->assertMatchesSnapshot((array) $play);
+    $this->assertMatchesJsonSnapshot(json_encode($play));
   }
 
   public function test_deserialize_required_fields() {
@@ -304,6 +304,6 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
     $this->assertFalse($play->bmb_official);
     $this->assertFalse($play->is_tournament_entry);
 
-    $this->assertMatchesSnapshot((array) $play);
+    $this->assertMatchesJsonSnapshot(json_encode($play));
   }
 }

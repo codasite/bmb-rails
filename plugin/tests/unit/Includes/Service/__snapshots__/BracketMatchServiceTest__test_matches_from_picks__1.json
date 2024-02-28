@@ -11,9 +11,7 @@
             "team2": {
                 "id": 2,
                 "name": "Team 2"
-            },
-            "team1_wins": true,
-            "team2_wins": false
+            }
         },
         {
             "id": null,
@@ -26,9 +24,7 @@
             "team2": {
                 "id": 4,
                 "name": "Team 4"
-            },
-            "team1_wins": true,
-            "team2_wins": false
+            }
         },
         {
             "id": null,
@@ -41,9 +37,7 @@
             "team2": {
                 "id": 6,
                 "name": "Team 6"
-            },
-            "team1_wins": false,
-            "team2_wins": true
+            }
         },
         {
             "id": null,
@@ -56,9 +50,7 @@
             "team2": {
                 "id": 8,
                 "name": "Team 8"
-            },
-            "team1_wins": true,
-            "team2_wins": false
+            }
         }
     ],
     [
@@ -73,9 +65,7 @@
             "team2": {
                 "id": 3,
                 "name": "Team 3"
-            },
-            "team1_wins": true,
-            "team2_wins": false
+            }
         },
         {
             "id": null,
@@ -88,9 +78,7 @@
             "team2": {
                 "id": 7,
                 "name": "Team 7"
-            },
-            "team1_wins": false,
-            "team2_wins": true
+            }
         }
     ],
     [
@@ -105,9 +93,7 @@
             "team2": {
                 "id": 7,
                 "name": "Team 7"
-            },
-            "team1_wins": false,
-            "team2_wins": true
+            }
         }
     ]
 ]

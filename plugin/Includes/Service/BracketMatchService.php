@@ -41,6 +41,9 @@ class BracketMatchService {
    * @param array<MatchPick> $picks
    */
   public function matches_from_picks(array $matches_flat, array $picks_flat) {
+    /**
+     * @var array<array<BracketMatch>> $matches_2d
+     */
     $matches_2d = $this->match_node_2d($matches_flat);
     // Ensure picks are sorted by round_index and match_index
     $picks_flat = $this->sort_match_node($picks_flat);
@@ -67,12 +70,12 @@ class BracketMatchService {
           )->get_winning_team();
         }
         if ($match->team1 && $pick->winning_team_id === $match->team1->id) {
-          $match->team1_wins = true;
+          $match->set_team1_wins();
         } elseif (
           $match->team2 &&
           $pick->winning_team_id === $match->team2->id
         ) {
-          $match->team2_wins = true;
+          $match->set_team2_wins();
         }
       } else {
         $team1 = $this->get_prev_match(

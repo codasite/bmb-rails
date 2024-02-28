@@ -143,7 +143,7 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
     $this->assertInstanceOf(MatchPick::class, $results[0]);
     $this->assertInstanceOf(MatchPick::class, $results[1]);
     $this->assertInstanceOf(MatchPick::class, $results[2]);
-    $this->assertMatchesSnapshot((array) $bracket);
+    $this->assertMatchesJsonSnapshot(json_encode($bracket));
   }
 
   public function test_deserialize_required_fields() {
@@ -218,7 +218,7 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
     $this->assertEquals(0, $bracket->wildcard_placement);
     $this->assertCount(2, $bracket->matches);
 
-    $this->assertMatchesSnapshot((array) $bracket);
+    $this->assertMatchesJsonSnapshot(json_encode($bracket));
   }
 
   public function test_published_bracket_is_open() {

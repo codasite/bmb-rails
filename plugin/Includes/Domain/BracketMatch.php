@@ -29,8 +29,8 @@ class BracketMatch implements BracketMatchNodeInterface {
    */
   public $team2;
 
-  public bool $team1_wins = false;
-  public bool $team2_wins = false;
+  private bool $team1_wins = false;
+  private bool $team2_wins = false;
 
   public function __construct($args = []) {
     $this->round_index = (int) $args['round_index'];
@@ -94,6 +94,16 @@ class BracketMatch implements BracketMatchNodeInterface {
     }
 
     return null;
+  }
+
+  public function set_team1_wins(): void {
+    $this->team1_wins = true;
+    $this->team2_wins = false;
+  }
+
+  public function set_team2_wins(): void {
+    $this->team1_wins = false;
+    $this->team2_wins = true;
   }
 
   public function get_losing_team(): ?Team {

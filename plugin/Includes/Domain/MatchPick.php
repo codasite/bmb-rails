@@ -55,6 +55,7 @@ class MatchPick implements BracketMatchNodeInterface {
     ];
   }
 
+  // These functions renamed to retrieve_.. to avoid issues with automatic getters and setters
   public function get_round_index(): int {
     return $this->round_index;
   }

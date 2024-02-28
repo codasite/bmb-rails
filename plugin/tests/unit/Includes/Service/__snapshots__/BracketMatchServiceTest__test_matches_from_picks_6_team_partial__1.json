@@ -11,9 +11,7 @@
             "team2": {
                 "id": 2,
                 "name": "Team 2"
-            },
-            "team1_wins": true,
-            "team2_wins": false
+            }
         },
         "2": {
             "id": null,
@@ -26,9 +24,7 @@
             "team2": {
                 "id": 4,
                 "name": "Team 4"
-            },
-            "team1_wins": false,
-            "team2_wins": true
+            }
         }
     },
     [
@@ -43,9 +39,7 @@
             "team2": {
                 "id": 5,
                 "name": "Team 5"
-            },
-            "team1_wins": true,
-            "team2_wins": false
+            }
         },
         {
             "id": null,
@@ -55,9 +49,7 @@
             "team2": {
                 "id": 6,
                 "name": "Team 6"
-            },
-            "team1_wins": false,
-            "team2_wins": false
+            }
         }
     ]
 ]
