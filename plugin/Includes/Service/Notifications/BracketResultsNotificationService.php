@@ -42,28 +42,6 @@ class BracketResultsNotificationService implements
   //     “You picked {my_team} but {winning_team} won the round!”
 
   /**
-   * @param array<MatchPickResult> $results
-   */
-  public function get_result_notification_for_play(
-    array $results,
-    BracketPlay $play
-  ): MatchPickResult|null {
-    $result = null;
-    $final_winning_team = $play->get_winning_team();
-    foreach ($results as $match_pick_result) {
-      // if final_winning_team is in the match_pick_result
-      if (
-        $match_pick_result->winning_team->id === $final_winning_team->id ||
-        $match_pick_result->losing_team->id === $final_winning_team->id
-      ) {
-        $result = $match_pick_result;
-        break;
-      }
-    }
-    return $result;
-  }
-
-  /**
    * @throws \Exception
    */
   public function notify_bracket_results_updated(
@@ -109,6 +87,28 @@ class BracketResultsNotificationService implements
       BracketResultsRepo::RESULTS_NOTIFICATIONS_SENT_AT_META_KEY,
       (new DateTimeImmutable())->format('Y-m-d H:i:s')
     );
+  }
+
+  /**
+   * @param array<MatchPickResult> $results
+   */
+  public function get_result_notification_for_play(
+    array $results,
+    BracketPlay $play
+  ): MatchPickResult|null {
+    $result = null;
+    $final_winning_team = $play->get_winning_team();
+    foreach ($results as $match_pick_result) {
+      // if final_winning_team is in the match_pick_result
+      if (
+        $match_pick_result->winning_team->id === $final_winning_team->id ||
+        $match_pick_result->losing_team->id === $final_winning_team->id
+      ) {
+        $result = $match_pick_result;
+        break;
+      }
+    }
+    return $result;
   }
 
   public function get_pick_result_heading(
