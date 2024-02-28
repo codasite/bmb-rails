@@ -41,16 +41,15 @@ class MatchPickResultFactory {
     ]);
   }
 
+  /**
+   * @param BracketMatch[][] $matches
+   * @param MatchPick[] $picks
+   */
+  // NOTE: the tests for this wont run (updated signature)
   public function create_match_pick_results(
-    Bracket $bracket,
-    BracketPlay $play
+    array $matches,
+    array $picks
   ): array {
-    $matches = $bracket->get_matches();
-    $results = $bracket->get_picks();
-    $picks = $play->get_picks();
-
-    $matches = $this->match_service->matches_from_picks($matches, $results);
-
     $match_pick_results = [];
 
     foreach ($picks as $pick) {

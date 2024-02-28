@@ -5,12 +5,16 @@ use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Service\BracketMatchService;
 
 class BracketResultsNotificationService implements
   BracketResultsNotificationServiceInterface {
   protected EmailServiceInterface $email_service;
+  protected BracketMatchService $match_service;
+  protected MatchPickResultFactory $match_pick_result_factory;
 
   protected BracketRepo $bracket_repo;
   protected PlayRepo $play_repo;
@@ -20,27 +24,9 @@ class BracketResultsNotificationService implements
       $args['email_service'] ?? new MailchimpEmailService();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-  }
-
-  public function get_updated_bracket_results(
-    Bracket|int|null $old_bracket,
-    Bracket|int|null $new_bracket
-  ): void {
-    $new_results = $new_bracket->results;
-    $old_results = $old_bracket->results;
-    $updated_results = [];
-    foreach ($new_results as $new_result) {
-      foreach ($old_results as $old_result) {
-        if (
-          $new_result->round_index === $old_result->round_index &&
-          $new_result->match_index === $old_result->match_index
-        ) {
-          if ($new_result->winning_team_id !== $old_result->winning_team_id) {
-            $updated_results[] = $new_result;
-          }
-        }
-      }
-    }
+    $this->match_service = $args['match_service'] ?? new BracketMatchService();
+    $this->match_pick_result_factory =
+      $args['match_pick_result_factory'] ?? new MatchPickResultFactory();
   }
 
   // $ranked_play_teams = [5, 1, 0, 2, 3];
@@ -68,43 +54,20 @@ class BracketResultsNotificationService implements
     if (is_numeric($bracket)) {
       $bracket = $this->bracket_repo->get($bracket);
     }
-    $bracket_id = $bracket->id;
-    $winning_pick = $bracket->get_last_result();
-    $user_picks = $this->play_repo->get_user_picks_for_result(
-      $bracket,
-      $winning_pick
+    $plays = $this->play_repo->get_all(
+      ['bracket_id' => $bracket->id],
+      ['fetch_bracket' => false]
     );
-
-    foreach ($user_picks as $user_pick) {
-      $user = get_user_by('id', $user_pick['user_id']);
-      $pick = $this->play_repo->pick_repo->get_pick($user_pick['pick_id']);
-      $to_email = $user->user_email;
-      $to_name = $user->display_name;
-      $subject = 'Bracket Results Updated';
-      $message = [
-        'to' => [
-          [
-            'email' => $to_email,
-            'name' => $to_name,
-          ],
-        ],
-      ];
-
-      // Generate html content for email
-      $heading = $this->get_pick_result_heading($pick, $winning_pick);
-      $button_url = get_permalink($user_pick['play_id']) . 'view';
-      $button_text = 'View Bracket';
-
-      $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
-
-      // send the email
-      $response = $this->email_service->send(
-        $to_email,
-        $to_name,
-        $subject,
-        $message,
-        $html
+    $matches = $bracket->get_matches();
+    $results = $bracket->get_picks();
+    $matches = $this->match_service->matches_from_picks($matches, $results);
+    foreach ($plays as $play) {
+      $match_pick_results = $this->match_pick_result_factory->create_match_pick_results(
+        $matches,
+        $play->picks
       );
+      // TODO: find the match pick result to notify for
+      // Send the email update
     }
   }
 
