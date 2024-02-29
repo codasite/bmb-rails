@@ -70,6 +70,10 @@ class MatchPick implements BracketMatchNodeInterface {
     return $this->match_index;
   }
 
+  public function get_winning_team(): Team {
+    return $this->winning_team;
+  }
+
   public function get_updated_at(): ?\DateTimeImmutable {
     return $this->updated_at;
   }

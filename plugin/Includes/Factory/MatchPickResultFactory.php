@@ -36,8 +36,7 @@ class MatchPickResultFactory {
       'match_index' => $match->get_match_index(),
       'winning_team' => $match->get_winning_team(),
       'losing_team' => $match->get_losing_team(),
-      'correct_picked' =>
-        $match->get_winning_team()->id === $pick->winning_team_id,
+      'picked_team' => $pick->get_winning_team(),
     ]);
   }
 

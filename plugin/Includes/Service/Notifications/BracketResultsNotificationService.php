@@ -112,15 +112,15 @@ class BracketResultsNotificationService implements
   }
 
   public function get_pick_result_heading(MatchPickResult $result): string {
-    $picked_team = strtoupper($pick->winning_team->name);
-    $correct_team = strtoupper($correct_pick->winning_team->name);
-    if ($this->correct_picked($pick, $correct_pick)) {
+    $picked_team = strtoupper($result->picked_team->name);
+    $winning_team = strtoupper($result->winning_team->name);
+    if ($result->correct_picked()) {
       return 'You picked ' . $picked_team . '... and they won!';
     } else {
       return 'You picked ' .
         $picked_team .
         ', but ' .
-        $correct_team .
+        $winning_team .
         ' won the round...';
     }
   }
@@ -159,36 +159,36 @@ class BracketResultsNotificationService implements
     }
   }
 
-  public function send_email($user_pick, $winning_pick, BracketPlay $play) {
-    // TODO fix this function
-    $user = get_user_by('id', $user_pick['user_id']);
-    $pick = $this->play_repo->pick_repo->get_pick($user_pick['pick_id']);
-    $to_email = $user->user_email;
-    $to_name = $user->display_name;
-    $subject = 'Bracket Results Updated';
-    $message = [
-      'to' => [
-        [
-          'email' => $to_email,
-          'name' => $to_name,
-        ],
-      ],
-    ];
+  // public function send_email($user_pick, $winning_pick, BracketPlay $play) {
+  //   // TODO fix this function
+  //   $user = get_user_by('id', $user_pick['user_id']);
+  //   $pick = $this->play_repo->pick_repo->get_pick($user_pick['pick_id']);
+  //   $to_email = $user->user_email;
+  //   $to_name = $user->display_name;
+  //   $subject = 'Bracket Results Updated';
+  //   $message = [
+  //     'to' => [
+  //       [
+  //         'email' => $to_email,
+  //         'name' => $to_name,
+  //       ],
+  //     ],
+  //   ];
 
-    // Generate html content for email
-    $heading = $this->get_pick_result_heading($pick, $winning_pick);
-    $button_url = get_permalink($play->id) . 'view';
-    $button_text = 'View Bracket';
+  //   // Generate html content for email
+  //   $heading = $this->get_pick_result_heading($pick, $winning_pick);
+  //   $button_url = get_permalink($play->id) . 'view';
+  //   $button_text = 'View Bracket';
 
-    $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
+  //   $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
 
-    // send the email
-    $response = $this->email_service->send(
-      $to_email,
-      $to_name,
-      $subject,
-      $message,
-      $html
-    );
-  }
+  //   // send the email
+  //   $response = $this->email_service->send(
+  //     $to_email,
+  //     $to_name,
+  //     $subject,
+  //     $message,
+  //     $html
+  //   );
+  // }
 }
