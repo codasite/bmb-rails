@@ -70,7 +70,7 @@ class MatchPick implements BracketMatchNodeInterface {
     return $this->match_index;
   }
 
-  public function get_winning_team(): Team {
+  public function get_winning_team(): ?Team {
     return $this->winning_team;
   }
 

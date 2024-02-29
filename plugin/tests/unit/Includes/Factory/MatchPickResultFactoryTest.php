@@ -19,6 +19,7 @@ class MatchPickResultFactoryTest extends TestCase {
       'round_index' => 0,
       'match_index' => 1,
       'winning_team_id' => 1,
+      'winning_team' => new Team(['name' => 'team1', 'id' => 1]),
     ]);
     $factory = new MatchPickResultFactory();
     $result = $factory->create_match_pick_result($match, $pick);
@@ -27,7 +28,7 @@ class MatchPickResultFactoryTest extends TestCase {
     $this->assertEquals(1, $result->match_index);
     $this->assertEquals('team1', $result->winning_team->name);
     $this->assertEquals('team2', $result->losing_team->name);
-    $this->assertTrue($result->correct_picked);
+    $this->assertTrue($result->correct_picked());
   }
 
   public function test_create_match_pick_result_incorrect() {
@@ -42,6 +43,7 @@ class MatchPickResultFactoryTest extends TestCase {
       'round_index' => 0,
       'match_index' => 1,
       'winning_team_id' => 2,
+      'winning_team' => new Team(['name' => 'team2', 'id' => 2]),
     ]);
     $factory = new MatchPickResultFactory();
     $result = $factory->create_match_pick_result($match, $pick);
@@ -50,7 +52,7 @@ class MatchPickResultFactoryTest extends TestCase {
     $this->assertEquals(1, $result->match_index);
     $this->assertEquals('team1', $result->winning_team->name);
     $this->assertEquals('team2', $result->losing_team->name);
-    $this->assertFalse($result->correct_picked);
+    $this->assertFalse($result->correct_picked());
   }
 
   public function test_create_match_pick_result_round_mismatch() {
