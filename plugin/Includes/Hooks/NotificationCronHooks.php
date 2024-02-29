@@ -9,7 +9,7 @@ use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationSer
 
 class NotificationCronHooks implements HooksInterface {
   private BracketRepo $bracket_repo;
-  private BracketResultsNotificationService $notification_service;
+  private ?BracketResultsNotificationService $notification_service;
   public function __construct(array $args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->notification_service =
@@ -28,6 +28,9 @@ class NotificationCronHooks implements HooksInterface {
   }
 
   public function wpbb_notification_cron_exec(): void {
+    if (!$this->notification_service) {
+      return;
+    }
     $brackets = $this->bracket_repo->get_all([
       'meta_query' => [
         [

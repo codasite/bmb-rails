@@ -5,6 +5,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
+use WStrategies\BMB\Includes\Service\BracketMatchService;
 
 class MatchPickResultFactoryTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
@@ -80,8 +81,13 @@ class MatchPickResultFactoryTest extends WPBB_UnitTestCase {
         ]),
       ],
     ]);
+    $match_service = new BracketMatchService();
+    $matches = $match_service->matches_from_picks(
+      $bracket->matches,
+      $bracket->results
+    );
     $factory = new MatchPickResultFactory();
-    $results = $factory->create_match_pick_results($bracket, $play);
+    $results = $factory->create_match_pick_results($matches, $play->picks);
     $this->assertMatchesJsonSnapshot($results);
   }
 }

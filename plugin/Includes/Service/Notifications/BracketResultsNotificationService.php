@@ -64,7 +64,7 @@ class BracketResultsNotificationService implements
     $results = array_filter($results, function ($result) use (
       $results_sent_at
     ) {
-      return $result->updated_at > $results_sent_at;
+      return $result->get_updated_at() > $results_sent_at;
     });
     $matches = $this->match_service->matches_from_picks($matches, $results);
     foreach ($plays as $play) {
@@ -72,7 +72,6 @@ class BracketResultsNotificationService implements
         $matches,
         $play->picks
       );
-      // TODO: find the match pick result to notify for
       $result = $this->get_result_notification_for_play(
         $match_pick_results,
         $play
@@ -112,10 +111,7 @@ class BracketResultsNotificationService implements
     return $result;
   }
 
-  public function get_pick_result_heading(
-    MatchPick $pick,
-    MatchPick $correct_pick
-  ): string {
+  public function get_pick_result_heading(MatchPickResult $result): string {
     $picked_team = strtoupper($pick->winning_team->name);
     $correct_team = strtoupper($correct_pick->winning_team->name);
     if ($this->correct_picked($pick, $correct_pick)) {

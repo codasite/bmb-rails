@@ -26,7 +26,8 @@ class MatchPick implements BracketMatchNodeInterface {
    * @var int
    */
   public $winning_team_id;
-  public \DateTimeImmutable $updated_at;
+  // This is private so that it doesn't get serialized
+  private ?\DateTimeImmutable $updated_at;
 
   /**
    * @throws \Exception
@@ -37,7 +38,9 @@ class MatchPick implements BracketMatchNodeInterface {
     $this->winning_team_id = (int) $data['winning_team_id'];
     $this->winning_team = $data['winning_team'] ?? null;
     $this->id = isset($data['id']) ? (int) $data['id'] : null;
-    $this->updated_at = new \DateTimeImmutable($data['updated_at']);
+    $this->updated_at = isset($data['updated_at'])
+      ? new \DateTimeImmutable($data['updated_at'])
+      : null;
   }
 
   public static function from_array($data): MatchPick {
@@ -61,12 +64,15 @@ class MatchPick implements BracketMatchNodeInterface {
     ];
   }
 
-  // These functions renamed to retrieve_.. to avoid issues with automatic getters and setters
   public function get_round_index(): int {
     return $this->round_index;
   }
 
   public function get_match_index(): int {
     return $this->match_index;
+  }
+
+  public function get_updated_at(): ?\DateTimeImmutable {
+    return $this->updated_at;
   }
 }

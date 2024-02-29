@@ -144,6 +144,9 @@ class BracketResultsRepo implements CustomTableInterface {
         'winning_team_id' => $winning_team_id,
         'id' => $result['id'],
         'winning_team' => $winning_team,
+        'updated_at' => isset($result['updated_at'])
+          ? new DateTimeImmutable($result['updated_at'])
+          : null,
       ]);
     }
     return $bracket_results;
