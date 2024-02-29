@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
+use ValueError;
+
 class MatchPickResult implements BracketMatchNodeInterface {
   public int $round_index;
   public int $match_index;
@@ -14,6 +16,13 @@ class MatchPickResult implements BracketMatchNodeInterface {
     $this->winning_team = $args['winning_team'];
     $this->losing_team = $args['losing_team'];
     $this->picked_team = $args['picked_team'];
+    if (
+      $this->winning_team->id === null ||
+      $this->losing_team->id === null ||
+      $this->picked_team->id === null
+    ) {
+      throw new ValueError('Team id is required');
+    }
   }
 
   public function get_round_index(): int {
