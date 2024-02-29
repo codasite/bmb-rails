@@ -38,9 +38,7 @@ class MatchPick implements BracketMatchNodeInterface {
     $this->winning_team_id = (int) $data['winning_team_id'];
     $this->winning_team = $data['winning_team'] ?? null;
     $this->id = isset($data['id']) ? (int) $data['id'] : null;
-    $this->updated_at = isset($data['updated_at'])
-      ? new \DateTimeImmutable($data['updated_at'])
-      : null;
+    $this->updated_at = $data['updated_at'] ?? null;
   }
 
   public static function from_array($data): MatchPick {

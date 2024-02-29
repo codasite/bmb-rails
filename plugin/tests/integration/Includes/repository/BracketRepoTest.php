@@ -281,6 +281,27 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(null, $updated->results_first_updated_at);
   }
 
+  public function test_new_results_sets_updated_at() {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+      'num_teams' => 4,
+    ]);
+
+    $repo = new BracketRepo();
+    $repo->update($bracket->id, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ]);
+
+    $results = $this->get_bracket($bracket->id)->results;
+    $this->assertNotNull($results[0]->get_updated_at());
+  }
+
   public function test_get_with_fee() {
     $bracket = $this->create_bracket();
     $product_utils_mock = $this->getMockBuilder(BracketProductUtils::class)
