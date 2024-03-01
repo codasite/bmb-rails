@@ -1,14 +1,13 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
-use DateTimeImmutable;
-use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
+use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\MatchPickResultService;
@@ -22,6 +21,8 @@ class BracketResultsNotificationService implements
 
   protected BracketRepo $bracket_repo;
   protected PlayRepo $play_repo;
+  private BracketResultsEmailFormatService $email_format_service;
+  private DateTimePostMetaRepo $results_sent_at_repo;
 
   public function __construct($args = []) {
     $this->email_service =
@@ -33,6 +34,17 @@ class BracketResultsNotificationService implements
       $args['match_pick_result_factory'] ?? new MatchPickResultFactory();
     $this->match_pick_result_service =
       $args['match_pick_result_service'] ?? new MatchPickResultService();
+    $this->email_format_service =
+      $args['email_format_service'] ??
+      new BracketResultsEmailFormatService(
+        $this->play_repo,
+        $this->email_service
+      );
+    $this->results_sent_at_repo =
+      $args['results_sent_at_repo'] ??
+      new DateTimePostMetaRepo(
+        BracketResultsRepo::RESULTS_NOTIFICATIONS_SENT_AT_META_KEY
+      );
   }
 
   // $ranked_play_teams = [5, 1, 0, 2, 3];
@@ -63,7 +75,7 @@ class BracketResultsNotificationService implements
     );
     $matches = $bracket->get_matches();
     $results = $bracket->get_picks();
-    $results_sent_at = $this->get_results_sent_at($bracket);
+    $results_sent_at = $this->results_sent_at_repo->get($bracket->id);
     $results = array_filter($results, function ($result) use (
       $results_sent_at
     ) {
@@ -80,16 +92,12 @@ class BracketResultsNotificationService implements
         $play
       );
       if ($result) {
-        $this->notify_play_result($play, $result);
+        $this->email_format_service->send_email($play, $result);
       }
 
       // Send the email update
     }
-    update_post_meta(
-      $bracket->id,
-      BracketResultsRepo::RESULTS_NOTIFICATIONS_SENT_AT_META_KEY,
-      (new DateTimeImmutable())->format('Y-m-d H:i:s')
-    );
+    $this->results_sent_at_repo->set_to_now($bracket->id);
   }
 
   /**
@@ -174,65 +182,5 @@ class BracketResultsNotificationService implements
         $winning_team .
         ' won the round!';
     }
-  }
-
-  private function notify_play_result(
-    BracketPlay $play,
-    MatchPickResult $result
-  ) {
-  }
-
-  /**
-   * @param Bracket|int|null $bracket
-   *
-   * @return DateTimeImmutable
-   * @throws \Exception
-   */
-  public function get_results_sent_at(
-    Bracket|int|null $bracket
-  ): DateTimeImmutable {
-    $results_sent_at = get_post_meta(
-      $bracket->id,
-      BracketResultsRepo::RESULTS_NOTIFICATIONS_SENT_AT_META_KEY,
-      true
-    );
-    if ($results_sent_at) {
-      return new DateTimeImmutable($results_sent_at);
-    } else {
-      return new DateTimeImmutable('1970-01-01');
-    }
-  }
-
-  public function send_email($user_pick, $winning_pick, BracketPlay $play) {
-    // TODO fix this function
-    $user = get_user_by('id', $user_pick['user_id']);
-    $pick = $this->play_repo->pick_repo->get_pick($user_pick['pick_id']);
-    $to_email = $user->user_email;
-    $to_name = $user->display_name;
-    $subject = 'Bracket Results Updated';
-    $message = [
-      'to' => [
-        [
-          'email' => $to_email,
-          'name' => $to_name,
-        ],
-      ],
-    ];
-
-    // Generate html content for email
-    $heading = $this->get_pick_result_heading($pick, $winning_pick);
-    $button_url = get_permalink($play->id) . 'view';
-    $button_text = 'View Bracket';
-
-    $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
-
-    // send the email
-    $response = $this->email_service->send(
-      $to_email,
-      $to_name,
-      $subject,
-      $message,
-      $html
-    );
   }
 }

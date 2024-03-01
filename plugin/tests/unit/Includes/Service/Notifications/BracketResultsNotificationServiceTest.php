@@ -45,5 +45,10 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $notification_service = new BracketResultsNotificationService([
       'email_service' => $this->createMock(EmailServiceInterface::class),
     ]);
+
+    // have a bracket with 1 play
+    // have a play with 1 pick, team 1 wins over team 2, winning team is team 1
+    // update results for bracket, team 1 wins over team 2
+    //
   }
 }
