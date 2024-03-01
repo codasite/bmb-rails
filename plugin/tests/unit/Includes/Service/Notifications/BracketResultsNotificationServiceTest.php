@@ -3,7 +3,7 @@ namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
@@ -29,7 +29,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
 
   public function test_should_send_email_when_match_pick_result_is_not_null() {
     $bracket = new Bracket(['id' => 1]);
-    $plays = [new BracketPlay(['picks' => []])];
+    $plays = [new Play(['picks' => []])];
     $play_repo = $this->createMock(PlayRepo::class);
     $play_repo->method('get_all')->willReturn($plays);
     $email_format_service = $this->createMock(
@@ -77,7 +77,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
   }
   public function test_should_not_send_email_when_match_pick_result_is_null() {
     $bracket = new Bracket(['id' => 1]);
-    $plays = [new BracketPlay(['picks' => []])];
+    $plays = [new Play(['picks' => []])];
     $play_repo = $this->createMock(PlayRepo::class);
     $play_repo->method('get_all')->willReturn($plays);
     $email_format_service = $this->createMock(
@@ -121,7 +121,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
 
   public function test_should_set_results_sent_at_to_now_after_sending_notifications() {
     $bracket = new Bracket(['id' => 1]);
-    $plays = [new BracketPlay(['picks' => []])];
+    $plays = [new Play(['picks' => []])];
     $play_repo = $this->createMock(PlayRepo::class);
     $play_repo->method('get_all')->willReturn($plays);
     $email_format_service = $this->createMock(

@@ -51,7 +51,7 @@ abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   public function update_play(
     $play,
     $args = []
-  ): \WStrategies\BMB\Includes\Domain\BracketPlay|WP_Error|int|null {
+  ): \WStrategies\BMB\Includes\Domain\Play|WP_Error|int|null {
     return self::factory()->play->update_object($play, $args);
   }
 

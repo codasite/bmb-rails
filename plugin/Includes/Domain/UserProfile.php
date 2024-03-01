@@ -54,7 +54,7 @@ class UserProfile extends PostBase {
 
   public function get_bmb_tournament_wins(): int {
     $query = new WP_Query([
-      'post_type' => BracketPlay::get_post_type(),
+      'post_type' => Play::get_post_type(),
       'author' => $this->wp_user->ID,
       'posts_per_page' => -1,
       'is_winner' => true,
@@ -68,7 +68,7 @@ class UserProfile extends PostBase {
 
   public function get_tournament_wins(): int {
     $query = new WP_Query([
-      'post_type' => BracketPlay::get_post_type(),
+      'post_type' => Play::get_post_type(),
       'author' => $this->wp_user->ID,
       'posts_per_page' => -1,
       'is_winner' => true,

@@ -10,7 +10,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BeforePlayAddedListener;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerInterface;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
@@ -175,7 +175,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   public function get_items($request): WP_Error|WP_REST_Response {
     // $bracket_id = $request->get_param('bracket_id');
     $the_query = new WP_Query([
-      'post_type' => BracketPlay::get_post_type(),
+      'post_type' => Play::get_post_type(),
       'post_status' => 'any',
     ]);
     $plays = $this->play_repo->get_all($the_query);

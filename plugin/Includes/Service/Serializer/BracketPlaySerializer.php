@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 
 class BracketPlaySerializer extends PostBaseSerializer {
   private MatchPickSerializer $match_pick_serializer;
@@ -15,9 +15,9 @@ class BracketPlaySerializer extends PostBaseSerializer {
       $args['bracket_serializer'] ?? new BracketSerializer();
   }
 
-  public function deserialize(array $data): BracketPlay {
+  public function deserialize(array $data): Play {
     $obj_data = $this->get_object_data($data);
-    return new BracketPlay($obj_data);
+    return new Play($obj_data);
   }
 
   public function get_serialized_fields(): array {

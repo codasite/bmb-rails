@@ -8,7 +8,7 @@ use WP_Mock;
 use WP_Mock\Tools\TestCase;
 use WP_Post;
 use WStrategies\BMB\Includes\Domain\BracketConfig;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
@@ -67,10 +67,10 @@ class BracketProductHooksTest extends TestCase {
       'wc' => $wc_mock,
       'play_repo' => new class extends PlayRepo {
         public function get(
-          int|WP_Post|null|BracketPlay $post = null,
+          int|WP_Post|null|Play $post = null,
           array $opts = []
-        ): BracketPlay {
-          return new BracketPlay([
+        ): Play {
+          return new Play([
             'bracket_id' => 1,
             'is_paid' => false,
           ]);
@@ -141,10 +141,10 @@ class BracketProductHooksTest extends TestCase {
       'bracket_product_utils' => $bracket_product_utils_mock,
       'play_repo' => new class extends PlayRepo {
         public function get(
-          int|WP_Post|null|BracketPlay $post = null,
+          int|WP_Post|null|Play $post = null,
           array $opts = []
-        ): BracketPlay {
-          return new BracketPlay([
+        ): Play {
+          return new Play([
             'bracket_id' => 1,
             'is_paid' => false,
           ]);
@@ -190,10 +190,10 @@ class BracketProductHooksTest extends TestCase {
       'bracket_product_utils' => $bracket_product_utils_mock,
       'play_repo' => new class extends PlayRepo {
         public function get(
-          int|WP_Post|null|BracketPlay $post = null,
+          int|WP_Post|null|Play $post = null,
           array $opts = []
-        ): BracketPlay {
-          return new BracketPlay([
+        ): Play {
+          return new Play([
             'bracket_id' => 1,
             'is_paid' => false,
           ]);
@@ -235,10 +235,10 @@ class BracketProductHooksTest extends TestCase {
       'wc' => $wc_mock,
       'play_repo' => new class extends PlayRepo {
         public function get(
-          int|WP_Post|null|BracketPlay $post = null,
+          int|WP_Post|null|Play $post = null,
           array $opts = []
-        ): BracketPlay {
-          return new BracketPlay([
+        ): Play {
+          return new Play([
             'bracket_id' => 1,
             'is_paid' => false,
           ]);
@@ -294,10 +294,10 @@ class BracketProductHooksTest extends TestCase {
       'wc' => $wc_mock,
       'play_repo' => new class extends PlayRepo {
         public function get(
-          int|WP_Post|null|BracketPlay $post = null,
+          int|WP_Post|null|Play $post = null,
           array $opts = []
-        ): BracketPlay {
-          return new BracketPlay([
+        ): Play {
+          return new Play([
             'bracket_id' => 1,
             'is_paid' => false,
           ]);
@@ -354,10 +354,10 @@ class BracketProductHooksTest extends TestCase {
       'wc' => $wc_mock,
       'play_repo' => new class extends PlayRepo {
         public function get(
-          int|WP_Post|null|BracketPlay $post = null,
+          int|WP_Post|null|Play $post = null,
           array $opts = []
-        ): BracketPlay {
-          return new BracketPlay([
+        ): Play {
+          return new Play([
             'bracket_id' => 1,
             'is_paid' => true,
           ]);

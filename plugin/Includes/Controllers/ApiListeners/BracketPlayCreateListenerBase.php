@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Controllers\ApiListeners;
 
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 
 abstract class BracketPlayCreateListenerBase implements
   BracketPlayCreateListenerInterface {
@@ -12,10 +12,10 @@ abstract class BracketPlayCreateListenerBase implements
   public function filter_request_params(array $data): array {
     return $data;
   }
-  public function filter_before_play_added(BracketPlay $play): BracketPlay {
+  public function filter_before_play_added(Play $play): Play {
     return $play;
   }
-  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+  public function filter_after_play_added(Play $play): Play {
     return $play;
   }
   /**

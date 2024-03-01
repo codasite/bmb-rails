@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Includes\Service;
 
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
@@ -17,23 +17,19 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
       $args['bracket_product_utils'] ?? new BracketProductUtils();
   }
 
-  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+  public function filter_after_play_added(Play $play): Play {
     $this->try_mark_play_as_tournament_entry($play);
     return $play;
   }
 
-  public function try_mark_play_as_tournament_entry(
-    BracketPlay $play
-  ): ?BracketPlay {
+  public function try_mark_play_as_tournament_entry(Play $play): ?Play {
     if (!$this->should_mark_play_as_tournament_entry($play)) {
       return $play;
     }
     return $this->mark_play_as_tournament_entry($play);
   }
 
-  public function should_mark_play_as_tournament_entry(
-    BracketPlay $play
-  ): bool {
+  public function should_mark_play_as_tournament_entry(Play $play): bool {
     if ($play->is_tournament_entry) {
       return false;
     }
@@ -52,9 +48,7 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
     return true;
   }
 
-  public function mark_play_as_tournament_entry(
-    BracketPlay $play
-  ): ?BracketPlay {
+  public function mark_play_as_tournament_entry(Play $play): ?Play {
     $author_id = $play->author;
     $bracket_id = $play->bracket_id;
     $play_id = $play->id;

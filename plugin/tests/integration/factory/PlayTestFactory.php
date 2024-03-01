@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\tests\integration\factory;
 use WP_Error;
 use WP_UnitTest_Factory_For_Thing;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 /**
@@ -20,13 +20,13 @@ class PlayTestFactory extends WP_UnitTest_Factory_For_Thing {
     $this->default_generation_definitions = ['author' => 1];
   }
 
-  function create_object($args): BracketPlay|WP_Error|int|null {
-    $play = new BracketPlay($args);
+  function create_object($args): Play|WP_Error|int|null {
+    $play = new Play($args);
     $play = $this->play_repo->add($play);
     return $play;
   }
 
-  function update_object($play_id, $fields): BracketPlay|WP_Error|int|null {
+  function update_object($play_id, $fields): Play|WP_Error|int|null {
     $play = $this->play_repo->update($play_id, $fields);
     return $play;
   }

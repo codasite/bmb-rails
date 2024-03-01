@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Public\Partials\shared;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
@@ -12,7 +12,7 @@ class BracketCards {
   public static function vip_switcher( $bracket_or_play ) {
     if ( $bracket_or_play instanceof Bracket ) {
       return self::vip_bracket_card( $bracket_or_play, [ 'show_profile_link' => true ] );
-    } else if ( $bracket_or_play instanceof BracketPlay ) {
+    } else if ( $bracket_or_play instanceof Play ) {
       return self::vip_play_card( $bracket_or_play, [ 'show_profile_link' => true ] );
     }
   }

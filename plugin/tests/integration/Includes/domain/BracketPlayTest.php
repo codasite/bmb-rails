@@ -1,18 +1,18 @@
 <?php
 
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 
 class BracketPlayTest extends WPBB_UnitTestCase {
   public function test_get_post_type() {
-    $this->assertEquals('bracket_play', BracketPlay::get_post_type());
+    $this->assertEquals('bracket_play', Play::get_post_type());
   }
 
   public function test_constructor() {
     $args = [
       'bracket_id' => 2,
     ];
-    $play = new BracketPlay($args);
-    $this->assertInstanceOf(BracketPlay::class, $play);
+    $play = new Play($args);
+    $this->assertInstanceOf(Play::class, $play);
   }
 
   public function test_from_array() {
@@ -29,8 +29,8 @@ class BracketPlayTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    $play = BracketPlay::from_array($args);
-    $this->assertInstanceOf(BracketPlay::class, $play);
+    $play = Play::from_array($args);
+    $this->assertInstanceOf(Play::class, $play);
     $this->assertEquals(716, $play->bracket_id);
     $this->assertEquals(1, $play->author);
     $this->assertEquals(722, $play->busted_id);
@@ -47,7 +47,7 @@ class BracketPlayTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    $play = BracketPlay::from_array($args);
+    $play = Play::from_array($args);
   }
 
   public function test_from_array_author_is_required() {
@@ -60,6 +60,6 @@ class BracketPlayTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    $play = BracketPlay::from_array($args);
+    $play = Play::from_array($args);
   }
 }

@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\Fakes\UserRepoFake;
@@ -29,7 +29,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
       new UserRepoFake(),
       new PermalinkServiceFake()
     );
-    $play = new BracketPlay(['author' => 1, 'id' => 1]);
+    $play = new Play(['author' => 1, 'id' => 1]);
     $result = new MatchPickResult([
       'round_index' => 0,
       'match_index' => 0,

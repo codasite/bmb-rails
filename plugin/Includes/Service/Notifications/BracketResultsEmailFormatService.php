@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Repository\UserRepo;
 use WStrategies\BMB\Includes\Service\WordpressFunctions\PermalinkService;
@@ -16,7 +16,7 @@ class BracketResultsEmailFormatService {
   ) {
   }
 
-  public function send_email(BracketPlay $play, MatchPickResult $result): void {
+  public function send_email(Play $play, MatchPickResult $result): void {
     $user = $this->user_repo->get_by_id($play->author);
     $to_email = $user->user_email;
     $to_name = $user->display_name;

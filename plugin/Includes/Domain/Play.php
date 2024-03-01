@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
-class BracketPlay extends PostBase implements PostBracketInterface {
+class Play extends PostBase implements PostBracketInterface {
   /**
    * @var int
    */
@@ -38,7 +38,7 @@ class BracketPlay extends PostBase implements PostBracketInterface {
   public $is_printed;
 
   /**
-   * @var BracketPlay|null
+   * @var Play|null
    */
   public $busted_play;
 
@@ -114,14 +114,14 @@ class BracketPlay extends PostBase implements PostBracketInterface {
   /**
    * @throws ValidationException
    */
-  public static function from_array($data): BracketPlay {
+  public static function from_array($data): Play {
     RequiredFieldValidation::validateRequiredFields($data, [
       'bracket_id',
       'author',
     ]);
     $data['picks'] = self::get_picks_from_array($data);
 
-    return new BracketPlay($data);
+    return new Play($data);
   }
 
   private static function get_picks_from_array($data): array {

@@ -1,7 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
@@ -43,7 +43,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play = new BracketPlay([
+    $play = new Play([
       'bracket_id' => $bracket->id,
       'author' => 1,
       'total_score' => 5,

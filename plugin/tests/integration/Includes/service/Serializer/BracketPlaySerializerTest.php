@@ -2,7 +2,7 @@
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
@@ -226,7 +226,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
     ];
     $serializer = new BracketPlaySerializer();
     $play = $serializer->deserialize($data);
-    $this->assertInstanceOf(BracketPlay::class, $play);
+    $this->assertInstanceOf(Play::class, $play);
     $picks = $play->picks;
     $this->assertCount(3, $picks);
     $this->assertInstanceOf(MatchPick::class, $picks[0]);

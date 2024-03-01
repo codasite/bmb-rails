@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 use Stripe\PaymentIntent;
 use Stripe\StripeClient;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 
@@ -50,7 +50,7 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
     return $data;
   }
 
-  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+  public function filter_after_play_added(Play $play): Play {
     if ($this->should_create_payment_intent_for_play($play)) {
       $intent = $this->create_payment_intent_for_paid_tournament_play($play);
       $this->stripe_payment_intent = $intent;
@@ -93,19 +93,17 @@ class StripePaidTournamentService extends BracketPlayCreateListenerBase {
     );
   }
 
-  public function should_create_payment_intent_for_play(
-    BracketPlay $play
-  ): bool {
+  public function should_create_payment_intent_for_play(Play $play): bool {
     return $this->should_create_stripe_payment_intent &&
       $this->requires_payment($play);
   }
 
-  public function requires_payment(BracketPlay $play): bool {
+  public function requires_payment(Play $play): bool {
     return $this->bracket_product_utils->has_bracket_fee($play->bracket_id);
   }
 
   public function create_payment_intent_for_paid_tournament_play(
-    BracketPlay $play
+    Play $play
   ): \Stripe\PaymentIntent {
     # Stripe expects the amount in cents
     $amount =

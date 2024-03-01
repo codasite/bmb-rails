@@ -6,7 +6,7 @@ use WP_Post;
 use WP_Query;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
@@ -59,9 +59,9 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
   }
 
   public function get(
-    int|WP_Post|null|BracketPlay $post = null,
+    int|WP_Post|null|Play $post = null,
     array $opts = []
-  ): ?BracketPlay {
+  ): ?Play {
     list(
       $fetch_picks,
       $fetch_bracket,
@@ -73,13 +73,13 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
       $post = $this->get_id_from_cookie();
     }
 
-    if ($post instanceof BracketPlay) {
+    if ($post instanceof Play) {
       $post = $post->id;
     }
 
     $play_post = get_post($post);
 
-    if (!$play_post || $play_post->post_type !== BracketPlay::get_post_type()) {
+    if (!$play_post || $play_post->post_type !== Play::get_post_type()) {
       return null;
     }
 
@@ -136,7 +136,7 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
       'url' => get_permalink($play_post->ID),
     ];
 
-    return new BracketPlay($data);
+    return new Play($data);
   }
 
   private function get_defaults(array $user_opts = []): array {
@@ -159,7 +159,7 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     if (
       !$play_post ||
       ($play_post instanceof WP_Post &&
-        $play_post->post_type !== BracketPlay::get_post_type())
+        $play_post->post_type !== Play::get_post_type())
     ) {
       return [];
     }
@@ -196,7 +196,7 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     }
 
     $default_args = [
-      'post_type' => BracketPlay::get_post_type(),
+      'post_type' => Play::get_post_type(),
       'posts_per_page' => -1,
       'post_status' => 'any',
     ];
@@ -221,7 +221,7 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
 
   public function get_count(array $query_args): int {
     $default_args = [
-      'post_type' => BracketPlay::get_post_type(),
+      'post_type' => Play::get_post_type(),
       'posts_per_page' => -1,
       'post_status' => 'publish',
     ];
@@ -236,7 +236,7 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
   /**
    * @throws ValidationException
    */
-  public function add(BracketPlay $play): ?BracketPlay {
+  public function add(Play $play): ?Play {
     $post_id = $this->insert_post($play, true, true);
 
     if (is_wp_error($post_id)) {
@@ -348,17 +348,17 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     return $user_picks;
   }
 
-  public function update(BracketPlay|int|null $play, $data): ?BracketPlay {
+  public function update(Play|int|null $play, $data): ?Play {
     if ($play === null || empty($data)) {
       return null;
     }
-    if (!($play instanceof BracketPlay)) {
+    if (!($play instanceof Play)) {
       $play = $this->get($play);
     }
     $array = $play->to_array();
     $updated_array = array_merge($array, $data);
 
-    $play = BracketPlay::from_array($updated_array);
+    $play = Play::from_array($updated_array);
 
     $post_id = $this->update_post($play, true);
 

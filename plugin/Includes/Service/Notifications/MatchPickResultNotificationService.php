@@ -1,6 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Notifications;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Service\MatchPickResultService;
 
@@ -17,7 +17,7 @@ class MatchPickResultNotificationService {
    */
   public function get_match_pick_result_for_play(
     array $results,
-    BracketPlay $play
+    Play $play
   ): MatchPickResult|null {
     $final_winning_team_id = $play->get_winning_team()->id;
     if (!$final_winning_team_id) {
