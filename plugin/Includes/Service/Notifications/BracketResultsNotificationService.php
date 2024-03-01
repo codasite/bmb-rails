@@ -13,7 +13,6 @@ use WStrategies\BMB\Includes\Service\Notifications\MatchPickResultNotificationSe
 
 class BracketResultsNotificationService implements
   BracketResultsNotificationServiceInterface {
-  protected EmailServiceInterface $email_service;
   protected BracketMatchService $match_service;
   protected MatchPickResultFactory $match_pick_result_factory;
   protected MatchPickResultService $match_pick_result_service;
@@ -25,8 +24,6 @@ class BracketResultsNotificationService implements
   private MatchPickResultNotificationService $match_pick_result_notification_service;
 
   public function __construct($args = []) {
-    $this->email_service =
-      $args['email_service'] ?? new MailchimpEmailService();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->match_service = $args['match_service'] ?? new BracketMatchService();
@@ -35,8 +32,7 @@ class BracketResultsNotificationService implements
     $this->match_pick_result_service =
       $args['match_pick_result_service'] ?? new MatchPickResultService();
     $this->email_format_service =
-      $args['email_format_service'] ??
-      new BracketResultsEmailFormatService($this->email_service);
+      $args['email_format_service'] ?? new BracketResultsEmailFormatService();
     $this->results_sent_at_repo =
       $args['results_sent_at_repo'] ??
       new DateTimePostMetaRepo(

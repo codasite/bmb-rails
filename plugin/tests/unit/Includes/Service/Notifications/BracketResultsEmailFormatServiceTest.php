@@ -1,16 +1,44 @@
 <?php
+namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
-use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
-use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\Fakes\UserRepoFake;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
+use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
+use WStrategies\BMB\Includes\Service\WordpressFunctions\Fakes\PermalinkServiceFake;
 
 class BracketResultsEmailFormatServiceTest extends TestCase {
+  public function test_send_email_should_send_email_with_correct_content() {
+    $email_service = $this->createMock(EmailServiceInterface::class);
+    $email_service
+      ->expects($this->once())
+      ->method('send')
+      ->with('test@email.com', 'Test User', 'Bracket Results Updated', [
+        'html',
+      ]);
+    $email_format_service = new BracketResultsEmailFormatService(
+      $email_service,
+      new UserRepoFake(),
+      new PermalinkServiceFake()
+    );
+    $play = new BracketPlay(['author' => 1, 'id' => 1]);
+    $result = new MatchPickResult([
+      'round_index' => 0,
+      'match_index' => 0,
+      'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
+      'losing_team' => new Team(['name' => 'Team 2', 'id' => 2]),
+      'picked_team' => new Team(['name' => 'Team 1', 'id' => 1]),
+    ]);
+    $email_format_service->send_email($play, $result);
+  }
+
   public function test_get_pick_result_heading_should_return_won_text_when_pick_is_correct() {
     $email_format_service = new BracketResultsEmailFormatService(
-      $this->createMock(EmailServiceInterface::class)
+      $this->createMock(EmailServiceInterface::class),
+      new UserRepoFake()
     );
     $pick_result = new MatchPickResult([
       'round_index' => 0,
@@ -25,7 +53,8 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
 
   public function test_get_pick_result_heading_should_return_lost_text_when_pick_is_incorrect() {
     $email_format_service = new BracketResultsEmailFormatService(
-      $this->createMock(EmailServiceInterface::class)
+      $this->createMock(EmailServiceInterface::class),
+      new UserRepoFake()
     );
     $pick_result = new MatchPickResult([
       'round_index' => 0,

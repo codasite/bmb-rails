@@ -5,17 +5,19 @@ namespace WStrategies\BMB\Includes\Service\Notifications;
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
-use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Repository\UserRepo;
+use WStrategies\BMB\Includes\Service\WordpressFunctions\PermalinkService;
 
 class BracketResultsEmailFormatService {
-  private EmailServiceInterface $email_service;
-
-  public function __construct(EmailServiceInterface $email_service) {
-    $this->email_service = $email_service;
+  public function __construct(
+    private readonly EmailServiceInterface $email_service = new MailchimpEmailService(),
+    private readonly UserRepo $user_repo = new UserRepo(),
+    private readonly PermalinkService $permalink_service = new PermalinkService()
+  ) {
   }
 
-  public function send_email(BracketPlay $play, MatchPickResult $result) {
-    $user = get_user_by('id', $play->author);
+  public function send_email(BracketPlay $play, MatchPickResult $result): void {
+    $user = $this->user_repo->get_by_id($play->author);
     $to_email = $user->user_email;
     $to_name = $user->display_name;
     $subject = 'Bracket Results Updated';
@@ -30,7 +32,7 @@ class BracketResultsEmailFormatService {
 
     // Generate html content for email
     $heading = $this->get_pick_result_heading($result);
-    $button_url = get_permalink($play->id) . 'view';
+    $button_url = $this->permalink_service->get_permalink($play->id) . 'view';
     $button_text = 'View Bracket';
 
     $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
