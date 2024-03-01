@@ -119,9 +119,9 @@ class BracketResultsNotificationService implements
     } else {
       return 'You picked ' .
         $picked_team .
-        ', but ' .
+        '... but ' .
         $winning_team .
-        ' won the round...';
+        ' won the round!';
     }
   }
 
