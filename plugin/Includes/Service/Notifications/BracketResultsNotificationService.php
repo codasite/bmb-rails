@@ -12,12 +12,14 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
+use WStrategies\BMB\Includes\Service\MatchPickResultService;
 
 class BracketResultsNotificationService implements
   BracketResultsNotificationServiceInterface {
   protected EmailServiceInterface $email_service;
   protected BracketMatchService $match_service;
   protected MatchPickResultFactory $match_pick_result_factory;
+  protected MatchPickResultService $match_pick_result_service;
 
   protected BracketRepo $bracket_repo;
   protected PlayRepo $play_repo;
@@ -30,6 +32,8 @@ class BracketResultsNotificationService implements
     $this->match_service = $args['match_service'] ?? new BracketMatchService();
     $this->match_pick_result_factory =
       $args['match_pick_result_factory'] ?? new MatchPickResultFactory();
+    $this->match_pick_result_service =
+      $args['match_pick_result_service'] ?? new MatchPickResultService();
   }
 
   // $ranked_play_teams = [5, 1, 0, 2, 3];
@@ -72,7 +76,7 @@ class BracketResultsNotificationService implements
         $matches,
         $play->picks
       );
-      $result = $this->get_result_notification_for_play(
+      $result = $this->get_match_pick_result_for_play(
         $match_pick_results,
         $play
       );
@@ -96,15 +100,63 @@ class BracketResultsNotificationService implements
     array $results,
     BracketPlay $play
   ): MatchPickResult|null {
+    $final_winning_team_id = $play->get_winning_team()->id;
+    if (!$final_winning_team_id) {
+      throw new \Exception('Winning team id is required');
+    }
+    return $this->get_match_pick_result_for_single_team(
+      $results,
+      $final_winning_team_id
+    );
+  }
+
+  /**
+   * This function returns the match pick result given a single team id (assumed to be the final winning pick of a play)
+   * @param array<MatchPickResult> $results
+   * @param int $team_id
+   * @return MatchPickResult|null
+   */
+  public function get_match_pick_result_for_single_team(
+    array $results,
+    int $team_id
+  ): MatchPickResult|null {
     $result = null;
-    $final_winning_team = $play->get_winning_team();
-    foreach ($results as $match_pick_result) {
-      // if final_winning_team is in the match_pick_result
-      if (
-        $match_pick_result->winning_team->id === $final_winning_team->id ||
-        $match_pick_result->losing_team->id === $final_winning_team->id
-      ) {
-        $result = $match_pick_result;
+    $winning_team_map = $this->match_pick_result_service->get_winning_team_map(
+      $results
+    );
+    $losing_team_map = $this->match_pick_result_service->get_losing_team_map(
+      $results
+    );
+    if (isset($winning_team_map[$team_id])) {
+      $result = $winning_team_map[$team_id];
+    } elseif (isset($losing_team_map[$team_id])) {
+      $result = $losing_team_map[$team_id];
+    }
+    return $result;
+  }
+
+  /**
+   * This function returns the match pick result given an array of team ids.
+   * team_ids is assumed to be a play's winning picks in ranked order. For example [5, 1, 0, 2, 3]
+   * where team 5 is the final winning team, team 1 is the second place team, and so on.
+   */
+  public function get_match_pick_result_for_many_teams(
+    array $results,
+    array $team_ids
+  ) {
+    $result = null;
+    $winning_team_map = $this->match_pick_result_service->get_winning_team_map(
+      $results
+    );
+    $losing_team_map = $this->match_pick_result_service->get_losing_team_map(
+      $results
+    );
+    foreach ($team_ids as $team_id) {
+      if (isset($winning_team_map[$team_id])) {
+        $result = $winning_team_map[$team_id];
+        break;
+      } elseif (isset($losing_team_map[$team_id])) {
+        $result = $losing_team_map[$team_id];
         break;
       }
     }
@@ -123,13 +175,6 @@ class BracketResultsNotificationService implements
         $winning_team .
         ' won the round!';
     }
-  }
-
-  public function correct_picked(
-    MatchPick $pick,
-    MatchPick $correct_pick
-  ): bool {
-    return $pick->winning_team_id === $correct_pick->winning_team_id;
   }
 
   private function notify_play_result(
