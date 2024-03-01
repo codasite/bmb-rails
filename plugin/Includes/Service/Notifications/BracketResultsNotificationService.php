@@ -92,7 +92,7 @@ class BracketResultsNotificationService implements
   /**
    * @param array<MatchPickResult> $results
    */
-  public function get_result_notification_for_play(
+  public function get_match_pick_result_for_play(
     array $results,
     BracketPlay $play
   ): MatchPickResult|null {

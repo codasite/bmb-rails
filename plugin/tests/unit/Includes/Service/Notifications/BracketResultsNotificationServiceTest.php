@@ -1,6 +1,8 @@
 <?php
 
 use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
@@ -40,4 +42,23 @@ class BracketResultsNotificationServiceTest extends TestCase {
       $heading
     );
   }
+
+	public function test_get_match_pick_result_for_play_should_return_result_where_final_winning_team_is_winner() {
+		$notification_service = new BracketResultsNotificationService([
+			'email_service' => $this->createMock(EmailServiceInterface::class),
+		]);
+		$results = [
+			new MatchPickResult([
+				'round_index' => 0,
+				'match_index' => 0,
+				'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
+				'losing_team' => new Team(['name' => 'Team 2', 'id' => 2]),
+				'picked_team' => new Team(['name' => 'Team 1', 'id' => 1]),
+			]),
+		]
+		$play = new BracketPlay([
+			'bracket_id' => 1,
+			'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
+		])
+	}
 }
