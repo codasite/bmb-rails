@@ -4,7 +4,7 @@ namespace WStrategies\BMB\tests\includes\Hooks;
 use Spatie\Snapshots\MatchesSnapshots;
 use WPBB_UnitTestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
@@ -52,7 +52,7 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
     $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,

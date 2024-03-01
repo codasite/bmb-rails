@@ -1,7 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
@@ -46,17 +46,17 @@ class GelatoIntegrationTest extends WPBB_UnitTestCase {
       ]),
     ]);
     $bracket_mock->method('get_picks')->willReturn([
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 0,
         'winning_team_id' => $bracket_mock->get_matches()[0]->team1->id,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 1,
         'winning_team_id' => $bracket_mock->get_matches()[1]->team2->id,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 1,
         'match_index' => 0,
         'winning_team_id' => $bracket_mock->get_matches()[0]->team1->id,

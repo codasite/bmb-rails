@@ -7,7 +7,7 @@ use WP_Query;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Utils;
@@ -293,13 +293,13 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
    * Get an array of users and their picks for the given bracket result
    *
    * @param int $bracket_id The bracket id
-   * @param MatchPick $bracket_result The bracket result to match against
+   * @param Pick $bracket_result The bracket result to match against
    *
    * @return array An array of objects with the user and their pick
    */
   public function get_user_picks_for_result(
     Bracket|int|null $bracket_id,
-    MatchPick $bracket_result
+    Pick $bracket_result
   ): array {
     if (!$bracket_id) {
       return [];

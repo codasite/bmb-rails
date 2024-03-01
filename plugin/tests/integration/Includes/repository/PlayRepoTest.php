@@ -2,7 +2,7 @@
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
@@ -49,17 +49,17 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'total_score' => 5,
       'accuracy_score' => 0.3,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team2->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -127,17 +127,17 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 1,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team2->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -194,7 +194,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 1,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -206,7 +206,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 1,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,
@@ -231,7 +231,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => $user->ID,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -239,7 +239,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $result = new MatchPick([
+    $result = new Pick([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -274,17 +274,17 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => $user1->ID,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -296,17 +296,17 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => $user2->ID,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,
@@ -314,7 +314,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $result = new MatchPick([
+    $result = new Pick([
       'round_index' => 1,
       'match_index' => 0,
       'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -355,7 +355,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -384,7 +384,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -394,7 +394,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $play2 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,
@@ -409,7 +409,7 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     $play3 = $this->create_play([
       'bracket_id' => $bracket2->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,

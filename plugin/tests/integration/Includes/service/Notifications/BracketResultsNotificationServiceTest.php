@@ -1,6 +1,6 @@
 <?php
 
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
@@ -45,17 +45,17 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => $user1->ID,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -67,17 +67,17 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => $user2->ID,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team2->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,

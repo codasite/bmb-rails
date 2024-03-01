@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
-class MatchPick implements BracketMatchNodeInterface {
+class Pick implements BracketMatchNodeInterface {
   /**
    * @var int
    */
@@ -41,12 +41,12 @@ class MatchPick implements BracketMatchNodeInterface {
     $this->updated_at = $data['updated_at'] ?? null;
   }
 
-  public static function from_array($data): MatchPick {
+  public static function from_array($data): Pick {
     if (isset($data['winning_team'])) {
       $data['winning_team'] = Team::from_array($data['winning_team']);
     }
 
-    return new MatchPick($data);
+    return new Pick($data);
   }
 
   public function to_array(): array {

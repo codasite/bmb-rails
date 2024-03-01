@@ -1,6 +1,6 @@
 <?php
 
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
@@ -95,7 +95,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -121,7 +121,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_paid' => false,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -149,7 +149,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_paid' => false,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -177,7 +177,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_tournament_entry' => false,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -206,7 +206,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
       'is_tournament_entry' => false,
       'is_paid' => true,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,

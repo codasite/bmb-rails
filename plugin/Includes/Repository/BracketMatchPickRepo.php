@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Repository;
 
 use wpdb;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 
 class BracketMatchPickRepo implements CustomTableInterface {
   /**
@@ -21,7 +21,7 @@ class BracketMatchPickRepo implements CustomTableInterface {
     $this->team_repo = $team_repo;
   }
 
-  public function get_pick(int $pick_id): ?MatchPick {
+  public function get_pick(int $pick_id): ?Pick {
     $table_name = self::table_name();
     $sql = "SELECT * FROM $table_name WHERE id = $pick_id";
     $data = $this->wpdb->get_row($sql, ARRAY_A);
@@ -30,7 +30,7 @@ class BracketMatchPickRepo implements CustomTableInterface {
     }
     $winning_team_id = $data['winning_team_id'];
     $winning_team = $this->team_repo->get($winning_team_id);
-    return new MatchPick([
+    return new Pick([
       'round_index' => $data['round_index'],
       'match_index' => $data['match_index'],
       'winning_team_id' => $winning_team_id,
@@ -49,7 +49,7 @@ class BracketMatchPickRepo implements CustomTableInterface {
     foreach ($data as $pick) {
       $winning_team_id = $pick['winning_team_id'];
       $winning_team = $this->team_repo->get($winning_team_id);
-      $picks[] = new MatchPick([
+      $picks[] = new Pick([
         'round_index' => $pick['round_index'],
         'match_index' => $pick['match_index'],
         'winning_team_id' => $winning_team_id,
@@ -66,7 +66,7 @@ class BracketMatchPickRepo implements CustomTableInterface {
     }
   }
 
-  public function insert_pick(int $play_id, MatchPick $pick): void {
+  public function insert_pick(int $play_id, Pick $pick): void {
     $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
       'id' => $pick->id,

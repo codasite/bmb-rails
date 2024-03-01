@@ -3,7 +3,7 @@
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
@@ -64,19 +64,19 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       'bmb_official' => false,
       'bracket' => $bracket,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'id' => 100007,
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 100002,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 100008,
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => 100006,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 100009,
           'round_index' => 1,
           'match_index' => 0,
@@ -141,19 +141,19 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       'bmb_official' => true,
       'bracket' => $bracket,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'id' => 200007,
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 100002,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 200008,
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => 100006,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 200009,
           'round_index' => 1,
           'match_index' => 0,
@@ -177,19 +177,19 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       'busted_id' => 200008,
       'busted_play' => $busted_play,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'id' => 100007,
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 100002,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 100008,
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => 100006,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 100009,
           'round_index' => 1,
           'match_index' => 0,
@@ -229,9 +229,9 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
     $this->assertInstanceOf(Play::class, $play);
     $picks = $play->picks;
     $this->assertCount(3, $picks);
-    $this->assertInstanceOf(MatchPick::class, $picks[0]);
-    $this->assertInstanceOf(MatchPick::class, $picks[1]);
-    $this->assertInstanceOf(MatchPick::class, $picks[2]);
+    $this->assertInstanceOf(Pick::class, $picks[0]);
+    $this->assertInstanceOf(Pick::class, $picks[1]);
+    $this->assertInstanceOf(Pick::class, $picks[2]);
     $this->assertMatchesJsonSnapshot(json_encode($play));
   }
 
@@ -291,9 +291,9 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
     $this->assertEquals(1, $play->bracket_id);
     $this->assertNull($play->bracket);
     $this->assertCount(3, $play->picks);
-    $this->assertInstanceOf(MatchPick::class, $play->picks[0]);
-    $this->assertInstanceOf(MatchPick::class, $play->picks[1]);
-    $this->assertInstanceOf(MatchPick::class, $play->picks[2]);
+    $this->assertInstanceOf(Pick::class, $play->picks[0]);
+    $this->assertInstanceOf(Pick::class, $play->picks[1]);
+    $this->assertInstanceOf(Pick::class, $play->picks[2]);
     $this->assertNull($play->total_score);
     $this->assertNull($play->accuracy_score);
     $this->assertNull($play->busted_id);

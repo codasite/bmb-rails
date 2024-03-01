@@ -5,7 +5,7 @@ use ValueError;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 
@@ -18,7 +18,7 @@ class MatchPickResultFactory {
 
   public function create_match_pick_result(
     BracketMatch $match,
-    MatchPick $pick
+    Pick $pick
   ): MatchPickResult {
     if ($match->get_round_index() !== $pick->get_round_index()) {
       throw new ValueError('Round index mismatch');
@@ -42,7 +42,7 @@ class MatchPickResultFactory {
 
   /**
    * @param BracketMatch[][] $matches
-   * @param MatchPick[] $picks
+   * @param Pick[] $picks
    */
   // NOTE: the tests for this wont run (updated signature)
   public function create_match_pick_results(

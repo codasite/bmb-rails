@@ -13,7 +13,7 @@ class Play extends PostBase implements PostBracketInterface {
   public $bracket;
 
   /**
-   * @var MatchPick[]
+   * @var Pick[]
    */
   public $picks;
 
@@ -130,7 +130,7 @@ class Play extends PostBase implements PostBracketInterface {
       return $picks;
     }
     foreach ($data['picks'] as $pick) {
-      $picks[] = MatchPick::from_array($pick);
+      $picks[] = Pick::from_array($pick);
     }
     return $picks;
   }

@@ -4,7 +4,7 @@ namespace WStrategies\BMB\tests\unit\Includes\Service;
 use Spatie\Snapshots\MatchesSnapshots;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 
@@ -131,37 +131,37 @@ class BracketMatchServiceTest extends TestCase {
     ];
 
     $picks = [
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 0,
         'winning_team_id' => 1,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 1,
         'winning_team_id' => 3,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 2,
         'winning_team_id' => 6,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 3,
         'winning_team_id' => 7,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 1,
         'match_index' => 0,
         'winning_team_id' => 1,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 1,
         'match_index' => 1,
         'winning_team_id' => 7,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 2,
         'match_index' => 0,
         'winning_team_id' => 7,
@@ -202,27 +202,27 @@ class BracketMatchServiceTest extends TestCase {
     ];
 
     $picks = [
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 0,
         'winning_team_id' => 1,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 2,
         'winning_team_id' => 4,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 1,
         'match_index' => 0,
         'winning_team_id' => 1,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 1,
         'match_index' => 1,
         'winning_team_id' => 6,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 2,
         'match_index' => 0,
         'winning_team_id' => 1,
@@ -262,17 +262,17 @@ class BracketMatchServiceTest extends TestCase {
     ];
 
     $picks = [
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 0,
         'winning_team_id' => 1,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 0,
         'match_index' => 2,
         'winning_team_id' => 4,
       ]),
-      new MatchPick([
+      new Pick([
         'round_index' => 1,
         'match_index' => 0,
         'winning_team_id' => 1,

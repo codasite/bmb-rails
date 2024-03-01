@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes\Repository;
 use DateTimeImmutable;
 use Exception;
 use wpdb;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 
 class BracketResultsRepo implements CustomTableInterface {
   /**
@@ -67,7 +67,7 @@ class BracketResultsRepo implements CustomTableInterface {
     }
   }
 
-  public function insert_result(int $bracket_id, MatchPick $pick): void {
+  public function insert_result(int $bracket_id, Pick $pick): void {
     $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
       'id' => $pick->id,
@@ -138,7 +138,7 @@ class BracketResultsRepo implements CustomTableInterface {
     foreach ($data as $result) {
       $winning_team_id = $result['winning_team_id'];
       $winning_team = $this->team_repo->get($winning_team_id);
-      $bracket_results[] = new MatchPick([
+      $bracket_results[] = new Pick([
         'round_index' => $result['round_index'],
         'match_index' => $result['match_index'],
         'winning_team_id' => $winning_team_id,

@@ -1,7 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\BracketConfig;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
@@ -491,7 +491,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_printed' => false,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -560,7 +560,7 @@ class GelatoIntegrationPublicHooksTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,

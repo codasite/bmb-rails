@@ -1,6 +1,6 @@
 <?php
 
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Hooks\AnonymousUserHooks;
 use WStrategies\BMB\Includes\Utils;
 
@@ -71,7 +71,7 @@ class AnonymousUserTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -110,7 +110,7 @@ class AnonymousUserTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'author' => 0,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,

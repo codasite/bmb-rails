@@ -2,7 +2,7 @@
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
@@ -64,17 +64,17 @@ class MatchPickResultFactoryTest extends WPBB_UnitTestCase {
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team2->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,

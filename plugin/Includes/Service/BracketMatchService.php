@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Includes\Service;
 use InvalidArgumentException;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\BracketMatchNodeInterface;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 
 class BracketMatchService {
   /**
@@ -39,7 +39,7 @@ class BracketMatchService {
    * NOTE: Because this method loops over the picks, it will only create matches that have been picked
    *
    * @param array<BracketMatch> $matches_flat
-   * @param array<MatchPick> $picks_flat
+   * @param array<Pick> $picks_flat
    */
   public function matches_from_picks(array $matches_flat, array $picks_flat) {
     /**
