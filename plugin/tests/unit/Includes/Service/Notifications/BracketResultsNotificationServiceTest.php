@@ -1,13 +1,11 @@
 <?php
+namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
-use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
-use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
+use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
+use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
 
 class BracketResultsNotificationServiceTest extends TestCase {
   public function test_get_pick_result_heading_should_return_won_text_when_pick_is_correct() {
@@ -41,5 +39,8 @@ class BracketResultsNotificationServiceTest extends TestCase {
       'You picked TEAM 2... but TEAM 1 won the round!',
       $heading
     );
+  }
+
+  public function test_should_send_notification_if_updated_results_contain_winning_team() {
   }
 }
