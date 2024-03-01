@@ -8,6 +8,7 @@ use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\Fakes\UserRepoFake;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
+use WStrategies\BMB\Includes\Service\Notifications\Fakes\EmailServiceInterfaceFake;
 use WStrategies\BMB\Includes\Service\WordpressFunctions\Fakes\PermalinkServiceFake;
 
 class BracketResultsEmailFormatServiceTest extends TestCase {
@@ -16,9 +17,13 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
     $email_service
       ->expects($this->once())
       ->method('send')
-      ->with('test@email.com', 'Test User', 'Bracket Results Updated', [
-        'html',
-      ]);
+      ->with(
+        'test@email.com',
+        'Test User',
+        'Bracket Results Updated',
+        $this->isType('string'),
+        $this->isType('string')
+      );
     $email_format_service = new BracketResultsEmailFormatService(
       $email_service,
       new UserRepoFake(),
@@ -37,7 +42,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
 
   public function test_get_pick_result_heading_should_return_won_text_when_pick_is_correct() {
     $email_format_service = new BracketResultsEmailFormatService(
-      $this->createMock(EmailServiceInterface::class),
+      new EmailServiceInterfaceFake(),
       new UserRepoFake()
     );
     $pick_result = new MatchPickResult([
@@ -53,7 +58,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
 
   public function test_get_pick_result_heading_should_return_lost_text_when_pick_is_incorrect() {
     $email_format_service = new BracketResultsEmailFormatService(
-      $this->createMock(EmailServiceInterface::class),
+      new EmailServiceInterfaceFake(),
       new UserRepoFake()
     );
     $pick_result = new MatchPickResult([

@@ -21,14 +21,6 @@ class BracketResultsEmailFormatService {
     $to_email = $user->user_email;
     $to_name = $user->display_name;
     $subject = 'Bracket Results Updated';
-    $message = [
-      'to' => [
-        [
-          'email' => $to_email,
-          'name' => $to_name,
-        ],
-      ],
-    ];
 
     // Generate html content for email
     $heading = $this->get_pick_result_heading($result);
@@ -42,7 +34,7 @@ class BracketResultsEmailFormatService {
       $to_email,
       $to_name,
       $subject,
-      $message,
+      $heading,
       $html
     );
   }
