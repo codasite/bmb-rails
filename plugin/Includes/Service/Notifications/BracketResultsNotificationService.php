@@ -47,16 +47,6 @@ class BracketResultsNotificationService implements
       );
   }
 
-  // $ranked_play_teams = [5, 1, 0, 2, 3];
-  // foreach result:
-  //   if result is in $ranked_play_teams:
-
-  // foreach NEW result:
-  //   if my_team plays and my_team wins:
-  //     “You picked {my_team} and they won!”
-  //   if my_team plays and my_team loses:
-  //     “You picked {my_team} but {winning_team} won the round!”
-
   /**
    * @throws \Exception
    */
@@ -94,8 +84,6 @@ class BracketResultsNotificationService implements
       if ($result) {
         $this->email_format_service->send_email($play, $result);
       }
-
-      // Send the email update
     }
     $this->results_sent_at_repo->set_to_now($bracket->id);
   }
@@ -168,19 +156,5 @@ class BracketResultsNotificationService implements
       }
     }
     return $result;
-  }
-
-  public function get_pick_result_heading(MatchPickResult $result): string {
-    $picked_team = strtoupper($result->picked_team->name);
-    $winning_team = strtoupper($result->winning_team->name);
-    if ($result->correct_picked()) {
-      return 'You picked ' . $picked_team . '... and they won!';
-    } else {
-      return 'You picked ' .
-        $picked_team .
-        '... but ' .
-        $winning_team .
-        ' won the round!';
-    }
   }
 }
