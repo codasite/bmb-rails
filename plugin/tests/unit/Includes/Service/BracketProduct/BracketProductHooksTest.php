@@ -1,6 +1,12 @@
 <?php
-
+namespace WStrategies\BMB\tests\unit\Includes\Service\BracketProduct;
+use CartFeesInterface;
+use CartInterface;
+use OrderItemFeeInterface;
+use OrderItemInterface;
+use WP_Mock;
 use WP_Mock\Tools\TestCase;
+use WP_Post;
 use WStrategies\BMB\Includes\Domain\BracketConfig;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\PlayRepo;

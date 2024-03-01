@@ -1,8 +1,10 @@
 <?php
 
+namespace WStrategies\BMB\tests\unit\Includes\Service\PaidTournamentService;
 use Stripe\PaymentIntent;
 use Stripe\Service\PaymentIntentService;
 use Stripe\StripeClient;
+use WP_Mock;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;

@@ -1,11 +1,12 @@
 <?php
 
+namespace WStrategies\BMB\tests\unit\Includes\Service;
+use Spatie\Snapshots\MatchesSnapshots;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
-use Spatie\Snapshots\MatchesSnapshots;
-use WStrategies\BMB\Includes\Domain\MatchPick;
 
 class BracketMatchServiceTest extends TestCase {
   use MatchesSnapshots;

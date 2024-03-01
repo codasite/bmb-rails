@@ -36,6 +36,9 @@ wp-unit:
 wp-unit-update-snapshots:
 	make wp-unit args="-d --update-snapshots"
 
+wp-unit-local:
+	./plugin/vendor/bin/phpunit --configuration=plugin/tests/unit/phpunit.xml.dist $(args)
+
 # Run all tests in plugin/tests/integration. Loads the full wordpress environment.
 wp-integration:
 	docker exec wp-dev composer test-integration -- $(args)
