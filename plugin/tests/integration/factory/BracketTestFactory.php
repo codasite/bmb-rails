@@ -1,5 +1,9 @@
 <?php
 
+namespace WStrategies\BMB\tests\integration\factory;
+use WP_Error;
+use WP_UnitTest_Factory_For_Thing;
+use WP_UnitTest_Generator_Sequence;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
@@ -10,7 +14,7 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
  *
  * This class is used to create template objects for unit testing
  */
-class WPBB_UnitTest_Factory_For_Bracket extends WP_UnitTest_Factory_For_Thing {
+class BracketTestFactory extends WP_UnitTest_Factory_For_Thing {
   private $bracket_repo;
 
   function __construct($factory = null) {

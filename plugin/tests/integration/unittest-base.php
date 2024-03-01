@@ -2,8 +2,8 @@
 
 use WStrategies\BMB\Includes\Activator;
 use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\tests\integration\factory\TestFactory;
 
-include_once 'factory/unittest-factory.php';
 include_once 'Traits/SetupAdminUser.php';
 
 /**
@@ -15,10 +15,10 @@ include_once 'Traits/SetupAdminUser.php';
 abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
   protected $plugin_path = '/var/www/html/wp-content/plugins/wp-bracket-builder/';
 
-  protected static function factory(): ?WPBB_UnitTest_Factory {
+  protected static function factory(): ?TestFactory {
     static $factory = null;
     if (!$factory) {
-      $factory = new WPBB_UnitTest_Factory();
+      $factory = new TestFactory();
     }
     return $factory;
   }

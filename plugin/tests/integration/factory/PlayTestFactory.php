@@ -1,5 +1,7 @@
 <?php
-
+namespace WStrategies\BMB\tests\integration\factory;
+use WP_Error;
+use WP_UnitTest_Factory_For_Thing;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 
@@ -8,7 +10,7 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
  *
  * This class is used to create template objects for unit testing
  */
-class WPBB_UnitTest_Factory_For_Play extends WP_UnitTest_Factory_For_Thing {
+class PlayTestFactory extends WP_UnitTest_Factory_For_Thing {
   private $play_repo;
 
   function __construct($factory = null) {

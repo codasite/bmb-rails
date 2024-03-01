@@ -1,5 +1,8 @@
 <?php
 
+namespace WStrategies\BMB\tests\integration\factory;
+use WP_Error;
+use WP_UnitTest_Factory_For_Thing;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
 
@@ -8,7 +11,7 @@ use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
  *
  * This class is used to create template objects for unit testing
  */
-class WPBB_UnitTest_Factory_For_Team extends WP_UnitTest_Factory_For_Thing {
+class TeamTestFactory extends WP_UnitTest_Factory_For_Thing {
   private $repo;
 
   function __construct($factory = null) {

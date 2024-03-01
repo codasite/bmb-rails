@@ -1,5 +1,8 @@
 <?php
 
+namespace WStrategies\BMB\tests\integration\factory;
+use WP_Error;
+use WP_UnitTest_Factory_For_Thing;
 use WStrategies\BMB\Includes\Domain\Notification;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
@@ -9,8 +12,7 @@ use WStrategies\BMB\Includes\Repository\NotificationRepo;
  *
  * This class is used to create template objects for unit testing
  */
-class WPBB_UnitTest_Factory_For_Notification extends
-  WP_UnitTest_Factory_For_Thing {
+class NotificationTestFactory extends WP_UnitTest_Factory_For_Thing {
   private $notification_repo;
 
   function __construct($factory = null) {
