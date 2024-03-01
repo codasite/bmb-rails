@@ -1,6 +1,9 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
+/**
+ * A Pick is chosen winning team for a match in a bracket
+ */
 class Pick implements BracketMatchNodeInterface {
   /**
    * @var int

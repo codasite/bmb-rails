@@ -6,13 +6,13 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 
 class BracketSerializer extends PostBaseSerializer {
   private BracketMatchSerializer $match_serializer;
-  private MatchPickSerializer $results_serializer;
+  private PickSerializer $results_serializer;
 
   public function __construct($args = []) {
     $this->match_serializer =
       $args['match_serializer'] ?? new BracketMatchSerializer();
     $this->results_serializer =
-      $args['results_serializer'] ?? new MatchPickSerializer();
+      $args['results_serializer'] ?? new PickSerializer();
   }
   public function deserialize(array $data): Bracket {
     $obj_data = $this->get_object_data($data);

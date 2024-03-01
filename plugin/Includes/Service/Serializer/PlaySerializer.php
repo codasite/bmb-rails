@@ -4,13 +4,13 @@ namespace WStrategies\BMB\Includes\Service\Serializer;
 
 use WStrategies\BMB\Includes\Domain\Play;
 
-class BracketPlaySerializer extends PostBaseSerializer {
-  private MatchPickSerializer $match_pick_serializer;
+class PlaySerializer extends PostBaseSerializer {
+  private PickSerializer $match_pick_serializer;
   private BracketSerializer $bracket_serializer;
 
   public function __construct($args = []) {
     $this->match_pick_serializer =
-      $args['match_pick_serializer'] ?? new MatchPickSerializer();
+      $args['match_pick_serializer'] ?? new PickSerializer();
     $this->bracket_serializer =
       $args['bracket_serializer'] ?? new BracketSerializer();
   }

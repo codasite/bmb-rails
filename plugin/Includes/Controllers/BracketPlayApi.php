@@ -23,7 +23,7 @@ use WStrategies\BMB\Includes\Service\Play\PlayImageService;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ImageGeneratorException;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
-use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
+use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
@@ -32,7 +32,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   protected string $rest_namespace;
   protected string $base_path;
   private ProductIntegrationInterface $product_integration;
-  private BracketPlaySerializer $serializer;
+  private PlaySerializer $serializer;
   private Utils $utils;
 
   /**
@@ -46,7 +46,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->product_integration =
       $args['product_integration'] ?? new GelatoProductIntegration();
-    $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();
+    $this->serializer = $args['serializer'] ?? new PlaySerializer();
     $this->utils = $args['utils'] ?? new Utils();
     $this->rest_namespace = 'wp-bracket-builder/v1';
     $this->base_path = 'plays';

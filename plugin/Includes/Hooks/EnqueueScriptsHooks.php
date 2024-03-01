@@ -5,8 +5,8 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
-use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
+use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 /**
@@ -61,9 +61,9 @@ class EnqueueScriptsHooks implements HooksInterface {
   private $bracket_product_utils;
 
   /**
-   * @var BracketPlaySerializer
+   * @var PlaySerializer
    */
-  private BracketPlaySerializer $play_serializer;
+  private PlaySerializer $play_serializer;
 
   /**
    * @var BracketSerializer
@@ -78,8 +78,7 @@ class EnqueueScriptsHooks implements HooksInterface {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
-    $this->play_serializer =
-      $args['play_serializer'] ?? new BracketPlaySerializer();
+    $this->play_serializer = $args['play_serializer'] ?? new PlaySerializer();
     $this->bracket_serializer =
       $args['bracket_serializer'] ?? new BracketSerializer();
     $this->account_factory =

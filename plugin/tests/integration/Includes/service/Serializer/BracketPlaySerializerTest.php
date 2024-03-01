@@ -2,13 +2,11 @@
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
-use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
-use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
-use WStrategies\BMB\Includes\Service\Serializer\PostBaseSerializer;
+use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
 
 class BracketPlaySerializerTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
@@ -85,7 +83,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $serializer = new BracketPlaySerializer();
+    $serializer = new PlaySerializer();
     $serialized = $serializer->serialize($play);
     $this->assertMatchesSnapshot($serialized);
   }
@@ -198,7 +196,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $serializer = new BracketPlaySerializer();
+    $serializer = new PlaySerializer();
     $serialized = $serializer->serialize($play);
     $this->assertMatchesSnapshot($serialized);
   }
@@ -224,7 +222,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
         ],
       ],
     ];
-    $serializer = new BracketPlaySerializer();
+    $serializer = new PlaySerializer();
     $play = $serializer->deserialize($data);
     $this->assertInstanceOf(Play::class, $play);
     $picks = $play->picks;
@@ -237,7 +235,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
 
   public function test_deserialize_required_fields() {
     $data = [];
-    $serializer = new BracketPlaySerializer();
+    $serializer = new PlaySerializer();
     $this->expectException(ValidationException::class);
     // assert exception message
     $this->expectExceptionMessage('Missing required fields: bracket_id, picks');
@@ -277,7 +275,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
         ],
       ],
     ];
-    $serializer = new BracketPlaySerializer();
+    $serializer = new PlaySerializer();
     $play = $serializer->deserialize($data);
 
     $this->assertNull($play->id);

@@ -2,12 +2,9 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
-use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Pick;
 
-class MatchPickSerializer extends ApiSerializerBase {
+class PickSerializer extends ApiSerializerBase {
   // public function serialize(object $bracket): array {
   //   if (!$bracket instanceof Pick) {
   //     throw new \Exception('Invalid data type');
