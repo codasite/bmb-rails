@@ -42,5 +42,8 @@ class BracketResultsNotificationServiceTest extends TestCase {
   }
 
   public function test_should_send_notification_if_updated_results_contain_winning_team() {
+    $notification_service = new BracketResultsNotificationService([
+      'email_service' => $this->createMock(EmailServiceInterface::class),
+    ]);
   }
 }

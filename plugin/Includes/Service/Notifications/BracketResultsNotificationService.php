@@ -5,7 +5,6 @@ use DateTimeImmutable;
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Domain\MatchPick;
 use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
@@ -204,36 +203,36 @@ class BracketResultsNotificationService implements
     }
   }
 
-  // public function send_email($user_pick, $winning_pick, BracketPlay $play) {
-  //   // TODO fix this function
-  //   $user = get_user_by('id', $user_pick['user_id']);
-  //   $pick = $this->play_repo->pick_repo->get_pick($user_pick['pick_id']);
-  //   $to_email = $user->user_email;
-  //   $to_name = $user->display_name;
-  //   $subject = 'Bracket Results Updated';
-  //   $message = [
-  //     'to' => [
-  //       [
-  //         'email' => $to_email,
-  //         'name' => $to_name,
-  //       ],
-  //     ],
-  //   ];
+  public function send_email($user_pick, $winning_pick, BracketPlay $play) {
+    // TODO fix this function
+    $user = get_user_by('id', $user_pick['user_id']);
+    $pick = $this->play_repo->pick_repo->get_pick($user_pick['pick_id']);
+    $to_email = $user->user_email;
+    $to_name = $user->display_name;
+    $subject = 'Bracket Results Updated';
+    $message = [
+      'to' => [
+        [
+          'email' => $to_email,
+          'name' => $to_name,
+        ],
+      ],
+    ];
 
-  //   // Generate html content for email
-  //   $heading = $this->get_pick_result_heading($pick, $winning_pick);
-  //   $button_url = get_permalink($play->id) . 'view';
-  //   $button_text = 'View Bracket';
+    // Generate html content for email
+    $heading = $this->get_pick_result_heading($pick, $winning_pick);
+    $button_url = get_permalink($play->id) . 'view';
+    $button_text = 'View Bracket';
 
-  //   $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
+    $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
 
-  //   // send the email
-  //   $response = $this->email_service->send(
-  //     $to_email,
-  //     $to_name,
-  //     $subject,
-  //     $message,
-  //     $html
-  //   );
-  // }
+    // send the email
+    $response = $this->email_service->send(
+      $to_email,
+      $to_name,
+      $subject,
+      $message,
+      $html
+    );
+  }
 }
