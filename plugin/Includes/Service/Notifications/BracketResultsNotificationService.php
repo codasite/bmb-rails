@@ -2,8 +2,6 @@
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
@@ -11,6 +9,7 @@ use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\MatchPickResultService;
+use WStrategies\BMB\Includes\Service\Notifications\MatchPickResultNotificationService;
 
 class BracketResultsNotificationService implements
   BracketResultsNotificationServiceInterface {
@@ -18,11 +17,12 @@ class BracketResultsNotificationService implements
   protected BracketMatchService $match_service;
   protected MatchPickResultFactory $match_pick_result_factory;
   protected MatchPickResultService $match_pick_result_service;
-
   protected BracketRepo $bracket_repo;
   protected PlayRepo $play_repo;
   private BracketResultsEmailFormatService $email_format_service;
   private DateTimePostMetaRepo $results_sent_at_repo;
+  private BracketResultsFilterService $results_filter_service;
+  private MatchPickResultNotificationService $match_pick_result_notification_service;
 
   public function __construct($args = []) {
     $this->email_service =
@@ -42,6 +42,11 @@ class BracketResultsNotificationService implements
       new DateTimePostMetaRepo(
         BracketResultsRepo::RESULTS_NOTIFICATIONS_SENT_AT_META_KEY
       );
+    $this->results_filter_service =
+      $args['results_filter_service'] ?? new BracketResultsFilterService();
+    $this->match_pick_result_notification_service =
+      $args['match_pick_result_notification_service'] ??
+      new MatchPickResultNotificationService($this->match_pick_result_service);
   }
 
   /**
@@ -63,18 +68,17 @@ class BracketResultsNotificationService implements
     $matches = $bracket->get_matches();
     $results = $bracket->get_picks();
     $results_sent_at = $this->results_sent_at_repo->get($bracket->id);
-    $results = array_filter($results, function ($result) use (
+    $results = $this->results_filter_service->filter_results_updated_at_time(
+      $results,
       $results_sent_at
-    ) {
-      return $result->get_updated_at() > $results_sent_at;
-    });
+    );
     $matches = $this->match_service->matches_from_picks($matches, $results);
     foreach ($plays as $play) {
       $match_pick_results = $this->match_pick_result_factory->create_match_pick_results(
         $matches,
         $play->picks
       );
-      $result = $this->get_match_pick_result_for_play(
+      $result = $this->match_pick_result_notification_service->get_match_pick_result_for_play(
         $match_pick_results,
         $play
       );
@@ -83,75 +87,5 @@ class BracketResultsNotificationService implements
       }
     }
     $this->results_sent_at_repo->set_to_now($bracket->id);
-  }
-
-  /**
-   * @param array<MatchPickResult> $results
-   */
-  public function get_match_pick_result_for_play(
-    array $results,
-    BracketPlay $play
-  ): MatchPickResult|null {
-    $final_winning_team_id = $play->get_winning_team()->id;
-    if (!$final_winning_team_id) {
-      throw new \Exception('Winning team id is required');
-    }
-    return $this->get_match_pick_result_for_single_team(
-      $results,
-      $final_winning_team_id
-    );
-  }
-
-  /**
-   * This function returns the match pick result given a single team id (assumed to be the final winning pick of a play)
-   * @param array<MatchPickResult> $results
-   * @param int $team_id
-   * @return MatchPickResult|null
-   */
-  public function get_match_pick_result_for_single_team(
-    array $results,
-    int $team_id
-  ): MatchPickResult|null {
-    $result = null;
-    $winning_team_map = $this->match_pick_result_service->get_winning_team_map(
-      $results
-    );
-    $losing_team_map = $this->match_pick_result_service->get_losing_team_map(
-      $results
-    );
-    if (isset($winning_team_map[$team_id])) {
-      $result = $winning_team_map[$team_id];
-    } elseif (isset($losing_team_map[$team_id])) {
-      $result = $losing_team_map[$team_id];
-    }
-    return $result;
-  }
-
-  /**
-   * This function returns the match pick result given an array of team ids.
-   * team_ids is assumed to be a play's winning picks in ranked order. For example [5, 1, 0, 2, 3]
-   * where team 5 is the final winning team, team 1 is the second place team, and so on.
-   */
-  public function get_match_pick_result_for_many_teams(
-    array $results,
-    array $team_ids
-  ) {
-    $result = null;
-    $winning_team_map = $this->match_pick_result_service->get_winning_team_map(
-      $results
-    );
-    $losing_team_map = $this->match_pick_result_service->get_losing_team_map(
-      $results
-    );
-    foreach ($team_ids as $team_id) {
-      if (isset($winning_team_map[$team_id])) {
-        $result = $winning_team_map[$team_id];
-        break;
-      } elseif (isset($losing_team_map[$team_id])) {
-        $result = $losing_team_map[$team_id];
-        break;
-      }
-    }
-    return $result;
   }
 }
