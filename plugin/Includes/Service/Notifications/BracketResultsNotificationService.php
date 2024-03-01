@@ -36,10 +36,7 @@ class BracketResultsNotificationService implements
       $args['match_pick_result_service'] ?? new MatchPickResultService();
     $this->email_format_service =
       $args['email_format_service'] ??
-      new BracketResultsEmailFormatService(
-        $this->play_repo,
-        $this->email_service
-      );
+      new BracketResultsEmailFormatService($this->email_service);
     $this->results_sent_at_repo =
       $args['results_sent_at_repo'] ??
       new DateTimePostMetaRepo(

@@ -8,14 +8,9 @@ use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class BracketResultsEmailFormatService {
-  private PlayRepo $play_repo;
   private EmailServiceInterface $email_service;
 
-  public function __construct(
-    PlayRepo $play_repo,
-    EmailServiceInterface $email_service
-  ) {
-    $this->play_repo = $play_repo;
+  public function __construct(EmailServiceInterface $email_service) {
     $this->email_service = $email_service;
   }
 
