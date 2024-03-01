@@ -3,6 +3,9 @@ namespace WStrategies\BMB\Includes\Domain;
 
 use InvalidArgumentException;
 
+/**
+ * Two teams competing in a match.
+ */
 class BracketMatch implements BracketMatchNodeInterface {
   /**
    * @var int
