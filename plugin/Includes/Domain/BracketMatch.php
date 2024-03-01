@@ -4,7 +4,8 @@ namespace WStrategies\BMB\Includes\Domain;
 use InvalidArgumentException;
 
 /**
- * Two teams competing in a match.
+ * Two teams competing in a match. I would name this class `Match` but it's a
+ * reserved word in PHP.
  */
 class BracketMatch implements BracketMatchNodeInterface {
   /**
