@@ -32,6 +32,7 @@ class PickResultFactoryTest extends WPBB_UnitTestCase {
           ]),
         ]),
         new BracketMatch([
+          'id' => 2,
           'round_index' => 0,
           'match_index' => 1,
           'team1' => new Team([
