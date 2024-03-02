@@ -13,7 +13,7 @@ use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatServ
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsFilterService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
-use WStrategies\BMB\Includes\Service\Notifications\PickResultNotificationService;
+use WStrategies\BMB\Includes\Service\PickResultService;
 
 class BracketResultsNotificationServiceTest extends TestCase {
   // public function test_should_send_notification_if_updated_results_contain_winning_team() {
@@ -51,10 +51,8 @@ class BracketResultsNotificationServiceTest extends TestCase {
       ->method('send_email')
       ->with($plays[0], $result_to_send);
 
-    $match_pick_result_notification_service = $this->createMock(
-      PickResultNotificationService::class
-    );
-    $match_pick_result_notification_service
+    $pick_result_service = $this->createMock(PickResultService::class);
+    $pick_result_service
       ->method('get_pick_result_for_play')
       ->willReturn($result_to_send);
 
@@ -68,7 +66,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
         PickResultFactory::class
       ),
       'email_format_service' => $email_format_service,
-      'match_pick_result_notification_service' => $match_pick_result_notification_service,
+      'pick_result_service' => $pick_result_service,
     ]);
 
     $notification_service->notify_bracket_results_updated($bracket);
@@ -90,12 +88,8 @@ class BracketResultsNotificationServiceTest extends TestCase {
       ->willReturn([]);
     $match_service = $this->createMock(BracketMatchService::class);
     $match_service->method('matches_from_picks')->willReturn([]);
-    $match_pick_result_notification_service = $this->createMock(
-      PickResultNotificationService::class
-    );
-    $match_pick_result_notification_service
-      ->method('get_pick_result_for_play')
-      ->willReturn(null);
+    $pick_result_service = $this->createMock(PickResultService::class);
+    $pick_result_service->method('get_pick_result_for_play')->willReturn(null);
 
     $notification_service = new BracketResultsNotificationService([
       'email_service' => $this->createMock(EmailServiceInterface::class),
@@ -107,7 +101,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
         PickResultFactory::class
       ),
       'email_format_service' => $email_format_service,
-      'match_pick_result_notification_service' => $match_pick_result_notification_service,
+      'pick_result_service' => $pick_result_service,
     ]);
 
     $email_format_service->expects($this->never())->method('send_email');
@@ -132,12 +126,8 @@ class BracketResultsNotificationServiceTest extends TestCase {
       ->willReturn([]);
     $match_service = $this->createMock(BracketMatchService::class);
     $match_service->method('matches_from_picks')->willReturn([]);
-    $match_pick_result_notification_service = $this->createMock(
-      PickResultNotificationService::class
-    );
-    $match_pick_result_notification_service
-      ->method('get_pick_result_for_play')
-      ->willReturn(null);
+    $pick_result_service = $this->createMock(PickResultService::class);
+    $pick_result_service->method('get_pick_result_for_play')->willReturn(null);
 
     $results_sent_at_repo = $this->createMock(DateTimePostMetaRepo::class);
     $results_sent_at_repo->expects($this->once())->method('set_to_now');
@@ -152,7 +142,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
         PickResultFactory::class
       ),
       'email_format_service' => $email_format_service,
-      'match_pick_result_notification_service' => $match_pick_result_notification_service,
+      'pick_result_service' => $pick_result_service,
     ]);
 
     $notification_service->notify_bracket_results_updated($bracket);
