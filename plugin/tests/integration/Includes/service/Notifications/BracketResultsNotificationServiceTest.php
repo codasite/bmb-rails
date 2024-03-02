@@ -7,7 +7,7 @@ use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationSer
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
 
 class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
-  public function test_notify_bracket_results_updated() {
+  public function test_should_notify_bracket_results_updated() {
     $bracket = $this->create_bracket([
       'num_teams' => 4,
     ]);
@@ -85,54 +85,36 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $user_picks = [
-      [
-        'user_id' => $user1->ID,
-        'play_id' => $play1->id,
-        'pick_id' => $play1->picks[2]->id,
-      ],
-      [
-        'user_id' => $user2->ID,
-        'play_id' => $play2->id,
-        'pick_id' => $play2->picks[2]->id,
-      ],
-    ];
-
-    $play_repo_mock = $this->getMockBuilder(PlayRepo::class)
-      ->onlyMethods(['get_user_picks_for_result'])
-      ->getMock();
-    $play_repo_mock
-      ->method('get_user_picks_for_result')
-      ->willReturn($user_picks);
-
     $email_mock = $this->getMockBuilder(EmailServiceInterface::class)
       ->disableOriginalConstructor()
       ->getMock();
+    $matcher = $this->exactly(2);
     $email_mock
-      ->expects($this->exactly(2))
+      ->expects($matcher)
       ->method('send')
-      ->withConsecutive(
-        [
-          $this->equalTo($user1->user_email),
-          $this->equalTo($user1->display_name),
-          $this->equalTo('Bracket Results Updated'),
-          $this->anything(),
-          $this->anything(),
-        ],
-        [
-          $this->equalTo($user2->user_email),
-          $this->equalTo($user2->display_name),
-          $this->equalTo('Bracket Results Updated'),
-          $this->anything(),
-          $this->anything(),
-        ]
-      );
+      ->willReturnCallback(function (
+        $to,
+        $name,
+        $subject,
+        $message,
+        $headers
+      ) use ($matcher, $user1, $user2) {
+        switch ($matcher->getInvocationCount()) {
+          case 1:
+            $this->assertEquals($user1->user_email, $to);
+            $this->assertEquals($user1->display_name, $name);
+            $this->assertEquals('Bracket Results Updated', $subject);
+            break;
+          case 2:
+            $this->assertEquals($user2->user_email, $to);
+            $this->assertEquals($user2->display_name, $name);
+            $this->assertEquals('Bracket Results Updated', $subject);
+            break;
+        }
+      });
 
     $notification_service = new BracketResultsNotificationService([
-      'play_repo' => $play_repo_mock,
-      'email_format_service' => new BracketResultsEmailFormatService(
-        email_service: $email_mock
-      ),
+      'email_service' => $email_mock,
     ]);
 
     $notification_service->notify_bracket_results_updated($bracket);

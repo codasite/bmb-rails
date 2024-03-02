@@ -23,8 +23,8 @@ class PickResult {
       );
     }
     if (
-      $this->match->get_winning_team()->id === null ||
-      $this->match->get_losing_team()->id === null ||
+      $this->get_winning_team()->id === null ||
+      $this->get_losing_team()->id === null ||
       $this->get_picked_team()->id === null
     ) {
       throw new ValueError('Team id is required');
@@ -32,11 +32,18 @@ class PickResult {
   }
 
   public function correct_picked(): bool {
-    return $this->get_picked_team()->id ===
-      $this->match->get_winning_team()->id;
+    return $this->get_picked_team()->id === $this->get_winning_team()->id;
   }
 
   public function get_picked_team(): Team {
-    return $this->pick->winning_team;
+    return $this->pick->get_winning_team();
+  }
+
+  public function get_winning_team(): Team {
+    return $this->match->get_winning_team();
+  }
+
+  public function get_losing_team(): Team {
+    return $this->match->get_losing_team();
   }
 }

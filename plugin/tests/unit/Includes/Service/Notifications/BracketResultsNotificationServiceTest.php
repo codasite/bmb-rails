@@ -55,7 +55,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       PickResultNotificationService::class
     );
     $match_pick_result_notification_service
-      ->method('get_match_pick_result_for_play')
+      ->method('get_pick_result_for_play')
       ->willReturn($result_to_send);
 
     $notification_service = new BracketResultsNotificationService([
@@ -94,7 +94,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       PickResultNotificationService::class
     );
     $match_pick_result_notification_service
-      ->method('get_match_pick_result_for_play')
+      ->method('get_pick_result_for_play')
       ->willReturn(null);
 
     $notification_service = new BracketResultsNotificationService([
@@ -136,7 +136,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       PickResultNotificationService::class
     );
     $match_pick_result_notification_service
-      ->method('get_match_pick_result_for_play')
+      ->method('get_pick_result_for_play')
       ->willReturn(null);
 
     $results_sent_at_repo = $this->createMock(DateTimePostMetaRepo::class);
