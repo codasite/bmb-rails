@@ -1,4 +1,19 @@
 {
+    "1": {
+        "match": {
+            "id": null,
+            "round_index": 2,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "team 1"
+            },
+            "team2": {
+                "id": 5,
+                "name": "team 5"
+            }
+        }
+    },
     "2": {
         "match": {
             "id": null,
@@ -14,6 +29,21 @@
             }
         }
     },
+    "3": {
+        "match": {
+            "id": null,
+            "round_index": 1,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "team 1"
+            },
+            "team2": {
+                "id": 3,
+                "name": "team 3"
+            }
+        }
+    },
     "4": {
         "match": {
             "id": null,
@@ -26,6 +56,21 @@
             "team2": {
                 "id": 4,
                 "name": "team 4"
+            }
+        }
+    },
+    "5": {
+        "match": {
+            "id": null,
+            "round_index": 2,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "team 1"
+            },
+            "team2": {
+                "id": 5,
+                "name": "team 5"
             }
         }
     },
@@ -59,21 +104,6 @@
             }
         }
     },
-    "3": {
-        "match": {
-            "id": null,
-            "round_index": 1,
-            "match_index": 0,
-            "team1": {
-                "id": 1,
-                "name": "team 1"
-            },
-            "team2": {
-                "id": 3,
-                "name": "team 3"
-            }
-        }
-    },
     "8": {
         "match": {
             "id": null,
@@ -86,21 +116,6 @@
             "team2": {
                 "id": 8,
                 "name": "team 8"
-            }
-        }
-    },
-    "1": {
-        "match": {
-            "id": null,
-            "round_index": 2,
-            "match_index": 0,
-            "team1": {
-                "id": 1,
-                "name": "team 1"
-            },
-            "team2": {
-                "id": 5,
-                "name": "team 5"
             }
         }
     }

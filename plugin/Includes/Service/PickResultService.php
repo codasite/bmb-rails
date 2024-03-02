@@ -42,15 +42,8 @@ class PickResultService {
     array $results,
     int $team_id
   ): PickResult|null {
-    $result = null;
-    $winning_team_map = $this->get_winning_team_map($results);
-    $losing_team_map = $this->get_losing_team_map($results);
-    if (isset($winning_team_map[$team_id])) {
-      $result = $winning_team_map[$team_id];
-    } elseif (isset($losing_team_map[$team_id])) {
-      $result = $losing_team_map[$team_id];
-    }
-    return $result;
+    $team_results_map = $this->get_most_recent_pick_result_map($results);
+    return $team_results_map[$team_id] ?? null;
   }
 
   /**
@@ -63,15 +56,11 @@ class PickResultService {
     array $team_ids
   ) {
     $result = null;
-    $winning_team_map = $this->get_winning_team_map($results);
-    $losing_team_map = $this->get_losing_team_map($results);
+    $team_results_map = $this->get_most_recent_pick_result_map($results);
     foreach ($team_ids as $team_id) {
-      if (isset($winning_team_map[$team_id])) {
-        $result = $winning_team_map[$team_id];
-        break;
-      } elseif (isset($losing_team_map[$team_id])) {
-        $result = $losing_team_map[$team_id];
-        break;
+      $result = $team_results_map[$team_id] ?? null;
+      if ($result) {
+        return $result;
       }
     }
     return $result;
@@ -98,6 +87,18 @@ class PickResultService {
     $team_map = [];
     foreach ($pick_results as $result) {
       $team_map[$result->get_losing_team()->id] = $result;
+    }
+    return $team_map;
+  }
+
+  /**
+   * Return a mapping of team ids to the pick result of the most recent match that team played in, whether they won or lost
+   */
+  public function get_most_recent_pick_result_map(array $pick_results) {
+    $team_map = [];
+    foreach ($pick_results as $result) {
+      $team_map[$result->get_team1()->id] = $result;
+      $team_map[$result->get_team2()->id] = $result;
     }
     return $team_map;
   }

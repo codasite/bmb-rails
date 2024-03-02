@@ -46,4 +46,12 @@ class PickResult {
   public function get_losing_team(): Team {
     return $this->match->get_losing_team();
   }
+
+  public function get_team1(): Team {
+    return $this->match->team1;
+  }
+
+  public function get_team2(): Team {
+    return $this->match->team2;
+  }
 }
