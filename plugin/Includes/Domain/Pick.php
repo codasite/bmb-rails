@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
+use WStrategies\BMB\Includes\Service\BracketMatchService;
+
 /**
  * A Pick is chosen winning team for a match in a bracket
  */
@@ -76,5 +78,67 @@ class Pick implements BracketMatchNodeInterface {
 
   public function get_updated_at(): ?\DateTimeImmutable {
     return $this->updated_at;
+  }
+
+  /**
+   * Returns an array of teams picked by this play ranked according to the highest round and match index the team was picked in.
+   * For example the final winning team is the first element in the array, the second place team is the second element and so on.
+   *
+   * @param Pick[] $picks
+   * @return Team[]
+   */
+  public static function get_ranked_teams(array $picks): array {
+    /**
+     * Ensure that the picks are sorted by round and match index, and then reverse the order
+     * so that the first pick corresponds to the highest round and match index.
+     *
+     * @var Pick[] $reversed
+     */
+    $reversed = array_reverse(BracketMatchService::sort_match_node($picks));
+
+    /**
+     * An array of all the teams picked by this play in the order same order as above.
+     * This array will contain duplicate teams
+     *
+     * @var Team[] $all_teams
+     */
+    $all_teams = array_map(function ($pick) {
+      return $pick->winning_team;
+    }, $reversed);
+
+    /**
+     * Extract only the team ids from the above array
+     *
+     * @var int[] $team_ids
+     */
+    $team_ids = array_map(function ($team) {
+      return $team->id;
+    }, $all_teams);
+
+    /**
+     * Remove duplicate team ids, keeping only the first occurrence.
+     * This will give us a unique set of team ids ranked from highest round and match index to lowest.
+     *
+     * @var int[] $unique_ids
+     */
+    $unique_ids = array_unique($team_ids);
+
+    /**
+     * Create a map of team ids to teams. This is used to look up teams by their ids
+     *
+     * @var array<int, Team> $team_id_map
+     */
+    $team_id_map = Team::get_team_id_map($all_teams);
+
+    /**
+     * Finally, create an array of teams from the unique team ids
+     *
+     * @var Team[] $ranked_teams
+     */
+    $ranked_teams = [];
+    foreach ($unique_ids as $id) {
+      $ranked_teams[] = $team_id_map[$id];
+    }
+    return $ranked_teams;
   }
 }

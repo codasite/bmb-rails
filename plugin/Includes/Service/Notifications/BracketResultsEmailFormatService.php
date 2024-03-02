@@ -42,7 +42,7 @@ class BracketResultsEmailFormatService {
   public function get_pick_result_heading(PickResult $result): string {
     $picked_team = strtoupper($result->get_picked_team()->name);
     $winning_team = strtoupper($result->match->get_winning_team()->name);
-    if ($result->correct_picked()) {
+    if ($result->picked_team_won()) {
       return 'You picked ' . $picked_team . '... and they won!';
     } else {
       return 'You picked ' .

@@ -1,8 +1,6 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
-use WStrategies\BMB\Includes\Service\BracketMatchService;
-
 class Play extends PostBase implements PostBracketInterface {
   /**
    * @var int
@@ -107,15 +105,7 @@ class Play extends PostBase implements PostBracketInterface {
    * @return Team[]
    */
   public function get_ranked_teams(): array {
-    /**
-     * @var Pick[] $sorted
-     */
-    $sorted = BracketMatchService::sort_match_node($this->picks);
-    $teams = [];
-    foreach ($sorted as $pick) {
-      $teams[] = $pick->get_winning_team();
-    }
-    return array_reverse($teams);
+    return Pick::get_ranked_teams($this->picks);
   }
 
   public function get_post_meta(): array {

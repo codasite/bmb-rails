@@ -30,16 +30,88 @@ class PickResultTest extends TestCase {
     $this->assertEquals('team1', $pick_result->match->get_winning_team()->name);
     $this->assertEquals('team2', $pick_result->match->get_losing_team()->name);
     $this->assertEquals('team1', $pick_result->get_picked_team()->name);
+    $this->assertEquals('team1', $pick_result->get_team1()->name);
+    $this->assertEquals('team2', $pick_result->get_team2()->name);
   }
 
-  public function test_correct_picked_should_return_true_when_picked_team_is_winning_team() {
-    $pick_result = PickResultFakeFactory::get_correct_pick_result();
-    $this->assertTrue($pick_result->correct_picked());
+  public function test_returns_true_when_picked_team_won() {
+    $pick_result = new PickResult(
+      new BracketMatch([
+        'round_index' => 1,
+        'match_index' => 2,
+        'team1_wins' => 1,
+        'team2_wins' => 0,
+        'team1' => new Team(['name' => 'team1', 'id' => 1]),
+        'team2' => new Team(['name' => 'team2', 'id' => 2]),
+      ]),
+      new Pick([
+        'round_index' => 1,
+        'match_index' => 2,
+        'winning_team_id' => 1,
+        'winning_team' => new Team(['name' => 'team1', 'id' => 1]),
+      ])
+    );
+    $this->assertTrue($pick_result->picked_team_won());
   }
 
-  public function test_correct_picked_should_return_false_when_picked_team_is_not_winning_team() {
-    $pick_result = PickResultFakeFactory::get_incorrect_pick_result();
-    $this->assertFalse($pick_result->correct_picked());
+  public function test_returns_false_when_picked_team_did_not_win() {
+    $pick_result = new PickResult(
+      new BracketMatch([
+        'round_index' => 1,
+        'match_index' => 2,
+        'team1_wins' => 1,
+        'team2_wins' => 0,
+        'team1' => new Team(['name' => 'team1', 'id' => 1]),
+        'team2' => new Team(['name' => 'team2', 'id' => 2]),
+      ]),
+      new Pick([
+        'round_index' => 1,
+        'match_index' => 2,
+        'winning_team_id' => 2,
+        'winning_team' => new Team(['name' => 'team2', 'id' => 2]),
+      ])
+    );
+    $this->assertFalse($pick_result->picked_team_won());
+  }
+
+  public function test_returns_true_when_picked_team_played() {
+    $pick_result = new PickResult(
+      new BracketMatch([
+        'round_index' => 1,
+        'match_index' => 2,
+        'team1_wins' => 1,
+        'team2_wins' => 0,
+        'team1' => new Team(['name' => 'team1', 'id' => 1]),
+        'team2' => new Team(['name' => 'team2', 'id' => 2]),
+      ]),
+      new Pick([
+        'round_index' => 1,
+        'match_index' => 2,
+        'winning_team_id' => 1,
+        'winning_team' => new Team(['name' => 'team1', 'id' => 1]),
+      ])
+    );
+    $this->assertTrue($pick_result->picked_team_played());
+  }
+
+  public function test_returns_false_when_picked_team_did_not_play() {
+    $pick_result = new PickResult(
+      new BracketMatch([
+        'round_index' => 1,
+        'match_index' => 2,
+        'team1_wins' => 1,
+        'team2_wins' => 0,
+        'team1' => new Team(['name' => 'team1', 'id' => 1]),
+        'team2' => new Team(['name' => 'team2', 'id' => 2]),
+      ]),
+      new Pick([
+        'round_index' => 1,
+        'match_index' => 2,
+        'winning_team_id' => 3,
+        'winning_team' => new Team(['name' => 'team3', 'id' => 3]),
+      ])
+    );
+    $this->assertFalse($pick_result->picked_team_played());
   }
 
   public function test_create_match_pick_result_round_mismatch() {

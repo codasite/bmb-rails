@@ -32,7 +32,7 @@ class PickResultFakeFactory {
       new Pick([
         'round_index' => $round_index,
         'match_index' => $match_index,
-        'winning_team_id' => $winning_team_id,
+        'winning_team_id' => $picked_team_id,
         'winning_team' => new Team([
           'name' => $picked_team_name,
           'id' => $picked_team_id,

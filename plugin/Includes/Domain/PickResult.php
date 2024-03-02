@@ -31,8 +31,13 @@ class PickResult {
     }
   }
 
-  public function correct_picked(): bool {
-    return $this->get_picked_team()->id === $this->get_winning_team()->id;
+  public function picked_team_won(): bool {
+    return $this->get_picked_team()->equals($this->get_winning_team());
+  }
+
+  public function picked_team_played(): bool {
+    return $this->get_picked_team()->equals($this->get_team1()) ||
+      $this->get_picked_team()->equals($this->get_team2());
   }
 
   public function get_picked_team(): Team {

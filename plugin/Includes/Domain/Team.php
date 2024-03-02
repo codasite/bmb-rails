@@ -29,4 +29,28 @@ class Team {
       'name' => $this->name,
     ];
   }
+
+  /**
+   * Returns a map of team ids to teams
+   * @param array<Team> $teams
+   * @return array<int, Team>
+   */
+  public static function get_team_id_map(array $teams): array {
+    $team_id_map = [];
+
+    foreach ($teams as $team) {
+      $team_id_map[$team->id] = $team;
+    }
+
+    return $team_id_map;
+  }
+
+  public function equals(Team|int $team): bool {
+    if ($team instanceof Team) {
+      return $this->id === $team->id;
+    } elseif (is_int($team)) {
+      return $this->id === $team;
+    }
+    return false;
+  }
 }
