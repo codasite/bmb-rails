@@ -77,7 +77,7 @@ class PickResultService {
     return $result;
   }
   /**
-   * This function returns a mapping of team ids to the latest match pick result where that team won
+   * This function returns a mapping of team ids to the most recent match pick result where that team won
    * @param array<PickResult> $pick_results
    * @return array<array<PickResult>>
    */
@@ -90,7 +90,7 @@ class PickResultService {
   }
 
   /**
-   * This function returns a mapping of team ids to the latest match pick result where that team lost
+   * This function returns a mapping of team ids to the most recent match pick result where that team lost
    * @param array<PickResult> $pick_results
    * @return array<array<PickResult>>
    */
