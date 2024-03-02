@@ -1,12 +1,15 @@
-
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\Service\Notifications;
+
+use MailchimpTransactional\Api\MessagesApi;
+use WPBB_UnitTestCase;
 use WStrategies\BMB\Includes\Service\Notifications\MailchimpApiClient;
 use WStrategies\BMB\Includes\Service\Notifications\MailchimpEmailService;
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
   public function test_client_send_is_called() {
-    $messagesMock = $this->getMockBuilder(stdClass::class) // Use stdClass just as a generic object.
-      ->addMethods(['send']) // Mock the 'send' method.
+    $messagesMock = $this->getMockBuilder(MessagesApi::class)
+      ->disableOriginalConstructor()
       ->getMock();
 
     $messagesMock
@@ -48,4 +51,3 @@ class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
     );
   }
 }
-
