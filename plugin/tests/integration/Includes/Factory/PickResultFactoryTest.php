@@ -1,6 +1,6 @@
 <?php
 
-namespace WStrategies\BMB\tests\integration\Includes\domain;
+namespace WStrategies\BMB\tests\integration\Includes\Factory;
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WPBB_UnitTestCase;
@@ -10,7 +10,7 @@ use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Factory\PickResultFactory;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 
-class PickResultIntegrationTest extends WPBB_UnitTestCase {
+class PickResultFactoryTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
 
   public function test_create_match_pick_results() {

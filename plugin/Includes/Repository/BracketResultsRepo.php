@@ -8,7 +8,7 @@ use WStrategies\BMB\Includes\Domain\Pick;
 
 class BracketResultsRepo implements CustomTableInterface {
   /**
-   * @var BracketTeamRepo
+   * @var TeamRepo
    */
   private $team_repo;
 
@@ -29,7 +29,7 @@ class BracketResultsRepo implements CustomTableInterface {
 
   public function __construct(
     BracketRepo $bracket_repo,
-    BracketTeamRepo $team_repo,
+    TeamRepo $team_repo,
     BracketMatchRepo $match_repo
   ) {
     global $wpdb;
@@ -165,7 +165,7 @@ class BracketResultsRepo implements CustomTableInterface {
     global $wpdb;
     $table_name = self::table_name();
     $brackets_table = BracketRepo::table_name();
-    $teams_table = BracketTeamRepo::table_name();
+    $teams_table = TeamRepo::table_name();
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (

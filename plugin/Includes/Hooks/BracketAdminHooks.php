@@ -4,14 +4,14 @@ namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
+use WStrategies\BMB\Includes\Repository\TeamRepo;
 
 class BracketAdminHooks implements HooksInterface {
   private $bracket_repo;
   private $team_repo;
   public function __construct($args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    $this->team_repo = $args['team_repo'] ?? new BracketTeamRepo();
+    $this->team_repo = $args['team_repo'] ?? new TeamRepo();
   }
   public function load(Loader $loader): void {
     $loader->add_action('add_meta_boxes_bracket', [$this, 'add_meta_boxes']);

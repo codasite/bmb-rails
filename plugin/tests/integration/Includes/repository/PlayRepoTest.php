@@ -1,15 +1,15 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
+use WStrategies\BMB\Includes\Repository\PickRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class PlayRepoTest extends WPBB_UnitTestCase {
   private PlayRepo $play_repo;
-  private BracketMatchPickRepo $pick_repo;
+  private PickRepo $pick_repo;
 
   public function set_up(): void {
     parent::set_up();

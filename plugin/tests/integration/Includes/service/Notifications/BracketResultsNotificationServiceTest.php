@@ -1,8 +1,8 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\Pick;
-use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
 
@@ -129,8 +129,10 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       );
 
     $notification_service = new BracketResultsNotificationService([
-      'email_service' => $email_mock,
       'play_repo' => $play_repo_mock,
+      'email_format_service' => new BracketResultsEmailFormatService(
+        email_service: $email_mock
+      ),
     ]);
 
     $notification_service->notify_bracket_results_updated($bracket);

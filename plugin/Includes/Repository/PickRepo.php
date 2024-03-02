@@ -4,9 +4,9 @@ namespace WStrategies\BMB\Includes\Repository;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Pick;
 
-class BracketMatchPickRepo implements CustomTableInterface {
+class PickRepo implements CustomTableInterface {
   /**
-   * @var BracketTeamRepo
+   * @var TeamRepo
    */
   private $team_repo;
 
@@ -15,7 +15,7 @@ class BracketMatchPickRepo implements CustomTableInterface {
    */
   private $wpdb;
 
-  public function __construct(BracketTeamRepo $team_repo) {
+  public function __construct(TeamRepo $team_repo) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = $team_repo;
@@ -90,7 +90,7 @@ class BracketMatchPickRepo implements CustomTableInterface {
     global $wpdb;
     $table_name = self::table_name();
     $plays_table = PlayRepo::table_name();
-    $teams_table = BracketTeamRepo::table_name();
+    $teams_table = TeamRepo::table_name();
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (

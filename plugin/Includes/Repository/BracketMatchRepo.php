@@ -6,7 +6,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 
 class BracketMatchRepo implements CustomTableInterface {
   /**
-   * @var BracketTeamRepo
+   * @var TeamRepo
    */
   private $team_repo;
 
@@ -15,7 +15,7 @@ class BracketMatchRepo implements CustomTableInterface {
    */
   private $wpdb;
 
-  public function __construct(BracketTeamRepo $team_repo) {
+  public function __construct(TeamRepo $team_repo) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = $team_repo;
@@ -76,7 +76,7 @@ class BracketMatchRepo implements CustomTableInterface {
     global $wpdb;
     $table_name = self::table_name();
     $brackets_table = BracketRepo::table_name();
-    $teams_table = BracketTeamRepo::table_name();
+    $teams_table = TeamRepo::table_name();
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (

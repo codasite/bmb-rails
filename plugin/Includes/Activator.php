@@ -1,14 +1,14 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
-use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
 use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
 use WStrategies\BMB\Includes\Repository\BracketPickRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
-use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
+use WStrategies\BMB\Includes\Repository\PickRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Repository\TeamRepo;
 
 /**
  * Fired during plugin activation
@@ -41,9 +41,9 @@ class Activator {
   public static function activate(): void {
     BracketRepo::create_table();
     PlayRepo::create_table();
-    BracketTeamRepo::create_table();
+    TeamRepo::create_table();
     BracketMatchRepo::create_table();
-    BracketMatchPickRepo::create_table();
+    PickRepo::create_table();
     BracketResultsRepo::create_table();
     NotificationRepo::create_table();
   }
@@ -53,9 +53,9 @@ class Activator {
   // @phpstan-ignore-next-line
   private static function delete_tables(): void {
     BracketResultsRepo::drop_table();
-    BracketMatchPickRepo::drop_table();
+    PickRepo::drop_table();
     BracketMatchRepo::drop_table();
-    BracketTeamRepo::drop_table();
+    TeamRepo::drop_table();
     NotificationRepo::drop_table();
     PlayRepo::drop_table();
     BracketRepo::drop_table();

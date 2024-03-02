@@ -6,8 +6,8 @@ use WP_Post;
 use WP_Query;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Utils;
@@ -24,14 +24,14 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
   private $bracket_repo;
 
   /**
-   * @var BracketTeamRepo
+   * @var TeamRepo
    */
   public $team_repo;
 
   /**
-   * @var BracketMatchPickRepo
+   * @var PickRepo
    */
-  public BracketMatchPickRepo $pick_repo;
+  public PickRepo $pick_repo;
 
   /**
    * @var wpdb
@@ -42,9 +42,8 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    $this->team_repo = $args['team_repo'] ?? new BracketTeamRepo();
-    $this->pick_repo =
-      $args['pick_repo'] ?? new BracketMatchPickRepo($this->team_repo);
+    $this->team_repo = $args['team_repo'] ?? new TeamRepo();
+    $this->pick_repo = $args['pick_repo'] ?? new PickRepo($this->team_repo);
     $this->utils = $args['utils'] ?? new Utils();
     parent::__construct();
   }

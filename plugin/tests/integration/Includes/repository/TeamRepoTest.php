@@ -3,7 +3,7 @@
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
+use WStrategies\BMB\Includes\Repository\TeamRepo;
 
 class TeamRepoTest extends WPBB_UnitTestCase {
   private $team_repo;
@@ -12,7 +12,7 @@ class TeamRepoTest extends WPBB_UnitTestCase {
   public function set_up(): void {
     parent::set_up();
 
-    $this->team_repo = new BracketTeamRepo();
+    $this->team_repo = new TeamRepo();
     $this->bracket_repo = new BracketRepo();
   }
 

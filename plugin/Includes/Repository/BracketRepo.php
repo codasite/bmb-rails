@@ -11,7 +11,7 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   /**
-   * @var BracketTeamRepo
+   * @var TeamRepo
    */
   private $team_repo;
 
@@ -40,7 +40,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   public function __construct($args = []) {
     global $wpdb;
     $this->wpdb = $args['wpdb'] ?? $wpdb;
-    $this->team_repo = $args['team_repo'] ?? new BracketTeamRepo();
+    $this->team_repo = $args['team_repo'] ?? new TeamRepo();
     $this->match_repo =
       $args['match_repo'] ?? new BracketMatchRepo($this->team_repo);
     $this->results_repo =

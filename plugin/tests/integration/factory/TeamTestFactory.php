@@ -4,7 +4,7 @@ namespace WStrategies\BMB\tests\integration\factory;
 use WP_Error;
 use WP_UnitTest_Factory_For_Thing;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Repository\BracketTeamRepo;
+use WStrategies\BMB\Includes\Repository\TeamRepo;
 
 /**
  * Class WPBB_UnitTest_Factory_For_Team
@@ -16,7 +16,7 @@ class TeamTestFactory extends WP_UnitTest_Factory_For_Thing {
 
   function __construct($factory = null) {
     parent::__construct($factory);
-    $this->repo = new BracketTeamRepo();
+    $this->repo = new TeamRepo();
 
     $this->default_generation_definitions = ['author' => 1];
   }

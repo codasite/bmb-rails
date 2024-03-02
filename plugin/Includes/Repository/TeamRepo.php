@@ -1,15 +1,13 @@
 <?php
 namespace WStrategies\BMB\Includes\Repository;
 
-use Exception;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Utils;
 
 /**
  * Repository for BracketMatches, Match Picks, and Teams
  */
-class BracketTeamRepo implements CustomTableInterface {
+class TeamRepo implements CustomTableInterface {
   /**
    * @var wpdb
    */
