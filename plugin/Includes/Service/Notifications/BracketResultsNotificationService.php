@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
+use WStrategies\BMB\Includes\Factory\PickResultFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
@@ -13,7 +13,7 @@ use WStrategies\BMB\Includes\Service\MatchPickResultService;
 class BracketResultsNotificationService implements
   BracketResultsNotificationServiceInterface {
   protected BracketMatchService $match_service;
-  protected MatchPickResultFactory $match_pick_result_factory;
+  protected PickResultFactory $match_pick_result_factory;
   protected MatchPickResultService $match_pick_result_service;
   protected BracketRepo $bracket_repo;
   protected PlayRepo $play_repo;
@@ -27,7 +27,7 @@ class BracketResultsNotificationService implements
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->match_service = $args['match_service'] ?? new BracketMatchService();
     $this->match_pick_result_factory =
-      $args['match_pick_result_factory'] ?? new MatchPickResultFactory();
+      $args['match_pick_result_factory'] ?? new PickResultFactory();
     $this->match_pick_result_service =
       $args['match_pick_result_service'] ?? new MatchPickResultService();
     $this->email_format_service =

@@ -40,8 +40,8 @@ class BracketResultsEmailFormatService {
   }
 
   public function get_pick_result_heading(PickResult $result): string {
-    $picked_team = strtoupper($result->picked_team->name);
-    $winning_team = strtoupper($result->winning_team->name);
+    $picked_team = strtoupper($result->get_picked_team()->name);
+    $winning_team = strtoupper($result->match->get_winning_team()->name);
     if ($result->correct_picked()) {
       return 'You picked ' . $picked_team . '... and they won!';
     } else {

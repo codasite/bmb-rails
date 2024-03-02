@@ -5,7 +5,7 @@ use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
+use WStrategies\BMB\Includes\Factory\PickResultFactory;
 use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
@@ -35,9 +35,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $email_format_service = $this->createMock(
       BracketResultsEmailFormatService::class
     );
-    $match_pick_result_factory = $this->createMock(
-      MatchPickResultFactory::class
-    );
+    $match_pick_result_factory = $this->createMock(PickResultFactory::class);
     $results_filter_service = $this->createMock(
       BracketResultsFilterService::class
     );
@@ -67,7 +65,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       'results_filter_service' => $results_filter_service,
       'match_service' => $match_service,
       'match_pick_result_factory' => $this->createMock(
-        MatchPickResultFactory::class
+        PickResultFactory::class
       ),
       'email_format_service' => $email_format_service,
       'match_pick_result_notification_service' => $match_pick_result_notification_service,
@@ -83,9 +81,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $email_format_service = $this->createMock(
       BracketResultsEmailFormatService::class
     );
-    $match_pick_result_factory = $this->createMock(
-      MatchPickResultFactory::class
-    );
+    $match_pick_result_factory = $this->createMock(PickResultFactory::class);
     $results_filter_service = $this->createMock(
       BracketResultsFilterService::class
     );
@@ -108,7 +104,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       'results_filter_service' => $results_filter_service,
       'match_service' => $match_service,
       'match_pick_result_factory' => $this->createMock(
-        MatchPickResultFactory::class
+        PickResultFactory::class
       ),
       'email_format_service' => $email_format_service,
       'match_pick_result_notification_service' => $match_pick_result_notification_service,
@@ -127,9 +123,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $email_format_service = $this->createMock(
       BracketResultsEmailFormatService::class
     );
-    $match_pick_result_factory = $this->createMock(
-      MatchPickResultFactory::class
-    );
+    $match_pick_result_factory = $this->createMock(PickResultFactory::class);
     $results_filter_service = $this->createMock(
       BracketResultsFilterService::class
     );
@@ -155,7 +149,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       'results_filter_service' => $results_filter_service,
       'match_service' => $match_service,
       'match_pick_result_factory' => $this->createMock(
-        MatchPickResultFactory::class
+        PickResultFactory::class
       ),
       'email_format_service' => $email_format_service,
       'match_pick_result_notification_service' => $match_pick_result_notification_service,

@@ -2,9 +2,8 @@
 namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
-use WStrategies\BMB\Includes\Domain\PickResult;
+use WStrategies\BMB\Includes\Domain\Fakes\PickResultFakeFactory;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\Fakes\UserRepoFake;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
@@ -30,13 +29,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
       new PermalinkServiceFake()
     );
     $play = new Play(['author' => 1, 'id' => 1]);
-    $result = new PickResult([
-      'round_index' => 0,
-      'match_index' => 0,
-      'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
-      'losing_team' => new Team(['name' => 'Team 2', 'id' => 2]),
-      'picked_team' => new Team(['name' => 'Team 1', 'id' => 1]),
-    ]);
+    $result = PickResultFakeFactory::get_correct_pick_result();
     $email_format_service->send_email($play, $result);
   }
 
@@ -45,13 +38,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
       new EmailServiceInterfaceFake(),
       new UserRepoFake()
     );
-    $pick_result = new PickResult([
-      'round_index' => 0,
-      'match_index' => 0,
-      'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
-      'losing_team' => new Team(['name' => 'Team 2', 'id' => 2]),
-      'picked_team' => new Team(['name' => 'Team 1', 'id' => 1]),
-    ]);
+    $pick_result = PickResultFakeFactory::get_correct_pick_result();
     $heading = $email_format_service->get_pick_result_heading($pick_result);
     $this->assertEquals('You picked TEAM 1... and they won!', $heading);
   }
@@ -61,13 +48,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
       new EmailServiceInterfaceFake(),
       new UserRepoFake()
     );
-    $pick_result = new PickResult([
-      'round_index' => 0,
-      'match_index' => 0,
-      'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
-      'losing_team' => new Team(['name' => 'Team 2', 'id' => 2]),
-      'picked_team' => new Team(['name' => 'Team 2', 'id' => 2]),
-    ]);
+    $pick_result = PickResultFakeFactory::get_incorrect_pick_result();
     $heading = $email_format_service->get_pick_result_heading($pick_result);
     $this->assertEquals(
       'You picked TEAM 2... but TEAM 1 won the round!',

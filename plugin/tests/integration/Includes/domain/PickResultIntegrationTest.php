@@ -1,14 +1,18 @@
 <?php
 
+namespace WStrategies\BMB\tests\integration\Includes\domain;
+
 use Spatie\Snapshots\MatchesSnapshots;
+use WPBB_UnitTestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
-use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
+use WStrategies\BMB\Includes\Factory\PickResultFactory;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 
-class MatchPickResultFactoryTest extends WPBB_UnitTestCase {
+class PickResultIntegrationTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
+
   public function test_create_match_pick_results() {
     $bracket = $this->create_bracket([
       'status' => 'publish',
@@ -86,7 +90,7 @@ class MatchPickResultFactoryTest extends WPBB_UnitTestCase {
       $bracket->matches,
       $bracket->results
     );
-    $factory = new MatchPickResultFactory();
+    $factory = new PickResultFactory();
     $results = $factory->create_match_pick_results($matches, $play->picks);
     $this->assertMatchesJsonSnapshot($results);
   }
