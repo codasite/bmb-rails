@@ -14,20 +14,20 @@ class PickResultService {
     Play $play,
     bool $final_winning_team_only = true
   ): PickResult|null {
-    $final_winning_team_id = $play->get_winning_team()->id;
-    if (!$final_winning_team_id) {
-      throw new \Exception('Winning team id is required');
+    $ranked_teams = $play->get_ranked_teams();
+    if (empty($ranked_teams)) {
+      throw new \Exception('Play has no picks');
     }
     if ($final_winning_team_only) {
       return $this->get_pick_result_for_single_team(
         $results,
-        $final_winning_team_id
+        $ranked_teams[0]->id
       );
     }
-    return $this->get_pick_result_for_single_team(
-      $results,
-      $final_winning_team_id
-    );
+    $team_ids = array_map(function ($team) {
+      return $team->id;
+    }, $ranked_teams);
+    return $this->get_pick_result_for_many_teams($results, $team_ids);
   }
 
   /**
@@ -64,31 +64,6 @@ class PickResultService {
       }
     }
     return $result;
-  }
-  /**
-   * This function returns a mapping of team ids to the most recent match pick result where that team won
-   * @param array<PickResult> $pick_results
-   * @return array<array<PickResult>>
-   */
-  public function get_winning_team_map(array $pick_results) {
-    $team_map = [];
-    foreach ($pick_results as $result) {
-      $team_map[$result->get_winning_team()->id] = $result;
-    }
-    return $team_map;
-  }
-
-  /**
-   * This function returns a mapping of team ids to the most recent match pick result where that team lost
-   * @param array<PickResult> $pick_results
-   * @return array<array<PickResult>>
-   */
-  public function get_losing_team_map(array $pick_results) {
-    $team_map = [];
-    foreach ($pick_results as $result) {
-      $team_map[$result->get_losing_team()->id] = $result;
-    }
-    return $team_map;
   }
 
   /**

@@ -37,4 +37,32 @@ class PickResultServiceTest extends TestCase {
 
     $this->assertMatchesJsonSnapshot($mapped_results);
   }
+
+  public function test_should_return_the_most_recent_match_played_when_team_played() {
+    $results = [
+      PickResultFakeFactory::create_pick_result(1, 2, 1, 1, 0, 0),
+      PickResultFakeFactory::create_pick_result(3, 4, 3, 3, 0, 1),
+      PickResultFakeFactory::create_pick_result(5, 6, 5, 5, 0, 2),
+      PickResultFakeFactory::create_pick_result(7, 8, 8, 7, 0, 3),
+      PickResultFakeFactory::create_pick_result(1, 3, 1, 1, 1, 0),
+      PickResultFakeFactory::create_pick_result(5, 8, 5, 5, 1, 1),
+      PickResultFakeFactory::create_pick_result(1, 5, 5, 5, 2, 0),
+    ];
+
+    $service = new PickResultService();
+    $result = $service->get_pick_result_for_single_team($results, 3);
+    $this->assertEquals($result, $results[4]);
+  }
+
+  public function test_should_return_null_when_team_did_not_play() {
+    $results = [
+      PickResultFakeFactory::create_pick_result(1, 3, 1, 1, 1, 0),
+      PickResultFakeFactory::create_pick_result(5, 8, 5, 5, 1, 1),
+      PickResultFakeFactory::create_pick_result(1, 5, 5, 5, 2, 0),
+    ];
+
+    $service = new PickResultService();
+    $result = $service->get_pick_result_for_single_team($results, 2);
+    $this->assertNull($result);
+  }
 }

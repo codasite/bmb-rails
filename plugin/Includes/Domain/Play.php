@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
+use WStrategies\BMB\Includes\Service\BracketMatchService;
+
 class Play extends PostBase implements PostBracketInterface {
   /**
    * @var int
@@ -95,10 +97,25 @@ class Play extends PostBase implements PostBracketInterface {
   }
 
   public function get_winning_team(): ?Team {
-    if (count($this->picks) === 0) {
-      return null;
+    return $this->get_ranked_teams()[0] ?? null;
+  }
+
+  /**
+   * Returns an array of teams picked by this play ranked according to the highest round and match index the team was picked in.
+   * For example the final winning team is the first element in the array, the second place team is the second element and so on.
+   *
+   * @return Team[]
+   */
+  public function get_ranked_teams(): array {
+    /**
+     * @var Pick[] $sorted
+     */
+    $sorted = BracketMatchService::sort_match_node($this->picks);
+    $teams = [];
+    foreach ($sorted as $pick) {
+      $teams[] = $pick->get_winning_team();
     }
-    return $this->picks[count($this->picks) - 1]->winning_team;
+    return array_reverse($teams);
   }
 
   public function get_post_meta(): array {

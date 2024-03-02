@@ -12,7 +12,7 @@ class BracketMatchService {
    * @param array<BracketMatchNodeInterface> $nodes_flat
    * @return array<array<BracketMatchNodeInterface>>
    */
-  public function match_node_2d(array $nodes_flat) {
+  public static function match_node_2d(array $nodes_flat) {
     $arr_2d = [];
     foreach ($nodes_flat as $node) {
       $arr_2d[$node->get_round_index()][$node->get_match_index()] = $node;
@@ -24,7 +24,13 @@ class BracketMatchService {
    * @param array<BracketMatchNodeInterface> $nodes_flat
    * @return array<BracketMatchNodeInterface>
    */
-  public function sort_match_node(array $nodes_flat) {
+  public static function sort_match_node(array $nodes_flat) {
+    if (empty($nodes_flat)) {
+      return $nodes_flat;
+    }
+    if (self::is_sorted($nodes_flat)) {
+      return $nodes_flat;
+    }
     usort($nodes_flat, function ($a, $b) {
       if ($a->get_round_index() === $b->get_round_index()) {
         return $a->get_match_index() - $b->get_match_index();
@@ -32,6 +38,25 @@ class BracketMatchService {
       return $a->get_round_index() - $b->get_round_index();
     });
     return $nodes_flat;
+  }
+
+  public static function is_sorted(array $nodes_flat) {
+    $prev_round_index = -1;
+    $prev_match_index = -1;
+    foreach ($nodes_flat as $node) {
+      if ($node->get_round_index() < $prev_round_index) {
+        return false;
+      }
+      if (
+        $node->get_round_index() === $prev_round_index &&
+        $node->get_match_index() < $prev_match_index
+      ) {
+        return false;
+      }
+      $prev_round_index = $node->get_round_index();
+      $prev_match_index = $node->get_match_index();
+    }
+    return true;
   }
 
   /**
