@@ -32,9 +32,6 @@ class Pick implements BracketMatchNodeInterface {
   // This is private so that it doesn't get serialized
   private ?\DateTimeImmutable $updated_at;
 
-  /**
-   * @throws \Exception
-   */
   public function __construct($data = []) {
     $this->round_index = (int) $data['round_index'];
     $this->match_index = (int) $data['match_index'];

@@ -1,11 +1,12 @@
 <?php
+
 use WP_Mock\Tools\TestCase;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
+use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Team;
 
 class MatchPickResultTest extends TestCase {
   public function test_constructor() {
-    $pick_result = new MatchPickResult([
+    $pick_result = new PickResult([
       'round_index' => 1,
       'match_index' => 2,
       'winning_team' => new Team(['name' => 'team1', 'id' => 1]),
@@ -20,7 +21,7 @@ class MatchPickResultTest extends TestCase {
   }
 
   public function test_correct_picked_should_return_true_when_picked_team_is_winning_team() {
-    $pick_result = new MatchPickResult([
+    $pick_result = new PickResult([
       'round_index' => 1,
       'match_index' => 2,
       'winning_team' => new Team(['name' => 'team1', 'id' => 1]),
@@ -32,7 +33,7 @@ class MatchPickResultTest extends TestCase {
   }
 
   public function test_correct_picked_should_return_false_when_picked_team_is_not_winning_team() {
-    $pick_result = new MatchPickResult([
+    $pick_result = new PickResult([
       'round_index' => 1,
       'match_index' => 2,
       'winning_team' => new Team(['name' => 'team1', 'id' => 1]),

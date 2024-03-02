@@ -2,11 +2,9 @@
 namespace WStrategies\BMB\Includes\Factory;
 
 use ValueError;
-use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Pick;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
+use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 
 class MatchPickResultFactory {
@@ -19,7 +17,7 @@ class MatchPickResultFactory {
   public function create_match_pick_result(
     BracketMatch $match,
     Pick $pick
-  ): MatchPickResult {
+  ): PickResult {
     if ($match->get_round_index() !== $pick->get_round_index()) {
       throw new ValueError('Round index mismatch');
     }
@@ -31,7 +29,7 @@ class MatchPickResultFactory {
         'Match results not set. Populate match results first using BracketMatchService->matches_from_picks()'
       );
     }
-    return new MatchPickResult([
+    return new PickResult([
       'round_index' => $match->get_round_index(),
       'match_index' => $match->get_match_index(),
       'winning_team' => $match->get_winning_team(),

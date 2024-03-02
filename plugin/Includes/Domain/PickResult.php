@@ -3,7 +3,10 @@ namespace WStrategies\BMB\Includes\Domain;
 
 use ValueError;
 
-class MatchPickResult implements BracketMatchNodeInterface {
+/**
+ * The result of a pick.
+ */
+class PickResult implements BracketMatchNodeInterface {
   public int $round_index;
   public int $match_index;
   public Team $winning_team;

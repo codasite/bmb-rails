@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Notifications;
+use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Service\MatchPickResultService;
 
 class MatchPickResultNotificationService {
@@ -13,12 +13,12 @@ class MatchPickResultNotificationService {
     $this->match_pick_result_service = $match_pick_result_service;
   }
   /**
-   * @param array<MatchPickResult> $results
+   * @param array<PickResult> $results
    */
   public function get_match_pick_result_for_play(
     array $results,
     Play $play
-  ): MatchPickResult|null {
+  ): PickResult|null {
     $final_winning_team_id = $play->get_winning_team()->id;
     if (!$final_winning_team_id) {
       throw new \Exception('Winning team id is required');
@@ -31,14 +31,16 @@ class MatchPickResultNotificationService {
 
   /**
    * This function returns the match pick result given a single team id (assumed to be the final winning pick of a play)
-   * @param array<MatchPickResult> $results
+   *
+   * @param array<PickResult> $results
    * @param int $team_id
-   * @return MatchPickResult|null
+   *
+   * @return PickResult|null
    */
   public function get_match_pick_result_for_single_team(
     array $results,
     int $team_id
-  ): MatchPickResult|null {
+  ): PickResult|null {
     $result = null;
     $winning_team_map = $this->match_pick_result_service->get_winning_team_map(
       $results

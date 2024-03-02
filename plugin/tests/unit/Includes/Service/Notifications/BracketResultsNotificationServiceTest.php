@@ -3,16 +3,16 @@ namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Repository\PlayRepo;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
-use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
 use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
-use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsFilterService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
+use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
 use WStrategies\BMB\Includes\Service\Notifications\MatchPickResultNotificationService;
 
 class BracketResultsNotificationServiceTest extends TestCase {
@@ -46,7 +46,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       ->willReturn([]);
     $match_service = $this->createMock(BracketMatchService::class);
     $match_service->method('matches_from_picks')->willReturn([]);
-    $result_to_send = $this->createMock(MatchPickResult::class);
+    $result_to_send = $this->createMock(PickResult::class);
     // Expecting the send_email method to be called once with the result to send
     $email_format_service
       ->expects($this->once())

@@ -3,8 +3,8 @@
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
+use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Repository\UserRepo;
 use WStrategies\BMB\Includes\Service\WordpressFunctions\PermalinkService;
 
@@ -16,7 +16,7 @@ class BracketResultsEmailFormatService {
   ) {
   }
 
-  public function send_email(Play $play, MatchPickResult $result): void {
+  public function send_email(Play $play, PickResult $result): void {
     $user = $this->user_repo->get_by_id($play->author);
     $to_email = $user->user_email;
     $to_name = $user->display_name;
@@ -39,7 +39,7 @@ class BracketResultsEmailFormatService {
     );
   }
 
-  public function get_pick_result_heading(MatchPickResult $result): string {
+  public function get_pick_result_heading(PickResult $result): string {
     $picked_team = strtoupper($result->picked_team->name);
     $winning_team = strtoupper($result->winning_team->name);
     if ($result->correct_picked()) {

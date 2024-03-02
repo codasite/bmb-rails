@@ -1,8 +1,8 @@
 <?php
+
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Factory\MatchPickResultFactory;
 

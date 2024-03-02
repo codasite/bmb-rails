@@ -2,8 +2,8 @@
 namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\MatchPickResult;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\Fakes\UserRepoFake;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
@@ -30,7 +30,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
       new PermalinkServiceFake()
     );
     $play = new Play(['author' => 1, 'id' => 1]);
-    $result = new MatchPickResult([
+    $result = new PickResult([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
@@ -45,7 +45,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
       new EmailServiceInterfaceFake(),
       new UserRepoFake()
     );
-    $pick_result = new MatchPickResult([
+    $pick_result = new PickResult([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
@@ -61,7 +61,7 @@ class BracketResultsEmailFormatServiceTest extends TestCase {
       new EmailServiceInterfaceFake(),
       new UserRepoFake()
     );
-    $pick_result = new MatchPickResult([
+    $pick_result = new PickResult([
       'round_index' => 0,
       'match_index' => 0,
       'winning_team' => new Team(['name' => 'Team 1', 'id' => 1]),
