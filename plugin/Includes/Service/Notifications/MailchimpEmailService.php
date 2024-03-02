@@ -28,6 +28,7 @@ class MailchimpEmailService implements EmailServiceInterface {
   }
 
   public function send($to_email, $to_name, $subject, $message, $html) {
+    // TODO: Log exceptions to sentry
     return $this->client->messages->send([
       'message' => [
         'text' => $message,
