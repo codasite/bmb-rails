@@ -13,7 +13,7 @@ use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatServ
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsFilterService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
-use WStrategies\BMB\Includes\Service\Notifications\MatchPickResultNotificationService;
+use WStrategies\BMB\Includes\Service\Notifications\PickResultNotificationService;
 
 class BracketResultsNotificationServiceTest extends TestCase {
   // public function test_should_send_notification_if_updated_results_contain_winning_team() {
@@ -54,7 +54,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       ->with($plays[0], $result_to_send);
 
     $match_pick_result_notification_service = $this->createMock(
-      MatchPickResultNotificationService::class
+      PickResultNotificationService::class
     );
     $match_pick_result_notification_service
       ->method('get_match_pick_result_for_play')
@@ -95,7 +95,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $match_service = $this->createMock(BracketMatchService::class);
     $match_service->method('matches_from_picks')->willReturn([]);
     $match_pick_result_notification_service = $this->createMock(
-      MatchPickResultNotificationService::class
+      PickResultNotificationService::class
     );
     $match_pick_result_notification_service
       ->method('get_match_pick_result_for_play')
@@ -139,7 +139,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $match_service = $this->createMock(BracketMatchService::class);
     $match_service->method('matches_from_picks')->willReturn([]);
     $match_pick_result_notification_service = $this->createMock(
-      MatchPickResultNotificationService::class
+      PickResultNotificationService::class
     );
     $match_pick_result_notification_service
       ->method('get_match_pick_result_for_play')

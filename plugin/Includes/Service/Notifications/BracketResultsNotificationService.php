@@ -9,7 +9,6 @@ use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\MatchPickResultService;
-use WStrategies\BMB\Includes\Service\Notifications\MatchPickResultNotificationService;
 
 class BracketResultsNotificationService implements
   BracketResultsNotificationServiceInterface {
@@ -21,7 +20,7 @@ class BracketResultsNotificationService implements
   private BracketResultsEmailFormatService $email_format_service;
   private DateTimePostMetaRepo $results_sent_at_repo;
   private BracketResultsFilterService $results_filter_service;
-  private MatchPickResultNotificationService $match_pick_result_notification_service;
+  private PickResultNotificationService $match_pick_result_notification_service;
 
   public function __construct($args = []) {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
@@ -42,7 +41,7 @@ class BracketResultsNotificationService implements
       $args['results_filter_service'] ?? new BracketResultsFilterService();
     $this->match_pick_result_notification_service =
       $args['match_pick_result_notification_service'] ??
-      new MatchPickResultNotificationService($this->match_pick_result_service);
+      new PickResultNotificationService($this->match_pick_result_service);
   }
 
   /**

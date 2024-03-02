@@ -4,7 +4,7 @@ use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Service\MatchPickResultService;
 
-class MatchPickResultNotificationService {
+class PickResultNotificationService {
   private MatchPickResultService $match_pick_result_service;
 
   public function __construct(
