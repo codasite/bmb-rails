@@ -417,60 +417,6 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $this->assertEquals('publish', $bracket->status);
   }
 
-  public function test_notification_is_sent_when_results_are_updated() {
-    $notification_service = $this->getMockBuilder(
-      BracketResultsNotificationServiceInterface::class
-    )
-      ->disableOriginalConstructor()
-      ->getMock();
-
-    $api = new BracketApi([
-      'notification_service' => $notification_service,
-    ]);
-
-    $bracket = $this->create_bracket([
-      'matches' => [
-        new BracketMatch([
-          'round_index' => 0,
-          'match_index' => 0,
-          'team1' => new Team([
-            'name' => 'Team 1',
-          ]),
-          'team2' => new Team([
-            'name' => 'Team 2',
-          ]),
-        ]),
-      ],
-    ]);
-
-    $data = [
-      'title' => 'Test Bracket',
-      'update_notify_players' => true,
-      'results' => [
-        [
-          'round_index' => 0,
-          'match_index' => 0,
-          'winning_team_id' => $bracket->matches[0]->team1->id,
-        ],
-      ],
-    ];
-
-    $request = new WP_REST_Request(
-      'PATCH',
-      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
-    );
-
-    $request->set_body_params($data);
-    $request->set_param('item_id', $bracket->id);
-
-    $notification_service
-      ->expects($this->once())
-      ->method('notify_bracket_results_updated')
-      ->with($bracket->id);
-
-    $res = $api->update_item($request);
-  }
-
   public function test_user_without_permission_cannot_create_published_bracket() {
     $user = self::factory()->user->create_and_get();
     $user->remove_cap('wpbb_share_bracket');

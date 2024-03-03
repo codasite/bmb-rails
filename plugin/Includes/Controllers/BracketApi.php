@@ -254,12 +254,6 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
       }
       if ($can_set_results) {
         $this->score_service->score_bracket_plays($updated, $set_winners);
-        $notify = $request->get_param('update_notify_players');
-        if ($this->notification_service && $notify) {
-          $this->notification_service->notify_bracket_results_updated(
-            $bracket_id
-          );
-        }
       }
     }
     $serialized = $this->serializer->serialize($updated);
