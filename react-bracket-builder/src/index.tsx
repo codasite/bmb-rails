@@ -275,7 +275,8 @@ function insertElements(appObj: WpbbAppObj) {
 
 function renderDiv(element: React.FunctionComponentElement<any>, id: string) {
   const div = document.getElementById(id)
-  if (div) {
-    render(element, div)
+  if (!div) {
+    return
   }
+  render(element, div)
 }
