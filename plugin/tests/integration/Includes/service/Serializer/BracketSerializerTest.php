@@ -3,7 +3,7 @@
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
@@ -49,19 +49,19 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
         ]),
       ],
       'results' => [
-        new MatchPick([
+        new Pick([
           'id' => 100007,
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 100002,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 100008,
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => 100006,
         ]),
-        new MatchPick([
+        new Pick([
           'id' => 100009,
           'round_index' => 1,
           'match_index' => 0,
@@ -140,10 +140,10 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
     $this->assertInstanceOf(Team::class, $team4);
     $results = $bracket->results;
     $this->assertCount(3, $results);
-    $this->assertInstanceOf(MatchPick::class, $results[0]);
-    $this->assertInstanceOf(MatchPick::class, $results[1]);
-    $this->assertInstanceOf(MatchPick::class, $results[2]);
-    $this->assertMatchesSnapshot((array) $bracket);
+    $this->assertInstanceOf(Pick::class, $results[0]);
+    $this->assertInstanceOf(Pick::class, $results[1]);
+    $this->assertInstanceOf(Pick::class, $results[2]);
+    $this->assertMatchesJsonSnapshot(json_encode($bracket));
   }
 
   public function test_deserialize_required_fields() {
@@ -218,7 +218,7 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
     $this->assertEquals(0, $bracket->wildcard_placement);
     $this->assertCount(2, $bracket->matches);
 
-    $this->assertMatchesSnapshot((array) $bracket);
+    $this->assertMatchesJsonSnapshot(json_encode($bracket));
   }
 
   public function test_published_bracket_is_open() {

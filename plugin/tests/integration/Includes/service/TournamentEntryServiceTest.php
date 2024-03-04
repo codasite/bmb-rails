@@ -1,7 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 
@@ -243,7 +243,7 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
   }
 
   public function test_tournament_entries_are_not_cleared() {
-    $play_mock = $this->createMock(BracketPlay::class);
+    $play_mock = $this->createMock(Play::class);
     $play_mock->bracket_id = 1;
     $play_mock->author = 2;
     $play_mock->id = 3;

@@ -4,8 +4,8 @@ namespace WStrategies\BMB\Includes\Service\Serializer;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Play;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 
 class TeamSerializer extends ApiSerializerBase {

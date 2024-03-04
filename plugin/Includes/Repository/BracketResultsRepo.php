@@ -4,11 +4,11 @@ namespace WStrategies\BMB\Includes\Repository;
 use DateTimeImmutable;
 use Exception;
 use wpdb;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 
 class BracketResultsRepo implements CustomTableInterface {
   /**
-   * @var BracketTeamRepo
+   * @var TeamRepo
    */
   private $team_repo;
 
@@ -22,10 +22,9 @@ class BracketResultsRepo implements CustomTableInterface {
    */
   private $wpdb;
 
-  public function __construct(
-    BracketRepo $bracket_repo,
-    BracketTeamRepo $team_repo
-  ) {
+  public const RESULTS_NOTIFICATIONS_SENT_AT_META_KEY = 'results_notifications_sent_at';
+
+  public function __construct(BracketRepo $bracket_repo, TeamRepo $team_repo) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->bracket_repo = $bracket_repo;
@@ -55,7 +54,7 @@ class BracketResultsRepo implements CustomTableInterface {
     }
   }
 
-  public function insert_result(int $bracket_id, MatchPick $pick): void {
+  public function insert_result(int $bracket_id, Pick $pick): void {
     $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
       'id' => $pick->id,
@@ -126,12 +125,15 @@ class BracketResultsRepo implements CustomTableInterface {
     foreach ($data as $result) {
       $winning_team_id = $result['winning_team_id'];
       $winning_team = $this->team_repo->get($winning_team_id);
-      $bracket_results[] = new MatchPick([
+      $bracket_results[] = new Pick([
         'round_index' => $result['round_index'],
         'match_index' => $result['match_index'],
         'winning_team_id' => $winning_team_id,
         'id' => $result['id'],
         'winning_team' => $winning_team,
+        'updated_at' => isset($result['updated_at'])
+          ? new DateTimeImmutable($result['updated_at'])
+          : null,
       ]);
     }
     return $bracket_results;
@@ -150,7 +152,7 @@ class BracketResultsRepo implements CustomTableInterface {
     global $wpdb;
     $table_name = self::table_name();
     $brackets_table = BracketRepo::table_name();
-    $teams_table = BracketTeamRepo::table_name();
+    $teams_table = TeamRepo::table_name();
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
@@ -159,6 +161,7 @@ class BracketResultsRepo implements CustomTableInterface {
 			round_index tinyint(4) NOT NULL,
 			match_index tinyint(4) NOT NULL,
 			winning_team_id bigint(20) UNSIGNED NOT NULL,
+			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 			PRIMARY KEY (id),
 			FOREIGN KEY (bracket_id) REFERENCES {$brackets_table}(id) ON DELETE CASCADE,
 			FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE

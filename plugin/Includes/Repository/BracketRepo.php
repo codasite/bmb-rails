@@ -11,7 +11,7 @@ use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   /**
-   * @var BracketTeamRepo
+   * @var TeamRepo
    */
   private $team_repo;
 
@@ -40,11 +40,12 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   public function __construct($args = []) {
     global $wpdb;
     $this->wpdb = $args['wpdb'] ?? $wpdb;
-    $this->team_repo = $args['team_repo'] ?? new BracketTeamRepo();
+    $this->team_repo = $args['team_repo'] ?? new TeamRepo();
     $this->match_repo =
       $args['match_repo'] ?? new BracketMatchRepo($this->team_repo);
     $this->results_repo =
-      $args['results_repo'] ?? new BracketResultsRepo($this, $this->team_repo);
+      $args['results_repo'] ??
+      new BracketResultsRepo($this, $this->team_repo, $this->match_repo);
     $this->leaderboard_service =
       $args['leaderboard_service'] ??
       new BracketLeaderboardService(null, [
@@ -115,7 +116,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     }
     $results_updated = isset($bracket_data['results_first_updated_at'])
       ? new DateTimeImmutable($bracket_data['results_first_updated_at'])
-      : false;
+      : null;
 
     $matches = $fetch_matches
       ? $this->match_repo->get_matches($bracket_id)
@@ -154,6 +155,11 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
         'bracket_id' => $bracket_post->ID,
       ]),
       'fee' => $this->bracket_product_utils->get_bracket_fee($bracket_post->ID),
+      'should_notify_results_updated' => get_post_meta(
+        $bracket_post->ID,
+        'should_notify_results_updated',
+        true
+      ),
     ];
 
     return new Bracket($data);

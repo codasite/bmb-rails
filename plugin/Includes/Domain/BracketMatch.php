@@ -3,7 +3,11 @@ namespace WStrategies\BMB\Includes\Domain;
 
 use InvalidArgumentException;
 
-class BracketMatch {
+/**
+ * Two teams competing in a match. I would name this class `Match` but it's a
+ * reserved word in PHP.
+ */
+class BracketMatch implements BracketMatchNodeInterface {
   /**
    * @var int
    */
@@ -29,12 +33,21 @@ class BracketMatch {
    */
   public $team2;
 
+  private bool $team1_wins = false;
+  private bool $team2_wins = false;
+
   public function __construct($args = []) {
     $this->round_index = (int) $args['round_index'];
     $this->match_index = (int) $args['match_index'];
     $this->team1 = $args['team1'] ?? null;
     $this->team2 = $args['team2'] ?? null;
+    $this->team1_wins = $args['team1_wins'] ?? false;
+    $this->team2_wins = $args['team2_wins'] ?? false;
     $this->id = isset($args['id']) ? (int) $args['id'] : null;
+
+    if ($this->team1_wins && $this->team2_wins) {
+      throw new InvalidArgumentException('Both teams cannot win a match');
+    }
   }
 
   public static function from_array(array $data): BracketMatch {
@@ -65,5 +78,53 @@ class BracketMatch {
       'team1' => $this->team1 ? $this->team1->to_array() : null,
       'team2' => $this->team2 ? $this->team2->to_array() : null,
     ];
+  }
+
+  public function get_round_index(): int {
+    return $this->round_index;
+  }
+
+  public function get_match_index(): int {
+    return $this->match_index;
+  }
+
+  public function get_winning_team(): ?Team {
+    if ($this->team1_wins) {
+      return $this->team1;
+    }
+
+    if ($this->team2_wins) {
+      return $this->team2;
+    }
+
+    return null;
+  }
+
+  public function set_team1_wins(): void {
+    $this->team1_wins = true;
+    $this->team2_wins = false;
+  }
+
+  public function set_team2_wins(): void {
+    $this->team1_wins = false;
+    $this->team2_wins = true;
+  }
+
+  public function get_losing_team(): ?Team {
+    if ($this->team1_wins) {
+      return $this->team2;
+    }
+
+    if ($this->team2_wins) {
+      return $this->team1;
+    }
+
+    return null;
+  }
+
+  public function has_results(): bool {
+    return $this->team1 &&
+      $this->team2 &&
+      ($this->team1_wins || $this->team2_wins);
   }
 }

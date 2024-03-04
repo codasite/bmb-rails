@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\Play;
 
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Utils;
 
 class AnonymousPlayService extends BracketPlayCreateListenerBase {
@@ -15,7 +15,7 @@ class AnonymousPlayService extends BracketPlayCreateListenerBase {
     $this->utils = $args['utils'] ?? new Utils();
   }
 
-  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+  public function filter_after_play_added(Play $play): Play {
     if (!is_user_logged_in()) {
       $bytes = random_bytes(32);
       $nonce = base64_encode($bytes);

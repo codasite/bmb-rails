@@ -4,50 +4,22 @@ namespace WStrategies\BMB\Includes\Domain;
 use DateTimeImmutable;
 
 class Bracket extends PostBase implements PostBracketInterface {
-  /**
-   * @var string
-   */
-  public $month;
-
-  /**
-   * @var string
-   */
-  public $year;
-
-  /**
-   * @var int
-   */
-  public $num_teams;
-
-  /**
-   * @var int
-   */
-  public $wildcard_placement;
-
+  public ?string $month;
+  public ?string $year;
+  public ?int $num_teams;
+  public ?int $wildcard_placement;
+  public ?DateTimeImmutable $results_first_updated_at;
+  public ?int $num_plays;
+  public ?float $fee;
+  public bool $should_notify_results_updated;
   /**
    * @var BracketMatch[] Array of BracketMatch objects
    */
-  public $matches;
-
+  public array $matches;
   /**
-   * @var MatchPick[]
+   * @var Pick[]
    */
-  public $results;
-
-  /**
-   * @var DateTimeImmutable|null
-   */
-  public $results_first_updated_at;
-
-  /**
-   * @var int
-   */
-  public $num_plays;
-
-  /**
-   * @var float|null
-   */
-  public $fee;
+  public array $results;
 
   public function __construct(array $data = []) {
     parent::__construct($data);
@@ -60,6 +32,8 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->results_first_updated_at = $data['results_first_updated_at'] ?? null;
     $this->num_plays = (int) ($data['num_plays'] ?? null);
     $this->fee = (float) ($data['fee'] ?? null);
+    $this->should_notify_results_updated =
+      $data['should_notify_results_updated'] ?? false;
   }
 
   public function get_winning_team(): ?Team {
@@ -127,6 +101,9 @@ class Bracket extends PostBase implements PostBracketInterface {
       'month' => $this->month,
       'year' => $this->year,
       'bracket_fee' => $this->fee,
+      'should_notify_results_updated' => $this->should_notify_results_updated
+        ? 1
+        : 0,
     ];
   }
 
@@ -135,6 +112,9 @@ class Bracket extends PostBase implements PostBracketInterface {
       'month' => $this->month,
       'year' => $this->year,
       'bracket_fee' => $this->fee,
+      'should_notify_results_updated' => $this->should_notify_results_updated
+        ? 1
+        : 0,
     ];
   }
 
@@ -159,7 +139,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     if (isset($data['results'])) {
       $results = [];
       foreach ($data['results'] as $result) {
-        $results[] = MatchPick::from_array($result);
+        $results[] = Pick::from_array($result);
       }
       $data['results'] = $results;
     }
@@ -177,7 +157,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     return new Bracket($data);
   }
 
-  public function get_last_result(): ?MatchPick {
+  public function get_last_result(): ?Pick {
     if (!$this->results) {
       return null;
     }
@@ -190,6 +170,9 @@ class Bracket extends PostBase implements PostBracketInterface {
     $bracket['wildcard_placement'] = $this->wildcard_placement;
     $bracket['month'] = $this->month;
     $bracket['year'] = $this->year;
+    $bracket['fee'] = $this->fee;
+    $bracket['should_notify_results_updated'] =
+      $this->should_notify_results_updated;
     $bracket['results_first_updated_at'] = $this->results_first_updated_at
       ? $this->results_first_updated_at->format('Y-m-d H:i:s')
       : null;

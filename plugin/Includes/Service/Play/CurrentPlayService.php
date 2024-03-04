@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\Play;
 
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Utils;
 
 class CurrentPlayService extends BracketPlayCreateListenerBase {
@@ -23,7 +23,7 @@ class CurrentPlayService extends BracketPlayCreateListenerBase {
     return $data;
   }
 
-  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+  public function filter_after_play_added(Play $play): Play {
     if ($this->should_set_cookie) {
       $this->utils->set_cookie('play_id', $play->id, ['days' => 30]);
     }

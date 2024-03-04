@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Public\Partials;
 
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 
@@ -84,7 +84,7 @@ class LeaderboardPage implements TemplateInterface {
 		return ob_get_clean();
 	}
 
-	public function leaderboard_play_list_item(BracketPlay $play, $winner = false, $show_score = false, $complete = false): false|string {
+	public function leaderboard_play_list_item(Play $play, $winner = false, $show_score = false, $complete = false): false|string {
 		$play_id = $play->id;
 		$play_author = $play->author;
 		$author_name = get_the_author_meta('user_login', $play_author);

@@ -1,0 +1,720 @@
+<?php
+
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\Play;
+use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Repository\PickRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
+
+class PlayRepoTest extends WPBB_UnitTestCase {
+  private PlayRepo $play_repo;
+  private PickRepo $pick_repo;
+
+  public function set_up(): void {
+    parent::set_up();
+
+    $this->play_repo = new PlayRepo();
+  }
+
+  public function test_add() {
+    $bracket = $this->create_bracket([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $play = new Play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'total_score' => 5,
+      'accuracy_score' => 0.3,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $play = $this->play_repo->add($play);
+
+    $this->assertNotNull($play->id);
+    $this->assertEquals($bracket->id, $play->bracket_id);
+    $this->assertEquals(1, $play->author);
+
+    $new_picks = $play->picks;
+
+    $this->assertEquals(3, count($new_picks));
+    $this->assertEquals(0, $new_picks[0]->round_index);
+    $this->assertEquals(0, $new_picks[0]->match_index);
+    $this->assertEquals(
+      $bracket->matches[0]->team1->id,
+      $new_picks[0]->winning_team_id
+    );
+    $this->assertEquals(0, $new_picks[1]->round_index);
+    $this->assertEquals(1, $new_picks[1]->match_index);
+    $this->assertEquals(
+      $bracket->matches[1]->team2->id,
+      $new_picks[1]->winning_team_id
+    );
+    $this->assertEquals(1, $new_picks[2]->round_index);
+    $this->assertEquals(0, $new_picks[2]->match_index);
+    $this->assertEquals(
+      $bracket->matches[0]->team1->id,
+      $new_picks[2]->winning_team_id
+    );
+    $this->assertEquals(5, $play->total_score);
+    $this->assertEquals(0.3, $play->accuracy_score);
+  }
+
+  public function test_get() {
+    $bracket = $this->create_bracket([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $get_play = $this->play_repo->get($play->id);
+
+    $this->assertEquals($play->id, $get_play->id);
+    $this->assertEquals($play->bracket_id, $get_play->bracket_id);
+    $this->assertEquals($play->author, $get_play->author);
+
+    $new_picks = $get_play->picks;
+
+    $this->assertEquals(3, count($new_picks));
+    $this->assertEquals(0, $new_picks[0]->round_index);
+    $this->assertEquals(0, $new_picks[0]->match_index);
+    $this->assertEquals(
+      $bracket->matches[0]->team1->id,
+      $new_picks[0]->winning_team_id
+    );
+    $this->assertEquals(0, $new_picks[1]->round_index);
+    $this->assertEquals(1, $new_picks[1]->match_index);
+    $this->assertEquals(
+      $bracket->matches[1]->team2->id,
+      $new_picks[1]->winning_team_id
+    );
+    $this->assertEquals(1, $new_picks[2]->round_index);
+    $this->assertEquals(0, $new_picks[2]->match_index);
+    $this->assertEquals(
+      $bracket->matches[0]->team1->id,
+      $new_picks[2]->winning_team_id
+    );
+  }
+
+  public function test_get_all() {
+    $bracket = $this->create_bracket([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $plays = $this->play_repo->get_all();
+
+    $this->assertEquals(2, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+  }
+  public function test_get_user_picks_for_result() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $user = self::factory()->user->create_and_get();
+
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user->ID,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $result = new Pick([
+      'round_index' => 0,
+      'match_index' => 0,
+      'winning_team_id' => $bracket->matches[0]->team1->id,
+    ]);
+
+    $user_picks = $this->play_repo->get_user_picks_for_result(
+      $bracket->id,
+      $result
+    );
+
+    $this->assertEquals(count($user_picks), 1);
+    $user_pick = $user_picks[0];
+    // $this->assertEquals($play->id, $user_pick['play_id']);
+    $this->assertEquals($user->ID, $user_pick['user_id']);
+    $this->assertEquals($play->picks[0]->id, $user_pick['pick_id']);
+
+    $pick = $this->play_repo->pick_repo->get_pick($user_picks[0]['pick_id']);
+    $this->assertEquals($result->round_index, $pick->round_index);
+    $this->assertEquals($result->match_index, $pick->match_index);
+    $this->assertEquals($result->winning_team_id, $pick->winning_team_id);
+  }
+
+  public function test_get_multiple_user_picks_for_result() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user1->ID,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user2->ID,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team1->id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $result = new Pick([
+      'round_index' => 1,
+      'match_index' => 0,
+      'winning_team_id' => $bracket->matches[0]->team1->id,
+    ]);
+
+    $user_picks = $this->play_repo->get_user_picks_for_result(
+      $bracket->id,
+      $result
+    );
+
+    $this->assertEquals(count($user_picks), 2);
+
+    $user_pick1 = $user_picks[0];
+    $this->assertEquals($user1->ID, $user_pick1['user_id']);
+    $this->assertEquals($play1->picks[2]->id, $user_pick1['pick_id']);
+    $pick1 = $this->play_repo->pick_repo->get_pick($user_pick1['pick_id']);
+    $this->assertEquals($result->round_index, $pick1->round_index);
+    $this->assertEquals($result->match_index, $pick1->match_index);
+    $this->assertEquals($result->winning_team_id, $pick1->winning_team_id);
+
+    $user_pick2 = $user_picks[1];
+    $this->assertEquals($user2->ID, $user_pick2['user_id']);
+    $this->assertEquals($play2->picks[2]->id, $user_pick2['pick_id']);
+    $pick2 = $this->play_repo->pick_repo->get_pick($user_pick2['pick_id']);
+    $this->assertEquals($result->round_index, $pick2->round_index);
+    $this->assertEquals($result->match_index, $pick2->match_index);
+    $this->assertNotEquals($result->winning_team_id, $pick2->winning_team_id);
+    $this->assertEquals(
+      $bracket->matches[0]->team2->id,
+      $pick2->winning_team_id
+    );
+  }
+  public function test_update_is_printed() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $updated = $this->play_repo->update($play->id, [
+      'is_printed' => true,
+    ]);
+
+    $this->assertTrue($updated->is_printed);
+    $this->assertEquals($play->id, $updated->id);
+    $this->assertEquals($play->bracket_id, $updated->bracket_id);
+    $this->assertEquals($play->author, $updated->author);
+    $this->assertEquals($play->title, $updated->title);
+    $this->assertEquals($play->total_score, $updated->total_score);
+    $this->assertEquals($play->accuracy_score, $updated->accuracy_score);
+    $this->assertEquals($play->busted_id, $updated->busted_id);
+  }
+
+  public function test_get_plays_for_bracket_id() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $bracket2 = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $play3 = $this->create_play([
+      'bracket_id' => $bracket2->id,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team2->id,
+        ]),
+      ],
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $this->assertEquals(2, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+  }
+
+  public function test_sort_plays_by_total_score() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'total_score' => 5,
+    ]);
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'total_score' => 10,
+    ]);
+    $play3 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'total_score' => 15,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'orderby' => 'total_score',
+      'order' => 'DESC',
+    ]);
+
+    $this->assertEquals(3, count($plays));
+    $this->assertEquals($play3->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+    $this->assertEquals($play1->id, $plays[2]->id);
+  }
+
+  public function test_sort_plays_by_accuracy_score() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'accuracy_score' => 0.5,
+    ]);
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'accuracy_score' => 0.75,
+    ]);
+    $play3 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'accuracy_score' => 0.25,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'orderby' => 'accuracy_score',
+      'order' => 'DESC',
+    ]);
+
+    $this->assertEquals(3, count($plays));
+    $this->assertEquals($play2->id, $plays[0]->id);
+    $this->assertEquals($play1->id, $plays[1]->id);
+    $this->assertEquals($play3->id, $plays[2]->id);
+  }
+
+  public function test_query_printed() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+    ]);
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+    ]);
+
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+  }
+
+  public function test_query_printed_ignore_late_plays() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $bracket_results_date = '2020-03-01 12:00:00';
+
+    $ontime_date = '2020-03-01 11:59:59';
+    $late_date = '2020-03-01 12:00:01';
+
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+    ]);
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+    ]);
+    $play3 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+    ]);
+    $play4 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_printed' => false,
+    ]);
+    wp_update_post([
+      'ID' => $play1->id,
+      'post_date_gmt' => $ontime_date,
+    ]);
+    wp_update_post([
+      'ID' => $play2->id,
+      'post_date_gmt' => $ontime_date,
+    ]);
+    wp_update_post([
+      'ID' => $play3->id,
+      'post_date_gmt' => $late_date,
+    ]);
+    wp_update_post([
+      'ID' => $play4->id,
+      'post_date_gmt' => $late_date,
+    ]);
+
+    // query for all plays with post_date_gmt before bracket_results_date
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'is_printed' => true,
+      'date_query' => [
+        [
+          'column' => 'post_date_gmt',
+          'before' => $bracket_results_date,
+        ],
+      ],
+    ]);
+
+    $this->assertEquals(2, count($plays));
+    $this->assertEquals($play1->id, $plays[0]->id);
+    $this->assertEquals($play2->id, $plays[1]->id);
+  }
+
+  public function test_get_with_busted_play() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $busted = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+    $buster = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'busted_id' => $busted->id,
+    ]);
+
+    $play = $this->play_repo->get($buster->id);
+
+    $this->assertEquals($busted->id, $play->busted_id);
+    $this->assertEquals($busted->id, $play->busted_play->id);
+  }
+
+  public function test_play_with_no_tags_is_not_bustable() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    $this->assertFalse($play->is_bustable);
+  }
+
+  public function test_public_play_is_bustable() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $featured_play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+    $profile_play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+    // add the tag 'bmb_vip_featured' to the play
+    wp_set_post_tags($featured_play->id, 'bmb_vip_featured');
+    // add the tag 'bmb_vip_profile' to the play
+    wp_set_post_tags($profile_play->id, 'bmb_vip_profile');
+    $featured_play = $this->play_repo->get($featured_play->id);
+    $profile_play = $this->play_repo->get($profile_play->id);
+
+    $this->assertTrue($featured_play->is_bustable);
+    $this->assertTrue($profile_play->is_bustable);
+  }
+
+  public function test_public_play_with_no_bust_tag_is_not_bustable() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+    ]);
+
+    wp_set_post_tags($play->id, ['bmb_vip_profile', 'bmb_no_bust']);
+    $play = $this->play_repo->get($play->id);
+
+    $this->assertFalse($play->is_bustable);
+  }
+
+  public function test_query_is_winner() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $winner = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_winner' => true,
+    ]);
+
+    $loser = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_winner' => false,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'is_winner' => true,
+    ]);
+
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($winner->id, $plays[0]->id);
+  }
+
+  public function test_query_bmb_official() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $official = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'bmb_official' => true,
+    ]);
+
+    $unofficial = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'bmb_official' => false,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'bmb_official' => true,
+    ]);
+
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($official->id, $plays[0]->id);
+  }
+
+  public function test_query_is_tournament_entry() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+    ]);
+
+    $entry = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+    ]);
+
+    $non_entry = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+    ]);
+
+    $plays = $this->play_repo->get_all([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => true,
+    ]);
+
+    $this->assertEquals(1, count($plays));
+    $this->assertEquals($entry->id, $plays[0]->id);
+  }
+
+  public function test_update_is_paid() {
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_paid' => false,
+    ]);
+
+    $updated = $this->play_repo->update($play->id, [
+      'is_paid' => true,
+    ]);
+
+    $this->assertTrue($updated->is_paid);
+  }
+}

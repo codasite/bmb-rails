@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\Play;
 
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class FreePaidPlayService extends BracketPlayCreateListenerBase {
@@ -13,7 +13,7 @@ class FreePaidPlayService extends BracketPlayCreateListenerBase {
       $args['bracket_product_utils'] ?? new BracketProductUtils();
   }
 
-  public function filter_before_play_added(BracketPlay $play): BracketPlay {
+  public function filter_before_play_added(Play $play): Play {
     if (
       $this->bracket_product_utils->has_bracket_fee($play->bracket_id) &&
       current_user_can('wpbb_play_paid_bracket_for_free')

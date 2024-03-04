@@ -28,7 +28,8 @@ class MailchimpEmailService implements EmailServiceInterface {
   }
 
   public function send($to_email, $to_name, $subject, $message, $html) {
-    $response = $this->client->messages->send([
+    // TODO: Log exceptions to sentry
+    return $this->client->messages->send([
       'message' => [
         'text' => $message,
         'html' => $html,
@@ -43,7 +44,5 @@ class MailchimpEmailService implements EmailServiceInterface {
         'preserve_recipients' => false,
       ],
     ]);
-
-    return $response;
   }
 }

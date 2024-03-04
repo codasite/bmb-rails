@@ -1,7 +1,7 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\ScoreService;
 
@@ -44,7 +44,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -96,7 +96,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $play1 = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team2->id,
@@ -164,7 +164,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       'total_score' => 5,
       'accuracy_score' => 0.5,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket2->matches[0]->team1->id,
@@ -236,7 +236,7 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $update_bracket = $this->get_bracket($bracket->id);
 
     $play_picks = array_map(function ($pick) {
-      return new MatchPick($pick);
+      return new Pick($pick);
     }, $picks);
 
     $play = $this->create_play([
@@ -307,37 +307,37 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team2->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 2,
           'winning_team_id' => $bracket->matches[2]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 3,
           'winning_team_id' => $bracket->matches[3]->team2->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[2]->team2->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[2]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 2,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[2]->team1->id,
@@ -379,17 +379,17 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_tournament_entry' => true,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
@@ -432,17 +432,17 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       'bracket_id' => $bracket->id,
       'is_tournament_entry' => false,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 1,
           'winning_team_id' => $bracket->matches[1]->team1->id,
         ]),
-        new MatchPick([
+        new Pick([
           'round_index' => 1,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,

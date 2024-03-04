@@ -6,7 +6,8 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceInterface;
+use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
+use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\ScoreServiceInterface;
 use WStrategies\BMB\Includes\Utils;
 
@@ -417,9 +418,9 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $this->assertEquals('publish', $bracket->status);
   }
 
-  public function test_notification_is_sent_when_results_are_updated() {
+  public function test_should_update_should_notify_results_updated_when_value_is_true() {
     $notification_service = $this->getMockBuilder(
-      BracketResultsNotificationServiceInterface::class
+      BracketResultsNotificationService::class
     )
       ->disableOriginalConstructor()
       ->getMock();
@@ -445,7 +446,7 @@ class BracketApiTest extends WPBB_UnitTestCase {
 
     $data = [
       'title' => 'Test Bracket',
-      'update_notify_players' => true,
+      'should_notify_results_updated' => true,
       'results' => [
         [
           'round_index' => 0,
@@ -463,12 +464,9 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $request->set_body_params($data);
     $request->set_param('item_id', $bracket->id);
 
-    $notification_service
-      ->expects($this->once())
-      ->method('notify_bracket_results_updated')
-      ->with($bracket->id);
-
     $res = $api->update_item($request);
+    $bracket = $this->bracket_repo->get($bracket->id);
+    $this->assertTrue($bracket->should_notify_results_updated);
   }
 
   public function test_user_without_permission_cannot_create_published_bracket() {

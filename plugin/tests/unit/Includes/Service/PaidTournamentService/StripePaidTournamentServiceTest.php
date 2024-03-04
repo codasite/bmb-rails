@@ -1,11 +1,13 @@
 <?php
 
+namespace WStrategies\BMB\tests\unit\Includes\Service\PaidTournamentService;
 use Stripe\PaymentIntent;
 use Stripe\Service\PaymentIntentService;
 use Stripe\StripeClient;
+use WP_Mock;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
@@ -20,7 +22,7 @@ class StripePaidTournamentServiceTest extends TestCase {
     $sot = new StripePaidTournamentService([
       'bracket_product_utils' => $product_utils_mock,
     ]);
-    $play = new BracketPlay([
+    $play = new Play([
       'bracket_id' => 1,
     ]);
     $this->assertTrue($sot->requires_payment($play));
@@ -33,7 +35,7 @@ class StripePaidTournamentServiceTest extends TestCase {
     $sot = new StripePaidTournamentService([
       'bracket_product_utils' => $product_utils_mock,
     ]);
-    $play = new BracketPlay([
+    $play = new Play([
       'bracket_id' => 1,
     ]);
     $this->assertFalse($sot->requires_payment($play));
@@ -104,7 +106,7 @@ class StripePaidTournamentServiceTest extends TestCase {
       'bracket_product_utils' => $product_utils_mock,
       'connected_account_factory' => $connected_account_factory_mock,
     ]);
-    $play = new BracketPlay([
+    $play = new Play([
       'id' => 1,
       'bracket_id' => 1,
       'bracket' => new Bracket([
@@ -186,7 +188,7 @@ class StripePaidTournamentServiceTest extends TestCase {
         }
       },
     ]);
-    $play = new BracketPlay([
+    $play = new Play([
       'id' => 2,
       'bracket_id' => 1,
       'bracket' => new Bracket([
@@ -212,7 +214,7 @@ class StripePaidTournamentServiceTest extends TestCase {
   }
 
   public function test_filter_after_play_added_does_not_require_payment() {
-    $playMock = $this->createMock(BracketPlay::class);
+    $playMock = $this->createMock(Play::class);
     $playMock->id = 123;
 
     $sot = $this->getMockBuilder(StripePaidTournamentService::class)
@@ -235,7 +237,7 @@ class StripePaidTournamentServiceTest extends TestCase {
   }
 
   public function test_filter_after_play_added_requires_payment() {
-    $playMock = $this->createMock(BracketPlay::class);
+    $playMock = $this->createMock(Play::class);
     $playMock->id = 123;
     $payment_intent_mock = $this->createMock(PaymentIntent::class);
     $payment_intent_mock
@@ -268,7 +270,7 @@ class StripePaidTournamentServiceTest extends TestCase {
   }
 
   public function test_filter_after_play_serialized() {
-    $playMock = $this->createMock(BracketPlay::class);
+    $playMock = $this->createMock(Play::class);
     $playMock->id = 123;
     $payment_intent_mock = $this->createMock(PaymentIntent::class);
     $payment_intent_mock
@@ -312,7 +314,7 @@ class StripePaidTournamentServiceTest extends TestCase {
 
     $product_utils_mock->method('has_bracket_fee')->willReturn(true);
 
-    $playMock = $this->createMock(BracketPlay::class);
+    $playMock = $this->createMock(Play::class);
     $playMock->id = 123;
     $playMock->bracket_id = 1;
 
@@ -335,7 +337,7 @@ class StripePaidTournamentServiceTest extends TestCase {
 
     $product_utils_mock->method('has_bracket_fee')->willReturn(true);
 
-    $playMock = $this->createMock(BracketPlay::class);
+    $playMock = $this->createMock(Play::class);
     $playMock->id = 123;
     $playMock->bracket_id = 1;
 

@@ -1,10 +1,13 @@
 <?php
-
+namespace WStrategies\BMB\tests\unit\Includes\Service\BracketProduct;
+use Mockery;
 use Spatie\Snapshots\MatchesSnapshots;
 use Stripe\Service\AccountService;
+use WP_Mock;
 use WP_Mock\Tools\TestCase;
+use WP_Query;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StubStripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
@@ -131,7 +134,7 @@ class DashboardPageTest extends TestCase {
             array $options = []
           ): array {
             return [
-              new BracketPlay([
+              new Play([
                 'id' => 1,
                 'bracket' => new Bracket([
                   'title' => 'Bracket 1',

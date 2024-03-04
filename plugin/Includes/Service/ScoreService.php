@@ -4,9 +4,9 @@ namespace WStrategies\BMB\Includes\Service;
 use Exception;
 use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Repository\BracketMatchPickRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
+use WStrategies\BMB\Includes\Repository\PickRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 
 class ScoreService implements ScoreServiceInterface {
@@ -106,7 +106,7 @@ class ScoreService implements ScoreServiceInterface {
   }
 
   private function get_join_clause($bracket_id, $num_rounds): string {
-    $picks_table = BracketMatchPickRepo::table_name();
+    $picks_table = PickRepo::table_name();
     $results_table = BracketResultsRepo::table_name();
     $posts_table = $this->wpdb->posts;
 

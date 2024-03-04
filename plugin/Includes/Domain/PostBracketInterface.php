@@ -17,7 +17,7 @@ interface PostBracketInterface {
   /**
    * A series of match picks representing a bracket outcome.
    *
-   * @return MatchPick[]
+   * @return Pick[]
    */
   public function get_picks(): array;
 

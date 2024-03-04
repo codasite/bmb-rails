@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WP_Query;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
@@ -59,7 +59,7 @@ class PlayHistoryPage {
 	<?php return ob_get_clean();
   }
 
-  static function play_list_item(BracketPlay $play): false|string {
+  static function play_list_item(Play $play): false|string {
     $title = $play->bracket?->title;
     $user_rank = 99999;
     $trend_icon = 'arrow_up.svg';
@@ -131,7 +131,7 @@ class PlayHistoryPage {
     $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
     $the_query = new WP_Query([
-      'post_type' => BracketPlay::get_post_type(),
+      'post_type' => Play::get_post_type(),
       'author' => get_current_user_id(),
       'posts_per_page' => 6,
       'paged' => $paged,

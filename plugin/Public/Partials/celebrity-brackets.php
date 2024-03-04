@@ -3,7 +3,7 @@ namespace WStrategies\BMB\Public\Partials;
 
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketCards;
@@ -15,7 +15,7 @@ $bracket_repo = new BracketRepo();
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $query = new WP_Query([
-	'post_type' => [Bracket::get_post_type(), BracketPlay::get_post_type()],
+	'post_type' => [Bracket::get_post_type(), Play::get_post_type()],
 	'posts_per_page' => 6,
 	'paged' => $paged,
 	'tag_slug__in' => ['bmb_vip_featured'],
@@ -28,7 +28,7 @@ $brackets_and_plays = [];
 foreach ($posts as $post) {
 	if ($post->post_type === Bracket::get_post_type()) {
 		$brackets_and_plays[] = $bracket_repo->get($post);
-	} else if ($post->post_type === BracketPlay::get_post_type()) {
+	} else if ($post->post_type === Play::get_post_type()) {
 		$brackets_and_plays[] = $play_repo->get($post);
 	}
 }

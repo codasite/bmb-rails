@@ -1,0 +1,73 @@
+[
+    {
+        "0": {
+            "id": null,
+            "round_index": 0,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "Team 1"
+            },
+            "team2": {
+                "id": 2,
+                "name": "Team 2"
+            }
+        },
+        "2": {
+            "id": null,
+            "round_index": 0,
+            "match_index": 2,
+            "team1": {
+                "id": 3,
+                "name": "Team 3"
+            },
+            "team2": {
+                "id": 4,
+                "name": "Team 4"
+            }
+        }
+    },
+    [
+        {
+            "id": null,
+            "round_index": 1,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "Team 1"
+            },
+            "team2": {
+                "id": 5,
+                "name": "Team 5"
+            }
+        },
+        {
+            "id": null,
+            "round_index": 1,
+            "match_index": 1,
+            "team1": {
+                "id": 4,
+                "name": "Team 4"
+            },
+            "team2": {
+                "id": 6,
+                "name": "Team 6"
+            }
+        }
+    ],
+    [
+        {
+            "id": null,
+            "round_index": 2,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "Team 1"
+            },
+            "team2": {
+                "id": 6,
+                "name": "Team 6"
+            }
+        }
+    ]
+]

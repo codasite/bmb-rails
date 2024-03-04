@@ -2,7 +2,7 @@
 
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 
 class BracketTest extends WPBB_UnitTestCase {
@@ -32,7 +32,7 @@ class BracketTest extends WPBB_UnitTestCase {
         ]),
       ],
       'results' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 1,
@@ -116,7 +116,7 @@ class BracketTest extends WPBB_UnitTestCase {
         ]),
       ],
       'results' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => 1,

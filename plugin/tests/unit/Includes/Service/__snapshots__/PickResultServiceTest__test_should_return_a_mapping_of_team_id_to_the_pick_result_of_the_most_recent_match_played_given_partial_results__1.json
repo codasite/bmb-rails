@@ -1,0 +1,62 @@
+{
+    "1": {
+        "match": {
+            "id": null,
+            "round_index": 2,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "team 1"
+            },
+            "team2": {
+                "id": 5,
+                "name": "team 5"
+            }
+        }
+    },
+    "3": {
+        "match": {
+            "id": null,
+            "round_index": 1,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "team 1"
+            },
+            "team2": {
+                "id": 3,
+                "name": "team 3"
+            }
+        }
+    },
+    "5": {
+        "match": {
+            "id": null,
+            "round_index": 2,
+            "match_index": 0,
+            "team1": {
+                "id": 1,
+                "name": "team 1"
+            },
+            "team2": {
+                "id": 5,
+                "name": "team 5"
+            }
+        }
+    },
+    "8": {
+        "match": {
+            "id": null,
+            "round_index": 1,
+            "match_index": 1,
+            "team1": {
+                "id": 5,
+                "name": "team 5"
+            },
+            "team2": {
+                "id": 8,
+                "name": "team 8"
+            }
+        }
+    }
+}

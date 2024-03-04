@@ -2,7 +2,7 @@
 
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
-use WStrategies\BMB\Includes\Domain\MatchPick;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
@@ -170,7 +170,7 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'picks' => [
-        new MatchPick([
+        new Pick([
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $bracket->matches[0]->team1->id,

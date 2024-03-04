@@ -10,7 +10,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BeforePlayAddedListener;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerInterface;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
@@ -23,7 +23,7 @@ use WStrategies\BMB\Includes\Service\Play\PlayImageService;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ImageGeneratorException;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
-use WStrategies\BMB\Includes\Service\Serializer\BracketPlaySerializer;
+use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
@@ -32,7 +32,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   protected string $rest_namespace;
   protected string $base_path;
   private ProductIntegrationInterface $product_integration;
-  private BracketPlaySerializer $serializer;
+  private PlaySerializer $serializer;
   private Utils $utils;
 
   /**
@@ -46,7 +46,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->product_integration =
       $args['product_integration'] ?? new GelatoProductIntegration();
-    $this->serializer = $args['serializer'] ?? new BracketPlaySerializer();
+    $this->serializer = $args['serializer'] ?? new PlaySerializer();
     $this->utils = $args['utils'] ?? new Utils();
     $this->rest_namespace = 'wp-bracket-builder/v1';
     $this->base_path = 'plays';
@@ -175,7 +175,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   public function get_items($request): WP_Error|WP_REST_Response {
     // $bracket_id = $request->get_param('bracket_id');
     $the_query = new WP_Query([
-      'post_type' => BracketPlay::get_post_type(),
+      'post_type' => Play::get_post_type(),
       'post_status' => 'any',
     ]);
     $plays = $this->play_repo->get_all($the_query);

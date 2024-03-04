@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Includes\Service\Play;
 
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerBase;
-use WStrategies\BMB\Includes\Domain\BracketPlay;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 
@@ -26,7 +26,7 @@ class PlayImageService extends BracketPlayCreateListenerBase {
     return $data;
   }
 
-  public function filter_after_play_added(BracketPlay $play): BracketPlay {
+  public function filter_after_play_added(Play $play): Play {
     if ($this->should_generate_play_image) {
       $this->product_integration->generate_images($play);
     }
