@@ -6,7 +6,8 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceInterface;
+use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
+use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\ScoreServiceInterface;
 use WStrategies\BMB\Includes\Utils;
 
@@ -415,6 +416,57 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $bracket = $this->bracket_repo->get($bracket->id);
     $this->assertNotNull($bracket);
     $this->assertEquals('publish', $bracket->status);
+  }
+
+  public function test_should_update_should_notify_results_updated_when_value_is_true() {
+    $notification_service = $this->getMockBuilder(
+      BracketResultsNotificationService::class
+    )
+      ->disableOriginalConstructor()
+      ->getMock();
+
+    $api = new BracketApi([
+      'notification_service' => $notification_service,
+    ]);
+
+    $bracket = $this->create_bracket([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $data = [
+      'title' => 'Test Bracket',
+      'should_notify_results_updated' => true,
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      self::BRACKET_API_ENDPOINT . '/' . $bracket->id
+    );
+
+    $request->set_body_params($data);
+    $request->set_param('item_id', $bracket->id);
+
+    $res = $api->update_item($request);
+    $bracket = $this->bracket_repo->get($bracket->id);
+    $this->assertTrue($bracket->should_notify_results_updated);
   }
 
   public function test_user_without_permission_cannot_create_published_bracket() {

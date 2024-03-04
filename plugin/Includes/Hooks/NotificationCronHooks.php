@@ -8,22 +8,25 @@ use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationSer
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceFactory;
 
 class NotificationCronHooks implements HooksInterface {
-  private BracketRepo $bracket_repo;
   private ?BracketResultsNotificationService $notification_service;
   public function __construct(array $args = []) {
-    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->notification_service =
       $args['notification_service'] ??
       (new BracketResultsNotificationServiceFactory())->create();
   }
 
   public function load(Loader $loader): void {
+    $loader->add_action('init', [$this, 'schedule_cron']);
     $loader->add_action('wpbb_notification_cron_hook', [
       $this,
       'wpbb_notification_cron_exec',
     ]);
+  }
+
+  public function schedule_cron(): void {
     if (!wp_next_scheduled('wpbb_notification_cron_hook')) {
-      wp_schedule_event(time(), 'hourly', 'wpbb_notification_cron_hook');
+      wp_schedule_event(time(), 'every_minute', 'wpbb_notification_cron_hook');
+      // wp_schedule_event(time(), 'hourly', 'wpbb_notification_cron_hook');
     }
   }
 
@@ -31,17 +34,6 @@ class NotificationCronHooks implements HooksInterface {
     if (!$this->notification_service) {
       return;
     }
-    $brackets = $this->bracket_repo->get_all([
-      'meta_query' => [
-        [
-          'key' => BracketResultsRepo::SHOULD_SEND_NOTIFICATIONS_META_KEY,
-          'value' => true,
-        ],
-      ],
-    ]);
-
-    foreach ($brackets as $bracket) {
-      $this->notification_service->notify_bracket_results_updated($bracket);
-    }
+    $this->notification_service->send_bracket_results_notifications();
   }
 }

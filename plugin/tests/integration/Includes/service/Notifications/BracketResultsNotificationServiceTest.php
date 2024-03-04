@@ -1,15 +1,23 @@
 <?php
 
 use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
 
 class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
-  public function test_should_notify_bracket_results_updated() {
+  public function tear_down() {
+    // delete all post meta
+    parent::tear_down();
+    global $wpdb;
+    $wpdb->query("DELETE FROM $wpdb->postmeta");
+  }
+  public function test_should_send_results_notifications_for_bracket() {
     $bracket = $this->create_bracket([
       'num_teams' => 4,
+      'should_notify_results_updated' => true,
     ]);
 
     $results = [
@@ -117,6 +125,25 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       'email_service' => $email_mock,
     ]);
 
-    $notification_service->notify_bracket_results_updated($bracket);
+    $notification_service->send_results_notifications_for_bracket($bracket);
+    $bracket = $this->get_bracket($bracket->id);
+    $this->assertFalse($bracket->should_notify_results_updated);
+  }
+
+  public function test_should_return_all_brackets_to_send_results_notifications_for() {
+    $bracket1 = $this->create_bracket([
+      'should_notify_results_updated' => true,
+    ]);
+    $bracket2 = $this->create_bracket();
+    $bracket3 = $this->create_bracket([
+      'should_notify_results_updated' => true,
+    ]);
+    $service = new BracketResultsNotificationService([
+      'email_service' => $this->createMock(EmailServiceInterface::class),
+    ]);
+    $brackets = $service->get_brackets_to_send_results_notifications_for();
+    $this->assertEquals(2, count($brackets));
+    $this->assertEquals($bracket1->id, $brackets[0]->id);
+    $this->assertEquals($bracket3->id, $brackets[1]->id);
   }
 }

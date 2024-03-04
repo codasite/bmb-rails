@@ -320,4 +320,32 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(5.0, $bracket->fee);
   }
+
+  public function test_should_update_notify_results_updated_when_set_to_true() {
+    $bracket = $this->create_bracket();
+    $repo = new BracketRepo();
+
+    $repo->update($bracket->id, [
+      'should_notify_results_updated' => true,
+    ]);
+
+    $updated = $this->get_bracket($bracket->id);
+
+    $this->assertTrue($updated->should_notify_results_updated);
+  }
+
+  public function test_should_update_notify_results_updated_when_set_to_false() {
+    $bracket = $this->create_bracket([
+      'should_notify_results_updated' => true,
+    ]);
+    $repo = new BracketRepo();
+
+    $repo->update($bracket->id, [
+      'should_notify_results_updated' => false,
+    ]);
+
+    $updated = $this->get_bracket($bracket->id);
+
+    $this->assertFalse($updated->should_notify_results_updated);
+  }
 }

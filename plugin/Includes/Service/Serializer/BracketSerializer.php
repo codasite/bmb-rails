@@ -43,6 +43,7 @@ class BracketSerializer extends PostBaseSerializer {
       'is_open',
       'is_printable',
       'fee',
+      'should_notify_results_updated',
     ]);
   }
 }

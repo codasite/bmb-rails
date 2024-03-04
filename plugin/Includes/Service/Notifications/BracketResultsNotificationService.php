@@ -10,8 +10,7 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\PickResultService;
 
-class BracketResultsNotificationService implements
-  BracketResultsNotificationServiceInterface {
+class BracketResultsNotificationService {
   protected BracketMatchService $match_service;
   protected PickResultFactory $pick_result_factory;
   protected PickResultService $pick_result_service;
@@ -43,10 +42,29 @@ class BracketResultsNotificationService implements
       $args['results_filter_service'] ?? new BracketResultsFilterService();
   }
 
+  public function send_bracket_results_notifications() {
+    $brackets = $this->get_brackets_to_send_results_notifications_for();
+    foreach ($brackets as $bracket) {
+      $this->send_results_notifications_for_bracket($bracket);
+    }
+  }
+
+  public function get_brackets_to_send_results_notifications_for() {
+    return $this->bracket_repo->get_all([
+      'meta_query' => [
+        [
+          // TODO: change this to a constant
+          'key' => 'should_notify_results_updated',
+          'value' => 1,
+        ],
+      ],
+    ]);
+  }
+
   /**
    * @throws \Exception
    */
-  public function notify_bracket_results_updated(
+  public function send_results_notifications_for_bracket(
     Bracket|int|null $bracket
   ): void {
     if (!$bracket) {
@@ -81,5 +99,8 @@ class BracketResultsNotificationService implements
       }
     }
     $this->results_sent_at_repo->set_to_now($bracket->id);
+    $this->bracket_repo->update($bracket, [
+      'should_notify_results_updated' => false,
+    ]);
   }
 }

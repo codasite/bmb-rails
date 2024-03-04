@@ -12,6 +12,10 @@
     "year": "test year",
     "num_teams": 8,
     "wildcard_placement": 0,
+    "results_first_updated_at": null,
+    "num_plays": 0,
+    "fee": 0,
+    "should_notify_results_updated": false,
     "matches": [
         {
             "id": 100002,
@@ -40,8 +44,5 @@
             }
         }
     ],
-    "results": [],
-    "results_first_updated_at": null,
-    "num_plays": 0,
-    "fee": 0
+    "results": []
 }

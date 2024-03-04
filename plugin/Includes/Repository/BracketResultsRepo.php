@@ -17,34 +17,21 @@ class BracketResultsRepo implements CustomTableInterface {
    */
   private BracketRepo $bracket_repo;
 
-  private BracketMatchRepo $match_repo;
-
   /**
    * @var wpdb
    */
   private $wpdb;
 
-  public const SHOULD_SEND_NOTIFICATIONS_META_KEY = 'should_send_notifications';
   public const RESULTS_NOTIFICATIONS_SENT_AT_META_KEY = 'results_notifications_sent_at';
 
-  public function __construct(
-    BracketRepo $bracket_repo,
-    TeamRepo $team_repo,
-    BracketMatchRepo $match_repo
-  ) {
+  public function __construct(BracketRepo $bracket_repo, TeamRepo $team_repo) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->bracket_repo = $bracket_repo;
     $this->team_repo = $team_repo;
-    $this->match_repo = $match_repo;
   }
 
   public function insert_results(int $bracket_id, array $results): void {
-    update_post_meta(
-      $bracket_id,
-      $this::SHOULD_SEND_NOTIFICATIONS_META_KEY,
-      true
-    );
     $this->wpdb->query('START TRANSACTION');
     try {
       foreach ($results as $result) {
