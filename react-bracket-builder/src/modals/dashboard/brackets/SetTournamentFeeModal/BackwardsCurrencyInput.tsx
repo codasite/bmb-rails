@@ -25,8 +25,6 @@ export function BackwardsCurrencyInput(props: {
 
   const keyPressHandler = (event) => {
     const { key } = event
-    console.log(strValue)
-    console.log(typeof strValue)
     setStrValue((prevValue) => {
       // if you press backspace and it's a length of 1, return 0
       if (prevValue.length === 1 && key === 'Backspace') {
