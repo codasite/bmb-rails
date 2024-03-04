@@ -6,6 +6,7 @@ export const Checkbox = (props: {
   onChange: (e: any) => void
   height?: number
   width?: number
+  className?: string
 }) => {
   const { id, checked, onChange, height = 32, width = 32 } = props
   const baseStyles = ['tw-appearance-none', 'tw-rounded-8', 'tw-cursor-pointer']
@@ -13,6 +14,7 @@ export const Checkbox = (props: {
   const checkedStyles = ['tw-bg-white', 'tw-bg-no-repeat', 'tw-bg-center']
   const styles = baseStyles
     .concat(checked ? checkedStyles : uncheckedStyles)
+    .concat(props.className ? [props.className] : [])
     .join(' ')
   return (
     <input
