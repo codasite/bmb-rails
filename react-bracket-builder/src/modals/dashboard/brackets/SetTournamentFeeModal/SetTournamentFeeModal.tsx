@@ -38,13 +38,13 @@ export const SetTournamentFeeModal = () => {
   addClickHandlers({
     buttonClassName: 'wpbb-set-tournament-fee-button',
     onButtonClick: async (b) => {
+      setBracketId(parseInt(b.dataset.bracketId))
+      setFee(parseInt(b.dataset.fee))
+      setShow(true)
       // Don't refetch if we already have the info
       if (!chargesEnabled) {
         await fetchChargesEnabled()
       }
-      setBracketId(parseInt(b.dataset.bracketId))
-      setFee(parseInt(b.dataset.fee))
-      setShow(true)
     },
   })
 
