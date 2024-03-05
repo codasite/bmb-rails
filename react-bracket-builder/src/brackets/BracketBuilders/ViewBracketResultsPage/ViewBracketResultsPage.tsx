@@ -14,8 +14,7 @@ import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { ResultsBracket } from '../../shared/components/Bracket'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { ViewResultsPageButtons } from './ViewResultsPageButtons'
-import { GreenTag } from '../GreenTag'
-import { BracketRes, PlayRes, loadBracketResults } from '../../shared'
+import { BracketRes, loadBracketResults } from '../../shared'
 import { BracketStatusTag } from '../BracketStatusTag'
 
 export const ViewBracketResultsPage = (props: {
@@ -37,7 +36,7 @@ export const ViewBracketResultsPage = (props: {
 
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
         props.darkMode ? ' tw-dark' : ''
       }`}
       style={{

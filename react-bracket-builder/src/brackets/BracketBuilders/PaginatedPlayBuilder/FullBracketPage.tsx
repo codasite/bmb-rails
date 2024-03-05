@@ -1,17 +1,12 @@
 import React from 'react'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { MatchTree } from '../../shared/models/MatchTree'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PickableBracket } from '../../shared/components/Bracket'
 import { ThemeSelector } from '../../shared/components'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
-import SubmitPicksRegisterModal from '../PlayBracketBuilder/SubmitPicksRegisterModal'
-import { AddToApparel } from '../AddToApparel'
-import { CircleCheckBrokenIcon } from '../../shared'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
-import StripePaymentModal from '../PlayBracketBuilder/StripePaymentModal'
 import { PlayBuilderProps } from '../PlayBracketBuilder/types'
 
 interface FullBracketPageProps extends PlayBuilderProps {
@@ -25,7 +20,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
   const processing = props.processingAddToApparel || props.processingSubmitPicks
   return (
     <div
-      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
+      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
         darkMode ? ' tw-dark' : ''
       }`}
       style={{

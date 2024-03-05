@@ -4,7 +4,6 @@ import { MatchColumnProps } from '../types'
 //@ts-ignore
 import { DefaultMatchBox } from '../MatchBox/DefaultMatchBox'
 import { FlexMatchBox } from '../MatchBox'
-import { FlexTeamSlot } from '../TeamSlot'
 import { isPowerOfTwo } from '../Bracket/utils'
 import { flexBracketConstants } from '../../constants'
 import { WildcardPlacement } from '../../models/WildcardPlacement'
@@ -27,7 +26,7 @@ const FlexMatchGap = (props: FlexMatchColumnProps) => {
   const maxHeightClass = maxHeight >= 0 ? ` tw-max-h-[${maxHeight}px]` : ''
   return (
     <div
-      className={`tw-flex-grow tw-flex-shrink tw-flex-basis-10${minHeightClass}${maxHeightClass}`}
+      className={`tw-flex-grow tw-flex-shrink tw-flex-basis-10 ${minHeightClass}${maxHeightClass}`}
     ></div>
   )
 }

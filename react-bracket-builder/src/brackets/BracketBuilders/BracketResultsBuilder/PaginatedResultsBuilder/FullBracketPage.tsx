@@ -28,7 +28,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
 
   return (
     <div
-      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
+      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
         darkMode ? ' tw-dark' : ''
       }`}
       style={{

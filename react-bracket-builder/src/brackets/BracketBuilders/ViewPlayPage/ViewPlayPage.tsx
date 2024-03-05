@@ -43,7 +43,7 @@ const ViewPlayPage = (props: {
   const { width: windowWidth } = useContext(WindowDimensionsContext)
 
   const isScored = play?.accuracyScore !== undefined
-  const showProfilePicture = play?.thumbnailUrl ? true : false
+  const showProfilePicture = !!play?.thumbnailUrl
 
   const { playTree, setPlayTree, setResultsTree } = getScoredPlayTrees()
 
@@ -55,7 +55,7 @@ const ViewPlayPage = (props: {
 
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
         props.darkMode ? ' tw-dark' : ''
       }`}
       style={{

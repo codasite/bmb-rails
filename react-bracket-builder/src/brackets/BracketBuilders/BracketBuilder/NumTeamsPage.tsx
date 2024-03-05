@@ -184,8 +184,8 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
           </div>
         )}
         <div
-          className={`tw-flex tw-flex-col tw-gap-24${
-            showWildCardOptions ? '' : ' tw-pb-24'
+          className={`tw-flex tw-flex-col tw-gap-24 ${
+            showWildCardOptions ? '' : 'tw-pb-24'
           }`}
         >
           <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24">
