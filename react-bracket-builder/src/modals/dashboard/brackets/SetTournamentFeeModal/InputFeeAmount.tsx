@@ -9,6 +9,9 @@ const calculateApplicationFee = (
   applicationFeePercentage: number,
   applicationFeeMinimum: number
 ) => {
+  if (fee === 0) {
+    return 0
+  }
   let applicationFee = fee * applicationFeePercentage
   // remove extra decimal places
   applicationFee = Math.floor(applicationFee * 100) / 100
@@ -26,18 +29,19 @@ export const InputFeeAmount = (props: {
 }) => {
   const applicationFeeMinimum = props.applicationFeeMinimum * 0.01 // convert cents to dollars
   const [processing, setProcessing] = useState(false)
-  const [fee, setFee] = useState<number>(props.fee ?? 1) // bracket fee in whole dollar amounts
+  const [fee, setFee] = useState<number>(props.fee) // bracket fee in whole dollar amounts
   const [acceptTermsChecked, setAcceptTermsChecked] = useState(false)
-  const [showTermsError, setShowTermsError] = useState(true)
-  const [showFeeMinError, setShowFeeMinError] = useState(true)
-
-  const feeMinError = fee < applicationFeeMinimum
+  const [showTermsError, setShowTermsError] = useState(false)
+  const [showFeeMinError, setShowFeeMinError] = useState(false)
+  const feeMinError = fee !== 0 && fee <= applicationFeeMinimum
   const handleSave = async () => {
     if (feeMinError) {
-      return
+      setShowFeeMinError(true)
     }
     if (!acceptTermsChecked) {
       setShowTermsError(true)
+    }
+    if (feeMinError || !acceptTermsChecked) {
       return
     }
     if (fee === props.fee) {
@@ -81,15 +85,14 @@ export const InputFeeAmount = (props: {
           value={fee}
           onChange={(value) => {
             setFee(value)
+            setShowFeeMinError(false)
           }}
           allowCents={false}
           classNames={inputStyles.join(' ')}
         />
       </div>
-      {feeMinError && (
-        <span className={'tw-text-red'}>
-          Tournament fee must be greater than $1.
-        </span>
+      {showFeeMinError && (
+        <span className={'tw-text-red'}>Tournament fee must $2 or more.</span>
       )}
       <div className="tw-flex tw-flex-col tw-gap-10">
         <div className={'tw-mb-15 tw-mt-15'}>
