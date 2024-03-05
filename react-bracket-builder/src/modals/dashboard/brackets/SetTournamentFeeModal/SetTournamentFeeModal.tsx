@@ -14,11 +14,11 @@ export const SetTournamentFeeModal = (props: {
   applicationFeeMinimum: number
   applicationFeePercentage: number
 }) => {
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(false)
   const [fee, setFee] = useState<number>(null)
   const [bracketId, setBracketId] = useState<number>(null)
   const [loadingAccount, setLoadingAccount] = useState(false)
-  const [chargesEnabled, setChargesEnabled] = useState(true)
+  const [chargesEnabled, setChargesEnabled] = useState(false)
   const fetchChargesEnabled = async () => {
     try {
       setLoadingAccount(true)
