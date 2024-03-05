@@ -8,6 +8,7 @@ import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
 import { CancelButton } from '../../ModalButtons'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
+import { getDashboardPath } from '../../../brackets/shared'
 
 interface PaywallModalProps {
   upgradeAccountUrl: string
@@ -58,7 +59,7 @@ export const PublishBracketModal = (props: {
         bracketApi
           .updateBracket(bracketId, { status: 'publish' })
           .then((res) => {
-            window.location.reload()
+            window.location.href = getDashboardPath()
           })
           .catch((err) => {
             console.error(err)
