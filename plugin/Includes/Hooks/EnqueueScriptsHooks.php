@@ -4,6 +4,7 @@ namespace WStrategies\BMB\Includes\Hooks;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
@@ -175,6 +176,10 @@ class EnqueueScriptsHooks implements HooksInterface {
       'bracket' => $bracket,
       'is_user_logged_in' => is_user_logged_in(),
       'stripe_publishable_key' => $stripe_publishable_key,
+      'application_fee_minimum' =>
+        StripeConnectedAccount::$APPLICATION_FEE_MINIMUM,
+      'application_fee_percentage' =>
+        StripeConnectedAccount::$APPLICATION_FEE_PERCENTAGE,
     ]);
   }
 

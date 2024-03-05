@@ -10,12 +10,15 @@ import { ModalHeader } from '../../../ModalHeader'
 import { ModalHeaderLogo } from './ModalHeaderLogo'
 import { SetUpPaymentsButton } from './SetUpPaymentsButton'
 
-export const SetTournamentFeeModal = () => {
-  const [show, setShow] = useState(false)
+export const SetTournamentFeeModal = (props: {
+  applicationFeeMinimum: number
+  applicationFeePercentage: number
+}) => {
+  const [show, setShow] = useState(true)
   const [fee, setFee] = useState<number>(null)
   const [bracketId, setBracketId] = useState<number>(null)
   const [loadingAccount, setLoadingAccount] = useState(false)
-  const [chargesEnabled, setChargesEnabled] = useState(false)
+  const [chargesEnabled, setChargesEnabled] = useState(true)
   const fetchChargesEnabled = async () => {
     try {
       setLoadingAccount(true)
@@ -61,6 +64,8 @@ export const SetTournamentFeeModal = () => {
           bracketId={bracketId}
           fee={fee}
           onCancel={handleCancel}
+          applicationFeeMinimum={props.applicationFeeMinimum}
+          applicationFeePercentage={props.applicationFeePercentage}
         />
       ) : (
         <SetUpPaymentsButton />

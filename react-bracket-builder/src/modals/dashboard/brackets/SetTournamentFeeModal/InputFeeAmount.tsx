@@ -4,19 +4,40 @@ import { BackwardsCurrencyInput } from './BackwardsCurrencyInput'
 import { bracketApi } from '../../../../brackets/shared'
 import { Checkbox } from '../../../../brackets/BracketBuilders/BracketResultsBuilder/Checkbox'
 
+const calculateApplicationFee = (
+  fee: number,
+  applicationFeePercentage: number,
+  applicationFeeMinimum: number
+) => {
+  let applicationFee = fee * applicationFeePercentage
+  // remove extra decimal places
+  applicationFee = Math.floor(applicationFee * 100) / 100
+  return applicationFee < applicationFeeMinimum
+    ? applicationFeeMinimum
+    : applicationFee
+}
+
 export const InputFeeAmount = (props: {
   bracketId: number
   fee: number
   onCancel: () => void
+  applicationFeeMinimum: number
+  applicationFeePercentage: number
 }) => {
+  const applicationFeeMinimum = props.applicationFeeMinimum * 0.01 // convert cents to dollars
   const [processing, setProcessing] = useState(false)
-  const [fee, setFee] = useState<number>(props.fee) // bracket fee in whole dollar amounts
+  const [fee, setFee] = useState<number>(props.fee ?? 1) // bracket fee in whole dollar amounts
   const [acceptTermsChecked, setAcceptTermsChecked] = useState(false)
-  const [showErrors, setShowErrors] = useState(true)
+  const [showTermsError, setShowTermsError] = useState(true)
+  const [showFeeMinError, setShowFeeMinError] = useState(true)
 
+  const feeMinError = fee < applicationFeeMinimum
   const handleSave = async () => {
+    if (feeMinError) {
+      return
+    }
     if (!acceptTermsChecked) {
-      setShowErrors(true)
+      setShowTermsError(true)
       return
     }
     if (fee === props.fee) {
@@ -47,9 +68,15 @@ export const InputFeeAmount = (props: {
     'tw-w-full',
     'tw-text-center',
   ]
+  const applicationFee = calculateApplicationFee(
+    fee,
+    props.applicationFeePercentage,
+    applicationFeeMinimum
+  )
+  const yourCut = Math.round((fee - applicationFee) * 100) / 100
   return (
     <>
-      <div className="tw-flex tw-justify-center tw-py-12 tw-px-16 tw-mb-30 tw-border-b tw-border-b-solid tw-border-b-white/50">
+      <div className="tw-flex tw-justify-center tw-py-12 tw-px-16 tw-mb-10 tw-border-b tw-border-b-solid tw-border-b-white/50">
         <BackwardsCurrencyInput
           value={fee}
           onChange={(value) => {
@@ -59,24 +86,43 @@ export const InputFeeAmount = (props: {
           classNames={inputStyles.join(' ')}
         />
       </div>
+      {feeMinError && (
+        <span className={'tw-text-red'}>
+          Tournament fee must be greater than $1.
+        </span>
+      )}
       <div className="tw-flex tw-flex-col tw-gap-10">
+        <div className={'tw-mb-15 tw-mt-15'}>
+          <div className={'tw-text-white/60 tw-flex tw-justify-between'}>
+            <span className={''}>BMB Platform Fee & Transaction</span>
+            <span className={'tw-shrink-0'}>
+              -$
+              {applicationFee}
+            </span>
+          </div>
+          <div className="tw-flex tw-justify-between tw-items-center">
+            <span>Your cut</span>
+            <span className={'tw-text-36'}>${Math.max(0, yourCut)}</span>
+          </div>
+        </div>
         <div className="tw-flex tw-items-center tw-justify-center tw-gap-10 tw-mb-15">
           <Checkbox
             id={'accept-terms-and-conditions'}
             checked={acceptTermsChecked}
             onChange={(e) => {
-              if (showErrors) {
-                setShowErrors(false)
+              if (showTermsError) {
+                setShowTermsError(false)
               }
               setAcceptTermsChecked(e.target.checked)
             }}
             height={24}
             width={24}
+            className={'tw-shrink-0'}
           />
           <label
             htmlFor={'accept-terms-and-conditions'}
             className={`tw-text-14 tw-font-sans ${
-              showErrors ? 'tw-text-red' : 'tw-text-white/60'
+              showTermsError ? 'tw-text-red' : 'tw-text-white/60'
             }`}
           >
             I agree to the
@@ -85,7 +131,7 @@ export const InputFeeAmount = (props: {
               target="_blank"
               rel="noreferrer"
               className={`tw-pl-6 ${
-                showErrors ? 'tw-text-red' : 'tw-text-white/60'
+                showTermsError ? 'tw-text-red' : 'tw-text-white/60'
               } !tw-underline`}
             >
               hosting terms and conditions

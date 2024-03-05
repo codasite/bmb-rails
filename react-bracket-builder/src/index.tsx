@@ -239,7 +239,10 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
         canCreateBracket={appObj.userCanShareBracket}
       />
       <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} />
-      <SetTournamentFeeModal />
+      <SetTournamentFeeModal
+        applicationFeeMinimum={appObj.applicationFeeMinimum}
+        applicationFeePercentage={appObj.applicationFeePercentage}
+      />
     </>,
     'wpbb-tournaments-modals'
   )
