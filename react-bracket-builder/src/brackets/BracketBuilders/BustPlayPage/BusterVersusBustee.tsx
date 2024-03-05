@@ -33,7 +33,6 @@ export const BusterVsBustee = (props: BusterVsBusteeProps) => {
           src={busterThumbnail}
           alt="celebrity-photo"
           color="red"
-          backgroundColor="red/15"
           shadow={false}
         />
         <span className="tw-text-white tw-font-700 tw-text-12">
