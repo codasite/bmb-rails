@@ -1,7 +1,5 @@
-import { ModalHeader } from '../../../ModalHeader'
-import { CancelButton, ConfirmButton } from '../../../ModalButtons'
+import { ConfirmButton } from '../../../ModalButtons'
 import React, { useState } from 'react'
-import { ModalHeaderLogo } from './ModalHeaderLogo'
 import { BackwardsCurrencyInput } from './BackwardsCurrencyInput'
 import { bracketApi } from '../../../../brackets/shared'
 import { Checkbox } from '../../../../brackets/BracketBuilders/BracketResultsBuilder/Checkbox'
@@ -42,7 +40,7 @@ export const InputFeeAmount = (props: {
     'tw-bg-transparent',
     'tw-border-none',
     'tw-outline-none',
-    'tw-text-white/60',
+    'tw-text-white',
     'tw-text-48',
     'sm:tw-text-64',
     'tw-font-sans',
@@ -51,8 +49,6 @@ export const InputFeeAmount = (props: {
   ]
   return (
     <>
-      <ModalHeaderLogo />
-      <ModalHeader text={'Set an entry fee for your tournament'} />
       <div className="tw-flex tw-justify-center tw-py-12 tw-px-16 tw-mb-30 tw-border-b tw-border-b-solid tw-border-b-white/50">
         <BackwardsCurrencyInput
           value={fee}
@@ -104,11 +100,6 @@ export const InputFeeAmount = (props: {
         >
           <span>Set entry fee</span>
         </ConfirmButton>
-        <CancelButton
-          onClick={() => {
-            props.onCancel()
-          }}
-        />
       </div>
     </>
   )
