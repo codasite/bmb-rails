@@ -84,7 +84,11 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
         }
         if (index > 0) {
           matchBoxes.push(
-            <FlexMatchGap minHeight={minMatchGap} maxHeight={maxMatchGap} />
+            <FlexMatchGap
+              minHeight={minMatchGap}
+              maxHeight={maxMatchGap}
+              key={index}
+            />
           )
         }
         matchBoxes.push(
@@ -96,6 +100,7 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
             teamGap={teamGap}
             teamHeight={teamHeight}
             onTeamClick={onTeamClick}
+            key={index}
           />
         )
         return matchBoxes

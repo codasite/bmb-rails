@@ -1,16 +1,11 @@
 import React, { useContext } from 'react'
 import { MatchTree } from '../../models/MatchTree'
-import { BracketLines, RootMatchLines } from './BracketLines'
-import { getBracketHeight, getBracketWidth } from './utils'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
 import { DarkModeContext } from '../../context/context'
 import { FlexMatchColumn } from '../MatchColumn'
-import { FlexMatchBox } from '../MatchBox'
-import { FlexTeamSlot } from '../TeamSlot'
 import { flexBracketConstants } from '../../constants'
 import { MatchNode } from '../../models/operations/MatchNode'
-import { Round } from '../../models/Round'
 
 const {
   teamBreakpoints,
@@ -47,6 +42,7 @@ export const FlexBracket = (props: BracketProps) => {
           // matchGap={matchGap}
           teamGap={teamGap}
           teamHeight={teamHeight}
+          key={i}
         />
       )
     })

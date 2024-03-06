@@ -15,9 +15,9 @@ import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { getDashboardPath } from '../../shared'
 
 const defaultInitialPickerIndex = 0
-const teamPickerDefaults = [16, 32, 64]
-const teamPickerMin = [4, 17, 33]
-const teamPickerMax = [31, 63, 64]
+export const teamPickerDefaults = [16, 32, 64]
+export const teamPickerMin = [4, 17, 33]
+export const teamPickerMax = [31, 63, 64]
 interface BracketBuilderProps {
   bracket?: BracketRes
   matchTree?: MatchTree

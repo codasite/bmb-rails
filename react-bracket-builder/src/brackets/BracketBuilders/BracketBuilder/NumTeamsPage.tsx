@@ -27,7 +27,7 @@ interface NumTeamsPageProps {
   setWildcardPlacement: (placement: WildcardPlacement) => void
   teamPickerState: NumTeamsPickerState[]
   setTeamPickerState: (state: NumTeamsPickerState[]) => void
-  bracketMeta?: BracketMeta
+  bracketMeta: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
@@ -206,6 +206,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
                   setCurrentValue={(value) => setTeamPickerValue(i, value)}
                   selectNextPicker={getSelectNextTeamPicker(i)}
                   selectPrevPicker={getSelectPrevTeamPicker(i)}
+                  key={i}
                 />
               )
             })}
