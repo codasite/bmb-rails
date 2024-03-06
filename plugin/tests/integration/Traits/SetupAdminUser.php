@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Traits;
+
 
 trait SetupAdminUser {
   /**

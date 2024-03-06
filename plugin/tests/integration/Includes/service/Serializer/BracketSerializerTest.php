@@ -1,4 +1,5 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\Serializer;
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\Bracket;
@@ -8,6 +9,7 @@ use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\PostBaseSerializer;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketSerializerTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;

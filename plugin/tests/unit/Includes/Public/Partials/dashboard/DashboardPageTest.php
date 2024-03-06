@@ -12,7 +12,6 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StubStripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
-use WStrategies\BMB\Public\Partials\dashboard\ManageBracketsPage;
 use WStrategies\BMB\Public\Partials\dashboard\PlayHistoryPage;
 use WStrategies\BMB\Public\Partials\dashboard\TournamentsPage;
 use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;

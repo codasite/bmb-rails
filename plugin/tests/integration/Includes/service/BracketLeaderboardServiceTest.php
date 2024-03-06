@@ -1,6 +1,8 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service;
 
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketLeaderboardServiceTest extends WPBB_UnitTestCase {
   public function test_get_bracket() {

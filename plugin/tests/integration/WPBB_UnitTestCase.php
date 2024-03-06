@@ -1,10 +1,12 @@
 <?php
+namespace WStrategies\BMB\tests\integration;
 
+use WP_Error;
+use WP_Post;
+use WP_User;
 use WStrategies\BMB\Includes\Activator;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\tests\integration\factory\TestFactory;
-
-include_once 'Traits/SetupAdminUser.php';
 
 /**
  * Class WPBB_UnitTestCase
@@ -12,7 +14,7 @@ include_once 'Traits/SetupAdminUser.php';
  *
  * This class is used to set up the plugin's custom tables for unit testing
  */
-abstract class WPBB_UnitTestCase extends WP_UnitTestCase {
+abstract class WPBB_UnitTestCase extends \WP_UnitTestCase {
   protected $plugin_path = '/var/www/html/wp-content/plugins/wp-bracket-builder/';
 
   protected static function factory(): ?TestFactory {

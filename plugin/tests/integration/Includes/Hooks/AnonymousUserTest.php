@@ -1,8 +1,10 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Hooks\AnonymousUserHooks;
 use WStrategies\BMB\Includes\Utils;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class AnonymousUserTest extends WPBB_UnitTestCase {
   public function test_anonymous_bracket_is_linked_to_user_on_login() {

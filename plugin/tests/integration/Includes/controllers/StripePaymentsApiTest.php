@@ -1,5 +1,7 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\controllers;
 
+use WP_REST_Request;
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
@@ -7,10 +9,12 @@ use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccoun
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripePaidTournamentService;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookFunctions;
 use WStrategies\BMB\Includes\Service\PaymentProcessors\StripeWebhookService;
+use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 require_once WPBB_PLUGIN_DIR . 'tests/integration/mock/StripeMock.php';
 
-class StripePaymentsApiTest extends \WPBB_UnitTestCase {
+class StripePaymentsApiTest extends WPBB_UnitTestCase {
   use SetupAdminUser;
   public function test_webhook_handler_should_set_is_paid_to_true() {
     $this->create_bracket([

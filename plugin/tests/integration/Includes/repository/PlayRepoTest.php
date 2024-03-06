@@ -1,4 +1,5 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\repository;
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
@@ -6,6 +7,7 @@ use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PickRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class PlayRepoTest extends WPBB_UnitTestCase {
   private PlayRepo $play_repo;

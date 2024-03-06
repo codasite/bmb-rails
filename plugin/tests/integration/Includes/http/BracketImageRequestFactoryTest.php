@@ -1,4 +1,5 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\http;
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
@@ -6,6 +7,7 @@ use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\ObjectStorage\ObjectStorageInterface;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
   public function test_get_request_data() {

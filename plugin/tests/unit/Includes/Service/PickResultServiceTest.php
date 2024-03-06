@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\unit\Includes\Service;
+
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WP_Mock\Tools\TestCase;

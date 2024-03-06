@@ -1,5 +1,11 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\ProductIntegrations\Gelato;
 
+use Exception;
+use WC_Order;
+use WC_Order_Item_Product;
+use WC_Product;
+use WooCommerce;
 use WStrategies\BMB\Includes\Domain\BracketConfig;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
@@ -12,6 +18,11 @@ use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoPublicHook
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
 use WStrategies\BMB\Includes\Service\S3Service;
 use WStrategies\BMB\Includes\Utils;
+use WStrategies\BMB\tests\integration\mock\CartInterface;
+use WStrategies\BMB\tests\integration\mock\OrderInterface;
+use WStrategies\BMB\tests\integration\mock\OrderItemInterface;
+use WStrategies\BMB\tests\integration\mock\ProductInterface;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 require_once WPBB_PLUGIN_DIR . 'tests/integration/mock/WooCommerceMock.php';
 

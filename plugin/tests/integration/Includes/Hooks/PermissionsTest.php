@@ -1,4 +1,8 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\Hooks;
+
+use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class PermissionsTest extends WPBB_UnitTestCase {
   use SetupAdminUser;

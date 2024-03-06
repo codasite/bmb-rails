@@ -1,9 +1,11 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service;
 
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\ScoreService;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class ScoreServiceTest extends WPBB_UnitTestCase {
   public function set_up(): void {

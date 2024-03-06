@@ -1,9 +1,11 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\Notifications;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
 use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class UpcomingBracketNotificationServiceTest extends WPBB_UnitTestCase {
   public function test_notify_upcoming_bracket_live() {

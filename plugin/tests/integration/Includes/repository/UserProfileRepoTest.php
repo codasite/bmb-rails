@@ -1,7 +1,9 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\repository;
 
 use WStrategies\BMB\Includes\Domain\UserProfile;
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class ProfileRepoTest extends WPBB_UnitTestCase {
   private $profile_repo;

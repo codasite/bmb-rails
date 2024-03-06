@@ -1,4 +1,5 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\Notifications;
 
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
@@ -6,6 +7,7 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
   public function tear_down() {
