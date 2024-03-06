@@ -1,10 +1,10 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\repository;
 
-
 use WStrategies\BMB\Includes\Domain\Notification;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class NotificationRepoTest extends WPBB_UnitTestCase {
   private NotificationRepo $notification_repo;

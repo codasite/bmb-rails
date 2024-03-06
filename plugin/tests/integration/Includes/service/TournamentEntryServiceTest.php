@@ -1,11 +1,11 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service;
 
-
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\TournamentEntryService;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class TournamentEntryServiceTest extends WPBB_UnitTestCase {
   public function test_clear_tournament_entries_for_author() {

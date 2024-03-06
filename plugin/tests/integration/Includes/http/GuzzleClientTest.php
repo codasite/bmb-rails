@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\http;
 
-
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Handler\MockHandler;
@@ -10,6 +9,7 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use WStrategies\BMB\Includes\Service\Http\GuzzleClient;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class GuzzleClientTest extends WPBB_UnitTestCase {
   public function test_send_many() {

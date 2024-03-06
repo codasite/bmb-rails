@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\controllers;
 
-
+use WP_REST_Request;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
@@ -9,6 +9,8 @@ use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
 use WStrategies\BMB\Includes\Utils;
+use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketPlayApiTest extends WPBB_UnitTestCase {
   use SetupAdminUser;

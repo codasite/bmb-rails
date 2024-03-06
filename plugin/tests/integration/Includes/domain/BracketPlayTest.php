@@ -1,8 +1,9 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\domain;
 
-
+use Exception;
 use WStrategies\BMB\Includes\Domain\Play;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketPlayTest extends WPBB_UnitTestCase {
   public function test_get_post_type() {

@@ -1,8 +1,8 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\controllers;
 
-
 use Spatie\Snapshots\MatchesSnapshots;
+use WP_REST_Request;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
@@ -12,6 +12,8 @@ use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\ScoreServiceInterface;
 use WStrategies\BMB\Includes\Utils;
+use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 //namespace phpunit
 

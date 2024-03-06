@@ -1,8 +1,8 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\domain;
 
-
 use WStrategies\BMB\Includes\Domain\UserProfile;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class UserProfileTest extends WPBB_UnitTestCase {
   public function test_get_post_type() {

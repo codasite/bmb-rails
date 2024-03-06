@@ -2,9 +2,9 @@
 namespace WStrategies\BMB\tests\integration\Includes\Service\Notifications;
 
 use MailchimpTransactional\Api\MessagesApi;
-use WPBB_UnitTestCase;
 use WStrategies\BMB\Includes\Service\Notifications\MailchimpApiClient;
 use WStrategies\BMB\Includes\Service\Notifications\MailchimpEmailService;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
   public function test_client_send_is_called() {

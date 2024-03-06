@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\ProductIntegrations\Gelato;
 
-
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
@@ -10,6 +9,7 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\Http\HttpClientInterface;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class GelatoIntegrationTest extends WPBB_UnitTestCase {
   public function test_generate_images() {

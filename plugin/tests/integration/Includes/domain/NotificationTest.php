@@ -1,11 +1,11 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\domain;
 
-
 use WStrategies\BMB\Includes\Domain\Notification;
 use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class NotificationTest extends \WPBB_UnitTestCase {
+class NotificationTest extends WPBB_UnitTestCase {
   public function testConstructor() {
     $data = [
       'id' => '1',

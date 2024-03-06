@@ -1,8 +1,8 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\BracketProduct;
 
-
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketProductUtilsTest extends WPBB_UnitTestCase {
   public function test_get_bracket_fee() {

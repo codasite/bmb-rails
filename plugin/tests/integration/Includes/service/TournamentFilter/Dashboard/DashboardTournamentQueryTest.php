@@ -1,11 +1,11 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\TournamentFilter\Dashboard;
 
-
 use WStrategies\BMB\Includes\Domain\Notification;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
   public function test_get_live_hosted_brackets() {

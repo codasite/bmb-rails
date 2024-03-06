@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\Serializer;
 
-
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
@@ -9,6 +8,7 @@ use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class BracketPlaySerializerTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;

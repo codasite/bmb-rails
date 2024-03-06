@@ -1,10 +1,12 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\controllers;
 
-
+use WP_REST_Request;
 use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class NotificationApiTest extends \WPBB_UnitTestCase {
+class NotificationApiTest extends WPBB_UnitTestCase {
   use SetupAdminUser;
   const NOTIFICATION_API_ENDPOINT = '/wp-bracket-builder/v1/notifications';
   public function test_get_notification() {

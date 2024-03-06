@@ -2,7 +2,6 @@
 namespace WStrategies\BMB\Includes;
 
 use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
-use WStrategies\BMB\Includes\Repository\BracketPickRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;

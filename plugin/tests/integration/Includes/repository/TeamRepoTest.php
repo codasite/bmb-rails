@@ -1,11 +1,11 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\repository;
 
-
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\TeamRepo;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class TeamRepoTest extends WPBB_UnitTestCase {
   private $team_repo;

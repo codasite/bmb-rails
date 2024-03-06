@@ -1,9 +1,5 @@
 <?php
 namespace WStrategies\BMB\tests\unit\Includes\Service\BracketProduct;
-use CartFeesInterface;
-use CartInterface;
-use OrderItemFeeInterface;
-use OrderItemInterface;
 use WP_Mock;
 use WP_Mock\Tools\TestCase;
 use WP_Post;
@@ -13,6 +9,10 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\WcFunctions;
+use WStrategies\BMB\tests\integration\mock\CartFeesInterface;
+use WStrategies\BMB\tests\integration\mock\CartInterface;
+use WStrategies\BMB\tests\integration\mock\OrderItemFeeInterface;
+use WStrategies\BMB\tests\integration\mock\OrderItemInterface;
 use const WStrategies\BMB\Includes\Service\BracketProduct\BRACKET_FEE_META_PREFIX;
 
 require_once WPBB_PLUGIN_DIR . 'tests/integration/mock/WooCommerceMock.php';

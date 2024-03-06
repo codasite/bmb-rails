@@ -1,5 +1,5 @@
-
 <?php
+
 namespace WStrategies\BMB\tests\integration\Includes\service\PaidTournamentService;
 
 use Stripe\Service\AccountLinkService;
@@ -7,6 +7,7 @@ use Stripe\Service\AccountService;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
 use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeAccountMock;
 use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class StripeConnectedAccountTest extends WPBB_UnitTestCase {
   public function test_get_connected_account_id() {

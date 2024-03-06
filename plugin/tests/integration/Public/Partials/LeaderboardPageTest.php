@@ -2,7 +2,6 @@
 namespace WStrategies\BMB\tests\includes\Hooks;
 
 use Spatie\Snapshots\MatchesSnapshots;
-use WPBB_UnitTestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
@@ -10,6 +9,7 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Includes\Service\ScoreService;
 use WStrategies\BMB\Public\Partials\LeaderboardPage;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class LeaderboardPageTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;

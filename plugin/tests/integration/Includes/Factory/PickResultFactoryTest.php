@@ -3,12 +3,12 @@
 namespace WStrategies\BMB\tests\integration\Includes\Factory;
 
 use Spatie\Snapshots\MatchesSnapshots;
-use WPBB_UnitTestCase;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Factory\PickResultFactory;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
+use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class PickResultFactoryTest extends WPBB_UnitTestCase {
   use MatchesSnapshots;
