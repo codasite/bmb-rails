@@ -16,6 +16,7 @@ class LoginHooks implements HooksInterface {
     ]);
     $loader->add_filter('login_message', [$this, 'filter_login_message']);
     $loader->add_filter('the_privacy_policy_link', '__return_false');
+    $loader->add_filter('login_headerurl', [$this, 'login_header_url']);
   }
   public function enqueue_login_scripts(): void {
     wp_enqueue_style(
@@ -39,5 +40,9 @@ class LoginHooks implements HooksInterface {
       return '';
     }
     return $message;
+  }
+
+  public function login_header_url(): string {
+    return home_url();
   }
 }
