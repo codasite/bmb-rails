@@ -1,10 +1,5 @@
 import { Nullable } from '../../../utils/types'
-import {
-  MatchPick,
-  MatchReq,
-  MatchRes,
-  MatchTreeRepr,
-} from '../api/types/bracket'
+import { MatchPick, MatchReq, MatchRes, MatchTreeRepr } from '../api'
 import { WildcardPlacement } from './WildcardPlacement'
 import { Team } from './Team'
 import { MatchNode } from './operations/MatchNode'

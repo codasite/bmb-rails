@@ -27,7 +27,7 @@ interface NumTeamsPageProps {
   setWildcardPlacement: (placement: WildcardPlacement) => void
   teamPickerState: NumTeamsPickerState[]
   setTeamPickerState: (state: NumTeamsPickerState[]) => void
-  bracketMeta?: BracketMeta
+  bracketMeta: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
@@ -184,8 +184,8 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
           </div>
         )}
         <div
-          className={`tw-flex tw-flex-col tw-gap-24${
-            showWildCardOptions ? '' : ' tw-pb-24'
+          className={`tw-flex tw-flex-col tw-gap-24 ${
+            showWildCardOptions ? '' : 'tw-pb-24'
           }`}
         >
           <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24">
@@ -206,6 +206,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
                   setCurrentValue={(value) => setTeamPickerValue(i, value)}
                   selectNextPicker={getSelectNextTeamPicker(i)}
                   selectPrevPicker={getSelectPrevTeamPicker(i)}
+                  key={i}
                 />
               )
             })}

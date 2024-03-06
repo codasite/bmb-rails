@@ -10,7 +10,7 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
   const { darkMode, setDarkMode, matchTree, setMatchTree } = props
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
         darkMode ? ' tw-dark' : ''
       }`}
       style={{

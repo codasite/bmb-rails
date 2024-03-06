@@ -1,16 +1,11 @@
 import React, { useContext } from 'react'
 import { MatchTree } from '../../models/MatchTree'
-import { BracketLines, RootMatchLines } from './BracketLines'
-import { getBracketHeight, getBracketWidth } from './utils'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
 import { DarkModeContext } from '../../context/context'
 import { FlexMatchColumn } from '../MatchColumn'
-import { FlexMatchBox } from '../MatchBox'
-import { FlexTeamSlot } from '../TeamSlot'
 import { flexBracketConstants } from '../../constants'
 import { MatchNode } from '../../models/operations/MatchNode'
-import { Round } from '../../models/Round'
 
 const {
   teamBreakpoints,
@@ -36,7 +31,7 @@ export const FlexBracket = (props: BracketProps) => {
     teamGap: number,
     teamHeight: number
   ): JSX.Element[] => {
-    const matchColumns = rounds.map((matches, i) => {
+    return rounds.map((matches, i) => {
       return (
         <MatchColumnComponent
           matches={matches}
@@ -47,14 +42,10 @@ export const FlexBracket = (props: BracketProps) => {
           // matchGap={matchGap}
           teamGap={teamGap}
           teamHeight={teamHeight}
+          key={`${position}-${i}`}
         />
       )
     })
-    if (position === 'right') {
-      matchColumns.reverse()
-    }
-
-    return matchColumns
   }
 
   const buildMatches = (tree: MatchTree) => {
@@ -63,9 +54,9 @@ export const FlexBracket = (props: BracketProps) => {
     const leftMatches = sideMatches.map((round) =>
       round.matches.slice(0, round.matches.length / 2)
     )
-    const rightMatches = sideMatches.map((round) =>
-      round.matches.slice(round.matches.length / 2)
-    )
+    const rightMatches = sideMatches
+      .map((round) => round.matches.slice(round.matches.length / 2))
+      .reverse()
     const finalMatch = rounds[rounds.length - 1].matches
 
     const numTeams = tree.getNumTeams()

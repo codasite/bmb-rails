@@ -1,34 +1,29 @@
-import React, { useState, useContext } from 'react'
+import React from 'react'
 //@ts-ignore
 import { TeamSlotProps } from '../types'
 import { InactiveTeamSlot } from './InactiveTeamSlot'
-import { ActiveTeamSlot } from './ActiveTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
-import {
-  BusteeMatchTreeContext,
-  BusterMatchTreeContext,
-} from '../../context/context'
 import { getBustTrees } from '../../../BracketBuilders/BustPlayPage/utils'
 
 export const BusterTeamSlotToggle = (props: TeamSlotProps) => {
-  const { team, match, teamPosition } = props
-
   const { busteeTree } = getBustTrees()
-  const roundIndex = match.roundIndex
-  const matchIndex = match.matchIndex
+  const roundIndex = props.match.roundIndex
+  const matchIndex = props.match.matchIndex
 
-  const busterMatch = match
+  const busterMatch = props.match
   const busteeMatch = busteeTree.rounds[roundIndex].matches[matchIndex]
 
-  const busterTeam = team
+  const busterTeam = props.team
   const busteeTeam =
-    teamPosition === 'left' ? busteeMatch.getTeam1() : busteeMatch.getTeam2()
+    props.teamPosition === 'left'
+      ? busteeMatch.getTeam1()
+      : busteeMatch.getTeam2()
 
   const busterPicked = busterTeam && busterMatch.getWinner() === busterTeam
   const busteePicked = busteeTeam && busteeMatch.getWinner() === busteeTeam
 
   // If current team is null, set it to the bustee team
-  props.team = team ? team : busteeTeam
+  const team = props.team ?? busteeTeam
 
   // if both buster and bustee picked, show red box with blue border
   if (busterPicked && busteePicked && team && team.equals(busteeTeam)) {

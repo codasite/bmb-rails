@@ -1,0 +1,253 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddTeamsPage renders page correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="tw-flex tw-flex-col tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
+  >
+    <div
+      class="sm:tw-px-60 tw-mb-16"
+    >
+      <div
+        class="tw-flex tw-p-16"
+      >
+        <a
+          class="tw-flex tw-gap-10 tw-items-center"
+          href="#"
+        >
+          <svg />
+          <span
+            class="tw-font-500 tw-text-16 sm:tw-text-20 tw-text-white "
+          >
+            Create Bracket
+          </span>
+        </a>
+      </div>
+    </div>
+    <div
+      class="tw-flex tw-flex-col tw-w-full tw-max-w-screen-lg tw-mx-auto tw-gap-60"
+    >
+      <div>
+        <div
+          class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-dark "
+        >
+          <div
+            class="tw-flex tw-flex-col tw-dark wpbb-default-bracket tw-relative"
+          >
+            <div
+              class="tw-flex tw-flex-col tw-justify-end"
+              style="margin-bottom: 95px; min-height: 0;"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-24 tw-items-center"
+              >
+                <div
+                  class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/25"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 32px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+            >
+              <div
+                class="tw-flex tw-justify-between tw-relative tw-w-[700px]"
+              >
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+                  >
+                    <div
+                      class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 1
+                      </span>
+                    </div>
+                    <div
+                      class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 2
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
+                  >
+                    <div
+                      class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 1
+                      </span>
+                    </div>
+                    <div
+                      class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+                  >
+                    <div
+                      class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 3
+                      </span>
+                    </div>
+                    <div
+                      class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 4
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="margin-top: 20px; min-height: 0;"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-font-700 tw-whitespace-nowrap "
+              >
+                <span
+                  class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+                >
+                  Who You Got?
+                </span>
+                <svg
+                  class="tw-w-[124px] tw-text-black/25 dark:tw-text-white"
+                />
+              </div>
+            </div>
+            <div
+              class="tw-absolute"
+            />
+            <div
+              class="tw-absolute"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-flex-col tw-justify-center tw-gap-10"
+      >
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-cursor-pointer tw-bg-blue/15 tw-text-white tw-gap-10 tw-text-20 tw-font-500 tw-rounded-8 tw-px-16 tw-py-12 tw-border-solid tw-border tw-border-blue tw-self-center"
+        >
+          <svg />
+          <span
+            class="tw-font-500 tw-text-20 tw-uppercase tw-font-sans"
+          >
+            Scramble Team Order
+          </span>
+        </button>
+      </div>
+      <div
+        class="tw-flex tw-flex-col tw-gap-60 tw-max-w-[510px] tw-w-full tw-mx-auto"
+      >
+        <div
+          class="tw-flex tw-flex-col tw-justify-center tw-text-center tw-gap-16"
+        >
+          <span
+            class="tw-text-white/50 tw-text-24 tw-font-500"
+          >
+            Your Bracket's Date
+          </span>
+          <div
+            class="tw-flex tw-flex-col sm:tw-items-start sm:tw-flex-row tw-justify-center tw-gap-16 "
+          >
+            <div
+              class="tw-flex tw-flex-col"
+            >
+              <div
+                class="tw-relative tw-flex tw-flex-col tw-gap-8"
+              >
+                <div
+                  class="tw-absolute tw-top-1/2 tw-left-1/2 tw--translate-x-1/2 tw--translate-y-1/2 tw-pointer-events-none"
+                >
+                  <div
+                    class="tw-flex tw-items-center tw-justify-center tw-gap-16 tw-pointer-events-none"
+                  >
+                    <svg />
+                    <span
+                      class="tw-text-24 tw-font-600 tw-text-white/50"
+                    >
+                      Month
+                    </span>
+                  </div>
+                </div>
+                <input
+                  class="tw-font-sans tw-uppercase tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50 tw-bg-transparent focus:tw-placeholder-transparent focus:tw-outline-none focus:tw-bg-white/5 tw-flex-grow "
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              class="tw-relative tw-flex tw-flex-col tw-gap-8"
+            >
+              <input
+                class="tw-font-sans tw-uppercase tw-p-16 tw-border tw-border-solid tw-rounded-8 tw-border-white/50 tw-text-white/50 tw-text-center tw-text-24 tw-font-600 tw-text-white-50 tw-placeholder-white/50 tw-bg-transparent focus:tw-placeholder-transparent focus:tw-outline-none focus:tw-bg-white/5 sm:tw-w-[150px] "
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-cursor-pointer tw-bg-blue/15 tw-text-white tw-gap-16 tw-text-20 tw-font-500 tw-rounded-8 tw-py-16 tw-border-solid tw-border tw-border-blue"
+      >
+        <svg />
+        <span
+          class="tw-font-500 tw-text-20 tw-uppercase tw-font-sans"
+        >
+          Save
+        </span>
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;

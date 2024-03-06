@@ -1,15 +1,8 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import redBracketBg from '../../../shared/assets/bracket-bg-red.png'
-import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
-import {
-  BusterBracket,
-  ResultsBracket,
-} from '../../../shared/components/Bracket'
-import { DarkModeContext } from '../../../shared/context/context'
-import { ThemeSelector } from '../../../shared/components'
+import { BusterBracket } from '../../../shared/components/Bracket'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
-import { bracketApi } from '../../../shared/api/bracketApi'
 import { EndPageProps } from '../../PaginatedBuilderBase/types'
 import { BusterVsBustee } from '../BusterVersusBustee'
 import { BracketBusterContext } from '../context'
@@ -34,7 +27,7 @@ export const BustEndPage = (props: EndPageProps) => {
 
   return (
     <div
-      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
+      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
         darkMode ? ' tw-dark' : ''
       }`}
       style={{

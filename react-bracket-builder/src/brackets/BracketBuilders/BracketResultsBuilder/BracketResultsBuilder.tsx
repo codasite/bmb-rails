@@ -109,7 +109,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   }
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover${
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
         darkMode ? ' tw-dark' : ''
       }`}
       style={{
@@ -124,7 +124,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
             <ResultsBracket matchTree={matchTree} setMatchTree={setMatchTree} />
           </div>
           <div
-            className={`tw-flex tw-flex-col tw-gap-24${
+            className={`tw-flex tw-flex-col tw-gap-24 ${
               !complete ? ' tw-max-w-[470px] tw-w-full' : ''
             }`}
           >
