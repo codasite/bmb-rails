@@ -50,7 +50,8 @@
     "sentry/sentry": "^4.3",
     "php-stubs/woocommerce-stubs": "^8.4",
     "10up/wp_mock": "dev-trunk",
-    "dg/bypass-finals": "^1.5"
+    "dg/bypass-finals": "^1.5",
+    "sempro/phpunit-pretty-print": "^1.4"
   },
   "require": {
     "aws/aws-sdk-php": "^3.270",
