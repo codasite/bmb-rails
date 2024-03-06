@@ -1,24 +1,27 @@
 <?php
-namespace WStrategies\BMB\tests\integration\Includes\service\Serializer;
+namespace Includes\Service\Serializer;
 
 use Spatie\Snapshots\MatchesSnapshots;
+use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
-use WStrategies\BMB\Includes\Service\Serializer\PostBaseSerializer;
-use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class BracketSerializerTest extends WPBB_UnitTestCase {
+class BracketSerializerTest extends TestCase {
   use MatchesSnapshots;
 
   public function test_serialize() {
-    $bracket = $this->create_bracket([
+    $bracket = new Bracket([
+      'author' => 1,
+      'author_display_name' => 'admin',
+      'num_teams' => 4,
+      'url' => 'http://example.org/?bracket=test-bracket',
       'id' => 100000,
       'title' => 'Test Bracket',
-      'published_date' => '2020-01-01 00:00:00',
+      'published_date' => '2020-01-01T00:00:00+00:00',
       'slug' => 'test-bracket',
       'month' => 'January',
       'year' => '2020',
@@ -224,7 +227,7 @@ class BracketSerializerTest extends WPBB_UnitTestCase {
   }
 
   public function test_published_bracket_is_open() {
-    $bracket = $this->create_bracket([
+    $bracket = new Bracket([
       'status' => 'publish',
     ]);
     $serializer = new BracketSerializer();
