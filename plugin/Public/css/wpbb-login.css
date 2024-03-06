@@ -140,7 +140,6 @@ input[type='submit'] {
       ),
       url('https://s3.amazonaws.com/backmybracket.com/bmb_banner_cropped1000.png');
     background-size: 875px;
-    background-repeat: no-repeat;
   }
   #login {
     margin: 0 120px;
