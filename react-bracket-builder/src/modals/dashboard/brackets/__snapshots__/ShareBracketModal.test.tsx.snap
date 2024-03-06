@@ -14,10 +14,10 @@ exports[`ShareBracketModal renders modal correctly 1`] = `
     tabindex="-1"
   >
     <div
-      class="tw-relative tw-max-w-[606px] tw-max-h-full tw-p-60 tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20"
+      class="tw-relative tw-max-w-[606px] tw-max-h-full tw-p-30 sm:tw-p-60 tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20"
     >
       <h1
-        class="tw-text-32 tw-leading-10 tw-text-white tw-uppercase tw-whitespace-pre-line tw-mb-30 tw-w-full tw-text-center tw-font-sans"
+        class="tw-text-24 sm:tw-text-32 tw-leading-10 tw-text-white tw-uppercase tw-whitespace-pre-line tw-mb-30 tw-w-full tw-text-center tw-font-sans"
       >
         Share Bracket
       </h1>
@@ -45,7 +45,7 @@ exports[`ShareBracketModal renders modal correctly 1`] = `
           </a>
         </div>
         <button
-          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-cursor-pointer tw-bg-green/15 tw-text-white tw-gap-10 tw-text-16 tw-font-700 tw-rounded-8 tw-px-16 tw-py-12 tw-border-solid tw-border tw-border-green hover:tw-text-white/75 tw-w-full"
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-bg-green/15 tw-gap-16 tw-rounded-8 tw-p-12 tw-border-1 tw-border-solid tw-border-green hover:tw-text-white/75 tw-text-white tw-w-full tw-text-16 tw-font-700 disabled:tw-bg-transparent disabled:tw-text-white/20 disabled:tw-border-white/20"
         >
           <svg />
           <span>
@@ -53,7 +53,7 @@ exports[`ShareBracketModal renders modal correctly 1`] = `
           </span>
         </button>
         <button
-          class="tw-bg-white/15 tw-flex tw-gap-16 tw-items-center tw-justify-center tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-font-sans tw-text-white tw-uppercase tw-w-full tw-text-16 tw-font-500 tw-cursor-pointer"
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-bg-white/15 tw-gap-16 tw-rounded-8 tw-p-12 tw-border-none hover:tw-text-white/75 tw-text-white tw-w-full tw-text-16 tw-font-500 disabled:tw-bg-white/15 disabled:tw-text-white/50"
         >
           Cancel
         </button>
