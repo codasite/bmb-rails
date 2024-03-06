@@ -11,8 +11,6 @@ use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceFactory;
 use WStrategies\BMB\Includes\Service\ScoreService;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Utils;
@@ -38,8 +36,6 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
    */
   private $score_service;
 
-  private ?BracketResultsNotificationService $notification_service;
-
   /**
    * @var Utils
    */
@@ -57,9 +53,6 @@ class BracketApi extends WP_REST_Controller implements HooksInterface {
     $this->rest_base = 'brackets';
     $this->score_service = $args['score_service'] ?? new ScoreService();
     $this->serializer = $args['serializer'] ?? new BracketSerializer();
-    $this->notification_service =
-      $args['notification_service'] ??
-      (new BracketResultsNotificationServiceFactory())->create();
   }
 
   public function load(Loader $loader): void {

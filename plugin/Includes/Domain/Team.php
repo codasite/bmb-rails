@@ -51,6 +51,5 @@ class Team {
     } elseif (is_int($team)) {
       return $this->id === $team;
     }
-    return false;
   }
 }

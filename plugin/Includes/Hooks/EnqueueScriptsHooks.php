@@ -5,7 +5,6 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
-use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
@@ -70,7 +69,6 @@ class EnqueueScriptsHooks implements HooksInterface {
    * @var BracketSerializer
    */
   private BracketSerializer $bracket_serializer;
-  private StripeConnectedAccountFactory $account_factory;
 
   public function __construct($args = []) {
     $this->plugin_name = $args['plugin_name'];
@@ -82,8 +80,6 @@ class EnqueueScriptsHooks implements HooksInterface {
     $this->play_serializer = $args['play_serializer'] ?? new PlaySerializer();
     $this->bracket_serializer =
       $args['bracket_serializer'] ?? new BracketSerializer();
-    $this->account_factory =
-      $args['account_factory'] ?? new StripeConnectedAccountFactory();
   }
 
   public function load(Loader $loader): void {
@@ -212,7 +208,7 @@ class EnqueueScriptsHooks implements HooksInterface {
     $bracket = null;
     $post = get_post();
     if (!$post) {
-      return;
+      return null;
     }
     if ($post->post_type === 'bracket_play') {
       $play = $this->play_serializer->serialize($this->play_repo->get($post));
