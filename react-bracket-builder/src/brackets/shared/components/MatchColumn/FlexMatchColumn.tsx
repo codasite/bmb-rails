@@ -87,7 +87,7 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
             <FlexMatchGap
               minHeight={minMatchGap}
               maxHeight={maxMatchGap}
-              key={index}
+              key={`gap-${index}`}
             />
           )
         }
