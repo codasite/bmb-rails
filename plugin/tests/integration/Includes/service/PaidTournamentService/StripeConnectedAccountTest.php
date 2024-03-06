@@ -303,3 +303,4 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
     $this->assertEquals('http://example.com', $link);
   }
 }
+
