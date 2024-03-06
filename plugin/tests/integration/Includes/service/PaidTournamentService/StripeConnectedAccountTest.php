@@ -35,8 +35,8 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
   public function test_calculate_application_fee() {
     $user = $this->create_user();
     $service = new StripeConnectedAccount(['user_id' => $user->ID]);
-    $fee = $service->calculate_application_fee(1000);
-    $this->assertEquals(125, $fee);
+    $fee = $service->calculate_application_fee(2000);
+    $this->assertEquals(140, $fee);
   }
 
   public function test_calculate_application_fee_minimum() {
@@ -303,4 +303,3 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
     $this->assertEquals('http://example.com', $link);
   }
 }
-
