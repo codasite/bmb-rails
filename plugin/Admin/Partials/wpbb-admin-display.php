@@ -1,7 +1,5 @@
 <?php
 namespace WStrategies\BMB\Admin\Partials;
-
-
 /**
  * Provide a admin area view for the plugin
  *

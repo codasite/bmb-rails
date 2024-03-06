@@ -3,7 +3,6 @@
 namespace WStrategies\BMB\Public\Partials\shared;
 
 class PartialsContants {
-
   public const LIVE_STATUS = 'live';
   public const UPCOMING_STATUS = 'upcoming';
   public const SCORED_STATUS = 'scored';

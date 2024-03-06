@@ -20,7 +20,7 @@ class BracketListItem {
       : 'tw-border-white/15'; ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
         <div class="tw-flex tw-gap-8 tw-items-center">
-          <?php echo $is_paid ? self::paid_bracket_tag() : ''?>
+          <?php echo $is_paid ? self::paid_bracket_tag() : ''; ?>
           <span class="tw-font-500 tw-text-12"><?php echo esc_html(
             $num_teams
           ); ?>-Team Bracket</span>
@@ -52,13 +52,11 @@ class BracketListItem {
   }
 
   public static function paid_bracket_tag(): false|string {
-    ob_start();
-    ?>
+    ob_start(); ?>
     <div class="tw-text-white tw-bg-blue tw-px-8 tw-py-4 tw-flex tw-items-center tw-rounded-8">
-      <?php echo PartialsCommon::icon('currency_dollar') ?>
+      <?php echo PartialsCommon::icon('currency_dollar'); ?>
     </div>
-    <?php
-    return ob_get_clean();
+    <?php return ob_get_clean();
   }
 
   public static function get_bracket_buttons($bracket): false|string {
@@ -149,8 +147,13 @@ class BracketListItem {
     $leaderboard_link = get_permalink($bracket->id) . 'leaderboard';
     ob_start();
     ?>
-    <?php echo BracketsCommon::play_bracket_btn($bracket, [ 'label' => 'Play' ]); ?>
-    <?php echo BracketListItem::score_bracket_btn($bracket_score_link, $bracket); ?>
+    <?php echo BracketsCommon::play_bracket_btn($bracket, [
+      'label' => 'Play',
+    ]); ?>
+    <?php echo BracketListItem::score_bracket_btn(
+      $bracket_score_link,
+      $bracket
+    ); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();

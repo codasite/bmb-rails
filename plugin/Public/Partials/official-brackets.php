@@ -2,7 +2,6 @@
 namespace WStrategies\BMB\Public\Partials;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 use WStrategies\BMB\Public\Partials\shared\PartialsContants;
-
 ?>
 <div class="wpbb-faded-bracket-bg tw-py-20 sm:tw-py-60 tw-px-20">
 	<div class="wpbb-reset wpbb-official-brackets tw-flex tw-flex-col tw-gap-30 tw-max-w-screen-lg tw-mx-auto ">
@@ -14,7 +13,9 @@ use WStrategies\BMB\Public\Partials\shared\PartialsContants;
       <div class="tw-flex tw-justify-center tw-gap-10 tw-py-11 tw-flex-wrap">
         <?php echo BracketsCommon::bracket_filter_buttons(); ?>
       </div>
-      <?php echo BracketsCommon::public_bracket_list( [ 'tags' => [ PartialsContants::BMB_OFFICIAL ] ] ); ?>
+      <?php echo BracketsCommon::public_bracket_list([
+        'tags' => [PartialsContants::BMB_OFFICIAL],
+      ]); ?>
 		</div>
 	</div>
   <div id='wpbb-public-bracket-modals'></div>

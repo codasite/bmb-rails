@@ -4,7 +4,6 @@ namespace WStrategies\BMB\Public\Partials\shared;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
 
 class BracketIconButtons {
-
   public static function get_bracket_icon_buttons($bracket): false|string {
     switch ($bracket->status) {
       case 'publish':
