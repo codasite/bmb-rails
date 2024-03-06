@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ReactComponent as ArrowNarrowLeft } from '../../shared/assets/arrow-narrow-left.svg'
 import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
@@ -39,8 +39,8 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     setYear,
     processing,
   } = props
-  const [dateError, setDateError] = React.useState(false)
-  const [scrambledIndices, setScrambledIndices] = React.useState<number[]>([])
+  const [dateError, setDateError] = useState(false)
+  const [scrambledIndices, setScrambledIndices] = useState<number[]>([])
   const createDisabled =
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
   const scrambleDisabled =

@@ -4,10 +4,8 @@ import PlayBuilderPage from './PlayBuilderPage'
 import { MatchTree } from '../../shared/models/MatchTree'
 import '@testing-library/jest-dom/jest-globals'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
-import { MatchPick, MatchRes } from '../../shared/api/types/bracket'
+import { bracketApi, MatchPick, MatchRes } from '../../shared'
 import { jest } from '@jest/globals'
-import { bracketApi } from '../../shared/api/bracketApi'
-
 // jest.mock('wpbb_app_obj', () => {
 //   return {
 //     bracketProductArchiveUrl: '#',
