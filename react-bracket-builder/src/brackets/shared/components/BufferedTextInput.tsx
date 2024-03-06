@@ -103,7 +103,6 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
           }
         }}
         value={buffer}
-        {...props}
         onChange={handleChange}
         className={className}
       />
