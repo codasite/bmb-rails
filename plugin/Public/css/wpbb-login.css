@@ -17,16 +17,19 @@ body {
   background-position: top;
   background-color: #000330;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
   font-family: 'ClashDisplay', sans-serif;
   height: auto;
   min-height: 100%;
+  gap: 30px;
 }
-#login {
+.login #login {
   width: auto;
   max-width: 400px;
-  padding: 20px;
-  margin: 0 auto;
+  padding: 0 20px;
+  margin: 0;
   color: rgba(255, 255, 255, 0.5);
   text-transform: uppercase;
 }
@@ -118,6 +121,10 @@ input[type='submit'] {
   padding-bottom: 10px;
 }
 
+.login #nav {
+  margin-top: 15px;
+}
+
 .login .message,
 .login .notice,
 .login .success {
@@ -128,6 +135,19 @@ input[type='submit'] {
 
 #reg_passmail {
   font-size: 12px;
+}
+
+#backtoblog {
+  display: none;
+}
+
+#woo-slp-social-container-login.woo-slp-social-container {
+  margin: 0;
+  padding: 0 20px;
+}
+
+#woo-slp-social-container-login.woo-slp-social-container .woo-slp-social-wrap {
+  justify-content: flex-start;
 }
 
 @media screen and (min-width: 600px) {
@@ -141,6 +161,8 @@ input[type='submit'] {
       url('https://s3.amazonaws.com/backmybracket.com/bmb_banner_cropped1000.png');
     background-size: 875px;
     background-repeat: repeat;
+    align-items: flex-start;
+    padding-left: 120px;
   }
   #login {
     margin: 0 120px;

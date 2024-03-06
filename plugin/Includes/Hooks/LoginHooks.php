@@ -15,6 +15,7 @@ class LoginHooks implements HooksInterface {
       'enqueue_login_scripts',
     ]);
     $loader->add_filter('login_message', [$this, 'filter_login_message']);
+    $loader->add_filter('the_privacy_policy_link', '__return_false');
   }
   public function enqueue_login_scripts(): void {
     wp_enqueue_style(
