@@ -295,7 +295,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage correctly 1`] = `
           class="tw-flex tw-self-stretch tw-flex-col tw-items-stretch"
         >
           <button
-            class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-green tw-text-dd-blue disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-green/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-green dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+            class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-green tw-text-dd-blue disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-green/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-green dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
             disabled=""
           >
             <svg
@@ -307,7 +307,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage correctly 1`] = `
           </button>
         </div>
         <button
-          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-blue tw-text-white disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-blue/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-blue dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-blue tw-text-white disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-blue/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-blue dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
           disabled=""
         >
           <svg
