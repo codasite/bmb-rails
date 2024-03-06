@@ -4,7 +4,8 @@ namespace WStrategies\BMB\Includes\Service\PaidTournamentService;
 use Stripe\Account;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
-use WP_User;
+use WStrategies\BMB\Includes\Repository\UserMetaRepo;
+use WStrategies\BMB\Includes\Repository\UserRepo;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 use WStrategies\BMB\Public\Partials\StripeOnboardingRedirect;
@@ -17,6 +18,9 @@ class StripeConnectedAccount {
   private StripeClient $stripe;
   private ?Account $stripe_account;
   private int $user_id;
+  private UserMetaRepo $connected_account_id_meta_repo;
+  private UserRepo $user_repo;
+
   /**
    * @param array<string, mixed> $args
    */
@@ -25,6 +29,10 @@ class StripeConnectedAccount {
     $this->stripe =
       $args['stripe_client'] ??
       (new StripeClientFactory())->createStripeClient();
+    $this->connected_account_id_meta_repo =
+      $args['connected_account_id_meta_repo'] ??
+      new UserMetaRepo(self::$CONNECTED_ACCOUNT_ID_META_KEY);
+    $this->user_repo = $args['user_repo'] ?? new UserRepo();
   }
 
   /**
@@ -82,7 +90,7 @@ class StripeConnectedAccount {
    * @throws StripeConnectedAccountException
    */
   public function create_account(): string {
-    $user = new WP_User($this->user_id);
+    $user = $this->user_repo->get_by_id($this->user_id);
     $email = $user->user_email;
     if (empty($email)) {
       throw new StripeConnectedAccountException('User email not set');
@@ -95,11 +103,7 @@ class StripeConnectedAccount {
   }
 
   public function get_account_id(): string {
-    return get_user_meta(
-      $this->user_id,
-      self::$CONNECTED_ACCOUNT_ID_META_KEY,
-      true
-    );
+    return $this->connected_account_id_meta_repo->get($this->user_id);
   }
 
   public function account_id_exists(): bool {
@@ -111,11 +115,7 @@ class StripeConnectedAccount {
   }
 
   public function set_account_id(string $acct_id): void {
-    update_user_meta(
-      $this->user_id,
-      self::$CONNECTED_ACCOUNT_ID_META_KEY,
-      $acct_id
-    );
+    $this->connected_account_id_meta_repo->set($this->user_id, $acct_id);
   }
 
   public function should_create_destination_charge(): bool {
