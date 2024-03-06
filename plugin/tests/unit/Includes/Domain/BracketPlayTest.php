@@ -1,11 +1,11 @@
 <?php
-namespace WStrategies\BMB\tests\integration\Includes\domain;
+namespace Includes\Domain;
 
 use Exception;
+use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class BracketPlayTest extends WPBB_UnitTestCase {
+class BracketPlayTest extends TestCase {
   public function test_get_post_type() {
     $this->assertEquals('bracket_play', Play::get_post_type());
   }
