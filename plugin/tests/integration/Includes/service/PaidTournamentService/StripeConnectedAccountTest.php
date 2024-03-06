@@ -5,8 +5,8 @@ namespace WStrategies\BMB\tests\integration\Includes\service\PaidTournamentServi
 use Stripe\Service\AccountLinkService;
 use Stripe\Service\AccountService;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
-use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeAccountMock;
-use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;
+use WStrategies\BMB\tests\integration\mock\StripeAccountMock;
+use WStrategies\BMB\tests\integration\mock\StripeMock;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class StripeConnectedAccountTest extends WPBB_UnitTestCase {
@@ -306,4 +306,3 @@ class StripeConnectedAccountTest extends WPBB_UnitTestCase {
     $this->assertEquals('http://example.com', $link);
   }
 }
-
