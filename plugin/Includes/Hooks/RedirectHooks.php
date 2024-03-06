@@ -1,9 +1,10 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use WP_Comment;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Helpers\Wordpress\Navigation;
+use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 class RedirectHooks implements HooksInterface {
   public function load(Loader $loader): void {
@@ -27,6 +28,18 @@ class RedirectHooks implements HooksInterface {
     );
     $loader->add_action(
       'woocommerce_registration_redirect',
+      [$this, 'redirect_after_register'],
+      10,
+      0
+    );
+    $loader->add_action(
+      'login_redirect',
+      [$this, 'redirect_after_login'],
+      10,
+      0
+    );
+    $loader->add_action(
+      'registration_redirect',
       [$this, 'redirect_after_register'],
       10,
       0
@@ -66,7 +79,7 @@ class RedirectHooks implements HooksInterface {
   private function get_login_redirect_url(): string {
     $redirect_to = $_REQUEST['redirect_to'] ?? '';
     if (empty($redirect_to)) {
-      $redirect_to = Navigation::get_page_permalink_by_path('dashboard');
+      $redirect_to = DashboardPage::get_url();
     }
     return $redirect_to;
   }

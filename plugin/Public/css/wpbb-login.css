@@ -1,0 +1,164 @@
+@font-face {
+  font-family: 'ClashDisplay';
+  src:
+    url('../assets/fonts/ClashDisplay-Variable.woff2') format('woff2'),
+    url('../assets/fonts/ClashDisplay-Variable.woff') format('woff');
+}
+body {
+  background: linear-gradient(
+      180deg,
+      rgba(0, 25, 255, 0.5) 0%,
+      #000857 55.5%,
+      #000330 100%
+    ),
+    url('https://s3.amazonaws.com/backmybracket.com/bmb_banner_short1000.png');
+  background-size: 600px;
+  background-repeat: no-repeat;
+  background-position: top;
+  background-color: #000330;
+  display: flex;
+  align-items: center;
+  font-family: 'ClashDisplay', sans-serif;
+  height: auto;
+  min-height: 100%;
+}
+#login {
+  width: auto;
+  max-width: 400px;
+  padding: 20px;
+  margin: 0 auto;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.login #login p {
+  padding: 0;
+}
+
+#loginform,
+#registerform,
+#lostpasswordform {
+  background-color: transparent;
+  border: none;
+  margin-top: 30px;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  padding: 0 2px 2px; /** padding is needed to avoid clipping of outline */
+}
+
+.login #login a {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.login #login a:hover {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.login #login #login-message a {
+  color: #2137ff;
+}
+
+.login .button.wp-hide-pw {
+  top: 6px;
+  color: #2137ff;
+}
+
+input[type='text'],
+input[type='password'],
+input[type='email'] {
+  background-color: transparent !important;
+  border-radius: 8px;
+  outline-color: #2137ff !important;
+  border: 1px solid #2137ff;
+  color: white;
+  padding: 9px !important;
+}
+
+input[type='text']:focus,
+input[type='password']:focus,
+input[type='email']:focus,
+input[type='submit']:focus {
+  border-radius: 8px !important;
+  outline-color: #2137ff !important;
+  border: 1px solid #2137ff;
+}
+
+input[type='submit'] {
+  border-radius: 8px !important;
+  border: 1px solid #2137ff !important;
+  background: rgba(33, 55, 255, 0.15) !important;
+  width: 100%;
+  font-size: 16px !important;
+  text-transform: uppercase;
+  height: 52px;
+}
+
+#login h1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  text-align: left;
+  color: white;
+  font-size: 32px;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+#login h1 a {
+  background-image: url('https://s3.amazonaws.com/backmybracket.com/bmb_logo200.png');
+  background-size: 121px;
+  width: 121px;
+  height: 32px;
+  margin: 0;
+}
+
+.login #login p.forgetmenot {
+  padding-bottom: 10px;
+}
+
+.login .message,
+.login .notice,
+.login .success {
+  margin-top: 20px;
+  border-color: #2137ff;
+  color: black;
+}
+
+#reg_passmail {
+  font-size: 12px;
+}
+
+@media screen and (min-width: 600px) {
+  body {
+    background: linear-gradient(
+        270deg,
+        rgba(0, 25, 255, 0) 0%,
+        #000857 55.5%,
+        #000330 100%
+      ),
+      url('https://s3.amazonaws.com/backmybracket.com/bmb_banner_cropped1000.png');
+    background-size: 875px;
+    background-repeat: no-repeat;
+  }
+  #login {
+    margin: 0 120px;
+  }
+  #login h1 {
+    font-size: 48px;
+    align-items: flex-start;
+  }
+}
+@media screen and (min-width: 800px) {
+  .login #login p.forgetmenot {
+    padding-bottom: 5px;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  body {
+    background-size: contain;
+    background-position: right;
+  }
+}

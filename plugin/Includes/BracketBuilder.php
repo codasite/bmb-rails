@@ -13,6 +13,7 @@ use WStrategies\BMB\Includes\Hooks\CustomPostHooks;
 use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
+use WStrategies\BMB\Includes\Hooks\LoginHooks;
 use WStrategies\BMB\Includes\Hooks\NotificationCronHooks;
 use WStrategies\BMB\Includes\Hooks\Permissions;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
@@ -125,6 +126,7 @@ class BracketBuilder {
       new BracketChatHooks(),
       new UserAdminHooks(),
       new NotificationCronHooks(),
+      new LoginHooks($name_and_version_args),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);
