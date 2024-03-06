@@ -4,16 +4,21 @@ import { Modal } from '../../../Modal'
 import addClickHandlers from '../../../addClickHandlers'
 import { bracketApi } from '../../../../brackets/shared'
 import * as Sentry from '@sentry/react'
-import { SetUpPayments } from './SetUpPayments'
 import { Spinner } from '../../../../brackets/shared/components/Spinner'
 import { InputFeeAmount } from './InputFeeAmount'
+import { ModalHeader } from '../../../ModalHeader'
+import { ModalHeaderLogo } from './ModalHeaderLogo'
+import { SetUpPaymentsButton } from './SetUpPaymentsButton'
 
-export const SetTournamentFeeModal = (props: { chargesEnabled: boolean }) => {
+export const SetTournamentFeeModal = (props: {
+  applicationFeeMinimum: number
+  applicationFeePercentage: number
+}) => {
   const [show, setShow] = useState(false)
   const [fee, setFee] = useState<number>(null)
   const [bracketId, setBracketId] = useState<number>(null)
   const [loadingAccount, setLoadingAccount] = useState(false)
-  const [chargesEnabled, setChargesEnabled] = useState(true)
+  const [chargesEnabled, setChargesEnabled] = useState(false)
   const fetchChargesEnabled = async () => {
     try {
       setLoadingAccount(true)
@@ -35,33 +40,38 @@ export const SetTournamentFeeModal = (props: { chargesEnabled: boolean }) => {
 
   addClickHandlers({
     buttonClassName: 'wpbb-set-tournament-fee-button',
-    onButtonClick: (b) => {
-      // Don't refetch if we already have the info
-      if (!chargesEnabled) {
-        fetchChargesEnabled()
-      }
+    onButtonClick: async (b) => {
       setBracketId(parseInt(b.dataset.bracketId))
       setFee(parseInt(b.dataset.fee))
       setShow(true)
+      // Don't refetch if we already have the info
+      if (!chargesEnabled) {
+        await fetchChargesEnabled()
+      }
     },
   })
 
   return (
     <Modal show={show} setShow={setShow}>
+      <ModalHeaderLogo />
+      <ModalHeader text={'Set an Entry Fee for Your Tournament'} />
       {loadingAccount ? (
         <div className="tw-flex tw-justify-center tw-items-center tw-mb-30">
           <Spinner fill={'white'} height={32} width={32} />
-          <CancelButton onClick={handleCancel} />
         </div>
       ) : chargesEnabled ? (
         <InputFeeAmount
           bracketId={bracketId}
           fee={fee}
           onCancel={handleCancel}
+          applicationFeeMinimum={props.applicationFeeMinimum}
+          applicationFeePercentage={props.applicationFeePercentage}
         />
       ) : (
-        <SetUpPayments onCancel={handleCancel} />
+        <SetUpPaymentsButton />
       )}
+      <div className="tw-flex tw-justify-center tw-mt-10" />
+      <CancelButton onClick={handleCancel} />
     </Modal>
   )
 }

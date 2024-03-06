@@ -240,7 +240,8 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
       />
       <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} />
       <SetTournamentFeeModal
-        chargesEnabled={appObj.userStripeAccountChargesEnabled}
+        applicationFeeMinimum={appObj.applicationFeeMinimum}
+        applicationFeePercentage={appObj.applicationFeePercentage}
       />
     </>,
     'wpbb-tournaments-modals'
@@ -275,7 +276,8 @@ function insertElements(appObj: WpbbAppObj) {
 
 function renderDiv(element: React.FunctionComponentElement<any>, id: string) {
   const div = document.getElementById(id)
-  if (div) {
-    render(element, div)
+  if (!div) {
+    return
   }
+  render(element, div)
 }

@@ -6,7 +6,6 @@ declare var wpbb_app_obj: any
 declare var wpbb_bracket_product_preview_obj: any
 
 export interface WpbbAppObj {
-  userStripeAccountChargesEnabled: boolean
   dashboardUrl?: string
   myPlayHistoryUrl?: string
   bracketBuilderUrl?: string
@@ -22,6 +21,8 @@ export interface WpbbAppObj {
   play?: PlayRes
   isUserLoggedIn?: boolean
   stripePublishableKey?: string
+  applicationFeePercentage?: number
+  applicationFeeMinimum?: number
 }
 
 export interface WpbbBracketProductPreviewObj {
@@ -42,6 +43,18 @@ class WpbbAjax {
       typeof wpbb_bracket_product_preview_obj !== 'undefined'
         ? camelCaseKeys(wpbb_bracket_product_preview_obj)
         : {}
+
+    // parseFloats for number fields
+    if (this.appObj.applicationFeePercentage) {
+      this.appObj.applicationFeePercentage = parseFloat(
+        this.appObj.applicationFeePercentage.toString()
+      )
+    }
+    if (this.appObj.applicationFeeMinimum) {
+      this.appObj.applicationFeeMinimum = parseFloat(
+        this.appObj.applicationFeeMinimum.toString()
+      )
+    }
   }
 
   public getAppObj(): WpbbAppObj {

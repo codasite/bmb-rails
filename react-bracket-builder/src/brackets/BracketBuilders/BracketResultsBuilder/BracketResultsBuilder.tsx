@@ -19,7 +19,7 @@ import {
 import { useWindowDimensions } from '../../../utils/hooks'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { PaginatedResultsBuilder } from './PaginatedResultsBuilder/PaginatedResultsBuilder'
-import { CustomCheckbox } from './CustomCheckbox'
+import { Checkbox } from './Checkbox'
 import { BracketResultsBuilderContext } from './context'
 import { getDashboardPath } from '../../shared'
 
@@ -136,7 +136,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
               {complete ? 'Complete Bracket' : 'Update Picks'}
             </ActionButton>
             <div className="tw-flex tw-gap-20 tw-items-center tw-self-center">
-              <CustomCheckbox
+              <Checkbox
                 id="notify-participants-check"
                 checked={notifyParticipants}
                 onChange={() => setNotifyParticipants(!notifyParticipants)}

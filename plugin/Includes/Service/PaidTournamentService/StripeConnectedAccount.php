@@ -5,14 +5,13 @@ use Stripe\Account;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use WP_User;
-use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
 use WStrategies\BMB\Includes\Service\Stripe\StripeClientFactory;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 use WStrategies\BMB\Public\Partials\StripeOnboardingRedirect;
 
 class StripeConnectedAccount {
   public static string $CONNECTED_ACCOUNT_ID_META_KEY = 'stripe_connected_account_id';
-  public static float $APPLICATION_FEE_PERCENTAGE = 0.125;
+  public static float $APPLICATION_FEE_PERCENTAGE = 0.07;
   // The minimum application fee to charge in cents
   public static float $APPLICATION_FEE_MINIMUM = 100;
   private StripeClient $stripe;

@@ -1,14 +1,12 @@
-import React, { useState, useContext } from 'react'
+import React, { useContext } from 'react'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
 import { MatchTree } from '../../../shared/models/MatchTree'
 import { ActionButton } from '../../../shared/components/ActionButtons'
 import { ResultsBracket } from '../../../shared/components/Bracket'
-import { DarkModeContext } from '../../../shared/context/context'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
-import { bracketApi } from '../../../shared/api/bracketApi'
 import { ReactComponent as EditIcon } from '../../../shared/assets/edit-icon.svg'
-import { CustomCheckbox } from '../CustomCheckbox'
+import { Checkbox } from '../Checkbox'
 import { BracketResultsBuilderContext } from '../context'
 
 interface FullBracketPageProps {
@@ -67,7 +65,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           </ActionButton>
         </div>
         <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px] tw-mt-[52px]">
-          <CustomCheckbox
+          <Checkbox
             id="notify-participants-check"
             checked={notifyParticipants}
             onChange={toggleNotifyParticipants}
