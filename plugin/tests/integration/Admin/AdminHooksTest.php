@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Admin;
+
 
 class AdminHooksTest extends WPBB_UnitTestCase {
   public function test_change_role_to_vip_should_add_new_user_profile_post() {

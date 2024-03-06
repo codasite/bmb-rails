@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\controllers;
+
 
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Includes\Repository\PlayRepo;

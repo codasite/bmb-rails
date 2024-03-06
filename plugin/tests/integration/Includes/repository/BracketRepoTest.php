@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\repository;
+
 
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;

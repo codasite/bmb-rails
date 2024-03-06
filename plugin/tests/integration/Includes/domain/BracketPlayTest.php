@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\domain;
+
 
 use WStrategies\BMB\Includes\Domain\Play;
 

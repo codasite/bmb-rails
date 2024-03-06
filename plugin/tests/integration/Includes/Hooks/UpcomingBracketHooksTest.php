@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\Hooks;
+
 
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\Loader;

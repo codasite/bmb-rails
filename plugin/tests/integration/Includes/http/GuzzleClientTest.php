@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\http;
+
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;

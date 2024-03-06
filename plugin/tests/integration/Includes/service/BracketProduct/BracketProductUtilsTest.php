@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\BracketProduct;
+
 
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 

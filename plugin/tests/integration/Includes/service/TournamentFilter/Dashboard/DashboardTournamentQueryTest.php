@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\TournamentFilter\Dashboard;
+
 
 use WStrategies\BMB\Includes\Domain\Notification;
 use WStrategies\BMB\Includes\Domain\NotificationType;

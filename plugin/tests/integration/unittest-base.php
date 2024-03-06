@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration;
+
 
 use WStrategies\BMB\Includes\Activator;
 use WStrategies\BMB\Includes\Domain\Bracket;

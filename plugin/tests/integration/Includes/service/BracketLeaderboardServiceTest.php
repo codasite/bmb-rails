@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service;
+
 
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 

@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\controllers;
+
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Controllers\BracketApi;

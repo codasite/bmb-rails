@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\mock;
+
 interface OrderInterface {
   public function get_items();
   public function get_id();

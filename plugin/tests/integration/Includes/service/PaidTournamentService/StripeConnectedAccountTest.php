@@ -1,5 +1,7 @@
 
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\PaidTournamentService;
+
 use Stripe\Service\AccountLinkService;
 use Stripe\Service\AccountService;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;

@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\controllers;
+
 
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;

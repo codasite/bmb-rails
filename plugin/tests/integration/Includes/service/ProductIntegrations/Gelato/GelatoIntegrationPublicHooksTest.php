@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\integration\Includes\service\ProductIntegrations\Gelato;
+
 
 use WStrategies\BMB\Includes\Domain\BracketConfig;
 use WStrategies\BMB\Includes\Domain\Pick;

@@ -1,4 +1,6 @@
 <?php
+namespace WStrategies\BMB\tests\unit\Includes\Domain;
+
 
 use PHPUnit\Framework\TestCase;
 use WStrategies\BMB\Includes\Domain\Team;
