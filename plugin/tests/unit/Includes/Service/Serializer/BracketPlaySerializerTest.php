@@ -1,23 +1,28 @@
 <?php
-namespace WStrategies\BMB\tests\integration\Includes\service\Serializer;
+namespace Includes\Service\Serializer;
 
 use Spatie\Snapshots\MatchesSnapshots;
+use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
-use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class BracketPlaySerializerTest extends WPBB_UnitTestCase {
+class BracketPlaySerializerTest extends TestCase {
   use MatchesSnapshots;
 
   public function test_serialize() {
-    $bracket = $this->create_bracket([
+    $bracket = new Bracket([
+      'author' => 1,
+      'author_display_name' => 'admin',
       'id' => 100000,
       'title' => 'Test Bracket',
-      'published_date' => '2020-01-01 00:00:00',
+      'published_date' => '2020-01-01T00:00:00+00:00',
+      'num_teams' => 4,
+      'url' => 'http://example.org/?bracket=test-bracket',
       'slug' => 'test-bracket',
       'month' => 'January',
       'year' => '2020',
@@ -51,10 +56,13 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play = $this->create_play([
+    $play = new Play([
+      'author' => 1,
+      'author_display_name' => 'admin',
+      'url' => 'http://example.org/?bracket_play=test-play',
       'id' => 100007,
       'slug' => 'test-play',
-      'published_date' => '2020-01-01 00:00:00',
+      'published_date' => '2020-01-01T00:00:00+00:00',
       'bracket_id' => 100000,
       'total_score' => 100,
       'accuracy_score' => 0.5,
@@ -91,7 +99,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
   }
 
   public function test_serialize_with_buster_play() {
-    $bracket = $this->create_bracket([
+    $bracket = new Bracket([
       'id' => 100000,
       'title' => 'Test Bracket',
       'published_date' => '2020-01-01 00:00:00',
@@ -128,7 +136,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $busted_play = $this->create_play([
+    $busted_play = new Play([
       'id' => 200008,
       'slug' => 'test-play-busted',
       'published_date' => '2020-01-01 00:00:00',
@@ -162,7 +170,7 @@ class BracketPlaySerializerTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $play = $this->create_play([
+    $play = new Play([
       'id' => 100007,
       'slug' => 'test-play',
       'published_date' => '2020-01-01 00:00:00',

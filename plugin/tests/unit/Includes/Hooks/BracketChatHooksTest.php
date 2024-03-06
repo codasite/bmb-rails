@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\tests\unit\Includes\Hooks;
 
-
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Hooks\BracketChatHooks;

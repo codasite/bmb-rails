@@ -1,7 +1,6 @@
 <?php
 namespace WStrategies\BMB\tests\unit\Includes\Service;
 
-
 use Spatie\Snapshots\MatchesSnapshots;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Fakes\PickResultFakeFactory;

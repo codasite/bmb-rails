@@ -1,11 +1,11 @@
 <?php
-namespace WStrategies\BMB\tests\integration\Includes\domain;
+namespace Includes\Domain;
 
+use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Notification;
 use WStrategies\BMB\Includes\Domain\NotificationType;
-use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class NotificationTest extends WPBB_UnitTestCase {
+class NotificationTest extends TestCase {
   public function testConstructor() {
     $data = [
       'id' => '1',
