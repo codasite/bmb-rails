@@ -44,8 +44,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     $this->match_repo =
       $args['match_repo'] ?? new BracketMatchRepo($this->team_repo);
     $this->results_repo =
-      $args['results_repo'] ??
-      new BracketResultsRepo($this, $this->team_repo, $this->match_repo);
+      $args['results_repo'] ?? new BracketResultsRepo($this, $this->team_repo);
     $this->leaderboard_service =
       $args['leaderboard_service'] ??
       new BracketLeaderboardService(null, [

@@ -72,6 +72,9 @@ class BracketMatchService {
      */
     $matches_2d = $this->match_node_2d($matches_flat);
     // Ensure picks are sorted by round_index and match_index
+    /**
+     * @var array<Pick> $sorted_picks_flat
+     */
     $sorted_picks_flat = $this->sort_match_node($picks_flat);
     // Sorts picks by round_index and match_index
     foreach ($sorted_picks_flat as $pick) {

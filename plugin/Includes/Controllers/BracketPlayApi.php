@@ -231,13 +231,13 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
         'status' => 400,
       ]);
     } catch (ImageGeneratorException $e) {
+      $this->utils->log_error($e->getMessage());
       return new WP_Error('image-generation-error', $e->getMessage(), [
         'status' => 500,
       ]);
-      $this->utils->log_error($e->getMessage());
     } catch (Exception $e) {
-      return new WP_Error('error', $e->getMessage(), ['status' => 500]);
       $this->utils->log_error($e->getMessage());
+      return new WP_Error('error', $e->getMessage(), ['status' => 500]);
     }
   }
 
@@ -265,13 +265,13 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
       $serialized = $this->serializer->serialize($play);
       return new WP_REST_Response($serialized, 201);
     } catch (ImageGeneratorException $e) {
+      $this->utils->log_error($e->getMessage());
       return new WP_Error('image-generation-error', $e->getMessage(), [
         'status' => 500,
       ]);
-      $this->utils->log_error($e->getMessage());
     } catch (Exception $e) {
-      return new WP_Error('error', $e->getMessage(), ['status' => 500]);
       $this->utils->log_error($e->getMessage());
+      return new WP_Error('error', $e->getMessage(), ['status' => 500]);
     }
   }
 
