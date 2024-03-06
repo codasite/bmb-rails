@@ -17,6 +17,7 @@ class PartialsCommon {
       <span class="tw-font-700 tw-whitespace-nowrap"><?php echo $label; ?></span>
     </a>
     <?php // return ob_get_clean();
+
     return self::gradient_border_wrap(ob_get_clean(), [
       'wpbb-add-apparel-gradient-border',
       'tw-rounded-8',
