@@ -1,0 +1,381 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FullBracketPage renders page correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="wpbb-reset tw-flex tw-uppercase tw-min-h-screen tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark "
+    style="background-image: url(undefined);"
+  >
+    <div
+      class="tw-flex tw-flex-col tw-justify-center px-60 tw-max-w-[268px] tw-m-auto tw-gap-80"
+    >
+      <h1
+        class="tw-text-center tw-text-48 tw-font-700 tw-w-"
+      >
+        Who You Got?
+      </h1>
+      <div
+        class="tw-flex tw-flex-col tw-justify-center tw-items-center"
+        style="height: 0px; width: 210px;"
+      >
+        <div
+          style="transform: scale(0.3);"
+        >
+          <div
+            class="tw-flex tw-flex-col tw-dark wpbb-default-bracket tw-relative"
+          >
+            <div
+              class="tw-flex tw-flex-col tw-justify-end"
+              style="margin-bottom: 95px; min-height: 0;"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-24 tw-items-center"
+              >
+                <div
+                  class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-dd-blue tw-font-700 tw-bg-green"
+                  style="border-width: 0px;"
+                >
+                  <span
+                    style="font-size: 32px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+            >
+              <div
+                class="tw-flex tw-justify-between tw-relative tw-w-[700px]"
+              >
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+                  >
+                    <button
+                      class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-green tw-cursor-pointer"
+                      style="border-width: 0px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 1
+                      </span>
+                    </button>
+                    <button
+                      class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 2
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
+                  >
+                    <button
+                      class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 1
+                      </span>
+                    </button>
+                    <button
+                      class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-green tw-cursor-pointer"
+                      style="border-width: 0px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 3
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+                  >
+                    <button
+                      class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-green tw-cursor-pointer"
+                      style="border-width: 0px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 3
+                      </span>
+                    </button>
+                    <button
+                      class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 4
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="margin-top: 20px; min-height: 0;"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-font-700 tw-whitespace-nowrap "
+              >
+                <span
+                  class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+                >
+                  Who You Got?
+                </span>
+                <svg
+                  class="tw-w-[124px] tw-text-black/25 dark:tw-text-white"
+                />
+              </div>
+            </div>
+            <div
+              class="tw-absolute"
+            >
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+            </div>
+            <div
+              class="tw-absolute"
+            >
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-cursor-pointer tw-bg-yellow/15 tw-text-yellow tw-gap-10 tw-text-24 tw-font-700 tw-rounded-8 tw-h-[48px] tw-py-16 tw-border-solid tw-border-4 tw-border-yellow"
+      >
+        Update Picks
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`LandingPage renders page correctly 1`] = `
+<DocumentFragment>
+  <div
+    class="wpbb-reset tw-flex tw-uppercase tw-min-h-screen tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark "
+    style="background-image: url(undefined);"
+  >
+    <div
+      class="tw-flex tw-flex-col tw-justify-center px-60 tw-max-w-[268px] tw-m-auto tw-gap-80"
+    >
+      <h1
+        class="tw-text-center tw-text-48 tw-font-700 tw-w-"
+      >
+        Who You Got?
+      </h1>
+      <div
+        class="tw-flex tw-flex-col tw-justify-center tw-items-center"
+        style="height: 0px; width: 210px;"
+      >
+        <div
+          style="transform: scale(0.3);"
+        >
+          <div
+            class="tw-flex tw-flex-col tw-dark wpbb-default-bracket tw-relative"
+          >
+            <div
+              class="tw-flex tw-flex-col tw-justify-end"
+              style="margin-bottom: 95px; min-height: 0;"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-24 tw-items-center"
+              >
+                <div
+                  class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-dd-blue tw-font-700 tw-bg-green"
+                  style="border-width: 0px;"
+                >
+                  <span
+                    style="font-size: 32px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div
+              class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+            >
+              <div
+                class="tw-flex tw-justify-between tw-relative tw-w-[700px]"
+              >
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+                  >
+                    <button
+                      class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-green tw-cursor-pointer"
+                      style="border-width: 0px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 1
+                      </span>
+                    </button>
+                    <button
+                      class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 2
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
+                  >
+                    <button
+                      class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 1
+                      </span>
+                    </button>
+                    <button
+                      class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-green tw-cursor-pointer"
+                      style="border-width: 0px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 3
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div
+                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                >
+                  <div
+                    class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+                  >
+                    <button
+                      class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-green tw-cursor-pointer"
+                      style="border-width: 0px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 3
+                      </span>
+                    </button>
+                    <button
+                      class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                      style="border-width: 2px;"
+                    >
+                      <span
+                        style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                      >
+                        Team 4
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              style="margin-top: 20px; min-height: 0;"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-font-700 tw-whitespace-nowrap "
+              >
+                <span
+                  class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+                >
+                  Who You Got?
+                </span>
+                <svg
+                  class="tw-w-[124px] tw-text-black/25 dark:tw-text-white"
+                />
+              </div>
+            </div>
+            <div
+              class="tw-absolute"
+            >
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+            </div>
+            <div
+              class="tw-absolute"
+            >
+              <div
+                class="react-lineto-placeholder"
+              />
+              <div
+                class="react-lineto-placeholder"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-cursor-pointer tw-bg-yellow/15 tw-text-yellow tw-gap-10 tw-text-24 tw-font-700 tw-rounded-8 tw-h-[48px] tw-py-16 tw-border-solid tw-border-4 tw-border-yellow"
+      >
+        Update Picks
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
