@@ -2,9 +2,12 @@
 
 namespace WStrategies\BMB\Email\Template;
 class BracketEmailTemplate {
-  public static function render( string $heading, string $button_url, string $button_text ): false|string {
-    ob_start();
-    ?>
+  public static function render(
+    string $heading,
+    string $button_url,
+    string $button_text
+  ): false|string {
+    ob_start(); ?>
     <!DOCTYPE html>
     <html lang='en'>
     <head>
@@ -138,7 +141,7 @@ class BracketEmailTemplate {
                         <tr>
                           <td class="pad">
                             <h1
-                              style="margin: 0; color: #ffffff; direction: ltr; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><?php echo $heading ?></h1>
+                              style="margin: 0; color: #ffffff; direction: ltr; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: center; margin-top: 0; margin-bottom: 0;"><?php echo $heading; ?></h1>
                           </td>
                         </tr>
                       </table>
@@ -157,12 +160,14 @@ class BracketEmailTemplate {
                                 <w:anchorlock />
                                 <v:textbox inset='0px,0px,0px,0px'>
                                   <center style='color:#ffffff; font-family:Arial, sans-serif; font-size:16px'><![endif]--><a
-                                href=<?php echo "\"" . $button_url . "\"" ?> style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#005013;border-radius:4px;width:auto;border-top:1px
+                                href=<?php echo "\"" .
+                                  $button_url .
+                                  "\""; ?> style="text-decoration:none;display:inline-block;color:#ffffff;background-color:#005013;border-radius:4px;width:auto;border-top:1px
                                 solid #05FF3C;font-weight:400;border-right:1px solid #05FF3C;border-bottom:1px solid #05FF3C;border-left:1px solid
                                 #05FF3C;padding-top:5px;padding-bottom:5px;font-family:Arial, Helvetica,
                                 sans-serif;font-size:16px;text-align:center;mso-border-alt:none;word-break:keep-all;" target="_blank"><span
                                 style="padding-left:40px;padding-right:40px;font-size:16px;display:inline-block;letter-spacing:normal;"><span
-                                  style="word-break: break-word; line-height: 32px;"><?php echo $button_text ?></span></span></a><!--[if mso]></center></v:textbox></v:roundrect>
+                                  style="word-break: break-word; line-height: 32px;"><?php echo $button_text; ?></span></span></a><!--[if mso]></center></v:textbox></v:roundrect>
                               <![endif]--></div>
                           </td>
                         </tr>
@@ -179,7 +184,6 @@ class BracketEmailTemplate {
     </table><!-- End -->
     </body>
     </html>
-    <?php
-    return ob_get_clean();
+    <?php return ob_get_clean();
   }
 }

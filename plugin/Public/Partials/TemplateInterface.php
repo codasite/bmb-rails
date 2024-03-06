@@ -3,5 +3,5 @@
 namespace WStrategies\BMB\Public\Partials;
 
 interface TemplateInterface {
-	public function render() : string;
+  public function render(): string;
 }

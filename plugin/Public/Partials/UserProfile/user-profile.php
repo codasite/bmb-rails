@@ -10,9 +10,9 @@ $user_profile_repo = new UserProfileRepo();
 $user_profile = $user_profile_repo->get_by_post();
 $play_repo = new PlayRepo();
 $plays = $play_repo->get_all([
-	'posts_per_page' => 6,
-	'tag_slug__in' => ['bmb_vip_profile'],
-  'author' => $user_profile->author
+  'posts_per_page' => 6,
+  'tag_slug__in' => ['bmb_vip_profile'],
+  'author' => $user_profile->author,
 ]);
 ?>
 <div class="wpbb-reset wpbb-faded-bracket-bg tw-pt-60 tw-pb-[150px] tw-px-20">
@@ -29,15 +29,18 @@ $plays = $play_repo->get_all([
 		</div>
     <h1 class="tw-text-32 md:tw-text-48 tw-font-700 tw-py-30">Recent Play History</h1>
     <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10">
-      <?php foreach ($plays as $play) : ?>
-        <?php echo BracketCards::vip_play_card( $play ); ?>
+      <?php foreach ($plays as $play): ?>
+        <?php echo BracketCards::vip_play_card($play); ?>
       <?php endforeach; ?>
     </div>
     <h1 class="tw-text-32 md:tw-text-48 tw-font-700 tw-pt-60">Brackets</h1>
     <div class="tw-flex tw-justify-start tw-gap-10 tw-py-24 tw-flex-wrap">
       <?php echo BracketsCommon::bracket_filter_buttons(); ?>
     </div>
-    <?php echo BracketsCommon::public_bracket_list( [ 'author' => $user_profile->author, 'tags' => [ 'bmb_vip_profile' ] ] ); ?>
+    <?php echo BracketsCommon::public_bracket_list([
+      'author' => $user_profile->author,
+      'tags' => ['bmb_vip_profile'],
+    ]); ?>
   </div>
   <div id='wpbb-public-bracket-modals'></div>
 </div>

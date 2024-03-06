@@ -1,6 +1,5 @@
 <?php
 namespace WStrategies\BMB\Public\Error;
-
 /**
  * The template for displaying 403 pages (Forbidden)
  */

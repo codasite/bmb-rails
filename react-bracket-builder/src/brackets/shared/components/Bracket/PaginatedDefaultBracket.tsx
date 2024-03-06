@@ -124,8 +124,8 @@ export const PaginatedDefaultBracket = (
   const nextMatchPosition = nextRoundIsLast
     ? 'center'
     : leftSide
-    ? 'left'
-    : 'right'
+      ? 'left'
+      : 'right'
 
   const currentRoundColumn = (
     <MatchColumnComponent

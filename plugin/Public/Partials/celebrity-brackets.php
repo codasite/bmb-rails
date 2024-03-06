@@ -15,10 +15,10 @@ $bracket_repo = new BracketRepo();
 $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
 
 $query = new WP_Query([
-	'post_type' => [Bracket::get_post_type(), Play::get_post_type()],
-	'posts_per_page' => 6,
-	'paged' => $paged,
-	'tag_slug__in' => ['bmb_vip_featured'],
+  'post_type' => [Bracket::get_post_type(), Play::get_post_type()],
+  'posts_per_page' => 6,
+  'paged' => $paged,
+  'tag_slug__in' => ['bmb_vip_featured'],
 ]);
 
 $num_pages = $query->max_num_pages;
@@ -26,11 +26,11 @@ $posts = $query->posts;
 $brackets_and_plays = [];
 
 foreach ($posts as $post) {
-	if ($post->post_type === Bracket::get_post_type()) {
-		$brackets_and_plays[] = $bracket_repo->get($post);
-	} else if ($post->post_type === Play::get_post_type()) {
-		$brackets_and_plays[] = $play_repo->get($post);
-	}
+  if ($post->post_type === Bracket::get_post_type()) {
+    $brackets_and_plays[] = $bracket_repo->get($post);
+  } elseif ($post->post_type === Play::get_post_type()) {
+    $brackets_and_plays[] = $play_repo->get($post);
+  }
 }
 ?>
 <div class="wpbb-reset tw-bg-dd-blue">
@@ -43,11 +43,11 @@ foreach ($posts as $post) {
 			<div class="tw-flex tw-flex-col tw-gap-30 tw-max-w-[1160px] tw-m-auto ">
 				<h2 class="tw-text-36 md:tw-text-48 tw-font-700 ">Featured</h2>
 				<div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10 tw-items-stretch" style="grid-auto-rows: 1fr;">
-					<?php foreach ($brackets_and_plays as $obj) : ?>
-						<?php echo BracketCards::vip_switcher( $obj ); ?>
+					<?php foreach ($brackets_and_plays as $obj): ?>
+						<?php echo BracketCards::vip_switcher($obj); ?>
 					<?php endforeach; ?>
 				</div>
-				<?php PaginationWidget::pagination( $paged, $num_pages ); ?>
+				<?php PaginationWidget::pagination($paged, $num_pages); ?>
 			</div>
 		</div>
 	</div>
