@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\tests\unit\Includes\Service\BracketProduct;
+namespace WStrategies\BMB\tests\unit\Includes\Public\Partials\dashboard;
 use Mockery;
 use Spatie\Snapshots\MatchesSnapshots;
 use Stripe\Service\AccountService;
@@ -14,7 +14,7 @@ use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournam
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 use WStrategies\BMB\Public\Partials\dashboard\PlayHistoryPage;
 use WStrategies\BMB\Public\Partials\dashboard\TournamentsPage;
-use WStrategies\BMB\tests\Includes\Service\PaymentProcessors\StripeMock;
+use WStrategies\BMB\tests\integration\mock\StripeMock;
 
 class DashboardPageTest extends TestCase {
   use MatchesSnapshots;

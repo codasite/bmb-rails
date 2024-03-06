@@ -1,9 +1,10 @@
 <?php
 namespace WStrategies\BMB\tests\unit\Includes\Hooks;
 
-
 // use PHPUnit\Framework\TestCase;
 
+use Exception;
+use WP_Mock;
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Hooks\RedirectHooks;
 
