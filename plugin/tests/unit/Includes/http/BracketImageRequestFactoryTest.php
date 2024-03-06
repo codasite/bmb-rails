@@ -1,15 +1,16 @@
 <?php
-namespace WStrategies\BMB\tests\integration\Includes\http;
+namespace Includes\http;
 
+use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\PostBracketInterface;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Service\Http\BracketImageRequestFactory;
 use WStrategies\BMB\Includes\Service\ObjectStorage\ObjectStorageInterface;
-use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
+class BracketImageRequestFactoryTest extends TestCase {
   public function test_get_request_data() {
     $bracket_mock = $this->createMock(PostBracketInterface::class);
     $bracket_mock->method('get_post_id')->willReturn(1);
@@ -278,7 +279,8 @@ class BracketImageRequestFactoryTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_multiple_requests() {
-    $bracket = $this->create_bracket([
+    $bracket = new Bracket([
+      'id' => 1,
       'title' => 'Test Bracket',
       'date' => '2020-01-01',
       'num_teams' => 4,
