@@ -41,9 +41,12 @@ class UserAdminHooks implements HooksInterface {
   }
 
   public function display_stripe_connected_acct_meta_box($user): void {
+    $account = null;
     try {
       $account = $this->connected_account_factory->get_account($user->ID);
     } catch (Exception $e) {
+    }
+    if (!$account) {
       return;
     }
     wp_nonce_field(
