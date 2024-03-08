@@ -2,6 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
+use Exception;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 
 class UserAdminHooks implements HooksInterface {
@@ -40,7 +41,11 @@ class UserAdminHooks implements HooksInterface {
   }
 
   public function display_stripe_connected_acct_meta_box($user): void {
-    $account = $this->connected_account_factory->get_account($user->ID);
+    try {
+      $account = $this->connected_account_factory->get_account($user->ID);
+    } catch (Exception $e) {
+      return;
+    }
     wp_nonce_field(
       'stripe_connected_acct_meta_box',
       'stripe_connected_acct_meta_box_nonce'
