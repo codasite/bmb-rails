@@ -40,7 +40,8 @@ body {
 
 #loginform,
 #registerform,
-#lostpasswordform {
+#lostpasswordform,
+#resetpassform {
   background-color: transparent;
   border: none;
   margin-top: 30px;
@@ -58,7 +59,9 @@ body {
   color: rgba(255, 255, 255, 0.75);
 }
 
-.login #login #login-message a {
+.login #login .message a,
+.login #login .notice a,
+.login #login .notice-info a {
   color: #2137ff;
 }
 
