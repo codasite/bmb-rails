@@ -22,10 +22,6 @@ class UserAdminHooks implements HooksInterface {
       $this,
       'display_stripe_connected_acct_meta_box',
     ]);
-    $loader->add_action('user_new_form', [
-      $this,
-      'display_stripe_connected_acct_meta_box',
-    ]);
     $loader->add_action('personal_options_update', [
       $this,
       'save_stripe_connected_acct_meta_box',
