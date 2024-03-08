@@ -116,6 +116,8 @@ class PublicHooks implements HooksInterface {
   }
 
   public function add_roles(): void {
+    remove_role('bmb_plus');
+    remove_role('bmb_vip');
     add_role('bmb_plus', 'BMB Plus', [
       'wpbb_share_bracket' => true,
       'wpbb_bust_play' => true,
