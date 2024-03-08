@@ -31,3 +31,4 @@ wordpress_sites:
       wp_sentry_php_dsn: 'https://2e4df9ae93914f279c4ab59721811edc@o4505256728330240.ingest.sentry.io/4505256731082752'
       aws_region: 'us-east-1'
       node_env: 'development'
+      disable_wp_cron: false

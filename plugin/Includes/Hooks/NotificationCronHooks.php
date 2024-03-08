@@ -2,6 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
+use Error;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;

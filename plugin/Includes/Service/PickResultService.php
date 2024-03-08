@@ -8,6 +8,9 @@ use WStrategies\BMB\Includes\Domain\Play;
 class PickResultService {
   /**
    * @param array<PickResult> $results
+   * @param Play $play
+   *
+   * @return PickResult|null
    */
   public function get_pick_result_for_play(
     array $results,
@@ -27,6 +30,11 @@ class PickResultService {
    * This function returns the match pick result given an array of team ids.
    * team_ids is assumed to be a play's winning picks in ranked order. For example [5, 1, 0, 2, 3]
    * where team 5 is the final winning team, team 1 is the second place team, and so on.
+   *
+   * @param array<PickResult> $results
+   * @param array<int> $team_ids
+   *
+   * @return PickResult|null
    */
   public function get_pick_result_for_many_teams(
     array $results,

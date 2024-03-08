@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\Logger;
 
 class SentryLogger {
-  public static function log($msg, $level = 'debug') {
+  public static function log($msg, $level = 'debug'): void {
     error_log($msg);
     switch ($level) {
       case 'debug':
@@ -26,20 +26,20 @@ class SentryLogger {
     }
 
     if (function_exists('wp_sentry_safe')) {
-      return wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
+      wp_sentry_safe(function (\Sentry\State\HubInterface $client) use (
         $msg,
         $severity
       ) {
-        return $client->captureMessage($msg, $severity);
+        $client->captureMessage($msg, $severity);
       });
     }
   }
 
-  public static function log_error($msg): null {
-    return self::log($msg, 'error');
+  public static function log_error($msg): void {
+    self::log($msg, 'error');
   }
 
-  public static function warn($msg): null {
-    return self::log($msg, 'warning');
+  public static function warn($msg): void {
+    self::log($msg, 'warning');
   }
 }

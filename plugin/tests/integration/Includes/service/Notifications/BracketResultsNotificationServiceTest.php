@@ -148,4 +148,38 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
     $this->assertEquals($bracket1->id, $brackets[0]->id);
     $this->assertEquals($bracket3->id, $brackets[1]->id);
   }
+
+  public function test_should_return_empty_array_when_no_brackets_to_send_results_notifications_for() {
+    $bracket1 = $this->create_bracket();
+    $bracket2 = $this->create_bracket();
+    $bracket3 = $this->create_bracket();
+    $service = new BracketResultsNotificationService([
+      'email_service' => $this->createMock(EmailServiceInterface::class),
+    ]);
+    $brackets = $service->get_brackets_to_send_results_notifications_for();
+    $this->assertEquals(0, count($brackets));
+  }
+
+  public function test_should_exclude_anonymous_plays() {
+    $user1 = $this->create_user();
+    $user2 = $this->create_user();
+    $bracket = $this->create_bracket();
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user1->ID,
+    ]);
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user2->ID,
+    ]);
+    $play3 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 0,
+    ]);
+    $service = new BracketResultsNotificationService([
+      'email_service' => $this->createMock(EmailServiceInterface::class),
+    ]);
+    $plays = $service->get_plays($bracket);
+    $this->assertEquals(2, count($plays));
+  }
 }

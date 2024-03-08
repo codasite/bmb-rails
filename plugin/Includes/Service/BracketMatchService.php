@@ -66,7 +66,10 @@ class BracketMatchService {
    * @param array<BracketMatch> $matches_flat
    * @param array<Pick> $picks_flat
    */
-  public function matches_from_picks(array $matches_flat, array $picks_flat) {
+  public function matches_2d_from_picks(
+    array $matches_flat,
+    array $picks_flat
+  ) {
     /**
      * @var array<array<BracketMatch>> $matches_2d
      */
@@ -101,27 +104,52 @@ class BracketMatchService {
             1
           )->get_winning_team();
         }
-        if ($match->team1 && $pick->winning_team_id === $match->team1->id) {
+        if ($match->team1 && $match->team1->equals($pick->get_winning_team())) {
           $match->set_team1_wins();
         } elseif (
           $match->team2 &&
-          $pick->winning_team_id === $match->team2->id
+          $match->team2->equals($pick->get_winning_team())
         ) {
           $match->set_team2_wins();
+        } else {
+          throw new InvalidArgumentException(
+            'Invalid pick. Winning team not found in match'
+          );
         }
       } else {
-        $team1 = $this->get_prev_match(
+        $team1_match = $this->get_prev_match(
           $matches_2d,
           $pick->get_round_index(),
           $pick->get_match_index(),
           0
-        )->get_winning_team();
-        $team2 = $this->get_prev_match(
+        );
+        $team2_match = $this->get_prev_match(
           $matches_2d,
           $pick->get_round_index(),
           $pick->get_match_index(),
           1
-        )->get_winning_team();
+        );
+        $team1 = $team1_match->get_winning_team();
+        $team2 = $team2_match->get_winning_team();
+        if (!$team1 || !$team2) {
+          throw new InvalidArgumentException(
+            'Both teams must be set for a match to be created'
+          );
+        }
+        $team1_wins =
+          $team1 !== null && $team1->equals($pick->get_winning_team());
+        $team2_wins =
+          $team2 !== null && $team2->equals($pick->get_winning_team());
+        if ($team1_wins === $team2_wins) {
+          throw new InvalidArgumentException(
+            'Only one team can win a match. Pick: ' .
+              print_r($pick, true) .
+              ' Team1: ' .
+              print_r($team1, true) .
+              ' Team2: ' .
+              print_r($team2, true)
+          );
+        }
         $matches_2d[$pick->get_round_index()][
           $pick->get_match_index()
         ] = new BracketMatch([
@@ -129,8 +157,8 @@ class BracketMatchService {
           'match_index' => $pick->get_match_index(),
           'team1' => $team1,
           'team2' => $team2,
-          'team1_wins' => $team1 && $pick->winning_team_id === $team1->id,
-          'team2_wins' => $team2 && $pick->winning_team_id === $team2->id,
+          'team1_wins' => $team1_wins,
+          'team2_wins' => $team2_wins,
         ]);
       }
     }
@@ -165,5 +193,26 @@ class BracketMatchService {
     }
 
     return $matches_2d[$prev_round_index][$prev_match_index];
+  }
+
+  /**
+   * @param array<array<mixed>> $arr_2d
+   * @param array<BracketMatchNodeInterface> $nodes_flat
+   *
+   * @return array<array<mixed>> $arr_2d
+   */
+  public function filter_2d_array(array $arr_2d, array $nodes_flat): array {
+    $filtered = [];
+    foreach ($nodes_flat as $node) {
+      $round = $node->get_round_index();
+      $match = $node->get_match_index();
+      if (!isset($arr_2d[$round][$match])) {
+        throw new InvalidArgumentException(
+          'No match found at index: ' . $match . ' in round: ' . $round
+        );
+      }
+      $filtered[$round][$match] = $arr_2d[$round][$match];
+    }
+    return $filtered;
   }
 }

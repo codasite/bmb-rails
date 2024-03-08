@@ -13,7 +13,7 @@ class Bracket extends PostBase implements PostBracketInterface {
   public ?float $fee;
   public bool $should_notify_results_updated;
   /**
-   * @var BracketMatch[] Array of BracketMatch objects
+   * @var BracketMatch[]
    */
   public array $matches;
   /**
@@ -122,19 +122,15 @@ class Bracket extends PostBase implements PostBracketInterface {
    * @throws ValidationException
    */
   public static function from_array(array $data): Bracket {
-    $requiredFields = [
-      'num_teams',
-      'wildcard_placement',
-      'author',
-      'title',
-      'matches',
-    ];
+    $requiredFields = ['num_teams', 'wildcard_placement', 'author', 'title'];
     RequiredFieldValidation::validateRequiredFields($data, $requiredFields);
-    $matches = [];
-    foreach ($data['matches'] as $match) {
-      $matches[] = BracketMatch::from_array($match);
+    if (isset($data['matches'])) {
+      $matches = [];
+      foreach ($data['matches'] as $match) {
+        $matches[] = BracketMatch::from_array($match);
+      }
+      $data['matches'] = $matches;
     }
-    $data['matches'] = $matches;
 
     if (isset($data['results'])) {
       $results = [];

@@ -87,7 +87,7 @@ class PickResultFactoryTest extends WPBB_UnitTestCase {
       ],
     ]);
     $match_service = new BracketMatchService();
-    $matches = $match_service->matches_from_picks(
+    $matches = $match_service->matches_2d_from_picks(
       $bracket->matches,
       $bracket->results
     );

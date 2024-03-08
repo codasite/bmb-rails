@@ -19,7 +19,7 @@ class PickResult {
     }
     if (!$match->has_results()) {
       throw new ValueError(
-        'Match results not set. Populate match results first using BracketMatchService->matches_from_picks()'
+        'Match results not set. Populate match results first using BracketMatchService->matches_2d_from_picks()'
       );
     }
     if (

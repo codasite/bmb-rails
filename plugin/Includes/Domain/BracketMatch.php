@@ -41,8 +41,8 @@ class BracketMatch implements BracketMatchNodeInterface {
     $this->match_index = (int) $args['match_index'];
     $this->team1 = $args['team1'] ?? null;
     $this->team2 = $args['team2'] ?? null;
-    $this->team1_wins = $args['team1_wins'] ?? false;
-    $this->team2_wins = $args['team2_wins'] ?? false;
+    $this->team1_wins = (bool) ($args['team1_wins'] ?? false);
+    $this->team2_wins = (bool) ($args['team2_wins'] ?? false);
     $this->id = isset($args['id']) ? (int) $args['id'] : null;
 
     if ($this->team1_wins && $this->team2_wins) {

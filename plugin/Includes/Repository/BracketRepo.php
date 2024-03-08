@@ -185,7 +185,9 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     return $bracket_data;
   }
 
-  public function get_all(array|WP_Query $query = []): array {
+  public function get_all(array|WP_Query $query = [], array $args = []): array {
+    $fetch_matches = $args['fetch_matches'] ?? false;
+    $fetch_results = $args['fetch_results'] ?? false;
     if ($query instanceof WP_Query) {
       return $this->brackets_from_query($query);
     }
@@ -198,13 +200,17 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     $args = array_merge($default_args, $query);
     $query = new WP_Query($args);
 
-    return $this->brackets_from_query($query);
+    return $this->brackets_from_query($query, $fetch_matches, $fetch_results);
   }
 
-  public function brackets_from_query(WP_Query $query): array {
+  public function brackets_from_query(
+    WP_Query $query,
+    $fetch_matches = false,
+    $fetch_results = false
+  ): array {
     $brackets = [];
     foreach ($query->posts as $post) {
-      $bracket = $this->get($post, false);
+      $bracket = $this->get($post, $fetch_matches, $fetch_results);
       if ($bracket) {
         $brackets[] = $bracket;
       }

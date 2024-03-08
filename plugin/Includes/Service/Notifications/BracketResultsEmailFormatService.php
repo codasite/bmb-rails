@@ -18,6 +18,9 @@ class BracketResultsEmailFormatService {
 
   public function send_email(Play $play, PickResult $result): void {
     $user = $this->user_repo->get_by_id($play->author);
+    if (!$user) {
+      return;
+    }
     $to_email = $user->user_email;
     $to_name = $user->display_name;
     $subject = 'Bracket Results Updated';
@@ -30,13 +33,7 @@ class BracketResultsEmailFormatService {
     $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
 
     // send the email
-    $response = $this->email_service->send(
-      $to_email,
-      $to_name,
-      $subject,
-      $heading,
-      $html
-    );
+    $this->email_service->send($to_email, $to_name, $subject, $heading, $html);
   }
 
   public function get_pick_result_heading(PickResult $result): string {

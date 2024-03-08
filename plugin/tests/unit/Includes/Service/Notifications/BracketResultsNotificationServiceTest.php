@@ -3,6 +3,7 @@ namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Factory\PickResultFactory;
@@ -26,15 +27,14 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $email_format_service = $this->createMock(
       BracketResultsEmailFormatService::class
     );
-    $match_pick_result_factory = $this->createMock(PickResultFactory::class);
     $results_filter_service = $this->createMock(
       BracketResultsFilterService::class
     );
     $results_filter_service
       ->method('filter_results_updated_at_time')
-      ->willReturn([]);
+      ->willReturn([$this->createStub(Pick::class)]);
     $match_service = $this->createMock(BracketMatchService::class);
-    $match_service->method('matches_from_picks')->willReturn([]);
+    $match_service->method('matches_2d_from_picks')->willReturn([]);
     $result_to_send = $this->createMock(PickResult::class);
     // Expecting the send_email method to be called once with the result to send
     $email_format_service
@@ -72,7 +72,6 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $email_format_service = $this->createMock(
       BracketResultsEmailFormatService::class
     );
-    $match_pick_result_factory = $this->createMock(PickResultFactory::class);
     $results_filter_service = $this->createMock(
       BracketResultsFilterService::class
     );
@@ -80,7 +79,7 @@ class BracketResultsNotificationServiceTest extends TestCase {
       ->method('filter_results_updated_at_time')
       ->willReturn([]);
     $match_service = $this->createMock(BracketMatchService::class);
-    $match_service->method('matches_from_picks')->willReturn([]);
+    $match_service->method('matches_2d_from_picks')->willReturn([]);
     $pick_result_service = $this->createMock(PickResultService::class);
     $pick_result_service->method('get_pick_result_for_play')->willReturn(null);
 
@@ -112,15 +111,14 @@ class BracketResultsNotificationServiceTest extends TestCase {
     $email_format_service = $this->createMock(
       BracketResultsEmailFormatService::class
     );
-    $match_pick_result_factory = $this->createMock(PickResultFactory::class);
     $results_filter_service = $this->createMock(
       BracketResultsFilterService::class
     );
     $results_filter_service
       ->method('filter_results_updated_at_time')
-      ->willReturn([]);
+      ->willReturn([$this->createStub(Pick::class)]);
     $match_service = $this->createMock(BracketMatchService::class);
-    $match_service->method('matches_from_picks')->willReturn([]);
+    $match_service->method('matches_2d_from_picks')->willReturn([]);
     $pick_result_service = $this->createMock(PickResultService::class);
     $pick_result_service->method('get_pick_result_for_play')->willReturn(null);
 
