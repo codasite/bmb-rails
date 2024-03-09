@@ -13,7 +13,7 @@ class StripeConnectedAccountFactory {
       (new StripeClientFactory())->createStripeClient();
   }
 
-  public function get_account(int|null $userId): ?StripeConnectedAccount {
+  public function get_account(?int $userId): ?StripeConnectedAccount {
     if (!$userId) {
       return null;
     }
