@@ -164,14 +164,7 @@ class PublicHooks implements HooksInterface {
     $data = [
       'is_printed' => true,
     ];
-    // Assume that if the bracket has a bracket fee and the play was printed, the tournament fee was paid
-    if ($this->bracket_product_utils->has_bracket_fee($play->bracket_id)) {
-      $data['is_paid'] = true;
-    }
 
-    $printed_play = $this->play_repo->update($play_id, $data);
-    $this->tournament_entry_service->try_mark_play_as_tournament_entry(
-      $printed_play
-    );
+    $this->play_repo->update($play_id, $data);
   }
 }

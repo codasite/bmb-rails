@@ -31,6 +31,7 @@ class Deactivator {
    */
   public static function deactivate(): void {
     remove_role('bmb_plus');
+    remove_role('bmb_vip');
     remove_role('private_reader');
     $timestamp = wp_next_scheduled('wpbb_notification_cron_hook');
     wp_unschedule_event($timestamp, 'wpbb_notification_cron_hook');

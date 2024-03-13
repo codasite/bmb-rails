@@ -113,7 +113,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertTrue($play->is_printed);
   }
 
-  public function test_after_play_printed_sets_is_paid_true_for_paid_bracket() {
+  public function test_after_play_printed_does_not_set_is_paid_true_for_paid_bracket() {
     $bracket_utils_mock = $this->createMock(BracketProductUtils::class);
     $bracket_utils_mock->method('has_bracket_fee')->willReturn(true);
     $bracket = $this->create_bracket([
@@ -138,7 +138,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $play = $this->get_play($play->id);
 
-    $this->assertTrue($play->is_paid);
+    $this->assertFalse($play->is_paid);
   }
 
   public function test_after_play_printed_does_not_sets_is_paid_true_for_free_bracket() {
@@ -169,7 +169,7 @@ class PublicHooksTest extends WPBB_UnitTestCase {
     $this->assertFalse($play->is_paid);
   }
 
-  public function test_after_play_printed_marks_play_as_tournament_entry_no_fee() {
+  public function test_after_play_printed_does_not_mark_play_as_tournament_entry_no_fee() {
     $bracket_utils_mock = $this->createMock(BracketProductUtils::class);
     $bracket_utils_mock->method('has_bracket_fee')->willReturn(false);
     $bracket = $this->create_bracket([
@@ -194,10 +194,10 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $play = $this->get_play($play->id);
 
-    $this->assertTrue($play->is_tournament_entry);
+    $this->assertFalse($play->is_tournament_entry);
   }
 
-  public function test_after_play_printed_marks_play_as_tournament_entry_with_fee() {
+  public function test_after_play_printed_does_not_mark_play_as_tournament_entry_with_fee() {
     $bracket_utils_mock = $this->createMock(BracketProductUtils::class);
     $bracket_utils_mock->method('has_bracket_fee')->willReturn(true);
     $bracket = $this->create_bracket([
@@ -223,6 +223,6 @@ class PublicHooksTest extends WPBB_UnitTestCase {
 
     $play = $this->get_play($play->id);
 
-    $this->assertTrue($play->is_tournament_entry);
+    $this->assertFalse($play->is_tournament_entry);
   }
 }
