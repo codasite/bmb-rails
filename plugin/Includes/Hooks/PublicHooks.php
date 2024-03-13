@@ -11,17 +11,11 @@ class PublicHooks implements HooksInterface {
   private $play_repo;
   private $play_query;
   private Utils $utils;
-  private BracketProductUtils $bracket_product_utils;
-  private TournamentEntryService $tournament_entry_service;
 
   public function __construct($opts = []) {
     $this->play_query = $opts['play_query'] ?? new CustomPlayQuery();
     $this->play_repo = $opts['play_repo'] ?? new PlayRepo();
-    $this->bracket_product_utils =
-      $opts['bracket_product_utils'] ?? new BracketProductUtils();
     $this->utils = $opts['utils'] ?? new Utils();
-    $this->tournament_entry_service =
-      $opts['tournament_entry_service'] ?? new TournamentEntryService();
   }
 
   public function load(Loader $loader): void {
