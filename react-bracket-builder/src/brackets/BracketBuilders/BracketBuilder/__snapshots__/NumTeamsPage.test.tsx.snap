@@ -7,149 +7,165 @@ exports[`NumTeamsPage renders page correctly 1`] = `
     style="background-image: url(undefined);"
   >
     <div
-      class="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0"
+      class="tw-flex tw-flex-col tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0 tw-pb-100 tw-pt-60 "
     >
       <div
-        class="tw-flex tw-justify-center tw-border-b-solid tw-border-white/30 tw-p-16 "
+        class="tw-flex tw-flex-col tw-gap-15 tw-py-30 tw-items-center"
       >
+        <div
+          class="tw-h-[50px] tw-w-[200px] md:tw-h-[75px] md:tw-w-[300px] lg:tw-h-[85px] lg:tw-w-[340px] tw-bg-[url('https://s3.amazonaws.com/backmybracket.com/bmb_text_logo_500.png')] tw-bg-no-repeat tw-bg-contain"
+        />
         <h1
-          class="tw-font-500 tw-text-24 sm:tw-text-32 !tw-text-white/20 tw-text-center"
+          class="tw-text-30 sm:tw-text-48 md:tw-text-64 lg:tw-text-80 tw-leading-normal tw-text-center"
         >
-          Test bracket
+          Bracket Builder
         </h1>
       </div>
-      <div>
-        <div
-          class="tw-flex tw-flex-col tw-justify-center tw-m-auto tw-max-w-[474px] tw-h-[296px]"
-        >
-          <div
-            class="tw-flex tw-justify-between tw-gap-8 md:tw-gap-16 "
-          >
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[8px]"
-              >
-                <div
-                  class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
-                />
-                <div
-                  class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
-                />
-              </div>
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[8px] tw-pb-16"
-              >
-                <div
-                  class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/10"
-                />
-                <div
-                  class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/10"
-                />
-              </div>
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[8px]"
-              >
-                <div
-                  class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
-                />
-                <div
-                  class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
       <div
-        class="tw-flex tw-flex-col tw-gap-24 tw-pb-24"
+        class="tw-flex tw-flex-col tw-gap-40 "
       >
-        <span
-          class="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24"
-        >
-          How Many Teams in Your Bracket?
-        </span>
         <div
-          class="tw-flex tw-flex-col md:tw-flex-row tw-gap-24"
+          class="tw-flex tw-justify-center tw-border-b-solid tw-border-white/30 tw-p-16 "
         >
+          <h1
+            class="tw-font-500 tw-text-24 sm:tw-text-32 !tw-text-white/20 tw-text-center"
+          >
+            Test bracket
+          </h1>
+        </div>
+        <div>
           <div
-            class="tw-flex tw-flex-col tw-gap-24 tw-grow"
+            class="tw-flex tw-flex-col tw-justify-center tw-m-auto tw-max-w-[474px] tw-h-[296px]"
           >
             <div
-              class="tw-flex tw-justify-center tw-h-[136px] tw-items-center tw-border-solid tw-rounded-8 tw-relative tw-cursor-pointer tw-bg-green/15 tw-border-4 tw-border-green"
+              class="tw-flex tw-justify-between tw-gap-8 md:tw-gap-16 "
             >
-              <span
-                class="tw-font-500 tw-text-48 tw-text-white"
+              <div
+                class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
               >
-                16
-              </span>
-              <span
-                class="tw-absolute tw-bottom-8 tw-left-14 tw-text-green tw-font-500 tw-text-12"
+                <div
+                  class="tw-flex tw-flex-col tw-gap-[8px]"
+                >
+                  <div
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                  />
+                  <div
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                  />
+                </div>
+              </div>
+              <div
+                class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
               >
-                Default
-              </span>
-            </div>
-            <div
-              class="tw-flex tw-justify-center tw-gap-12"
-            >
-              <button
-                class="tw-flex tw-justify-center tw-items-center tw-flex-grow tw-border-solid tw-border tw-rounded-4 tw-text-36 tw-font-500 tw-font-sans tw-h-30 tw-bg-transparent tw-border-white tw-text-white tw-cursor-pointer"
+                <div
+                  class="tw-flex tw-flex-col tw-gap-[8px] tw-pb-16"
+                >
+                  <div
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/10"
+                  />
+                  <div
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/10"
+                  />
+                </div>
+              </div>
+              <div
+                class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
               >
-                -
-              </button>
-              <button
-                class="tw-flex tw-justify-center tw-items-center tw-flex-grow tw-border-solid tw-border tw-rounded-4 tw-text-36 tw-font-500 tw-font-sans tw-h-30 tw-bg-transparent tw-border-white tw-text-white tw-cursor-pointer"
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <div
-            class="tw-flex tw-flex-col tw-gap-24 tw-grow"
-          >
-            <div
-              class="tw-flex tw-justify-center tw-h-[136px] tw-items-center tw-border-solid tw-rounded-8 tw-relative tw-cursor-pointer tw-border tw-border-white/50"
-            >
-              <span
-                class="tw-font-500 tw-text-48 tw-text-white"
-              >
-                32
-              </span>
-            </div>
-          </div>
-          <div
-            class="tw-flex tw-flex-col tw-gap-24 tw-grow"
-          >
-            <div
-              class="tw-flex tw-justify-center tw-h-[136px] tw-items-center tw-border-solid tw-rounded-8 tw-relative tw-cursor-pointer tw-border tw-border-white/50"
-            >
-              <span
-                class="tw-font-500 tw-text-48 tw-text-white"
-              >
-                64
-              </span>
+                <div
+                  class="tw-flex tw-flex-col tw-gap-[8px]"
+                >
+                  <div
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                  />
+                  <div
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <button
-        class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-cursor-pointer tw-bg-green/15 tw-text-white tw-gap-10 tw-text-20 tw-font-500 tw-rounded-8 tw-py-16 tw-border-solid tw-border tw-border-green"
-      >
-        <span
-          class="tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans"
+        <div
+          class="tw-flex tw-flex-col tw-gap-24 tw-pb-24"
         >
-          Add Your Teams
-        </span>
-      </button>
+          <span
+            class="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24"
+          >
+            How Many Teams in Your Bracket?
+          </span>
+          <div
+            class="tw-flex tw-flex-col md:tw-flex-row tw-gap-24"
+          >
+            <div
+              class="tw-flex tw-flex-col tw-gap-24 tw-grow"
+            >
+              <div
+                class="tw-flex tw-justify-center tw-h-[136px] tw-items-center tw-border-solid tw-rounded-8 tw-relative tw-cursor-pointer tw-bg-green/15 tw-border-4 tw-border-green"
+              >
+                <span
+                  class="tw-font-500 tw-text-48 tw-text-white"
+                >
+                  16
+                </span>
+                <span
+                  class="tw-absolute tw-bottom-8 tw-left-14 tw-text-green tw-font-500 tw-text-12"
+                >
+                  Default
+                </span>
+              </div>
+              <div
+                class="tw-flex tw-justify-center tw-gap-12"
+              >
+                <button
+                  class="tw-flex tw-justify-center tw-items-center tw-flex-grow tw-border-solid tw-border tw-rounded-4 tw-text-36 tw-font-500 tw-font-sans tw-h-30 tw-bg-transparent tw-border-white tw-text-white tw-cursor-pointer"
+                >
+                  -
+                </button>
+                <button
+                  class="tw-flex tw-justify-center tw-items-center tw-flex-grow tw-border-solid tw-border tw-rounded-4 tw-text-36 tw-font-500 tw-font-sans tw-h-30 tw-bg-transparent tw-border-white tw-text-white tw-cursor-pointer"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div
+              class="tw-flex tw-flex-col tw-gap-24 tw-grow"
+            >
+              <div
+                class="tw-flex tw-justify-center tw-h-[136px] tw-items-center tw-border-solid tw-rounded-8 tw-relative tw-cursor-pointer tw-border tw-border-white/50"
+              >
+                <span
+                  class="tw-font-500 tw-text-48 tw-text-white"
+                >
+                  32
+                </span>
+              </div>
+            </div>
+            <div
+              class="tw-flex tw-flex-col tw-gap-24 tw-grow"
+            >
+              <div
+                class="tw-flex tw-justify-center tw-h-[136px] tw-items-center tw-border-solid tw-rounded-8 tw-relative tw-cursor-pointer tw-border tw-border-white/50"
+              >
+                <span
+                  class="tw-font-500 tw-text-48 tw-text-white"
+                >
+                  64
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-cursor-pointer tw-bg-green/15 tw-text-white tw-gap-10 tw-text-20 tw-font-500 tw-rounded-8 tw-py-16 tw-border-solid tw-border tw-border-green"
+        >
+          <span
+            class="tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans"
+          >
+            Add Your Teams
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </DocumentFragment>
