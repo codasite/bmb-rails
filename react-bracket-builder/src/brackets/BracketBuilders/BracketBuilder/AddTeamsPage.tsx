@@ -15,6 +15,7 @@ import {
   scrambleTeams,
 } from '../../shared/models/operations/ScrambleTeams'
 import { ReactComponent as ScrambleIcon } from '../../shared/assets/scramble.svg'
+import { BracketBuilderHeader } from './BracketBuilderHeader'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -74,6 +75,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
       className="tw-flex tw-flex-col tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
       style={{ background: `url(${iconBackground}), #000225` }}
     >
+      <BracketBuilderHeader />
       <div className="sm:tw-px-60 tw-mb-16">
         <div className="tw-flex tw-p-16">
           <a

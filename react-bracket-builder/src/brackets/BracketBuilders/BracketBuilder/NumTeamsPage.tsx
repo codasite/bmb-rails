@@ -9,6 +9,7 @@ import { ActionButton } from '../../shared/components/ActionButtons'
 import { BracketMeta } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 import { BracketTitle } from './BracketTitle'
+import { BracketBuilderHeader } from './BracketBuilderHeader'
 
 export interface NumTeamsPickerState {
   currentValue: number
@@ -169,63 +170,66 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
       className="tw-bg-no-repeat tw-bg-top tw-bg-cover"
       style={{ backgroundImage: `url(${darkBracketBg})` }}
     >
-      <div className="tw-flex tw-flex-col tw-gap-40 tw-pb-[240px] tw-pt-60 tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0">
-        <BracketTitle
-          title={bracketMeta.title}
-          placeholder="Name Your Bracket"
-          setTitle={(title) => setBracketMeta({ ...bracketMeta, title })}
-          onChange={onTitleChange}
-          showError={showTitleError}
-          errorMessage="Bracket name is required."
-        />
-        {matchTree && (
-          <div>
-            <BracketPreview matchTree={matchTree} />
-          </div>
-        )}
-        <div
-          className={`tw-flex tw-flex-col tw-gap-24 ${
-            showWildCardOptions ? '' : 'tw-pb-24'
-          }`}
-        >
-          <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24">
-            How Many Teams in Your Bracket?
-          </span>
-          <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-24">
-            {teamPickerState.map((pickerState, i) => {
-              return (
-                <NumTeamsPicker
-                  currentValue={pickerState.currentValue}
-                  defaultValue={teamPickerDefaults[i]}
-                  min={teamPickerMin[i]}
-                  max={teamPickerMax[i]}
-                  selected={pickerState.selected}
-                  setSelected={() => setTeamPickerSelected(i)}
-                  increment={() => incrementTeamPicker(i)}
-                  decrement={() => decrementTeamPicker(i)}
-                  setCurrentValue={(value) => setTeamPickerValue(i, value)}
-                  selectNextPicker={getSelectNextTeamPicker(i)}
-                  selectPrevPicker={getSelectPrevTeamPicker(i)}
-                  key={i}
-                />
-              )
-            })}
-          </div>
-          {showWildCardOptions && (
-            <WildcardPicker
-              wildcardPlacement={wildcardPlacement}
-              onWildcardPlacementChanged={handleWildcardPlacement}
-            />
+      <div className="tw-flex tw-flex-col tw-max-w-screen-lg tw-m-auto tw-px-20 lg:tw-px-0 tw-pb-100 tw-pt-60 ">
+        <BracketBuilderHeader />
+        <div className="tw-flex tw-flex-col tw-gap-40 ">
+          <BracketTitle
+            title={bracketMeta.title}
+            placeholder="Name Your Bracket"
+            setTitle={(title) => setBracketMeta({ ...bracketMeta, title })}
+            onChange={onTitleChange}
+            showError={showTitleError}
+            errorMessage="Bracket name is required."
+          />
+          {matchTree && (
+            <div>
+              <BracketPreview matchTree={matchTree} />
+            </div>
           )}
-        </div>
-        {/* <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
+          <div
+            className={`tw-flex tw-flex-col tw-gap-24 ${
+              showWildCardOptions ? '' : 'tw-pb-24'
+            }`}
+          >
+            <span className="tw-text-white/50 tw-text-center tw-font-500 tw-text-16 md:tw-text-24">
+              How Many Teams in Your Bracket?
+            </span>
+            <div className="tw-flex tw-flex-col md:tw-flex-row tw-gap-24">
+              {teamPickerState.map((pickerState, i) => {
+                return (
+                  <NumTeamsPicker
+                    currentValue={pickerState.currentValue}
+                    defaultValue={teamPickerDefaults[i]}
+                    min={teamPickerMin[i]}
+                    max={teamPickerMax[i]}
+                    selected={pickerState.selected}
+                    setSelected={() => setTeamPickerSelected(i)}
+                    increment={() => incrementTeamPicker(i)}
+                    decrement={() => decrementTeamPicker(i)}
+                    setCurrentValue={(value) => setTeamPickerValue(i, value)}
+                    selectNextPicker={getSelectNextTeamPicker(i)}
+                    selectPrevPicker={getSelectPrevTeamPicker(i)}
+                    key={i}
+                  />
+                )
+              })}
+            </div>
+            {showWildCardOptions && (
+              <WildcardPicker
+                wildcardPlacement={wildcardPlacement}
+                onWildcardPlacementChanged={handleWildcardPlacement}
+              />
+            )}
+          </div>
+          {/* <button className='tw-rounded-8 tw-border tw-border-solid tw-border-green tw-bg-green/15 tw-p-16 tw-flex tw-justify-center tw-cursor-pointer' onClick={onAddTeamsClick}>
           <span className='tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans '>Add Your Teams</span>
         </button> */}
-        <ActionButton variant="green" onClick={handleAddTeamsClick}>
-          <span className="tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-            Add Your Teams
-          </span>
-        </ActionButton>
+          <ActionButton variant="green" onClick={handleAddTeamsClick}>
+            <span className="tw-text-white tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
+              Add Your Teams
+            </span>
+          </ActionButton>
+        </div>
       </div>
     </div>
   )

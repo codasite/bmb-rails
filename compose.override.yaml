@@ -92,8 +92,6 @@ services:
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
       XDEBUG_MODE: coverage
     volumes:
-      # Mount react code separately because symlink does not work from within volumn (fails with 403)
-      - ./react-bracket-builder/build/wordpress:/var/www/html/wp-content/plugins/wp-bracket-builder/Includes/react-bracket-builder/build/wordpress
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
       - ./docker/wordpress/downloads:/tmp/downloads
       - ./docker/wordpress/plugins:/tmp/plugins
