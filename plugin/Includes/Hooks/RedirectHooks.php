@@ -38,12 +38,6 @@ class RedirectHooks implements HooksInterface {
       10,
       0
     );
-    $loader->add_action(
-      'registration_redirect',
-      [$this, 'redirect_after_register'],
-      10,
-      0
-    );
   }
 
   public function dashboard_redirect(): void {
