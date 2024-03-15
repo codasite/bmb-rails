@@ -5,7 +5,7 @@ use WStrategies\BMB\Includes\Domain\UserProfile;
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class ProfileRepoTest extends WPBB_UnitTestCase {
+class UserProfileRepoTest extends WPBB_UnitTestCase {
   private $profile_repo;
 
   public function set_up(): void {
@@ -15,7 +15,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_by_post() {
-    $user = self::factory()->user->create_and_get();
+    $user = $this->create_user();
     $profile_post = $this->create_post([
       'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
@@ -41,7 +41,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_by_user_with_user() {
-    $user = self::factory()->user->create_and_get();
+    $user = $this->create_user();
     $profile_post = $this->create_post([
       'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
@@ -67,7 +67,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_by_user_current_user() {
-    $user = self::factory()->user->create_and_get();
+    $user = $this->create_user();
     $profile_post = $this->create_post([
       'post_type' => UserProfile::get_post_type(),
       'post_author' => $user->ID,
@@ -94,7 +94,7 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_add() {
-    $user = self::factory()->user->create_and_get();
+    $user = $this->create_user();
     $profile = new UserProfile([
       'title' => 'Test Profile',
       'status' => 'publish',
@@ -110,10 +110,21 @@ class ProfileRepoTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_by_user_no_post() {
-    $user = self::factory()->user->create_and_get();
+    $user = $this->create_user();
     $profile = $this->profile_repo->get_by_user($user);
     $this->assertInstanceOf(UserProfile::class, $profile);
     $this->assertNull($profile->id);
     $this->assertEquals($profile->wp_user, $user);
+  }
+
+  public function test_get_should_return_content() {
+    $user = $this->create_user();
+    $profile_post = $this->create_post([
+      'post_type' => UserProfile::get_post_type(),
+      'post_author' => $user->ID,
+      'post_content' => 'Test Content',
+    ]);
+    $profile = $this->profile_repo->get_by_post($profile_post);
+    $this->assertStringContainsString('Test Content', $profile->get_bio());
   }
 }

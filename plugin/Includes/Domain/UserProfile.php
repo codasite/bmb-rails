@@ -6,17 +6,12 @@ use WP_User;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 
 class UserProfile extends PostBase {
-  /**
-   * The user object.
-   *
-   * @var WP_User
-   */
-  public $wp_user;
-  private $leaderboard_service;
+  public ?WP_User $wp_user;
+  private BracketLeaderboardService $leaderboard_service;
 
   public function __construct(array $data = []) {
     parent::__construct($data);
-    $this->wp_user = isset($data['wp_user']) ? $data['wp_user'] : null;
+    $this->wp_user = $data['wp_user'] ?? null;
     $this->leaderboard_service =
       $data['leaderboard_service'] ?? new BracketLeaderboardService();
   }
@@ -81,5 +76,9 @@ class UserProfile extends PostBase {
 
   public function get_total_accuracy(): float {
     return 0.5;
+  }
+
+  public function get_bio(): string {
+    return $this->content;
   }
 }

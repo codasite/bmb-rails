@@ -66,6 +66,7 @@ module.exports = {
       'grey-blue': '#3D4376',
       yellow: '#F8E11A',
       red: '#FF456D',
+      bluish: '#999BCD',
     },
     borderRadius: {
       4: '4px',

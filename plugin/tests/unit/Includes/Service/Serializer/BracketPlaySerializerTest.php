@@ -294,8 +294,8 @@ class BracketPlaySerializerTest extends TestCase {
     $this->assertFalse($play->published_date);
     $this->assertEquals('', $play->slug);
     $this->assertEquals('', $play->author_display_name);
-    $this->assertFalse($play->thumbnail_url);
-    $this->assertFalse($play->url);
+    $this->assertEmpty($play->thumbnail_url);
+    $this->assertEmpty($play->url);
     $this->assertEquals(1, $play->bracket_id);
     $this->assertNull($play->bracket);
     $this->assertCount(3, $play->picks);

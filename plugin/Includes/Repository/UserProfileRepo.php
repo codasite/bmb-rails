@@ -34,6 +34,7 @@ class UserProfileRepo extends CustomPostRepoBase {
       'thumbnail_url' => get_the_post_thumbnail_url($profile_post),
       'url' => get_permalink($profile_post),
       'wp_user' => $user,
+      'content' => apply_filters('the_content', $profile_post->post_content),
     ]);
   }
 

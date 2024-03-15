@@ -4,8 +4,9 @@ namespace WStrategies\BMB\Public\Partials\dashboard;
 
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccountFactory;
 use WStrategies\BMB\Public\Partials\shared\PartialsCommon;
+use WStrategies\BMB\Public\Partials\TemplateInterface;
 
-class DashboardPage {
+class DashboardPage implements TemplateInterface {
   private PlayHistoryPage $play_history_page;
   private TournamentsPage $tournaments_page;
   private StripeConnectedAccountFactory $account_factory;

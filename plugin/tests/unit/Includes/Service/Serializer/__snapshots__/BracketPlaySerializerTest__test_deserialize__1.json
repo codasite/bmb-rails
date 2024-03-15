@@ -1,13 +1,13 @@
 {
     "id": null,
-    "title": "",
     "author": null,
+    "title": "",
     "status": "publish",
-    "published_date": false,
     "slug": "",
     "author_display_name": "",
-    "thumbnail_url": false,
-    "url": false,
+    "thumbnail_url": "",
+    "url": "",
+    "published_date": false,
     "bracket_id": 1,
     "bracket": null,
     "picks": [

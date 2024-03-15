@@ -8,8 +8,9 @@ use WStrategies\BMB\Includes\Service\TournamentFilter\TournamentFilterInterface;
 use WStrategies\BMB\Public\Partials\shared\BracketListItem;
 use WStrategies\BMB\Public\Partials\shared\FilterButton;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
+use WStrategies\BMB\Public\Partials\TemplateInterface;
 
-class TournamentsPage {
+class TournamentsPage implements TemplateInterface {
   private DashboardTournamentsQuery $tournament_query;
   private int $paged;
   private string $role;
@@ -145,7 +146,7 @@ class TournamentsPage {
     return get_permalink() . 'tournaments?role=' . $role . '&status=' . $status;
   }
 
-  public function render() {
+  public function render(): false|string {
     $this->init();
     $brackets = [];
     $num_pages = 0;

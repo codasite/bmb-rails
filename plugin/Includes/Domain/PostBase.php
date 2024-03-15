@@ -1,72 +1,36 @@
 <?php
 namespace WStrategies\BMB\Includes\Domain;
 
+use DateTime;
 use DateTimeImmutable;
 
 abstract class PostBase implements CustomPostInterface {
-  /**
-   * @var int
-   */
-  public $id;
-
-  /**
-   * @var string
-   */
-  public $title;
-
-  /**
-   * @var int
-   *
-   * ID of the user who created the bracket
-   */
-  public $author;
-
-  /**
-   * @var string
-   */
-  public $status;
+  public ?int $id;
+  public ?int $author;
+  public string $title;
+  public string $status;
+  public string $slug;
+  public string $author_display_name;
+  public string $thumbnail_url;
+  public string $url;
+  protected string $content;
 
   /**
    * @var DateTimeImmutable|false
-   *
-   * Date the bracket was published in UTC
    */
   public $published_date;
 
-  /**
-   * @var string
-   *
-   * Slug of the bracket
-   */
-  public $slug;
-
-  /**
-   * @var string
-   *
-   * Display name of the author
-   */
-  public $author_display_name;
-
-  /**
-   * @var string
-   */
-  public $thumbnail_url;
-
-  /**
-   * @var string
-   */
-  public $url;
-
   public function __construct(array $data) {
     $this->id = $data['id'] ?? null;
-    $this->title = $data['title'] ?? '';
     $this->author = $data['author'] ?? null;
-    $this->status = $data['status'] ?? 'publish';
     $this->published_date = $data['published_date'] ?? false;
+    $this->title = $data['title'] ?? '';
+    $this->status = $data['status'] ?? 'publish';
     $this->slug = $data['slug'] ?? '';
     $this->author_display_name = $data['author_display_name'] ?? '';
-    $this->thumbnail_url = $data['thumbnail_url'] ?? false;
-    $this->url = $data['url'] ?? false;
+    $this->thumbnail_url = $data['thumbnail_url'] ?? '';
+    $this->url = $data['url'] ?? '';
+    $this->content = $data['content'] ?? '';
   }
 
   abstract public static function get_post_type(): string;
@@ -81,6 +45,7 @@ abstract class PostBase implements CustomPostInterface {
       'post_name' => $this->slug,
       'post_type' => static::get_post_type(),
       'post_date_gmt' => $this->published_date,
+      'post_content' => $this->content,
     ];
   }
 

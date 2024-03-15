@@ -215,8 +215,8 @@ class BracketSerializerTest extends TestCase {
     $this->assertFalse($bracket->published_date);
     $this->assertEquals('', $bracket->slug);
     $this->assertEquals('', $bracket->author_display_name);
-    $this->assertFalse($bracket->thumbnail_url);
-    $this->assertFalse($bracket->url);
+    $this->assertEmpty($bracket->thumbnail_url);
+    $this->assertEmpty($bracket->url);
     $this->assertEquals('test month', $bracket->month);
     $this->assertEquals('test year', $bracket->year);
     $this->assertEquals(8, $bracket->num_teams);

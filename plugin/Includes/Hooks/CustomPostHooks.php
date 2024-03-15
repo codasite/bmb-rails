@@ -51,7 +51,7 @@ class CustomPostHooks implements HooksInterface {
       'description' => 'User profiles for the WP Bracket Builder plugin',
       'public' => true,
       'has_archive' => true,
-      'supports' => ['title', 'author', 'thumbnail', 'custom-fields'],
+      'supports' => ['title', 'author', 'thumbnail', 'custom-fields', 'editor'],
       'show_ui' => true,
       'show_in_rest' => true,
       'taxonomies' => ['post_tag'],
