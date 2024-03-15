@@ -14,7 +14,7 @@ export interface WpbbAppObj {
   upgradeAccountUrl?: string
   bracketProductArchiveUrl?: string
   nonce?: string
-  rest_url?: string
+  restUrl?: string
   sentryEnv?: string
   sentryDsn?: string
   bracket?: BracketRes
@@ -23,6 +23,7 @@ export interface WpbbAppObj {
   stripePublishableKey?: string
   applicationFeePercentage?: number
   applicationFeeMinimum?: number
+  loginUrl?: string
 }
 
 export interface WpbbBracketProductPreviewObj {

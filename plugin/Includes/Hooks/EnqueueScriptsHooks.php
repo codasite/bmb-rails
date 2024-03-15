@@ -152,30 +152,29 @@ class EnqueueScriptsHooks implements HooksInterface {
     list($bracket, $play) = $this->get_bracket_and_play();
 
     wp_localize_script('wpbb-bracket-builder-react', 'wpbb_app_obj', [
-      'sentry_env' => $sentry_env,
-      'sentry_dsn' => $sentry_dsn,
+      'sentryEnv' => $sentry_env,
+      'sentryDsn' => $sentry_dsn,
       'nonce' => wp_create_nonce('wp_rest'),
-      'rest_url' => get_rest_url() . 'wp-bracket-builder/v1/',
-      'dashboard_url' => DashboardPage::get_url(),
-      'bracket_builder_url' => get_permalink(
-        get_page_by_path('bracket-builder')
-      ),
-      'user_can_share_bracket' => current_user_can('wpbb_share_bracket'),
-      'user_can_play_paid_bracket_for_free' => current_user_can(
+      'restUrl' => get_rest_url() . 'wp-bracket-builder/v1/',
+      'dashboardUrl' => DashboardPage::get_url(),
+      'bracketBuilderUrl' => get_permalink(get_page_by_path('bracket-builder')),
+      'userCanShareBracket' => current_user_can('wpbb_share_bracket'),
+      'userCanPlayPaidBracketForFree' => current_user_can(
         'wpbb_play_paid_bracket_for_free'
       ),
-      'upgrade_account_url' => $this->get_bmb_plus_permalink(),
-      'bracket_product_archive_url' => $this->get_bracket_product_archive_url(),
-      'my_play_history_url' =>
+      'upgradeAccountUrl' => $this->get_bmb_plus_permalink(),
+      'bracketProductArchiveUrl' => $this->get_bracket_product_archive_url(),
+      'myPlayHistoryUrl' =>
         get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
       'play' => $play,
       'bracket' => $bracket,
-      'is_user_logged_in' => is_user_logged_in(),
-      'stripe_publishable_key' => $stripe_publishable_key,
-      'application_fee_minimum' =>
+      'isUserLoggedIn' => is_user_logged_in(),
+      'stripePublishableKey' => $stripe_publishable_key,
+      'applicationFeeMinimum' =>
         StripeConnectedAccount::$APPLICATION_FEE_MINIMUM,
-      'application_fee_percentage' =>
+      'applicationFeePercentage' =>
         StripeConnectedAccount::$APPLICATION_FEE_PERCENTAGE,
+      'loginUrl' => wp_login_url(),
     ]);
   }
 

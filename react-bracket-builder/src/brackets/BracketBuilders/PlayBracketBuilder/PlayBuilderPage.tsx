@@ -23,7 +23,7 @@ import { PlayStorage } from '../../shared/storages/PlayStorage'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import StripePaymentModal from './StripePaymentModal'
 
-interface PlayPageProps {
+const PlayPage = (props: {
   bracketProductArchiveUrl: string
   myPlayHistoryUrl: string
   isUserLoggedIn: boolean
@@ -36,9 +36,8 @@ interface PlayPageProps {
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
   userCanPlayPaidBracketForFree?: boolean
-}
-
-const PlayPage = (props: PlayPageProps) => {
+  loginUrl: string
+}) => {
   const {
     bracket,
     bracketProductArchiveUrl,
@@ -257,6 +256,7 @@ const PlayPage = (props: PlayPageProps) => {
       <SubmitPicksRegisterModal
         show={showRegisterModal}
         setShow={setShowRegisterModal}
+        loginUrl={props.loginUrl}
       />
       <StripePaymentModal
         title={'Submit Your Picks'}

@@ -4,7 +4,9 @@ import { useState } from 'react'
 import { Modal } from '../../Modal'
 import addClickHandlers from '../../addClickHandlers'
 
-export default function UpcomingNotificationRegisterModal() {
+export default function UpcomingNotificationRegisterModal(props: {
+  loginUrl: string
+}) {
   const [show, setShow] = useState(false)
   const [upcomingBracketId, setUpcomingBracketId] = useState<number>(null)
   addClickHandlers({
@@ -24,7 +26,7 @@ export default function UpcomingNotificationRegisterModal() {
         <ConfirmButton
           onClick={() => {
             document.cookie = `wpbb_upcoming_bracket_id=${upcomingBracketId}; path=/;`
-            window.location.href = '/my-account'
+            window.location.href = props.loginUrl
           }}
         >
           <span>Sign in/register</span>

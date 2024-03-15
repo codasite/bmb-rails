@@ -2,14 +2,11 @@ import { Modal } from '../../../modals/Modal'
 import { CancelButton, ConfirmButton } from '../../../modals/ModalButtons'
 import { ModalHeader } from '../../../modals/ModalHeader'
 
-interface SubmitPicksRegisterModalProps {
+export default function SubmitPicksRegisterModal(props: {
   show: boolean
   setShow: (show: boolean) => void
-}
-
-export default function SubmitPicksRegisterModal(
-  props: SubmitPicksRegisterModalProps
-) {
+  loginUrl: string
+}) {
   const { show, setShow } = props
   return (
     <Modal show={show} setShow={setShow}>
@@ -17,7 +14,7 @@ export default function SubmitPicksRegisterModal(
       <div className="tw-flex tw-flex-col tw-gap-10">
         <ConfirmButton
           onClick={() => {
-            window.location.href = '/my-account'
+            window.location.href = props.loginUrl
           }}
         >
           <span>Sign in/register</span>

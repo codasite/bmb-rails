@@ -2,8 +2,9 @@ import { BracketReq, BracketRes, PlayReq, PlayRes } from './types/bracket'
 import { PaymentIntentReq, PaymentIntentRes } from './types/stripe'
 import { NotificationReq } from './types/notification'
 import { RequestOptions, WpHttpClient } from './wpHttpClient'
+import { WpbbAppObj } from '../../../utils/WpbbAjax'
 
-declare var wpbb_app_obj: any
+declare var wpbb_app_obj: WpbbAppObj
 export class BracketApi {
   private bracketsPath: string = 'brackets'
   private notificationsPath: string = 'notifications'
@@ -11,7 +12,7 @@ export class BracketApi {
   private client: WpHttpClient
   constructor() {
     if (typeof wpbb_app_obj !== 'undefined') {
-      this.client = new WpHttpClient(wpbb_app_obj.rest_url, wpbb_app_obj.nonce)
+      this.client = new WpHttpClient(wpbb_app_obj.restUrl, wpbb_app_obj.nonce)
     }
   }
   async removeNotification(notificationId: number): Promise<boolean> {

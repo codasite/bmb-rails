@@ -6,12 +6,6 @@ import '@testing-library/jest-dom/jest-globals'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
 import { bracketApi, MatchPick, MatchRes } from '../../shared'
 import { jest } from '@jest/globals'
-// jest.mock('wpbb_app_obj', () => {
-//   return {
-//     bracketProductArchiveUrl: '#',
-//     myPlayHistoryUrl: '#',
-//   }
-// })
 global.wpbb_app_obj = {
   bracketProductArchiveUrl: '#',
   myPlayHistoryUrl: '#',

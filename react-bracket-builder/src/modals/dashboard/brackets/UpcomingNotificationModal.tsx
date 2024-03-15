@@ -3,13 +3,10 @@ import DisableUpcomingNotificationModal from './DisableUpcomingNotificationModal
 import EnableUpcomingNotificationModal from './EnableUpcomingNotificationModal'
 import UpcomingNotificationRegisterModal from './UpcomingNotificationRegisterModal'
 
-interface UpcomingNotificationModalProps {
+export const UpcomingNotificationModal = (props: {
   isUserLoggedIn: boolean
-}
-
-export const UpcomingNotificationModal = (
-  props: UpcomingNotificationModalProps
-) => {
+  loginUrl: string
+}) => {
   const { isUserLoggedIn } = props
   if (isUserLoggedIn) {
     return (
@@ -19,5 +16,5 @@ export const UpcomingNotificationModal = (
       </>
     )
   }
-  return <UpcomingNotificationRegisterModal />
+  return <UpcomingNotificationRegisterModal loginUrl={props.loginUrl} />
 }
