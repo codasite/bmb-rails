@@ -44,12 +44,6 @@ class PublicShortcodes implements HooksInterface {
     return ob_get_clean();
   }
 
-  public function render_user_profile_page(): false|string {
-    ob_start();
-    include WPBB_PLUGIN_DIR . 'Public/Partials/UserProfile/user-profile.php';
-    return ob_get_clean();
-  }
-
   public function render_stripe_onboarding_redirect(): void {
     ob_start();
     include WPBB_PLUGIN_DIR . 'Public/Partials/stripe-onboarding-redirect.php';

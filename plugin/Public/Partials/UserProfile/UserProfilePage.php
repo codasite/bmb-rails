@@ -16,6 +16,7 @@ class UserProfilePage implements TemplateInterface {
   }
   public function render(): false|string {
     $user_profile = $this->user_profile_repo->get_by_post();
+    $bio = $user_profile->get_bio();
     $plays = $this->play_repo->get_all([
       'posts_per_page' => 6,
       'tag_slug__in' => ['bmb_vip_profile'],
@@ -24,7 +25,11 @@ class UserProfilePage implements TemplateInterface {
     ?>
 		<div class="wpbb-reset wpbb-faded-bracket-bg tw-pt-60 tw-pb-[150px] tw-px-20">
 			<div class="wpbb-reset tw-max-w-screen-xl tw-mx-auto tw-flex-col tw-flex">
-				<div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-30 tw-pb-30 md:tw-py-60 tw-self-center tw-items-center md:tw-items-start">
+				<div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-30 tw-pb-30 md:tw-py-60 tw-self-center tw-items-center <?= empty(
+      $bio
+    )
+      ? 'md:tw-items-center'
+      : 'md:tw-items-start' ?>">
 					<?php if ($user_profile->thumbnail_url): ?>
 						<div class="tw-shrink-0 tw-w-[150px] tw-h-[150px] md:tw-w-[200px] md:tw-h-[200px] tw-rounded-full tw-border-4 tw-bg-white tw-bg-cover tw-bg-center tw-bg-no-repeat" style="background-image: url(<?php echo $user_profile->thumbnail_url; ?>)">
 						</div>
@@ -34,9 +39,11 @@ class UserProfilePage implements TemplateInterface {
 							<span class="tw-text-20 md:tw-text-24 tw-bg-red tw-font-700 tw-rounded-8 tw-px-16 tw-py-4">VIP</span>
 						</div>
 						<h1 class="tw-text-48 md:tw-text-64 tw-font-700 tw-text-center"><?php echo $user_profile->author_display_name; ?></h1>
-						<div class="wpbb-user-profile-bio tw-max-w-[50em] tw-text-bluish">
-							<?php echo $user_profile->get_bio(); ?>
-						</div>
+						<?php if (!empty($bio)): ?>
+							<div class="wpbb-user-profile-bio tw-max-w-[50em] tw-text-bluish">
+								<?php echo $user_profile->get_bio(); ?>
+							</div>
+						<?php endif; ?>
 					</div>
 				</div>
 				<h1 class="tw-text-32 md:tw-text-48 tw-font-700 tw-py-30">Recent Play History</h1>
