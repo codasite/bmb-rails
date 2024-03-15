@@ -70,11 +70,14 @@ class RedirectHooks implements HooksInterface {
     return $this->get_login_redirect_url();
   }
 
+  /**
+   * Redirect to the dashboard page no matter where the user logs in from.
+   */
   private function get_login_redirect_url(): string {
-    $redirect_to = $_REQUEST['redirect_to'] ?? '';
-    if (empty($redirect_to)) {
-      $redirect_to = DashboardPage::get_url();
-    }
+    // $redirect_to = $_REQUEST['redirect_to'] ?? '';
+    // if (empty($redirect_to)) {
+    $redirect_to = DashboardPage::get_url();
+    // }
     return $redirect_to;
   }
 }
