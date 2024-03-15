@@ -110,15 +110,15 @@
   margin: 8px 0;
 }
 
-.wpbb-user-profile-bio a {
-  color: #999bcd;
-}
-
 .wpbb-user-profile-link-container {
   margin: 16px 8px 8px;
 }
 
-a.wpbb-user-profile-link::before {
+.wpbb-user-profile-link-container a {
+  color: #999bcd;
+}
+
+.wpbb-user-profile-link-container a::before {
   content: '';
   display: inline-block;
   height: 24px;
@@ -127,7 +127,7 @@ a.wpbb-user-profile-link::before {
   margin-right: 8px;
   margin-bottom: -6px;
 }
-a.wpbb-user-profile-link:hover {
+.wpbb-user-profile-link-container a:hover {
   color: #0074db;
 }
 
