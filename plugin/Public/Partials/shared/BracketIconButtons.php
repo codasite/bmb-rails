@@ -32,7 +32,7 @@ class BracketIconButtons {
     );
   }
 
-  public static function unpublish_bracket_btn($bracket): false|string {
+  public static function lock_tournament_btn($bracket): false|string {
     if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
       return '';
     }
@@ -40,7 +40,7 @@ class BracketIconButtons {
     return DashboardCommon::icon_btn(
       'lock.svg',
       'submit',
-      classes: 'wpbb-unpublish-bracket-button',
+      classes: 'wpbb-lock-tournament-button',
       attributes: "data-bracket-id='$bracket->id'"
     );
   }
@@ -118,7 +118,7 @@ class BracketIconButtons {
     <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::unpublish_bracket_btn($bracket); ?>
+    <?php echo self::lock_tournament_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
     <?php return ob_get_clean();
   }
