@@ -20,6 +20,7 @@ export interface WpbbAppObj {
   bracket?: BracketRes
   play?: PlayRes
   isUserLoggedIn?: boolean
+  isUserPlayAuthor?: boolean
   stripePublishableKey?: string
   applicationFeePercentage?: number
   applicationFeeMinimum?: number

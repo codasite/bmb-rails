@@ -55,7 +55,7 @@ export interface MatchRepr {
   team1Wins?: boolean
   team2Wins?: boolean
 }
-interface PostBase {
+export interface PostBase {
   id: number
   title: string
   status: string

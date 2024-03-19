@@ -5,6 +5,7 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Includes\Service\PaidTournamentService\StripeConnectedAccount;
+use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
@@ -73,13 +74,21 @@ class EnqueueScriptsHooks implements HooksInterface {
   public function __construct($args = []) {
     $this->plugin_name = $args['plugin_name'];
     $this->version = $args['version'];
-    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->play_repo =
+      $args['play_repo'] ??
+      new PlayRepo([
+        'bracket_repo' => $this->bracket_repo,
+      ]);
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ?? new BracketProductUtils();
-    $this->play_serializer = $args['play_serializer'] ?? new PlaySerializer();
     $this->bracket_serializer =
       $args['bracket_serializer'] ?? new BracketSerializer();
+    $this->play_serializer =
+      $args['play_serializer'] ??
+      new PlaySerializer([
+        'bracket_repo' => $this->bracket_repo,
+      ]);
   }
 
   public function load(Loader $loader): void {
@@ -159,15 +168,15 @@ class EnqueueScriptsHooks implements HooksInterface {
       'dashboardUrl' => DashboardPage::get_url(),
       'bracketBuilderUrl' => get_permalink(get_page_by_path('bracket-builder')),
       'userCanShareBracket' => current_user_can('wpbb_share_bracket'),
-      'userCanPlayBracketForFree' => !empty($bracket)
-        ? current_user_can('wpbb_play_bracket_for_free', $bracket->id)
-        : false,
+      'userCanPlayBracketForFree' =>
+        !empty($bracket) &&
+        current_user_can('wpbb_play_bracket_for_free', $bracket->id),
       'upgradeAccountUrl' => $this->get_bmb_plus_permalink(),
       'bracketProductArchiveUrl' => $this->get_bracket_product_archive_url(),
       'myPlayHistoryUrl' =>
         get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
-      'play' => $play,
-      'bracket' => $bracket,
+      'play' => $this->play_serializer->serialize($play),
+      'bracket' => $this->bracket_serializer->serialize($bracket),
       'isUserLoggedIn' => is_user_logged_in(),
       'stripePublishableKey' => $stripe_publishable_key,
       'applicationFeeMinimum' =>
@@ -175,6 +184,9 @@ class EnqueueScriptsHooks implements HooksInterface {
       'applicationFeePercentage' =>
         StripeConnectedAccount::$APPLICATION_FEE_PERCENTAGE,
       'loginUrl' => wp_login_url(),
+      'isUserPlayAuthor' =>
+        !empty($play) &&
+        PlayPermissions::is_author(get_current_user_id(), $play),
     ]);
   }
 
@@ -208,12 +220,14 @@ class EnqueueScriptsHooks implements HooksInterface {
     $post = get_post();
     if (!empty($post)) {
       if ($post->post_type === 'bracket_play') {
-        $play = $this->play_serializer->serialize($this->play_repo->get($post));
-        $bracket = $play['bracket'];
+        // $play = $this->play_serializer->serialize($this->play_repo->get($post));
+        $play = $this->play_repo->get($post);
+        $bracket = $play->bracket;
       } elseif ($post->post_type === 'bracket') {
-        $bracket = $this->bracket_serializer->serialize(
-          $this->bracket_repo->get($post)
-        );
+        // $bracket = $this->bracket_serializer->serialize(
+        //   $this->bracket_repo->get($post)
+        // );
+        $bracket = $this->bracket_repo->get($post);
       }
     }
     return [$bracket, $play];

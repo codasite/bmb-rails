@@ -7,15 +7,35 @@ import {
   getPlayBracketUrl,
   getBracketResultsUrl,
   PlayRes,
+  getReplayPlayUrl,
 } from '../../shared'
 import { addToApparelHandler } from './utils'
+import { wpbbAjax } from '../../../utils/WpbbAjax'
+
+const PlayOrReplayButton = (props: { play?: PlayRes }) => {
+  const bracket = props.play?.bracket
+  const { isUserPlayAuthor } = wpbbAjax.getAppObj()
+
+  if (!bracket?.isOpen) {
+    return null
+  }
+
+  const url = isUserPlayAuthor
+    ? getReplayPlayUrl(props.play)
+    : getPlayBracketUrl(bracket)
+  const text = isUserPlayAuthor ? 'Replay Tournament' : 'Play Tournament'
+
+  return url ? (
+    <GreenLink href={url}>
+      <PlayIcon className="tw-h-16 sm:tw-h-24" />
+      {text}
+    </GreenLink>
+  ) : null
+}
 
 export const ViewPlayPageButtons = (props: { play?: PlayRes }) => {
   const play = props.play
   const bracket = play?.bracket
-  const playBracketUrl = bracket?.isOpen
-    ? getPlayBracketUrl(bracket)
-    : undefined
   const viewResultsUrl =
     bracket?.results?.length > 0 ? getBracketResultsUrl(bracket) : undefined
   const handleAddApparel = async () => {
@@ -23,6 +43,7 @@ export const ViewPlayPageButtons = (props: { play?: PlayRes }) => {
   }
   // const showBustButton = props.handleBustPlay !== undefined
   const showBustButton = false
+
   return (
     <div className="tw-flex tw-flex-col sm:tw-gap-15">
       <AddToApparel variant="grey" handleApparelClick={handleAddApparel} />
@@ -31,12 +52,7 @@ export const ViewPlayPageButtons = (props: { play?: PlayRes }) => {
           showBustButton ? 'tw-mt-30' : 'tw-mt-15 sm:tw-mt-0'
         } `}
       >
-        {playBracketUrl && (
-          <GreenLink href={playBracketUrl}>
-            <PlayIcon className="tw-h-16 sm:tw-h-24" />
-            Play Tournament
-          </GreenLink>
-        )}
+        <PlayOrReplayButton play={play} />
         {viewResultsUrl && (
           <GreenLink href={viewResultsUrl}>
             <EyeIcon className="tw-h-16 sm:tw-h-24" />
