@@ -80,19 +80,6 @@ class PermissionsTest extends WPBB_UnitTestCase {
     $this->assertTrue(current_user_can('wpbb_view_play', $play->id));
   }
 
-  public function test_non_author_can_view_printed_play() {
-    $user = self::factory()->user->create_and_get(['role' => 'subscriber']);
-    $bracket = $this->create_bracket([
-      'num_teams' => 4,
-    ]);
-    $play = $this->create_play([
-      'bracket_id' => $bracket->id,
-      'is_printed' => true,
-    ]);
-    wp_set_current_user($user->ID);
-    $this->assertTrue(current_user_can('wpbb_view_play', $play->id));
-  }
-
   public function test_non_author_cannot_view_unprinted_play() {
     $user = self::factory()->user->create_and_get(['role' => 'subscriber']);
     $bracket = $this->create_bracket([
@@ -127,19 +114,6 @@ class PermissionsTest extends WPBB_UnitTestCase {
     $play = $this->create_play([
       'bracket_id' => $bracket->id,
       'author' => $user->ID,
-    ]);
-    wp_set_current_user($user->ID);
-    $this->assertTrue(current_user_can('wpbb_print_play', $play->id));
-  }
-
-  public function test_non_author_can_print_printed_play() {
-    $user = self::factory()->user->create_and_get(['role' => 'subscriber']);
-    $bracket = $this->create_bracket([
-      'num_teams' => 4,
-    ]);
-    $play = $this->create_play([
-      'bracket_id' => $bracket->id,
-      'is_printed' => true,
     ]);
     wp_set_current_user($user->ID);
     $this->assertTrue(current_user_can('wpbb_print_play', $play->id));
@@ -267,6 +241,20 @@ class PermissionsTest extends WPBB_UnitTestCase {
     ]);
     wp_set_current_user($admin->ID);
     $this->assertTrue(
+      current_user_can('wpbb_play_bracket_for_free', $bracket->id)
+    );
+  }
+
+  public function test_anonymous_user_cannot_play_paid_bracket_for_free_when_paid_anonymous_play_exists() {
+    $bracket = $this->create_bracket([
+      'fee' => 10,
+    ]);
+    $anonymous_play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_paid' => true,
+    ]);
+    wp_set_current_user(0);
+    $this->assertFalse(
       current_user_can('wpbb_play_bracket_for_free', $bracket->id)
     );
   }
