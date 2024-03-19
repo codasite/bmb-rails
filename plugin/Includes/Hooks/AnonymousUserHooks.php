@@ -3,10 +3,15 @@ namespace WStrategies\BMB\Includes\Hooks;
 
 use WP_Post;
 use WP_User;
+use WStrategies\BMB\Includes\Domain\PostBase;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Service\TournamentEntryService;
 use WStrategies\BMB\Includes\Utils;
 
 class AnonymousUserHooks implements HooksInterface {
   private Utils $utils;
+  private PlayRepo $play_repo;
+  private TournamentEntryService $tournament_entry_service;
 
   /**
    * @param array<string, mixed> $opts
@@ -18,6 +23,9 @@ class AnonymousUserHooks implements HooksInterface {
     } else {
       $this->utils = new Utils();
     }
+    $this->play_repo = $opts['play_repo'] ?? new PlayRepo();
+    $this->tournament_entry_service =
+      $opts['tournament_entry_service'] ?? new TournamentEntryService();
   }
 
   public function load(Loader $loader): void {
@@ -81,19 +89,23 @@ class AnonymousUserHooks implements HooksInterface {
     string $user_login,
     WP_User $user
   ): void {
-    $this->link_anonymous_post_to_user_from_cookie(
-      $user->ID,
-      'play_id',
-      'wpbb_anonymous_play_key'
-    );
+    $this->link_anonymous_play_to_user_from_cookie($user->ID);
   }
 
   public function link_anonymous_play_to_user_on_register(int $user_id): void {
-    $this->link_anonymous_post_to_user_from_cookie(
+    $this->link_anonymous_play_to_user_from_cookie($user_id);
+  }
+
+  public function link_anonymous_play_to_user_from_cookie(int $user_id): void {
+    $post = $this->link_anonymous_post_to_user_from_cookie(
       $user_id,
       'play_id',
       'wpbb_anonymous_play_key'
     );
+    $play = isset($post->ID) ? $this->play_repo->get($post->ID) : null;
+    if ($play) {
+      $this->tournament_entry_service->try_mark_play_as_tournament_entry($play);
+    }
   }
 
   // This is needed in case a user prints a play without logging in
@@ -108,33 +120,35 @@ class AnonymousUserHooks implements HooksInterface {
     int $user_id,
     string $cookie_id_name,
     string $cookie_verify_key_name
-  ): void {
+  ): ?WP_Post {
     $post_id = $this->utils->pop_cookie($cookie_id_name);
     $cookie_key = $this->utils->pop_cookie($cookie_verify_key_name);
     $post_meta = get_post_meta($post_id, $cookie_verify_key_name);
     if (isset($post_meta) && is_array($post_meta) && !empty($post_meta)) {
       $meta_key = $post_meta[0];
     } else {
-      return;
+      return null;
     }
 
     if ($cookie_key !== $meta_key) {
-      return;
+      return null;
     }
 
-    $this->link_anonymous_post_to_user($post_id, $user_id);
+    return $this->link_anonymous_post_to_user($post_id, $user_id);
   }
 
   public function link_anonymous_post_to_user(
     int $post_id,
     int $user_id
-  ): void {
+  ): ?WP_Post {
     $post = get_post($post_id);
     if ($post instanceof WP_Post && (int) $post->post_author === 0) {
       wp_update_post([
         'ID' => $post_id,
         'post_author' => $user_id,
       ]);
+      return $post;
     }
+    return null;
   }
 }

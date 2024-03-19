@@ -222,6 +222,20 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
     $this->assertFalse($should);
   }
 
+  public function test_should_not_mark_play_as_tournament_entry_when_author_is_anonymous() {
+    $bracket = $this->create_bracket();
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'is_tournament_entry' => false,
+      'author' => 0,
+    ]);
+
+    $service = new TournamentEntryService();
+    $should = $service->should_mark_play_as_tournament_entry($play);
+
+    $this->assertFalse($should);
+  }
+
   public function test_should_clear_tournament_entries_for_paid_bracket() {
     $bracket = $this->create_bracket([
       'fee' => 10.0,

@@ -232,4 +232,72 @@ class AnonymousUserTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(0, $post->post_author);
   }
+
+  public function test_should_mark_anonymous_play_as_tournament_entry_on_register() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = $this->create_bracket([
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 0,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+    update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
+
+    $utils_mock = $this->createStub(Utils::class);
+    $utils_mock
+      ->method('pop_cookie')
+      ->willReturnOnConsecutiveCalls($play->id, 'test_key');
+
+    $hooks = new AnonymousUserHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_play_to_user_on_register($user->ID);
+
+    $play = $this->get_play($play->id);
+
+    $this->assertTrue($play->is_tournament_entry);
+  }
+
+  public function test_should_mark_anonymous_play_as_tournament_entry_on_login() {
+    $user = self::factory()->user->create_and_get();
+    $bracket = $this->create_bracket([
+      'author' => 0,
+      'num_teams' => 4,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 0,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+    update_post_meta($play->id, 'wpbb_anonymous_play_key', 'test_key');
+
+    $utils_mock = $this->createStub(Utils::class);
+    $utils_mock
+      ->method('pop_cookie')
+      ->willReturnOnConsecutiveCalls($play->id, 'test_key');
+
+    $hooks = new AnonymousUserHooks([
+      'utils' => $utils_mock,
+    ]);
+    $hooks->link_anonymous_play_to_user_on_login('test_login', $user);
+
+    $play = $this->get_play($play->id);
+
+    $this->assertTrue($play->is_tournament_entry);
+  }
 }

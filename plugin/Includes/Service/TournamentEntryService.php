@@ -30,6 +30,9 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
   }
 
   public function should_mark_play_as_tournament_entry(Play $play): bool {
+    if (empty($play->author)) {
+      return false;
+    }
     if ($play->is_tournament_entry) {
       return false;
     }
