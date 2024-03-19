@@ -70,7 +70,7 @@ class BracketPermissions implements PermissionsServiceInterface {
   }
 
   private function user_can_view_bracket_chat($user_id, $bracket): bool {
-    if (!$user_id) {
+    if (empty($user_id)) {
       return false;
     }
     $num_plays = $this->leaderboard_service->get_num_plays([
@@ -84,7 +84,7 @@ class BracketPermissions implements PermissionsServiceInterface {
   }
 
   private function is_bracket_author($user_id, $bracket): bool {
-    return (int) $bracket->author === (int) $user_id;
+    return !empty($user_id) && (int) $bracket->author === (int) $user_id;
   }
 
   private function user_can_play_bracket_for_free($user_id, $bracket): bool {
@@ -98,6 +98,9 @@ class BracketPermissions implements PermissionsServiceInterface {
     int $user_id,
     Bracket $bracket
   ): bool {
+    if (empty($user_id)) {
+      return false;
+    }
     return $this->play_repo->get_count([
       'bracket_id' => $bracket->id,
       'author' => $user_id,

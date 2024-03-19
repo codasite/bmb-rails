@@ -38,7 +38,7 @@ class PlayPermissions implements PermissionsServiceInterface {
     if ($this->is_author($user_id, $play)) {
       return true;
     }
-    return $play->is_printed || $play->is_tournament_entry;
+    return $play->is_tournament_entry;
   }
 
   private function user_can_print_play($user_id, $play): bool {
@@ -46,7 +46,7 @@ class PlayPermissions implements PermissionsServiceInterface {
   }
 
   private function is_author($user_id, $play): bool {
-    return (int) $play->author === (int) $user_id;
+    return !empty($user_id) && (int) $play->author === (int) $user_id;
   }
 
   public static function is_bustable(WP_Post|int|null $play_post): bool {
