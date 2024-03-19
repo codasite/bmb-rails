@@ -222,4 +222,8 @@ class Bracket extends PostBase implements PostBracketInterface {
     $enabled_status = ['publish', 'score', 'complete'];
     return in_array($this->status, $enabled_status);
   }
+
+  public function has_fee(): bool {
+    return $this->fee > 0;
+  }
 }

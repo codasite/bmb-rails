@@ -35,7 +35,7 @@ const PlayPage = (props: {
   setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  userCanPlayPaidBracketForFree?: boolean
+  userCanPlayBracketForFree?: boolean
   loginUrl: string
 }) => {
   const {
@@ -49,7 +49,7 @@ const PlayPage = (props: {
     setBracketMeta,
     darkMode,
     setDarkMode,
-    userCanPlayPaidBracketForFree,
+    userCanPlayBracketForFree,
   } = props
 
   const [processingAddToApparel, setProcessingAddToApparel] = useState(false)
@@ -70,8 +70,7 @@ const PlayPage = (props: {
   const canPrint = bracket?.isPrintable
   const canSubmit = bracket?.isOpen
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
-  const paymentRequired =
-    bracket?.fee > 0 && bracket?.isOpen && !userCanPlayPaidBracketForFree
+  const paymentRequired = bracket?.isOpen && !userCanPlayBracketForFree // TODO: decide if we need to check if the bracket is open. Is this handled by canSubmit?
 
   useEffect(() => {
     if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {

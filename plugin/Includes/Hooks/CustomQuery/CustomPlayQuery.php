@@ -19,6 +19,7 @@ class CustomPlayQuery {
     'bracket_id',
     'bracket_post_id',
     'is_printed',
+    'is_paid',
     'is_winner',
     'bmb_official',
     'busted_play_id',

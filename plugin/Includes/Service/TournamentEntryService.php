@@ -62,7 +62,7 @@ class TournamentEntryService extends BracketPlayCreateListenerBase {
   }
 
   public function should_clear_tournament_entries(int $bracket_id): bool {
-    return !$this->bracket_product_utils->has_bracket_fee($bracket_id);
+    return true; // no longer allow multiple entries for paid brackets
   }
 
   public function clear_tournament_entries_for_author(

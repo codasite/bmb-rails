@@ -159,8 +159,9 @@ class EnqueueScriptsHooks implements HooksInterface {
       'dashboardUrl' => DashboardPage::get_url(),
       'bracketBuilderUrl' => get_permalink(get_page_by_path('bracket-builder')),
       'userCanShareBracket' => current_user_can('wpbb_share_bracket'),
-      'userCanPlayPaidBracketForFree' => current_user_can(
-        'wpbb_play_paid_bracket_for_free'
+      'userCanPlayBracketForFree' => current_user_can(
+        'wpbb_play_bracket_for_free',
+        $bracket->id
       ),
       'upgradeAccountUrl' => $this->get_bmb_plus_permalink(),
       'bracketProductArchiveUrl' => $this->get_bracket_product_archive_url(),
@@ -206,16 +207,15 @@ class EnqueueScriptsHooks implements HooksInterface {
     $play = null;
     $bracket = null;
     $post = get_post();
-    if (!$post) {
-      return null;
-    }
-    if ($post->post_type === 'bracket_play') {
-      $play = $this->play_serializer->serialize($this->play_repo->get($post));
-      $bracket = $play['bracket'];
-    } elseif ($post->post_type === 'bracket') {
-      $bracket = $this->bracket_serializer->serialize(
-        $this->bracket_repo->get($post)
-      );
+    if (!empty($post)) {
+      if ($post->post_type === 'bracket_play') {
+        $play = $this->play_serializer->serialize($this->play_repo->get($post));
+        $bracket = $play['bracket'];
+      } elseif ($post->post_type === 'bracket') {
+        $bracket = $this->bracket_serializer->serialize(
+          $this->bracket_repo->get($post)
+        );
+      }
     }
     return [$bracket, $play];
   }

@@ -10,7 +10,7 @@ export interface WpbbAppObj {
   myPlayHistoryUrl?: string
   bracketBuilderUrl?: string
   userCanShareBracket?: boolean
-  userCanPlayPaidBracketForFree?: boolean
+  userCanPlayBracketForFree?: boolean
   upgradeAccountUrl?: string
   bracketProductArchiveUrl?: string
   nonce?: string

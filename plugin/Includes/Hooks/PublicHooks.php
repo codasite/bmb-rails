@@ -121,7 +121,7 @@ class PublicHooks implements HooksInterface {
       'wpbb_share_bracket' => true,
       'wpbb_bust_play' => true,
       'wpbb_enable_chat' => true,
-      'wpbb_play_paid_bracket_for_free' => true,
+      'wpbb_play_bracket_for_free' => true,
       'wpbb_create_paid_bracket' => true,
       'read' => true,
     ]);

@@ -1,15 +1,23 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Permissions;
 
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 
 class BracketPermissions implements PermissionsServiceInterface {
   private $bracket_repo;
+  private $play_repo;
   private $leaderboard_service;
 
   public function __construct($opts = []) {
     $this->bracket_repo = $opts['bracket_repo'] ?? new BracketRepo();
+    $this->play_repo =
+      $opts['play_repo'] ??
+      new PlayRepo([
+        'bracket_repo' => $this->bracket_repo,
+      ]);
     $this->leaderboard_service =
       $opts['leaderboard_service'] ?? new BracketLeaderboardService();
   }
@@ -35,6 +43,8 @@ class BracketPermissions implements PermissionsServiceInterface {
         return $this->user_can_play_bracket($user_id, $bracket);
       case 'wpbb_view_bracket_chat':
         return $this->user_can_view_bracket_chat($user_id, $bracket);
+      case 'wpbb_play_bracket_for_free':
+        return $this->user_can_play_bracket_for_free($user_id, $bracket);
       default:
         return false;
     }
@@ -45,7 +55,7 @@ class BracketPermissions implements PermissionsServiceInterface {
       'wpbb_delete_bracket',
       'wpbb_edit_bracket',
       'wpbb_play_bracket',
-      'wpbb_play_paid_bracket_for_free',
+      'wpbb_play_bracket_for_free',
       'wpbb_add_bracket_fee',
       'wpbb_view_bracket_chat',
     ];
@@ -75,5 +85,23 @@ class BracketPermissions implements PermissionsServiceInterface {
 
   private function is_bracket_author($user_id, $bracket): bool {
     return (int) $bracket->author === (int) $user_id;
+  }
+
+  private function user_can_play_bracket_for_free($user_id, $bracket): bool {
+    if (!$bracket->has_fee()) {
+      return true;
+    }
+    return $this->user_has_paid_play_for_bracket($user_id, $bracket);
+  }
+
+  private function user_has_paid_play_for_bracket(
+    int $user_id,
+    Bracket $bracket
+  ): bool {
+    return $this->play_repo->get_count([
+      'bracket_id' => $bracket->id,
+      'author' => $user_id,
+      'is_paid' => true,
+    ]) > 0;
   }
 }

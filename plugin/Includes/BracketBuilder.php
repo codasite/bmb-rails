@@ -110,7 +110,6 @@ class BracketBuilder {
       new PublicHooks(),
       new AdminHooks($name_and_version_args),
       new GelatoProductIntegration(),
-      new BracketProductHooks(),
       new EnqueueScriptsHooks($name_and_version_args),
       new PublicShortcodes(),
       new CustomPostHooks(),

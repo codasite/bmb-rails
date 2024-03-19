@@ -67,7 +67,7 @@ class BracketProductHooks implements HooksInterface {
         $fee_amount = $this->bracket_product_utils->get_bracket_fee(
           $bracket_id
         );
-        if (current_user_can('wpbb_play_paid_bracket_for_free')) {
+        if (current_user_can('wpbb_play_bracket_for_free')) {
           $fee_amount = 0;
         }
         if ($fee_amount > 0) {

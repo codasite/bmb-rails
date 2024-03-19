@@ -117,7 +117,7 @@ function renderPlayBracket(appObj: WpbbAppObj) {
     bracketProductArchiveUrl,
     myPlayHistoryUrl,
     isUserLoggedIn,
-    userCanPlayPaidBracketForFree,
+    userCanPlayBracketForFree,
   } = appObj
   if (bracket) {
     renderDiv(
@@ -127,7 +127,7 @@ function renderPlayBracket(appObj: WpbbAppObj) {
           bracketProductArchiveUrl={bracketProductArchiveUrl}
           myPlayHistoryUrl={myPlayHistoryUrl}
           isUserLoggedIn={isUserLoggedIn}
-          userCanPlayPaidBracketForFree={userCanPlayPaidBracketForFree}
+          userCanPlayBracketForFree={userCanPlayBracketForFree}
           loginUrl={appObj.loginUrl}
         />
       </App>,
@@ -239,7 +239,10 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
         upgradeAccountUrl={appObj.upgradeAccountUrl}
         canCreateBracket={appObj.userCanShareBracket}
       />
-      <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} loginUrl={appObj.loginUrl} />
+      <UpcomingNotificationModal
+        isUserLoggedIn={appObj.isUserLoggedIn}
+        loginUrl={appObj.loginUrl}
+      />
       <SetTournamentFeeModal
         applicationFeeMinimum={appObj.applicationFeeMinimum}
         applicationFeePercentage={appObj.applicationFeePercentage}
@@ -251,7 +254,10 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
 function renderPublicBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
-      <UpcomingNotificationModal isUserLoggedIn={appObj.isUserLoggedIn} loginUrl={appObj.loginUrl} />
+      <UpcomingNotificationModal
+        isUserLoggedIn={appObj.isUserLoggedIn}
+        loginUrl={appObj.loginUrl}
+      />
       <ShareBracketModal />
     </>,
     'wpbb-public-bracket-modals'

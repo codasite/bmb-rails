@@ -222,7 +222,7 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
     $this->assertFalse($should);
   }
 
-  public function test_should_not_clear_tournament_entries_for_paid_bracket() {
+  public function test_should_clear_tournament_entries_for_paid_bracket() {
     $bracket = $this->create_bracket([
       'fee' => 10.0,
     ]);
@@ -230,7 +230,7 @@ class TournamentEntryServiceTest extends WPBB_UnitTestCase {
     $service = new TournamentEntryService();
     $should = $service->should_clear_tournament_entries($bracket->id);
 
-    $this->assertFalse($should);
+    $this->assertTrue($should);
   }
 
   public function test_should_clear_tournament_entries_for_free_bracket() {

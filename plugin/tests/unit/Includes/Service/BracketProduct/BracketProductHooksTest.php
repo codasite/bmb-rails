@@ -23,7 +23,7 @@ class BracketProductHooksTest extends TestCase {
     $play_id = 2;
     WP_Mock::userFunction('current_user_can', [
       'times' => 1,
-      'args' => ['wpbb_play_paid_bracket_for_free'],
+      'args' => ['wpbb_play_bracket_for_free'],
       'return' => false,
     ]);
     WP_Mock::userFunction('sanitize_title', [
@@ -109,7 +109,7 @@ class BracketProductHooksTest extends TestCase {
     $play_id = 2;
     WP_Mock::userFunction('current_user_can', [
       'times' => 1,
-      'args' => ['wpbb_play_paid_bracket_for_free'],
+      'args' => ['wpbb_play_bracket_for_free'],
       'return' => true,
     ]);
     $cart_mock = $this->createMock(CartInterface::class);
