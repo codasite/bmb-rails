@@ -159,8 +159,8 @@ class EnqueueScriptsHooks implements HooksInterface {
       'dashboardUrl' => DashboardPage::get_url(),
       'bracketBuilderUrl' => get_permalink(get_page_by_path('bracket-builder')),
       'userCanShareBracket' => current_user_can('wpbb_share_bracket'),
-      'userCanPlayPaidBracketForFree' => !empty($bracket)
-        ? current_user_can('wpbb_play_paid_bracket_for_free', $bracket->id)
+      'userCanPlayBracketForFree' => !empty($bracket)
+        ? current_user_can('wpbb_play_bracket_for_free', $bracket->id)
         : false,
       'upgradeAccountUrl' => $this->get_bmb_plus_permalink(),
       'bracketProductArchiveUrl' => $this->get_bracket_product_archive_url(),
