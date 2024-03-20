@@ -41,7 +41,7 @@ class BracketIconButtons {
       'lock.svg',
       'submit',
       classes: 'wpbb-lock-tournament-button',
-      attributes: "data-bracket-id='$bracket->id'"
+      attributes: "data-bracket-id='$bracket->id' data-bracket-title='$bracket->title'"
     );
   }
 
