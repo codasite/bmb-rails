@@ -13,11 +13,11 @@ import {
 import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
 import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
-import { unpublishBracketHandler } from './handlers/dashboard/brackets/unpublishBracketHandler'
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
 import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingNotificationModal'
 import { paymentsHandler } from './handlers/dashboard/payments/paymentsHandler'
 import { SetTournamentFeeModal } from './modals/dashboard/brackets/SetTournamentFeeModal'
+import { LockLiveTournamentModal } from './modals/dashboard/brackets/LockLiveTournamentModal'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -276,6 +276,7 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
         applicationFeeMinimum={appObj.applicationFeeMinimum}
         applicationFeePercentage={appObj.applicationFeePercentage}
       />
+      <LockLiveTournamentModal />
     </>,
     'wpbb-tournaments-modals'
   )
@@ -302,7 +303,6 @@ function renderStripeOnboardingRedirect(appObj: WpbbAppObj) {
   )
 }
 function addClickHandlers(appObj: WpbbAppObj) {
-  unpublishBracketHandler()
   paymentsHandler()
 }
 

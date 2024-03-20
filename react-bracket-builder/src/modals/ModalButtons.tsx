@@ -6,7 +6,7 @@ import {
 import * as React from 'react'
 
 export const DangerButton = (props: {
-  disabled: boolean
+  disabled?: boolean
   onClick: () => void
   children?: React.ReactNode
 }) => {

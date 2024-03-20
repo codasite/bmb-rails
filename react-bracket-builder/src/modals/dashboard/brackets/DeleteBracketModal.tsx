@@ -50,6 +50,7 @@ export default function DeleteBracketModal() {
   return (
     <Modal show={show} setShow={setShow}>
       <ModalHeader text={`Delete "${title}"?`} />
+      <p className="tw-text-center">This action cannot be undone.</p>
       <div className="tw-flex tw-flex-col tw-gap-10">
         <DangerButton disabled={loading} onClick={onDeleteBracket}>
           Delete
