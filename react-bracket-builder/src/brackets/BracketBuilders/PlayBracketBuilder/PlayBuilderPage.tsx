@@ -9,7 +9,12 @@ import {
   WithDarkMode,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
-import { BracketRes, PlayReq } from '../../shared/api/types/bracket'
+import {
+  BracketRes,
+  MatchPick,
+  PlayReq,
+  PlayRes,
+} from '../../shared/api/types/bracket'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
 import {
@@ -29,6 +34,7 @@ const PlayPage = (props: {
   isUserLoggedIn: boolean
   bracketStylesheetUrl: string
   bracket?: BracketRes
+  play?: PlayRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   darkMode?: boolean
@@ -81,7 +87,8 @@ const PlayPage = (props: {
     let tree: Nullable<MatchTree> = null
     const numTeams = bracket.numTeams
     const matches = bracket.matches
-    const play = playStorage.loadPlay(bracket.id)
+    const stored = playStorage.loadPlay(bracket.id)
+    const play = stored ? stored : props.play
     if (play) {
       tree = MatchTree.fromPicks(numTeams, matches, play.picks)
       setStoredPlay(play)
@@ -110,6 +117,13 @@ const PlayPage = (props: {
     )
   }
 
+  const doNotCreateNewPlay = (playReq: PlayReq) => {
+    return (
+      storedPlay?.id &&
+      JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks)
+    )
+  }
+
   const getPlayReq = () => {
     const picks = matchTree?.toMatchPicks()
     const bracketId = bracket?.id
@@ -133,10 +147,7 @@ const PlayPage = (props: {
     const playReq = getPlayReq()
     playReq.generateImages = true
     try {
-      if (
-        JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
-        storedPlay?.id
-      ) {
+      if (doNotCreateNewPlay(playReq)) {
         // regenerate play images anyway (in case they don't exist)
         await bracketApi.generatePlayImages(storedPlay.id)
       } else {
@@ -172,10 +183,8 @@ const PlayPage = (props: {
     const playReq = getPlayReq()
     playReq.generateImages = false
     playReq.createStripePaymentIntent = paymentRequired
-    if (
-      JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks) &&
-      storedPlay.id
-    ) {
+
+    if (doNotCreateNewPlay(playReq)) {
       if (!paymentRequired) {
         if (isUserLoggedIn) {
           window.location.assign(myPlayHistoryUrl)

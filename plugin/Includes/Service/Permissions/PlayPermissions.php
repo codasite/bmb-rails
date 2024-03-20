@@ -45,7 +45,7 @@ class PlayPermissions implements PermissionsServiceInterface {
     return $this->user_can_view_play($user_id, $play);
   }
 
-  private function is_author($user_id, $play): bool {
+  public static function is_author($user_id, $play): bool {
     return !empty($user_id) && (int) $play->author === (int) $user_id;
   }
 

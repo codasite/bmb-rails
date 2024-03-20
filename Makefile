@@ -90,6 +90,13 @@ test:
 pretty:
 	npm run pretty
 
+pretty-check:
+	npm run pretty:check
+
+check:
+	make pretty-check
+	make phpstan
+
 react-start:
 	cd react-bracket-builder && npm run start:plugin
 

@@ -2,34 +2,31 @@ import { useState } from 'react'
 import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
 import { ModalHeader } from '../../ModalHeader'
-import { CancelButton, ConfirmButton } from '../../ModalButtons'
+import { CancelButton, ConfirmButton, DangerButton } from '../../ModalButtons'
 import { bracketApi } from '../../../brackets/shared'
 
 export const LockLiveTournamentModal = () => {
   const [show, setShow] = useState(false)
   const [bracketId, setBracketId] = useState<number | null>(null)
-  const [bracketTitle, setBracketTitle] = useState<string | null>(null)
 
   addClickHandlers({
     buttonClassName: 'wpbb-lock-tournament-button',
     onButtonClick: (b) => {
       b.dataset.bracketId && setBracketId(parseInt(b.dataset.bracketId))
-      b.dataset.bracketTitle && setBracketTitle(b.dataset.bracketTitle)
       setShow(true)
     },
   })
-  const headerText = `Lock plays for ${
-    bracketTitle ? `"${bracketTitle}"` : 'this tournament'
-  }?`
+  const headerText = `Update tournament status to "In Progress"?`
 
   return (
     <Modal show={show} setShow={setShow}>
       <ModalHeader text={headerText} />
       <p className="tw-text-center">
-        No new plays can be made once a tournament is locked.
+        No new plays will be accepted into the tournament.
+        <span className="tw-text-red"> This action cannot be undone.</span>
       </p>
       <div className="tw-flex tw-flex-col tw-gap-10">
-        <ConfirmButton
+        <DangerButton
           onClick={() => {
             // Lock the tournament
             if (!bracketId) {
@@ -46,7 +43,7 @@ export const LockLiveTournamentModal = () => {
           }}
         >
           <span>Confirm</span>
-        </ConfirmButton>
+        </DangerButton>
         <CancelButton onClick={() => setShow(false)}></CancelButton>
       </div>
     </Modal>
