@@ -22,6 +22,7 @@ class UserProfilePage implements TemplateInterface {
       'tag_slug__in' => ['bmb_vip_profile'],
       'author' => $user_profile->author,
     ]);
+    ob_start();
     ?>
 		<div class="wpbb-reset wpbb-faded-bracket-bg tw-pt-60 tw-pb-[150px] tw-px-20">
 			<div class="wpbb-reset tw-max-w-screen-xl tw-mx-auto tw-flex-col tw-flex">
