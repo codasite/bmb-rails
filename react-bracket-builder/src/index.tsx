@@ -284,11 +284,13 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
 function renderPublicBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
+      <EditBracketModal />
       <UpcomingNotificationModal
         isUserLoggedIn={appObj.isUserLoggedIn}
         loginUrl={appObj.loginUrl}
       />
       <ShareBracketModal />
+      <LockLiveTournamentModal />
     </>,
     'wpbb-public-bracket-modals'
   )
