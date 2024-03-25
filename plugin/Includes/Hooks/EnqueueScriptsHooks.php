@@ -175,8 +175,10 @@ class EnqueueScriptsHooks implements HooksInterface {
       'bracketProductArchiveUrl' => $this->get_bracket_product_archive_url(),
       'myPlayHistoryUrl' =>
         get_permalink(get_page_by_path('dashboard')) . '?tab=play-history',
-      'play' => $this->play_serializer->serialize($play),
-      'bracket' => $this->bracket_serializer->serialize($bracket),
+      'play' => $play ? $this->play_serializer->serialize($play) : null,
+      'bracket' => $bracket
+        ? $this->bracket_serializer->serialize($bracket)
+        : null,
       'isUserLoggedIn' => is_user_logged_in(),
       'stripePublishableKey' => $stripe_publishable_key,
       'applicationFeeMinimum' =>
