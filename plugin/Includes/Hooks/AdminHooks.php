@@ -27,7 +27,7 @@ class AdminHooks implements HooksInterface {
     $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_styles']);
     // $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
 
-    // $loader->add_action('init', [$this, 'add_capabilities']);
+    $loader->add_action('init', [$this, 'add_capabilities']);
     $loader->add_action(
       'add_user_role',
       [$this, 'create_user_profile_post'],
