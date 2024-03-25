@@ -3,13 +3,34 @@
 ## Dev setup
 
 1. Run prettier on save with your editor: https://prettier.io/docs/en/editors
+2. Add file `phpstan.neon` to the root of the project with the following content:
 
-## Installation
+```
+includes:
+  - phpstan.neon.dist
+```
+
+## Basic Installation (Docker)
+
+1. Copy the `.env.example` file to `.env` and fill in the necessary values.
+2. Add the following plugins to `docker/wordpress/plugins`:
+  - [Sentry](https://wordpress.org/plugins/wp-sentry-integration/)
+  - [WooCommerce](https://wordpress.org/plugins/woocommerce/)
+  - [Oxygen](https://drive.google.com/file/d/19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2/view?usp=sharing)
+  - [Oxygen-WooCommerce](https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing)
+3. Run `make composer-install` to install php dependencies.
+4. Run `make wp-up` to start the local wordpress services.
+5. In a new terminal run `make wp-install` to install wordpress and initialize plugins. This also sets up the test installation
+6. `make react-install` to install npm dependencies for the react app.
+7. `make react-start` or `make react-build` to start or build the react app.
+8. Go to `localhost:8008` in your browser to view the site. The wordpress admin is at `localhost:8000/wp-admin` with username `admin` and password `admin`.
+
+## Basic Installation (Local WP)
 
 1. Install Wordpress locally
 
-- Install the Local dev tool: https://localwp.com/
-- Create a new site in Local: https://wpengine.com/resources/local-wordpress-development-environment-how-to/
+  - Install the Local dev tool: https://localwp.com/
+  - Create a new site in Local: https://wpengine.com/resources/local-wordpress-development-environment-how-to/
   - Use the latest php version and mysql version
 
 2. Clone the repo anywhere on your system and create a symlink to the `plugin` folder:
@@ -124,59 +145,6 @@ Tests should be run via docker-compose. To run the tests:
 Resources:
 https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/
 https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/
-
-## Docker live site
-
-Docker can be used to run a local clone of an existing site. This is useful for testing with "live" data.
-
-1. Pull the latest site backup (requires ssh access to the server):
-    
-    ```
-    make wp-pull
-    ```
-
-2. Start the local site:
-
-    ```
-    make wp-up
-    ```
-
-3. Add the test installation and create the admin user (existing credentials can be used as well):
-    
-    ```
-    make wp-init
-    ```
-
-## Docker local development
-
-For development it's faster to use a slimmed down version of the site.
-
-1. Add the following plugins to `docker/wordpress/plugins`:
-- [Sentry](https://wordpress.org/plugins/wp-sentry-integration/)
-- [WooCommerce](https://wordpress.org/plugins/woocommerce/)
-- [Oxygen](https://drive.google.com/file/d/19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2/view?usp=sharing)
-- [Oxygen-WooCommerce](https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing)
-
-
-2. Delete existing volumes
-    
-    ```
-    make wp-down
-    ```
-
-3. Reload containers, intitializing the database from the latest dump
-
-    ```
-    make wp-up
-    ```
-
-4. Install wordpress and plugins
-    
-    ```
-    make wp-install
-    ```
-
-## WP Admin
 
 ### Tags
     A number of tags are used to organize brackets for public facing pages.

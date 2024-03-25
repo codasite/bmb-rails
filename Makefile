@@ -1,3 +1,5 @@
+# Precede each command with `make` to run it
+
 # Try to pull the latest wordpress files from the server
 wp-pull:
 	./docker/wordpress/bin/pull-wp.sh
