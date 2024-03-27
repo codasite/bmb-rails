@@ -1,9 +1,9 @@
-import * as Sentry from '@sentry/react'
 import { baseButtonStyles } from '../../../../brackets/shared/components/ActionButtons'
 import stripeLogo from '../../../../assets/images/stripe_logo_64.png'
 import { useState } from 'react'
 import { bracketApi } from '../../../../brackets/shared'
 import { Spinner } from '../../../../brackets/shared/components/Spinner'
+import { logger } from '../../../../utils/Logger'
 
 export const SetUpPaymentsButton = (props: {}) => {
   const [processing, setProcessing] = useState(false)
@@ -13,7 +13,7 @@ export const SetUpPaymentsButton = (props: {}) => {
       const { url } = await bracketApi.getStripePaymentsLink()
       window.location.href = url
     } catch (error) {
-      Sentry.captureException(error)
+      logger.error(error)
       setProcessing(false)
     }
   }

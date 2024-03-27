@@ -1,5 +1,5 @@
+import { logger } from '../../../utils/Logger'
 import { camelCaseKeys, snakeCaseKeys } from '../utils/caseUtils'
-import * as Sentry from '@sentry/react'
 
 export interface RequestOptions {
   method?: string
@@ -59,7 +59,7 @@ export class WpHttpClient {
       }
       return responseData
     } catch (error) {
-      Sentry.captureException(error)
+      logger.error(error)
       throw error
     }
   }

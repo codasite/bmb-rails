@@ -6,7 +6,7 @@ import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { generatorImageSchema } from './schema'
 import { HEADLESS, HOST, PORT } from './config'
 
-Sentry.init({ dsn: process.env.SENTRY_DSN })
+Sentry.init()
 
 if (!process.env.CLIENT_URL) {
   throw new Error('CLIENT_URL not set')
@@ -112,6 +112,7 @@ const takeScreenshot = async (req: GenerateRequest) => {
 
   try {
     const page = await browser.newPage()
+    let pageError = null
 
     await page.setViewport({
       height: pxHeight,
@@ -122,13 +123,24 @@ const takeScreenshot = async (req: GenerateRequest) => {
     const queryString = Object.entries(req.queryParams)
       .map(([key, value]) => {
         if (typeof value === 'object') {
-          value = encodeURIComponent(JSON.stringify(value))
+          value = JSON.stringify(value)
         }
         return key + '=' + encodeURIComponent(value as any)
       })
       .join('&')
     const path = url + (queryString ? '?' + queryString : '')
-    await page.goto(path, { waitUntil: 'networkidle0' })
+    page.on('pageerror', (err) => {
+      pageError = err
+    })
+    const res = await page.goto(path, { waitUntil: 'networkidle0' })
+    if (!res.ok()) {
+      throw new Error(
+        'Failed to load page. Status: ' + res.status() + ' ' + res.statusText()
+      )
+    }
+    if (pageError) {
+      throw new Error('Error in page console: ' + pageError)
+    }
 
     let file: Buffer
     if (req.pdf) {
@@ -187,7 +199,7 @@ app.post(
   },
 
   async (err: Error, req: Request, res: Response, next: NextFunction) => {
-    Sentry.captureException(err)
+    console.error(err)
     // Attempt to close the browser in case of an error, if appropriate
     if (err.name === 'ValidationError') {
       // Return after sending the response to stop execution

@@ -18,7 +18,7 @@ import {
 import { WithMatchTree3 } from '../../shared/components/HigherOrder/WithMatchTree'
 import { getBustTrees } from './utils'
 import { BustablePlayPageButtons } from './buttons'
-import { addToApparelHandler } from '../ViewPlayPage/utils'
+import { addExistingPlayToApparelHandler } from '../ViewPlayPage/addExistingPlayToApparel'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { BustStartPage } from './PaginatedBustBuilder/BustStartPage'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
@@ -65,7 +65,7 @@ const BustPlayPage = (props: BustPlayPageProps) => {
   }
 
   const handleAddApparel = async () => {
-    await addToApparelHandler(play?.id)
+    await addExistingPlayToApparelHandler(play?.id)
   }
 
   useEffect(() => {

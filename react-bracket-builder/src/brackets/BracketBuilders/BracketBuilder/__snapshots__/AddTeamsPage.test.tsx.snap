@@ -51,7 +51,8 @@ exports[`AddTeamsPage renders page correctly 1`] = `
               style="margin-bottom: 95px; min-height: 0;"
             >
               <div
-                class="tw-flex tw-flex-col tw-gap-24 tw-items-center"
+                class="tw-flex tw-flex-col tw-items-center"
+                style="gap: 24px;"
               >
                 <div
                   class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/25"
@@ -69,7 +70,8 @@ exports[`AddTeamsPage renders page correctly 1`] = `
               class="tw-flex tw-flex-col tw-justify-center tw-h-100"
             >
               <div
-                class="tw-flex tw-justify-between tw-relative tw-w-[700px]"
+                class="tw-flex tw-justify-between"
+                style="width: 700px;"
               >
                 <div
                   class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"

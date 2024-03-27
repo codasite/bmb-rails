@@ -20,8 +20,8 @@ services:
     environment:
       - CLIENT_URL=http://react-server:3001
       # These are ultimately set based on trellis variables and vault secrets
-      - WP_SENTRY_ENV=${WP_SENTRY_ENV}
-      - WP_SENTRY_DSN=${WP_SENTRY_DSN}
+      - SENTRY_ENVIRONEMENT=${WP_SENTRY_ENV}
+      - SENTRY_DSN=${WP_SENTRY_PHP_DSN}
       - NODE_ENV=${NODE_ENV}
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -54,8 +54,8 @@ services:
     env_file:
       - .env
     environment:
-      - WP_SENTRY_ENV=${WP_SENTRY_ENV}
-      - WP_SENTRY_DSN=${WP_SENTRY_DSN}
+      - SENTRY_ENVIRONEMENT=${WP_SENTRY_ENV}
+      - SENTRY_DSN=${WP_SENTRY_PHP_DSN}
       - NODE_ENV=${NODE_ENV}
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3001/ping']
@@ -78,8 +78,8 @@ services:
     env_file:
       - .env
     environment:
-      - WP_SENTRY_ENV=${WP_SENTRY_ENV}
-      - WP_SENTRY_DSN=${WP_SENTRY_DSN}
+      - SENTRY_ENVIRONEMENT=${WP_SENTRY_ENV}
+      - SENTRY_DSN=${WP_SENTRY_PHP_DSN}
       - NODE_ENV=${NODE_ENV}
     volumes:
       - standalone_react:/usr/src/app/build/standalone

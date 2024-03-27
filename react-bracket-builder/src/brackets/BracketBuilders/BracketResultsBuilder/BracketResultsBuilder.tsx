@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import * as Sentry from '@sentry/react'
+import { logger } from '../../../utils/Logger'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { BracketMeta } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
@@ -90,7 +90,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
         })
         .catch((err) => {
           console.error(err)
-          Sentry.captureException(err)
+          logger.error(err)
         })
     }
   }

@@ -9,8 +9,9 @@ import {
   PlayRes,
   getReplayPlayUrl,
 } from '../../shared'
-import { addToApparelHandler } from './utils'
+import { addExistingPlayToApparelHandler } from './addExistingPlayToApparel'
 import { wpbbAjax } from '../../../utils/WpbbAjax'
+import { useState } from 'react'
 
 const PlayOrReplayButton = (props: { play?: PlayRes }) => {
   const bracket = props.play?.bracket
@@ -34,19 +35,30 @@ const PlayOrReplayButton = (props: { play?: PlayRes }) => {
 }
 
 export const ViewPlayPageButtons = (props: { play?: PlayRes }) => {
+  const [apparelError, setApparelError] = useState(false)
+  const [apparelProcessing, setApparelProcessing] = useState(false)
   const play = props.play
   const bracket = play?.bracket
   const viewResultsUrl =
     bracket?.results?.length > 0 ? getBracketResultsUrl(bracket) : undefined
   const handleAddApparel = async () => {
-    await addToApparelHandler(props.play?.id)
+    await addExistingPlayToApparelHandler({
+      playId: play?.id,
+      setProcessing: setApparelProcessing,
+      onError: () => setApparelError(true),
+    })
   }
   // const showBustButton = props.handleBustPlay !== undefined
   const showBustButton = false
 
   return (
     <div className="tw-flex tw-flex-col sm:tw-gap-15">
-      <AddToApparel variant="grey" handleApparelClick={handleAddApparel} />
+      <AddToApparel
+        variant="grey"
+        handleApparelClick={handleAddApparel}
+        error={apparelError}
+        processing={apparelProcessing}
+      />
       <div
         className={`tw-flex tw-flex-col md:tw-flex-row tw-justify-between tw-gap-15 ${
           showBustButton ? 'tw-mt-30' : 'tw-mt-15 sm:tw-mt-0'

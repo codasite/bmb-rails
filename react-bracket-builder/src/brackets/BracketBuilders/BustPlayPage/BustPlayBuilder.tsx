@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import * as Sentry from '@sentry/react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { getBustTrees } from './utils'
 import { BustPlayView } from './BustPlayView'
+import { logger } from '../../../utils/Logger'
 
 interface BustPlayBuilderProps {
   busteePlay: PlayRes
@@ -50,7 +50,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       const msg =
         'Cannot create play. Missing one of bracketId, busteeId, or picks'
       console.error(msg)
-      Sentry.captureException(msg)
+      logger.error(msg)
       return
     }
 
@@ -72,7 +72,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       })
       .catch((err) => {
         console.error(err)
-        Sentry.captureException(err)
+        logger.error(err)
       })
       .finally(() => {
         setProcessing(false)

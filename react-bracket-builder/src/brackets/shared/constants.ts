@@ -96,6 +96,16 @@ export const defaultBracketConstants = {
     250, // 6 rounds
   ],
 
+  winnerContainerTitleMaxWidth: [
+    700, // 0 rounds
+    700, // 1 round
+    700, // 2 rounds
+    700, // 3 rounds
+    700, // 4 rounds
+    700, // 5 rounds
+    500, // 6 rounds
+  ],
+
   logoContainerBottomMargin: [
     0, // 0 rounds
     0, // 1 round

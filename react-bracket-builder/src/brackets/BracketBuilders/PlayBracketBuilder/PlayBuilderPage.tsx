@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react'
-import * as Sentry from '@sentry/react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
 import { MatchTree } from '../../shared/models/MatchTree'
@@ -27,6 +26,7 @@ import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsCo
 import { PlayStorage } from '../../shared/storages/PlayStorage'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import StripePaymentModal from './StripePaymentModal'
+import { logger } from '../../../utils/Logger'
 
 const PlayPage = (props: {
   bracketProductArchiveUrl: string
@@ -130,7 +130,7 @@ const PlayPage = (props: {
     if (!picks || !bracketId) {
       const msg = 'Cannot create play. Missing picks'
       console.error(msg)
-      Sentry.captureException(msg)
+      logger.error(msg)
       return
     }
     const playReq: PlayReq = {
@@ -165,7 +165,7 @@ const PlayPage = (props: {
             console.error('error: ', err)
             setProcessingAddToApparel(false)
             setAddToApparelError(true)
-            Sentry.captureException(err)
+            logger.error(err)
           })
       }
       window.location.assign(bracketProductArchiveUrl)
@@ -173,7 +173,7 @@ const PlayPage = (props: {
       console.error('error: ', err)
       setProcessingAddToApparel(false)
       setAddToApparelError(true)
-      Sentry.captureException(err)
+      logger.error(err)
     }
   }
 
@@ -209,7 +209,7 @@ const PlayPage = (props: {
           console.error('error: ', err)
           setProcessingSubmitPicks(false)
           setSubmitPicksError(true)
-          Sentry.captureException(err)
+          logger.error(err)
         })
 
       return
@@ -238,7 +238,7 @@ const PlayPage = (props: {
       .catch((err) => {
         console.error('error: ', err)
         setProcessingSubmitPicks(false)
-        Sentry.captureException(err)
+        logger.error(err)
       })
   }
 

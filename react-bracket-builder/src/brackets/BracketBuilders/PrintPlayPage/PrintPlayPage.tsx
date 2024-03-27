@@ -10,6 +10,7 @@ import {
 import { parseParams } from './schema'
 import { validateParams } from './validate'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
+import { logger } from '../../../utils/Logger'
 
 interface PrintBracketPageProps {
   bracketMeta: BracketMeta
@@ -40,7 +41,9 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
     const errors = validateParams(parsed)
 
     if (errors.length > 0) {
-      throw new Error(errors.join(', '))
+      const errorString = errors.join(', ')
+      logger.error(errorString)
+      throw new Error(errorString)
     }
 
     const {

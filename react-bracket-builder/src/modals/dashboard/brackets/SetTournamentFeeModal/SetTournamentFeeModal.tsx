@@ -3,12 +3,12 @@ import React, { useState } from 'react'
 import { Modal } from '../../../Modal'
 import addClickHandlers from '../../../addClickHandlers'
 import { bracketApi } from '../../../../brackets/shared'
-import * as Sentry from '@sentry/react'
 import { Spinner } from '../../../../brackets/shared/components/Spinner'
 import { InputFeeAmount } from './InputFeeAmount'
 import { ModalHeader } from '../../../ModalHeader'
 import { ModalHeaderLogo } from './ModalHeaderLogo'
 import { SetUpPaymentsButton } from './SetUpPaymentsButton'
+import { logger } from '../../../../utils/Logger'
 
 export const SetTournamentFeeModal = (props: {
   applicationFeeMinimum: number
@@ -28,7 +28,7 @@ export const SetTournamentFeeModal = (props: {
       }
     } catch (error) {
       console.error(error)
-      Sentry.captureException(error)
+      logger.error(error)
     } finally {
       setLoadingAccount(false)
     }

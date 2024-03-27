@@ -24,12 +24,17 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
     topTextColorDark = 'white',
     gap = 24,
   } = props
+  const numRounds = matchTree.rounds.length
 
   return (
-    <div className={`tw-flex tw-flex-col tw-gap-${gap} tw-items-center`}>
+    <div className={`tw-flex tw-flex-col tw-items-center`} style={{ gap: gap }}>
       {topText && (
         <span
-          className={`tw-text-48 sm:tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-max-w-[700px] tw-text-center tw-leading-none`}
+          className={`tw-text-48 sm:tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-text-center tw-leading-none`}
+          style={{
+            width:
+              defaultBracketConstants.winnerContainerTitleMaxWidth[numRounds],
+          }}
         >
           {topText}
         </span>

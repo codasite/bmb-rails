@@ -9,14 +9,14 @@ import {
   PlayRes,
   BracketRes,
 } from '../../shared'
-// import { addToApparelHandler } from './utils'
+// import { addExistingPlayToApparelHandler } from './utils'
 
 export const ViewResultsPageButtons = (props: {
   bracket?: BracketRes
   // addApparelUrl: string
 }) => {
   // const handleAddApparel = async () => {
-  //   await addToApparelHandler(props.play?.id, props.addApparelUrl)
+  //   await addExistingPlayToApparelHandler(props.play?.id, props.addApparelUrl)
   // }
   return (
     <div className="tw-flex tw-flex-col sm:tw-gap-15">

@@ -211,9 +211,10 @@ export const DefaultBracket = (props: BracketProps) => {
           }`}
         >
           <div
-            className={`tw-flex tw-justify-${
-              numRounds > 1 ? 'between' : 'center'
-            } tw-relative tw-w-[${width}px]`}
+            className={`tw-flex ${
+              numRounds > 1 ? 'tw-justify-between' : 'tw-justify-center'
+            }`}
+            style={{ width: width }}
           >
             {buildMatches(matchTree.rounds)}
           </div>

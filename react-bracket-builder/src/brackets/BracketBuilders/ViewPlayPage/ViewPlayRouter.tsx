@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { ViewPlayPageProps } from './types'
 import { BustPlay } from './BustPlay'
-import { ViewPlay } from './ViewPlay'
 import ViewPlayPage from './ViewPlayPage'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import {

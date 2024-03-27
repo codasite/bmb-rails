@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ImageGallery from 'react-image-gallery'
-import * as Sentry from '@sentry/react'
 import 'react-image-gallery/styles/css/image-gallery.css'
 import { Spinner } from '../brackets/shared/components/Spinner'
+import { logger } from '../utils/Logger'
 
 const SCALE_FACTOR = 3
 const COLOR_SELECTOR_ID = 'color'
@@ -108,7 +108,7 @@ const Gallery: React.FC<GalleryProps> = ({
       })
       .catch((error) => {
         console.error('An error occurred:', error)
-        Sentry.captureException(error)
+        logger.error(error)
       })
   }, [])
 
