@@ -74,7 +74,7 @@ const PlayPage = (props: {
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
   const canPrint = bracket?.isPrintable
-  const canSubmit = bracket?.isOpen
+  const canSubmit = bracket?.isOpen && props.isUserLoggedIn
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
   const paymentRequired = bracket?.isOpen && !userCanPlayBracketForFree // TODO: decide if we need to check if the bracket is open. Is this handled by canSubmit?
 
@@ -97,6 +97,9 @@ const PlayPage = (props: {
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
+    }
+    if (!isUserLoggedIn) {
+      setShowRegisterModal(true)
     }
   }, [])
 
@@ -264,7 +267,7 @@ const PlayPage = (props: {
       <SubmitPicksRegisterModal
         show={showRegisterModal}
         setShow={setShowRegisterModal}
-        loginUrl={props.loginUrl}
+        loginUrl={props.loginUrl + '?redirect_to=' + props.bracket.url}
       />
       <StripePaymentModal
         title={'Submit Your Picks'}
