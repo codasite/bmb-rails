@@ -29,11 +29,22 @@ describe('PlayBuilderPage', () => {
   afterEach(() => {
     jest.clearAllMocks()
   })
-  test('renders PlayBuilderPage correctly', () => {
+  test('should render submit picks button when user is logged in', () => {
     const { asFragment } = render(
       <PlayBuilderPage
         matchTree={MatchTree.fromNumTeams(10)}
         bracket={{ isPrintable: true, isOpen: true }}
+        isUserLoggedIn={true}
+      />
+    )
+    expect(asFragment()).toMatchSnapshot()
+  })
+  test('should render should show register modal when user is not logged in', () => {
+    const { asFragment } = render(
+      <PlayBuilderPage
+        matchTree={MatchTree.fromNumTeams(10)}
+        bracket={{ isPrintable: true, isOpen: true }}
+        isUserLoggedIn={false}
       />
     )
     expect(asFragment()).toMatchSnapshot()
@@ -73,10 +84,16 @@ describe('PlayBuilderPage', () => {
     expect(window.location.search).toContain('loadStoredPicks=true')
     expect(sessionStorage.getItem('wpbb_play_data_1')).toBeTruthy()
     const { asFragment: asFragmentSession } = render(
-      <PlayBuilderPage bracket={{ id: 1, numTeams: 4, matches: matches }} />
+      <PlayBuilderPage
+        bracket={{ id: 1, numTeams: 4, matches: matches }}
+        isUserLoggedIn={true}
+      />
     )
     const { asFragment } = render(
-      <PlayBuilderPage matchTree={MatchTree.fromPicks(4, matches, picks)} />
+      <PlayBuilderPage
+        matchTree={MatchTree.fromPicks(4, matches, picks)}
+        isUserLoggedIn={true}
+      />
     )
     expect(asFragmentSession()).toEqual(asFragment())
   })

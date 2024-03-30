@@ -7,6 +7,51 @@ import { ReactComponent as LinkIcon } from '../../../brackets/shared/assets/link
 import { ReactComponent as XLogo } from '../../../brackets/shared/assets/x-logo.svg'
 import { ReactComponent as FacebookLogo } from '../../../brackets/shared/assets/facebook-logo.svg'
 
+export const FacebookShareLink = (props: { playBracketUrl: string }) => {
+  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${props.playBracketUrl}`
+  return (
+    <Link href={facebookShareUrl} openInNewTab={true}>
+      <FacebookLogo />
+    </Link>
+  )
+}
+
+export const TwitterShareLink = (props: {
+  playBracketUrl: string
+  bracketTitle: string
+}) => {
+  const shareText = `Play my bracket, ${props.bracketTitle.toUpperCase()}!`
+  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${props.playBracketUrl}&via=BackMyBracket`
+  return (
+    <Link href={twitterShareUrl} openInNewTab={true}>
+      <XLogo />
+    </Link>
+  )
+}
+
+export const CopyLinkButton = (props: {
+  playBracketUrl: string
+  onClick: () => void
+}) => {
+  return (
+    <ConfirmButton
+      disabled={false}
+      onClick={() => {
+        navigator.clipboard.writeText(props.playBracketUrl).catch((err) => {
+          console.error(err)
+          console.error(
+            'If "navigator.clipboard is undefined", you may not be using a secure origin.'
+          )
+        })
+        props.onClick()
+      }}
+    >
+      <LinkIcon />
+      <span>Copy link</span>
+    </ConfirmButton>
+  )
+}
+
 export default function ShareBracketModal() {
   const [show, setShow] = useState(false)
   const [playBracketUrl, setPlayBracketUrl] = useState('')
@@ -19,36 +64,21 @@ export default function ShareBracketModal() {
       setShow(true)
     },
   })
-  const shareText = `Play my bracket, ${bracketTitle.toUpperCase()}!`
-  const twitterShareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${playBracketUrl}&via=BackMyBracket`
-  const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${playBracketUrl}`
   return (
     <Modal show={show} setShow={setShow}>
       <ModalHeader text={'Share Bracket'} />
       <div className="tw-flex tw-flex-col tw-gap-10">
         <div className="tw-flex tw-gap-10 tw-items-center">
-          <Link href={facebookShareUrl} openInNewTab={true}>
-            <FacebookLogo />
-          </Link>
-          <Link href={twitterShareUrl} openInNewTab={true}>
-            <XLogo />
-          </Link>
+          <FacebookShareLink playBracketUrl={playBracketUrl} />
+          <TwitterShareLink
+            playBracketUrl={playBracketUrl}
+            bracketTitle={bracketTitle}
+          />
         </div>
-        <ConfirmButton
-          disabled={false}
-          onClick={() => {
-            navigator.clipboard.writeText(playBracketUrl).catch((err) => {
-              console.error(err)
-              console.error(
-                'If "navigator.clipboard is undefined", you may not be using a secure origin.'
-              )
-            })
-            setShow(false)
-          }}
-        >
-          <LinkIcon />
-          <span>Copy link</span>
-        </ConfirmButton>
+        <CopyLinkButton
+          playBracketUrl={playBracketUrl}
+          onClick={() => setShow(false)}
+        />
         <CancelButton onClick={() => setShow(false)} />
       </div>
     </Modal>

@@ -2,6 +2,7 @@
 
 namespace WStrategies\BMB\Public\Partials\shared;
 
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
 
@@ -77,13 +78,13 @@ class BracketListItem {
     }
   }
 
-  public static function go_live_btn(string $id): false|string {
-    if (!current_user_can('wpbb_edit_bracket', $id)) {
+  public static function go_live_btn(Bracket $bracket): false|string {
+    if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
       return '';
     }
     ob_start();
     ?>
-    <button data-bracket-id="<?php echo $id; ?>"
+    <button data-bracket-id="<?php echo $bracket->id; ?>" data-go-live-url="<?php echo esc_url($bracket->url) . 'go-live'; ?>"
             class="wpbb-publish-bracket-button tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-min-w-[190px] tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-blue tw-font-sans tw-text-white tw-uppercase tw-cursor-pointer">
       <?php echo file_get_contents(
         WPBB_PLUGIN_DIR . 'Public/assets/icons/signal.svg'
@@ -110,7 +111,7 @@ class BracketListItem {
     ob_start();
     ?>
     <?php echo DashboardCommon::add_to_apparel_btn($bracket_play_link); ?>
-    <?php echo self::go_live_btn($bracket->id); ?>
+    <?php echo self::go_live_btn($bracket); ?>
     <?php return ob_get_clean();
   }
 

@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { BackwardsCurrencyInput } from './BackwardsCurrencyInput'
 import { bracketApi } from '../../../../brackets/shared'
 import { Checkbox } from '../../../../brackets/BracketBuilders/BracketResultsBuilder/Checkbox'
+import Button from '../../../../ui/Button'
 
 const calculateApplicationFee = (
   fee: number,
@@ -24,6 +25,7 @@ export const InputFeeAmount = (props: {
   bracketId: number
   fee: number
   onCancel: () => void
+  onSave: () => void
   applicationFeeMinimum: number
   applicationFeePercentage: number
 }) => {
@@ -53,8 +55,8 @@ export const InputFeeAmount = (props: {
       .updateBracket(props.bracketId, {
         fee: fee,
       })
-      .then((res) => {
-        window.location.reload()
+      .then(() => {
+        props.onSave()
       })
       .catch((err) => {
         console.error(err)
@@ -94,7 +96,7 @@ export const InputFeeAmount = (props: {
       {showFeeMinError && (
         <span className={'tw-text-red'}>Tournament fee must $2 or more.</span>
       )}
-      <div className="tw-flex tw-flex-col tw-gap-10">
+      <div className="tw-flex tw-flex-col tw-gap-10 tw-w-full">
         <div className={'tw-mb-15 tw-mt-15'}>
           <div className={'tw-text-white/60 tw-flex tw-justify-between'}>
             <span className={''}>BMB Platform Fee & Transaction</span>
@@ -141,14 +143,16 @@ export const InputFeeAmount = (props: {
             </a>
           </label>
         </div>
-        <ConfirmButton
+        <Button
+          color={'green'}
+          variant={'outlined'}
           onClick={async () => {
             await handleSave()
           }}
           disabled={processing}
         >
           <span>Set entry fee</span>
-        </ConfirmButton>
+        </Button>
       </div>
     </>
   )

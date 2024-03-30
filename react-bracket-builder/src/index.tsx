@@ -55,6 +55,8 @@ const StripeOnboardingRedirect = React.lazy(
   () => import('./redirects/StripeOnboardingRedirect')
 )
 
+const GoLivePage = React.lazy(() => import('./features/GoLive/GoLivePage'))
+
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 const appObj = wpbbAjax.getAppObj()
 if (Object.keys(appObj).length !== 0) {
@@ -69,6 +71,7 @@ if (Object.keys(appObj).length !== 0) {
   renderBustBracketPlay(appObj)
   renderPublicBracketsModals(appObj)
   renderStripeOnboardingRedirect(appObj)
+  renderGoLivePage(appObj)
   addClickHandlers(appObj)
   insertElements(appObj)
 } else {
@@ -209,7 +212,7 @@ function renderPrintBracketPage() {
   )
 }
 // This renders the image gallery on the bracket product preview page
-function renderProductPreview(appObj: WpbbAppObj) {
+function renderProductPreview(_appObj: WpbbAppObj) {
   const previewObj: WpbbBracketProductPreviewObj = wpbbAjax.getPreviewObj()
   if (
     !previewObj ||
@@ -268,7 +271,7 @@ function renderPublicBracketsModals(appObj: WpbbAppObj) {
   )
 }
 
-function renderStripeOnboardingRedirect(appObj: WpbbAppObj) {
+function renderStripeOnboardingRedirect(_appObj: WpbbAppObj) {
   renderDiv(
     <App>
       <StripeOnboardingRedirect />
@@ -276,7 +279,21 @@ function renderStripeOnboardingRedirect(appObj: WpbbAppObj) {
     'wpbb-stripe-onboarding-redirect'
   )
 }
-function addClickHandlers(appObj: WpbbAppObj) {
+
+function renderGoLivePage(appObj: WpbbAppObj) {
+  renderDiv(
+    <App>
+      <GoLivePage
+        bracket={appObj.bracket}
+        applicationFeeMinimum={appObj.applicationFeeMinimum}
+        applicationFeePercentage={appObj.applicationFeePercentage}
+      />
+    </App>,
+    'wpbb-go-live'
+  )
+}
+
+function addClickHandlers(_appObj: WpbbAppObj) {
   paymentsHandler()
 }
 

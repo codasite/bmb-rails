@@ -233,7 +233,10 @@ class StripePaymentsApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_REST_Response {
     $account = $this->connected_account_factory->get_account_for_current_user();
-    return new WP_REST_Response($account->get_stripe_account(), 200);
+    return new WP_REST_Response(
+      ['account' => $account->get_stripe_account()],
+      200
+    );
   }
 
   /**

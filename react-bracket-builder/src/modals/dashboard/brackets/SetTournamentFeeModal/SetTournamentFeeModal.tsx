@@ -1,5 +1,5 @@
 import { CancelButton } from '../../../ModalButtons'
-import React, { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Modal } from '../../../Modal'
 import addClickHandlers from '../../../addClickHandlers'
 import { bracketApi } from '../../../../brackets/shared'
@@ -10,21 +10,21 @@ import { ModalHeaderLogo } from './ModalHeaderLogo'
 import { SetUpPaymentsButton } from './SetUpPaymentsButton'
 import { logger } from '../../../../utils/Logger'
 
-export const SetTournamentFeeModal = (props: {
-  applicationFeeMinimum: number
-  applicationFeePercentage: number
+export const ChargesEnabledContainer = (props: {
+  // I hoist this state so that react will save it between rerenders, we
+  // could also change the modal to use tw-hidden instead of changing the DOM
+  // so react saves this state.
+  chargesEnabled: boolean
+  setChargesEnabled: (enabled: boolean) => void
+  children?: React.ReactNode
 }) => {
-  const [show, setShow] = useState(false)
-  const [fee, setFee] = useState<number>(null)
-  const [bracketId, setBracketId] = useState<number>(null)
   const [loadingAccount, setLoadingAccount] = useState(false)
-  const [chargesEnabled, setChargesEnabled] = useState(false)
   const fetchChargesEnabled = async () => {
     try {
       setLoadingAccount(true)
-      const acct = await bracketApi.getStripeAccount()
-      if (acct?.chargesEnabled) {
-        setChargesEnabled(true)
+      const data = await bracketApi.getStripeAccount()
+      if (data.account?.chargesEnabled) {
+        props.setChargesEnabled(true)
       }
     } catch (error) {
       console.error(error)
@@ -33,6 +33,37 @@ export const SetTournamentFeeModal = (props: {
       setLoadingAccount(false)
     }
   }
+
+  useEffect(() => {
+    if (!props.chargesEnabled) {
+      fetchChargesEnabled()
+    }
+  }, [])
+
+  if (loadingAccount) {
+    return (
+      <div className="tw-flex tw-justify-center tw-items-center tw-mb-30">
+        <Spinner fill={'white'} height={32} width={32} />
+      </div>
+    )
+  }
+  if (!props.chargesEnabled) {
+    return <SetUpPaymentsButton />
+  }
+
+  return <div>{props.children}</div>
+}
+
+interface SetTournamentFeeModalProps {
+  applicationFeeMinimum: number
+  applicationFeePercentage: number
+}
+
+export const SetTournamentFeeModal = (props: SetTournamentFeeModalProps) => {
+  const [show, setShow] = useState(false)
+  const [fee, setFee] = useState<number>(null)
+  const [bracketId, setBracketId] = useState<number>(null)
+  const [chargesEnabled, setChargesEnabled] = useState(false)
 
   const handleCancel = () => {
     setShow(false)
@@ -44,10 +75,6 @@ export const SetTournamentFeeModal = (props: {
       setBracketId(parseInt(b.dataset.bracketId))
       setFee(parseInt(b.dataset.fee))
       setShow(true)
-      // Don't refetch if we already have the info
-      if (!chargesEnabled) {
-        await fetchChargesEnabled()
-      }
     },
   })
 
@@ -55,21 +82,19 @@ export const SetTournamentFeeModal = (props: {
     <Modal show={show} setShow={setShow}>
       <ModalHeaderLogo />
       <ModalHeader text={'Set an Entry Fee for Your Tournament'} />
-      {loadingAccount ? (
-        <div className="tw-flex tw-justify-center tw-items-center tw-mb-30">
-          <Spinner fill={'white'} height={32} width={32} />
-        </div>
-      ) : chargesEnabled ? (
+      <ChargesEnabledContainer
+        chargesEnabled={chargesEnabled}
+        setChargesEnabled={setChargesEnabled}
+      >
         <InputFeeAmount
           bracketId={bracketId}
           fee={fee}
           onCancel={handleCancel}
+          onSave={() => window.location.reload()}
           applicationFeeMinimum={props.applicationFeeMinimum}
           applicationFeePercentage={props.applicationFeePercentage}
         />
-      ) : (
-        <SetUpPaymentsButton />
-      )}
+      </ChargesEnabledContainer>
       <div className="tw-flex tw-justify-center tw-mt-10" />
       <CancelButton onClick={handleCancel} />
     </Modal>

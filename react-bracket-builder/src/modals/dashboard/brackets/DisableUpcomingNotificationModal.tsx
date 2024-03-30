@@ -20,7 +20,7 @@ export default function DisableUpcomingNotificationModal() {
       <ModalHeader text={'Turn off\nNotifications?'} />
       <div className="tw-flex tw-flex-col tw-gap-10">
         <ConfirmButton
-          variant="white"
+          color="white"
           onClick={() => {
             bracketApi
               .removeNotification(notificationId)

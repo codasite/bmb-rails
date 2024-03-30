@@ -5,7 +5,7 @@ import { bracketApi } from '../../../../brackets/shared'
 import { Spinner } from '../../../../brackets/shared/components/Spinner'
 import { logger } from '../../../../utils/Logger'
 
-export const SetUpPaymentsButton = (props: {}) => {
+export const SetUpPaymentsButton = () => {
   const [processing, setProcessing] = useState(false)
   const handleSetUpPayments = async () => {
     setProcessing(true)

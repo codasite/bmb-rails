@@ -4,6 +4,7 @@ import {
   baseButtonStyles,
 } from '../brackets/shared/components/ActionButtons'
 import * as React from 'react'
+import Button from '../ui/Button'
 
 export const DangerButton = (props: {
   disabled?: boolean
@@ -33,16 +34,16 @@ export const ConfirmButton = (props: {
   children?: React.ReactNode
   disabled?: boolean
   className?: string
-  variant?: 'green' | 'white'
+  color?: 'green' | 'white'
 }) => {
   const defaultStyles = [
-    props.variant === 'white' ? 'tw-bg-white/15' : 'tw-bg-green/15',
+    props.color === 'white' ? 'tw-bg-white/15' : 'tw-bg-green/15',
     'tw-gap-16',
     'tw-rounded-8',
     'tw-p-12',
     'tw-border-1',
     'tw-border-solid',
-    props.variant === 'white' ? 'tw-border-white' : 'tw-border-green',
+    props.color === 'white' ? 'tw-border-white' : 'tw-border-green',
     'hover:tw-text-white/75',
     'tw-text-white',
     'tw-w-full',
@@ -73,29 +74,14 @@ export const CancelButton = (props: {
   children?: React.ReactNode
   disabled?: boolean
 }) => {
-  const defaultStyles = [
-    'tw-bg-white/15',
-    'tw-gap-16',
-    'tw-rounded-8',
-    'tw-p-12',
-    'tw-border-none',
-    'hover:tw-text-white/75',
-    'tw-text-white',
-    'tw-w-full',
-    'tw-text-16',
-    'tw-font-500',
-    'disabled:tw-bg-white/15',
-    'disabled:tw-text-white/50',
-  ]
-  const styles = [...baseButtonStyles, ...defaultStyles].join(' ')
   return (
-    <button
-      disabled={props.disabled}
+    <Button
+      variant={'filled'}
       onClick={props.onClick}
-      className={styles}
+      disabled={props.disabled}
     >
       {props.children ?? 'Cancel'}
-    </button>
+    </Button>
   )
 }
 

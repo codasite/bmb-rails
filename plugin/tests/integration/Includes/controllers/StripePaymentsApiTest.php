@@ -323,7 +323,9 @@ class StripePaymentsApiTest extends WPBB_UnitTestCase {
     $this->assertSame(200, $res->get_status());
     $this->assertEquals(
       [
-        'foo' => 'bar',
+        'account' => [
+          'foo' => 'bar',
+        ],
       ],
       $res->get_data()
     );

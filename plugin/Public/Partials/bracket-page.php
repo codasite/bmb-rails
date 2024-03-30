@@ -37,6 +37,9 @@ switch ($view) {
   case 'chat':
     include WPBB_PLUGIN_DIR . 'Public/Partials/BracketPage/bracket-chat.php';
     break;
+  case 'go-live':
+    echo '<div id="wpbb-go-live"></div>';
+    break;
   default:
     echo '<div id="wpbb-play-bracket"></div>';
     break;

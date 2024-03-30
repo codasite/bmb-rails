@@ -77,6 +77,9 @@ const PlayPage = (props: {
   const canSubmit = bracket?.isOpen && props.isUserLoggedIn
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
   const paymentRequired = bracket?.isOpen && !userCanPlayBracketForFree // TODO: decide if we need to check if the bracket is open. Is this handled by canSubmit?
+  const loginRedirectUrl =
+    props.loginUrl +
+    (props.bracket?.url ? `?redirect=${props.bracket.url}` : '')
 
   useEffect(() => {
     if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
@@ -267,7 +270,7 @@ const PlayPage = (props: {
       <SubmitPicksRegisterModal
         show={showRegisterModal}
         setShow={setShowRegisterModal}
-        loginUrl={props.loginUrl + '?redirect_to=' + props.bracket.url}
+        loginUrl={loginRedirectUrl}
       />
       <StripePaymentModal
         title={'Submit Your Picks'}

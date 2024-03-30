@@ -82,7 +82,7 @@ export class BracketApi {
       method: 'POST',
     })
   }
-  async getStripeAccount(): Promise<any> {
+  async getStripeAccount(): Promise<{ account: { chargesEnabled: boolean } }> {
     return await this.client.performRequest(`stripe/account`)
   }
 }

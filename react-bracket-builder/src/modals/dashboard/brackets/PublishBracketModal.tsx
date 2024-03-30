@@ -53,15 +53,7 @@ export const PublishBracketModal = (props: {
     buttonClassName: 'wpbb-publish-bracket-button',
     onButtonClick: (b) => {
       if (props.canCreateBracket) {
-        const bracketId = parseInt(b.dataset.bracketId)
-        bracketApi
-          .updateBracket(bracketId, { status: 'publish' })
-          .then((res) => {
-            window.location.href = getDashboardPath()
-          })
-          .catch((err) => {
-            console.error(err)
-          })
+        window.location.href = b.dataset.goLiveUrl
       } else {
         setShow(true)
       }
