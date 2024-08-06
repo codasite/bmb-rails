@@ -56,6 +56,9 @@ const StripeOnboardingRedirect = React.lazy(
 )
 
 const GoLivePage = React.lazy(() => import('./features/GoLive/GoLivePage'))
+const ViewBracketMPP = React.lazy(
+  () => import('./features/MostPopularPicks/ViewBracketMPP')
+)
 
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 const appObj = wpbbAjax.getAppObj()
@@ -72,6 +75,7 @@ if (Object.keys(appObj).length !== 0) {
   renderPublicBracketsModals(appObj)
   renderStripeOnboardingRedirect(appObj)
   renderGoLivePage(appObj)
+  renderMostPopularPicks(appObj)
   addClickHandlers(appObj)
   insertElements(appObj)
 } else {
@@ -290,6 +294,15 @@ function renderGoLivePage(appObj: WpbbAppObj) {
       />
     </App>,
     'wpbb-go-live'
+  )
+}
+
+function renderMostPopularPicks(appObj: WpbbAppObj) {
+  renderDiv(
+    <App>
+      <ViewBracketMPP bracket={appObj.bracket} />
+    </App>,
+    'wpbb-most-popular-picks'
   )
 }
 

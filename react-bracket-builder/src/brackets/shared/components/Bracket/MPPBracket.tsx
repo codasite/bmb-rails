@@ -5,7 +5,7 @@ import { TeamSlotToggle } from '../TeamSlot'
 import { Team } from '../../models/Team'
 import { MatchNode } from '../../models/operations/MatchNode'
 
-export const PreviewBracket = (props: BracketProps) => {
+export const MPPBracket = (props: BracketProps) => {
   const { matchTree } = props
 
   return <DefaultBracket {...props} TeamSlotComponent={TeamSlotToggle} />
