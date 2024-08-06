@@ -11,8 +11,7 @@ class PlayPage implements TemplateInterface {
   public function __construct(private PlayRepo $play_repo = new PlayRepo()) {
   }
   public function render(): false|string {
-    $post = get_post();
-    $play = $this->play_repo->get($post->ID);
+    $play = $this->play_repo->get(get_the_ID());
     $error_page = $this->get_error_page($play);
     if ($error_page) {
       return $error_page->render();
@@ -41,8 +40,7 @@ class PlayPage implements TemplateInterface {
     $status_code = 200;
     if (!$play) {
       $status_code = 404;
-    }
-    if (!current_user_can('wpbb_view_play', $play->id)) {
+    } elseif (!current_user_can('wpbb_view_play', $play->id)) {
       $status_code = 403;
     }
     if ($status_code !== 200) {

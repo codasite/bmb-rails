@@ -8,7 +8,7 @@ use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Includes\Service\ScoreService;
-use WStrategies\BMB\Public\Partials\LeaderboardPage;
+use WStrategies\BMB\Public\Partials\BracketPage\LeaderboardPage;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class LeaderboardPageTest extends WPBB_UnitTestCase {
@@ -132,7 +132,7 @@ class LeaderboardPageTest extends WPBB_UnitTestCase {
 
     $leaderboard_service = new BracketLeaderboardService($bracket->id);
 
-    $leaderboard_page = new LeaderboardPage([
+    $leaderboard_page = new LeaderboardPage($bracket, [
       'leaderboard_service' => $leaderboard_service,
     ]);
 

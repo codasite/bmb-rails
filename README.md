@@ -23,7 +23,7 @@ includes:
 5. In a new terminal run `make wp-install` to install wordpress and initialize plugins. This also sets up the test installation
 6. `make react-install` to install npm dependencies for the react app.
 7. `make react-start` or `make react-build` to start or build the react app.
-8. Go to `localhost:8008` in your browser to view the site. The wordpress admin is at `localhost:8000/wp-admin` with username `admin` and password `admin`.
+8. Go to `localhost:8008` in your browser to view the site. The wordpress admin is at `localhost:8008/wp-admin` with username `admin` and password `admin`.
 
 ## Basic Installation (Local WP)
 
@@ -58,6 +58,7 @@ ln -s /Users/karl/Documents/repos/wp-bracket-builder/plugin wp-bracket-builder
 - "Official Brackets" [wpbb-official-brackets]
 - "Celebrity Picks" [wpbb-celebrity-picks]
 - "Bracket Builder" [wpbb-bracket-builder]
+- "Stripe Onboarding Redirect" [wpbb-stripe-onboarding-redirect]
 
 9. Create Oxygen templates for the following post types and add the shortcodes. Under `Where does this template apply?` Select the corresponding post type.
 

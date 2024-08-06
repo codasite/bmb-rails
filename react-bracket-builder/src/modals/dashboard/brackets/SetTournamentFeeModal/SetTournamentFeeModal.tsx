@@ -51,7 +51,7 @@ export const ChargesEnabledContainer = (props: {
     return <SetUpPaymentsButton />
   }
 
-  return <div>{props.children}</div>
+  return <>{props.children}</>
 }
 
 interface SetTournamentFeeModalProps {

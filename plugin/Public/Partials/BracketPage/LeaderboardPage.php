@@ -1,17 +1,19 @@
 <?php
-namespace WStrategies\BMB\Public\Partials;
+namespace WStrategies\BMB\Public\Partials\BracketPage;
 
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
+use WStrategies\BMB\Public\Partials\TemplateInterface;
 
 class LeaderboardPage implements TemplateInterface {
   private BracketLeaderboardService $leaderboard;
 
-  public function __construct($args = []) {
+  public function __construct(Bracket $bracket, $args = []) {
     $this->leaderboard =
       $args['leaderboard_service'] ??
-      new BracketLeaderboardService(get_the_ID());
+      new BracketLeaderboardService($bracket->id, $args);
   }
 
   public function render(): string {

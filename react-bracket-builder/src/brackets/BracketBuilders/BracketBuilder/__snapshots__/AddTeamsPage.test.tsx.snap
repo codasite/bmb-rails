@@ -6,16 +6,20 @@ exports[`AddTeamsPage renders page correctly 1`] = `
     class="tw-flex tw-flex-col tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
   >
     <div
-      class="tw-flex tw-flex-col tw-gap-15 tw-py-30 tw-items-center"
+      class="tw-py-30"
     >
       <div
-        class="tw-h-[50px] tw-w-[200px] md:tw-h-[75px] md:tw-w-[300px] lg:tw-h-[85px] lg:tw-w-[340px] tw-bg-[url('https://s3.amazonaws.com/backmybracket.com/bmb_text_logo_500.png')] tw-bg-no-repeat tw-bg-contain"
-      />
-      <h1
-        class="tw-text-30 sm:tw-text-48 md:tw-text-64 lg:tw-text-80 tw-leading-normal tw-text-center"
+        class="tw-flex tw-flex-col tw-items-center tw-gap-20"
       >
-        Bracket Builder
-      </h1>
+        <div
+          class="tw-h-[50px] tw-w-[200px] md:tw-h-[75px] md:tw-w-[300px] lg:tw-h-[85px] lg:tw-w-[340px] tw-bg-[url('https://s3.amazonaws.com/backmybracket.com/bmb_text_logo_500.png')] tw-bg-no-repeat tw-bg-contain"
+        />
+        <h1
+          class="tw-text-32 sm:tw-text-48 md:tw-text-64 lg:tw-text-80 tw-text-center"
+        >
+          Bracket Builder
+        </h1>
+      </div>
     </div>
     <div
       class="sm:tw-px-60 tw-mb-16"
