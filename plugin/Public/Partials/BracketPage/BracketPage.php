@@ -48,7 +48,7 @@ class BracketPage implements TemplateInterface {
       case 'go-live':
         $el_id = 'wpbb-go-live';
         break;
-      case 'mpp':
+      case 'most-popular-picks':
         $el_id = 'wpbb-most-popular-picks';
         break;
     }
