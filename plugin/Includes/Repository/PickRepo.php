@@ -47,7 +47,7 @@ class PickRepo implements CustomTableInterface {
   public function get_most_popular_picks(int $bracket_id): array {
     $picks_table_name = self::table_name();
     $plays_table_name = PlayRepo::table_name();
-    $query = $wpdb->prepare(
+    $query = $this->wpdb->prepare(
       "
     SELECT
         pick.round_index AS round_index,
@@ -73,6 +73,7 @@ class PickRepo implements CustomTableInterface {
       $bracket_id
     );
     $data = $this->wpdb->get_results($query, ARRAY_A);
+    print_r($data);
     $picks = [];
     foreach ($data as $pick) {
       $winning_team_id = $row['winning_team_id'];
