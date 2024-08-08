@@ -5,7 +5,6 @@ namespace WStrategies\BMB\Includes\Service;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Domain\Team;
 
 class BracketLeaderboardService {
   private BracketRepo $bracket_repo;

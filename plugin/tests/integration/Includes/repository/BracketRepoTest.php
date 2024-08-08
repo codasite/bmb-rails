@@ -351,4 +351,8 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $this->assertFalse($updated->should_notify_results_updated);
   }
+
+  public function test_should_return_most_popular_picks() {
+
+  }
 }
