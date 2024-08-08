@@ -8,33 +8,14 @@ use wpdb;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
-use WStrategies\BMB\Includes\Service\MostPopularPicksService;
 
 class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
-  /**
-   * @var TeamRepo
-   */
-  private $team_repo;
-
-  /**
-   * @var BracketMatchRepo
-   */
-  private $match_repo;
-
-  /**
-   * @var BracketResultsRepo
-   */
-  private $results_repo;
-
-  /**
-   * @var wpdb
-   */
-  private $wpdb;
-
+  private TeamRepo $team_repo;
+  private BracketMatchRepo $match_repo;
+  private BracketResultsRepo $results_repo;
+  private PickRepo $pick_repo;
+  private wpdb $wpdb;
   private BracketLeaderboardService $leaderboard_service;
-
-  private MostPopularPicksService $most_popular_picks_service;
-
   private BracketProductUtils $bracket_product_utils;
 
   public function __construct($args = []) {
@@ -45,16 +26,12 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       $args['match_repo'] ?? new BracketMatchRepo($this->team_repo);
     $this->results_repo =
       $args['results_repo'] ?? new BracketResultsRepo($this, $this->team_repo);
+    $this->pick_repo = $args['pick_repo'] ?? new PickRepo($this->team_repo);
     $this->leaderboard_service =
       $args['leaderboard_service'] ??
       new BracketLeaderboardService(null, [
         'bracket_repo' => $this,
         'play_repo' => new PlayRepo(['bracket_repo' => $this]),
-      ]);
-    $this->most_popular_picks_service = $args['most_popular_picks_service'] ??
-      new MostPopularPicksService(null, [
-      'bracket_repo' => $this,
-      'play_repo' => new PlayRepo(['bracket_repo' => $this]),
       ]);
     $this->bracket_product_utils =
       $args['bracket_product_utils'] ??
@@ -132,7 +109,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       : [];
 
     $most_popular_picks = $fetch_most_popular_picks
-      ? $this->most_popular_picks_service->get_most_popular_picks($bracket_id)
+      ? $this->pick_repo->get_most_popular_picks($bracket_id)
       : [];
 
     $author_id = (int) $bracket_post->post_author;
