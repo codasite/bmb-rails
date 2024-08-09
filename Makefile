@@ -30,6 +30,7 @@ wp-init:
 
 # Run tests
 # run a single test like this: make wp-test args="--filter NotificationRepoTest::testMethod"
+# or just "--filter NotificationRepoTest"
 
 # Run all tests in plugin/tests/unit. Uses WP_Mock to mock wordpress functions
 wp-unit:
