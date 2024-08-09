@@ -3,6 +3,11 @@ parameters:
     - vendor
     - tests/integration
     - tests/unit
+  paths:
+    - Admin
+    - Email
+    - Includes
+    - Public
   level: 5
   scanFiles:
     - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
