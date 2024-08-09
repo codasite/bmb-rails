@@ -61,6 +61,7 @@ class BracketIconButtons {
 
   public static function scored_bracket_icon_buttons($bracket): false|string {
     ob_start(); ?>
+    <?php echo self::most_popular_picks_btn($bracket); ?>
     <?php echo self::edit_bracket_btn($bracket); ?>
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
@@ -114,6 +115,7 @@ class BracketIconButtons {
 
   public static function live_bracket_icon_buttons($bracket): false|string {
     ob_start(); ?>
+    <?php echo self::most_popular_picks_btn($bracket); ?>
     <?php echo self::edit_bracket_btn($bracket); ?>
     <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::share_bracket_btn($bracket); ?>
@@ -130,5 +132,11 @@ class BracketIconButtons {
     $copy_link = get_permalink($bracket->id) . 'copy';
 
     return DashboardCommon::icon_link('copy.svg', $copy_link);
+  }
+
+  public static function most_popular_picks_btn($bracket): false|string {
+    $copy_link = get_permalink($bracket->id) . 'most-popular-picks';
+
+    return DashboardCommon::icon_link('percent.svg', $copy_link);
   }
 }
