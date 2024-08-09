@@ -29,7 +29,7 @@ wp-init:
 	docker exec wp-dev create-admin-user.sh
 
 # Run tests
-# run a single test like this: make wp-test args="--filter NotificationRepoTest"
+# run a single test like this: make wp-test args="--filter NotificationRepoTest::testMethod"
 
 # Run all tests in plugin/tests/unit. Uses WP_Mock to mock wordpress functions
 wp-unit:
@@ -42,6 +42,7 @@ wp-unit-local:
 	./plugin/vendor/bin/phpunit --configuration=plugin/tests/unit/phpunit.xml.dist $(args)
 
 # Run all tests in plugin/tests/integration. Loads the full wordpress environment.
+# See above to run single test
 wp-integration:
 	docker exec wp-dev composer test-integration -- $(args)
 

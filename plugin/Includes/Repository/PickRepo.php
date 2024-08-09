@@ -73,17 +73,25 @@ class PickRepo implements CustomTableInterface {
       $bracket_id
     );
     $data = $this->wpdb->get_results($query, ARRAY_A);
-    print_r($data);
     $picks = [];
-    foreach ($data as $pick) {
-      $winning_team_id = $row['winning_team_id'];
-      $winning_team = $this->team_repo->get($winning_team_id);
-      $picks[] = new Pick([
-        'round_index' => $row['round_index'],
-        'match_index' => $row['match_index'],
-        'winning_team_id' => $winning_team_id,
-        'winning_team' => $winning_team,
-      ]);
+    $current_round = -1;
+    $current_match = -1;
+    foreach ($data as $row) {
+      if (
+        $row['round_index'] !== $current_round ||
+        $row['match_index'] !== $current_match
+      ) {
+        $current_round = $row['round_index'];
+        $current_match = $row['match_index'];
+        $winning_team_id = $row['winning_team_id'];
+        $winning_team = $this->team_repo->get($winning_team_id);
+        $picks[] = new Pick([
+          'round_index' => $row['round_index'],
+          'match_index' => $row['match_index'],
+          'winning_team_id' => $winning_team_id,
+          'winning_team' => $winning_team,
+        ]);
+      }
     }
     return $picks;
   }
