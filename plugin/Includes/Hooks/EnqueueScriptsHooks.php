@@ -229,8 +229,16 @@ class EnqueueScriptsHooks implements HooksInterface {
         // $bracket = $this->bracket_serializer->serialize(
         //   $this->bracket_repo->get($post)
         // );
-        $fetch_most_popular_picks = preg_match('/most-popular-picks/', $_SERVER['REQUEST_URI']);
-        $bracket = $this->bracket_repo->get($post, true, true, $fetch_most_popular_picks);
+        $fetch_most_popular_picks = preg_match(
+          '/most-popular-picks/',
+          $_SERVER['REQUEST_URI']
+        );
+        $bracket = $this->bracket_repo->get(
+          $post,
+          true,
+          true,
+          $fetch_most_popular_picks
+        );
       }
     }
     return [$bracket, $play];
