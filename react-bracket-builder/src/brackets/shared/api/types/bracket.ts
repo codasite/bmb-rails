@@ -87,6 +87,7 @@ export interface BracketRes extends PostBase {
   isPrintable?: boolean
   fee?: number
   results?: MatchPick[]
+  mostPopularPicks?: MatchPick[]
 }
 export interface PlayReq {
   id?: number

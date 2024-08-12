@@ -5,7 +5,7 @@ export const loadBracketMPP = (
   bracket: BracketRes,
   setMatchTree: (matchTree: MatchTree) => void
 ) => {
-  const picks = bracket?.results // TODO: use MPP instead of results
+  const picks = bracket?.mostPopularPicks
   const matches = bracket?.matches
   const numTeams = bracket?.numTeams
   if (picks && matches && numTeams) {
