@@ -14,7 +14,10 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   private BracketMatchRepo $match_repo;
   private BracketResultsRepo $results_repo;
   private PickRepo $pick_repo;
-  private wpdb $wpdb;
+  /**
+   * @var wpdb
+   **/
+  private $wpdb;
   private BracketLeaderboardService $leaderboard_service;
   private BracketProductUtils $bracket_product_utils;
 

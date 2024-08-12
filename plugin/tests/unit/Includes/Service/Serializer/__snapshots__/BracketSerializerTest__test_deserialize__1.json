@@ -66,5 +66,6 @@
             "winning_team": null,
             "winning_team_id": 100006
         }
-    ]
+    ],
+    "most_popular_picks": []
 }
