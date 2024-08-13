@@ -1,5 +1,5 @@
-import { BracketRes } from '../api/types/bracket'
-import { MatchTree } from '../models/MatchTree'
+import { BracketRes } from '../../brackets/shared/api/types/bracket'
+import { MatchTree } from '../../brackets/shared/models/MatchTree'
 
 export const loadBracketMPP = (
   bracket: BracketRes,
