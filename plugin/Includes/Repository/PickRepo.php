@@ -52,12 +52,13 @@ class PickRepo implements CustomTableInterface {
     SELECT
         pick.round_index AS round_index,
         pick.match_index AS match_index,
-	pick.winning_team_id AS winning_team_id,
-        COUNT(*) AS occurrence_count
+        pick.winning_team_id AS winning_team_id,
+        COUNT(*) AS occurrence_count,
+        SUM(COUNT(*)) OVER (PARTITION BY pick.round_index, pick.match_index) AS total_occurrence_count
     FROM
         $picks_table_name pick
     JOIN
-	$plays_table_name play ON pick.bracket_play_id = play.id
+        $plays_table_name play ON pick.bracket_play_id = play.id
     WHERE
         play.bracket_id = %d
         AND play.is_tournament_entry = 1
@@ -90,6 +91,9 @@ class PickRepo implements CustomTableInterface {
           'match_index' => $row['match_index'],
           'winning_team_id' => $winning_team_id,
           'winning_team' => $winning_team,
+          'percentage' =>
+            (int) (($row['occurrence_count'] / $row['total_occurrence_count']) *
+              100),
         ]);
       }
     }

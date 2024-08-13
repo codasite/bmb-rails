@@ -35,6 +35,7 @@ export interface MatchPick {
   roundIndex: number
   matchIndex: number
   winningTeamId: number
+  percentage: number
 }
 
 export interface TeamRepr {
