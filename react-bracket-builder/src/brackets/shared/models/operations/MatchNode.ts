@@ -1,7 +1,7 @@
 import { Nullable } from '../../../../utils/types'
 import { Team } from '../Team'
 import { MatchNodeArgs } from './MatchNodeArgs'
-import { MatchRepr } from '../../api/types/bracket'
+import { MatchPick, MatchRepr } from '../../api/types/bracket'
 import { TeamPosition } from '../../components/types'
 
 export class MatchNode {
@@ -16,6 +16,7 @@ export class MatchNode {
   right: Nullable<MatchNode> = null
   parent: Nullable<MatchNode> = null
   depth: number
+  _pick: MatchPick | null = null
   // constructor(matchIndex, roundIndex, id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
   constructor(args: MatchNodeArgs) {
     const {
@@ -30,6 +31,7 @@ export class MatchNode {
       right,
       parent,
       depth,
+      pick
     } = args
     this.matchIndex = matchIndex
     this.roundIndex = roundIndex
@@ -42,6 +44,7 @@ export class MatchNode {
     this.parent = parent ? parent : null
     this.team1 = team1 ? team1 : null
     this.team2 = team2 ? team2 : null
+    this._pick = pick ? pick : null
   }
   serialize(): MatchRepr {
     const { id, matchIndex, roundIndex, team1, team2, team1Wins, team2Wins } =
@@ -54,6 +57,7 @@ export class MatchNode {
       team2: team2 ? team2.serialize() : undefined,
       team1Wins,
       team2Wins,
+      pick: this._pick
     }
   }
   getWinner(): Nullable<Team> {

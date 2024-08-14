@@ -16,7 +16,13 @@ export const PercentageTeamSlot = (props: TeamSlotProps) => {
     'tw-bg-yellow',
   ]
 
-  let percentage = 100
+  let percentage = null
+  if (props.match._pick.winningTeamId === props.team?.id) {
+    percentage = props.match._pick.percentage
+  }
+  if (props.teamPosition === 'winner') {
+    percentage = null
+  }
 
   return (
     <div className={`tw-relative`}>

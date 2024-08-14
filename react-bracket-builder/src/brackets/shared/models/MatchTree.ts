@@ -303,6 +303,8 @@ export class MatchTree {
       if (!match) {
         return null
       }
+      match._pick = pick
+      
       const team1 = match.getTeam1()
       const team2 = match.getTeam2()
       if (!team1 || !team2) {
@@ -334,6 +336,7 @@ export class MatchTree {
           team2: team2Repr,
           team1Wins,
           team2Wins,
+          pick
         } = match
         const team1 = team1Repr ? new Team(team1Repr.name, team1Repr.id) : null
         const team2 = team2Repr ? new Team(team2Repr.name, team2Repr.id) : null
@@ -350,6 +353,7 @@ export class MatchTree {
           right: null,
           parent: null,
           depth,
+          pick
         })
         return newMatch
       })

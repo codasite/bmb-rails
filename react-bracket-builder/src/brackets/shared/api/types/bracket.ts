@@ -35,7 +35,7 @@ export interface MatchPick {
   roundIndex: number
   matchIndex: number
   winningTeamId: number
-  percentage: number
+  percentage?: number
 }
 
 export interface TeamRepr {
@@ -55,6 +55,7 @@ export interface MatchRepr {
   team2?: TeamRepr
   team1Wins?: boolean
   team2Wins?: boolean
+  pick?: MatchPick
 }
 export interface PostBase {
   id: number
