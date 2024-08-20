@@ -104,6 +104,7 @@ class BracketImageRequestFactoryTest extends TestCase {
             'round_index' => 0,
             'match_index' => 0,
             'winning_team' => null,
+            'percentage' => null,
             'winning_team_id' => 1,
           ],
           [
@@ -111,6 +112,7 @@ class BracketImageRequestFactoryTest extends TestCase {
             'round_index' => 0,
             'match_index' => 1,
             'winning_team' => null,
+            'percentage' => null,
             'winning_team_id' => 4,
           ],
           [
@@ -118,6 +120,7 @@ class BracketImageRequestFactoryTest extends TestCase {
             'round_index' => 1,
             'match_index' => 0,
             'winning_team' => null,
+            'percentage' => null,
             'winning_team_id' => 1,
           ],
         ],
@@ -241,6 +244,7 @@ class BracketImageRequestFactoryTest extends TestCase {
             'round_index' => 0,
             'match_index' => 0,
             'winning_team' => null,
+            'percentage' => null,
             'winning_team_id' => 1,
           ],
         ],

@@ -16,6 +16,7 @@
             "round_index": 0,
             "match_index": 0,
             "winning_team": null,
+            "percentage": null,
             "winning_team_id": 1
         },
         {
@@ -23,6 +24,7 @@
             "round_index": 0,
             "match_index": 1,
             "winning_team": null,
+            "percentage": null,
             "winning_team_id": 2
         },
         {
@@ -30,6 +32,7 @@
             "round_index": 1,
             "match_index": 0,
             "winning_team": null,
+            "percentage": null,
             "winning_team_id": 3
         }
     ],
