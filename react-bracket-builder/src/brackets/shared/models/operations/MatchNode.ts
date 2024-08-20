@@ -31,7 +31,7 @@ export class MatchNode {
       right,
       parent,
       depth,
-      pick
+      pick,
     } = args
     this.matchIndex = matchIndex
     this.roundIndex = roundIndex
@@ -57,7 +57,7 @@ export class MatchNode {
       team2: team2 ? team2.serialize() : undefined,
       team1Wins,
       team2Wins,
-      pick: this._pick
+      pick: this._pick,
     }
   }
   getWinner(): Nullable<Team> {
