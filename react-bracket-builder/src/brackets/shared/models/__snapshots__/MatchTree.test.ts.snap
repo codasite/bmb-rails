@@ -7,6 +7,7 @@ exports[`MatchTree testing MatchTree serialize 1`] = `
       {
         "id": undefined,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": undefined,
@@ -22,6 +23,7 @@ exports[`MatchTree testing MatchTree serialize 1`] = `
       {
         "id": undefined,
         "matchIndex": 1,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": undefined,
@@ -37,6 +39,7 @@ exports[`MatchTree testing MatchTree serialize 1`] = `
       {
         "id": undefined,
         "matchIndex": 2,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": undefined,
@@ -52,6 +55,7 @@ exports[`MatchTree testing MatchTree serialize 1`] = `
       {
         "id": undefined,
         "matchIndex": 3,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": undefined,
@@ -69,6 +73,7 @@ exports[`MatchTree testing MatchTree serialize 1`] = `
       {
         "id": undefined,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 1,
         "team1": undefined,
         "team1Wins": true,
@@ -78,6 +83,7 @@ exports[`MatchTree testing MatchTree serialize 1`] = `
       {
         "id": undefined,
         "matchIndex": 1,
+        "pick": null,
         "roundIndex": 1,
         "team1": undefined,
         "team1Wins": undefined,
@@ -89,6 +95,7 @@ exports[`MatchTree testing MatchTree serialize 1`] = `
       {
         "id": undefined,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 2,
         "team1": undefined,
         "team1Wins": true,

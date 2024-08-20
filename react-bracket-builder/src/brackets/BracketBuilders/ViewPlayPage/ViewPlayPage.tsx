@@ -55,13 +55,11 @@ const ViewPlayPage = (props: {
 
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        props.darkMode ? ' tw-dark' : ''
-      }`}
+      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${props.darkMode ? ' tw-dark' : ''
+        }`}
       style={{
-        backgroundImage: `url(${
-          props.darkMode ? darkBracketBg : lightBracketBg
-        })`,
+        backgroundImage: `url(${props.darkMode ? darkBracketBg : lightBracketBg
+          })`,
       }}
     >
       <div
@@ -70,9 +68,8 @@ const ViewPlayPage = (props: {
         {playTree && (
           <>
             <div
-              className={`tw-flex tw-flex-col tw-w-full ${
-                isScored ? 'tw-mb-10' : 'tw-mb-40'
-              } ${showProfilePicture ? 'tw-gap-30' : 'tw-gap-10'}`}
+              className={`tw-flex tw-flex-col tw-w-full ${isScored ? 'tw-mb-10' : 'tw-mb-40'
+                } ${showProfilePicture ? 'tw-gap-30' : 'tw-gap-10'}`}
             >
               <div className="tw-flex tw-items-center">
                 <div className="tw-basis-1/3">
