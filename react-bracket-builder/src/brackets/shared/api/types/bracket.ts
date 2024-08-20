@@ -78,6 +78,7 @@ export interface BracketReq {
   results?: MatchPick[]
   updateNotifyPlayers?: boolean
   fee?: number
+  isVoting?: boolean
 }
 export interface BracketRes extends PostBase {
   month: string
@@ -90,6 +91,7 @@ export interface BracketRes extends PostBase {
   fee?: number
   results?: MatchPick[]
   mostPopularPicks?: MatchPick[]
+  isVoting?: boolean
 }
 export interface PlayReq {
   id?: number

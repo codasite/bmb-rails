@@ -5,10 +5,16 @@ import { SharePage } from './SharePage'
 import { PageRouter } from './PageRouter'
 import { Page } from './PageRouter/types'
 import { GoLivePageProps } from './types'
+import { BracketTypePage } from './BracketTypePage'
 
 const GoLivePage = (props: GoLivePageProps) => {
   const [chargesEnabled, setChargesEnabled] = useState(false)
   const pages: Page[] = [
+    {
+      title: 'Tournament Type',
+      slug: 'bracket-type',
+      Component: BracketTypePage,
+    },
     { title: 'Entry Fee', slug: 'entry-fee', Component: EntryFeePage },
     { title: 'Share', slug: 'share', Component: SharePage },
   ]
