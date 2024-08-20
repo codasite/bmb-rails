@@ -1,14 +1,15 @@
 import { BracketRes } from '../shared/api/types/bracket'
-import { GreenTag } from './GreenTag'
+import { BracketHeaderTag } from './BracketHeaderTag'
 
-export const BracketStatusTag = (props: { bracket?: BracketRes }) => {
+export const BracketResultsStatusTag = (props: { bracket?: BracketRes }) => {
   return (
-    <GreenTag
+    <BracketHeaderTag
       text={
         props.bracket?.status === 'complete'
           ? 'Final Results'
           : 'Partial Results'
       }
+      color="green"
     />
   )
 }

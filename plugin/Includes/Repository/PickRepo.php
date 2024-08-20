@@ -28,15 +28,7 @@ class PickRepo implements CustomTableInterface {
     if (!$data) {
       return null;
     }
-    $winning_team_id = $data['winning_team_id'];
-    $winning_team = $this->team_repo->get($winning_team_id);
-    return new Pick([
-      'round_index' => $data['round_index'],
-      'match_index' => $data['match_index'],
-      'winning_team_id' => $winning_team_id,
-      'id' => $data['id'],
-      'winning_team' => $winning_team,
-    ]);
+    return $this->pick_from_row($data);
   }
 
   public function get_picks(int $play_id): array {
@@ -47,15 +39,63 @@ class PickRepo implements CustomTableInterface {
 
     $picks = [];
     foreach ($data as $pick) {
-      $winning_team_id = $pick['winning_team_id'];
-      $winning_team = $this->team_repo->get($winning_team_id);
-      $picks[] = new Pick([
-        'round_index' => $pick['round_index'],
-        'match_index' => $pick['match_index'],
-        'winning_team_id' => $winning_team_id,
-        'id' => $pick['id'],
-        'winning_team' => $winning_team,
-      ]);
+      $picks[] = $this->pick_from_row($pick);
+    }
+    return $picks;
+  }
+
+  public function get_most_popular_picks(int $bracket_id): array {
+    $picks_table_name = self::table_name();
+    $plays_table_name = PlayRepo::table_name();
+    $query = $this->wpdb->prepare(
+      "
+    SELECT
+        pick.round_index AS round_index,
+        pick.match_index AS match_index,
+        pick.winning_team_id AS winning_team_id,
+        COUNT(*) AS occurrence_count,
+        SUM(COUNT(*)) OVER (PARTITION BY pick.round_index, pick.match_index) AS total_occurrence_count
+    FROM
+        $picks_table_name pick
+    JOIN
+        $plays_table_name play ON pick.bracket_play_id = play.id
+    WHERE
+        play.bracket_id = %d
+        AND play.is_tournament_entry = 1
+    GROUP BY
+        pick.round_index,
+        pick.match_index,
+        pick.winning_team_id
+    ORDER BY
+        pick.round_index,
+        pick.match_index,
+        occurrence_count DESC
+",
+      $bracket_id
+    );
+    $data = $this->wpdb->get_results($query, ARRAY_A);
+    $picks = [];
+    $current_round = -1;
+    $current_match = -1;
+    foreach ($data as $row) {
+      if (
+        $row['round_index'] !== $current_round ||
+        $row['match_index'] !== $current_match
+      ) {
+        $current_round = $row['round_index'];
+        $current_match = $row['match_index'];
+        $winning_team_id = $row['winning_team_id'];
+        $winning_team = $this->team_repo->get($winning_team_id);
+        $picks[] = new Pick([
+          'round_index' => $row['round_index'],
+          'match_index' => $row['match_index'],
+          'winning_team_id' => $winning_team_id,
+          'winning_team' => $winning_team,
+          'percentage' =>
+            (int) (($row['occurrence_count'] / $row['total_occurrence_count']) *
+              100),
+        ]);
+      }
     }
     return $picks;
   }
@@ -114,5 +154,17 @@ class PickRepo implements CustomTableInterface {
     $table_name = self::table_name();
     $sql = "DROP TABLE IF EXISTS {$table_name}";
     $wpdb->query($sql);
+  }
+
+  private function pick_from_row(array $row): Pick {
+    $winning_team_id = $row['winning_team_id'];
+    $winning_team = $this->team_repo->get($winning_team_id);
+    return new Pick([
+      'round_index' => $row['round_index'],
+      'match_index' => $row['match_index'],
+      'winning_team_id' => $winning_team_id,
+      'id' => $row['id'],
+      'winning_team' => $winning_team,
+    ]);
   }
 }

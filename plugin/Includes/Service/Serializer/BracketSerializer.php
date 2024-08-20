@@ -37,6 +37,10 @@ class BracketSerializer extends PostBaseSerializer {
         'serializer' => $this->results_serializer,
         'many' => true,
       ],
+      'most_popular_picks' => [
+        'serializer' => $this->results_serializer,
+        'many' => true,
+      ],
       'title' => [
         'required' => true,
       ],

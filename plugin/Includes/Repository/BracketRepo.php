@@ -10,31 +10,15 @@ use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
-  /**
-   * @var TeamRepo
-   */
-  private $team_repo;
-
-  /**
-   * @var BracketMatchRepo
-   */
-  private $match_repo;
-
-  /**
-   * @var BracketResultsRepo
-   */
-  private $results_repo;
-
+  private TeamRepo $team_repo;
+  private BracketMatchRepo $match_repo;
+  private BracketResultsRepo $results_repo;
+  private PickRepo $pick_repo;
   /**
    * @var wpdb
-   */
+   **/
   private $wpdb;
-
-  /**
-   * @var BracketLeaderboardService
-   */
   private BracketLeaderboardService $leaderboard_service;
-
   private BracketProductUtils $bracket_product_utils;
 
   public function __construct($args = []) {
@@ -45,6 +29,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       $args['match_repo'] ?? new BracketMatchRepo($this->team_repo);
     $this->results_repo =
       $args['results_repo'] ?? new BracketResultsRepo($this, $this->team_repo);
+    $this->pick_repo = $args['pick_repo'] ?? new PickRepo($this->team_repo);
     $this->leaderboard_service =
       $args['leaderboard_service'] ??
       new BracketLeaderboardService(null, [
@@ -92,7 +77,8 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   public function get(
     int|WP_Post|Bracket|null $post = null,
     bool $fetch_matches = true,
-    bool $fetch_results = true
+    bool $fetch_results = true,
+    bool $fetch_most_popular_picks = false
   ): ?Bracket {
     if ($post instanceof Bracket) {
       $post = $post->id;
@@ -125,6 +111,10 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       ? $this->results_repo->get_results($bracket_id)
       : [];
 
+    $most_popular_picks = $fetch_most_popular_picks
+      ? $this->pick_repo->get_most_popular_picks($bracket_id)
+      : [];
+
     $author_id = (int) $bracket_post->post_author;
 
     $data = [
@@ -143,6 +133,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       'published_date' => get_post_datetime($bracket_post->ID, 'date', 'gmt'),
       'matches' => $matches,
       'results' => $results,
+      'most_popular_picks' => $most_popular_picks,
       'slug' => $bracket_post->post_name,
       'author_display_name' => $author_id
         ? get_the_author_meta('display_name', $author_id)

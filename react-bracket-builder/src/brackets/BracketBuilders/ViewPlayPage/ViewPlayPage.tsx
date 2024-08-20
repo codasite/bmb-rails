@@ -12,7 +12,7 @@ import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { ScoredPlayBracket } from '../../shared/components/Bracket/ScoredPlayBracket'
 import { loadBracketResults, loadPlay, loadPlayMeta } from '../../shared'
 import { getScoredPlayTrees } from './getScoredPlayTrees'
-import { BracketStatusTag } from '../BracketStatusTag'
+import { BracketResultsStatusTag } from '../BracketResultsStatusTag'
 
 const PlayScore = (props: { scorePercent: number; label: string }) => {
   return (
@@ -103,7 +103,7 @@ const ViewPlayPage = (props: {
               </div>
               {isScored && (
                 <div className="tw-self-center">
-                  <BracketStatusTag bracket={play?.bracket} />
+                  <BracketResultsStatusTag bracket={play?.bracket} />
                 </div>
               )}
             </div>

@@ -1,4 +1,5 @@
 import { Nullable } from '../../../../utils/types'
+import { MatchPick } from '../../api'
 import { Team } from '../Team'
 import { MatchNode } from './MatchNode'
 
@@ -14,4 +15,5 @@ export interface MatchNodeArgs {
   right?: Nullable<MatchNode>
   parent?: Nullable<MatchNode>
   depth: number
+  pick?: MatchPick
 }

@@ -16,6 +16,12 @@ class PickSerializer extends ApiSerializerBase {
     return new Pick($obj_data);
   }
   public function get_serialized_fields(): array {
-    return ['id', 'round_index', 'match_index', 'winning_team_id'];
+    return [
+      'id',
+      'round_index',
+      'match_index',
+      'winning_team_id',
+      'percentage',
+    ];
   }
 }

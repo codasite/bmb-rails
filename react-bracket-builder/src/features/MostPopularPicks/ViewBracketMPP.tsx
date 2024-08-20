@@ -1,23 +1,29 @@
-import React, { useEffect } from 'react'
-import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context/context'
-import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
+import { useContext, useEffect } from 'react'
+import {
+  BracketRes,
+  loadBracketMPP,
+  loadPlay,
+  loadPlayMeta,
+  PlayRes,
+} from '../../brackets/shared'
+import { BracketMeta } from '../../brackets/shared/context/context'
+import { WindowDimensionsContext } from '../../brackets/shared/context/WindowDimensionsContext'
+import { MatchTree } from '../../brackets/shared/models/MatchTree'
+import { getBracketMeta } from '../../brackets/shared/components/Bracket/utils'
+import darkBracketBg from '../../brackets/shared/assets/bracket-bg-dark.png'
+import lightBracketBg from '../../brackets/shared/assets/bracket-bg-light.png'
+import { ProfilePicture } from '../../brackets/shared/components/ProfilePicture'
 import {
   WithBracketMeta,
   WithDarkMode,
   WithMatchTree,
   WithWindowDimensions,
-} from '../../shared/components/HigherOrder'
-import { getBracketMeta } from '../../shared/components/Bracket/utils'
-import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
-import { ResultsBracket } from '../../shared/components/Bracket'
-import { ProfilePicture } from '../../shared/components/ProfilePicture'
-import { ViewResultsPageButtons } from './ViewResultsPageButtons'
-import { BracketRes, loadBracketResults } from '../../shared'
-import { BracketResultsStatusTag } from '../BracketResultsStatusTag'
+} from '../../brackets/shared/components/HigherOrder'
+import { ScaledBracket } from '../../brackets/shared/components/Bracket/ScaledBracket'
+import { MPPBracket } from '../../brackets/shared/components/Bracket'
+import { BracketHeaderTag } from '../../brackets/BracketBuilders/BracketHeaderTag'
 
-export const ViewBracketResultsPage = (props: {
+export const ViewBracketMPP = (props: {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   bracket?: BracketRes
@@ -30,7 +36,7 @@ export const ViewBracketResultsPage = (props: {
   useEffect(() => {
     if (bracket && !props.matchTree) {
       props.setBracketMeta(getBracketMeta(bracket))
-      loadBracketResults(bracket, props.setMatchTree)
+      loadBracketMPP(bracket, props.setMatchTree)
     }
   }, [bracket])
 
@@ -64,20 +70,14 @@ export const ViewBracketResultsPage = (props: {
                 </div>
               )}
               <div className="tw-self-center">
-                <BracketResultsStatusTag bracket={bracket} />
+                <BracketHeaderTag text="Most Popular Picks" color="yellow" />
               </div>
             </div>
             <ScaledBracket
-              BracketComponent={ResultsBracket}
+              BracketComponent={MPPBracket}
               matchTree={props.matchTree}
               paddingX={20}
             />
-            <div className="tw-w-full tw-mt-40">
-              <ViewResultsPageButtons
-                bracket={bracket}
-                // addApparelUrl={props.addApparelUrl}
-              />
-            </div>
           </>
         )}
       </div>
@@ -86,6 +86,6 @@ export const ViewBracketResultsPage = (props: {
 }
 
 const Wrapped = WithWindowDimensions(
-  WithDarkMode(WithMatchTree(WithBracketMeta(ViewBracketResultsPage)))
+  WithDarkMode(WithMatchTree(WithBracketMeta(ViewBracketMPP)))
 )
 export default Wrapped

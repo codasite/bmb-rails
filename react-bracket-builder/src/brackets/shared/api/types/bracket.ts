@@ -35,6 +35,7 @@ export interface MatchPick {
   roundIndex: number
   matchIndex: number
   winningTeamId: number
+  percentage?: number
 }
 
 export interface TeamRepr {
@@ -54,6 +55,7 @@ export interface MatchRepr {
   team2?: TeamRepr
   team1Wins?: boolean
   team2Wins?: boolean
+  pick?: MatchPick
 }
 export interface PostBase {
   id: number
@@ -87,6 +89,7 @@ export interface BracketRes extends PostBase {
   isPrintable?: boolean
   fee?: number
   results?: MatchPick[]
+  mostPopularPicks?: MatchPick[]
 }
 export interface PlayReq {
   id?: number

@@ -20,6 +20,10 @@ class Bracket extends PostBase implements PostBracketInterface {
    * @var Pick[]
    */
   public array $results;
+  /**
+   * @var Pick[]
+   */
+  public array $most_popular_picks;
 
   public function __construct(array $data = []) {
     parent::__construct($data);
@@ -29,6 +33,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->wildcard_placement = (int) ($data['wildcard_placement'] ?? null);
     $this->matches = $data['matches'] ?? [];
     $this->results = $data['results'] ?? [];
+    $this->most_popular_picks = $data['most_popular_picks'] ?? [];
     $this->results_first_updated_at = $data['results_first_updated_at'] ?? null;
     $this->num_plays = (int) ($data['num_plays'] ?? null);
     $this->fee = (float) ($data['fee'] ?? null);

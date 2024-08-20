@@ -7,6 +7,7 @@ exports[`ScrambleTeams should scramble the teams 1`] = `
       {
         "id": 9,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": 17,
@@ -22,6 +23,7 @@ exports[`ScrambleTeams should scramble the teams 1`] = `
       {
         "id": 10,
         "matchIndex": 1,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": 18,
@@ -39,6 +41,7 @@ exports[`ScrambleTeams should scramble the teams 1`] = `
       {
         "id": undefined,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 1,
         "team1": undefined,
         "team1Wins": undefined,
@@ -67,6 +70,7 @@ exports[`ScrambleTeams should scramble the teams 3`] = `
       {
         "id": 9,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": 17,
@@ -82,6 +86,7 @@ exports[`ScrambleTeams should scramble the teams 3`] = `
       {
         "id": 10,
         "matchIndex": 1,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": 19,
@@ -99,6 +104,7 @@ exports[`ScrambleTeams should scramble the teams 3`] = `
       {
         "id": undefined,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 1,
         "team1": undefined,
         "team1Wins": undefined,
@@ -127,6 +133,7 @@ exports[`ScrambleTeams should scramble the teams 5`] = `
       {
         "id": 9,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": 17,
@@ -142,6 +149,7 @@ exports[`ScrambleTeams should scramble the teams 5`] = `
       {
         "id": 10,
         "matchIndex": 1,
+        "pick": null,
         "roundIndex": 0,
         "team1": {
           "id": 19,
@@ -159,6 +167,7 @@ exports[`ScrambleTeams should scramble the teams 5`] = `
       {
         "id": undefined,
         "matchIndex": 0,
+        "pick": null,
         "roundIndex": 1,
         "team1": undefined,
         "team1Wins": undefined,
