@@ -12,6 +12,8 @@ class Bracket extends PostBase implements PostBracketInterface {
   public ?int $num_plays;
   public ?float $fee;
   public bool $should_notify_results_updated;
+  public bool $is_voting;
+  public int $live_round_index;
   /**
    * @var BracketMatch[]
    */
@@ -39,6 +41,8 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->fee = (float) ($data['fee'] ?? null);
     $this->should_notify_results_updated =
       $data['should_notify_results_updated'] ?? false;
+    $this->is_voting = $data['is_voting'] ?? false;
+    $this->live_round_index = (int) ($data['live_round_index'] ?? 0);
   }
 
   public function get_winning_team(): ?Team {
