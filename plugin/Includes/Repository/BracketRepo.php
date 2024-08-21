@@ -291,8 +291,8 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
     post_id bigint(20) UNSIGNED NOT NULL,
     results_first_updated_at datetime,
-    isVoting TINYINT(1) DEFAULT 0,
-    liveRoundIndex TINYINT(2) DEFAULT 0,
+    is_voting TINYINT(1) DEFAULT 0,
+    live_round_index TINYINT(2) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE KEY (post_id),
     FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE
