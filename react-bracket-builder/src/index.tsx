@@ -17,6 +17,7 @@ import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingN
 import { paymentsHandler } from './handlers/dashboard/payments/paymentsHandler'
 import { SetTournamentFeeModal } from './modals/dashboard/brackets/SetTournamentFeeModal'
 import { LockLiveTournamentModal } from './modals/dashboard/brackets/LockLiveTournamentModal'
+import CompleteRoundModal from './features/VotingBracket/CompleteRoundModal'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -256,6 +257,7 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
         applicationFeePercentage={appObj.applicationFeePercentage}
       />
       <LockLiveTournamentModal />
+      <CompleteRoundModal />
     </>,
     'wpbb-tournaments-modals'
   )
