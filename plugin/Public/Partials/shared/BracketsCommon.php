@@ -115,6 +115,13 @@ class BracketsCommon {
     <?php return ob_get_clean();
   }
 
+  public static function voting_bracket_tag(Bracket $bracket): false|string {
+    if (!$bracket->is_voting) {
+      return '';
+    }
+    return self::bracket_tag('Voting', 'green');
+  }
+
   public static function upcoming_bracket_tag(): false|string {
     return self::bracket_tag('Upcoming', 'yellow');
   }
