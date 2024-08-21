@@ -119,7 +119,8 @@ class BracketsCommon {
     if (!$bracket->is_voting) {
       return '';
     }
-    return self::bracket_tag('Voting', 'green');
+    $round = $bracket->live_round_index + 1;
+    return self::bracket_tag("Voting Round $round", 'green');
   }
 
   public static function upcoming_bracket_tag(): false|string {
