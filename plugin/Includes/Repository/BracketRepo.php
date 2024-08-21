@@ -150,8 +150,8 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
         'should_notify_results_updated',
         true
       ),
-      'is_voting' => $bracket_data['isVoting'] ?? false,
-      'live_round_index' => $bracket_data['liveRoundIndex'] ?? 0,
+      'is_voting' => $bracket_data['is_voting'] ?? false,
+      'live_round_index' => $bracket_data['live_round_index'] ?? 0,
     ];
 
     return new Bracket($data);
@@ -254,7 +254,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   ): void {
     $old_data = $this->get_custom_table_data($id, $use_post_id);
     $id_field = $use_post_id ? 'post_id' : 'id';
-    $update_fields = ['results_first_updated_at'];
+    $update_fields = ['results_first_updated_at', 'is_voting'];
     $update_data = [];
     foreach ($data as $key => $value) {
       if (in_array($key, $update_fields) && $value !== $old_data[$key]) {

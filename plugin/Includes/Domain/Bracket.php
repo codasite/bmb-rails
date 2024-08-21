@@ -181,6 +181,8 @@ class Bracket extends PostBase implements PostBracketInterface {
     $bracket['results_first_updated_at'] = $this->results_first_updated_at
       ? $this->results_first_updated_at->format('Y-m-d H:i:s')
       : null;
+    $bracket['is_voting'] = $this->is_voting;
+    $bracket['live_round_index'] = $this->live_round_index;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {

@@ -75,6 +75,7 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $this->assertEquals('test year', $data->year);
     $this->assertEquals(8, $data->num_teams);
     $this->assertEquals(0, $data->wildcard_placement);
+    $this->assertFalse($data->is_voting);
     $this->assertEquals(2, count($data->matches));
     $this->assertEquals(0, $data->matches[0]['round_index']);
     $this->assertEquals(0, $data->matches[0]['match_index']);
@@ -167,6 +168,7 @@ class BracketApiTest extends WPBB_UnitTestCase {
       'title' => 'Test Bracket',
       'month' => 'Test Month',
       'year' => 'Test Year',
+      'is_voting' => true,
       'results' => [
         [
           'round_index' => 0,
@@ -204,6 +206,7 @@ class BracketApiTest extends WPBB_UnitTestCase {
     $bracket = $this->bracket_repo->get($data->id);
     $this->assertNotNull($bracket);
     $this->assertEquals('Test Bracket', $bracket->title);
+    $this->assertTrue($bracket->is_voting);
     $this->assertEquals(3, count($bracket->results));
     $this->assertEquals(0, $bracket->results[0]->round_index);
     $this->assertEquals(0, $bracket->results[0]->match_index);
