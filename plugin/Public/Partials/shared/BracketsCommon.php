@@ -120,6 +120,9 @@ class BracketsCommon {
       return '';
     }
     $round = $bracket->live_round_index + 1;
+    if ($bracket->status === 'complete') {
+      return self::bracket_tag('Voting', 'green');
+    }
     return self::bracket_tag("Voting Round $round", 'green');
   }
 
