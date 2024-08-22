@@ -131,6 +131,9 @@ class BracketListItem {
     if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
       return '';
     }
+    if ($bracket->is_voting) {
+      return '';
+    }
     ob_start();
     ?>
     <a
