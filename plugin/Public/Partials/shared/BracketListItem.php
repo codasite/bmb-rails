@@ -157,7 +157,7 @@ class BracketListItem {
     ob_start();
     ?>
     <button
-      class="wpbb-complete-round-button tw-border tw-border-solid tw-uppercase tw-border-white/50 tw-bg-white/15 hover:tw-bg-white hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white tw-cursor-pointer"
+      class="wpbb-complete-round-button tw-border tw-border-solid tw-uppercase tw-border-yellow tw-bg-yellow/15 hover:tw-bg-yellow hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white tw-cursor-pointer"
       data-bracket-id="<?php echo $bracket->id; ?>" data-live-round-index="<?php echo $bracket->live_round_index; ?>"
     >
       <?php echo file_get_contents(
@@ -177,13 +177,13 @@ class BracketListItem {
     <?php echo BracketsCommon::play_bracket_btn($bracket, [
       'label' => 'Play',
     ]); ?>
+    <?php echo BracketListItem::complete_round_button($bracket); ?>
     <?php echo BracketListItem::score_bracket_btn(
       $bracket_score_link,
       $bracket
     ); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
-    <?php echo BracketListItem::complete_round_button($bracket); ?>
     <?php return ob_get_clean();
   }
 }
