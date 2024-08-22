@@ -26,7 +26,7 @@ export default function CompleteRoundModal() {
     setLoading(true)
     try {
       await votingBracketApi.completeRound(bracketId)
-      setShow(false)
+      window.location.reload()
     } catch {
       setHasError(true)
     } finally {
