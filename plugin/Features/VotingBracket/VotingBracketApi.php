@@ -75,7 +75,6 @@ class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
         'status' => 404,
       ]);
     }
-    error_log('complete round');
 
     // If there are no plays for the round return 400.
     if (!$this->voting_bracket_service->has_plays_for_live_round($bracket)) {
