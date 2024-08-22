@@ -54,8 +54,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
       return
     }
 
-    bracketApi.createPlay
-
     const playReq: PlayReq = {
       bracketId: bracketId,
       picks: picks,

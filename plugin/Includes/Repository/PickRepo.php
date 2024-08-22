@@ -6,16 +6,11 @@ use WStrategies\BMB\Includes\Domain\Pick;
 
 class PickRepo implements CustomTableInterface {
   /**
-   * @var TeamRepo
-   */
-  private $team_repo;
-
-  /**
    * @var wpdb
    */
   private $wpdb;
 
-  public function __construct(TeamRepo $team_repo) {
+  public function __construct(private TeamRepo $team_repo) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = $team_repo;
@@ -98,6 +93,27 @@ class PickRepo implements CustomTableInterface {
       }
     }
     return $picks;
+  }
+
+  public function get_num_picks_for_round(
+    int $bracket_post_id,
+    int $round_index
+  ) {
+    $picks_table_name = self::table_name();
+    $plays_table_name = PlayRepo::table_name();
+    $query = $this->wpdb->prepare("SELECT
+      COUNT(*)
+    FROM
+      $picks_table_name pick
+    JOIN
+      $plays_table_name play ON pick.bracket_play_id = play.id
+    WHERE
+      play.bracket_post_id = %d
+      AND play.is_tournament_entry = 1
+      AND pick.round_index = %d
+      ", $bracket_post_id, $round_index);
+    $count = $this->wpdb->get_var($query);
+    return $count;
   }
 
   public function insert_picks(int $play_id, array $picks): void {

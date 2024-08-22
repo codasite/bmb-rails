@@ -4,11 +4,12 @@ import { CancelButton, ConfirmButton } from '../../modals/ModalButtons'
 import { ModalHeader } from '../../modals/ModalHeader'
 import addClickHandlers from '../../modals/addClickHandlers'
 import { votingBracketApi } from './votingBracketApi'
+import { HttpError } from '../../brackets/shared/api/wpHttpClient'
 
 export default function CompleteRoundModal() {
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [hasError, setHasError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
   const [bracketId, setBracketId] = useState(0)
   const [liveRoundIndex, setLiveRoundIndex] = useState(0)
 
@@ -18,7 +19,7 @@ export default function CompleteRoundModal() {
       setBracketId(parseInt(b.dataset.bracketId))
       setLiveRoundIndex(parseInt(b.dataset.liveRoundIndex))
       setShow(true)
-      setHasError(false)
+      setErrorMessage('')
     },
   })
 
@@ -27,8 +28,13 @@ export default function CompleteRoundModal() {
     try {
       await votingBracketApi.completeRound(bracketId)
       window.location.reload()
-    } catch {
-      setHasError(true)
+    } catch (error) {
+      console.log(error)
+      if (error instanceof HttpError) {
+        setErrorMessage(`Error completing round. ${error.data.message}`)
+      } else {
+        setErrorMessage('Error completing round')
+      }
     } finally {
       setLoading(false)
     }
@@ -42,7 +48,9 @@ export default function CompleteRoundModal() {
       </p>
       <div className="tw-flex tw-flex-col tw-gap-10">
         <div className="tw-flex tw-gap-10 tw-items-center"></div>
-        {hasError && <p className="tw-text-red tw-text-center">Error completing round</p>}
+        {errorMessage && (
+          <p className="tw-text-red tw-text-center">{errorMessage}</p>
+        )}
         <ConfirmButton disabled={loading} onClick={onCompleteRound}>
           Complete Round
         </ConfirmButton>

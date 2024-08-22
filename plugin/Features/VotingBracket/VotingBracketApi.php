@@ -7,6 +7,8 @@ use WP_REST_Controller;
 use WP_REST_Server;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
+use WStrategies\BMB\Includes\Repository\PickRepo;
+use WStrategies\BMB\Includes\Repository\TeamRepo;
 use WStrategies\BMB\Includes\Service\ScoreService;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
@@ -14,13 +16,15 @@ use WStrategies\BMB\Includes\Utils;
 
 class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
   private BracketRepo $bracket_repo;
-
+  private VotingBracketService $voting_bracket_service;
   private Utils $utils;
 
-
   public function __construct($args = []) {
+    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->voting_bracket_service =
+      $args['voting_bracket_service'] ??
+      new VotingBracketService(new PickRepo(new TeamRepo()));
     $this->utils = $args['utils'] ?? new Utils();
-    $this->bracket_repo = new BracketRepo();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
   }
@@ -63,12 +67,23 @@ class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
    */
   public function complete_round($request) {
     $bracket_id = (int) $request['bracket_id'];
+    $bracket = $this->bracket_repo->get($bracket_id);
 
     // Validate and complete the round for the given bracket ID.
-    if (!$this->is_valid_bracket($bracket_id)) {
+    if ($bracket === null) {
       return new WP_Error('invalid_bracket', __('Invalid bracket ID.'), [
         'status' => 404,
       ]);
+    }
+    error_log('complete round');
+
+    // If there are no plays for the round return 400.
+    if (!$this->voting_bracket_service->has_plays_for_live_round($bracket)) {
+      return new WP_Error(
+        'no_plays_for_round',
+        __('There are no plays for the current round.'),
+        ['status' => 400]
+      );
     }
 
     $updated = $this->complete_bracket_round($bracket_id);
@@ -105,10 +120,6 @@ class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
     return true;
   }
 
-  private function is_valid_bracket($bracket_id): bool {
-    return $this->bracket_repo->get($bracket_id) !== null;
-  }
-
   /**
    * Complete the current round for the given bracket ID.
    *
@@ -122,12 +133,9 @@ class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
     if ($bracket->live_round_index === $bracket->get_num_rounds()) {
       $bracket->status = 'complete';
     }
-    error_log(print_r($bracket, true));
-    // If there are no plays for the current round return false.
     // Calculate the most popular picks for the current round.
     // Save them to the bracket.
     $bracket = $this->bracket_repo->update($bracket);
-    error_log(print_r($bracket, true));
     return $bracket;
   }
 }
