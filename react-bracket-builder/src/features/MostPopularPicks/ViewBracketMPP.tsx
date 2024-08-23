@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react'
 import {
   BracketRes,
-  loadBracketMPP,
+  loadMostPopularPicks,
   loadPlay,
   loadPlayMeta,
   PlayRes,
@@ -36,7 +36,7 @@ export const ViewBracketMPP = (props: {
   useEffect(() => {
     if (bracket && !props.matchTree) {
       props.setBracketMeta(getBracketMeta(bracket))
-      loadBracketMPP(bracket, props.setMatchTree)
+      loadMostPopularPicks(bracket, props.setMatchTree)
     }
   }, [bracket])
 

@@ -1,7 +1,7 @@
-import { BracketRes } from '../../brackets/shared/api/types/bracket'
-import { MatchTree } from '../../brackets/shared/models/MatchTree'
+import { BracketRes } from '../api/types/bracket'
+import { MatchTree } from '../models/MatchTree'
 
-export const loadBracketMPP = (
+export const loadMostPopularPicks = (
   bracket: BracketRes,
   setMatchTree: (matchTree: MatchTree) => void
 ) => {

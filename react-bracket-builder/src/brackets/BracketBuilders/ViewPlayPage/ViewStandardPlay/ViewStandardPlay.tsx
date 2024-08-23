@@ -16,7 +16,7 @@ import { BracketResultsStatusTag } from '../../BracketResultsStatusTag'
 import { PlayScore } from './PlayScore'
 import { PlayRank } from './PlayRank'
 
-const ViewPlayPage = (props: {
+const ViewStandardPlayPage = (props: {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   bracketPlay: PlayRes
@@ -108,4 +108,4 @@ const ViewPlayPage = (props: {
   )
 }
 
-export default WithMatchTree2(ViewPlayPage)
+export default WithMatchTree2(ViewStandardPlayPage)
