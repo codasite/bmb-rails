@@ -29,7 +29,6 @@ export const LandingPage = (props: LandingPageProps) => {
           />
         )}
         <ActionButton
-          darkMode={true}
           variant="yellow"
           size="small"
           onClick={onStart}

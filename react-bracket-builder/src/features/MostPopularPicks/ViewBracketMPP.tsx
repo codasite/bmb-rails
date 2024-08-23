@@ -6,7 +6,7 @@ import {
   loadPlayMeta,
   PlayRes,
 } from '../../brackets/shared'
-import { BracketMeta } from '../../brackets/shared/context/context'
+import { BracketMeta, DarkModeContext } from '../../brackets/shared/context/context'
 import { WindowDimensionsContext } from '../../brackets/shared/context/WindowDimensionsContext'
 import { MatchTree } from '../../brackets/shared/models/MatchTree'
 import { getBracketMeta } from '../../brackets/shared/components/Bracket/utils'
@@ -29,10 +29,9 @@ export const ViewBracketMPP = (props: {
   bracket?: BracketRes
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
 }) => {
   const { bracket } = props
+  const { darkMode } = useContext(DarkModeContext)
   useEffect(() => {
     if (bracket && !props.matchTree) {
       props.setBracketMeta(getBracketMeta(bracket))
@@ -43,11 +42,11 @@ export const ViewBracketMPP = (props: {
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        props.darkMode ? ' tw-dark' : ''
+        darkMode ? ' tw-dark' : ''
       }`}
       style={{
         backgroundImage: `url(${
-          props.darkMode ? darkBracketBg : lightBracketBg
+          darkMode ? darkBracketBg : lightBracketBg
         })`,
       }}
     >

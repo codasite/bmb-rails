@@ -9,9 +9,10 @@ import { BracketBusterContext } from '../context'
 import { getBustTrees } from '../utils'
 import { DefaultEditButton } from '../../../shared/components/Bracket/BracketActionButtons'
 import { WindowDimensionsContext } from '../../../shared/context/WindowDimensionsContext'
+import { DarkModeContext } from '../../../shared/context/context'
 
 export const BustEndPage = (props: EndPageProps) => {
-  const { matchTree, darkMode, processing, handleSubmit, onEditClick } = props
+  const { matchTree, processing, handleSubmit, onEditClick } = props
   const { busterTree } = getBustTrees()
   const {
     busteeDisplayName,
@@ -20,6 +21,7 @@ export const BustEndPage = (props: EndPageProps) => {
     busterThumbnail,
     buttonText,
   } = useContext(BracketBusterContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   const { height: windowHeight, width: windowWidth } = useContext(
     WindowDimensionsContext
@@ -55,7 +57,6 @@ export const BustEndPage = (props: EndPageProps) => {
         <div className="tw-flex tw-flex-col tw-gap-10">
           {onEditClick && (
             <DefaultEditButton
-              darkMode={darkMode}
               onClick={onEditClick}
               disabled={processing}
             />

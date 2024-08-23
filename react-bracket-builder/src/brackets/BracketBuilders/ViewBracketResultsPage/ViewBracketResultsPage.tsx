@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context/context'
+import { BracketMeta, DarkModeContext } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import {
@@ -23,10 +23,9 @@ export const ViewBracketResultsPage = (props: {
   bracket?: BracketRes
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
 }) => {
   const { bracket } = props
+  const { darkMode } = useContext(DarkModeContext)
   useEffect(() => {
     if (bracket && !props.matchTree) {
       props.setBracketMeta(getBracketMeta(bracket))
@@ -37,11 +36,11 @@ export const ViewBracketResultsPage = (props: {
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        props.darkMode ? ' tw-dark' : ''
+        darkMode ? ' tw-dark' : ''
       }`}
       style={{
         backgroundImage: `url(${
-          props.darkMode ? darkBracketBg : lightBracketBg
+          darkMode ? darkBracketBg : lightBracketBg
         })`,
       }}
     >

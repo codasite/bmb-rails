@@ -7,7 +7,6 @@ import { Spinner } from '../../shared/components/Spinner'
 export const SubmitPicksButton = (props: {
   onClick: () => Promise<void>
   disabled?: boolean
-  darkMode?: boolean
   processing?: boolean
   error?: boolean
 }) => {

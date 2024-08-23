@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
-import { BracketMeta } from '../../shared/context/context'
+import React, { useContext, useEffect } from 'react'
+import { BracketMeta, DarkModeContext } from '../../shared/context/context'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
 import {
@@ -17,19 +17,11 @@ interface PrintBracketPageProps {
   setBracketMeta: (bracketMeta: BracketMeta) => void
   matchTree: MatchTree
   setMatchTree: (matchTree: MatchTree) => void
-  darkMode: boolean
-  setDarkMode: (darkMode: boolean) => void
 }
 
 const PrintPlayPage = (props: PrintBracketPageProps) => {
-  const {
-    bracketMeta,
-    setBracketMeta,
-    matchTree,
-    setMatchTree,
-    darkMode,
-    setDarkMode,
-  } = props
+  const { bracketMeta, setBracketMeta, matchTree, setMatchTree } = props
+  const { darkMode, setDarkMode } = useContext(DarkModeContext)
 
   const [position, setPosition] = React.useState('top')
   const [inchHeight, setInchHeight] = React.useState(16)
@@ -93,7 +85,6 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
         <ScaledBracket
           BracketComponent={PickableBracket}
           matchTree={matchTree}
-          darkMode={darkMode}
           title={bracketTitle}
           date={bracketDate}
           windowWidth={widthPx}

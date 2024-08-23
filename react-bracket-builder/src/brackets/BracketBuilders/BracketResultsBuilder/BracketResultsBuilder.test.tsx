@@ -17,8 +17,6 @@ describe('BracketResultsBuilder', () => {
           id: 0,
         }}
         setBracketMeta={noop}
-        darkMode={false}
-        setDarkMode={noop}
       />
     )
     expect(asFragment()).toMatchSnapshot()

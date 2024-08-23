@@ -37,8 +37,6 @@ const PlayPage = (props: {
   play?: PlayRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
   userCanPlayBracketForFree?: boolean
@@ -53,8 +51,6 @@ const PlayPage = (props: {
     setMatchTree,
     bracketMeta,
     setBracketMeta,
-    darkMode,
-    setDarkMode,
     userCanPlayBracketForFree,
   } = props
 
@@ -259,8 +255,6 @@ const PlayPage = (props: {
     processingSubmitPicks,
     addToApparelError,
     submitPicksError,
-    darkMode,
-    setDarkMode,
     bracketMeta,
     setBracketMeta,
   }

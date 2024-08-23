@@ -99,7 +99,6 @@ export interface BracketProps {
   BracketComponent?: React.FC<BracketProps> // for nesting brackets
   title?: string
   date?: string
-  darkMode?: boolean
   lineStyle?: object
   lineColor?: string
   lineWidth?: number

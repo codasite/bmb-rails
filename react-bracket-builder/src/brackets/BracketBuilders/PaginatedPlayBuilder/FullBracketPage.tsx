@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ActionButton } from '../../shared/components/ActionButtons'
@@ -8,13 +8,15 @@ import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
 import { PlayBuilderProps } from '../PlayBracketBuilder/types'
+import { DarkModeContext } from '../../shared/context/context'
 
 interface FullBracketPageProps extends PlayBuilderProps {
   onEditClick?: () => void
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { onEditClick, matchTree, darkMode, setDarkMode } = props
+  const { onEditClick, matchTree } = props
+  const {darkMode} = useContext(DarkModeContext)
 
   const canEdit = !!onEditClick
   const processing = props.processingAddToApparel || props.processingSubmitPicks
@@ -39,7 +41,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           {canEdit && (
             <ActionButton
               variant="white"
-              darkMode={darkMode}
               onClick={onEditClick}
               disabled={processing}
               borderWidth={0}

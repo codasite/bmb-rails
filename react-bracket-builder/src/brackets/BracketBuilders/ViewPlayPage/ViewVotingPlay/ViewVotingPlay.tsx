@@ -2,8 +2,8 @@ import { useContext, useEffect } from 'react'
 import { PickableBracket } from '../../../shared/components/Bracket'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
-import { BracketMeta } from '../../../shared/context/context'
 import { ProfilePicture } from '../../../shared/components/ProfilePicture'
+import { BracketMeta, DarkModeContext } from '../../../shared/context/context'
 import { PlayRes } from '../../../shared/api/types/bracket'
 import { WithMatchTree2 } from '../../../shared/components/HigherOrder/WithMatchTree'
 import { WindowDimensionsContext } from '../../../shared/context/WindowDimensionsContext'
@@ -17,9 +17,8 @@ const ViewVotingPlay = (props: {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   bracketPlay: PlayRes
-  darkMode: boolean
-  setDarkMode: (darkMode: boolean) => void
 }) => {
+  const { darkMode } = useContext(DarkModeContext)
   const { bracketPlay: play } = props
 
   const { width: windowWidth } = useContext(WindowDimensionsContext)
@@ -36,11 +35,11 @@ const ViewVotingPlay = (props: {
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        props.darkMode ? ' tw-dark' : ''
+        darkMode ? ' tw-dark' : ''
       }`}
       style={{
         backgroundImage: `url(${
-          props.darkMode ? darkBracketBg : lightBracketBg
+          darkMode ? darkBracketBg : lightBracketBg
         })`,
       }}
     >

@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { logger } from '../../../utils/Logger'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context/context'
+import { BracketMeta, DarkModeContext } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ResultsBracket } from '../../shared/components/Bracket'
@@ -29,12 +29,11 @@ interface BracketResultsBuilderProps {
   bracket?: any
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
 }
 
 const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
-  const { matchTree, setMatchTree, bracket, setBracketMeta, darkMode } = props
+  const { matchTree, setMatchTree, bracket, setBracketMeta } = props
+  const { darkMode } = useContext(DarkModeContext)
 
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)

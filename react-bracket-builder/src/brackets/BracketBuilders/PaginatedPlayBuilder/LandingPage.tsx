@@ -36,7 +36,6 @@ export const LandingPage = (props: LandingPageProps) => {
         )}
         {canPlay && (
           <ActionButton
-            darkMode={true}
             variant="green"
             size="small"
             onClick={onStart}

@@ -1,7 +1,5 @@
-import React, { useContext } from 'react'
 import { Round } from '../../models/Round'
 import LineTo, { SteppedLineTo } from 'react-lineto'
-import { DarkModeContext } from '../../context/context'
 import { getUniqueTeamClass } from './utils'
 
 interface BracketLinesProps {
@@ -11,7 +9,6 @@ interface BracketLinesProps {
 
 export const BracketLines = (props: BracketLinesProps) => {
   const { rounds, style } = props
-  const { darkMode } = useContext(DarkModeContext)
   // Main function
   const renderLines = (rounds: Round[]): JSX.Element[] => {
     let lines: JSX.Element[] = []
