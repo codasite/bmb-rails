@@ -3,7 +3,6 @@ import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
 import {
   WithBracketMeta,
-  WithDarkMode,
 } from '../../shared/components/HigherOrder'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
@@ -145,6 +144,6 @@ const BustPlayPage = (props: BustPlayPageProps) => {
 }
 
 const WrappedBustPlayPage = WithWindowDimensions(
-  WithMatchTree3(WithBracketMeta(WithDarkMode(BustPlayPage)))
+  WithMatchTree3(WithBracketMeta(BustPlayPage))
 )
 export default WrappedBustPlayPage

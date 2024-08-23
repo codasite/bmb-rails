@@ -7,12 +7,13 @@ export interface BracketMeta {
 }
 
 export const DarkModeContext = createContext<{
-  darkMode: boolean;
-  setDarkMode: (darkMode: boolean) => void;
+  darkMode: boolean
+  setDarkMode: (darkMode: boolean) => void
 }>({
   darkMode: true,
   setDarkMode: () => {},
-});
+})
+
 export const BracketMetaContext = createContext<BracketMeta>({})
 export const CallbackContext = createContext<() => void>(() => {})
 

@@ -4,7 +4,6 @@ import { MatchTree } from '../../shared/models/MatchTree'
 import { PickableBracket } from '../../shared/components/Bracket'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
 import { parseParams } from './schema'
@@ -95,8 +94,6 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
   )
 }
 
-const WrappedPrintPlayPage = WithDarkMode(
-  WithBracketMeta(WithMatchTree(PrintPlayPage))
-)
+const WrappedPrintPlayPage = WithBracketMeta(WithMatchTree(PrintPlayPage))
 
 export default WrappedPrintPlayPage

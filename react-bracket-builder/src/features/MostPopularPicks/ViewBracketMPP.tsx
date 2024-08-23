@@ -1,13 +1,9 @@
 import { useContext, useEffect } from 'react'
+import { BracketRes, loadMostPopularPicks } from '../../brackets/shared'
 import {
-  BracketRes,
-  loadMostPopularPicks,
-  loadPlay,
-  loadPlayMeta,
-  PlayRes,
-} from '../../brackets/shared'
-import { BracketMeta, DarkModeContext } from '../../brackets/shared/context/context'
-import { WindowDimensionsContext } from '../../brackets/shared/context/WindowDimensionsContext'
+  BracketMeta,
+  DarkModeContext,
+} from '../../brackets/shared/context/context'
 import { MatchTree } from '../../brackets/shared/models/MatchTree'
 import { getBracketMeta } from '../../brackets/shared/components/Bracket/utils'
 import darkBracketBg from '../../brackets/shared/assets/bracket-bg-dark.png'
@@ -15,7 +11,6 @@ import lightBracketBg from '../../brackets/shared/assets/bracket-bg-light.png'
 import { ProfilePicture } from '../../brackets/shared/components/ProfilePicture'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
   WithWindowDimensions,
 } from '../../brackets/shared/components/HigherOrder'
@@ -45,9 +40,7 @@ export const ViewBracketMPP = (props: {
         darkMode ? ' tw-dark' : ''
       }`}
       style={{
-        backgroundImage: `url(${
-          darkMode ? darkBracketBg : lightBracketBg
-        })`,
+        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
       <div
@@ -85,6 +78,6 @@ export const ViewBracketMPP = (props: {
 }
 
 const Wrapped = WithWindowDimensions(
-  WithDarkMode(WithMatchTree(WithBracketMeta(ViewBracketMPP)))
+  WithMatchTree(WithBracketMeta(ViewBracketMPP))
 )
 export default Wrapped

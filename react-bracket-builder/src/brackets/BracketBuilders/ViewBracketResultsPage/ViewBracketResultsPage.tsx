@@ -5,7 +5,6 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
   WithWindowDimensions,
 } from '../../shared/components/HigherOrder'
@@ -85,6 +84,6 @@ export const ViewBracketResultsPage = (props: {
 }
 
 const Wrapped = WithWindowDimensions(
-  WithDarkMode(WithMatchTree(WithBracketMeta(ViewBracketResultsPage)))
+  WithMatchTree(WithBracketMeta(ViewBracketResultsPage))
 )
 export default Wrapped

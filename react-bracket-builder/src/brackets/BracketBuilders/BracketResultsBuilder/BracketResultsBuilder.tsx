@@ -9,7 +9,6 @@ import { ActionButton } from '../../shared/components/ActionButtons'
 import { bracketApi } from '../../shared/api/bracketApi'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
 import {
@@ -154,8 +153,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   )
 }
 
-const Wrapped = WithDarkMode(
-  WithMatchTree(WithBracketMeta(BracketResultsBuilder))
-)
+const Wrapped = WithMatchTree(WithBracketMeta(BracketResultsBuilder))
 
 export default Wrapped

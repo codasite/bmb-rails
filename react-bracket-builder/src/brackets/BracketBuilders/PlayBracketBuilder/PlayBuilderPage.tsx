@@ -5,7 +5,6 @@ import { MatchTree } from '../../shared/models/MatchTree'
 import { BracketMeta } from '../../shared/context/context'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
 import {
@@ -284,7 +283,7 @@ const PlayPage = (props: {
 }
 
 const WrappedPlayBuilderPage = WithWindowDimensions(
-  WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage)))
+  WithMatchTree(WithBracketMeta(PlayPage))
 )
 
 export default WrappedPlayBuilderPage

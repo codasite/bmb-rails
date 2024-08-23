@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { DarkModeProvider } from './brackets/shared/components/HigherOrder/WithDarkMode'
+import { DarkModeProvider } from './brackets/shared/context/Providers'
 
 const App = (props) => {
   return (

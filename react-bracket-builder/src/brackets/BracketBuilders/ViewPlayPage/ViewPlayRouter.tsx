@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 import { ViewPlayPageProps } from './types'
 import ViewStandardPlayPage from './ViewStandardPlay/ViewStandardPlay'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
-import {
-  WithBracketMeta,
-  WithDarkMode,
-} from '../../shared/components/HigherOrder'
+import { WithBracketMeta } from '../../shared/components/HigherOrder'
 import { ViewBracketResultsPage } from '../ViewBracketResultsPage/ViewBracketResultsPage'
 import ViewVotingPlay from './ViewVotingPlay/ViewVotingPlay'
 
@@ -27,6 +24,6 @@ const ViewPlayRouter = (props: ViewPlayPageProps) => {
 }
 
 const WrappedViewPlayPage = WithWindowDimensions(
-  WithBracketMeta(WithDarkMode(ViewPlayRouter))
+  WithBracketMeta(ViewPlayRouter)
 )
 export default WrappedViewPlayPage

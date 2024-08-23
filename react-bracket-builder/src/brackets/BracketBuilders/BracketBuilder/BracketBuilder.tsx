@@ -6,7 +6,6 @@ import { NumTeamsPage, NumTeamsPickerState } from './NumTeamsPage'
 import { BracketReq, BracketRes } from '../../shared/api/types/bracket'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
 import { BracketMeta } from '../../shared/context/context'
@@ -182,7 +181,5 @@ const BracketBuilder = (props: BracketBuilderProps) => {
     </div>
   )
 }
-const WrappedBracketBuilder = WithDarkMode(
-  WithMatchTree(WithBracketMeta(BracketBuilder))
-)
+const WrappedBracketBuilder = WithMatchTree(WithBracketMeta(BracketBuilder))
 export default WrappedBracketBuilder
