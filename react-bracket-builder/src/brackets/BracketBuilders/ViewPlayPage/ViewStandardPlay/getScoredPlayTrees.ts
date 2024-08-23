@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import {
   MatchTreeContext,
   MatchTreeContext1,
-} from '../../shared/context/context'
+} from '../../../shared/context/context'
 
 export const getScoredPlayTrees = () => {
   const context0 = useContext(MatchTreeContext)

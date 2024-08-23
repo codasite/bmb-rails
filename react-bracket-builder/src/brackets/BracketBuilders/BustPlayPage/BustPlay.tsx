@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
-import { ViewPlayPageProps } from './types'
+import { ViewPlayPageProps } from '../ViewPlayPage/types'
 import { WithMatchTree3 } from '../../shared/components/HigherOrder'
-import { getBustTrees } from '../BustPlayPage/utils'
-import { BustPlayView } from '../BustPlayPage/BustPlayView'
+import { getBustTrees } from './utils'
+import { BustPlayView } from './BustPlayView'
 
 const BustPlay = (props: ViewPlayPageProps) => {
   const { setBracketMeta, bracketPlay: play } = props
