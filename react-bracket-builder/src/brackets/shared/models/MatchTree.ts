@@ -1,5 +1,5 @@
 import { Nullable } from '../../../utils/types'
-import { MatchPick, MatchReq, MatchRes, MatchTreeRepr } from '../api'
+import { BracketRes, MatchPick, MatchReq, MatchRes, MatchTreeRepr } from '../api'
 import { WildcardPlacement } from './WildcardPlacement'
 import { Team } from './Team'
 import { MatchNode } from './operations/MatchNode'
@@ -284,14 +284,13 @@ export class MatchTree {
   }
 
   static fromPicks(
-    numTeams: number,
-    matches: MatchRes[],
+    bracket: Pick<BracketRes, 'matches'| 'numTeams'| 'isVoting' |'liveRoundIndex' >,
     picks: MatchPick[],
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
     const matchTree = MatchTree.fromMatchRes(
-      numTeams,
-      matches,
+      bracket.numTeams,
+      bracket.matches,
       wildcardPlacement
     )
     if (!matchTree) {

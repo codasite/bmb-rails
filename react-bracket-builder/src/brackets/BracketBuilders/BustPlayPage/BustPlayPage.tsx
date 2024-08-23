@@ -74,9 +74,8 @@ const BustPlayPage = (props: BustPlayPageProps) => {
     setBracketMeta(meta)
     const bracket = play?.bracket
     const matches = bracket?.matches
-    const numTeams = bracket?.numTeams
     if (picks && matches) {
-      const tree = MatchTree.fromPicks(numTeams, matches, picks)
+      const tree = MatchTree.fromPicks(bracket, picks)
 
       if (tree) {
         setBusteeTree(tree)

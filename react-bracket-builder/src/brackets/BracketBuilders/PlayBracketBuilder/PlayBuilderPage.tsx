@@ -81,7 +81,7 @@ const PlayPage = (props: {
     const stored = playStorage.loadPlay(bracket.id)
     const play = stored ? stored : props.play
     if (play) {
-      tree = MatchTree.fromPicks(numTeams, matches, play.picks)
+      tree = MatchTree.fromPicks(bracket, play.picks)
       setStoredPlay(play)
     } else {
       tree = tree ?? MatchTree.fromMatchRes(numTeams, matches)

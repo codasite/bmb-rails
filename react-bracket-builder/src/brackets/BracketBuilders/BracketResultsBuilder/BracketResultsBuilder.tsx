@@ -55,7 +55,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
       setBracketId(bracket.id)
       let tree: MatchTree | null
       if (results && results.length > 0) {
-        tree = MatchTree.fromPicks(numTeams, matches, results)
+        tree = MatchTree.fromPicks(bracket, results)
       } else {
         tree = MatchTree.fromMatchRes(numTeams, matches)
       }
