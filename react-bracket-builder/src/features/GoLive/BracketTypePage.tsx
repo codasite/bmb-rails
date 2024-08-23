@@ -8,17 +8,26 @@ import { logger } from '../../utils/Logger'
 import Select from 'react-select'
 
 interface BracketTypePageProps extends GoLiveSubPageProps {}
+interface Option {
+  value: string
+  label: string
+}
 
 export const BracketTypePage = (props: BracketTypePageProps) => {
   const [loading, setLoading] = useState(false)
-  const options = [
+
+  const options: Option[] = [
     { value: 'standard', label: 'Standard' },
     { value: 'voting', label: 'Voting' },
   ]
+  const [selectedOption, setSelectedOption] = useState(options[0])
+
   const onContinue = async () => {
     setLoading(true)
     try {
-      await bracketApi.updateBracket(props.bracket.id, { isVoting: true })
+      await bracketApi.updateBracket(props.bracket.id, {
+        isVoting: selectedOption.value === 'voting',
+      })
       props.navigate('next')
     } catch (error) {
       logger.error('Failed to update bracket', error)
@@ -26,6 +35,11 @@ export const BracketTypePage = (props: BracketTypePageProps) => {
       setLoading(false)
     }
   }
+
+  const onChange = (option: Option) => {
+    setSelectedOption(option)
+  }
+
   return (
     <GoLivePageContainer
       title="Go Live!"
@@ -41,6 +55,7 @@ export const BracketTypePage = (props: BracketTypePageProps) => {
           defaultValue={options[0]}
           classNamePrefix="react-select"
           isSearchable={false}
+          onChange={onChange}
         />
       </div>
       <Button
