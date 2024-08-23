@@ -76,15 +76,13 @@ const PlayPage = (props: {
     const meta = getBracketMeta(bracket)
     setBracketMeta?.(meta ?? {})
     let tree: Nullable<MatchTree> = null
-    const numTeams = bracket.numTeams
-    const matches = bracket.matches
     const stored = playStorage.loadPlay(bracket.id)
     const play = stored ? stored : props.play
     if (play) {
       tree = MatchTree.fromPicks(bracket, play.picks)
       setStoredPlay(play)
     } else {
-      tree = tree ?? MatchTree.fromMatchRes(numTeams, matches)
+      tree = tree ?? MatchTree.fromMatchRes(bracket)
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
