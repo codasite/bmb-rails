@@ -67,7 +67,6 @@ if (Object.keys(appObj).length !== 0) {
   renderProductPreview(appObj)
   renderBracketBuilder(appObj)
   renderPlayBracket(appObj)
-  renderReplayPlayPage(appObj)
   renderUpdateBracketResultsPage(appObj)
   renderViewBracketResultsPage(appObj)
   renderViewBracketPlay(appObj)
@@ -96,31 +95,6 @@ function renderBracketBuilder(appObj: WpbbAppObj) {
 function renderPlayBracket(appObj: WpbbAppObj) {
   const {
     bracket,
-    bracketProductArchiveUrl,
-    myPlayHistoryUrl,
-    isUserLoggedIn,
-    userCanPlayBracketForFree,
-  } = appObj
-  if (bracket) {
-    renderDiv(
-      <App>
-        <PlayBuilderPage
-          bracket={bracket}
-          bracketProductArchiveUrl={bracketProductArchiveUrl}
-          myPlayHistoryUrl={myPlayHistoryUrl}
-          isUserLoggedIn={isUserLoggedIn}
-          userCanPlayBracketForFree={userCanPlayBracketForFree}
-          loginUrl={appObj.loginUrl}
-        />
-      </App>,
-      'wpbb-play-bracket'
-    )
-  }
-}
-
-function renderReplayPlayPage(appObj: WpbbAppObj) {
-  const {
-    bracket,
     play,
     bracketProductArchiveUrl,
     myPlayHistoryUrl,
@@ -140,7 +114,7 @@ function renderReplayPlayPage(appObj: WpbbAppObj) {
           loginUrl={appObj.loginUrl}
         />
       </App>,
-      'wpbb-replay-play'
+      'wpbb-play-bracket'
     )
   }
 }
