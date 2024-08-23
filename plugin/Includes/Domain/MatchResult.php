@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes\Domain;
 
 use WStrategies\BMB\Includes\Domain\Pick;
 
-class BracketResult extends Pick {
+class MatchResult extends Pick {
   public ?float $winning_team_pick_percent;
 
   public function __construct($data = []) {
@@ -13,7 +13,7 @@ class BracketResult extends Pick {
       ? (float) $data['winning_team_pick_percent']
       : null;
   }
-  public static function from_array($data): BracketResult {
-    return new BracketResult(self::hydrate_array($data));
+  public static function from_array($data): MatchResult {
+    return new MatchResult(self::hydrate_array($data));
   }
 }

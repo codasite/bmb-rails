@@ -19,7 +19,7 @@ class Bracket extends PostBase implements PostBracketInterface {
    */
   public array $matches;
   /**
-   * @var BracketResult[]
+   * @var MatchResult[]
    */
   public array $results;
   /**
@@ -144,7 +144,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     if (isset($data['results'])) {
       $results = [];
       foreach ($data['results'] as $result) {
-        $results[] = BracketResult::from_array($result);
+        $results[] = MatchResult::from_array($result);
       }
       $data['results'] = $results;
     }
@@ -162,7 +162,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     return new Bracket($data);
   }
 
-  public function get_last_result(): ?BracketResult {
+  public function get_last_result(): ?MatchResult {
     if (!$this->results) {
       return null;
     }
