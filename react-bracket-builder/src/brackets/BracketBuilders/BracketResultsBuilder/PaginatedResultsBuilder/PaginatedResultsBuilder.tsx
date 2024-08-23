@@ -5,12 +5,7 @@ import { ResultsBracketPage } from './ResultsBracketPage'
 import { FullBracketPage } from './FullBracketPage'
 
 export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    processing,
-    handleUpdatePicks,
-  } = props
+  const { matchTree, setMatchTree, processing, handleUpdatePicks } = props
 
   const [page, setPage] = useState('landing')
 

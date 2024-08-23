@@ -71,7 +71,9 @@ export class WpHttpClient {
           console.error('Error parsing response:', error)
         }
         throw new HttpError({
-          message: `${response.status}: ${response.statusText} - ${textData || JSON.stringify(jsonData)}`,
+          message: `${response.status}: ${response.statusText} - ${
+            textData || JSON.stringify(jsonData)
+          }`,
           data: jsonData,
         })
       }

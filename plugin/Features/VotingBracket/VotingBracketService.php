@@ -14,7 +14,7 @@ class VotingBracketService {
    * @return bool
    */
   public function has_plays_for_live_round(Bracket $bracket): bool {
-    $num_picks =  $this->pick_repo->get_num_picks_for_round(
+    $num_picks = $this->pick_repo->get_num_picks_for_round(
       $bracket->id,
       $bracket->live_round_index
     );

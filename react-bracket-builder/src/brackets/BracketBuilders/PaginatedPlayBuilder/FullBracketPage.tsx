@@ -16,7 +16,7 @@ interface FullBracketPageProps extends PlayBuilderProps {
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
   const { onEditClick, matchTree } = props
-  const {darkMode} = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   const canEdit = !!onEditClick
   const processing = props.processingAddToApparel || props.processingSubmitPicks

@@ -56,10 +56,7 @@ export const BustEndPage = (props: EndPageProps) => {
         )}
         <div className="tw-flex tw-flex-col tw-gap-10">
           {onEditClick && (
-            <DefaultEditButton
-              onClick={onEditClick}
-              disabled={processing}
-            />
+            <DefaultEditButton onClick={onEditClick} disabled={processing} />
           )}
           <ActionButton
             variant="red"

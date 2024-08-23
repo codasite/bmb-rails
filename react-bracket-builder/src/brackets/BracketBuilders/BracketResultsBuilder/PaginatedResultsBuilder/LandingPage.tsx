@@ -28,11 +28,7 @@ export const LandingPage = (props: LandingPageProps) => {
             matchTree={matchTree}
           />
         )}
-        <ActionButton
-          variant="yellow"
-          size="small"
-          onClick={onStart}
-        >
+        <ActionButton variant="yellow" size="small" onClick={onStart}>
           Update Picks
         </ActionButton>
       </div>

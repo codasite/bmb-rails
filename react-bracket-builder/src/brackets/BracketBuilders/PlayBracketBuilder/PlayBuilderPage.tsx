@@ -7,12 +7,7 @@ import {
   WithBracketMeta,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
-import {
-  BracketRes,
-  MatchPick,
-  PlayReq,
-  PlayRes,
-} from '../../shared/api/types/bracket'
+import { BracketRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
 import {
@@ -62,9 +57,7 @@ const PlayPage = (props: {
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [stripeClientSecret, setStripeClientSecret] = useState<string>('')
   const [stripePaymentAmount, setStripePaymentAmount] = useState<number>(null)
-  const { width: windowWidth, height: windowHeight } = useContext(
-    WindowDimensionsContext
-  )
+  const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 

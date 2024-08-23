@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { DarkModeContext } from "./context"
+import { useState } from 'react'
+import { DarkModeContext } from './context'
 
 export const DarkModeProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState<boolean>(true)

@@ -18,8 +18,7 @@ interface FullBracketPageProps {
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { matchTree, processing, onEditClick, handleUpdatePicks } =
-    props
+  const { matchTree, processing, onEditClick, handleUpdatePicks } = props
 
   const { notifyParticipants, toggleNotifyParticipants } = useContext(
     BracketResultsBuilderContext
