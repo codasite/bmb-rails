@@ -23,9 +23,17 @@ class Bracket extends PostBase implements PostBracketInterface {
    */
   public array $results;
   /**
+   * @var MostPopularPickPercentage[]
+   */
+  public array $result_percentages;
+  /**
    * @var Pick[]
    */
   public array $most_popular_picks;
+  /**
+   * @var MostPopularPickPercentage[]
+   */
+  public array $mpp_percentages;
 
   public function __construct(array $data = []) {
     parent::__construct($data);
@@ -35,7 +43,9 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->wildcard_placement = (int) ($data['wildcard_placement'] ?? null);
     $this->matches = $data['matches'] ?? [];
     $this->results = $data['results'] ?? [];
+    $this->result_percentages = $data['result_percentages'] ?? [];
     $this->most_popular_picks = $data['most_popular_picks'] ?? [];
+    $this->mpp_percentages = $data['mpp_percentages'] ?? [];
     $this->results_first_updated_at = $data['results_first_updated_at'] ?? null;
     $this->num_plays = (int) ($data['num_plays'] ?? null);
     $this->fee = (float) ($data['fee'] ?? null);
