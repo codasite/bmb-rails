@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes\Repository;
 use DateTimeImmutable;
 use Exception;
 use wpdb;
-use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\BracketResult;
 
 class BracketResultsRepo implements CustomTableInterface {
   /**
@@ -54,14 +54,15 @@ class BracketResultsRepo implements CustomTableInterface {
     }
   }
 
-  public function insert_result(int $bracket_id, Pick $pick): void {
+  public function insert_result(int $bracket_id, BracketResult $result): void {
     $table_name = self::table_name();
     $this->wpdb->insert($table_name, [
-      'id' => $pick->id,
+      'id' => $result->id,
       'bracket_id' => $bracket_id,
-      'round_index' => $pick->round_index,
-      'match_index' => $pick->match_index,
-      'winning_team_id' => $pick->winning_team_id,
+      'round_index' => $result->round_index,
+      'match_index' => $result->match_index,
+      'winning_team_id' => $result->winning_team_id,
+      'winning_team_pick_percent' => $result->winning_team_pick_percent,
     ]);
   }
 
@@ -96,6 +97,8 @@ class BracketResultsRepo implements CustomTableInterface {
                 self::table_name(),
                 [
                   'winning_team_id' => $new_result->winning_team_id,
+                  'winning_team_pick_percent' =>
+                    $new_result->winning_team_pick_percent,
                 ],
                 [
                   'id' => $old_result->id,
@@ -125,7 +128,7 @@ class BracketResultsRepo implements CustomTableInterface {
     foreach ($data as $result) {
       $winning_team_id = $result['winning_team_id'];
       $winning_team = $this->team_repo->get($winning_team_id);
-      $bracket_results[] = new Pick([
+      $bracket_results[] = new BracketResult([
         'round_index' => $result['round_index'],
         'match_index' => $result['match_index'],
         'winning_team_id' => $winning_team_id,
@@ -134,8 +137,10 @@ class BracketResultsRepo implements CustomTableInterface {
         'updated_at' => isset($result['updated_at'])
           ? new DateTimeImmutable($result['updated_at'])
           : null,
+        'winning_team_pick_percent' => $result['winning_team_pick_percent'],
       ]);
     }
+
     return $bracket_results;
   }
 
@@ -162,6 +167,10 @@ class BracketResultsRepo implements CustomTableInterface {
 			match_index tinyint(4) NOT NULL,
 			winning_team_id bigint(20) UNSIGNED NOT NULL,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      /**
+      * Percentage of players who picked this team to win the match.
+      */
+      winning_team_pick_percent DECIMAL(6, 5),
 			PRIMARY KEY (id),
 			FOREIGN KEY (bracket_id) REFERENCES {$brackets_table}(id) ON DELETE CASCADE,
 			FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE
