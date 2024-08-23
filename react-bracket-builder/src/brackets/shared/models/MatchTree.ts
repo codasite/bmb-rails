@@ -13,11 +13,20 @@ export class MatchTree {
   rounds: Round[]
   private numTeams: number
   private wildcardPlacement?: WildcardPlacement
+  private isVoting: boolean
+  private liveRoundIndex: number
 
-  constructor(rounds: Round[] = [], wildcardPlacement?: WildcardPlacement) {
+  constructor(
+    rounds: Round[] = [],
+    wildcardPlacement?: WildcardPlacement,
+    isVoting: boolean = false,
+    liveRoundIndex: number = 0
+  ) {
     linkNodes(rounds)
     this.rounds = rounds
     this.wildcardPlacement = wildcardPlacement
+    this.isVoting = isVoting
+    this.liveRoundIndex = liveRoundIndex
   }
 
   getRootMatch(): Nullable<MatchNode> {
@@ -139,6 +148,9 @@ export class MatchTree {
   }
 
   allPicked = (): boolean => {
+    if (this.isVoting) {
+      return this.rounds[this.liveRoundIndex].allPicked()
+    }
     return this.rounds.every((round) => {
       return round.allPicked()
     })

@@ -92,6 +92,7 @@ export interface BracketRes extends PostBase {
   results?: MatchPick[]
   mostPopularPicks?: MatchPick[]
   isVoting?: boolean
+  liveRoundIndex?: number
 }
 export interface PlayReq {
   id?: number
