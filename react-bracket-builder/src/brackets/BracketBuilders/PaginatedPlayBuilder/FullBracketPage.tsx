@@ -28,7 +28,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
       }}
     >
       <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
-        <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
+        <ThemeSelector />
         {matchTree && (
           <ScaledBracket
             BracketComponent={PickableBracket}
