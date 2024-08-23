@@ -44,11 +44,14 @@ class Pick implements BracketMatchNodeInterface {
   }
 
   public static function from_array($data): Pick {
+    return new Pick(self::hydrate_array($data));
+  }
+
+  public static function hydrate_array($data): array {
     if (isset($data['winning_team'])) {
       $data['winning_team'] = Team::from_array($data['winning_team']);
     }
-
-    return new Pick($data);
+    return $data;
   }
 
   public function to_array(): array {

@@ -14,6 +14,6 @@ class BracketResult extends Pick {
       : null;
   }
   public static function from_array($data): BracketResult {
-    return new BracketResult($data);
+    return new BracketResult(self::hydrate_array($data));
   }
 }
