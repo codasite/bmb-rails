@@ -6,7 +6,7 @@ export const WithDarkMode = (Component: React.ComponentType<any>) => {
     const [darkMode, setDarkMode] = useState(true)
 
     return (
-      <DarkModeContext.Provider value={darkMode}>
+      <DarkModeContext.Provider value={{darkMode, setDarkMode}}>
         <Component {...props} darkMode={darkMode} setDarkMode={setDarkMode} />
       </DarkModeContext.Provider>
     )

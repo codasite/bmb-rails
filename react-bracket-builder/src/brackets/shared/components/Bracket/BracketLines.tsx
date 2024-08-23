@@ -11,7 +11,7 @@ interface BracketLinesProps {
 
 export const BracketLines = (props: BracketLinesProps) => {
   const { rounds, style } = props
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
   // Main function
   const renderLines = (rounds: Round[]): JSX.Element[] => {
     let lines: JSX.Element[] = []

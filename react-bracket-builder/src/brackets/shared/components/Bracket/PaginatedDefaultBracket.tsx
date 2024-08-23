@@ -161,7 +161,7 @@ export const PaginatedDefaultBracket = (
     />
   )
 
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   const linesStyle = lineStyle || {
     className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,

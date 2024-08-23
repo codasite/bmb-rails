@@ -11,7 +11,7 @@ export const SubmitPicksButton = (props: {
   processing?: boolean
   error?: boolean
 }) => {
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
   const { onClick, disabled, processing, error } = props
   const styles = [
     'tw-border-none',

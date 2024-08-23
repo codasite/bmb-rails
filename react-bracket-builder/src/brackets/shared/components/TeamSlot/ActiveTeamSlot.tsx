@@ -6,7 +6,7 @@ import { TeamSlotProps } from '../types'
 import { getUniqueTeamClass } from '../Bracket/utils'
 
 export const ActiveTeamSlot = (props: TeamSlotProps) => {
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   return (
     <BaseTeamSlot

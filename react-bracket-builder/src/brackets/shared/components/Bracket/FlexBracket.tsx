@@ -22,7 +22,7 @@ export const FlexBracket = (props: BracketProps) => {
     onTeamClick,
   } = props
 
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   const getMatchColumns = (
     rounds: Nullable<MatchNode>[][],
