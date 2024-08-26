@@ -7,7 +7,7 @@ import { ActiveTeamSlot } from './ActiveTeamSlot'
 export const TeamSlotToggle = (props: TeamSlotProps) => {
   const { team, match } = props
 
-  const active = team && match.getWinner() === team ? true : false
+  const active = team && match.getWinner() === team
 
   return active ? (
     <ActiveTeamSlot {...props} />

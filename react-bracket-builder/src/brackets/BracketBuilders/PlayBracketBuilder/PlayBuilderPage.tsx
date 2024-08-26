@@ -81,8 +81,10 @@ const PlayPage = (props: {
     if (play) {
       tree = MatchTree.fromPicks(bracket, play.picks)
       setStoredPlay(play)
-    } else {
-      tree = tree ?? MatchTree.fromMatchRes(bracket)
+    } else if (bracket.isVoting && bracket.liveRoundIndex > 0) {
+      tree = MatchTree.fromPicks(bracket, bracket.results)
+    }else {
+      tree = MatchTree.fromMatchRes(bracket)
     }
     if (tree && setMatchTree) {
       setMatchTree(tree)
