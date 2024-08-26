@@ -351,4 +351,43 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $this->assertFalse($updated->should_notify_results_updated);
   }
+
+  public function test_update_results_with_winning_team_pick_percent() {
+    $bracket = new Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $bracket = $this->bracket_repo->add($bracket);
+
+    $winning_team_id = $bracket->matches[0]->team1->id;
+
+    $bracket = $this->bracket_repo->update($bracket->id, [
+      'results' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $winning_team_id,
+          'popularity' => 0.75,
+        ],
+      ],
+    ]);
+
+    $new_results = $bracket->results;
+
+    $this->assertEquals(0.75, $new_results[0]->popularity);
+  }
 }
