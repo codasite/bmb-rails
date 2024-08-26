@@ -133,17 +133,17 @@ class PickRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals(0, $most_popular_picks[0]->round_index);
     $this->assertEquals(0, $most_popular_picks[0]->match_index);
     $this->assertEquals($team1_id, $most_popular_picks[0]->winning_team->id);
-    $this->assertEquals(66, $most_popular_picks[0]->popularity);
+    $this->assertEquals(0.6667, $most_popular_picks[0]->popularity);
 
     $this->assertEquals(0, $most_popular_picks[1]->round_index);
     $this->assertEquals(1, $most_popular_picks[1]->match_index);
     $this->assertEquals($team3_id, $most_popular_picks[1]->winning_team->id);
-    $this->assertEquals(100, $most_popular_picks[1]->popularity);
+    $this->assertEquals(1, $most_popular_picks[1]->popularity);
 
     $this->assertEquals(1, $most_popular_picks[2]->round_index);
     $this->assertEquals(0, $most_popular_picks[2]->match_index);
     $this->assertEquals($team1_id, $most_popular_picks[2]->winning_team_id);
-    $this->assertEquals(66, $most_popular_picks[2]->popularity);
+    $this->assertEquals(0.6667, $most_popular_picks[2]->popularity);
   }
 
   public function test_should_return_num_picks_for_round() {
