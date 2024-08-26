@@ -81,7 +81,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
           team2: { name: match.team2?.name },
         }))
         setMatchTree?.(
-          MatchTree.fromMatchRes(numTeams, newMatches, wildcardPlacement)
+          MatchTree.fromMatchRes({numTeams, matches: newMatches}, wildcardPlacement)
         )
         setCurrentPage('add-teams')
       }

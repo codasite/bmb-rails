@@ -1,5 +1,5 @@
 import { Nullable } from '../../../utils/types'
-import { MatchPick, MatchReq, MatchRes, MatchTreeRepr } from '../api'
+import { BracketRes, MatchPick, MatchReq, MatchTreeRepr } from '../api'
 import { WildcardPlacement } from './WildcardPlacement'
 import { Team } from './Team'
 import { MatchNode } from './operations/MatchNode'
@@ -13,11 +13,20 @@ export class MatchTree {
   rounds: Round[]
   private numTeams: number
   private wildcardPlacement?: WildcardPlacement
+  private isVoting: boolean
+  private liveRoundIndex: number
 
-  constructor(rounds: Round[] = [], wildcardPlacement?: WildcardPlacement) {
+  constructor(
+    rounds: Round[] = [],
+    wildcardPlacement?: WildcardPlacement,
+    isVoting: boolean = false,
+    liveRoundIndex: number = 0
+  ) {
     linkNodes(rounds)
     this.rounds = rounds
     this.wildcardPlacement = wildcardPlacement
+    this.isVoting = isVoting
+    this.liveRoundIndex = liveRoundIndex
   }
 
   getRootMatch(): Nullable<MatchNode> {
@@ -139,6 +148,9 @@ export class MatchTree {
   }
 
   allPicked = (): boolean => {
+    if (this.isVoting) {
+      return this.rounds[this.liveRoundIndex].allPicked()
+    }
     return this.rounds.every((round) => {
       return round.allPicked()
     })
@@ -266,14 +278,13 @@ export class MatchTree {
   }
 
   static fromMatchRes(
-    numTeams: number,
-    matches: MatchRes[],
+    bracket: Pick<BracketRes, 'matches'| 'numTeams'| 'isVoting' |'liveRoundIndex' >,
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
-    const numRounds = getNumRounds(numTeams)
+    const numRounds = getNumRounds(bracket.numTeams)
 
     try {
-      const nestedMatches = matchReprFromRes(numRounds, matches)
+      const nestedMatches = matchReprFromRes(numRounds, bracket.matches)
       return MatchTree.deserialize({
         rounds: nestedMatches,
         wildcardPlacement,
@@ -284,14 +295,12 @@ export class MatchTree {
   }
 
   static fromPicks(
-    numTeams: number,
-    matches: MatchRes[],
+    bracket: Pick<BracketRes, 'matches'| 'numTeams'| 'isVoting' |'liveRoundIndex' >,
     picks: MatchPick[],
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
     const matchTree = MatchTree.fromMatchRes(
-      numTeams,
-      matches,
+      bracket,
       wildcardPlacement
     )
     if (!matchTree) {

@@ -9,7 +9,7 @@ export const loadMostPopularPicks = (
   const matches = bracket?.matches
   const numTeams = bracket?.numTeams
   if (picks && matches && numTeams) {
-    const tree = MatchTree.fromPicks(numTeams, matches, picks)
+    const tree = MatchTree.fromPicks(bracket, picks)
     if (tree) {
       setMatchTree(tree)
     }

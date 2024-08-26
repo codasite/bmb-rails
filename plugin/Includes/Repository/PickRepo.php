@@ -39,7 +39,17 @@ class PickRepo implements CustomTableInterface {
     return $picks;
   }
 
-  public function get_most_popular_picks(int $bracket_id): array {
+  public function get_most_popular_picks(
+    int $bracket_id,
+    array $opts = []
+  ): array {
+    $having = '';
+    if (isset($opts['round_index'])) {
+      $having = $this->wpdb->prepare(
+        'HAVING pick.round_index = %d',
+        $opts['round_index']
+      );
+    }
     $picks_table_name = self::table_name();
     $plays_table_name = PlayRepo::table_name();
     $query = $this->wpdb->prepare(
@@ -56,12 +66,13 @@ class PickRepo implements CustomTableInterface {
     JOIN
         $plays_table_name play ON pick.bracket_play_id = play.id
     WHERE
-        play.bracket_id = %d
+        play.bracket_post_id = %d
         AND play.is_tournament_entry = 1
     GROUP BY
         pick.round_index,
         pick.match_index,
         pick.winning_team_id
+    $having
     ORDER BY
         pick.round_index,
         pick.match_index,

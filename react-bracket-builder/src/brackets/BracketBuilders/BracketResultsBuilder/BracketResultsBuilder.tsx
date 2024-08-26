@@ -47,17 +47,15 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
 
   useEffect(() => {
     if (bracket) {
-      const numTeams = bracket.numTeams
-      const matches = bracket.matches
       const results = bracket.results
       const meta = getBracketMeta(bracket)
       setBracketMeta?.(meta)
       setBracketId(bracket.id)
       let tree: MatchTree | null
       if (results && results.length > 0) {
-        tree = MatchTree.fromPicks(numTeams, matches, results)
+        tree = MatchTree.fromPicks(bracket, results)
       } else {
-        tree = MatchTree.fromMatchRes(numTeams, matches)
+        tree = MatchTree.fromMatchRes(bracket)
       }
       if (tree) {
         setMatchTree?.(tree)

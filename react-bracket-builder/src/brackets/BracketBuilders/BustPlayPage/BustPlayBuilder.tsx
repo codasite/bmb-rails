@@ -35,9 +35,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
   const buildMatchTrees = () => {
     const bracket = busteePlay?.bracket
-    const matches = bracket?.matches
-    const numTeams = bracket?.numTeams
-    const buster = MatchTree.fromMatchRes(numTeams, matches)
+    const buster = MatchTree.fromMatchRes(bracket)
     setBusterTree(buster)
   }
 
