@@ -21,7 +21,7 @@ class PickSerializer extends ApiSerializerBase {
       'round_index',
       'match_index',
       'winning_team_id',
-      'percentage',
+      'popularity',
     ];
   }
 }
