@@ -254,11 +254,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   ): void {
     $old_data = $this->get_custom_table_data($id, $use_post_id);
     $id_field = $use_post_id ? 'post_id' : 'id';
-    $update_fields = [
-      'results_first_updated_at',
-      'is_voting',
-      'live_round_index',
-    ];
+    $update_fields = ['results_first_updated_at', 'is_voting', 'live_round_index'];
     $update_data = [];
     foreach ($data as $key => $value) {
       if (in_array($key, $update_fields) && $value !== $old_data[$key]) {

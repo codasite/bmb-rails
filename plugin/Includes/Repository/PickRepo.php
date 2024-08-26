@@ -101,8 +101,7 @@ class PickRepo implements CustomTableInterface {
   ) {
     $picks_table_name = self::table_name();
     $plays_table_name = PlayRepo::table_name();
-    $query = $this->wpdb->prepare(
-      "SELECT
+    $query = $this->wpdb->prepare("SELECT
       COUNT(*)
     FROM
       $picks_table_name pick
@@ -112,10 +111,7 @@ class PickRepo implements CustomTableInterface {
       play.bracket_post_id = %d
       AND play.is_tournament_entry = 1
       AND pick.round_index = %d
-      ",
-      $bracket_post_id,
-      $round_index
-    );
+      ", $bracket_post_id, $round_index);
     $count = $this->wpdb->get_var($query);
     return $count;
   }
