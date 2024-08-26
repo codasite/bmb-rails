@@ -10,4 +10,4 @@ ALTER TABLE wp_bracket_builder_brackets
         ADD COLUMN isVoting TINYINT(1) DEFAULT 0,
         ADD COLUMN liveRoundIndex TINYINT(2) DEFAULT 0;
 
-ALTER TABlE wp_bracket_builder_bracket_results ADD COLUMN winning_team_pick_percent DECIMAL(6, 5) DEFAULT NULL;
+ALTER TABlE wp_bracket_builder_bracket_results ADD COLUMN popularity DECIMAL(6, 5) DEFAULT NULL;
