@@ -110,13 +110,22 @@ export const DefaultBracket = (props: BracketProps) => {
 
   const getMatchColumns = (
     rounds: Nullable<MatchNode>[][],
-    position: string,
+    position: 'left' | 'right' | 'center',
     numRounds: number
   ): JSX.Element[] => {
     return rounds.map((matches, i) => {
-      const roundIndex = matches.find((match) => match !== null)?.roundIndex
+      let roundIndex: number;
+      if (position === 'left') {
+        roundIndex = i
+      }
+      if (position === 'right') {
+        roundIndex = numRounds - i - 2;
+      }
+      if (position === 'center') {
+        roundIndex = numRounds - 1
+      }
       const { teamHeight, teamWidth, teamGap, matchGap } =
-        getBracketMeasurements(roundIndex ?? i, numRounds)
+        getBracketMeasurements(roundIndex, numRounds)
       return (
         <MatchColumnComponent
           key={`${position}-${i}`}
