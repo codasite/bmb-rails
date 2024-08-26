@@ -118,6 +118,8 @@ class VotingBracketServiceTest extends WPBB_UnitTestCase {
     $updated = $voting_service->complete_bracket_round($bracket->id);
     $this->assertCount(2, $updated->results);
     $this->assertEquals($team1_id, $updated->results[0]->winning_team_id);
+    $this->assertEquals(0.6667, $updated->results[0]->popularity);
     $this->assertEquals($team3_id, $updated->results[1]->winning_team_id);
+    $this->assertEquals(1, $updated->results[1]->popularity);
   }
 }

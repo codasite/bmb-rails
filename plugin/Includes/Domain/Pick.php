@@ -70,6 +70,7 @@ class Pick implements BracketMatchNodeInterface {
         ? $this->winning_team->to_array()
         : null,
       'updated_at' => $this->updated_at,
+      'popularity' => $this->popularity,
     ];
   }
 
