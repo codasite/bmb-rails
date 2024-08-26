@@ -1,10 +1,11 @@
 <?php
-namespace WStrategies\BMB\Features\VotingBracket;
+namespace WStrategies\BMB\Features\VotingBracket\Presentation;
 
 use WP_Error;
 use WP_REST_Response;
 use WP_REST_Controller;
 use WP_REST_Server;
+use WStrategies\BMB\Features\VotingBracket\Domain\VotingBracketService;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Repository\PickRepo;
@@ -16,14 +17,17 @@ use WStrategies\BMB\Includes\Utils;
 
 class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
   private BracketRepo $bracket_repo;
+  private PickRepo $pick_repo;
   private VotingBracketService $voting_bracket_service;
   private Utils $utils;
 
   public function __construct($args = []) {
-    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $team_repo = $args['team_repo'] ?? new TeamRepo();
+    $this->bracket_repo =
+      $args['bracket_repo'] ?? new BracketRepo(['team_repo' => $team_repo]);
+    $this->pick_repo = $args['pick_repo'] ?? new PickRepo($team_repo);
     $this->voting_bracket_service =
-      $args['voting_bracket_service'] ??
-      new VotingBracketService(new PickRepo(new TeamRepo()));
+      $args['voting_bracket_service'] ?? new VotingBracketService();
     $this->utils = $args['utils'] ?? new Utils();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
@@ -85,7 +89,9 @@ class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
       );
     }
 
-    $updated = $this->complete_bracket_round($bracket_id);
+    $updated = $this->voting_bracket_service->complete_bracket_round(
+      $bracket_id
+    );
 
     if ($updated) {
       return new WP_REST_Response(
@@ -117,24 +123,5 @@ class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
     }
 
     return true;
-  }
-
-  /**
-   * Complete the current round for the given bracket ID.
-   *
-   * @param int $bracket_id Bracket ID.
-   * @return bool True if the round was completed, false otherwise.
-   */
-  private function complete_bracket_round($bracket_id) {
-    $bracket = $this->bracket_repo->get($bracket_id);
-    $bracket->live_round_index += 1;
-    // If the current round is the last round, set the bracket status to 'complete'.
-    if ($bracket->live_round_index === $bracket->get_num_rounds()) {
-      $bracket->status = 'complete';
-    }
-    // Calculate the most popular picks for the current round.
-    // Save them to the bracket.
-    $bracket = $this->bracket_repo->update($bracket);
-    return $bracket;
   }
 }

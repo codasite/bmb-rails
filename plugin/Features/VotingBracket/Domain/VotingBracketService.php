@@ -1,12 +1,17 @@
 <?php
 
-namespace WStrategies\BMB\Features\VotingBracket;
+namespace WStrategies\BMB\Features\VotingBracket\Domain;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PickRepo;
 
 class VotingBracketService {
-  public function __construct(private PickRepo $pick_repo) {
+  private BracketRepo $bracket_repo;
+  private PickRepo $pick_repo;
+  public function __construct(array $args = []) {
+    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->pick_repo = $args['pick_repo'] ?? $this->bracket_repo->pick_repo;
   }
 
   /**
@@ -19,5 +24,30 @@ class VotingBracketService {
       $bracket->live_round_index
     );
     return $num_picks > 0;
+  }
+
+  /**
+   * Complete the current round for the given bracket ID.
+   *
+   * @param int $bracket_id Bracket ID.
+   * @return Bracket The updated bracket object.
+   */
+  public function complete_bracket_round($bracket_id) {
+    $bracket = $this->bracket_repo->get($bracket_id);
+    $current_round = $bracket->live_round_index;
+    $bracket->live_round_index += 1;
+    // If the current round is the last round, set the bracket status to 'complete'.
+    if ($bracket->live_round_index === $bracket->get_num_rounds()) {
+      $bracket->status = 'complete';
+    }
+    // Calculate the most popular picks for the current round.
+    // Save them to the bracket.
+    $mpp = $this->pick_repo->get_most_popular_picks($bracket->id, [
+      'round_index' => $current_round,
+    ]);
+    $bracket->results = array_merge($bracket->results, $mpp);
+
+    $bracket = $this->bracket_repo->update($bracket);
+    return $bracket;
   }
 }

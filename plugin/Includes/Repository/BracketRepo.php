@@ -13,7 +13,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   private TeamRepo $team_repo;
   private BracketMatchRepo $match_repo;
   private BracketResultsRepo $results_repo;
-  private PickRepo $pick_repo;
+  public PickRepo $pick_repo;
   /**
    * @var wpdb
    **/
@@ -53,6 +53,8 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
 
     $bracket_id = $this->insert_custom_table_data([
       'post_id' => $post_id,
+      'is_voting' => $bracket->is_voting,
+      'live_round_index' => $bracket->live_round_index,
     ]);
 
     if ($bracket->matches) {
@@ -233,7 +235,6 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     }
 
     $this->update_custom_table_data($post_id, $updated_array);
-    // $this->update_teams($bracket->matches);
 
     $bracket_data = $this->get_custom_table_data($post_id);
     $bracket_id = $bracket_data['id'];
