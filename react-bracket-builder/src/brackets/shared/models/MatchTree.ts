@@ -13,8 +13,8 @@ export class MatchTree {
   rounds: Round[]
   private numTeams: number
   private wildcardPlacement?: WildcardPlacement
-  private isVoting: boolean
-  private liveRoundIndex: number
+  isVoting: boolean
+  liveRoundIndex: number
 
   constructor(
     rounds: Round[] = [],

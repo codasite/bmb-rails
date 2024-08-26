@@ -6,6 +6,8 @@ import { ThemeSelector } from '../../shared/components'
 import { PlayBuilderProps } from './types'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
 import { DarkModeContext } from '../../shared/context/context'
+import { VotingTeamSlot } from '../../../features/VotingBracket/VotingTeamSlot'
+import { TeamSlotToggle } from '../../shared/components/TeamSlot'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const { matchTree, setMatchTree } = props
@@ -26,7 +28,13 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
           <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
             <ThemeSelector />
           </div>
-          <PickableBracket matchTree={matchTree} setMatchTree={setMatchTree} />
+          <PickableBracket
+            matchTree={matchTree}
+            setMatchTree={setMatchTree}
+            TeamSlotComponent={
+              matchTree.isVoting ? VotingTeamSlot : TeamSlotToggle
+            }
+          />
           <div className="tw-px-24 tw-mt-60 tw-flex tw-gap-15 tw-flex-col tw-items-stretch tw-self-stretch">
             <PlayBuilderButtons {...props} />
           </div>
