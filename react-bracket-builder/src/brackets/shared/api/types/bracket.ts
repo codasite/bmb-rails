@@ -46,6 +46,8 @@ export interface TeamRepr {
 export interface MatchTreeRepr {
   rounds: Nullable<MatchRepr>[][]
   wildcardPlacement?: WildcardPlacement
+  isVoting?: boolean
+  liveRoundIndex?: number
 }
 export interface MatchRepr {
   id?: number
