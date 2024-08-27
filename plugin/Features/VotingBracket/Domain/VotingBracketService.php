@@ -27,6 +27,16 @@ class VotingBracketService {
   }
 
   /**
+   * Returns whether any ties exist for most popular pick
+   * @return bool
+   */
+  public function has_ties_for_live_round(Bracket $bracket): bool {
+    return $this->pick_repo->has_tie_for_most_popular_pick($bracket->id, [
+      'round_index' => $bracket->live_round_index,
+    ]);
+  }
+
+  /**
    * Complete the current round for the given bracket ID.
    *
    * @param int $bracket_id Bracket ID.

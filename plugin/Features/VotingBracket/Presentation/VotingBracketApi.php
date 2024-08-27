@@ -89,6 +89,15 @@ class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
       );
     }
 
+    // If ties exist for the round return 400.
+    if ($this->voting_bracket_service->has_ties_for_live_round($bracket)) {
+      return new WP_Error(
+        'ties_exist_for_round',
+        __('Ties exist for the current round.'),
+        ['status' => 400]
+      );
+    }
+
     $updated = $this->voting_bracket_service->complete_bracket_round(
       $bracket_id
     );

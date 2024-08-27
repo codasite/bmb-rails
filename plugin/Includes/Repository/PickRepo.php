@@ -50,6 +50,13 @@ class PickRepo implements CustomTableInterface {
     int $bracket_id,
     array $opts = []
   ) {
+    $having = '';
+    if (isset($opts['round_index'])) {
+      $having = $this->wpdb->prepare(
+        'HAVING pick.round_index = %d',
+        $opts['round_index']
+      );
+    }
     $picks_table_name = self::table_name();
     $plays_table_name = PlayRepo::table_name();
     $query = $this->wpdb->prepare(
@@ -72,6 +79,7 @@ class PickRepo implements CustomTableInterface {
             pick.round_index,
             pick.match_index,
             pick.winning_team_id
+        $having
         ) AS occurrence
     GROUP BY round_index, match_index, occurrence_count
     HAVING winner_count > 1
