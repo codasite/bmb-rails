@@ -39,6 +39,49 @@ class PickRepo implements CustomTableInterface {
     return $picks;
   }
 
+  /**
+   * Returns whether there is a tie for most popular pick in a given bracket.
+   *
+   * @param int $bracket_id
+   * @param array $opts
+   * @return bool
+   */
+  public function has_tie_for_most_popular_pick(
+    int $bracket_id,
+    array $opts = []
+  ) {
+    $picks_table_name = self::table_name();
+    $plays_table_name = PlayRepo::table_name();
+    $query = $this->wpdb->prepare(
+      "
+    SELECT round_index, match_index, occurrence_count, COUNT(*) as winner_count
+    FROM (
+        SELECT
+            pick.round_index AS round_index,
+            pick.match_index AS match_index,
+            pick.winning_team_id AS winning_team_id,
+            COUNT(*) AS occurrence_count
+        FROM
+            $picks_table_name pick
+        JOIN
+            $plays_table_name play ON pick.bracket_play_id = play.id
+        WHERE
+            play.bracket_post_id = %d
+            AND play.is_tournament_entry = 1
+        GROUP BY
+            pick.round_index,
+            pick.match_index,
+            pick.winning_team_id
+        ) AS occurrence
+    GROUP BY round_index, match_index, occurrence_count
+    HAVING winner_count > 1
+",
+      $bracket_id
+    );
+    $data = $this->wpdb->get_results($query, ARRAY_A);
+    return $this->wpdb->num_rows > 0;
+  }
+
   public function get_most_popular_picks(
     int $bracket_id,
     array $opts = []

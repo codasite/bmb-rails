@@ -315,4 +315,121 @@ class PickRepoTest extends WPBB_UnitTestCase {
     $this->assertEquals($team1_id, $most_popular_picks[0]->winning_team_id);
     $this->assertEquals(0.6667, $most_popular_picks[0]->popularity);
   }
+
+  public function test_should_return_true_when_tie_exist() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+      'is_voting' => true,
+      'live_round_index' => 0,
+    ]);
+    $team1_id = $bracket->matches[0]->team1->id;
+    $team2_id = $bracket->matches[0]->team2->id;
+    $team3_id = $bracket->matches[1]->team1->id;
+
+    $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+    $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team1_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+
+    $has_tie = $this->pick_repo->has_tie_for_most_popular_pick($bracket->id);
+    $this->assertTrue($has_tie, 'Should return true when tie exist');
+  }
+  public function test_should_return_false_when_no_tie_exist() {
+    $bracket = $this->create_bracket([
+      'num_teams' => 4,
+      'is_voting' => true,
+      'live_round_index' => 0,
+    ]);
+    $team1_id = $bracket->matches[0]->team1->id;
+    $team2_id = $bracket->matches[0]->team2->id;
+    $team3_id = $bracket->matches[1]->team1->id;
+
+    $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team1_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+    $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team1_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+
+    $has_tie = $this->pick_repo->has_tie_for_most_popular_pick($bracket->id);
+    $this->assertFalse($has_tie, 'Should return false when no tie exists');
+  }
 }
