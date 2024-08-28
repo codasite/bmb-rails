@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import { PaginatedDefaultBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
@@ -36,25 +36,22 @@ export const PaginatedDefaultBracket = (
     NavButtonsComponent = DefaultNavButtons,
     forcePageAllPicked = true,
   } = props
-  const [page, setPage] = React.useState(0)
-
-  useEffect(() => {
-    // try to determine page from matchTree
+  const getDefaultPage = () => {
     if (!matchTree.anyPicked()) {
-      return
+      return 0
     }
     if (matchTree.isVoting) {
-      return setPage((matchTree.liveRoundIndex) * 2)
+      return matchTree.liveRoundIndex * 2
     }
     if (matchTree.allPicked()) {
-      return setPage((matchTree.rounds.length - 1) * 2)
+      return (matchTree.rounds.length - 1) * 2
     }
     // find first unpicked match
     const firstUnpickedMatch = matchTree.findMatch(
       (match) => match && !match.isPicked()
     )
     if (!firstUnpickedMatch) {
-      return
+      return 0
     }
     const { roundIndex, matchIndex } = firstUnpickedMatch
     const numMatches = matchTree.rounds[roundIndex].matches.length
@@ -62,8 +59,9 @@ export const PaginatedDefaultBracket = (
     if (matchIndex >= numMatches / 2) {
       pageNum++
     }
-    setPage(pageNum)
-  }, [])
+    return pageNum
+  }
+  const [page, setPage] = useState(getDefaultPage)
 
   const numRounds = matchTree.rounds.length
   const roundIndex = Math.floor(page / 2)
@@ -125,8 +123,8 @@ export const PaginatedDefaultBracket = (
   const nextMatchPosition = nextRoundIsLast
     ? 'center'
     : isLeftSide
-    ? 'left'
-    : 'right'
+      ? 'left'
+      : 'right'
 
   const currentRoundColumn = (
     <MatchColumnComponent
@@ -191,7 +189,7 @@ export const PaginatedDefaultBracket = (
   }
   const hasNext = () => {
     if (matchTree.isVoting) {
-      return page < (matchTree.liveRoundIndex) * 2 + 1
+      return page < matchTree.liveRoundIndex * 2 + 1
     }
     return page < (matchTree.rounds.length - 1) * 2
   }
