@@ -3,32 +3,25 @@ namespace WStrategies\BMB\Features\VotingBracket\Presentation;
 
 use WP_Error;
 use WP_REST_Response;
+use WP_REST_Request;
 use WP_REST_Controller;
 use WP_REST_Server;
 use WStrategies\BMB\Features\VotingBracket\Domain\VotingBracketService;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
-use WStrategies\BMB\Includes\Repository\PickRepo;
 use WStrategies\BMB\Includes\Repository\TeamRepo;
-use WStrategies\BMB\Includes\Service\ScoreService;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
-use WStrategies\BMB\Includes\Utils;
 
 class VotingBracketApi extends WP_REST_Controller implements HooksInterface {
   private BracketRepo $bracket_repo;
-  private PickRepo $pick_repo;
   private VotingBracketService $voting_bracket_service;
-  private Utils $utils;
 
   public function __construct($args = []) {
     $team_repo = $args['team_repo'] ?? new TeamRepo();
     $this->bracket_repo =
       $args['bracket_repo'] ?? new BracketRepo(['team_repo' => $team_repo]);
-    $this->pick_repo = $args['pick_repo'] ?? new PickRepo($team_repo);
     $this->voting_bracket_service =
       $args['voting_bracket_service'] ?? new VotingBracketService();
-    $this->utils = $args['utils'] ?? new Utils();
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'brackets';
   }

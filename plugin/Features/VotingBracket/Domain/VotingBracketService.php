@@ -42,7 +42,7 @@ class VotingBracketService {
    * @param int $bracket_id Bracket ID.
    * @return Bracket The updated bracket object.
    */
-  public function complete_bracket_round($bracket_id) {
+  public function complete_bracket_round($bracket_id): ?Bracket {
     $bracket = $this->bracket_repo->get($bracket_id);
     $current_round = $bracket->live_round_index;
     $bracket->live_round_index += 1;
