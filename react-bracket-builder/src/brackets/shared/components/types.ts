@@ -133,8 +133,6 @@ export interface PaginatedNavButtonsProps {
 
 // why is this different from PaginatedBracketProps?
 export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
-  page: number
-  setPage: (page: number) => void
   disableNext?: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
   forcePageAllPicked?: boolean
 }

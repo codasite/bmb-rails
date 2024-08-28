@@ -34,10 +34,9 @@ export const PaginatedDefaultBracket = (
     lineStyle,
     onFinished,
     NavButtonsComponent = DefaultNavButtons,
-    page,
-    setPage,
     forcePageAllPicked = true,
   } = props
+  const [page, setPage] = React.useState(0)
 
   useEffect(() => {
     // try to determine page from matchTree
