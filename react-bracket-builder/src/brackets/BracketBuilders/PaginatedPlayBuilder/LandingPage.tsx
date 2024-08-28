@@ -4,8 +4,8 @@ import { MatchTree } from '../../shared/models/MatchTree'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PickableBracket } from '../../shared/components/Bracket'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
-import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { BracketMetaContext } from '../../shared/context/context'
+import { BracketHeaderTag } from '../BracketHeaderTag'
 
 interface LandingPageProps {
   onStart: () => void
@@ -23,6 +23,10 @@ export const LandingPage = (props: LandingPageProps) => {
       style={{ backgroundImage: `url(${darkBracketBg})` }}
     >
       <div className="tw-flex tw-flex-col tw-justify-center tw-items-center px-60 tw-m-auto">
+        <BracketHeaderTag
+          text={`Voting Round ${matchTree.liveRoundIndex + 1}`}
+          color="green"
+        />
         <h1 className="tw-text-center tw-text-48 tw-font-700 tw-w-">{title}</h1>
         {matchTree && (
           <div className="tw-mt-60">

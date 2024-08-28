@@ -3,7 +3,7 @@
 exports[`FullBracketPage renders page correctly 1`] = `
 <DocumentFragment>
   <div
-    class="wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover "
+    class="wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover  tw-dark"
     style="background-image: url(undefined);"
   >
     <div
@@ -47,7 +47,7 @@ exports[`FullBracketPage renders page correctly 1`] = `
                 style="width: 700px;"
               >
                 <div
-                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                  class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
                 >
                   <div
                     class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -75,7 +75,7 @@ exports[`FullBracketPage renders page correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+                  class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
                 >
                   <div
                     class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
@@ -103,7 +103,7 @@ exports[`FullBracketPage renders page correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                  class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
                 >
                   <div
                     class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"

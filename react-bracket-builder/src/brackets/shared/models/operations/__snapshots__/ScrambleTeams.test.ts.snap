@@ -2,6 +2,8 @@
 
 exports[`ScrambleTeams should scramble the teams 1`] = `
 {
+  "isVoting": false,
+  "liveRoundIndex": 0,
   "rounds": [
     [
       {
@@ -65,6 +67,8 @@ exports[`ScrambleTeams should scramble the teams 2`] = `
 
 exports[`ScrambleTeams should scramble the teams 3`] = `
 {
+  "isVoting": false,
+  "liveRoundIndex": 0,
   "rounds": [
     [
       {
@@ -128,6 +132,8 @@ exports[`ScrambleTeams should scramble the teams 4`] = `
 
 exports[`ScrambleTeams should scramble the teams 5`] = `
 {
+  "isVoting": false,
+  "liveRoundIndex": 0,
   "rounds": [
     [
       {

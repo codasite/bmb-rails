@@ -2,6 +2,8 @@
 
 exports[`SetTeams should set the teams 1`] = `
 {
+  "isVoting": false,
+  "liveRoundIndex": 0,
   "rounds": [
     [
       {

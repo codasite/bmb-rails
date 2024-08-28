@@ -53,11 +53,12 @@ const PlayPage = (props: {
   const [submitPicksError, setSubmitPicksError] = useState(false)
   const [processingSubmitPicks, setProcessingSubmitPicks] = useState(false)
   const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
-  const [showRegisterModal, setShowRegisterModal] = useState(false)
+  const [showRegisterModal, setShowRegisterModal] = useState(!isUserLoggedIn)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [stripeClientSecret, setStripeClientSecret] = useState<string>('')
   const [stripePaymentAmount, setStripePaymentAmount] = useState<number>(null)
   const { width: windowWidth } = useContext(WindowDimensionsContext)
+
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
@@ -68,31 +69,6 @@ const PlayPage = (props: {
   const loginRedirectUrl =
     props.loginUrl +
     (props.bracket?.url ? `?redirect=${props.bracket.url}` : '')
-
-  useEffect(() => {
-    if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
-      return
-    }
-    const meta = getBracketMeta(bracket)
-    setBracketMeta?.(meta ?? {})
-    let tree: Nullable<MatchTree> = null
-    const stored = playStorage.loadPlay(bracket.id)
-    const play = stored ? stored : props.play
-    if (play) {
-      tree = MatchTree.fromPicks(bracket, play.picks)
-      setStoredPlay(play)
-    } else if (bracket.isVoting && bracket.liveRoundIndex > 0) {
-      tree = MatchTree.fromPicks(bracket, bracket.results)
-    }else {
-      tree = MatchTree.fromMatchRes(bracket)
-    }
-    if (tree && setMatchTree) {
-      setMatchTree(tree)
-    }
-    if (!isUserLoggedIn) {
-      setShowRegisterModal(true)
-    }
-  }, [])
 
   const clearError = () => {
     setAddToApparelError(false)

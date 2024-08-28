@@ -3,6 +3,36 @@
 exports[`PlayBuilderPage should render should show register modal when user is not logged in 1`] = `
 <DocumentFragment>
   <div
+    class="tw-fixed tw-bg-black/50 tw-top-0 tw-left-0 tw-right-0 tw-z-50 tw-w-full tw-p-4 tw-overflow-x-hidden tw-overflow-y-auto md:tw-inset-0 tw-h-[calc(100%-1rem)] tw-max-h-full tw-justify-center tw-items-center tw-flex"
+    tabindex="-1"
+  >
+    <div
+      class="tw-relative tw-max-w-[606px] tw-p-30 sm:tw-p-60 tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20"
+    >
+      <h1
+        class="tw-text-24 sm:tw-text-32 tw-leading-normal tw-text-white tw-uppercase tw-whitespace-pre-line tw-mb-30 tw-w-full tw-text-center tw-font-sans"
+      >
+        Sign in or register to submit your picks!
+      </h1>
+      <div
+        class="tw-flex tw-flex-col tw-gap-10"
+      >
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-bg-green/15 tw-gap-16 tw-rounded-8 tw-p-12 tw-border-1 tw-border-solid tw-border-green hover:tw-text-white/75 tw-text-white tw-w-full tw-text-16 tw-font-700 disabled:tw-bg-transparent disabled:tw-text-white/20 disabled:tw-border-white/20"
+        >
+          <span>
+            Sign in/register
+          </span>
+        </button>
+        <button
+          class="disabled:tw-cursor-default disabled:tw-text-white/50 tw-cursor-pointer tw-flex tw-flex-row tw-font-sans tw-gap-16 tw-items-center tw-justify-center tw-leading-none tw-rounded-8 tw-text-16 tw-text-white tw-uppercase tw-w-full tw-whitespace-nowrap tw-border-none tw-font-500 tw-bg-white/15 enabled:hover:tw-bg-white/20 tw-border-white disabled:tw-border-white/50 tw-p-12"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
     class="wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover  tw-dark"
     style="background-image: url(undefined);"
   >
@@ -10,8 +40,18 @@ exports[`PlayBuilderPage should render should show register modal when user is n
       class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80"
     >
       <div
-        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"
+        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-10"
       >
+        <div
+          class="tw-flex tw-items-center tw-gap-4 tw-px-8 tw-py-4 tw-border tw-border-solid tw-rounded-8 tw-text-green tw-border-green tw-bg-green/20"
+        >
+          <svg />
+          <span
+            class="tw-text-12 tw-font-500"
+          >
+            Voting Round 1
+          </span>
+        </div>
         <div
           class="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14"
         >
@@ -60,7 +100,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
             style="width: 985px;"
           >
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -85,7 +125,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
               />
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -113,7 +153,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -129,7 +169,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[1172px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[1172px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
@@ -145,7 +185,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -161,7 +201,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -189,7 +229,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -324,8 +364,18 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
       class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80"
     >
       <div
-        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"
+        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-10"
       >
+        <div
+          class="tw-flex tw-items-center tw-gap-4 tw-px-8 tw-py-4 tw-border tw-border-solid tw-rounded-8 tw-text-green tw-border-green tw-bg-green/20"
+        >
+          <svg />
+          <span
+            class="tw-text-12 tw-font-500"
+          >
+            Voting Round 1
+          </span>
+        </div>
         <div
           class="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14"
         >
@@ -374,7 +424,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             style="width: 985px;"
           >
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -399,7 +449,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               />
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -427,7 +477,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -443,7 +493,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[1172px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[1172px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
@@ -459,7 +509,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -475,7 +525,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -503,7 +553,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"

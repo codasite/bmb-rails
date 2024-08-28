@@ -135,7 +135,7 @@ describe('MatchTree', () => {
         team2: { id: 32, name: 'Team 16' },
       },
     ]
-    const matchTree = MatchTree.fromMatchRes(16, matches)
+    const matchTree = MatchTree.fromMatchRes({ numTeams: 16, matches })
 
     expect(matchTree).not.toBeNull()
     expect(matchTree?.rounds.length).toBe(4)
@@ -403,7 +403,7 @@ describe('MatchTree', () => {
       { roundIndex: 2, matchIndex: 0, winningTeamId: 17 },
     ]
 
-    const matchTree = MatchTree.fromPicks(8, matches, picks)
+    const matchTree = MatchTree.fromPicks({ numTeams: 8, matches }, picks)
 
     expect(matchTree).not.toBeNull()
     expect(matchTree?.rounds.length).toBe(3)
@@ -952,8 +952,8 @@ describe('MatchTree', () => {
       { roundIndex: 2, matchIndex: 0, winningTeamId: 17 },
     ]
 
-    const tree1 = MatchTree.fromPicks(8, matches, picks)
-    const tree2 = MatchTree.fromMatchRes(8, matches)
+    const tree1 = MatchTree.fromPicks({ numTeams: 8, matches }, picks)
+    const tree2 = MatchTree.fromMatchRes({ numTeams: 8, matches })
 
     tree2?.syncPick(tree1?.getRootMatch())
 

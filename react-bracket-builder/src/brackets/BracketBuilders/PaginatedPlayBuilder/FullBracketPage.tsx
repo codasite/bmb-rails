@@ -9,6 +9,7 @@ import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
 import { PlayBuilderProps } from '../PlayBracketBuilder/types'
 import { DarkModeContext } from '../../shared/context/context'
+import { BracketHeaderTag } from '../BracketHeaderTag'
 
 interface FullBracketPageProps extends PlayBuilderProps {
   onEditClick?: () => void
@@ -30,7 +31,16 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
       }}
     >
       <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
-        <ThemeSelector />
+        <div className="tw-self-center">
+          <div className="tw-mb-10">
+            <BracketHeaderTag
+              text={`Voting Round ${matchTree.liveRoundIndex + 1}`}
+              color="green"
+            />
+          </div>
+          <ThemeSelector />
+        </div>
+
         {matchTree && (
           <ScaledBracket
             BracketComponent={PickableBracket}

@@ -8,6 +8,7 @@ import { PlayBuilderButtons } from './PlayBuilderButtons'
 import { DarkModeContext } from '../../shared/context/context'
 import { VotingTeamSlot } from '../../../features/VotingBracket/VotingTeamSlot'
 import { TeamSlotToggle } from '../../shared/components/TeamSlot'
+import { BracketHeaderTag } from '../BracketHeaderTag'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const { matchTree, setMatchTree } = props
@@ -25,7 +26,11 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
         <div
           className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80`}
         >
-          <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center">
+          <div className="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-10">
+            <BracketHeaderTag
+              text={`Voting Round ${matchTree.liveRoundIndex + 1}`}
+              color="green"
+            />
             <ThemeSelector />
           </div>
           <PickableBracket

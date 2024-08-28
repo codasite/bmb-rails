@@ -18,6 +18,10 @@ import { paymentsHandler } from './handlers/dashboard/payments/paymentsHandler'
 import { SetTournamentFeeModal } from './modals/dashboard/brackets/SetTournamentFeeModal'
 import { LockLiveTournamentModal } from './modals/dashboard/brackets/LockLiveTournamentModal'
 import CompleteRoundModal from './features/VotingBracket/CompleteRoundModal'
+import { getBracketMeta } from './brackets/shared/components/Bracket/utils'
+import { Nullable } from './utils/types'
+import { MatchTree } from './brackets/shared/models/MatchTree'
+import { PlayStorage } from './brackets/shared/storages/PlayStorage'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -102,9 +106,23 @@ function renderPlayBracket(appObj: WpbbAppObj) {
     userCanPlayBracketForFree,
   } = appObj
   if (bracket) {
+    const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
+    const meta = getBracketMeta(bracket)
+    let tree: MatchTree
+    const storedPlay = playStorage.loadPlay(bracket.id) || play
+    if (storedPlay) {
+      tree = MatchTree.fromPicks(bracket, storedPlay.picks)
+    } else if (bracket.isVoting && bracket.liveRoundIndex > 0) {
+      tree = MatchTree.fromPicks(bracket, bracket.results)
+    } else {
+      tree = MatchTree.fromMatchRes(bracket)
+    }
+
     renderDiv(
       <App>
         <PlayBuilderPage
+          matchTree={tree}
+          bracketMeta={meta}
           bracket={bracket}
           play={play}
           bracketProductArchiveUrl={bracketProductArchiveUrl}

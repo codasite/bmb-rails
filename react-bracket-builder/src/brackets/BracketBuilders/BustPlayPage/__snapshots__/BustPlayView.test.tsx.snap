@@ -79,7 +79,7 @@ exports[`BustPlayView renders page correctly 1`] = `
             style="width: 700px;"
           >
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
@@ -107,7 +107,7 @@ exports[`BustPlayView renders page correctly 1`] = `
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
@@ -135,7 +135,7 @@ exports[`BustPlayView renders page correctly 1`] = `
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
