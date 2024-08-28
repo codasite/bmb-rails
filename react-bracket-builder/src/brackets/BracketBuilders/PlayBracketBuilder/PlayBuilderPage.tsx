@@ -11,7 +11,6 @@ import { BracketRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
 import {
-  getBracketMeta,
   getBracketWidth,
 } from '../../shared/components/Bracket/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
@@ -22,7 +21,7 @@ import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import StripePaymentModal from './StripePaymentModal'
 import { logger } from '../../../utils/Logger'
 
-const PlayPage = (props: {
+const PlayBuilderPage = (props: {
   bracketProductArchiveUrl: string
   myPlayHistoryUrl: string
   isUserLoggedIn: boolean
@@ -252,7 +251,7 @@ const PlayPage = (props: {
 }
 
 const WrappedPlayBuilderPage = WithWindowDimensions(
-  WithMatchTree(WithBracketMeta(PlayPage))
+  WithMatchTree(WithBracketMeta(PlayBuilderPage))
 )
 
 export default WrappedPlayBuilderPage
