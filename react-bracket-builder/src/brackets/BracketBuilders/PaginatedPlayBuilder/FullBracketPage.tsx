@@ -33,10 +33,12 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
       <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
         <div className="tw-self-center">
           <div className="tw-mb-10">
-            <BracketHeaderTag
-              text={`Voting Round ${matchTree.liveRoundIndex + 1}`}
-              color="green"
-            />
+            {matchTree.isVoting && (
+              <BracketHeaderTag
+                text={`Voting Round ${matchTree.liveRoundIndex + 1}`}
+                color="green"
+              />
+            )}
           </div>
           <ThemeSelector />
         </div>
