@@ -55,7 +55,7 @@ const PrintPlayPage = (props: PrintBracketPageProps) => {
     setInchWidth(inchWidth)
     setBracketMeta({ title, date })
 
-    const tree = MatchTree.fromPicks({numTeams, matches}, picks)
+    const tree = MatchTree.fromPicks({ numTeams, matches }, picks)
 
     if (tree) {
       setMatchTree(tree)

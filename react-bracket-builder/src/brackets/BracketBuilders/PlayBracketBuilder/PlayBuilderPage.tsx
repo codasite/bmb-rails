@@ -10,9 +10,7 @@ import {
 import { BracketRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
-import {
-  getBracketWidth,
-} from '../../shared/components/Bracket/utils'
+import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'

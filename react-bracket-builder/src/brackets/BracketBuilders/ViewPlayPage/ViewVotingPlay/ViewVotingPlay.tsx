@@ -35,9 +35,7 @@ const ViewVotingPlay = (props: {
         darkMode ? ' tw-dark' : ''
       }`}
       style={{
-        backgroundImage: `url(${
-          darkMode ? darkBracketBg : lightBracketBg
-        })`,
+        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
       <div

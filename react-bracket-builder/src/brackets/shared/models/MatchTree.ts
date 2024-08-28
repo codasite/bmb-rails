@@ -108,7 +108,7 @@ export class MatchTree {
       rounds: rounds,
       wildcardPlacement: tree.wildcardPlacement,
       isVoting: tree.isVoting,
-      liveRoundIndex: tree.liveRoundIndex
+      liveRoundIndex: tree.liveRoundIndex,
     }
   }
 
@@ -280,7 +280,10 @@ export class MatchTree {
   }
 
   static fromMatchRes(
-    bracket: Pick<BracketRes, 'matches'| 'numTeams'| 'isVoting' |'liveRoundIndex' >,
+    bracket: Pick<
+      BracketRes,
+      'matches' | 'numTeams' | 'isVoting' | 'liveRoundIndex'
+    >,
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
     const numRounds = getNumRounds(bracket.numTeams)
@@ -291,7 +294,7 @@ export class MatchTree {
         rounds: nestedMatches,
         wildcardPlacement,
         isVoting: bracket.isVoting,
-        liveRoundIndex: bracket.liveRoundIndex
+        liveRoundIndex: bracket.liveRoundIndex,
       })
     } catch (e) {
       return null
@@ -299,14 +302,14 @@ export class MatchTree {
   }
 
   static fromPicks(
-    bracket: Pick<BracketRes, 'matches'| 'numTeams'| 'isVoting' |'liveRoundIndex' >,
+    bracket: Pick<
+      BracketRes,
+      'matches' | 'numTeams' | 'isVoting' | 'liveRoundIndex'
+    >,
     picks: MatchPick[],
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
-    const matchTree = MatchTree.fromMatchRes(
-      bracket,
-      wildcardPlacement,
-    )
+    const matchTree = MatchTree.fromMatchRes(bracket, wildcardPlacement)
     if (!matchTree) {
       return null
     }
@@ -373,7 +376,12 @@ export class MatchTree {
       newRound.matches = matches
       return newRound
     })
-    const tree = new MatchTree(rounds, wildcardPlacement, matchTreeRepr.isVoting, matchTreeRepr.liveRoundIndex)
+    const tree = new MatchTree(
+      rounds,
+      wildcardPlacement,
+      matchTreeRepr.isVoting,
+      matchTreeRepr.liveRoundIndex
+    )
     return tree
   }
 }

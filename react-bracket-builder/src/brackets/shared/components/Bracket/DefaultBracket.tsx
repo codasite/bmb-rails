@@ -114,12 +114,12 @@ export const DefaultBracket = (props: BracketProps) => {
     numRounds: number
   ): JSX.Element[] => {
     return rounds.map((matches, i) => {
-      let roundIndex: number;
+      let roundIndex: number
       if (position === 'left') {
         roundIndex = i
       }
       if (position === 'right') {
-        roundIndex = numRounds - i - 2;
+        roundIndex = numRounds - i - 2
       }
       if (position === 'center') {
         roundIndex = numRounds - 1

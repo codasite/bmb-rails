@@ -91,7 +91,7 @@ describe('PlayBuilderPage', () => {
     )
     const { asFragment } = render(
       <PlayBuilderPage
-        matchTree={MatchTree.fromPicks({numTeams: 4, matches}, picks)}
+        matchTree={MatchTree.fromPicks({ numTeams: 4, matches }, picks)}
         isUserLoggedIn={true}
       />
     )
