@@ -160,6 +160,10 @@ class BracketIconButtons {
   public static function most_popular_picks_btn($bracket): false|string {
     $copy_link = get_permalink($bracket->id) . 'most-popular-picks';
 
-    return DashboardCommon::icon_link('percent.svg', $copy_link);
+    return DashboardCommon::icon_link(
+      'Most Popular',
+      'percent.svg',
+      $copy_link
+    );
   }
 }

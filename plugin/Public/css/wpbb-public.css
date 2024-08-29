@@ -104,7 +104,7 @@
   transition: max-width 300ms linear;
 }
 .wpbb-icon-btn:hover .wpbb-icon-btn-label {
-  max-width: 100px;
+  max-width: 155px; /** setting this value to wider than the widest label forces the transitioned width to fit the contents */
 }
 
 /** DASHBOARD END */
