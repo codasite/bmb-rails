@@ -25,10 +25,14 @@ class BracketIconButtons {
     $play_link = get_permalink($bracket->id) . 'play';
 
     return DashboardCommon::icon_btn(
+      'Share',
       'share.svg',
-      'submit',
-      classes: 'wpbb-share-bracket-button',
-      attributes: "data-play-bracket-url='$play_link' data-bracket-title='$bracket->title'"
+      classes: ['wpbb-share-bracket-button'],
+      data: [
+        'label' => 'Share',
+        'play-bracket-url' => $play_link,
+        'bracket-title' => $bracket->title,
+      ]
     );
   }
 
@@ -38,10 +42,14 @@ class BracketIconButtons {
     }
 
     return DashboardCommon::icon_btn(
+      'Lock',
       'lock.svg',
-      'submit',
-      classes: 'wpbb-lock-tournament-button',
-      attributes: "data-bracket-id='$bracket->id' data-bracket-title='$bracket->title'"
+      classes: ['wpbb-lock-tournament-button'],
+      data: [
+        'label' => 'Lock',
+        'bracket-id' => $bracket->id,
+        'bracket-title' => $bracket->title,
+      ]
     );
   }
 
@@ -52,10 +60,14 @@ class BracketIconButtons {
     $bracket_id = $bracket->id;
 
     return DashboardCommon::icon_btn(
+      'Delete',
       'trash.svg',
-      'submit',
-      classes: 'wpbb-delete-bracket-button',
-      attributes: "data-bracket-id='$bracket_id' data-bracket-title='$bracket->title'"
+      classes: ['wpbb-delete-bracket-button'],
+      data: [
+        'label' => 'Delete',
+        'bracket-id' => $bracket_id,
+        'bracket-title' => $bracket->title,
+      ]
     );
   }
 
@@ -74,9 +86,14 @@ class BracketIconButtons {
       return '';
     }
     return DashboardCommon::icon_btn(
+      'Set Fee',
       'dollar_shield.svg',
-      classes: 'wpbb-set-tournament-fee-button',
-      attributes: "data-bracket-id='$bracket->id' data-fee='$bracket->fee'"
+      classes: ['wpbb-set-tournament-fee-button'],
+      data: [
+        'label' => 'Set Fee',
+        'bracket-id' => $bracket->id,
+        'fee' => $bracket->fee,
+      ]
     );
   }
 
@@ -99,10 +116,16 @@ class BracketIconButtons {
     $year = $bracket->year;
 
     return DashboardCommon::icon_btn(
+      'Edit',
       'pencil.svg',
-      'submit',
-      classes: 'wpbb-edit-bracket-button',
-      attributes: "data-bracket-id='$id' data-bracket-title='$title' data-bracket-month='$month' data-bracket-year='$year'"
+      classes: ['wpbb-edit-bracket-button'],
+      data: [
+        'label' => 'Edit',
+        'bracket-id' => $id,
+        'bracket-title' => $title,
+        'bracket-month' => $month,
+        'bracket-year' => $year,
+      ]
     );
   }
 
@@ -131,7 +154,7 @@ class BracketIconButtons {
     }
     $copy_link = get_permalink($bracket->id) . 'copy';
 
-    return DashboardCommon::icon_link('copy.svg', $copy_link);
+    return DashboardCommon::icon_link('Duplicate', 'copy.svg', $copy_link);
   }
 
   public static function most_popular_picks_btn($bracket): false|string {
