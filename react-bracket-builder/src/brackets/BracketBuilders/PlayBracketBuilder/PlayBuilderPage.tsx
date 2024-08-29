@@ -249,7 +249,7 @@ const PlayBuilderPage = (props: {
 }
 
 const WrappedPlayBuilderPage = WithWindowDimensions(
-  WithMatchTree(WithBracketMeta(PlayBuilderPage))
+  WithMatchTree(PlayBuilderPage)
 )
 
 export default WrappedPlayBuilderPage

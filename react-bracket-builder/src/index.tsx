@@ -22,6 +22,7 @@ import { getBracketMeta } from './brackets/shared/components/Bracket/utils'
 import { Nullable } from './utils/types'
 import { MatchTree } from './brackets/shared/models/MatchTree'
 import { PlayStorage } from './brackets/shared/storages/PlayStorage'
+import { BracketMetaContext } from './brackets/shared/context/context'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -120,17 +121,19 @@ function renderPlayBracket(appObj: WpbbAppObj) {
 
     renderDiv(
       <App>
-        <PlayBuilderPage
-          matchTree={tree}
-          bracketMeta={meta}
-          bracket={bracket}
-          play={play}
-          bracketProductArchiveUrl={bracketProductArchiveUrl}
-          myPlayHistoryUrl={myPlayHistoryUrl}
-          isUserLoggedIn={isUserLoggedIn}
-          userCanPlayBracketForFree={userCanPlayBracketForFree}
-          loginUrl={appObj.loginUrl}
-        />
+        <BracketMetaContext.Provider value={meta}>
+          <PlayBuilderPage
+            matchTree={tree}
+            bracketMeta={meta}
+            bracket={bracket}
+            play={play}
+            bracketProductArchiveUrl={bracketProductArchiveUrl}
+            myPlayHistoryUrl={myPlayHistoryUrl}
+            isUserLoggedIn={isUserLoggedIn}
+            userCanPlayBracketForFree={userCanPlayBracketForFree}
+            loginUrl={appObj.loginUrl}
+          />
+        </BracketMetaContext.Provider>
       </App>,
       'wpbb-play-bracket'
     )
