@@ -21,16 +21,21 @@ div.react-select__control {
   background-color: transparent;
   border-color: rgba(255, 255, 255, 0.5);
   border-radius: 8px;
-  padding: 16px;
+  padding: 8px;
   font-weight: 600;
-  font-size: 24px;
+  font-size: 16px;
 }
 div.react-select__control:hover {
   cursor: pointer;
 }
 
+div.react-select__control--menu-is-open {
+  border-radius: 8px 8px 0 0;
+}
+
 div.react-select__single-value {
   color: rgba(255, 255, 255, 0.5);
+  text-align: center;
 }
 
 span.react-select__indicator-separator {
@@ -45,11 +50,18 @@ div.react-select__menu {
   background-color: #010433;
   text-align: center;
   margin-bottom: 0;
+  margin-top: 1px;
   border-radius: 0 0 8px 8px;
   color: rgba(255, 255, 255, 0.5);
 }
 div.react-select__menu-list {
-  padding: 8px 0;
+  padding: 0;
+}
+
+div.react-select__option {
+  font-weight: 600;
+  font-size: 16px;
+  padding: 8px;
 }
 
 div.react-select__option--is-focused {
@@ -60,4 +72,16 @@ div.react-select__option--is-focused {
 div.react-select__option--is-selected {
   cursor: pointer;
   background-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 640px) {
+  div.react-select__control {
+    padding: 16px;
+    font-size: 24px;
+  }
+  div.react-select__option {
+    font-weight: 600;
+    font-size: 24px;
+    padding: 16px;
+  }
 }

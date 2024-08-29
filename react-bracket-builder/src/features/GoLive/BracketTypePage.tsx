@@ -46,23 +46,26 @@ export const BracketTypePage = (props: BracketTypePageProps) => {
       subTitle={props.bracket.title}
       {...props}
     >
-      <H4 className="tw-text-center tw-mb-30 md:tw-mb-60">
+      <H4 className="tw-text-center tw-mb-16 sm:tw-mb-30">
         Select Tournament Type
       </H4>
       <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-pb-60">
-        <Select
-          options={options}
-          defaultValue={options[0]}
-          classNamePrefix="react-select"
-          isSearchable={false}
-          onChange={onChange}
-        />
+        <div className="tw-w-full tw-max-w-[250px] sm:tw-max-w-[350px]">
+          <Select
+            options={options}
+            defaultValue={options[0]}
+            classNamePrefix="react-select"
+            isSearchable={false}
+            onChange={onChange}
+          />
+        </div>
       </div>
       <Button
         disabled={loading}
+        color="green"
         onClick={onContinue}
         className="tw-mt-15"
-        variant="filled"
+        variant="outlined"
       >
         Next
       </Button>
