@@ -155,7 +155,7 @@ class BracketListItem {
     ?>
     <button
       class="wpbb-complete-round-btn tw-text-white tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-rounded-8 hover:tw-cursor-pointer tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
-      data-bracket-id="<?php echo $bracket->id; ?>" data-live-round-index="<?php echo $bracket->live_round_index; ?>"
+      data-bracket-id="<?php echo $bracket->id; ?>" data-live-round-index="<?php echo $bracket->live_round_index; ?>" data-is-final-round="<?php echo $bracket->live_round_index_is_final() ? 'true' : 'false'; ?>"
     >
       <?php echo PartialsCommon::icon('arrow_right'); ?>
     <span class="tw-font-sans tw-font-700 tw-uppercase">Close round <?php echo $bracket->live_round_index +
