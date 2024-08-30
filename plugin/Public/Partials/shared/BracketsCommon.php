@@ -154,8 +154,11 @@ class BracketsCommon {
     <?php return ob_get_clean();
   }
 
-  public static function get_bracket_tag($status): false|string {
-    switch ($status) {
+  public static function get_bracket_status_tag($bracket): false|string {
+    if ($bracket->is_voting) {
+      return self::voting_bracket_tag($bracket);
+    }
+    switch ($bracket->status) {
       case 'publish':
         return self::live_bracket_tag();
       case 'private':

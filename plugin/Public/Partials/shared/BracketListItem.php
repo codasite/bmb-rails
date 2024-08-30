@@ -27,8 +27,7 @@ class BracketListItem {
           ); ?>-Team Bracket</span>
         </div>
         <div class="tw-flex tw-gap-4 tw-items-center">
-          <?php echo BracketsCommon::get_bracket_tag($bracket->status); ?>
-          <?php echo BracketsCommon::voting_bracket_tag($bracket); ?>
+          <?php echo BracketsCommon::get_bracket_status_tag($bracket); ?>
           <?php echo file_get_contents(
             WPBB_PLUGIN_DIR . 'Public/assets/icons/bar_chart.svg'
           ); ?>
