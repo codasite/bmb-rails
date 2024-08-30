@@ -14,7 +14,7 @@ export default function CompleteRoundModal() {
   const [liveRoundIndex, setLiveRoundIndex] = useState(0)
 
   addClickHandlers({
-    buttonClassName: 'wpbb-complete-round-button',
+    buttonClassName: 'wpbb-complete-round-btn',
     onButtonClick: (b) => {
       setBracketId(parseInt(b.dataset.bracketId))
       setLiveRoundIndex(parseInt(b.dataset.liveRoundIndex))

@@ -69,9 +69,7 @@ class DashboardCommon {
   private static function build_icon_btn_contents($label, $icon_path) {
     ob_start(); ?>
       <div class="tw-h-40 tw-w-40 tw-p-8 tw-flex tw-flex-col tw-items-center tw-justify-center">
-      <?php echo file_get_contents(
-        WPBB_PLUGIN_DIR . '/Public/assets/icons/' . $icon_path
-      ); ?>
+      <?php echo PartialsCommon::icon($icon_path); ?>
       </div>
       <div class="wpbb-icon-btn-label">
         <span class="tw-whitespace-nowrap tw-uppercase tw-font-500 tw-font-sans tw-pr-8"><?php echo $label; ?></span>
@@ -93,11 +91,9 @@ class DashboardCommon {
   public static function add_to_apparel_btn($endpoint): false|string {
     ob_start(); ?>
     <a
-      class="wpbb-add-apparel-btn tw-text-white tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-rounded-8 hover:tw-cursor-pointer tw-leading-[1.15] tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
+      class="tw-text-white tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-rounded-8 hover:tw-cursor-pointer tw-leading-[1.15] tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
       href="<?php echo esc_url($endpoint); ?>">
-      <?php echo file_get_contents(
-        WPBB_PLUGIN_DIR . 'Public/assets/icons/plus.svg'
-      ); ?>
+      <?php echo PartialsCommon::icon('plus'); ?>
       <span class="tw-font-700">Add to Apparel</span>
     </a>
     <?php return PartialsCommon::gradient_border_wrap(ob_get_clean(), [
