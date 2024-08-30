@@ -58,7 +58,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             disabled={processing}
             fontSize={16}
           >
-            {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
+            {matchTree.allPicked() ? 'Complete Bracket' : 'Update Results'}
           </ActionButton>
         </div>
         <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px] tw-mt-[52px]">

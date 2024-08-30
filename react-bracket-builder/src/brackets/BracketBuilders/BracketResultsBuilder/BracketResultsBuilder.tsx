@@ -129,7 +129,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
               size="big"
               onClick={handleUpdatePicks}
             >
-              {complete ? 'Complete Bracket' : 'Update Picks'}
+              {complete ? 'Complete Bracket' : 'Update Results'}
             </ActionButton>
             <div className="tw-flex tw-gap-20 tw-items-center tw-self-center">
               <Checkbox

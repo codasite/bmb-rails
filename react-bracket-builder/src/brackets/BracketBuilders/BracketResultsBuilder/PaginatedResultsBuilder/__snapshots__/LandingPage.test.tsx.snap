@@ -185,7 +185,7 @@ exports[`LandingPage renders page correctly 1`] = `
       <button
         class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-cursor-pointer tw-bg-yellow/15 tw-text-yellow tw-gap-10 tw-text-24 tw-font-700 tw-rounded-8 tw-h-[48px] tw-py-16 tw-border-solid tw-border-4 tw-border-yellow"
       >
-        Update Picks
+        Update Results
       </button>
     </div>
   </div>

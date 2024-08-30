@@ -142,7 +142,7 @@ class BracketListItem {
       class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 hover:tw-bg-yellow hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
       href="<?php echo esc_url($endpoint); ?>">
       <?php echo PartialsCommon::icon('trophy_24'); ?>
-      <span class="tw-font-500">Score tournament</span>
+      <span class="tw-font-500">Update Results</span>
     </a>
     <?php return ob_get_clean();
   }

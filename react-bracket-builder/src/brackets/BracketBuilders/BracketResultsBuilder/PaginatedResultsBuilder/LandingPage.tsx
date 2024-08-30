@@ -29,7 +29,7 @@ export const LandingPage = (props: LandingPageProps) => {
           />
         )}
         <ActionButton variant="yellow" size="small" onClick={onStart}>
-          Update Picks
+          Update Results
         </ActionButton>
       </div>
     </div>
