@@ -18,7 +18,7 @@ export const LandingPage = (props: LandingPageProps) => {
       className={`wpbb-reset tw-flex tw-uppercase tw-min-h-screen tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark `}
       style={{ backgroundImage: `url(${darkBracketBg})` }}
     >
-      <div className="tw-flex tw-flex-col tw-justify-center px-60 tw-max-w-[268px] tw-m-auto tw-gap-80">
+      <div className="tw-flex tw-flex-col tw-justify-center tw-items-center px-60 tw-max-w-[268px] tw-m-auto tw-gap-80">
         <h1 className="tw-text-center tw-text-48 tw-font-700 tw-w-">
           Who You Got?
         </h1>
