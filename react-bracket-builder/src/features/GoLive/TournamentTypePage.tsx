@@ -7,13 +7,13 @@ import { GoLiveSubPageProps } from './types'
 import { logger } from '../../utils/Logger'
 import Select from 'react-select'
 
-interface BracketTypePageProps extends GoLiveSubPageProps {}
+interface TournamentTypePageProps extends GoLiveSubPageProps {}
 interface Option {
   value: string
   label: string
 }
 
-export const BracketTypePage = (props: BracketTypePageProps) => {
+export const TournamentTypePage = (props: TournamentTypePageProps) => {
   const [loading, setLoading] = useState(false)
 
   const options: Option[] = [
@@ -46,7 +46,7 @@ export const BracketTypePage = (props: BracketTypePageProps) => {
       subTitle={props.bracket.title}
       {...props}
     >
-      <H4 className="tw-text-center tw-mb-16 sm:tw-mb-30">
+      <H4 className="tw-text-center tw-mb-16 sm:tw-mb-30 !tw-text-white/50">
         Select Tournament Type
       </H4>
       <div className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-pb-60">
