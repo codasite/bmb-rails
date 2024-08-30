@@ -12,12 +12,14 @@ export default function CompleteRoundModal() {
   const [errorMessage, setErrorMessage] = useState('')
   const [bracketId, setBracketId] = useState(0)
   const [liveRoundIndex, setLiveRoundIndex] = useState(0)
+  const [isFinalRound, setIsFinalRound] = useState(false)
 
   addClickHandlers({
-    buttonClassName: 'wpbb-complete-round-button',
+    buttonClassName: 'wpbb-complete-round-btn',
     onButtonClick: (b) => {
       setBracketId(parseInt(b.dataset.bracketId))
       setLiveRoundIndex(parseInt(b.dataset.liveRoundIndex))
+      setIsFinalRound(b.dataset.isFinalRound === 'true')
       setShow(true)
       setErrorMessage('')
     },
@@ -42,9 +44,12 @@ export default function CompleteRoundModal() {
 
   return (
     <Modal show={show} setShow={setShow}>
-      <ModalHeader text={`Complete Voting Round ${liveRoundIndex + 1}`} />
+      <ModalHeader text={`Close Voting Round ${liveRoundIndex + 1}`} />
       <p className="tw-text-center">
-        Complete the current voting round and set the next round to live.
+        Close the current voting round and
+        {isFinalRound
+          ? ' complete the tournament.'
+          : ' set the next round to live.'}
       </p>
       <div className="tw-flex tw-flex-col tw-gap-10">
         <div className="tw-flex tw-gap-10 tw-items-center"></div>
@@ -52,7 +57,7 @@ export default function CompleteRoundModal() {
           <p className="tw-text-red tw-text-center">{errorMessage}</p>
         )}
         <ConfirmButton disabled={loading} onClick={onCompleteRound}>
-          Complete Round
+          Close Round
         </ConfirmButton>
         <CancelButton onClick={() => setShow(false)} />
       </div>

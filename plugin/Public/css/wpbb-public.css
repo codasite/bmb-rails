@@ -107,6 +107,11 @@
   max-width: 155px; /** setting this value to wider than the widest label forces the transitioned width to fit the contents */
 }
 
+.wpbb-voting-bracket-tag,
+.wpbb-complete-round-gradient-border {
+  background: linear-gradient(49deg, #00e24f 26.85%, #21ffe9 73.15%);
+}
+
 /** DASHBOARD END */
 
 /** USER PROFILE START */

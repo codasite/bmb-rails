@@ -115,13 +115,13 @@ class BracketsCommon {
     <?php return ob_get_clean();
   }
 
-  public static function voting_bracket_tag(Bracket $bracket): false|string {
+  public static function voting_status_tag(Bracket $bracket): false|string {
     if (!$bracket->is_voting) {
       return '';
     }
     $round = $bracket->live_round_index + 1;
     if ($bracket->status === 'complete') {
-      return self::bracket_tag('Voting', 'green');
+      return self::bracket_tag('Complete', 'white');
     }
     return self::bracket_tag("Voting Round $round", 'green');
   }
@@ -154,8 +154,11 @@ class BracketsCommon {
     <?php return ob_get_clean();
   }
 
-  public static function get_bracket_tag($status): false|string {
-    switch ($status) {
+  public static function get_bracket_status_tag($bracket): false|string {
+    if ($bracket->is_voting) {
+      return self::voting_status_tag($bracket);
+    }
+    switch ($bracket->status) {
       case 'publish':
         return self::live_bracket_tag();
       case 'private':

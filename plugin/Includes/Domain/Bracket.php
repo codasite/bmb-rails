@@ -87,6 +87,10 @@ class Bracket extends PostBase implements PostBracketInterface {
     return $num_rounds;
   }
 
+  public function live_round_index_is_final(): bool {
+    return $this->live_round_index === $this->get_num_rounds() - 1;
+  }
+
   public function highest_possible_score(): int {
     $point_values = [1, 2, 4, 8, 16, 32];
 
