@@ -18,8 +18,8 @@ import { paymentsHandler } from './handlers/dashboard/payments/paymentsHandler'
 import { SetTournamentFeeModal } from './modals/dashboard/brackets/SetTournamentFeeModal'
 import { LockLiveTournamentModal } from './modals/dashboard/brackets/LockLiveTournamentModal'
 import CompleteRoundModal from './features/VotingBracket/CompleteRoundModal'
+import mergePicksFromPlayAndResults from './features/VotingBracket/mergePicksFromPlayAndResults'
 import { getBracketMeta } from './brackets/shared/components/Bracket/utils'
-import { Nullable } from './utils/types'
 import { MatchTree } from './brackets/shared/models/MatchTree'
 import { PlayStorage } from './brackets/shared/storages/PlayStorage'
 import { BracketMetaContext } from './brackets/shared/context/context'
@@ -110,11 +110,16 @@ function renderPlayBracket(appObj: WpbbAppObj) {
     const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
     const meta = getBracketMeta(bracket)
     let tree: MatchTree
-    const storedPlay = playStorage.loadPlay(bracket.id) || play
+    const storedPlay = playStorage.loadPlay(bracket.id)
     if (storedPlay) {
       tree = MatchTree.fromPicks(bracket, storedPlay.picks)
-    } else if (bracket.isVoting && bracket.liveRoundIndex > 0) {
-      tree = MatchTree.fromPicks(bracket, bracket.results)
+    } else if (bracket.isVoting) {
+      tree = MatchTree.fromPicks(
+        bracket,
+        mergePicksFromPlayAndResults(bracket.results, play)
+      )
+    } else if (play) {
+      tree = MatchTree.fromPicks(bracket, play.picks)
     } else {
       tree = MatchTree.fromMatchRes(bracket)
     }
