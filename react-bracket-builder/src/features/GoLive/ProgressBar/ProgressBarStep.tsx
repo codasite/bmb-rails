@@ -21,11 +21,11 @@ export const ProgressBarStep = (props: {
   return (
     <div
       className="tw-flex tw-flex-col tw-items-center tw-gap-5"
-      style={{ flex: `0 0 ${basis}%` }}
+      style={{ flex: `1` }}
     >
       <div className={`tw-h-4 tw-w-full ${stepClass}`} />
       {showText && (
-        <span className="tw-text-white tw-text-16 tw-font-500">
+        <span className="tw-text-white tw-text-16 tw-font-500 tw-text-center">
           {props.stepName}
         </span>
       )}
