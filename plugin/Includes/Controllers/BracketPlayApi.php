@@ -241,6 +241,43 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
     }
   }
 
+  public function update_item($request): WP_Error|WP_REST_Response {
+    $params = $request->get_params();
+    $play_id = $params['item_id'];
+    $play = $this->play_repo->get($play_id);
+    if (!$play) {
+      return new WP_Error(
+        'not-found',
+        'The requested play could not be found.',
+        ['status' => 404]
+      );
+    }
+    if (!current_user_can('wpbb_edit_play', $play_id)) {
+      return new WP_Error(
+        'unauthorized',
+        'You are not authorized to edit this play.',
+        ['status' => 403]
+      );
+    }
+    if (!$play->bracket->is_voting) {
+      return new WP_Error(
+        'unauthorized',
+        'You cannot edit a play for a non-voting bracket.',
+        ['status' => 403]
+      );
+    }
+    $current_live_round = $play->bracket->live_round_index;
+    // Filter picks to only include those for the current live round
+    $filtered_picks = array_filter($params['picks'], function ($pick) use (
+      $current_live_round
+    ) {
+      return $pick['round_index'] === $current_live_round;
+    });
+    $play = $this->play_repo->update($play, ['picks' => $filtered_picks]);
+    $serialized = $this->serializer->serialize($play);
+    return new WP_REST_Response($serialized, 200);
+  }
+
   public function generate_images($request): WP_Error|WP_REST_Response {
     $params = $request->get_params();
     $play_id = $params['item_id'];

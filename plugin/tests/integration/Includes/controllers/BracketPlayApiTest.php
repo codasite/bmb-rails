@@ -5,6 +5,7 @@ use WP_REST_Request;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
@@ -152,6 +153,84 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $play = $this->play_repo->get($response->get_data()['id']);
     $this->assertNotNull($play);
     $this->assertEquals(get_current_user_id(), $play->author);
+  }
+
+  public function test_should_update_picks() {
+    $bracket = $this->create_bracket([
+      'is_voting' => true,
+      'live_round_index' => 1,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+    $team1_id = $bracket->matches[0]->team1->id;
+    $team2_id = $bracket->matches[0]->team2->id;
+    $team3_id = $bracket->matches[1]->team1->id;
+    $team4_id = $bracket->matches[1]->team2->id;
+    $play = new Play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+    $play = $this->play_repo->add($play);
+    $data = [
+      'picks' => [
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/plays/' . $play->id);
+
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(200, $response->get_status(), print_r($response->data, true));
+    $play = $this->play_repo->get($play);
+    $this->assertEquals(3, count($play->picks));
+    $this->assertEquals($team2_id, $play->picks[0]->winning_team_id, "Team 2 should be the winner");
   }
 
   public function test_update_play_author() {

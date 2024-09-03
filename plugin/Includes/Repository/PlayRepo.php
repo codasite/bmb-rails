@@ -395,7 +395,7 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
       $this->update_play_data($play_id, $data);
     }
 
-    if ($play->picks) {
+    if ($play_id && $play->picks) {
       $this->pick_repo->update_picks($play_id, $play->picks);
     }
 
