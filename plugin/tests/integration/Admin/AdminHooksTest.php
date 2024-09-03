@@ -1,9 +1,11 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Admin;
 
+use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class AdminHooksTest extends WPBB_UnitTestCase {
+  use MatchesSnapshots;
   public function test_change_role_to_vip_should_add_new_user_profile_post() {
     $user = self::factory()->user->create_and_get();
     $user->add_role('bmb_vip');
@@ -40,5 +42,10 @@ class AdminHooksTest extends WPBB_UnitTestCase {
       'author' => $user->ID,
     ]);
     $this->assertEquals(0, count($posts));
+  }
+
+  public function test_should_add_correct_capabilities_to_administrator() {
+    $role = get_role('administrator');
+    $this->assertMatchesSnapshot($role->capabilities);
   }
 }
