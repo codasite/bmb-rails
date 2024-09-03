@@ -40,6 +40,59 @@ class PickRepo implements CustomTableInterface {
   }
 
   /**
+   * Updates the picks for a given play. If a pick does not exist, it is inserted. If a pick exists, it is updated.
+   *
+   * @param int $play_id
+   * @param array|null $new_picks
+   */
+  public function update_picks(int $play_id, array|null $new_picks): void {
+    if ($new_picks === null) {
+      return;
+    }
+
+    $old_picks = $this->get_picks($play_id);
+
+    if (empty($old_picks)) {
+      $this->insert_picks($play_id, $new_picks);
+      return;
+    }
+
+    $this->wpdb->query('START TRANSACTION');
+
+    try {
+      foreach ($new_picks as $new_pick) {
+        $pick_exists = false;
+        foreach ($old_picks as $old_pick) {
+          if (
+            $new_pick->round_index === $old_pick->round_index &&
+            $new_pick->match_index === $old_pick->match_index
+          ) {
+            $pick_exists = true;
+            if ($new_pick->winning_team_id !== $old_pick->winning_team_id) {
+              $this->wpdb->update(
+                self::table_name(),
+                [
+                  'winning_team_id' => $new_pick->winning_team_id,
+                ],
+                [
+                  'id' => $old_pick->id,
+                ]
+              );
+            }
+          }
+        }
+        if (!$pick_exists) {
+          $this->insert_pick($play_id, $new_pick);
+        }
+      }
+      $this->wpdb->query('COMMIT');
+    } catch (Exception $e) {
+      $this->wpdb->query('ROLLBACK');
+      throw $e;
+    }
+  }
+
+  /**
    * Returns whether there is a tie for most popular pick in a given bracket.
    *
    * @param int $bracket_id
@@ -215,15 +268,16 @@ class PickRepo implements CustomTableInterface {
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			bracket_play_id bigint(20) UNSIGNED NOT NULL,
-			round_index tinyint(4) NOT NULL,
-			match_index tinyint(4) NOT NULL,
-			winning_team_id bigint(20) UNSIGNED NOT NULL,
-			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_play_id) REFERENCES {$plays_table}(id) ON DELETE CASCADE,
-			FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE
-		) $charset_collate;";
+id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+bracket_play_id bigint(20) UNSIGNED NOT NULL,
+round_index tinyint(4) NOT NULL,
+match_index tinyint(4) NOT NULL,
+winning_team_id bigint(20) UNSIGNED NOT NULL,
+PRIMARY KEY (id),
+FOREIGN KEY (bracket_play_id) REFERENCES {$plays_table}(id) ON DELETE CASCADE,
+FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE,
+INDEX (round_index, match_index, winning_team_id)
+                ) $charset_collate;";
 
     // import dbDelta
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';

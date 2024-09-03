@@ -25,6 +25,70 @@ class PickRepoTest extends WPBB_UnitTestCase {
     $this->pick_repo = $this->play_repo->pick_repo;
   }
 
+  public function test_should_update_picks() {
+    $bracket = $this->create_bracket([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+    $team1_id = $bracket->matches[0]->team1->id;
+    $team2_id = $bracket->matches[0]->team2->id;
+    $team3_id = $bracket->matches[1]->team1->id;
+    $team4_id = $bracket->matches[1]->team2->id;
+    $play = new Play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+    $play = $this->play_repo->add($play);
+    $this->play_repo->update($play, ['picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team1_id,
+        ],
+    ]]);
+    $play = $this->play_repo->get($play);
+    $this->assertEquals(3, count($play->picks));
+    $this->assertEquals($team1_id, $play->picks[0]->winning_team_id);
+  }
+
   public function test_should_return_correct_most_popular_picks() {
     $bracket = $this->create_bracket([
       'matches' => [

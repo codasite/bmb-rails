@@ -15,8 +15,6 @@ use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-//namespace phpunit
-
 class BracketApiTest extends WPBB_UnitTestCase {
   use SetupAdminUser;
   use MatchesSnapshots;
