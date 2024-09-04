@@ -302,12 +302,9 @@ export class MatchTree {
 
       const team1 = match.getTeam1()
       const team2 = match.getTeam2()
-      if (!team1 || !team2) {
-        return null
-      }
-      if (team1.id === winningTeamId) {
+      if (team1?.id === winningTeamId) {
         match.team1Wins = true
-      } else if (team2.id === winningTeamId) {
+      } else if (team2?.id === winningTeamId) {
         match.team2Wins = true
       } else {
         return null
