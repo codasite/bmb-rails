@@ -47,7 +47,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     if (!bracketId || !busteeId || !picks) {
       const msg =
         'Cannot create play. Missing one of bracketId, busteeId, or picks'
-      console.error(msg)
       logger.error(msg)
       return
     }
@@ -67,7 +66,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
         window.location.href = redirectUrl
       })
       .catch((err) => {
-        console.error(err)
         logger.error(err)
       })
       .finally(() => {

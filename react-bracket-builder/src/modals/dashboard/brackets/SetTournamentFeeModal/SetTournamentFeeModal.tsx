@@ -27,7 +27,6 @@ export const ChargesEnabledContainer = (props: {
         props.setChargesEnabled(true)
       }
     } catch (error) {
-      console.error(error)
       logger.error(error)
     } finally {
       setLoadingAccount(false)

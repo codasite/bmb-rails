@@ -41,6 +41,7 @@ class Logger {
     }
   }
   error(error: Error | string, extraData: any = {}) {
+    console.error(error)
     Sentry.captureException(error, { extra: extraData })
   }
   log(message: string, extraData: any = {}) {

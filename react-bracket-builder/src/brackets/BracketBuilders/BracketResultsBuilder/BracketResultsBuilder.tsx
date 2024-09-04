@@ -85,7 +85,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
           if (dashboardUrl) window.location.href = dashboardUrl
         })
         .catch((err) => {
-          console.error(err)
           logger.error(err)
         })
     }

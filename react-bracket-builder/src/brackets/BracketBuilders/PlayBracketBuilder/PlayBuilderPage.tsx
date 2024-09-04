@@ -96,7 +96,6 @@ const PlayBuilderPage = (props: {
     const bracketId = bracket?.id
     if (!picks || !bracketId) {
       const msg = 'Cannot create play. Missing picks'
-      console.error(msg)
       logger.error(msg)
       return
     }
@@ -129,7 +128,6 @@ const PlayBuilderPage = (props: {
             playStorage.storePlay(newReq, bracket?.id)
           })
           .catch((err) => {
-            console.error('error: ', err)
             setProcessingAddToApparel(false)
             setAddToApparelError(true)
             logger.error(err)
@@ -137,7 +135,6 @@ const PlayBuilderPage = (props: {
       }
       window.location.assign(bracketProductArchiveUrl)
     } catch (err) {
-      console.error('error: ', err)
       setProcessingAddToApparel(false)
       setAddToApparelError(true)
       logger.error(err)
@@ -173,7 +170,6 @@ const PlayBuilderPage = (props: {
           setShowPaymentModal(true)
         })
         .catch((err) => {
-          console.error('error: ', err)
           setProcessingSubmitPicks(false)
           setSubmitPicksError(true)
           logger.error(err)
@@ -203,7 +199,6 @@ const PlayBuilderPage = (props: {
         }
       })
       .catch((err) => {
-        console.error('error: ', err)
         setProcessingSubmitPicks(false)
         logger.error(err)
       })
