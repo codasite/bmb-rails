@@ -118,7 +118,7 @@ function renderPlayBracket(appObj: WpbbAppObj) {
         bracket,
         mergePicksFromPlayAndResults(
           bracket.results,
-          play.picks,
+          play?.picks,
           bracket.liveRoundIndex
         )
       )
