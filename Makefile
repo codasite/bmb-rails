@@ -110,6 +110,8 @@ react-build:
 react-install:
 	cd react-bracket-builder && npm install
 
+# make react-test args="-- -t='test name'" to run specific test
+# make react-test args="-- -f='file'" to run specific file
 react-test:
 	cd react-bracket-builder && npm run test $(args)
 
