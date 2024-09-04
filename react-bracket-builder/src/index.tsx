@@ -116,7 +116,7 @@ function renderPlayBracket(appObj: WpbbAppObj) {
     } else if (bracket.isVoting) {
       tree = MatchTree.fromPicks(
         bracket,
-        mergePicksFromPlayAndResults(bracket.results, play)
+        mergePicksFromPlayAndResults(bracket.results, play.picks, bracket.liveRoundIndex)
       )
     } else if (play) {
       tree = MatchTree.fromPicks(bracket, play.picks)
