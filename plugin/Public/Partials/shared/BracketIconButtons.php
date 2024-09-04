@@ -145,6 +145,7 @@ class BracketIconButtons {
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::lock_tournament_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket); ?>
     <?php return ob_get_clean();
   }
 
@@ -165,5 +166,13 @@ class BracketIconButtons {
       'percent.svg',
       $copy_link
     );
+  }
+
+  public static function more_options_btn(): false|string {
+    return DashboardCommon::icon_btn(
+      '',
+      'ellipsis',
+    );
+
   }
 }
