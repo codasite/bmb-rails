@@ -117,21 +117,13 @@ const PlayBuilderPage = (props: {
         // regenerate play images anyway (in case they don't exist)
         await bracketApi.generatePlayImages(storedPlay.id)
       } else {
-        await bracketApi
-          .createPlay(playReq)
-          .then((res) => {
-            const playId = res.id
-            const newReq = {
-              ...playReq,
-              id: playId,
-            }
-            playStorage.storePlay(newReq, bracket?.id)
-          })
-          .catch((err) => {
-            setProcessingAddToApparel(false)
-            setAddToApparelError(true)
-            logger.error(err)
-          })
+        const res = await bracketApi.createPlay(playReq)
+        const playId = res.id
+        const newReq = {
+          ...playReq,
+          id: playId,
+        }
+        playStorage.storePlay(newReq, bracket?.id)
       }
       window.location.assign(bracketProductArchiveUrl)
     } catch (err) {
