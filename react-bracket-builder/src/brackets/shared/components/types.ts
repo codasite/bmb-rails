@@ -89,6 +89,11 @@ export interface BracketProps {
     prevMatchGap: number,
     matchHeight: number
   ) => number
+  getLineStyle?: (
+    roundIndex: number,
+    matchIndex: number,
+    teamPosition: 'left' | 'right'
+  ) => any
   setMatchTree?: (matchTree: MatchTree) => void
   onTeamClick?: TeamClickCallback
   matchTree: MatchTree

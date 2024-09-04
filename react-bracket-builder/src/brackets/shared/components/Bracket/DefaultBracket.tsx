@@ -229,9 +229,17 @@ export const DefaultBracket = (props: BracketProps) => {
           <LogoContainer {...props} bottomText={bracketDate} />
         </div>
       )}
-      <BracketLines rounds={matchTree.rounds} style={linesStyle} />
+      <BracketLines
+        rounds={matchTree.rounds}
+        style={linesStyle}
+        getLineStyle={props.getLineStyle}
+      />
       {renderWinnerAndLogo && (
-        <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
+        <RootMatchLines
+          rounds={matchTree.rounds}
+          style={linesStyle}
+          getLineStyle={props.getLineStyle}
+        />
       )}
     </div>
   )

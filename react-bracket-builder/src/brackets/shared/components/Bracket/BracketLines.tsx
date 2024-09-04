@@ -5,6 +5,11 @@ import { getUniqueTeamClass } from './utils'
 interface BracketLinesProps {
   rounds: Round[]
   style?: any
+  getLineStyle?: (
+    roundIndex: number,
+    matchIndex: number,
+    teamPosition: 'left' | 'right'
+  ) => any
 }
 
 export const BracketLines = (props: BracketLinesProps) => {
@@ -52,6 +57,11 @@ export const BracketLines = (props: BracketLinesProps) => {
         const line2FromClass = bracketLeft ? matchTeam2Class : parentTeamClass
         const line2ToClass = bracketLeft ? parentTeamClass : matchTeam2Class
 
+        const line1Style =
+          props.getLineStyle?.(roundIndex, matchIndex, 'left') || style
+        const line2Style =
+          props.getLineStyle?.(roundIndex, matchIndex, 'right') || style
+
         lines = [
           ...lines,
           <SteppedLineTo
@@ -62,7 +72,7 @@ export const BracketLines = (props: BracketLinesProps) => {
             toAnchor={toAnchor}
             orientation="h"
             delay={true}
-            {...style}
+            {...line1Style}
           />,
           <SteppedLineTo
             key={`${line2FromClass}-${line2ToClass}`}
@@ -72,7 +82,7 @@ export const BracketLines = (props: BracketLinesProps) => {
             toAnchor={toAnchor}
             orientation="h"
             delay={true}
-            {...style}
+            {...line2Style}
           />,
         ]
       })
@@ -85,7 +95,9 @@ export const BracketLines = (props: BracketLinesProps) => {
 export const RootMatchLines = (props: BracketLinesProps) => {
   const { rounds, style } = props
 
-  const rootMatch = rounds[props.rounds.length - 1].matches[0]
+  const roundIndex = props.rounds.length - 1
+  const matchIndex = 0
+  const rootMatch = rounds[roundIndex].matches[matchIndex]
   if (!rootMatch) {
     return null
   }
@@ -105,6 +117,11 @@ export const RootMatchLines = (props: BracketLinesProps) => {
     'right'
   )
 
+  const line1Style =
+    props.getLineStyle?.(roundIndex, matchIndex, 'left') || style
+  const line2Style =
+    props.getLineStyle?.(roundIndex, matchIndex, 'right') || style
+
   return (
     <div className="tw-absolute" key={'jaiefji'}>
       <LineTo
@@ -113,7 +130,7 @@ export const RootMatchLines = (props: BracketLinesProps) => {
         fromAnchor="bottom"
         toAnchor="top"
         delay={true}
-        {...style}
+        {...line1Style}
       />
       <LineTo
         from={rootTeam1Class}
@@ -121,7 +138,7 @@ export const RootMatchLines = (props: BracketLinesProps) => {
         fromAnchor="bottom"
         toAnchor="top"
         delay={true}
-        {...style}
+        {...line2Style}
       />
     </div>
   )

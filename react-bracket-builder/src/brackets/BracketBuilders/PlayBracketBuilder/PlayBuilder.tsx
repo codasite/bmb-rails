@@ -9,10 +9,15 @@ import { DarkModeContext } from '../../shared/context/context'
 import { VotingTeamSlot } from '../../../features/VotingBracket/VotingTeamSlot'
 import { TeamSlotToggle } from '../../shared/components/TeamSlot'
 import { BracketHeaderTag } from '../BracketHeaderTag'
+import { VotingBracket } from '../../../features/VotingBracket/VotingBracket'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const { matchTree, setMatchTree } = props
   const { darkMode } = useContext(DarkModeContext)
+  const bracketProps = {
+    matchTree,
+    setMatchTree,
+  }
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
@@ -35,13 +40,11 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
             )}
             <ThemeSelector />
           </div>
-          <PickableBracket
-            matchTree={matchTree}
-            setMatchTree={setMatchTree}
-            TeamSlotComponent={
-              matchTree.isVoting ? VotingTeamSlot : TeamSlotToggle
-            }
-          />
+          {matchTree.isVoting ? (
+            <VotingBracket {...bracketProps} />
+          ) : (
+            <PickableBracket {...bracketProps} />
+          )}
           <div className="tw-px-24 tw-mt-60 tw-flex tw-gap-15 tw-flex-col tw-items-stretch tw-self-stretch">
             <PlayBuilderButtons {...props} />
           </div>
