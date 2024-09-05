@@ -433,6 +433,48 @@ describe('MatchTree', () => {
     expect(round3?.matches[0]?.getWinner()?.id).toBe(17)
   })
 
+  // When a team is picked to advance twice in a row and no other picks are made
+  test('fromPicks should return correct tree when picks are incomplete', () => {
+    const matches = [
+      {
+        id: 9,
+        roundIndex: 0,
+        matchIndex: 0,
+        team1: { id: 17, name: 'Team 1' },
+        team2: { id: 18, name: 'Team 2' },
+      },
+      {
+        id: 10,
+        roundIndex: 0,
+        matchIndex: 1,
+        team1: { id: 19, name: 'Team 3' },
+        team2: { id: 20, name: 'Team 4' },
+      },
+      {
+        id: 11,
+        roundIndex: 0,
+        matchIndex: 2,
+        team1: { id: 21, name: 'Team 5' },
+        team2: { id: 22, name: 'Team 6' },
+      },
+      {
+        id: 12,
+        roundIndex: 0,
+        matchIndex: 3,
+        team1: { id: 23, name: 'Team 7' },
+        team2: { id: 24, name: 'Team 8' },
+      },
+    ]
+    const picks: MatchPick[] = [
+      { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
+      { roundIndex: 1, matchIndex: 0, winningTeamId: 17 },
+      { roundIndex: 2, matchIndex: 0, winningTeamId: 17 },
+    ]
+
+    const matchTree = MatchTree.fromPicks({ numTeams: 8, matches }, picks)
+    expect(matchTree).not.toBeNull()
+  })
+
   test('testing to match req', () => {
     const team1 = new Team('Team 1')
     const team2 = new Team('Team 2')
