@@ -6,6 +6,7 @@ import '@testing-library/jest-dom/jest-globals'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
 import { bracketApi, MatchPick, MatchRes } from '../../shared'
 import { jest } from '@jest/globals'
+import { bracketResFactory } from '../../shared/api/types/bracketFactory'
 global.wpbb_app_obj = {
   bracketProductArchiveUrl: '#',
   myPlayHistoryUrl: '#',
@@ -32,22 +33,31 @@ describe('PlayBuilderPage', () => {
   test('should render submit picks button when user is logged in', () => {
     const { asFragment } = render(
       <PlayBuilderPage
-        matchTree={MatchTree.fromNumTeams(10)}
-        bracket={{ isPrintable: true, isOpen: true }}
+        bracket={bracketResFactory({ isPrintable: true, isOpen: true })}
         isUserLoggedIn={true}
+        myPlayHistoryUrl=""
+        loginUrl=""
+        bracketProductArchiveUrl=""
       />
     )
-    expect(asFragment()).toMatchSnapshot()
+    const fragment = asFragment()
+    expect(fragment).toMatchSnapshot()
+    expect(screen.getByText('Submit Picks')).toBeEnabled()
   })
   test('should render should show register modal when user is not logged in', () => {
     const { asFragment } = render(
       <PlayBuilderPage
-        matchTree={MatchTree.fromNumTeams(10)}
-        bracket={{ isPrintable: true, isOpen: true }}
+        bracket={bracketResFactory({ isPrintable: true, isOpen: true })}
         isUserLoggedIn={false}
+        myPlayHistoryUrl=""
+        loginUrl=""
+        bracketProductArchiveUrl=""
       />
     )
     expect(asFragment()).toMatchSnapshot()
+    expect(
+      screen.getByText('Sign in or register to submit your picks!')
+    ).toBeVisible()
   })
   test('renders PlayBuilderPage from sessionStorage', () => {
     const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
@@ -66,14 +76,27 @@ describe('PlayBuilderPage', () => {
         team1: { id: 19, name: 'Team 3' },
         team2: { id: 20, name: 'Team 4' },
       },
-      { roundIndex: 1, matchIndex: 1 },
+      { roundIndex: 1, matchIndex: 0 },
     ]
     const picks: MatchPick[] = [
       { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
       { roundIndex: 0, matchIndex: 1, winningTeamId: 19 },
-      { roundIndex: 1, matchIndex: 1, winningTeamId: 19 },
+      { roundIndex: 1, matchIndex: 0, winningTeamId: 19 },
     ]
 
+    expect(window.location.search).not.toContain('loadStoredPicks=true')
+    expect(sessionStorage.getItem('wpbb_play_data_1')).toBeFalsy()
+    const { asFragment } = render(
+      <PlayBuilderPage
+        matchTree={MatchTree.fromPicks({ numTeams: 4, matches: matches }, picks)}
+        bracket={bracketResFactory({ numTeams: 4, matches: matches })}
+        isUserLoggedIn={true}
+        myPlayHistoryUrl=""
+        loginUrl=""
+        bracketProductArchiveUrl=""
+      />
+    )
+    const fragment = asFragment()
     playStorage.storePlay(
       {
         bracketId: 1,
@@ -85,17 +108,16 @@ describe('PlayBuilderPage', () => {
     expect(sessionStorage.getItem('wpbb_play_data_1')).toBeTruthy()
     const { asFragment: asFragmentSession } = render(
       <PlayBuilderPage
-        bracket={{ id: 1, numTeams: 4, matches: matches }}
+        bracket={bracketResFactory({ numTeams: 4, matches: matches })}
         isUserLoggedIn={true}
+        myPlayHistoryUrl=""
+        loginUrl=""
+        bracketProductArchiveUrl=""
       />
     )
-    const { asFragment } = render(
-      <PlayBuilderPage
-        matchTree={MatchTree.fromPicks({ numTeams: 4, matches }, picks)}
-        isUserLoggedIn={true}
-      />
-    )
-    expect(asFragmentSession()).toEqual(asFragment())
+    const sessionFragment = asFragmentSession()
+    expect(fragment).toMatchSnapshot()
+    expect(fragment).toEqual(sessionFragment)
   })
   test('click add to apparel button', async () => {
     jest.mock('../../shared/storages/PlayStorage')
@@ -142,12 +164,14 @@ describe('PlayBuilderPage', () => {
       [{ roundIndex: 1, matchIndex: 1, team2Wins: true }],
     ]
     const matchTree = MatchTree.deserialize({ rounds: matches })
-    const { asFragment } = render(
+    render(
       <PlayBuilderPage
         matchTree={matchTree}
-        bracket={{ id: 1, isPrintable: true }}
+        bracket={bracketResFactory({ id: 1, isPrintable: true })}
         bracketProductArchiveUrl="#"
         myPlayHistoryUrl="#"
+        loginUrl=""
+        isUserLoggedIn={false}
       />
     )
     expect(screen.getByText('Add to Apparel')).toBeEnabled()

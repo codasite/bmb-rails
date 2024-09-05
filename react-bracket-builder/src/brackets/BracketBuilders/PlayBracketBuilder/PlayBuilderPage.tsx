@@ -1,16 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context/context'
 import {
-  WithBracketMeta,
-  WithMatchTree,
-} from '../../shared/components/HigherOrder'
+  BracketMeta,
+  BracketMetaContext,
+  MatchTreeContext,
+} from '../../shared/context/context'
 import { BracketRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
-import { getBracketWidth } from '../../shared/components/Bracket/utils'
+import {
+  getBracketMeta,
+  getBracketWidth,
+} from '../../shared/components/Bracket/utils'
 import { getNumRounds } from '../../shared/models/operations/GetNumRounds'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
@@ -18,18 +21,16 @@ import { PlayStorage } from '../../shared/storages/PlayStorage'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import StripePaymentModal from './StripePaymentModal'
 import { logger } from '../../../utils/Logger'
+import mergePicksFromPlayAndResults from '../../../features/VotingBracket/mergePicksFromPlayAndResults'
 
 const PlayBuilderPage = (props: {
+  // for testing
+  matchTree?: MatchTree
   bracketProductArchiveUrl: string
   myPlayHistoryUrl: string
   isUserLoggedIn: boolean
-  bracketStylesheetUrl: string
   bracket?: BracketRes
   play?: PlayRes
-  matchTree?: MatchTree
-  setMatchTree?: (matchTree: MatchTree) => void
-  bracketMeta?: BracketMeta
-  setBracketMeta?: (bracketMeta: BracketMeta) => void
   userCanPlayBracketForFree?: boolean
   loginUrl: string
 }) => {
@@ -38,13 +39,31 @@ const PlayBuilderPage = (props: {
     bracketProductArchiveUrl,
     myPlayHistoryUrl,
     isUserLoggedIn,
-    matchTree,
-    setMatchTree,
-    bracketMeta,
-    setBracketMeta,
     userCanPlayBracketForFree,
+    play,
   } = props
 
+  let tree: MatchTree
+  if (props.matchTree) {
+    tree = props.matchTree
+  } else if (bracket.isVoting) {
+    tree = MatchTree.fromPicks(
+      bracket,
+      mergePicksFromPlayAndResults(
+        bracket.results || [],
+        play?.picks,
+        bracket.liveRoundIndex
+      )
+    )
+  } else if (play) {
+    tree = MatchTree.fromPicks(bracket, play.picks)
+  } else {
+    tree = MatchTree.fromMatchRes(bracket)
+  }
+  const [bracketMeta, setBracketMeta] = useState<BracketMeta>(
+    getBracketMeta(bracket)
+  )
+  const [matchTree, setMatchTree] = useState<MatchTree>(tree)
   const [processingAddToApparel, setProcessingAddToApparel] = useState(false)
   const [addToApparelError, setAddToApparelError] = useState(false)
   const [submitPicksError, setSubmitPicksError] = useState(false)
@@ -67,13 +86,21 @@ const PlayBuilderPage = (props: {
     props.loginUrl +
     (props.bracket?.url ? `?redirect=${props.bracket.url}` : '')
 
+  useEffect(() => {
+    const stored = playStorage.loadPlay(bracket?.id)
+    if (stored) {
+      const tree = MatchTree.fromPicks(bracket, stored.picks)
+      setMatchTreeAndSaveInStorage(tree)
+    }
+  }, [])
+
   const clearError = () => {
     setAddToApparelError(false)
     setSubmitPicksError(false)
   }
 
   const setMatchTreeAndSaveInStorage = (tree: MatchTree) => {
-    setMatchTree(tree)
+    setMatchTree(tree.clone())
     playStorage.storePlay(
       {
         bracketId: bracket?.id,
@@ -212,31 +239,36 @@ const PlayBuilderPage = (props: {
   }
 
   return (
-    <>
-      <SubmitPicksRegisterModal
-        show={showRegisterModal}
-        setShow={setShowRegisterModal}
-        loginUrl={loginRedirectUrl}
-      />
-      <StripePaymentModal
-        title={'Submit Your Picks'}
-        show={showPaymentModal}
-        setShow={setShowPaymentModal}
-        clientSecret={stripeClientSecret}
-        paymentAmount={stripePaymentAmount}
-        myPlayHistoryUrl={myPlayHistoryUrl}
-      />
-      {showPaginated ? (
-        <PaginatedPlayBuilder {...playBuilderProps} />
-      ) : (
-        <PlayBuilder {...playBuilderProps} />
-      )}
-    </>
+    <MatchTreeContext.Provider
+      value={{
+        matchTree: matchTree,
+        setMatchTree: setMatchTreeAndSaveInStorage,
+      }}
+    >
+      <BracketMetaContext.Provider value={bracketMeta}>
+        <SubmitPicksRegisterModal
+          show={showRegisterModal}
+          setShow={setShowRegisterModal}
+          loginUrl={loginRedirectUrl}
+        />
+        <StripePaymentModal
+          title={'Submit Your Picks'}
+          show={showPaymentModal}
+          setShow={setShowPaymentModal}
+          clientSecret={stripeClientSecret}
+          paymentAmount={stripePaymentAmount}
+          myPlayHistoryUrl={myPlayHistoryUrl}
+        />
+        {showPaginated ? (
+          <PaginatedPlayBuilder {...playBuilderProps} />
+        ) : (
+          <PlayBuilder {...playBuilderProps} />
+        )}
+      </BracketMetaContext.Provider>
+    </MatchTreeContext.Provider>
   )
 }
 
-const WrappedPlayBuilderPage = WithWindowDimensions(
-  WithMatchTree(PlayBuilderPage)
-)
+const WrappedPlayBuilderPage = WithWindowDimensions(PlayBuilderPage)
 
 export default WrappedPlayBuilderPage

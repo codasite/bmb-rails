@@ -267,17 +267,13 @@ export class MatchTree {
   ): MatchTree | null {
     const numRounds = getNumRounds(bracket.numTeams)
 
-    try {
-      const nestedMatches = matchReprFromRes(numRounds, bracket.matches)
-      return MatchTree.deserialize({
-        rounds: nestedMatches,
-        wildcardPlacement,
-        isVoting: bracket.isVoting,
-        liveRoundIndex: bracket.liveRoundIndex,
-      })
-    } catch (e) {
-      return null
-    }
+    const nestedMatches = matchReprFromRes(numRounds, bracket.matches)
+    return MatchTree.deserialize({
+      rounds: nestedMatches,
+      wildcardPlacement,
+      isVoting: bracket.isVoting,
+      liveRoundIndex: bracket.liveRoundIndex,
+    })
   }
 
   static fromPicks(
@@ -296,7 +292,7 @@ export class MatchTree {
       const { roundIndex, matchIndex, winningTeamId } = pick
       const match = matchTree.rounds[roundIndex].matches[matchIndex]
       if (!match) {
-        return null
+        throw new Error('Match not found')
       }
       match._pick = pick
 
@@ -307,7 +303,7 @@ export class MatchTree {
       } else if (team2?.id === winningTeamId) {
         match.team2Wins = true
       } else {
-        return null
+        throw new Error('Match does not have winningTeam from pick')
       }
     }
     return matchTree

@@ -107,33 +107,9 @@ function renderPlayBracket(appObj: WpbbAppObj) {
     userCanPlayBracketForFree,
   } = appObj
   if (bracket) {
-    const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
-    const meta = getBracketMeta(bracket)
-    let tree: MatchTree
-    const storedPlay = playStorage.loadPlay(bracket.id)
-    if (storedPlay) {
-      tree = MatchTree.fromPicks(bracket, storedPlay.picks)
-    } else if (bracket.isVoting) {
-      tree = MatchTree.fromPicks(
-        bracket,
-        mergePicksFromPlayAndResults(
-          bracket.results,
-          play?.picks,
-          bracket.liveRoundIndex
-        )
-      )
-    } else if (play) {
-      tree = MatchTree.fromPicks(bracket, play.picks)
-    } else {
-      tree = MatchTree.fromMatchRes(bracket)
-    }
-
     renderDiv(
       <App>
-        <BracketMetaContext.Provider value={meta}>
           <PlayBuilderPage
-            matchTree={tree}
-            bracketMeta={meta}
             bracket={bracket}
             play={play}
             bracketProductArchiveUrl={bracketProductArchiveUrl}
@@ -142,7 +118,6 @@ function renderPlayBracket(appObj: WpbbAppObj) {
             userCanPlayBracketForFree={userCanPlayBracketForFree}
             loginUrl={appObj.loginUrl}
           />
-        </BracketMetaContext.Provider>
       </App>,
       'wpbb-play-bracket'
     )
