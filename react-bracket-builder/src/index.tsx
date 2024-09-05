@@ -109,15 +109,15 @@ function renderPlayBracket(appObj: WpbbAppObj) {
   if (bracket) {
     renderDiv(
       <App>
-          <PlayBuilderPage
-            bracket={bracket}
-            play={play}
-            bracketProductArchiveUrl={bracketProductArchiveUrl}
-            myPlayHistoryUrl={myPlayHistoryUrl}
-            isUserLoggedIn={isUserLoggedIn}
-            userCanPlayBracketForFree={userCanPlayBracketForFree}
-            loginUrl={appObj.loginUrl}
-          />
+        <PlayBuilderPage
+          bracket={bracket}
+          play={play}
+          bracketProductArchiveUrl={bracketProductArchiveUrl}
+          myPlayHistoryUrl={myPlayHistoryUrl}
+          isUserLoggedIn={isUserLoggedIn}
+          userCanPlayBracketForFree={userCanPlayBracketForFree}
+          loginUrl={appObj.loginUrl}
+        />
       </App>,
       'wpbb-play-bracket'
     )

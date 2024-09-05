@@ -219,7 +219,10 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
       ],
     ];
 
-    $request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/plays/' . $play->id);
+    $request = new WP_REST_Request(
+      'PATCH',
+      '/wp-bracket-builder/v1/plays/' . $play->id
+    );
 
     $request->set_body_params($data);
     $request->set_header('Content-Type', 'application/json');
@@ -227,10 +230,18 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
 
     $response = rest_do_request($request);
 
-    $this->assertEquals(200, $response->get_status(), print_r($response->data, true));
+    $this->assertEquals(
+      200,
+      $response->get_status(),
+      print_r($response->data, true)
+    );
     $play = $this->play_repo->get($play);
     $this->assertEquals(3, count($play->picks));
-    $this->assertEquals($team2_id, $play->picks[0]->winning_team_id, "Team 2 should be the winner");
+    $this->assertEquals(
+      $team2_id,
+      $play->picks[0]->winning_team_id,
+      'Team 2 should be the winner'
+    );
   }
 
   public function test_update_play_author() {

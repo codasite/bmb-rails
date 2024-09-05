@@ -77,13 +77,15 @@ class PickRepoTest extends WPBB_UnitTestCase {
       ],
     ]);
     $play = $this->play_repo->add($play);
-    $this->play_repo->update($play, ['picks' => [
+    $this->play_repo->update($play, [
+      'picks' => [
         [
           'round_index' => 0,
           'match_index' => 0,
           'winning_team_id' => $team1_id,
         ],
-    ]]);
+      ],
+    ]);
     $play = $this->play_repo->get($play);
     $this->assertEquals(3, count($play->picks));
     $this->assertEquals($team1_id, $play->picks[0]->winning_team_id);

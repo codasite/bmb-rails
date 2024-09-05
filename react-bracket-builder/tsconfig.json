@@ -3,7 +3,7 @@
     "./**/*.tsx",
     "./**/*.ts",
     "src/custom.d.ts",
-    "node_modules/ts-jest/globals.d.ts",
+    "node_modules/ts-jest/globals.d.ts"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",

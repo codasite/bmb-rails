@@ -33,7 +33,12 @@ class PlayPermissions implements PermissionsServiceInterface {
   }
 
   public static function get_caps(): array {
-    return ['wpbb_view_play', 'wpbb_print_play', 'wpbb_create_payment_intent', 'wpbb_edit_play'];
+    return [
+      'wpbb_view_play',
+      'wpbb_print_play',
+      'wpbb_create_payment_intent',
+      'wpbb_edit_play',
+    ];
   }
 
   private function user_can_view_play($user_id, Play $play): bool {
