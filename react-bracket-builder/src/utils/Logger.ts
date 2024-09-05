@@ -31,6 +31,9 @@ class Logger {
             ],
           }),
           new Sentry.Replay(),
+          new Sentry.Integrations.Breadcrumbs({
+            console: false,
+          }),
         ],
         // Performance Monitoring
         tracesSampleRate: 0.1, // Capture 100% of the transactions, reduce in production!
