@@ -1,11 +1,9 @@
 {
   "include": [
     "./**/*.tsx",
+    "./**/*.ts",
     "src/custom.d.ts",
     "node_modules/ts-jest/globals.d.ts",
-    "src/utils/WpbbApp.ts",
-    "src/features/GoLive/PageRouter/index.ts",
-    "src/features/GoLive/PageRouter/types.ts"
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
