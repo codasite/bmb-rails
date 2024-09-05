@@ -88,7 +88,10 @@ describe('PlayBuilderPage', () => {
     expect(sessionStorage.getItem('wpbb_play_data_1')).toBeFalsy()
     const { asFragment } = render(
       <PlayBuilderPage
-        matchTree={MatchTree.fromPicks({ numTeams: 4, matches: matches }, picks)}
+        matchTree={MatchTree.fromPicks(
+          { numTeams: 4, matches: matches },
+          picks
+        )}
         bracket={bracketResFactory({ numTeams: 4, matches: matches })}
         isUserLoggedIn={true}
         myPlayHistoryUrl=""
@@ -118,6 +121,11 @@ describe('PlayBuilderPage', () => {
     const sessionFragment = asFragmentSession()
     expect(fragment).toMatchSnapshot()
     expect(fragment).toEqual(sessionFragment)
+
+    // Cleanup search params otherwise the following test fails for some reason
+    const url = new URL(window.location.href)
+    url.search = ''
+    window.history.replaceState({}, document.title, url)
   })
   test('click add to apparel button', async () => {
     jest.mock('../../shared/storages/PlayStorage')
@@ -171,7 +179,7 @@ describe('PlayBuilderPage', () => {
         bracketProductArchiveUrl="#"
         myPlayHistoryUrl="#"
         loginUrl=""
-        isUserLoggedIn={false}
+        isUserLoggedIn={true}
       />
     )
     expect(screen.getByText('Add to Apparel')).toBeEnabled()
