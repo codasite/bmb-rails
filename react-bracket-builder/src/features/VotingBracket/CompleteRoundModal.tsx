@@ -31,7 +31,7 @@ export default function CompleteRoundModal() {
       await votingBracketApi.completeRound(bracketId)
       window.location.reload()
     } catch (error) {
-      console.log(error)
+      console.error(error)
       if (error instanceof HttpError) {
         setErrorMessage(`Error completing round. ${error.data.message}`)
       } else {
