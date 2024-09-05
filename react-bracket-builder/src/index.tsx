@@ -9,20 +9,21 @@ import {
   WpbbAppObj,
   WpbbBracketProductPreviewObj,
 } from './utils/WpbbAjax'
-import ShareBracketModal from './modals/dashboard/brackets/ShareBracketModal'
-import DeleteBracketModal from './modals/dashboard/brackets/DeleteBracketModal'
+import { ShareBracketModal } from './modals/dashboard/brackets/ShareBracketModal'
+import { DeleteBracketModal } from './modals/dashboard/brackets/DeleteBracketModal'
 import { PublishBracketModal } from './modals/dashboard/brackets/PublishBracketModal'
 import { insertLeaderboardTeamName } from './elements/leaderboard/insertTeamName'
 import { UpcomingNotificationModal } from './modals/dashboard/brackets/UpcomingNotificationModal'
 import { paymentsHandler } from './handlers/dashboard/payments/paymentsHandler'
 import { SetTournamentFeeModal } from './modals/dashboard/brackets/SetTournamentFeeModal'
 import { LockLiveTournamentModal } from './modals/dashboard/brackets/LockLiveTournamentModal'
-import CompleteRoundModal from './features/VotingBracket/CompleteRoundModal'
+import { CompleteRoundModal } from './modals/dashboard/brackets/CompleteRoundModal'
 import mergePicksFromPlayAndResults from './features/VotingBracket/mergePicksFromPlayAndResults'
 import { getBracketMeta } from './brackets/shared/components/Bracket/utils'
 import { MatchTree } from './brackets/shared/models/MatchTree'
 import { PlayStorage } from './brackets/shared/storages/PlayStorage'
 import { BracketMetaContext } from './brackets/shared/context/context'
+import { TournamentModals } from './modals/dashboard/brackets'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -245,7 +246,8 @@ function renderProductPreview(_appObj: WpbbAppObj) {
 function renderMyBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
-      <EditBracketModal />
+      <TournamentModals appObj={appObj} />
+      {/* <EditBracketModal />
       <ShareBracketModal />
       <DeleteBracketModal />
       <PublishBracketModal
@@ -261,7 +263,7 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
         applicationFeePercentage={appObj.applicationFeePercentage}
       />
       <LockLiveTournamentModal />
-      <CompleteRoundModal />
+      <CompleteRoundModal /> */}
     </>,
     'wpbb-tournaments-modals'
   )
@@ -269,13 +271,14 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
 function renderPublicBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
-      <EditBracketModal />
+      <TournamentModals appObj={appObj} />
+      {/* <EditBracketModal />
       <UpcomingNotificationModal
         isUserLoggedIn={appObj.isUserLoggedIn}
         loginUrl={appObj.loginUrl}
       />
       <ShareBracketModal />
-      <LockLiveTournamentModal />
+      <LockLiveTournamentModal /> */}
     </>,
     'wpbb-public-bracket-modals'
   )

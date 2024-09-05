@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { Modal } from '../../modals/Modal'
-import { CancelButton, ConfirmButton } from '../../modals/ModalButtons'
-import { ModalHeader } from '../../modals/ModalHeader'
-import addClickHandlers from '../../modals/addClickHandlers'
-import { votingBracketApi } from './votingBracketApi'
-import { HttpError } from '../../brackets/shared/api/wpHttpClient'
+import { Modal } from '../../Modal'
+import { CancelButton, ConfirmButton } from '../../ModalButtons'
+import { ModalHeader } from '../../ModalHeader'
+import addClickHandlers from '../../addClickHandlers'
+import { votingBracketApi } from '../../../features/VotingBracket/votingBracketApi'
+import { HttpError } from '../../../brackets/shared/api/wpHttpClient'
 
-export default function CompleteRoundModal() {
+export const CompleteRoundModal = () => {
   const [show, setShow] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')

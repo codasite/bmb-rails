@@ -6,7 +6,7 @@ import { Modal } from '../../Modal'
 import addClickHandlers from '../../addClickHandlers'
 import { ReactComponent as LinkIcon } from '../../../brackets/deleted/assets/link.svg'
 
-export default function DeleteBracketModal() {
+export const DeleteBracketModal = () => {
   const [bracketId, setBracketId] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')

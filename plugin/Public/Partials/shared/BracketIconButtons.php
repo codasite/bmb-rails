@@ -22,15 +22,13 @@ class BracketIconButtons {
   }
 
   public static function share_bracket_btn($bracket): false|string {
-    $play_link = get_permalink($bracket->id) . 'play';
-
     return DashboardCommon::icon_btn(
       'Share',
       'share.svg',
       classes: ['wpbb-share-bracket-button'],
       data: [
         'label' => 'Share',
-        'play-bracket-url' => $play_link,
+        'play-bracket-url' => $bracket->url . 'play',
         'bracket-title' => $bracket->title,
       ]
     );
@@ -78,6 +76,7 @@ class BracketIconButtons {
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket); ?>
     <?php return ob_get_clean();
   }
 
@@ -153,26 +152,47 @@ class BracketIconButtons {
     if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
       return '';
     }
-    $copy_link = get_permalink($bracket->id) . 'copy';
 
-    return DashboardCommon::icon_link('Duplicate', 'copy.svg', $copy_link);
+    return DashboardCommon::icon_link(
+      'Duplicate',
+      'copy.svg',
+      $bracket->url . 'copy'
+    );
   }
 
   public static function most_popular_picks_btn($bracket): false|string {
-    $copy_link = get_permalink($bracket->id) . 'most-popular-picks';
-
     return DashboardCommon::icon_link(
       'Most Popular',
       'percent.svg',
-      $copy_link
+      $bracket->url . 'most-popular-picks'
     );
   }
 
-  public static function more_options_btn(): false|string {
+  public static function more_options_btn(
+    $bracket,
+    $options = []
+  ): false|string {
     return DashboardCommon::icon_btn(
       '',
       'ellipsis',
+      classes: ['wpbb-more-options-button'],
+      data: [
+        'view-mpp' => $options['view_mpp'] ?? false,
+        'share-bracket' => $options['share_bracket'] ?? false,
+        'edit-bracket' => $options['edit_bracket'] ?? false,
+        'set-fee' => $options['set_fee'] ?? false,
+        'duplicate-bracket' => $options['duplicate_bracket'] ?? false,
+        'lock-tournament' => $options['lock_tournament'] ?? false,
+        'delete-bracket' => $options['delete_bracket'] ?? false,
+        'bracket-id' => $bracket->id,
+        'bracket-title' => $bracket->title,
+        'bracket-month' => $bracket->month,
+        'bracket-year' => $bracket->year,
+        'fee' => $bracket->fee,
+        'play-bracket-url' => $bracket->url,
+        'copy-bracket-url' => $bracket->url . 'copy',
+        'most-popular-picks-url' => $bracket->url . 'most-popular-picks',
+      ]
     );
-
   }
 }

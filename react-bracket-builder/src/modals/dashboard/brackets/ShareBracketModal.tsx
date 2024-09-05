@@ -52,7 +52,7 @@ export const CopyLinkButton = (props: {
   )
 }
 
-export default function ShareBracketModal() {
+export const ShareBracketModal = () => {
   const [show, setShow] = useState(false)
   const [playBracketUrl, setPlayBracketUrl] = useState('')
   const [bracketTitle, setBracketTitle] = useState('')
