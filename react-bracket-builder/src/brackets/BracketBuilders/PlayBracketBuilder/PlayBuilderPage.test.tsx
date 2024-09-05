@@ -44,7 +44,7 @@ describe('PlayBuilderPage', () => {
     expect(fragment).toMatchSnapshot()
     expect(screen.getByText('Submit Picks')).toBeEnabled()
   })
-  test('should render should show register modal when user is not logged in', () => {
+  test('should render register modal when user is not logged in', () => {
     const { asFragment } = render(
       <PlayBuilderPage
         bracket={bracketResFactory({ isPrintable: true, isOpen: true })}
