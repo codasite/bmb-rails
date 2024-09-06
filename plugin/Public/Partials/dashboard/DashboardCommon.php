@@ -71,7 +71,7 @@ class DashboardCommon {
       <div class="tw-h-40 tw-w-40 tw-p-8 tw-flex tw-flex-col tw-items-center tw-justify-center">
       <?php echo PartialsCommon::icon($icon_path); ?>
       </div>
-      <?php if (!empty($label)) :?>
+      <?php if (!empty($label)): ?>
       <div class="wpbb-icon-btn-label">
         <span class="tw-whitespace-nowrap tw-uppercase tw-font-500 tw-font-sans tw-pr-8"><?php echo $label; ?></span>
       </div>

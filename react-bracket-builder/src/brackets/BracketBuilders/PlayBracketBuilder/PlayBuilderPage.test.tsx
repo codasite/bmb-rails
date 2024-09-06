@@ -244,17 +244,17 @@ describe('PlayBuilderPage', () => {
     // Team 2 and Team 3 should be highlighted in the first round from results
     expect(asFragment()).toMatchSnapshot()
     // Submit picks button should be disabled
-    expect(screen.getByRole('button', {name: 'Submit Picks'})).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Submit Picks' })).toBeDisabled()
     // I click on Team 3 to win second round
     expect(screen.getByTestId('team-slot-round-1-match-0-right')).toBeEnabled()
     userEvent.click(screen.getByTestId('team-slot-round-1-match-0-right'))
     // Submit picks button should be enabled
-    expect(screen.getByRole('button', {name: 'Submit Picks'})).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Submit Picks' })).toBeEnabled()
     // Click on submit picks
-    userEvent.click(screen.getByRole('button', {name: 'Submit Picks'}))
+    userEvent.click(screen.getByRole('button', { name: 'Submit Picks' }))
     // bracketApi.updatePicks should be called with the updated picks which is Team 3 for second round
     expect(bracketApi.updatePlay).toHaveBeenCalledWith(play.bracketId, [
-      { roundIndex: 1, matchIndex: 1, winningTeam: 20 },])
-
+      { roundIndex: 1, matchIndex: 1, winningTeam: 20 },
+    ])
   })
 })
