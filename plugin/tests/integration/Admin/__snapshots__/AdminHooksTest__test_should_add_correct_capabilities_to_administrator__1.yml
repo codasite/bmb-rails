@@ -70,7 +70,7 @@ wpbb_add_bracket_fee: true
 wpbb_view_bracket_chat: true
 wpbb_view_play: true
 wpbb_print_play: true
-wpbb_delete_notification: true
 wpbb_create_payment_intent: true
-wpbb_create_paid_bracket: true
 wpbb_edit_play: true
+wpbb_delete_notification: true
+wpbb_create_paid_bracket: true
