@@ -9,6 +9,8 @@ import { ModalHeader } from '../../../ModalHeader'
 import { ModalHeaderLogo } from './ModalHeaderLogo'
 import { SetUpPaymentsButton } from './SetUpPaymentsButton'
 import { logger } from '../../../../utils/Logger'
+import { BracketData } from '../BracketData'
+import { loadBracketData } from '../../../loadBracketData'
 
 export const ChargesEnabledContainer = (props: {
   // I hoist this state so that react will save it between rerenders, we
@@ -53,32 +55,30 @@ export const ChargesEnabledContainer = (props: {
   return <>{props.children}</>
 }
 
-interface SetTournamentFeeModalProps {
+export const SetTournamentFeeModal = (props: {
   applicationFeeMinimum: number
   applicationFeePercentage: number
-}
-
-export const SetTournamentFeeModal = (props: SetTournamentFeeModalProps) => {
-  const [show, setShow] = useState(false)
-  const [fee, setFee] = useState<number>(null)
-  const [bracketId, setBracketId] = useState<number>(null)
+  show: boolean
+  setShow: (show: boolean) => void
+  bracketData: BracketData
+  setBracketData: (data: BracketData) => void
+}) => {
   const [chargesEnabled, setChargesEnabled] = useState(false)
 
   const handleCancel = () => {
-    setShow(false)
+    props.setShow(false)
   }
 
   addClickHandlers({
     buttonClassName: 'wpbb-set-tournament-fee-button',
     onButtonClick: async (b) => {
-      setBracketId(parseInt(b.dataset.bracketId))
-      setFee(parseInt(b.dataset.fee))
-      setShow(true)
+      loadBracketData(b, props.setBracketData)
+      props.setShow(true)
     },
   })
 
   return (
-    <Modal show={show} setShow={setShow}>
+    <Modal show={props.show} setShow={props.setShow}>
       <ModalHeaderLogo />
       <ModalHeader text={'Set an Entry Fee for Your Tournament'} />
       <ChargesEnabledContainer
@@ -86,8 +86,8 @@ export const SetTournamentFeeModal = (props: SetTournamentFeeModalProps) => {
         setChargesEnabled={setChargesEnabled}
       >
         <InputFeeAmount
-          bracketId={bracketId}
-          fee={fee}
+          bracketId={props.bracketData.id}
+          fee={props.bracketData.fee}
           onCancel={handleCancel}
           onSave={() => window.location.reload()}
           applicationFeeMinimum={props.applicationFeeMinimum}

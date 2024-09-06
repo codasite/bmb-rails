@@ -40,7 +40,7 @@ class BracketListItem {
         <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html(
           $title
         ); ?></h2>
-        <div class="tw-flex tw-gap-10 tw-items-start">
+        <div class="tw-flex tw-gap-10 tw-items-start tw-flex-wrap">
           <?php echo BracketIconButtons::get_bracket_icon_buttons($bracket); ?>
         </div>
       </div>

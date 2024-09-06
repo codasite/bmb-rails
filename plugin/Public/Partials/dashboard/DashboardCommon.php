@@ -36,7 +36,7 @@ class DashboardCommon {
     <button <?php echo !empty($id) ? "id=$id" : ''; ?>
       class="<?php echo $classes; ?>"
       <?php echo $data_attributes; ?>>
-      <?php echo self::build_icon_btn_contents($label, $icon_path); ?>
+      <?php echo self::build_icon_btn_contents($icon_path, $label); ?>
     </button>
     <?php return ob_get_clean();
   }
@@ -61,19 +61,21 @@ class DashboardCommon {
       href="<?php echo esc_url($endpoint); ?>"
       class="<?php echo $classes; ?>"
       <?php echo $data_attributes; ?>>
-      <?php echo self::build_icon_btn_contents($label, $icon_path); ?>
+      <?php echo self::build_icon_btn_contents($icon_path, $label); ?>
     </a>
     <?php return ob_get_clean();
   }
 
-  private static function build_icon_btn_contents($label, $icon_path) {
+  private static function build_icon_btn_contents($icon_path, $label = '') {
     ob_start(); ?>
       <div class="tw-h-40 tw-w-40 tw-p-8 tw-flex tw-flex-col tw-items-center tw-justify-center">
       <?php echo PartialsCommon::icon($icon_path); ?>
       </div>
+      <?php if (!empty($label)) :?>
       <div class="wpbb-icon-btn-label">
         <span class="tw-whitespace-nowrap tw-uppercase tw-font-500 tw-font-sans tw-pr-8"><?php echo $label; ?></span>
       </div>
+      <?php endif; ?>
       <?php return ob_get_clean();
   }
 

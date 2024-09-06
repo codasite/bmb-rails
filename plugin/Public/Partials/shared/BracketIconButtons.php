@@ -21,17 +21,73 @@ class BracketIconButtons {
     }
   }
 
-  public static function share_bracket_btn($bracket): false|string {
-    $play_link = get_permalink($bracket->id) . 'play';
+  public static function live_bracket_icon_buttons($bracket): false|string {
+    ob_start(); ?>
+    <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::share_bracket_btn($bracket); ?>
+    <?php echo self::duplicate_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'most_popular_picks',
+      'edit_bracket',
+      'set_fee',
+      'share_bracket',
+      'duplicate_bracket',
+      'lock_tournament',
+      'delete_bracket',
+    ]); ?>
+    <?php return ob_get_clean();
+  }
 
+  public static function private_bracket_icon_buttons($bracket): false|string {
+    ob_start(); ?>
+    <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::duplicate_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'edit_bracket',
+      'set_fee',
+      'duplicate_bracket',
+      'delete_bracket',
+    ]); ?>
+    <?php return ob_get_clean();
+  }
+
+  public static function scored_bracket_icon_buttons($bracket): false|string {
+    ob_start(); ?>
+    <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::share_bracket_btn($bracket); ?>
+    <?php echo self::duplicate_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'most_popular_picks',
+      'edit_bracket',
+      'share_bracket',
+      'duplicate_bracket',
+      'delete_bracket',
+    ]); ?>
+    <?php return ob_get_clean();
+  }
+
+  public static function upcoming_bracket_icon_buttons($bracket) {
+    ob_start(); ?>
+    <?php echo self::set_fee_btn($bracket); ?>
+    <?php echo self::share_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'set_fee',
+      'share_bracket',
+    ]); ?>
+    
+    <?php return ob_get_clean();
+  }
+
+  public static function share_bracket_btn($bracket): false|string {
     return DashboardCommon::icon_btn(
       'Share',
       'share.svg',
       classes: ['wpbb-share-bracket-button'],
       data: [
         'label' => 'Share',
-        'play-bracket-url' => $play_link,
+        'play-bracket-url' => $bracket->url . 'play',
         'bracket-title' => $bracket->title,
+        'bracket-id' => $bracket->id,
       ]
     );
   }
@@ -71,16 +127,6 @@ class BracketIconButtons {
     );
   }
 
-  public static function scored_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::most_popular_picks_btn($bracket); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php return ob_get_clean();
-  }
-
   public static function set_fee_btn($bracket): false|string {
     if (!current_user_can('wpbb_add_bracket_fee', $bracket->id)) {
       return '';
@@ -95,15 +141,6 @@ class BracketIconButtons {
         'fee' => $bracket->fee,
       ]
     );
-  }
-
-  public static function private_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::set_fee_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php return ob_get_clean();
   }
 
   public static function edit_bracket_btn($bracket): false|string {
@@ -129,41 +166,55 @@ class BracketIconButtons {
     );
   }
 
-  public static function upcoming_bracket_icon_buttons($bracket) {
-    ob_start(); ?>
-    <?php echo self::set_fee_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php return ob_get_clean();
-  }
-
-  public static function live_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::most_popular_picks_btn($bracket); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::set_fee_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::lock_tournament_btn($bracket); ?>
-    <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php return ob_get_clean();
-  }
-
   public static function duplicate_bracket_btn($bracket): false|string {
     if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
       return '';
     }
-    $copy_link = get_permalink($bracket->id) . 'copy';
 
-    return DashboardCommon::icon_link('Duplicate', 'copy.svg', $copy_link);
+    return DashboardCommon::icon_link(
+      'Duplicate',
+      'copy.svg',
+      $bracket->url . 'copy'
+    );
   }
 
   public static function most_popular_picks_btn($bracket): false|string {
-    $copy_link = get_permalink($bracket->id) . 'most-popular-picks';
-
     return DashboardCommon::icon_link(
       'Most Popular',
       'percent.svg',
-      $copy_link
+      $bracket->url . 'most-popular-picks'
     );
   }
+
+  public static function more_options_btn(
+    $bracket,
+    $options = []
+  ): false|string {
+    return DashboardCommon::icon_btn(
+      '',
+      'ellipsis',
+      classes: ['wpbb-more-options-button'],
+      data: [
+        'most-popular-picks' => isOptionPresent('most_popular_picks', $options),
+        'share-bracket' => isOptionPresent('share_bracket', $options),
+        'edit-bracket' => isOptionPresent('edit_bracket', $options),
+        'set-fee' => isOptionPresent('set_fee', $options),
+        'duplicate-bracket' => isOptionPresent('duplicate_bracket', $options),
+        'lock-tournament' => isOptionPresent('lock_tournament', $options),
+        'delete-bracket' => isOptionPresent('delete_bracket', $options),
+        'bracket-id' => $bracket->id,
+        'bracket-title' => $bracket->title,
+        'bracket-month' => $bracket->month,
+        'bracket-year' => $bracket->year,
+        'fee' => $bracket->fee,
+        'play-bracket-url' => $bracket->url,
+        'copy-bracket-url' => $bracket->url . 'copy',
+        'most-popular-picks-url' => $bracket->url . 'most-popular-picks',
+      ]
+    );
+  }
+}
+
+function isOptionPresent($optionName, $options) {
+  return in_array($optionName, $options) ? 'true' : 'false';
 }
