@@ -9,6 +9,7 @@ import { ReactComponent as TrashIcon } from '../../../assets/icons/trash.svg'
 import { ReactComponent as DollarIcon } from '../../../assets/icons/dollar_shield.svg'
 import { ReactComponent as LockIcon } from '../../../assets/icons/lock.svg'
 import { BracketData } from './BracketData'
+import { TournamentModalVisibility } from './TournamentModalVisibility'
 
 const BracketOptionButton = (props: {
   IconComponent: React.FunctionComponent
@@ -45,13 +46,9 @@ const BracketOptionLink = (props: {
 }
 
 export const MoreOptionsModal = (props: {
-  setShowEditBracketModal: (show: boolean) => void
-  setShowShareBracketModal: (show: boolean) => void
-  setShowDeleteBracketModal: (show: boolean) => void
-  setShowSetTournamentFeeModal: (show: boolean) => void
-  setShowLockLiveTournamentModal: (show: boolean) => void
   show: boolean
   setShow: (show: boolean) => void
+  showModal: (modalName: keyof TournamentModalVisibility) => void
   bracketData: BracketData
   setBracketData: (data: BracketData) => void
 }) => {
@@ -83,24 +80,21 @@ export const MoreOptionsModal = (props: {
           IconComponent={EditIcon}
           label="Edit Info"
           onClick={() => {
-            props.setShow(false)
-            props.setShowEditBracketModal(true)
+            props.showModal('editBracket')
           }}
         />
         <BracketOptionButton
           IconComponent={DollarIcon}
           label="Set Fee"
           onClick={() => {
-            props.setShow(false)
-            props.setShowSetTournamentFeeModal(true)
+            props.showModal('setTournamentFee')
           }}
         />
         <BracketOptionButton
           IconComponent={ShareIcon}
           label="Share"
           onClick={() => {
-            props.setShow(false)
-            props.setShowShareBracketModal(true)
+            props.showModal('shareBracket')
           }}
         />
         <BracketOptionLink
@@ -112,16 +106,14 @@ export const MoreOptionsModal = (props: {
           IconComponent={LockIcon}
           label="Lock"
           onClick={() => {
-            props.setShow(false)
-            props.setShowLockLiveTournamentModal(true)
+            props.showModal('lockLiveTournament')
           }}
         />
         <BracketOptionButton
           IconComponent={TrashIcon}
           label="Delete"
           onClick={() => {
-            props.setShow(false)
-            props.setShowDeleteBracketModal(true)
+            props.showModal('deleteBracket')
           }}
         />
       </div>

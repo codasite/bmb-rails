@@ -16,7 +16,7 @@ import { getBracketMeta } from './brackets/shared/components/Bracket/utils'
 import { MatchTree } from './brackets/shared/models/MatchTree'
 import { PlayStorage } from './brackets/shared/storages/PlayStorage'
 import { BracketMetaContext } from './brackets/shared/context/context'
-import { TournamentModalsContainer } from './modals/dashboard/brackets/TournamentModals'
+import { TournamentModals } from './modals/dashboard/brackets/TournamentModals'
 
 declare var wp: any, tailwind: any
 tailwind.config = require('../tailwind.config.js')
@@ -239,7 +239,7 @@ function renderProductPreview(_appObj: WpbbAppObj) {
 function renderMyBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
-      <TournamentModalsContainer appObj={appObj} />
+      <TournamentModals appObj={appObj} />
     </>,
     'wpbb-tournaments-modals'
   )
@@ -247,7 +247,7 @@ function renderMyBracketsModals(appObj: WpbbAppObj) {
 function renderPublicBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
-      <TournamentModalsContainer appObj={appObj} />
+      <TournamentModals appObj={appObj} />
       {/* <EditBracketModal />
       <UpcomingNotificationModal
         isUserLoggedIn={appObj.isUserLoggedIn}
