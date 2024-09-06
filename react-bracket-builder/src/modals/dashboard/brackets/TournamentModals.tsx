@@ -39,10 +39,6 @@ export const TournamentModals = (props: { appObj: WpbbAppObj }) => {
     })
   }
 
-  useEffect(() => {
-    console.log('bracketData', bracketData)
-  }, [bracketData])
-
   return (
     <>
       <EditBracketModal
