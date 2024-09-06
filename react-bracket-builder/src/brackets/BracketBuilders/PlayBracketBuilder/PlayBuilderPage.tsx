@@ -111,7 +111,7 @@ const PlayBuilderPage = (props: {
     )
   }
 
-  const shouldNotCreateNewPlay = (playReq: PlayReq) => {
+  const playExists = (playReq: PlayReq) => {
     return (
       storedPlay?.id &&
       JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks)
@@ -140,7 +140,7 @@ const PlayBuilderPage = (props: {
     const playReq = getPlayReq()
     playReq.generateImages = true
     try {
-      if (shouldNotCreateNewPlay(playReq)) {
+      if (playExists(playReq)) {
         // regenerate play images anyway (in case they don't exist)
         await bracketApi.generatePlayImages(storedPlay.id)
       } else {
@@ -167,7 +167,7 @@ const PlayBuilderPage = (props: {
     playReq.generateImages = false
     playReq.createStripePaymentIntent = paymentRequired
 
-    if (shouldNotCreateNewPlay(playReq)) {
+    if (playExists(playReq)) {
       if (!paymentRequired) {
         window.location.assign(myPlayHistoryUrl)
         return
