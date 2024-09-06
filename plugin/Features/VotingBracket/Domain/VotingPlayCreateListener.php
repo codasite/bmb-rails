@@ -12,8 +12,6 @@ class VotingPlayCreateListener extends BracketPlayCreateListenerBase {
   ) {
   }
   public function filter_before_play_added(Play $play): Play {
-    // If bracket is voting
-    // filter picks to the live round
     $bracket = $this->bracket_repo->get($play->bracket_id);
 
     if ($bracket->is_voting) {

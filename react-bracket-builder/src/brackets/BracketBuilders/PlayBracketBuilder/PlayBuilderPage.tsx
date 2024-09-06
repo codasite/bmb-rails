@@ -175,6 +175,17 @@ const PlayBuilderPage = (props: {
       setProcessingSubmitPicks(false)
       return
     }
+    // if bracket is voting and play id is given, then we can update picks without payment
+    if (bracket.isVoting) {
+      if (play?.id) {
+        await bracketApi.updatePlay(play.id, {
+          picks: playReq.picks,
+        })
+        window.location.assign(myPlayHistoryUrl)
+        return
+      }
+    }
+
     try {
       if (playExists(playReq)) {
         const res = await bracketApi.createStripePaymentIntent({
