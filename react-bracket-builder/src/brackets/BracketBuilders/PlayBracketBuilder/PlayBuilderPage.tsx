@@ -81,7 +81,7 @@ const PlayBuilderPage = (props: {
   const canPrint = bracket?.isPrintable
   const canSubmit = bracket?.isOpen && props.isUserLoggedIn
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
-  const paymentRequired = bracket?.isOpen && !userCanPlayBracketForFree // TODO: decide if we need to check if the bracket is open. Is this handled by canSubmit?
+  const paymentRequired = !userCanPlayBracketForFree
   const loginRedirectUrl =
     props.loginUrl +
     (props.bracket?.url ? `?redirect=${props.bracket.url}` : '')
@@ -166,54 +166,46 @@ const PlayBuilderPage = (props: {
     const playReq = getPlayReq()
     playReq.generateImages = false
     playReq.createStripePaymentIntent = paymentRequired
-
-    if (playExists(playReq)) {
-      if (!paymentRequired) {
-        window.location.assign(myPlayHistoryUrl)
-        return
-      }
-      if (stripeClientSecret) {
-        setShowPaymentModal(true)
-        return
-      }
-      try {
+    if (playExists(playReq) && !paymentRequired) {
+      window.location.assign(myPlayHistoryUrl)
+      return
+    }
+    if (playExists(playReq) && stripeClientSecret) {
+      setShowPaymentModal(true)
+      setProcessingSubmitPicks(false)
+      return
+    }
+    try {
+      if (playExists(playReq)) {
         const res = await bracketApi.createStripePaymentIntent({
           playId: storedPlay.id,
         })
         setStripeClientSecret(res.clientSecret)
         setStripePaymentAmount(res.amount)
-        setProcessingSubmitPicks(false)
-        setShowPaymentModal(true)
-      } catch (err) {
-        setProcessingSubmitPicks(false)
-        setSubmitPicksError(true)
-        logger.error(err)
-      }
-      return
-    }
-    // create play will create payment intent if payment is required
-    try {
-      const res = await bracketApi.createPlay(playReq)
-      const playId = res.id
-      const newReq = {
-        ...playReq,
-        id: playId,
-      }
-      playStorage.storePlay(newReq, bracket?.id)
-      setStoredPlay(newReq)
-      if (paymentRequired) {
-        setStripeClientSecret(res.stripePaymentIntentClientSecret)
-        setStripePaymentAmount(res.stripePaymentAmount)
-        setProcessingSubmitPicks(false)
-        setShowPaymentModal(true)
       } else {
-        window.location.assign(myPlayHistoryUrl)
+        // Create play will create payment intent if payment is required
+        const res = await bracketApi.createPlay(playReq)
+        const newReq = {
+          ...playReq,
+          id: res.id,
+        }
+        playStorage.storePlay(newReq, bracket?.id)
+        setStoredPlay(newReq)
+        if (paymentRequired) {
+          setStripeClientSecret(res.stripePaymentIntentClientSecret)
+          setStripePaymentAmount(res.stripePaymentAmount)
+        } else {
+          window.location.assign(myPlayHistoryUrl)
+          return
+        }
       }
     } catch (err) {
-      setProcessingSubmitPicks(false)
       setSubmitPicksError(true)
       logger.error(err)
     }
+    // At this point payment is required and process is finished
+    setShowPaymentModal(true)
+    setProcessingSubmitPicks(false)
   }
 
   const playBuilderProps = {
