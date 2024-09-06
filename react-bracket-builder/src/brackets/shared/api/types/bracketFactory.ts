@@ -7,7 +7,7 @@ export const bracketResFactory = (
   return {
     id: 1,
     title: 'Test Bracket',
-    status: 'live',
+    status: 'publish',
     month: 'March',
     year: '2022',
     numTeams: 8,
@@ -19,6 +19,8 @@ export const bracketResFactory = (
       timezone_type: 1,
       timezone: '+00:00',
     },
+    isOpen: true,
+    isPrintable: true,
     matches: [
       {
         id: 9,

@@ -189,5 +189,72 @@ describe('PlayBuilderPage', () => {
     await userEvent.click(screen.getByText('Add to Apparel'))
     window.location = location
     expect(screen.getByText('Generating your bracket...')).toBeVisible()
+    expect(createPlayMock).toHaveBeenCalled()
+  })
+
+  test('should update existing play when bracket is voting and user submit picks for second round', () => {
+    // Four team bracket is voting and live round is second round
+    const matches = [
+      {
+        id: 9,
+        roundIndex: 0,
+        matchIndex: 0,
+        team1: { id: 17, name: 'Team 1' },
+        team2: { id: 18, name: 'Team 2' },
+      },
+      {
+        id: 10,
+        roundIndex: 0,
+        matchIndex: 1,
+        team1: { id: 19, name: 'Team 3' },
+        team2: { id: 20, name: 'Team 4' },
+      },
+      { roundIndex: 1, matchIndex: 0 },
+    ]
+    const bracket = bracketResFactory({
+      matches,
+      numTeams: 4,
+      isVoting: true,
+      liveRoundIndex: 1,
+    })
+
+    // User's play picked Team 1 and Team 3 for first round
+    const play = {
+      bracketId: bracket.id,
+      picks: [
+        { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
+        { roundIndex: 0, matchIndex: 1, winningTeamId: 19 },
+      ],
+    }
+    // Results were actually Team 2 and Team 3
+    bracket.results = [
+      { roundIndex: 0, matchIndex: 0, winningTeamId: 18 },
+      { roundIndex: 0, matchIndex: 1, winningTeamId: 19 },
+    ]
+
+    const { asFragment } = render(
+      <PlayBuilderPage
+        bracket={bracket}
+        isUserLoggedIn={true}
+        myPlayHistoryUrl=""
+        loginUrl=""
+        bracketProductArchiveUrl=""
+      />
+    )
+    // Team 2 and Team 3 should be highlighted in the first round from results
+    expect(asFragment()).toMatchSnapshot()
+    // Submit picks button should be disabled
+    expect(screen.getByRole('button', {name: 'Submit Picks'})).toBeDisabled()
+    // I click on Team 3 to win second round
+    expect(screen.getByTestId('team-slot-round-1-match-0-right')).toBeEnabled()
+    userEvent.click(screen.getByTestId('team-slot-round-1-match-0-right'))
+    // Submit picks button should be enabled
+    expect(screen.getByRole('button', {name: 'Submit Picks'})).toBeEnabled()
+    // Click on submit picks
+    userEvent.click(screen.getByRole('button', {name: 'Submit Picks'}))
+    // bracketApi.updatePicks should be called with the updated picks which is Team 3 for second round
+    expect(bracketApi.updatePlay).toHaveBeenCalledWith(play.bracketId, [
+      { roundIndex: 1, matchIndex: 1, winningTeam: 20 },])
+
   })
 })
