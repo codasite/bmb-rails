@@ -180,47 +180,45 @@ const PlayBuilderPage = (props: {
         setShowPaymentModal(true)
         return
       }
-      await bracketApi
-        .createStripePaymentIntent({ playId: storedPlay.id })
-        .then((res) => {
-          setStripeClientSecret(res.clientSecret)
-          setStripePaymentAmount(res.amount)
-          setProcessingSubmitPicks(false)
-          setShowPaymentModal(true)
+      try {
+        const res = await bracketApi.createStripePaymentIntent({
+          playId: storedPlay.id,
         })
-        .catch((err) => {
-          setProcessingSubmitPicks(false)
-          setSubmitPicksError(true)
-          logger.error(err)
-        })
-
+        setStripeClientSecret(res.clientSecret)
+        setStripePaymentAmount(res.amount)
+        setProcessingSubmitPicks(false)
+        setShowPaymentModal(true)
+      } catch (err) {
+        setProcessingSubmitPicks(false)
+        setSubmitPicksError(true)
+        logger.error(err)
+      }
       return
     }
-    return bracketApi
-      .createPlay(playReq)
-      .then((res) => {
-        const playId = res.id
-        const newReq = {
-          ...playReq,
-          id: playId,
-        }
-        playStorage.storePlay(newReq, bracket?.id)
-        setStoredPlay(newReq)
-        if (paymentRequired) {
-          setStripeClientSecret(res.stripePaymentIntentClientSecret)
-          setStripePaymentAmount(res.stripePaymentAmount)
-          setShowPaymentModal(true)
-          setProcessingSubmitPicks(false)
-        } else if (isUserLoggedIn) {
-          window.location.assign(myPlayHistoryUrl)
-        } else {
-          setShowRegisterModal(true)
-        }
-      })
-      .catch((err) => {
+    // create play will create payment intent if payment is required
+    try {
+      const res = await bracketApi.createPlay(playReq)
+      const playId = res.id
+      const newReq = {
+        ...playReq,
+        id: playId,
+      }
+      playStorage.storePlay(newReq, bracket?.id)
+      setStoredPlay(newReq)
+      if (paymentRequired) {
+        setStripeClientSecret(res.stripePaymentIntentClientSecret)
+        setStripePaymentAmount(res.stripePaymentAmount)
         setProcessingSubmitPicks(false)
-        logger.error(err)
-      })
+        setShowPaymentModal(true)
+      } else if (isUserLoggedIn) {
+        window.location.assign(myPlayHistoryUrl)
+      } else {
+        setShowRegisterModal(true)
+      }
+    } catch (err) {
+      setProcessingSubmitPicks(false)
+      logger.error(err)
+    }
   }
 
   const playBuilderProps = {
