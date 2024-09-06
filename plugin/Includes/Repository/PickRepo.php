@@ -26,6 +26,12 @@ class PickRepo implements CustomTableInterface {
     return $this->pick_from_row($data);
   }
 
+  /**
+   * Returns all picks for a given play. If no play_id is provided, all picks are returned.
+   *
+   * @param int $play_id
+   * @return Pick[]
+   */
   public function get_picks(int $play_id): array {
     $table_name = self::table_name();
     $where = $play_id ? "WHERE bracket_play_id = $play_id" : '';
@@ -43,7 +49,7 @@ class PickRepo implements CustomTableInterface {
    * Updates the picks for a given play. If a pick does not exist, it is inserted. If a pick exists, it is updated.
    *
    * @param int $play_id
-   * @param array|null $new_picks
+   * @param Pick[]|null $new_picks
    */
   public function update_picks(int $play_id, array|null $new_picks): void {
     if ($new_picks === null) {
