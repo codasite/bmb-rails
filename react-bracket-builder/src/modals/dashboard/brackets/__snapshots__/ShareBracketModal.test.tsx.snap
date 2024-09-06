@@ -7,7 +7,7 @@ exports[`ShareBracketModal renders modal correctly 1`] = `
     tabindex="-1"
   >
     <div
-      class="tw-relative tw-max-w-[606px] tw-p-30 sm:tw-p-60 tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20"
+      class="tw-relative tw-max-w-[606px] tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20 tw-p-30 sm:tw-p-60"
     >
       <h1
         class="tw-text-24 sm:tw-text-32 tw-leading-normal tw-text-white tw-uppercase tw-whitespace-pre-line tw-mb-30 tw-w-full tw-text-center tw-font-sans"
