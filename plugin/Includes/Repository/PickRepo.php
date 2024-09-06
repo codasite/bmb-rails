@@ -86,7 +86,7 @@ class PickRepo implements CustomTableInterface {
         }
       }
       $this->wpdb->query('COMMIT');
-    } catch (Exception $e) {
+    } catch (\Exception $e) {
       $this->wpdb->query('ROLLBACK');
       throw $e;
     }

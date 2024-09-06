@@ -156,7 +156,7 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     $prepared_query = $this->wpdb->prepare($query, $user_id, $bracket_post_id);
     $play_post_id = $this->wpdb->get_var($prepared_query);
     if ($play_post_id) {
-      return $this->get($play_post_id);
+      return $this->get((int) $play_post_id);
     }
     return null;
   }
