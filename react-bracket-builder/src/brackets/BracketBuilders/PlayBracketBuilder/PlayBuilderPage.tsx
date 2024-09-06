@@ -169,11 +169,7 @@ const PlayBuilderPage = (props: {
 
     if (shouldNotCreateNewPlay(playReq)) {
       if (!paymentRequired) {
-        if (isUserLoggedIn) {
-          window.location.assign(myPlayHistoryUrl)
-        } else {
-          setShowRegisterModal(true)
-        }
+        window.location.assign(myPlayHistoryUrl)
         return
       }
       if (stripeClientSecret) {
@@ -210,13 +206,12 @@ const PlayBuilderPage = (props: {
         setStripePaymentAmount(res.stripePaymentAmount)
         setProcessingSubmitPicks(false)
         setShowPaymentModal(true)
-      } else if (isUserLoggedIn) {
-        window.location.assign(myPlayHistoryUrl)
       } else {
-        setShowRegisterModal(true)
+        window.location.assign(myPlayHistoryUrl)
       }
     } catch (err) {
       setProcessingSubmitPicks(false)
+      setSubmitPicksError(true)
       logger.error(err)
     }
   }
