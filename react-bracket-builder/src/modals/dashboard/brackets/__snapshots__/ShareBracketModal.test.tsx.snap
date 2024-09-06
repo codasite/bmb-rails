@@ -2,13 +2,6 @@
 
 exports[`ShareBracketModal renders modal correctly 1`] = `
 <DocumentFragment>
-  <button
-    class="wpbb-share-bracket-button"
-    data-bracket-title="Test bracket"
-    data-play-bracket-url="testurl"
-  >
-    Share Bracket
-  </button>
   <div
     class="tw-fixed tw-bg-black/50 tw-top-0 tw-left-0 tw-right-0 tw-z-50 tw-w-full tw-p-4 tw-overflow-x-hidden tw-overflow-y-auto md:tw-inset-0 tw-h-[calc(100%-1rem)] tw-max-h-full tw-justify-center tw-items-center tw-flex"
     tabindex="-1"

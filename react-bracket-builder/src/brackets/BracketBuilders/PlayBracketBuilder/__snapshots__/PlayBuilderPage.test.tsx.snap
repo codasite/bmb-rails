@@ -54,6 +54,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
             </span>
             <div
               class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-dd-blue tw-font-700 tw-bg-white"
+              data-testid="team-slot-round-1-match-0-winner"
               style="border-width: 0px;"
             >
               <span
@@ -77,8 +78,9 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
-                <div
-                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                <button
+                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-left"
                   style="border-width: 0px;"
                 >
                   <span
@@ -86,9 +88,10 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
                   >
                     Team 1
                   </span>
-                </div>
-                <div
-                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                </button>
+                <button
+                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -96,7 +99,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
                   >
                     Team 2
                   </span>
-                </div>
+                </button>
               </div>
             </div>
             <div
@@ -105,8 +108,9 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
               >
-                <div
-                  class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                <button
+                  class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-1-match-0-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -114,9 +118,10 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
                   >
                     Team 1
                   </span>
-                </div>
-                <div
-                  class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                </button>
+                <button
+                  class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white tw-cursor-pointer"
+                  data-testid="team-slot-round-1-match-0-right"
                   style="border-width: 0px;"
                 >
                   <span
@@ -124,7 +129,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
                   >
                     Team 3
                   </span>
-                </div>
+                </button>
               </div>
             </div>
             <div
@@ -133,8 +138,9 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
-                <div
-                  class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                <button
+                  class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-left"
                   style="border-width: 0px;"
                 >
                   <span
@@ -142,9 +148,10 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
                   >
                     Team 3
                   </span>
-                </div>
-                <div
-                  class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                </button>
+                <button
+                  class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -152,7 +159,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
                   >
                     Team 4
                   </span>
-                </div>
+                </button>
               </div>
             </div>
           </div>
@@ -203,7 +210,32 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
       </div>
       <div
         class="tw-px-24 tw-mt-60 tw-flex tw-gap-15 tw-flex-col tw-items-stretch tw-self-stretch"
-      />
+      >
+        <div
+          class="tw-flex tw-self-stretch tw-flex-col tw-items-stretch"
+        >
+          <button
+            class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-green tw-text-dd-blue disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-green/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-green dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+          >
+            <svg
+              class="tw-h-16 sm:tw-h-24"
+            />
+            <span>
+              Add to Apparel
+            </span>
+          </button>
+        </div>
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-blue tw-text-white disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-blue/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-blue dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+        >
+          <svg
+            class="tw-h-16 sm:tw-h-24"
+          />
+          <span>
+            Submit Picks
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </DocumentFragment>
@@ -293,6 +325,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
             </span>
             <div
               class="wpbb-team-2-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
+              data-testid="team-slot-round-2-match-0-winner"
               style="border-width: 2px;"
             />
           </div>
@@ -312,6 +345,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
               >
                 <button
                   class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -322,6 +356,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
                 </button>
                 <button
                   class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -336,6 +371,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
               >
                 <button
                   class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -346,6 +382,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
                 </button>
                 <button
                   class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -364,10 +401,12 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
               >
                 <div
                   class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-left"
                   style="border-width: 2px;"
                 />
                 <div
                   class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-right"
                   style="border-width: 2px;"
                 />
               </div>
@@ -380,10 +419,12 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
               >
                 <div
                   class="wpbb-team-2-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-left"
                   style="border-width: 2px;"
                 />
                 <div
                   class="wpbb-team-2-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-right"
                   style="border-width: 2px;"
                 />
               </div>
@@ -396,10 +437,12 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
               >
                 <div
                   class="wpbb-team-1-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-left"
                   style="border-width: 2px;"
                 />
                 <div
                   class="wpbb-team-1-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-right"
                   style="border-width: 2px;"
                 />
               </div>
@@ -412,6 +455,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
               >
                 <button
                   class="wpbb-team-0-2-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -422,6 +466,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
                 </button>
                 <button
                   class="wpbb-team-0-2-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -436,6 +481,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
               >
                 <button
                   class="wpbb-team-0-3-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -446,6 +492,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
                 </button>
                 <button
                   class="wpbb-team-0-3-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -604,6 +651,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             </span>
             <div
               class="wpbb-team-2-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
+              data-testid="team-slot-round-2-match-0-winner"
               style="border-width: 2px;"
             />
           </div>
@@ -623,6 +671,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               >
                 <button
                   class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -633,6 +682,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
                 </button>
                 <button
                   class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -647,6 +697,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               >
                 <button
                   class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -657,6 +708,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
                 </button>
                 <button
                   class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -675,10 +727,12 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               >
                 <div
                   class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-left"
                   style="border-width: 2px;"
                 />
                 <div
                   class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-right"
                   style="border-width: 2px;"
                 />
               </div>
@@ -691,10 +745,12 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               >
                 <div
                   class="wpbb-team-2-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-left"
                   style="border-width: 2px;"
                 />
                 <div
                   class="wpbb-team-2-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-right"
                   style="border-width: 2px;"
                 />
               </div>
@@ -707,10 +763,12 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               >
                 <div
                   class="wpbb-team-1-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-left"
                   style="border-width: 2px;"
                 />
                 <div
                   class="wpbb-team-1-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-right"
                   style="border-width: 2px;"
                 />
               </div>
@@ -723,6 +781,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               >
                 <button
                   class="wpbb-team-0-2-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -733,6 +792,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
                 </button>
                 <button
                   class="wpbb-team-0-2-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-right"
                   style="border-width: 2px;"
                 >
                   <span
@@ -747,6 +807,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
               >
                 <button
                   class="wpbb-team-0-3-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-left"
                   style="border-width: 2px;"
                 >
                   <span
@@ -757,6 +818,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
                 </button>
                 <button
                   class="wpbb-team-0-3-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-right"
                   style="border-width: 2px;"
                 >
                   <span
