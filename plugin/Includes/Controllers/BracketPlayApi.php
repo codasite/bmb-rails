@@ -8,6 +8,7 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
+use WStrategies\BMB\Features\VotingBracket\Domain\VotingPlayCreateListener;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BeforePlayAddedListener;
 use WStrategies\BMB\Includes\Controllers\ApiListeners\BracketPlayCreateListenerInterface;
 use WStrategies\BMB\Includes\Domain\Play;
@@ -58,6 +59,7 @@ class BracketPlayApi extends WP_REST_Controller implements HooksInterface {
   private function init_create_listeners(array $args): array {
     return [
       new BeforePlayAddedListener(),
+      new VotingPlayCreateListener(),
       new AnonymousPlayService($args),
       new CurrentPlayService($args),
       new PlayImageService($args),
