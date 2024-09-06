@@ -21,6 +21,63 @@ class BracketIconButtons {
     }
   }
 
+  public static function live_bracket_icon_buttons($bracket): false|string {
+    ob_start(); ?>
+    <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::share_bracket_btn($bracket); ?>
+    <?php echo self::duplicate_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'most_popular_picks',
+      'edit_bracket',
+      'set_fee',
+      'share_bracket',
+      'duplicate_bracket',
+      'lock_tournament',
+      'delete_bracket',
+    ]); ?>
+    <?php return ob_get_clean();
+  }
+
+  public static function private_bracket_icon_buttons($bracket): false|string {
+    ob_start(); ?>
+    <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::duplicate_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'edit_bracket',
+      'set_fee',
+      'duplicate_bracket',
+      'delete_bracket',
+    ]); ?>
+    <?php return ob_get_clean();
+  }
+
+  public static function scored_bracket_icon_buttons($bracket): false|string {
+    ob_start(); ?>
+    <?php echo self::edit_bracket_btn($bracket); ?>
+    <?php echo self::share_bracket_btn($bracket); ?>
+    <?php echo self::duplicate_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'most_popular_picks',
+      'edit_bracket',
+      'share_bracket',
+      'duplicate_bracket',
+      'delete_bracket',
+    ]); ?>
+    <?php return ob_get_clean();
+  }
+
+  public static function upcoming_bracket_icon_buttons($bracket) {
+    ob_start(); ?>
+    <?php echo self::set_fee_btn($bracket); ?>
+    <?php echo self::share_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'set_fee',
+      'share_bracket',
+    ]); ?>
+    
+    <?php return ob_get_clean();
+  }
+
   public static function share_bracket_btn($bracket): false|string {
     return DashboardCommon::icon_btn(
       'Share',
@@ -70,23 +127,6 @@ class BracketIconButtons {
     );
   }
 
-  public static function scored_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::most_popular_picks_btn($bracket); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      'most_popular_picks',
-      'edit_bracket',
-      'share_bracket',
-      'duplicate_bracket',
-      'delete_bracket',
-    ]); ?>
-    <?php return ob_get_clean();
-  }
-
   public static function set_fee_btn($bracket): false|string {
     if (!current_user_can('wpbb_add_bracket_fee', $bracket->id)) {
       return '';
@@ -101,21 +141,6 @@ class BracketIconButtons {
         'fee' => $bracket->fee,
       ]
     );
-  }
-
-  public static function private_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::set_fee_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      'edit_bracket',
-      'set_fee',
-      'duplicate_bracket',
-      'delete_bracket',
-    ]); ?>
-    <?php return ob_get_clean();
   }
 
   public static function edit_bracket_btn($bracket): false|string {
@@ -139,39 +164,6 @@ class BracketIconButtons {
         'bracket-year' => $year,
       ]
     );
-  }
-
-  public static function upcoming_bracket_icon_buttons($bracket) {
-    ob_start(); ?>
-    <?php echo self::set_fee_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      'set_fee',
-      'share_bracket',
-    ]); ?>
-    
-    <?php return ob_get_clean();
-  }
-
-  public static function live_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::most_popular_picks_btn($bracket); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::set_fee_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::lock_tournament_btn($bracket); ?>
-    <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      'most_popular_picks',
-      'edit_bracket',
-      'set_fee',
-      'share_bracket',
-      'duplicate_bracket',
-      'lock_tournament',
-      'delete_bracket',
-    ]); ?>
-    <?php return ob_get_clean();
   }
 
   public static function duplicate_bracket_btn($bracket): false|string {
