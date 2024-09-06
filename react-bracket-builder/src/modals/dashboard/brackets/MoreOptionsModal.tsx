@@ -92,8 +92,8 @@ export const MoreOptionsModal = (props: {
     },
   })
   return (
-    <Modal show={props.show} setShow={props.setShow}>
-      <div className="tw-flex tw-flex-col tw-gap-15">
+    <Modal show={props.show} setShow={props.setShow} usePadding={false}>
+      <div className="tw-flex tw-flex-col tw-gap-15 tw-p-20">
         {bracketOptions.mostPopularPicks && (
           <BracketOptionLink
             IconComponent={PercentIcon}

@@ -4,7 +4,9 @@ export const Modal = (props: {
   show: boolean
   setShow: (show: boolean) => void
   children: React.ReactNode
+  usePadding?: boolean
 }) => {
+  const { usePadding = true } = props
   return (
     <>
       {props.show && (
@@ -15,7 +17,9 @@ export const Modal = (props: {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="tw-relative tw-max-w-[606px] tw-p-30 sm:tw-p-60 tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20"
+            className={`tw-relative tw-max-w-[606px] tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20 ${
+              usePadding ? 'tw-p-30 sm:tw-p-60' : ''
+            }`}
           >
             {props.children}
           </div>
