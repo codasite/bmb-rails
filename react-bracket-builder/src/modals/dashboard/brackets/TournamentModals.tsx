@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { wpbbAjax, WpbbAppObj } from '../../../utils/WpbbAjax'
+import { useEffect, useState } from 'react'
+import { WpbbAppObj } from '../../../utils/WpbbAjax'
 import { CompleteRoundModal } from './CompleteRoundModal'
 import { DeleteBracketModal } from './DeleteBracketModal'
 import { EditBracketModal } from './EditBracketModal'
@@ -8,60 +8,91 @@ import { PublishBracketModal } from './PublishBracketModal'
 import { SetTournamentFeeModal } from './SetTournamentFeeModal'
 import { ShareBracketModal } from './ShareBracketModal'
 import { UpcomingNotificationModal } from './UpcomingNotificationModal'
-import addClickHandlers from '../../addClickHandlers'
 import { MoreOptionsModal } from './MoreOptionsModal'
+import { BracketData } from './BracketData'
 
-export const TournamentModals = (props: { appObj: WpbbAppObj }) => {
+export const TournamentModalsContainer = (props: { appObj: WpbbAppObj }) => {
   const [showEditBracketModal, setShowEditBracketModal] = useState(false)
   const [showShareBracketModal, setShowShareBracketModal] = useState(false)
   const [showDeleteBracketModal, setShowDeleteBracketModal] = useState(false)
-  const [showPublishBracketModal, setShowPublishBracketModal] = useState(false)
-  const [showUpcomingNotificationModal, setShowUpcomingNotificationModal] =
-    useState(false)
   const [showSetTournamentFeeModal, setShowSetTournamentFeeModal] =
     useState(false)
   const [showLockLiveTournamentModal, setShowLockLiveTournamentModal] =
     useState(false)
-  const [showCompleteRoundModal, setShowCompleteRoundModal] = useState(false)
-  const [showMoreOptionsModal, setShowMoreOptionsModal] = useState(true)
+  const [showMoreOptionsModal, setShowMoreOptionsModal] = useState(false)
+  return (
+    <TournamentModals
+      appObj={props.appObj}
+      showEditBracketModal={showEditBracketModal}
+      setShowEditBracketModal={setShowEditBracketModal}
+      showSetTournamentFeeModal={showSetTournamentFeeModal}
+      setShowSetTournamentFeeModal={setShowSetTournamentFeeModal}
+      showShareBracketModal={showShareBracketModal}
+      setShowShareBracketModal={setShowShareBracketModal}
+      showLockLiveTournamentModal={showLockLiveTournamentModal}
+      setShowLockLiveTournamentModal={setShowLockLiveTournamentModal}
+      showDeleteBracketModal={showDeleteBracketModal}
+      setShowDeleteBracketModal={setShowDeleteBracketModal}
+      showMoreOptionsModal={showMoreOptionsModal}
+      setShowMoreOptionsModal={setShowMoreOptionsModal}
+    />
+  )
+}
 
-  const [bracketId, setBracketId] = useState<number | null>(null)
-  const [bracketTitle, setBracketTitle] = useState('')
-  const [bracketMonth, setBracketMonth] = useState('')
-  const [bracketYear, setBracketYear] = useState('')
-  const [bracketFee, setBracketFee] = useState<number>(null)
-  const [playBracketUrl, setPlayBracketUrl] = useState('')
-  const [copyBracketUrl, setCopyBracketUrl] = useState('')
-  const [mostPopularPicksUrl, setMostPopularPicksUrl] = useState('')
+export const TournamentModals = (props: {
+  appObj: WpbbAppObj
+  showEditBracketModal: boolean
+  setShowEditBracketModal: (show: boolean) => void
+  showSetTournamentFeeModal: boolean
+  setShowSetTournamentFeeModal: (show: boolean) => void
+  showShareBracketModal: boolean
+  setShowShareBracketModal: (show: boolean) => void
+  showLockLiveTournamentModal: boolean
+  setShowLockLiveTournamentModal: (show: boolean) => void
+  showDeleteBracketModal: boolean
+  setShowDeleteBracketModal: (show: boolean) => void
+  showMoreOptionsModal: boolean
+  setShowMoreOptionsModal: (show: boolean) => void
+}) => {
+  const [bracketData, setBracketData] = useState<BracketData>({})
+  useEffect(() => {
+    console.log('bracketData', bracketData)
+  }, [bracketData])
 
-  const resetState = () => {
-    setBracketId(null)
-    setBracketTitle('')
-    setBracketMonth('')
-    setBracketYear('')
-    setBracketFee(null)
-    setPlayBracketUrl('')
-    setCopyBracketUrl('')
-    setMostPopularPicksUrl('')
-    setShowEditBracketModal(false)
-  }
   return (
     <>
       <EditBracketModal
-        show={showEditBracketModal}
-        setShow={setShowEditBracketModal}
-        resetState={resetState}
-        bracketId={bracketId}
-        bracketTitle={bracketTitle}
-        setBracketTitle={setBracketTitle}
-        bracketMonth={bracketMonth}
-        setBracketMonth={setBracketMonth}
-        bracketYear={bracketYear}
-        setBracketYear={setBracketYear}
-        setBracketId={setBracketId}
+        show={props.showEditBracketModal}
+        setShow={props.setShowEditBracketModal}
+        bracketData={bracketData}
+        setBracketData={setBracketData}
       />
-      <ShareBracketModal />
-      <DeleteBracketModal />
+      <SetTournamentFeeModal
+        applicationFeeMinimum={props.appObj.applicationFeeMinimum}
+        applicationFeePercentage={props.appObj.applicationFeePercentage}
+        show={props.showSetTournamentFeeModal}
+        setShow={props.setShowSetTournamentFeeModal}
+        bracketData={bracketData}
+        setBracketData={setBracketData}
+      />
+      <ShareBracketModal
+        show={props.showShareBracketModal}
+        setShow={props.setShowShareBracketModal}
+        bracketData={bracketData}
+        setBracketData={setBracketData}
+      />
+      <LockLiveTournamentModal
+        show={props.showLockLiveTournamentModal}
+        setShow={props.setShowLockLiveTournamentModal}
+        bracketData={bracketData}
+        setBracketData={setBracketData}
+      />
+      <DeleteBracketModal
+        show={props.showDeleteBracketModal}
+        setShow={props.setShowDeleteBracketModal}
+        bracketData={bracketData}
+        setBracketData={setBracketData}
+      />
       <PublishBracketModal
         upgradeAccountUrl={props.appObj.upgradeAccountUrl}
         canCreateBracket={props.appObj.userCanShareBracket}
@@ -70,34 +101,17 @@ export const TournamentModals = (props: { appObj: WpbbAppObj }) => {
         isUserLoggedIn={props.appObj.isUserLoggedIn}
         loginUrl={props.appObj.loginUrl}
       />
-      <SetTournamentFeeModal
-        applicationFeeMinimum={props.appObj.applicationFeeMinimum}
-        applicationFeePercentage={props.appObj.applicationFeePercentage}
-      />
-      <LockLiveTournamentModal />
       <CompleteRoundModal />
       <MoreOptionsModal
-        show={showMoreOptionsModal}
-        setShow={setShowMoreOptionsModal}
-        setShowDeleteBracketModal={setShowDeleteBracketModal}
-        setShowEditBracketModal={setShowEditBracketModal}
-        setShowLockLiveTournamentModal={setShowLockLiveTournamentModal}
-        setShowSetTournamentFeeModal={setShowSetTournamentFeeModal}
-        setShowShareBracketModal={setShowShareBracketModal}
-        bracketId={bracketId}
-        bracketTitle={bracketTitle}
-        bracketMonth={bracketMonth}
-        setBracketMonth={setBracketMonth}
-        bracketYear={bracketYear}
-        setBracketYear={setBracketYear}
-        bracketFee={bracketFee}
-        setBracketFee={setBracketFee}
-        playBracketUrl={playBracketUrl}
-        setPlayBracketUrl={setPlayBracketUrl}
-        copyBracketUrl={copyBracketUrl}
-        setCopyBracketUrl={setCopyBracketUrl}
-        mostPopularPicksUrl={mostPopularPicksUrl}
-        setMostPopularPicksUrl={setMostPopularPicksUrl}
+        show={props.showMoreOptionsModal}
+        setShow={props.setShowMoreOptionsModal}
+        setShowDeleteBracketModal={props.setShowDeleteBracketModal}
+        setShowEditBracketModal={props.setShowEditBracketModal}
+        setShowLockLiveTournamentModal={props.setShowLockLiveTournamentModal}
+        setShowSetTournamentFeeModal={props.setShowSetTournamentFeeModal}
+        setShowShareBracketModal={props.setShowShareBracketModal}
+        bracketData={bracketData}
+        setBracketData={setBracketData}
       />
     </>
   )

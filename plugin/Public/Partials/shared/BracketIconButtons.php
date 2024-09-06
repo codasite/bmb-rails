@@ -30,6 +30,7 @@ class BracketIconButtons {
         'label' => 'Share',
         'play-bracket-url' => $bracket->url . 'play',
         'bracket-title' => $bracket->title,
+        'bracket-id' => $bracket->id,
       ]
     );
   }

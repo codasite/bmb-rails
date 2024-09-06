@@ -17,5 +17,5 @@ export default function addClickHandlers(props: {
         button.removeEventListener('click', handleButtonClick)
       }
     }
-  })
+  }, [])
 }

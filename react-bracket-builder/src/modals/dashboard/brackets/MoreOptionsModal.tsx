@@ -2,24 +2,33 @@ import { useState } from 'react'
 import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
 import { ReactComponent as EditIcon } from '../../../assets/icons/pencil.svg'
+import { ReactComponent as PercentIcon } from '../../../assets/icons/percent.svg'
+import { ReactComponent as ShareIcon } from '../../../assets/icons/share.svg'
+import { ReactComponent as CopyIcon } from '../../../assets/icons/copy.svg'
+import { ReactComponent as TrashIcon } from '../../../assets/icons/trash.svg'
+import { ReactComponent as DollarIcon } from '../../../assets/icons/dollar_shield.svg'
+import { ReactComponent as LockIcon } from '../../../assets/icons/lock.svg'
+import { BracketData } from './BracketData'
 
-const MoreOptionsButton = (props: {
+const BracketOptionButton = (props: {
   IconComponent: React.FunctionComponent
   label: string
   onClick: () => void
 }) => {
   return (
     <button
-      className="tw-flex tw-gap-10 tw-items-center tw-bg-transparent tw-text-white tw-uppercase tw-font-sans tw-border-none tw-cursor-pointer"
+      className="tw-flex tw-gap-10 tw-items-center tw-bg-transparent tw-text-white tw-uppercase tw-font-sans tw-border-none tw-cursor-pointer tw-p-0"
       onClick={props.onClick}
     >
-      <props.IconComponent />
+      <div className="tw-h-24 tw-w-24">
+        <props.IconComponent />
+      </div>
       <span className="tw-font-500 tw-text-16">{props.label}</span>
     </button>
   )
 }
 
-const MoreOptionsLink = (props: {
+const BracketOptionLink = (props: {
   IconComponent: React.FunctionComponent
   label: string
   url: string
@@ -27,7 +36,7 @@ const MoreOptionsLink = (props: {
   return (
     <a
       href={props.url}
-      className="tw-flex tw-gap-10 tw-items-center tw-bg-transparent tw-text-white tw-uppercase tw-font-sans tw-border-none tw-cursor-pointer"
+      className="tw-flex tw-gap-10 tw-items-center tw-text-white tw-uppercase tw-font-sans tw-cursor-pointer"
     >
       <props.IconComponent />
       <span className="tw-font-500 tw-text-16">{props.label}</span>
@@ -43,49 +52,76 @@ export const MoreOptionsModal = (props: {
   setShowLockLiveTournamentModal: (show: boolean) => void
   show: boolean
   setShow: (show: boolean) => void
-  bracketId: number | null
-  setBracketId: (id: number) => void
-  bracketTitle: string
-  setBracketTitle: (title: string) => void
-  bracketMonth: string
-  setBracketMonth: (month: string) => void
-  bracketYear: string
-  setBracketYear: (year: string) => void
-  bracketFee: number
-  setBracketFee: (fee: number) => void
-  playBracketUrl: string
-  setPlayBracketUrl: (url: string) => void
-  copyBracketUrl: string
-  setCopyBracketUrl: (url: string) => void
-  mostPopularPicksUrl: string
-  setMostPopularPicksUrl: (url: string) => void
+  bracketData: BracketData
+  setBracketData: (data: BracketData) => void
 }) => {
   addClickHandlers({
     buttonClassName: 'wpbb-more-options-button',
     onButtonClick: (b) => {
-      b.dataset.bracketId && props.setBracketId(parseInt(b.dataset.bracketId))
-      b.dataset.bracketTitle && props.setBracketTitle(b.dataset.bracketTitle)
-      b.dataset.bracketMonth && props.setBracketMonth(b.dataset.bracketMonth)
-      b.dataset.bracketYear && props.setBracketYear(b.dataset.bracketYear)
-      b.dataset.fee && props.setBracketFee(parseInt(b.dataset.fee))
-      b.dataset.playBracketUrl &&
-        props.setPlayBracketUrl(b.dataset.playBracketUrl)
-      b.dataset.copyBracketUrl &&
-        props.setCopyBracketUrl(b.dataset.copyBracketUrl)
-      b.dataset.mostPopularPicksUrl &&
-        props.setMostPopularPicksUrl(b.dataset.mostPopularPicksUrl)
+      props.setBracketData({
+        id: parseInt(b.dataset.bracketId),
+        title: b.dataset.bracketTitle,
+        month: b.dataset.bracketMonth,
+        year: b.dataset.bracketYear,
+        fee: parseInt(b.dataset.fee),
+        playBracketUrl: b.dataset.playBracketUrl,
+        copyBracketUrl: b.dataset.copyBracketUrl,
+        mostPopularPicksUrl: b.dataset.mostPopularPicksUrl,
+      })
       props.setShow(true)
     },
   })
   return (
     <Modal show={props.show} setShow={props.setShow}>
       <div className="tw-flex tw-flex-col tw-gap-15">
-        <MoreOptionsButton
+        <BracketOptionLink
+          IconComponent={PercentIcon}
+          label="Most Popular Picks"
+          url={props.bracketData.mostPopularPicksUrl}
+        />
+        <BracketOptionButton
           IconComponent={EditIcon}
           label="Edit Info"
           onClick={() => {
             props.setShow(false)
             props.setShowEditBracketModal(true)
+          }}
+        />
+        <BracketOptionButton
+          IconComponent={DollarIcon}
+          label="Set Fee"
+          onClick={() => {
+            props.setShow(false)
+            props.setShowSetTournamentFeeModal(true)
+          }}
+        />
+        <BracketOptionButton
+          IconComponent={ShareIcon}
+          label="Share"
+          onClick={() => {
+            props.setShow(false)
+            props.setShowShareBracketModal(true)
+          }}
+        />
+        <BracketOptionLink
+          IconComponent={CopyIcon}
+          label="Duplicate"
+          url={props.bracketData.copyBracketUrl}
+        />
+        <BracketOptionButton
+          IconComponent={LockIcon}
+          label="Lock"
+          onClick={() => {
+            props.setShow(false)
+            props.setShowLockLiveTournamentModal(true)
+          }}
+        />
+        <BracketOptionButton
+          IconComponent={TrashIcon}
+          label="Delete"
+          onClick={() => {
+            props.setShow(false)
+            props.setShowDeleteBracketModal(true)
           }}
         />
       </div>
