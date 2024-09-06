@@ -77,7 +77,13 @@ class BracketIconButtons {
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'most_popular_picks',
+      'edit_bracket',
+      'share_bracket',
+      'duplicate_bracket',
+      'delete_bracket',
+    ]); ?>
     <?php return ob_get_clean();
   }
 
@@ -103,6 +109,12 @@ class BracketIconButtons {
     <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'edit_bracket',
+      'set_fee',
+      'duplicate_bracket',
+      'delete_bracket',
+    ]); ?>
     <?php return ob_get_clean();
   }
 
@@ -133,6 +145,11 @@ class BracketIconButtons {
     ob_start(); ?>
     <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::share_bracket_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'set_fee',
+      'share_bracket',
+    ]); ?>
+    
     <?php return ob_get_clean();
   }
 
@@ -145,7 +162,15 @@ class BracketIconButtons {
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::lock_tournament_btn($bracket); ?>
     <?php echo self::delete_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket); ?>
+    <?php echo self::more_options_btn($bracket, [
+      'most_popular_picks',
+      'edit_bracket',
+      'set_fee',
+      'share_bracket',
+      'duplicate_bracket',
+      'lock_tournament',
+      'delete_bracket',
+    ]); ?>
     <?php return ob_get_clean();
   }
 
@@ -178,13 +203,13 @@ class BracketIconButtons {
       'ellipsis',
       classes: ['wpbb-more-options-button'],
       data: [
-        'view-mpp' => $options['view_mpp'] ?? false,
-        'share-bracket' => $options['share_bracket'] ?? false,
-        'edit-bracket' => $options['edit_bracket'] ?? false,
-        'set-fee' => $options['set_fee'] ?? false,
-        'duplicate-bracket' => $options['duplicate_bracket'] ?? false,
-        'lock-tournament' => $options['lock_tournament'] ?? false,
-        'delete-bracket' => $options['delete_bracket'] ?? false,
+        'most-popular-picks' => isOptionPresent('most_popular_picks', $options),
+        'share-bracket' => isOptionPresent('share_bracket', $options),
+        'edit-bracket' => isOptionPresent('edit_bracket', $options),
+        'set-fee' => isOptionPresent('set_fee', $options),
+        'duplicate-bracket' => isOptionPresent('duplicate_bracket', $options),
+        'lock-tournament' => isOptionPresent('lock_tournament', $options),
+        'delete-bracket' => isOptionPresent('delete_bracket', $options),
         'bracket-id' => $bracket->id,
         'bracket-title' => $bracket->title,
         'bracket-month' => $bracket->month,
@@ -196,4 +221,8 @@ class BracketIconButtons {
       ]
     );
   }
+}
+
+function isOptionPresent($optionName, $options) {
+  return in_array($optionName, $options) ? 'true' : 'false';
 }

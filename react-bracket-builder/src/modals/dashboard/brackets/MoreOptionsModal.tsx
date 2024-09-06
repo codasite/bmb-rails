@@ -10,6 +10,7 @@ import { ReactComponent as DollarIcon } from '../../../assets/icons/dollar_shiel
 import { ReactComponent as LockIcon } from '../../../assets/icons/lock.svg'
 import { BracketData } from './BracketData'
 import { TournamentModalVisibility } from './TournamentModalVisibility'
+import { loadBracketData } from '../../loadBracketData'
 
 const BracketOptionButton = (props: {
   IconComponent: React.FunctionComponent
@@ -45,6 +46,16 @@ const BracketOptionLink = (props: {
   )
 }
 
+interface BracketOptionAvailability {
+  mostPopularPicks: boolean
+  shareBracket: boolean
+  editBracket: boolean
+  setFee: boolean
+  duplicateBracket: boolean
+  lockTournament: boolean
+  deleteBracket: boolean
+}
+
 export const MoreOptionsModal = (props: {
   show: boolean
   setShow: (show: boolean) => void
@@ -52,70 +63,96 @@ export const MoreOptionsModal = (props: {
   bracketData: BracketData
   setBracketData: (data: BracketData) => void
 }) => {
+  const [bracketOptions, setBracketOptions] =
+    useState<BracketOptionAvailability>({
+      mostPopularPicks: false,
+      shareBracket: false,
+      editBracket: false,
+      setFee: false,
+      duplicateBracket: false,
+      lockTournament: false,
+      deleteBracket: false,
+    })
   addClickHandlers({
     buttonClassName: 'wpbb-more-options-button',
     onButtonClick: (b) => {
-      props.setBracketData({
-        id: parseInt(b.dataset.bracketId),
-        title: b.dataset.bracketTitle,
-        month: b.dataset.bracketMonth,
-        year: b.dataset.bracketYear,
-        fee: parseInt(b.dataset.fee),
-        playBracketUrl: b.dataset.playBracketUrl,
-        copyBracketUrl: b.dataset.copyBracketUrl,
-        mostPopularPicksUrl: b.dataset.mostPopularPicksUrl,
+      loadBracketData(b, props.setBracketData)
+      setBracketOptions({
+        mostPopularPicks: b.dataset.mostPopularPicks === 'true' ? true : false,
+        shareBracket: b.dataset.shareBracket === 'true' ? true : false,
+        editBracket: b.dataset.editBracket === 'true' ? true : false,
+        setFee: b.dataset.setFee === 'true' ? true : false,
+        duplicateBracket: b.dataset.duplicateBracket === 'true' ? true : false,
+        lockTournament: b.dataset.lockTournament === 'true' ? true : false,
+        deleteBracket: b.dataset.deleteBracket === 'true' ? true : false,
       })
+      console.log('bracketOptions', bracketOptions)
+
       props.setShow(true)
     },
   })
   return (
     <Modal show={props.show} setShow={props.setShow}>
       <div className="tw-flex tw-flex-col tw-gap-15">
-        <BracketOptionLink
-          IconComponent={PercentIcon}
-          label="Most Popular Picks"
-          url={props.bracketData.mostPopularPicksUrl}
-        />
-        <BracketOptionButton
-          IconComponent={EditIcon}
-          label="Edit Info"
-          onClick={() => {
-            props.showModal('editBracket')
-          }}
-        />
-        <BracketOptionButton
-          IconComponent={DollarIcon}
-          label="Set Fee"
-          onClick={() => {
-            props.showModal('setTournamentFee')
-          }}
-        />
-        <BracketOptionButton
-          IconComponent={ShareIcon}
-          label="Share"
-          onClick={() => {
-            props.showModal('shareBracket')
-          }}
-        />
-        <BracketOptionLink
-          IconComponent={CopyIcon}
-          label="Duplicate"
-          url={props.bracketData.copyBracketUrl}
-        />
-        <BracketOptionButton
-          IconComponent={LockIcon}
-          label="Lock"
-          onClick={() => {
-            props.showModal('lockLiveTournament')
-          }}
-        />
-        <BracketOptionButton
-          IconComponent={TrashIcon}
-          label="Delete"
-          onClick={() => {
-            props.showModal('deleteBracket')
-          }}
-        />
+        {bracketOptions.mostPopularPicks && (
+          <BracketOptionLink
+            IconComponent={PercentIcon}
+            label="Most Popular Picks"
+            url={props.bracketData.mostPopularPicksUrl}
+          />
+        )}
+        {bracketOptions.editBracket && (
+          <BracketOptionButton
+            IconComponent={EditIcon}
+            label="Edit Info"
+            onClick={() => {
+              props.showModal('editBracket')
+            }}
+          />
+        )}
+        {bracketOptions.setFee && (
+          <BracketOptionButton
+            IconComponent={DollarIcon}
+            label="Set Fee"
+            onClick={() => {
+              props.showModal('setTournamentFee')
+            }}
+          />
+        )}
+        {bracketOptions.shareBracket && (
+          <BracketOptionButton
+            IconComponent={ShareIcon}
+            label="Share"
+            onClick={() => {
+              props.showModal('shareBracket')
+            }}
+          />
+        )}
+        {bracketOptions.duplicateBracket && (
+          <BracketOptionLink
+            IconComponent={CopyIcon}
+            label="Duplicate"
+            url={props.bracketData.copyBracketUrl}
+          />
+        )}
+        {bracketOptions.lockTournament && (
+          <BracketOptionButton
+            IconComponent={LockIcon}
+            label="Lock"
+            onClick={() => {
+              props.showModal('lockLiveTournament')
+            }}
+          />
+        )}
+        {bracketOptions.deleteBracket && (
+          <BracketOptionButton
+            IconComponent={TrashIcon}
+            label="Delete"
+            onClick={() => {
+              props.showModal('deleteBracket')
+            }}
+          />
+        )}
       </div>
     </Modal>
   )
