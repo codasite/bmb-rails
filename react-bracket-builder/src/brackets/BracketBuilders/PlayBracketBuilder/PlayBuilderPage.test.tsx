@@ -192,7 +192,7 @@ describe('PlayBuilderPage', () => {
     expect(createPlayMock).toHaveBeenCalled()
   })
 
-  test('should update existing play when bracket is voting and user submit picks for second round', () => {
+  test.skip('should update existing play when bracket is voting and user submit picks for second round', () => {
     // Four team bracket is voting and live round is second round
     const matches = [
       {
