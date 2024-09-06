@@ -106,7 +106,9 @@ class BracketListItem {
     ob_start();
     ?>
     <?php echo BracketsCommon::view_results_btn($bracket); ?>
-    <?php echo self::score_bracket_btn($bracket_score_link, $bracket); ?>
+    <?php echo $bracket->is_voting
+      ? BracketListItem::complete_round_button($bracket)
+      : BracketListItem::score_bracket_btn($bracket_score_link, $bracket); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();
