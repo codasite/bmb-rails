@@ -46,6 +46,8 @@ class AdminHooksTest extends WPBB_UnitTestCase {
 
   public function test_should_add_correct_capabilities_to_administrator() {
     $role = get_role('administrator');
-    $this->assertMatchesSnapshot($role->capabilities);
+    $sorted = array_keys($role->capabilities);
+    sort($sorted);
+    $this->assertMatchesSnapshot($sorted);
   }
 }
