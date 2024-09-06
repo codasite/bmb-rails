@@ -62,9 +62,14 @@ class BracketResultsRepo implements CustomTableInterface {
       'round_index' => $pick->round_index,
       'match_index' => $pick->match_index,
       'winning_team_id' => $pick->winning_team_id,
+      'popularity' => $pick->popularity,
     ]);
   }
 
+  /**
+   * @param int $bracket_id
+   * @param Pick[]|null $new_results
+   */
   public function update_results(
     int $bracket_id,
     array|null $new_results
@@ -96,6 +101,7 @@ class BracketResultsRepo implements CustomTableInterface {
                 self::table_name(),
                 [
                   'winning_team_id' => $new_result->winning_team_id,
+                  'popularity' => $new_result->popularity,
                 ],
                 [
                   'id' => $old_result->id,
@@ -134,6 +140,7 @@ class BracketResultsRepo implements CustomTableInterface {
         'updated_at' => isset($result['updated_at'])
           ? new DateTimeImmutable($result['updated_at'])
           : null,
+        'popularity' => $result['popularity'],
       ]);
     }
     return $bracket_results;
@@ -162,6 +169,10 @@ class BracketResultsRepo implements CustomTableInterface {
 			match_index tinyint(4) NOT NULL,
 			winning_team_id bigint(20) UNSIGNED NOT NULL,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      /**
+      * Percentage of players who picked this team to win the match.
+      */
+      popularity DECIMAL(6, 5),
 			PRIMARY KEY (id),
 			FOREIGN KEY (bracket_id) REFERENCES {$brackets_table}(id) ON DELETE CASCADE,
 			FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE

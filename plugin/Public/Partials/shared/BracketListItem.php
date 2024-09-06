@@ -22,15 +22,14 @@ class BracketListItem {
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
         <div class="tw-flex tw-gap-8 tw-items-center">
           <?php echo $is_paid ? self::paid_bracket_tag() : ''; ?>
+          <?php echo $bracket->is_voting ? self::voting_bracket_tag() : ''; ?>
           <span class="tw-font-500 tw-text-12"><?php echo esc_html(
             $num_teams
           ); ?>-Team Bracket</span>
         </div>
         <div class="tw-flex tw-gap-4 tw-items-center">
-          <?php echo BracketsCommon::get_bracket_tag($bracket->status); ?>
-          <?php echo file_get_contents(
-            WPBB_PLUGIN_DIR . 'Public/assets/icons/bar_chart.svg'
-          ); ?>
+          <?php echo BracketsCommon::get_bracket_status_tag($bracket); ?>
+          <?php echo PartialsCommon::icon('bar_chart'); ?>
           <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html(
             $num_plays
           ); ?></span>
@@ -41,7 +40,7 @@ class BracketListItem {
         <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html(
           $title
         ); ?></h2>
-        <div class="tw-flex tw-gap-10 tw-items-center">
+        <div class="tw-flex tw-gap-10 tw-items-start tw-flex-wrap">
           <?php echo BracketIconButtons::get_bracket_icon_buttons($bracket); ?>
         </div>
       </div>
@@ -56,6 +55,15 @@ class BracketListItem {
     ob_start(); ?>
     <div class="tw-text-white tw-bg-blue tw-px-8 tw-py-4 tw-flex tw-items-center tw-rounded-8">
       <?php echo PartialsCommon::icon('currency_dollar'); ?>
+    </div>
+    <?php return ob_get_clean();
+  }
+
+  public static function voting_bracket_tag(): false|string {
+    ob_start(); ?>
+    <div class="wpbb-voting-bracket-tag tw-px-8 tw-py-4 tw-flex tw-items-center tw-gap-4 tw-rounded-8">
+      <?php echo PartialsCommon::icon('percent_16'); ?>
+      <span class="tw-text-14 tw-text-dd-blue tw-font-600">Voting</span>
     </div>
     <?php return ob_get_clean();
   }
@@ -86,9 +94,7 @@ class BracketListItem {
     ?>
     <button data-bracket-id="<?php echo $bracket->id; ?>" data-go-live-url="<?php echo esc_url($bracket->url) . 'go-live'; ?>"
             class="wpbb-publish-bracket-button tw-border tw-border-solid tw-border-blue tw-bg-blue/15 tw-min-w-[190px] tw-px-16 tw-py-12 tw-flex tw-gap-10 tw-items-center tw-justify-center tw-rounded-8 hover:tw-bg-blue tw-font-sans tw-text-white tw-uppercase tw-cursor-pointer">
-      <?php echo file_get_contents(
-        WPBB_PLUGIN_DIR . 'Public/assets/icons/signal.svg'
-      ); ?>
+      <?php echo PartialsCommon::icon('signal'); ?>
       <span class="tw-font-700">Go Live</span>
     </button>
     <?php return ob_get_clean();
@@ -100,7 +106,9 @@ class BracketListItem {
     ob_start();
     ?>
     <?php echo BracketsCommon::view_results_btn($bracket); ?>
-    <?php echo self::score_bracket_btn($bracket_score_link, $bracket); ?>
+    <?php echo $bracket->is_voting
+      ? BracketListItem::complete_round_button($bracket)
+      : BracketListItem::score_bracket_btn($bracket_score_link, $bracket); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();
@@ -135,12 +143,30 @@ class BracketListItem {
     <a
       class="tw-border tw-border-solid tw-border-yellow tw-bg-yellow/15 hover:tw-bg-yellow hover:tw-text-dd-blue tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
       href="<?php echo esc_url($endpoint); ?>">
-      <?php echo file_get_contents(
-        WPBB_PLUGIN_DIR . 'Public/assets/icons/trophy_24.svg'
-      ); ?>
-      <span class="tw-font-500">Score tournament</span>
+      <?php echo PartialsCommon::icon('trophy_24'); ?>
+      <span class="tw-font-500">Update Results</span>
     </a>
     <?php return ob_get_clean();
+  }
+
+  public static function complete_round_button(Bracket $bracket): false|string {
+    if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
+      return '';
+    }
+    ob_start();
+    ?>
+    <button
+      class="wpbb-complete-round-btn tw-text-white tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-rounded-8 hover:tw-cursor-pointer tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue tw-w-full"
+      data-bracket-id="<?php echo $bracket->id; ?>" data-live-round-index="<?php echo $bracket->live_round_index; ?>" data-is-final-round="<?php echo $bracket->live_round_index_is_final() ? 'true' : 'false'; ?>"
+    >
+      <?php echo PartialsCommon::icon('arrow_right'); ?>
+    <span class="tw-font-sans tw-font-700 tw-uppercase">Close round <?php echo $bracket->live_round_index +
+      1; ?></span>
+    </button>
+    <?php return PartialsCommon::gradient_border_wrap(ob_get_clean(), [
+      'wpbb-complete-round-gradient-border',
+      'tw-rounded-8',
+    ]);
   }
 
   public static function live_bracket_buttons($bracket): false|string {
@@ -151,10 +177,9 @@ class BracketListItem {
     <?php echo BracketsCommon::play_bracket_btn($bracket, [
       'label' => 'Play',
     ]); ?>
-    <?php echo BracketListItem::score_bracket_btn(
-      $bracket_score_link,
-      $bracket
-    ); ?>
+    <?php echo $bracket->is_voting
+      ? BracketListItem::complete_round_button($bracket)
+      : BracketListItem::score_bracket_btn($bracket_score_link, $bracket); ?>
     <?php echo BracketsCommon::bracket_chat_btn($bracket->id); ?>
     <?php echo BracketsCommon::leaderboard_btn($leaderboard_link); ?>
     <?php return ob_get_clean();

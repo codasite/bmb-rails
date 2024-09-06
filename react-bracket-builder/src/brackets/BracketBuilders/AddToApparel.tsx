@@ -12,7 +12,7 @@ export const AddToApparel = (props: {
   processing?: boolean
   error?: boolean
 }) => {
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
   const { handleApparelClick, disabled, processing, error } = props
   const greenStyles = [
     'tw-bg-green',

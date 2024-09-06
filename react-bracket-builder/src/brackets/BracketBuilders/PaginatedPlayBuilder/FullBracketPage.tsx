@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ActionButton } from '../../shared/components/ActionButtons'
@@ -8,13 +8,16 @@ import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
 import { PlayBuilderProps } from '../PlayBracketBuilder/types'
+import { DarkModeContext } from '../../shared/context/context'
+import { BracketHeaderTag } from '../BracketHeaderTag'
 
 interface FullBracketPageProps extends PlayBuilderProps {
   onEditClick?: () => void
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { onEditClick, matchTree, darkMode, setDarkMode } = props
+  const { onEditClick, matchTree } = props
+  const { darkMode } = useContext(DarkModeContext)
 
   const canEdit = !!onEditClick
   const processing = props.processingAddToApparel || props.processingSubmitPicks
@@ -28,7 +31,18 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
       }}
     >
       <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
-        <ThemeSelector darkMode={darkMode} setDarkMode={setDarkMode} />
+        <div className="tw-self-center">
+          <div className="tw-mb-10">
+            {matchTree.isVoting && (
+              <BracketHeaderTag
+                text={`Voting Round ${matchTree.liveRoundIndex + 1}`}
+                color="green"
+              />
+            )}
+          </div>
+          <ThemeSelector />
+        </div>
+
         {matchTree && (
           <ScaledBracket
             BracketComponent={PickableBracket}
@@ -39,7 +53,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           {canEdit && (
             <ActionButton
               variant="white"
-              darkMode={darkMode}
               onClick={onEditClick}
               disabled={processing}
               borderWidth={0}

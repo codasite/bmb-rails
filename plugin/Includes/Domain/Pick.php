@@ -31,7 +31,7 @@ class Pick implements BracketMatchNodeInterface {
    * Percentage of players who picked this team to win for the round_index and
    * match_index.
    */
-  public ?int $percentage;
+  public ?float $popularity;
 
   /**
    * @var int
@@ -45,8 +45,8 @@ class Pick implements BracketMatchNodeInterface {
     $this->match_index = (int) $data['match_index'];
     $this->winning_team_id = (int) $data['winning_team_id'];
     $this->winning_team = $data['winning_team'] ?? null;
-    $this->percentage = isset($data['percentage'])
-      ? (int) $data['percentage']
+    $this->popularity = isset($data['popularity'])
+      ? (float) $data['popularity']
       : null;
     $this->id = isset($data['id']) ? (int) $data['id'] : null;
     $this->updated_at = $data['updated_at'] ?? null;
@@ -70,6 +70,7 @@ class Pick implements BracketMatchNodeInterface {
         ? $this->winning_team->to_array()
         : null,
       'updated_at' => $this->updated_at,
+      'popularity' => $this->popularity,
     ];
   }
 

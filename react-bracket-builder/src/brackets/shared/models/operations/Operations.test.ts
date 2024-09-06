@@ -83,7 +83,9 @@ describe('MatchTree Utils', () => {
     const t = () => {
       matchReprFromRes(numRounds, matches)
     }
-    expect(t).toThrowError('Invalid round index 4 for match 10')
+    expect(t).toThrowError(
+      'Invalid round index 4 for match {"id":10,"roundIndex":4,"matchIndex":1,"team1":{"id":19,"name":"Team 3"},"team2":{"id":20,"name":"Team 4"}}'
+    )
   })
 
   test('testing matchReprFromRes invalid match index', () => {
@@ -108,7 +110,9 @@ describe('MatchTree Utils', () => {
     const t = () => {
       matchReprFromRes(numRounds, matches)
     }
-    expect(t).toThrowError('Invalid match index 8 for match 10')
+    expect(t).toThrowError(
+      'Invalid match index 8 for match {"id":10,"roundIndex":1,"matchIndex":8,"team1":{"id":19,"name":"Team 3"},"team2":{"id":20,"name":"Team 4"}}'
+    )
   })
 
   test('testing matchReprFromRes wildcards', () => {

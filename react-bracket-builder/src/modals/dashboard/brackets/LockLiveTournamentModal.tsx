@@ -4,22 +4,26 @@ import { Modal } from '../../Modal'
 import { ModalHeader } from '../../ModalHeader'
 import { CancelButton, ConfirmButton, DangerButton } from '../../ModalButtons'
 import { bracketApi } from '../../../brackets/shared'
+import { BracketData } from './BracketData'
+import { loadBracketData } from '../../loadBracketData'
 
-export const LockLiveTournamentModal = () => {
-  const [show, setShow] = useState(false)
-  const [bracketId, setBracketId] = useState<number | null>(null)
-
+export const LockLiveTournamentModal = (props: {
+  show: boolean
+  setShow: (show: boolean) => void
+  bracketData: BracketData
+  setBracketData: (bracketData: BracketData) => void
+}) => {
   addClickHandlers({
     buttonClassName: 'wpbb-lock-tournament-button',
     onButtonClick: (b) => {
-      b.dataset.bracketId && setBracketId(parseInt(b.dataset.bracketId))
-      setShow(true)
+      loadBracketData(b, props.setBracketData)
+      props.setShow(true)
     },
   })
   const headerText = `Update tournament status to "In Progress"?`
 
   return (
-    <Modal show={show} setShow={setShow}>
+    <Modal show={props.show} setShow={props.setShow}>
       <ModalHeader text={headerText} />
       <p className="tw-text-center">
         No new plays will be accepted into the tournament.
@@ -29,11 +33,11 @@ export const LockLiveTournamentModal = () => {
         <DangerButton
           onClick={() => {
             // Lock the tournament
-            if (!bracketId) {
+            if (!props.bracketData.id) {
               return
             }
             bracketApi
-              .updateBracket(bracketId, { status: 'score' })
+              .updateBracket(props.bracketData.id, { status: 'score' })
               .then(() => {
                 window.location.reload()
               })
@@ -44,7 +48,7 @@ export const LockLiveTournamentModal = () => {
         >
           <span>Confirm</span>
         </DangerButton>
-        <CancelButton onClick={() => setShow(false)}></CancelButton>
+        <CancelButton onClick={() => props.setShow(false)}></CancelButton>
       </div>
     </Modal>
   )

@@ -2,6 +2,8 @@
 
 exports[`MatchTree testing MatchTree serialize 1`] = `
 {
+  "isVoting": false,
+  "liveRoundIndex": 0,
   "rounds": [
     [
       {

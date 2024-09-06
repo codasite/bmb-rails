@@ -17,8 +17,8 @@ export const PercentageTeamSlot = (props: TeamSlotProps) => {
   ]
 
   let percentage = null
-  if (props.match._pick.winningTeamId === props.team?.id) {
-    percentage = props.match._pick.percentage
+  if (props.match._pick && props.match._pick.winningTeamId === props.team?.id) {
+    percentage = props.match._pick.popularity
   }
   if (props.teamPosition === 'winner') {
     percentage = null
@@ -30,7 +30,7 @@ export const PercentageTeamSlot = (props: TeamSlotProps) => {
       <div className={MarkerStyles.join(' ')}>
         {percentage && (
           <span className="tw-p-4 tw-text-black tw-text-12 tw-font-600 tw-leading-none">
-            {percentage.toFixed(0) + '%'}
+            {(100 * percentage).toFixed(0) + '%'}
           </span>
         )}
       </div>

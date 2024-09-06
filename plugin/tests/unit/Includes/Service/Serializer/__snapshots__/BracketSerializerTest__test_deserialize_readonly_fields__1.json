@@ -16,6 +16,8 @@
     "num_plays": 0,
     "fee": 0,
     "should_notify_results_updated": false,
+    "is_voting": false,
+    "live_round_index": 0,
     "matches": [
         {
             "id": 100002,

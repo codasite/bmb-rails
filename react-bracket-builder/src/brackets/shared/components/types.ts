@@ -89,6 +89,11 @@ export interface BracketProps {
     prevMatchGap: number,
     matchHeight: number
   ) => number
+  getLineStyle?: (
+    roundIndex: number,
+    matchIndex: number,
+    teamPosition: 'left' | 'right'
+  ) => any
   setMatchTree?: (matchTree: MatchTree) => void
   onTeamClick?: TeamClickCallback
   matchTree: MatchTree
@@ -99,7 +104,6 @@ export interface BracketProps {
   BracketComponent?: React.FC<BracketProps> // for nesting brackets
   title?: string
   date?: string
-  darkMode?: boolean
   lineStyle?: object
   lineColor?: string
   lineWidth?: number
@@ -134,8 +138,6 @@ export interface PaginatedNavButtonsProps {
 
 // why is this different from PaginatedBracketProps?
 export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
-  page: number
-  setPage: (page: number) => void
   disableNext?: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
   forcePageAllPicked?: boolean
 }

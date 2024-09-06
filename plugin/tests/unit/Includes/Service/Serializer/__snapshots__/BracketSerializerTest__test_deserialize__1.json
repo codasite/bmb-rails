@@ -16,6 +16,8 @@
     "num_plays": 0,
     "fee": 0,
     "should_notify_results_updated": false,
+    "is_voting": false,
+    "live_round_index": 0,
     "matches": [
         {
             "id": null,
@@ -50,7 +52,7 @@
             "round_index": 0,
             "match_index": 0,
             "winning_team": null,
-            "percentage": null,
+            "popularity": null,
             "winning_team_id": 100002
         },
         {
@@ -58,7 +60,7 @@
             "round_index": 0,
             "match_index": 1,
             "winning_team": null,
-            "percentage": null,
+            "popularity": null,
             "winning_team_id": 100006
         },
         {
@@ -66,7 +68,7 @@
             "round_index": 1,
             "match_index": 0,
             "winning_team": null,
-            "percentage": null,
+            "popularity": null,
             "winning_team_id": 100006
         }
     ],

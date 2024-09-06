@@ -79,6 +79,8 @@ class BracketTest extends TestCase {
       'author' => 1,
       'num_teams' => 2,
       'wildcard_placement' => 0,
+      'is_voting' => false,
+      'live_round_index' => 0,
       'results_first_updated_at' => '2020-01-01 00:00:00',
       'matches' => [
         [
@@ -108,6 +110,8 @@ class BracketTest extends TestCase {
     $this->assertEquals(1, $bracket->author);
     $this->assertEquals(2, $bracket->num_teams);
     $this->assertEquals(0, $bracket->wildcard_placement);
+    $this->assertFalse($bracket->is_voting);
+    $this->assertEquals(0, $bracket->live_round_index);
     $this->assertEquals(1, count($bracket->matches));
     $this->assertEquals(1, count($bracket->results));
     $this->assertEquals(
@@ -154,6 +158,7 @@ class BracketTest extends TestCase {
     $this->assertEquals(1, $array['author']);
     $this->assertEquals(2, $array['num_teams']);
     $this->assertEquals(0, $array['wildcard_placement']);
+    $this->assertFalse($array['is_voting']);
     $this->assertEquals(1, count($array['matches']));
     $this->assertEquals(1, count($array['results']));
     $this->assertEquals(

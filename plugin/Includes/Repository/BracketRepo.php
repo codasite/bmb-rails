@@ -13,7 +13,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   private TeamRepo $team_repo;
   private BracketMatchRepo $match_repo;
   private BracketResultsRepo $results_repo;
-  private PickRepo $pick_repo;
+  public PickRepo $pick_repo;
   /**
    * @var wpdb
    **/
@@ -53,6 +53,8 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
 
     $bracket_id = $this->insert_custom_table_data([
       'post_id' => $post_id,
+      'is_voting' => $bracket->is_voting,
+      'live_round_index' => $bracket->live_round_index,
     ]);
 
     if ($bracket->matches) {
@@ -112,7 +114,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       : [];
 
     $most_popular_picks = $fetch_most_popular_picks
-      ? $this->pick_repo->get_most_popular_picks($bracket_id)
+      ? $this->pick_repo->get_most_popular_picks($bracket_post->ID)
       : [];
 
     $author_id = (int) $bracket_post->post_author;
@@ -150,6 +152,8 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
         'should_notify_results_updated',
         true
       ),
+      'is_voting' => $bracket_data['is_voting'] ?? false,
+      'live_round_index' => $bracket_data['live_round_index'] ?? 0,
     ];
 
     return new Bracket($data);
@@ -231,7 +235,6 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     }
 
     $this->update_custom_table_data($post_id, $updated_array);
-    // $this->update_teams($bracket->matches);
 
     $bracket_data = $this->get_custom_table_data($post_id);
     $bracket_id = $bracket_data['id'];
@@ -252,7 +255,11 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
   ): void {
     $old_data = $this->get_custom_table_data($id, $use_post_id);
     $id_field = $use_post_id ? 'post_id' : 'id';
-    $update_fields = ['results_first_updated_at'];
+    $update_fields = [
+      'results_first_updated_at',
+      'is_voting',
+      'live_round_index',
+    ];
     $update_data = [];
     foreach ($data as $key => $value) {
       if (in_array($key, $update_fields) && $value !== $old_data[$key]) {
@@ -286,13 +293,15 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			post_id bigint(20) UNSIGNED NOT NULL,
-      results_first_updated_at datetime,
-			PRIMARY KEY (id),
-			UNIQUE KEY (post_id),
-			FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE
-		) $charset_collate;";
+    id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    post_id bigint(20) UNSIGNED NOT NULL,
+    results_first_updated_at datetime,
+    is_voting TINYINT(1) DEFAULT 0,
+    live_round_index TINYINT(2) DEFAULT 0,
+    PRIMARY KEY (id),
+    UNIQUE KEY (post_id),
+    FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE
+) $charset_collate;";
 
     // import dbDelta
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';

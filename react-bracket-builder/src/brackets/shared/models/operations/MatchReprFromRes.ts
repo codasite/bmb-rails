@@ -8,12 +8,16 @@ export const matchReprFromRes = (numRounds: number, matches: MatchRes[]) => {
   for (const match of matches) {
     if (match.roundIndex >= nullableMatches.length) {
       throw new Error(
-        `Invalid round index ${match.roundIndex} for match ${match.id}`
+        `Invalid round index ${match.roundIndex} for match ${JSON.stringify(
+          match
+        )}`
       )
     }
     if (match.matchIndex >= nullableMatches[match.roundIndex].length) {
       throw new Error(
-        `Invalid match index ${match.matchIndex} for match ${match.id}`
+        `Invalid match index ${match.matchIndex} for match ${JSON.stringify(
+          match
+        )}`
       )
     }
     // Filter out null teams

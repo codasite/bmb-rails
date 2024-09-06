@@ -1,0 +1,2 @@
+# DOMAIN LAYER
+- Domain classes

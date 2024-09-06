@@ -1,8 +1,6 @@
-import React, { useContext } from 'react'
 import { MatchTree } from '../../models/MatchTree'
 import { Nullable } from '../../../../utils/types'
 import { BracketProps } from '../types'
-import { DarkModeContext } from '../../context/context'
 import { FlexMatchColumn } from '../MatchColumn'
 import { flexBracketConstants } from '../../constants'
 import { MatchNode } from '../../models/operations/MatchNode'
@@ -21,8 +19,6 @@ export const FlexBracket = (props: BracketProps) => {
     MatchColumnComponent = FlexMatchColumn,
     onTeamClick,
   } = props
-
-  const darkMode = useContext(DarkModeContext)
 
   const getMatchColumns = (
     rounds: Nullable<MatchNode>[][],

@@ -8,6 +8,16 @@ export interface RequestOptions {
   camelCaseResponse?: boolean
 }
 
+export class HttpError extends Error {
+  data: any
+
+  constructor({ message, data }) {
+    super(message)
+    this.name = 'HttpError'
+    this.data = data
+  }
+}
+
 export class WpHttpClient {
   private baseUrl: string = ''
   private nonce: string = ''
@@ -48,10 +58,24 @@ export class WpHttpClient {
     try {
       const response = await fetch(`${this.baseUrl}${path}/`, request)
       if (!response.ok) {
-        const text = await response.text()
-        throw new Error(
-          `HTTP Error ${response.status}: ${response.statusText} - ${text} - ${request['body']}`
-        )
+        const contentType = response.headers.get('content-type')
+        let jsonData: any = null
+        let textData: string = ''
+        try {
+          if (contentType?.includes('application/json')) {
+            jsonData = await response.json()
+          } else {
+            textData = await response.text()
+          }
+        } catch (error) {
+          console.error('Error parsing response:', error)
+        }
+        throw new HttpError({
+          message: `${response.status}: ${response.statusText} - ${
+            textData || JSON.stringify(jsonData)
+          }`,
+          data: jsonData,
+        })
       }
       let responseData = await response.json()
       if (camelCaseResponse) {

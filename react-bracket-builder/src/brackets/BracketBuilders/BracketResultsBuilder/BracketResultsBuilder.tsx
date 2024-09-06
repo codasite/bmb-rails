@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { logger } from '../../../utils/Logger'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context/context'
+import { BracketMeta, DarkModeContext } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ResultsBracket } from '../../shared/components/Bracket'
@@ -9,7 +9,6 @@ import { ActionButton } from '../../shared/components/ActionButtons'
 import { bracketApi } from '../../shared/api/bracketApi'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
 import {
@@ -29,12 +28,11 @@ interface BracketResultsBuilderProps {
   bracket?: any
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
 }
 
 const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
-  const { matchTree, setMatchTree, bracket, setBracketMeta, darkMode } = props
+  const { matchTree, setMatchTree, bracket, setBracketMeta } = props
+  const { darkMode } = useContext(DarkModeContext)
 
   const [notifyParticipants, setNotifyParticipants] = useState(true)
   const [bracketId, setBracketId] = useState(0)
@@ -49,17 +47,15 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
 
   useEffect(() => {
     if (bracket) {
-      const numTeams = bracket.numTeams
-      const matches = bracket.matches
       const results = bracket.results
       const meta = getBracketMeta(bracket)
       setBracketMeta?.(meta)
       setBracketId(bracket.id)
       let tree: MatchTree | null
       if (results && results.length > 0) {
-        tree = MatchTree.fromPicks(numTeams, matches, results)
+        tree = MatchTree.fromPicks(bracket, results)
       } else {
-        tree = MatchTree.fromMatchRes(numTeams, matches)
+        tree = MatchTree.fromMatchRes(bracket)
       }
       if (tree) {
         setMatchTree?.(tree)
@@ -89,7 +85,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
           if (dashboardUrl) window.location.href = dashboardUrl
         })
         .catch((err) => {
-          console.error(err)
           logger.error(err)
         })
     }
@@ -133,7 +128,7 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
               size="big"
               onClick={handleUpdatePicks}
             >
-              {complete ? 'Complete Bracket' : 'Update Picks'}
+              {complete ? 'Complete Bracket' : 'Update Results'}
             </ActionButton>
             <div className="tw-flex tw-gap-20 tw-items-center tw-self-center">
               <Checkbox
@@ -155,8 +150,6 @@ const BracketResultsBuilder = (props: BracketResultsBuilderProps) => {
   )
 }
 
-const Wrapped = WithDarkMode(
-  WithMatchTree(WithBracketMeta(BracketResultsBuilder))
-)
+const Wrapped = WithMatchTree(WithBracketMeta(BracketResultsBuilder))
 
 export default Wrapped

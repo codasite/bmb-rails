@@ -5,14 +5,7 @@ import { ResultsBracketPage } from './ResultsBracketPage'
 import { FullBracketPage } from './FullBracketPage'
 
 export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
-  const {
-    matchTree,
-    setMatchTree,
-    darkMode,
-    setDarkMode,
-    processing,
-    handleUpdatePicks,
-  } = props
+  const { matchTree, setMatchTree, processing, handleUpdatePicks } = props
 
   const [page, setPage] = useState('landing')
 
@@ -54,8 +47,6 @@ export const PaginatedResultsBuilder = (props: ResultsBuilderProps) => {
       element = (
         <FullBracketPage
           matchTree={matchTree}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
           processing={processing}
           handleUpdatePicks={handleUpdatePicks}
           onEditClick={onStart}

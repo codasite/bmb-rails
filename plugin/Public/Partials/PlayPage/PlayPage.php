@@ -27,7 +27,7 @@ class PlayPage implements TemplateInterface {
         $el_id = 'wpbb-bust-play';
         break;
       case 'replay':
-        $el_id = 'wpbb-replay-play';
+        $el_id = 'wpbb-play-bracket';
         break;
       default:
         $el_id = 'wpbb-view-play';

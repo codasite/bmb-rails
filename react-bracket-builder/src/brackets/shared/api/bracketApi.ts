@@ -57,6 +57,13 @@ export class BracketApi {
   async getPlay(playId: number): Promise<PlayRes> {
     return await this.client.performRequest(`${this.playPath}/${playId}`)
   }
+  async updatePlay(playId: number, play: PlayReq): Promise<PlayRes> {
+    const options: RequestOptions = { method: 'PATCH', body: play }
+    return await this.client.performRequest(
+      `${this.playPath}/${playId}`,
+      options
+    )
+  }
   async generatePlayImages(playId: number): Promise<PlayRes> {
     const options: RequestOptions = { method: 'POST' }
     return await this.client.performRequest(

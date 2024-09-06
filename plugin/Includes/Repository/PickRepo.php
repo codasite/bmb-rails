@@ -6,16 +6,11 @@ use WStrategies\BMB\Includes\Domain\Pick;
 
 class PickRepo implements CustomTableInterface {
   /**
-   * @var TeamRepo
-   */
-  private $team_repo;
-
-  /**
    * @var wpdb
    */
   private $wpdb;
 
-  public function __construct(TeamRepo $team_repo) {
+  public function __construct(private TeamRepo $team_repo) {
     global $wpdb;
     $this->wpdb = $wpdb;
     $this->team_repo = $team_repo;
@@ -44,7 +39,121 @@ class PickRepo implements CustomTableInterface {
     return $picks;
   }
 
-  public function get_most_popular_picks(int $bracket_id): array {
+  /**
+   * Updates the picks for a given play. If a pick does not exist, it is inserted. If a pick exists, it is updated.
+   *
+   * @param int $play_id
+   * @param array|null $new_picks
+   */
+  public function update_picks(int $play_id, array|null $new_picks): void {
+    if ($new_picks === null) {
+      return;
+    }
+
+    $old_picks = $this->get_picks($play_id);
+
+    if (empty($old_picks)) {
+      $this->insert_picks($play_id, $new_picks);
+      return;
+    }
+
+    $this->wpdb->query('START TRANSACTION');
+
+    try {
+      foreach ($new_picks as $new_pick) {
+        $pick_exists = false;
+        foreach ($old_picks as $old_pick) {
+          if (
+            $new_pick->round_index === $old_pick->round_index &&
+            $new_pick->match_index === $old_pick->match_index
+          ) {
+            $pick_exists = true;
+            if ($new_pick->winning_team_id !== $old_pick->winning_team_id) {
+              $this->wpdb->update(
+                self::table_name(),
+                [
+                  'winning_team_id' => $new_pick->winning_team_id,
+                ],
+                [
+                  'id' => $old_pick->id,
+                ]
+              );
+            }
+          }
+        }
+        if (!$pick_exists) {
+          $this->insert_pick($play_id, $new_pick);
+        }
+      }
+      $this->wpdb->query('COMMIT');
+    } catch (\Exception $e) {
+      $this->wpdb->query('ROLLBACK');
+      throw $e;
+    }
+  }
+
+  /**
+   * Returns whether there is a tie for most popular pick in a given bracket.
+   *
+   * @param int $bracket_id
+   * @param array $opts
+   * @return bool
+   */
+  public function has_tie_for_most_popular_pick(
+    int $bracket_id,
+    array $opts = []
+  ) {
+    $having = '';
+    if (isset($opts['round_index'])) {
+      $having = $this->wpdb->prepare(
+        'HAVING pick.round_index = %d',
+        $opts['round_index']
+      );
+    }
+    $picks_table_name = self::table_name();
+    $plays_table_name = PlayRepo::table_name();
+    $query = $this->wpdb->prepare(
+      "
+    SELECT round_index, match_index, occurrence_count, COUNT(*) as winner_count
+    FROM (
+        SELECT
+            pick.round_index AS round_index,
+            pick.match_index AS match_index,
+            pick.winning_team_id AS winning_team_id,
+            COUNT(*) AS occurrence_count
+        FROM
+            $picks_table_name pick
+        JOIN
+            $plays_table_name play ON pick.bracket_play_id = play.id
+        WHERE
+            play.bracket_post_id = %d
+            AND play.is_tournament_entry = 1
+        GROUP BY
+            pick.round_index,
+            pick.match_index,
+            pick.winning_team_id
+        $having
+        ) AS occurrence
+    GROUP BY round_index, match_index, occurrence_count
+    HAVING winner_count > 1
+",
+      $bracket_id
+    );
+    $data = $this->wpdb->get_results($query, ARRAY_A);
+    return $this->wpdb->num_rows > 0;
+  }
+
+  public function get_most_popular_picks(
+    int $bracket_id,
+    array $opts = []
+  ): array {
+    $having = '';
+    if (isset($opts['round_index'])) {
+      $having = $this->wpdb->prepare(
+        'HAVING pick.round_index = %d',
+        $opts['round_index']
+      );
+    }
     $picks_table_name = self::table_name();
     $plays_table_name = PlayRepo::table_name();
     $query = $this->wpdb->prepare(
@@ -54,18 +163,20 @@ class PickRepo implements CustomTableInterface {
         pick.match_index AS match_index,
         pick.winning_team_id AS winning_team_id,
         COUNT(*) AS occurrence_count,
-        SUM(COUNT(*)) OVER (PARTITION BY pick.round_index, pick.match_index) AS total_occurrence_count
+        SUM(COUNT(*)) OVER (PARTITION BY pick.round_index, pick.match_index) AS total_occurrence_count,
+        COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY pick.round_index, pick.match_index) AS popularity
     FROM
         $picks_table_name pick
     JOIN
         $plays_table_name play ON pick.bracket_play_id = play.id
     WHERE
-        play.bracket_id = %d
+        play.bracket_post_id = %d
         AND play.is_tournament_entry = 1
     GROUP BY
         pick.round_index,
         pick.match_index,
         pick.winning_team_id
+    $having
     ORDER BY
         pick.round_index,
         pick.match_index,
@@ -91,13 +202,36 @@ class PickRepo implements CustomTableInterface {
           'match_index' => $row['match_index'],
           'winning_team_id' => $winning_team_id,
           'winning_team' => $winning_team,
-          'percentage' =>
-            (int) (($row['occurrence_count'] / $row['total_occurrence_count']) *
-              100),
+          'popularity' => $row['popularity'],
         ]);
       }
     }
     return $picks;
+  }
+
+  public function get_num_picks_for_round(
+    int $bracket_post_id,
+    int $round_index
+  ) {
+    $picks_table_name = self::table_name();
+    $plays_table_name = PlayRepo::table_name();
+    $query = $this->wpdb->prepare(
+      "SELECT
+      COUNT(*)
+    FROM
+      $picks_table_name pick
+    JOIN
+      $plays_table_name play ON pick.bracket_play_id = play.id
+    WHERE
+      play.bracket_post_id = %d
+      AND play.is_tournament_entry = 1
+      AND pick.round_index = %d
+      ",
+      $bracket_post_id,
+      $round_index
+    );
+    $count = $this->wpdb->get_var($query);
+    return $count;
   }
 
   public function insert_picks(int $play_id, array $picks): void {
@@ -134,15 +268,16 @@ class PickRepo implements CustomTableInterface {
     $charset_collate = $wpdb->get_charset_collate();
 
     $sql = "CREATE TABLE IF NOT EXISTS $table_name (
-			id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-			bracket_play_id bigint(20) UNSIGNED NOT NULL,
-			round_index tinyint(4) NOT NULL,
-			match_index tinyint(4) NOT NULL,
-			winning_team_id bigint(20) UNSIGNED NOT NULL,
-			PRIMARY KEY (id),
-			FOREIGN KEY (bracket_play_id) REFERENCES {$plays_table}(id) ON DELETE CASCADE,
-			FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE
-		) $charset_collate;";
+id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+bracket_play_id bigint(20) UNSIGNED NOT NULL,
+round_index tinyint(4) NOT NULL,
+match_index tinyint(4) NOT NULL,
+winning_team_id bigint(20) UNSIGNED NOT NULL,
+PRIMARY KEY (id),
+FOREIGN KEY (bracket_play_id) REFERENCES {$plays_table}(id) ON DELETE CASCADE,
+FOREIGN KEY (winning_team_id) REFERENCES {$teams_table}(id) ON DELETE CASCADE,
+INDEX (round_index, match_index, winning_team_id)
+                ) $charset_collate;";
 
     // import dbDelta
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';

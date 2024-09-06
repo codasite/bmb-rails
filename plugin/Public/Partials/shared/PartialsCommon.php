@@ -41,8 +41,12 @@ class PartialsCommon {
   }
 
   public static function icon($icon_name): false|string {
+    // add svg file extension if not present
+    if (strpos($icon_name, '.svg') === false) {
+      $icon_name .= '.svg';
+    }
     return file_get_contents(
-      WPBB_PLUGIN_DIR . 'Public/assets/icons/' . $icon_name . '.svg'
+      WPBB_PLUGIN_DIR . 'Public/assets/icons/' . $icon_name
     );
   }
 }

@@ -35,9 +35,7 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
 
   const buildMatchTrees = () => {
     const bracket = busteePlay?.bracket
-    const matches = bracket?.matches
-    const numTeams = bracket?.numTeams
-    const buster = MatchTree.fromMatchRes(numTeams, matches)
+    const buster = MatchTree.fromMatchRes(bracket)
     setBusterTree(buster)
   }
 
@@ -49,12 +47,9 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
     if (!bracketId || !busteeId || !picks) {
       const msg =
         'Cannot create play. Missing one of bracketId, busteeId, or picks'
-      console.error(msg)
       logger.error(msg)
       return
     }
-
-    bracketApi.createPlay
 
     const playReq: PlayReq = {
       bracketId: bracketId,
@@ -71,7 +66,6 @@ export const BustPlayBuilder = (props: BustPlayBuilderProps) => {
         window.location.href = redirectUrl
       })
       .catch((err) => {
-        console.error(err)
         logger.error(err)
       })
       .finally(() => {

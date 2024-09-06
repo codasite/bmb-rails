@@ -6,6 +6,8 @@ import addClickHandlers from '../../addClickHandlers'
 import { ReactComponent as LinkIcon } from '../../../brackets/shared/assets/link.svg'
 import { ReactComponent as XLogo } from '../../../brackets/shared/assets/x-logo.svg'
 import { ReactComponent as FacebookLogo } from '../../../brackets/shared/assets/facebook-logo.svg'
+import { BracketData } from './BracketData'
+import { loadBracketData } from '../../loadBracketData'
 
 export const FacebookShareLink = (props: { playBracketUrl: string }) => {
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${props.playBracketUrl}`
@@ -52,34 +54,37 @@ export const CopyLinkButton = (props: {
   )
 }
 
-export default function ShareBracketModal() {
-  const [show, setShow] = useState(false)
-  const [playBracketUrl, setPlayBracketUrl] = useState('')
-  const [bracketTitle, setBracketTitle] = useState('')
+export const ShareBracketModal = (props: {
+  show: boolean
+  setShow: (show: boolean) => void
+  bracketData: BracketData
+  setBracketData: (data: BracketData) => void
+}) => {
   addClickHandlers({
     buttonClassName: 'wpbb-share-bracket-button',
     onButtonClick: (b) => {
-      setPlayBracketUrl(b.dataset.playBracketUrl)
-      setBracketTitle(b.dataset.bracketTitle)
-      setShow(true)
+      loadBracketData(b, props.setBracketData)
+      props.setShow(true)
     },
   })
   return (
-    <Modal show={show} setShow={setShow}>
+    <Modal show={props.show} setShow={props.setShow}>
       <ModalHeader text={'Share Bracket'} />
       <div className="tw-flex tw-flex-col tw-gap-10">
         <div className="tw-flex tw-gap-10 tw-items-center">
-          <FacebookShareLink playBracketUrl={playBracketUrl} />
+          <FacebookShareLink
+            playBracketUrl={props.bracketData.playBracketUrl}
+          />
           <TwitterShareLink
-            playBracketUrl={playBracketUrl}
-            bracketTitle={bracketTitle}
+            playBracketUrl={props.bracketData.playBracketUrl}
+            bracketTitle={props.bracketData.title}
           />
         </div>
         <CopyLinkButton
-          playBracketUrl={playBracketUrl}
-          onClick={() => setShow(false)}
+          playBracketUrl={props.bracketData.playBracketUrl}
+          onClick={() => props.setShow(false)}
         />
-        <CancelButton onClick={() => setShow(false)} />
+        <CancelButton onClick={() => props.setShow(false)} />
       </div>
     </Modal>
   )

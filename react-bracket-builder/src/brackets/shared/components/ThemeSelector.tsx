@@ -1,12 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { DarkModeContext } from '../context/context'
 
-interface ThemeSelectorProps {
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
-}
-
-export const ThemeSelector = (props: ThemeSelectorProps) => {
-  const { darkMode, setDarkMode } = props
+export const ThemeSelector = () => {
+  const { darkMode, setDarkMode } = useContext(DarkModeContext)
   return (
     <div className="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14">
       <span className="tw-text-dd-blue dark:tw-text-white">Theme</span>

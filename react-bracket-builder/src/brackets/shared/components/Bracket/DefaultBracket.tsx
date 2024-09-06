@@ -47,7 +47,6 @@ export const DefaultBracket = (props: BracketProps) => {
     lineWidth = 1,
     title,
     date,
-    darkMode,
     columnsToRender,
     renderWinnerAndLogo = true,
   }: BracketProps = props
@@ -68,14 +67,7 @@ export const DefaultBracket = (props: BracketProps) => {
 
   useResizeObserver(containerRef, resizeCallback)
 
-  let dark = darkMode
-  if (dark === undefined) {
-    const darkContext = useContext(DarkModeContext)
-    if (darkContext === undefined) {
-      throw new Error('darkMode or DarkModeContext is required')
-    }
-    dark = darkContext
-  }
+  const { darkMode } = useContext(DarkModeContext)
   let bracketTitle = title
   let bracketDate = date
   if (!bracketTitle || !date) {
@@ -85,7 +77,7 @@ export const DefaultBracket = (props: BracketProps) => {
   }
   const linesStyle = lineStyle || {
     className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${
-      dark ? darkLineColor : lineColor
+      darkMode ? darkLineColor : lineColor
     }`,
   }
 
@@ -118,13 +110,22 @@ export const DefaultBracket = (props: BracketProps) => {
 
   const getMatchColumns = (
     rounds: Nullable<MatchNode>[][],
-    position: string,
+    position: 'left' | 'right' | 'center',
     numRounds: number
   ): JSX.Element[] => {
     return rounds.map((matches, i) => {
-      const roundIndex = matches.find((match) => match !== null)?.roundIndex
+      let roundIndex: number
+      if (position === 'left') {
+        roundIndex = i
+      }
+      if (position === 'right') {
+        roundIndex = numRounds - i - 2
+      }
+      if (position === 'center') {
+        roundIndex = numRounds - 1
+      }
       const { teamHeight, teamWidth, teamGap, matchGap } =
-        getBracketMeasurements(roundIndex ?? i, numRounds)
+        getBracketMeasurements(roundIndex, numRounds)
       return (
         <MatchColumnComponent
           key={`${position}-${i}`}
@@ -181,59 +182,65 @@ export const DefaultBracket = (props: BracketProps) => {
     defaultBracketConstants.logoContainerMinHeight[numRounds]
 
   return (
-    <DarkModeContext.Provider value={dark}>
-      <div
-        className={`tw-flex tw-flex-col${
-          dark ? ' tw-dark' : ''
-        } wpbb-default-bracket tw-relative`}
-        ref={containerRef}
-      >
-        {rootMatch && renderWinnerAndLogo && (
-          <div
-            className="tw-flex tw-flex-col tw-justify-end"
-            style={{
-              marginBottom: winnerContainerMB,
-              minHeight: winnerContainerMinHeight,
-            }}
-          >
-            <WinnerContainer
-              match={rootMatch}
-              matchTree={matchTree}
-              matchPosition="center"
-              TeamSlotComponent={TeamSlotComponent}
-              topText={bracketTitle}
-            />
-          </div>
-        )}
+    <div
+      className={`tw-flex tw-flex-col${
+        darkMode ? ' tw-dark' : ''
+      } wpbb-default-bracket tw-relative`}
+      ref={containerRef}
+    >
+      {rootMatch && renderWinnerAndLogo && (
         <div
-          className={`tw-flex tw-flex-col tw-justify-center ${
-            renderWinnerAndLogo ? 'tw-h-100' : ''
-          }`}
+          className="tw-flex tw-flex-col tw-justify-end"
+          style={{
+            marginBottom: winnerContainerMB,
+            minHeight: winnerContainerMinHeight,
+          }}
         >
-          <div
-            className={`tw-flex ${
-              numRounds > 1 ? 'tw-justify-between' : 'tw-justify-center'
-            }`}
-            style={{ width: width }}
-          >
-            {buildMatches(matchTree.rounds)}
-          </div>
+          <WinnerContainer
+            match={rootMatch}
+            matchTree={matchTree}
+            matchPosition="center"
+            TeamSlotComponent={TeamSlotComponent}
+            topText={bracketTitle}
+          />
         </div>
-        {renderWinnerAndLogo && (
-          <div
-            style={{
-              marginTop: logoContainerMT,
-              minHeight: logoContainerMinHeight,
-            }}
-          >
-            <LogoContainer {...props} bottomText={bracketDate} />
-          </div>
-        )}
-        <BracketLines rounds={matchTree.rounds} style={linesStyle} />
-        {renderWinnerAndLogo && (
-          <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
-        )}
+      )}
+      <div
+        className={`tw-flex tw-flex-col tw-justify-center ${
+          renderWinnerAndLogo ? 'tw-h-100' : ''
+        }`}
+      >
+        <div
+          className={`tw-flex ${
+            numRounds > 1 ? 'tw-justify-between' : 'tw-justify-center'
+          }`}
+          style={{ width: width }}
+        >
+          {buildMatches(matchTree.rounds)}
+        </div>
       </div>
-    </DarkModeContext.Provider>
+      {renderWinnerAndLogo && (
+        <div
+          style={{
+            marginTop: logoContainerMT,
+            minHeight: logoContainerMinHeight,
+          }}
+        >
+          <LogoContainer {...props} bottomText={bracketDate} />
+        </div>
+      )}
+      <BracketLines
+        rounds={matchTree.rounds}
+        style={linesStyle}
+        getLineStyle={props.getLineStyle}
+      />
+      {renderWinnerAndLogo && (
+        <RootMatchLines
+          rounds={matchTree.rounds}
+          style={linesStyle}
+          getLineStyle={props.getLineStyle}
+        />
+      )}
+    </div>
   )
 }

@@ -1,5 +1,5 @@
 import { Nullable } from '../../../utils/types'
-import { MatchPick, MatchReq, MatchRes, MatchTreeRepr } from '../api'
+import { BracketRes, MatchPick, MatchReq, MatchTreeRepr } from '../api'
 import { WildcardPlacement } from './WildcardPlacement'
 import { Team } from './Team'
 import { MatchNode } from './operations/MatchNode'
@@ -13,11 +13,20 @@ export class MatchTree {
   rounds: Round[]
   private numTeams: number
   private wildcardPlacement?: WildcardPlacement
+  isVoting: boolean
+  liveRoundIndex: number
 
-  constructor(rounds: Round[] = [], wildcardPlacement?: WildcardPlacement) {
+  constructor(
+    rounds: Round[] = [],
+    wildcardPlacement?: WildcardPlacement,
+    isVoting: boolean = false,
+    liveRoundIndex: number = 0
+  ) {
     linkNodes(rounds)
     this.rounds = rounds
     this.wildcardPlacement = wildcardPlacement
+    this.isVoting = isVoting
+    this.liveRoundIndex = liveRoundIndex
   }
 
   getRootMatch(): Nullable<MatchNode> {
@@ -36,27 +45,6 @@ export class MatchTree {
     return (
       JSON.stringify(this.serialize()) === JSON.stringify(other.serialize())
     )
-  }
-
-  syncPick(otherMatch?: Nullable<MatchNode>): void {
-    if (!otherMatch) {
-      return
-    }
-
-    let thisMatch =
-      this.rounds[otherMatch.roundIndex].matches[otherMatch.matchIndex]
-    if (!thisMatch) {
-      return
-    }
-
-    thisMatch.team1Wins = otherMatch.team1Wins
-    thisMatch.team2Wins = otherMatch.team2Wins
-
-    if (otherMatch.team1Wins) {
-      this.syncPick(otherMatch.left)
-    } else if (otherMatch.team2Wins) {
-      this.syncPick(otherMatch.right)
-    }
   }
 
   /**
@@ -98,6 +86,8 @@ export class MatchTree {
     return {
       rounds: rounds,
       wildcardPlacement: tree.wildcardPlacement,
+      isVoting: tree.isVoting,
+      liveRoundIndex: tree.liveRoundIndex,
     }
   }
 
@@ -139,6 +129,9 @@ export class MatchTree {
   }
 
   allPicked = (): boolean => {
+    if (this.isVoting) {
+      return this.rounds[this.liveRoundIndex].allPicked()
+    }
     return this.rounds.every((round) => {
       return round.allPicked()
     })
@@ -266,34 +259,32 @@ export class MatchTree {
   }
 
   static fromMatchRes(
-    numTeams: number,
-    matches: MatchRes[],
+    bracket: Pick<
+      BracketRes,
+      'matches' | 'numTeams' | 'isVoting' | 'liveRoundIndex'
+    >,
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
-    const numRounds = getNumRounds(numTeams)
+    const numRounds = getNumRounds(bracket.numTeams)
 
-    try {
-      const nestedMatches = matchReprFromRes(numRounds, matches)
-      return MatchTree.deserialize({
-        rounds: nestedMatches,
-        wildcardPlacement,
-      })
-    } catch (e) {
-      return null
-    }
+    const nestedMatches = matchReprFromRes(numRounds, bracket.matches)
+    return MatchTree.deserialize({
+      rounds: nestedMatches,
+      wildcardPlacement,
+      isVoting: bracket.isVoting,
+      liveRoundIndex: bracket.liveRoundIndex,
+    })
   }
 
   static fromPicks(
-    numTeams: number,
-    matches: MatchRes[],
+    bracket: Pick<
+      BracketRes,
+      'matches' | 'numTeams' | 'isVoting' | 'liveRoundIndex'
+    >,
     picks: MatchPick[],
     wildcardPlacement?: WildcardPlacement
   ): MatchTree | null {
-    const matchTree = MatchTree.fromMatchRes(
-      numTeams,
-      matches,
-      wildcardPlacement
-    )
+    const matchTree = MatchTree.fromMatchRes(bracket, wildcardPlacement)
     if (!matchTree) {
       return null
     }
@@ -301,21 +292,18 @@ export class MatchTree {
       const { roundIndex, matchIndex, winningTeamId } = pick
       const match = matchTree.rounds[roundIndex].matches[matchIndex]
       if (!match) {
-        return null
+        throw new Error('Match not found')
       }
       match._pick = pick
 
       const team1 = match.getTeam1()
       const team2 = match.getTeam2()
-      if (!team1 || !team2) {
-        return null
-      }
-      if (team1.id === winningTeamId) {
+      if (team1?.id === winningTeamId) {
         match.team1Wins = true
-      } else if (team2.id === winningTeamId) {
+      } else if (team2?.id === winningTeamId) {
         match.team2Wins = true
       } else {
-        return null
+        throw new Error('Match does not have winningTeam from pick')
       }
     }
     return matchTree
@@ -360,7 +348,12 @@ export class MatchTree {
       newRound.matches = matches
       return newRound
     })
-    const tree = new MatchTree(rounds, wildcardPlacement)
+    const tree = new MatchTree(
+      rounds,
+      wildcardPlacement,
+      matchTreeRepr.isVoting,
+      matchTreeRepr.liveRoundIndex
+    )
     return tree
   }
 }

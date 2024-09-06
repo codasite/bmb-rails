@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
+use WStrategies\BMB\Features\VotingBracket\Presentation\VotingBracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Controllers\NotificationApi;
@@ -114,6 +115,7 @@ class BracketBuilder {
       new PublicShortcodes(),
       new CustomPostHooks(),
       new BracketApi(),
+      new VotingBracketApi(),
       new BracketPlayApi(),
       new NotificationApi(),
       new StripePaymentsApi(),

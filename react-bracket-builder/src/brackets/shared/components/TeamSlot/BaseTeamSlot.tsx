@@ -86,6 +86,7 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
       onClick={handleTeamClick}
       onFocus={onTeamFocus}
       style={{ borderWidth: borderWidth }}
+      data-testid={`team-slot-round-${match.roundIndex}-match-${match.matchIndex}-${teamPosition}`}
     >
       {children
         ? children

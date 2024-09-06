@@ -8,23 +8,22 @@ import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { ReactComponent as EditIcon } from '../../../shared/assets/edit-icon.svg'
 import { Checkbox } from '../Checkbox'
 import { BracketResultsBuilderContext } from '../context'
+import { DarkModeContext } from '../../../shared/context/context'
 
 interface FullBracketPageProps {
   matchTree?: MatchTree
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
   processing?: boolean
   handleUpdatePicks: () => void
   onEditClick: () => void
 }
 
 export const FullBracketPage = (props: FullBracketPageProps) => {
-  const { matchTree, darkMode, processing, onEditClick, handleUpdatePicks } =
-    props
+  const { matchTree, processing, onEditClick, handleUpdatePicks } = props
 
   const { notifyParticipants, toggleNotifyParticipants } = useContext(
     BracketResultsBuilderContext
   )
+  const { darkMode } = useContext(DarkModeContext)
 
   return (
     <div
@@ -45,7 +44,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
         <div className="tw-flex tw-flex-col tw-gap-10">
           <ActionButton
             variant="white"
-            darkMode={darkMode}
             onClick={onEditClick}
             disabled={processing}
             borderWidth={1}
@@ -56,12 +54,11 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           <ActionButton
             variant="yellow"
             size="small"
-            darkMode={darkMode}
             onClick={handleUpdatePicks}
             disabled={processing}
             fontSize={16}
           >
-            {matchTree.allPicked() ? 'Complete Bracket' : 'Update Picks'}
+            {matchTree.allPicked() ? 'Complete Bracket' : 'Update Results'}
           </ActionButton>
         </div>
         <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px] tw-mt-[52px]">

@@ -49,7 +49,7 @@ class EnqueueScriptsHooks implements HooksInterface {
    */
   private $version;
 
-  private $play_repo;
+  private PlayRepo $play_repo;
 
   /**
    * @var BracketRepo
@@ -239,6 +239,12 @@ class EnqueueScriptsHooks implements HooksInterface {
           true,
           $fetch_most_popular_picks
         );
+        if ($bracket->is_voting) {
+          $play = $this->play_repo->get_play_by_user_and_bracket(
+            get_current_user_id(),
+            $bracket->id
+          );
+        }
       }
     }
     return [$bracket, $play];

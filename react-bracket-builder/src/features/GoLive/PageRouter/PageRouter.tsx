@@ -44,7 +44,6 @@ export const PageRouter: FC<PageRouterProps & Record<string, any>> = (
       initializePage()
     } else {
       const pageFromPath = getPageIndexFromPath(location.pathname, pages)
-      console.log('pageFromPath', pageFromPath)
       setCurrentPage(pageFromPath)
     }
   }, [location])

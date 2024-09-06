@@ -4,8 +4,6 @@ import { BracketMeta } from '../../shared/context/context'
 export interface PaginatedBuilderProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
   processing?: boolean
@@ -28,8 +26,6 @@ export interface BracketPagesProps {
 
 export interface EndPageProps {
   matchTree?: MatchTree
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
   processing?: boolean

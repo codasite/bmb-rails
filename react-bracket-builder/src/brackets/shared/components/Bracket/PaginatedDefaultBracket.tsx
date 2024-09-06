@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useState } from 'react'
 import { PaginatedDefaultBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
@@ -34,45 +34,44 @@ export const PaginatedDefaultBracket = (
     lineStyle,
     onFinished,
     NavButtonsComponent = DefaultNavButtons,
-    page,
-    setPage,
     forcePageAllPicked = true,
   } = props
-
-  useEffect(() => {
-    const paged = matchTree
-    // try to determine page from matchTree
-    if (!paged.anyPicked()) {
-      return
+  const getDefaultPage = () => {
+    if (!matchTree.anyPicked()) {
+      return 0
     }
-    if (paged.allPicked()) {
-      return setPage((paged.rounds.length - 1) * 2)
+    if (matchTree.isVoting) {
+      return matchTree.liveRoundIndex * 2
+    }
+    if (matchTree.allPicked()) {
+      return (matchTree.rounds.length - 1) * 2
     }
     // find first unpicked match
-    const firstUnpickedMatch = paged.findMatch(
+    const firstUnpickedMatch = matchTree.findMatch(
       (match) => match && !match.isPicked()
     )
     if (!firstUnpickedMatch) {
-      return
+      return 0
     }
     const { roundIndex, matchIndex } = firstUnpickedMatch
-    const numMatches = paged.rounds[roundIndex].matches.length
+    const numMatches = matchTree.rounds[roundIndex].matches.length
     let pageNum = roundIndex * 2
     if (matchIndex >= numMatches / 2) {
       pageNum++
     }
-    setPage(pageNum)
-  }, [])
+    return pageNum
+  }
+  const [page, setPage] = useState(getDefaultPage)
 
   const numRounds = matchTree.rounds.length
   const roundIndex = Math.floor(page / 2)
   const nextRoundIndex = roundIndex + 1
-  const currentRoundIsLast = roundIndex === numRounds - 1
+  const isLastRound = roundIndex === numRounds - 1
   const nextRoundIsLast = nextRoundIndex === numRounds - 1
-  const leftSide = page % 2 === 0
+  const isLeftSide = page % 2 === 0
 
   let currentRoundMatches = matchTree.rounds[roundIndex].matches
-  let nextRoundMatches = currentRoundIsLast
+  let nextRoundMatches = isLastRound
     ? null
     : matchTree.rounds[nextRoundIndex].matches
 
@@ -92,11 +91,11 @@ export const PaginatedDefaultBracket = (
     )
   }
 
-  if (!currentRoundIsLast) {
+  if (!isLastRound) {
     const mid1 = currentRoundMatches.length / 2
     const mid2 = nextRoundMatches.length / 2
 
-    if (leftSide) {
+    if (isLeftSide) {
       // if left side, get first half of matches
       currentRoundMatches = currentRoundMatches.slice(0, mid1)
       nextRoundMatches = nextRoundIsLast
@@ -120,10 +119,10 @@ export const PaginatedDefaultBracket = (
   const matchHeight = teamHeight * 2 + teamGap
   const matchGap2 = getSubsequentMatchGap(matchHeight, matchGap1, matchHeight)
 
-  const currentMatchPosition = leftSide ? 'left' : 'right'
+  const currentMatchPosition = isLeftSide ? 'left' : 'right'
   const nextMatchPosition = nextRoundIsLast
     ? 'center'
-    : leftSide
+    : isLeftSide
     ? 'left'
     : 'right'
 
@@ -143,7 +142,7 @@ export const PaginatedDefaultBracket = (
     />
   )
 
-  const nextRoundColumn = currentRoundIsLast ? null : (
+  const nextRoundColumn = isLastRound ? null : (
     <MatchColumnComponent
       matches={nextRoundMatches}
       matchPosition={nextMatchPosition}
@@ -161,7 +160,7 @@ export const PaginatedDefaultBracket = (
     />
   )
 
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   const linesStyle = lineStyle || {
     className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
@@ -182,6 +181,18 @@ export const PaginatedDefaultBracket = (
       setPage(newPage)
     }
   }
+  const disablePrev = () => {
+    if (matchTree.isVoting) {
+      return page <= matchTree.liveRoundIndex * 2
+    }
+    return page <= 0
+  }
+  const hasNext = () => {
+    if (matchTree.isVoting) {
+      return page < matchTree.liveRoundIndex * 2 + 1
+    }
+    return page < (matchTree.rounds.length - 1) * 2
+  }
 
   return (
     <div
@@ -194,10 +205,10 @@ export const PaginatedDefaultBracket = (
       </div>
       <div
         className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${
-          currentRoundIsLast ? ' tw-pb-0' : ''
+          isLastRound ? ' tw-pb-0' : ''
         }`}
       >
-        {currentRoundIsLast && (
+        {isLastRound && (
           <WinnerContainer
             match={matchTree.rounds[roundIndex].matches[0]}
             matchTree={matchTree}
@@ -210,12 +221,12 @@ export const PaginatedDefaultBracket = (
 
         <div
           className={`tw-flex tw-justify-${
-            currentRoundIsLast ? 'center' : 'between'
+            isLastRound ? 'center' : 'between'
           } tw-relative`}
         >
-          {leftSide ? currentRoundColumn : nextRoundColumn}
-          {leftSide ? nextRoundColumn : currentRoundColumn}
-          {currentRoundIsLast ? (
+          {isLeftSide ? currentRoundColumn : nextRoundColumn}
+          {isLeftSide ? nextRoundColumn : currentRoundColumn}
+          {isLastRound ? (
             <RootMatchLines rounds={matchTree.rounds} style={linesStyle} />
           ) : (
             <BracketLines rounds={matchTree.rounds} style={linesStyle} />
@@ -224,16 +235,16 @@ export const PaginatedDefaultBracket = (
       </div>
       <div
         className={`tw-flex tw-flex-col tw-justify-end tw-items-${
-          currentRoundIsLast ? 'center' : 'stretch'
-        }${currentRoundIsLast ? ' tw-flex-grow' : ''}`}
+          isLastRound ? 'center' : 'stretch'
+        }${isLastRound ? ' tw-flex-grow' : ''}`}
       >
         <NavButtonsComponent
           disableNext={
             forcePageAllPicked ? someMatchNotPicked(currentRoundMatches) : false
           }
-          disablePrev={page === 0}
+          disablePrev={disablePrev()}
           onNext={handleNext}
-          hasNext={page < (matchTree.rounds.length - 1) * 2}
+          hasNext={hasNext()}
           onPrev={handlePrev}
           onFullBracket={onFinished}
           onFinished={onFinished}
