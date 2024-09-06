@@ -19,7 +19,7 @@ const BracketOptionButton = (props: {
 }) => {
   return (
     <button
-      className="tw-flex tw-gap-10 tw-items-center tw-bg-transparent tw-text-white tw-uppercase tw-font-sans tw-border-none tw-cursor-pointer tw-p-0"
+      className="tw-flex tw-gap-10 tw-items-center tw-bg-transparent tw-text-white tw-uppercase tw-font-sans tw-border-none tw-cursor-pointer tw-p-0 hover:tw-text-white/75"
       onClick={props.onClick}
     >
       <div className="tw-h-24 tw-w-24">
@@ -38,7 +38,7 @@ const BracketOptionLink = (props: {
   return (
     <a
       href={props.url}
-      className="tw-flex tw-gap-10 tw-items-center tw-text-white tw-uppercase tw-font-sans tw-cursor-pointer"
+      className="tw-flex tw-gap-10 tw-items-center tw-text-white tw-uppercase tw-font-sans tw-cursor-pointer hover:tw-text-white/75"
     >
       <props.IconComponent />
       <span className="tw-font-500 tw-text-16">{props.label}</span>
