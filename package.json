@@ -1,10 +1,12 @@
 {
   "scripts": {
     "pretty:check": "prettier --check \"**/*\" --ignore-unknown",
-    "pretty": "prettier --write \"**/*\" --ignore-unknown"
+    "pretty": "prettier --write \"**/*\" --ignore-unknown",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.20.1",
+    "husky": "^9.1.5",
     "prettier": "^3.0.3"
   }
 }
