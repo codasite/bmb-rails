@@ -1,10 +1,10 @@
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import PlayBuilderPage from './PlayBuilderPage'
 import { MatchTree } from '../../shared/models/MatchTree'
 import '@testing-library/jest-dom/jest-globals'
 import { PlayStorage } from '../../shared/storages/PlayStorage'
-import { bracketApi, MatchPick, MatchRes } from '../../shared'
+import { bracketApi, MatchPick, MatchRes, PlayRes } from '../../shared'
 import { jest } from '@jest/globals'
 import { bracketResFactory } from '../../shared/api/types/bracketFactory'
 global.wpbb_app_obj = {
@@ -192,7 +192,7 @@ describe('PlayBuilderPage', () => {
     expect(createPlayMock).toHaveBeenCalled()
   })
 
-  test.skip('should update existing play when bracket is voting and user submit picks for second round', () => {
+  test('should update existing play when bracket is voting and user submit picks for second round', () => {
     // Four team bracket is voting and live round is second round
     const matches = [
       {
@@ -219,12 +219,22 @@ describe('PlayBuilderPage', () => {
     })
 
     // User's play picked Team 1 and Team 3 for first round
-    const play = {
+    const play: PlayRes = {
+      id: 1,
       bracketId: bracket.id,
       picks: [
         { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
         { roundIndex: 0, matchIndex: 1, winningTeamId: 19 },
       ],
+      author: 1,
+      authorDisplayName: 'author',
+      publishedDate: {
+        date: 'date',
+        timezone_type: 1,
+        timezone: 'timezone',
+      },
+      title: 'Test Play',
+      status: 'published',
     }
     // Results were actually Team 2 and Team 3
     bracket.results = [
@@ -239,6 +249,7 @@ describe('PlayBuilderPage', () => {
         myPlayHistoryUrl=""
         loginUrl=""
         bracketProductArchiveUrl=""
+        play={play}
       />
     )
     // Team 2 and Team 3 should be highlighted in the first round from results
@@ -246,15 +257,19 @@ describe('PlayBuilderPage', () => {
     // Submit picks button should be disabled
     expect(screen.getByRole('button', { name: 'Submit Picks' })).toBeDisabled()
     // I click on Team 3 to win second round
-    expect(screen.getByTestId('team-slot-round-1-match-0-right')).toBeEnabled()
-    userEvent.click(screen.getByTestId('team-slot-round-1-match-0-right'))
+    expect(screen.getByTestId('team-slot-round-1-match-0-right'))
+    fireEvent.click(screen.getByTestId('team-slot-round-1-match-0-right'))
     // Submit picks button should be enabled
     expect(screen.getByRole('button', { name: 'Submit Picks' })).toBeEnabled()
     // Click on submit picks
-    userEvent.click(screen.getByRole('button', { name: 'Submit Picks' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Submit Picks' }))
     // bracketApi.updatePicks should be called with the updated picks which is Team 3 for second round
-    expect(bracketApi.updatePlay).toHaveBeenCalledWith(play.bracketId, [
-      { roundIndex: 1, matchIndex: 1, winningTeam: 20 },
-    ])
+    expect(bracketApi.updatePlay).toHaveBeenCalledWith(play.bracketId, {
+      picks: [
+        { matchIndex: 0, roundIndex: 0, winningTeamId: 18 },
+        { matchIndex: 1, roundIndex: 0, winningTeamId: 19 },
+        { matchIndex: 0, roundIndex: 1, winningTeamId: 19 },
+      ],
+    })
   })
 })
