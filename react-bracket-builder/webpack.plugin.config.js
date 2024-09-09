@@ -1,5 +1,5 @@
 const createWpWebpackConfig = require('./create-wp-webpack-config')
-console.log(
+console.info(
   'outputting to plugin/Includes/react-bracket-builder/build/wordpress'
 )
 

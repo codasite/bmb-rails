@@ -1,6 +1,6 @@
 const path = require('path')
 const defaults = require('@wordpress/scripts/config/webpack.config')
-console.log('loading wordpress webpack config')
+console.info('loading wordpress webpack config')
 
 function createWpWebpackConfig(...pathSegments) {
   return {
