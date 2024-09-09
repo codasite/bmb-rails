@@ -152,7 +152,7 @@ export class MatchTree {
 
   toMatchReq = (): MatchReq[] => {
     const matches: MatchReq[] = []
-    this.forEachMatch((match, matchIndex, roundIndex) => {
+    this.forEachMatch((match) => {
       const matchReq: MatchReq = {
         roundIndex: match.roundIndex,
         matchIndex: match.matchIndex,
