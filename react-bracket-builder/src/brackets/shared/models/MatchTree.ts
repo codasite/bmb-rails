@@ -303,7 +303,14 @@ export class MatchTree {
       } else if (team2?.id === winningTeamId) {
         match.team2Wins = true
       } else {
-        throw new Error('Match does not have winningTeam from pick')
+        const team = matchTree.rounds[0].getTeam(winningTeamId)
+        if (team.side === 'left') {
+          match.setTeam1(team)
+          match.team1Wins = true
+        } else {
+          match.setTeam2(team)
+          match.team2Wins = true
+        }
       }
     }
     return matchTree
