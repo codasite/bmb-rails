@@ -4,7 +4,7 @@ import {
   MatchTreeContext1,
 } from '../../../shared/context/context'
 
-export const getVotingPlayTrees = () => {
+export const useVotingPlayTrees = () => {
   const context0 = useContext(MatchTreeContext)
   const context1 = useContext(MatchTreeContext1)
 

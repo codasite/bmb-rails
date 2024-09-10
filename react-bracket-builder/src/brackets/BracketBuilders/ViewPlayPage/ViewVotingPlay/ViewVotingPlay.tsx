@@ -1,5 +1,5 @@
 import { useContext, useEffect } from 'react'
-import { PickableBracket } from '../../../shared/components/Bracket'
+import { DefaultBracket } from '../../../shared/components/Bracket'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
 import { BracketMeta, DarkModeContext } from '../../../shared/context/context'
@@ -8,7 +8,8 @@ import { WithMatchTree2 } from '../../../shared/components/HigherOrder/WithMatch
 import { WindowDimensionsContext } from '../../../shared/context/WindowDimensionsContext'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { loadMostPopularPicks, loadPlay, loadPlayMeta } from '../../../shared'
-import { getVotingPlayTrees } from './getVotingPlayTrees'
+import { useVotingPlayTrees } from './getVotingPlayTrees'
+import { TeamSlotToggle } from '../../../shared/components/TeamSlot'
 
 const ViewVotingPlay = (props: {
   bracketMeta: BracketMeta
@@ -21,7 +22,7 @@ const ViewVotingPlay = (props: {
   const { width: windowWidth } = useContext(WindowDimensionsContext)
 
   const { playTree, setPlayTree, setMostPopularPicksTree } =
-    getVotingPlayTrees()
+    useVotingPlayTrees()
 
   useEffect(() => {
     loadPlayMeta(play, props.setBracketMeta)
@@ -44,14 +45,12 @@ const ViewVotingPlay = (props: {
         {playTree && (
           <>
             <ScaledBracket
-              BracketComponent={PickableBracket}
+              BracketComponent={DefaultBracket}
+              TeamSlotComponent={TeamSlotToggle}
               matchTree={playTree}
               windowWidth={windowWidth}
               paddingX={20}
             />
-            <div className="tw-w-full tw-mt-40">
-              {/* <ViewPlayPageButtons play={play} /> */}
-            </div>
           </>
         )}
       </div>
