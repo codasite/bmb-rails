@@ -75,10 +75,10 @@ export class MatchNode {
     return !this.isLeftChild()
   }
   getTeam1(): Nullable<Team> {
-    return this.left ? this.left.getWinner() : this.team1
+    return this.left?.getWinner() ?? this.team1
   }
   getTeam2(): Nullable<Team> {
-    return this.right ? this.right.getWinner() : this.team2
+    return this.right?.getWinner() ?? this.team2
   }
   setTeam1(team: Team): void {
     this.team1 = team

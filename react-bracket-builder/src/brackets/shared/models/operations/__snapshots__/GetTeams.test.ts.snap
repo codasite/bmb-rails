@@ -5,18 +5,22 @@ exports[`GetTeams should get the teams 1`] = `
   Team {
     "id": 17,
     "name": "Team 1",
+    "side": null,
   },
   Team {
     "id": 18,
     "name": "Team 2",
+    "side": null,
   },
   Team {
     "id": 19,
     "name": "Team 3",
+    "side": null,
   },
   Team {
     "id": 20,
     "name": "Team 4",
+    "side": null,
   },
 ]
 `;
