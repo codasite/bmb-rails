@@ -2,7 +2,7 @@ import express from 'express'
 import path from 'path'
 import { createProxyMiddleware } from 'http-proxy-middleware'
 
-console.log('react server')
+console.info('react server')
 const app = express()
 
 const port = 3001
@@ -21,7 +21,7 @@ app.get('/hello', async (req, res) => {
 })
 
 if (process.env.NODE_ENV === 'development') {
-  console.log('development mode')
+  console.info('development mode')
   app.use(
     '*',
     createProxyMiddleware({
@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'development') {
     })
   )
 } else {
-  console.log('production mode')
+  console.info('production mode')
   app.use(express.static('client/dist'))
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '../client/dist/index.html'))
@@ -38,5 +38,5 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 app.listen(port, host, () => {
-  console.log(`React Server listening at http://${host}:${port}`)
+  console.info(`React Server listening at http://${host}:${port}`)
 })

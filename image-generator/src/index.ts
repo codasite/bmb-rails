@@ -217,5 +217,5 @@ app.post(
 )
 
 app.listen(port, host, () => {
-  console.log(`Image Generator listening at http://${host}:${port}`)
+  console.info(`Image Generator listening at http://${host}:${port}`)
 })

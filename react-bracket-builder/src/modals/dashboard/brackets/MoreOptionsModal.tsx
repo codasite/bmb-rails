@@ -86,7 +86,6 @@ export const MoreOptionsModal = (props: {
         lockTournament: b.dataset.lockTournament === 'true' ? true : false,
         deleteBracket: b.dataset.deleteBracket === 'true' ? true : false,
       })
-      console.log('bracketOptions', bracketOptions)
 
       props.setShow(true)
     },
