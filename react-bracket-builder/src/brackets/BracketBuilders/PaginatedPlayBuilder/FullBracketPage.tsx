@@ -3,13 +3,13 @@ import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { PickableBracket } from '../../shared/components/Bracket'
-import { ThemeSelector } from '../../shared/components'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { ReactComponent as EditIcon } from '../../shared/assets/edit-icon.svg'
 import { PlayBuilderButtons } from '../PlayBracketBuilder/PlayBuilderButtons'
 import { PlayBuilderProps } from '../PlayBracketBuilder/types'
 import { DarkModeContext } from '../../shared/context/context'
 import { BracketHeaderTag } from '../BracketHeaderTag'
+import { ThemeSelector } from '../../../ui/ThemeSelector'
 
 interface FullBracketPageProps extends PlayBuilderProps {
   onEditClick?: () => void
