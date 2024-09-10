@@ -1,15 +1,22 @@
 import { useContext, useEffect } from 'react'
-import { DefaultBracket } from '../../../shared/components/Bracket'
-import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
-import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
-import { BracketMeta, DarkModeContext } from '../../../shared/context/context'
-import { PlayRes } from '../../../shared/api/types/bracket'
-import { WithMatchTree2 } from '../../../shared/components/HigherOrder/WithMatchTree'
-import { WindowDimensionsContext } from '../../../shared/context/WindowDimensionsContext'
-import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
-import { loadMostPopularPicks, loadPlay, loadPlayMeta } from '../../../shared'
+import { DefaultBracket } from '../../../brackets/shared/components/Bracket'
+import darkBracketBg from '../../../brackets/shared/assets/bracket-bg-dark.png'
+import lightBracketBg from '../../../brackets/shared/assets/bracket-bg-light.png'
+import {
+  BracketMeta,
+  DarkModeContext,
+} from '../../../brackets/shared/context/context'
+import { PlayRes } from '../../../brackets/shared/api/types/bracket'
+import { WithMatchTree2 } from '../../../brackets/shared/components/HigherOrder/WithMatchTree'
+import { WindowDimensionsContext } from '../../../brackets/shared/context/WindowDimensionsContext'
+import { ScaledBracket } from '../../../brackets/shared/components/Bracket/ScaledBracket'
+import {
+  loadMostPopularPicks,
+  loadPlay,
+  loadPlayMeta,
+} from '../../../brackets/shared'
 import { useVotingPlayTrees } from './getVotingPlayTrees'
-import { TeamSlotToggle } from '../../../shared/components/TeamSlot'
+import { TeamSlotToggle } from '../../../brackets/shared/components/TeamSlot'
 
 const ViewVotingPlay = (props: {
   bracketMeta: BracketMeta
