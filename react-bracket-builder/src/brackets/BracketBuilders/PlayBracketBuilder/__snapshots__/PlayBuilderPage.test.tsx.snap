@@ -21,10 +21,10 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -292,10 +292,10 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -618,10 +618,10 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -965,10 +965,10 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
