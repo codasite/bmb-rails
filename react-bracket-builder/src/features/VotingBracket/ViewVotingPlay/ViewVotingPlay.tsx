@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { DefaultBracket } from '../../../brackets/shared/components/Bracket'
 import darkBracketBg from '../../../brackets/shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../../brackets/shared/assets/bracket-bg-light.png'
@@ -17,6 +17,10 @@ import {
 } from '../../../brackets/shared'
 import { useVotingPlayTrees } from './getVotingPlayTrees'
 import { VotingPlayTeamSlot } from './VotingPlayTeamSlot'
+import { VotingResultsTeamSlot } from '../VotingResultsTeamSlot'
+import { ThemeSelector } from '../../../ui/ThemeSelector'
+import ToggleSwitch from '../../../ui/ToggleSwitch'
+import { H3, H4 } from '../../../elements'
 
 const ViewVotingPlay = (props: {
   bracketMeta: BracketMeta
@@ -28,8 +32,18 @@ const ViewVotingPlay = (props: {
 
   const { width: windowWidth } = useContext(WindowDimensionsContext)
 
-  const { playTree, setPlayTree, setMostPopularPicksTree } =
-    useVotingPlayTrees()
+  const {
+    playTree,
+    setPlayTree,
+    setMostPopularPicksTree,
+    mostPopularPicksTree,
+  } = useVotingPlayTrees()
+
+  // Whether to show my picks vs show popular picks
+  const [showPopularPicks, setShowPopularPicks] = useState(false)
+  const handleToggleShowPopularPicks = () => {
+    setShowPopularPicks(!showPopularPicks)
+  }
 
   useEffect(() => {
     loadPlayMeta(play, props.setBracketMeta)
@@ -49,12 +63,23 @@ const ViewVotingPlay = (props: {
       <div
         className={`tw-flex tw-flex-col tw-items-center tw-max-w-[900px] tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-px-20`}
       >
+        <div className="tw-mb-20 tw-flex tw-items-center tw-gap-14">
+          <span className="tw-font-500">My Picks</span>
+          <ToggleSwitch
+            isOn={!showPopularPicks}
+            handleToggle={handleToggleShowPopularPicks}
+            color={showPopularPicks ? 'green' : 'white'}
+          />
+          <span className="tw-font-500">Popular Picks</span>
+        </div>
         {playTree && (
           <>
             <ScaledBracket
               BracketComponent={DefaultBracket}
-              TeamSlotComponent={VotingPlayTeamSlot}
-              matchTree={playTree}
+              TeamSlotComponent={
+                showPopularPicks ? VotingResultsTeamSlot : VotingPlayTeamSlot
+              }
+              matchTree={showPopularPicks ? mostPopularPicksTree : playTree}
               windowWidth={windowWidth}
               paddingX={20}
             />
