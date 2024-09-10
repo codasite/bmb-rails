@@ -16,6 +16,7 @@ import { ViewResultsPageButtons } from './ViewResultsPageButtons'
 import { BracketRes, loadBracketResults } from '../../shared'
 import { BracketResultsStatusTag } from '../BracketResultsStatusTag'
 import { ResultsTeamSlotToggle } from '../../shared/components/TeamSlot'
+import { VotingResultsTeamSlot } from '../../../features/VotingBracket/VotingResultsTeamSlot'
 
 export const ViewBracketResultsPage = (props: {
   matchTree?: MatchTree
@@ -66,7 +67,9 @@ export const ViewBracketResultsPage = (props: {
             </div>
             <ScaledBracket
               BracketComponent={DefaultBracket}
-              TeamSlotComponent={ResultsTeamSlotToggle}
+              TeamSlotComponent={
+                bracket.isVoting ? VotingResultsTeamSlot : ResultsTeamSlotToggle
+              }
               matchTree={props.matchTree}
               paddingX={20}
             />
