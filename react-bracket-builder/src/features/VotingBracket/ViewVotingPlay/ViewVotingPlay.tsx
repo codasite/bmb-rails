@@ -16,7 +16,7 @@ import {
   loadPlayMeta,
 } from '../../../brackets/shared'
 import { useVotingPlayTrees } from './getVotingPlayTrees'
-import { TeamSlotToggle } from '../../../brackets/shared/components/TeamSlot'
+import { VotingPlayTeamSlot } from './VotingPlayTeamSlot'
 
 const ViewVotingPlay = (props: {
   bracketMeta: BracketMeta
@@ -53,7 +53,7 @@ const ViewVotingPlay = (props: {
           <>
             <ScaledBracket
               BracketComponent={DefaultBracket}
-              TeamSlotComponent={TeamSlotToggle}
+              TeamSlotComponent={VotingPlayTeamSlot}
               matchTree={playTree}
               windowWidth={windowWidth}
               paddingX={20}

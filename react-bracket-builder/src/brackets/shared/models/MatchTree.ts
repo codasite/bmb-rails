@@ -29,6 +29,10 @@ export class MatchTree {
     this.liveRoundIndex = liveRoundIndex
   }
 
+  getMatch(roundIndex: number, matchIndex: number): Nullable<MatchNode> {
+    return this.rounds[roundIndex]?.matches[matchIndex]
+  }
+
   getRootMatch(): Nullable<MatchNode> {
     const lastRound = this.rounds[this.rounds.length - 1]
     if (!lastRound) {
