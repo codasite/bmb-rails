@@ -21,7 +21,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
           >
             <div
               class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
@@ -292,7 +292,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
           >
             <div
               class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
@@ -618,7 +618,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
           >
             <div
               class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
@@ -965,7 +965,7 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
           >
             <div
               class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"

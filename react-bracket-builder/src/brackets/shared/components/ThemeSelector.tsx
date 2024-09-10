@@ -1,21 +1,19 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { DarkModeContext } from '../context/context'
+import ToggleSwitch from '../../../ui/ToggleSwitch'
 
 export const ThemeSelector = () => {
   const { darkMode, setDarkMode } = useContext(DarkModeContext)
+
   return (
     <div className="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14">
       <span className="tw-text-dd-blue dark:tw-text-white">Theme</span>
-      <button
-        onClick={() => setDarkMode?.(!darkMode)}
-        className="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
-      >
-        <div className="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center">
-          <span className="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase">
-            {darkMode ? 'dark' : 'light'}
-          </span>
-        </div>
-      </button>
+      <ToggleSwitch
+        isOn={darkMode}
+        handleToggle={() => setDarkMode?.(!darkMode)}
+        onLabel="dark"
+        offLabel="light"
+      />
     </div>
   )
 }
