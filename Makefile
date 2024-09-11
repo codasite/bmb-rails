@@ -115,6 +115,9 @@ react-install:
 react-test:
 	cd react-bracket-builder && npm run test $(args)
 
+react-test-watch:
+	cd react-bracket-builder && npm run test -- --watch
+
 react-test-update-snapshots:
 	cd react-bracket-builder && npm run test -- -u
 
