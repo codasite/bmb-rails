@@ -41,6 +41,16 @@ export class MatchTree {
     return lastRound.matches[0]
   }
 
+  getTeam(teamId: number): Nullable<Team> {
+    for (const round of this.rounds) {
+      const team = round.getTeam(teamId)
+      if (team) {
+        return team
+      }
+    }
+    return null
+  }
+
   clone(): MatchTree {
     return MatchTree.deserialize(this.serialize())
   }
@@ -307,7 +317,10 @@ export class MatchTree {
       } else if (team2?.id === winningTeamId) {
         match.team2Wins = true
       } else {
-        const team = matchTree.rounds[0].getTeam(winningTeamId)
+        const team = matchTree.getTeam(winningTeamId)
+        if (team === null) {
+          throw new Error(`Team ${winningTeamId} not found`)
+        }
         if (team.side === 'left') {
           match.setTeam1(team)
           match.team1Wins = true

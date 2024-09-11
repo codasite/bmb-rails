@@ -79,7 +79,7 @@ const ViewVotingPlay = (props: {
               TeamSlotComponent={
                 showPopularPicks ? VotingResultsTeamSlot : VotingPlayTeamSlot
               }
-              matchTree={showPopularPicks ? mostPopularPicksTree : playTree}
+              matchTree={mostPopularPicksTree}
               windowWidth={windowWidth}
               paddingX={20}
             />

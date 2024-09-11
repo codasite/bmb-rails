@@ -7,23 +7,22 @@ import { PercentageTeamSlot } from '../../MostPopularPicks/PercentageTeamSlot'
 import { useVotingPlayTrees } from './getVotingPlayTrees'
 
 export const VotingPlayTeamSlot = (props: TeamSlotProps) => {
-  const { mostPopularPicksTree } = useVotingPlayTrees()
+  const { playTree } = useVotingPlayTrees()
   if (props.teamPosition === 'winner') {
     return (
       <BaseTeamSlot backgroundColor="white" textColor="dd-blue" {...props} />
     )
   }
-  const mppMatch = mostPopularPicksTree.getMatch(
+  const playMatch = playTree.getMatch(
     props.match.roundIndex,
     props.match.matchIndex
   )
   return (
     <PercentageTeamSlot
       {...props}
-      teamSlot={<TeamSlotToggle {...props} />}
+      teamSlot={<TeamSlotToggle {...props} match={playMatch} />}
       chipColor="green"
       showLoserPopularity={true}
-      match={mppMatch}
     />
   )
 }
