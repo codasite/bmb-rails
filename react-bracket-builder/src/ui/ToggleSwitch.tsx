@@ -4,12 +4,14 @@ const ToggleSwitch = ({
   onLabel,
   offLabel,
   color,
+  title,
 }: {
   isOn: boolean
   handleToggle: () => void
   onLabel?: string
   offLabel?: string
   color?: 'white' | 'green'
+  title?: string
 }) => {
   const showCircle = !offLabel && !onLabel
   const getColorClass = () => {
@@ -27,6 +29,7 @@ const ToggleSwitch = ({
       className={`tw-flex tw-items-center ${
         !showCircle ? 'tw-w-[71px] tw-h-31' : 'tw-w-[30px]'
       } tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid ${getColorClass()} tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300`}
+      title={title}
     >
       {showCircle && (
         <svg

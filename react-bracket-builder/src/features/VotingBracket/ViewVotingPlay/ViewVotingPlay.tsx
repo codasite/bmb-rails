@@ -67,6 +67,7 @@ const ViewVotingPlay = (props: {
             isOn={!showPopularPicks}
             handleToggle={handleToggleShowPopularPicks}
             color={showPopularPicks ? 'green' : 'white'}
+            title={showPopularPicks ? 'Show my picks' : 'Show popular picks'}
           />
           <span className="tw-font-500">Popular Picks</span>
         </div>
