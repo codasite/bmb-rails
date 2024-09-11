@@ -144,7 +144,7 @@ describe('PlayBuilderPage', () => {
       authorDisplayName: 'authorDisplayName',
       publishedDate: {
         date: 'date',
-        timezone_type: 1,
+        timezoneType: 1,
         timezone: 'timezone',
       },
     }
@@ -230,7 +230,7 @@ describe('PlayBuilderPage', () => {
       authorDisplayName: 'author',
       publishedDate: {
         date: 'date',
-        timezone_type: 1,
+        timezoneType: 1,
         timezone: 'timezone',
       },
       title: 'Test Play',

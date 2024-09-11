@@ -3,7 +3,7 @@ import { WildcardPlacement } from '../../models/WildcardPlacement'
 
 interface phpDate {
   date: string
-  timezone_type: number
+  timezoneType: number
   timezone: string
 }
 
