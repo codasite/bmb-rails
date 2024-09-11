@@ -18,9 +18,7 @@ import {
 import { useVotingPlayTrees } from './getVotingPlayTrees'
 import { VotingPlayTeamSlot } from './VotingPlayTeamSlot'
 import { VotingResultsTeamSlot } from '../VotingResultsTeamSlot'
-import { ThemeSelector } from '../../../ui/ThemeSelector'
 import ToggleSwitch from '../../../ui/ToggleSwitch'
-import { H3, H4 } from '../../../elements'
 
 const ViewVotingPlay = (props: {
   bracketMeta: BracketMeta
