@@ -8,19 +8,29 @@ import { useVotingPlayTrees } from './getVotingPlayTrees'
 
 export const VotingPlayTeamSlot = (props: TeamSlotProps) => {
   const { playTree } = useVotingPlayTrees()
-  if (props.teamPosition === 'winner') {
-    return (
-      <BaseTeamSlot backgroundColor="white" textColor="dd-blue" {...props} />
-    )
-  }
   const playMatch = playTree.getMatch(
     props.match.roundIndex,
     props.match.matchIndex
   )
+  if (props.teamPosition === 'winner') {
+    return (
+      <BaseTeamSlot
+        {...props}
+        backgroundColor="white"
+        textColor="dd-blue"
+        match={playMatch}
+        team={playMatch.getWinner()}
+      />
+    )
+  }
+  let team = props.team
+  if (props.match.roundIndex > props.matchTree.liveRoundIndex) {
+    team = playMatch.getTeam(props.teamPosition)
+  }
   return (
     <PercentageTeamSlot
       {...props}
-      teamSlot={<TeamSlotToggle {...props} match={playMatch} />}
+      teamSlot={<TeamSlotToggle {...props} match={playMatch} team={team} />}
       chipColor="green"
       showLoserPopularity={true}
     />

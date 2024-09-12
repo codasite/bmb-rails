@@ -76,7 +76,7 @@ exports[`ViewVotingPlay renders correctly 1`] = `
                   <span
                     style="font-size: 32px; transform: scale(1); visibility: hidden;"
                   >
-                    jalapeno
+                    Classic
                   </span>
                 </div>
               </div>

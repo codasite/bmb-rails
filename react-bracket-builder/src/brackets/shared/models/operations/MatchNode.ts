@@ -74,6 +74,14 @@ export class MatchNode {
   isRightChild(): boolean {
     return !this.isLeftChild()
   }
+  getTeam(position: TeamPosition): Nullable<Team> {
+    if (position === 'left') {
+      return this.getTeam1()
+    } else if (position === 'right') {
+      return this.getTeam2()
+    }
+    return null
+  }
   getTeam1(): Nullable<Team> {
     return this.left?.getWinner() ?? this.team1
   }
