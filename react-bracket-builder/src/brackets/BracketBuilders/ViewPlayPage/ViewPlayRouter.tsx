@@ -4,7 +4,7 @@ import ViewStandardPlayPage from './ViewStandardPlay/ViewStandardPlay'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { WithBracketMeta } from '../../shared/components/HigherOrder'
 import { ViewBracketResultsPage } from '../ViewBracketResultsPage/ViewBracketResultsPage'
-import ViewVotingPlay from './ViewVotingPlay/ViewVotingPlay'
+import ViewVotingPlay from '../../../features/VotingBracket/ViewVotingPlay/ViewVotingPlay'
 
 const ViewPlayRouter = (props: ViewPlayPageProps) => {
   const [page, setPage] = useState<'view' | 'results'>('view')

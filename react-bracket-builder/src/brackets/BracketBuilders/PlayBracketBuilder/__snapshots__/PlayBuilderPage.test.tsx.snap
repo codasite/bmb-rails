@@ -21,10 +21,10 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -292,10 +292,10 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -618,10 +618,10 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -965,10 +965,10 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -1017,26 +1017,40 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
                 <div
-                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
-                  data-testid="team-slot-round-0-match-0-left"
-                  style="border-width: 2px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                    data-testid="team-slot-round-0-match-0-left"
+                    style="border-width: 2px;"
                   >
-                    Team 1
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 1
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-[lightgray]"
+                  />
                 </div>
                 <div
-                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
-                  data-testid="team-slot-round-0-match-0-right"
-                  style="border-width: 0px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                    data-testid="team-slot-round-0-match-0-right"
+                    style="border-width: 0px;"
                   >
-                    Team 2
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 2
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-green"
+                  />
                 </div>
               </div>
             </div>
@@ -1077,26 +1091,40 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
                 <div
-                  class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
-                  data-testid="team-slot-round-0-match-1-left"
-                  style="border-width: 0px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                    data-testid="team-slot-round-0-match-1-left"
+                    style="border-width: 0px;"
                   >
-                    Team 3
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 3
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-green"
+                  />
                 </div>
                 <div
-                  class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
-                  data-testid="team-slot-round-0-match-1-right"
-                  style="border-width: 2px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                    data-testid="team-slot-round-0-match-1-right"
+                    style="border-width: 2px;"
                   >
-                    Team 4
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 4
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-[lightgray]"
+                  />
                 </div>
               </div>
             </div>

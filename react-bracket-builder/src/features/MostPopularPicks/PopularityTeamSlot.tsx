@@ -1,7 +1,7 @@
 import { TeamSlotToggle } from '../../brackets/shared/components/TeamSlot'
 import { TeamSlotProps } from '../../brackets/shared/components/types'
 
-export const PercentageTeamSlot = (
+export const PopularityTeamSlot = (
   props: TeamSlotProps & {
     teamSlot?: React.ReactNode
     chipColor?: 'yellow' | 'green'
@@ -47,7 +47,7 @@ export const PercentageTeamSlot = (
   }
 
   let percentage = null
-  if (!props.match._pick || props.teamPosition === 'winner') {
+  if (isNaN(props.match._pick?.popularity) || props.teamPosition === 'winner') {
     percentage = null
   } else if (isWinner) {
     percentage = props.match._pick.popularity

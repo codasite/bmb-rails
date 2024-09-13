@@ -2,12 +2,12 @@ import React, { useContext } from 'react'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import { PickableBracket } from '../../shared/components/Bracket'
-import { ThemeSelector } from '../../shared/components'
 import { PlayBuilderProps } from './types'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
 import { DarkModeContext } from '../../shared/context/context'
 import { BracketHeaderTag } from '../BracketHeaderTag'
 import { VotingBracket } from '../../../features/VotingBracket/VotingBracket'
+import { ThemeSelector } from '../../../ui/ThemeSelector'
 
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const { matchTree, setMatchTree } = props

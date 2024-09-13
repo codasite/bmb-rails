@@ -115,8 +115,14 @@ react-install:
 react-test:
 	cd react-bracket-builder && npm run test $(args)
 
+react-test-watch:
+	cd react-bracket-builder && npm run test -- --watch
+
 react-test-update-snapshots:
 	cd react-bracket-builder && npm run test -- -u
+
+react-test-cover:
+	cd react-bracket-builder && npm run test -- --coverage
 
 composer-install:
 	cd plugin && composer install

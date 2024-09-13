@@ -26,6 +26,9 @@ export class Round {
   }
   getTeam(teamId: number): Nullable<Team> {
     for (const [index, match] of this.matches.entries()) {
+      if (match === null) {
+        continue
+      }
       const team1 = match.getTeam1()
       const team2 = match.getTeam2()
 

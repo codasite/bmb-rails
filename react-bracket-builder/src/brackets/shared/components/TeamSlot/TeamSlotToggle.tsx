@@ -17,7 +17,7 @@ export const TeamSlotToggle = (
     match,
   } = props
 
-  if (team && match.getWinner() === team) {
+  if (team && match.getWinner()?.id === team.id) {
     return <>{activeTeamSlot}</>
   }
   return <>{inactiveTeamSlot}</>

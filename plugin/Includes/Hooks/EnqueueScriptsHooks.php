@@ -224,6 +224,14 @@ class EnqueueScriptsHooks implements HooksInterface {
       if ($post->post_type === 'bracket_play') {
         // $play = $this->play_serializer->serialize($this->play_repo->get($post));
         $play = $this->play_repo->get($post);
+        if ($play->bracket->is_voting) {
+          $play->bracket = $this->bracket_repo->get(
+            $play->bracket_id,
+            true,
+            true,
+            true
+          );
+        }
         $bracket = $play->bracket;
       } elseif ($post->post_type === 'bracket') {
         // $bracket = $this->bracket_serializer->serialize(

@@ -16,7 +16,7 @@ export const bracketResFactory = (
     authorDisplayName: 'Test User',
     publishedDate: {
       date: '2024-08-28 16:46:09.000000',
-      timezone_type: 1,
+      timezoneType: 1,
       timezone: '+00:00',
     },
     isOpen: true,

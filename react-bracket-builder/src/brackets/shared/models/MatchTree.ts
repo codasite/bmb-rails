@@ -29,12 +29,26 @@ export class MatchTree {
     this.liveRoundIndex = liveRoundIndex
   }
 
+  getMatch(roundIndex: number, matchIndex: number): Nullable<MatchNode> {
+    return this.rounds[roundIndex]?.matches[matchIndex]
+  }
+
   getRootMatch(): Nullable<MatchNode> {
     const lastRound = this.rounds[this.rounds.length - 1]
     if (!lastRound) {
       return null
     }
     return lastRound.matches[0]
+  }
+
+  getTeam(teamId: number): Nullable<Team> {
+    for (const round of this.rounds) {
+      const team = round.getTeam(teamId)
+      if (team) {
+        return team
+      }
+    }
+    return null
   }
 
   clone(): MatchTree {
@@ -188,12 +202,14 @@ export class MatchTree {
             roundIndex,
             matchIndex,
             winningTeamId: team1.id,
+            popularity: match._pick?.popularity,
           })
         } else if (team2Winner && team2.id) {
           picks.push({
             roundIndex,
             matchIndex,
             winningTeamId: team2.id,
+            popularity: match._pick?.popularity,
           })
         }
       })
@@ -303,7 +319,10 @@ export class MatchTree {
       } else if (team2?.id === winningTeamId) {
         match.team2Wins = true
       } else {
-        const team = matchTree.rounds[0].getTeam(winningTeamId)
+        const team = matchTree.getTeam(winningTeamId)
+        if (team === null) {
+          throw new Error(`Team ${winningTeamId} not found`)
+        }
         if (team.side === 'left') {
           match.setTeam1(team)
           match.team1Wins = true
