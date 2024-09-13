@@ -7,7 +7,7 @@ exports[`ViewVotingPlay renders correctly 1`] = `
     style="background-image: url(undefined);"
   >
     <div
-      class="tw-flex tw-flex-col tw-items-center tw-max-w-[900px] tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-px-20"
+      class="tw-flex tw-flex-col tw-items-center tw-max-w-[900px] tw-gap-40 sm:tw-gap-0 tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-px-20"
     >
       <div
         class="tw-mb-20 tw-flex tw-items-center tw-gap-14"
@@ -752,7 +752,7 @@ exports[`ViewVotingPlay renders correctly 2`] = `
     style="background-image: url(undefined);"
   >
     <div
-      class="tw-flex tw-flex-col tw-items-center tw-max-w-[900px] tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-px-20"
+      class="tw-flex tw-flex-col tw-items-center tw-max-w-[900px] tw-gap-40 sm:tw-gap-0 tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-px-20"
     >
       <div
         class="tw-mb-20 tw-flex tw-items-center tw-gap-14"
