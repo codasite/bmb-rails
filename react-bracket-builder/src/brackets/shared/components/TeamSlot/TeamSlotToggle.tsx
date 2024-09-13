@@ -4,14 +4,21 @@ import { TeamSlotProps } from '../types'
 import { InactiveTeamSlot } from './InactiveTeamSlot'
 import { ActiveTeamSlot } from './ActiveTeamSlot'
 
-export const TeamSlotToggle = (props: TeamSlotProps) => {
-  const { team, match } = props
+export const TeamSlotToggle = (
+  props: TeamSlotProps & {
+    activeTeamSlot?: React.ReactNode
+    inactiveTeamSlot?: React.ReactNode
+  }
+) => {
+  const {
+    activeTeamSlot = <ActiveTeamSlot {...props} />,
+    inactiveTeamSlot = <InactiveTeamSlot {...props} />,
+    team,
+    match,
+  } = props
 
-  const active = team && match.getWinner() === team
-
-  return active ? (
-    <ActiveTeamSlot {...props} />
-  ) : (
-    <InactiveTeamSlot {...props} />
-  )
+  if (team && match.getWinner() === team) {
+    return <>{activeTeamSlot}</>
+  }
+  return <>{inactiveTeamSlot}</>
 }

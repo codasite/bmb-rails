@@ -6,8 +6,6 @@ import { ThemeSelector } from '../../shared/components'
 import { PlayBuilderProps } from './types'
 import { PlayBuilderButtons } from './PlayBuilderButtons'
 import { DarkModeContext } from '../../shared/context/context'
-import { VotingTeamSlot } from '../../../features/VotingBracket/VotingTeamSlot'
-import { TeamSlotToggle } from '../../shared/components/TeamSlot'
 import { BracketHeaderTag } from '../BracketHeaderTag'
 import { VotingBracket } from '../../../features/VotingBracket/VotingBracket'
 
