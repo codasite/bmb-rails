@@ -55,7 +55,7 @@ const ViewVotingPlay = (props: {
       }}
     >
       <div
-        className={`tw-flex tw-flex-col tw-items-center tw-max-w-[900px] tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-px-20`}
+        className={`tw-flex tw-flex-col tw-items-center tw-max-w-[900px] tw-gap-40 sm:tw-gap-0 tw-m-auto tw-pb-[83px] tw-pt-[62px] tw-px-20`}
       >
         <div className="tw-mb-20 tw-flex tw-items-center tw-gap-14">
           <span className="tw-font-500">My Picks</span>
