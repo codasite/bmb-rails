@@ -202,12 +202,14 @@ export class MatchTree {
             roundIndex,
             matchIndex,
             winningTeamId: team1.id,
+            popularity: match._pick?.popularity,
           })
         } else if (team2Winner && team2.id) {
           picks.push({
             roundIndex,
             matchIndex,
             winningTeamId: team2.id,
+            popularity: match._pick?.popularity,
           })
         }
       })
