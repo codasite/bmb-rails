@@ -4,7 +4,7 @@ import {
 } from '../../../brackets/shared/components/TeamSlot'
 import { TeamSlotProps } from '../../../brackets/shared/components/types'
 import { PercentageTeamSlot } from '../../MostPopularPicks/PercentageTeamSlot'
-import { useVotingPlayTrees } from './getVotingPlayTrees'
+import { useVotingPlayTrees } from './useVotingPlayTrees'
 
 export const VotingPlayTeamSlot = (props: TeamSlotProps) => {
   const { playTree } = useVotingPlayTrees()

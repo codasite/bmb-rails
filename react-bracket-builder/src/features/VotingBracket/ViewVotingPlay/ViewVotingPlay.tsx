@@ -15,7 +15,7 @@ import {
   loadPlay,
   loadPlayMeta,
 } from '../../../brackets/shared'
-import { useVotingPlayTrees } from './getVotingPlayTrees'
+import { useVotingPlayTrees } from './useVotingPlayTrees'
 import { VotingPlayTeamSlot } from './VotingPlayTeamSlot'
 import { VotingResultsTeamSlot } from '../VotingResultsTeamSlot'
 import ToggleSwitch from '../../../ui/ToggleSwitch'
