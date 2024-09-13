@@ -8,7 +8,16 @@ import { PercentageTeamSlot } from '../MostPopularPicks/PercentageTeamSlot'
 export const VotingResultsTeamSlot = (props: TeamSlotProps) => {
   if (props.teamPosition === 'winner') {
     return (
-      <BaseTeamSlot backgroundColor="green" textColor="dd-blue" {...props} />
+      <TeamSlotToggle
+        {...props}
+        activeTeamSlot={
+          <BaseTeamSlot
+            backgroundColor="green"
+            textColor="dd-blue"
+            {...props}
+          />
+        }
+      />
     )
   }
   return (

@@ -14,10 +14,8 @@ export const VotingPlayTeamSlot = (props: TeamSlotProps) => {
   )
   if (props.teamPosition === 'winner') {
     return (
-      <BaseTeamSlot
+      <TeamSlotToggle
         {...props}
-        backgroundColor="white"
-        textColor="dd-blue"
         match={playMatch}
         team={playMatch.getWinner()}
       />
