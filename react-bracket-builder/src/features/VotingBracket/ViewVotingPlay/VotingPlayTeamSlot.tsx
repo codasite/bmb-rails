@@ -3,7 +3,7 @@ import {
   TeamSlotToggle,
 } from '../../../brackets/shared/components/TeamSlot'
 import { TeamSlotProps } from '../../../brackets/shared/components/types'
-import { PercentageTeamSlot } from '../../MostPopularPicks/PercentageTeamSlot'
+import { PopularityTeamSlot } from '../../MostPopularPicks/PopularityTeamSlot'
 import { useVotingPlayTrees } from './useVotingPlayTrees'
 
 export const VotingPlayTeamSlot = (props: TeamSlotProps) => {
@@ -26,7 +26,7 @@ export const VotingPlayTeamSlot = (props: TeamSlotProps) => {
     team = playMatch.getTeam(props.teamPosition)
   }
   return (
-    <PercentageTeamSlot
+    <PopularityTeamSlot
       {...props}
       teamSlot={<TeamSlotToggle {...props} match={playMatch} team={team} />}
       chipColor="green"

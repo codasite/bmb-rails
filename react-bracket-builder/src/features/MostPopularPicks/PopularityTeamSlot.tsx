@@ -1,7 +1,7 @@
 import { TeamSlotToggle } from '../../brackets/shared/components/TeamSlot'
 import { TeamSlotProps } from '../../brackets/shared/components/types'
 
-export const PercentageTeamSlot = (
+export const PopularityTeamSlot = (
   props: TeamSlotProps & {
     teamSlot?: React.ReactNode
     chipColor?: 'yellow' | 'green'

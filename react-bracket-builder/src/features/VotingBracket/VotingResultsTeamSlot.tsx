@@ -3,7 +3,7 @@ import {
   TeamSlotToggle,
 } from '../../brackets/shared/components/TeamSlot'
 import { TeamSlotProps } from '../../brackets/shared/components/types'
-import { PercentageTeamSlot } from '../MostPopularPicks/PercentageTeamSlot'
+import { PopularityTeamSlot } from '../MostPopularPicks/PopularityTeamSlot'
 
 export const VotingResultsTeamSlot = (props: TeamSlotProps) => {
   if (props.teamPosition === 'winner') {
@@ -21,7 +21,7 @@ export const VotingResultsTeamSlot = (props: TeamSlotProps) => {
     )
   }
   return (
-    <PercentageTeamSlot
+    <PopularityTeamSlot
       teamSlot={
         <TeamSlotToggle
           activeTeamSlot={

@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import { TeamSlotToggle } from '../../brackets/shared/components/TeamSlot'
 import { TeamSlotProps } from '../../brackets/shared/components/types'
 import { DarkModeContext } from '../../brackets/shared/context/context'
-import { PercentageTeamSlot } from '../MostPopularPicks/PercentageTeamSlot'
+import { PopularityTeamSlot } from '../MostPopularPicks/PopularityTeamSlot'
 
 export const VotingTeamSlot = (props: TeamSlotProps) => {
   const { darkMode } = useContext(DarkModeContext)
@@ -10,7 +10,7 @@ export const VotingTeamSlot = (props: TeamSlotProps) => {
     return <TeamSlotToggle {...props} />
   }
   return (
-    <PercentageTeamSlot
+    <PopularityTeamSlot
       {...props}
       showLoserPopularity={true}
       chipColor="green"
