@@ -114,26 +114,31 @@ exports[`MatchTree testing to match picks 1`] = `
 [
   {
     "matchIndex": 0,
+    "popularity": undefined,
     "roundIndex": 0,
     "winningTeamId": 1,
   },
   {
     "matchIndex": 2,
+    "popularity": undefined,
     "roundIndex": 0,
     "winningTeamId": 4,
   },
   {
     "matchIndex": 0,
+    "popularity": undefined,
     "roundIndex": 1,
     "winningTeamId": 1,
   },
   {
     "matchIndex": 1,
+    "popularity": undefined,
     "roundIndex": 1,
     "winningTeamId": 4,
   },
   {
     "matchIndex": 0,
+    "popularity": undefined,
     "roundIndex": 2,
     "winningTeamId": 1,
   },

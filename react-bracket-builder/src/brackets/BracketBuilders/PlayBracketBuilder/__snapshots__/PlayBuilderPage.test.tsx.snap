@@ -1017,26 +1017,40 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
                 <div
-                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
-                  data-testid="team-slot-round-0-match-0-left"
-                  style="border-width: 2px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                    data-testid="team-slot-round-0-match-0-left"
+                    style="border-width: 2px;"
                   >
-                    Team 1
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 1
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-[lightgray]"
+                  />
                 </div>
                 <div
-                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
-                  data-testid="team-slot-round-0-match-0-right"
-                  style="border-width: 0px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                    data-testid="team-slot-round-0-match-0-right"
+                    style="border-width: 0px;"
                   >
-                    Team 2
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 2
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-green"
+                  />
                 </div>
               </div>
             </div>
@@ -1077,26 +1091,40 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
                 <div
-                  class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
-                  data-testid="team-slot-round-0-match-1-left"
-                  style="border-width: 0px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                    data-testid="team-slot-round-0-match-1-left"
+                    style="border-width: 0px;"
                   >
-                    Team 3
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 3
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-green"
+                  />
                 </div>
                 <div
-                  class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
-                  data-testid="team-slot-round-0-match-1-right"
-                  style="border-width: 2px;"
+                  class="tw-relative"
                 >
-                  <span
-                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  <div
+                    class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                    data-testid="team-slot-round-0-match-1-right"
+                    style="border-width: 2px;"
                   >
-                    Team 4
-                  </span>
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 4
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-[lightgray]"
+                  />
                 </div>
               </div>
             </div>
