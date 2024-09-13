@@ -10,6 +10,7 @@ import { PlayBuilderProps } from '../PlayBracketBuilder/types'
 import { DarkModeContext } from '../../shared/context/context'
 import { BracketHeaderTag } from '../BracketHeaderTag'
 import { ThemeSelector } from '../../../ui/ThemeSelector'
+import { VotingBracket } from '../../../features/VotingBracket/VotingBracket'
 
 interface FullBracketPageProps extends PlayBuilderProps {
   onEditClick?: () => void
@@ -45,7 +46,9 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
 
         {matchTree && (
           <ScaledBracket
-            BracketComponent={PickableBracket}
+            BracketComponent={
+              matchTree.isVoting ? VotingBracket : PickableBracket
+            }
             matchTree={matchTree}
           />
         )}
