@@ -22,22 +22,22 @@ class RedirectHooks implements HooksInterface {
     );
     $loader->add_action(
       'woocommerce_login_redirect',
-      [$this, 'redirect_after_login'],
+      [$this, 'dashboard_or_redirect'],
       10,
-      0
+      1
     );
     $loader->add_action(
       'woocommerce_registration_redirect',
-      [$this, 'redirect_after_register'],
+      [$this, 'dashboard_or_redirect'],
       10,
-      0
+      1
     );
-    // $loader->add_action(
-    //   'login_redirect',
-    //   [$this, 'redirect_after_login'],
-    //   10,
-    //   0
-    // );
+    $loader->add_action(
+      'login_redirect',
+      [$this, 'dashboard_or_redirect'],
+      10,
+      1
+    );
   }
 
   public function dashboard_redirect(): void {
@@ -62,22 +62,16 @@ class RedirectHooks implements HooksInterface {
     return $location;
   }
 
-  public function redirect_after_login(): string {
-    return $this->get_login_redirect_url();
-  }
-
-  public function redirect_after_register(): string {
-    return $this->get_login_redirect_url();
-  }
-
-  /**
-   * Redirect to the dashboard page no matter where the user logs in from.
-   */
-  private function get_login_redirect_url(): string {
-    // $redirect_to = $_REQUEST['redirect_to'] ?? '';
-    // if (empty($redirect_to)) {
-    $redirect_to = DashboardPage::get_url();
-    // }
-    return $redirect_to;
+  public function dashboard_or_redirect($redirect) {
+    error_log('redirect: ' . $redirect);
+    // if redirect is empty or contains 'wp-admin' or 'my-account' return dashboard
+    if (
+      empty($redirect) ||
+      strpos($redirect, 'wp-admin') !== false ||
+      strpos($redirect, 'my-account') !== false
+    ) {
+      $redirect = DashboardPage::get_url();
+    }
+    return $redirect;
   }
 }
