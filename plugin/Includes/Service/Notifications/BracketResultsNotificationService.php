@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
@@ -37,7 +38,7 @@ class BracketResultsNotificationService {
     $this->email_format_service =
       $args['email_format_service'] ??
       new BracketResultsEmailFormatService(
-        $args['email_service'] ?? new MailchimpEmailService()
+        $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create()
       );
     $this->results_sent_at_repo =
       $args['results_sent_at_repo'] ??

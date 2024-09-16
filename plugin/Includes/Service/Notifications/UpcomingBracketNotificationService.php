@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
@@ -18,7 +18,7 @@ class UpcomingBracketNotificationService {
     $this->notification_repo =
       $args['notification_repo'] ?? new NotificationRepo();
     $this->email_service =
-      $args['email_service'] ?? new MailchimpEmailService();
+      $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
   }
 

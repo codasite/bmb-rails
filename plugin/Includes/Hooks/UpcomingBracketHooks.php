@@ -8,12 +8,13 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceFactory;
+use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
 use WStrategies\BMB\Includes\Utils;
 
 class UpcomingBracketHooks implements HooksInterface {
   private $utils;
-  private $notification_service;
-  private $notification_repo;
+  private UpcomingBracketNotificationService $notification_service;
+  private NotificationRepo $notification_repo;
   private $bracket_repo;
   public const UPCOMING_NOTIFICATION_SENT_META_KEY = 'bmb_upcoming_notification_sent';
   public function __construct($args = []) {
@@ -22,8 +23,7 @@ class UpcomingBracketHooks implements HooksInterface {
     $this->utils = $args['utils'] ?? new Utils();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->notification_service =
-      $args['notification_service'] ??
-      (new BracketResultsNotificationServiceFactory())->create();
+      $args['notification_service'] ?? new UpcomingBracketNotificationService();
   }
 
   public function load(Loader $loader): void {

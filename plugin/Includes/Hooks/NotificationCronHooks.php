@@ -6,14 +6,12 @@ use Error;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceFactory;
 
 class NotificationCronHooks implements HooksInterface {
   private ?BracketResultsNotificationService $notification_service;
   public function __construct(array $args = []) {
     $this->notification_service =
-      $args['notification_service'] ??
-      (new BracketResultsNotificationServiceFactory())->create();
+      $args['notification_service'] ?? new BracketResultsNotificationService();
   }
 
   public function load(Loader $loader): void {
