@@ -22,22 +22,17 @@ class RedirectHooks implements HooksInterface {
     );
     $loader->add_action(
       'woocommerce_login_redirect',
-      [$this, 'dashboard_or_redirect'],
+      [$this, 'login_redirect'],
       10,
       1
     );
     $loader->add_action(
       'woocommerce_registration_redirect',
-      [$this, 'dashboard_or_redirect'],
+      [$this, 'login_redirect'],
       10,
       1
     );
-    $loader->add_action(
-      'login_redirect',
-      [$this, 'dashboard_or_redirect'],
-      10,
-      1
-    );
+    $loader->add_action('login_redirect', [$this, 'login_redirect'], 10, 1);
   }
 
   public function dashboard_redirect(): void {
@@ -62,8 +57,7 @@ class RedirectHooks implements HooksInterface {
     return $location;
   }
 
-  public function dashboard_or_redirect($redirect) {
-    error_log('redirect: ' . $redirect);
+  public function login_redirect($redirect) {
     // if redirect is empty or contains 'wp-admin' or 'my-account' return dashboard
     if (
       empty($redirect) ||
