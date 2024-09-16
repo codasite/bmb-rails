@@ -181,6 +181,12 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     return $bracket_data;
   }
 
+  /**
+   * @param array|WP_Query $query
+   * @param array $args
+   *
+   * @return array<Bracket>
+   * */
   public function get_all(array|WP_Query $query = [], array $args = []): array {
     $fetch_matches = $args['fetch_matches'] ?? false;
     $fetch_results = $args['fetch_results'] ?? false;

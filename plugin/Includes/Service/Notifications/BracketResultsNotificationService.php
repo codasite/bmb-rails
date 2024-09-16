@@ -71,7 +71,6 @@ class BracketResultsNotificationService {
       [
         'meta_query' => [
           [
-            // TODO: change this to a constant
             'key' => BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED,
             'value' => 1,
           ],
