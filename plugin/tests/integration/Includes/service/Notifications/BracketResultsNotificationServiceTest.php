@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\Notifications;
 
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
@@ -16,7 +17,7 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
   public function test_should_send_results_notifications_for_bracket() {
     $bracket = $this->create_bracket([
       'num_teams' => 4,
-      'should_notify_results_updated' => true,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => true,
     ]);
 
     $results = [
@@ -131,11 +132,11 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
 
   public function test_should_return_all_brackets_to_send_results_notifications_for() {
     $bracket1 = $this->create_bracket([
-      'should_notify_results_updated' => true,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => true,
     ]);
     $bracket2 = $this->create_bracket();
     $bracket3 = $this->create_bracket([
-      'should_notify_results_updated' => true,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => true,
     ]);
     $service = new BracketResultsNotificationService([
       'email_service' => $this->createMock(EmailServiceInterface::class),

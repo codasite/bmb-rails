@@ -2,12 +2,12 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationServiceFactory;
 use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
 use WStrategies\BMB\Includes\Utils;
 
@@ -16,7 +16,7 @@ class UpcomingBracketHooks implements HooksInterface {
   private UpcomingBracketNotificationService $notification_service;
   private NotificationRepo $notification_repo;
   private $bracket_repo;
-  public const UPCOMING_NOTIFICATION_SENT_META_KEY = 'bmb_upcoming_notification_sent';
+
   public function __construct($args = []) {
     $this->notification_repo =
       $args['notification_repo'] ?? new NotificationRepo();
@@ -95,7 +95,7 @@ class UpcomingBracketHooks implements HooksInterface {
       // update post meta to indicate that the notification has not been sent
       update_post_meta(
         $post->ID,
-        self::UPCOMING_NOTIFICATION_SENT_META_KEY,
+        BracketMetaConstants::UPCOMING_NOTIFICATION_SENT,
         false
       );
       $should_update = true;
@@ -125,13 +125,17 @@ class UpcomingBracketHooks implements HooksInterface {
       $this->notification_service !== null &&
       $new_status === 'publish' &&
       $old_status === 'upcoming' &&
-      !get_post_meta($post->ID, self::UPCOMING_NOTIFICATION_SENT_META_KEY, true)
+      !get_post_meta(
+        $post->ID,
+        BracketMetaConstants::UPCOMING_NOTIFICATION_SENT,
+        true
+      )
     ) {
       $this->notification_service->notify_upcoming_bracket_live($post->ID);
       // add a flag to the post meta to indicate that the notification has been sent
       update_post_meta(
         $post->ID,
-        self::UPCOMING_NOTIFICATION_SENT_META_KEY,
+        BracketMetaConstants::UPCOMING_NOTIFICATION_SENT,
         true
       );
     }

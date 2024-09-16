@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;
@@ -71,7 +72,7 @@ class BracketResultsNotificationService {
         'meta_query' => [
           [
             // TODO: change this to a constant
-            'key' => 'should_notify_results_updated',
+            'key' => BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED,
             'value' => 1,
           ],
         ],
@@ -105,7 +106,7 @@ class BracketResultsNotificationService {
       $this->results_sent_at_repo->set_to_now($bracket->id);
     }
     $this->bracket_repo->update($bracket, [
-      'should_notify_results_updated' => false,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => false,
     ]);
   }
 

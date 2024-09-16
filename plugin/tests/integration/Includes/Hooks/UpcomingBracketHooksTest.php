@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\Hooks;
 
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Hooks\Loader;
@@ -66,7 +67,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
     // update meta
     update_post_meta(
       $bracket->id,
-      UpcomingBracketHooks::UPCOMING_NOTIFICATION_SENT_META_KEY,
+      BracketMetaConstants::UPCOMING_NOTIFICATION_SENT,
       true
     );
     // add the upcoming tag
@@ -75,7 +76,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
       false,
       get_post_meta(
         $bracket->id,
-        UpcomingBracketHooks::UPCOMING_NOTIFICATION_SENT_META_KEY,
+        BracketMetaConstants::UPCOMING_NOTIFICATION_SENT,
         true
       )
     );
@@ -105,7 +106,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
       true,
       get_post_meta(
         $bracket->id,
-        UpcomingBracketHooks::UPCOMING_NOTIFICATION_SENT_META_KEY,
+        BracketMetaConstants::UPCOMING_NOTIFICATION_SENT,
         true
       )
     );
@@ -118,7 +119,7 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
     // update post meta
     update_post_meta(
       $bracket->id,
-      UpcomingBracketHooks::UPCOMING_NOTIFICATION_SENT_META_KEY,
+      BracketMetaConstants::UPCOMING_NOTIFICATION_SENT,
       true
     );
     $notification_service_mock = $this->createMock(
