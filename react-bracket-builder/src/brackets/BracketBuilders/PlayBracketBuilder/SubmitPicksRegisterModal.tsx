@@ -13,15 +13,12 @@ export default function SubmitPicksRegisterModal(props: {
     <Modal show={show} setShow={setShow}>
       <ModalHeader text={'Sign in or register to submit your picks!'} />
       <div className="tw-flex tw-flex-col tw-gap-10">
-        <div className="tw-flex tw-gap-10">
-          <Link href={props.signInUrl}>
-            <span>Sign in</span>
-          </Link>
-          <Link href={props.registerUrl}>
-            <span>Register</span>
-          </Link>
-        </div>
-        <CancelButton onClick={() => setShow(false)} />
+        <Link href={props.signInUrl}>
+          <span>Sign in</span>
+        </Link>
+        <Link href={props.registerUrl}>
+          <span>Register</span>
+        </Link>
       </div>
     </Modal>
   )
