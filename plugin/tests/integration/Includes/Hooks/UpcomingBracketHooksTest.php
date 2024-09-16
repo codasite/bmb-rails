@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\Hooks;
 
-use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;

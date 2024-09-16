@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\tests\integration\Includes\controllers;
 
 use WP_REST_Request;
-use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 

@@ -2,8 +2,8 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
+use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;

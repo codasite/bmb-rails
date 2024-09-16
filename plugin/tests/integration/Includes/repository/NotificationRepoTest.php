@@ -1,8 +1,8 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\repository;
 
-use WStrategies\BMB\Includes\Domain\Notification;
-use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 

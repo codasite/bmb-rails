@@ -2,8 +2,8 @@
 
 namespace WStrategies\BMB\Includes\Repository;
 
-use WStrategies\BMB\Includes\Domain\Notification;
-use WStrategies\BMB\Includes\Domain\NotificationType;
+use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 
