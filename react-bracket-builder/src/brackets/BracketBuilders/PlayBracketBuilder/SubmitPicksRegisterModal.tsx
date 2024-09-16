@@ -1,24 +1,26 @@
 import { Modal } from '../../../modals/Modal'
-import { CancelButton, ConfirmButton } from '../../../modals/ModalButtons'
+import { CancelButton, ConfirmButton, Link } from '../../../modals/ModalButtons'
 import { ModalHeader } from '../../../modals/ModalHeader'
 
 export default function SubmitPicksRegisterModal(props: {
   show: boolean
   setShow: (show: boolean) => void
-  loginUrl: string
+  signInUrl: string
+  registerUrl: string
 }) {
   const { show, setShow } = props
   return (
     <Modal show={show} setShow={setShow}>
       <ModalHeader text={'Sign in or register to submit your picks!'} />
       <div className="tw-flex tw-flex-col tw-gap-10">
-        <ConfirmButton
-          onClick={() => {
-            window.location.href = props.loginUrl
-          }}
-        >
-          <span>Sign in/register</span>
-        </ConfirmButton>
+        <div className="tw-flex tw-gap-10">
+          <Link href={props.signInUrl}>
+            <span>Sign in</span>
+          </Link>
+          <Link href={props.registerUrl}>
+            <span>Register</span>
+          </Link>
+        </div>
         <CancelButton onClick={() => setShow(false)} />
       </div>
     </Modal>
