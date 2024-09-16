@@ -79,7 +79,7 @@ const PlayPage = (props: {
   const paymentRequired = bracket?.isOpen && !userCanPlayBracketForFree // TODO: decide if we need to check if the bracket is open. Is this handled by canSubmit?
   const loginRedirectUrl =
     props.loginUrl +
-    (props.bracket?.url ? `?redirect=${props.bracket.url}` : '')
+    (props.bracket?.url ? `?redirect_to=${props.bracket.url}` : '')
 
   useEffect(() => {
     if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
