@@ -84,7 +84,7 @@ const PlayBuilderPage = (props: {
   const paymentRequired = !userCanPlayBracketForFree
   const loginRedirectUrl =
     props.loginUrl +
-    (props.bracket?.url ? `?redirect=${props.bracket.url}` : '')
+    (props.bracket?.url ? `?redirect_to=${props.bracket.url}` : '')
 
   useEffect(() => {
     const stored = playStorage.loadPlay(bracket?.id)
