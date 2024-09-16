@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Includes\Service\Notifications;
+namespace WStrategies\BMB\Features\Notifications\Email;
 
 interface EmailServiceInterface {
   public function send($to_email, $to_name, $subject, $message, $html);

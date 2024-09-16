@@ -2,12 +2,12 @@
 namespace WStrategies\BMB\tests\unit\Includes\Service\Notifications;
 
 use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Features\Notifications\Email\Fakes\EmailServiceInterfaceFake;
 use WStrategies\BMB\Includes\Domain\Fakes\PickResultFakeFactory;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\Fakes\UserRepoFake;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
-use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
-use WStrategies\BMB\Includes\Service\Notifications\Fakes\EmailServiceInterfaceFake;
+use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Includes\Service\WordpressFunctions\Fakes\PermalinkServiceFake;
 
 class BracketResultsEmailFormatServiceTest extends TestCase {

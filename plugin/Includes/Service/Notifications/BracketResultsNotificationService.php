@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\BracketMatch;

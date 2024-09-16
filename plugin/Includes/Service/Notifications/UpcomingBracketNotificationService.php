@@ -3,6 +3,8 @@
 namespace WStrategies\BMB\Includes\Service\Notifications;
 
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
+use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
 use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\NotificationRepo;

@@ -14,7 +14,7 @@ use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsFilterService;
 use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
-use WStrategies\BMB\Includes\Service\Notifications\EmailServiceInterface;
+use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Includes\Service\PickResultService;
 
 class BracketResultsNotificationServiceTest extends TestCase {
