@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Permissions;
 
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationRepo;
 
 class NotificationPermissions implements PermissionsServiceInterface {
   private $notification_repo;

@@ -3,10 +3,10 @@
 namespace WStrategies\BMB\Public\Partials\shared;
 
 use WP_Query;
+use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
 
 class BracketsCommon {
   public static function filter_button(

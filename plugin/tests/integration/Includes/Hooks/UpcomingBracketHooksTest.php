@@ -1,10 +1,10 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\Hooks;
 
+use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
 use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;

@@ -5,8 +5,8 @@ use Exception;
 use WP_Error;
 use WP_UnitTest_Factory_For_Thing;
 use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
 
 /**
  * Class WPBB_UnitTest_Factory_For_Play
