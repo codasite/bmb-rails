@@ -73,17 +73,22 @@ class SendRoundCompleteNotificationsService {
     }
     $to_email = $user->user_email;
     $to_name = $user->display_name;
-    $subject = $bracket->get_title() . ' Voting Round Complete!';
-
-    // Generate html content for email
-    $message = 'Vote now in round ' . $bracket->live_round_index;
-    $button_url =
-      $this->permalink_service->get_permalink($bracket->id) . 'play';
-    $button_text = 'Vote now!';
+    if ($bracket->status === 'complete') {
+      $subject = $bracket->get_title() . ' Voting Complete!';
+      $message = 'The voting for ' . $bracket->get_title() . ' is complete!';
+      $button_url =
+        $this->permalink_service->get_permalink($bracket->id) . 'results';
+      $button_text = 'View Results';
+    } else {
+      $subject = $bracket->get_title() . ' Voting Round Complete!';
+      $message = 'Vote now in round ' . $bracket->live_round_index;
+      $button_url =
+        $this->permalink_service->get_permalink($bracket->id) . 'play';
+      $button_text = 'Vote now';
+    }
 
     $html = BracketEmailTemplate::render($message, $button_url, $button_text);
 
-    // send the email
     $this->email_service->send($to_email, $to_name, $subject, $message, $html);
   }
 }
