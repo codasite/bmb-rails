@@ -81,7 +81,7 @@ class SendRoundCompleteNotificationsServiceTest extends WPBB_UnitTestCase {
     $service = new SendRoundCompleteNotificationsService([
       'email_service' => $email_mock,
     ]);
-    $service->send_complete_round_notifications();
+    $service->send_round_complete_notifications();
     $this->assertEquals(
       '0',
       get_post_meta(

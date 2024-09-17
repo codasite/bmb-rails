@@ -29,7 +29,7 @@ class SendRoundCompleteNotificationsService {
     $this->permalink_service =
       $args['permalink_service'] ?? new PermalinkService();
   }
-  public function send_complete_round_notifications(): void {
+  public function send_round_complete_notifications(): void {
     $brackets = $this->bracket_repo->get_all(
       [
         'meta_query' => [
