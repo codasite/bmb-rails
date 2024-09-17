@@ -60,6 +60,7 @@ exports[`AddTeamsPage renders page correctly 1`] = `
               >
                 <div
                   class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/25"
+                  data-testid="team-slot-round-1-match-0-winner"
                   style="border-width: 2px;"
                 >
                   <span
@@ -78,13 +79,14 @@ exports[`AddTeamsPage renders page correctly 1`] = `
                 style="width: 700px;"
               >
                 <div
-                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                  class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
                 >
                   <div
                     class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
                   >
                     <div
                       class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      data-testid="team-slot-round-0-match-0-left"
                       style="border-width: 2px;"
                     >
                       <span
@@ -95,6 +97,7 @@ exports[`AddTeamsPage renders page correctly 1`] = `
                     </div>
                     <div
                       class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      data-testid="team-slot-round-0-match-0-right"
                       style="border-width: 2px;"
                     >
                       <span
@@ -106,13 +109,14 @@ exports[`AddTeamsPage renders page correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+                  class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
                 >
                   <div
                     class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
                   >
                     <div
                       class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      data-testid="team-slot-round-1-match-0-left"
                       style="border-width: 2px;"
                     >
                       <span
@@ -123,6 +127,7 @@ exports[`AddTeamsPage renders page correctly 1`] = `
                     </div>
                     <div
                       class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      data-testid="team-slot-round-1-match-0-right"
                       style="border-width: 2px;"
                     >
                       <span
@@ -134,13 +139,14 @@ exports[`AddTeamsPage renders page correctly 1`] = `
                   </div>
                 </div>
                 <div
-                  class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+                  class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
                 >
                   <div
                     class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
                   >
                     <div
                       class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      data-testid="team-slot-round-0-match-1-left"
                       style="border-width: 2px;"
                     >
                       <span
@@ -151,6 +157,7 @@ exports[`AddTeamsPage renders page correctly 1`] = `
                     </div>
                     <div
                       class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                      data-testid="team-slot-round-0-match-1-right"
                       style="border-width: 2px;"
                     >
                       <span

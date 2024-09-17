@@ -10,8 +10,6 @@ export const ProgressBar = (props: {
   const classes = props.className
     ? `${baseClasses} ${props.className}`
     : baseClasses
-  console.log('ProgressBar')
-  console.log(props)
   return (
     <div className={classes}>
       {Array.from({ length: props.maxSteps }).map((_, i) => {

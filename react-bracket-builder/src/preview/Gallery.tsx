@@ -107,7 +107,6 @@ const Gallery: React.FC<GalleryProps> = ({
         setLoadingImages(false)
       })
       .catch((error) => {
-        console.error('An error occurred:', error)
         logger.error(error)
       })
   }, [])

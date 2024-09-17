@@ -5,7 +5,7 @@ import { PickableBracketPage } from './PickableBracketPage'
 import { FullBracketPage } from './FullBracketPage'
 
 export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
-  const { matchTree, setMatchTree, darkMode, setDarkMode, canPlay } = props
+  const { matchTree, setMatchTree, canPlay } = props
 
   const [page, setPage] = useState(() => {
     if (matchTree && canPlay) {
@@ -44,8 +44,6 @@ export const PaginatedPlayBuilder = (props: PlayBuilderProps) => {
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           onFinished={onFinished}
-          darkMode={darkMode}
-          setDarkMode={setDarkMode}
         />
       )
       break

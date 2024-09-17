@@ -6,7 +6,7 @@ import { BaseTeamSlot } from './BaseTeamSlot'
 
 export const InactiveTeamSlot = (props: TeamSlotProps) => {
   const { team, onTeamClick } = props
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   return (
     <BaseTeamSlot

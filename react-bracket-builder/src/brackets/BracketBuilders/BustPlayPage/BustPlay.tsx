@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
-import { ViewPlayPageProps } from './types'
+import { ViewPlayPageProps } from '../ViewPlayPage/types'
 import { WithMatchTree3 } from '../../shared/components/HigherOrder'
-import { getBustTrees } from '../BustPlayPage/utils'
-import { BustPlayView } from '../BustPlayPage/BustPlayView'
+import { getBustTrees } from './utils'
+import { BustPlayView } from './BustPlayView'
 
 const BustPlay = (props: ViewPlayPageProps) => {
   const { setBracketMeta, bracketPlay: play } = props
@@ -34,12 +34,10 @@ const BustPlay = (props: ViewPlayPageProps) => {
 
   const buildMatchTrees = () => {
     const bracket = play.bracket
-    const matches = bracket?.matches
     const busterPicks = play.picks
     const busteePicks = play.bustedPlay?.picks
-    const numTeams = bracket?.numTeams
-    const busterTree = MatchTree.fromPicks(numTeams, matches, busterPicks)
-    const busteeTree = MatchTree.fromPicks(numTeams, matches, busteePicks)
+    const busterTree = MatchTree.fromPicks(bracket, busterPicks)
+    const busteeTree = MatchTree.fromPicks(bracket, busteePicks)
     setBusterTree(busterTree)
     setBusteeTree(busteeTree)
   }

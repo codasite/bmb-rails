@@ -1,43 +1,27 @@
 import { useContext, useEffect } from 'react'
-import { PickableBracket } from '../../shared/components/Bracket'
-import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
-import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
-import { BracketMeta } from '../../shared/context/context'
-import { ProfilePicture } from '../../shared/components/ProfilePicture'
-import { PlayRes } from '../../shared/api/types/bracket'
-import { WithMatchTree2 } from '../../shared/components/HigherOrder/WithMatchTree'
+import { PickableBracket } from '../../../shared/components/Bracket'
+import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
+import lightBracketBg from '../../../shared/assets/bracket-bg-light.png'
+import { BracketMeta, DarkModeContext } from '../../../shared/context/context'
+import { ProfilePicture } from '../../../shared/components/ProfilePicture'
+import { PlayRes } from '../../../shared/api/types/bracket'
+import { WithMatchTree2 } from '../../../shared/components/HigherOrder/WithMatchTree'
 import { ViewPlayPageButtons } from './ViewPlayPageButtons'
-import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
-import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
-import { ScoredPlayBracket } from '../../shared/components/Bracket/ScoredPlayBracket'
-import { loadBracketResults, loadPlay, loadPlayMeta } from '../../shared'
+import { WindowDimensionsContext } from '../../../shared/context/WindowDimensionsContext'
+import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
+import { ScoredPlayBracket } from '../../../shared/components/Bracket/ScoredPlayBracket'
+import { loadBracketResults, loadPlay, loadPlayMeta } from '../../../shared'
 import { getScoredPlayTrees } from './getScoredPlayTrees'
-import { BracketResultsStatusTag } from '../BracketResultsStatusTag'
+import { BracketResultsStatusTag } from '../../BracketResultsStatusTag'
+import { PlayScore } from './PlayScore'
+import { PlayRank } from './PlayRank'
 
-const PlayScore = (props: { scorePercent: number; label: string }) => {
-  return (
-    <div className="tw-flex tw-flex-col tw-items-end tw-gap-4 tw-leading-none">
-      <span className="tw-text-10 sm:tw-text-12 tw-font-700 tw-text-green">
-        {props.label}
-      </span>
-      <span className="tw-text-36 sm:tw-text-48 tw-font-700 tw-text-green">
-        {Math.round(props.scorePercent)}%
-      </span>
-    </div>
-  )
-}
-
-const PlayRank = () => {
-  return <div></div>
-}
-
-const ViewPlayPage = (props: {
+const ViewStandardPlayPage = (props: {
   bracketMeta: BracketMeta
   setBracketMeta: (bracketMeta: BracketMeta) => void
   bracketPlay: PlayRes
-  darkMode: boolean
-  setDarkMode: (darkMode: boolean) => void
 }) => {
+  const { darkMode } = useContext(DarkModeContext)
   const { bracketPlay: play } = props
 
   const { width: windowWidth } = useContext(WindowDimensionsContext)
@@ -56,12 +40,10 @@ const ViewPlayPage = (props: {
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        props.darkMode ? ' tw-dark' : ''
+        darkMode ? ' tw-dark' : ''
       }`}
       style={{
-        backgroundImage: `url(${
-          props.darkMode ? darkBracketBg : lightBracketBg
-        })`,
+        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
       <div
@@ -123,4 +105,4 @@ const ViewPlayPage = (props: {
   )
 }
 
-export default WithMatchTree2(ViewPlayPage)
+export default WithMatchTree2(ViewStandardPlayPage)

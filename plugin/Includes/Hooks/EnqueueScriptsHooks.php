@@ -49,7 +49,7 @@ class EnqueueScriptsHooks implements HooksInterface {
    */
   private $version;
 
-  private $play_repo;
+  private PlayRepo $play_repo;
 
   /**
    * @var BracketRepo
@@ -224,6 +224,14 @@ class EnqueueScriptsHooks implements HooksInterface {
       if ($post->post_type === 'bracket_play') {
         // $play = $this->play_serializer->serialize($this->play_repo->get($post));
         $play = $this->play_repo->get($post);
+        if ($play->bracket->is_voting) {
+          $play->bracket = $this->bracket_repo->get(
+            $play->bracket_id,
+            true,
+            true,
+            true
+          );
+        }
         $bracket = $play->bracket;
       } elseif ($post->post_type === 'bracket') {
         // $bracket = $this->bracket_serializer->serialize(
@@ -239,6 +247,12 @@ class EnqueueScriptsHooks implements HooksInterface {
           true,
           $fetch_most_popular_picks
         );
+        if ($bracket->is_voting) {
+          $play = $this->play_repo->get_play_by_user_and_bracket(
+            get_current_user_id(),
+            $bracket->id
+          );
+        }
       }
     }
     return [$bracket, $play];

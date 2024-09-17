@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
 import { ViewPlayPageProps } from './types'
-import { BustPlay } from './BustPlay'
-import ViewPlayPage from './ViewPlayPage'
+import ViewStandardPlayPage from './ViewStandardPlay/ViewStandardPlay'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
-import {
-  WithBracketMeta,
-  WithDarkMode,
-} from '../../shared/components/HigherOrder'
+import { WithBracketMeta } from '../../shared/components/HigherOrder'
 import { ViewBracketResultsPage } from '../ViewBracketResultsPage/ViewBracketResultsPage'
+import ViewVotingPlay from '../../../features/VotingBracket/ViewVotingPlay/ViewVotingPlay'
 
 const ViewPlayRouter = (props: ViewPlayPageProps) => {
   const [page, setPage] = useState<'view' | 'results'>('view')
@@ -19,11 +16,14 @@ const ViewPlayRouter = (props: ViewPlayPageProps) => {
   if (page === 'results') {
     return <ViewBracketResultsPage {...props} />
   } else {
-    return <ViewPlayPage {...props} />
+    if (props.bracketPlay.bracket?.isVoting) {
+      return <ViewVotingPlay {...props} />
+    }
+    return <ViewStandardPlayPage {...props} />
   }
 }
 
 const WrappedViewPlayPage = WithWindowDimensions(
-  WithBracketMeta(WithDarkMode(ViewPlayRouter))
+  WithBracketMeta(ViewPlayRouter)
 )
 export default WrappedViewPlayPage

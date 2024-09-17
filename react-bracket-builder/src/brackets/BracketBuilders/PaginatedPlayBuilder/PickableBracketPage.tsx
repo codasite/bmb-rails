@@ -1,22 +1,15 @@
-import { useContext } from 'react'
 import { PaginatedPickableBracket } from '../../shared/components/Bracket'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { DarkModeContext } from '../../shared/context/context'
 
 interface PickableBracketPageProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
   onFinished?: () => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
 }
 
 export const PickableBracketPage = (props: PickableBracketPageProps) => {
-  const { matchTree, setMatchTree, onFinished, darkMode, setDarkMode } = props
-  if (!darkMode) {
-    setDarkMode(true)
-  }
+  const { matchTree, setMatchTree, onFinished } = props
 
   let containerProps = {
     className: 'wpbb-reset tw-uppercase tw-dark tw-bg-dd-blue',

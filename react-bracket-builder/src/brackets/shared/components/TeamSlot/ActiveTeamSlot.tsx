@@ -3,10 +3,9 @@ import React, { useState, useContext } from 'react'
 import { DarkModeContext } from '../../context/context'
 import { BaseTeamSlot } from './BaseTeamSlot'
 import { TeamSlotProps } from '../types'
-import { getUniqueTeamClass } from '../Bracket/utils'
 
 export const ActiveTeamSlot = (props: TeamSlotProps) => {
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
 
   return (
     <BaseTeamSlot

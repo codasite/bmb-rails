@@ -138,6 +138,29 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     return new Play($data);
   }
 
+  public function get_play_by_user_and_bracket(
+    int $user_id,
+    int $bracket_post_id
+  ): ?Play {
+    $plays_table = self::table_name();
+    $posts_table = $this->wpdb->posts;
+    $query = "
+        SELECT post.ID
+        FROM $posts_table post
+        INNER JOIN $plays_table play ON post.ID = play.post_id
+        WHERE post.post_author = %d
+        AND play.bracket_post_id = %d
+        AND play.is_tournament_entry = 1
+        LIMIT 1;
+    ";
+    $prepared_query = $this->wpdb->prepare($query, $user_id, $bracket_post_id);
+    $play_post_id = $this->wpdb->get_var($prepared_query);
+    if ($play_post_id) {
+      return $this->get((int) $play_post_id);
+    }
+    return null;
+  }
+
   private function get_defaults(array $user_opts = []): array {
     $default_opts = [
       'fetch_picks' => true,
@@ -370,6 +393,10 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
 
     if ($play_id) {
       $this->update_play_data($play_id, $data);
+    }
+
+    if ($play_id && $play->picks) {
+      $this->pick_repo->update_picks($play_id, $play->picks);
     }
 
     return $this->get($post_id);

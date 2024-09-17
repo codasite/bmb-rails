@@ -5,6 +5,7 @@ use WP_REST_Request;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\ProductIntegrationInterface;
@@ -152,6 +153,242 @@ class BracketPlayApiTest extends WPBB_UnitTestCase {
     $play = $this->play_repo->get($response->get_data()['id']);
     $this->assertNotNull($play);
     $this->assertEquals(get_current_user_id(), $play->author);
+  }
+
+  public function test_update_should_return_404_when_play_not_found() {
+    $request = new WP_REST_Request('PATCH', '/wp-bracket-builder/v1/plays/999');
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(404, $response->get_status());
+    $this->assertEquals(
+      'The requested play could not be found.',
+      $response->get_data()['message']
+    );
+  }
+
+  public function test_update_should_return_403_when_user_is_not_author() {
+    $author = self::factory()->user->create_and_get();
+    $other = self::factory()->user->create_and_get();
+    $bracket = $this->create_bracket([
+      'is_voting' => true,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $author->ID,
+    ]);
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      '/wp-bracket-builder/v1/plays/' . $play->id
+    );
+
+    wp_set_current_user($other->ID);
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(403, $response->get_status());
+    $this->assertEquals(
+      'You are not authorized to edit this play.',
+      $response->get_data()['message']
+    );
+  }
+
+  public function test_update_should_return_403_when_bracket_is_not_voting() {
+    $author = self::factory()->user->create_and_get();
+    $bracket = $this->create_bracket([
+      'is_voting' => false,
+    ]);
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $author->ID,
+    ]);
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      '/wp-bracket-builder/v1/plays/' . $play->id
+    );
+
+    wp_set_current_user($author->ID);
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(403, $response->get_status());
+    $this->assertEquals(
+      'You cannot edit a play for a non-voting bracket.',
+      $response->get_data()['message']
+    );
+  }
+
+  public function test_update_voting_bracket_play_with_new_picks_should_only_update_picks_for_current_live_round() {
+    $author = self::factory()->user->create_and_get();
+    $bracket = $this->create_bracket([
+      'is_voting' => true,
+      'live_round_index' => 1,
+      'num_teams' => 4,
+    ]);
+    $team1_id = $bracket->matches[0]->team1->id;
+    $team2_id = $bracket->matches[0]->team2->id;
+    $team3_id = $bracket->matches[1]->team1->id;
+    $team4_id = $bracket->matches[1]->team2->id;
+    $play = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $author->ID,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+    $data = [
+      'picks' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team1_id,
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team4_id,
+        ],
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      '/wp-bracket-builder/v1/plays/' . $play->id
+    );
+
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(
+      200,
+      $response->get_status(),
+      print_r($response->data, true)
+    );
+    $play = $this->play_repo->get($play);
+    $this->assertEquals(3, count($play->picks));
+    $this->assertEquals(
+      $team2_id,
+      $play->picks[0]->winning_team_id,
+      'Original pick should not change'
+    );
+    $this->assertEquals(
+      $team3_id,
+      $play->picks[1]->winning_team_id,
+      'Original pick should not change'
+    );
+    $this->assertEquals(
+      $team2_id,
+      $play->picks[2]->winning_team_id,
+      'Play should have new pick for current round'
+    );
+  }
+
+  public function test_should_update_picks() {
+    $bracket = $this->create_bracket([
+      'is_voting' => true,
+      'live_round_index' => 1,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+    $team1_id = $bracket->matches[0]->team1->id;
+    $team2_id = $bracket->matches[0]->team2->id;
+    $team3_id = $bracket->matches[1]->team1->id;
+    $team4_id = $bracket->matches[1]->team2->id;
+    $play = new Play([
+      'bracket_id' => $bracket->id,
+      'author' => 1,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ]),
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $team3_id,
+        ]),
+        new Pick([
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team3_id,
+        ]),
+      ],
+    ]);
+    $play = $this->play_repo->add($play);
+    $data = [
+      'picks' => [
+        [
+          'round_index' => 1,
+          'match_index' => 0,
+          'winning_team_id' => $team2_id,
+        ],
+      ],
+    ];
+
+    $request = new WP_REST_Request(
+      'PATCH',
+      '/wp-bracket-builder/v1/plays/' . $play->id
+    );
+
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+
+    $response = rest_do_request($request);
+
+    $this->assertEquals(
+      200,
+      $response->get_status(),
+      print_r($response->data, true)
+    );
+    $play = $this->play_repo->get($play);
+    $this->assertEquals(3, count($play->picks));
+    $this->assertEquals(
+      $team2_id,
+      $play->picks[0]->winning_team_id,
+      'Team 2 should be the winner'
+    );
   }
 
   public function test_update_play_author() {

@@ -1,9 +1,12 @@
 import React, { Suspense } from 'react'
+import { DarkModeProvider } from './brackets/shared/context/Providers'
 
 const App = (props) => {
   return (
     // Suspense is used to allow for lazy loading of components
-    <Suspense>{props.children}</Suspense>
+    <Suspense>
+      <DarkModeProvider>{props.children}</DarkModeProvider>
+    </Suspense>
   )
 }
 

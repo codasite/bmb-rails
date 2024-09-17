@@ -3,7 +3,7 @@ import { TeamSlotProps } from '../types'
 import { EditableTeamSlot } from './EditableTeamSlot'
 import { BaseTeamSlot } from './BaseTeamSlot'
 
-const DisabledTeamSlot = (props: TeamSlotProps) => {
+export const DisabledTeamSlot = (props: TeamSlotProps) => {
   return <BaseTeamSlot {...props} borderColor="white/25" borderWidth={2} />
 }
 

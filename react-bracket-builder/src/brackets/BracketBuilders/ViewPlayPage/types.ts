@@ -10,6 +10,4 @@ export interface ViewPlayPageProps {
   bracketPlay: PlayRes
   addToApparelUrl: string
   myPlayHistoryUrl: string
-  darkMode: boolean
-  setDarkMode: (darkMode: boolean) => void
 }

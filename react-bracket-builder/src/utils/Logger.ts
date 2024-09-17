@@ -31,6 +31,9 @@ class Logger {
             ],
           }),
           new Sentry.Replay(),
+          new Sentry.Integrations.Breadcrumbs({
+            console: false,
+          }),
         ],
         // Performance Monitoring
         tracesSampleRate: 0.1, // Capture 100% of the transactions, reduce in production!
@@ -41,6 +44,7 @@ class Logger {
     }
   }
   error(error: Error | string, extraData: any = {}) {
+    console.error(error)
     Sentry.captureException(error, { extra: extraData })
   }
   log(message: string, extraData: any = {}) {

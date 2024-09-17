@@ -23,7 +23,7 @@ export const DefaultMatchColumn = (props: MatchColumnProps) => {
 
   return (
     <div
-      className={`tw-flex tw-flex-col tw-justify-center tw-gap-[${matchGap}px]`}
+      className={`wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[${matchGap}px]`}
     >
       {matches.map((match, index) => {
         return (

@@ -89,7 +89,6 @@ export const BustPlayView = (props: BustPlayViewProps) => {
               <ActionButton
                 variant="red"
                 size="big"
-                darkMode={true}
                 disabled={!busterTree?.allPicked() || processing}
                 onClick={onButtonClick}
               >

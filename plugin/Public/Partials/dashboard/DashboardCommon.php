@@ -5,27 +5,38 @@ namespace WStrategies\BMB\Public\Partials\dashboard;
 use WStrategies\BMB\Public\Partials\shared\PartialsCommon;
 
 class DashboardCommon {
+  private static $icon_btn_class = [
+    'wpbb-icon-btn',
+    'tw-p-0',
+    'tw-bg-white/15',
+    'tw-border-none',
+    'tw-text-white',
+    'tw-flex',
+    'tw-items-center',
+    'tw-justify-center',
+    'tw-rounded-8',
+    'hover:tw-cursor-pointer',
+    'hover:tw-bg-white',
+    'hover:tw-text-black',
+  ];
   /**
    * Icon Buttons DO something (make post request, execute JS, etc.)
    */
   public static function icon_btn(
+    $label,
     $icon_path,
-    $type = '',
     $id = '',
-    $classes = '',
-    $attributes = ''
+    $classes = [],
+    $data = []
   ): false|string {
-    ob_start(); ?>
-    <button <?php echo !empty($type) ? "type=$type" : ''; ?> <?php echo !empty(
-   $id
- )
-   ? "id=$id"
-   : ''; ?>
-      class="<?php echo $classes; ?> tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-items-center tw-justify-center tw-rounded-8 hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black"
-      <?php echo $attributes; ?>>
-      <?php echo file_get_contents(
-        WPBB_PLUGIN_DIR . '/Public/assets/icons/' . $icon_path
-      ); ?>
+    $classes = implode(' ', array_merge(self::$icon_btn_class, $classes));
+    $data_attributes = self::build_data_attributes($data);
+    ob_start();
+    ?>
+    <button <?php echo !empty($id) ? "id=$id" : ''; ?>
+      class="<?php echo $classes; ?>"
+      <?php echo $data_attributes; ?>>
+      <?php echo self::build_icon_btn_contents($icon_path, $label); ?>
     </button>
     <?php return ob_get_clean();
   }
@@ -33,37 +44,47 @@ class DashboardCommon {
   /**
    * Icon Links GO somewhere. (To another page, etc.)
    */
-  public static function icon_link($icon_path, $endpoint): false|string {
-    ob_start(); ?>
+  public static function icon_link(
+    $label,
+    $icon_path,
+    $endpoint,
+    $id = '',
+    $classes = [],
+    $data = []
+  ): false|string {
+    $classes = implode(' ', array_merge(self::$icon_btn_class, $classes));
+    $data_attributes = self::build_data_attributes($data);
+    ob_start();
+    ?>
     <a
-      class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black"
-      href="<?php echo esc_url($endpoint); ?>">
-      <?php echo file_get_contents(
-        WPBB_PLUGIN_DIR . '/Public/assets/icons/' . $icon_path
-      ); ?>
+      <?php echo !empty($id) ? "id=$id" : ''; ?>
+      href="<?php echo esc_url($endpoint); ?>"
+      class="<?php echo $classes; ?>"
+      <?php echo $data_attributes; ?>>
+      <?php echo self::build_icon_btn_contents($icon_path, $label); ?>
     </a>
     <?php return ob_get_clean();
   }
 
-  /**
-   * This button sends a POST request to delete the template
-   */
-  public static function delete_post_btn(
-    $endpoint,
-    $post_id,
-    $post_id_field,
-    $nonce_action,
-    $nonce_name
-  ): false|string {
+  private static function build_icon_btn_contents($icon_path, $label = '') {
     ob_start(); ?>
-    <form method="post" action="<?php echo esc_url($endpoint); ?>">
-      <input type="hidden" name="<?php echo $post_id_field; ?>" value="<?php echo esc_attr(
-  $post_id
-); ?>">
-      <?php wp_nonce_field($nonce_action, $nonce_name); ?>
-      <?php echo self::icon_btn('trash.svg', 'submit'); ?>
-    </form>
-    <?php return ob_get_clean();
+      <div class="tw-h-40 tw-w-40 tw-p-8 tw-flex tw-flex-col tw-items-center tw-justify-center">
+      <?php echo PartialsCommon::icon($icon_path); ?>
+      </div>
+      <?php if (!empty($label)): ?>
+      <div class="wpbb-icon-btn-label">
+        <span class="tw-whitespace-nowrap tw-uppercase tw-font-500 tw-font-sans tw-pr-8"><?php echo $label; ?></span>
+      </div>
+      <?php endif; ?>
+      <?php return ob_get_clean();
+  }
+
+  private static function build_data_attributes(array $data): string {
+    $data_attributes = '';
+    foreach ($data as $key => $value) {
+      $data_attributes .= "data-$key='$value' ";
+    }
+    return $data_attributes;
   }
 
   /**
@@ -72,42 +93,14 @@ class DashboardCommon {
   public static function add_to_apparel_btn($endpoint): false|string {
     ob_start(); ?>
     <a
-      class="wpbb-add-apparel-btn tw-text-white tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-rounded-8 hover:tw-cursor-pointer tw-leading-[1.15] tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
+      class="tw-text-white tw-border tw-border-solid tw-border-transparent tw-bg-clip-padding tw-px-16 tw-py-12 tw-flex tw-items-center tw-justify-center tw-gap-10 tw-rounded-8 hover:tw-cursor-pointer tw-leading-[1.15] tw-h-full tw-bg-dd-blue/80 hover:tw-bg-transparent hover:tw-text-dd-blue"
       href="<?php echo esc_url($endpoint); ?>">
-      <?php echo file_get_contents(
-        WPBB_PLUGIN_DIR . 'Public/assets/icons/plus.svg'
-      ); ?>
+      <?php echo PartialsCommon::icon('plus'); ?>
       <span class="tw-font-700">Add to Apparel</span>
     </a>
     <?php return PartialsCommon::gradient_border_wrap(ob_get_clean(), [
       'wpbb-add-apparel-gradient-border',
       'tw-rounded-8',
     ]);
-  }
-
-  /**
-   * This button sends a POST request to delete the tournament
-   */
-  public static function delete_tournament_btn(
-    $endpoint,
-    $post_id
-  ): false|string {
-    ob_start(); ?>
-    <form method="post" action="<?php echo esc_url($endpoint); ?>">
-      <input type="hidden" name="delete_tournament_id" value="<?php echo esc_attr(
-        $post_id
-      ); ?>">
-      <?php wp_nonce_field(
-        'delete_tournament_action',
-        'delete_tournament_nonce'
-      ); ?>
-      <?php echo self::icon_btn('trash.svg', 'submit'); ?>
-      <!-- <button type="submit" class="tw-h-40 tw-w-40 tw-p-8 tw-bg-white/15 tw-border-none tw-text-white tw-flex tw-flex-col tw-rounded-8 tw-items-center tw-justify-center hover:tw-cursor-pointer hover:tw-bg-white hover:tw-text-black">
-			<?php echo file_get_contents(
-     WPBB_PLUGIN_DIR . 'Public/assets/icons/trash.svg'
-   ); ?>
-		</button> -->
-    </form>
-    <?php return ob_get_clean();
   }
 }

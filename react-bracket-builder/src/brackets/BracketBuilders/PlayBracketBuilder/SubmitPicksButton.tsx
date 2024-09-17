@@ -7,11 +7,10 @@ import { Spinner } from '../../shared/components/Spinner'
 export const SubmitPicksButton = (props: {
   onClick: () => Promise<void>
   disabled?: boolean
-  darkMode?: boolean
   processing?: boolean
   error?: boolean
 }) => {
-  const darkMode = useContext(DarkModeContext)
+  const { darkMode } = useContext(DarkModeContext)
   const { onClick, disabled, processing, error } = props
   const styles = [
     'tw-border-none',

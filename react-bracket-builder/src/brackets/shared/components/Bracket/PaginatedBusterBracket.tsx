@@ -1,9 +1,4 @@
-import React, { useEffect } from 'react'
-import {
-  PaginatedBracketProps,
-  PaginatedDefaultBracketProps,
-  PaginatedNavButtonsProps,
-} from '../types'
+import { PaginatedBracketProps, PaginatedNavButtonsProps } from '../types'
 import { PaginatedDefaultBracket } from './PaginatedDefaultBracket'
 import { BusterBracket } from './BusterBracket'
 import { DefaultFullBracketButton } from './BracketActionButtons'
@@ -35,15 +30,11 @@ export const BusterFinalButton = (props: ActionButtonProps) => {
 }
 
 export const PaginatedBusterBracket = (props: PaginatedBracketProps) => {
-  const [page, setPage] = React.useState(0)
-  const newProps: PaginatedDefaultBracketProps = {
-    ...props,
-    page,
-    setPage,
-    NavButtonsComponent: BusterNavButtons,
-  }
-
   return (
-    <BusterBracket BracketComponent={PaginatedDefaultBracket} {...newProps} />
+    <BusterBracket
+      BracketComponent={PaginatedDefaultBracket}
+      NavButtonsComponent={BusterNavButtons}
+      {...props}
+    />
   )
 }

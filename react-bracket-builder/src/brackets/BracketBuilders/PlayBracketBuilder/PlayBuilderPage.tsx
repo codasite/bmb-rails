@@ -1,19 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { Nullable } from '../../../utils/types'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context/context'
 import {
-  WithBracketMeta,
-  WithDarkMode,
-  WithMatchTree,
-} from '../../shared/components/HigherOrder'
-import {
-  BracketRes,
-  MatchPick,
-  PlayReq,
-  PlayRes,
-} from '../../shared/api/types/bracket'
+  BracketMeta,
+  BracketMetaContext,
+  MatchTreeContext,
+} from '../../shared/context/context'
+import { BracketRes, PlayReq, PlayRes } from '../../shared/api/types/bracket'
 import { PaginatedPlayBuilder } from '../PaginatedPlayBuilder/PaginatedPlayBuilder'
 import { PlayBuilder } from './PlayBuilder'
 import {
@@ -27,20 +21,16 @@ import { PlayStorage } from '../../shared/storages/PlayStorage'
 import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import StripePaymentModal from './StripePaymentModal'
 import { logger } from '../../../utils/Logger'
+import mergePicksFromPlayAndResults from '../../../features/VotingBracket/mergePicksFromPlayAndResults'
 
-const PlayPage = (props: {
+const PlayBuilderPage = (props: {
+  // for testing
+  matchTree?: MatchTree
   bracketProductArchiveUrl: string
   myPlayHistoryUrl: string
   isUserLoggedIn: boolean
-  bracketStylesheetUrl: string
   bracket?: BracketRes
   play?: PlayRes
-  matchTree?: MatchTree
-  setMatchTree?: (matchTree: MatchTree) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
-  bracketMeta?: BracketMeta
-  setBracketMeta?: (bracketMeta: BracketMeta) => void
   userCanPlayBracketForFree?: boolean
   loginUrl: string
 }) => {
@@ -49,60 +39,58 @@ const PlayPage = (props: {
     bracketProductArchiveUrl,
     myPlayHistoryUrl,
     isUserLoggedIn,
-    matchTree,
-    setMatchTree,
-    bracketMeta,
-    setBracketMeta,
-    darkMode,
-    setDarkMode,
     userCanPlayBracketForFree,
+    play,
   } = props
 
+  let tree: MatchTree
+  if (props.matchTree) {
+    tree = props.matchTree
+  } else if (bracket.isVoting) {
+    tree = MatchTree.fromPicks(
+      bracket,
+      mergePicksFromPlayAndResults(
+        bracket.results || [],
+        play?.picks,
+        bracket.liveRoundIndex
+      )
+    )
+  } else if (play) {
+    tree = MatchTree.fromPicks(bracket, play.picks)
+  } else {
+    tree = MatchTree.fromMatchRes(bracket)
+  }
+  const [bracketMeta, setBracketMeta] = useState<BracketMeta>(
+    getBracketMeta(bracket)
+  )
+  const [matchTree, setMatchTree] = useState<MatchTree>(tree)
   const [processingAddToApparel, setProcessingAddToApparel] = useState(false)
   const [addToApparelError, setAddToApparelError] = useState(false)
   const [submitPicksError, setSubmitPicksError] = useState(false)
   const [processingSubmitPicks, setProcessingSubmitPicks] = useState(false)
   const [storedPlay, setStoredPlay] = useState<Nullable<PlayReq>>(null)
-  const [showRegisterModal, setShowRegisterModal] = useState(false)
+  const [showRegisterModal, setShowRegisterModal] = useState(!isUserLoggedIn)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
   const [stripeClientSecret, setStripeClientSecret] = useState<string>('')
   const [stripePaymentAmount, setStripePaymentAmount] = useState<number>(null)
-  const { width: windowWidth, height: windowHeight } = useContext(
-    WindowDimensionsContext
-  )
+  const { width: windowWidth } = useContext(WindowDimensionsContext)
+
   const showPaginated =
     windowWidth - 100 < getBracketWidth(getNumRounds(bracket?.numTeams))
 
   const canPrint = bracket?.isPrintable
   const canSubmit = bracket?.isOpen && props.isUserLoggedIn
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
-  const paymentRequired = bracket?.isOpen && !userCanPlayBracketForFree // TODO: decide if we need to check if the bracket is open. Is this handled by canSubmit?
+  const paymentRequired = !userCanPlayBracketForFree
   const loginRedirectUrl =
     props.loginUrl +
     (props.bracket?.url ? `?redirect_to=${props.bracket.url}` : '')
 
   useEffect(() => {
-    if (!bracket?.id || !bracket?.numTeams || !bracket?.matches) {
-      return
-    }
-    const meta = getBracketMeta(bracket)
-    setBracketMeta?.(meta ?? {})
-    let tree: Nullable<MatchTree> = null
-    const numTeams = bracket.numTeams
-    const matches = bracket.matches
-    const stored = playStorage.loadPlay(bracket.id)
-    const play = stored ? stored : props.play
-    if (play) {
-      tree = MatchTree.fromPicks(numTeams, matches, play.picks)
-      setStoredPlay(play)
-    } else {
-      tree = tree ?? MatchTree.fromMatchRes(numTeams, matches)
-    }
-    if (tree && setMatchTree) {
-      setMatchTree(tree)
-    }
-    if (!isUserLoggedIn) {
-      setShowRegisterModal(true)
+    const stored = playStorage.loadPlay(bracket?.id)
+    if (stored) {
+      const tree = MatchTree.fromPicks(bracket, stored.picks)
+      setMatchTreeAndSaveInStorage(tree)
     }
   }, [])
 
@@ -112,7 +100,7 @@ const PlayPage = (props: {
   }
 
   const setMatchTreeAndSaveInStorage = (tree: MatchTree) => {
-    setMatchTree(tree)
+    setMatchTree(tree.clone())
     playStorage.storePlay(
       {
         bracketId: bracket?.id,
@@ -123,7 +111,7 @@ const PlayPage = (props: {
     )
   }
 
-  const doNotCreateNewPlay = (playReq: PlayReq) => {
+  const playExists = (playReq: PlayReq) => {
     return (
       storedPlay?.id &&
       JSON.stringify(storedPlay?.picks) === JSON.stringify(playReq.picks)
@@ -135,7 +123,6 @@ const PlayPage = (props: {
     const bracketId = bracket?.id
     if (!picks || !bracketId) {
       const msg = 'Cannot create play. Missing picks'
-      console.error(msg)
       logger.error(msg)
       return
     }
@@ -153,30 +140,20 @@ const PlayPage = (props: {
     const playReq = getPlayReq()
     playReq.generateImages = true
     try {
-      if (doNotCreateNewPlay(playReq)) {
+      if (playExists(playReq)) {
         // regenerate play images anyway (in case they don't exist)
         await bracketApi.generatePlayImages(storedPlay.id)
       } else {
-        await bracketApi
-          .createPlay(playReq)
-          .then((res) => {
-            const playId = res.id
-            const newReq = {
-              ...playReq,
-              id: playId,
-            }
-            playStorage.storePlay(newReq, bracket?.id)
-          })
-          .catch((err) => {
-            console.error('error: ', err)
-            setProcessingAddToApparel(false)
-            setAddToApparelError(true)
-            logger.error(err)
-          })
+        const res = await bracketApi.createPlay(playReq)
+        const playId = res.id
+        const newReq = {
+          ...playReq,
+          id: playId,
+        }
+        playStorage.storePlay(newReq, bracket?.id)
       }
       window.location.assign(bracketProductArchiveUrl)
     } catch (err) {
-      console.error('error: ', err)
       setProcessingAddToApparel(false)
       setAddToApparelError(true)
       logger.error(err)
@@ -189,63 +166,57 @@ const PlayPage = (props: {
     const playReq = getPlayReq()
     playReq.generateImages = false
     playReq.createStripePaymentIntent = paymentRequired
-
-    if (doNotCreateNewPlay(playReq)) {
-      if (!paymentRequired) {
-        if (isUserLoggedIn) {
-          window.location.assign(myPlayHistoryUrl)
-        } else {
-          setShowRegisterModal(true)
-        }
-        return
-      }
-      if (stripeClientSecret) {
-        setShowPaymentModal(true)
-        return
-      }
-      await bracketApi
-        .createStripePaymentIntent({ playId: storedPlay.id })
-        .then((res) => {
-          setStripeClientSecret(res.clientSecret)
-          setStripePaymentAmount(res.amount)
-          setProcessingSubmitPicks(false)
-          setShowPaymentModal(true)
-        })
-        .catch((err) => {
-          console.error('error: ', err)
-          setProcessingSubmitPicks(false)
-          setSubmitPicksError(true)
-          logger.error(err)
-        })
-
+    if (playExists(playReq) && !paymentRequired) {
+      window.location.assign(myPlayHistoryUrl)
       return
     }
-    return bracketApi
-      .createPlay(playReq)
-      .then((res) => {
-        const playId = res.id
+    if (playExists(playReq) && stripeClientSecret) {
+      setShowPaymentModal(true)
+      setProcessingSubmitPicks(false)
+      return
+    }
+    // if bracket is voting and play id is given, then we can update picks without payment
+    if (bracket.isVoting) {
+      if (play?.id) {
+        await bracketApi.updatePlay(play.id, {
+          picks: playReq.picks,
+        })
+        window.location.assign(myPlayHistoryUrl)
+        return
+      }
+    }
+
+    try {
+      if (playExists(playReq)) {
+        const res = await bracketApi.createStripePaymentIntent({
+          playId: storedPlay.id,
+        })
+        setStripeClientSecret(res.clientSecret)
+        setStripePaymentAmount(res.amount)
+      } else {
+        // Create play will create payment intent if payment is required
+        const res = await bracketApi.createPlay(playReq)
         const newReq = {
           ...playReq,
-          id: playId,
+          id: res.id,
         }
         playStorage.storePlay(newReq, bracket?.id)
         setStoredPlay(newReq)
         if (paymentRequired) {
           setStripeClientSecret(res.stripePaymentIntentClientSecret)
           setStripePaymentAmount(res.stripePaymentAmount)
-          setShowPaymentModal(true)
-          setProcessingSubmitPicks(false)
-        } else if (isUserLoggedIn) {
-          window.location.assign(myPlayHistoryUrl)
         } else {
-          setShowRegisterModal(true)
+          window.location.assign(myPlayHistoryUrl)
+          return
         }
-      })
-      .catch((err) => {
-        console.error('error: ', err)
-        setProcessingSubmitPicks(false)
-        logger.error(err)
-      })
+      }
+    } catch (err) {
+      setSubmitPicksError(true)
+      logger.error(err)
+    }
+    // At this point payment is required and process is finished
+    setShowPaymentModal(true)
+    setProcessingSubmitPicks(false)
   }
 
   const playBuilderProps = {
@@ -259,38 +230,41 @@ const PlayPage = (props: {
     processingSubmitPicks,
     addToApparelError,
     submitPicksError,
-    darkMode,
-    setDarkMode,
     bracketMeta,
     setBracketMeta,
   }
 
   return (
-    <>
-      <SubmitPicksRegisterModal
-        show={showRegisterModal}
-        setShow={setShowRegisterModal}
-        loginUrl={loginRedirectUrl}
-      />
-      <StripePaymentModal
-        title={'Submit Your Picks'}
-        show={showPaymentModal}
-        setShow={setShowPaymentModal}
-        clientSecret={stripeClientSecret}
-        paymentAmount={stripePaymentAmount}
-        myPlayHistoryUrl={myPlayHistoryUrl}
-      />
-      {showPaginated ? (
-        <PaginatedPlayBuilder {...playBuilderProps} />
-      ) : (
-        <PlayBuilder {...playBuilderProps} />
-      )}
-    </>
+    <MatchTreeContext.Provider
+      value={{
+        matchTree: matchTree,
+        setMatchTree: setMatchTreeAndSaveInStorage,
+      }}
+    >
+      <BracketMetaContext.Provider value={bracketMeta}>
+        <SubmitPicksRegisterModal
+          show={showRegisterModal}
+          setShow={setShowRegisterModal}
+          loginUrl={loginRedirectUrl}
+        />
+        <StripePaymentModal
+          title={'Submit Your Picks'}
+          show={showPaymentModal}
+          setShow={setShowPaymentModal}
+          clientSecret={stripeClientSecret}
+          paymentAmount={stripePaymentAmount}
+          myPlayHistoryUrl={myPlayHistoryUrl}
+        />
+        {showPaginated ? (
+          <PaginatedPlayBuilder {...playBuilderProps} />
+        ) : (
+          <PlayBuilder {...playBuilderProps} />
+        )}
+      </BracketMetaContext.Provider>
+    </MatchTreeContext.Provider>
   )
 }
 
-const WrappedPlayBuilderPage = WithWindowDimensions(
-  WithDarkMode(WithMatchTree(WithBracketMeta(PlayPage)))
-)
+const WrappedPlayBuilderPage = WithWindowDimensions(PlayBuilderPage)
 
 export default WrappedPlayBuilderPage

@@ -48,6 +48,8 @@ class BracketSerializer extends PostBaseSerializer {
       'is_printable',
       'fee',
       'should_notify_results_updated',
+      'is_voting',
+      'live_round_index',
     ]);
   }
 }

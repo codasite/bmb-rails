@@ -3,6 +3,7 @@ import { TeamRepr, TeamReq } from '../api/types/bracket'
 export class Team {
   name: string
   id: number | null
+  side: 'left' | 'right' | null = null
   constructor(name: string, id: number | null = null) {
     this.name = name
     this.id = id

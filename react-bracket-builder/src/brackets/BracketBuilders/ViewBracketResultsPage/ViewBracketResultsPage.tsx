@@ -1,21 +1,22 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
-import { BracketMeta } from '../../shared/context/context'
+import { BracketMeta, DarkModeContext } from '../../shared/context/context'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
 import lightBracketBg from '../../shared/assets/bracket-bg-light.png'
 import {
   WithBracketMeta,
-  WithDarkMode,
   WithMatchTree,
   WithWindowDimensions,
 } from '../../shared/components/HigherOrder'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
-import { ResultsBracket } from '../../shared/components/Bracket'
+import { DefaultBracket, ResultsBracket } from '../../shared/components/Bracket'
 import { ProfilePicture } from '../../shared/components/ProfilePicture'
 import { ViewResultsPageButtons } from './ViewResultsPageButtons'
 import { BracketRes, loadBracketResults } from '../../shared'
 import { BracketResultsStatusTag } from '../BracketResultsStatusTag'
+import { ResultsTeamSlotToggle } from '../../shared/components/TeamSlot'
+import { VotingResultsTeamSlot } from '../../../features/VotingBracket/VotingResultsTeamSlot'
 
 export const ViewBracketResultsPage = (props: {
   matchTree?: MatchTree
@@ -23,10 +24,9 @@ export const ViewBracketResultsPage = (props: {
   bracket?: BracketRes
   bracketMeta?: BracketMeta
   setBracketMeta?: (bracketMeta: BracketMeta) => void
-  darkMode?: boolean
-  setDarkMode?: (darkMode: boolean) => void
 }) => {
   const { bracket } = props
+  const { darkMode } = useContext(DarkModeContext)
   useEffect(() => {
     if (bracket && !props.matchTree) {
       props.setBracketMeta(getBracketMeta(bracket))
@@ -37,12 +37,10 @@ export const ViewBracketResultsPage = (props: {
   return (
     <div
       className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        props.darkMode ? ' tw-dark' : ''
+        darkMode ? ' tw-dark' : ''
       }`}
       style={{
-        backgroundImage: `url(${
-          props.darkMode ? darkBracketBg : lightBracketBg
-        })`,
+        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
       }}
     >
       <div
@@ -68,7 +66,10 @@ export const ViewBracketResultsPage = (props: {
               </div>
             </div>
             <ScaledBracket
-              BracketComponent={ResultsBracket}
+              BracketComponent={DefaultBracket}
+              TeamSlotComponent={
+                bracket.isVoting ? VotingResultsTeamSlot : ResultsTeamSlotToggle
+              }
               matchTree={props.matchTree}
               paddingX={20}
             />
@@ -86,6 +87,6 @@ export const ViewBracketResultsPage = (props: {
 }
 
 const Wrapped = WithWindowDimensions(
-  WithDarkMode(WithMatchTree(WithBracketMeta(ViewBracketResultsPage)))
+  WithMatchTree(WithBracketMeta(ViewBracketResultsPage))
 )
 export default Wrapped

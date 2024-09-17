@@ -1,5 +1,5 @@
 import { TeamSlotProps } from '../types'
-import { getScoredPlayTrees } from '../../../BracketBuilders/ViewPlayPage/getScoredPlayTrees'
+import { getScoredPlayTrees } from '../../../BracketBuilders/ViewPlayPage/ViewStandardPlay/getScoredPlayTrees'
 import { TeamSlotToggle } from './TeamSlotToggle'
 import { ThickCheckIcon, XIcon } from '../../assets'
 import { ActiveTeamSlot } from './ActiveTeamSlot'

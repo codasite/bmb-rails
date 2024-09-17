@@ -3,7 +3,7 @@ import { WildcardPlacement } from '../../models/WildcardPlacement'
 
 interface phpDate {
   date: string
-  timezone_type: number
+  timezoneType: number
   timezone: string
 }
 
@@ -35,7 +35,7 @@ export interface MatchPick {
   roundIndex: number
   matchIndex: number
   winningTeamId: number
-  percentage?: number
+  popularity?: number
 }
 
 export interface TeamRepr {
@@ -46,6 +46,8 @@ export interface TeamRepr {
 export interface MatchTreeRepr {
   rounds: Nullable<MatchRepr>[][]
   wildcardPlacement?: WildcardPlacement
+  isVoting?: boolean
+  liveRoundIndex?: number
 }
 export interface MatchRepr {
   id?: number
@@ -78,6 +80,7 @@ export interface BracketReq {
   results?: MatchPick[]
   updateNotifyPlayers?: boolean
   fee?: number
+  isVoting?: boolean
 }
 export interface BracketRes extends PostBase {
   month: string
@@ -90,6 +93,8 @@ export interface BracketRes extends PostBase {
   fee?: number
   results?: MatchPick[]
   mostPopularPicks?: MatchPick[]
+  isVoting?: boolean
+  liveRoundIndex?: number
 }
 export interface PlayReq {
   id?: number

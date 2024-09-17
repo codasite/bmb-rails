@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`PlayBuilderPage should render should show register modal when user is not logged in 1`] = `
+exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
 <DocumentFragment>
   <div
     class="wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover  tw-dark"
@@ -10,7 +10,7 @@ exports[`PlayBuilderPage should render should show register modal when user is n
       class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80"
     >
       <div
-        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"
+        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-10"
       >
         <div
           class="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14"
@@ -21,10 +21,10 @@ exports[`PlayBuilderPage should render should show register modal when user is n
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -46,10 +46,23 @@ exports[`PlayBuilderPage should render should show register modal when user is n
             class="tw-flex tw-flex-col tw-items-center"
             style="gap: 24px;"
           >
+            <span
+              class="tw-text-48 sm:tw-text-48 tw-text-dd-blue dark:tw-text-white tw-font-700 tw-text-center tw-leading-none"
+              style="width: 700px;"
+            >
+              Test Bracket
+            </span>
             <div
-              class="wpbb-team-3-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
-              style="border-width: 2px;"
-            />
+              class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-dd-blue tw-font-700 tw-bg-white"
+              data-testid="team-slot-round-1-match-0-winner"
+              style="border-width: 0px;"
+            >
+              <span
+                style="font-size: 32px; transform: scale(1); visibility: hidden;"
+              >
+                Team 3
+              </span>
+            </div>
           </div>
         </div>
         <div
@@ -57,166 +70,102 @@ exports[`PlayBuilderPage should render should show register modal when user is n
         >
           <div
             class="tw-flex tw-justify-between"
-            style="width: 985px;"
+            style="width: 700px;"
           >
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
-                <div
-                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                <button
+                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-left"
+                  style="border-width: 0px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 1
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-right"
                   style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-1-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-1-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 2
+                  </span>
+                </button>
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-2-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-2-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[1172px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
               >
-                <div
-                  class="wpbb-team-3-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                <button
+                  class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-1-match-0-left"
                   style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-3-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 1
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white tw-cursor-pointer"
+                  data-testid="team-slot-round-1-match-0-right"
+                  style="border-width: 0px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </button>
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
-                <div
-                  class="wpbb-team-2-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                <button
+                  class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-left"
+                  style="border-width: 0px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-right"
                   style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-2-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 4
+                  </span>
+                </button>
               </div>
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-1-2-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-1-2-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-1-3-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-1-3-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-0-4-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-0-4-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
             </div>
           </div>
         </div>
         <div
-          style="margin-top: 20px; min-height: 200px;"
+          style="margin-top: 20px; min-height: 0;"
         >
           <div
             class="tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-font-700 tw-whitespace-nowrap "
@@ -229,6 +178,11 @@ exports[`PlayBuilderPage should render should show register modal when user is n
             <svg
               class="tw-w-[124px] tw-text-black/25 dark:tw-text-white"
             />
+            <span
+              class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+            >
+              March 2022
+            </span>
           </div>
         </div>
         <div
@@ -246,6 +200,335 @@ exports[`PlayBuilderPage should render should show register modal when user is n
           <div
             class="mock-react-lineto"
           />
+        </div>
+        <div
+          class="tw-absolute"
+        >
+          <div />
+          <div />
+        </div>
+      </div>
+      <div
+        class="tw-px-24 tw-mt-60 tw-flex tw-gap-15 tw-flex-col tw-items-stretch tw-self-stretch"
+      >
+        <div
+          class="tw-flex tw-self-stretch tw-flex-col tw-items-stretch"
+        >
+          <button
+            class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-green tw-text-dd-blue disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-green/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-green dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+          >
+            <svg
+              class="tw-h-16 sm:tw-h-24"
+            />
+            <span>
+              Add to Apparel
+            </span>
+          </button>
+        </div>
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-blue tw-text-white disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-blue/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-blue dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+        >
+          <svg
+            class="tw-h-16 sm:tw-h-24"
+          />
+          <span>
+            Submit Picks
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PlayBuilderPage should render register modal when user is not logged in 1`] = `
+<DocumentFragment>
+  <div
+    class="tw-fixed tw-bg-black/50 tw-top-0 tw-left-0 tw-right-0 tw-z-50 tw-w-full tw-p-4 tw-overflow-x-hidden tw-overflow-y-auto md:tw-inset-0 tw-h-[calc(100%-1rem)] tw-max-h-full tw-justify-center tw-items-center tw-flex"
+    tabindex="-1"
+  >
+    <div
+      class="tw-relative tw-max-w-[606px] tw-rounded-16 tw-bg-dark-blue tw-grow tw-mx-20 tw-p-30 sm:tw-p-60"
+    >
+      <h1
+        class="tw-text-24 sm:tw-text-32 tw-leading-normal tw-text-white tw-uppercase tw-whitespace-pre-line tw-mb-30 tw-w-full tw-text-center tw-font-sans"
+      >
+        Sign in or register to submit your picks!
+      </h1>
+      <div
+        class="tw-flex tw-flex-col tw-gap-10"
+      >
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-bg-green/15 tw-gap-16 tw-rounded-8 tw-p-12 tw-border-1 tw-border-solid tw-border-green hover:tw-text-white/75 tw-text-white tw-w-full tw-text-16 tw-font-700 disabled:tw-bg-transparent disabled:tw-text-white/20 disabled:tw-border-white/20"
+        >
+          <span>
+            Sign in/register
+          </span>
+        </button>
+        <button
+          class="disabled:tw-cursor-default disabled:tw-text-white/50 tw-cursor-pointer tw-flex tw-flex-row tw-font-sans tw-gap-16 tw-items-center tw-justify-center tw-leading-none tw-rounded-8 tw-text-16 tw-text-white tw-uppercase tw-w-full tw-whitespace-nowrap tw-border-none tw-font-500 tw-bg-white/15 enabled:hover:tw-bg-white/20 tw-border-white disabled:tw-border-white/50 tw-p-12"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+  <div
+    class="wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover  tw-dark"
+    style="background-image: url(undefined);"
+  >
+    <div
+      class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80"
+    >
+      <div
+        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-10"
+      >
+        <div
+          class="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14"
+        >
+          <span
+            class="tw-text-dd-blue dark:tw-text-white"
+          >
+            Theme
+          </span>
+          <button
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
+          >
+            <div
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
+            >
+              <span
+                class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
+              >
+                dark
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-flex-col tw-dark wpbb-default-bracket tw-relative"
+      >
+        <div
+          class="tw-flex tw-flex-col tw-justify-end"
+          style="margin-bottom: 95px; min-height: 0;"
+        >
+          <div
+            class="tw-flex tw-flex-col tw-items-center"
+            style="gap: 24px;"
+          >
+            <span
+              class="tw-text-48 sm:tw-text-48 tw-text-dd-blue dark:tw-text-white tw-font-700 tw-text-center tw-leading-none"
+              style="width: 700px;"
+            >
+              Test Bracket
+            </span>
+            <div
+              class="wpbb-team-2-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
+              data-testid="team-slot-round-2-match-0-winner"
+              style="border-width: 2px;"
+            />
+          </div>
+        </div>
+        <div
+          class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+        >
+          <div
+            class="tw-flex tw-justify-between"
+            style="width: 800px;"
+          >
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <button
+                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-left"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 1
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-right"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 2
+                  </span>
+                </button>
+              </div>
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <button
+                  class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-left"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-right"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 4
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <div
+                  class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-left"
+                  style="border-width: 2px;"
+                />
+                <div
+                  class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-right"
+                  style="border-width: 2px;"
+                />
+              </div>
+            </div>
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
+              >
+                <div
+                  class="wpbb-team-2-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-left"
+                  style="border-width: 2px;"
+                />
+                <div
+                  class="wpbb-team-2-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-right"
+                  style="border-width: 2px;"
+                />
+              </div>
+            </div>
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <div
+                  class="wpbb-team-1-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-left"
+                  style="border-width: 2px;"
+                />
+                <div
+                  class="wpbb-team-1-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-right"
+                  style="border-width: 2px;"
+                />
+              </div>
+            </div>
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <button
+                  class="wpbb-team-0-2-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-left"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 5
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-2-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-right"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 6
+                  </span>
+                </button>
+              </div>
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <button
+                  class="wpbb-team-0-3-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-left"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 7
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-3-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-right"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 8
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style="margin-top: 20px; min-height: 0;"
+        >
+          <div
+            class="tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-font-700 tw-whitespace-nowrap "
+          >
+            <span
+              class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+            >
+              Who You Got?
+            </span>
+            <svg
+              class="tw-w-[124px] tw-text-black/25 dark:tw-text-white"
+            />
+            <span
+              class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+            >
+              March 2022
+            </span>
+          </div>
+        </div>
+        <div
+          class="tw-absolute"
+        >
           <div
             class="mock-react-lineto"
           />
@@ -324,7 +607,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
       class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80"
     >
       <div
-        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center"
+        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-10"
       >
         <div
           class="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14"
@@ -335,10 +618,10 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             Theme
           </span>
           <button
-            class="tw-flex tw-items-center tw-justify-end dark:tw-justify-start tw-w-[71px] tw-h-30 tw-px-2 tw-rounded-16 dark:tw-border-2 tw-border-solid tw-border-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none"
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
           >
             <div
-              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center"
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
             >
               <span
                 class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
@@ -360,8 +643,15 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             class="tw-flex tw-flex-col tw-items-center"
             style="gap: 24px;"
           >
+            <span
+              class="tw-text-48 sm:tw-text-48 tw-text-dd-blue dark:tw-text-white tw-font-700 tw-text-center tw-leading-none"
+              style="width: 700px;"
+            >
+              Test Bracket
+            </span>
             <div
-              class="wpbb-team-3-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
+              class="wpbb-team-2-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
+              data-testid="team-slot-round-2-match-0-winner"
               style="border-width: 2px;"
             />
           </div>
@@ -371,166 +661,178 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
         >
           <div
             class="tw-flex tw-justify-between"
-            style="width: 985px;"
+            style="width: 800px;"
           >
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
-                <div
-                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                <button
+                  class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-left"
                   style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 1
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-0-right"
                   style="border-width: 2px;"
-                />
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 2
+                  </span>
+                </button>
               </div>
               <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <button
+                  class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-left"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-1-right"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 4
+                  </span>
+                </button>
+              </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
                 <div
                   class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-left"
                   style="border-width: 2px;"
                 />
                 <div
                   class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-1-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-1-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-0-right"
                   style="border-width: 2px;"
                 />
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-2-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-2-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[1172px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
               >
                 <div
-                  class="wpbb-team-3-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  class="wpbb-team-2-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-left"
                   style="border-width: 2px;"
                 />
                 <div
-                  class="wpbb-team-3-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  class="wpbb-team-2-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-2-match-0-right"
                   style="border-width: 2px;"
                 />
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[548px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
                 <div
-                  class="wpbb-team-2-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  class="wpbb-team-1-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-left"
                   style="border-width: 2px;"
                 />
                 <div
-                  class="wpbb-team-2-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  class="wpbb-team-1-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                  data-testid="team-slot-round-1-match-1-right"
                   style="border-width: 2px;"
                 />
               </div>
             </div>
             <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
             >
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
-                <div
-                  class="wpbb-team-1-2-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                <button
+                  class="wpbb-team-0-2-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-left"
                   style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-1-2-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 5
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-2-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-2-right"
                   style="border-width: 2px;"
-                />
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 6
+                  </span>
+                </button>
               </div>
               <div
                 class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
               >
-                <div
-                  class="wpbb-team-1-3-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                <button
+                  class="wpbb-team-0-3-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-left"
                   style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-1-3-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 7
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-0-3-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-0-match-3-right"
                   style="border-width: 2px;"
-                />
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 8
+                  </span>
+                </button>
               </div>
-            </div>
-            <div
-              class="tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
-            >
-              <div
-                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
-              >
-                <div
-                  class="wpbb-team-0-4-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-                <div
-                  class="wpbb-team-0-4-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50"
-                  style="border-width: 2px;"
-                />
-              </div>
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
-              <div
-                class="tw-h-[76px] tw-w-[115px]"
-              />
             </div>
           </div>
         </div>
         <div
-          style="margin-top: 20px; min-height: 200px;"
+          style="margin-top: 20px; min-height: 0;"
         >
           <div
             class="tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-font-700 tw-whitespace-nowrap "
@@ -543,6 +845,11 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
             <svg
               class="tw-w-[124px] tw-text-black/25 dark:tw-text-white"
             />
+            <span
+              class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+            >
+              March 2022
+            </span>
           </div>
         </div>
         <div
@@ -584,6 +891,269 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
           <div
             class="mock-react-lineto"
           />
+        </div>
+        <div
+          class="tw-absolute"
+        >
+          <div />
+          <div />
+        </div>
+      </div>
+      <div
+        class="tw-px-24 tw-mt-60 tw-flex tw-gap-15 tw-flex-col tw-items-stretch tw-self-stretch"
+      >
+        <div
+          class="tw-flex tw-self-stretch tw-flex-col tw-items-stretch"
+        >
+          <button
+            class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-green tw-text-dd-blue disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-green/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-green dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+            disabled=""
+          >
+            <svg
+              class="tw-h-16 sm:tw-h-24"
+            />
+            <span>
+              Add to Apparel
+            </span>
+          </button>
+        </div>
+        <button
+          class="tw-flex tw-flex-row tw-items-center tw-justify-center tw-font-sans tw-uppercase tw-whitespace-nowrap tw-cursor-pointer disabled:tw-cursor-default tw-leading-none tw-border-none tw-py-15 tw-rounded-8 tw-font-700 tw-text-16 sm:tw-text-24 tw-gap-15 sm:tw-gap-20 tw-bg-blue tw-text-white disabled:!tw-bg-transparent disabled:tw-border disabled:tw-border-solid disabled:tw-border-black/20 disabled:tw-text-black/20 dark:tw-bg-blue/15 dark:tw-text-white dark:tw-border dark:tw-border-solid dark:tw-border-blue dark:disabled:tw-text-white/20 dark:disabled:tw-border-white/20"
+          disabled=""
+        >
+          <svg
+            class="tw-h-16 sm:tw-h-24"
+          />
+          <span>
+            Submit Picks
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`PlayBuilderPage should update existing play when bracket is voting and user submit picks for second round 1`] = `
+<DocumentFragment>
+  <div
+    class="wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover  tw-dark"
+    style="background-image: url(undefined);"
+  >
+    <div
+      class="tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80"
+    >
+      <div
+        class="tw-h-[140px] tw-flex tw-flex-col tw-justify-center tw-items-center tw-gap-10"
+      >
+        <div
+          class="tw-flex tw-items-center tw-gap-4 tw-px-8 tw-py-4 tw-border tw-border-solid tw-rounded-8 tw-text-green tw-border-green tw-bg-green/20"
+        >
+          <svg />
+          <span
+            class="tw-text-12 tw-font-500"
+          >
+            Voting Round 2
+          </span>
+        </div>
+        <div
+          class="tw-flex tw-items-center tw-justify-center tw-font-600 tw-gap-14"
+        >
+          <span
+            class="tw-text-dd-blue dark:tw-text-white"
+          >
+            Theme
+          </span>
+          <button
+            class="tw-flex tw-items-center tw-w-[71px] tw-h-31 tw-p-[3px] tw-rounded-16 tw-border-2 tw-border-solid tw-border-white tw-text-white tw-cursor-pointer tw-bg-dd-blue dark:tw-bg-none tw-transition-all tw-duration-300"
+          >
+            <div
+              class="tw-w-[47px] tw-h-[22px] tw-rounded-16 tw-bg-white tw-text-10 tw-flex tw-items-center tw-justify-center tw-transition-transform tw-duration-300 tw-translate-x-0"
+            >
+              <span
+                class="tw-text-dd-blue tw-font-600 tw-text-sans tw-uppercase"
+              >
+                dark
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <div
+        class="tw-flex tw-flex-col tw-dark wpbb-default-bracket tw-relative"
+      >
+        <div
+          class="tw-flex tw-flex-col tw-justify-end"
+          style="margin-bottom: 95px; min-height: 0;"
+        >
+          <div
+            class="tw-flex tw-flex-col tw-items-center"
+            style="gap: 24px;"
+          >
+            <span
+              class="tw-text-48 sm:tw-text-48 tw-text-dd-blue dark:tw-text-white tw-font-700 tw-text-center tw-leading-none"
+              style="width: 700px;"
+            >
+              Test Bracket
+            </span>
+            <div
+              class="wpbb-team-1-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
+              data-testid="team-slot-round-1-match-0-winner"
+              style="border-width: 2px;"
+            />
+          </div>
+        </div>
+        <div
+          class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+        >
+          <div
+            class="tw-flex tw-justify-between"
+            style="width: 700px;"
+          >
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <div
+                  class="tw-relative"
+                >
+                  <div
+                    class="wpbb-team-0-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                    data-testid="team-slot-round-0-match-0-left"
+                    style="border-width: 2px;"
+                  >
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 1
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-[lightgray]"
+                  />
+                </div>
+                <div
+                  class="tw-relative"
+                >
+                  <div
+                    class="wpbb-team-0-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                    data-testid="team-slot-round-0-match-0-right"
+                    style="border-width: 0px;"
+                  >
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 2
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-green"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[236px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[-48px]"
+              >
+                <button
+                  class="wpbb-team-1-0-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-1-match-0-left"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 2
+                  </span>
+                </button>
+                <button
+                  class="wpbb-team-1-0-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/50 tw-cursor-pointer"
+                  data-testid="team-slot-round-1-match-0-right"
+                  style="border-width: 2px;"
+                >
+                  <span
+                    style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                  >
+                    Team 3
+                  </span>
+                </button>
+              </div>
+            </div>
+            <div
+              class="wpbb-default-match-column tw-flex tw-flex-col tw-justify-center tw-gap-[80px]"
+            >
+              <div
+                class="tw-flex tw-flex-col tw-gap-[20px] tw-translate-y-[0px]"
+              >
+                <div
+                  class="tw-relative"
+                >
+                  <div
+                    class="wpbb-team-0-1-left tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-dd-blue tw-font-500 tw-bg-white"
+                    data-testid="team-slot-round-0-match-1-left"
+                    style="border-width: 0px;"
+                  >
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 3
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-green"
+                  />
+                </div>
+                <div
+                  class="tw-relative"
+                >
+                  <div
+                    class="wpbb-team-0-1-right tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[115px] tw-h-[28px] tw-text-white/75 tw-font-500 tw-bg-transparent tw-border-solid tw-border-white/25"
+                    data-testid="team-slot-round-0-match-1-right"
+                    style="border-width: 2px;"
+                  >
+                    <span
+                      style="font-size: 16px; transform: scale(1); visibility: hidden;"
+                    >
+                      Team 4
+                    </span>
+                  </div>
+                  <div
+                    class="tw-absolute tw-top-0 tw-right-0 tw-transform tw-translate-x-1/2 tw--translate-y-1/2 tw-rounded-16 tw-flex tw-items-center tw-justify-center tw-bg-[lightgray]"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          style="margin-top: 20px; min-height: 0;"
+        >
+          <div
+            class="tw-flex tw-flex-col tw-gap-20 tw-justify-between tw-items-center tw-font-700 tw-whitespace-nowrap "
+          >
+            <span
+              class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+            >
+              Who You Got?
+            </span>
+            <svg
+              class="tw-w-[124px] tw-text-black/25 dark:tw-text-white"
+            />
+            <span
+              class="tw-text-36 tw-text-dd-blue dark:tw-text-white"
+            >
+              March 2022
+            </span>
+          </div>
+        </div>
+        <div
+          class="tw-absolute"
+        >
           <div
             class="mock-react-lineto"
           />

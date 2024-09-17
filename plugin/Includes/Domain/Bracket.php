@@ -12,6 +12,8 @@ class Bracket extends PostBase implements PostBracketInterface {
   public ?int $num_plays;
   public ?float $fee;
   public bool $should_notify_results_updated;
+  public bool $is_voting;
+  public int $live_round_index;
   /**
    * @var BracketMatch[]
    */
@@ -39,6 +41,8 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->fee = (float) ($data['fee'] ?? null);
     $this->should_notify_results_updated =
       $data['should_notify_results_updated'] ?? false;
+    $this->is_voting = $data['is_voting'] ?? false;
+    $this->live_round_index = (int) ($data['live_round_index'] ?? 0);
   }
 
   public function get_winning_team(): ?Team {
@@ -81,6 +85,10 @@ class Bracket extends PostBase implements PostBracketInterface {
       $num_rounds = ceil(log($num_teams, 2));
     }
     return $num_rounds;
+  }
+
+  public function live_round_index_is_final(): bool {
+    return $this->live_round_index === $this->get_num_rounds() - 1;
   }
 
   public function highest_possible_score(): int {
@@ -177,6 +185,8 @@ class Bracket extends PostBase implements PostBracketInterface {
     $bracket['results_first_updated_at'] = $this->results_first_updated_at
       ? $this->results_first_updated_at->format('Y-m-d H:i:s')
       : null;
+    $bracket['is_voting'] = $this->is_voting;
+    $bracket['live_round_index'] = $this->live_round_index;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {
@@ -220,7 +230,7 @@ class Bracket extends PostBase implements PostBracketInterface {
   }
 
   public function is_printable(): bool {
-    return $this->status !== 'upcoming';
+    return $this->status !== 'upcoming' && !$this->is_voting;
   }
 
   public function is_chat_enabled(): bool {

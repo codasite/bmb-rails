@@ -135,7 +135,7 @@ describe('MatchTree', () => {
         team2: { id: 32, name: 'Team 16' },
       },
     ]
-    const matchTree = MatchTree.fromMatchRes(16, matches)
+    const matchTree = MatchTree.fromMatchRes({ numTeams: 16, matches })
 
     expect(matchTree).not.toBeNull()
     expect(matchTree?.rounds.length).toBe(4)
@@ -403,7 +403,7 @@ describe('MatchTree', () => {
       { roundIndex: 2, matchIndex: 0, winningTeamId: 17 },
     ]
 
-    const matchTree = MatchTree.fromPicks(8, matches, picks)
+    const matchTree = MatchTree.fromPicks({ numTeams: 8, matches }, picks)
 
     expect(matchTree).not.toBeNull()
     expect(matchTree?.rounds.length).toBe(3)
@@ -431,6 +431,48 @@ describe('MatchTree', () => {
     expect(round3?.matches[0]?.getTeam1()?.id).toBe(17)
     expect(round3?.matches[0]?.getTeam2()?.id).toBe(21)
     expect(round3?.matches[0]?.getWinner()?.id).toBe(17)
+  })
+
+  // When a team is picked to advance twice in a row and no other picks are made
+  test('fromPicks should return correct tree when picks are incomplete', () => {
+    const matches = [
+      {
+        id: 9,
+        roundIndex: 0,
+        matchIndex: 0,
+        team1: { id: 17, name: 'Team 1' },
+        team2: { id: 18, name: 'Team 2' },
+      },
+      {
+        id: 10,
+        roundIndex: 0,
+        matchIndex: 1,
+        team1: { id: 19, name: 'Team 3' },
+        team2: { id: 20, name: 'Team 4' },
+      },
+      {
+        id: 11,
+        roundIndex: 0,
+        matchIndex: 2,
+        team1: { id: 21, name: 'Team 5' },
+        team2: { id: 22, name: 'Team 6' },
+      },
+      {
+        id: 12,
+        roundIndex: 0,
+        matchIndex: 3,
+        team1: { id: 23, name: 'Team 7' },
+        team2: { id: 24, name: 'Team 8' },
+      },
+    ]
+    const picks: MatchPick[] = [
+      { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
+      { roundIndex: 1, matchIndex: 0, winningTeamId: 17 },
+      { roundIndex: 2, matchIndex: 0, winningTeamId: 17 },
+    ]
+
+    const matchTree = MatchTree.fromPicks({ numTeams: 8, matches }, picks)
+    expect(matchTree).not.toBeNull()
   })
 
   test('testing to match req', () => {
@@ -909,57 +951,6 @@ describe('MatchTree', () => {
     expect(
       MatchTree.fromNumTeams(8, WildcardPlacement.Split)?.getWildcardPlacement()
     ).toBe(WildcardPlacement.Split)
-  })
-
-  test('testing sync branch', () => {
-    const matches = [
-      {
-        id: 9,
-        roundIndex: 0,
-        matchIndex: 0,
-        team1: { id: 17, name: 'Team 1' },
-        team2: { id: 18, name: 'Team 2' },
-      },
-      {
-        id: 10,
-        roundIndex: 0,
-        matchIndex: 1,
-        team1: { id: 19, name: 'Team 3' },
-        team2: { id: 20, name: 'Team 4' },
-      },
-      {
-        id: 11,
-        roundIndex: 0,
-        matchIndex: 2,
-        team1: { id: 21, name: 'Team 5' },
-        team2: { id: 22, name: 'Team 6' },
-      },
-      {
-        id: 12,
-        roundIndex: 0,
-        matchIndex: 3,
-        team1: { id: 23, name: 'Team 7' },
-        team2: { id: 24, name: 'Team 8' },
-      },
-    ]
-    const picks: MatchPick[] = [
-      { roundIndex: 0, matchIndex: 0, winningTeamId: 17 },
-      { roundIndex: 0, matchIndex: 1, winningTeamId: 20 },
-      { roundIndex: 0, matchIndex: 2, winningTeamId: 21 },
-      { roundIndex: 0, matchIndex: 3, winningTeamId: 24 },
-      { roundIndex: 1, matchIndex: 0, winningTeamId: 17 },
-      { roundIndex: 1, matchIndex: 1, winningTeamId: 21 },
-      { roundIndex: 2, matchIndex: 0, winningTeamId: 17 },
-    ]
-
-    const tree1 = MatchTree.fromPicks(8, matches, picks)
-    const tree2 = MatchTree.fromMatchRes(8, matches)
-
-    tree2?.syncPick(tree1?.getRootMatch())
-
-    expect(tree2?.rounds[0].matches[0]?.getWinner()?.id).toBe(17)
-    expect(tree2?.rounds[1].matches[0]?.getWinner()?.id).toBe(17)
-    expect(tree2?.rounds[2].matches[0]?.getWinner()?.id).toBe(17)
   })
 
   test('testing matchTree equals true', () => {

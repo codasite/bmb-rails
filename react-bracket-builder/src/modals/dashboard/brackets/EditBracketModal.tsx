@@ -7,33 +7,26 @@ import { ModalHeader } from '../../ModalHeader'
 import { ModalTextField } from '../../ModalTextFields'
 import { CancelButton, ConfirmButton } from '../../ModalButtons'
 import { DatePicker } from '../../../brackets/shared/components/DatePicker'
+import { BracketData } from './BracketData'
+import { loadBracketData } from '../../loadBracketData'
 
-export const EditBracketModal = () => {
-  const [bracketId, setBracketId] = useState<number | null>(null)
+export const EditBracketModal = (props: {
+  show: boolean
+  setShow: (show: boolean) => void
+  bracketData: BracketData
+  setBracketData: (data: BracketData) => void
+}) => {
   const [loading, setLoading] = useState(false)
-  const [title, setTitle] = useState('')
   const [titleHasError, setTitleHasError] = useState(false)
   const [dateHasError, setDateHasError] = useState(false)
-  const [month, setMonth] = useState('')
-  const [year, setYear] = useState('')
-  const [show, setShow] = useState(false)
+
   addClickHandlers({
     buttonClassName: 'wpbb-edit-bracket-button',
     onButtonClick: (b) => {
-      setTitle(b.dataset.bracketTitle)
-      setMonth(b.dataset.bracketMonth)
-      setYear(b.dataset.bracketYear)
-      setBracketId(parseInt(b.dataset.bracketId))
-      setShow(true)
+      loadBracketData(b, props.setBracketData)
+      props.setShow(true)
     },
   })
-
-  const resetState = () => {
-    setBracketId(null)
-    setLoading(false)
-    setTitle('')
-    setShow(false)
-  }
 
   const onDateError = (error: string) => {
     setDateHasError(true)
@@ -44,16 +37,16 @@ export const EditBracketModal = () => {
   }
 
   const onEditBracket = () => {
-    if (!title) {
+    if (!props.bracketData.title) {
       setTitleHasError(true)
       return
     }
     setLoading(true)
     bracketApi
-      .updateBracket(bracketId, {
-        title: title,
-        month: month,
-        year: year,
+      .updateBracket(props.bracketData.id, {
+        title: props.bracketData.title,
+        month: props.bracketData.month,
+        year: props.bracketData.year,
       })
       .then((res) => {
         window.location.reload()
@@ -62,11 +55,11 @@ export const EditBracketModal = () => {
         console.error(err)
       })
       .finally(() => {
-        resetState()
+        props.setShow(false)
       })
   }
   return (
-    <Modal show={show} setShow={setShow}>
+    <Modal show={props.show} setShow={props.setShow}>
       <div className="tw-flex tw-flex-col">
         <ModalHeader text={'Edit info'} />
         <div className="tw-flex tw-flex-col tw-gap-10">
@@ -74,16 +67,22 @@ export const EditBracketModal = () => {
             hasError={titleHasError}
             errorText={'Bracket name is required'}
             placeholderText={'Bracket name...'}
-            input={title}
-            setInput={setTitle}
+            input={props.bracketData.title}
+            setInput={(val) =>
+              props.setBracketData({ ...props.bracketData, title: val })
+            }
             setHasError={setTitleHasError}
           />
           <div className="tw-mb-20"></div>
           <DatePicker
-            month={month}
-            year={year}
-            handleMonthChange={(month) => setMonth(month)}
-            handleYearChange={(year) => setYear(year)}
+            month={props.bracketData.month}
+            year={props.bracketData.year}
+            handleMonthChange={(month) =>
+              props.setBracketData({ ...props.bracketData, month })
+            }
+            handleYearChange={(year) =>
+              props.setBracketData({ ...props.bracketData, year })
+            }
             showTitle={false}
             onHasError={onDateError}
             onErrorCleared={onDateErrorCleared}
@@ -95,7 +94,7 @@ export const EditBracketModal = () => {
           >
             {'Save'}
           </ConfirmButton>
-          <CancelButton onClick={() => setShow(false)} />
+          <CancelButton onClick={() => props.setShow(false)} />
         </div>
       </div>
     </Modal>

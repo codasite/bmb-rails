@@ -4,10 +4,10 @@ import { DefaultBracket } from '../../brackets/shared/components/Bracket/Default
 import { TeamSlotToggle } from '../../brackets/shared/components/TeamSlot'
 import { Team } from '../../brackets/shared/models/Team'
 import { MatchNode } from '../../brackets/shared/models/operations/MatchNode'
-import { PercentageTeamSlot } from './PercentageTeamSlot'
+import { PopularityTeamSlot } from './PopularityTeamSlot'
 
 export const MPPBracket = (props: BracketProps) => {
   const { matchTree } = props
 
-  return <DefaultBracket {...props} TeamSlotComponent={PercentageTeamSlot} />
+  return <DefaultBracket {...props} TeamSlotComponent={PopularityTeamSlot} />
 }

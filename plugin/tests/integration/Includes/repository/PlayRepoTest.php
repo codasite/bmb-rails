@@ -176,6 +176,96 @@ class PlayRepoTest extends WPBB_UnitTestCase {
     );
   }
 
+  public function test_get_play_by_user_and_bracket() {
+    // Create a bracket with matches
+    $bracket = $this->create_bracket([
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team([
+            'name' => 'Team 3',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 4',
+          ]),
+        ]),
+      ],
+    ]);
+
+    // Create users
+    $user1 = self::factory()->user->create_and_get();
+    $user2 = self::factory()->user->create_and_get();
+
+    // Create plays for different users
+    $play1 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user1->ID,
+      'total_score' => 10,
+      'accuracy_score' => 0.7,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 0,
+          'winning_team_id' => $bracket->matches[0]->team1->id,
+        ]),
+      ],
+    ]);
+
+    $play2 = $this->create_play([
+      'bracket_id' => $bracket->id,
+      'author' => $user2->ID,
+      'total_score' => 15,
+      'accuracy_score' => 0.8,
+      'is_tournament_entry' => true,
+      'picks' => [
+        new Pick([
+          'round_index' => 0,
+          'match_index' => 1,
+          'winning_team_id' => $bracket->matches[1]->team2->id,
+        ]),
+      ],
+    ]);
+
+    // Test for user1
+    $result_play1 = $this->play_repo->get_play_by_user_and_bracket(
+      $user1->ID,
+      $bracket->id
+    );
+    $this->assertNotNull($result_play1);
+    $this->assertEquals($play1->id, $result_play1->id);
+    $this->assertEquals($user1->ID, $result_play1->author);
+    $this->assertEquals($bracket->id, $result_play1->bracket_id);
+
+    // Test for user2
+    $result_play2 = $this->play_repo->get_play_by_user_and_bracket(
+      $user2->ID,
+      $bracket->id
+    );
+    $this->assertNotNull($result_play2);
+    $this->assertEquals($play2->id, $result_play2->id);
+    $this->assertEquals($user2->ID, $result_play2->author);
+    $this->assertEquals($bracket->id, $result_play2->bracket_id);
+
+    // Test for a user who has no play in the bracket
+    $result_play_no_play = $this->play_repo->get_play_by_user_and_bracket(
+      999,
+      $bracket->id
+    );
+    $this->assertNull($result_play_no_play);
+  }
+
   public function test_get_all() {
     $bracket = $this->create_bracket([
       'matches' => [

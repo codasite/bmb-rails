@@ -80,12 +80,17 @@ export const BaseTeamSlot = (props: TeamSlotProps) => {
 
   const styles = baseStyles.join(' ')
 
+  const getDataTestId = () => {
+    return `team-slot-round-${match.roundIndex}-match-${match.matchIndex}-${teamPosition}`
+  }
+
   return (
     <DivOrButton
       className={styles}
       onClick={handleTeamClick}
       onFocus={onTeamFocus}
       style={{ borderWidth: borderWidth }}
+      data-testid={getDataTestId()}
     >
       {children
         ? children

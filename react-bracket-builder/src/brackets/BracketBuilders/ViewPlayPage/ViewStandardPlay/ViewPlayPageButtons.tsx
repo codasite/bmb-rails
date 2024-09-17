@@ -1,38 +1,9 @@
-import { AddToApparel } from '../AddToApparel'
-import { BustPicksButton } from '../BustPicksButton'
-import { GreenLink } from '../GreenLink'
-import {
-  EyeIcon,
-  PlayIcon,
-  getPlayBracketUrl,
-  getBracketResultsUrl,
-  PlayRes,
-  getReplayPlayUrl,
-} from '../../shared'
+import { AddToApparel } from '../../AddToApparel'
+import { GreenLink } from '../../GreenLink'
+import { EyeIcon, getBracketResultsUrl, PlayRes } from '../../../shared'
 import { addExistingPlayToApparelHandler } from './addExistingPlayToApparel'
-import { wpbbAjax } from '../../../utils/WpbbAjax'
 import { useState } from 'react'
-
-const PlayOrReplayButton = (props: { play?: PlayRes }) => {
-  const bracket = props.play?.bracket
-  const { isUserPlayAuthor } = wpbbAjax.getAppObj()
-
-  if (!bracket?.isOpen) {
-    return null
-  }
-
-  const url = isUserPlayAuthor
-    ? getReplayPlayUrl(props.play)
-    : getPlayBracketUrl(bracket)
-  const text = isUserPlayAuthor ? 'Replay Tournament' : 'Play Tournament'
-
-  return url ? (
-    <GreenLink href={url}>
-      <PlayIcon className="tw-h-16 sm:tw-h-24" />
-      {text}
-    </GreenLink>
-  ) : null
-}
+import { PlayOrReplayButton } from './PlayOrReplayButton'
 
 export const ViewPlayPageButtons = (props: { play?: PlayRes }) => {
   const [apparelError, setApparelError] = useState(false)
