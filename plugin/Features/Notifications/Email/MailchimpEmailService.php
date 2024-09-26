@@ -36,6 +36,7 @@ class MailchimpEmailService implements EmailServiceInterface {
         'html' => $html,
         'subject' => $subject,
         'from_email' => $this->from_email,
+        'from_name' => 'BackMyBracket',
         'to' => [
           [
             'email' => $to_email,
