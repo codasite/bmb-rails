@@ -1,6 +1,6 @@
 <?php
 
-namespace WStrategies\BMB\Includes\Domain;
+namespace WStrategies\BMB\Features\Notifications;
 
 use ValueError;
 

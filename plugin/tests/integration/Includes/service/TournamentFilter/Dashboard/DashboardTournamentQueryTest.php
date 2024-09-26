@@ -1,9 +1,9 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\TournamentFilter\Dashboard;
 
-use WStrategies\BMB\Includes\Domain\Notification;
-use WStrategies\BMB\Includes\Domain\NotificationType;
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 

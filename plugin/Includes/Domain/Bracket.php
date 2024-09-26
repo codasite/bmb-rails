@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes\Domain;
 
 use DateTimeImmutable;
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 
 class Bracket extends PostBase implements PostBracketInterface {
   public ?string $month;
@@ -40,7 +41,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     $this->num_plays = (int) ($data['num_plays'] ?? null);
     $this->fee = (float) ($data['fee'] ?? null);
     $this->should_notify_results_updated =
-      $data['should_notify_results_updated'] ?? false;
+      $data[BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED] ?? false;
     $this->is_voting = $data['is_voting'] ?? false;
     $this->live_round_index = (int) ($data['live_round_index'] ?? 0);
   }
@@ -114,7 +115,7 @@ class Bracket extends PostBase implements PostBracketInterface {
       'month' => $this->month,
       'year' => $this->year,
       'bracket_fee' => $this->fee,
-      'should_notify_results_updated' => $this->should_notify_results_updated
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => $this->should_notify_results_updated
         ? 1
         : 0,
     ];
@@ -125,7 +126,7 @@ class Bracket extends PostBase implements PostBracketInterface {
       'month' => $this->month,
       'year' => $this->year,
       'bracket_fee' => $this->fee,
-      'should_notify_results_updated' => $this->should_notify_results_updated
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => $this->should_notify_results_updated
         ? 1
         : 0,
     ];
@@ -180,7 +181,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     $bracket['month'] = $this->month;
     $bracket['year'] = $this->year;
     $bracket['fee'] = $this->fee;
-    $bracket['should_notify_results_updated'] =
+    $bracket[BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED] =
       $this->should_notify_results_updated;
     $bracket['results_first_updated_at'] = $this->results_first_updated_at
       ? $this->results_first_updated_at->format('Y-m-d H:i:s')
@@ -214,7 +215,7 @@ class Bracket extends PostBase implements PostBracketInterface {
   }
 
   public function get_title(): string {
-    return $this->title;
+    return strtoupper($this->title);
   }
 
   public function get_date(): string {

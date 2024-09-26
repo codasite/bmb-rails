@@ -1,9 +1,9 @@
 <?php
-namespace WStrategies\BMB\tests\integration\Includes\Service\Notifications;
+namespace WStrategies\BMB\tests\integration\Features\Notifications\Email;
 
 use MailchimpTransactional\Api\MessagesApi;
-use WStrategies\BMB\Includes\Service\Notifications\MailchimpApiClient;
-use WStrategies\BMB\Includes\Service\Notifications\MailchimpEmailService;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpApiClient;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
