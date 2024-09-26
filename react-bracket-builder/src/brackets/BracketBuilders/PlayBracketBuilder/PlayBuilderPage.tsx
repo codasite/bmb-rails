@@ -82,9 +82,6 @@ const PlayBuilderPage = (props: {
   const canSubmit = bracket?.isOpen && props.isUserLoggedIn
   const playStorage = new PlayStorage('loadStoredPicks', 'wpbb_play_data_')
   const paymentRequired = !userCanPlayBracketForFree
-  const loginRedirectUrl =
-    props.loginUrl +
-    (props.bracket?.url ? `?redirect_to=${props.bracket.url}` : '')
 
   useEffect(() => {
     const stored = playStorage.loadPlay(bracket?.id)
@@ -245,7 +242,8 @@ const PlayBuilderPage = (props: {
         <SubmitPicksRegisterModal
           show={showRegisterModal}
           setShow={setShowRegisterModal}
-          loginUrl={loginRedirectUrl}
+          signInUrl={props.loginUrl + '?redirect_to=' + bracket?.url}
+          registerUrl={props.loginUrl + '?action=register'}
         />
         <StripePaymentModal
           title={'Submit Your Picks'}
