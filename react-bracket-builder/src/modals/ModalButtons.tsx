@@ -1,6 +1,5 @@
 import {
   ActionButton,
-  ActionButtonProps,
   baseButtonStyles,
 } from '../brackets/shared/components/ActionButtons'
 import * as React from 'react'

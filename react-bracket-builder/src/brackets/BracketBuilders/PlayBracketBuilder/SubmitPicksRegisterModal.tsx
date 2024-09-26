@@ -1,5 +1,5 @@
 import { Modal } from '../../../modals/Modal'
-import { CancelButton, ConfirmButton, Link } from '../../../modals/ModalButtons'
+import { Link } from '../../../modals/ModalButtons'
 import { ModalHeader } from '../../../modals/ModalHeader'
 
 export default function SubmitPicksRegisterModal(props: {
