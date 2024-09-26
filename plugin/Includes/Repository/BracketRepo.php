@@ -5,6 +5,7 @@ use DateTimeImmutable;
 use WP_Post;
 use WP_Query;
 use wpdb;
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
@@ -147,9 +148,9 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
         'bracket_id' => $bracket_post->ID,
       ]),
       'fee' => $this->bracket_product_utils->get_bracket_fee($bracket_post->ID),
-      'should_notify_results_updated' => get_post_meta(
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => get_post_meta(
         $bracket_post->ID,
-        'should_notify_results_updated',
+        BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED,
         true
       ),
       'is_voting' => $bracket_data['is_voting'] ?? false,
@@ -180,6 +181,12 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     return $bracket_data;
   }
 
+  /**
+   * @param array|WP_Query $query
+   * @param array $args
+   *
+   * @return array<Bracket>
+   * */
   public function get_all(array|WP_Query $query = [], array $args = []): array {
     $fetch_matches = $args['fetch_matches'] ?? false;
     $fetch_results = $args['fetch_results'] ?? false;

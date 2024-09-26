@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\tests\integration\Includes\repository;
 
 use DateTimeImmutable;
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
@@ -329,7 +330,7 @@ class BracketRepoTest extends WPBB_UnitTestCase {
     $repo = new BracketRepo();
 
     $repo->update($bracket->id, [
-      'should_notify_results_updated' => true,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => true,
     ]);
 
     $updated = $this->get_bracket($bracket->id);
@@ -339,12 +340,12 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
   public function test_should_update_notify_results_updated_when_set_to_false() {
     $bracket = $this->create_bracket([
-      'should_notify_results_updated' => true,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => true,
     ]);
     $repo = new BracketRepo();
 
     $repo->update($bracket->id, [
-      'should_notify_results_updated' => false,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => false,
     ]);
 
     $updated = $this->get_bracket($bracket->id);

@@ -1,7 +1,8 @@
 <?php
-namespace WStrategies\BMB\Includes\Service\Notifications;
+namespace WStrategies\BMB\Features\Notifications\Email;
 
 use Exception;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpApiClient;
 
 class MailchimpEmailService implements EmailServiceInterface {
   protected MailchimpApiClient $client;
@@ -35,6 +36,7 @@ class MailchimpEmailService implements EmailServiceInterface {
         'html' => $html,
         'subject' => $subject,
         'from_email' => $this->from_email,
+        'from_name' => 'BackMyBracket',
         'to' => [
           [
             'email' => $to_email,

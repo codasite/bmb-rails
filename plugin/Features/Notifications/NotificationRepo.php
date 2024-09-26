@@ -1,11 +1,11 @@
 <?php
 
-namespace WStrategies\BMB\Includes\Repository;
+namespace WStrategies\BMB\Features\Notifications;
 
-use WStrategies\BMB\Includes\Domain\Notification;
-use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
+use WStrategies\BMB\Includes\Repository\CustomTableInterface;
+use WStrategies\BMB\Includes\Repository\CustomTableNames;
 
 class NotificationRepo implements CustomTableInterface {
   private \wpdb $wpdb;
