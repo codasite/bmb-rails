@@ -1,10 +1,10 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
+use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Repository\PickRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\TeamRepo;

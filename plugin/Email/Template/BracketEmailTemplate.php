@@ -126,7 +126,7 @@ class BracketEmailTemplate {
                             <table align="center" cellpadding="0" cellspacing="0" class="alignment" role="presentation" style="mso-table-lspace: 0pt; mso-table-rspace: 0pt;">
                               <tr>
                                 <td style="vertical-align: middle; text-align: center; padding-top: 5px; padding-bottom: 5px; padding-left: 5px; padding-right: 5px;"><a
-                                    href="www.example.com" style="text-decoration: none;" target="_self"><img align="center" alt="Company Logo" class="icon" height="64"
+                                    href="www.example.com" style="text-decoration: none;" target="_self"><img align="center" class="icon" height="64"
                                                                                                               src="https://backmybracket.com/wp-content/uploads/2023/10/logo_dark.png"
                                                                                                               style="display: block; height: auto; margin: 0 auto; border: 0;"
                                                                                                               width="259" /></a></td>

@@ -2,6 +2,7 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Domain\Bracket;
 
 class BracketSerializer extends PostBaseSerializer {
@@ -47,7 +48,7 @@ class BracketSerializer extends PostBaseSerializer {
       'is_open',
       'is_printable',
       'fee',
-      'should_notify_results_updated',
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED,
       'is_voting',
       'live_round_index',
     ]);

@@ -2,11 +2,8 @@
 namespace WStrategies\BMB\tests\integration\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Domain\Pick;
-use WStrategies\BMB\Includes\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
-use WStrategies\BMB\Includes\Repository\NotificationRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
-use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class PublicHooksTest extends WPBB_UnitTestCase {

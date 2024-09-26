@@ -1,6 +1,6 @@
 <?php
 
-namespace WStrategies\BMB\Includes\Service\Notifications;
+namespace WStrategies\BMB\Features\Notifications\Email;
 
 use MailchimpTransactional\ApiClient;
 

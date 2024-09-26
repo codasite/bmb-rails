@@ -3,6 +3,7 @@ namespace WStrategies\BMB\tests\integration\Includes\controllers;
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WP_REST_Request;
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
@@ -451,7 +452,7 @@ class BracketApiTest extends WPBB_UnitTestCase {
 
     $data = [
       'title' => 'Test Bracket',
-      'should_notify_results_updated' => true,
+      BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => true,
       'results' => [
         [
           'round_index' => 0,
