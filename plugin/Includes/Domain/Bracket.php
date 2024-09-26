@@ -215,7 +215,7 @@ class Bracket extends PostBase implements PostBracketInterface {
   }
 
   public function get_title(): string {
-    return $this->title;
+    return strtoupper($this->title);
   }
 
   public function get_date(): string {
