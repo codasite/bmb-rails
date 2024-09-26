@@ -81,7 +81,7 @@ class SendRoundCompleteNotificationsService {
       $button_text = 'View Results';
     } else {
       $subject = $bracket->get_title() . ' Voting Round Complete!';
-      $message = 'Vote now in round ' . $bracket->live_round_index;
+      $message = 'Vote now in round ' . $bracket->live_round_index + 1;
       $button_url =
         $this->permalink_service->get_permalink($bracket->id) . 'play';
       $button_text = 'Vote now';
