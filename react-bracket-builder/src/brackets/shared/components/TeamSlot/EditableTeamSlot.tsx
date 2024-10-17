@@ -12,6 +12,7 @@ import {
 } from '../Bracket/utils'
 import { BufferedTextInput } from '../BufferedTextInput'
 import { useResizeObserver } from '../../../../utils/hooks'
+import { setTeams } from '../../models/operations/SetTeams'
 
 export const EditableTeamSlot = (props: TeamSlotProps) => {
   const {
@@ -82,6 +83,21 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
     setShadowContent(value)
   }
 
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    const text = event.clipboardData.getData('text/plain').trim()
+    if (!text.includes('\n')) {
+      return
+    }
+    event.preventDefault()
+    const teams = text.split('\n')
+    setTeams(
+      matchTree,
+      teams.map((team) => new Team(team)),
+      false
+    )
+    setMatchTree(matchTree)
+  }
+
   return (
     <BaseTeamSlot
       {...props}
@@ -104,6 +120,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           inputRef={inputRef}
           initialValue={team ? team.name : ''}
           onChange={handleChange}
+          onPaste={handlePaste}
           onDoneEditing={doneEditing}
           placeholderEl={<span style={{ fontSize: fontSize }}>Add Team</span>}
           className="tw-border-none tw-outline-none tw-text-white tw-bg-transparent tw-font-sans tw-uppercase tw-font-500 tw-text-center tw-p-0"
