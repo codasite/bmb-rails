@@ -13,7 +13,7 @@ export interface BufferedTextInputProps {
   onHasError?: (error: string) => void
   onErrorCleared?: () => void
   noMoreInput?: boolean
-
+  onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void
   [key: string]: any
 }
 
@@ -30,6 +30,7 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
     onHasError,
     onErrorCleared,
     noMoreInput,
+    onPaste,
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
@@ -102,6 +103,7 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
             e.currentTarget.blur()
           }
         }}
+        onPaste={onPaste}
         value={buffer}
         onChange={handleChange}
         className={className}
