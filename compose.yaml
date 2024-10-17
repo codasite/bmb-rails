@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   # Entry point for image generation. This is called by code in the plugin
   image-generator:

@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   image-generator:
     container_name: image-generator
