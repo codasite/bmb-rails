@@ -48,13 +48,13 @@ exports[`NumTeamsPage renders page correctly 1`] = `
                 class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
               >
                 <div
-                  class="tw-flex tw-flex-col tw-gap-[8px]"
+                  class="tw-flex tw-flex-col tw-items-center tw-gap-[8px]"
                 >
                   <div
-                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-w-full tw-bg-white/30"
                   />
                   <div
-                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-w-full tw-bg-white/30"
                   />
                 </div>
               </div>
@@ -62,13 +62,13 @@ exports[`NumTeamsPage renders page correctly 1`] = `
                 class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
               >
                 <div
-                  class="tw-flex tw-flex-col tw-gap-[8px] tw-pb-16"
+                  class="tw-flex tw-flex-col tw-items-center tw-gap-[8px] tw-pb-16"
                 >
                   <div
-                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/10"
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-w-full tw-bg-white/10"
                   />
                   <div
-                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/10"
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-w-full tw-bg-white/10"
                   />
                 </div>
               </div>
@@ -76,13 +76,13 @@ exports[`NumTeamsPage renders page correctly 1`] = `
                 class="tw-flex tw-flex-col tw-justify-center tw-flex-grow"
               >
                 <div
-                  class="tw-flex tw-flex-col tw-gap-[8px]"
+                  class="tw-flex tw-flex-col tw-items-center tw-gap-[8px]"
                 >
                   <div
-                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-w-full tw-bg-white/30"
                   />
                   <div
-                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-bg-white/30"
+                    class="tw-rounded-4 tw-h-[24px] tw-max-w-[150px] tw-w-full tw-bg-white/30"
                   />
                 </div>
               </div>

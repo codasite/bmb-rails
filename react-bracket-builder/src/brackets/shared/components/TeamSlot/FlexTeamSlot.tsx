@@ -9,7 +9,12 @@ export const FlexTeamSlot = (props: TeamSlotProps) => {
   const active =
     teamPosition === 'left' ? match.left === null : match.right === null
 
-  const baseStyles = ['tw-rounded-4', `tw-h-[${height}px]`, 'tw-max-w-[150px]']
+  const baseStyles = [
+    'tw-rounded-4',
+    `tw-h-[${height}px]`,
+    'tw-max-w-[150px]',
+    'tw-w-full',
+  ]
 
   const activeStyles = ['tw-bg-white/30']
 

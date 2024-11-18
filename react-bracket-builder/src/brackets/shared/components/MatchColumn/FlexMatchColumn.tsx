@@ -68,17 +68,10 @@ export const FlexMatchColumn = (props: MatchColumnProps) => {
     <div className={`tw-flex tw-flex-col ${justifyContent} tw-flex-grow`}>
       {matches.reduce((matchBoxes, match, index) => {
         if (!match) {
-          // if (outerColumn && wildcardPlacement === WildcardPlacement.Split) {
-          // 	matchBoxes.push(<FlexMatchGap maxHeight={99} />)
-          // }
-          // return matchBoxes
           if (outerColumn) {
             if (wildcardPlacement === WildcardPlacement.Split) {
               matchBoxes.push(<FlexMatchGap maxHeight={99} />)
             }
-            // else if (wildcardPlacement === WildcardPlacement.Top || wildcardPlacement === WildcardPlacement.Bottom) {
-            // 	matchBoxes.push(<FlexMatchGap minHeight={matchGap} />)
-            // }
           }
           return matchBoxes
         }

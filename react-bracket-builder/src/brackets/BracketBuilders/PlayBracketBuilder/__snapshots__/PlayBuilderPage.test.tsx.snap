@@ -66,7 +66,7 @@ exports[`PlayBuilderPage renders PlayBuilderPage from sessionStorage 1`] = `
           </div>
         </div>
         <div
-          class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+          class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-100"
         >
           <div
             class="tw-flex tw-justify-between"
@@ -335,7 +335,7 @@ exports[`PlayBuilderPage should render register modal when user is not logged in
           </div>
         </div>
         <div
-          class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+          class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-100"
         >
           <div
             class="tw-flex tw-justify-between"
@@ -661,7 +661,7 @@ exports[`PlayBuilderPage should render submit picks button when user is logged i
           </div>
         </div>
         <div
-          class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+          class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-100"
         >
           <div
             class="tw-flex tw-justify-between"
@@ -1008,7 +1008,7 @@ exports[`PlayBuilderPage should update existing play when bracket is voting and 
           </div>
         </div>
         <div
-          class="tw-flex tw-flex-col tw-justify-center tw-h-100"
+          class="tw-flex tw-flex-col tw-justify-center tw-items-center tw-h-100"
         >
           <div
             class="tw-flex tw-justify-between"
