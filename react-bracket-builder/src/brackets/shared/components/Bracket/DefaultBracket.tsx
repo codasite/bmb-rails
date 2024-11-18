@@ -206,7 +206,7 @@ export const DefaultBracket = (props: BracketProps) => {
         </div>
       )}
       <div
-        className={`tw-flex tw-flex-col tw-justify-center ${
+        className={`tw-flex tw-flex-col tw-justify-center tw-items-center ${
           renderWinnerAndLogo ? 'tw-h-100' : ''
         }`}
       >

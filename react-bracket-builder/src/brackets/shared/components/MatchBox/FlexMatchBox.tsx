@@ -49,7 +49,7 @@ export const FlexMatchBox = (props: MatchBoxProps) => {
 
   return (
     <div
-      className={`tw-flex tw-flex-col tw-gap-[${teamGap}px]${
+      className={`tw-flex tw-flex-col tw-items-center tw-gap-[${teamGap}px]${
         center ? ' tw-pb-16' : ''
       }`}
     >
