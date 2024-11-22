@@ -129,7 +129,6 @@ const takeScreenshot = async (req: GenerateRequest) => {
       })
       .join('&')
     const path = url + (queryString ? '?' + queryString : '')
-    console.log(path)
     page.on('pageerror', (err) => {
       pageError = err
     })
