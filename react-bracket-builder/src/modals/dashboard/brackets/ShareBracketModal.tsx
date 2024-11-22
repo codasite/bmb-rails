@@ -1,5 +1,6 @@
 import { ModalHeader } from '../../ModalHeader'
 import { CancelButton, ConfirmButton, Link } from '../../ModalButtons'
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useState } from 'react'
 import { Modal } from '../../Modal'
 import addClickHandlers from '../../addClickHandlers'

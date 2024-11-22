@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useState } from 'react'
 import { PlayBuilderProps } from '../PlayBracketBuilder/types'
 import { LandingPage } from './LandingPage'

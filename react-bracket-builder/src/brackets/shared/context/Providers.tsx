@@ -1,4 +1,5 @@
-import { useState } from 'react'
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
+import React, { useState } from 'react'
 import { DarkModeContext } from './context'
 
 export const DarkModeProvider = ({ children }) => {

@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext, useEffect } from 'react'
 import { BracketMeta, DarkModeContext } from '../../shared/context/context'
 import { MatchTree } from '../../shared/models/MatchTree'

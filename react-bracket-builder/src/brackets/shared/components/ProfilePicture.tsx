@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import { ReactComponent as UserIcon } from '../assets/user.svg'
 

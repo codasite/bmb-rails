@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import BracketResultsBuilder from './BracketResultsBuilder'
 import { fourTeamMatchTree } from '../../shared/models/MatchTreeFakeFactory'

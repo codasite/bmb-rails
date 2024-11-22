@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useState, useCallback } from 'react'
 import {
   SizeChangeListener,

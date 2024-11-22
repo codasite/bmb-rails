@@ -1,4 +1,5 @@
 import { ConfirmButton } from '../../../ModalButtons'
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useState } from 'react'
 import { BackwardsCurrencyInput } from './BackwardsCurrencyInput'
 import { bracketApi } from '../../../../brackets/shared'

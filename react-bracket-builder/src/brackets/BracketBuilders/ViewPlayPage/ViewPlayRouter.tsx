@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useState } from 'react'
 import { ViewPlayPageProps } from './types'
 import ViewStandardPlayPage from './ViewStandardPlay/ViewStandardPlay'

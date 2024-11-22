@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext } from 'react'
 import redBracketBg from '../../../shared/assets/bracket-bg-red.png'
 import { ActionButton } from '../../../shared/components/ActionButtons'

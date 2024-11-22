@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useEffect, useState } from 'react'
 import { NumTeamsPicker } from './NumTeamsPicker'
 import { MatchTree } from '../../shared/models/MatchTree'
