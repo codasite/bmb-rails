@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ReactComponent as ArrowNarrowLeft } from '../../shared/assets/arrow-narrow-left.svg'

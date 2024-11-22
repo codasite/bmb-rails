@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext, useState } from 'react'
 import { baseButtonStyles } from '../../shared/components/ActionButtons'
 import { CircleCheckBrokenIcon } from '../../shared'

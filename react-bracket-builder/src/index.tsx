@@ -1,4 +1,4 @@
-// import { HostBracketModal } from './modals/dashboard/brackets/HostBracketModal'
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import App from './App'
 import { render } from 'react-dom'

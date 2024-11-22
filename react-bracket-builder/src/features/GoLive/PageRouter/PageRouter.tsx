@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { FC, useEffect, useRef, useState } from 'react'
 import { Page } from './types'
 import { useLocation } from 'react-use'

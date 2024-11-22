@@ -1,5 +1,6 @@
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { Layout, LayoutObject } from '@stripe/stripe-js'
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useEffect, useState } from 'react'
 import { ConfirmButton } from '../../../modals/ModalButtons'
 

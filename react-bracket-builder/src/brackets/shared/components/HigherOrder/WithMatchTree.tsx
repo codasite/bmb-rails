@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useState } from 'react'
 import { MatchTree } from '../../models/MatchTree'
 import {

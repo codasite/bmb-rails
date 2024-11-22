@@ -1,6 +1,7 @@
 import { baseButtonStyles } from '../shared/components/ActionButtons'
 import { Spinner } from '../shared/components/Spinner'
 import { PlusIcon } from '../shared'
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext, useState } from 'react'
 import { DarkModeContext } from '../shared/context/context'
 

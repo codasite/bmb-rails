@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import { render } from 'react-dom'
 import { ScaledSpan } from '../../brackets/shared/components/TeamSlot/ScaledSpan'

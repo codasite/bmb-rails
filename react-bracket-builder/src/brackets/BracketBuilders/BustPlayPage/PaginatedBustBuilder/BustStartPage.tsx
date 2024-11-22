@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext } from 'react'
 import darkBracketBg from '../../../shared/assets/bracket-bg-dark.png'
 import { MatchTree } from '../../../shared/models/MatchTree'

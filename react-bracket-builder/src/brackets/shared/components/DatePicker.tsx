@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useRef, useState } from 'react'
 import { ReactComponent as CalendarIcon } from '../assets/calendar.svg'
 import { BufferedTextInput } from './BufferedTextInput'

@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import { baseButtonStyles } from '../shared/components/ActionButtons'
 import { LightningIcon } from '../shared'

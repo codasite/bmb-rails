@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext, useEffect, useRef, useCallback } from 'react'
 import {
   getBracketWidth as getDefaultBracketWidth,

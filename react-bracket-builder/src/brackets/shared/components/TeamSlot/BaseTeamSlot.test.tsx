@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
 import { BaseTeamSlot } from './BaseTeamSlot' // Import your component

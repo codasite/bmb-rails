@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import { render } from '@testing-library/react'
 import { BustPlayView } from './BustPlayView'

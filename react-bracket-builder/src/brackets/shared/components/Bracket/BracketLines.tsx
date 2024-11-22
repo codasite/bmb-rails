@@ -1,3 +1,5 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
+import React from 'react'
 import { Round } from '../../models/Round'
 import LineTo, { SteppedLineTo } from 'react-lineto'
 import { getUniqueTeamClass } from './utils'

@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useState, useContext } from 'react'
 //@ts-ignore
 import { TeamSlotProps } from '../types'

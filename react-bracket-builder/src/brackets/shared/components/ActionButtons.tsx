@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext } from 'react'
 import { DarkModeContext } from '../context/context'
 

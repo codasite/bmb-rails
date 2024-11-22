@@ -1,3 +1,4 @@
+// DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { FlexBracket } from '../../shared/components/Bracket/FlexBracket'

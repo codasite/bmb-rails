@@ -151,11 +151,19 @@ Trellis comes set up for a remote staging environment out of the box
 ## Deployment: Production
 The production server is not yet configured through trellis. Need to SSH in to deploy manually
 
+### Plugin Code (most common)
 1. `ssh wpbb@147.182.190.133`  Log into production server
 2. `cd wp-bracket-builder` this folder is symlinked to `/var/www/html/wp-content/plugins/wp-bracket-builder`
 3. `git pull` pull the latest changes
 4. `make react-install` install new react dependencies
 5. `make react-build` builds the react package for the plugin
+
+### Image Generator Containers (only needed if printable bracket styles change)
+1. `make prod-build-images` build the containers locally. If desired, test the images on the staging server first.
+2. `make prod-push-images` pushes new images to docker-registry.wstrategies.co/wpbb
+3. `ssh wpbb@147.182.190.133`  Log into production server
+4. `cd wp-bracket-builder` go to project root
+
 
 Resources:
 https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/
