@@ -13,6 +13,6 @@ class MyScoreWidget {
      ); ?>%</h2>
 					<span class="tw-font-500 tw-text-12 tw-text-white">My Score</span>
 				</div>
-				<?php return ob_get_clean();
+		<?php return ob_get_clean();
   }
 }
