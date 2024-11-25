@@ -124,7 +124,6 @@ class LeaderboardPage implements TemplateInterface {
       ' ago';
     $winning_team = $play->get_winning_team();
     $winning_team_name = $winning_team ? $winning_team->name : '';
-    $score = $play->accuracy_score;
     $winner = $winner && $show_score;
     $view_play_link = get_permalink($play_id);
 
@@ -137,14 +136,10 @@ class LeaderboardPage implements TemplateInterface {
 				<?php if ($show_score): ?>
 					<div class="tw-flex tw-flex-col">
 						<?php if ($winner): ?>
-							<span class="tw-text-60 tw-font-700 tw-text-green"><?php echo round(
-         $score * 100
-       ); ?>%</span>
+							<span class="tw-text-60 tw-font-700 tw-text-green"><?php echo $play->get_accuracy_score(); ?>%</span>
 							<span class="tw-text-16 tw-font-500 tw-text-white/50">Accuracy Score</span>
 						<?php else: ?>
-							<span class="tw-text-32 tw-font-700 tw-text-white/50"><?php echo round(
-         $score * 100
-       ); ?>%</span>
+							<span class="tw-text-32 tw-font-700 tw-text-white/50"><?php echo $play->get_accuracy_score(); ?>%</span>
 						<?php endif; ?>
 					</div>
 				<?php endif; ?>
