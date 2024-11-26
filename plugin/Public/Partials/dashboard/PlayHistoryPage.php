@@ -101,11 +101,9 @@ class PlayHistoryPage {
       : self::get_default_play_buttons($play); ?>
       </div>
     </div>
-    <div class="tw-flex tw-flex-col tw-justify-between sm:tw-items-end">
-			<?php if ($play->is_scored()): ?>
-        <?php echo MyScoreWidget::my_score($play); ?>
-			<?php endif; ?>
-		</div>
+    <?php echo MyScoreWidget::my_score($play, [
+      'float_right' => true,
+    ]); ?>
 	</div>
 <?php return ob_get_clean();
   }

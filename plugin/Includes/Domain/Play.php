@@ -190,7 +190,7 @@ class Play extends PostBase implements PostBracketInterface {
     return $this->bracket->get_num_teams();
   }
 
-  public function get_accuracy_score(): float|null {
+  public function get_accuracy_score(): ?float {
     if (!$this->is_scored()) {
       return null;
     }

@@ -13,6 +13,7 @@ use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Utils;
 
 class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
+  private static ?PlayRepo $instance = null;
   /**
    * @var Utils
    */
@@ -46,6 +47,17 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     $this->pick_repo = $args['pick_repo'] ?? new PickRepo($this->team_repo);
     $this->utils = $args['utils'] ?? new Utils();
     parent::__construct();
+  }
+
+  public static function setInstance(?PlayRepo $instance): void {
+    self::$instance = $instance;
+  }
+
+  public static function getInstance(): PlayRepo {
+    if (self::$instance === null) {
+      self::$instance = new self();
+    }
+    return self::$instance;
   }
 
   public function get_id_from_cookie() {

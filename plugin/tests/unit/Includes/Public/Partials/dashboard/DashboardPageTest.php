@@ -53,6 +53,11 @@ class DashboardPageTest extends TestCase {
   }
 
   public function test_render_dashboard() {
+    $play_repo_mock = Mockery::mock(PlayRepo::class);
+    $play_repo_mock
+      ->shouldReceive('get_play_by_user_and_bracket')
+      ->andReturn(null);
+    PlayRepo::setInstance($play_repo_mock);
     $post_mock = $this->mockPost([
       'ID' => 1,
       'post_author' => 1,
@@ -75,6 +80,7 @@ class DashboardPageTest extends TestCase {
         'num_teams' => 64,
         'status' => 'live',
         'id' => 1,
+        'fee' => 1,
       ]),
     ]);
     $tournament_query_mock->method('has_tournaments')->willReturn(true);
