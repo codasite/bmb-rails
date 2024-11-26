@@ -154,6 +154,9 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     int $user_id,
     int $bracket_post_id
   ): ?Play {
+    if (!$user_id || !$bracket_post_id) {
+      return null;
+    }
     $plays = $this->get_all([
       'bracket_post_id' => $bracket_post_id,
       'author' => $user_id,
