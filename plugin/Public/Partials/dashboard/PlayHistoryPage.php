@@ -2,10 +2,12 @@
 
 namespace WStrategies\BMB\Public\Partials\dashboard;
 
+use mysqli;
 use WP_Query;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
+use WStrategies\BMB\Public\Partials\shared\MyScoreWidget;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 use WStrategies\BMB\Public\Partials\shared\PartialsCommon;
 
@@ -60,69 +62,48 @@ class PlayHistoryPage {
   }
 
   static function play_list_item(Play $play): false|string {
-    $title = $play->bracket?->title;
-    $user_rank = 99999;
-    $trend_icon = 'arrow_up.svg';
-    $accuracy_score = round($play->accuracy_score * 100);
-    $show_score = $play->accuracy_score !== null;
-    $buster_play = $play->busted_id !== null;
-    $printed = $play->is_printed;
-    $winner = $play->is_winner && !$buster_play;
-    $entry = $play->is_tournament_entry;
-    $num_teams = $play->bracket?->num_teams;
-    $official = $play->bmb_official;
-    $paid = $play->is_paid;
+    $tournament_winner = $play->is_winner && !$play->is_buster_play();
     ob_start();
     ?>
 
 	<div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-16 tw-p-20 sm:tw-p-30 tw-rounded-16 tw-border-2 tw-border-solid tw-border-blue/20 tw-bg-blue/5">
 		<div class="tw-flex tw-w-full tw-flex-col tw-gap-20">
       <span class="tw-font-500 tw-text-12"><?php echo esc_html(
-        strval($num_teams)
+        strval($play->bracket?->num_teams)
       ); ?>-Team Bracket</span>
 			<div class="tw-flex tw-gap-10 tw-flex-wrap">
 				<h2 class="tw-font-700 tw-text-20 sm:tw-text-30 tw-text-white"><?php echo esc_html(
-      $title
+      $play->bracket?->title
     ); ?></h2>
         <div class="tw-flex tw-gap-10 tw-flex-wrap">
-					<?php echo $buster_play ? BracketsCommon::bracket_tag('buster', 'red') : ''; ?>
-					<?php echo $official ? BracketsCommon::bracket_tag('official', 'blue') : ''; ?>
-					<?php if ($winner): ?>
+					<?php echo $play->is_buster_play()
+       ? BracketsCommon::bracket_tag('buster', 'red')
+       : ''; ?>
+					<?php echo $play->bmb_official
+       ? BracketsCommon::bracket_tag('official', 'blue')
+       : ''; ?>
+					<?php if ($tournament_winner): ?>
 						<?php echo BracketsCommon::bracket_tag('winner', 'yellow'); ?>
-					<?php elseif ($entry): ?>
+					<?php elseif ($play->is_tournament_entry): ?>
 						<?php echo BracketsCommon::bracket_tag('submitted', 'yellow', false); ?>
 					<?php endif; ?>
-          <?php echo $printed
+          <?php echo $play->is_printed
             ? BracketsCommon::bracket_tag('printed', 'green')
             : ''; ?>
-					<?php echo $paid ? BracketsCommon::bracket_tag('paid', 'green') : ''; ?>
+					<?php echo $play->is_paid
+       ? BracketsCommon::bracket_tag('paid', 'green')
+       : ''; ?>
         </div>
       </div>
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-gap-8">
-				<?php echo $buster_play
+				<?php echo $play->is_buster_play()
       ? self::get_buster_play_buttons($play)
       : self::get_default_play_buttons($play); ?>
       </div>
     </div>
-    <div class="tw-flex tw-flex-col tw-justify-between sm:tw-items-end">
-      <!-- <div class="tw-flex tw-gap-4 tw-items-center">
-				<?php echo file_get_contents(
-      WPBB_PLUGIN_DIR . "Public/assets/icons/$trend_icon"
-    ); ?>
-				<span class="tw-font-500 tw-text-16 tw-text-white"><?php echo esc_html(
-      strval($user_rank)
-    ); ?></span>
-				<span class="tw-font-500 tw-text-16 tw-text-white/50">Rank</span>
-			</div> -->
-			<?php if ($show_score): ?>
-        <div class="tw-flex tw-flex-col sm:tw-items-end">
-					<h2 class="tw-font-700 tw-text-32 sm:tw-text-48 tw-text-white"><?php echo esc_html(
-       strval($accuracy_score)
-     ); ?>%</h2>
-					<span class="tw-font-500 tw-text-12 tw-text-white">My Score</span>
-				</div>
-			<?php endif; ?>
-		</div>
+    <?php echo MyScoreWidget::my_score($play, [
+      'float_right' => true,
+    ]); ?>
 	</div>
 <?php return ob_get_clean();
   }

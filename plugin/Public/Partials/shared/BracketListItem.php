@@ -3,17 +3,17 @@
 namespace WStrategies\BMB\Public\Partials\shared;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
 
 class BracketListItem {
-  public static function bracket_list_item($bracket): false|string {
-    $title = $bracket->title;
-    $num_teams = $bracket->num_teams;
-    $num_plays = $bracket->num_plays;
+  public static function bracket_list_item(Bracket $bracket): false|string {
+    $play_repo = PlayRepo::getInstance();
+    $user_play = $play_repo->get_play_by_user_and_bracket(
+      get_current_user_id(),
+      $bracket->id
+    );
     ob_start();
-    $bracket_product_utils = new BracketProductUtils();
-    $is_paid = $bracket_product_utils->has_bracket_fee($bracket->id);
     ?>
     <div class="tw-border-2 tw-border-solid <?php echo $bracket->status ==
     'publish'
@@ -21,24 +21,24 @@ class BracketListItem {
       : 'tw-border-white/15'; ?> tw-bg-dd-blue tw-flex tw-flex-col tw-gap-10 tw-p-30 tw-rounded-16">
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between sm:tw-items-center tw-gap-8">
         <div class="tw-flex tw-gap-8 tw-items-center">
-          <?php echo $is_paid ? self::paid_bracket_tag() : ''; ?>
+          <?php echo $bracket->has_fee() ? self::paid_bracket_tag() : ''; ?>
           <?php echo $bracket->is_voting ? self::voting_bracket_tag() : ''; ?>
           <span class="tw-font-500 tw-text-12"><?php echo esc_html(
-            $num_teams
+            (string) $bracket->num_teams
           ); ?>-Team Bracket</span>
         </div>
         <div class="tw-flex tw-gap-4 tw-items-center">
           <?php echo BracketsCommon::get_bracket_status_tag($bracket); ?>
           <?php echo PartialsCommon::icon('bar_chart'); ?>
           <span class="tw-font-500 tw-text-20 tw-text-white"><?php echo esc_html(
-            $num_plays
+            (string) $bracket->num_plays
           ); ?></span>
           <span class="tw-font-500 tw-text-20 tw-text-white/50">Plays</span>
         </div>
       </div>
       <div class="tw-flex tw-flex-col sm:tw-flex-row tw-justify-between tw-gap-15">
         <h2 class="tw-text-white tw-font-700 tw-text-20 sm:tw-text-30"><?php echo esc_html(
-          $title
+          $bracket->title
         ); ?></h2>
         <div class="tw-flex tw-gap-10 tw-items-start tw-flex-wrap">
           <?php echo BracketIconButtons::get_bracket_icon_buttons($bracket); ?>
@@ -47,6 +47,11 @@ class BracketListItem {
       <div class="tw-mt-10 tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16 tw-flex-wrap">
         <?php echo self::get_bracket_buttons($bracket); ?>
       </div>
+        <?php if ($user_play !== null): ?>
+            <?php echo MyScoreWidget::my_score($user_play, [
+              'float_right' => false,
+            ]); ?>
+      <?php endif; ?>
     </div>
     <?php return ob_get_clean();
   }

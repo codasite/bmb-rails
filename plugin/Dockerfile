@@ -1,4 +1,4 @@
-FROM php:8.2-cli as php-builder
+FROM php:8.2-cli AS php-builder
 WORKDIR /usr/src/app
 
 # Copy Composer files first to take advantage of Docker layer caching
@@ -15,11 +15,11 @@ RUN chmod +x /usr/local/bin/install-php-extensions && \
     apt-get install -y git && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
-    # Allow Composer to run as super user
+    # Allow Composer to run AS super user
     export COMPOSER_ALLOW_SUPERUSER=1 && \
     composer install --no-dev --optimize-autoloader
 
-FROM node:18 as node-builder
+FROM node:18 AS node-builder
 WORKDIR /usr/src/app
 
 # Install dependencies
@@ -29,7 +29,7 @@ COPY react-bracket-builder .
 # Build the app for standalone and wordpress environments
 RUN npm run build:local
 
-FROM alpine:latest as final
+FROM alpine:latest AS final
 WORKDIR /usr/src/app
 
 COPY plugin .

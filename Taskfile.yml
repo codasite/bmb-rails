@@ -1,0 +1,183 @@
+version: '3'
+
+tasks:
+  ### WORDPRESS ###
+  wp:
+    desc: WordPress task namespace
+    cmds:
+      - task --list-all | grep 'wp:'
+    silent: true
+
+  wp:pull:
+    desc: Try to pull the latest wordpress files from the server
+    cmds:
+      - ./docker/wordpress/bin/pull-wp.sh
+
+  wp:up:
+    desc: Start all wordpress containers
+    cmds:
+      - docker compose --profile wp up --build --remove-orphans
+
+  wp:up-detach:
+    desc: Start all wordpress containers in detached mode for ci
+    cmds:
+      - docker compose --profile wp up --build --detach --remove-orphans
+
+  wp:down:
+    desc: Stop and remove all wordpress containers
+    cmds:
+      - docker compose --profile wp down -v
+
+  wp:install:
+    desc: Install wordpress and the test installation (use when building from scratch)
+    cmds:
+      - docker exec wp-dev install-wp.sh
+      - docker exec wp-dev install-wp-tests
+
+  wp:init:
+    desc: Initialize test installation and add admin user (use when building from backup)
+    cmds:
+      - docker exec wp-dev install-wp-tests
+      - docker exec wp-dev create-admin-user.sh
+
+  ### TESTING ###
+  wp:test:
+    desc: Run all tests
+    cmds:
+      - task: wp:test:integration
+      - task: wp:test:unit
+
+  wp:test:unit:
+    desc: Run unit tests using WP_Mock
+    cmds:
+      - docker exec wp-dev composer test-unit -- {{.CLI_ARGS}}
+
+  wp:test:unit-local:
+    desc: Run unit tests locally
+    cmds:
+      - ./plugin/vendor/bin/phpunit --configuration=plugin/tests/unit/phpunit.xml.dist {{.CLI_ARGS}}
+
+  wp:test:integration:
+    desc: Run integration tests with full WordPress environment
+    cmds:
+      - docker exec wp-dev composer test-integration -- {{.CLI_ARGS}}
+
+  wp:test:coverage:
+    desc: Run tests with coverage
+    cmds:
+      - docker exec wp-dev composer coverage
+
+  ### DEVELOPMENT ###
+  wp:log:
+    desc: Read debug log (ignore deprecated warnings)
+    cmds:
+      - docker exec wp-dev tail -999999 /var/www/html/wp-content/debug.log | grep -v 'deprecated' | less +G
+
+  wp:log:watch:
+    desc: Watch debug log in real-time
+    cmds:
+      - docker exec wp-dev tail -f /var/www/html/wp-content/debug.log | grep -v 'deprecated'
+
+  wp:db:dump:
+    desc: Dump the database into the mariadb init folder
+    cmds:
+      - docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
+
+  wp:db:query:
+    desc: Run SQL query
+    cmds:
+      - docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress -e "{{.CLI_ARGS}}"'
+
+  ### IMAGES ###
+  images:up:
+    desc: Start image processing containers
+    cmds:
+      - docker compose --profile images up --build --remove-orphans
+
+  images:down:
+    desc: Stop image processing containers
+    cmds:
+      - docker compose --profile images down -v
+
+  ### REACT ###
+  react:
+    desc: React task namespace
+    cmds:
+      - task --list-all | grep 'react:'
+    silent: true
+
+  react:start:
+    desc: Start React development server
+    dir: ./react-bracket-builder
+    cmds:
+      - npm run start:plugin
+
+  react:build:
+    desc: Build React application
+    dir: ./react-bracket-builder
+    cmds:
+      - npm run build:plugin
+
+  react:install:
+    desc: Install React dependencies
+    dir: ./react-bracket-builder
+    cmds:
+      - npm install
+
+  react:test:
+    desc: Run React tests
+    dir: ./react-bracket-builder
+    cmds:
+      - npm run test {{.CLI_ARGS}}
+
+  ### DEPLOYMENT ###
+  prod:
+    desc: Production task namespace
+    cmds:
+      - task --list-all | grep 'prod:'
+    silent: true
+
+  prod:up:
+    desc: Start production containers
+    cmds:
+      - VERSION_NUMBER=$(date +%Y-%m-%d) docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb up -d --no-build --remove-orphans --force-recreate --pull always
+
+  prod:build:
+    desc: Build all production containers
+    cmds:
+      - VERSION_NUMBER=$(date +%Y-%m-%d) docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb build
+
+  prod:push:
+    desc: Push all production containers
+    cmds:
+      - VERSION_NUMBER=$(date +%Y-%m-%d) docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb push
+
+  ### QUALITY ###
+  quality:
+    desc: Code quality task namespace
+    cmds:
+      - task --list-all | grep 'quality:'
+    silent: true
+
+  quality:check:
+    alias: check
+    desc: Check code quality
+    cmds:
+      - task: quality:pretty-check
+      - task: quality:phpstan
+
+  quality:pretty:
+    desc: Format code
+    cmds:
+      - npm run pretty
+
+  quality:pretty-check:
+    desc: Check code formatting
+    cmds:
+      - npm run pretty:check
+
+  quality:phpstan:
+    desc: Run PHPStan analysis
+    dir: ./plugin
+    cmds:
+      - vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 2G .

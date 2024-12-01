@@ -13,6 +13,7 @@ use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Utils;
 
 class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
+  private static ?PlayRepo $instance = null;
   /**
    * @var Utils
    */
@@ -46,6 +47,17 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     $this->pick_repo = $args['pick_repo'] ?? new PickRepo($this->team_repo);
     $this->utils = $args['utils'] ?? new Utils();
     parent::__construct();
+  }
+
+  public static function setInstance(?PlayRepo $instance): void {
+    self::$instance = $instance;
+  }
+
+  public static function getInstance(): PlayRepo {
+    if (self::$instance === null) {
+      self::$instance = new self();
+    }
+    return self::$instance;
   }
 
   public function get_id_from_cookie() {
@@ -142,21 +154,16 @@ class PlayRepo extends CustomPostRepoBase implements CustomTableInterface {
     int $user_id,
     int $bracket_post_id
   ): ?Play {
-    $plays_table = self::table_name();
-    $posts_table = $this->wpdb->posts;
-    $query = "
-        SELECT post.ID
-        FROM $posts_table post
-        INNER JOIN $plays_table play ON post.ID = play.post_id
-        WHERE post.post_author = %d
-        AND play.bracket_post_id = %d
-        AND play.is_tournament_entry = 1
-        LIMIT 1;
-    ";
-    $prepared_query = $this->wpdb->prepare($query, $user_id, $bracket_post_id);
-    $play_post_id = $this->wpdb->get_var($prepared_query);
-    if ($play_post_id) {
-      return $this->get((int) $play_post_id);
+    if (!$user_id || !$bracket_post_id) {
+      return null;
+    }
+    $plays = $this->get_all([
+      'bracket_post_id' => $bracket_post_id,
+      'author' => $user_id,
+      'is_tournament_entry' => true,
+    ]);
+    if (count($plays) > 0) {
+      return $plays[0];
     }
     return null;
   }

@@ -1,5 +1,5 @@
 # Build stage
-FROM ghcr.io/puppeteer/puppeteer:latest as builder
+FROM ghcr.io/puppeteer/puppeteer:23.9.0 AS builder
 USER root
 WORKDIR /usr/src/app
 
@@ -17,7 +17,7 @@ RUN npm prune --production
 RUN chown -R pptruser:pptruser /usr/src/app
 
 # Runtime stage
-FROM ghcr.io/puppeteer/puppeteer:latest
+FROM ghcr.io/puppeteer/puppeteer:23.9.0
 USER pptruser
 WORKDIR /usr/src/app
 
