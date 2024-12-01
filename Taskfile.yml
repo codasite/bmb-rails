@@ -130,7 +130,7 @@ tasks:
     cmds:
       - npm run test {{.CLI_ARGS}}
 
-  ### PRODUCTION ###
+  ### DEPLOYMENT ###
   prod:
     desc: Production task namespace
     cmds:
@@ -140,17 +140,17 @@ tasks:
   prod:up:
     desc: Start production containers
     cmds:
-      - docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb up -d --no-build --remove-orphans --force-recreate --pull always
+      - VERSION_NUMBER=$(date +%Y-%m-%d) docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb up -d --no-build --remove-orphans --force-recreate --pull always
 
   prod:build:
     desc: Build all production containers
     cmds:
-      - docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb build
+      - VERSION_NUMBER=$(date +%Y-%m-%d) docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb build
 
   prod:push:
     desc: Push all production containers
     cmds:
-      - docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb push
+      - VERSION_NUMBER=$(date +%Y-%m-%d) docker compose -f compose.yaml -f compose.prod.yaml --profile all -p wpbb push
 
   ### QUALITY ###
   quality:
