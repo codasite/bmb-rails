@@ -41,7 +41,7 @@ tasks:
       - docker exec wp-dev create-admin-user.sh
 
   ### TESTING ###
-  wp:test:all:
+  wp:test:
     desc: Run all tests
     cmds:
       - task: wp:test:integration
@@ -158,6 +158,13 @@ tasks:
     cmds:
       - task --list-all | grep 'quality:'
     silent: true
+
+  quality:check:
+    alias: check
+    desc: Check code quality
+    cmds:
+      - task: quality:pretty-check
+      - task: quality:phpstan
 
   quality:pretty:
     desc: Format code
