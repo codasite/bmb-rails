@@ -814,16 +814,10 @@ exports[`ViewVotingPlay renders correctly 2`] = `
                   test teset's Chip Flavors picks
                 </span>
                 <div
-                  class="wpbb-team-3-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-dd-blue tw-font-700 tw-bg-green"
+                  class="wpbb-team-3-0-winner tw-relative tw-flex tw-justify-center tw-items-center tw-whitespace-nowrap tw-leading-none tw-uppercase tw-font-sans tw-w-[297px] tw-h-[52px] tw-text-white tw-font-700 tw-bg-transparent tw-border-solid tw-border-white/50"
                   data-testid="team-slot-round-3-match-0-winner"
-                  style="border-width: 0px;"
-                >
-                  <span
-                    style="font-size: 32px; transform: scale(1); visibility: hidden;"
-                  >
-                    jalapeno
-                  </span>
-                </div>
+                  style="border-width: 2px;"
+                />
               </div>
             </div>
             <div
