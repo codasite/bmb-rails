@@ -12,6 +12,7 @@ import { WindowDimensionsContext } from '../../../brackets/shared/context/Window
 import { ScaledBracket } from '../../../brackets/shared/components/Bracket/ScaledBracket'
 import {
   loadBracketResults,
+  loadMostPopularPicks,
   loadPlay,
   loadPlayMeta,
 } from '../../../brackets/shared'
@@ -30,8 +31,12 @@ const ViewVotingPlay = (props: {
 
   const { width: windowWidth } = useContext(WindowDimensionsContext)
 
-  const { playTree, setPlayTree, setBracketResultsTree, bracketResultsTree } =
-    useVotingPlayTrees()
+  const {
+    playTree,
+    setPlayTree,
+    mostPopularPicksTree,
+    setMostPopularPicksTree,
+  } = useVotingPlayTrees()
 
   // Whether to show my picks vs show popular picks
   const [showPopularPicks, setShowPopularPicks] = useState(false)
@@ -42,7 +47,7 @@ const ViewVotingPlay = (props: {
   useEffect(() => {
     loadPlayMeta(play, props.setBracketMeta)
     loadPlay(play, setPlayTree)
-    loadBracketResults(play?.bracket, setBracketResultsTree)
+    loadMostPopularPicks(play?.bracket, setMostPopularPicksTree)
   }, [play])
 
   return (
@@ -74,7 +79,7 @@ const ViewVotingPlay = (props: {
               TeamSlotComponent={
                 showPopularPicks ? VotingResultsTeamSlot : VotingPlayTeamSlot
               }
-              matchTree={bracketResultsTree}
+              matchTree={mostPopularPicksTree}
               windowWidth={windowWidth}
               paddingX={20}
             />
