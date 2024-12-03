@@ -121,9 +121,9 @@ export const getBracketMeta = (bracket?: BracketRes): BracketMeta => {
   if (!bracket) {
     return null
   }
-  const { title, month, year } = bracket
+  const { title, month, year, isOpen } = bracket
   const date = [month, year].filter(Boolean).join(' ')
-  return { title, date }
+  return { title, date, isOpen }
 }
 
 export const someMatchNotPicked = (matches: MatchNode[]) => {

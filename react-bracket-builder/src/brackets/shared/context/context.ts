@@ -4,6 +4,7 @@ import { MatchTree } from '../models/MatchTree'
 export interface BracketMeta {
   title?: string
   date?: string
+  isOpen?: boolean
 }
 
 export const DarkModeContext = createContext<{
