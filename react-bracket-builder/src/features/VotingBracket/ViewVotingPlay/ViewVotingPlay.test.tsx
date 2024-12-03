@@ -115,7 +115,7 @@ describe('ViewVotingPlay', () => {
             },
           },
         ],
-        results: [
+        mostPopularPicks: [
           {
             roundIndex: 0,
             matchIndex: 0,
