@@ -11,7 +11,7 @@ export const useVotingPlayTrees = () => {
   return {
     playTree: context0.matchTree,
     setPlayTree: context0.setMatchTree,
-    bracketResultsTree: context1.matchTree,
-    setBracketResultsTree: context1.setMatchTree,
+    mostPopularPicksTree: context1.matchTree,
+    setMostPopularPicksTree: context1.setMatchTree,
   }
 }
