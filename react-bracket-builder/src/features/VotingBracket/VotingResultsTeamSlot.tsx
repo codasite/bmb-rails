@@ -20,6 +20,10 @@ export const VotingResultsTeamSlot = (props: TeamSlotProps) => {
       />
     )
   }
+  let team = props.team
+  if (isNaN(props.match._pick?.popularity)) {
+    team = null
+  }
   return (
     <PopularityTeamSlot
       teamSlot={
@@ -28,6 +32,7 @@ export const VotingResultsTeamSlot = (props: TeamSlotProps) => {
             <BaseTeamSlot borderWidth={2} borderColor="green" {...props} />
           }
           {...props}
+          team={team}
         />
       }
       chipColor="green"
