@@ -186,3 +186,22 @@ tasks:
     dir: ./plugin
     cmds:
       - vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 2G .
+
+  # MOBILE APP #
+  app:
+    desc: Mobile app task namespace
+    cmds:
+      - task --list-all | grep 'app:'
+    silent: true
+
+  app:run:
+    desc: Run mobile app
+    dir: ./bmb_mobile
+    cmds:
+      - flutter run
+
+  app:build:
+    desc: Build mobile app
+    dir: ./bmb_mobile
+    cmds:
+      - flutter build api
