@@ -31,6 +31,8 @@ class WebViewApp extends StatefulWidget {
 class _WebViewAppState extends State<WebViewApp> {
   late final WebViewController controller;
   int _selectedIndex = 0;
+  
+  static const String baseUrl = 'https://backmybracket.com';
 
   final List<NavigationItem> _pages = [
     NavigationItem(
@@ -101,14 +103,12 @@ class _WebViewAppState extends State<WebViewApp> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      final baseUrl = 'https://backmybracket.com';
       final path = _pages[index].path;
       controller.loadRequest(Uri.parse(baseUrl + path));
     });
   }
 
   void _onDrawerItemTap(DrawerItem item) {
-    final baseUrl = 'https://backmybracket.com';
     controller.loadRequest(Uri.parse(baseUrl + item.path));
     Navigator.pop(context);
   }
@@ -165,7 +165,7 @@ class _WebViewAppState extends State<WebViewApp> {
           },
         ),
       )
-      ..loadRequest(Uri.parse('https://backmybracket.com'));
+      ..loadRequest(Uri.parse(baseUrl));
   }
 
   @override
