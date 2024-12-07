@@ -200,8 +200,14 @@ tasks:
     cmds:
       - flutter run
 
-  app:build:
-    desc: Build mobile app
+  app:build:ios:
+    desc: Build iOS mobile app
     dir: ./bmb_mobile
     cmds:
       - flutter build api
+
+  app:push:ios:
+    desc: Push iOS app to App Store Connect
+    dir: ./bmb_mobile
+    cmds:
+      - xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey your_api_key --apiIssuer
