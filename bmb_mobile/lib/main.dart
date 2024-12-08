@@ -40,17 +40,20 @@ class _WebViewAppState extends State<WebViewApp> {
   final List<NavigationItem> _pages = [
     NavigationItem(
       icon: Icons.person,
-      label: 'Profile',
+      shortLabel: 'Profile',
+      label: 'My Profile',
       path: '/dashboard/profile',
     ),
     NavigationItem(
       icon: Icons.emoji_events,
-      label: 'Tournaments',
+      shortLabel: 'Tournaments',
+      label: 'My Tournaments',
       path: '/dashboard/tournaments',
     ),
     NavigationItem(
       icon: Icons.history,
-      label: 'History',
+      shortLabel: 'History',
+      label: 'My Play History',
       path: '/dashboard/play-history',
     ),
   ];
@@ -230,7 +233,7 @@ class _WebViewAppState extends State<WebViewApp> {
         items: _pages
             .map((page) => BottomNavigationBarItem(
                   icon: Icon(page.icon),
-                  label: page.label,
+                  label: page.shortLabel,
                 ))
             .toList(),
         currentIndex: _selectedIndex ?? 0,
@@ -245,11 +248,13 @@ class _WebViewAppState extends State<WebViewApp> {
 class NavigationItem {
   final IconData icon;
   final String label;
+  final String shortLabel;
   final String path;
 
   NavigationItem({
     required this.icon,
     required this.label,
+    required this.shortLabel,
     required this.path,
   });
 }
