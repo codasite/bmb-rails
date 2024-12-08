@@ -34,6 +34,7 @@ class _WebViewAppState extends State<WebViewApp> {
   String _currentUrl = '';
   String _currentTitle = 'Back My Bracket';
   bool _isLoading = true;
+  bool _canGoBack = false;
 
   static const String baseUrl = 'http://backmybracket.test';
   // static const String baseUrl = 'https://backmybracket.com';
@@ -43,19 +44,19 @@ class _WebViewAppState extends State<WebViewApp> {
       icon: Icons.person,
       shortLabel: 'Profile',
       label: 'My Profile',
-      path: '/dashboard/profile',
+      path: '/dashboard/profile/',
     ),
     NavigationItem(
       icon: Icons.emoji_events,
       shortLabel: 'Tournaments',
       label: 'My Tournaments',
-      path: '/dashboard/tournaments',
+      path: '/dashboard/tournaments/',
     ),
     NavigationItem(
       icon: Icons.history,
       shortLabel: 'History',
       label: 'My Play History',
-      path: '/dashboard/play-history',
+      path: '/dashboard/play-history/',
     ),
   ];
 
@@ -67,37 +68,37 @@ class _WebViewAppState extends State<WebViewApp> {
     ),
     DrawerItem(
       label: 'Be a Host',
-      path: '/be-a-host',
+      path: '/be-a-host/',
       icon: Icons.celebration,
     ),
     DrawerItem(
       label: 'BMB Brackets',
-      path: '/bmb-brackets',
+      path: '/bmb-brackets/',
       icon: Icons.sports_basketball,
     ),
     DrawerItem(
       label: 'Celebrity Picks',
-      path: '/celebrity-picks',
+      path: '/celebrity-picks/',
       icon: Icons.star,
     ),
     DrawerItem(
       label: 'Shop',
-      path: '/shop',
+      path: '/shop/',
       icon: Icons.shopping_bag,
     ),
     DrawerItem(
       label: 'Referral Program',
-      path: '/referralprogram',
+      path: '/referralprogram/',
       icon: Icons.people,
     ),
     DrawerItem(
       label: 'My Account',
-      path: '/dashboard/my-account',
+      path: '/dashboard/my-account/',
       icon: Icons.settings,
     ),
     DrawerItem(
       label: 'Payments',
-      path: '/dashboard/payments',
+      path: '/dashboard/payments/',
       icon: Icons.payments,
     ),
     DrawerItem(
@@ -168,10 +169,24 @@ class _WebViewAppState extends State<WebViewApp> {
               _isLoading = true;
             });
             _syncNavigationState();
+
+            // Update back navigation state
+            controller.canGoBack().then((value) {
+              setState(() {
+                _canGoBack = value;
+              });
+            });
           },
           onPageFinished: (String url) {
             setState(() {
               _isLoading = false;
+            });
+
+            // Update back navigation state
+            controller.canGoBack().then((value) {
+              setState(() {
+                _canGoBack = value;
+              });
             });
           },
           onWebResourceError: (WebResourceError error) {
@@ -181,6 +196,7 @@ class _WebViewAppState extends State<WebViewApp> {
             });
           },
           onNavigationRequest: (NavigationRequest request) {
+            print('Navigation request: ${request.url}');
             return NavigationDecision.navigate;
           },
         ),
@@ -198,72 +214,109 @@ class _WebViewAppState extends State<WebViewApp> {
     _currentTitle = _pages[0].label;
   }
 
+  Future<bool> _handleBackPress() async {
+    final canGoBack = await controller.canGoBack();
+    if (canGoBack) {
+      controller.goBack();
+      return false; // Don't close the app
+    }
+    return true; // Allow closing the app
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
+    return PopScope<Object?>(
+      canPop: !_canGoBack,
+      onPopInvokedWithResult: (bool didPop, Object? result) async {
+        if (didPop) {
+          return;
+        }
+        final shouldPop = await _handleBackPress();
+        if (context.mounted && shouldPop) {
+          Navigator.pop(context);
+        }
+      },
+      child: Scaffold(
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          _currentTitle,
-          style: const TextStyle(color: Colors.white),
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          iconTheme: const IconThemeData(color: Colors.white),
+          leading: IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+          title: Text(
+            _currentTitle,
+            style: const TextStyle(color: Colors.white),
+          ),
+          actions: [
+            if (_canGoBack)
+              IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  controller.goBack();
+                },
+                color: Colors.white,
               ),
-              child: Text(
-                'Menu',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ..._drawerItems.map((item) => ListTile(
-                  leading: Icon(item.icon),
-                  title: Text(item.label),
-                  onTap: () => _onDrawerItemTap(item),
-                )),
           ],
         ),
-      ),
-      body: SafeArea(
-        child: Container(
-          color: Colors.black,
-          child: Stack(
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
             children: [
-              WebViewWidget(controller: controller),
-              if (_isLoading)
-                Container(
-                  color: Colors.transparent.withOpacity(0.5),
-                  child: const Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.blue,
-                    ),
+              const DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Text(
+                  'Menu',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
                   ),
                 ),
+              ),
+              ..._drawerItems.map((item) => ListTile(
+                    leading: Icon(item.icon),
+                    title: Text(item.label),
+                    onTap: () => _onDrawerItemTap(item),
+                  )),
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: _pages
-            .map((page) => BottomNavigationBarItem(
-                  icon: Icon(page.icon),
-                  label: page.shortLabel,
-                ))
-            .toList(),
-        currentIndex: _selectedIndex ?? 0,
-        selectedItemColor: _selectedIndex == null ? Colors.grey : Colors.blue,
-        type: BottomNavigationBarType.fixed,
-        onTap: _onItemTapped,
+        body: SafeArea(
+          child: Container(
+            color: Colors.black,
+            child: Stack(
+              children: [
+                WebViewWidget(controller: controller),
+                if (_isLoading)
+                  Container(
+                    color: Colors.transparent.withOpacity(0.5),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: _pages
+              .map((page) => BottomNavigationBarItem(
+                    icon: Icon(page.icon),
+                    label: page.shortLabel,
+                  ))
+              .toList(),
+          currentIndex: _selectedIndex ?? 0,
+          selectedItemColor: _selectedIndex == null ? Colors.grey : Colors.blue,
+          type: BottomNavigationBarType.fixed,
+          onTap: _onItemTapped,
+        ),
       ),
     );
   }
