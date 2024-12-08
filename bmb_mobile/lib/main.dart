@@ -33,9 +33,10 @@ class _WebViewAppState extends State<WebViewApp> {
   int? _selectedIndex;
   String _currentUrl = '';
   String _currentTitle = 'Back My Bracket';
+  bool _isLoading = true;
 
   static const String baseUrl = 'http://backmybracket.test';
-  // static const String baseUrl = 'http://backmybracket.com';
+  // static const String baseUrl = 'https://backmybracket.com';
 
   final List<NavigationItem> _pages = [
     NavigationItem(
@@ -157,17 +158,27 @@ class _WebViewAppState extends State<WebViewApp> {
     super.initState();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..clearCache() // TODO: Remove this before release
+      // ..clearCache() // TODO: Remove this before release
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {},
           onPageStarted: (String url) {
-            setState(() => _currentUrl = url);
+            setState(() {
+              _currentUrl = url;
+              _isLoading = true;
+            });
             _syncNavigationState();
           },
-          onPageFinished: (String url) {},
+          onPageFinished: (String url) {
+            setState(() {
+              _isLoading = false;
+            });
+          },
           onWebResourceError: (WebResourceError error) {
             debugPrint('Web resource error: ${error.description}');
+            setState(() {
+              _isLoading = false;
+            });
           },
           onNavigationRequest: (NavigationRequest request) {
             return NavigationDecision.navigate;
@@ -226,7 +237,20 @@ class _WebViewAppState extends State<WebViewApp> {
       body: SafeArea(
         child: Container(
           color: Colors.black,
-          child: WebViewWidget(controller: controller),
+          child: Stack(
+            children: [
+              WebViewWidget(controller: controller),
+              if (_isLoading)
+                Container(
+                  color: Colors.transparent.withOpacity(0.5),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
