@@ -194,6 +194,18 @@ tasks:
       - task --list-all | grep 'app:'
     silent: true
 
+  app:clean:ios:
+    desc: Clean ios files
+    dir: ./bmb_mobile
+    cmds:
+      - flutter clean && flutter pub get && rm -rf ios/Pods ios/Podfile.lock ; pod install --project-directory=ios
+
+  app:xcode:
+    desc: Open Xcode project
+    dir: ./bmb_mobile
+    cmds:
+      - open ios/Runner.xcworkspace
+
   app:run:
     desc: Run mobile app
     dir: ./bmb_mobile

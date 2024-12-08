@@ -30,9 +30,11 @@ class WebViewApp extends StatefulWidget {
 
 class _WebViewAppState extends State<WebViewApp> {
   late final WebViewController controller;
-  int _selectedIndex = 0;
-  
-  static const String baseUrl = 'https://backmybracket.com';
+  int? _selectedIndex;
+  String _currentUrl = '';
+
+  static const String baseUrl = 'http://backmybracket.test';
+  // static const String baseUrl = 'http://backmybracket.com';
 
   final List<NavigationItem> _pages = [
     NavigationItem(
@@ -100,17 +102,33 @@ class _WebViewAppState extends State<WebViewApp> {
     ),
   ];
 
+  void _loadUrl(String path) {
+    controller.loadRequest(
+      Uri.parse(baseUrl + path),
+      headers: {
+        'X-BMB-MOBILE-APP': 'true',
+      },
+    );
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      final path = _pages[index].path;
-      controller.loadRequest(Uri.parse(baseUrl + path));
+      _loadUrl(_pages[index].path);
     });
   }
 
   void _onDrawerItemTap(DrawerItem item) {
-    controller.loadRequest(Uri.parse(baseUrl + item.path));
+    _loadUrl(item.path);
     Navigator.pop(context);
+  }
+
+  void _syncNavigationState() {
+    final currentPath = Uri.parse(_currentUrl).path;
+    setState(() {
+      _selectedIndex = _pages.indexWhere((page) => page.path == currentPath);
+      if (_selectedIndex == -1) _selectedIndex = null;
+    });
   }
 
   @override
@@ -118,45 +136,15 @@ class _WebViewAppState extends State<WebViewApp> {
     super.initState();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..clearCache() // TODO: Remove this before release
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // You could show a loading indicator here
-          },
+          onProgress: (int progress) {},
           onPageStarted: (String url) {
-            // Inject CSS to hide navigation when page starts loading
-            controller.runJavaScript('''
-              document.addEventListener('DOMContentLoaded', function() {
-                // Hide navigation section
-                var nav = document.getElementById('navigation');
-                if (nav) {
-                  nav.style.display = 'none';
-                }
-                
-                // Hide all nav elements
-                var navElements = document.getElementsByTagName('nav');
-                for (var i = 0; i < navElements.length; i++) {
-                  navElements[i].style.display = 'none';
-                }
-              });
-            ''');
+            setState(() => _currentUrl = url);
+            _syncNavigationState();
           },
-          onPageFinished: (String url) {
-            // Also try to hide navigation after page load completes
-            controller.runJavaScript('''
-              // Hide navigation section
-              var nav = document.getElementById('navigation');
-              if (nav) {
-                nav.style.display = 'none';
-              }
-              
-              // Hide all nav elements
-              var navElements = document.getElementsByTagName('nav');
-              for (var i = 0; i < navElements.length; i++) {
-                navElements[i].style.display = 'none';
-              }
-            ''');
-          },
+          onPageFinished: (String url) {},
           onWebResourceError: (WebResourceError error) {
             debugPrint('Web resource error: ${error.description}');
           },
@@ -164,8 +152,15 @@ class _WebViewAppState extends State<WebViewApp> {
             return NavigationDecision.navigate;
           },
         ),
-      )
-      ..loadRequest(Uri.parse(baseUrl));
+      );
+
+    // Initial load - changed from empty string to profile path
+    _loadUrl('/dashboard/profile');
+
+    // Set initial selected index to Profile (0)
+    setState(() {
+      _selectedIndex = 0;
+    });
   }
 
   @override
@@ -217,8 +212,8 @@ class _WebViewAppState extends State<WebViewApp> {
                   label: page.label,
                 ))
             .toList(),
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
+        currentIndex: _selectedIndex ?? 0,
+        selectedItemColor: _selectedIndex == null ? Colors.grey : Colors.blue,
         type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
       ),
