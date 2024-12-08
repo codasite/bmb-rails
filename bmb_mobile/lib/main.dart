@@ -32,6 +32,7 @@ class _WebViewAppState extends State<WebViewApp> {
   late final WebViewController controller;
   int? _selectedIndex;
   String _currentUrl = '';
+  String _currentTitle = 'Back My Bracket';
 
   static const String baseUrl = 'http://backmybracket.test';
   // static const String baseUrl = 'http://backmybracket.com';
@@ -114,11 +115,15 @@ class _WebViewAppState extends State<WebViewApp> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      _currentTitle = _pages[index].label;
       _loadUrl(_pages[index].path);
     });
   }
 
   void _onDrawerItemTap(DrawerItem item) {
+    setState(() {
+      _currentTitle = item.label;
+    });
     _loadUrl(item.path);
     Navigator.pop(context);
   }
@@ -127,7 +132,20 @@ class _WebViewAppState extends State<WebViewApp> {
     final currentPath = Uri.parse(_currentUrl).path;
     setState(() {
       _selectedIndex = _pages.indexWhere((page) => page.path == currentPath);
-      if (_selectedIndex == -1) _selectedIndex = null;
+      if (_selectedIndex == -1) {
+        _selectedIndex = null;
+        final drawerItem = _drawerItems.firstWhere(
+          (item) => item.path == currentPath,
+          orElse: () => DrawerItem(
+            label: 'Back My Bracket',
+            path: '',
+            icon: Icons.home,
+          ),
+        );
+        _currentTitle = drawerItem.label;
+      } else {
+        _currentTitle = _pages[_selectedIndex!].label;
+      }
     });
   }
 
@@ -161,6 +179,9 @@ class _WebViewAppState extends State<WebViewApp> {
     setState(() {
       _selectedIndex = 0;
     });
+
+    // Set initial title to Profile
+    _currentTitle = _pages[0].label;
   }
 
   @override
@@ -170,9 +191,9 @@ class _WebViewAppState extends State<WebViewApp> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text(
-          'Back My Bracket',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          _currentTitle,
+          style: const TextStyle(color: Colors.white),
         ),
       ),
       drawer: Drawer(
