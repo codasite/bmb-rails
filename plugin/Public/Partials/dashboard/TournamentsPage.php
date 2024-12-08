@@ -165,7 +165,7 @@ class TournamentsPage implements TemplateInterface {
     <div id="wpbb-tournaments-modals"></div>
       <div class="tw-flex tw-flex-col tw-gap-40">
         <div class="tw-flex tw-flex-col tw-gap-16">
-          <h1 class="tw-text-24 sm:tw-text-48 lg:tw-text-64 tw-font-700 tw-leading-none">Tournaments</h1>
+          <h1 class="wpbb-dashboard-page-title tw-text-24 sm:tw-text-48 lg:tw-text-64 tw-font-700 tw-leading-none">Tournaments</h1>
           <a href="<?php echo get_permalink(
             get_page_by_path('bracket-builder')
           ); ?>" class="tw-flex tw-gap-16 tw-items-center tw-justify-center tw-border-solid tw-border tw-border-white tw-rounded-8 tw-p-16 tw-bg-white/15 tw-text-white tw-font-sans tw-uppercase tw-cursor-pointer hover:tw-text-black hover:tw-bg-white">

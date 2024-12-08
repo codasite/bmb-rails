@@ -1,5 +1,7 @@
+/* This stylesheet is applied when the site is accessed from the mobile app */
 #navigation,
 #wpbb-dashboard-nav,
-#section-6-79 {
+#section-6-79,
+.wpbb-dashboard-page-title {
   display: none !important;
 }
