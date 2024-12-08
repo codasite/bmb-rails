@@ -203,7 +203,7 @@ class _WebViewAppState extends State<WebViewApp> {
       );
 
     // Initial load - changed from empty string to profile path
-    _loadUrl('/dashboard/profile');
+    _loadUrl(_pages[0].path);
 
     // Set initial selected index to Profile (0)
     setState(() {
@@ -241,10 +241,14 @@ class _WebViewAppState extends State<WebViewApp> {
         appBar: AppBar(
           backgroundColor: Colors.black,
           iconTheme: const IconThemeData(color: Colors.white),
-          leading: IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () {
+                  Scaffold.of(context).openDrawer();
+                },
+              );
             },
           ),
           title: Text(
