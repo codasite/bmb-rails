@@ -134,13 +134,15 @@ class _WebViewAppState extends State<WebViewApp> {
   }
 
   void _syncNavigationState() {
-    final currentPath = Uri.parse(_currentUrl).path;
+    final currentPath =
+        Uri.parse(_currentUrl).path.replaceAll(RegExp(r'/$'), '');
     setState(() {
-      _selectedIndex = _pages.indexWhere((page) => page.path == currentPath);
+      _selectedIndex = _pages.indexWhere(
+          (page) => page.path.replaceAll(RegExp(r'/$'), '') == currentPath);
       if (_selectedIndex == -1) {
         _selectedIndex = null;
         final drawerItem = _drawerItems.firstWhere(
-          (item) => item.path == currentPath,
+          (item) => item.path.replaceAll(RegExp(r'/$'), '') == currentPath,
           orElse: () => DrawerItem(
             label: 'Back My Bracket',
             path: '',
@@ -317,7 +319,7 @@ class _WebViewAppState extends State<WebViewApp> {
                   ))
               .toList(),
           currentIndex: _selectedIndex ?? 0,
-          selectedItemColor: _selectedIndex == null ? Colors.grey : Colors.blue,
+          selectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
           onTap: _onItemTapped,
         ),
