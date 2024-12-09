@@ -111,9 +111,6 @@ class _WebViewAppState extends State<WebViewApp> {
   void _loadUrl(String path) {
     controller.loadRequest(
       Uri.parse(baseUrl + path),
-      headers: {
-        'X-BMB-MOBILE-APP': 'true',
-      },
     );
   }
 
@@ -161,7 +158,7 @@ class _WebViewAppState extends State<WebViewApp> {
     super.initState();
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      // ..clearCache() // TODO: Remove this before release
+      ..setUserAgent('BackMyBracket-MobileApp')
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {},
@@ -172,7 +169,6 @@ class _WebViewAppState extends State<WebViewApp> {
             });
             _syncNavigationState();
 
-            // Update back navigation state
             controller.canGoBack().then((value) {
               setState(() {
                 _canGoBack = value;
@@ -184,7 +180,6 @@ class _WebViewAppState extends State<WebViewApp> {
               _isLoading = false;
             });
 
-            // Update back navigation state
             controller.canGoBack().then((value) {
               setState(() {
                 _canGoBack = value;
@@ -204,15 +199,10 @@ class _WebViewAppState extends State<WebViewApp> {
         ),
       );
 
-    // Initial load - changed from empty string to profile path
     _loadUrl(_pages[0].path);
-
-    // Set initial selected index to Profile (0)
     setState(() {
       _selectedIndex = 0;
     });
-
-    // Set initial title to Profile
     _currentTitle = _pages[0].label;
   }
 
