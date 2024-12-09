@@ -45,18 +45,21 @@ class _WebViewAppState extends State<WebViewApp> {
       shortLabel: 'Profile',
       label: 'My Profile',
       path: '/dashboard/profile/',
+      slug: 'profile',
     ),
     NavigationItem(
       icon: Icons.emoji_events,
       shortLabel: 'Tournaments',
       label: 'My Tournaments',
       path: '/dashboard/tournaments/',
+      slug: 'tournaments',
     ),
     NavigationItem(
       icon: Icons.history,
       shortLabel: 'History',
       label: 'My Play History',
       path: '/dashboard/play-history/',
+      slug: 'play-history',
     ),
   ];
 
@@ -131,11 +134,14 @@ class _WebViewAppState extends State<WebViewApp> {
   }
 
   void _syncNavigationState() {
-    final currentPath =
-        Uri.parse(_currentUrl).path.replaceAll(RegExp(r'/$'), '');
+    final uri = Uri.parse(_currentUrl);
+    final currentPath = uri.path.replaceAll(RegExp(r'/$'), '');
+    final tabSlug = uri.queryParameters['tab'];
     setState(() {
-      _selectedIndex = _pages.indexWhere(
-          (page) => page.path.replaceAll(RegExp(r'/$'), '') == currentPath);
+      // sometimes the path looks like /dashboard/?tab=play-history instead of /dashboard/play-history
+      _selectedIndex = _pages.indexWhere((page) =>
+          page.path.replaceAll(RegExp(r'/$'), '') == currentPath ||
+          (tabSlug != null && page.slug == tabSlug));
       if (_selectedIndex == -1) {
         _selectedIndex = null;
         final drawerItem = _drawerItems.firstWhere(
@@ -323,12 +329,14 @@ class NavigationItem {
   final String label;
   final String shortLabel;
   final String path;
+  final String slug;
 
   NavigationItem({
     required this.icon,
     required this.label,
     required this.shortLabel,
     required this.path,
+    required this.slug,
   });
 }
 
