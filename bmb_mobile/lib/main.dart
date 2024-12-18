@@ -6,6 +6,26 @@ void main() {
   runApp(const MyApp());
 }
 
+class UpperCaseText extends Text {
+  UpperCaseText(
+    String data, {
+    super.key,
+    super.style,
+    super.strutStyle,
+    super.textAlign,
+    super.textDirection,
+    super.locale,
+    super.softWrap,
+    super.overflow,
+    super.textScaleFactor,
+    super.maxLines,
+    super.semanticsLabel,
+    super.textWidthBasis,
+    super.textHeightBehavior,
+    super.selectionColor,
+  }) : super(data.toUpperCase());
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -242,7 +262,7 @@ class _WebViewAppState extends State<WebViewApp> {
               );
             },
           ),
-          title: Text(
+          title: UpperCaseText(
             _currentTitle,
             style: const TextStyle(color: Colors.white),
           ),
@@ -261,20 +281,20 @@ class _WebViewAppState extends State<WebViewApp> {
           child: ListView(
             padding: EdgeInsets.zero,
             children: [
-              const DrawerHeader(
-                decoration: BoxDecoration(
+              DrawerHeader(
+                decoration: const BoxDecoration(
                   color: Colors.blue,
                 ),
-                child: Text(
+                child: UpperCaseText(
                   'Menu',
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
                   ),
                 ),
               ),
               ..._drawerItems.map((item) => ListTile(
-                    title: Text(item.label),
+                    title: UpperCaseText(item.label),
                     onTap: () => _onDrawerItemTap(item),
                   )),
             ],
@@ -311,7 +331,7 @@ class _WebViewAppState extends State<WebViewApp> {
                         BlendMode.srcIn,
                       ),
                     ),
-                    label: page.shortLabel,
+                    label: page.shortLabel.toUpperCase(),
                   ))
               .toList(),
           currentIndex: _selectedIndex ?? 0,
