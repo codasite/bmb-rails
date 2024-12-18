@@ -1,29 +1,11 @@
+import 'package:bmb_mobile/theme/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bmb_mobile/widgets/upper_case_text.dart';
 
 void main() {
   runApp(const MyApp());
-}
-
-class UpperCaseText extends Text {
-  UpperCaseText(
-    String data, {
-    super.key,
-    super.style,
-    super.strutStyle,
-    super.textAlign,
-    super.textDirection,
-    super.locale,
-    super.softWrap,
-    super.overflow,
-    super.textScaleFactor,
-    super.maxLines,
-    super.semanticsLabel,
-    super.textWidthBasis,
-    super.textHeightBehavior,
-    super.selectionColor,
-  }) : super(data.toUpperCase());
 }
 
 class MyApp extends StatelessWidget {
@@ -248,9 +230,9 @@ class _WebViewAppState extends State<WebViewApp> {
         }
       },
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: BMBColors.ddBlue,
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: BMBColors.ddBlue,
           iconTheme: const IconThemeData(color: Colors.white),
           leading: Builder(
             builder: (BuildContext context) {
@@ -283,7 +265,7 @@ class _WebViewAppState extends State<WebViewApp> {
             children: [
               DrawerHeader(
                 decoration: const BoxDecoration(
-                  color: Colors.blue,
+                  color: BMBColors.blue,
                 ),
                 child: UpperCaseText(
                   'Menu',
@@ -302,7 +284,7 @@ class _WebViewAppState extends State<WebViewApp> {
         ),
         body: SafeArea(
           child: Container(
-            color: Colors.black,
+            color: BMBColors.ddBlue,
             child: Stack(
               children: [
                 WebViewWidget(controller: controller),
@@ -311,7 +293,7 @@ class _WebViewAppState extends State<WebViewApp> {
                     color: Colors.transparent.withOpacity(0.5),
                     child: const Center(
                       child: CircularProgressIndicator(
-                        color: Colors.blue,
+                        color: BMBColors.blue,
                       ),
                     ),
                   ),
@@ -327,7 +309,7 @@ class _WebViewAppState extends State<WebViewApp> {
                       width: 24,
                       height: 24,
                       colorFilter: const ColorFilter.mode(
-                        Colors.grey,
+                        Colors.white,
                         BlendMode.srcIn,
                       ),
                     ),
@@ -336,10 +318,9 @@ class _WebViewAppState extends State<WebViewApp> {
               .toList(),
           currentIndex: _selectedIndex ?? 0,
           type: BottomNavigationBarType.fixed,
-          selectedLabelStyle: const TextStyle(color: Colors.grey),
-          unselectedLabelStyle: const TextStyle(color: Colors.grey),
-          selectedItemColor: Colors.grey,
-          unselectedItemColor: Colors.grey,
+          backgroundColor: BMBColors.darkBlue,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
           onTap: _onItemTapped,
         ),
       ),
