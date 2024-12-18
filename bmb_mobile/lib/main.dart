@@ -300,13 +300,16 @@ class _WebViewAppState extends State<WebViewApp> {
             backgroundColor: Colors.transparent,
             items: _pages
                 .map((page) => BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        page.iconPath,
-                        width: 24,
-                        height: 24,
-                        colorFilter: const ColorFilter.mode(
-                          Colors.white,
-                          BlendMode.srcIn,
+                      icon: Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: SvgPicture.asset(
+                          page.iconPath,
+                          width: 24,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
                         ),
                       ),
                       label: page.shortLabel.toUpperCase(),
@@ -314,8 +317,10 @@ class _WebViewAppState extends State<WebViewApp> {
                 .toList(),
             currentIndex: _selectedIndex ?? 0,
             type: BottomNavigationBarType.fixed,
-            selectedItemColor: Colors.white,
-            unselectedItemColor: Colors.white,
+            selectedLabelStyle: const TextStyle(fontSize: 12),
+            unselectedLabelStyle: const TextStyle(fontSize: 12),
+            selectedItemColor: BMBColors.white,
+            unselectedItemColor: BMBColors.white,
             onTap: _onItemTapped,
           ),
         ),

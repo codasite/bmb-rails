@@ -5,6 +5,7 @@ class BMBColors {
   BMBColors._();
 
   // Brand Colors
+  static const Color white = Color(0xFFFFFFFF);
   static const Color darkBlue = Color(0xFF0D1454);
   static const Color blue = Color(0xFF2137FF);
   static const Color ddBlue = Color(0xFF010433);
