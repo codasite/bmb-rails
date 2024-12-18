@@ -16,6 +16,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
+        fontFamily: 'ClashDisplay',
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(fontSize: 16.0),
+          bodyMedium: TextStyle(fontSize: 14.0),
+          titleLarge: TextStyle(fontSize: 20.0),
+        ),
       ),
       home: const WebViewApp(),
     );
@@ -309,8 +315,11 @@ class _WebViewAppState extends State<WebViewApp> {
                   ))
               .toList(),
           currentIndex: _selectedIndex ?? 0,
-          selectedItemColor: Colors.grey,
           type: BottomNavigationBarType.fixed,
+          selectedLabelStyle: const TextStyle(color: Colors.grey),
+          unselectedLabelStyle: const TextStyle(color: Colors.grey),
+          selectedItemColor: Colors.grey,
+          unselectedItemColor: Colors.grey,
           onTap: _onItemTapped,
         ),
       ),
