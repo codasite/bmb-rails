@@ -232,7 +232,7 @@ class _WebViewAppState extends State<WebViewApp> {
       child: Scaffold(
         backgroundColor: BMBColors.ddBlue,
         appBar: AppBar(
-          backgroundColor: BMBColors.ddBlue,
+          backgroundColor: BMBColors.darkBlue,
           iconTheme: const IconThemeData(color: Colors.white),
           leading: Builder(
             builder: (BuildContext context) {
@@ -260,28 +260,19 @@ class _WebViewAppState extends State<WebViewApp> {
           ],
         ),
         drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(
-                  color: BMBColors.blue,
-                ),
-                child: UpperCaseText(
-                  'Menu',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                  ),
-                ),
+            backgroundColor: BMBColors.darkBlue,
+            child: SafeArea(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ..._drawerItems.map((item) => ListTile(
+                        title: UpperCaseText(item.label),
+                        textColor: Colors.white,
+                        onTap: () => _onDrawerItemTap(item),
+                      )),
+                ],
               ),
-              ..._drawerItems.map((item) => ListTile(
-                    title: UpperCaseText(item.label),
-                    onTap: () => _onDrawerItemTap(item),
-                  )),
-            ],
-          ),
-        ),
+            )),
         body: SafeArea(
           child: Container(
             color: BMBColors.ddBlue,
@@ -301,27 +292,32 @@ class _WebViewAppState extends State<WebViewApp> {
             ),
           ),
         ),
-        bottomNavigationBar: BottomNavigationBar(
-          items: _pages
-              .map((page) => BottomNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      page.iconPath,
-                      width: 24,
-                      height: 24,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.only(top: 10),
+          color: BMBColors.darkBlue,
+          child: BottomNavigationBar(
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            items: _pages
+                .map((page) => BottomNavigationBarItem(
+                      icon: SvgPicture.asset(
+                        page.iconPath,
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
                       ),
-                    ),
-                    label: page.shortLabel.toUpperCase(),
-                  ))
-              .toList(),
-          currentIndex: _selectedIndex ?? 0,
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: BMBColors.darkBlue,
-          selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.white,
-          onTap: _onItemTapped,
+                      label: page.shortLabel.toUpperCase(),
+                    ))
+                .toList(),
+            currentIndex: _selectedIndex ?? 0,
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Colors.white,
+            unselectedItemColor: Colors.white,
+            onTap: _onItemTapped,
+          ),
         ),
       ),
     );
