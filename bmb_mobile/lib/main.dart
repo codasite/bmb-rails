@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
   runApp(const MyApp());
@@ -41,21 +42,21 @@ class _WebViewAppState extends State<WebViewApp> {
 
   final List<NavigationItem> _pages = [
     NavigationItem(
-      icon: Icons.person,
+      iconPath: 'assets/icons/user.svg',
       shortLabel: 'Profile',
       label: 'My Profile',
       path: '/dashboard/profile/',
       slug: 'profile',
     ),
     NavigationItem(
-      icon: Icons.emoji_events,
+      iconPath: 'assets/icons/signal.svg',
       shortLabel: 'Tournaments',
       label: 'My Tournaments',
       path: '/dashboard/tournaments/',
       slug: 'tournaments',
     ),
     NavigationItem(
-      icon: Icons.history,
+      iconPath: 'assets/icons/clock.svg',
       shortLabel: 'History',
       label: 'My Play History',
       path: '/dashboard/play-history/',
@@ -67,47 +68,34 @@ class _WebViewAppState extends State<WebViewApp> {
     DrawerItem(
       label: 'Home',
       path: '/',
-      icon: Icons.home,
     ),
     DrawerItem(
       label: 'Be a Host',
       path: '/be-a-host/',
-      icon: Icons.celebration,
     ),
     DrawerItem(
       label: 'BMB Brackets',
       path: '/bmb-brackets/',
-      icon: Icons.sports_basketball,
     ),
     DrawerItem(
       label: 'Celebrity Picks',
       path: '/celebrity-picks/',
-      icon: Icons.star,
     ),
     DrawerItem(
       label: 'Shop',
       path: '/shop/',
-      icon: Icons.shopping_bag,
     ),
     DrawerItem(
       label: 'Referral Program',
       path: '/referralprogram/',
-      icon: Icons.people,
     ),
     DrawerItem(
       label: 'My Account',
       path: '/dashboard/my-account/',
-      icon: Icons.settings,
-    ),
-    DrawerItem(
-      label: 'Payments',
-      path: '/dashboard/payments/',
-      icon: Icons.payments,
     ),
     DrawerItem(
       label: 'Logout',
       path: '/wp-login.php?action=logout',
-      icon: Icons.logout,
     ),
   ];
 
@@ -149,7 +137,6 @@ class _WebViewAppState extends State<WebViewApp> {
           orElse: () => DrawerItem(
             label: 'Back My Bracket',
             path: '',
-            icon: Icons.home,
           ),
         );
         _currentTitle = drawerItem.label;
@@ -281,7 +268,6 @@ class _WebViewAppState extends State<WebViewApp> {
                 ),
               ),
               ..._drawerItems.map((item) => ListTile(
-                    leading: Icon(item.icon),
                     title: Text(item.label),
                     onTap: () => _onDrawerItemTap(item),
                   )),
@@ -310,7 +296,15 @@ class _WebViewAppState extends State<WebViewApp> {
         bottomNavigationBar: BottomNavigationBar(
           items: _pages
               .map((page) => BottomNavigationBarItem(
-                    icon: Icon(page.icon),
+                    icon: SvgPicture.asset(
+                      page.iconPath,
+                      width: 24,
+                      height: 24,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.grey,
+                        BlendMode.srcIn,
+                      ),
+                    ),
                     label: page.shortLabel,
                   ))
               .toList(),
@@ -325,14 +319,14 @@ class _WebViewAppState extends State<WebViewApp> {
 }
 
 class NavigationItem {
-  final IconData icon;
+  final String iconPath;
   final String label;
   final String shortLabel;
   final String path;
   final String slug;
 
   NavigationItem({
-    required this.icon,
+    required this.iconPath,
     required this.label,
     required this.shortLabel,
     required this.path,
@@ -343,11 +337,9 @@ class NavigationItem {
 class DrawerItem {
   final String label;
   final String path;
-  final IconData icon;
 
   DrawerItem({
     required this.label,
     required this.path,
-    required this.icon,
   });
 }
