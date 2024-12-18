@@ -42,6 +42,19 @@ tasks:
       - docker exec wp-dev install-wp-tests
       - docker exec wp-dev create-admin-user.sh
 
+  ### TRELLIS ###
+  trellis:
+    desc: Trellis task namespace
+    cmds:
+      - task --list-all | grep 'trellis:'
+    silent: true
+
+  trellis:up:
+    desc: Start trellis development containers using Vagrant (requires Virtual Box)
+    dir: ./trellis
+    cmds:
+      - trellis up
+
   ### TESTING ###
   wp:test:
     desc: Run all tests
