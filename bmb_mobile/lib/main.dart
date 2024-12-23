@@ -43,7 +43,6 @@ class WebViewApp extends StatefulWidget {
 class _WebViewAppState extends State<WebViewApp> {
   late final WebViewController controller;
   int? _selectedIndex;
-  String _currentUrl = '';
   String _currentTitle = 'Back My Bracket';
   bool _isLoading = true;
   bool _canGoBack = false;
@@ -82,7 +81,7 @@ class _WebViewAppState extends State<WebViewApp> {
       path: '/',
     ),
     DrawerItem(
-      iconPath: getIconPath('trophy'),
+      iconPath: getIconPath('currency_dollar'),
       label: 'Be a Host',
       path: '/be-a-host/',
     ),
@@ -151,7 +150,6 @@ class _WebViewAppState extends State<WebViewApp> {
           onProgress: (int progress) {},
           onPageStarted: (String url) {
             setState(() {
-              _currentUrl = url;
               _isLoading = true;
             });
 
