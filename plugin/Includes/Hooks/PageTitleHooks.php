@@ -5,7 +5,11 @@ use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
 
 class PageTitleHooks implements HooksInterface {
   public function load(Loader $loader): void {
-    $loader->add_filter('pre_get_document_title', [$this, 'set_page_title']);
+    $loader->add_filter(
+      'pre_get_document_title',
+      [$this, 'set_page_title'],
+      999
+    );
   }
 
   public function set_page_title($title): string {
