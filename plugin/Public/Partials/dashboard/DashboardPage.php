@@ -89,6 +89,15 @@ class DashboardPage implements TemplateInterface {
     <?php return ob_get_clean();
   }
 
+  public static function get_tab_title($current_tab): string {
+    return match ($current_tab) {
+      'profile' => 'Profile',
+      'play-history' => 'Play History',
+      'tournaments' => 'Tournaments',
+      default => 'Dashboard',
+    };
+  }
+
   public function render($current_tab = null): false|string {
     $current_tab = $current_tab == null ? get_query_var('tab') : $current_tab;
 
