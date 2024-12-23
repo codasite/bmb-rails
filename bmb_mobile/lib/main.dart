@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/widgets/upper_case_text.dart';
+import 'package:bmb_mobile/models/navigation_item.dart';
+import 'package:bmb_mobile/models/drawer_item.dart';
+import 'package:bmb_mobile/utils/asset_paths.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,26 +48,26 @@ class _WebViewAppState extends State<WebViewApp> {
   bool _isLoading = true;
   bool _canGoBack = false;
 
-  static const String baseUrl = 'http://backmybracket.test';
-  // static const String baseUrl = 'https://backmybracket.com';
+  // static const String baseUrl = 'http://backmybracket.test';
+  static const String baseUrl = 'https://backmybracket.com';
 
   final List<NavigationItem> _pages = [
     NavigationItem(
-      iconPath: 'assets/icons/user.svg',
+      iconPath: getIconPath('user'),
       shortLabel: 'Profile',
       label: 'My Profile',
       path: '/dashboard/profile/',
       slug: 'profile',
     ),
     NavigationItem(
-      iconPath: 'assets/icons/signal.svg',
+      iconPath: getIconPath('signal'),
       shortLabel: 'Tournaments',
       label: 'My Tournaments',
       path: '/dashboard/tournaments/',
       slug: 'tournaments',
     ),
     NavigationItem(
-      iconPath: 'assets/icons/clock.svg',
+      iconPath: getIconPath('clock'),
       shortLabel: 'History',
       label: 'My Play History',
       path: '/dashboard/play-history/',
@@ -74,34 +77,42 @@ class _WebViewAppState extends State<WebViewApp> {
 
   final List<DrawerItem> _drawerItems = [
     DrawerItem(
+      iconPath: getIconPath('home'),
       label: 'Home',
       path: '/',
     ),
     DrawerItem(
+      iconPath: getIconPath('trophy'),
       label: 'Be a Host',
       path: '/be-a-host/',
     ),
     DrawerItem(
+      iconPath: getIconPath('bmb'),
       label: 'BMB Brackets',
       path: '/bmb-brackets/',
     ),
     DrawerItem(
+      iconPath: getIconPath('eye'),
       label: 'Celebrity Picks',
       path: '/celebrity-picks/',
     ),
     DrawerItem(
+      iconPath: getIconPath('shopping_cart'),
       label: 'Shop',
       path: '/shop/',
     ),
     DrawerItem(
+      iconPath: getIconPath('ticket'),
       label: 'Referral Program',
       path: '/referralprogram/',
     ),
     DrawerItem(
+      iconPath: getIconPath('user_2'),
       label: 'My Account',
       path: '/dashboard/my-account/',
     ),
     DrawerItem(
+      iconPath: getIconPath('user'),
       label: 'Logout',
       path: '/wp-login.php?action=logout',
     ),
@@ -327,30 +338,4 @@ class _WebViewAppState extends State<WebViewApp> {
       ),
     );
   }
-}
-
-class NavigationItem {
-  final String iconPath;
-  final String label;
-  final String shortLabel;
-  final String path;
-  final String slug;
-
-  NavigationItem({
-    required this.iconPath,
-    required this.label,
-    required this.shortLabel,
-    required this.path,
-    required this.slug,
-  });
-}
-
-class DrawerItem {
-  final String label;
-  final String path;
-
-  DrawerItem({
-    required this.label,
-    required this.path,
-  });
 }
