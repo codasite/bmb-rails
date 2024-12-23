@@ -5,6 +5,8 @@ coverage
 composer.lock
 *.md
 trellis/
+bmb_mobile/*
+!bmb_mobile/lib/
 *.code-workspace
 site/
 __snapshots__/
