@@ -238,3 +238,9 @@ tasks:
     dir: ./bmb_mobile
     cmds:
       - open ios/Runner.xcworkspace
+
+  actions:runner
+    desc: Run the self-hosted runner
+    dir: ./actions-runner
+    cmds:
+      - ./run.sh

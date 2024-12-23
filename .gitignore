@@ -145,3 +145,5 @@ docker/wordpress/plugins/*
 !docker/wordpress/plugins/.gitkeep
 docker/db/import/1bmb_import.sql
 !docker/wordpress/db/import/.gitkeep
+actions-runner/*
+!actions-runner/.gitkeep
