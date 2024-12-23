@@ -250,6 +250,18 @@ class _WebViewAppState extends State<WebViewApp> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  ListTile(
+                    leading: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                    title: UpperCaseText(
+                      'Close',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    onTap: () => Navigator.pop(context),
+                  ),
                   // Add logo header
                   InkWell(
                     onTap: () => _onDrawerItemTap(DrawerItem(
@@ -260,8 +272,8 @@ class _WebViewAppState extends State<WebViewApp> {
                     child: Container(
                       padding: const EdgeInsets.only(
                         left: 16,
-                        top: 24,
-                        bottom: 24,
+                        top: 30,
+                        bottom: 30,
                       ),
                       alignment: Alignment.centerLeft,
                       child: SvgPicture.asset(
@@ -270,7 +282,7 @@ class _WebViewAppState extends State<WebViewApp> {
                       ),
                     ),
                   ),
-                  // Add divider after logo
+                  // Add close button
                   ..._drawerItems.map((item) => ListTile(
                         title: UpperCaseText(item.label),
                         textColor: Colors.white,
