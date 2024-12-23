@@ -126,14 +126,14 @@ class _WebViewAppState extends State<WebViewApp> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _currentTitle = _pages[index].label;
+      // _currentTitle = _pages[index].label;
       _loadUrl(_pages[index].path);
     });
   }
 
   void _onDrawerItemTap(DrawerItem item) {
     setState(() {
-      _currentTitle = item.label;
+      // _currentTitle = item.label;
     });
     _loadUrl(item.path);
     Navigator.pop(context);
@@ -160,6 +160,7 @@ class _WebViewAppState extends State<WebViewApp> {
             });
           },
           onPageFinished: (String url) {
+            setAppBarTitle();
             setState(() {
               _isLoading = false;
             });
@@ -177,7 +178,6 @@ class _WebViewAppState extends State<WebViewApp> {
             });
           },
           onNavigationRequest: (NavigationRequest request) {
-            print('Navigation request: ${request.url}');
             return NavigationDecision.navigate;
           },
         ),
@@ -187,7 +187,7 @@ class _WebViewAppState extends State<WebViewApp> {
     setState(() {
       _selectedIndex = 0;
     });
-    _currentTitle = _pages[0].label;
+    // _currentTitle = _pages[0].label;
   }
 
   Future<bool> _handleBackPress() async {
@@ -197,6 +197,15 @@ class _WebViewAppState extends State<WebViewApp> {
       return false; // Don't close the app
     }
     return true; // Allow closing the app
+  }
+
+  void setAppBarTitle() {
+    controller.getTitle().then((title) {
+      String? trimmedTitle = title?.replaceAll(RegExp(r' - BackMyBracket'), '');
+      setState(() {
+        _currentTitle = trimmedTitle ?? 'Loading';
+      });
+    });
   }
 
   @override
