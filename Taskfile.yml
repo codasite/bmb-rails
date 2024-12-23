@@ -55,8 +55,6 @@ tasks:
     cmds:
       - trellis up
 
-  trellis:
-
   ### TESTING ###
   wp:test:
     desc: Run all tests
