@@ -112,7 +112,7 @@ class _WebViewAppState extends State<WebViewApp> {
       path: '/dashboard/my-account/',
     ),
     DrawerItem(
-      iconPath: getIconPath('user'),
+      iconPath: getIconPath('logout'),
       label: 'Logout',
       path: '/wp-login.php?action=logout',
     ),
@@ -140,31 +140,6 @@ class _WebViewAppState extends State<WebViewApp> {
     Navigator.pop(context);
   }
 
-  void _syncNavigationState() {
-    final uri = Uri.parse(_currentUrl);
-    final currentPath = uri.path.replaceAll(RegExp(r'/$'), '');
-    final tabSlug = uri.queryParameters['tab'];
-    setState(() {
-      // sometimes the path looks like /dashboard/?tab=play-history instead of /dashboard/play-history
-      _selectedIndex = _pages.indexWhere((page) =>
-          page.path.replaceAll(RegExp(r'/$'), '') == currentPath ||
-          (tabSlug != null && page.slug == tabSlug));
-      if (_selectedIndex == -1) {
-        _selectedIndex = null;
-        final drawerItem = _drawerItems.firstWhere(
-          (item) => item.path.replaceAll(RegExp(r'/$'), '') == currentPath,
-          orElse: () => DrawerItem(
-            label: 'Back My Bracket',
-            path: '',
-          ),
-        );
-        _currentTitle = drawerItem.label;
-      } else {
-        _currentTitle = _pages[_selectedIndex!].label;
-      }
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -179,7 +154,6 @@ class _WebViewAppState extends State<WebViewApp> {
               _currentUrl = url;
               _isLoading = true;
             });
-            _syncNavigationState();
 
             controller.canGoBack().then((value) {
               setState(() {
@@ -280,6 +254,15 @@ class _WebViewAppState extends State<WebViewApp> {
                         title: UpperCaseText(item.label),
                         textColor: Colors.white,
                         onTap: () => _onDrawerItemTap(item),
+                        leading: SvgPicture.asset(
+                          item.iconPath,
+                          width: 24,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                        ),
                       )),
                 ],
               ),
