@@ -115,12 +115,27 @@ class EnqueueScriptsHooks implements HooksInterface {
      */
 
     wp_enqueue_style(
-      $this->plugin_name,
+      $this->plugin_name . '-public',
       plugin_dir_url(dirname(__FILE__, 2)) . 'Public/css/wpbb-public.css',
       [],
       $this->version,
       'all'
     );
+
+    // Only enqueue mobile app styles if the special header is present
+    if (
+      !empty($_SERVER['HTTP_USER_AGENT']) &&
+      $_SERVER['HTTP_USER_AGENT'] === 'BackMyBracket-MobileApp'
+    ) {
+      wp_enqueue_style(
+        $this->plugin_name . '-mobile-app',
+        plugin_dir_url(dirname(__FILE__, 2)) . 'Public/css/wpbb-mobile-app.css',
+        [],
+        $this->version,
+        'all'
+      );
+    }
+
     wp_enqueue_style(
       'index.css',
       plugin_dir_url(dirname(__FILE__, 2)) .

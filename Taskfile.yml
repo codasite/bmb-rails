@@ -42,6 +42,19 @@ tasks:
       - docker exec wp-dev install-wp-tests
       - docker exec wp-dev create-admin-user.sh
 
+  ### TRELLIS ###
+  trellis:
+    desc: Trellis task namespace
+    cmds:
+      - task --list-all | grep 'trellis:'
+    silent: true
+
+  trellis:up:
+    desc: Start trellis development containers using Vagrant (requires Virtual Box)
+    dir: ./trellis
+    cmds:
+      - trellis up
+
   ### TESTING ###
   wp:test:
     desc: Run all tests
@@ -186,3 +199,46 @@ tasks:
     dir: ./plugin
     cmds:
       - vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 2G .
+
+  # MOBILE APP #
+  flutter:run:
+    desc: Run mobile app with the currently selected device in VSCode
+    dir: ./bmb_mobile
+    cmds:
+      - flutter run
+
+  ios:
+    desc: iOS task namespace
+    cmds:
+      - task --list-all | grep 'ios:'
+    silent: true
+
+  ios:clean:
+    desc: Clean ios files
+    dir: ./bmb_mobile
+    cmds:
+      - flutter clean && flutter pub get && rm -rf ios/Pods ios/Podfile.lock ; pod install --project-directory=ios
+
+  ios:build:
+    desc: Build iOS mobile app
+    dir: ./bmb_mobile
+    cmds:
+      - flutter build api
+
+  ios:push:
+    desc: Push iOS app to App Store Connect
+    dir: ./bmb_mobile
+    cmds:
+      - xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey your_api_key --apiIssuer
+
+  ios:xcode:
+    desc: Open Xcode project
+    dir: ./bmb_mobile
+    cmds:
+      - open ios/Runner.xcworkspace
+
+  actions:runner:
+    desc: Run the self-hosted runner
+    dir: ./actions-runner
+    cmds:
+      - ./run.sh

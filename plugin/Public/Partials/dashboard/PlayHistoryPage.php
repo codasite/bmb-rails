@@ -129,7 +129,7 @@ class PlayHistoryPage {
     ob_start();
     ?>
     <div class="tw-flex tw-flex-col tw-gap-15 md:tw-gap-30">
-    <h1 class="tw-text-32 sm:tw-text-48 lg:tw-text-64">My Play History</h1>
+    <h1 class="wpbb-dashboard-page-title tw-text-32 sm:tw-text-48 lg:tw-text-64">My Play History</h1>
       <div class="tw-flex tw-flex-col tw-gap-16">
         <?php foreach ($plays as $play) {
           echo self::play_list_item($play);

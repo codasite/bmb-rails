@@ -24,6 +24,7 @@ use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
 use WStrategies\BMB\Includes\Hooks\UserAdminHooks;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
+use WStrategies\BMB\Includes\Hooks\PageTitleHooks;
 
 /**
  * The core plugin class.
@@ -128,6 +129,7 @@ class BracketBuilder {
       new UserAdminHooks(),
       new NotificationCronHooks(),
       new LoginHooks($name_and_version_args),
+      new PageTitleHooks(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

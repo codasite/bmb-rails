@@ -89,6 +89,15 @@ class DashboardPage implements TemplateInterface {
     <?php return ob_get_clean();
   }
 
+  public static function get_tab_title($current_tab): string {
+    return match ($current_tab) {
+      'profile' => 'Profile',
+      'play-history' => 'Play History',
+      'tournaments' => 'Tournaments',
+      default => 'Dashboard',
+    };
+  }
+
   public function render($current_tab = null): false|string {
     $current_tab = $current_tab == null ? get_query_var('tab') : $current_tab;
 
@@ -106,16 +115,17 @@ class DashboardPage implements TemplateInterface {
     <div class="tw-bg-dd-blue tw-py-60">
       <div
         class="wpbb-dashboard tw-text-white tw-font-sans tw-flex tw-flex-col md:tw-flex-row tw-gap-60 md:tw-gap-30 lg:tw-gap-60 leading-none tw-uppercase tw-max-w-screen-xl tw-mx-auto tw-px-20">
-        <nav>
+        <nav id="wpbb-dashboard-nav">
           <h4 class="tw-text-white/50 tw-text-16 tw-font-500 tw-mb-15">Dashboard</h4>
           <ul class="tw-flex tw-flex-col tw-gap-15 tw-p-0 tw-m-0">
-            <li class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
+            <li id="wpbb-dashboard-nav-profile" class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
               'profile',
               $current_tab,
               'Profile',
               '../../assets/icons/user.svg'
             ); ?></li>
             <li
+              id="wpbb-dashboard-nav-tournaments"
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
                 'tournaments',
                 $current_tab,
@@ -123,6 +133,7 @@ class DashboardPage implements TemplateInterface {
                 '../../assets/icons/signal.svg'
               ); ?></li>
             <li
+              id="wpbb-dashboard-nav-play-history"
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_nav_link(
                 'play-history',
                 $current_tab,
@@ -130,11 +141,13 @@ class DashboardPage implements TemplateInterface {
                 '../../assets/icons/clock.svg'
               ); ?></li>
             <li
+              id="wpbb-dashboard-nav-account-settings"
               class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::get_account_settings_link(); ?></li>
-              <?php if (current_user_can('wpbb_create_paid_bracket')): ?>
-                <li
-                  class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::payments_button(); ?></li>
-              <?php endif; ?>
+            <?php if (current_user_can('wpbb_create_paid_bracket')): ?>
+              <li
+                id="wpbb-dashboard-nav-payments"
+                class="tw-font-500 tw-text-20 tw-list-none"><?php echo self::payments_button(); ?></li>
+            <?php endif; ?>
           </ul>
         </nav>
         <div class="tw-flex-grow">
