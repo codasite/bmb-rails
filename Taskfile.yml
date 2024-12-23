@@ -239,7 +239,7 @@ tasks:
     cmds:
       - open ios/Runner.xcworkspace
 
-  actions:runner
+  actions:runner:
     desc: Run the self-hosted runner
     dir: ./actions-runner
     cmds:
