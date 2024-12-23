@@ -250,6 +250,27 @@ class _WebViewAppState extends State<WebViewApp> {
               child: ListView(
                 padding: EdgeInsets.zero,
                 children: [
+                  // Add logo header
+                  InkWell(
+                    onTap: () => _onDrawerItemTap(DrawerItem(
+                      iconPath: getIconPath('home'),
+                      label: 'Home',
+                      path: '/',
+                    )),
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        left: 16,
+                        top: 24,
+                        bottom: 24,
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: SvgPicture.asset(
+                        getIconPath('bmb_logo'),
+                        height: 40,
+                      ),
+                    ),
+                  ),
+                  // Add divider after logo
                   ..._drawerItems.map((item) => ListTile(
                         title: UpperCaseText(item.label),
                         textColor: Colors.white,
