@@ -6,6 +6,9 @@ import 'package:bmb_mobile/widgets/upper_case_text.dart';
 import 'package:bmb_mobile/models/navigation_item.dart';
 import 'package:bmb_mobile/models/drawer_item.dart';
 import 'package:bmb_mobile/utils/asset_paths.dart';
+import 'package:bmb_mobile/login/login_screen.dart';
+import 'package:bmb_mobile/constants.dart';
+import 'package:bmb_mobile/login/auth_service.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +31,11 @@ class MyApp extends StatelessWidget {
           titleLarge: TextStyle(fontSize: 20.0),
         ),
       ),
-      home: const WebViewApp(),
+      routes: {
+        '/': (context) => const WebViewApp(),
+        '/login': (context) => const LoginScreen(),
+      },
+      initialRoute: '/',
     );
   }
 }
@@ -46,9 +53,6 @@ class _WebViewAppState extends State<WebViewApp> {
   String _currentTitle = 'Back My Bracket';
   bool _isLoading = true;
   bool _canGoBack = false;
-
-  // static const String baseUrl = 'http://backmybracket.test';
-  static const String baseUrl = 'https://backmybracket.com';
 
   final List<NavigationItem> _pages = [
     NavigationItem(
@@ -119,7 +123,7 @@ class _WebViewAppState extends State<WebViewApp> {
 
   void _loadUrl(String path) {
     controller.loadRequest(
-      Uri.parse(baseUrl + path),
+      Uri.parse(AppConstants.baseUrl + path),
     );
   }
 
@@ -178,16 +182,41 @@ class _WebViewAppState extends State<WebViewApp> {
             });
           },
           onNavigationRequest: (NavigationRequest request) {
+            if (request.url.contains('wp-login.php') ||
+                request.url.contains('unauthorized')) {
+              AuthService()
+                  .logout(); // Clear cookies when hitting login/unauthorized
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  Navigator.pushReplacementNamed(context, '/login');
+                }
+              });
+              return NavigationDecision.prevent;
+            }
             return NavigationDecision.navigate;
           },
         ),
       );
 
-    _loadUrl(_pages[0].path);
-    setState(() {
-      _selectedIndex = 0;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAuthAndLoadPage();
     });
-    // _currentTitle = _pages[0].label;
+  }
+
+  Future<void> _checkAuthAndLoadPage() async {
+    final authService = AuthService();
+    bool isAuthenticated = await authService.hasValidCookie();
+
+    if (!isAuthenticated) {
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+      return;
+    }
+
+    // Load initial URL if authenticated
+    controller.loadRequest(
+        Uri.parse('${AppConstants.baseUrl}/dashboard/tournaments/'));
   }
 
   Future<bool> _handleBackPress() async {
