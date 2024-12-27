@@ -135,12 +135,16 @@ class _WebViewAppState extends State<WebViewApp> {
     });
   }
 
-  void _onDrawerItemTap(DrawerItem item) {
-    setState(() {
-      // _currentTitle = item.label;
-    });
-    _loadUrl(item.path);
-    Navigator.pop(context);
+  void _onDrawerItemTap(DrawerItem item) async {
+    if (item.path == '/wp-login.php?action=logout') {
+      await AuthService().logout();
+      if (mounted) {
+        Navigator.pushReplacementNamed(context, '/login');
+      }
+    } else {
+      _loadUrl(item.path);
+      Navigator.pop(context);
+    }
   }
 
   @override
@@ -182,7 +186,7 @@ class _WebViewAppState extends State<WebViewApp> {
             });
           },
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.contains('wp-login.php') ||
+            if (request.url.contains(AppConstants.loginPath) ||
                 request.url.contains('unauthorized')) {
               AuthService()
                   .logout(); // Clear cookies when hitting login/unauthorized
