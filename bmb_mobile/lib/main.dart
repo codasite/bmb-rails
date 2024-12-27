@@ -9,6 +9,7 @@ import 'package:bmb_mobile/utils/asset_paths.dart';
 import 'package:bmb_mobile/login/login_screen.dart';
 import 'package:bmb_mobile/constants.dart';
 import 'package:bmb_mobile/login/auth_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -185,11 +186,35 @@ class _WebViewAppState extends State<WebViewApp> {
               _isLoading = false;
             });
           },
-          onNavigationRequest: (NavigationRequest request) {
+          onNavigationRequest: (NavigationRequest request) async {
+            // List of allowed external domains for system functionality
+            final allowedExternalDomains = [
+              'widgets.wp.com',
+              'public-api.wordpress.com',
+              'wordpress.com'
+            ];
+
+            // Check if URL is external (not our domain)
+            if (!request.url.contains(AppConstants.baseUrl)) {
+              final uri = Uri.parse(request.url);
+
+              // Allow system-related external requests to load in WebView
+              if (allowedExternalDomains
+                  .any((domain) => request.url.contains(domain))) {
+                return NavigationDecision.navigate;
+              }
+
+              // Open other external links in browser
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+              return NavigationDecision.prevent;
+            }
+
+            // Handle login/unauthorized redirects
             if (request.url.contains(AppConstants.loginPath) ||
                 request.url.contains('unauthorized')) {
-              AuthService()
-                  .logout(); // Clear cookies when hitting login/unauthorized
+              AuthService().logout();
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) {
                   Navigator.pushReplacementNamed(context, '/login');
