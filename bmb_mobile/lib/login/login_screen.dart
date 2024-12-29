@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:bmb_mobile/login/auth_service.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:bmb_mobile/theme/font_weights.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:bmb_mobile/constants.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -55,6 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  void _handleSignUp() async {
+    final Uri url = Uri.parse(AppConstants.baseUrl + AppConstants.registerPath);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
-                        'WELCOME BACK',
+                        'RETURNING MEMBER',
                         style: TextStyle(
                           fontFamily: 'ClashDisplay',
                           fontSize: 32,
@@ -211,6 +220,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.white,
+                            fontVariations: BMBFontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: _handleSignUp,
+                        child: Text(
+                          'OR SIGN UP',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white.withOpacity(0.5),
                             fontVariations: BMBFontWeight.w500,
                           ),
                         ),
