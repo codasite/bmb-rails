@@ -154,6 +154,14 @@ class _WebViewAppState extends State<WebViewApp> {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setUserAgent('BackMyBracket-MobileApp')
+      ..addJavaScriptChannel(
+        'Flutter',
+        onMessageReceived: (message) {
+          if (message.message == 'refresh') {
+            controller.reload();
+          }
+        },
+      )
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {},
@@ -169,6 +177,22 @@ class _WebViewAppState extends State<WebViewApp> {
             });
           },
           onPageFinished: (String url) {
+            // Inject overscroll detection JavaScript
+            controller.runJavaScript('''
+              let startY;
+              document.addEventListener('touchstart', (e) => {
+                startY = e.touches[0].pageY;
+              });
+              document.addEventListener('touchmove', (e) => {
+                const y = e.touches[0].pageY;
+                const scrollTop = document.documentElement.scrollTop;
+                
+                if (scrollTop === 0 && y - startY > 65) {
+                  Flutter.postMessage('refresh');
+                }
+              });
+            ''');
+
             setAppBarTitle();
             setState(() {
               _isLoading = false;
