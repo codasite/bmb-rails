@@ -4,6 +4,7 @@ import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:bmb_mobile/theme/font_weights.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bmb_mobile/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -99,14 +100,20 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             child: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 60.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      SvgPicture.asset(
+                        'assets/icons/bmb_logo.svg',
+                        width: MediaQuery.of(context).size.width / 3,
+                        // height will adjust automatically to maintain aspect ratio
+                      ),
+                      const SizedBox(height: 30),
                       Text(
                         'RETURNING MEMBER',
                         style: TextStyle(
@@ -117,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 30),
                       TextFormField(
                         controller: _emailController,
                         style: const TextStyle(color: Colors.white),
