@@ -49,11 +49,14 @@ class WebViewApp extends StatefulWidget {
 }
 
 class _WebViewAppState extends State<WebViewApp> {
+  static const double _refreshThreshold = 65.0;
+
   late final WebViewController controller;
   int? _selectedIndex;
   String _currentTitle = 'Back My Bracket';
   bool _isLoading = true;
   bool _canGoBack = false;
+  double _refreshProgress = 0.0;
 
   final List<NavigationItem> _pages = [
     NavigationItem(
@@ -159,6 +162,12 @@ class _WebViewAppState extends State<WebViewApp> {
         onMessageReceived: (message) {
           if (message.message == 'refresh') {
             controller.reload();
+            setState(() => _refreshProgress = 0.0);
+          } else if (message.message.startsWith('pull:')) {
+            // Parse pull amount from message
+            final pullAmount = double.parse(message.message.split(':')[1]);
+            setState(() => _refreshProgress =
+                (pullAmount / _refreshThreshold).clamp(0.0, 1.0));
           }
         },
       )
@@ -187,9 +196,17 @@ class _WebViewAppState extends State<WebViewApp> {
                 const y = e.touches[0].pageY;
                 const scrollTop = document.documentElement.scrollTop;
                 
-                if (scrollTop === 0 && y - startY > 65) {
-                  Flutter.postMessage('refresh');
+                if (scrollTop === 0) {
+                  const pullAmount = y - startY;
+                  if (pullAmount > ${_refreshThreshold}) {
+                    Flutter.postMessage('refresh');
+                  } else if (pullAmount > 0) {
+                    Flutter.postMessage('pull:' + pullAmount);
+                  }
                 }
+              });
+              document.addEventListener('touchend', () => {
+                Flutter.postMessage('pull:0');
               });
             ''');
 
@@ -401,6 +418,19 @@ class _WebViewAppState extends State<WebViewApp> {
                     child: const Center(
                       child: CircularProgressIndicator(
                         color: BMBColors.blue,
+                      ),
+                    ),
+                  ),
+                if (_refreshProgress > 0)
+                  const Positioned(
+                    top: 8,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Icon(
+                        Icons.refresh,
+                        color: BMBColors.blue,
+                        size: 24,
                       ),
                     ),
                   ),
