@@ -238,7 +238,6 @@ tasks:
       - source .env.appstoreconnect && xcrun altool --list-providers -apiKey $API_KEY --apiIssuer $API_ISSUER
 
   ios:xcode:
-  ios:xcode:
     desc: Open Xcode project
     dir: ./bmb_mobile
     cmds:
@@ -250,28 +249,28 @@ tasks:
     cmds:
       - ./run.sh
 
+  app:version:get:
+    desc: Display the current version and build number
+    dir: ./bmb_mobile
+    cmds:
+      - "grep 'version:' pubspec.yaml | sed -E 's/version: (.*)/Current version: \\1/'"
+
   app:version:bump-build:
     desc: Increment the build number (+1)
     dir: ./bmb_mobile
     cmds:
       - |
-        current=$(grep 'version:' pubspec.yaml | sed -E 's/version: ([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)/\2/')
+        current=$(grep "version:" pubspec.yaml | sed -E "s/version: ([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)/\2/")
         next=$((current + 1))
-        sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+/\1+$next/" pubspec.yaml
-      - echo "Build number bumped to +$next"
+        sed -i "" -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+/\1+$next/" pubspec.yaml
+        echo "Build number bumped to +$next"
 
   app:version:bump-patch:
     desc: Increment the patch version (x.x.X)
     dir: ./bmb_mobile
     cmds:
       - |
-        current=$(grep 'version:' pubspec.yaml | sed -E 's/version: ([0-9]+\.[0-9]+\.)([0-9]+)\+.*/\2/')
+        current=$(grep "version:" pubspec.yaml | sed -E "s/version: ([0-9]+\.[0-9]+\.)([0-9]+)\+.*/\2/")
         next=$((current + 1))
-        sed -i '' -E "s/(version: [0-9]+\.[0-9]+\.)[0-9]+(\+[0-9]+)/\1$next\2/" pubspec.yaml
-      - echo "Version bumped to patch $next"
-
-  app:version:get:
-    desc: Display the current version and build number
-    dir: ./bmb_mobile
-    cmds:
-      - grep 'version:' pubspec.yaml | sed -E 's/version: (.*)/Current version: \1/'
+        sed -i "" -E "s/(version: [0-9]+\.[0-9]+\.)[0-9]+(\+[0-9]+)/\1$next\2/" pubspec.yaml
+        echo "Version bumped to patch $next"
