@@ -36,6 +36,9 @@ dependencies:
   cupertino_icons: ^1.0.8
   webview_flutter: ^4.10.0
   flutter_svg: ^2.0.16
+  http: ^1.2.2
+  webview_cookie_manager: ^2.0.6
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +67,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/icons/
-
+    - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
@@ -94,3 +97,4 @@ flutter:
     - family: ClashDisplay
       fonts:
         - asset: fonts/ClashDisplay-Variable.ttf
+
