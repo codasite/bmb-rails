@@ -5,14 +5,36 @@ namespace WStrategies\BMB\Features\Notifications\Push;
 use WStrategies\BMB\Includes\Repository\CustomTableInterface;
 use WStrategies\BMB\Includes\Repository\CustomTableNames;
 
+/**
+ * Repository for managing FCM tokens in the database.
+ *
+ * Handles CRUD operations for FCM tokens and maintains the custom database table.
+ */
 class FCMTokenRepo implements CustomTableInterface {
+  /** @var \wpdb WordPress database instance */
   public \wpdb $wpdb;
 
+  /**
+   * Initializes the repository.
+   */
   function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
   }
 
+  /**
+   * Retrieves tokens based on search criteria.
+   *
+   * @param array $args {
+   *     Optional. Arguments for filtering tokens.
+   *     @type int     $id        Token ID.
+   *     @type int     $user_id   User ID.
+   *     @type string  $device_id Device identifier.
+   *     @type string  $token     FCM token value.
+   *     @type bool    $single    Whether to return a single result.
+   * }
+   * @return array|object|null The found token(s) or null if not found.
+   */
   public function get($args = []): array|object|null {
     $single = $args['single'] ?? false;
     $where = 'WHERE 1=1';
@@ -45,6 +67,17 @@ class FCMTokenRepo implements CustomTableInterface {
     return $single ? array_shift($results) : $results;
   }
 
+  /**
+   * Adds a new FCM token.
+   *
+   * @param int         $user_id      WordPress user ID.
+   * @param string      $device_id    Device identifier.
+   * @param string      $token        FCM token value.
+   * @param string      $device_type  Device platform (ios|android).
+   * @param string|null $device_name  Optional. Device name.
+   * @param string|null $app_version  Optional. App version.
+   * @return array|null The created token or null on failure.
+   */
   public function add(
     int $user_id,
     string $device_id,
@@ -153,6 +186,11 @@ class FCMTokenRepo implements CustomTableInterface {
     return $rows_affected > 0;
   }
 
+  /**
+   * Gets the custom table name.
+   *
+   * @return string The fully qualified table name.
+   */
   public static function table_name(): string {
     return CustomTableNames::table_name('fcm_tokens');
   }

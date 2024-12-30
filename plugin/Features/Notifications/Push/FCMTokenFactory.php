@@ -4,7 +4,20 @@ namespace WStrategies\BMB\Features\Notifications\Push;
 
 use WStrategies\BMB\Includes\Domain\ValidationException;
 
+/**
+ * Factory for creating validated FCMToken instances.
+ *
+ * Handles validation and creation of FCMToken objects, ensuring all required
+ * fields and constraints are met.
+ */
 class FCMTokenFactory {
+  /**
+   * Creates a new FCMToken instance with validation.
+   *
+   * @param array $data Token data to validate and use for creation.
+   * @return FCMToken The created and validated token.
+   * @throws ValidationException If validation fails.
+   */
   public static function create($data = []): FCMToken {
     $errors = self::validate($data);
     if (count($errors)) {
@@ -13,6 +26,12 @@ class FCMTokenFactory {
     return new FCMToken($data);
   }
 
+  /**
+   * Validates token data.
+   *
+   * @param array $data The token data to validate.
+   * @return array Array of validation error messages, empty if valid.
+   */
   public static function validate($data = []): array {
     $errors = [];
 
