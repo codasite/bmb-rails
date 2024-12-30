@@ -104,127 +104,168 @@ class _LoginScreenState extends State<LoginScreen> {
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
                 child: Form(
                   key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      SvgPicture.asset(
-                        'assets/icons/bmb_logo.svg',
-                        width: MediaQuery.of(context).size.width / 3,
-                        // height will adjust automatically to maintain aspect ratio
-                      ),
-                      const SizedBox(height: 30),
-                      Text(
-                        'RETURNING MEMBER',
-                        style: TextStyle(
-                          fontFamily: 'ClashDisplay',
-                          fontSize: 32,
-                          fontVariations: BMBFontWeight.w700,
-                          color: Colors.white,
+                  child: AutofillGroup(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/bmb_logo.svg',
+                          width: MediaQuery.of(context).size.width / 3,
+                          // height will adjust automatically to maintain aspect ratio
                         ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 30),
-                      TextFormField(
-                        controller: _emailController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'EMAIL',
-                          labelStyle: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                            fontVariations: BMBFontWeight.w500,
+                        const SizedBox(height: 30),
+                        Text(
+                          'RETURNING MEMBER',
+                          style: TextStyle(
+                            fontFamily: 'ClashDisplay',
+                            fontSize: 32,
+                            fontVariations: BMBFontWeight.w700,
+                            color: Colors.white,
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: BMBColors.blue,
-                              width: 1,
-                            ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                              color: BMBColors.blue.withOpacity(0.7),
-                              width: 1,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: BMBColors.blue,
-                              width: 1,
-                            ),
-                          ),
-                          prefixIcon:
-                              const Icon(Icons.email, color: Colors.white70),
+                          textAlign: TextAlign.center,
                         ),
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!value.contains('@')) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 15),
-                      TextFormField(
-                        controller: _passwordController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          labelText: 'PASSWORD',
-                          labelStyle: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                            fontVariations: BMBFontWeight.w500,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: BMBColors.blue,
-                              width: 1,
+                        const SizedBox(height: 30),
+                        TextFormField(
+                          controller: _emailController,
+                          autofillHints: const [
+                            AutofillHints.username,
+                            AutofillHints.email
+                          ],
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelText: 'EMAIL',
+                            labelStyle: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                              fontVariations: BMBFontWeight.w500,
                             ),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(
-                              color: BMBColors.blue.withOpacity(0.7),
-                              width: 1,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                color: BMBColors.blue,
+                                width: 1,
+                              ),
                             ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(
-                              color: BMBColors.blue,
-                              width: 1,
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: BMBColors.blue.withOpacity(0.7),
+                                width: 1,
+                              ),
                             ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                color: BMBColors.blue,
+                                width: 1,
+                              ),
+                            ),
+                            prefixIcon:
+                                const Icon(Icons.email, color: Colors.white70),
                           ),
-                          prefixIcon:
-                              const Icon(Icons.lock, color: Colors.white70),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            if (!value.contains('@')) {
+                              return 'Please enter a valid email';
+                            }
+                            return null;
+                          },
                         ),
-                        obscureText: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: _handleForgotPassword,
-                          style: TextButton.styleFrom(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        const SizedBox(height: 15),
+                        TextFormField(
+                          controller: _passwordController,
+                          autofillHints: const [AutofillHints.password],
+                          style: const TextStyle(color: Colors.white),
+                          decoration: InputDecoration(
+                            labelText: 'PASSWORD',
+                            labelStyle: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                              fontVariations: BMBFontWeight.w500,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                color: BMBColors.blue,
+                                width: 1,
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(
+                                color: BMBColors.blue.withOpacity(0.7),
+                                width: 1,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: const BorderSide(
+                                color: BMBColors.blue,
+                                width: 1,
+                              ),
+                            ),
+                            prefixIcon:
+                                const Icon(Icons.lock, color: Colors.white70),
+                          ),
+                          obscureText: true,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            if (value.length < 6) {
+                              return 'Password must be at least 6 characters';
+                            }
+                            return null;
+                          },
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: TextButton(
+                            onPressed: _handleForgotPassword,
+                            style: TextButton.styleFrom(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: Text(
+                              'FORGOT PASSWORD?',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white.withOpacity(0.5),
+                                fontVariations: BMBFontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 15),
+                        ElevatedButton(
+                          onPressed: _handleLogin,
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            backgroundColor: BMBColors.blue.withOpacity(0.30),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              side: const BorderSide(
+                                color: BMBColors.blue,
+                                width: 1,
+                              ),
+                            ),
                           ),
                           child: Text(
-                            'FORGOT PASSWORD?',
+                            'SIGN IN',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.white,
+                              fontVariations: BMBFontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: _handleSignUp,
+                          child: Text(
+                            'OR SIGN UP',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white.withOpacity(0.5),
@@ -232,42 +273,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 15),
-                      ElevatedButton(
-                        onPressed: _handleLogin,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          backgroundColor: BMBColors.blue.withOpacity(0.30),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            side: const BorderSide(
-                              color: BMBColors.blue,
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          'SIGN IN',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontVariations: BMBFontWeight.w500,
-                          ),
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: _handleSignUp,
-                        child: Text(
-                          'OR SIGN UP',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white.withOpacity(0.5),
-                            fontVariations: BMBFontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
