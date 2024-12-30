@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
+use WStrategies\BMB\Features\Notifications\Push\FCMTokenApi;
 use WStrategies\BMB\Features\VotingBracket\Presentation\VotingBracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketApi;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
@@ -130,6 +131,7 @@ class BracketBuilder {
       new NotificationCronHooks(),
       new LoginHooks($name_and_version_args),
       new PageTitleHooks(),
+      new FCMTokenApi(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

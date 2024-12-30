@@ -13,12 +13,12 @@ use WStrategies\BMB\Includes\Hooks\Loader;
 
 class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   private FCMTokenRepo $token_repo;
-  protected string $namespace;
-  protected string $rest_base;
+  protected string $api_namespace;
+  protected string $api_rest_base;
 
   public function __construct($args = []) {
-    $this->namespace = 'bmb/v1';
-    $this->rest_base = 'fcm';
+    $this->api_namespace = 'bmb/v1';
+    $this->api_rest_base = 'fcm';
     $this->token_repo = $args['token_repo'] ?? new FCMTokenRepo();
   }
 
@@ -27,8 +27,8 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   }
 
   public function register_routes(): void {
-    $namespace = $this->namespace;
-    $base = $this->rest_base;
+    $namespace = $this->api_namespace;
+    $base = $this->api_rest_base;
 
     // Register device token
     register_rest_route($namespace, "/{$base}/register", [
@@ -133,6 +133,10 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
         $token->app_version
       );
 
+      if ($saved) {
+        $saved['id'] = (int) $saved['id'];
+      }
+
       return new WP_REST_Response($saved, 201);
     } catch (ValidationException $e) {
       return new WP_Error('validation_error', $e->getMessage(), [
@@ -175,6 +179,19 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   ): WP_Error|WP_REST_Response {
     $user_id = get_current_user_id();
     $device_id = $request->get_param('device_id');
+
+    // Check if device exists first
+    $device = $this->token_repo->get([
+      'user_id' => $user_id,
+      'device_id' => $device_id,
+      'single' => true,
+    ]);
+
+    if (!$device) {
+      return new WP_Error('device_not_found', 'Device not found', [
+        'status' => 404,
+      ]);
+    }
 
     $deleted = $this->token_repo->delete_by_device($user_id, $device_id);
     if (!$deleted) {
