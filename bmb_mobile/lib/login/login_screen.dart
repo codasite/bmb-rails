@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _authService = AuthService();
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -28,17 +29,25 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
       try {
         bool loginSuccess = await _authService.login(
           _emailController.text,
           _passwordController.text,
         );
 
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+
         if (loginSuccess && mounted) {
-          // Navigate to main app and remove login from navigation stack
           Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         } else if (mounted) {
-          // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text(
@@ -48,6 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } catch (e) {
         if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Error: ${e.toString()}'),
@@ -241,7 +253,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 15),
                         ElevatedButton(
-                          onPressed: _handleLogin,
+                          onPressed: _isLoading ? null : _handleLogin,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             backgroundColor: BMBColors.blue.withOpacity(0.30),
@@ -253,14 +265,24 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                           ),
-                          child: Text(
-                            'SIGN IN',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontVariations: BMBFontWeight.w500,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                  ),
+                                )
+                              : Text(
+                                  'SIGN IN',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.white,
+                                    fontVariations: BMBFontWeight.w500,
+                                  ),
+                                ),
                         ),
                         TextButton(
                           onPressed: _handleSignUp,
