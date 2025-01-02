@@ -39,6 +39,7 @@ dependencies:
   http: ^1.2.2
   webview_cookie_manager: ^2.0.6
   url_launcher: ^6.3.1
+  shared_preferences: ^2.3.5
 
 dev_dependencies:
   flutter_test:
