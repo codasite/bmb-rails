@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "bmb_badge_1024_padding 1.png",
+      "filename" : "BMBLaunchScreen_200.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "bmb_badge_1024_padding.png",
+      "filename" : "BMBLaunchScreen_400.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "bmb_badge_1024_padding 2.png",
+      "filename" : "BMBLaunchScreen_600.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

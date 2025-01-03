@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "bmb_badge_1024_padding.png",
+      "filename" : "BMBAppIcon_1024.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -13,7 +13,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "bmb_badge_1024_inverted_padding.png",
+      "filename" : "BMBAppIcon_Dark_1024.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
@@ -25,7 +25,7 @@
           "value" : "tinted"
         }
       ],
-      "filename" : "bmb_badge_1024_white_padding.png",
+      "filename" : "BMBAppIcon_Tinted_1024.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
