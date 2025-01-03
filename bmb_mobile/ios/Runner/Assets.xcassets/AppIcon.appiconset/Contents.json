@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "BMBAppIcon_1024.png",
+      "filename" : "BMBAppIcon_1024_bg.png",
       "idiom" : "universal",
       "platform" : "ios",
       "size" : "1024x1024"
