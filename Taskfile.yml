@@ -231,6 +231,13 @@ tasks:
     cmds:
       - source .env.appstoreconnect && xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey $API_KEY --apiIssuer $API_ISSUER
 
+  ios:deploy:
+    desc: Deploy iOS app to App Store Connect
+    dir: ./bmb_mobile
+    cmds:
+      - task: ios:build
+      - task: ios:push
+
   ios:test-credentials:
     desc: Test App Store Connect API key
     dir: ./bmb_mobile

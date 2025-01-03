@@ -11,22 +11,36 @@ import 'package:bmb_mobile/constants.dart';
 import 'package:bmb_mobile/login/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((_) {
-    runApp(const MyApp());
-  });
+  ]);
+
+  // Check authentication status before deciding initial route
+  final authService = AuthService();
+  final isAuthenticated = await authService.hasValidCookie();
+
+  runApp(MyApp(isAuthenticated: isAuthenticated));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isAuthenticated;
+
+  const MyApp({super.key, required this.isAuthenticated});
 
   @override
   Widget build(BuildContext context) {
+    // Remove splash screen after a delay
+    Future.delayed(const Duration(seconds: 1), () {
+      FlutterNativeSplash.remove();
+    });
+
     return MaterialApp(
       title: 'Back My Bracket',
       theme: ThemeData(
@@ -43,7 +57,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const WebViewApp(),
         '/login': (context) => const LoginScreen(),
       },
-      initialRoute: '/',
+      initialRoute: isAuthenticated ? '/' : '/login',
     );
   }
 }
@@ -161,139 +175,135 @@ class _WebViewAppState extends State<WebViewApp> {
   @override
   void initState() {
     super.initState();
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setUserAgent('BackMyBracket-MobileApp')
-      ..addJavaScriptChannel(
-        'Flutter',
-        onMessageReceived: (message) {
-          if (message.message == 'refresh') {
-            controller.reload();
-            setState(() => _refreshProgress = 0.0);
-          } else if (message.message.startsWith('pull:')) {
-            // Parse pull amount from message
-            final pullAmount = double.parse(message.message.split(':')[1]);
-            setState(() => _refreshProgress =
-                (pullAmount / _refreshThreshold).clamp(0.0, 1.0));
-          }
-        },
-      )
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {},
-          onPageStarted: (String url) {
-            setState(() {
-              _isLoading = true;
-            });
 
-            controller.canGoBack().then((value) {
-              setState(() {
-                _canGoBack = value;
-              });
-            });
-          },
-          onPageFinished: (String url) {
-            // Inject overscroll detection JavaScript
-            controller.runJavaScript('''
-              let startY;
-              document.addEventListener('touchstart', (e) => {
-                startY = e.touches[0].pageY;
-              });
-              document.addEventListener('touchmove', (e) => {
-                const y = e.touches[0].pageY;
-                const scrollTop = document.documentElement.scrollTop;
-                
-                if (scrollTop === 0) {
-                  const pullAmount = y - startY;
-                  if (pullAmount > ${_refreshThreshold}) {
-                    Flutter.postMessage('refresh');
-                  } else if (pullAmount > 0) {
-                    Flutter.postMessage('pull:' + pullAmount);
-                  }
-                }
-              });
-              document.addEventListener('touchend', () => {
-                Flutter.postMessage('pull:0');
-              });
-            ''');
+    // Check authentication first
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final authService = AuthService();
+      final isAuthenticated = await authService.hasValidCookie();
 
-            setAppBarTitle();
-            setState(() {
-              _isLoading = false;
-            });
-
-            controller.canGoBack().then((value) {
-              setState(() {
-                _canGoBack = value;
-              });
-            });
-          },
-          onWebResourceError: (WebResourceError error) {
-            debugPrint('Web resource error: ${error.description}');
-            setState(() {
-              _isLoading = false;
-            });
-          },
-          onNavigationRequest: (NavigationRequest request) async {
-            // List of allowed external domains for system functionality
-            final allowedExternalDomains = [
-              'widgets.wp.com',
-              'public-api.wordpress.com',
-              'wordpress.com'
-            ];
-
-            // Check if URL is external (not our domain)
-            if (!request.url.contains(AppConstants.baseUrl)) {
-              final uri = Uri.parse(request.url);
-
-              // Allow system-related external requests to load in WebView
-              if (allowedExternalDomains
-                  .any((domain) => request.url.contains(domain))) {
-                return NavigationDecision.navigate;
-              }
-
-              // Open other external links in browser
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              }
-              return NavigationDecision.prevent;
-            }
-
-            // Handle login/unauthorized redirects
-            if (request.url.contains(AppConstants.loginPath) ||
-                request.url.contains('unauthorized')) {
-              AuthService().logout();
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) {
-                  Navigator.pushReplacementNamed(context, '/login');
-                }
-              });
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          },
-        ),
-      );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAuthAndLoadPage();
-    });
-  }
-
-  Future<void> _checkAuthAndLoadPage() async {
-    final authService = AuthService();
-    bool isAuthenticated = await authService.hasValidCookie();
-
-    if (!isAuthenticated) {
-      if (mounted) {
+      if (!isAuthenticated && mounted) {
         Navigator.pushReplacementNamed(context, '/login');
+        return;
       }
-      return;
-    }
 
-    // Load initial URL if authenticated
-    controller.loadRequest(
-        Uri.parse('${AppConstants.baseUrl}/dashboard/tournaments/'));
+      // Only initialize WebView if authenticated
+      controller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setUserAgent('BackMyBracket-MobileApp')
+        ..addJavaScriptChannel(
+          'Flutter',
+          onMessageReceived: (message) {
+            if (message.message == 'refresh') {
+              controller.reload();
+              setState(() => _refreshProgress = 0.0);
+            } else if (message.message.startsWith('pull:')) {
+              // Parse pull amount from message
+              final pullAmount = double.parse(message.message.split(':')[1]);
+              setState(() => _refreshProgress =
+                  (pullAmount / _refreshThreshold).clamp(0.0, 1.0));
+            }
+          },
+        )
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {},
+            onPageStarted: (String url) {
+              setState(() {
+                _isLoading = true;
+              });
+
+              controller.canGoBack().then((value) {
+                setState(() {
+                  _canGoBack = value;
+                });
+              });
+            },
+            onPageFinished: (String url) {
+              // Inject overscroll detection JavaScript
+              controller.runJavaScript('''
+                let startY;
+                document.addEventListener('touchstart', (e) => {
+                  startY = e.touches[0].pageY;
+                });
+                document.addEventListener('touchmove', (e) => {
+                  const y = e.touches[0].pageY;
+                  const scrollTop = document.documentElement.scrollTop;
+                  
+                  if (scrollTop === 0) {
+                    const pullAmount = y - startY;
+                    if (pullAmount > ${_refreshThreshold}) {
+                      Flutter.postMessage('refresh');
+                    } else if (pullAmount > 0) {
+                      Flutter.postMessage('pull:' + pullAmount);
+                    }
+                  }
+                });
+                document.addEventListener('touchend', () => {
+                  Flutter.postMessage('pull:0');
+                });
+              ''');
+
+              setAppBarTitle();
+              setState(() {
+                _isLoading = false;
+              });
+
+              controller.canGoBack().then((value) {
+                setState(() {
+                  _canGoBack = value;
+                });
+              });
+            },
+            onWebResourceError: (WebResourceError error) {
+              debugPrint('Web resource error: ${error.description}');
+              setState(() {
+                _isLoading = false;
+              });
+            },
+            onNavigationRequest: (NavigationRequest request) async {
+              // List of allowed external domains for system functionality
+              final allowedExternalDomains = [
+                'widgets.wp.com',
+                'public-api.wordpress.com',
+                'wordpress.com'
+              ];
+
+              // Check if URL is external (not our domain)
+              if (!request.url.contains(AppConstants.baseUrl)) {
+                final uri = Uri.parse(request.url);
+
+                // Allow system-related external requests to load in WebView
+                if (allowedExternalDomains
+                    .any((domain) => request.url.contains(domain))) {
+                  return NavigationDecision.navigate;
+                }
+
+                // Open other external links in browser
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                }
+                return NavigationDecision.prevent;
+              }
+
+              // Handle login/unauthorized redirects
+              if (request.url.contains(AppConstants.loginPath) ||
+                  request.url.contains('unauthorized')) {
+                AuthService().logout();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  }
+                });
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            },
+          ),
+        );
+
+      controller.loadRequest(
+          Uri.parse('${AppConstants.baseUrl}/dashboard/tournaments/'));
+    });
   }
 
   Future<bool> _handleBackPress() async {
