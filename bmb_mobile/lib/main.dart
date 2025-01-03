@@ -11,15 +11,18 @@ import 'package:bmb_mobile/constants.dart';
 import 'package:bmb_mobile/login/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
+void main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
-  ]).then((_) {
-    runApp(const MyApp());
-  });
+  ]);
+
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -27,6 +30,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Remove splash screen after a delay
+    Future.delayed(const Duration(seconds: 2), () {
+      FlutterNativeSplash.remove();
+    });
+
     return MaterialApp(
       title: 'Back My Bracket',
       theme: ThemeData(
