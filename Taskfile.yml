@@ -231,6 +231,28 @@ tasks:
     cmds:
       - source .env.appstoreconnect && xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey $API_KEY --apiIssuer $API_ISSUER
 
+  ios:deploy:
+    desc: Deploy iOS app to App Store Connect
+    dir: ./bmb_mobile
+    cmds:
+      - task: ios:build
+      - task: ios:push
+
+  ios:archive:
+    desc: Build, archive, and export ipa package
+    dir: ./bmb_mobile/ios
+    cmds:
+      - xattr -w com.apple.xcode.CreatedByBuildSystem true ./build && xcodebuild -quiet clean
+      - xcodebuild build -quiet -scheme Runner -sdk iphoneos -destination generic/platform=iOS -workspace Runner.xcworkspace
+      - xcodebuild archive -quiet -scheme Runner -sdk iphoneos -destination generic/platform=iOS -workspace Runner.xcworkspace -archivePath ./build/Runner.xcarchive
+      - xcodebuild -exportArchive -quiet -archivePath ./build/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
+
+  ios:install:
+    desc: Install the archived app on a physical device (use `task ios:archive` first)
+    dir: ./bmb_mobile/ios
+    cmds:
+      - source ../.env.devices && xcrun devicectl device install app --device $IOS_DEVICE_ID build/*.ipa
+
   ios:test-credentials:
     desc: Test App Store Connect API key
     dir: ./bmb_mobile

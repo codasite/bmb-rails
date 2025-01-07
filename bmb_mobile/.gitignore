@@ -44,3 +44,4 @@ app.*.map.json
 
 # App Store Connect credentials
 .env.appstoreconnect
+.env.devices
