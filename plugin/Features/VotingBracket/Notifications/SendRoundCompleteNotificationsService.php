@@ -20,14 +20,30 @@ class SendRoundCompleteNotificationsService {
   private readonly UserRepo $user_repo;
   private readonly PermalinkService $permalink_service;
 
+  /**
+   * @var array<RoundCompleteNotificationListenerInterface>
+   */
+  private array $listeners = [];
+
   function __construct($args = []) {
     $this->email_service =
       $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
+    $args['email_service'] = $this->email_service;
+    $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->user_repo = $args['user_repo'] ?? new UserRepo();
     $this->permalink_service =
       $args['permalink_service'] ?? new PermalinkService();
+  }
+  /**
+   * @return array<RoundCompleteNotificationListenerInterface>
+   */
+  private function init_listeners($args): array {
+    return [
+      new RoundCompleteEmailListener($args),
+      new RoundCompletePushListener($args),
+    ];
   }
   public function send_round_complete_notifications(): void {
     $brackets = $this->bracket_repo->get_all(
@@ -71,24 +87,9 @@ class SendRoundCompleteNotificationsService {
     if (!$user) {
       return;
     }
-    $to_email = $user->user_email;
-    $to_name = $user->display_name;
-    if ($bracket->status === 'complete') {
-      $subject = $bracket->get_title() . ' Voting Complete!';
-      $message = 'The voting for ' . $bracket->get_title() . ' is complete!';
-      $button_url =
-        $this->permalink_service->get_permalink($bracket->id) . 'results';
-      $button_text = 'View Results';
-    } else {
-      $subject = $bracket->get_title() . ' Voting Round Complete!';
-      $message = 'Vote now in round ' . ((int) $bracket->live_round_index + 1);
-      $button_url =
-        $this->permalink_service->get_permalink($bracket->id) . 'play';
-      $button_text = 'Vote now';
+
+    foreach ($this->listeners as $listener) {
+      $listener->notify($user, $bracket, $play);
     }
-
-    $html = BracketEmailTemplate::render($message, $button_url, $button_text);
-
-    $this->email_service->send($to_email, $to_name, $subject, $message, $html);
   }
 }

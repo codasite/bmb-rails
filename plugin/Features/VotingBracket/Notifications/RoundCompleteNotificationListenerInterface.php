@@ -6,5 +6,5 @@ use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\User;
 
 interface RoundCompleteNotificationListenerInterface {
-  public function notify(Bracket $bracket, Play $play): void;
+  public function notify(User $user, Bracket $bracket, Play $play): void;
 }
