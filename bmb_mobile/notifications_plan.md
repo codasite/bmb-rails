@@ -12,7 +12,7 @@
   - device_info_plus
 
 ## 2. Database Infrastructure
-- [ ] Create new `wp_fcm_devices` table
+- [X] Create new `wp_fcm_devices` table
   - user_id
   - device_id
   - token
@@ -20,8 +20,14 @@
   - app_version
   - last_used
   - created_at
-- [ ] Set up proper indexes and constraints
+- [X] Set up proper indexes and constraints
 - [ ] Create PHP management class for device operations
+  - Manage device preferences
+  - Filter devices based on notification type
+  - Handle token validation
+  - Manage device status
+  - Support notification targeting
+  - Handle delivery failures
 
 ## 3. WordPress Backend
 - [ ] Install/configure FCM WordPress plugin
