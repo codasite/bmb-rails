@@ -6,7 +6,7 @@ use WStrategies\BMB\Features\Notifications\Email\Fakes\EmailServiceInterfaceFake
 use WStrategies\BMB\Includes\Domain\Fakes\PickResultFakeFactory;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\Fakes\UserRepoFake;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
+use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsEmailFormatService;
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Includes\Service\WordpressFunctions\Fakes\PermalinkServiceFake;
 

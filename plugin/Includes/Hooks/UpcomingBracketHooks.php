@@ -8,7 +8,7 @@ use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
+use WStrategies\BMB\Features\Bracket\UpcomingBracket\UpcomingBracketNotificationService;
 use WStrategies\BMB\Includes\Utils;
 
 class UpcomingBracketHooks implements HooksInterface {

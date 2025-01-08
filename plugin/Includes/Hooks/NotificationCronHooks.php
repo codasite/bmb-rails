@@ -6,7 +6,7 @@ use Error;
 use WStrategies\BMB\Features\VotingBracket\Notifications\SendRoundCompleteNotificationsService;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
+use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsNotificationService;
 
 class NotificationCronHooks implements HooksInterface {
   private BracketResultsNotificationService $results_notification_service;

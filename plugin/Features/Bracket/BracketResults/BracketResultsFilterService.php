@@ -1,6 +1,6 @@
 <?php
 
-namespace WStrategies\BMB\Includes\Service\Notifications;
+namespace WStrategies\BMB\Features\Bracket\BracketResults;
 
 use DateTimeImmutable;
 use InvalidArgumentException;

@@ -3,7 +3,7 @@ namespace WStrategies\BMB\tests\integration\Includes\service\Notifications;
 
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Features\Notifications\NotificationType;
-use WStrategies\BMB\Includes\Service\Notifications\UpcomingBracketNotificationService;
+use WStrategies\BMB\Features\Bracket\UpcomingBracket\UpcomingBracketNotificationService;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class UpcomingBracketNotificationServiceTest extends WPBB_UnitTestCase {

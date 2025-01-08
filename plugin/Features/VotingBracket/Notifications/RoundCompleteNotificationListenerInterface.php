@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Features\Notifications\NotificationListeners;
+namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;

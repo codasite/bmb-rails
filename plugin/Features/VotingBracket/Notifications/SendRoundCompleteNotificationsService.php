@@ -3,6 +3,7 @@
 namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
+use WStrategies\BMB\Features\Notifications\NotificationListeners\RoundCompleteNotificationListenerInterface;
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;

@@ -11,9 +11,9 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsEmailFormatService;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsFilterService;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
+use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsEmailFormatService;
+use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsFilterService;
+use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsNotificationService;
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Includes\Service\PickResultService;
 

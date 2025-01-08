@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Includes\Service\Notifications;
+namespace WStrategies\BMB\Features\Bracket\BracketResults;
 
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
