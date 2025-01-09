@@ -42,6 +42,11 @@ tasks:
       - docker exec wp-dev install-wp-tests
       - docker exec wp-dev create-admin-user.sh
 
+  composer:install:
+    desc: Install php dependencies
+    cmds:
+      - docker exec wp-dev composer install
+
   ### TRELLIS ###
   trellis:
     desc: Trellis task namespace

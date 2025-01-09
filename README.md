@@ -18,11 +18,11 @@ includes:
   - [WooCommerce](https://wordpress.org/plugins/woocommerce/)
   - [Oxygen](https://drive.google.com/file/d/19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2/view?usp=sharing)
   - [Oxygen-WooCommerce](https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing)
-3. Run `make composer-install` to install php dependencies.
-4. Run `make wp-up` to start the local wordpress services.
-5. In a new terminal run `make wp-install` to install wordpress and initialize plugins. This also sets up the test installation
-6. `make react-install` to install npm dependencies for the react app.
-7. `make react-start` or `make react-build` to start or build the react app.
+3. Run `task composer:install` to install php dependencies.
+4. Run `task wp:up` to start the local wordpress services.
+5. In a new terminal run `task wp:install` to install wordpress and initialize plugins. This also sets up the test installation
+6. `task react:install` to install npm dependencies for the react app.
+7. `task react:start` or `task react:build` to start or build the react app.
 8. Go to `localhost:8008` in your browser to view the site. The wordpress admin is at `localhost:8008/wp-admin` with username `admin` and password `admin`.
 
 ## Basic Installation (Local WP)
@@ -47,8 +47,8 @@ cd /Users/karl/Local Sites/bracket-builder/app/public/wp-content/plugins
 ln -s /Users/karl/Documents/repos/wp-bracket-builder/plugin wp-bracket-builder
 ```
 
-3. Run `make composer-install` to install php dependencies. 
-4. Run `make react-install` to install npm dependencies.
+3. Run `task composer:install` to install php dependencies. 
+4. Run `task react:install` to install npm dependencies.
 5. Install and activate Oxygen Builder 4.5
 6. Install and activate the WooCommerce Plugin
 7. Activate the WP Bracket Builder Plugin
@@ -81,7 +81,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ```
 
 12. Enable debugging in `wp-config.php` https://wordpress.org/documentation/article/debugging-in-wordpress/
-13. Run `make react-start` to start the react app.
+13. Run `task react:start` to start the react app.
 
 ## Image Generation
 
@@ -137,10 +137,10 @@ Tests are stored in `plugin/tests` and follow the directory structure of the plu
 
 Tests should be run via docker-compose. To run the tests:
 
-1. `make wp-up` to start the local wordpress services
-2. `make wp-install` installs wordpress and the test directory
-3. `make wp-test` to run the tests
-4. `make wp-cover` to run the tests with code coverage. The coverage report is available at localhost:8080/coverage
+1. `task wp:up` to start the local wordpress services
+2. `task wp:install` installs wordpress and the test directory
+3. `task wp:test` to run the tests
+4. `task wp:test:coverage` to run the tests with code coverage. The coverage report is available at localhost:8080/coverage
 
 ### Configuring Coverage Gutters in VS Code
 
@@ -171,7 +171,7 @@ Replace `/path/to/your/wp-bracket-builder` with the absolute path to your local 
 
 The `remotePathResolve` setting maps the Docker container path to your local workspace path, allowing Coverage Gutters to find the correct files.
 
-4. After running `make wp-cover`, click the "Watch" button in the VS Code status bar to enable coverage highlighting
+4. After running `task wp:test:coverage`, click the "Watch" button in the VS Code status bar to enable coverage highlighting
 5. Coverage indicators will appear in the gutter:
    - Green: Line is covered by tests
    - Red: Line is not covered
@@ -180,8 +180,10 @@ The `remotePathResolve` setting maps the Docker container path to your local wor
 ## Deployment: Staging
 Trellis comes set up for a remote staging environment out of the box
 
-1. `deploy-plugin-staging` to build, push, and deploy WordPress plugin code to the Trellis staging environment
-2. go to https://dev.backmybracket.com/
+1. `task prod:build` to build the plugin
+2. `task prod:push` to push the plugin to the registry
+3. `trellis deploy staging` to deploy to staging
+4. go to https://dev.backmybracket.com/
 
 ## Deployment: Production
 The production server is not yet configured through trellis. Need to SSH in to deploy manually
@@ -190,12 +192,12 @@ The production server is not yet configured through trellis. Need to SSH in to d
 1. `ssh wpbb@147.182.190.133`  Log into production server
 2. `cd wp-bracket-builder` this folder is symlinked to `/var/www/html/wp-content/plugins/wp-bracket-builder`
 3. `git pull` pull the latest changes
-4. `make react-install` install new react dependencies
-5. `make react-build` builds the react package for the plugin
+4. `task react:install` install new react dependencies
+5. `task react:build` builds the react package for the plugin
 
 ### Image Generator Containers (only needed if printable bracket styles change)
-1. `make prod-build-images` build the containers locally. If desired, test the images on the staging server first.
-2. `make prod-push-images` pushes new images to docker-registry.wstrategies.co/wpbb
+1. `task prod:build` build the containers locally. If desired, test the images on the staging server first.
+2. `task prod:push` pushes new images to docker-registry.wstrategies.co/wpbb
 3. `ssh wpbb@147.182.190.133`  Log into production server
 4. `cd wp-bracket-builder` go to project root
 
