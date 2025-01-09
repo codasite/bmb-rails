@@ -6,6 +6,7 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Driver\Selector;
 use SebastianBergmann\CodeCoverage\Filter;
 use SebastianBergmann\CodeCoverage\Report\Html\Facade as HtmlReport;
+use SebastianBergmann\CodeCoverage\Report\Clover;
 
 // Create new coverage object
 $filter = new Filter();
@@ -26,6 +27,14 @@ if (file_exists('/var/www/html/coverage-data/integration.cov')) {
   $coverage->merge($integration);
 }
 
-// Generate HTML report
+// Generate HTML report (nice for browsing)
 $writer = new HtmlReport();
-$writer->process($coverage, '/var/www/html/coverage');
+$writer->process($coverage, '/var/www/html/coverage/html');
+
+// Generate Clover XML report (for Coverage Gutters)
+$clover = new Clover();
+$clover->process($coverage, '/var/www/html/coverage/coverage.xml');
+
+// shell_exec(
+//   'php vendor/bin/phpcov convert --html=/var/www/html/coverage/html --clover=/var/www/html/coverage/clover.xml --lcov=/var/www/html/coverage/lcov.info /var/www/html/coverage-data'
+// );

@@ -51,7 +51,8 @@
     "php-stubs/woocommerce-stubs": "^8.4",
     "10up/wp_mock": "dev-trunk",
     "dg/bypass-finals": "^1.5",
-    "sempro/phpunit-pretty-print": "^1.4"
+    "sempro/phpunit-pretty-print": "^1.4",
+    "phpunit/phpcov": "^8.2"
   },
   "require": {
     "aws/aws-sdk-php": "^3.270",
@@ -69,6 +70,10 @@
       "@test-integration"
     ],
     "coverage": [
+      "@mkdir -p /var/www/html/coverage-data",
+      "@mkdir -p /var/www/html/coverage",
+      "TEST_TYPE=unit phpunit --configuration=tests/phpunit.xml.dist --testsuite unit --coverage-php /var/www/html/coverage-data/unit.cov --coverage-clover /var/www/html/coverage-data/unit.xml",
+      "TEST_TYPE=integration phpunit --configuration=tests/phpunit.xml.dist --testsuite integration --coverage-php /var/www/html/coverage-data/integration.cov --coverage-clover /var/www/html/coverage-data/integration.xml",
       "php -d memory_limit=-1 tests/merge-coverage.php"
     ]
   },

@@ -96,6 +96,7 @@ services:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
       - ./docker/wordpress/downloads:/tmp/downloads
       - ./docker/wordpress/plugins:/tmp/plugins
+      - ./plugin/tests/coverage:/var/www/html/coverage
       - wp-dev-data:/var/www/html
     ports:
       - 8008:80
