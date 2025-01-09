@@ -35,6 +35,14 @@ $writer->process($coverage, '/var/www/html/coverage/html');
 $clover = new Clover();
 $clover->process($coverage, '/var/www/html/coverage/coverage.xml');
 
-// shell_exec(
-//   'php vendor/bin/phpcov convert --html=/var/www/html/coverage/html --clover=/var/www/html/coverage/clover.xml --lcov=/var/www/html/coverage/lcov.info /var/www/html/coverage-data'
-// );
+// Perform find-replace on coverage.xml
+$coverageXmlPath = '/var/www/html/coverage/coverage.xml';
+if (file_exists($coverageXmlPath)) {
+  $content = file_get_contents($coverageXmlPath);
+  $content = str_replace(
+    '/var/www/html/wp-content/plugins/wp-bracket-builder',
+    '/Users/barrymolina/Projects/WStrategies/wp-bracket-builder/plugin',
+    $content
+  );
+  file_put_contents($coverageXmlPath, $content);
+}
