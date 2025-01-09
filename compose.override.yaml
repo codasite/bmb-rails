@@ -92,6 +92,7 @@ services:
       WORDPRESS_ADMIN_PASSWORD: admin
       WORDPRESS_ADMIN_EMAIL: test@wstrategies.co
       XDEBUG_MODE: coverage
+      REPO_ROOT: ${REPO_ROOT}
     volumes:
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
       - ./docker/wordpress/downloads:/tmp/downloads

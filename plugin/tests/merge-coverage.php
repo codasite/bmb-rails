@@ -35,13 +35,22 @@ $writer->process($coverage, '/var/www/html/coverage/html');
 $clover = new Clover();
 $clover->process($coverage, '/var/www/html/coverage/coverage.xml');
 
+// Get repository root from environment
+$hostPath = getenv('REPO_ROOT');
+echo getcwd() . "\n";
+if (!$hostPath) {
+  throw new RuntimeException(
+    'REPO_ROOT environment variable must be set. Add REPO_ROOT=/path/to/wp-bracket-builder to your .env file'
+  );
+}
+
 // Perform find-replace on coverage.xml
 $coverageXmlPath = '/var/www/html/coverage/coverage.xml';
 if (file_exists($coverageXmlPath)) {
   $content = file_get_contents($coverageXmlPath);
   $content = str_replace(
     '/var/www/html/wp-content/plugins/wp-bracket-builder',
-    '/Users/barrymolina/Projects/WStrategies/wp-bracket-builder/plugin',
+    $hostPath . '/plugin',
     $content
   );
   file_put_contents($coverageXmlPath, $content);
