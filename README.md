@@ -142,6 +142,41 @@ Tests should be run via docker-compose. To run the tests:
 3. `make wp-test` to run the tests
 4. `make wp-cover` to run the tests with code coverage. The coverage report is available at localhost:8080/coverage
 
+### Configuring Coverage Gutters in VS Code
+
+To see code coverage indicators in VS Code:
+
+1. Install the [Coverage Gutters](https://marketplace.visualstudio.com/items?itemName=ryanluker.vscode-coverage-gutters) extension
+
+2. Set your repository path in `.env`:
+```ini
+REPO_ROOT=/path/to/your/wp-bracket-builder
+```
+Replace `/path/to/your/wp-bracket-builder` with the absolute path to your local repository root.
+
+3. Add the following to your VS Code settings.json:
+```json
+{
+  "coverage-gutters.coverageFileNames": [
+    "coverage.xml"
+  ],
+  "coverage-gutters.remotePathResolve": [
+    [
+      "/var/www/html/wp-content/plugins/wp-bracket-builder",
+      "${workspaceFolder}/plugin/"
+    ]
+  ]
+}
+```
+
+The `remotePathResolve` setting maps the Docker container path to your local workspace path, allowing Coverage Gutters to find the correct files.
+
+4. After running `make wp-cover`, click the "Watch" button in the VS Code status bar to enable coverage highlighting
+5. Coverage indicators will appear in the gutter:
+   - Green: Line is covered by tests
+   - Red: Line is not covered
+   - Yellow: Line is partially covered
+
 ## Deployment: Staging
 Trellis comes set up for a remote staging environment out of the box
 
