@@ -80,6 +80,11 @@ tasks:
     cmds:
       - docker exec wp-dev composer coverage
 
+  wp:test:merge-coverage:
+    desc: Merge coverage data
+    cmds:
+      - docker exec wp-dev composer merge-coverage
+
   ### DEVELOPMENT ###
   wp:log:
     desc: Read debug log (ignore deprecated warnings)

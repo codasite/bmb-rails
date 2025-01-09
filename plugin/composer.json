@@ -75,6 +75,10 @@
       "TEST_TYPE=unit phpunit --configuration=tests/phpunit.xml.dist --testsuite unit --coverage-php /var/www/html/coverage-data/unit.cov --coverage-clover /var/www/html/coverage-data/unit.xml",
       "TEST_TYPE=integration phpunit --configuration=tests/phpunit.xml.dist --testsuite integration --coverage-php /var/www/html/coverage-data/integration.cov --coverage-clover /var/www/html/coverage-data/integration.xml",
       "php -d memory_limit=-1 tests/merge-coverage.php"
+    ],
+    "merge-coverage": [
+      "@mkdir -p /var/www/html/coverage",
+      "php -d memory_limit=-1 tests/merge-coverage.php"
     ]
   },
   "extra": {
