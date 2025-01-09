@@ -44,8 +44,9 @@ tasks:
 
   composer:install:
     desc: Install php dependencies
+    dir: ./plugin
     cmds:
-      - docker exec wp-dev composer install
+      - composer install
 
   ### TRELLIS ###
   trellis:
