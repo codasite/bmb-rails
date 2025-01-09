@@ -2,24 +2,40 @@
 
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
-use WStrategies\BMB\Email\Template\BracketEmailTemplate;
-use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Features\Notifications\NotificationRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\UserRepo;
 
 class UpcomingBracketNotificationService {
   private NotificationRepo $notification_repo;
-  private EmailServiceInterface $email_service;
   private BracketRepo $bracket_repo;
+  private readonly UserRepo $user_repo;
+
+  /**
+   * @var array<UpcomingNotificationListenerInterface>
+   */
+  private array $listeners = [];
 
   public function __construct($args = []) {
     $this->notification_repo =
       $args['notification_repo'] ?? new NotificationRepo();
-    $this->email_service =
-      $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->user_repo = $args['user_repo'] ?? new UserRepo();
+    $args['email_service'] =
+      $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
+    $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
+  }
+
+  /**
+   * @return array<UpcomingNotificationListenerInterface>
+   */
+  private function init_listeners($args): array {
+    return [
+      new UpcomingBracketEmailListener($args),
+      new UpcomingBracketPushListener($args),
+    ];
   }
 
   public function notify_upcoming_bracket_live(int $bracket_post_id): void {
@@ -27,26 +43,21 @@ class UpcomingBracketNotificationService {
       'post_id' => $bracket_post_id,
       'notification_type' => NotificationType::BRACKET_UPCOMING,
     ]);
+
     $bracket = $this->bracket_repo->get($bracket_post_id);
-    // send email to each user
+    if (!$bracket) {
+      return;
+    }
+
     foreach ($notifications as $notification) {
-      $user = get_user_by('id', $notification->user_id);
+      $user = $this->user_repo->get_by_id($notification->user_id);
       if (!$user) {
         continue;
       }
-      $heading = strtoupper($bracket->title) . ' is now live. Make your picks!';
-      $button_url = $bracket->url;
-      $button_text = 'Play Tournament';
 
-      $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
-
-      $this->email_service->send(
-        $user->user_email,
-        $user->display_name,
-        $heading,
-        $heading,
-        $html
-      );
+      foreach ($this->listeners as $listener) {
+        $listener->notify($user, $bracket, $notification);
+      }
     }
   }
 }
