@@ -59,9 +59,7 @@ tasks:
   wp:test:
     desc: Run all tests
     cmds:
-      - task: wp:test:integration
-      - task: wp:test:unit
-
+      - docker exec wp-dev composer test -- {{.CLI_ARGS}}
   wp:test:unit:
     desc: Run unit tests using WP_Mock
     cmds:
@@ -102,6 +100,11 @@ tasks:
     desc: Run SQL query
     cmds:
       - docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress -e "{{.CLI_ARGS}}"'
+
+  wp:bash:
+    desc: Open a bash shell in the wordpress container
+    cmds:
+      - docker exec -it wp-dev /bin/bash
 
   ### IMAGES ###
   images:up:
