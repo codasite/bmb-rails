@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\Features\Notifications\NotificationListeners;
+namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
 use WStrategies\BMB\Features\Notifications\Notification;
 
