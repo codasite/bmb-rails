@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\tests\integration\Includes\service\Notifications;
+namespace WStrategies\BMB\tests\integration\Features\Bracket\UpcomingBracket;
 
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Features\Notifications\NotificationType;

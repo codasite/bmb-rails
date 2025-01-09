@@ -4,43 +4,48 @@ namespace WStrategies\BMB\Features\Bracket\BracketResults;
 
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\UserRepo;
 use WStrategies\BMB\Includes\Service\WordpressFunctions\PermalinkService;
+use WStrategies\BMB\Includes\Domain\User;
 
-class BracketResultsEmailFormatService {
-  public function __construct(
-    private readonly EmailServiceInterface $email_service = new MailchimpEmailService(),
-    private readonly UserRepo $user_repo = new UserRepo(),
-    private readonly PermalinkService $permalink_service = new PermalinkService()
-  ) {
+class BracketResultsEmailListener implements
+  BracketResultsNotificationListenerInterface {
+  private readonly EmailServiceInterface $email_service;
+  private readonly UserRepo $user_repo;
+  private readonly PermalinkService $permalink_service;
+
+  public function __construct($args = []) {
+    $this->email_service =
+      $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
+    $this->user_repo = $args['user_repo'] ?? new UserRepo();
+    $this->permalink_service =
+      $args['permalink_service'] ?? new PermalinkService();
   }
 
-  public function send_email(Play $play, PickResult $result): void {
-    $user = $this->user_repo->get_by_id($play->author);
-    if (!$user) {
-      return;
-    }
-    $to_email = $user->user_email;
-    $to_name = $user->display_name;
+  public function notify(User $user, Play $play, PickResult $result): void {
     $subject = 'Bracket Results Updated';
-
-    // Generate html content for email
     $heading = $this->get_pick_result_heading($result);
     $button_url = $this->permalink_service->get_permalink($play->id) . 'view';
     $button_text = 'View Bracket';
 
     $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
 
-    // send the email
-    $this->email_service->send($to_email, $to_name, $subject, $heading, $html);
+    $this->email_service->send(
+      $user->user_email,
+      $user->display_name,
+      $subject,
+      $heading,
+      $html
+    );
   }
 
-  public function get_pick_result_heading(PickResult $result): string {
+  private function get_pick_result_heading(PickResult $result): string {
     $picked_team = strtoupper($result->get_picked_team()->name);
     $winning_team = strtoupper($result->match->get_winning_team()->name);
+
     if ($result->picked_team_won()) {
       return 'You picked ' . $picked_team . '... and they won!';
     } else {

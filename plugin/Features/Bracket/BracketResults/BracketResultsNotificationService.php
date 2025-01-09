@@ -2,7 +2,6 @@
 namespace WStrategies\BMB\Features\Bracket\BracketResults;
 
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
@@ -17,6 +16,8 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
 use WStrategies\BMB\Includes\Service\PickResultService;
+use WStrategies\BMB\Includes\Domain\User;
+use WStrategies\BMB\Includes\Repository\UserRepo;
 
 class BracketResultsNotificationService {
   protected BracketMatchService $match_service;
@@ -24,9 +25,14 @@ class BracketResultsNotificationService {
   protected PickResultService $pick_result_service;
   protected BracketRepo $bracket_repo;
   protected PlayRepo $play_repo;
-  private BracketResultsEmailFormatService $email_format_service;
   private DateTimePostMetaRepo $results_sent_at_repo;
   private BracketResultsFilterService $results_filter_service;
+  private readonly UserRepo $user_repo;
+
+  /**
+   * @var array<BracketResultsNotificationListenerInterface>
+   */
+  private array $listeners = [];
 
   public function __construct($args = []) {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
@@ -36,11 +42,9 @@ class BracketResultsNotificationService {
       $args['pick_result_factory'] ?? new PickResultFactory();
     $this->pick_result_service =
       $args['pick_result_service'] ?? new PickResultService();
-    $this->email_format_service =
-      $args['email_format_service'] ??
-      new BracketResultsEmailFormatService(
-        $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create()
-      );
+    $args['email_service'] =
+      $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
+    $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
     $this->results_sent_at_repo =
       $args['results_sent_at_repo'] ??
       new DateTimePostMetaRepo(
@@ -48,6 +52,17 @@ class BracketResultsNotificationService {
       );
     $this->results_filter_service =
       $args['results_filter_service'] ?? new BracketResultsFilterService();
+    $this->user_repo = $args['user_repo'] ?? new UserRepo();
+  }
+
+  /**
+   * @return array<BracketResultsNotificationListenerInterface>
+   */
+  private function init_listeners($args): array {
+    return [
+      new BracketResultsEmailListener($args),
+      new BracketResultsPushListener($args),
+    ];
   }
 
   public function send_bracket_results_notifications() {
@@ -189,8 +204,17 @@ class BracketResultsNotificationService {
   ): void {
     try {
       $result = $this->get_pick_result($play, $filtered_matches_2d);
-      if ($result) {
-        $this->email_format_service->send_email($play, $result);
+      if (!$result) {
+        return;
+      }
+
+      $user = $this->user_repo->get_by_id($play->author);
+      if (!$user) {
+        return;
+      }
+
+      foreach ($this->listeners as $listener) {
+        $listener->notify($user, $play, $result);
       }
     } catch (\Exception $e) {
       SentryLogger::log_error(

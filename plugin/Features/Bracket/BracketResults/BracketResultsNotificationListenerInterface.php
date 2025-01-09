@@ -6,5 +6,5 @@ use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\User;
 
 interface BracketResultsNotificationListenerInterface {
-  public function notify(Play $play, PickResult $result): void;
+  public function notify(User $user, Play $play, PickResult $result): void;
 }
