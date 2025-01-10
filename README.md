@@ -1,10 +1,11 @@
 # WP Bracket Builder
 
-A WordPress plugin for creating and managing tournament brackets.
+A WordPress plugin for creating and managing tournament brackets, with companion mobile app.
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Development Setup](#development-setup)
+- [Mobile Development](#mobile-development)
 - [Development Tools](#development-tools)
   - [Testing](#testing)
   - [Code Coverage](#code-coverage)
@@ -63,6 +64,50 @@ task react:start     # Start React development server
    - Admin: `localhost:8008/wp-admin` (username: `admin`, password: `admin`)
 
 > **Note**: The WordPress installation comes pre-configured with all necessary pages, templates, and sample data. You don't need to create any pages or Oxygen templates manually.
+
+## Mobile Development
+
+The project includes a Flutter mobile app located in the `bmb_mobile` directory.
+
+### Prerequisites
+1. Install Flutter development tools:
+   - [Flutter SDK](https://docs.flutter.dev/get-started/install)
+   - [Xcode](https://developer.apple.com/xcode/) (for iOS development)
+   - [Android Studio](https://developer.android.com/studio) (for Android development)
+
+2. Set up your IDE:
+   - [VS Code Flutter Extension](https://marketplace.visualstudio.com/items?itemName=Dart-Code.flutter)
+   - Or [Android Studio Flutter Plugin](https://docs.flutter.dev/get-started/editor?tab=androidstudio)
+
+### Getting Started
+```bash
+task flutter:get      # Install dependencies
+task flutter:run    # Run the app on selected device
+```
+
+### Version Management
+The mobile app version follows the format `x.y.z+b` where:
+- `x.y.z` is the semantic version (major.minor.patch)
+- `b` is the build number
+
+```bash
+task app:version:get        # Display current version
+task app:version:bump-patch # Increment patch version
+task app:version:bump-build # Increment build number
+```
+
+### iOS Deployment
+1. Set up App Store Connect credentials:
+```bash
+cp bmb_mobile/.env.appstoreconnect.example bmb_mobile/.env.appstoreconnect
+# Edit .env.appstoreconnect with your credentials
+```
+
+2. Build and deploy:
+```bash
+task ios:build    # Build iOS app
+task ios:push     # Upload to App Store Connect
+```
 
 ## Development Tools
 

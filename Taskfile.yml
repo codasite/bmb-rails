@@ -221,6 +221,12 @@ tasks:
     cmds:
       - flutter run
 
+  flutter:get:
+    desc: Get Flutter dependencies
+    dir: ./bmb_mobile
+    cmds:
+      - flutter pub get
+
   ios:
     desc: iOS task namespace
     cmds:
