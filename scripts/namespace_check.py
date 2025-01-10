@@ -112,6 +112,7 @@ def main():
     has_errors = False
     checked_count = 0
     error_count = 0
+    updated_count = 0
 
     for directory in args.directories:
         directory_path = os.path.abspath(directory)
@@ -132,15 +133,24 @@ def main():
                     file_path, base_dir, args.namespace_prefix, args.update
                 )
 
-                if not success or args.update:
-                    print(message)
                 if not success:
                     has_errors = True
                     error_count += 1
+                    print(message)
+                elif args.update and "Updated namespace" in message:
+                    updated_count += 1
+                    print(message)
 
                 checked_count += 1
 
-    print(f"Checked {checked_count} files, found {error_count} errors")
+    print(f"Checked {checked_count} files", end="")
+    if updated_count > 0:
+        print(f", updated {updated_count}")
+    elif error_count > 0:
+        print(f", found {error_count} errors")
+    else:
+        print()
+
     sys.exit(1 if has_errors else 0)
 
 
