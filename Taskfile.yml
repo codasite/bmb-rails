@@ -214,6 +214,11 @@ tasks:
     cmds:
       - vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 2G .
 
+  quality:namespace-check:
+    desc: Check namespace consistency
+    cmds:
+      - python3 scripts/namespace_check.py ./plugin --namespace-prefix WStrategies\\BMB --limit 100
+
   # MOBILE APP #
   flutter:run:
     desc: Run mobile app with the currently selected device in VSCode
