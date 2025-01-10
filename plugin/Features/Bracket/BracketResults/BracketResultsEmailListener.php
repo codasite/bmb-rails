@@ -42,7 +42,7 @@ class BracketResultsEmailListener implements
     );
   }
 
-  private function get_pick_result_heading(PickResult $result): string {
+  public function get_pick_result_heading(PickResult $result): string {
     $picked_team = strtoupper($result->get_picked_team()->name);
     $winning_team = strtoupper($result->match->get_winning_team()->name);
 
