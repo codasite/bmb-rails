@@ -6,6 +6,28 @@
  * @package Wp_Bracket_Builder
  */
 
+// Add path mapping for test output at the start
+$mappedPathTo = getenv('REPO_ROOT');
+
+if ($mappedPathTo) {
+  class PathMappingPrinter extends
+    Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9 {
+    public function write(string $buffer): void {
+      $buffer = str_replace(
+        '/var/www/html/wp-content/plugins/wp-bracket-builder',
+        getenv('REPO_ROOT') . '/plugin',
+        $buffer
+      );
+
+      parent::write($buffer);
+    }
+  }
+} else {
+  class PathMappingPrinter extends
+    Sempro\PHPUnitPrettyPrinter\PrettyPrinterForPhpUnit9 {
+  }
+}
+
 // Get test type from environment variable (unit or integration)
 $test_type = getenv('TEST_TYPE') ?: 'integration';
 
