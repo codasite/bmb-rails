@@ -1,5 +1,5 @@
 <?php
-namespace Includes\Domain;
+namespace WStrategies\BMB\tests\unit\Includes\Domain;
 
 use Exception;
 use WP_Mock\Tools\TestCase;

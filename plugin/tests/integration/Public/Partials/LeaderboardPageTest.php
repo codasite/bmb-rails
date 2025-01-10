@@ -1,5 +1,5 @@
 <?php
-namespace WStrategies\BMB\tests\includes\Hooks;
+namespace WStrategies\BMB\tests\integration\Public\Partials;
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
