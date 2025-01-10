@@ -59,48 +59,47 @@ def main():
     parser = argparse.ArgumentParser(
         description="Check PHP namespace declarations match file paths"
     )
-    parser.add_argument("directory", help="Directory to check PHP files in")
+    parser.add_argument(
+        "directories", nargs="+", help="One or more directories to check PHP files in"
+    )
+    parser.add_argument(
+        "--base-dir",
+        help="Base directory for namespace calculations (defaults to directory being checked)",
+    )
     parser.add_argument(
         "--namespace-prefix", help="Namespace prefix to prepend", default=""
     )
-    parser.add_argument(
-        "--limit",
-        type=int,
-        help="Limit number of files to check (0 for unlimited)",
-        default=0,
-    )
     args = parser.parse_args()
-
-    base_dir = os.path.abspath(args.directory)
-    if not os.path.isdir(base_dir):
-        print(f"Error: {base_dir} is not a directory")
-        sys.exit(1)
 
     has_errors = False
     checked_count = 0
     error_count = 0
 
-    for root, _, files in os.walk(base_dir):
-        for file in files:
-            if args.limit > 0 and checked_count >= args.limit:
-                print(f"Skipping {len(files)} files")
-                break
-
-            if not file.endswith(".php"):
-                continue
-
-            file_path = os.path.join(root, file)
-            success, message = check_file(file_path, base_dir, args.namespace_prefix)
-
-            if not success:
-                has_errors = True
-                error_count += 1
-                print(message)
-
-            checked_count += 1
-        else:
+    for directory in args.directories:
+        directory_path = os.path.abspath(directory)
+        if not os.path.isdir(directory_path):
+            print(f"Error: {directory_path} is not a directory")
             continue
-        break
+
+        # Use base_dir if provided, otherwise use the directory being checked
+        base_dir = os.path.abspath(args.base_dir) if args.base_dir else directory_path
+
+        for root, _, files in os.walk(directory_path):
+            for file in files:
+                if not file.endswith(".php"):
+                    continue
+
+                file_path = os.path.join(root, file)
+                success, message = check_file(
+                    file_path, base_dir, args.namespace_prefix
+                )
+
+                if not success:
+                    has_errors = True
+                    error_count += 1
+                    print(message)
+
+                checked_count += 1
 
     print(f"Checked {checked_count} files, found {error_count} errors")
     sys.exit(1 if has_errors else 0)
