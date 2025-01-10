@@ -25,7 +25,28 @@ def path_to_namespace(file_path: str, base_dir: str, prefix: str) -> str:
     return f"{prefix}\\{namespace}" if prefix else namespace
 
 
-def check_file(file_path: str, base_dir: str, prefix: str) -> Tuple[bool, str]:
+def update_namespace(file_path: str, old_namespace: str, new_namespace: str) -> bool:
+    """Update namespace in the file."""
+    try:
+        with open(file_path, "r", encoding="utf-8") as f:
+            content = f.read()
+
+        updated_content = content.replace(
+            f"namespace {old_namespace};", f"namespace {new_namespace};"
+        )
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            f.write(updated_content)
+
+        return True
+    except Exception as e:
+        print(f"Error updating {file_path}: {str(e)}")
+        return False
+
+
+def check_file(
+    file_path: str, base_dir: str, prefix: str, update: bool
+) -> Tuple[bool, str]:
     """Check if file's namespace matches its path."""
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -42,6 +63,18 @@ def check_file(file_path: str, base_dir: str, prefix: str) -> Tuple[bool, str]:
             expected_namespace = prefix
 
         if actual_namespace.strip() != expected_namespace:
+            if update:
+                if update_namespace(
+                    file_path, actual_namespace.strip(), expected_namespace
+                ):
+                    return (
+                        True,
+                        f"Updated namespace in {file_path}:\n"
+                        f"  From: {actual_namespace}\n"
+                        f"  To:   {expected_namespace}",
+                    )
+                else:
+                    return False, f"Failed to update namespace in {file_path}"
             return (
                 False,
                 f"Namespace mismatch in {file_path}:\n"
@@ -69,6 +102,11 @@ def main():
     parser.add_argument(
         "--namespace-prefix", help="Namespace prefix to prepend", default=""
     )
+    parser.add_argument(
+        "--update",
+        action="store_true",
+        help="Update namespaces in files where they don't match",
+    )
     args = parser.parse_args()
 
     has_errors = False
@@ -91,13 +129,13 @@ def main():
 
                 file_path = os.path.join(root, file)
                 success, message = check_file(
-                    file_path, base_dir, args.namespace_prefix
+                    file_path, base_dir, args.namespace_prefix, args.update
                 )
 
                 if not success:
                     has_errors = True
                     error_count += 1
-                    print(message)
+                print(message)
 
                 checked_count += 1
 
