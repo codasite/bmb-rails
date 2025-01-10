@@ -42,6 +42,12 @@ tasks:
       - docker exec wp-dev install-wp-tests
       - docker exec wp-dev create-admin-user.sh
 
+  composer:install:
+    desc: Install php dependencies
+    dir: ./plugin
+    cmds:
+      - composer install
+
   ### TRELLIS ###
   trellis:
     desc: Trellis task namespace
@@ -214,6 +220,12 @@ tasks:
     dir: ./bmb_mobile
     cmds:
       - flutter run
+
+  flutter:get:
+    desc: Get Flutter dependencies
+    dir: ./bmb_mobile
+    cmds:
+      - flutter pub get
 
   ios:
     desc: iOS task namespace
