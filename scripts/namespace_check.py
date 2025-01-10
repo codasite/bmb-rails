@@ -82,7 +82,7 @@ def check_file(
                 f"  Found:    {actual_namespace}",
             )
 
-        return True, f"Namespace correct in {file_path}"
+        return True, "Namespace correct"
 
     except Exception as e:
         return False, f"Error processing {file_path}: {str(e)}"
@@ -132,10 +132,11 @@ def main():
                     file_path, base_dir, args.namespace_prefix, args.update
                 )
 
+                if not success or args.update:
+                    print(message)
                 if not success:
                     has_errors = True
                     error_count += 1
-                print(message)
 
                 checked_count += 1
 

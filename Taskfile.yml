@@ -219,7 +219,7 @@ tasks:
     dir: ./plugin
     cmds:
       # - python3 ../scripts/namespace_check.py Features Includes Admin Email Public --base-dir . --namespace-prefix WStrategies\\BMB
-      - python3 ../scripts/namespace_check.py tests --base-dir . --namespace-prefix WStrategies\\BMB
+      - python3 ../scripts/namespace_check.py tests --base-dir . --namespace-prefix WStrategies\\BMB {{.CLI_ARGS}}
 
   # MOBILE APP #
   flutter:run:
