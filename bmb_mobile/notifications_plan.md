@@ -31,13 +31,13 @@
 
 ## 3. WordPress Backend
 - [ ] Install/configure FCM WordPress plugin
-- [ ] Create REST API endpoints for:
+- [X] Create REST API endpoints for:
   - Token registration
   - Token updates
   - Device management
   - Notification preferences
-- [ ] Integrate with existing notification system
-- [ ] Set up token cleanup routines
+- [X] Integrate with existing notification system
+- [X] Set up token cleanup routines
 
 ## 4. App Modifications
 - [ ] Initialize Firebase in main.dart
