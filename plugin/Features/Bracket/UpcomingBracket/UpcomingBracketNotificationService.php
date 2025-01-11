@@ -23,8 +23,6 @@ class UpcomingBracketNotificationService {
       $args['notification_repo'] ?? new NotificationRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->user_repo = $args['user_repo'] ?? new UserRepo();
-    $args['email_service'] =
-      $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
     $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
   }
 

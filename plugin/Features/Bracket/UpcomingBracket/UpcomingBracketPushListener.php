@@ -3,17 +3,33 @@
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
 use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\User;
 
 class UpcomingBracketPushListener implements
   UpcomingNotificationListenerInterface {
+  private readonly PushMessagingService $messaging_service;
+
+  public function __construct($args = []) {
+    $this->messaging_service =
+      $args['messaging_service'] ??
+      (new PushMessagingServiceFactory())->create($args);
+  }
+
   public function notify(
     User $user,
     Bracket $bracket,
     Notification $notification
   ): void {
     $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
-    // TODO: Implement push notification logic using $heading
+
+    $this->messaging_service->sendNotification(
+      NotificationType::TOURNAMENT_START,
+      $user->id,
+      $heading
+    );
   }
 }

@@ -1,17 +1,32 @@
 <?php
 namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 
-use WStrategies\BMB\Features\VotingBracket\Notifications\RoundCompleteNotificationListenerInterface;
+use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\User;
-use WStrategies\BMB\Features\VotingBracket\Notifications\RoundCompleteMessageFormatter;
 
 class RoundCompletePushListener implements
   RoundCompleteNotificationListenerInterface {
+  private readonly PushMessagingService $messaging_service;
+
+  public function __construct($args = []) {
+    $this->messaging_service =
+      $args['messaging_service'] ??
+      (new PushMessagingServiceFactory())->create($args);
+  }
+
   public function notify(User $user, Bracket $bracket, Play $play): void {
     $heading = RoundCompleteMessageFormatter::get_heading($bracket);
     $message = RoundCompleteMessageFormatter::get_message($bracket);
-    // TODO: Implement push notification logic using $heading and $message
+
+    $this->messaging_service->sendNotification(
+      NotificationType::ROUND_COMPLETE,
+      $user->id,
+      $heading,
+      $message
+    );
   }
 }
