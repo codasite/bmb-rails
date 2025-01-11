@@ -23,7 +23,7 @@ class UpcomingBracketEmailListener implements
     Bracket $bracket,
     Notification $notification
   ): void {
-    $heading = strtoupper($bracket->title) . ' is now live. Make your picks!';
+    $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
     $button_url = $bracket->url;
     $button_text = 'Play Tournament';
 

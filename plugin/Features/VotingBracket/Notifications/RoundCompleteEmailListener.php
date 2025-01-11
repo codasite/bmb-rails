@@ -21,19 +21,12 @@ class RoundCompleteEmailListener implements
   }
 
   public function notify(User $user, Bracket $bracket, Play $play): void {
-    if ($bracket->status === 'complete') {
-      $subject = $bracket->get_title() . ' Voting Complete!';
-      $message = 'The voting for ' . $bracket->get_title() . ' is complete!';
-      $button_url =
-        $this->permalink_service->get_permalink($bracket->id) . 'results';
-      $button_text = 'View Results';
-    } else {
-      $subject = $bracket->get_title() . ' Voting Round Complete!';
-      $message = 'Vote now in round ' . ((int) $bracket->live_round_index + 1);
-      $button_url =
-        $this->permalink_service->get_permalink($bracket->id) . 'play';
-      $button_text = 'Vote now';
-    }
+    $subject = RoundCompleteMessageFormatter::get_heading($bracket);
+    $message = RoundCompleteMessageFormatter::get_message($bracket);
+    $button_url =
+      $this->permalink_service->get_permalink($bracket->id) .
+      RoundCompleteMessageFormatter::get_button_url_suffix($bracket);
+    $button_text = RoundCompleteMessageFormatter::get_button_text($bracket);
 
     $html = BracketEmailTemplate::render($message, $button_url, $button_text);
     $this->email_service->send(

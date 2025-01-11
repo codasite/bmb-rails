@@ -9,6 +9,7 @@ use WStrategies\BMB\Includes\Domain\User;
 class BracketResultsPushListener implements
   BracketResultsNotificationListenerInterface {
   public function notify(User $user, Play $play, PickResult $result): void {
-    // TODO: Implement push notification logic
+    $heading = BracketResultsMessageFormatter::get_heading($result);
+    // TODO: Implement push notification logic using $heading
   }
 }

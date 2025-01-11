@@ -5,10 +5,13 @@ use WStrategies\BMB\Features\VotingBracket\Notifications\RoundCompleteNotificati
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\User;
+use WStrategies\BMB\Features\VotingBracket\Notifications\RoundCompleteMessageFormatter;
 
 class RoundCompletePushListener implements
   RoundCompleteNotificationListenerInterface {
   public function notify(User $user, Bracket $bracket, Play $play): void {
-    // TODO: Implement notify() method.
+    $heading = RoundCompleteMessageFormatter::get_heading($bracket);
+    $message = RoundCompleteMessageFormatter::get_message($bracket);
+    // TODO: Implement push notification logic using $heading and $message
   }
 }

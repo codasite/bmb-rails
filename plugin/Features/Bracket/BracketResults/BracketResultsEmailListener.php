@@ -14,20 +14,18 @@ use WStrategies\BMB\Includes\Domain\User;
 class BracketResultsEmailListener implements
   BracketResultsNotificationListenerInterface {
   private readonly EmailServiceInterface $email_service;
-  private readonly UserRepo $user_repo;
   private readonly PermalinkService $permalink_service;
 
   public function __construct($args = []) {
     $this->email_service =
       $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
-    $this->user_repo = $args['user_repo'] ?? new UserRepo();
     $this->permalink_service =
       $args['permalink_service'] ?? new PermalinkService();
   }
 
   public function notify(User $user, Play $play, PickResult $result): void {
     $subject = 'Bracket Results Updated';
-    $heading = $this->get_pick_result_heading($result);
+    $heading = BracketResultsMessageFormatter::get_heading($result);
     $button_url = $this->permalink_service->get_permalink($play->id) . 'view';
     $button_text = 'View Bracket';
 
@@ -40,20 +38,5 @@ class BracketResultsEmailListener implements
       $heading,
       $html
     );
-  }
-
-  public function get_pick_result_heading(PickResult $result): string {
-    $picked_team = strtoupper($result->get_picked_team()->name);
-    $winning_team = strtoupper($result->match->get_winning_team()->name);
-
-    if ($result->picked_team_won()) {
-      return 'You picked ' . $picked_team . '... and they won!';
-    } else {
-      return 'You picked ' .
-        $picked_team .
-        '... but ' .
-        $winning_team .
-        ' won the round!';
-    }
   }
 }

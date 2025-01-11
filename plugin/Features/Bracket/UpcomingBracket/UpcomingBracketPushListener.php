@@ -13,6 +13,7 @@ class UpcomingBracketPushListener implements
     Bracket $bracket,
     Notification $notification
   ): void {
-    // TODO: Implement push notification logic
+    $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
+    // TODO: Implement push notification logic using $heading
   }
 }
