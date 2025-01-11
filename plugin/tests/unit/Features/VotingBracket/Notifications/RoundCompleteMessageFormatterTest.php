@@ -9,19 +9,19 @@ class RoundCompleteMessageFormatterTest extends TestCase {
   public function test_get_heading_should_return_complete_text_when_bracket_is_complete() {
     $bracket = new Bracket(['status' => 'complete', 'title' => 'Test Bracket']);
     $heading = RoundCompleteMessageFormatter::get_heading($bracket);
-    $this->assertEquals('Test Bracket Voting Complete!', $heading);
+    $this->assertEquals('TEST BRACKET Voting Complete!', $heading);
   }
 
   public function test_get_heading_should_return_round_complete_text_when_bracket_is_not_complete() {
     $bracket = new Bracket(['status' => 'live', 'title' => 'Test Bracket']);
     $heading = RoundCompleteMessageFormatter::get_heading($bracket);
-    $this->assertEquals('Test Bracket Voting Round Complete!', $heading);
+    $this->assertEquals('TEST BRACKET Voting Round Complete!', $heading);
   }
 
   public function test_get_message_should_return_complete_text_when_bracket_is_complete() {
     $bracket = new Bracket(['status' => 'complete', 'title' => 'Test Bracket']);
     $message = RoundCompleteMessageFormatter::get_message($bracket);
-    $this->assertEquals('The voting for Test Bracket is complete!', $message);
+    $this->assertEquals('The voting for TEST BRACKET is complete!', $message);
   }
 
   public function test_get_message_should_return_next_round_text_when_bracket_is_not_complete() {
