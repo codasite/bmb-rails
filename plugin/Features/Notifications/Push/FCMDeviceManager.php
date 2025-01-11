@@ -28,20 +28,18 @@ class FCMDeviceManager {
    * @param int[] $user_ids Target user IDs
    * @return array Valid FCM tokens for notification
    */
-  public function getTargetDevices(
+  public function getTargetDeviceTokens(
     NotificationType $type,
-    array $user_ids
+    int $user_id
   ): array {
-    $devices = [];
-    foreach ($user_ids as $user_id) {
-      $user_devices = $this->token_repo->get_user_devices($user_id);
-      foreach ($user_devices as $device) {
-        if ($this->shouldReceiveNotification($device, $type)) {
-          $devices[] = $device;
-        }
+    $tokens = [];
+    $user_devices = $this->token_repo->get_user_devices($user_id);
+    foreach ($user_devices as $device) {
+      if ($this->shouldReceiveNotification($device, $type)) {
+        $tokens[] = $device['token'];
       }
     }
-    return $devices;
+    return $tokens;
   }
 
   /**

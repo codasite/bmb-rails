@@ -21,7 +21,7 @@
   - last_used
   - created_at
 - [X] Set up proper indexes and constraints
-- [ ] Create PHP management class for device operations
+- [X] Create PHP management class for device operations
   - Manage device preferences
   - Filter devices based on notification type
   - Handle token validation

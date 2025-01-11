@@ -60,7 +60,8 @@
     "setasign/fpdi": "^2.3",
     "mailchimp/marketing": "^3.0",
     "mailchimp/transactional": "^1.0",
-    "stripe/stripe-php": "^13.8"
+    "stripe/stripe-php": "^13.8",
+    "kreait/firebase-php": "^7.16"
   },
   "scripts": {
     "test-integration": "TEST_TYPE=integration phpunit --configuration=tests/phpunit.xml.dist --testsuite integration",
