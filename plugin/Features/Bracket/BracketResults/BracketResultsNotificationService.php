@@ -1,23 +1,25 @@
 <?php
 namespace WStrategies\BMB\Features\Bracket\BracketResults;
 
-use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
-use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
+use WStrategies\BMB\Includes\Domain\Play;
+use WStrategies\BMB\Includes\Domain\User;
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\PickResult;
-use WStrategies\BMB\Includes\Factory\PickResultFactory;
-use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
-use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Includes\Repository\UserRepo;
+use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Factory\PickResultFactory;
+use WStrategies\BMB\Includes\Service\PickResultService;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
-use WStrategies\BMB\Includes\Service\PickResultService;
-use WStrategies\BMB\Includes\Domain\User;
-use WStrategies\BMB\Includes\Repository\UserRepo;
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
+use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
+use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 
 class BracketResultsNotificationService {
   protected BracketMatchService $match_service;
@@ -42,8 +44,6 @@ class BracketResultsNotificationService {
       $args['pick_result_factory'] ?? new PickResultFactory();
     $this->pick_result_service =
       $args['pick_result_service'] ?? new PickResultService();
-    $args['email_service'] =
-      $args['email_service'] ?? (new MailchimpEmailServiceFactory())->create();
     $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
     $this->results_sent_at_repo =
       $args['results_sent_at_repo'] ??

@@ -8,7 +8,7 @@ use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Messaging\MulticastSendReport;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 
-class MessagingService {
+class PushMessagingService {
   private Messaging $messaging;
   private FCMDeviceManager $fcmDeviceManager;
 
