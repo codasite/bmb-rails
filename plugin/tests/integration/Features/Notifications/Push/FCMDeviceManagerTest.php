@@ -18,7 +18,7 @@ class FCMDeviceManagerTest extends WPBB_UnitTestCase {
   }
 
   public function test_get_target_devices_returns_empty_for_no_devices(): void {
-    $tokens = $this->device_manager->getTargetDeviceTokens(
+    $tokens = $this->device_manager->get_target_device_tokens(
       NotificationType::TOURNAMENT_START,
       1
     );
@@ -30,7 +30,7 @@ class FCMDeviceManagerTest extends WPBB_UnitTestCase {
     $this->token_repo->add(1, 'device1', 'token1', 'ios');
     $this->token_repo->add(1, 'device2', 'token2', 'android');
 
-    $tokens = $this->device_manager->getTargetDeviceTokens(
+    $tokens = $this->device_manager->get_target_device_tokens(
       NotificationType::TOURNAMENT_START,
       1
     );
@@ -51,7 +51,7 @@ class FCMDeviceManagerTest extends WPBB_UnitTestCase {
       "UPDATE {$table} SET last_used_at = DATE_SUB(NOW(), INTERVAL 31 DAY)"
     );
 
-    $tokens = $this->device_manager->getTargetDeviceTokens(
+    $tokens = $this->device_manager->get_target_device_tokens(
       NotificationType::TOURNAMENT_START,
       1
     );
@@ -64,7 +64,7 @@ class FCMDeviceManagerTest extends WPBB_UnitTestCase {
     $this->token_repo->add(1, 'device1', 'token1', 'ios');
 
     // Handle failed delivery
-    $this->device_manager->handleFailedDelivery('token1');
+    $this->device_manager->handle_failed_delivery('token1');
 
     // Verify token was removed
     $device = $this->token_repo->get(['token' => 'token1', 'single' => true]);
@@ -85,7 +85,7 @@ class FCMDeviceManagerTest extends WPBB_UnitTestCase {
     );
 
     // Run cleanup
-    $removed = $this->device_manager->cleanupInactiveTokens(30);
+    $removed = $this->device_manager->cleanup_inactive_tokens(30);
 
     $this->assertEquals(1, $removed);
     $this->assertNull(
@@ -101,7 +101,7 @@ class FCMDeviceManagerTest extends WPBB_UnitTestCase {
     $this->token_repo->add(1, 'device1', 'token1', 'ios');
 
     // Update app version
-    $success = $this->device_manager->updateAppVersion(1, 'device1', '2.0.0');
+    $success = $this->device_manager->update_app_version(1, 'device1', '2.0.0');
 
     $this->assertTrue($success);
     $device = $this->token_repo->get([

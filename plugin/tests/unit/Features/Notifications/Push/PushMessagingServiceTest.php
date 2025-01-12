@@ -1,0 +1,146 @@
+<?php
+
+namespace WStrategies\BMB\tests\unit\Features\Notifications\Push;
+
+use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Includes\Utils;
+use Kreait\Firebase\Messaging\CloudMessage;
+use Kreait\Firebase\Messaging\Notification;
+use Kreait\Firebase\Messaging\MessageTarget;
+use PHPUnit\Framework\MockObject\MockObject;
+use Kreait\Firebase\Messaging\MulticastSendReport;
+use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Push\FCMDeviceManager;
+use WStrategies\BMB\Features\Notifications\Push\Fakes\MessagingFake;
+use WStrategies\BMB\Features\Notifications\Push\Fakes\SendReportFake;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
+
+class PushMessagingServiceTest extends TestCase {
+  private MessagingFake $messaging;
+  /** @var MockObject&FCMDeviceManager */
+  private MockObject $device_manager;
+  private PushMessagingService $service;
+
+  public function setUp(): void {
+    parent::setUp();
+    \WP_Mock::setUp();
+
+    $this->messaging = new MessagingFake();
+    $this->device_manager = $this->createMock(FCMDeviceManager::class);
+    $this->service = new PushMessagingService(
+      $this->messaging,
+      $this->device_manager
+    );
+  }
+
+  public function tearDown(): void {
+    \WP_Mock::tearDown();
+    parent::tearDown();
+  }
+
+  public function test_send_notification_handles_invalid_token(): void {
+    $tokens = ['valid_token', 'invalid_token'];
+    $this->device_manager
+      ->method('get_target_device_tokens')
+      ->willReturn($tokens);
+
+    $this->device_manager
+      ->expects($this->once())
+      ->method('handle_failed_delivery')
+      ->with('invalid_token');
+
+    $this->messaging->configure_response(
+      'invalid_token',
+      fn($target) => SendReportFake::failure($target)->withInvalidTarget()
+    );
+
+    $report = $this->service->send_notification(
+      NotificationType::TOURNAMENT_START,
+      1,
+      'Test Title'
+    );
+
+    $this->assertEquals(1, $report->successes()->count());
+    $this->assertEquals(1, $report->failures()->count());
+  }
+
+  public function test_send_notification_handles_unknown_token(): void {
+    $tokens = ['valid_token', 'unknown_token'];
+    $this->device_manager
+      ->method('get_target_device_tokens')
+      ->willReturn($tokens);
+
+    $this->device_manager
+      ->expects($this->once())
+      ->method('handle_failed_delivery')
+      ->with('unknown_token');
+
+    $this->messaging->configure_response(
+      'unknown_token',
+      fn($target) => SendReportFake::failure($target)->withUnknownToken()
+    );
+
+    $report = $this->service->send_notification(
+      NotificationType::TOURNAMENT_START,
+      1,
+      'Test Title'
+    );
+
+    $this->assertEquals(1, $report->successes()->count());
+    $this->assertEquals(1, $report->failures()->count());
+  }
+
+  public function test_send_notification_handles_invalid_message(): void {
+    $tokens = ['valid_token', 'token_with_invalid_message'];
+    $this->device_manager
+      ->method('get_target_device_tokens')
+      ->willReturn($tokens);
+
+    // Should not try to remove token for invalid message
+    $this->device_manager
+      ->expects($this->never())
+      ->method('handle_failed_delivery');
+
+    $this->messaging->configure_response(
+      'token_with_invalid_message',
+      fn($target) => SendReportFake::failure($target)->withInvalidMessage()
+    );
+
+    $report = $this->service->send_notification(
+      NotificationType::TOURNAMENT_START,
+      1,
+      'Test Title'
+    );
+
+    $this->assertEquals(1, $report->successes()->count());
+    $this->assertEquals(1, $report->failures()->count());
+  }
+
+  public function test_send_notification_includes_all_parameters(): void {
+    $this->device_manager
+      ->method('get_target_device_tokens')
+      ->willReturn(['token1']);
+
+    $this->service->send_notification(
+      NotificationType::TOURNAMENT_START,
+      1,
+      'Test Title',
+      'Test Message',
+      'http://test.com/image.jpg',
+      ['key' => 'value']
+    );
+
+    $sent_messages = $this->messaging->getSentMessages();
+    $message = $sent_messages[0]->jsonSerialize();
+
+    // Verify message contains all parameters
+    $this->assertArrayHasKey('notification', $message);
+    $this->assertEquals('Test Title', $message['notification']['title']);
+    $this->assertEquals('Test Message', $message['notification']['body']);
+    $this->assertEquals(
+      'http://test.com/image.jpg',
+      $message['notification']['image']
+    );
+    $this->assertEquals(['key' => 'value'], $message['data']);
+  }
+}

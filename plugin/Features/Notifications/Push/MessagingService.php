@@ -7,20 +7,17 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Messaging\MulticastSendReport;
 use WStrategies\BMB\Features\Notifications\NotificationType;
-use WStrategies\BMB\Includes\Utils;
 
-class PushMessagingService {
+class MessagingService {
   private Messaging $messaging;
-  private FCMDeviceManager $fcm_device_manager;
-  private Utils $utils;
+  private FCMDeviceManager $fcmDeviceManager;
 
   public function __construct(
     Messaging $messaging,
-    FCMDeviceManager $fcm_device_manager
+    FCMDeviceManager $fcmDeviceManager
   ) {
     $this->messaging = $messaging;
-    $this->fcm_device_manager = $fcm_device_manager;
-    $this->utils = new Utils();
+    $this->fcmDeviceManager = $fcmDeviceManager;
   }
 
   /**
@@ -34,7 +31,7 @@ class PushMessagingService {
    * @param array $data Optional additional data
    * @return MulticastSendReport The send report
    */
-  public function send_notification(
+  public function sendNotification(
     NotificationType $type,
     int $user_id,
     string $title = '',
@@ -42,7 +39,7 @@ class PushMessagingService {
     string $image_url = '',
     array $data = []
   ): MulticastSendReport {
-    $tokens = $this->fcm_device_manager->get_target_device_tokens(
+    $tokens = $this->fcmDeviceManager->get_target_device_tokens(
       $type,
       $user_id
     );
@@ -59,7 +56,7 @@ class PushMessagingService {
     $sendReport = $this->messaging->sendMulticast($message, $tokens);
 
     // Handle the send report
-    $this->handle_send_report($sendReport);
+    $this->handleSendReport($sendReport);
 
     return $sendReport;
   }
@@ -69,35 +66,34 @@ class PushMessagingService {
    *
    * @param MulticastSendReport $report The send report to process
    */
-  private function handle_send_report(MulticastSendReport $report): void {
+  private function handleSendReport(MulticastSendReport $report): void {
     // Log overall statistics
-    $this->utils->log(
+    error_log(
       sprintf(
         'FCM Notification Report - Success: %d, Failed: %d',
         $report->successes()->count(),
         $report->failures()->count()
-      ),
-      'info'
+      )
     );
 
     // Process failures using SendReport methods
     if ($report->hasFailures()) {
-      foreach ($report->failures()->getItems() as $failure) {
+      foreach ($report->failures() as $failure) {
         $token = $failure->target()->value();
 
         // Handle different failure types
         if ($failure->messageTargetWasInvalid()) {
-          $this->utils->log_error("Invalid token format: {$token}");
-          $this->fcm_device_manager->handle_failed_delivery($token);
+          error_log("Invalid token format: {$token}");
+          $this->fcmDeviceManager->handle_failed_delivery($token);
         } elseif ($failure->messageWasSentToUnknownToken()) {
-          $this->utils->log_error("Unknown token (not in Firebase): {$token}");
-          $this->fcm_device_manager->handle_failed_delivery($token);
+          error_log("Unknown token (not in Firebase): {$token}");
+          $this->fcmDeviceManager->handle_failed_delivery($token);
         } elseif ($failure->messageWasInvalid()) {
-          $this->utils->log_error("Invalid message format for token: {$token}");
+          error_log("Invalid message format for token: {$token}");
         } else {
           // Log other errors with full error message
           $error = $failure->error();
-          $this->utils->log_error(
+          error_log(
             sprintf(
               'FCM delivery failed for token %s: %s',
               $token,

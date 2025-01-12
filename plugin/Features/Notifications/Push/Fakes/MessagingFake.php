@@ -12,6 +12,14 @@ use Kreait\Firebase\Messaging\AppInstance;
 
 class MessagingFake implements Messaging {
   private array $sent_messages = [];
+  private array $token_responses = [];
+
+  public function configure_response(
+    string $token,
+    callable $responseBuilder
+  ): void {
+    $this->token_responses[$token] = $responseBuilder;
+  }
 
   public function send(
     Message|array $message,
@@ -37,12 +45,20 @@ class MessagingFake implements Messaging {
     $reports = [];
 
     foreach ($tokens as $token) {
-      $reports[] = SendReport::success(
-        MessageTarget::with(MessageTarget::TOKEN, $token->value()),
-        ['message_id' => 'fake_message_id_' . count($this->sent_messages)],
-        $message
-      );
       $this->sent_messages[] = $message;
+
+      if (isset($this->token_responses[$token->value()])) {
+        $reports[] = $this->token_responses[$token->value()](
+          MessageTarget::with(MessageTarget::TOKEN, $token->value()),
+          $message
+        );
+      } else {
+        $reports[] = SendReportFake::success(
+          MessageTarget::with(MessageTarget::TOKEN, $token->value()),
+          ['message_id' => 'fake_id'],
+          $message
+        );
+      }
     }
 
     return MulticastSendReport::withItems($reports);

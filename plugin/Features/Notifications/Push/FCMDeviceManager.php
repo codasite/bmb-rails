@@ -29,14 +29,14 @@ class FCMDeviceManager {
    * @param int[] $user_ids Target user IDs
    * @return array Valid FCM tokens for notification
    */
-  public function getTargetDeviceTokens(
+  public function get_target_device_tokens(
     NotificationType $type,
     int $user_id
   ): array {
     $tokens = [];
     $user_devices = $this->token_repo->get_user_devices($user_id);
     foreach ($user_devices as $device) {
-      if ($this->shouldReceiveNotification($device, $type)) {
+      if ($this->should_receive_notification($device, $type)) {
         $tokens[] = $device['token'];
       }
     }
@@ -50,7 +50,7 @@ class FCMDeviceManager {
    * @param NotificationType $type Type of notification
    * @return bool Whether device should receive notification
    */
-  private function shouldReceiveNotification(
+  private function should_receive_notification(
     array $device,
     NotificationType $type
   ): bool {
@@ -81,7 +81,7 @@ class FCMDeviceManager {
    *
    * @param string $token The FCM token that failed
    */
-  public function handleFailedDelivery(string $token): void {
+  public function handle_failed_delivery(string $token): void {
     $device = $this->token_repo->get(['token' => $token, 'single' => true]);
 
     if ($device) {
@@ -106,7 +106,7 @@ class FCMDeviceManager {
    * @param int $days_threshold Number of days of inactivity before cleanup
    * @return int Number of tokens removed
    */
-  public function cleanupInactiveTokens(int $days_threshold = 30): int {
+  public function cleanup_inactive_tokens(int $days_threshold = 30): int {
     return $this->token_repo->delete_inactive_tokens($days_threshold);
   }
 
@@ -118,7 +118,7 @@ class FCMDeviceManager {
    * @param string $app_version New app version
    * @return bool Success status
    */
-  public function updateAppVersion(
+  public function update_app_version(
     int $user_id,
     string $device_id,
     string $app_version

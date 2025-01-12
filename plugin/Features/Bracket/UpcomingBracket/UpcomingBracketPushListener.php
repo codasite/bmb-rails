@@ -26,7 +26,7 @@ class UpcomingBracketPushListener implements
   ): void {
     $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
 
-    $this->messaging_service->sendNotification(
+    $this->messaging_service->send_notification(
       NotificationType::TOURNAMENT_START,
       $user->id,
       $heading
