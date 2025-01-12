@@ -15,9 +15,9 @@ class PushMessagingServiceFactory {
       $factory = (new Factory())->withProjectId('bmb-mobile'); // TODO: add project id etc
       $messaging = $args['messaging'] ?? $factory->createMessaging();
     } catch (Exception $e) {
-      // (new Utils())->log_error(
-      //   'Caught error: ' . $e->getMessage() . 'Returning fake Messaging'
-      // );
+      (new Utils())->log_error(
+        'Caught error: ' . $e->getMessage() . 'Returning fake Messaging'
+      );
       $messaging = new MessagingFake();
     }
 

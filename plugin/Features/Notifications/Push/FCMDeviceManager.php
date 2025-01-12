@@ -2,6 +2,7 @@
 
 namespace WStrategies\BMB\Features\Notifications\Push;
 
+use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 
 /**
@@ -81,18 +82,15 @@ class FCMDeviceManager {
    * @param string $token The FCM token that failed
    */
   public function handleFailedDelivery(string $token): void {
-    // Get device info before deletion for logging
     $device = $this->token_repo->get(['token' => $token, 'single' => true]);
 
     if ($device) {
-      // Delete the invalid token by device info
       $this->token_repo->delete_by_device(
         (int) $device['user_id'],
         $device['device_id']
       );
 
-      // TODO: Log token removal for monitoring
-      error_log(
+      (new Utils())->log(
         sprintf(
           'Removed invalid FCM token for user %d device %s',
           $device['user_id'],

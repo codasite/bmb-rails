@@ -8,6 +8,7 @@
 
 // Add path mapping for test output at the start
 $mappedPathTo = getenv('REPO_ROOT');
+define('DOING_TESTS', true);
 
 if ($mappedPathTo) {
   class PathMappingPrinter extends
