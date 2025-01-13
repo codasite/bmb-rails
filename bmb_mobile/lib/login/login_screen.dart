@@ -1,3 +1,4 @@
+import 'package:bmb_mobile/main.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/login/auth_service.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
@@ -46,7 +47,10 @@ class _LoginScreenState extends State<LoginScreen> {
         }
 
         if (loginSuccess && mounted) {
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const WebViewApp()),
+          );
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
