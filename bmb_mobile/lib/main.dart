@@ -60,7 +60,11 @@ class MyApp extends StatelessWidget {
           titleLarge: TextStyle(fontSize: 20.0),
         ),
       ),
-      home: isAuthenticated ? const WebViewApp() : const LoginScreen(),
+      routes: {
+        '/app': (context) => const WebViewApp(),
+        '/login': (context) => const LoginScreen(),
+      },
+      initialRoute: isAuthenticated ? '/app' : '/login',
     );
   }
 }
@@ -167,10 +171,7 @@ class _WebViewAppState extends State<WebViewApp> {
     if (item.path == '/wp-login.php?action=logout') {
       await AuthService().logout();
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
+        Navigator.pushReplacementNamed(context, '/login');
       }
     } else {
       _loadUrl(item.path);
@@ -285,10 +286,7 @@ class _WebViewAppState extends State<WebViewApp> {
                 request.url.contains('unauthorized')) {
               AuthService().logout();
               if (mounted) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                );
+                Navigator.pushReplacementNamed(context, '/login');
               }
               return NavigationDecision.prevent;
             }

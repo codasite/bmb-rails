@@ -47,10 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
 
         if (loginSuccess && mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const WebViewApp()),
-          );
+          Navigator.pushReplacementNamed(context, '/app');
         } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
