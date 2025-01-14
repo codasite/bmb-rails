@@ -14,10 +14,21 @@ import 'package:bmb_mobile/login/auth_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:bmb_mobile/services/fcm_token_service.dart';
+import 'package:bmb_mobile/utils/app_logger.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+
+  // Load environment variables
+  await dotenv.load();
+
+  await AppLogger.initialize(
+    dsn: dotenv.env['SENTRY_DSN'] ?? '',
+    environment: dotenv.env['SENTRY_ENV'] ?? 'development',
+  );
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -80,6 +91,7 @@ class _WebViewAppState extends State<WebViewApp> {
   static const double _refreshThreshold = 65.0;
 
   late final WebViewController controller;
+  late final FCMTokenService _fcmService;
   int? _selectedIndex;
   String _currentTitle = 'Back My Bracket';
   bool _isLoading = true;
@@ -169,6 +181,7 @@ class _WebViewAppState extends State<WebViewApp> {
 
   void _onDrawerItemTap(DrawerItem item) async {
     if (item.path == '/wp-login.php?action=logout') {
+      await _fcmService.deregisterToken();
       await AuthService().logout();
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
@@ -182,6 +195,10 @@ class _WebViewAppState extends State<WebViewApp> {
   @override
   void initState() {
     super.initState();
+
+    // Initialize FCM service
+    _fcmService = FCMTokenService();
+    _initializeFCM();
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -299,6 +316,22 @@ class _WebViewAppState extends State<WebViewApp> {
     // we can safely load the initial URL
     controller.loadRequest(
         Uri.parse('${AppConstants.baseUrl}/dashboard/tournaments/'));
+
+    // Start periodic status updates
+    _startStatusUpdates();
+  }
+
+  Future<void> _initializeFCM() async {
+    await _fcmService.initialize();
+    await _fcmService.setupToken();
+  }
+
+  void _startStatusUpdates() {
+    // Update token status every 24 hours
+    Future.delayed(const Duration(days: 1), () async {
+      await _fcmService.updateStatus();
+      _startStatusUpdates(); // Schedule next update
+    });
   }
 
   Future<bool> _handleBackPress() async {

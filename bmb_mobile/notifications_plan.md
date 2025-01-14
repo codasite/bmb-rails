@@ -1,11 +1,11 @@
 # FCM Integration Plan for BMB Mobile
 
 ## 1. Initial Setup
-- [ ] Create Firebase project
-- [ ] Configure Android/iOS apps in Firebase Console
-- [ ] Add Firebase configuration files
-- [ ] Update build files for both platforms
-- [ ] Add required dependencies:
+- [X] Create Firebase project
+- [X] Configure Android/iOS apps in Firebase Console
+- [X] Add Firebase configuration files
+- [X] Update build files for both platforms
+- [X] Add required dependencies:
   - firebase_core
   - firebase_messaging
   - flutter_local_notifications
