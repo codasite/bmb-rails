@@ -1,31 +1,32 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
-use WStrategies\BMB\Features\Notifications\Push\FCMTokenApi;
-use WStrategies\BMB\Features\VotingBracket\Presentation\VotingBracketApi;
-use WStrategies\BMB\Includes\Controllers\BracketApi;
-use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
-use WStrategies\BMB\Includes\Controllers\NotificationApi;
-use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
-use WStrategies\BMB\Includes\Hooks\AdminHooks;
-use WStrategies\BMB\Includes\Hooks\AnonymousUserHooks;
-use WStrategies\BMB\Includes\Hooks\BracketAdminHooks;
-use WStrategies\BMB\Includes\Hooks\BracketChatHooks;
-use WStrategies\BMB\Includes\Hooks\CustomPostHooks;
-use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
-use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
+use WStrategies\BMB\Includes\Hooks\AdminHooks;
 use WStrategies\BMB\Includes\Hooks\LoginHooks;
-use WStrategies\BMB\Includes\Hooks\NotificationCronHooks;
 use WStrategies\BMB\Includes\Hooks\Permissions;
 use WStrategies\BMB\Includes\Hooks\PublicHooks;
-use WStrategies\BMB\Includes\Hooks\PublicShortcodes;
 use WStrategies\BMB\Includes\Hooks\RedirectHooks;
-use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
-use WStrategies\BMB\Includes\Hooks\UserAdminHooks;
-use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
-use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
+use WStrategies\BMB\Includes\Hooks\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\MobileAppHooks;
 use WStrategies\BMB\Includes\Hooks\PageTitleHooks;
+use WStrategies\BMB\Includes\Hooks\UserAdminHooks;
+use WStrategies\BMB\Includes\Hooks\CustomPostHooks;
+use WStrategies\BMB\Includes\Controllers\BracketApi;
+use WStrategies\BMB\Includes\Hooks\BracketChatHooks;
+use WStrategies\BMB\Includes\Hooks\PublicShortcodes;
+use WStrategies\BMB\Includes\Hooks\BracketAdminHooks;
+use WStrategies\BMB\Includes\Hooks\AnonymousUserHooks;
+use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
+use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
+use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
+use WStrategies\BMB\Includes\Controllers\NotificationApi;
+use WStrategies\BMB\Includes\Hooks\NotificationCronHooks;
+use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
+use WStrategies\BMB\Features\Notifications\Push\FCMTokenApi;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
+use WStrategies\BMB\Features\VotingBracket\Presentation\VotingBracketApi;
+use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 
 /**
  * The core plugin class.
@@ -132,6 +133,7 @@ class BracketBuilder {
       new LoginHooks($name_and_version_args),
       new PageTitleHooks(),
       new FCMTokenApi(),
+      new MobileAppHooks(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

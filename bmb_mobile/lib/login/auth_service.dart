@@ -6,6 +6,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:convert';
 
+// 1. user login
+// - POST /wp-login.php
+// - set logged in cookie
+// - check if app password exists
+// - if it does, check if it works (somehow)
+// - if not, GET /application-passwords, find one named 'bmb-mobile-app'
+// - if not found, POST to /application-passwords
+// - store the app password in shared prefs
+// 2. user logout
+// - remove logged in cookie
+// - DELETE /application-passwords
+// - remove app password
+
 class AuthService {
   final _cookieManager = WebviewCookieManager();
   static const String _cookieStorageKey = 'wordpress_cookies';
@@ -72,24 +85,30 @@ class AuthService {
 
   Future<bool> _requestApplicationPassword(String username) async {
     try {
-      final uri = Uri.parse(AppConstants.baseUrl);
-      final cookies = await _cookieManager.getCookies(uri.toString());
+      final baseUri = Uri.parse(AppConstants.baseUrl);
+      final cookies = await _cookieManager.getCookies(baseUri.toString());
+      final restNonceCookie = cookies.firstWhere(
+        (cookie) => cookie.name == 'wordpress_rest_nonce',
+      );
+      final nonce = restNonceCookie.value;
       final cookieHeader =
           cookies.map((c) => '${c.name}=${c.value}').join('; ');
+      print('Cookie header: $cookieHeader');
 
+      // Now make the application password request with the nonce
       final response = await http.post(
         Uri.parse(AppConstants.applicationPasswordsUrl),
         headers: {
-          'Cookie': cookieHeader,
           'Content-Type': 'application/json',
+          'X-WP-Nonce': nonce,
+          'Cookie': cookieHeader,
         },
         body: jsonEncode({
-          'name': 'BMB Mobile App ${DateTime.now().millisecondsSinceEpoch}',
-          'app_id': 'bmb-mobile',
+          'name': 'bmb-mobile-app',
         }),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         final responseData = jsonDecode(response.body);
         final password = responseData['password'];
 
