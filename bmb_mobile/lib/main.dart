@@ -1,3 +1,4 @@
+import 'package:bmb_mobile/login/wp_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
@@ -10,7 +11,7 @@ import 'package:bmb_mobile/models/drawer_item.dart';
 import 'package:bmb_mobile/utils/asset_paths.dart';
 import 'package:bmb_mobile/login/login_screen.dart';
 import 'package:bmb_mobile/constants.dart';
-import 'package:bmb_mobile/login/auth_service.dart';
+import 'package:bmb_mobile/login/wp_cookie_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -40,8 +41,8 @@ void main() async {
   ]);
 
   // Check authentication status before launching app
-  final authService = AuthService();
-  final isAuthenticated = await authService.hasValidCookie();
+  final authService = WpAuth();
+  final isAuthenticated = await authService.isAuthenticated();
 
   // Remove splash screen and launch app
   runApp(MyApp(isAuthenticated: isAuthenticated));
@@ -182,7 +183,7 @@ class _WebViewAppState extends State<WebViewApp> {
   void _onDrawerItemTap(DrawerItem item) async {
     if (item.path == '/wp-login.php?action=logout') {
       await _fcmService.deregisterToken();
-      await AuthService().logout();
+      await WpAuth().logout();
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
       }
@@ -301,7 +302,7 @@ class _WebViewAppState extends State<WebViewApp> {
             // Handle unauthorized/login redirects
             if (request.url.contains(AppConstants.loginPath) ||
                 request.url.contains('unauthorized')) {
-              AuthService().logout();
+              WpAuth().logout();
               if (mounted) {
                 Navigator.pushReplacementNamed(context, '/login');
               }

@@ -10,7 +10,6 @@ import 'dart:convert';
 // - POST /wp-login.php
 // - set logged in cookie
 // - check if app password exists
-// - if it does, check if it works (somehow)
 // - if not, GET /application-passwords, find one named 'bmb-mobile-app'
 // - if not found, POST to /application-passwords
 // - store the app password in shared prefs
@@ -19,10 +18,9 @@ import 'dart:convert';
 // - DELETE /application-passwords
 // - remove app password
 
-class AuthService {
+class WpCookieAuth {
   final _cookieManager = WebviewCookieManager();
   static const String _cookieStorageKey = 'wordpress_cookies';
-  static const String _appPasswordStorageKey = 'wp_app_password';
 
   Future<bool> login(String username, String password) async {
     try {
@@ -58,15 +56,7 @@ class AuthService {
         await _cookieManager.setCookies(cookiesToSet);
         await _storeCookies(cookiesToSet);
         await AppLogger.logMessage('Cookies set successfully');
-
-        // Request application password
-        final appPasswordSuccess = await _requestApplicationPassword(username);
-        if (!appPasswordSuccess) {
-          await AppLogger.logWarning(
-            'Failed to obtain application password',
-          );
-        }
-        return appPasswordSuccess;
+        return true;
       }
 
       await AppLogger.logWarning(
@@ -83,79 +73,7 @@ class AuthService {
     }
   }
 
-  Future<bool> _requestApplicationPassword(String username) async {
-    try {
-      final baseUri = Uri.parse(AppConstants.baseUrl);
-      final cookies = await _cookieManager.getCookies(baseUri.toString());
-      final restNonceCookie = cookies.firstWhere(
-        (cookie) => cookie.name == 'wordpress_rest_nonce',
-      );
-      final nonce = restNonceCookie.value;
-      final cookieHeader =
-          cookies.map((c) => '${c.name}=${c.value}').join('; ');
-      print('Cookie header: $cookieHeader');
-
-      // Now make the application password request with the nonce
-      final response = await http.post(
-        Uri.parse(AppConstants.applicationPasswordsUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'X-WP-Nonce': nonce,
-          'Cookie': cookieHeader,
-        },
-        body: jsonEncode({
-          'name': 'bmb-mobile-app',
-        }),
-      );
-
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
-        final password = responseData['password'];
-
-        await _storeApplicationPassword(username, password);
-        await AppLogger.logMessage('Application password created successfully');
-        return true;
-      }
-
-      await AppLogger.logWarning(
-        'Application password request failed with status ${response.statusCode}: ${response.body}',
-      );
-      return false;
-    } catch (e, stackTrace) {
-      await AppLogger.logError(
-        e,
-        stackTrace,
-        extras: {'message': 'Application password request failed'},
-      );
-      return false;
-    }
-  }
-
-  Future<void> _storeApplicationPassword(
-      String username, String password) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        _appPasswordStorageKey,
-        jsonEncode({
-          'username': username,
-          'password': password,
-        }));
-  }
-
-  Future<Map<String, String>?> getStoredCredentials() async {
-    final prefs = await SharedPreferences.getInstance();
-    final credentialsString = prefs.getString(_appPasswordStorageKey);
-    if (credentialsString != null) {
-      final credentials = jsonDecode(credentialsString) as Map<String, dynamic>;
-      return {
-        'username': credentials['username'],
-        'password': credentials['password'],
-      };
-    }
-    return null;
-  }
-
-  Future<bool> hasValidCookie() async {
+  Future<bool> isAuthenticated() async {
     try {
       final uri = Uri.parse(AppConstants.baseUrl);
       var cookies = await _cookieManager.getCookies(uri.toString());
@@ -191,13 +109,12 @@ class AuthService {
       await _cookieManager.clearCookies();
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_cookieStorageKey);
-      await prefs.remove(_appPasswordStorageKey);
-      await AppLogger.logMessage('User logged out successfully');
+      await AppLogger.logMessage('Logged out of cookie auth successfully');
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
         stackTrace,
-        extras: {'message': 'Logout operation failed'},
+        extras: {'message': 'Failed to log out of cookie auth'},
       );
     }
   }

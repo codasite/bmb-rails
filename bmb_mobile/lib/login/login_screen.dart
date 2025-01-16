@@ -1,6 +1,5 @@
-import 'package:bmb_mobile/main.dart';
+import 'package:bmb_mobile/login/wp_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:bmb_mobile/login/auth_service.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:bmb_mobile/theme/font_weights.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,7 +17,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
+  final _authService = WpAuth();
   bool _isLoading = false;
 
   @override
