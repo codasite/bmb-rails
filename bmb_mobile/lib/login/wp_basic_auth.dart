@@ -257,7 +257,7 @@ class WpBasicAuth {
     Map<String, String> headers,
   ) async {
     final response = await http.delete(
-      Uri.parse('${AppConstants.applicationPasswordsUrl}/$uuid'),
+      Uri.parse(AppConstants.applicationPasswordUrl(uuid)),
       headers: headers,
     );
 
