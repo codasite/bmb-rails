@@ -1,4 +1,6 @@
 import 'package:bmb_mobile/login/wp_auth.dart';
+import 'package:bmb_mobile/login/wp_basic_auth.dart';
+import 'package:bmb_mobile/services/authenticated_http_client.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
@@ -40,8 +42,7 @@ void main() async {
   ]);
 
   // Check authentication status before launching app
-  final authService = WpAuth();
-  final isAuthenticated = await authService.isAuthenticated();
+  final isAuthenticated = await WpAuth().isAuthenticated();
 
   // Remove splash screen and launch app
   runApp(MyApp(isAuthenticated: isAuthenticated));
@@ -92,6 +93,7 @@ class _WebViewAppState extends State<WebViewApp> {
 
   late final WebViewController controller;
   late final FCMTokenService _fcmService;
+  late final AuthenticatedHttpClient _client;
   int? _selectedIndex;
   String _currentTitle = 'Back My Bracket';
   bool _isLoading = true;
@@ -197,7 +199,8 @@ class _WebViewAppState extends State<WebViewApp> {
     super.initState();
 
     // Initialize FCM service
-    _fcmService = FCMTokenService();
+    _client = AuthenticatedHttpClient(WpBasicAuth());
+    _fcmService = FCMTokenService(_client);
     _initializeFCM();
 
     controller = WebViewController()

@@ -1,17 +1,20 @@
 import 'package:bmb_mobile/constants.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
-import 'package:http/http.dart' as http;
-import 'package:webview_cookie_manager/webview_cookie_manager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:bmb_mobile/login/models/wp_app_password.dart';
 import 'package:bmb_mobile/login/models/wp_app_password_result.dart';
+import 'package:bmb_mobile/services/authenticated_http_client.dart';
+import 'package:bmb_mobile/login/wp_credential_manager.dart';
 
 class WpBasicAuth {
-  final _cookieManager = WebviewCookieManager();
-  static const String _appPasswordStorageKey = 'wp_app_password';
+  final AppPasswordHttpClient _passwordClient;
+  final SessionHttpClient _sessionClient;
+  final WpCredentialManager _credentialManager;
   static const String _appName = 'bmb-mobile-app';
   static const String _appId = '72b89be5-8c8d-480a-8a9f-d08324d8410a';
+
+  WpBasicAuth(
+      this._passwordClient, this._sessionClient, this._credentialManager);
 
   Future<bool> login(String username) async {
     try {
@@ -24,14 +27,12 @@ class WpBasicAuth {
         return true;
       }
 
-      final authHeaders = await _getAuthHeaders();
-      await AppLogger.logMessage(
-          'Got auth headers, attempting to create application password');
+      await AppLogger.logMessage('Attempting to create application password');
 
-      final result = await _createApplicationPassword(username, authHeaders);
+      final result = await _createApplicationPassword(username);
 
       if (result.success && result.password != null) {
-        await _storeApplicationPassword(result.password!);
+        await _credentialManager.storeCredentials(result.password!);
         await AppLogger.logMessage(
             'Successfully created and stored application password');
         return true;
@@ -59,7 +60,7 @@ class WpBasicAuth {
   }
 
   Future<bool> _hasStoredPassword() async {
-    final existingCredentials = await getStoredCredentials();
+    final existingCredentials = await _credentialManager.getStoredCredentials();
     if (existingCredentials != null) {
       await AppLogger.logMessage('Found existing application password');
       return true;
@@ -67,45 +68,10 @@ class WpBasicAuth {
     return false;
   }
 
-  Future<Map<String, String>> _getAuthHeaders() async {
-    try {
-      final baseUri = Uri.parse(AppConstants.baseUrl);
-      final cookies = await _cookieManager.getCookies(baseUri.toString());
-
-      final restNonceCookie = cookies.firstWhere(
-        (cookie) => cookie.name == 'wordpress_rest_nonce',
-        orElse: () {
-          throw Exception('WordPress REST nonce cookie not found');
-        },
-      );
-
-      final nonce = restNonceCookie.value;
-      final cookieHeader =
-          cookies.map((c) => '${c.name}=${c.value}').join('; ');
-
-      await AppLogger.logMessage(
-          'Generated auth headers with nonce and cookies');
-      return {
-        'Content-Type': 'application/json',
-        'X-WP-Nonce': nonce,
-        'Cookie': cookieHeader,
-      };
-    } catch (e, stackTrace) {
-      await AppLogger.logError(
-        e,
-        stackTrace,
-        extras: {'message': 'Failed to generate auth headers'},
-      );
-      rethrow;
-    }
-  }
-
   Future<WpAppPasswordResult> _createApplicationPassword(
-    String username,
-    Map<String, String> headers,
-  ) async {
+      String username) async {
     try {
-      final initialResult = await _attemptCreatePassword(username, headers);
+      final initialResult = await _attemptCreatePassword(username);
       if (initialResult.success || initialResult.statusCode != 409) {
         return initialResult;
       }
@@ -114,7 +80,7 @@ class WpBasicAuth {
         'Got conflict creating password, attempting to resolve',
       );
 
-      return await _handlePasswordConflict(username, headers);
+      return await _handlePasswordConflict(username);
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -125,12 +91,9 @@ class WpBasicAuth {
     }
   }
 
-  Future<WpAppPasswordResult> _handlePasswordConflict(
-    String username,
-    Map<String, String> headers,
-  ) async {
+  Future<WpAppPasswordResult> _handlePasswordConflict(String username) async {
     try {
-      final existingUuid = await _findExistingPassword(headers);
+      final existingUuid = await _findExistingPassword();
       if (existingUuid == null) {
         await AppLogger.logWarning('No existing password found after conflict');
         return WpAppPasswordResult.failure(409);
@@ -141,8 +104,8 @@ class WpBasicAuth {
         extras: {'uuid': existingUuid},
       );
 
-      await _deletePassword(existingUuid, headers);
-      return await _attemptCreatePassword(username, headers);
+      await _deletePassword(existingUuid);
+      return await _attemptCreatePassword(username);
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -153,27 +116,23 @@ class WpBasicAuth {
     }
   }
 
-  Future<WpAppPasswordResult> _attemptCreatePassword(
-    String username,
-    Map<String, String> headers,
-  ) async {
+  Future<WpAppPasswordResult> _attemptCreatePassword(String username) async {
     try {
-      final response = await http.post(
-        Uri.parse(AppConstants.applicationPasswordsUrl),
-        headers: headers,
-        body: jsonEncode({
+      final response = await _sessionClient.post(
+        AppConstants.applicationPasswordsUrl,
+        body: {
           'name': _appName,
           'app_id': _appId,
-        }),
+        },
       );
 
       await AppLogger.logMessage(
         'Attempted to create password',
-        extras: {'status_code': response.statusCode},
+        extras: {'status_code': response?.statusCode},
       );
 
-      if (response.statusCode == 201) {
-        final responseData = jsonDecode(response.body);
+      if (response?.statusCode == 201) {
+        final responseData = jsonDecode(response!.body);
         final appPassword = WpAppPassword(
           username: username,
           password: responseData['password'] as String,
@@ -183,17 +142,17 @@ class WpBasicAuth {
         return WpAppPasswordResult.success(appPassword, response.statusCode);
       }
 
-      if (response.statusCode != 409) {
+      if (response?.statusCode != 409) {
         await AppLogger.logWarning(
           'Unexpected status code creating password',
           extras: {
-            'status_code': response.statusCode,
-            'response': response.body,
+            'status_code': response?.statusCode,
+            'response': response?.body,
           },
         );
       }
 
-      return WpAppPasswordResult.failure(response.statusCode);
+      return WpAppPasswordResult.failure(response?.statusCode ?? 500);
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -204,22 +163,19 @@ class WpBasicAuth {
     }
   }
 
-  Future<String?> _findExistingPassword(
-    Map<String, String> headers,
-  ) async {
+  Future<String?> _findExistingPassword() async {
     try {
-      final response = await http.get(
-        Uri.parse(AppConstants.applicationPasswordsUrl),
-        headers: headers,
+      final response = await _sessionClient.get(
+        AppConstants.applicationPasswordsUrl,
       );
 
       await AppLogger.logMessage(
         'Fetched existing passwords',
-        extras: {'status_code': response.statusCode},
+        extras: {'status_code': response?.statusCode},
       );
 
-      if (response.statusCode == 200) {
-        final passwords = jsonDecode(response.body) as List;
+      if (response?.statusCode == 200) {
+        final passwords = jsonDecode(response!.body) as List;
         final existing = passwords.firstWhere(
           (p) => p['name'] == _appName,
           orElse: () => null,
@@ -240,8 +196,8 @@ class WpBasicAuth {
       await AppLogger.logWarning(
         'Failed to fetch existing passwords',
         extras: {
-          'status_code': response.statusCode,
-          'response': response.body,
+          'status_code': response?.statusCode,
+          'response': response?.body,
         },
       );
       return null;
@@ -256,25 +212,25 @@ class WpBasicAuth {
   }
 
   Future<bool> _deletePassword(
-    String uuid,
-    Map<String, String> headers,
-  ) async {
-    // TODO: Delete password using app password during logout
-    final response = await http.delete(
-      Uri.parse(AppConstants.applicationPasswordUrl(uuid)),
-      headers: headers,
+    String uuid, {
+    bool isLogout = false,
+  }) async {
+    final client = isLogout ? _passwordClient : _sessionClient;
+    final response = await client.delete(
+      AppConstants.applicationPasswordUrl(uuid),
     );
 
-    return response.statusCode == 200;
+    return response?.statusCode == 200;
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
     try {
-      final credentials = await getStoredCredentials();
+      final credentials = await _credentialManager.getStoredCredentials();
       if (credentials != null) {
-        final authHeaders = await _getAuthHeaders();
-        final deleted = await _deletePassword(credentials.uuid, authHeaders);
+        final deleted = await _deletePassword(
+          credentials.uuid,
+          isLogout: true,
+        );
 
         if (!deleted) {
           await AppLogger.logWarning(
@@ -292,13 +248,13 @@ class WpBasicAuth {
       );
     } finally {
       AppLogger.logMessage('Removing application password from storage');
-      await prefs.remove(_appPasswordStorageKey);
+      await _credentialManager.clearCredentials();
     }
   }
 
   Future<bool> isAuthenticated() async {
     try {
-      final credentials = await getStoredCredentials();
+      final credentials = await _credentialManager.getStoredCredentials();
       return credentials != null;
     } catch (e, stackTrace) {
       await AppLogger.logError(
@@ -308,21 +264,5 @@ class WpBasicAuth {
       );
       return false;
     }
-  }
-
-  Future<void> _storeApplicationPassword(WpAppPassword appPassword) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(
-        _appPasswordStorageKey, jsonEncode(appPassword.toJson()));
-  }
-
-  Future<WpAppPassword?> getStoredCredentials() async {
-    final prefs = await SharedPreferences.getInstance();
-    final credentialsString = prefs.getString(_appPasswordStorageKey);
-    if (credentialsString != null) {
-      final json = jsonDecode(credentialsString) as Map<String, dynamic>;
-      return WpAppPassword.fromJson(json);
-    }
-    return null;
   }
 }

@@ -1,16 +1,18 @@
-import 'dart:convert';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:http/http.dart' as http;
 import 'package:bmb_mobile/utils/app_logger.dart';
 import 'dart:io';
 import '../constants.dart';
+import 'package:bmb_mobile/services/authenticated_http_client.dart';
 
 class FCMTokenService {
   static const String _tokenKey = 'fcm_token';
   final _messaging = FirebaseMessaging.instance;
+  final AuthenticatedHttpClient _client;
+
+  FCMTokenService(this._client);
 
   /// Initialize FCM and request permissions
   Future<void> initialize() async {
@@ -90,19 +92,18 @@ class FCMTokenService {
       final deviceInfo = await _getDeviceInfo();
       final packageInfo = await PackageInfo.fromPlatform();
 
-      final response = await http.post(
-        Uri.parse('${AppConstants.baseUrl}/wp-json/bmb/v1/fcm/register'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
+      final response = await _client.post(
+        AppConstants.fcmRegisterPath,
+        body: {
           'token': token,
           'device_id': deviceInfo.id,
           'platform': deviceInfo.platform,
           'device_name': deviceInfo.name,
           'app_version': packageInfo.version,
-        }),
+        },
       );
 
-      if (response.statusCode == 201) {
+      if (response?.statusCode == 201) {
         await AppLogger.logMessage('FCM token registered successfully');
         return true;
       }
@@ -110,8 +111,8 @@ class FCMTokenService {
       await AppLogger.logWarning(
         'Failed to register FCM token',
         extras: {
-          'status_code': response.statusCode,
-          'response': response.body,
+          'status_code': response?.statusCode,
+          'response': response?.body,
         },
       );
       return false;
@@ -130,17 +131,16 @@ class FCMTokenService {
     try {
       final deviceInfo = await _getDeviceInfo();
 
-      final response = await http.put(
-        Uri.parse('${AppConstants.baseUrl}/wp-json/bmb/v1/fcm/update'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
+      final response = await _client.put(
+        AppConstants.fcmUpdatePath,
+        body: {
           'old_token': oldToken,
           'new_token': newToken,
           'device_id': deviceInfo.id,
-        }),
+        },
       );
 
-      if (response.statusCode == 200) {
+      if (response?.statusCode == 200) {
         await AppLogger.logMessage('FCM token updated successfully');
         return true;
       }
@@ -148,8 +148,8 @@ class FCMTokenService {
       await AppLogger.logWarning(
         'Failed to update FCM token',
         extras: {
-          'status_code': response.statusCode,
-          'response': response.body,
+          'status_code': response?.statusCode,
+          'response': response?.body,
         },
       );
       return false;
@@ -169,15 +169,14 @@ class FCMTokenService {
       final deviceInfo = await _getDeviceInfo();
       final prefs = await SharedPreferences.getInstance();
 
-      final response = await http.delete(
-        Uri.parse('${AppConstants.baseUrl}/wp-json/bmb/v1/fcm/deregister'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
+      final response = await _client.delete(
+        AppConstants.fcmDeregisterPath,
+        body: {
           'device_id': deviceInfo.id,
-        }),
+        },
       );
 
-      if (response.statusCode == 200) {
+      if (response?.statusCode == 200) {
         await prefs.remove(_tokenKey);
         await AppLogger.logMessage('FCM token deregistered successfully');
         return true;
@@ -186,8 +185,8 @@ class FCMTokenService {
       await AppLogger.logWarning(
         'Failed to deregister FCM token',
         extras: {
-          'status_code': response.statusCode,
-          'response': response.body,
+          'status_code': response?.statusCode,
+          'response': response?.body,
         },
       );
       return false;
@@ -214,16 +213,15 @@ class FCMTokenService {
 
       final deviceInfo = await _getDeviceInfo();
 
-      final response = await http.post(
-        Uri.parse('${AppConstants.baseUrl}/wp-json/bmb/v1/fcm/status'),
-        headers: {'Content-Type': 'application/json'},
-        body: json.encode({
+      final response = await _client.post(
+        AppConstants.fcmStatusPath,
+        body: {
           'device_id': deviceInfo.id,
           'status': 'active',
-        }),
+        },
       );
 
-      if (response.statusCode == 200) {
+      if (response?.statusCode == 200) {
         await AppLogger.logMessage('FCM status updated successfully');
         return true;
       }
@@ -231,8 +229,8 @@ class FCMTokenService {
       await AppLogger.logWarning(
         'Failed to update FCM status',
         extras: {
-          'status_code': response.statusCode,
-          'response': response.body,
+          'status_code': response?.statusCode,
+          'response': response?.body,
         },
       );
       return false;
