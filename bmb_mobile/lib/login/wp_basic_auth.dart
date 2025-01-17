@@ -11,7 +11,7 @@ class WpBasicAuth {
   final _cookieManager = WebviewCookieManager();
   static const String _appPasswordStorageKey = 'wp_app_password';
   static const String _appName = 'bmb-mobile-app';
-  static const String _appId = 'com.backmybracket.mobile';
+  static const String _appId = '72b89be5-8c8d-480a-8a9f-d08324d8410a';
 
   Future<bool> login(String username) async {
     try {
@@ -28,7 +28,7 @@ class WpBasicAuth {
       await AppLogger.logMessage(
           'Got auth headers, attempting to create application password');
 
-      final result = await _createApplicationPassword(authHeaders);
+      final result = await _createApplicationPassword(username, authHeaders);
 
       if (result.success && result.password != null) {
         await _storeApplicationPassword(result.password!);
@@ -101,10 +101,11 @@ class WpBasicAuth {
   }
 
   Future<WpAppPasswordResult> _createApplicationPassword(
+    String username,
     Map<String, String> headers,
   ) async {
     try {
-      final initialResult = await _attemptCreatePassword(headers);
+      final initialResult = await _attemptCreatePassword(username, headers);
       if (initialResult.success || initialResult.statusCode != 409) {
         return initialResult;
       }
@@ -113,7 +114,7 @@ class WpBasicAuth {
         'Got conflict creating password, attempting to resolve',
       );
 
-      return await _handlePasswordConflict(headers);
+      return await _handlePasswordConflict(username, headers);
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -125,6 +126,7 @@ class WpBasicAuth {
   }
 
   Future<WpAppPasswordResult> _handlePasswordConflict(
+    String username,
     Map<String, String> headers,
   ) async {
     try {
@@ -140,7 +142,7 @@ class WpBasicAuth {
       );
 
       await _deletePassword(existingUuid, headers);
-      return await _attemptCreatePassword(headers);
+      return await _attemptCreatePassword(username, headers);
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -152,6 +154,7 @@ class WpBasicAuth {
   }
 
   Future<WpAppPasswordResult> _attemptCreatePassword(
+    String username,
     Map<String, String> headers,
   ) async {
     try {
@@ -172,7 +175,7 @@ class WpBasicAuth {
       if (response.statusCode == 201) {
         final responseData = jsonDecode(response.body);
         final appPassword = WpAppPassword(
-          username: responseData['user']['login'] as String,
+          username: username,
           password: responseData['password'] as String,
           uuid: responseData['uuid'] as String,
         );
@@ -256,6 +259,7 @@ class WpBasicAuth {
     String uuid,
     Map<String, String> headers,
   ) async {
+    // TODO: Delete password using app password during logout
     final response = await http.delete(
       Uri.parse(AppConstants.applicationPasswordUrl(uuid)),
       headers: headers,
@@ -265,6 +269,7 @@ class WpBasicAuth {
   }
 
   Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
     try {
       final credentials = await getStoredCredentials();
       if (credentials != null) {
@@ -278,9 +283,6 @@ class WpBasicAuth {
           );
         }
       }
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_appPasswordStorageKey);
       await AppLogger.logMessage('Logged out of basic auth successfully');
     } catch (e, stackTrace) {
       await AppLogger.logError(
@@ -288,6 +290,9 @@ class WpBasicAuth {
         stackTrace,
         extras: {'message': 'Failed to log out of basic auth'},
       );
+    } finally {
+      AppLogger.logMessage('Removing application password from storage');
+      await prefs.remove(_appPasswordStorageKey);
     }
   }
 

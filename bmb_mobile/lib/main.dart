@@ -11,7 +11,6 @@ import 'package:bmb_mobile/models/drawer_item.dart';
 import 'package:bmb_mobile/utils/asset_paths.dart';
 import 'package:bmb_mobile/login/login_screen.dart';
 import 'package:bmb_mobile/constants.dart';
-import 'package:bmb_mobile/login/wp_cookie_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';

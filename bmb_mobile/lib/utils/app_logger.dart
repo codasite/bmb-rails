@@ -43,6 +43,9 @@ class AppLogger {
   }) async {
     if (kDebugMode) {
       print('${level.name.toUpperCase()}: $message');
+      if (extras.isNotEmpty) {
+        print(extras);
+      }
     }
 
     await Sentry.captureMessage(

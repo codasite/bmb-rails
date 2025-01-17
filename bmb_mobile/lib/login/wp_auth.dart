@@ -1,13 +1,13 @@
 import 'package:bmb_mobile/login/wp_cookie_auth.dart';
 import 'package:bmb_mobile/login/wp_basic_auth.dart';
+import 'package:bmb_mobile/utils/app_logger.dart';
 
 class WpAuth {
   final _cookieAuth = WpCookieAuth();
   final _basicAuth = WpBasicAuth();
 
   Future<bool> isAuthenticated() async {
-    return await _cookieAuth.isAuthenticated() &&
-        await _basicAuth.isAuthenticated();
+    return await _cookieAuth.isAuthenticated();
   }
 
   Future<bool> login(String username, String password) async {
@@ -16,8 +16,16 @@ class WpAuth {
       return false;
     }
     final basicLoggedIn = await _basicAuth.login(username);
-    return basicLoggedIn;
+    if (!basicLoggedIn) {
+      AppLogger.logError(
+          'Failed to login with basic auth. Notifications will not work.',
+          null);
+    }
+    return true;
   }
 
-  Future<void> logout() async {}
+  Future<void> logout() async {
+    await _cookieAuth.logout();
+    await _basicAuth.logout();
+  }
 }
