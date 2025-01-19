@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:bmb_mobile/firebase/fcm_token_manager.dart';
+import 'package:bmb_mobile/providers/http_client_provider.dart';
 
-class FCMTokenManagerProvider with ChangeNotifier {
-  final FcmTokenManager _fcmManager;
+class FCMTokenServiceProvider with ChangeNotifier {
+  late final FcmTokenManager _fcmManager;
 
-  FCMTokenManagerProvider({
-    required FcmTokenManager fcmManager,
-  }) : _fcmManager = fcmManager;
+  FCMTokenServiceProvider(HttpClientProvider httpProvider) {
+    _fcmManager = FcmTokenManager(httpProvider.sessionClient);
+  }
 
   FcmTokenManager get service => _fcmManager;
 
