@@ -1,23 +1,24 @@
-import 'package:bmb_mobile/widgets/bmb_app.dart';
+import 'package:bmb_mobile/app/bmb_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:bmb_mobile/utils/app_logger.dart';
+import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:bmb_mobile/providers/auth_provider.dart';
-import 'package:bmb_mobile/providers/http_client_provider.dart' as http;
-import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
-import 'package:bmb_mobile/auth/wp_credential_manager.dart';
-import 'package:bmb_mobile/http/session_http_client.dart';
-import 'package:bmb_mobile/http/app_password_http_client.dart';
-import 'package:bmb_mobile/auth/wp_basic_auth.dart';
-import 'package:bmb_mobile/auth/wp_cookie_auth.dart';
-import 'package:bmb_mobile/auth/wp_auth.dart';
-import 'package:bmb_mobile/firebase/fcm_token_manager.dart';
+import 'package:bmb_mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:bmb_mobile/features/http/presentation/providers/http_client_provider.dart'
+    as http;
+import 'package:bmb_mobile/features/notifications/presentation/providers/fcm_token_manager_provider.dart';
+import 'package:bmb_mobile/features/auth/data/repositories/wp_credential_repository.dart';
+import 'package:bmb_mobile/features/http/domain/service/session_http_client.dart';
+import 'package:bmb_mobile/features/http/domain/service/app_password_http_client.dart';
+import 'package:bmb_mobile/features/auth/domain/services/wp_basic_auth.dart';
+import 'package:bmb_mobile/features/auth/domain/services/wp_cookie_auth.dart';
+import 'package:bmb_mobile/features/auth/domain/services/wp_auth.dart';
+import 'package:bmb_mobile/features/notifications/domain/services/fcm_token_manager.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +42,7 @@ void main() async {
   ]);
 
   final cookieManager = WebviewCookieManager();
-  final credentialManager = WpCredentialManager();
+  final credentialManager = WpCredentialRepository();
   final sessionClient = SessionHttpClient(cookieManager);
   final passwordClient = AppPasswordHttpClient(credentialManager);
   final basicAuth = WpBasicAuth(
