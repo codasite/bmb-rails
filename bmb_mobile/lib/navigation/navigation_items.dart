@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/models/navigation_item.dart';
+import 'package:bmb_mobile/navigation/navigation_item.dart';
 import 'package:bmb_mobile/utils/asset_paths.dart';
 
 final List<NavigationItem> navigationItems = [

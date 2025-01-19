@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/models/drawer_item.dart';
+import 'package:bmb_mobile/navigation/drawer_item.dart';
 import 'package:bmb_mobile/utils/asset_paths.dart';
 
 final List<DrawerItem> drawerItems = [
