@@ -1,4 +1,3 @@
-import 'package:bmb_mobile/http/authenticated_http_client.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'firebase_options.dart';
@@ -15,12 +14,12 @@ import 'package:bmb_mobile/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:bmb_mobile/services/fcm_token_service.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/providers/auth_provider.dart';
 import 'package:bmb_mobile/providers/http_client_provider.dart' as http;
+import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -46,12 +45,14 @@ void main() async {
   final cookieManager = WebviewCookieManager();
   final httpProvider = http.HttpClientProvider(cookieManager);
   final authProvider = AuthProvider(httpProvider, cookieManager);
+  final fcmProvider = FCMTokenServiceProvider(httpProvider);
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: httpProvider),
         ChangeNotifierProvider.value(value: authProvider),
+        ChangeNotifierProvider.value(value: fcmProvider),
       ],
       child: const MyApp(),
     ),
@@ -99,8 +100,6 @@ class _WebViewAppState extends State<WebViewApp> {
   static const double _refreshThreshold = 65.0;
 
   late final WebViewController controller;
-  late final FCMTokenService _fcmService;
-  late final AuthenticatedHttpClient _client;
   int? _selectedIndex;
   String _currentTitle = 'Back My Bracket';
   bool _isLoading = true;
@@ -190,7 +189,7 @@ class _WebViewAppState extends State<WebViewApp> {
 
   void _onDrawerItemTap(DrawerItem item) async {
     if (item.path == '/wp-login.php?action=logout') {
-      await _fcmService.deregisterToken();
+      await context.read<FCMTokenServiceProvider>().deregisterToken();
       await context.read<AuthProvider>().logout();
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
@@ -205,10 +204,8 @@ class _WebViewAppState extends State<WebViewApp> {
   void initState() {
     super.initState();
 
-    // Get the client from provider
-    final client = context.read<HttpClientProvider>().sessionClient;
-    _fcmService = FCMTokenService(client);
-    _initializeFCM();
+    // Initialize FCM
+    context.read<FCMTokenServiceProvider>().initialize();
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -331,15 +328,10 @@ class _WebViewAppState extends State<WebViewApp> {
     _startStatusUpdates();
   }
 
-  Future<void> _initializeFCM() async {
-    await _fcmService.initialize();
-    await _fcmService.setupToken();
-  }
-
   void _startStatusUpdates() {
     // Update token status every 24 hours
     Future.delayed(const Duration(days: 1), () async {
-      await _fcmService.updateStatus();
+      await context.read<FCMTokenServiceProvider>().updateStatus();
       _startStatusUpdates(); // Schedule next update
     });
   }
