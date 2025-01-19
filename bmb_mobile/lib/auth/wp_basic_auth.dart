@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/constants.dart';
+import 'package:bmb_mobile/http/wp_urls.dart';
 import 'package:bmb_mobile/http/app_password_http_client.dart';
 import 'package:bmb_mobile/http/session_http_client.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
@@ -120,7 +120,7 @@ class WpBasicAuth {
   Future<WpAppPasswordResult> _attemptCreatePassword(String username) async {
     try {
       final response = await _sessionClient.post(
-        AppConstants.applicationPasswordsUrl,
+        WpUrls.applicationPasswordsUrl,
         body: {
           'name': _appName,
           'app_id': _appId,
@@ -167,7 +167,7 @@ class WpBasicAuth {
   Future<String?> _findExistingPassword() async {
     try {
       final response = await _sessionClient.get(
-        AppConstants.applicationPasswordsUrl,
+        WpUrls.applicationPasswordsUrl,
       );
 
       await AppLogger.logMessage(
@@ -218,7 +218,7 @@ class WpBasicAuth {
   }) async {
     final client = isLogout ? _passwordClient : _sessionClient;
     final response = await client.delete(
-      AppConstants.applicationPasswordUrl(uuid),
+      WpUrls.applicationPasswordUrl(uuid),
     );
 
     return response?.statusCode == 200;

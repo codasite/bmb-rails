@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:bmb_mobile/theme/bmb_font_weights.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bmb_mobile/constants.dart';
+import 'package:bmb_mobile/http/wp_urls.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -53,15 +53,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleSignUp() async {
-    final Uri url = Uri.parse(AppConstants.baseUrl + AppConstants.registerPath);
+    final Uri url = Uri.parse(WpUrls.baseUrl + WpUrls.registerPath);
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 
   void _handleForgotPassword() async {
-    final Uri url =
-        Uri.parse(AppConstants.baseUrl + AppConstants.lostPasswordPath);
+    final Uri url = Uri.parse(WpUrls.baseUrl + WpUrls.lostPasswordPath);
     if (await canLaunchUrl(url)) {
       await launchUrl(url, mode: LaunchMode.externalApplication);
     }

@@ -1,4 +1,4 @@
-class AppConstants {
+class WpUrls {
   static const String baseUrl = 'http://localhost:8008';
 
   // WordPress API paths

@@ -6,10 +6,8 @@ import 'package:bmb_mobile/widgets/upper_case_text.dart';
 import 'package:bmb_mobile/models/navigation_item.dart';
 import 'package:bmb_mobile/models/drawer_item.dart';
 import 'package:bmb_mobile/utils/asset_paths.dart';
-import 'package:bmb_mobile/login/login_screen.dart';
 import 'package:bmb_mobile/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/providers/auth_provider.dart';
 import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
@@ -17,38 +15,14 @@ import 'package:bmb_mobile/navigation/navigation_items.dart';
 import 'package:bmb_mobile/navigation/drawer_items.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
-class BmbApp extends StatelessWidget {
-  const BmbApp({super.key});
+class WebViewWrapper extends StatefulWidget {
+  const WebViewWrapper({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 1), () {
-      FlutterNativeSplash.remove();
-    });
-
-    return MaterialApp(
-      title: 'Back My Bracket',
-      theme: ThemeData(
-        fontFamily: 'ClashDisplay',
-      ),
-      routes: {
-        '/app': (context) => const WebViewApp(),
-        '/login': (context) => const LoginScreen(),
-      },
-      initialRoute:
-          context.read<AuthProvider>().isAuthenticated ? '/app' : '/login',
-    );
-  }
+  State<WebViewWrapper> createState() => _WebViewWrapperState();
 }
 
-class WebViewApp extends StatefulWidget {
-  const WebViewApp({super.key});
-
-  @override
-  State<WebViewApp> createState() => _WebViewAppState();
-}
-
-class _WebViewAppState extends State<WebViewApp> {
+class _WebViewWrapperState extends State<WebViewWrapper> {
   static const double _refreshThreshold = 65.0;
 
   late final WebViewController controller;
@@ -63,7 +37,7 @@ class _WebViewAppState extends State<WebViewApp> {
 
   void _loadUrl(String path) {
     controller.loadRequest(
-      Uri.parse(AppConstants.baseUrl + path),
+      Uri.parse(WpUrls.baseUrl + path),
     );
   }
 
@@ -164,7 +138,7 @@ class _WebViewAppState extends State<WebViewApp> {
             ];
 
             // Check if URL is external (not our domain)
-            if (!request.url.contains(AppConstants.baseUrl)) {
+            if (!request.url.contains(WpUrls.baseUrl)) {
               final uri = Uri.parse(request.url);
 
               // Allow system-related external requests to load in WebView
@@ -181,7 +155,7 @@ class _WebViewAppState extends State<WebViewApp> {
             }
 
             // Handle unauthorized/login redirects
-            if (request.url.contains(AppConstants.loginPath) ||
+            if (request.url.contains(WpUrls.loginPath) ||
                 request.url.contains('unauthorized')) {
               context.read<AuthProvider>().logout();
               if (mounted) {
@@ -196,8 +170,8 @@ class _WebViewAppState extends State<WebViewApp> {
 
     // Since this widget only mounts when user is authenticated,
     // we can safely load the initial URL
-    controller.loadRequest(
-        Uri.parse('${AppConstants.baseUrl}/dashboard/tournaments/'));
+    controller
+        .loadRequest(Uri.parse('${WpUrls.baseUrl}/dashboard/tournaments/'));
 
     // Start periodic status updates
     _startStatusUpdates();

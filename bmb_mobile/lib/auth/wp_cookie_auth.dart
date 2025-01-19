@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/constants.dart';
+import 'package:bmb_mobile/http/wp_urls.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
@@ -29,7 +29,7 @@ class WpCookieAuth {
       await AppLogger.logMessage('Attempting login for user: $username');
 
       final response = await http.post(
-        Uri.parse(AppConstants.loginUrl),
+        Uri.parse(WpUrls.loginUrl),
         body: {
           'log': username,
           'pwd': password,
@@ -42,7 +42,7 @@ class WpCookieAuth {
       if (cookies != null && cookies.contains('wordpress_logged_in_')) {
         // Handle cookie storage as before
         final cookiesList = cookies.split(',').map((cookie) => cookie.trim());
-        final uri = Uri.parse(AppConstants.baseUrl);
+        final uri = Uri.parse(WpUrls.baseUrl);
 
         final cookiesToSet = <Cookie>[];
         for (var cookieStr in cookiesList) {
@@ -77,7 +77,7 @@ class WpCookieAuth {
 
   Future<bool> isAuthenticated() async {
     try {
-      final uri = Uri.parse(AppConstants.baseUrl);
+      final uri = Uri.parse(WpUrls.baseUrl);
       var cookies = await _cookieManager.getCookies(uri.toString());
 
       if (!cookies

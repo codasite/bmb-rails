@@ -7,12 +7,12 @@ import 'dart:io';
 import '../http/wp_urls.dart';
 import 'package:bmb_mobile/http/authenticated_http_client.dart';
 
-class FcmTokenManager {
+class FCMTokenService {
   static const String _tokenKey = 'fcm_token';
   final _messaging = FirebaseMessaging.instance;
   final AuthenticatedHttpClient _client;
 
-  FcmTokenManager(this._client);
+  FCMTokenService(this._client);
 
   /// Initialize FCM and request permissions
   Future<void> initialize() async {

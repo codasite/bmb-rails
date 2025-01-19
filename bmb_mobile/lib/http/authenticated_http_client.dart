@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bmb_mobile/utils/app_logger.dart';
-import 'package:bmb_mobile/constants.dart';
+import 'package:bmb_mobile/http/wp_urls.dart';
 
 abstract class AuthenticatedHttpClient {
   const AuthenticatedHttpClient();
@@ -54,7 +54,7 @@ abstract class AuthenticatedHttpClient {
         return null;
       }
 
-      final uri = Uri.parse('${AppConstants.baseUrl}$path');
+      final uri = Uri.parse('${WpUrls.baseUrl}$path');
       final requestHeaders = {
         'Content-Type': 'application/json',
         ...authHeaders,

@@ -1,5 +1,5 @@
 import 'package:bmb_mobile/utils/app_logger.dart';
-import 'package:bmb_mobile/constants.dart';
+import 'package:bmb_mobile/http/wp_urls.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:bmb_mobile/http/authenticated_http_client.dart';
 
@@ -11,7 +11,7 @@ class SessionHttpClient extends AuthenticatedHttpClient {
   @override
   Future<Map<String, String>?> getAuthHeaders() async {
     try {
-      final baseUri = Uri.parse(AppConstants.baseUrl);
+      final baseUri = Uri.parse(WpUrls.baseUrl);
       final cookies = await cookieManager.getCookies(baseUri.toString());
 
       final restNonceCookie = cookies.firstWhere(
