@@ -9,7 +9,7 @@ import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
-import 'package:bmb_mobile/features/wp_http/presentation/providers/http_client_provider.dart'
+import 'package:bmb_mobile/features/wp_http/presentation/providers/wp_http_client_provider.dart'
     as http;
 import 'package:bmb_mobile/features/notifications/presentation/providers/fcm_token_manager_provider.dart';
 import 'package:bmb_mobile/features/wp_auth/data/repositories/wp_credential_repository.dart';
@@ -54,7 +54,7 @@ void main() async {
   final auth = WpAuth(cookieAuth, basicAuth);
   final fcmManager = FcmTokenManager(sessionClient);
   await auth.refreshAuthStatus();
-  final httpProvider = http.HttpClientProvider(
+  final httpProvider = http.WpHttpClientProvider(
     credentialManager: credentialManager,
     sessionClient: sessionClient,
     passwordClient: passwordClient,
