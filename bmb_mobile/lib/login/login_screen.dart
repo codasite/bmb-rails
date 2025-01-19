@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
-import 'package:bmb_mobile/theme/font_weights.dart';
+import 'package:bmb_mobile/theme/bmb_font_weights.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bmb_mobile/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(
                             fontFamily: 'ClashDisplay',
                             fontSize: 32,
-                            fontVariations: BMBFontWeight.w700,
+                            fontVariations: BmbFontWeights.w700,
                             color: Colors.white,
                           ),
                           textAlign: TextAlign.center,
@@ -132,26 +132,26 @@ class _LoginScreenState extends State<LoginScreen> {
                             labelStyle: TextStyle(
                               color: Colors.white70,
                               fontSize: 16,
-                              fontVariations: BMBFontWeight.w500,
+                              fontVariations: BmbFontWeights.w500,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: const BorderSide(
-                                color: BMBColors.blue,
+                                color: BmbColors.blue,
                                 width: 1,
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: BMBColors.blue.withOpacity(0.7),
+                                color: BmbColors.blue.withOpacity(0.7),
                                 width: 1,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: const BorderSide(
-                                color: BMBColors.blue,
+                                color: BmbColors.blue,
                                 width: 1,
                               ),
                             ),
@@ -179,26 +179,26 @@ class _LoginScreenState extends State<LoginScreen> {
                             labelStyle: TextStyle(
                               color: Colors.white70,
                               fontSize: 16,
-                              fontVariations: BMBFontWeight.w500,
+                              fontVariations: BmbFontWeights.w500,
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: const BorderSide(
-                                color: BMBColors.blue,
+                                color: BmbColors.blue,
                                 width: 1,
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: BMBColors.blue.withOpacity(0.7),
+                                color: BmbColors.blue.withOpacity(0.7),
                                 width: 1,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: const BorderSide(
-                                color: BMBColors.blue,
+                                color: BmbColors.blue,
                                 width: 1,
                               ),
                             ),
@@ -228,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.white.withOpacity(0.5),
-                                fontVariations: BMBFontWeight.w500,
+                                fontVariations: BmbFontWeights.w500,
                               ),
                             ),
                           ),
@@ -238,11 +238,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: _isLoading ? null : _login,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: BMBColors.blue.withOpacity(0.30),
+                            backgroundColor: BmbColors.blue.withOpacity(0.30),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(
-                                color: BMBColors.blue,
+                                color: BmbColors.blue,
                                 width: 1,
                               ),
                             ),
@@ -262,7 +262,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
-                                    fontVariations: BMBFontWeight.w500,
+                                    fontVariations: BmbFontWeights.w500,
                                   ),
                                 ),
                         ),
@@ -273,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.white.withOpacity(0.5),
-                              fontVariations: BMBFontWeight.w500,
+                              fontVariations: BmbFontWeights.w500,
                             ),
                           ),
                         ),

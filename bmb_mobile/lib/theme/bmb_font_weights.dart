@@ -4,7 +4,7 @@ import 'dart:ui';
 // Use like so:
 // Text('Hello', style: TextStyle(fontVariations: BMBFontWeight.w700))
 
-class BMBFontWeight {
+class BmbFontWeights {
   static List<FontVariation> w100 = [const FontVariation('wght', 100)];
   static List<FontVariation> w200 = [const FontVariation('wght', 200)];
   static List<FontVariation> w300 = [const FontVariation('wght', 300)];

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class BMBColors {
+class BmbColors {
   // Private constructor to prevent instantiation
-  BMBColors._();
+  BmbColors._();
 
   // Brand Colors
   static const Color white = Color(0xFFFFFFFF);

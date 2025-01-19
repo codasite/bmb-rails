@@ -29,14 +29,7 @@ class BmbApp extends StatelessWidget {
     return MaterialApp(
       title: 'Back My Bracket',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
         fontFamily: 'ClashDisplay',
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(fontSize: 16.0),
-          bodyMedium: TextStyle(fontSize: 14.0),
-          titleLarge: TextStyle(fontSize: 20.0),
-        ),
       ),
       routes: {
         '/app': (context) => const WebViewApp(),
@@ -252,9 +245,9 @@ class _WebViewAppState extends State<WebViewApp> {
         }
       },
       child: Scaffold(
-        backgroundColor: BMBColors.ddBlue,
+        backgroundColor: BmbColors.ddBlue,
         appBar: AppBar(
-          backgroundColor: BMBColors.darkBlue,
+          backgroundColor: BmbColors.darkBlue,
           iconTheme: const IconThemeData(color: Colors.white),
           leading: Builder(
             builder: (BuildContext context) {
@@ -282,7 +275,7 @@ class _WebViewAppState extends State<WebViewApp> {
           ],
         ),
         drawer: Drawer(
-            backgroundColor: BMBColors.darkBlue,
+            backgroundColor: BmbColors.darkBlue,
             child: SafeArea(
               child: ListView(
                 padding: EdgeInsets.zero,
@@ -339,7 +332,7 @@ class _WebViewAppState extends State<WebViewApp> {
             )),
         body: SafeArea(
           child: Container(
-            color: BMBColors.ddBlue,
+            color: BmbColors.ddBlue,
             child: Stack(
               children: [
                 WebViewWidget(controller: controller),
@@ -348,7 +341,7 @@ class _WebViewAppState extends State<WebViewApp> {
                     color: Colors.transparent.withOpacity(0.5),
                     child: const Center(
                       child: CircularProgressIndicator(
-                        color: BMBColors.blue,
+                        color: BmbColors.blue,
                       ),
                     ),
                   ),
@@ -360,7 +353,7 @@ class _WebViewAppState extends State<WebViewApp> {
                     child: Center(
                       child: Icon(
                         Icons.refresh,
-                        color: BMBColors.blue,
+                        color: BmbColors.blue,
                         size: 24,
                       ),
                     ),
@@ -371,7 +364,7 @@ class _WebViewAppState extends State<WebViewApp> {
         ),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.only(top: 10),
-          color: BMBColors.darkBlue,
+          color: BmbColors.darkBlue,
           child: BottomNavigationBar(
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -396,8 +389,8 @@ class _WebViewAppState extends State<WebViewApp> {
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: const TextStyle(fontSize: 12),
             unselectedLabelStyle: const TextStyle(fontSize: 12),
-            selectedItemColor: BMBColors.white,
-            unselectedItemColor: BMBColors.white,
+            selectedItemColor: BmbColors.white,
+            unselectedItemColor: BmbColors.white,
             onTap: _onItemTapped,
           ),
         ),
