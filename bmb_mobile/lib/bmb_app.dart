@@ -13,6 +13,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/providers/auth_provider.dart';
 import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
+import 'package:bmb_mobile/navigation/navigation_items.dart';
+import 'package:bmb_mobile/navigation/drawer_items.dart';
 
 class BmbApp extends StatelessWidget {
   const BmbApp({super.key});
@@ -62,72 +64,8 @@ class _WebViewAppState extends State<WebViewApp> {
   bool _canGoBack = false;
   double _refreshProgress = 0.0;
 
-  final List<NavigationItem> _pages = [
-    NavigationItem(
-      iconPath: getIconPath('user'),
-      shortLabel: 'Profile',
-      label: 'My Profile',
-      path: '/dashboard/profile/',
-      slug: 'profile',
-    ),
-    NavigationItem(
-      iconPath: getIconPath('signal'),
-      shortLabel: 'Tournaments',
-      label: 'My Tournaments',
-      path: '/dashboard/tournaments/',
-      slug: 'tournaments',
-    ),
-    NavigationItem(
-      iconPath: getIconPath('clock'),
-      shortLabel: 'History',
-      label: 'My Play History',
-      path: '/dashboard/play-history/',
-      slug: 'play-history',
-    ),
-  ];
-
-  final List<DrawerItem> _drawerItems = [
-    DrawerItem(
-      iconPath: getIconPath('home'),
-      label: 'Home',
-      path: '/',
-    ),
-    DrawerItem(
-      iconPath: getIconPath('currency_dollar'),
-      label: 'Be a Host',
-      path: '/be-a-host/',
-    ),
-    DrawerItem(
-      iconPath: getIconPath('bmb'),
-      label: 'BMB Brackets',
-      path: '/bmb-brackets/',
-    ),
-    DrawerItem(
-      iconPath: getIconPath('eye'),
-      label: 'Celebrity Picks',
-      path: '/celebrity-picks/',
-    ),
-    DrawerItem(
-      iconPath: getIconPath('shopping_cart'),
-      label: 'Shop',
-      path: '/shop/',
-    ),
-    DrawerItem(
-      iconPath: getIconPath('ticket'),
-      label: 'Referral Program',
-      path: '/referralprogram/',
-    ),
-    DrawerItem(
-      iconPath: getIconPath('user_2'),
-      label: 'My Account',
-      path: '/dashboard/my-account/',
-    ),
-    DrawerItem(
-      iconPath: getIconPath('logout'),
-      label: 'Logout',
-      path: '/wp-login.php?action=logout',
-    ),
-  ];
+  final List<NavigationItem> _pages = navigationItems;
+  final List<DrawerItem> _drawerItems = drawerItems;
 
   void _loadUrl(String path) {
     controller.loadRequest(
