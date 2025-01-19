@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:bmb_mobile/features/auth/domain/services/wp_auth.dart';
+import 'package:bmb_mobile/features/wp_auth/domain/services/wp_auth.dart';
 
 class AuthProvider with ChangeNotifier {
   final WpAuth _auth;

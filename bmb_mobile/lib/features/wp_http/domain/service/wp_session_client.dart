@@ -1,12 +1,12 @@
 import 'package:bmb_mobile/core/utils/app_logger.dart';
-import 'package:bmb_mobile/features/http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
-import 'package:bmb_mobile/features/http/domain/service/authenticated_http_client.dart';
+import 'package:bmb_mobile/features/wp_http/domain/service/wp_http_client.dart';
 
-class SessionHttpClient extends AuthenticatedHttpClient {
+class WpSessionClient extends WpHttpClient {
   final WebviewCookieManager cookieManager;
 
-  const SessionHttpClient(this.cookieManager);
+  const WpSessionClient(this.cookieManager);
 
   @override
   Future<Map<String, String>?> getAuthHeaders() async {

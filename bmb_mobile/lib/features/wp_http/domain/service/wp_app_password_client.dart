@@ -1,10 +1,10 @@
-import 'package:bmb_mobile/features/auth/data/repositories/wp_credential_repository.dart';
-import 'package:bmb_mobile/features/http/domain/service/authenticated_http_client.dart';
+import 'package:bmb_mobile/features/wp_auth/data/repositories/wp_credential_repository.dart';
+import 'package:bmb_mobile/features/wp_http/domain/service/wp_http_client.dart';
 
-class AppPasswordHttpClient extends AuthenticatedHttpClient {
+class WpAppPasswordClient extends WpHttpClient {
   final WpCredentialRepository credentialManager;
 
-  const AppPasswordHttpClient(this.credentialManager);
+  const WpAppPasswordClient(this.credentialManager);
 
   @override
   Future<Map<String, String>?> getAuthHeaders() async {

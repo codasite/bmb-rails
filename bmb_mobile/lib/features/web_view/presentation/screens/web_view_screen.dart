@@ -6,11 +6,11 @@ import 'package:bmb_mobile/features/web_view/data/models/navigation_item.dart';
 import 'package:bmb_mobile/features/web_view/data/models/drawer_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
-import 'package:bmb_mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/fcm_token_manager_provider.dart';
 import 'package:bmb_mobile/features/web_view/config/bottom_nav_items.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:bmb_mobile/features/http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:bmb_mobile/features/web_view/presentation/widgets/bmb_drawer.dart';
 import 'package:bmb_mobile/features/web_view/presentation/widgets/bmb_bottom_nav_bar.dart';
 

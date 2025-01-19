@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bmb_mobile/features/auth/data/models/wp_app_password.dart';
+import 'package:bmb_mobile/features/wp_auth/data/models/wp_app_password.dart';
 
 class WpCredentialRepository {
   static const String _appPasswordStorageKey = 'wp_app_password';

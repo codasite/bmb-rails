@@ -1,9 +1,9 @@
 import 'package:bmb_mobile/features/web_view/presentation/screens/web_view_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:bmb_mobile/features/auth/presentation/screens/login_screen.dart';
+import 'package:bmb_mobile/features/wp_auth/presentation/screens/login_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
-import 'package:bmb_mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 
 class BmbApp extends StatelessWidget {
   const BmbApp({super.key});

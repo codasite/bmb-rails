@@ -21,8 +21,6 @@ class WpUrls {
 
   // Full URLs
   static String get loginUrl => baseUrl + loginPath;
-  static String get applicationPasswordsUrl =>
-      baseUrl + applicationPasswordsPath;
-  static String applicationPasswordUrl(String uuid) =>
-      '$applicationPasswordsUrl/$uuid';
+  static String applicationPasswordPath(String uuid) =>
+      '$applicationPasswordsPath/$uuid';
 }

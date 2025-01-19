@@ -4,13 +4,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'dart:io';
-import '../../../http/wp_urls.dart';
-import 'package:bmb_mobile/features/http/domain/service/authenticated_http_client.dart';
+import '../../../wp_http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/domain/service/wp_http_client.dart';
 
 class FcmTokenManager {
   static const String _tokenKey = 'fcm_token';
   final _messaging = FirebaseMessaging.instance;
-  final AuthenticatedHttpClient _client;
+  final WpHttpClient _client;
 
   FcmTokenManager(this._client);
 

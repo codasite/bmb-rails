@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:bmb_mobile/features/http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:bmb_mobile/features/auth/presentation/providers/auth_provider.dart';
+import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {

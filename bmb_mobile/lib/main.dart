@@ -8,16 +8,16 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
-import 'package:bmb_mobile/features/auth/presentation/providers/auth_provider.dart';
-import 'package:bmb_mobile/features/http/presentation/providers/http_client_provider.dart'
+import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
+import 'package:bmb_mobile/features/wp_http/presentation/providers/http_client_provider.dart'
     as http;
 import 'package:bmb_mobile/features/notifications/presentation/providers/fcm_token_manager_provider.dart';
-import 'package:bmb_mobile/features/auth/data/repositories/wp_credential_repository.dart';
-import 'package:bmb_mobile/features/http/domain/service/session_http_client.dart';
-import 'package:bmb_mobile/features/http/domain/service/app_password_http_client.dart';
-import 'package:bmb_mobile/features/auth/domain/services/wp_basic_auth.dart';
-import 'package:bmb_mobile/features/auth/domain/services/wp_cookie_auth.dart';
-import 'package:bmb_mobile/features/auth/domain/services/wp_auth.dart';
+import 'package:bmb_mobile/features/wp_auth/data/repositories/wp_credential_repository.dart';
+import 'package:bmb_mobile/features/wp_http/domain/service/wp_session_client.dart';
+import 'package:bmb_mobile/features/wp_http/domain/service/wp_app_password_client.dart';
+import 'package:bmb_mobile/features/wp_auth/domain/services/wp_basic_auth.dart';
+import 'package:bmb_mobile/features/wp_auth/domain/services/wp_cookie_auth.dart';
+import 'package:bmb_mobile/features/wp_auth/domain/services/wp_auth.dart';
 import 'package:bmb_mobile/features/notifications/domain/services/fcm_token_manager.dart';
 
 void main() async {
@@ -43,8 +43,8 @@ void main() async {
 
   final cookieManager = WebviewCookieManager();
   final credentialManager = WpCredentialRepository();
-  final sessionClient = SessionHttpClient(cookieManager);
-  final passwordClient = AppPasswordHttpClient(credentialManager);
+  final sessionClient = WpSessionClient(cookieManager);
+  final passwordClient = WpAppPasswordClient(credentialManager);
   final basicAuth = WpBasicAuth(
     passwordClient,
     sessionClient,

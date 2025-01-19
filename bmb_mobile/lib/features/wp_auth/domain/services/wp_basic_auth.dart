@@ -1,15 +1,15 @@
-import 'package:bmb_mobile/features/http/wp_urls.dart';
-import 'package:bmb_mobile/features/http/domain/service/app_password_http_client.dart';
-import 'package:bmb_mobile/features/http/domain/service/session_http_client.dart';
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/domain/service/wp_app_password_client.dart';
+import 'package:bmb_mobile/features/wp_http/domain/service/wp_session_client.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'dart:convert';
-import 'package:bmb_mobile/features/auth/data/models/wp_app_password.dart';
-import 'package:bmb_mobile/features/auth/data/models/wp_app_password_result.dart';
-import 'package:bmb_mobile/features/auth/data/repositories/wp_credential_repository.dart';
+import 'package:bmb_mobile/features/wp_auth/data/models/wp_app_password.dart';
+import 'package:bmb_mobile/features/wp_auth/data/models/wp_app_password_result.dart';
+import 'package:bmb_mobile/features/wp_auth/data/repositories/wp_credential_repository.dart';
 
 class WpBasicAuth {
-  final AppPasswordHttpClient _passwordClient;
-  final SessionHttpClient _sessionClient;
+  final WpAppPasswordClient _passwordClient;
+  final WpSessionClient _sessionClient;
   final WpCredentialRepository _credentialManager;
   static const String _appName = 'bmb-mobile-app';
   static const String _appId = '72b89be5-8c8d-480a-8a9f-d08324d8410a';
@@ -120,7 +120,7 @@ class WpBasicAuth {
   Future<WpAppPasswordResult> _attemptCreatePassword(String username) async {
     try {
       final response = await _sessionClient.post(
-        WpUrls.applicationPasswordsUrl,
+        WpUrls.applicationPasswordsPath,
         body: {
           'name': _appName,
           'app_id': _appId,
@@ -167,7 +167,7 @@ class WpBasicAuth {
   Future<String?> _findExistingPassword() async {
     try {
       final response = await _sessionClient.get(
-        WpUrls.applicationPasswordsUrl,
+        WpUrls.applicationPasswordsPath,
       );
 
       await AppLogger.logMessage(
@@ -218,7 +218,7 @@ class WpBasicAuth {
   }) async {
     final client = isLogout ? _passwordClient : _sessionClient;
     final response = await client.delete(
-      WpUrls.applicationPasswordUrl(uuid),
+      WpUrls.applicationPasswordPath(uuid),
     );
 
     return response?.statusCode == 200;

@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/features/http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:http/http.dart' as http;
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';

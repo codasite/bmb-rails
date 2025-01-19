@@ -1,10 +1,10 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bmb_mobile/core/utils/app_logger.dart';
-import 'package:bmb_mobile/features/http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 
-abstract class AuthenticatedHttpClient {
-  const AuthenticatedHttpClient();
+abstract class WpHttpClient {
+  const WpHttpClient();
 
   // Abstract method that both implementations will provide
   Future<Map<String, String>?> getAuthHeaders();

@@ -1,5 +1,5 @@
-import 'package:bmb_mobile/features/auth/domain/services/wp_cookie_auth.dart';
-import 'package:bmb_mobile/features/auth/domain/services/wp_basic_auth.dart';
+import 'package:bmb_mobile/features/wp_auth/domain/services/wp_cookie_auth.dart';
+import 'package:bmb_mobile/features/wp_auth/domain/services/wp_basic_auth.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 
 class WpAuth {
