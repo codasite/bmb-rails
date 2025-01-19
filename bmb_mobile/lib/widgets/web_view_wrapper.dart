@@ -1,7 +1,6 @@
 import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/widgets/upper_case_text.dart';
 import 'package:bmb_mobile/navigation/navigation_item.dart';
 import 'package:bmb_mobile/navigation/drawer_item.dart';
@@ -13,6 +12,7 @@ import 'package:bmb_mobile/navigation/navigation_items.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:bmb_mobile/http/wp_urls.dart';
 import 'package:bmb_mobile/widgets/bmb_drawer.dart';
+import 'package:bmb_mobile/widgets/bmb_bottom_nav_bar.dart';
 
 class WebViewWrapper extends StatefulWidget {
   const WebViewWrapper({super.key});
@@ -284,37 +284,10 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
                 ),
               ),
             ),
-            bottomNavigationBar: Container(
-              padding: const EdgeInsets.only(top: 10),
-              color: BmbColors.darkBlue,
-              child: BottomNavigationBar(
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                items: _pages
-                    .map((page) => BottomNavigationBarItem(
-                          icon: Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: SvgPicture.asset(
-                              page.iconPath,
-                              width: 24,
-                              height: 24,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                          label: page.shortLabel.toUpperCase(),
-                        ))
-                    .toList(),
-                currentIndex: _selectedIndex ?? 0,
-                type: BottomNavigationBarType.fixed,
-                selectedLabelStyle: const TextStyle(fontSize: 12),
-                unselectedLabelStyle: const TextStyle(fontSize: 12),
-                selectedItemColor: BmbColors.white,
-                unselectedItemColor: BmbColors.white,
-                onTap: _onItemTapped,
-              ),
+            bottomNavigationBar: BmbBottomNavBar(
+              pages: _pages,
+              selectedIndex: _selectedIndex ?? 0,
+              onItemTapped: _onItemTapped,
             ),
           ),
           if (_isLoggingOut)
