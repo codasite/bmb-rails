@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
-import 'package:bmb_mobile/features/navigation/data/models/navigation_item.dart';
+import 'package:bmb_mobile/features/web_view/data/models/navigation_item.dart';
 
 class BmbBottomNavBar extends StatelessWidget {
   final List<NavigationItem> pages;

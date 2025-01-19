@@ -2,17 +2,17 @@ import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
-import 'package:bmb_mobile/features/navigation/data/models/navigation_item.dart';
-import 'package:bmb_mobile/features/navigation/data/models/drawer_item.dart';
+import 'package:bmb_mobile/features/web_view/data/models/navigation_item.dart';
+import 'package:bmb_mobile/features/web_view/data/models/drawer_item.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/features/auth/presentation/providers/auth_provider.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/fcm_token_manager_provider.dart';
-import 'package:bmb_mobile/features/navigation/data/models/navigation_items.dart';
+import 'package:bmb_mobile/features/web_view/config/bottom_nav_items.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:bmb_mobile/features/http/wp_urls.dart';
-import 'package:bmb_mobile/features/navigation/presentation/widgets/bmb_drawer.dart';
-import 'package:bmb_mobile/features/navigation/presentation/widgets/bmb_bottom_nav_bar.dart';
+import 'package:bmb_mobile/features/web_view/presentation/widgets/bmb_drawer.dart';
+import 'package:bmb_mobile/features/web_view/presentation/widgets/bmb_bottom_nav_bar.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -32,7 +32,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   double _refreshProgress = 0.0;
   bool _isLoggingOut = false;
 
-  final List<NavigationItem> _pages = navigationItems;
+  final List<NavigationItem> _pages = bottomNavItems;
 
   void _loadUrl(String path) {
     controller.loadRequest(
