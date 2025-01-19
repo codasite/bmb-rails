@@ -269,7 +269,7 @@ class FcmTokenManager {
         stackTrace,
         extras: {'message': 'Failed to get device info'},
       );
-      throw e; // Re-throw as this is critical information
+      rethrow;
     }
   }
 }

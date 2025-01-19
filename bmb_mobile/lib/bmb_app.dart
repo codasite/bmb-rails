@@ -146,7 +146,9 @@ class _WebViewAppState extends State<WebViewApp> {
   void _onDrawerItemTap(DrawerItem item) async {
     if (item.path == '/wp-login.php?action=logout') {
       await context.read<FCMTokenManagerProvider>().deregisterToken();
-      await context.read<AuthProvider>().logout();
+      if (mounted) {
+        await context.read<AuthProvider>().logout();
+      }
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
       }
@@ -287,8 +289,10 @@ class _WebViewAppState extends State<WebViewApp> {
   void _startStatusUpdates() {
     // Update token status every 24 hours
     Future.delayed(const Duration(days: 1), () async {
-      await context.read<FCMTokenManagerProvider>().updateStatus();
-      _startStatusUpdates(); // Schedule next update
+      if (mounted) {
+        await context.read<FCMTokenManagerProvider>().updateStatus();
+        _startStatusUpdates(); // Schedule next update
+      }
     });
   }
 
