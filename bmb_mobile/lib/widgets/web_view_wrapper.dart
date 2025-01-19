@@ -44,7 +44,6 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // _currentTitle = _pages[index].label;
       _loadUrl(_pages[index].path);
     });
   }
@@ -67,7 +66,6 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
   Future<void> _injectPullToRefreshJS() async {
     final String js =
         await rootBundle.loadString('assets/js/pull_to_refresh.js');
-    // Replace the threshold placeholder with actual value
     final String configuredJs =
         js.replaceAll('REFRESH_THRESHOLD', _refreshThreshold.toString());
     await controller.runJavaScript(configuredJs);
@@ -77,7 +75,6 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
   void initState() {
     super.initState();
 
-    // Initialize FCM
     context.read<FCMTokenManagerProvider>().initialize();
 
     controller = WebViewController()
@@ -130,31 +127,26 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
             });
           },
           onNavigationRequest: (NavigationRequest request) async {
-            // List of allowed external domains for system functionality
             final allowedExternalDomains = [
               'widgets.wp.com',
               'public-api.wordpress.com',
               'wordpress.com'
             ];
 
-            // Check if URL is external (not our domain)
             if (!request.url.contains(WpUrls.baseUrl)) {
               final uri = Uri.parse(request.url);
 
-              // Allow system-related external requests to load in WebView
               if (allowedExternalDomains
                   .any((domain) => request.url.contains(domain))) {
                 return NavigationDecision.navigate;
               }
 
-              // Open other external links in browser
               if (await canLaunchUrl(uri)) {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               }
               return NavigationDecision.prevent;
             }
 
-            // Handle unauthorized/login redirects
             if (request.url.contains(WpUrls.loginPath) ||
                 request.url.contains('unauthorized')) {
               context.read<AuthProvider>().logout();
@@ -168,12 +160,9 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
         ),
       );
 
-    // Since this widget only mounts when user is authenticated,
-    // we can safely load the initial URL
     controller
         .loadRequest(Uri.parse('${WpUrls.baseUrl}/dashboard/tournaments/'));
 
-    // Start periodic status updates
     _startStatusUpdates();
   }
 
@@ -286,7 +275,6 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
                       ),
                     ),
                   ),
-                  // Add close button
                   ..._drawerItems.map((item) => ListTile(
                         title: UpperCaseText(item.label),
                         textColor: Colors.white,
