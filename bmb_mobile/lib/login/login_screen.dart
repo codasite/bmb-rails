@@ -1,10 +1,11 @@
-import 'package:bmb_mobile/auth/wp_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:bmb_mobile/theme/font_weights.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:bmb_mobile/constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:bmb_mobile/providers/auth_provider.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,7 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = WpAuth();
   bool _isLoading = false;
 
   @override
@@ -27,45 +27,27 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _handleLogin() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+  Future<void> _login() async {
+    if (!_formKey.currentState!.validate()) return;
 
-      try {
-        bool loginSuccess = await _authService.login(
-          _emailController.text,
-          _passwordController.text,
+    setState(() => _isLoading = true);
+
+    try {
+      final success = await context.read<AuthProvider>().login(
+            _emailController.text,
+            _passwordController.text,
+          );
+
+      if (success && mounted) {
+        Navigator.pushReplacementNamed(context, '/app');
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login failed')),
         );
-
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
-
-        if (loginSuccess && mounted) {
-          Navigator.pushReplacementNamed(context, '/app');
-        } else if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                  'Login failed. Please check your credentials and try again.'),
-            ),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Error: ${e.toString()}'),
-            ),
-          );
-        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
       }
     }
   }
@@ -253,7 +235,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 15),
                         ElevatedButton(
-                          onPressed: _isLoading ? null : _handleLogin,
+                          onPressed: _isLoading ? null : _login,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             backgroundColor: BMBColors.blue.withOpacity(0.30),

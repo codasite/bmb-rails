@@ -1,9 +1,10 @@
 import 'package:bmb_mobile/constants.dart';
+import 'package:bmb_mobile/http/app_password_http_client.dart';
+import 'package:bmb_mobile/http/session_http_client.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
 import 'dart:convert';
 import 'package:bmb_mobile/auth/models/wp_app_password.dart';
 import 'package:bmb_mobile/auth/models/wp_app_password_result.dart';
-import 'package:bmb_mobile/http/authenticated_http_client.dart';
 import 'package:bmb_mobile/auth/wp_credential_manager.dart';
 
 class WpBasicAuth {

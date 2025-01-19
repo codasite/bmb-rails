@@ -227,6 +227,12 @@ tasks:
     cmds:
       - flutter pub get
 
+  flutter:add:
+    desc: Add a new Flutter dependency
+    dir: ./bmb_mobile
+    cmds:
+      - flutter pub add {{.CLI_ARGS}}
+
   ios:
     desc: iOS task namespace
     cmds:

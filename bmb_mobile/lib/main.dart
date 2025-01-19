@@ -1,7 +1,6 @@
-import 'package:bmb_mobile/auth/wp_auth.dart';
-import 'package:bmb_mobile/auth/wp_basic_auth.dart';
 import 'package:bmb_mobile/http/authenticated_http_client.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'firebase_options.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +18,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:bmb_mobile/services/fcm_token_service.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
+import 'package:bmb_mobile/providers/auth_provider.dart';
+import 'package:bmb_mobile/providers/http_client_provider.dart' as http;
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -41,21 +43,26 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  // Check authentication status before launching app
-  final isAuthenticated = await WpAuth().isAuthenticated();
+  final cookieManager = WebviewCookieManager();
+  final httpProvider = http.HttpClientProvider(cookieManager);
+  final authProvider = AuthProvider(httpProvider, cookieManager);
 
-  // Remove splash screen and launch app
-  runApp(MyApp(isAuthenticated: isAuthenticated));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: httpProvider),
+        ChangeNotifierProvider.value(value: authProvider),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
-  final bool isAuthenticated;
-
-  const MyApp({super.key, required this.isAuthenticated});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Remove splash screen after a delay
     Future.delayed(const Duration(seconds: 1), () {
       FlutterNativeSplash.remove();
     });
@@ -184,7 +191,7 @@ class _WebViewAppState extends State<WebViewApp> {
   void _onDrawerItemTap(DrawerItem item) async {
     if (item.path == '/wp-login.php?action=logout') {
       await _fcmService.deregisterToken();
-      await WpAuth().logout();
+      await context.read<AuthProvider>().logout();
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
       }
@@ -198,9 +205,9 @@ class _WebViewAppState extends State<WebViewApp> {
   void initState() {
     super.initState();
 
-    // Initialize FCM service
-    _client = AuthenticatedHttpClient(WpBasicAuth());
-    _fcmService = FCMTokenService(_client);
+    // Get the client from provider
+    final client = context.read<HttpClientProvider>().sessionClient;
+    _fcmService = FCMTokenService(client);
     _initializeFCM();
 
     controller = WebViewController()
@@ -304,7 +311,7 @@ class _WebViewAppState extends State<WebViewApp> {
             // Handle unauthorized/login redirects
             if (request.url.contains(AppConstants.loginPath) ||
                 request.url.contains('unauthorized')) {
-              WpAuth().logout();
+              context.read<AuthProvider>().logout();
               if (mounted) {
                 Navigator.pushReplacementNamed(context, '/login');
               }

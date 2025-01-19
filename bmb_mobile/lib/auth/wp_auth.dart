@@ -3,8 +3,10 @@ import 'package:bmb_mobile/auth/wp_basic_auth.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
 
 class WpAuth {
-  final _cookieAuth = WpCookieAuth();
-  final _basicAuth = WpBasicAuth();
+  final WpCookieAuth _cookieAuth;
+  final WpBasicAuth _basicAuth;
+
+  const WpAuth(this._cookieAuth, this._basicAuth);
 
   Future<bool> isAuthenticated() async {
     return await _cookieAuth.isAuthenticated();
