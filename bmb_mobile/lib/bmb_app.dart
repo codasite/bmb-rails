@@ -15,6 +15,7 @@ import 'package:bmb_mobile/providers/auth_provider.dart';
 import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
 import 'package:bmb_mobile/navigation/navigation_items.dart';
 import 'package:bmb_mobile/navigation/drawer_items.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class BmbApp extends StatelessWidget {
   const BmbApp({super.key});
@@ -96,6 +97,15 @@ class _WebViewAppState extends State<WebViewApp> {
     }
   }
 
+  Future<void> _injectPullToRefreshJS() async {
+    final String js =
+        await rootBundle.loadString('assets/js/pull_to_refresh.js');
+    // Replace the threshold placeholder with actual value
+    final String configuredJs =
+        js.replaceAll('REFRESH_THRESHOLD', _refreshThreshold.toString());
+    await controller.runJavaScript(configuredJs);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -113,7 +123,6 @@ class _WebViewAppState extends State<WebViewApp> {
             controller.reload();
             setState(() => _refreshProgress = 0.0);
           } else if (message.message.startsWith('pull:')) {
-            // Parse pull amount from message
             final pullAmount = double.parse(message.message.split(':')[1]);
             setState(() => _refreshProgress =
                 (pullAmount / _refreshThreshold).clamp(0.0, 1.0));
@@ -135,30 +144,7 @@ class _WebViewAppState extends State<WebViewApp> {
             });
           },
           onPageFinished: (String url) {
-            // Inject overscroll detection JavaScript
-            controller.runJavaScript('''
-              let startY;
-              document.addEventListener('touchstart', (e) => {
-                startY = e.touches[0].pageY;
-              });
-              document.addEventListener('touchmove', (e) => {
-                const y = e.touches[0].pageY;
-                const scrollTop = document.documentElement.scrollTop;
-                
-                if (scrollTop === 0) {
-                  const pullAmount = y - startY;
-                  if (pullAmount > ${_refreshThreshold}) {
-                    Flutter.postMessage('refresh');
-                  } else if (pullAmount > 0) {
-                    Flutter.postMessage('pull:' + pullAmount);
-                  }
-                }
-              });
-              document.addEventListener('touchend', () => {
-                Flutter.postMessage('pull:0');
-              });
-            ''');
-
+            _injectPullToRefreshJS();
             setAppBarTitle();
             setState(() {
               _isLoading = false;
