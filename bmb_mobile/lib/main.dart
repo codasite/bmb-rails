@@ -20,6 +20,13 @@ import 'package:provider/provider.dart';
 import 'package:bmb_mobile/providers/auth_provider.dart';
 import 'package:bmb_mobile/providers/http_client_provider.dart' as http;
 import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
+import 'package:bmb_mobile/auth/wp_credential_manager.dart';
+import 'package:bmb_mobile/http/session_http_client.dart';
+import 'package:bmb_mobile/http/app_password_http_client.dart';
+import 'package:bmb_mobile/auth/wp_basic_auth.dart';
+import 'package:bmb_mobile/auth/wp_cookie_auth.dart';
+import 'package:bmb_mobile/auth/wp_auth.dart';
+import 'package:bmb_mobile/firebase/fcm_token_manager.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -43,9 +50,27 @@ void main() async {
   ]);
 
   final cookieManager = WebviewCookieManager();
-  final httpProvider = http.HttpClientProvider(cookieManager);
-  final authProvider = AuthProvider(httpProvider, cookieManager);
-  final fcmProvider = FCMTokenServiceProvider(httpProvider);
+  final credentialManager = WpCredentialManager();
+  final sessionClient = SessionHttpClient(cookieManager);
+  final passwordClient = AppPasswordHttpClient(credentialManager);
+  final basicAuth = WpBasicAuth(
+    passwordClient,
+    sessionClient,
+    credentialManager,
+  );
+  final cookieAuth = WpCookieAuth(cookieManager);
+  final auth = WpAuth(cookieAuth, basicAuth);
+  final fcmManager = FCMTokenManager(sessionClient);
+  await auth.refreshAuthStatus();
+  final httpProvider = http.HttpClientProvider(
+    credentialManager: credentialManager,
+    sessionClient: sessionClient,
+    passwordClient: passwordClient,
+  );
+  final authProvider = AuthProvider(auth: auth);
+  final fcmProvider = FCMTokenManagerProvider(
+    fcmManager: fcmManager,
+  );
 
   runApp(
     MultiProvider(
@@ -84,7 +109,8 @@ class MyApp extends StatelessWidget {
         '/app': (context) => const WebViewApp(),
         '/login': (context) => const LoginScreen(),
       },
-      initialRoute: isAuthenticated ? '/app' : '/login',
+      initialRoute:
+          context.read<AuthProvider>().isAuthenticated ? '/app' : '/login',
     );
   }
 }
@@ -189,7 +215,7 @@ class _WebViewAppState extends State<WebViewApp> {
 
   void _onDrawerItemTap(DrawerItem item) async {
     if (item.path == '/wp-login.php?action=logout') {
-      await context.read<FCMTokenServiceProvider>().deregisterToken();
+      await context.read<FCMTokenManagerProvider>().deregisterToken();
       await context.read<AuthProvider>().logout();
       if (mounted) {
         Navigator.pushReplacementNamed(context, '/login');
@@ -205,7 +231,7 @@ class _WebViewAppState extends State<WebViewApp> {
     super.initState();
 
     // Initialize FCM
-    context.read<FCMTokenServiceProvider>().initialize();
+    context.read<FCMTokenManagerProvider>().initialize();
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -331,7 +357,7 @@ class _WebViewAppState extends State<WebViewApp> {
   void _startStatusUpdates() {
     // Update token status every 24 hours
     Future.delayed(const Duration(days: 1), () async {
-      await context.read<FCMTokenServiceProvider>().updateStatus();
+      await context.read<FCMTokenManagerProvider>().updateStatus();
       _startStatusUpdates(); // Schedule next update
     });
   }

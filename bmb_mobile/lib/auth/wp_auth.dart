@@ -5,29 +5,37 @@ import 'package:bmb_mobile/utils/app_logger.dart';
 class WpAuth {
   final WpCookieAuth _cookieAuth;
   final WpBasicAuth _basicAuth;
+  bool _isAuthenticated = false;
 
-  const WpAuth(this._cookieAuth, this._basicAuth);
+  WpAuth(this._cookieAuth, this._basicAuth);
 
-  Future<bool> isAuthenticated() async {
-    return await _cookieAuth.isAuthenticated();
+  bool get isAuthenticated => _isAuthenticated;
+
+  Future<void> refreshAuthStatus() async {
+    _isAuthenticated = await _cookieAuth.isAuthenticated();
   }
 
   Future<bool> login(String username, String password) async {
     final cookieLoggedIn = await _cookieAuth.login(username, password);
     if (!cookieLoggedIn) {
+      _isAuthenticated = false;
       return false;
     }
+
     final basicLoggedIn = await _basicAuth.login(username);
     if (!basicLoggedIn) {
       AppLogger.logError(
           'Failed to login with basic auth. Notifications will not work.',
           null);
     }
+
+    _isAuthenticated = true;
     return true;
   }
 
   Future<void> logout() async {
     await _cookieAuth.logout();
     await _basicAuth.logout();
+    _isAuthenticated = false;
   }
 }
