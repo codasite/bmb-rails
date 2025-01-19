@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/login/wp_auth.dart';
+import 'package:bmb_mobile/auth/wp_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';
 import 'package:bmb_mobile/theme/font_weights.dart';

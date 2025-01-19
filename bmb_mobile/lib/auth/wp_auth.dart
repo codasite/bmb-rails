@@ -1,5 +1,5 @@
-import 'package:bmb_mobile/login/wp_cookie_auth.dart';
-import 'package:bmb_mobile/login/wp_basic_auth.dart';
+import 'package:bmb_mobile/auth/wp_cookie_auth.dart';
+import 'package:bmb_mobile/auth/wp_basic_auth.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
 
 class WpAuth {

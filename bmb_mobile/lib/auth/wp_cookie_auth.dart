@@ -19,8 +19,10 @@ import 'dart:convert';
 // - remove app password
 
 class WpCookieAuth {
-  final _cookieManager = WebviewCookieManager();
+  final WebviewCookieManager _cookieManager;
   static const String _cookieStorageKey = 'wordpress_cookies';
+
+  const WpCookieAuth(this._cookieManager);
 
   Future<bool> login(String username, String password) async {
     try {

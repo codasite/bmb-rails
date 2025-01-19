@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/login/models/wp_app_password.dart';
+import 'package:bmb_mobile/auth/models/wp_app_password.dart';
 
 class WpAppPasswordResult {
   final bool success;

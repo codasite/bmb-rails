@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:bmb_mobile/utils/app_logger.dart';
 import 'package:bmb_mobile/constants.dart';
-import 'package:bmb_mobile/login/wp_credential_manager.dart';
+import 'package:bmb_mobile/auth/wp_credential_manager.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 
 abstract class AuthenticatedHttpClient {

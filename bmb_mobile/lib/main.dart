@@ -1,6 +1,6 @@
-import 'package:bmb_mobile/login/wp_auth.dart';
-import 'package:bmb_mobile/login/wp_basic_auth.dart';
-import 'package:bmb_mobile/services/authenticated_http_client.dart';
+import 'package:bmb_mobile/auth/wp_auth.dart';
+import 'package:bmb_mobile/auth/wp_basic_auth.dart';
+import 'package:bmb_mobile/http/authenticated_http_client.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:bmb_mobile/theme/bmb_colors.dart';

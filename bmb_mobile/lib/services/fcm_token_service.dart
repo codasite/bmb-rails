@@ -5,7 +5,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:bmb_mobile/utils/app_logger.dart';
 import 'dart:io';
 import '../constants.dart';
-import 'package:bmb_mobile/services/authenticated_http_client.dart';
+import 'package:bmb_mobile/http/authenticated_http_client.dart';
 
 class FCMTokenService {
   static const String _tokenKey = 'fcm_token';
