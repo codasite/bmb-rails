@@ -5,15 +5,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/widgets/upper_case_text.dart';
 import 'package:bmb_mobile/navigation/navigation_item.dart';
 import 'package:bmb_mobile/navigation/drawer_item.dart';
-import 'package:bmb_mobile/utils/asset_paths.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/providers/auth_provider.dart';
 import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
 import 'package:bmb_mobile/navigation/navigation_items.dart';
-import 'package:bmb_mobile/navigation/drawer_items.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:bmb_mobile/http/wp_urls.dart';
+import 'package:bmb_mobile/widgets/bmb_drawer.dart';
 
 class WebViewWrapper extends StatefulWidget {
   const WebViewWrapper({super.key});
@@ -34,7 +33,6 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
   bool _isLoggingOut = false;
 
   final List<NavigationItem> _pages = navigationItems;
-  final List<DrawerItem> _drawerItems = drawerItems;
 
   void _loadUrl(String path) {
     controller.loadRequest(
@@ -251,61 +249,9 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
                   ),
               ],
             ),
-            drawer: Drawer(
-                backgroundColor: BmbColors.darkBlue,
-                child: SafeArea(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: [
-                      ListTile(
-                        leading: const Icon(
-                          Icons.close,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                        title: UpperCaseText(
-                          'Close',
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        onTap: () => Navigator.pop(context),
-                      ),
-                      // Add logo header
-                      InkWell(
-                        onTap: () => _onDrawerItemTap(DrawerItem(
-                          iconPath: getIconPath('home'),
-                          label: 'Home',
-                          path: '/',
-                        )),
-                        child: Container(
-                          padding: const EdgeInsets.only(
-                            left: 16,
-                            top: 30,
-                            bottom: 30,
-                          ),
-                          alignment: Alignment.centerLeft,
-                          child: SvgPicture.asset(
-                            getIconPath('bmb_logo'),
-                            height: 40,
-                          ),
-                        ),
-                      ),
-                      ..._drawerItems.map((item) => ListTile(
-                            title: UpperCaseText(item.label),
-                            textColor: Colors.white,
-                            onTap: () => _onDrawerItemTap(item),
-                            leading: SvgPicture.asset(
-                              item.iconPath,
-                              width: 24,
-                              height: 24,
-                              colorFilter: const ColorFilter.mode(
-                                Colors.white,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          )),
-                    ],
-                  ),
-                )),
+            drawer: BmbDrawer(
+              onDrawerItemTap: _onDrawerItemTap,
+            ),
             body: SafeArea(
               child: Container(
                 color: BmbColors.ddBlue,
