@@ -6,7 +6,6 @@ import 'package:bmb_mobile/widgets/upper_case_text.dart';
 import 'package:bmb_mobile/navigation/navigation_item.dart';
 import 'package:bmb_mobile/navigation/drawer_item.dart';
 import 'package:bmb_mobile/utils/asset_paths.dart';
-import 'package:bmb_mobile/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/providers/auth_provider.dart';
@@ -14,6 +13,7 @@ import 'package:bmb_mobile/providers/fcm_token_manager_provider.dart';
 import 'package:bmb_mobile/navigation/navigation_items.dart';
 import 'package:bmb_mobile/navigation/drawer_items.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:bmb_mobile/http/wp_urls.dart';
 
 class WebViewWrapper extends StatefulWidget {
   const WebViewWrapper({super.key});
@@ -31,6 +31,7 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
   bool _isLoading = true;
   bool _canGoBack = false;
   double _refreshProgress = 0.0;
+  bool _isLoggingOut = false;
 
   final List<NavigationItem> _pages = navigationItems;
   final List<DrawerItem> _drawerItems = drawerItems;
@@ -50,12 +51,23 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
 
   void _onDrawerItemTap(DrawerItem item) async {
     if (item.path == '/wp-login.php?action=logout') {
-      await context.read<FCMTokenManagerProvider>().deregisterToken();
-      if (mounted) {
-        await context.read<AuthProvider>().logout();
-      }
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/login');
+      setState(() {
+        _isLoggingOut = true;
+      });
+
+      try {
+        await context.read<FCMTokenManagerProvider>().deregisterToken();
+        if (mounted) {
+          await context.read<AuthProvider>().logout();
+        }
+        if (mounted) {
+          Navigator.pushReplacementNamed(context, '/login');
+        }
+      } finally {
+        // In case navigation fails, we should reset the loading state
+        setState(() {
+          _isLoggingOut = false;
+        });
       }
     } else {
       _loadUrl(item.path);
@@ -207,155 +219,168 @@ class _WebViewWrapperState extends State<WebViewWrapper> {
           Navigator.pop(context);
         }
       },
-      child: Scaffold(
-        backgroundColor: BmbColors.ddBlue,
-        appBar: AppBar(
-          backgroundColor: BmbColors.darkBlue,
-          iconTheme: const IconThemeData(color: Colors.white),
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
+      child: Stack(
+        children: [
+          Scaffold(
+            backgroundColor: BmbColors.ddBlue,
+            appBar: AppBar(
+              backgroundColor: BmbColors.darkBlue,
+              iconTheme: const IconThemeData(color: Colors.white),
+              leading: Builder(
+                builder: (BuildContext context) {
+                  return IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  );
                 },
-              );
-            },
-          ),
-          title: UpperCaseText(
-            _currentTitle,
-            style: const TextStyle(color: Colors.white),
-          ),
-          actions: [
-            if (_canGoBack)
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () {
-                  controller.goBack();
-                },
-                color: Colors.white,
               ),
-          ],
-        ),
-        drawer: Drawer(
-            backgroundColor: BmbColors.darkBlue,
-            child: SafeArea(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  ListTile(
-                    leading: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                    title: UpperCaseText(
-                      'Close',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  // Add logo header
-                  InkWell(
-                    onTap: () => _onDrawerItemTap(DrawerItem(
-                      iconPath: getIconPath('home'),
-                      label: 'Home',
-                      path: '/',
-                    )),
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        left: 16,
-                        top: 30,
-                        bottom: 30,
-                      ),
-                      alignment: Alignment.centerLeft,
-                      child: SvgPicture.asset(
-                        getIconPath('bmb_logo'),
-                        height: 40,
-                      ),
-                    ),
-                  ),
-                  ..._drawerItems.map((item) => ListTile(
-                        title: UpperCaseText(item.label),
-                        textColor: Colors.white,
-                        onTap: () => _onDrawerItemTap(item),
-                        leading: SvgPicture.asset(
-                          item.iconPath,
-                          width: 24,
-                          height: 24,
-                          colorFilter: const ColorFilter.mode(
-                            Colors.white,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                      )),
-                ],
+              title: UpperCaseText(
+                _currentTitle,
+                style: const TextStyle(color: Colors.white),
               ),
-            )),
-        body: SafeArea(
-          child: Container(
-            color: BmbColors.ddBlue,
-            child: Stack(
-              children: [
-                WebViewWidget(controller: controller),
-                if (_isLoading)
-                  Container(
-                    color: Colors.transparent.withOpacity(0.5),
-                    child: const Center(
-                      child: CircularProgressIndicator(
-                        color: BmbColors.blue,
-                      ),
-                    ),
-                  ),
-                if (_refreshProgress > 0)
-                  const Positioned(
-                    top: 8,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: Icon(
-                        Icons.refresh,
-                        color: BmbColors.blue,
-                        size: 24,
-                      ),
-                    ),
+              actions: [
+                if (_canGoBack)
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      controller.goBack();
+                    },
+                    color: Colors.white,
                   ),
               ],
             ),
-          ),
-        ),
-        bottomNavigationBar: Container(
-          padding: const EdgeInsets.only(top: 10),
-          color: BmbColors.darkBlue,
-          child: BottomNavigationBar(
-            elevation: 0,
-            backgroundColor: Colors.transparent,
-            items: _pages
-                .map((page) => BottomNavigationBarItem(
-                      icon: Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: SvgPicture.asset(
-                          page.iconPath,
-                          width: 24,
-                          height: 24,
-                          colorFilter: const ColorFilter.mode(
-                            Colors.white,
-                            BlendMode.srcIn,
+            drawer: Drawer(
+                backgroundColor: BmbColors.darkBlue,
+                child: SafeArea(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    children: [
+                      ListTile(
+                        leading: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                        title: UpperCaseText(
+                          'Close',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        onTap: () => Navigator.pop(context),
+                      ),
+                      // Add logo header
+                      InkWell(
+                        onTap: () => _onDrawerItemTap(DrawerItem(
+                          iconPath: getIconPath('home'),
+                          label: 'Home',
+                          path: '/',
+                        )),
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                            left: 16,
+                            top: 30,
+                            bottom: 30,
+                          ),
+                          alignment: Alignment.centerLeft,
+                          child: SvgPicture.asset(
+                            getIconPath('bmb_logo'),
+                            height: 40,
                           ),
                         ),
                       ),
-                      label: page.shortLabel.toUpperCase(),
-                    ))
-                .toList(),
-            currentIndex: _selectedIndex ?? 0,
-            type: BottomNavigationBarType.fixed,
-            selectedLabelStyle: const TextStyle(fontSize: 12),
-            unselectedLabelStyle: const TextStyle(fontSize: 12),
-            selectedItemColor: BmbColors.white,
-            unselectedItemColor: BmbColors.white,
-            onTap: _onItemTapped,
+                      ..._drawerItems.map((item) => ListTile(
+                            title: UpperCaseText(item.label),
+                            textColor: Colors.white,
+                            onTap: () => _onDrawerItemTap(item),
+                            leading: SvgPicture.asset(
+                              item.iconPath,
+                              width: 24,
+                              height: 24,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.white,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          )),
+                    ],
+                  ),
+                )),
+            body: SafeArea(
+              child: Container(
+                color: BmbColors.ddBlue,
+                child: Stack(
+                  children: [
+                    WebViewWidget(controller: controller),
+                    if (_isLoading)
+                      Container(
+                        color: Colors.transparent.withOpacity(0.5),
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: BmbColors.blue,
+                          ),
+                        ),
+                      ),
+                    if (_refreshProgress > 0)
+                      const Positioned(
+                        top: 8,
+                        left: 0,
+                        right: 0,
+                        child: Center(
+                          child: Icon(
+                            Icons.refresh,
+                            color: BmbColors.blue,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+            bottomNavigationBar: Container(
+              padding: const EdgeInsets.only(top: 10),
+              color: BmbColors.darkBlue,
+              child: BottomNavigationBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                items: _pages
+                    .map((page) => BottomNavigationBarItem(
+                          icon: Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: SvgPicture.asset(
+                              page.iconPath,
+                              width: 24,
+                              height: 24,
+                              colorFilter: const ColorFilter.mode(
+                                Colors.white,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ),
+                          label: page.shortLabel.toUpperCase(),
+                        ))
+                    .toList(),
+                currentIndex: _selectedIndex ?? 0,
+                type: BottomNavigationBarType.fixed,
+                selectedLabelStyle: const TextStyle(fontSize: 12),
+                unselectedLabelStyle: const TextStyle(fontSize: 12),
+                selectedItemColor: BmbColors.white,
+                unselectedItemColor: BmbColors.white,
+                onTap: _onItemTapped,
+              ),
+            ),
           ),
-        ),
+          if (_isLoggingOut)
+            Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(
+                  color: BmbColors.blue,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
