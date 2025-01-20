@@ -1,11 +1,10 @@
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
-import 'dart:io';
-import '../../../wp_http/wp_urls.dart';
 import 'package:bmb_mobile/features/wp_http/domain/service/wp_http_client.dart';
+import 'package:bmb_mobile/core/utils/device_info.dart';
 
 class FcmTokenManager {
   static const String _tokenKey = 'fcm_token';
@@ -246,42 +245,6 @@ class FcmTokenManager {
 
   /// Get device information
   Future<DeviceData> _getDeviceInfo() async {
-    try {
-      final deviceInfo = DeviceInfoPlugin();
-      if (Platform.isIOS) {
-        final iosInfo = await deviceInfo.iosInfo;
-        return DeviceData(
-          id: iosInfo.identifierForVendor ?? 'unknown',
-          platform: 'ios',
-          name: '${iosInfo.name} ${iosInfo.model}',
-        );
-      } else {
-        final androidInfo = await deviceInfo.androidInfo;
-        return DeviceData(
-          id: androidInfo.id,
-          platform: 'android',
-          name: androidInfo.model,
-        );
-      }
-    } catch (e, stackTrace) {
-      await AppLogger.logError(
-        e,
-        stackTrace,
-        extras: {'message': 'Failed to get device info'},
-      );
-      rethrow;
-    }
+    return await DeviceInfo.getDeviceInfo();
   }
-}
-
-class DeviceData {
-  final String id;
-  final String platform;
-  final String name;
-
-  DeviceData({
-    required this.id,
-    required this.platform,
-    required this.name,
-  });
 }
