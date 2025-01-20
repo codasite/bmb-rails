@@ -15,7 +15,9 @@ class FcmTokenManager {
 
   /// Initialize FCM and request permissions
   Future<void> initialize() async {
+    await AppLogger.logMessage('Initializing FCM');
     try {
+      await AppLogger.logMessage("Requesting FCM permissions");
       await _messaging.requestPermission(
         alert: true,
         badge: true,
@@ -24,8 +26,9 @@ class FcmTokenManager {
 
       await AppLogger.logMessage('FCM permissions requested successfully');
 
-      // Set up token refresh listener
+      await AppLogger.logMessage('Setting up FCM token refresh listener');
       _messaging.onTokenRefresh.listen(_handleTokenRefresh);
+      await AppLogger.logMessage('Finished initializing FCM');
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -38,20 +41,24 @@ class FcmTokenManager {
   /// Register or update token based on current state
   Future<void> setupToken() async {
     try {
+      await AppLogger.logMessage('Setting up FCM token');
+      await AppLogger.logMessage('Retrieving FCM token from Firebase');
       final token = await _messaging.getToken();
       if (token == null) {
         await AppLogger.logWarning('Failed to get FCM token');
         return;
       }
+      await AppLogger.logMessage('Got FCM token: $token');
 
+      await AppLogger.logMessage('Retrieving FCM token from SharedPreferences');
       final prefs = await SharedPreferences.getInstance();
       final oldToken = prefs.getString(_tokenKey);
 
       if (oldToken != null) {
-        await AppLogger.logMessage('Updating existing FCM token');
+        await AppLogger.logMessage('Found existing FCM token: $oldToken');
         await _updateToken(oldToken, token);
       } else {
-        await AppLogger.logMessage('Registering new FCM token');
+        await AppLogger.logMessage('No existing FCM token found');
         await _registerToken(token);
       }
 
@@ -68,13 +75,20 @@ class FcmTokenManager {
   /// Handle token refresh
   Future<void> _handleTokenRefresh(String newToken) async {
     try {
+      await AppLogger.logMessage('Handling FCM token refresh');
       final prefs = await SharedPreferences.getInstance();
       final oldToken = prefs.getString(_tokenKey);
 
       if (oldToken != null) {
-        await AppLogger.logMessage('Refreshing FCM token');
+        await AppLogger.logMessage(
+          'Found existing token to update',
+          extras: {'old_token': oldToken},
+        );
         await _updateToken(oldToken, newToken);
+        await AppLogger.logMessage('Storing new token in SharedPreferences');
         await prefs.setString(_tokenKey, newToken);
+      } else {
+        await AppLogger.logMessage('No existing token found during refresh');
       }
     } catch (e, stackTrace) {
       await AppLogger.logError(
@@ -87,9 +101,19 @@ class FcmTokenManager {
 
   /// Register a new token with the backend
   Future<bool> _registerToken(String token) async {
+    await AppLogger.logMessage('Registering FCM token');
     try {
       final deviceInfo = await _getDeviceInfo();
       final packageInfo = await PackageInfo.fromPlatform();
+
+      await AppLogger.logMessage(
+        'Sending registration request',
+        extras: {
+          'device_id': deviceInfo.id,
+          'platform': deviceInfo.platform,
+          'app_version': packageInfo.version,
+        },
+      );
 
       final response = await _client.post(
         WpUrls.fcmRegisterPath,
@@ -127,8 +151,20 @@ class FcmTokenManager {
 
   /// Update an existing token
   Future<bool> _updateToken(String oldToken, String newToken) async {
+    await AppLogger.logMessage(
+      'Updating FCM token',
+      extras: {
+        'old_token': oldToken,
+        'new_token': newToken,
+      },
+    );
     try {
       final deviceInfo = await _getDeviceInfo();
+
+      await AppLogger.logMessage(
+        'Sending token update request',
+        extras: {'device_id': deviceInfo.id},
+      );
 
       final response = await _client.put(
         WpUrls.fcmUpdatePath,
@@ -163,10 +199,16 @@ class FcmTokenManager {
   }
 
   /// Deregister the current token
-  Future<bool> deregisterToken() async {
+  Future<void> deregisterToken() async {
+    await AppLogger.logMessage('Starting FCM token deregistration');
+    final prefs = await SharedPreferences.getInstance();
     try {
       final deviceInfo = await _getDeviceInfo();
-      final prefs = await SharedPreferences.getInstance();
+
+      await AppLogger.logMessage(
+        'Sending deregistration request',
+        extras: {'device_id': deviceInfo.id},
+      );
 
       final response = await _client.delete(
         WpUrls.fcmDeregisterPath,
@@ -176,32 +218,32 @@ class FcmTokenManager {
       );
 
       if (response?.statusCode == 200) {
-        await prefs.remove(_tokenKey);
-        await AppLogger.logMessage('FCM token deregistered successfully');
-        return true;
+        await AppLogger.logMessage('Successfully deregistered FCM token');
+      } else {
+        await AppLogger.logWarning(
+          'Failed to deregister FCM token',
+          extras: {
+            'status_code': response?.statusCode,
+            'response': response?.body,
+          },
+        );
       }
-
-      await AppLogger.logWarning(
-        'Failed to deregister FCM token',
-        extras: {
-          'status_code': response?.statusCode,
-          'response': response?.body,
-        },
-      );
-      return false;
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
         stackTrace,
         extras: {'message': 'Failed to deregister FCM token'},
       );
-      return false;
+    } finally {
+      await AppLogger.logMessage('Removing FCM token from SharedPreferences');
+      await prefs.remove(_tokenKey);
     }
   }
 
   /// Send status update to keep token active
   Future<bool> updateStatus() async {
     try {
+      await AppLogger.logMessage('Starting FCM status update');
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString(_tokenKey);
 
@@ -211,6 +253,11 @@ class FcmTokenManager {
       }
 
       final deviceInfo = await _getDeviceInfo();
+
+      await AppLogger.logMessage(
+        'Sending status update request',
+        extras: {'device_id': deviceInfo.id},
+      );
 
       final response = await _client.post(
         WpUrls.fcmStatusPath,
