@@ -4,6 +4,8 @@ namespace WStrategies\BMB\Features\Notifications\Push;
 
 use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Includes\Hooks\HooksInterface;
+use WStrategies\BMB\Includes\Hooks\Loader;
 
 /**
  * Manages device-level notification operations.
@@ -15,11 +17,41 @@ use WStrategies\BMB\Features\Notifications\NotificationType;
  * - Device status management
  * - Failed delivery cleanup
  */
-class FCMDeviceManager {
+class FCMDeviceManager implements HooksInterface {
   private FCMTokenRepo $token_repo;
+  private const CLEANUP_HOOK = 'wpbb_fcm_cleanup_hook';
+  private const CLEANUP_SCHEDULE = 'daily';
+  private const DEFAULT_INACTIVE_DAYS = 30;
 
-  public function __construct(FCMTokenRepo $token_repo) {
-    $this->token_repo = $token_repo;
+  public function __construct(array $args = []) {
+    $this->token_repo = $args['token_repo'] ?? new FCMTokenRepo();
+  }
+
+  public function load(Loader $loader): void {
+    $loader->add_action('init', [$this, 'schedule_cleanup_cron']);
+    $loader->add_action(self::CLEANUP_HOOK, [$this, 'run_cleanup']);
+  }
+
+  /**
+   * Schedule the cleanup cron job if not already scheduled
+   */
+  public function schedule_cleanup_cron(): void {
+    if (!wp_next_scheduled(self::CLEANUP_HOOK)) {
+      wp_schedule_event(time(), self::CLEANUP_SCHEDULE, self::CLEANUP_HOOK);
+    }
+  }
+
+  /**
+   * Cron job handler to clean up inactive tokens
+   */
+  public function run_cleanup(): void {
+    $removed = $this->cleanup_inactive_tokens(self::DEFAULT_INACTIVE_DAYS);
+
+    if ($removed > 0) {
+      (new Utils())->log(
+        sprintf('Cleaned up %d inactive FCM tokens', $removed)
+      );
+    }
   }
 
   /**

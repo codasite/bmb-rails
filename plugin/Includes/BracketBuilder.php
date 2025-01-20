@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
+use WStrategies\BMB\Features\Notifications\Push\FCMDeviceManager;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\AdminHooks;
 use WStrategies\BMB\Includes\Hooks\LoginHooks;
@@ -134,6 +135,7 @@ class BracketBuilder {
       new PageTitleHooks(),
       new FCMTokenApi(),
       new MobileAppHooks(),
+      new FCMDeviceManager(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

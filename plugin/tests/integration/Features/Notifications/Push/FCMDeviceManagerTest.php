@@ -14,7 +14,9 @@ class FCMDeviceManagerTest extends WPBB_UnitTestCase {
   public function setUp(): void {
     parent::setUp();
     $this->token_repo = new FCMTokenRepo();
-    $this->device_manager = new FCMDeviceManager($this->token_repo);
+    $this->device_manager = new FCMDeviceManager([
+      'token_repo' => $this->token_repo,
+    ]);
   }
 
   public function test_get_target_devices_returns_empty_for_no_devices(): void {
