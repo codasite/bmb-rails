@@ -52,7 +52,7 @@ void main() async {
   );
   final cookieAuth = WpCookieAuth(cookieManager);
   final auth = WpAuth(cookieAuth, basicAuth);
-  final fcmManager = FcmTokenManager(sessionClient);
+  final fcmManager = FcmTokenManager(passwordClient);
   await auth.refreshAuthStatus();
   final httpProvider = http.WpHttpClientProvider(
     credentialManager: credentialManager,
