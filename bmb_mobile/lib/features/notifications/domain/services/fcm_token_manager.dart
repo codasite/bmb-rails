@@ -60,7 +60,11 @@ class FcmTokenManager {
           'Found existing token to update',
           extras: {'old_token': oldToken},
         );
-        await _updateToken(oldToken, token);
+        if (!await _updateToken(oldToken, token)) {
+          await AppLogger.logMessage(
+              'Token update failed, falling back to registration');
+          await _registerToken(token);
+        }
       } else {
         await AppLogger.logMessage(
             'No existing token found, registering new token');
