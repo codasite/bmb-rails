@@ -39,11 +39,12 @@ class FcmTokenManager {
   }
 
   /// Register or update token based on current state
-  Future<void> setupToken() async {
+  Future<void> setupToken([String? newToken]) async {
     try {
       await AppLogger.logMessage('Setting up FCM token');
-      await AppLogger.logMessage('Retrieving FCM token from Firebase');
-      final token = await _messaging.getToken();
+
+      // Get token from Firebase if not provided
+      final token = newToken ?? await _messaging.getToken();
       if (token == null) {
         await AppLogger.logWarning('Failed to get FCM token');
         return;
@@ -55,13 +56,18 @@ class FcmTokenManager {
       final oldToken = prefs.getString(_tokenKey);
 
       if (oldToken != null) {
-        await AppLogger.logMessage('Found existing FCM token: $oldToken');
+        await AppLogger.logMessage(
+          'Found existing token to update',
+          extras: {'old_token': oldToken},
+        );
         await _updateToken(oldToken, token);
       } else {
-        await AppLogger.logMessage('No existing FCM token found');
+        await AppLogger.logMessage(
+            'No existing token found, registering new token');
         await _registerToken(token);
       }
 
+      await AppLogger.logMessage('Storing token in SharedPreferences');
       await prefs.setString(_tokenKey, token);
     } catch (e, stackTrace) {
       await AppLogger.logError(
@@ -72,24 +78,11 @@ class FcmTokenManager {
     }
   }
 
-  /// Handle token refresh
+  /// Handle token refresh by calling setupToken
   Future<void> _handleTokenRefresh(String newToken) async {
     try {
       await AppLogger.logMessage('Handling FCM token refresh');
-      final prefs = await SharedPreferences.getInstance();
-      final oldToken = prefs.getString(_tokenKey);
-
-      if (oldToken != null) {
-        await AppLogger.logMessage(
-          'Found existing token to update',
-          extras: {'old_token': oldToken},
-        );
-        await _updateToken(oldToken, newToken);
-        await AppLogger.logMessage('Storing new token in SharedPreferences');
-        await prefs.setString(_tokenKey, newToken);
-      } else {
-        await AppLogger.logMessage('No existing token found during refresh');
-      }
+      await setupToken(newToken);
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
