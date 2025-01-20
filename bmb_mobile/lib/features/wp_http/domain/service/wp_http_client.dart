@@ -90,6 +90,7 @@ abstract class WpHttpClient {
           'path': path,
           'method': method,
           'status_code': response.statusCode,
+          'response_body': response.body,
         },
       );
 

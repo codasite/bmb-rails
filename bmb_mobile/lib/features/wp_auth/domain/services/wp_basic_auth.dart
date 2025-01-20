@@ -6,16 +6,22 @@ import 'dart:convert';
 import 'package:bmb_mobile/features/wp_auth/data/models/wp_app_password.dart';
 import 'package:bmb_mobile/features/wp_auth/data/models/wp_app_password_result.dart';
 import 'package:bmb_mobile/features/wp_auth/data/repositories/wp_credential_repository.dart';
+import 'package:bmb_mobile/core/utils/device_info.dart';
 
 class WpBasicAuth {
   final WpAppPasswordClient _passwordClient;
   final WpSessionClient _sessionClient;
   final WpCredentialRepository _credentialManager;
-  static const String _appName = 'bmb-mobile-app';
+  static const String _baseAppName = 'BMB Mobile App';
   static const String _appId = '72b89be5-8c8d-480a-8a9f-d08324d8410a';
 
   WpBasicAuth(
       this._passwordClient, this._sessionClient, this._credentialManager);
+
+  Future<String> _getDeviceAppName() async {
+    final deviceData = await DeviceInfo.getDeviceInfo();
+    return '$_baseAppName - ${deviceData.name} (${deviceData.id})';
+  }
 
   Future<bool> login(String username) async {
     try {
@@ -119,10 +125,11 @@ class WpBasicAuth {
 
   Future<WpAppPasswordResult> _attemptCreatePassword(String username) async {
     try {
+      final appName = await _getDeviceAppName();
       final response = await _sessionClient.post(
         WpUrls.applicationPasswordsPath,
         body: {
-          'name': _appName,
+          'name': appName,
           'app_id': _appId,
         },
       );
@@ -166,6 +173,7 @@ class WpBasicAuth {
 
   Future<String?> _findExistingPassword() async {
     try {
+      final appName = await _getDeviceAppName();
       final response = await _sessionClient.get(
         WpUrls.applicationPasswordsPath,
       );
@@ -178,7 +186,7 @@ class WpBasicAuth {
       if (response?.statusCode == 200) {
         final passwords = jsonDecode(response!.body) as List;
         final existing = passwords.firstWhere(
-          (p) => p['name'] == _appName,
+          (p) => p['name'] == appName,
           orElse: () => null,
         );
 
