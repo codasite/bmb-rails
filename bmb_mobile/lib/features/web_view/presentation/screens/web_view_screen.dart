@@ -1,5 +1,4 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
-import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
@@ -36,9 +35,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   final List<NavigationItem> _pages = bottomNavItems;
 
-  late final AppLifecycleListener _lifecycleListener;
-  Timer? _statusUpdateTimer;
-
   void _loadUrl(String path) {
     controller.loadRequest(
       Uri.parse(WpUrls.baseUrl + path),
@@ -67,7 +63,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
           Navigator.pushReplacementNamed(context, '/login');
         }
       } finally {
-        // In case navigation fails, we should reset the loading state
         setState(() {
           _isLoggingOut = false;
         });
@@ -89,15 +84,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Initial setup
-    context.read<FCMTokenManagerProvider>().initialize();
-
-    _lifecycleListener = AppLifecycleListener(
-      onStateChange: _handleLifecycleStateChange,
-    );
-
-    _startStatusUpdates();
 
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -184,38 +170,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     controller
         .loadRequest(Uri.parse('${WpUrls.baseUrl}/dashboard/tournaments/'));
-  }
-
-  void _handleLifecycleStateChange(AppLifecycleState state) async {
-    await AppLogger.logMessage('App lifecycle state changed: $state');
-
-    if (state == AppLifecycleState.resumed) {
-      await AppLogger.logMessage('App resumed, restarting FCM status updates');
-      // Update status immediately and restart timer
-      if (mounted) {
-        await context.read<FCMTokenManagerProvider>().updateStatus();
-        _startStatusUpdates();
-      }
-    }
-  }
-
-  void _startStatusUpdates() {
-    AppLogger.logMessage('Starting FCM status updates');
-    _statusUpdateTimer?.cancel();
-    _statusUpdateTimer = Timer.periodic(const Duration(hours: 24), (_) async {
-      if (mounted) {
-        AppLogger.logMessage('Updating FCM status from timer');
-        await context.read<FCMTokenManagerProvider>().updateStatus();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    AppLogger.logMessage('Disposing of FCM status updates');
-    _statusUpdateTimer?.cancel();
-    _lifecycleListener.dispose();
-    super.dispose();
   }
 
   Future<bool> _handleBackPress() async {
