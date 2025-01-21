@@ -28,6 +28,10 @@ class FcmTokenManager {
 
       await AppLogger.logMessage('Setting up FCM token refresh listener');
       _messaging.onTokenRefresh.listen(_handleTokenRefresh);
+
+      await AppLogger.logMessage('Setting up initial token');
+      await setupToken();
+
       await AppLogger.logMessage('Finished initializing FCM');
     } catch (e, stackTrace) {
       await AppLogger.logError(

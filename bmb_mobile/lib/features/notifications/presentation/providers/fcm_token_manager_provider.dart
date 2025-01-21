@@ -12,7 +12,6 @@ class FCMTokenManagerProvider with ChangeNotifier {
 
   Future<void> initialize() async {
     await _fcmManager.initialize();
-    await _fcmManager.setupToken();
   }
 
   Future<void> deregisterToken() async {
