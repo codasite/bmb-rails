@@ -30,7 +30,7 @@ class FcmTokenManager {
       _messaging.onTokenRefresh.listen(_handleTokenRefresh);
 
       await AppLogger.logMessage('Setting up initial token');
-      await setupToken();
+      await getNewToken();
 
       await AppLogger.logMessage('Finished initializing FCM');
     } catch (e, stackTrace) {
@@ -42,19 +42,20 @@ class FcmTokenManager {
     }
   }
 
-  /// Register or update token based on current state
-  Future<void> setupToken([String? newToken]) async {
+  Future<void> getNewToken() async {
+    final token = await _messaging.getToken();
+    await AppLogger.logMessage('Got FCM token: $token');
+    if (token == null) {
+      await AppLogger.logWarning('Failed to get FCM token');
+      return;
+    }
+    await registerOrUpdateToken(token);
+  }
+
+  /// Register a new token or update existing one on the server
+  Future<void> registerOrUpdateToken(String token) async {
     try {
-      await AppLogger.logMessage('Setting up FCM token');
-
-      // Get token from Firebase if not provided
-      final token = newToken ?? await _messaging.getToken();
-      if (token == null) {
-        await AppLogger.logWarning('Failed to get FCM token');
-        return;
-      }
-      await AppLogger.logMessage('Got FCM token: $token');
-
+      await AppLogger.logMessage('Registering/updating FCM token');
       await AppLogger.logMessage('Retrieving FCM token from SharedPreferences');
       final prefs = await SharedPreferences.getInstance();
       final oldToken = prefs.getString(_tokenKey);
@@ -88,16 +89,16 @@ class FcmTokenManager {
       await AppLogger.logError(
         e,
         stackTrace,
-        extras: {'message': 'Failed to setup FCM token'},
+        extras: {'message': 'Failed to register/update FCM token'},
       );
     }
   }
 
-  /// Handle token refresh by calling setupToken
+  /// Handle token refresh by calling registerOrUpdateToken
   Future<void> _handleTokenRefresh(String newToken) async {
     try {
       await AppLogger.logMessage('Handling FCM token refresh');
-      await setupToken(newToken);
+      await registerOrUpdateToken(newToken);
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -258,7 +259,7 @@ class FcmTokenManager {
       if (token == null) {
         await AppLogger.logMessage(
             'No FCM token found, attempting to get new token');
-        await setupToken();
+        await getNewToken();
         return false;
       }
 
@@ -282,7 +283,7 @@ class FcmTokenManager {
           extras: {'device_id': deviceInfo.id},
         );
         await prefs.remove(_tokenKey);
-        await setupToken();
+        await getNewToken();
         return false;
       }
 
