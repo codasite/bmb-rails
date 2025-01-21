@@ -40,19 +40,19 @@
 - [X] Set up token cleanup routines
 
 ## 4. App Modifications
-- [ ] Initialize Firebase in main.dart
-- [ ] Request notification permissions
-- [ ] Implement token management system
-- [ ] Handle token refresh events
-- [ ] Create device identification system
-- [ ] Integrate with WordPress API endpoints
+- [X] Initialize Firebase in main.dart
+- [X] Request notification permissions
+- [X] Implement token management system
+- [X] Handle token refresh events
+- [X] Create device identification system
+- [X] Integrate with WordPress API endpoints
 
 ## 5. Token Management System
-- [ ] Implement device registration flow
-- [ ] Handle token refreshes
-- [ ] Manage multiple devices per user
-- [ ] Clean up invalid/old tokens
-- [ ] Track token usage and validity
+- [X] Implement device registration flow
+- [X] Handle token refreshes
+- [X] Manage multiple devices per user
+- [X] Clean up invalid/old tokens
+- [X] Track token usage and validity
 
 ## 6. WebView Integration
 - [ ] Bridge notifications with WebView content
