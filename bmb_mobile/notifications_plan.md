@@ -170,3 +170,70 @@
     }
   }
   ```
+
+## Lifecycle Flows
+
+### 1. Initialization Flow
+```mermaid
+flowchart TD
+    A[WebViewScreen created] --> B[FCMLifecycleManager initState]
+    B --> C[FCMTokenManagerProvider.initialize]
+    C --> D[Request FCM permissions]
+    C --> E[Setup token refresh listener]
+    C --> F[FCMTokenManager.setupToken]
+    F --> G{Token in SharedPrefs?}
+    G -->|Yes| H[Update token]
+    G -->|No| I[Register new token]
+    H -->|Success| J[Store token]
+    H -->|Failure| I
+    I --> J
+```
+
+### 2. Token Refresh Flow
+```mermaid
+flowchart TD
+    A[Firebase issues new token] --> B[onTokenRefresh listener]
+    B --> C[FCMTokenManager.handleTokenRefresh]
+    C --> D[setupToken with new token]
+    D --> E{Old token exists?}
+    E -->|Yes| F[Update token on server]
+    E -->|No| G[Register new token]
+    F -->|Success| H[Store new token]
+    F -->|Failure| G
+    G --> H
+```
+
+### 3. Status Update Flow
+```mermaid
+flowchart TD
+    A[Start status updates] --> B[24hr Timer starts]
+    B --> C[updateStatus]
+    C --> D{Token exists?}
+    D -->|No| E[setupToken]
+    E --> F1[Get token from Firebase]
+    F1 --> G1[Register new token]
+    G1 -->|Success| H1[Store token]
+    D -->|Yes| F[Send status update]
+    F -->|200| G[Success]
+    F -->|404| H[Clear token & re-register]
+    F -->|500+| I{Retry < max?}
+    I -->|Yes| J[Exponential backoff]
+    J --> F
+    I -->|No| K[Log max retries]
+    
+    L[App paused] --> M[Cancel timer]
+    N[App resumed] --> O[Update status]
+    O --> P[Restart timer]
+```
+
+### 4. App Lifecycle State Changes
+```mermaid
+flowchart TD
+    A[FCMLifecycleManager created] --> B[Listen to AppLifecycleState]
+    B --> C{State change}
+    C -->|resumed| D[Update status]
+    D --> E[Restart status timer]
+    C -->|paused| F[Timer continues]
+    C -->|inactive| G[Timer continues]
+    C -->|detached| H[Timer cancelled on dispose]
+```

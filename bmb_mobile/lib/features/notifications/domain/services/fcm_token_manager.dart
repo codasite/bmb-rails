@@ -56,24 +56,31 @@ class FcmTokenManager {
       final prefs = await SharedPreferences.getInstance();
       final oldToken = prefs.getString(_tokenKey);
 
+      bool success = false;
       if (oldToken != null) {
         await AppLogger.logMessage(
           'Found existing token to update',
           extras: {'old_token': oldToken},
         );
-        if (!await _updateToken(oldToken, token)) {
+        success = await _updateToken(oldToken, token);
+        if (!success) {
           await AppLogger.logMessage(
               'Token update failed, falling back to registration');
-          await _registerToken(token);
+          success = await _registerToken(token);
         }
       } else {
         await AppLogger.logMessage(
             'No existing token found, registering new token');
-        await _registerToken(token);
+        success = await _registerToken(token);
       }
 
-      await AppLogger.logMessage('Storing token in SharedPreferences');
-      await prefs.setString(_tokenKey, token);
+      if (success) {
+        await AppLogger.logMessage('Storing token in SharedPreferences');
+        await prefs.setString(_tokenKey, token);
+      } else {
+        await AppLogger.logWarning(
+            'Failed to register/update token, not storing in SharedPreferences');
+      }
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -253,8 +260,10 @@ class FcmTokenManager {
         final token = prefs.getString(_tokenKey);
 
         if (token == null) {
-          await AppLogger.logWarning('No FCM token found for status update');
-          return false;
+          await AppLogger.logMessage(
+              'No FCM token found, attempting to get new token');
+          await setupToken();
+          return false; // Don't retry, setupToken will handle registration
         }
 
         final deviceInfo = await _getDeviceInfo();
@@ -272,6 +281,17 @@ class FcmTokenManager {
           return true;
         }
 
+        // If token not found, clear it and trigger new registration
+        if (response?.statusCode == 404) {
+          await AppLogger.logMessage(
+            'Token no longer exists on server, clearing and re-registering',
+            extras: {'device_id': deviceInfo.id},
+          );
+          await prefs.remove(_tokenKey);
+          await setupToken();
+          return false;
+        }
+
         await AppLogger.logWarning(
           'Failed to update FCM status',
           extras: {
@@ -279,7 +299,9 @@ class FcmTokenManager {
             'response': response?.body,
           },
         );
-        return false;
+
+        // Only retry on server errors (500+) or network issues
+        return response?.statusCode == null || response!.statusCode >= 500;
       } catch (e, stackTrace) {
         await AppLogger.logError(
           e,
@@ -289,18 +311,19 @@ class FcmTokenManager {
             'attempt': attempts + 1,
           },
         );
-        return false;
+        // Retry network errors
+        return true;
       }
     }
 
     while (attempts < maxRetries) {
-      if (await attemptUpdate()) {
-        return true;
+      final shouldRetry = await attemptUpdate();
+      if (!shouldRetry) {
+        return false;
       }
       attempts++;
 
       if (attempts < maxRetries) {
-        // Exponential backoff with jitter
         final delay =
             Duration(seconds: (1 << attempts) + (Random().nextInt(3)));
         await AppLogger.logMessage(
