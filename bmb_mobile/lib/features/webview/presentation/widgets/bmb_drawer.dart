@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
-import 'package:bmb_mobile/features/web_view/data/models/drawer_item.dart';
-import 'package:bmb_mobile/features/web_view/config/drawer_items.dart';
+import 'package:bmb_mobile/features/webview/data/models/drawer_item.dart';
+import 'package:bmb_mobile/features/webview/config/drawer_items.dart';
 import 'package:bmb_mobile/core/utils/asset_paths.dart';
 
 class BmbDrawer extends StatelessWidget {

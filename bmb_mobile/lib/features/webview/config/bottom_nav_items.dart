@@ -1,4 +1,4 @@
-import 'package:bmb_mobile/features/web_view/data/models/navigation_item.dart';
+import 'package:bmb_mobile/features/webview/data/models/navigation_item.dart';
 import 'package:bmb_mobile/core/utils/asset_paths.dart';
 
 final List<NavigationItem> bottomNavItems = [
