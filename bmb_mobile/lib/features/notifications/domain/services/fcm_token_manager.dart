@@ -5,7 +5,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:bmb_mobile/features/wp_http/domain/service/wp_http_client.dart';
 import 'package:bmb_mobile/core/utils/device_info.dart';
-import 'dart:math';
 
 class FcmTokenManager {
   static const String _tokenKey = 'fcm_token';
@@ -246,105 +245,59 @@ class FcmTokenManager {
   }
 
   /// Send status update to keep token active
-  Future<bool> updateStatus({int maxRetries = 3}) async {
-    int attempts = 0;
+  Future<bool> updateStatus() async {
+    try {
+      await AppLogger.logMessage('Starting FCM status update');
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(_tokenKey);
 
-    Future<bool> attemptUpdate() async {
-      try {
+      if (token == null) {
         await AppLogger.logMessage(
-          'Attempting FCM status update',
-          extras: {'attempt': attempts + 1},
-        );
-
-        final prefs = await SharedPreferences.getInstance();
-        final token = prefs.getString(_tokenKey);
-
-        if (token == null) {
-          await AppLogger.logMessage(
-              'No FCM token found, attempting to get new token');
-          await setupToken();
-          return false; // Don't retry, setupToken will handle registration
-        }
-
-        final deviceInfo = await _getDeviceInfo();
-
-        final response = await _client.post(
-          WpUrls.fcmStatusPath,
-          body: {
-            'device_id': deviceInfo.id,
-            'status': 'active',
-          },
-        );
-
-        if (response?.statusCode == 200) {
-          await AppLogger.logMessage('FCM status updated successfully');
-          return true;
-        }
-
-        // If token not found, clear it and trigger new registration
-        if (response?.statusCode == 404) {
-          await AppLogger.logMessage(
-            'Token no longer exists on server, clearing and re-registering',
-            extras: {'device_id': deviceInfo.id},
-          );
-          await prefs.remove(_tokenKey);
-          await setupToken();
-          return false;
-        }
-
-        await AppLogger.logWarning(
-          'Failed to update FCM status',
-          extras: {
-            'status_code': response?.statusCode,
-            'response': response?.body,
-          },
-        );
-
-        // Only retry on server errors (500+) or network issues
-        return response?.statusCode == null || response!.statusCode >= 500;
-      } catch (e, stackTrace) {
-        await AppLogger.logError(
-          e,
-          stackTrace,
-          extras: {
-            'message': 'Failed to update FCM status',
-            'attempt': attempts + 1,
-          },
-        );
-        // Retry network errors
-        return true;
-      }
-    }
-
-    while (attempts < maxRetries) {
-      final shouldRetry = await attemptUpdate();
-      if (!shouldRetry) {
+            'No FCM token found, attempting to get new token');
+        await setupToken();
         return false;
       }
-      attempts++;
 
-      if (attempts < maxRetries) {
-        final delay =
-            Duration(seconds: (1 << attempts) + (Random().nextInt(3)));
-        await AppLogger.logMessage(
-          'Retrying FCM status update after delay',
-          extras: {
-            'attempt': attempts,
-            'delay_seconds': delay.inSeconds,
-          },
-        );
-        await Future.delayed(delay);
-      }
-    }
-
-    if (attempts == maxRetries) {
-      await AppLogger.logWarning(
-        'FCM status update failed after max retries',
-        extras: {'max_retries': maxRetries},
+      final deviceInfo = await _getDeviceInfo();
+      final response = await _client.post(
+        WpUrls.fcmStatusPath,
+        body: {
+          'device_id': deviceInfo.id,
+          'status': 'active',
+        },
       );
-    }
 
-    return false;
+      if (response?.statusCode == 200) {
+        await AppLogger.logMessage('FCM status updated successfully');
+        return true;
+      }
+
+      if (response?.statusCode == 404) {
+        await AppLogger.logMessage(
+          'Token no longer exists on server, clearing and re-registering',
+          extras: {'device_id': deviceInfo.id},
+        );
+        await prefs.remove(_tokenKey);
+        await setupToken();
+        return false;
+      }
+
+      await AppLogger.logWarning(
+        'Failed to update FCM status',
+        extras: {
+          'status_code': response?.statusCode,
+          'response': response?.body,
+        },
+      );
+      return false;
+    } catch (e, stackTrace) {
+      await AppLogger.logError(
+        e,
+        stackTrace,
+        extras: {'message': 'Failed to update FCM status'},
+      );
+      return false;
+    }
   }
 
   /// Get device information
