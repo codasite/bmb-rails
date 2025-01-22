@@ -91,11 +91,14 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   /** @var FCMTokenRepo Repository for token storage and retrieval */
   private FCMTokenRepo $token_repo;
 
+  /** @var FCMTokenManager Token manager for token operations */
+  private FCMTokenManager $token_manager;
+
   /** @var string The API namespace */
-  protected string $api_namespace;
+  private string $api_namespace;
 
   /** @var string The API endpoint base */
-  protected string $api_rest_base;
+  private string $api_rest_base;
 
   /**
    * Initializes the API controller.
@@ -103,6 +106,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    * @param array $args {
    *     Optional. Arguments for initializing the controller.
    *     @type FCMTokenRepo $token_repo Token repository instance.
+   *     @type FCMTokenManager $token_manager Token manager instance.
    * }
    */
   public function __construct($args = []) {

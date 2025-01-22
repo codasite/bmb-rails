@@ -13,13 +13,13 @@ use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundExceptio
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseException;
 
 /**
- * Manages device-level notification operations.
+ * Manages FCM token operations.
  *
  * Handles:
- * - Device preference management
+ * - Token registration and updates
  * - Notification targeting
  * - Token validation
- * - Device status management
+ * - Token status management
  * - Failed delivery cleanup
  */
 class FCMTokenManager implements HooksInterface {
@@ -66,7 +66,7 @@ class FCMTokenManager implements HooksInterface {
    * @param int $user_id Target user ID
    * @return array Valid FCM token strings for notification
    */
-  public function get_target_device_tokens(
+  public function get_target_tokens(
     NotificationType $type,
     int $user_id
   ): array {

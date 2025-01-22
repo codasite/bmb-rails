@@ -12,8 +12,8 @@ use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseExceptio
  * Handles CRUD operations for FCM tokens and maintains the custom database table.
  */
 class FCMTokenRepo implements CustomTableInterface {
-  /** @var \wpdb WordPress database instance */
-  public \wpdb $wpdb;
+  private \wpdb $wpdb;
+  private string $table_name;
 
   /**
    * Initializes the repository.
@@ -21,6 +21,7 @@ class FCMTokenRepo implements CustomTableInterface {
   function __construct() {
     global $wpdb;
     $this->wpdb = $wpdb;
+    $this->table_name = self::table_name();
   }
 
   /**
@@ -58,9 +59,8 @@ class FCMTokenRepo implements CustomTableInterface {
       $params[] = $args['token'];
     }
 
-    $table_name = self::table_name();
     $query = $this->wpdb->prepare(
-      "SELECT * FROM {$table_name} {$where}",
+      "SELECT * FROM {$this->table_name} {$where} ORDER BY id ASC",
       $params
     );
 
@@ -89,8 +89,7 @@ class FCMTokenRepo implements CustomTableInterface {
    * @return FCMToken|null The created token or null on failure
    */
   public function add(FCMToken $token): ?FCMToken {
-    $table_name = self::table_name();
-    $inserted = $this->wpdb->insert($table_name, [
+    $inserted = $this->wpdb->insert($this->table_name, [
       'user_id' => $token->user_id,
       'device_id' => $token->device_id,
       'token' => $token->token,
@@ -122,7 +121,6 @@ class FCMTokenRepo implements CustomTableInterface {
    * @return FCMToken|null Updated token or null on failure
    */
   public function update_token(int $id, array $fields = []): ?FCMToken {
-    $table_name = self::table_name();
     $data = [];
 
     // Only include fields that were actually passed
@@ -139,7 +137,7 @@ class FCMTokenRepo implements CustomTableInterface {
     // Always update last_used
     $data['last_used_at'] = current_time('mysql');
 
-    $updated = $this->wpdb->update($table_name, $data, ['id' => $id]);
+    $updated = $this->wpdb->update($this->table_name, $data, ['id' => $id]);
     if ($this->wpdb->last_error) {
       throw new TokenDatabaseException(
         "Database error updating token: {$this->wpdb->last_error}"
@@ -153,9 +151,13 @@ class FCMTokenRepo implements CustomTableInterface {
     return $this->get(['id' => $id, 'single' => true]);
   }
 
+  /**
+   * @param int $id Token ID to delete
+   * @return bool Whether deletion was successful
+   * @throws TokenDatabaseException If database error occurs
+   */
   public function delete(int $id): bool {
-    $table_name = self::table_name();
-    $this->wpdb->delete($table_name, ['id' => $id]);
+    $this->wpdb->delete($this->table_name, ['id' => $id]);
 
     if ($this->wpdb->last_error) {
       throw new TokenDatabaseException(
@@ -174,9 +176,8 @@ class FCMTokenRepo implements CustomTableInterface {
    * @throws TokenDatabaseException If database error occurs
    */
   public function delete_inactive_tokens(int $days_threshold = 30): int {
-    $table_name = self::table_name();
     $sql = $this->wpdb->prepare(
-      "DELETE FROM {$table_name} WHERE last_used_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+      "DELETE FROM {$this->table_name} WHERE last_used_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
       $days_threshold
     );
 
