@@ -18,6 +18,7 @@ class WpUrls {
   static const String fcmUpdatePath = '$_fcmBase/update';
   static const String fcmDeregisterPath = '$_fcmBase/deregister';
   static const String fcmStatusPath = '$_fcmBase/status';
+  static const String fcmSyncPath = '$_fcmBase/sync';
 
   // Full URLs
   static String get loginUrl => baseUrl + loginPath;

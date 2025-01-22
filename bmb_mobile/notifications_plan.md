@@ -133,7 +133,7 @@
   ```json
   {
     "device_id": "unique_device_identifier",
-    "status": "active"
+    "token": "fcm_token"
   }
   ```
 
@@ -180,21 +180,23 @@ flowchart TD
     B --> C[FCMTokenManagerProvider.initialize]
     C --> D[Request FCM permissions]
     C --> E[Setup token refresh listener]
-    C --> F[FCMTokenManager.setupToken]
-    F --> G{Token in SharedPrefs?}
-    G -->|Yes| H[Update token]
-    G -->|No| I[Register new token]
-    H -->|Success| J[Store token]
-    H -->|Failure| I
-    I --> J
+    C --> F[getNewToken]
+    F --> G[Get token from Firebase]
+    G --> H[registerOrUpdateToken]
+    H --> I{Token in SharedPrefs?}
+    I -->|Yes| J[Update token]
+    I -->|No| K[Register new token]
+    J -->|Success| L[Store token]
+    J -->|Failure| K
+    K --> L
 ```
 
 ### 2. Token Refresh Flow
 ```mermaid
 flowchart TD
     A[Firebase issues new token] --> B[onTokenRefresh listener]
-    B --> C[FCMTokenManager.handleTokenRefresh]
-    C --> D[setupToken with new token]
+    B --> C[handleTokenRefresh]
+    C --> D[registerOrUpdateToken]
     D --> E{Old token exists?}
     E -->|Yes| F[Update token on server]
     E -->|No| G[Register new token]
@@ -209,13 +211,14 @@ flowchart TD
     A[Start status updates] --> B[24hr Timer starts]
     B --> C[updateStatus]
     C --> D{Token exists?}
-    D -->|No| E[setupToken]
+    D -->|No| E[getNewToken]
     E --> F1[Get token from Firebase]
-    F1 --> G1[Register new token]
+    F1 --> G1[registerOrUpdateToken]
     G1 -->|Success| H1[Store token]
     D -->|Yes| F[Send status update]
     F -->|200| G[Success]
     F -->|404| H[Clear token & re-register]
+    F -->|409| H2[Token mismatch - Clear & re-register]
     F -->|500+| I{Retry < max?}
     I -->|Yes| J[Exponential backoff]
     J --> F

@@ -105,6 +105,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     $this->api_namespace = 'bmb/v1';
     $this->api_rest_base = 'fcm';
     $this->token_repo = $args['token_repo'] ?? new FCMTokenRepo();
+    $this->device_manager = $args['device_manager'] ?? new FCMDeviceManager();
   }
 
   /**
@@ -190,10 +191,10 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     $namespace = $this->api_namespace;
     $base = $this->api_rest_base;
 
-    // Register device token
-    register_rest_route($namespace, "/{$base}/register", [
+    // Sync token
+    register_rest_route($namespace, "/{$base}/sync", [
       'methods' => WP_REST_Server::CREATABLE,
-      'callback' => [$this, 'register_token'],
+      'callback' => [$this, 'sync_token'],
       'permission_callback' => [$this, 'permission_check'],
       'args' => [
         'token' => [
@@ -205,9 +206,11 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
           'type' => 'string',
         ],
         'platform' => [
-          'required' => true,
           'type' => 'string',
           'enum' => ['ios', 'android'],
+        ],
+        'device_name' => [
+          'type' => 'string',
         ],
         'app_version' => [
           'type' => 'string',
@@ -215,28 +218,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
       ],
     ]);
 
-    // Update token
-    register_rest_route($namespace, "/{$base}/update", [
-      'methods' => WP_REST_Server::EDITABLE,
-      'callback' => [$this, 'update_token'],
-      'permission_callback' => [$this, 'permission_check'],
-      'args' => [
-        'old_token' => [
-          'required' => true,
-          'type' => 'string',
-        ],
-        'new_token' => [
-          'required' => true,
-          'type' => 'string',
-        ],
-        'device_id' => [
-          'required' => true,
-          'type' => 'string',
-        ],
-      ],
-    ]);
-
-    // Deregister device
+    // Deregister device (keep this separate)
     register_rest_route($namespace, "/{$base}/deregister", [
       'methods' => WP_REST_Server::DELETABLE,
       'callback' => [$this, 'deregister_token'],
@@ -248,31 +230,14 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
         ],
       ],
     ]);
-
-    // Update device status
-    register_rest_route($namespace, "/{$base}/status", [
-      'methods' => WP_REST_Server::CREATABLE,
-      'callback' => [$this, 'update_status'],
-      'permission_callback' => [$this, 'permission_check'],
-      'args' => [
-        'device_id' => [
-          'required' => true,
-          'type' => 'string',
-        ],
-        'token' => [
-          'required' => true,
-          'type' => 'string',
-        ],
-      ],
-    ]);
   }
 
   /**
-   * Handles token registration requests.
+   * Syncs device token - registers new device, updates token, or refreshes status.
    *
    * Example Request:
    * ```json
-   * POST /wp-json/bmb/v1/fcm/register
+   * POST /wp-json/bmb/v1/fcm/sync
    * {
    *   "token": "fcm-token-123",
    *   "device_id": "device-123",
@@ -281,103 +246,87 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    *   "app_version": "1.0.0"
    * }
    * ```
-   *
-   * Success Response (201):
-   * ```json
-   * {
-   *   "id": 123,
-   *   "user_id": 456,
-   *   "device_id": "device-123",
-   *   "token": "fcm-token-123",
-   *   "device_type": "ios",
-   *   "device_name": "iPhone 12",
-   *   "app_version": "1.0.0"
-   * }
-   * ```
-   *
-   * @param WP_REST_Request $request The registration request.
-   * @return WP_REST_Response|WP_Error Response or error.
    */
-  public function register_token(
-    WP_REST_Request $request
-  ): WP_Error|WP_REST_Response {
-    try {
-      $user_id = get_current_user_id();
-      $params = $request->get_params();
-
-      $token = FCMTokenFactory::create([
-        'user_id' => $user_id,
-        'device_id' => $params['device_id'],
-        'token' => $params['token'],
-        'device_type' => $params['platform'],
-        'device_name' => $params['device_name'] ?? null,
-        'app_version' => $params['app_version'] ?? null,
-      ]);
-
-      $saved = $this->token_repo->add(
-        $token->user_id,
-        $token->device_id,
-        $token->token,
-        $token->device_type,
-        $token->device_name,
-        $token->app_version
-      );
-
-      if ($saved) {
-        $saved['id'] = (int) $saved['id'];
-      }
-
-      return new WP_REST_Response($saved, 201);
-    } catch (ValidationException $e) {
-      return new WP_Error('validation_error', $e->getMessage(), [
-        'status' => 400,
-      ]);
-    }
-  }
-
-  /**
-   * Updates an existing token.
-   *
-   * Example Request:
-   * ```json
-   * PUT /wp-json/bmb/v1/fcm/update
-   * {
-   *   "old_token": "old-fcm-token",
-   *   "new_token": "new-fcm-token",
-   *   "device_id": "device-123"
-   * }
-   * ```
-   *
-   * @param WP_REST_Request $request The update request.
-   * @return WP_REST_Response|WP_Error Response or error.
-   */
-  public function update_token(
+  public function sync_token(
     WP_REST_Request $request
   ): WP_Error|WP_REST_Response {
     $user_id = get_current_user_id();
     $params = $request->get_params();
-
-    // Find existing token
-    $existing = $this->token_repo->get([
+    $token = $params['token'];
+    $device_id = $params['device_id'];
+    $token = FCMTokenFactory::create([
       'user_id' => $user_id,
-      'device_id' => $params['device_id'],
-      'token' => $params['old_token'],
+      'device_id' => $device_id,
+      'token' => $token,
+      'device_type' => $params['platform'],
+      'device_name' => $params['device_name'] ?? null,
+      'app_version' => $params['app_version'] ?? null,
+    ]);
+
+    // Find existing device
+    $device = $this->token_repo->get([
+      'user_id' => $user_id,
+      'device_id' => $device_id,
       'single' => true,
     ]);
 
-    if (!$existing) {
-      return new WP_Error(
-        'token_not_found',
-        'Token not found for this device',
-        ['status' => 404]
-      );
+    if (!$device) {
+      // New device - register
+      try {
+        $token = FCMTokenFactory::create([
+          'user_id' => $user_id,
+          'device_id' => $device_id,
+          'token' => $token,
+          'device_type' => $params['platform'],
+          'device_name' => $params['device_name'] ?? null,
+          'app_version' => $params['app_version'] ?? null,
+        ]);
+
+        $saved = $this->token_repo->add(
+          $token->user_id,
+          $token->device_id,
+          $token->token,
+          $token->device_type,
+          $token->device_name,
+          $token->app_version
+        );
+
+        return new WP_REST_Response($saved, 201);
+      } catch (ValidationException $e) {
+        return new WP_Error('validation_error', $e->getMessage(), [
+          'status' => 400,
+        ]);
+      }
     }
 
-    $updated = $this->token_repo->update_token(
-      $existing['id'],
-      $params['new_token']
-    );
-    return new WP_REST_Response($updated, 200);
+    // Check if token needs updating
+    if ($device['token'] !== $token) {
+      $updated = $this->token_repo->update_token($device['id'], $token);
+      if (!$updated) {
+        return new WP_Error('update_failed', 'Failed to update token', [
+          'status' => 500,
+        ]);
+      }
+      // Update other fields if provided
+      if (isset($params['app_version']) || isset($params['device_name'])) {
+        $this->token_repo->update_device_info(
+          $device['id'],
+          $params['device_name'] ?? null,
+          $params['app_version'] ?? null
+        );
+      }
+      return new WP_REST_Response($updated, 200);
+    }
+
+    // Just update last_used
+    $updated = $this->token_repo->update_last_used($token);
+    if (!$updated) {
+      return new WP_Error('update_failed', 'Failed to update status', [
+        'status' => 500,
+      ]);
+    }
+
+    return new WP_REST_Response(['success' => true], 200);
   }
 
   /**
@@ -416,58 +365,6 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     $deleted = $this->token_repo->delete_by_device($user_id, $device_id);
     if (!$deleted) {
       return new WP_Error('delete_failed', 'Failed to delete device token', [
-        'status' => 500,
-      ]);
-    }
-
-    return new WP_REST_Response(['success' => true], 200);
-  }
-
-  /**
-   * Updates device status.
-   *
-   * Example Request:
-   * ```json
-   * POST /wp-json/bmb/v1/fcm/status
-   * {
-   *   "device_id": "device-123",
-   *   "token": "fcm-token-123"
-   * }
-   * ```
-   *
-   * @param WP_REST_Request $request The status update request.
-   * @return WP_REST_Response|WP_Error Response or error.
-   */
-  public function update_status(
-    WP_REST_Request $request
-  ): WP_Error|WP_REST_Response {
-    $user_id = get_current_user_id();
-    $device_id = $request->get_param('device_id');
-    $token = $request->get_param('token');
-
-    // Find the token for this device
-    $device = $this->token_repo->get([
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-      'single' => true,
-    ]);
-
-    if (!$device) {
-      return new WP_Error('device_not_found', 'Device not found', [
-        'status' => 404,
-      ]);
-    }
-
-    // Check if tokens match
-    if ($device['token'] !== $token) {
-      return new WP_Error('token_mismatch', 'Token mismatch', [
-        'status' => 409,
-      ]);
-    }
-
-    $updated = $this->token_repo->update_last_used($device['token']);
-    if (!$updated) {
-      return new WP_Error('update_failed', 'Failed to update device status', [
         'status' => 500,
       ]);
     }
