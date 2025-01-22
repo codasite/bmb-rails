@@ -42,7 +42,7 @@ class PushMessagingService {
     string $image_url = '',
     array $data = []
   ): MulticastSendReport {
-    $tokens = $this->token_manager->get_target_device_tokens($type, $user_id);
+    $tokens = $this->token_manager->get_target_tokens($type, $user_id);
 
     if (empty($tokens)) {
       return MulticastSendReport::withItems([]); // Return empty report if no tokens
