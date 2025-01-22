@@ -6,6 +6,8 @@ use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenRegistrationException;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenUpdateException;
 
 /**
  * Manages device-level notification operations.
@@ -143,22 +145,84 @@ class FCMTokenManager implements HooksInterface {
   }
 
   /**
-   * Updates device app version.
+   * Syncs a device token - registers new device, updates token, or refreshes status.
    *
-   * @param int $user_id User ID
-   * @param string $device_id Device identifier
-   * @param string $app_version New app version
-   * @return bool Success status
+   * @param FCMToken $token Token to sync
+   * @return array{token: FCMToken, created: bool} Token and whether it was newly created
+   * @throws TokenRegistrationException|TokenUpdateException
    */
-  public function update_app_version(
-    int $user_id,
-    string $device_id,
-    string $app_version
+  public function sync_token(FCMToken $token): array {
+    $existing_token = $this->token_repo->get([
+      'user_id' => $token->user_id,
+      'device_id' => $token->device_id,
+      'single' => true,
+    ]);
+
+    if (!$existing_token) {
+      $token = $this->register_new_device($token);
+      return ['token' => $token, 'created' => true];
+    }
+
+    if ($this->should_update_token($existing_token, $token)) {
+      $token = $this->update_token($existing_token, $token);
+      return ['token' => $token, 'created' => false];
+    }
+
+    $token = $this->refresh_device_status($existing_token);
+    return ['token' => $token, 'created' => false];
+  }
+
+  /**
+   * Checks if device info needs updating.
+   *
+   * @param FCMToken $existing Existing device token
+   * @param FCMToken $new New token data
+   * @return bool Whether device needs updating
+   */
+  private function should_update_token(
+    FCMToken $existing,
+    FCMToken $new
   ): bool {
-    return $this->token_repo->update_app_version(
-      $user_id,
-      $device_id,
-      $app_version
-    );
+    return $existing->token !== $new->token ||
+      $existing->device_name !== $new->device_name ||
+      $existing->app_version !== $new->app_version;
+  }
+
+  /**
+   * @throws TokenRegistrationException
+   */
+  private function register_new_device(FCMToken $token): FCMToken {
+    $saved = $this->token_repo->add($token);
+    if (!$saved) {
+      throw new TokenRegistrationException('Failed to register device');
+    }
+    return $saved;
+  }
+
+  /**
+   * @throws TokenUpdateException
+   */
+  private function update_token(FCMToken $existing, FCMToken $new): FCMToken {
+    $updated = $this->token_repo->update_token($existing->id, [
+      'token' => $new->token,
+      'device_name' => $new->device_name,
+      'app_version' => $new->app_version,
+    ]);
+
+    if (!$updated) {
+      throw new TokenUpdateException('Failed to update device info');
+    }
+    return $updated;
+  }
+
+  /**
+   * @throws TokenUpdateException
+   */
+  private function refresh_device_status(FCMToken $token): FCMToken {
+    $updated = $this->token_repo->update_last_used($token->id);
+    if (!$updated) {
+      throw new TokenUpdateException('Failed to update status');
+    }
+    return $token;
   }
 }

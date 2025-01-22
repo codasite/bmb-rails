@@ -7,9 +7,11 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
-use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
+use Exception;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenRegistrationException;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenUpdateException;
 
 /**
  * REST API controller for managing FCM tokens.
@@ -105,7 +107,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     $this->api_namespace = 'bmb/v1';
     $this->api_rest_base = 'fcm';
     $this->token_repo = $args['token_repo'] ?? new FCMTokenRepo();
-    $this->device_manager = $args['device_manager'] ?? new FCMTokenManager();
+    $this->token_manager = $args['token_manager'] ?? new FCMTokenManager();
   }
 
   /**
@@ -250,83 +252,33 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   public function sync_token(
     WP_REST_Request $request
   ): WP_Error|WP_REST_Response {
-    $user_id = get_current_user_id();
-    $params = $request->get_params();
-    $token = $params['token'];
-    $device_id = $params['device_id'];
-    $token = FCMTokenFactory::create([
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-      'token' => $token,
-      'device_type' => $params['platform'],
-      'device_name' => $params['device_name'] ?? null,
-      'app_version' => $params['app_version'] ?? null,
-    ]);
+    try {
+      $params = $request->get_params();
+      $token = FCMTokenFactory::create([
+        'user_id' => get_current_user_id(),
+        'device_id' => $params['device_id'],
+        'token' => $params['token'],
+        'device_type' => $params['platform'],
+        'device_name' => $params['device_name'] ?? null,
+        'app_version' => $params['app_version'] ?? null,
+      ]);
 
-    // Find existing device
-    $device = $this->token_repo->get([
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-      'single' => true,
-    ]);
-
-    if (!$device) {
-      // New device - register
-      try {
-        $token = FCMTokenFactory::create([
-          'user_id' => $user_id,
-          'device_id' => $device_id,
-          'token' => $token,
-          'device_type' => $params['platform'],
-          'device_name' => $params['device_name'] ?? null,
-          'app_version' => $params['app_version'] ?? null,
-        ]);
-
-        $saved = $this->token_repo->add(
-          $token->user_id,
-          $token->device_id,
-          $token->token,
-          $token->device_type,
-          $token->device_name,
-          $token->app_version
-        );
-
-        return new WP_REST_Response($saved, 201);
-      } catch (ValidationException $e) {
-        return new WP_Error('validation_error', $e->getMessage(), [
-          'status' => 400,
-        ]);
-      }
-    }
-
-    // Check if token needs updating
-    if ($device['token'] !== $token) {
-      $updated = $this->token_repo->update_token($device['id'], $token);
-      if (!$updated) {
-        return new WP_Error('update_failed', 'Failed to update token', [
-          'status' => 500,
-        ]);
-      }
-      // Update other fields if provided
-      if (isset($params['app_version']) || isset($params['device_name'])) {
-        $this->token_repo->update_device_info(
-          $device['id'],
-          $params['device_name'] ?? null,
-          $params['app_version'] ?? null
-        );
-      }
-      return new WP_REST_Response($updated, 200);
-    }
-
-    // Just update last_used
-    $updated = $this->token_repo->update_last_used($token);
-    if (!$updated) {
-      return new WP_Error('update_failed', 'Failed to update status', [
+      $result = $this->token_manager->sync_token($token);
+      return new WP_REST_Response(
+        $result['token']->to_array(),
+        $result['created'] ? 201 : 200
+      );
+    } catch (TokenRegistrationException $e) {
+      return new WP_Error('registration_failed', $e->getMessage(), [
         'status' => 500,
       ]);
+    } catch (TokenUpdateException $e) {
+      return new WP_Error('update_failed', $e->getMessage(), [
+        'status' => 500,
+      ]);
+    } catch (Exception $e) {
+      return new WP_Error('sync_failed', $e->getMessage(), ['status' => 500]);
     }
-
-    return new WP_REST_Response(['success' => true], 200);
   }
 
   /**

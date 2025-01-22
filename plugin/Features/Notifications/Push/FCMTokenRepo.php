@@ -33,9 +33,9 @@ class FCMTokenRepo implements CustomTableInterface {
    *     @type string  $token     FCM token value.
    *     @type bool    $single    Whether to return a single result.
    * }
-   * @return array|object|null The found token(s) or null if not found.
+   * @return FCMToken|FCMToken[]|null The found token(s) or null if not found.
    */
-  public function get($args = []): array|object|null {
+  public function get($args = []): FCMToken|array|null {
     $single = $args['single'] ?? false;
     $where = 'WHERE 1=1';
     $params = [];
@@ -64,66 +64,73 @@ class FCMTokenRepo implements CustomTableInterface {
     );
 
     $results = $this->wpdb->get_results($query, ARRAY_A);
-    return $single ? array_shift($results) : $results;
+    if (empty($results)) {
+      return null;
+    }
+
+    if ($single) {
+      return new FCMToken($results[0]);
+    }
+
+    return array_map(fn($row) => new FCMToken($row), $results);
   }
 
   /**
    * Adds a new FCM token.
    *
-   * @param int         $user_id      WordPress user ID.
-   * @param string      $device_id    Device identifier.
-   * @param string      $token        FCM token value.
-   * @param string      $device_type  Device platform (ios|android).
-   * @param string|null $device_name  Optional. Device name.
-   * @param string|null $app_version  Optional. App version.
-   * @return array|null The created token or null on failure.
+   * @param FCMToken $token Token to add
+   * @return FCMToken|null The created token or null on failure
    */
-  public function add(
-    int $user_id,
-    string $device_id,
-    string $token,
-    string $device_type,
-    ?string $device_name = null,
-    ?string $app_version = null
-  ): ?array {
-    // Check if device already exists for user
-    $existing = $this->get([
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-      'single' => true,
-    ]);
-
-    if ($existing) {
-      // Update existing device
-      return $this->update_token($existing['id'], $token);
-    }
-
+  public function add(FCMToken $token): ?FCMToken {
     $table_name = self::table_name();
-    $this->wpdb->insert($table_name, [
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-      'token' => $token,
-      'device_type' => $device_type,
-      'device_name' => $device_name,
-      'app_version' => $app_version,
+    $inserted = $this->wpdb->insert($table_name, [
+      'user_id' => $token->user_id,
+      'device_id' => $token->device_id,
+      'token' => $token->token,
+      'device_type' => $token->device_type,
+      'device_name' => $token->device_name,
+      'app_version' => $token->app_version,
       'created_at' => current_time('mysql'),
       'last_used_at' => current_time('mysql'),
     ]);
 
-    $id = $this->wpdb->insert_id;
-    return $this->get(['id' => $id, 'single' => true]);
+    if (!$inserted) {
+      return null;
+    }
+
+    return $this->get(['id' => $this->wpdb->insert_id, 'single' => true]);
   }
 
-  public function update_token(int $id, string $token): ?array {
+  /**
+   * Updates device information including token, name and app version.
+   *
+   * @param int $id Device ID
+   * @param array $fields Fields to update
+   * @return FCMToken|null Updated token or null on failure
+   */
+  public function update_token(int $id, array $fields): ?FCMToken {
     $table_name = self::table_name();
-    $this->wpdb->update(
-      $table_name,
-      [
-        'token' => $token,
-        'last_used_at' => current_time('mysql'),
-      ],
-      ['id' => $id]
-    );
+    $data = [];
+
+    // Only include fields that were actually passed
+    if (isset($fields['token'])) {
+      $data['token'] = $fields['token'];
+    }
+    if (isset($fields['device_name'])) {
+      $data['device_name'] = $fields['device_name'];
+    }
+    if (isset($fields['app_version'])) {
+      $data['app_version'] = $fields['app_version'];
+    }
+
+    // Always update last_used
+    $data['last_used_at'] = current_time('mysql');
+
+    $updated = $this->wpdb->update($table_name, $data, ['id' => $id]);
+    if (!$updated) {
+      return null;
+    }
+
     return $this->get(['id' => $id, 'single' => true]);
   }
 
@@ -142,12 +149,12 @@ class FCMTokenRepo implements CustomTableInterface {
     return empty($this->wpdb->last_error);
   }
 
-  public function update_last_used(string $token): bool {
+  public function update_last_used(int $id): bool {
     $table_name = self::table_name();
     return $this->wpdb->update(
       $table_name,
       ['last_used_at' => current_time('mysql')],
-      ['token' => $token]
+      ['id' => $id]
     ) !== false;
   }
 
@@ -162,28 +169,6 @@ class FCMTokenRepo implements CustomTableInterface {
       $days_threshold
     );
     return $this->wpdb->query($sql);
-  }
-
-  public function update_app_version(
-    int $user_id,
-    string $device_id,
-    string $app_version
-  ): bool {
-    $table_name = self::table_name();
-    $rows_affected = $this->wpdb->update(
-      $table_name,
-      [
-        'app_version' => $app_version,
-        'last_used_at' => current_time('mysql'),
-      ],
-      [
-        'user_id' => $user_id,
-        'device_id' => $device_id,
-      ]
-    );
-
-    // Return true only if rows were actually updated
-    return $rows_affected > 0;
   }
 
   /**
