@@ -140,15 +140,6 @@ class FCMTokenRepo implements CustomTableInterface {
     return empty($this->wpdb->last_error);
   }
 
-  public function delete_by_device(int $user_id, string $device_id): bool {
-    $table_name = self::table_name();
-    $this->wpdb->delete($table_name, [
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-    ]);
-    return empty($this->wpdb->last_error);
-  }
-
   public function update_last_used(int $id): bool {
     $table_name = self::table_name();
     return $this->wpdb->update(

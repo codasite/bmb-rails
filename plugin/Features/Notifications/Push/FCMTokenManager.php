@@ -8,6 +8,8 @@ use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenRegistrationException;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenUpdateException;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDeleteException;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundException;
 
 /**
  * Manages device-level notification operations.
@@ -221,5 +223,30 @@ class FCMTokenManager implements HooksInterface {
       throw new TokenUpdateException('Failed to update status');
     }
     return $token;
+  }
+
+  /**
+   * Deregisters a device token.
+   *
+   * @param int $user_id User ID
+   * @param string $device_id Device identifier
+   * @throws TokenNotFoundException If device not found
+   * @throws TokenDeleteException If deletion fails
+   */
+  public function deregister_token(int $user_id, string $device_id): void {
+    $token = $this->token_repo->get([
+      'user_id' => $user_id,
+      'device_id' => $device_id,
+      'single' => true,
+    ]);
+
+    if (!$token) {
+      throw new TokenNotFoundException('Device not found');
+    }
+
+    $deleted = $this->token_repo->delete($token->id);
+    if (!$deleted) {
+      throw new TokenDeleteException('Failed to delete device token');
+    }
   }
 }

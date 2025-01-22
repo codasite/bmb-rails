@@ -12,6 +12,8 @@ use WStrategies\BMB\Includes\Hooks\Loader;
 use Exception;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenRegistrationException;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenUpdateException;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDeleteException;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundException;
 
 /**
  * REST API controller for managing FCM tokens.
@@ -298,30 +300,21 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   public function deregister_token(
     WP_REST_Request $request
   ): WP_Error|WP_REST_Response {
-    $user_id = get_current_user_id();
-    $device_id = $request->get_param('device_id');
-
-    // Check if device exists first
-    $device = $this->token_repo->get([
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-      'single' => true,
-    ]);
-
-    if (!$device) {
-      return new WP_Error('device_not_found', 'Device not found', [
+    try {
+      $this->token_manager->deregister_token(
+        get_current_user_id(),
+        $request->get_param('device_id')
+      );
+      return new WP_REST_Response(['success' => true], 200);
+    } catch (TokenNotFoundException $e) {
+      return new WP_Error('device_not_found', $e->getMessage(), [
         'status' => 404,
       ]);
-    }
-
-    $deleted = $this->token_repo->delete_by_device($user_id, $device_id);
-    if (!$deleted) {
-      return new WP_Error('delete_failed', 'Failed to delete device token', [
+    } catch (TokenDeleteException $e) {
+      return new WP_Error('delete_failed', $e->getMessage(), [
         'status' => 500,
       ]);
     }
-
-    return new WP_REST_Response(['success' => true], 200);
   }
 
   /**
