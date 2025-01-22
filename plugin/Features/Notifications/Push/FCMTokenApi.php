@@ -259,10 +259,9 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
           'required' => true,
           'type' => 'string',
         ],
-        'status' => [
+        'token' => [
           'required' => true,
           'type' => 'string',
-          'enum' => ['active'],
         ],
       ],
     ]);
@@ -432,7 +431,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    * POST /wp-json/bmb/v1/fcm/status
    * {
    *   "device_id": "device-123",
-   *   "status": "active"
+   *   "token": "fcm-token-123"
    * }
    * ```
    *
@@ -444,6 +443,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   ): WP_Error|WP_REST_Response {
     $user_id = get_current_user_id();
     $device_id = $request->get_param('device_id');
+    $token = $request->get_param('token');
 
     // Find the token for this device
     $device = $this->token_repo->get([
@@ -455,6 +455,13 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     if (!$device) {
       return new WP_Error('device_not_found', 'Device not found', [
         'status' => 404,
+      ]);
+    }
+
+    // Check if tokens match
+    if ($device['token'] !== $token) {
+      return new WP_Error('token_mismatch', 'Token mismatch', [
+        'status' => 409,
       ]);
     }
 

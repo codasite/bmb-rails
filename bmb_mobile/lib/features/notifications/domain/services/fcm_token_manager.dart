@@ -52,7 +52,6 @@ class FcmTokenManager {
     await registerOrUpdateToken(token);
   }
 
-  /// Register a new token or update existing one on the server
   Future<void> registerOrUpdateToken(String token) async {
     try {
       await AppLogger.logMessage('Registering/updating FCM token');
@@ -268,6 +267,7 @@ class FcmTokenManager {
         WpUrls.fcmStatusPath,
         body: {
           'device_id': deviceInfo.id,
+          'token': token,
           'status': 'active',
         },
       );
@@ -280,6 +280,17 @@ class FcmTokenManager {
       if (response?.statusCode == 404) {
         await AppLogger.logMessage(
           'Token no longer exists on server, clearing and re-registering',
+          extras: {'device_id': deviceInfo.id},
+        );
+        await prefs.remove(_tokenKey);
+        await getNewToken();
+        return false;
+      }
+
+      // Handle token mismatch
+      if (response?.statusCode == 409) {
+        await AppLogger.logMessage(
+          'Token mismatch with server, clearing and re-registering',
           extras: {'device_id': deviceInfo.id},
         );
         await prefs.remove(_tokenKey);
