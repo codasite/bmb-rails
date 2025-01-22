@@ -4,6 +4,7 @@ namespace WStrategies\BMB\Features\Notifications\Push;
 
 use WStrategies\BMB\Includes\Repository\CustomTableInterface;
 use WStrategies\BMB\Includes\Repository\CustomTableNames;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseException;
 
 /**
  * Repository for managing FCM tokens in the database.
@@ -64,6 +65,12 @@ class FCMTokenRepo implements CustomTableInterface {
     );
 
     $results = $this->wpdb->get_results($query, ARRAY_A);
+    if ($this->wpdb->last_error) {
+      throw new TokenDatabaseException(
+        "Database error fetching tokens: {$this->wpdb->last_error}"
+      );
+    }
+
     if (empty($results)) {
       return null;
     }
@@ -94,6 +101,12 @@ class FCMTokenRepo implements CustomTableInterface {
       'last_used_at' => current_time('mysql'),
     ]);
 
+    if ($this->wpdb->last_error) {
+      throw new TokenDatabaseException(
+        "Database error adding token: {$this->wpdb->last_error}"
+      );
+    }
+
     if (!$inserted) {
       return null;
     }
@@ -108,7 +121,7 @@ class FCMTokenRepo implements CustomTableInterface {
    * @param array $fields Fields to update
    * @return FCMToken|null Updated token or null on failure
    */
-  public function update_token(int $id, array $fields): ?FCMToken {
+  public function update_token(int $id, array $fields = []): ?FCMToken {
     $table_name = self::table_name();
     $data = [];
 
@@ -127,6 +140,12 @@ class FCMTokenRepo implements CustomTableInterface {
     $data['last_used_at'] = current_time('mysql');
 
     $updated = $this->wpdb->update($table_name, $data, ['id' => $id]);
+    if ($this->wpdb->last_error) {
+      throw new TokenDatabaseException(
+        "Database error updating token: {$this->wpdb->last_error}"
+      );
+    }
+
     if (!$updated) {
       return null;
     }
@@ -137,29 +156,38 @@ class FCMTokenRepo implements CustomTableInterface {
   public function delete(int $id): bool {
     $table_name = self::table_name();
     $this->wpdb->delete($table_name, ['id' => $id]);
-    return empty($this->wpdb->last_error);
+
+    if ($this->wpdb->last_error) {
+      throw new TokenDatabaseException(
+        "Database error deleting token: {$this->wpdb->last_error}"
+      );
+    }
+
+    return true;
   }
 
-  public function update_last_used(int $id): bool {
-    $table_name = self::table_name();
-    return $this->wpdb->update(
-      $table_name,
-      ['last_used_at' => current_time('mysql')],
-      ['id' => $id]
-    ) !== false;
-  }
-
-  public function get_user_devices(int $user_id): array {
-    return $this->get(['user_id' => $user_id]) ?? [];
-  }
-
+  /**
+   * Deletes tokens that haven't been used in the specified number of days.
+   *
+   * @param int $days_threshold Number of days of inactivity before deletion
+   * @return int Number of tokens deleted
+   * @throws TokenDatabaseException If database error occurs
+   */
   public function delete_inactive_tokens(int $days_threshold = 30): int {
     $table_name = self::table_name();
     $sql = $this->wpdb->prepare(
       "DELETE FROM {$table_name} WHERE last_used_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
       $days_threshold
     );
-    return $this->wpdb->query($sql);
+
+    $deleted = $this->wpdb->query($sql);
+    if ($this->wpdb->last_error) {
+      throw new TokenDatabaseException(
+        "Database error deleting inactive tokens: {$this->wpdb->last_error}"
+      );
+    }
+
+    return $deleted;
   }
 
   /**

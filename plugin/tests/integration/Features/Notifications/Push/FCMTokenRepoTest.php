@@ -111,7 +111,7 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
     $this->repo->add($this->user->ID, 'device1', 'token1', 'ios');
     $this->repo->add($this->user->ID, 'device2', 'token2', 'android');
 
-    $devices = $this->repo->get_user_devices($this->user->ID);
+    $devices = $this->repo->get_user_tokens($this->user->ID);
 
     $this->assertCount(2, $devices);
     $this->assertEquals('device1', $devices[0]['device_id']);
@@ -179,7 +179,7 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
     $this->repo->add($this->user->ID, 'device456', 'fcm-token-456', 'ios');
 
     $deleted_count = $this->repo->delete_inactive_tokens(30);
-    $remaining_tokens = $this->repo->get_user_devices($this->user->ID);
+    $remaining_tokens = $this->repo->get_user_tokens($this->user->ID);
 
     $this->assertEquals(1, $deleted_count);
     $this->assertCount(1, $remaining_tokens);
@@ -262,7 +262,7 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
       'android'
     );
 
-    $devices = $this->repo->get_user_devices($this->user->ID);
+    $devices = $this->repo->get_user_tokens($this->user->ID);
 
     $this->assertCount(2, $devices);
     $this->assertNotEquals($device1['id'], $device2['id']);
@@ -277,7 +277,7 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
 
     wp_delete_user($this->user->ID);
 
-    $remaining_tokens = $this->repo->get_user_devices($this->user->ID);
+    $remaining_tokens = $this->repo->get_user_tokens($this->user->ID);
     $this->assertEmpty($remaining_tokens);
   }
 
@@ -318,7 +318,7 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(1, $deleted_count);
 
-    $remaining = $this->repo->get_user_devices($this->user->ID);
+    $remaining = $this->repo->get_user_tokens($this->user->ID);
     $this->assertCount(1, $remaining);
     $this->assertEquals($token1['id'], $remaining[0]['id']);
   }

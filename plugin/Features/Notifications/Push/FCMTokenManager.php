@@ -10,6 +10,7 @@ use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenRegistrationExce
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenUpdateException;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDeleteException;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundException;
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseException;
 
 /**
  * Manages device-level notification operations.
@@ -59,39 +60,60 @@ class FCMTokenManager implements HooksInterface {
   }
 
   /**
-   * Gets all active devices that should receive a notification.
+   * Gets all active tokens that should receive a notification.
    *
    * @param NotificationType $type Notification type
-   * @param int[] $user_ids Target user IDs
-   * @return array Valid FCM tokens for notification
+   * @param int $user_id Target user ID
+   * @return array Valid FCM token strings for notification
    */
   public function get_target_device_tokens(
     NotificationType $type,
     int $user_id
   ): array {
-    $tokens = [];
-    $user_devices = $this->token_repo->get_user_devices($user_id);
-    foreach ($user_devices as $device) {
-      if ($this->should_receive_notification($device, $type)) {
-        $tokens[] = $device['token'];
+    try {
+      $tokens = [];
+      $user_tokens = $this->token_repo->get(['user_id' => $user_id]);
+      if ($user_tokens) {
+        foreach ($user_tokens as $token) {
+          if ($this->should_receive_notification($token, $type)) {
+            $tokens[] = $token->token;
+          }
+        }
       }
+      return $tokens;
+    } catch (TokenDatabaseException $e) {
+      (new Utils())->log(
+        sprintf(
+          'Database error fetching tokens for user %d: %s',
+          $user_id,
+          $e->getMessage()
+        )
+      );
+    } catch (\Exception $e) {
+      (new Utils())->log(
+        sprintf(
+          'Unexpected error fetching tokens for user %d: %s',
+          $user_id,
+          $e->getMessage()
+        )
+      );
     }
-    return $tokens;
+    return [];
   }
 
   /**
    * Checks if device should receive notification based on preferences.
    *
-   * @param array $device Device data from repository
+   * @param FCMToken $token Token data from repository
    * @param NotificationType $type Type of notification
    * @return bool Whether device should receive notification
    */
   private function should_receive_notification(
-    array $device,
+    FCMToken $token,
     NotificationType $type
   ): bool {
     // Skip inactive devices (no activity in last 30 days)
-    $last_used = strtotime($device['last_used_at']);
+    $last_used = strtotime($token->last_used_at);
     if ($last_used < strtotime('-30 days')) {
       return false;
     }
@@ -118,16 +140,44 @@ class FCMTokenManager implements HooksInterface {
    * @param string $token The FCM token that failed
    */
   public function handle_failed_delivery(string $token): void {
-    $token = $this->token_repo->get(['token' => $token, 'single' => true]);
+    try {
+      $token = $this->token_repo->get(['token' => $token, 'single' => true]);
 
-    if ($token) {
-      $this->token_repo->delete($token->id);
+      if ($token) {
+        $deleted = $this->token_repo->delete($token->id);
+        if (!$deleted) {
+          (new Utils())->log(
+            sprintf(
+              'Failed to delete invalid token for user %d device %s',
+              $token->user_id,
+              $token->device_id
+            )
+          );
+          return;
+        }
 
+        (new Utils())->log(
+          sprintf(
+            'Removed invalid FCM token for user %d device %s',
+            $token->user_id,
+            $token->device_id
+          )
+        );
+      }
+    } catch (TokenDatabaseException $e) {
       (new Utils())->log(
         sprintf(
-          'Removed invalid FCM token for user %d device %s',
-          $token->user_id,
-          $token->device_id
+          'Database error handling failed delivery for token %s: %s',
+          $token,
+          $e->getMessage()
+        )
+      );
+    } catch (\Exception $e) {
+      (new Utils())->log(
+        sprintf(
+          'Unexpected error handling failed delivery for token %s: %s',
+          $token,
+          $e->getMessage()
         )
       );
     }
@@ -140,7 +190,24 @@ class FCMTokenManager implements HooksInterface {
    * @return int Number of tokens removed
    */
   public function cleanup_inactive_tokens(int $days_threshold = 30): int {
-    return $this->token_repo->delete_inactive_tokens($days_threshold);
+    try {
+      return $this->token_repo->delete_inactive_tokens($days_threshold);
+    } catch (TokenDatabaseException $e) {
+      (new Utils())->log(
+        sprintf(
+          'Database error cleaning up inactive tokens: %s',
+          $e->getMessage()
+        )
+      );
+    } catch (\Exception $e) {
+      (new Utils())->log(
+        sprintf(
+          'Unexpected error cleaning up inactive tokens: %s',
+          $e->getMessage()
+        )
+      );
+    }
+    return 0;
   }
 
   /**
@@ -158,7 +225,7 @@ class FCMTokenManager implements HooksInterface {
     ]);
 
     if (!$existing_token) {
-      $token = $this->register_new_device($token);
+      $token = $this->register_token($token);
       return ['token' => $token, 'created' => true];
     }
 
@@ -167,7 +234,7 @@ class FCMTokenManager implements HooksInterface {
       return ['token' => $token, 'created' => false];
     }
 
-    $token = $this->refresh_device_status($existing_token);
+    $token = $this->refresh_token($existing_token);
     return ['token' => $token, 'created' => false];
   }
 
@@ -190,39 +257,56 @@ class FCMTokenManager implements HooksInterface {
   /**
    * @throws TokenRegistrationException
    */
-  private function register_new_device(FCMToken $token): FCMToken {
-    $saved = $this->token_repo->add($token);
-    if (!$saved) {
-      throw new TokenRegistrationException('Failed to register device');
+  private function register_token(FCMToken $token): FCMToken {
+    try {
+      $saved = $this->token_repo->add($token);
+      if (!$saved) {
+        throw new TokenRegistrationException('Failed to register token');
+      }
+      return $saved;
+    } catch (TokenDatabaseException $e) {
+      (new Utils())->log(
+        "Database error registering token: {$e->getMessage()}"
+      );
+      throw new TokenRegistrationException('Failed to register token');
     }
-    return $saved;
   }
 
   /**
    * @throws TokenUpdateException
    */
   private function update_token(FCMToken $existing, FCMToken $new): FCMToken {
-    $updated = $this->token_repo->update_token($existing->id, [
-      'token' => $new->token,
-      'device_name' => $new->device_name,
-      'app_version' => $new->app_version,
-    ]);
+    try {
+      $updated = $this->token_repo->update_token($existing->id, [
+        'token' => $new->token,
+        'device_name' => $new->device_name,
+        'app_version' => $new->app_version,
+      ]);
 
-    if (!$updated) {
-      throw new TokenUpdateException('Failed to update device info');
+      if (!$updated) {
+        throw new TokenUpdateException('Failed to update token');
+      }
+      return $updated;
+    } catch (TokenDatabaseException $e) {
+      (new Utils())->log("Database error updating token: {$e->getMessage()}");
+      throw new TokenUpdateException('Failed to update token');
     }
-    return $updated;
   }
 
   /**
    * @throws TokenUpdateException
    */
-  private function refresh_device_status(FCMToken $token): FCMToken {
-    $updated = $this->token_repo->update_last_used($token->id);
-    if (!$updated) {
-      throw new TokenUpdateException('Failed to update status');
+  private function refresh_token(FCMToken $token): FCMToken {
+    try {
+      $updated = $this->token_repo->update_token($token->id);
+      if (!$updated) {
+        throw new TokenUpdateException('Failed to refresh token');
+      }
+      return $token;
+    } catch (TokenDatabaseException $e) {
+      (new Utils())->log("Database error refreshing token: {$e->getMessage()}");
+      throw new TokenUpdateException('Failed to refresh token');
     }
-    return $token;
   }
 
   /**
@@ -234,18 +318,25 @@ class FCMTokenManager implements HooksInterface {
    * @throws TokenDeleteException If deletion fails
    */
   public function deregister_token(int $user_id, string $device_id): void {
-    $token = $this->token_repo->get([
-      'user_id' => $user_id,
-      'device_id' => $device_id,
-      'single' => true,
-    ]);
+    try {
+      $token = $this->token_repo->get([
+        'user_id' => $user_id,
+        'device_id' => $device_id,
+        'single' => true,
+      ]);
 
-    if (!$token) {
-      throw new TokenNotFoundException('Device not found');
-    }
+      if (!$token) {
+        throw new TokenNotFoundException('Device token not found');
+      }
 
-    $deleted = $this->token_repo->delete($token->id);
-    if (!$deleted) {
+      $deleted = $this->token_repo->delete($token->id);
+      if (!$deleted) {
+        throw new TokenDeleteException('Failed to delete device token');
+      }
+    } catch (TokenDatabaseException $e) {
+      (new Utils())->log(
+        "Database error deregistering token: {$e->getMessage()}"
+      );
       throw new TokenDeleteException('Failed to delete device token');
     }
   }
