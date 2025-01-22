@@ -10,11 +10,11 @@ use WStrategies\BMB\Features\Notifications\NotificationType;
 
 class MessagingService {
   private Messaging $messaging;
-  private FCMDeviceManager $fcmDeviceManager;
+  private FCMTokenManager $fcmDeviceManager;
 
   public function __construct(
     Messaging $messaging,
-    FCMDeviceManager $fcmDeviceManager
+    FCMTokenManager $fcmDeviceManager
   ) {
     $this->messaging = $messaging;
     $this->fcmDeviceManager = $fcmDeviceManager;

@@ -10,14 +10,14 @@ use Kreait\Firebase\Messaging\MessageTarget;
 use PHPUnit\Framework\MockObject\MockObject;
 use Kreait\Firebase\Messaging\MulticastSendReport;
 use WStrategies\BMB\Features\Notifications\NotificationType;
-use WStrategies\BMB\Features\Notifications\Push\FCMDeviceManager;
+use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Features\Notifications\Push\Fakes\MessagingFake;
 use WStrategies\BMB\Features\Notifications\Push\Fakes\SendReportFake;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 
 class PushMessagingServiceTest extends TestCase {
   private MessagingFake $messaging;
-  /** @var MockObject&FCMDeviceManager */
+  /** @var MockObject&FCMTokenManager */
   private MockObject $device_manager;
   private PushMessagingService $service;
 
@@ -26,7 +26,7 @@ class PushMessagingServiceTest extends TestCase {
     \WP_Mock::setUp();
 
     $this->messaging = new MessagingFake();
-    $this->device_manager = $this->createMock(FCMDeviceManager::class);
+    $this->device_manager = $this->createMock(FCMTokenManager::class);
     $this->service = new PushMessagingService(
       $this->messaging,
       $this->device_manager

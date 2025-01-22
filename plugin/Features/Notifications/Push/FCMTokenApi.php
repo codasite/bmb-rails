@@ -105,7 +105,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     $this->api_namespace = 'bmb/v1';
     $this->api_rest_base = 'fcm';
     $this->token_repo = $args['token_repo'] ?? new FCMTokenRepo();
-    $this->device_manager = $args['device_manager'] ?? new FCMDeviceManager();
+    $this->device_manager = $args['device_manager'] ?? new FCMTokenManager();
   }
 
   /**

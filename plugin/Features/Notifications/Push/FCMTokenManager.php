@@ -17,7 +17,7 @@ use WStrategies\BMB\Includes\Hooks\Loader;
  * - Device status management
  * - Failed delivery cleanup
  */
-class FCMDeviceManager implements HooksInterface {
+class FCMTokenManager implements HooksInterface {
   private FCMTokenRepo $token_repo;
   private const CLEANUP_HOOK = 'wpbb_fcm_cleanup_hook';
   private const CLEANUP_SCHEDULE = 'daily';

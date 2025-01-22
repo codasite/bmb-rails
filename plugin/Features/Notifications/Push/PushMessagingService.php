@@ -11,12 +11,12 @@ use WStrategies\BMB\Includes\Utils;
 
 class PushMessagingService {
   private Messaging $messaging;
-  private FCMDeviceManager $fcm_device_manager;
+  private FCMTokenManager $fcm_device_manager;
   private Utils $utils;
 
   public function __construct(
     Messaging $messaging,
-    FCMDeviceManager $fcm_device_manager
+    FCMTokenManager $fcm_device_manager
   ) {
     $this->messaging = $messaging;
     $this->fcm_device_manager = $fcm_device_manager;

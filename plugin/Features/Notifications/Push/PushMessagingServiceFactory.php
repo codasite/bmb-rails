@@ -5,7 +5,7 @@ use Exception;
 use Kreait\Firebase\Factory;
 use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
-use WStrategies\BMB\Features\Notifications\Push\FCMDeviceManager;
+use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Features\Notifications\Push\Fakes\MessagingFake;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 
@@ -23,7 +23,7 @@ class PushMessagingServiceFactory {
 
     $fcmDeviceManager =
       $args['fcm_device_manager'] ??
-      new FCMDeviceManager(['token_repo' => new FCMTokenRepo()]);
+      new FCMTokenManager(['token_repo' => new FCMTokenRepo()]);
     return new PushMessagingService($messaging, $fcmDeviceManager);
   }
 }

@@ -3,18 +3,18 @@
 namespace WStrategies\BMB\Tests\Integration\Features\Notifications\Push;
 
 use WStrategies\BMB\Features\Notifications\NotificationType;
-use WStrategies\BMB\Features\Notifications\Push\FCMDeviceManager;
+use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class FCMDeviceManagerTest extends WPBB_UnitTestCase {
-  private FCMDeviceManager $device_manager;
+  private FCMTokenManager $device_manager;
   private FCMTokenRepo $token_repo;
 
   public function setUp(): void {
     parent::setUp();
     $this->token_repo = new FCMTokenRepo();
-    $this->device_manager = new FCMDeviceManager([
+    $this->device_manager = new FCMTokenManager([
       'token_repo' => $this->token_repo,
     ]);
   }
