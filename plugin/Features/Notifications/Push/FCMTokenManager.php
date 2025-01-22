@@ -116,19 +116,16 @@ class FCMTokenManager implements HooksInterface {
    * @param string $token The FCM token that failed
    */
   public function handle_failed_delivery(string $token): void {
-    $device = $this->token_repo->get(['token' => $token, 'single' => true]);
+    $token = $this->token_repo->get(['token' => $token, 'single' => true]);
 
-    if ($device) {
-      $this->token_repo->delete_by_device(
-        (int) $device['user_id'],
-        $device['device_id']
-      );
+    if ($token) {
+      $this->token_repo->delete($token->id);
 
       (new Utils())->log(
         sprintf(
           'Removed invalid FCM token for user %d device %s',
-          $device['user_id'],
-          $device['device_id']
+          $token->user_id,
+          $token->device_id
         )
       );
     }

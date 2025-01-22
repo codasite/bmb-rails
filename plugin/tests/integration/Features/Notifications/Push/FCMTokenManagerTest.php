@@ -7,7 +7,7 @@ use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class FCMDeviceManagerTest extends WPBB_UnitTestCase {
+class FCMTokenManagerTest extends WPBB_UnitTestCase {
   private FCMTokenManager $device_manager;
   private FCMTokenRepo $token_repo;
 

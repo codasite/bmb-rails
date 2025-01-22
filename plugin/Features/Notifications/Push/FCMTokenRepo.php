@@ -134,7 +134,7 @@ class FCMTokenRepo implements CustomTableInterface {
     return $this->get(['id' => $id, 'single' => true]);
   }
 
-  public function delete($id): bool {
+  public function delete(int $id): bool {
     $table_name = self::table_name();
     $this->wpdb->delete($table_name, ['id' => $id]);
     return empty($this->wpdb->last_error);
