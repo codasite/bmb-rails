@@ -11,15 +11,15 @@ use WStrategies\BMB\Includes\Utils;
 
 class PushMessagingService {
   private Messaging $messaging;
-  private FCMTokenManager $fcm_device_manager;
+  private FCMTokenManager $token_manager;
   private Utils $utils;
 
   public function __construct(
     Messaging $messaging,
-    FCMTokenManager $fcm_device_manager
+    FCMTokenManager $token_manager
   ) {
     $this->messaging = $messaging;
-    $this->fcm_device_manager = $fcm_device_manager;
+    $this->token_manager = $token_manager;
     $this->utils = new Utils();
   }
 
@@ -42,10 +42,7 @@ class PushMessagingService {
     string $image_url = '',
     array $data = []
   ): MulticastSendReport {
-    $tokens = $this->fcm_device_manager->get_target_device_tokens(
-      $type,
-      $user_id
-    );
+    $tokens = $this->token_manager->get_target_device_tokens($type, $user_id);
 
     if (empty($tokens)) {
       return MulticastSendReport::withItems([]); // Return empty report if no tokens
@@ -88,10 +85,10 @@ class PushMessagingService {
         // Handle different failure types
         if ($failure->messageTargetWasInvalid()) {
           $this->utils->log_error("Invalid token format: {$token}");
-          $this->fcm_device_manager->handle_failed_delivery($token);
+          $this->token_manager->handle_failed_delivery($token);
         } elseif ($failure->messageWasSentToUnknownToken()) {
           $this->utils->log_error("Unknown token (not in Firebase): {$token}");
-          $this->fcm_device_manager->handle_failed_delivery($token);
+          $this->token_manager->handle_failed_delivery($token);
         } elseif ($failure->messageWasInvalid()) {
           $this->utils->log_error("Invalid message format for token: {$token}");
         } else {
@@ -107,8 +104,5 @@ class PushMessagingService {
         }
       }
     }
-
-    // Store valid tokens for future reference if needed
-    $validTokens = $report->validTokens();
   }
 }
