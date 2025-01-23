@@ -144,7 +144,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     $base = $this->api_rest_base;
 
     // Sync token
-    register_rest_route($namespace, "/{$base}/token/sync", [
+    register_rest_route($namespace, "/{$base}/sync", [
       'methods' => WP_REST_Server::CREATABLE,
       'callback' => [$this, 'sync_token'],
       'permission_callback' => [$this, 'permission_check'],
