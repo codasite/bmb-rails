@@ -317,7 +317,10 @@ class FCMTokenManager implements HooksInterface {
    * @throws TokenNotFoundException If device not found
    * @throws TokenDeleteException If deletion fails
    */
-  public function deregister_token(int $user_id, string $device_id): void {
+  public function delete_token_by_device(
+    int $user_id,
+    string $device_id
+  ): void {
     try {
       $token = $this->token_repo->get([
         'user_id' => $user_id,

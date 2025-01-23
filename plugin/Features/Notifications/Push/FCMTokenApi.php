@@ -249,7 +249,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
     WP_REST_Request $request
   ): WP_Error|WP_REST_Response {
     try {
-      $this->token_manager->deregister_token(
+      $this->token_manager->delete_token_by_device(
         get_current_user_id(),
         $request->get_param('device_id')
       );

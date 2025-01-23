@@ -185,4 +185,88 @@ class FCMTokenApiTest extends WPBB_UnitTestCase {
     $response = rest_do_request($request);
     $this->assertSame(200, $response->get_status());
   }
+
+  public function test_sync_token_with_minimal_data(): void {
+    $minimal_data = [
+      'token' => 'fcm-token-123',
+      'device_id' => 'device-123',
+      'platform' => 'ios',
+    ];
+
+    $request = new WP_REST_Request('POST', self::FCM_API_ENDPOINT . '/sync');
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($minimal_data));
+
+    $response = rest_do_request($request);
+    $data = $response->get_data();
+
+    $this->assertSame(201, $response->get_status());
+    $this->assertNull($data['device_name']);
+    $this->assertNull($data['app_version']);
+  }
+
+  public function test_sync_token_with_malformed_json(): void {
+    $request = new WP_REST_Request('POST', self::FCM_API_ENDPOINT . '/sync');
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body('{malformed json}');
+
+    $response = rest_do_request($request);
+    $this->assertSame(400, $response->get_status());
+  }
+
+  public function test_sync_token_with_empty_values(): void {
+    $data_with_empty = array_merge($this->valid_data, [
+      'device_name' => '',
+      'app_version' => '',
+    ]);
+
+    $request = new WP_REST_Request('POST', self::FCM_API_ENDPOINT . '/sync');
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($data_with_empty));
+
+    $response = rest_do_request($request);
+    $data = $response->get_data();
+
+    $this->assertSame(201, $response->get_status());
+    $this->assertNull($data['device_name']);
+    $this->assertNull($data['app_version']);
+  }
+
+  public function test_delete_token_with_malformed_json(): void {
+    $request = new WP_REST_Request('DELETE', self::FCM_API_ENDPOINT);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body('{malformed json}');
+
+    $response = rest_do_request($request);
+    $this->assertSame(400, $response->get_status());
+  }
+
+  public function test_delete_token_missing_device_id(): void {
+    $request = new WP_REST_Request('DELETE', self::FCM_API_ENDPOINT);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode([]));
+
+    $response = rest_do_request($request);
+    $this->assertSame(400, $response->get_status());
+  }
+
+  public function test_sync_token_with_very_long_values(): void {
+    $long_data = array_merge($this->valid_data, [
+      'device_name' => str_repeat('a', 256), // Exceeds varchar(255)
+      'app_version' => str_repeat('1', 51), // Exceeds varchar(50)
+    ]);
+
+    $request = new WP_REST_Request('POST', self::FCM_API_ENDPOINT . '/sync');
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $request->set_body(wp_json_encode($long_data));
+
+    $response = rest_do_request($request);
+    $this->assertSame(500, $response->get_status());
+  }
 }

@@ -57,8 +57,12 @@ class FCMToken {
     $this->device_id = $data['device_id'];
     $this->token = $data['token'];
     $this->device_type = $data['device_type'];
-    $this->device_name = $data['device_name'] ?? null;
-    $this->app_version = $data['app_version'] ?? null;
+    $this->device_name = !empty($data['device_name'])
+      ? $data['device_name']
+      : null;
+    $this->app_version = !empty($data['app_version'])
+      ? $data['app_version']
+      : null;
     $this->created_at = $data['created_at'] ?? current_time('mysql');
     $this->last_used_at = $data['last_used_at'] ?? current_time('mysql');
   }
