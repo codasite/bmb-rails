@@ -364,4 +364,77 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
     $this->assertCount(1, $remaining);
     $this->assertEquals($created1->id, $remaining[0]->id);
   }
+
+  public function test_partial_update_preserves_unchanged_fields(): void {
+    $token = new FCMToken([
+      'user_id' => $this->user->ID,
+      'device_id' => 'device123',
+      'token' => 'token1',
+      'device_type' => 'ios',
+      'device_name' => 'Original Name',
+      'app_version' => '1.0.0',
+    ]);
+    $created = $this->repo->add($token);
+
+    // Update only token
+    $updated = $this->repo->update_token($created->id, [
+      'token' => 'token2',
+    ]);
+
+    $this->assertEquals('token2', $updated->token);
+    $this->assertEquals('Original Name', $updated->device_name);
+    $this->assertEquals('1.0.0', $updated->app_version);
+  }
+
+  public function test_last_used_at_updates_on_token_update(): void {
+    global $wpdb;
+
+    $token = new FCMToken([
+      'user_id' => $this->user->ID,
+      'device_id' => 'device123',
+      'token' => 'token1',
+      'device_type' => 'ios',
+    ]);
+    $created = $this->repo->add($token);
+
+    // Manually set last_used_at to an old date
+    $table = FCMTokenRepo::table_name();
+    $wpdb->update(
+      $table,
+      ['last_used_at' => '2020-01-01 00:00:00'],
+      ['id' => $created->id]
+    );
+
+    // Update the token
+    $updated = $this->repo->update_token($created->id, [
+      'token' => 'token2',
+    ]);
+
+    // Get the current record
+    $current = $this->repo->get(['id' => $created->id, 'single' => true]);
+
+    // Verify last_used_at was updated to current time (within last minute)
+    $this->assertGreaterThan(
+      strtotime('-1 minute'),
+      strtotime($current->last_used_at)
+    );
+  }
+
+  public function test_sql_injection_prevention(): void {
+    $malicious_token = "'; DROP TABLE " . FCMTokenRepo::table_name() . '; --';
+
+    $token = new FCMToken([
+      'user_id' => $this->user->ID,
+      'device_id' => 'device123',
+      'token' => $malicious_token,
+      'device_type' => 'ios',
+    ]);
+
+    $created = $this->repo->add($token);
+
+    // Verify table still exists and token was stored properly
+    $result = $this->repo->get(['id' => $created->id, 'single' => true]);
+    $this->assertNotNull($result);
+    $this->assertEquals($malicious_token, $result->token);
+  }
 }
