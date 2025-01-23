@@ -137,18 +137,19 @@ class FCMTokenRepo implements CustomTableInterface {
     // Always update last_used
     $data['last_used_at'] = current_time('mysql');
 
-    $updated = $this->wpdb->update($this->table_name, $data, ['id' => $id]);
+    $this->wpdb->update($this->table_name, $data, ['id' => $id]);
     if ($this->wpdb->last_error) {
       throw new TokenDatabaseException(
         "Database error updating token: {$this->wpdb->last_error}"
       );
     }
 
-    if (!$updated) {
+    $token = $this->get(['id' => $id, 'single' => true]);
+    if (!$token) {
       return null;
     }
 
-    return $this->get(['id' => $id, 'single' => true]);
+    return $token;
   }
 
   /**
@@ -189,6 +190,22 @@ class FCMTokenRepo implements CustomTableInterface {
     }
 
     return $deleted;
+  }
+
+  /**
+   * Suppress database errors
+   *
+   * @return bool|null Previous value of show_errors
+   */
+  public function suppress_errors() {
+    return $this->wpdb->suppress_errors();
+  }
+
+  /**
+   * Show database errors
+   */
+  public function show_errors() {
+    $this->wpdb->show_errors();
   }
 
   /**

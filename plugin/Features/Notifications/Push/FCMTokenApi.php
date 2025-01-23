@@ -111,7 +111,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    */
   public function __construct($args = []) {
     $this->api_namespace = 'bmb/v1';
-    $this->api_rest_base = 'fcm';
+    $this->api_rest_base = 'fcm/token';
     $this->token_repo = $args['token_repo'] ?? new FCMTokenRepo();
     $this->token_manager = $args['token_manager'] ?? new FCMTokenManager();
   }
@@ -226,10 +226,10 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
       ],
     ]);
 
-    // Deregister device (keep this separate)
-    register_rest_route($namespace, "/{$base}/deregister", [
+    // Delete token
+    register_rest_route($namespace, "/{$base}", [
       'methods' => WP_REST_Server::DELETABLE,
-      'callback' => [$this, 'deregister_token'],
+      'callback' => [$this, 'delete_token'],
       'permission_callback' => [$this, 'permission_check'],
       'args' => [
         'device_id' => [
@@ -301,7 +301,7 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    * @param WP_REST_Request $request The deregistration request.
    * @return WP_REST_Response|WP_Error Response or error.
    */
-  public function deregister_token(
+  public function delete_token(
     WP_REST_Request $request
   ): WP_Error|WP_REST_Response {
     try {

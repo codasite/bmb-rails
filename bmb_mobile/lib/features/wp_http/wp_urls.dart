@@ -14,11 +14,9 @@ class WpUrls {
 
   // FCM API paths
   static const String _fcmBase = '/wp-json/bmb/v1/fcm';
-  static const String fcmRegisterPath = '$_fcmBase/register';
-  static const String fcmUpdatePath = '$_fcmBase/update';
-  static const String fcmDeregisterPath = '$_fcmBase/deregister';
-  static const String fcmStatusPath = '$_fcmBase/status';
-  static const String fcmSyncPath = '$_fcmBase/sync';
+  static const String _tokenBase = '$_fcmBase/token';
+  static const String fcmSyncPath = '$_tokenBase/sync';
+  static const String fcmTokenPath = _tokenBase;
 
   // Full URLs
   static String get loginUrl => baseUrl + loginPath;

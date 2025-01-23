@@ -40,9 +40,7 @@ class PushMessagingServiceTest extends TestCase {
 
   public function test_send_notification_handles_invalid_token(): void {
     $tokens = ['valid_token', 'invalid_token'];
-    $this->device_manager
-      ->method('get_target_device_tokens')
-      ->willReturn($tokens);
+    $this->device_manager->method('get_target_tokens')->willReturn($tokens);
 
     $this->device_manager
       ->expects($this->once())
@@ -66,9 +64,7 @@ class PushMessagingServiceTest extends TestCase {
 
   public function test_send_notification_handles_unknown_token(): void {
     $tokens = ['valid_token', 'unknown_token'];
-    $this->device_manager
-      ->method('get_target_device_tokens')
-      ->willReturn($tokens);
+    $this->device_manager->method('get_target_tokens')->willReturn($tokens);
 
     $this->device_manager
       ->expects($this->once())
@@ -92,9 +88,7 @@ class PushMessagingServiceTest extends TestCase {
 
   public function test_send_notification_handles_invalid_message(): void {
     $tokens = ['valid_token', 'token_with_invalid_message'];
-    $this->device_manager
-      ->method('get_target_device_tokens')
-      ->willReturn($tokens);
+    $this->device_manager->method('get_target_tokens')->willReturn($tokens);
 
     // Should not try to remove token for invalid message
     $this->device_manager
@@ -117,9 +111,7 @@ class PushMessagingServiceTest extends TestCase {
   }
 
   public function test_send_notification_includes_all_parameters(): void {
-    $this->device_manager
-      ->method('get_target_device_tokens')
-      ->willReturn(['token1']);
+    $this->device_manager->method('get_target_tokens')->willReturn(['token1']);
 
     $this->service->send_notification(
       NotificationType::TOURNAMENT_START,

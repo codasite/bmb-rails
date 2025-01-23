@@ -142,7 +142,7 @@ class FcmTokenManager {
       );
 
       final response = await _client.delete(
-        WpUrls.fcmDeregisterPath,
+        WpUrls.fcmTokenPath,
         body: {
           'device_id': deviceInfo.id,
         },
