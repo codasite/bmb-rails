@@ -3,7 +3,6 @@ namespace WStrategies\BMB\Features\Bracket\BracketResults;
 
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Includes\Domain\Play;
-use WStrategies\BMB\Includes\Domain\User;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\PickResult;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
@@ -17,9 +16,6 @@ use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
-use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
-use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 
 class BracketResultsNotificationService {
   protected BracketMatchService $match_service;

@@ -21,9 +21,9 @@ class PushMessagingServiceFactory {
       $messaging = new MessagingFake();
     }
 
-    $fcmDeviceManager =
+    $token_manager =
       $args['fcm_device_manager'] ??
       new FCMTokenManager(['token_repo' => new FCMTokenRepo()]);
-    return new PushMessagingService($messaging, $fcmDeviceManager);
+    return new PushMessagingService($messaging, $token_manager);
   }
 }
