@@ -28,15 +28,13 @@ use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundExceptio
  * 4. Deregistration: When user logs out or uninstalls app
  *
  * Available Endpoints:
- * - POST /bmb/v1/fcm/register - Initial device registration
- * - PUT /bmb/v1/fcm/update - Handle Firebase token refresh
- * - DELETE /bmb/v1/fcm/deregister - Clean up on logout/uninstall
- * - POST /bmb/v1/fcm/status - Keep token active
+ * - POST /bmb/v1/fcm/token/sync - Sync device token
+ * - DELETE /bmb/v1/fcm/token - Deregister device token
  *
  * Example Usage:
  * ```js
  * // 1. Register when app starts
- * await fetch('/wp-json/bmb/v1/fcm/register', {
+ * await fetch('/wp-json/bmb/v1/fcm/token/sync', {
  *   method: 'POST',
  *   headers: {
  *     'Content-Type': 'application/json',
@@ -51,35 +49,9 @@ use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundExceptio
  *   })
  * });
  *
- * // 2. Update when Firebase refreshes token
- * messaging.onTokenRefresh(() => {
- *   const newToken = await messaging.getToken();
- *   await fetch('/wp-json/bmb/v1/fcm/update', {
- *     method: 'PUT',
- *     // ... headers ...
- *     body: JSON.stringify({
- *       old_token: currentToken,
- *       new_token: newToken,
- *       device_id: deviceId
- *     })
- *   });
- * });
- *
- * // 3. Regular status updates
- * setInterval(async () => {
- *   await fetch('/wp-json/bmb/v1/fcm/status', {
- *     method: 'POST',
- *     // ... headers ...
- *     body: JSON.stringify({
- *       device_id: deviceId,
- *       status: 'active'
- *     })
- *   });
- * }, 24 * 60 * 60 * 1000); // Daily
- *
- * // 4. Cleanup on logout
+ * // 2. Deregister on logout
  * async function logout() {
- *   await fetch('/wp-json/bmb/v1/fcm/deregister', {
+ *   await fetch('/wp-json/bmb/v1/fcm/token', {
  *     method: 'DELETE',
  *     // ... headers ...
  *     body: JSON.stringify({ device_id: deviceId })
@@ -88,9 +60,6 @@ use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundExceptio
  * ```
  */
 class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
-  /** @var FCMTokenRepo Repository for token storage and retrieval */
-  private FCMTokenRepo $token_repo;
-
   /** @var FCMTokenManager Token manager for token operations */
   private FCMTokenManager $token_manager;
 
@@ -105,14 +74,12 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    *
    * @param array $args {
    *     Optional. Arguments for initializing the controller.
-   *     @type FCMTokenRepo $token_repo Token repository instance.
    *     @type FCMTokenManager $token_manager Token manager instance.
    * }
    */
   public function __construct($args = []) {
     $this->api_namespace = 'bmb/v1';
     $this->api_rest_base = 'fcm/token';
-    $this->token_repo = $args['token_repo'] ?? new FCMTokenRepo();
     $this->token_manager = $args['token_manager'] ?? new FCMTokenManager();
   }
 
@@ -130,12 +97,13 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    *
    * Endpoint Documentation:
    *
-   * 1. Register Device Token
-   *    Endpoint: POST /bmb/v1/fcm/register
+   * 1. Sync Token
+   *    Endpoint: POST /bmb/v1/fcm/token/sync
    *    When to Use:
-   *    - On first app install
+   *    - On first app install (creates new token)
+   *    - When Firebase refreshes the token (updates existing)
    *    - After user logs in
-   *    - If no existing token is found
+   *    - For periodic health checks
    *    Required Fields:
    *    - token (string): The FCM token from Firebase
    *    - device_id (string): Unique device identifier
@@ -143,64 +111,40 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
    *    Optional Fields:
    *    - device_name (string): Human-readable device name
    *    - app_version (string): Version of the mobile app
-   *    Returns: 201 Created with token details
+   *    Returns:
+   *    - 201 Created with token details (new token)
+   *    - 200 OK with token details (existing token)
    *    Notes:
    *    - Will update existing token if device_id exists
-   *    - Starts the token lifecycle
-   *
-   * 2. Update Token
-   *    Endpoint: PUT /bmb/v1/fcm/update
-   *    When to Use:
-   *    - When Firebase refreshes the token
-   *    - If token validation fails
-   *    Required Fields:
-   *    - old_token (string): Current FCM token
-   *    - new_token (string): New FCM token
-   *    - device_id (string): Device identifier
-   *    Returns: 200 OK with updated token or 404 Not Found
-   *    Notes:
-   *    - Maintains the same device registration
    *    - Updates last_used_at timestamp
+   *    - One device can only have one active token
    *
-   * 3. Deregister Device
-   *    Endpoint: DELETE /bmb/v1/fcm/deregister
+   * 2. Delete Token
+   *    Endpoint: DELETE /bmb/v1/fcm/token
    *    When to Use:
    *    - User logs out
    *    - App is uninstalled
    *    - User revokes push permission
    *    Required Fields:
    *    - device_id (string): Device to deregister
-   *    Returns: 200 OK on success or 404 Not Found
+   *    Returns:
+   *    - 200 OK on success
+   *    - 404 Not Found if token doesn't exist
    *    Notes:
    *    - Completely removes the token
    *    - User will need to re-register for pushes
    *
-   * 4. Update Status
-   *    Endpoint: POST /bmb/v1/fcm/status
-   *    When to Use:
-   *    - Periodic health check (e.g., daily)
-   *    - After app comes to foreground
-   *    - To prevent token expiration
-   *    Required Fields:
-   *    - device_id (string): Device identifier
-   *    - status (string): Must be 'active'
-   *    Returns: 200 OK on success or 404 Not Found
-   *    Notes:
-   *    - Updates last_used_at timestamp
-   *    - Prevents cleanup of active tokens
-   *    - Should be called regularly
-   *
    * Token Cleanup:
    * - Tokens inactive for 30+ days are automatically removed
    * - User tokens are removed on account deletion
-   * - One device can only have one active token
+   * - Tokens must be unique across all users
    */
   public function register_routes(): void {
     $namespace = $this->api_namespace;
     $base = $this->api_rest_base;
 
     // Sync token
-    register_rest_route($namespace, "/{$base}/sync", [
+    register_rest_route($namespace, "/{$base}/token/sync", [
       'methods' => WP_REST_Server::CREATABLE,
       'callback' => [$this, 'sync_token'],
       'permission_callback' => [$this, 'permission_check'],
@@ -241,11 +185,11 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
-   * Syncs device token - registers new device, updates token, or refreshes status.
+   * Syncs device token - registers new device or updates existing.
    *
    * Example Request:
    * ```json
-   * POST /wp-json/bmb/v1/fcm/sync
+   * POST /wp-json/bmb/v1/fcm/token/sync
    * {
    *   "token": "fcm-token-123",
    *   "device_id": "device-123",
@@ -288,17 +232,17 @@ class FCMTokenApi extends WP_REST_Controller implements HooksInterface {
   }
 
   /**
-   * Deregisters a device token.
+   * Deletes a device token.
    *
    * Example Request:
    * ```json
-   * DELETE /wp-json/bmb/v1/fcm/deregister
+   * DELETE /wp-json/bmb/v1/fcm/token
    * {
    *   "device_id": "device-123"
    * }
    * ```
    *
-   * @param WP_REST_Request $request The deregistration request.
+   * @param WP_REST_Request $request The deletion request.
    * @return WP_REST_Response|WP_Error Response or error.
    */
   public function delete_token(
