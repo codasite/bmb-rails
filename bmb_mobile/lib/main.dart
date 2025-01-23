@@ -19,6 +19,8 @@ import 'package:bmb_mobile/features/wp_auth/domain/services/wp_basic_auth.dart';
 import 'package:bmb_mobile/features/wp_auth/domain/services/wp_cookie_auth.dart';
 import 'package:bmb_mobile/features/wp_auth/domain/services/wp_auth.dart';
 import 'package:bmb_mobile/features/notifications/domain/services/fcm_token_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +54,12 @@ void main() async {
   );
   final cookieAuth = WpCookieAuth(cookieManager);
   final auth = WpAuth(cookieAuth, basicAuth);
-  final fcmManager = FcmTokenManager(passwordClient);
+  final prefs = await SharedPreferences.getInstance();
+  final fcmManager = FcmTokenManager(
+    passwordClient,
+    FirebaseMessaging.instance,
+    prefs,
+  );
   await auth.refreshAuthStatus();
   final httpProvider = http.WpHttpClientProvider(
     credentialManager: credentialManager,

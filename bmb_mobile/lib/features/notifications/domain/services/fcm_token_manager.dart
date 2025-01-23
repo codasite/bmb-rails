@@ -8,10 +8,15 @@ import 'package:bmb_mobile/core/utils/device_info.dart';
 
 class FcmTokenManager {
   static const String _tokenKey = 'fcm_token';
-  final _messaging = FirebaseMessaging.instance;
+  final FirebaseMessaging _messaging;
   final WpHttpClient _client;
+  final SharedPreferences _prefs;
 
-  FcmTokenManager(this._client);
+  FcmTokenManager(
+    this._client,
+    this._messaging,
+    this._prefs,
+  );
 
   /// Initialize FCM and request permissions
   Future<void> initialize() async {
@@ -71,8 +76,7 @@ class FcmTokenManager {
 
       if (response?.statusCode == 200 || response?.statusCode == 201) {
         await AppLogger.logMessage('FCM token synced successfully');
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString(_tokenKey, token);
+        await _prefs.setString(_tokenKey, token);
         return true;
       }
 
@@ -96,8 +100,7 @@ class FcmTokenManager {
 
   Future<bool> updateStatus() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString(_tokenKey);
+      final token = _prefs.getString(_tokenKey);
 
       if (token == null) {
         await AppLogger.logMessage(
@@ -132,7 +135,6 @@ class FcmTokenManager {
 
   Future<void> deregisterToken() async {
     await AppLogger.logMessage('Starting FCM token deregistration');
-    final prefs = await SharedPreferences.getInstance();
     try {
       final deviceInfo = await DeviceInfo.getDeviceInfo();
 
@@ -167,7 +169,7 @@ class FcmTokenManager {
       );
     } finally {
       await AppLogger.logMessage('Removing FCM token from SharedPreferences');
-      await prefs.remove(_tokenKey);
+      await _prefs.remove(_tokenKey);
     }
   }
 }
