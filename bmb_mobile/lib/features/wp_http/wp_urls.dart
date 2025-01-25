@@ -1,5 +1,6 @@
 class WpUrls {
-  static const String baseUrl = 'http://localhost:8008';
+  // static const String baseUrl = 'http://localhost:8008';
+  static const String baseUrl = 'http://192.168.1.77:8008';
 
   // WordPress API paths
   static const String _wpApiBase = '/wp-json/wp/v2';

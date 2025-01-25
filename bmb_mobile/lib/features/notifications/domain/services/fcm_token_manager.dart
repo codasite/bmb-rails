@@ -18,19 +18,20 @@ class FcmTokenManager {
     this._prefs,
   );
 
+  Future<void> requestPermissions() async {
+    await AppLogger.logMessage("Requesting FCM permissions");
+    await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    await AppLogger.logMessage('FCM permissions requested successfully');
+  }
+
   /// Initialize FCM and request permissions
   Future<void> initialize() async {
     await AppLogger.logMessage('Initializing FCM');
     try {
-      await AppLogger.logMessage("Requesting FCM permissions");
-      await _messaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-
-      await AppLogger.logMessage('FCM permissions requested successfully');
-
       await AppLogger.logMessage('Setting up FCM token refresh listener');
       _messaging.onTokenRefresh.listen(_handleTokenRefresh);
 

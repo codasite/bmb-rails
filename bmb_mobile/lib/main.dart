@@ -60,6 +60,7 @@ void main() async {
     FirebaseMessaging.instance,
     prefs,
   );
+  await fcmManager.requestPermissions();
   await auth.refreshAuthStatus();
   final httpProvider = http.WpHttpClientProvider(
     credentialManager: credentialManager,
