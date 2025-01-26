@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
-use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationSubscription;
 use WStrategies\BMB\Includes\Domain\Bracket;
 
 class UpcomingBracketMessageFormatter {

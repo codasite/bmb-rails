@@ -2,10 +2,10 @@
 namespace Includes\Domain;
 
 use WP_Mock\Tools\TestCase;
-use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 
-class NotificationTest extends TestCase {
+class NotificationSubscriptionTest extends TestCase {
   public function testConstructor() {
     $data = [
       'id' => '1',
@@ -14,9 +14,9 @@ class NotificationTest extends TestCase {
       'notification_type' => 'bracket_upcoming',
     ];
 
-    $notification = new Notification($data);
+    $notification = new NotificationSubscription($data);
 
-    $this->assertInstanceOf(Notification::class, $notification);
+    $this->assertInstanceOf(NotificationSubscription::class, $notification);
     $this->assertSame(1, $notification->id);
     $this->assertSame(2, $notification->user_id);
     $this->assertSame(3, $notification->post_id);
@@ -33,9 +33,9 @@ class NotificationTest extends TestCase {
       'notification_type' => 'bracket_upcoming',
     ];
 
-    $notification = new Notification($data);
+    $notification = new NotificationSubscription($data);
 
-    $this->assertInstanceOf(Notification::class, $notification);
+    $this->assertInstanceOf(NotificationSubscription::class, $notification);
     $this->assertNull($notification->id);
     $this->assertSame(2, $notification->user_id);
     $this->assertSame(3, $notification->post_id);

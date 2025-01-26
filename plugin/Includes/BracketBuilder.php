@@ -21,7 +21,7 @@ use WStrategies\BMB\Includes\Hooks\AnonymousUserHooks;
 use WStrategies\BMB\Includes\Hooks\EnqueueScriptsHooks;
 use WStrategies\BMB\Includes\Controllers\BracketPlayApi;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
-use WStrategies\BMB\Includes\Controllers\NotificationApi;
+use WStrategies\BMB\Includes\Controllers\NotificationSubscriptionApi;
 use WStrategies\BMB\Includes\Hooks\NotificationCronHooks;
 use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenApi;
@@ -121,7 +121,7 @@ class BracketBuilder {
       new BracketApi(),
       new VotingBracketApi(),
       new BracketPlayApi(),
-      new NotificationApi(),
+      new NotificationSubscriptionApi(),
       new StripePaymentsApi(),
       new Permissions(),
       new UpcomingBracketHooks(),

@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Features\Notifications;
 
-class Notification {
+class NotificationSubscription {
   public int|null $id;
   public int $user_id;
   public int $post_id;

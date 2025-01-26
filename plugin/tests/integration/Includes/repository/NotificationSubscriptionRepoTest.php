@@ -1,25 +1,25 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\repository;
 
-use WStrategies\BMB\Features\Notifications\Notification;
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class NotificationRepoTest extends WPBB_UnitTestCase {
-  private NotificationRepo $notification_repo;
+class NotificationSubscriptionRepoTest extends WPBB_UnitTestCase {
+  private NotificationSubscriptionRepo $notification_sub_repo;
 
   public function set_up(): void {
     parent::set_up();
 
-    $this->notification_repo = new NotificationRepo();
+    $this->notification_sub_repo = new NotificationSubscriptionRepo();
   }
 
   public function test_add() {
     $user = self::factory()->user->create_and_get();
     $post = $this->create_post();
-    $notification = $this->notification_repo->add(
-      new Notification([
+    $notification = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user->ID,
         'post_id' => $post->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
@@ -37,18 +37,21 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   public function test_get_single() {
     $user = self::factory()->user->create_and_get();
     $post = $this->create_post();
-    $notification = $this->notification_repo->add(
-      new Notification([
+    $notification = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user->ID,
         'post_id' => $post->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $found_notification = $this->notification_repo->get([
+    $found_notification = $this->notification_sub_repo->get([
       'id' => $notification->id,
       'single' => true,
     ]);
-    $this->assertInstanceOf(Notification::class, $found_notification);
+    $this->assertInstanceOf(
+      NotificationSubscription::class,
+      $found_notification
+    );
     $this->assertSame($notification->id, $found_notification->id);
     $this->assertSame($user->ID, $found_notification->user_id);
     $this->assertSame($post->ID, $found_notification->post_id);
@@ -62,25 +65,28 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     $user1 = self::factory()->user->create_and_get();
     $user2 = self::factory()->user->create_and_get();
     $post = $this->create_post();
-    $notification1 = $this->notification_repo->add(
-      new Notification([
+    $notification1 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user1->ID,
         'post_id' => $post->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $notification2 = $this->notification_repo->add(
-      new Notification([
+    $notification2 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user2->ID,
         'post_id' => $post->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $found_notifications = $this->notification_repo->get([
+    $found_notifications = $this->notification_sub_repo->get([
       'user_id' => $user1->ID,
     ]);
     $this->assertCount(1, $found_notifications);
-    $this->assertInstanceOf(Notification::class, $found_notifications[0]);
+    $this->assertInstanceOf(
+      NotificationSubscription::class,
+      $found_notifications[0]
+    );
     $this->assertSame($notification1->id, $found_notifications[0]->id);
     $this->assertSame($user1->ID, $found_notifications[0]->user_id);
     $this->assertSame($post->ID, $found_notifications[0]->post_id);
@@ -93,26 +99,29 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     $user = self::factory()->user->create_and_get();
     $post1 = $this->create_post();
     $post2 = $this->create_post();
-    $notification1 = $this->notification_repo->add(
-      new Notification([
+    $notification1 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user->ID,
         'post_id' => $post1->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $notification2 = $this->notification_repo->add(
-      new Notification([
+    $notification2 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user->ID,
         'post_id' => $post2->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $found_notifications = $this->notification_repo->get_by_post_id(
+    $found_notifications = $this->notification_sub_repo->get_by_post_id(
       $post1->ID,
       NotificationType::BRACKET_UPCOMING
     );
     $this->assertCount(1, $found_notifications);
-    $this->assertInstanceOf(Notification::class, $found_notifications[0]);
+    $this->assertInstanceOf(
+      NotificationSubscription::class,
+      $found_notifications[0]
+    );
     $this->assertSame($notification1->id, $found_notifications[0]->id);
     $this->assertSame($user->ID, $found_notifications[0]->user_id);
     $this->assertSame($post1->ID, $found_notifications[0]->post_id);
@@ -126,34 +135,37 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     $user2 = self::factory()->user->create_and_get();
     $post1 = $this->create_post();
     $post2 = $this->create_post();
-    $notification1 = $this->notification_repo->add(
-      new Notification([
+    $notification1 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user1->ID,
         'post_id' => $post1->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $notification2 = $this->notification_repo->add(
-      new Notification([
+    $notification2 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user1->ID,
         'post_id' => $post2->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $notification3 = $this->notification_repo->add(
-      new Notification([
+    $notification3 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user2->ID,
         'post_id' => $post2->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $found_notifications = $this->notification_repo->get([
+    $found_notifications = $this->notification_sub_repo->get([
       'user_id' => $user1->ID,
       'notification_type' => NotificationType::BRACKET_UPCOMING,
       'post_id' => $post1->ID,
     ]);
     $this->assertCount(1, $found_notifications);
-    $this->assertInstanceOf(Notification::class, $found_notifications[0]);
+    $this->assertInstanceOf(
+      NotificationSubscription::class,
+      $found_notifications[0]
+    );
     $this->assertSame($notification1->id, $found_notifications[0]->id);
     $this->assertSame($user1->ID, $found_notifications[0]->user_id);
     $this->assertSame($post1->ID, $found_notifications[0]->post_id);
@@ -168,33 +180,36 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     $user2 = self::factory()->user->create_and_get();
     $post1 = $this->create_post();
     $post2 = $this->create_post();
-    $notification1 = $this->notification_repo->add(
-      new Notification([
+    $notification1 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user1->ID,
         'post_id' => $post1->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $notification2 = $this->notification_repo->add(
-      new Notification([
+    $notification2 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user2->ID,
         'post_id' => $post1->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $notification3 = $this->notification_repo->add(
-      new Notification([
+    $notification3 = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user1->ID,
         'post_id' => $post2->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $found_notifications = $this->notification_repo->get([
+    $found_notifications = $this->notification_sub_repo->get([
       'notification_type' => NotificationType::BRACKET_UPCOMING,
       'post_id' => $post1->ID,
     ]);
     $this->assertCount(2, $found_notifications);
-    $this->assertInstanceOf(Notification::class, $found_notifications[0]);
+    $this->assertInstanceOf(
+      NotificationSubscription::class,
+      $found_notifications[0]
+    );
     $this->assertSame($notification1->id, $found_notifications[0]->id);
     $this->assertSame($user1->ID, $found_notifications[0]->user_id);
     $this->assertSame($post1->ID, $found_notifications[0]->post_id);
@@ -202,7 +217,10 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
       NotificationType::BRACKET_UPCOMING,
       $found_notifications[0]->notification_type
     );
-    $this->assertInstanceOf(Notification::class, $found_notifications[1]);
+    $this->assertInstanceOf(
+      NotificationSubscription::class,
+      $found_notifications[1]
+    );
     $this->assertSame($notification2->id, $found_notifications[1]->id);
     $this->assertSame($user2->ID, $found_notifications[1]->user_id);
     $this->assertSame($post1->ID, $found_notifications[1]->post_id);
@@ -215,15 +233,15 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   public function test_delete() {
     $user = self::factory()->user->create_and_get();
     $post = $this->create_post();
-    $notification = $this->notification_repo->add(
-      new Notification([
+    $notification = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user->ID,
         'post_id' => $post->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $this->notification_repo->delete($notification->id);
-    $found_notification = $this->notification_repo->get([
+    $this->notification_sub_repo->delete($notification->id);
+    $found_notification = $this->notification_sub_repo->get([
       'id' => $notification->id,
       'single' => true,
     ]);
@@ -233,15 +251,15 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
   public function test_create_duplicate_notification() {
     $user = self::factory()->user->create_and_get();
     $post = $this->create_post();
-    $notification = $this->notification_repo->add(
-      new Notification([
+    $notification = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user->ID,
         'post_id' => $post->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
       ])
     );
-    $duplicate = $this->notification_repo->add(
-      new Notification([
+    $duplicate = $this->notification_sub_repo->add(
+      new NotificationSubscription([
         'user_id' => $user->ID,
         'post_id' => $post->ID,
         'notification_type' => NotificationType::BRACKET_UPCOMING,

@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\tests\integration\Includes\Hooks;
 
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
@@ -155,8 +155,8 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
     ]);
     $hooks->create_upcoming_bracket_notification_on_login('test_login', $user);
 
-    $notification_repo = new NotificationRepo();
-    $notifications = $notification_repo->get([
+    $notification_sub_repo = new NotificationSubscriptionRepo();
+    $notifications = $notification_sub_repo->get([
       'user_id' => $user_id,
       'bracket_id' => $bracket->id,
     ]);
@@ -189,8 +189,8 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
     ]);
     $hooks->create_upcoming_bracket_notification_on_register($user_id);
 
-    $notification_repo = new NotificationRepo();
-    $notifications = $notification_repo->get([
+    $notification_sub_repo = new NotificationSubscriptionRepo();
+    $notifications = $notification_sub_repo->get([
       'user_id' => $user_id,
       'bracket_id' => $bracket->id,
     ]);
@@ -222,7 +222,9 @@ class UpcomingBracketHooksTest extends WPBB_UnitTestCase {
     ]);
     $hooks->create_upcoming_bracket_notification($user_id);
 
-    $notification_repo_mock = $this->createMock(NotificationRepo::class);
+    $notification_repo_mock = $this->createMock(
+      NotificationSubscriptionRepo::class
+    );
     $notification_repo_mock->expects($this->never())->method('add');
   }
 

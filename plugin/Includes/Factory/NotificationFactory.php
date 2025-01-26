@@ -1,17 +1,17 @@
 <?php
 
 namespace WStrategies\BMB\Includes\Factory;
-use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 
 class NotificationFactory {
-  public static function create($data = []): Notification {
+  public static function create($data = []): NotificationSubscription {
     $errors = self::validate($data);
     if (count($errors)) {
       throw new ValidationException(implode(', ', $errors));
     }
-    return new Notification($data);
+    return new NotificationSubscription($data);
   }
 
   public static function validate($data = []): array {

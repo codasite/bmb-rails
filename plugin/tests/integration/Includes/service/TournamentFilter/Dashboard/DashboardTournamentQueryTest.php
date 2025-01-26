@@ -1,8 +1,8 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\TournamentFilter\Dashboard;
 
-use WStrategies\BMB\Features\Notifications\Notification;
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
@@ -335,13 +335,13 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
       'bracket_id' => $complete_tourney->id,
       'author' => $user->ID,
     ]);
-    $notification_repo = new NotificationRepo();
-    $notification = new Notification([
+    $notification_sub_repo = new NotificationSubscriptionRepo();
+    $notification = new NotificationSubscription([
       'user_id' => $user->ID,
       'post_id' => $upcoming_tourney->id,
       'notification_type' => NotificationType::BRACKET_UPCOMING,
     ]);
-    $notification_repo->add($notification);
+    $notification_sub_repo->add($notification);
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();

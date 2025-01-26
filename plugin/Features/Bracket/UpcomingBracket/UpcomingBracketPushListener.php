@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
-use WStrategies\BMB\Features\Notifications\Notification;
+use WStrategies\BMB\Features\Notifications\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
@@ -22,7 +22,7 @@ class UpcomingBracketPushListener implements
   public function notify(
     User $user,
     Bracket $bracket,
-    Notification $notification
+    NotificationSubscription $notification
   ): void {
     $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
 

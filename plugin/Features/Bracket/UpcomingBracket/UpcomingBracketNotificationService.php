@@ -3,13 +3,13 @@
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\UserRepo;
 
 class UpcomingBracketNotificationService {
-  private NotificationRepo $notification_repo;
+  private NotificationSubscriptionRepo $notification_sub_repo;
   private BracketRepo $bracket_repo;
   private readonly UserRepo $user_repo;
 
@@ -19,8 +19,8 @@ class UpcomingBracketNotificationService {
   private array $listeners = [];
 
   public function __construct($args = []) {
-    $this->notification_repo =
-      $args['notification_repo'] ?? new NotificationRepo();
+    $this->notification_sub_repo =
+      $args['notification_sub_repo'] ?? new NotificationSubscriptionRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->user_repo = $args['user_repo'] ?? new UserRepo();
     $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
@@ -37,7 +37,7 @@ class UpcomingBracketNotificationService {
   }
 
   public function notify_upcoming_bracket_live(int $bracket_post_id): void {
-    $notifications = $this->notification_repo->get([
+    $notifications = $this->notification_sub_repo->get([
       'post_id' => $bracket_post_id,
       'notification_type' => NotificationType::BRACKET_UPCOMING,
     ]);

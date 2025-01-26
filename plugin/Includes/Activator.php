@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
 use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
@@ -45,7 +45,7 @@ class Activator {
     BracketMatchRepo::create_table();
     PickRepo::create_table();
     BracketResultsRepo::create_table();
-    NotificationRepo::create_table();
+    NotificationSubscriptionRepo::create_table();
     FCMTokenRepo::create_table();
   }
 
@@ -57,7 +57,7 @@ class Activator {
     PickRepo::drop_table();
     BracketMatchRepo::drop_table();
     TeamRepo::drop_table();
-    NotificationRepo::drop_table();
+    NotificationSubscriptionRepo::drop_table();
     PlayRepo::drop_table();
     BracketRepo::drop_table();
     FCMTokenRepo::drop_table();

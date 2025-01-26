@@ -7,7 +7,7 @@ use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\CustomTableInterface;
 use WStrategies\BMB\Includes\Repository\CustomTableNames;
 
-class NotificationRepo implements CustomTableInterface {
+class NotificationSubscriptionRepo implements CustomTableInterface {
   private \wpdb $wpdb;
 
   function __construct() {
@@ -85,7 +85,9 @@ class NotificationRepo implements CustomTableInterface {
     return $notification->id ?? null;
   }
 
-  public function add(Notification $notification): ?Notification {
+  public function add(
+    NotificationSubscription $notification
+  ): ?NotificationSubscription {
     // first, check to see if the notification already exists
     $existing = $this->get([
       'user_id' => $notification->user_id,

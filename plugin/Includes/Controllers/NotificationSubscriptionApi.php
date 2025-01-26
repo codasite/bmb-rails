@@ -6,17 +6,18 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 
-class NotificationApi extends WP_REST_Controller implements HooksInterface {
+class NotificationSubscriptionApi extends WP_REST_Controller implements
+  HooksInterface {
   /**
-   * @var NotificationRepo
+   * @var NotificationSubscriptionRepo
    */
-  private $notification_repo;
+  private $notification_sub_repo;
 
   /**
    * @var string
@@ -34,8 +35,8 @@ class NotificationApi extends WP_REST_Controller implements HooksInterface {
   public function __construct($args = []) {
     $this->namespace = 'wp-bracket-builder/v1';
     $this->rest_base = 'notifications';
-    $this->notification_repo =
-      $args['notification_repo'] ?? new NotificationRepo();
+    $this->notification_sub_repo =
+      $args['notification_sub_repo'] ?? new NotificationSubscriptionRepo();
   }
 
   public function load(Loader $loader): void {
@@ -113,7 +114,7 @@ class NotificationApi extends WP_REST_Controller implements HooksInterface {
    * @return WP_Error|WP_REST_Response
    */
   public function get_items($request): WP_Error|WP_REST_Response {
-    $notifications = $this->notification_repo->get();
+    $notifications = $this->notification_sub_repo->get();
     return new WP_REST_Response($notifications, 200);
   }
 
@@ -126,7 +127,7 @@ class NotificationApi extends WP_REST_Controller implements HooksInterface {
   public function get_item($request): WP_Error|WP_REST_Response {
     // get id from request
     $id = $request->get_param('item_id');
-    $notification = $this->notification_repo->get([
+    $notification = $this->notification_sub_repo->get([
       'id' => $id,
       'single' => true,
     ]);
@@ -152,7 +153,7 @@ class NotificationApi extends WP_REST_Controller implements HooksInterface {
     }
     try {
       $notification = NotificationFactory::create($params);
-      $saved = $this->notification_repo->add($notification);
+      $saved = $this->notification_sub_repo->add($notification);
       return new WP_REST_Response($saved, 201);
     } catch (ValidationException $e) {
       return new WP_Error('validation-error', $e->getMessage(), [
@@ -171,7 +172,7 @@ class NotificationApi extends WP_REST_Controller implements HooksInterface {
     // get id from request
     $id = $request->get_param('item_id');
     if (current_user_can('wpbb_delete_notification', $id)) {
-      $deleted = $this->notification_repo->delete($id);
+      $deleted = $this->notification_sub_repo->delete($id);
       return new WP_REST_Response($deleted, 200);
     } else {
       return new WP_Error(
