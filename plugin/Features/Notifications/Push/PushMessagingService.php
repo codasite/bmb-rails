@@ -6,7 +6,7 @@ use Kreait\Firebase\Contract\Messaging;
 use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Messaging\MulticastSendReport;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Utils;
 
 class PushMessagingService {

@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
-use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
 use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;

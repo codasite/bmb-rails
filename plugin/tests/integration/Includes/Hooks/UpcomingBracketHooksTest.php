@@ -2,8 +2,8 @@
 namespace WStrategies\BMB\tests\integration\Includes\Hooks;
 
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
-use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\UpcomingBracketHooks;
 use WStrategies\BMB\Features\Bracket\UpcomingBracket\UpcomingBracketNotificationService;

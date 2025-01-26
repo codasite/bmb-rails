@@ -6,7 +6,7 @@ use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
-use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;

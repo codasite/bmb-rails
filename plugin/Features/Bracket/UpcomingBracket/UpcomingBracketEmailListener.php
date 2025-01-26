@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
-use WStrategies\BMB\Features\Notifications\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\User;
 

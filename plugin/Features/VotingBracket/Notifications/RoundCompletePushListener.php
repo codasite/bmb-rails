@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;

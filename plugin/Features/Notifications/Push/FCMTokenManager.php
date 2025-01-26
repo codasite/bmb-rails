@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Features\Notifications\Push;
 
 use WStrategies\BMB\Includes\Utils;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenRegistrationException;

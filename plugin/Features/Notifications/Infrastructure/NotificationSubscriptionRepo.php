@@ -1,7 +1,9 @@
 <?php
 
-namespace WStrategies\BMB\Features\Notifications;
+namespace WStrategies\BMB\Features\Notifications\Infrastructure;
 
+use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Factory\NotificationFactory;
 use WStrategies\BMB\Includes\Repository\CustomTableInterface;

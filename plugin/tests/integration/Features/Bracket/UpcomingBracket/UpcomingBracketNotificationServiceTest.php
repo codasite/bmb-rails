@@ -2,7 +2,7 @@
 namespace WStrategies\BMB\tests\integration\Features\Bracket\UpcomingBracket;
 
 use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Bracket\UpcomingBracket\UpcomingBracketNotificationService;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 

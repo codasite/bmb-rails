@@ -9,7 +9,7 @@ use Kreait\Firebase\Messaging\Notification;
 use Kreait\Firebase\Messaging\MessageTarget;
 use PHPUnit\Framework\MockObject\MockObject;
 use Kreait\Firebase\Messaging\MulticastSendReport;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Features\Notifications\Push\Fakes\MessagingFake;
 use WStrategies\BMB\Features\Notifications\Push\Fakes\SendReportFake;

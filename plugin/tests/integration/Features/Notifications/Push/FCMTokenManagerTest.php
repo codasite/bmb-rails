@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Tests\Integration\Features\Notifications\Push;
 
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Push\FCMToken;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;

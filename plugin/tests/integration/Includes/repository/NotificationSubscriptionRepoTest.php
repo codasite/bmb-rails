@@ -1,9 +1,9 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\repository;
 
-use WStrategies\BMB\Features\Notifications\NotificationSubscription;
-use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class NotificationSubscriptionRepoTest extends WPBB_UnitTestCase {

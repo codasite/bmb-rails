@@ -3,8 +3,8 @@
 namespace WStrategies\BMB\Public\Partials\shared;
 
 use WP_Query;
-use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 

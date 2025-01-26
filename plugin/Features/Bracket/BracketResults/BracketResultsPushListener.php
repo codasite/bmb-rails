@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Features\Bracket\BracketResults;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Domain\User;
 use WStrategies\BMB\Includes\Domain\PickResult;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsMessageFormatter;

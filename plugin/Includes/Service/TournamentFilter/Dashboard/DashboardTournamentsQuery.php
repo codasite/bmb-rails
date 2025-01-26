@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard;
 
 use WP_Query;
-use WStrategies\BMB\Features\Notifications\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;

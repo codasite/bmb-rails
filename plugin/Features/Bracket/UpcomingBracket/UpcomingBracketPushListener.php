@@ -2,8 +2,8 @@
 
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
-use WStrategies\BMB\Features\Notifications\NotificationSubscription;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;

@@ -2,8 +2,8 @@
 namespace Includes\Domain;
 
 use WP_Mock\Tools\TestCase;
-use WStrategies\BMB\Features\Notifications\NotificationSubscription;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 
 class NotificationSubscriptionTest extends TestCase {
   public function testConstructor() {

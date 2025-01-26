@@ -1,6 +1,6 @@
 <?php
 
-namespace WStrategies\BMB\Features\Notifications;
+namespace WStrategies\BMB\Features\Notifications\Domain;
 
 class NotificationSubscription {
   public int|null $id;

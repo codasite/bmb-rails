@@ -1,8 +1,8 @@
 <?php
 
 namespace WStrategies\BMB\Includes\Factory;
-use WStrategies\BMB\Features\Notifications\NotificationSubscription;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 
 class NotificationFactory {
