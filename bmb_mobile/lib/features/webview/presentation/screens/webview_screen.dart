@@ -14,6 +14,7 @@ import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_drawer.dart';
 import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_bottom_nav_bar.dart';
 import 'dart:async';
+import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -79,6 +80,19 @@ class _WebViewScreenState extends State<WebViewScreen> {
     final String configuredJs =
         js.replaceAll('REFRESH_THRESHOLD', _refreshThreshold.toString());
     await controller.runJavaScript(configuredJs);
+  }
+
+  void _handleNotificationNavigation() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NotificationScreen(),
+      ),
+    );
+
+    if (result != null && result is String) {
+      _loadUrl(result);
+    }
   }
 
   @override
@@ -233,6 +247,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     },
                     color: Colors.white,
                   ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.notifications_outlined,
+                    color: Colors.white,
+                  ),
+                  onPressed: _handleNotificationNavigation,
+                ),
               ],
             ),
             drawer: BmbDrawer(
