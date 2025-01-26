@@ -1,5 +1,5 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
-import 'package:bmb_mobile/features/notifications/data/models/notification.dart';
+import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
@@ -13,15 +13,15 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   // Test data - replace with real data later
-  final List<NotificationModel> notifications = [
-    NotificationModel(
+  final List<BmbNotification> notifications = [
+    BmbNotification(
       id: '1',
       title: 'New Tournament Available',
       message: 'March Madness 2024 brackets are now open for predictions!',
       timestamp: DateTime.now().subtract(const Duration(hours: 2)),
       link: '/dashboard/tournaments',
     ),
-    NotificationModel(
+    BmbNotification(
       id: '2',
       title: 'Bracket Update',
       message: 'Your bracket "Championship Dreams" has been updated.',
@@ -29,7 +29,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       isRead: true,
       link: '/dashboard/brackets',
     ),
-    NotificationModel(
+    BmbNotification(
       id: '3',
       title: 'Tournament Starting Soon',
       message: 'The tournament "Spring Classic" starts in 24 hours.',

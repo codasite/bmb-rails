@@ -1,4 +1,4 @@
-class NotificationModel {
+class BmbNotification {
   final String id;
   final String title;
   final String message;
@@ -6,7 +6,7 @@ class NotificationModel {
   final bool isRead;
   final String? link;
 
-  NotificationModel({
+  BmbNotification({
     required this.id,
     required this.title,
     required this.message,
@@ -15,8 +15,8 @@ class NotificationModel {
     this.link,
   });
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) {
-    return NotificationModel(
+  factory BmbNotification.fromJson(Map<String, dynamic> json) {
+    return BmbNotification(
       id: json['id'],
       title: json['title'],
       message: json['message'],
