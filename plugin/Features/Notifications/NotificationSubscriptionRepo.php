@@ -119,7 +119,7 @@ class NotificationSubscriptionRepo implements CustomTableInterface {
   }
 
   public static function table_name(): string {
-    return CustomTableNames::table_name('notifications');
+    return CustomTableNames::table_name('notification_subscriptions');
   }
 
   public static function create_table(): void {
