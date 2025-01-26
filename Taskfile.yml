@@ -105,12 +105,12 @@ tasks:
   wp:db:dump:
     desc: Dump the database into the mariadb init folder
     cmds:
-      - docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
+      - docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
 
   wp:db:query:
     desc: Run SQL query
     cmds:
-      - docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress -e "{{.CLI_ARGS}}"'
+      - docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$MYSQL_ROOT_PASSWORD" wordpress -e "{{.CLI_ARGS}}"'
 
   wp:bash:
     desc: Open a bash shell in the wordpress container
