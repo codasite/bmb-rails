@@ -6,7 +6,7 @@ use WP_Error;
 use WP_UnitTest_Factory_For_Thing;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
-use WStrategies\BMB\Includes\Factory\NotificationFactory;
+use WStrategies\BMB\Includes\Factory\NotificationSubscriptionFactory;
 
 /**
  * Class WPBB_UnitTest_Factory_For_Play
@@ -26,7 +26,7 @@ class NotificationSubscriptionTestFactory extends
 
   function create_object($args): WP_Error|int|NotificationSubscription|null {
     $notification = $this->notification_sub_repo->add(
-      NotificationFactory::create($args)
+      NotificationSubscriptionFactory::create($args)
     );
     return $notification;
   }

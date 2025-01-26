@@ -8,7 +8,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Includes\Domain\ValidationException;
-use WStrategies\BMB\Includes\Factory\NotificationFactory;
+use WStrategies\BMB\Includes\Factory\NotificationSubscriptionFactory;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 
@@ -152,7 +152,7 @@ class NotificationSubscriptionApi extends WP_REST_Controller implements
       $params['user_id'] = get_current_user_id();
     }
     try {
-      $notification = NotificationFactory::create($params);
+      $notification = NotificationSubscriptionFactory::create($params);
       $saved = $this->notification_sub_repo->add($notification);
       return new WP_REST_Response($saved, 201);
     } catch (ValidationException $e) {

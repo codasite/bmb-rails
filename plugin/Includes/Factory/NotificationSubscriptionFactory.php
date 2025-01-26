@@ -5,7 +5,7 @@ use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 
-class NotificationFactory {
+class NotificationSubscriptionFactory {
   public static function create($data = []): NotificationSubscription {
     $errors = self::validate($data);
     if (count($errors)) {

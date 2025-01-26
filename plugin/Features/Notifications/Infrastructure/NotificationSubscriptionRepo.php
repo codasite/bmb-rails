@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Features\Notifications\Infrastructure;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\ValidationException;
-use WStrategies\BMB\Includes\Factory\NotificationFactory;
+use WStrategies\BMB\Includes\Factory\NotificationSubscriptionFactory;
 use WStrategies\BMB\Includes\Repository\CustomTableInterface;
 use WStrategies\BMB\Includes\Repository\CustomTableNames;
 
@@ -50,7 +50,7 @@ class NotificationSubscriptionRepo implements CustomTableInterface {
     $notifications = [];
     foreach ($notification_results as $result) {
       try {
-        $notification = NotificationFactory::create($result);
+        $notification = NotificationSubscriptionFactory::create($result);
         $notifications[] = $notification;
       } catch (ValidationException $e) {
         // do nothing

@@ -6,7 +6,7 @@ use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
-use WStrategies\BMB\Includes\Factory\NotificationFactory;
+use WStrategies\BMB\Includes\Factory\NotificationSubscriptionFactory;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Features\Bracket\UpcomingBracket\UpcomingBracketNotificationService;
 use WStrategies\BMB\Includes\Utils;
@@ -168,7 +168,7 @@ class UpcomingBracketHooks implements HooksInterface {
     }
 
     $this->notification_sub_repo->add(
-      NotificationFactory::create([
+      NotificationSubscriptionFactory::create([
         'user_id' => $user_id,
         'post_id' => $upcoming_bracket_id,
         'notification_type' => NotificationType::BRACKET_UPCOMING,
