@@ -122,12 +122,6 @@ abstract class RepositoryBase implements CustomTableInterface {
     $where = 'WHERE 1=1';
     $params = [];
 
-    // Handle ID condition
-    if (isset($args['id'])) {
-      $where .= ' AND id = %d'; // Hardcode %d for integer IDs
-      $params[] = $args['id'];
-    }
-
     // Handle searchable fields
     $searchable_fields = $this->get_searchable_fields();
     foreach ($searchable_fields as $field => $type) {
@@ -146,6 +140,8 @@ abstract class RepositoryBase implements CustomTableInterface {
       "SELECT * FROM {$this->table_name} {$where} ORDER BY {$orderby} {$order}",
       $params
     );
+
+    print_r($query);
 
     $results = $this->wpdb->get_results($query, ARRAY_A);
     if ($this->wpdb->last_error) {

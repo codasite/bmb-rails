@@ -160,23 +160,19 @@ class FCMTokenRepo extends RepositoryBase {
    * @throws TokenDatabaseException
    */
   public function delete_inactive_tokens(int $days_threshold = 30): int {
-    try {
-      $sql = $this->wpdb->prepare(
-        "DELETE FROM {$this->table_name} WHERE last_used_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
-        $days_threshold
+    $sql = $this->wpdb->prepare(
+      "DELETE FROM {$this->table_name} WHERE last_used_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
+      $days_threshold
+    );
+
+    $deleted = $this->wpdb->query($sql);
+    if ($this->wpdb->last_error) {
+      throw new TokenDatabaseException(
+        "Database error deleting inactive tokens: {$this->wpdb->last_error}"
       );
-
-      $deleted = $this->wpdb->query($sql);
-      if ($this->wpdb->last_error) {
-        throw new TokenDatabaseException(
-          "Database error deleting inactive tokens: {$this->wpdb->last_error}"
-        );
-      }
-
-      return (int) $deleted;
-    } catch (\Exception $e) {
-      throw new TokenDatabaseException($e->getMessage(), 0, $e);
     }
+
+    return $deleted;
   }
 
   /**

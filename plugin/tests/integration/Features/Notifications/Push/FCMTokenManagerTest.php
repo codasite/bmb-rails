@@ -52,6 +52,7 @@ class FCMTokenManagerTest extends WPBB_UnitTestCase {
       $this->user->ID
     );
 
+    print_r('getting tokens');
     $this->assertCount(2, $tokens);
     $this->assertContains('token1', $tokens);
     $this->assertContains('token2', $tokens);
