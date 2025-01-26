@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Includes;
 
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
 use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
@@ -47,6 +48,7 @@ class Activator {
     BracketResultsRepo::create_table();
     NotificationSubscriptionRepo::create_table();
     FCMTokenRepo::create_table();
+    NotificationRepo::create_table();
   }
 
   // WARNING: This function will delete all bracket data
@@ -61,5 +63,6 @@ class Activator {
     PlayRepo::drop_table();
     BracketRepo::drop_table();
     FCMTokenRepo::drop_table();
+    NotificationRepo::drop_table();
   }
 }

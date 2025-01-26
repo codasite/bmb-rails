@@ -16,14 +16,10 @@ abstract class RepositoryBase implements CustomTableInterface {
 
   /**
    * Initialize the repository.
-   *
-   * @param array{
-   *   wpdb?: \wpdb,
-   * } $args Constructor arguments
    */
-  public function __construct(array $args = []) {
+  public function __construct() {
     global $wpdb;
-    $this->wpdb = $args['wpdb'] ?? $wpdb;
+    $this->wpdb = $wpdb;
     $this->table_name = static::table_name();
   }
 
@@ -43,23 +39,14 @@ abstract class RepositoryBase implements CustomTableInterface {
   abstract protected function create_model(array $row);
 
   /**
-   * Get field definitions for the repository.
+   * Get field definitions for validation and types.
    *
    * @return array<string, array{
-   *   type: string,           SQL placeholder type (%s, %d, etc.)
-   *   sql_type: string,       SQL column type definition
-   *   required?: bool,        Whether field is required for inserts
-   *   searchable?: bool,      Whether field can be used in WHERE clauses
-   *   updateable?: bool,      Whether field can be updated
-   *   nullable?: bool,        Whether field can be NULL
-   *   default?: mixed,        Default value for field
-   *   primary_key?: bool,     Whether field is primary key
-   *   index?: bool,           Whether field should be indexed
-   *   foreign_key?: array{   Foreign key definition
-   *     table: string,        Referenced table
-   *     column: string,       Referenced column
-   *     on_delete?: string    ON DELETE behavior
-   *   }
+   *   type: string,        SQL placeholder type (%s, %d, etc.)
+   *   required?: bool,     Whether field is required for inserts
+   *   searchable?: bool,   Whether field can be used in WHERE clauses
+   *   updateable?: bool,   Whether field can be updated
+   *   default?: mixed,     Default value for field
    * }> Field definitions
    */
   abstract protected function get_field_definitions(): array;
@@ -344,40 +331,12 @@ abstract class RepositoryBase implements CustomTableInterface {
   }
 
   /**
-   * Create the database table.
-   */
-  public static function create_table(\wpdb $wpdb): void {
-    $table_name = static::table_name($wpdb);
-    $charset_collate = $wpdb->get_charset_collate();
-
-    $sql =
-      "CREATE TABLE IF NOT EXISTS {$table_name} (\n  " .
-      TableSqlGenerator::generate_table_sql(
-        (new static())->get_field_definitions()
-      ) .
-      "\n) $charset_collate;";
-
-    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-    dbDelta($sql);
-  }
-
-  /**
    * Drop the database table.
    */
-  public static function drop_table(\wpdb $wpdb): void {
-    $table_name = static::table_name($wpdb);
+  public static function drop_table(): void {
+    global $wpdb;
+    $table_name = static::table_name();
     $sql = "DROP TABLE IF EXISTS {$table_name}";
     $wpdb->query($sql);
-  }
-
-  abstract protected function get_table_base_name(): string;
-
-  /**
-   * Gets the custom table name.
-   *
-   * @return string The fully qualified table name.
-   */
-  public static function table_name(\wpdb $wpdb): string {
-    return $wpdb->prefix . WPBB_DB_PREFIX . static::get_table_base_name();
   }
 }

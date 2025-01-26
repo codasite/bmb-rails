@@ -54,10 +54,17 @@ class Notification {
     $this->user_id = (int) $data['user_id'];
     $this->title = $data['title'];
     $this->message = $data['message'];
-    $this->timestamp =
-      $data['timestamp'] instanceof DateTime
-        ? $data['timestamp']
-        : new DateTime($data['timestamp']);
+
+    // More defensive timestamp handling
+    if (isset($data['timestamp'])) {
+      $this->timestamp =
+        $data['timestamp'] instanceof DateTime
+          ? $data['timestamp']
+          : new DateTime($data['timestamp']);
+    } else {
+      $this->timestamp = new DateTime(); // Default to current time
+    }
+
     $this->is_read = $data['is_read'] ?? false;
     $this->link = $data['link'] ?? null;
 

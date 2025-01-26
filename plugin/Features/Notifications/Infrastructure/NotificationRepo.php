@@ -13,10 +13,6 @@ use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryDeleteException;
  * Handles CRUD operations for notifications and maintains the custom database table.
  */
 class NotificationRepo extends RepositoryBase {
-  function __construct(array $args = []) {
-    parent::__construct($args);
-  }
-
   /**
    * Create Notification model from database row.
    *
@@ -28,79 +24,60 @@ class NotificationRepo extends RepositoryBase {
   }
 
   /**
-   * Get field definitions for the repository.
+   * Get field definitions for validation and types.
+   *
+   * @return array<string, array{
+   *   type: string,        SQL placeholder type (%s, %d, etc.)
+   *   required?: bool,     Whether field is required for inserts
+   *   searchable?: bool,   Whether field can be used in WHERE clauses
+   *   updateable?: bool,   Whether field can be updated
+   *   default?: mixed,     Default value for field
+   * }> Field definitions
    */
-  public function get_field_definitions(): array {
-    global $wpdb;
+  protected function get_field_definitions(): array {
     return [
       'id' => [
         'type' => '%d',
-        'sql_type' => 'bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT',
         'required' => false,
         'searchable' => true,
-        'updateable' => false,
-        'primary_key' => true,
       ],
       'user_id' => [
         'type' => '%d',
-        'sql_type' => 'bigint UNSIGNED',
         'required' => true,
         'searchable' => true,
-        'updateable' => false,
-        'nullable' => false,
-        'index' => true,
-        'foreign_key' => [
-          'table' => $wpdb->users,
-          'column' => 'ID',
-          'on_delete' => 'CASCADE',
-        ],
       ],
       'title' => [
         'type' => '%s',
-        'sql_type' => 'varchar(255)',
         'required' => true,
         'updateable' => true,
-        'nullable' => false,
       ],
       'message' => [
         'type' => '%s',
-        'sql_type' => 'text',
         'required' => true,
         'updateable' => true,
-        'nullable' => false,
       ],
       'timestamp' => [
         'type' => '%s',
-        'sql_type' => 'datetime',
         'required' => false,
         'searchable' => true,
-        'nullable' => false,
         'default' => 'CURRENT_TIMESTAMP',
-        'index' => true,
       ],
       'is_read' => [
         'type' => '%d',
-        'sql_type' => 'tinyint(1)',
         'required' => false,
         'searchable' => true,
         'updateable' => true,
-        'nullable' => false,
         'default' => 0,
       ],
       'link' => [
         'type' => '%s',
-        'sql_type' => 'varchar(255)',
         'required' => false,
         'updateable' => true,
-        'nullable' => true,
       ],
       'notification_type' => [
         'type' => '%s',
-        'sql_type' => 'varchar(50)',
         'required' => true,
         'searchable' => true,
-        'nullable' => false,
-        'index' => true,
       ],
     ];
   }
@@ -188,7 +165,41 @@ class NotificationRepo extends RepositoryBase {
     return $deleted;
   }
 
-  protected function get_table_base_name(): string {
-    return 'notifications';
+  /**
+   * Gets the custom table name.
+   *
+   * @return string The fully qualified table name.
+   */
+  public static function table_name(): string {
+    return CustomTableNames::table_name('notifications');
+  }
+
+  /**
+   * Create the database table.
+   */
+  public static function create_table(): void {
+    global $wpdb;
+    $table_name = self::table_name();
+    $users_table = $wpdb->users;
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE IF NOT EXISTS {$table_name} (
+      id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+      user_id bigint UNSIGNED NOT NULL,
+      title varchar(255) NOT NULL,
+      message text NOT NULL,
+      timestamp datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      is_read tinyint(1) NOT NULL DEFAULT 0,
+      link varchar(255),
+      notification_type varchar(50) NOT NULL,
+      PRIMARY KEY (id),
+      KEY user_id (user_id),
+      KEY timestamp (timestamp),
+      KEY notification_type (notification_type),
+      FOREIGN KEY (user_id) REFERENCES {$users_table}(ID) ON DELETE CASCADE
+    ) $charset_collate;";
+
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta($sql);
   }
 }

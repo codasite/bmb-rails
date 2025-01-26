@@ -6,6 +6,7 @@ use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryUpdateException;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class NotificationRepoTest extends WPBB_UnitTestCase {
@@ -110,12 +111,14 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
       'title' => 'First Title',
       'message' => 'First Message',
       'notification_type' => NotificationType::BRACKET_RESULTS,
+      'timestamp' => '2025-01-01 00:00:00',
     ]);
     $notification2 = new Notification([
       'user_id' => $this->user->ID,
       'title' => 'Second Title',
       'message' => 'Second Message',
       'notification_type' => NotificationType::TOURNAMENT_START,
+      'timestamp' => '2025-01-02 00:00:00',
     ]);
     $this->repo->add($notification1);
     $this->repo->add($notification2);
@@ -253,7 +256,7 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     ]);
     $created = $this->repo->add($notification);
 
-    $this->expectException(RepositoryCreateException::class);
+    $this->expectException(RepositoryUpdateException::class);
     $this->repo->update($created->id, [
       'user_id' => 999, // Should not be able to update user_id
     ]);
