@@ -141,8 +141,6 @@ abstract class RepositoryBase implements CustomTableInterface {
       $params
     );
 
-    print_r($query);
-
     $results = $this->wpdb->get_results($query, ARRAY_A);
     if ($this->wpdb->last_error) {
       throw new RepositoryReadException(

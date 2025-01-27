@@ -72,12 +72,12 @@ class FCMTokenRepo extends RepositoryBase {
         'type' => '%s',
         'required' => false,
         'updateable' => true,
-        'default' => 'CURRENT_TIMESTAMP',
+        'default' => current_time('mysql'),
       ],
       'created_at' => [
         'type' => '%s',
         'required' => false,
-        'default' => 'CURRENT_TIMESTAMP',
+        'default' => current_time('mysql'),
       ],
     ];
   }
