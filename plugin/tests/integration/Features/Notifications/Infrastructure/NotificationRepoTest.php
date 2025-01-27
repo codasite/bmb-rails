@@ -280,4 +280,40 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     $this->assertNotNull($result);
     $this->assertEquals($malicious_title, $result->title);
   }
+
+  public function test_add_notification_for_nonexistent_user(): void {
+    $this->expectException(RepositoryCreateException::class);
+
+    $notification = new Notification([
+      'user_id' => 99999, // Non-existent user ID
+      'title' => 'Test',
+      'message' => 'Test Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+    ]);
+
+    $this->repo->add($notification);
+  }
+
+  public function test_default_timestamp(): void {
+    $notification = new Notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Test Title',
+      'message' => 'Test Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+    ]);
+
+    $created = $this->repo->add($notification);
+
+    $this->assertNotNull($created);
+    $this->assertNotEquals(
+      '0000-00-00 00:00:00',
+      $created->timestamp->format('Y-m-d H:i:s')
+    );
+    $this->assertEqualsWithDelta(
+      time(),
+      $created->timestamp->getTimestamp(),
+      2, // Allow 2 seconds difference for test execution
+      'Timestamp should be close to current time'
+    );
+  }
 }

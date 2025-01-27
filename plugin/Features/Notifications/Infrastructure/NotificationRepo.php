@@ -60,7 +60,7 @@ class NotificationRepo extends RepositoryBase {
         'type' => '%s',
         'required' => false,
         'searchable' => true,
-        'default' => 'CURRENT_TIMESTAMP',
+        'default' => current_time('mysql'),
       ],
       'is_read' => [
         'type' => '%d',
