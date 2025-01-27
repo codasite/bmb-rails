@@ -15,7 +15,7 @@ class BracketSerializer extends PostBaseSerializer {
     $this->results_serializer =
       $args['results_serializer'] ?? new PickSerializer();
   }
-  public function deserialize(array $data): Bracket {
+  public function deserialize(array|string $data): Bracket {
     $obj_data = $this->get_object_data($data);
     return new Bracket($obj_data);
   }

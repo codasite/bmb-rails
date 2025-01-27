@@ -3,9 +3,9 @@
 namespace WStrategies\BMB\Includes\Service\Serializer;
 
 interface ApiSerializerInterface {
-  public function deserialize(array $data): object;
+  public function deserialize(array|string $data): object;
 
-  public function serialize(object|null $obj): array;
+  public function serialize(object|null $obj): mixed;
 
   /**
    * Should return and array of field names, optionally mapped to an array of options that specifies how the field should be serialized

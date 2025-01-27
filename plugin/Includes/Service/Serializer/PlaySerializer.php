@@ -15,7 +15,7 @@ class PlaySerializer extends PostBaseSerializer {
       $args['bracket_serializer'] ?? new BracketSerializer();
   }
 
-  public function deserialize(array $data): Play {
+  public function deserialize(array|string $data): Play {
     $obj_data = $this->get_object_data($data);
     return new Play($obj_data);
   }

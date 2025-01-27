@@ -15,7 +15,7 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
     return $data_builder->get_object_data();
   }
 
-  public function serialize(object|null $obj): array {
+  public function serialize(object|null $obj): mixed {
     if (!$obj) {
       return [];
     }
@@ -32,8 +32,6 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
     );
     $director = new SerializedFieldDirector($options_builder);
     $director->build($this->get_serialized_fields());
-    $fields = $options_builder->get_fields();
-    // var_dump($fields);
     return $options_builder->get_fields();
   }
 
