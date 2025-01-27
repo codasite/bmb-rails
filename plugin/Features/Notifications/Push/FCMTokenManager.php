@@ -10,7 +10,10 @@ use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenRegistrationExce
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenUpdateException;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDeleteException;
 use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenNotFoundException;
-use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseException;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryReadException;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryUpdateException;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryDeleteException;
 
 /**
  * Manages FCM token operations.
@@ -81,7 +84,7 @@ class FCMTokenManager implements HooksInterface {
         }
       }
       return $tokens;
-    } catch (TokenDatabaseException $e) {
+    } catch (RepositoryReadException $e) {
       (new Utils())->log(
         sprintf(
           'Database error fetching tokens for user %d: %s',
@@ -92,7 +95,7 @@ class FCMTokenManager implements HooksInterface {
     } catch (\Exception $e) {
       (new Utils())->log(
         sprintf(
-          'Unexpected error fetching tokens for user %d: %s',
+          'Unexpected error in get_target_tokens for user %d: %s',
           $user_id,
           $e->getMessage()
         )
@@ -164,7 +167,7 @@ class FCMTokenManager implements HooksInterface {
           )
         );
       }
-    } catch (TokenDatabaseException $e) {
+    } catch (RepositoryReadException | RepositoryDeleteException $e) {
       (new Utils())->log(
         sprintf(
           'Database error handling failed delivery for token %s: %s',
@@ -175,7 +178,7 @@ class FCMTokenManager implements HooksInterface {
     } catch (\Exception $e) {
       (new Utils())->log(
         sprintf(
-          'Unexpected error handling failed delivery for token %s: %s',
+          'Unexpected error in handle_failed_delivery for token %s: %s',
           $token,
           $e->getMessage()
         )
@@ -192,7 +195,7 @@ class FCMTokenManager implements HooksInterface {
   public function cleanup_inactive_tokens(int $days_threshold = 30): int {
     try {
       return $this->token_repo->delete_inactive_tokens($days_threshold);
-    } catch (TokenDatabaseException $e) {
+    } catch (RepositoryDeleteException $e) {
       (new Utils())->log(
         sprintf(
           'Database error cleaning up inactive tokens: %s',
@@ -202,7 +205,7 @@ class FCMTokenManager implements HooksInterface {
     } catch (\Exception $e) {
       (new Utils())->log(
         sprintf(
-          'Unexpected error cleaning up inactive tokens: %s',
+          'Unexpected error in cleanup_inactive_tokens: %s',
           $e->getMessage()
         )
       );
@@ -264,11 +267,11 @@ class FCMTokenManager implements HooksInterface {
         throw new TokenRegistrationException('Failed to register token');
       }
       return $saved;
-    } catch (TokenDatabaseException $e) {
+    } catch (RepositoryCreateException $e) {
       (new Utils())->log(
         "Database error registering token: {$e->getMessage()}"
       );
-      throw new TokenRegistrationException('Failed to register token');
+      throw new TokenRegistrationException('Failed to register token', 0, $e);
     }
   }
 
@@ -287,9 +290,9 @@ class FCMTokenManager implements HooksInterface {
         throw new TokenUpdateException('Failed to update token');
       }
       return $updated;
-    } catch (TokenDatabaseException $e) {
+    } catch (RepositoryUpdateException $e) {
       (new Utils())->log("Database error updating token: {$e->getMessage()}");
-      throw new TokenUpdateException('Failed to update token');
+      throw new TokenUpdateException('Failed to update token', 0, $e);
     }
   }
 
@@ -300,12 +303,12 @@ class FCMTokenManager implements HooksInterface {
     try {
       $updated = $this->token_repo->update_token($token->id);
       if (!$updated) {
-        throw new TokenUpdateException('Failed to refresh token here');
+        throw new TokenUpdateException('Failed to refresh token');
       }
       return $token;
-    } catch (TokenDatabaseException $e) {
+    } catch (RepositoryUpdateException $e) {
       (new Utils())->log("Database error refreshing token: {$e->getMessage()}");
-      throw new TokenUpdateException('Failed to refresh token');
+      throw new TokenUpdateException('Failed to refresh token', 0, $e);
     }
   }
 
@@ -336,11 +339,8 @@ class FCMTokenManager implements HooksInterface {
       if (!$deleted) {
         throw new TokenDeleteException('Failed to delete device token');
       }
-    } catch (TokenDatabaseException $e) {
-      (new Utils())->log(
-        "Database error deregistering token: {$e->getMessage()}"
-      );
-      throw new TokenDeleteException('Failed to delete device token');
+    } catch (RepositoryDeleteException $e) {
+      throw new TokenDeleteException('Failed to delete device token', 0, $e);
     }
   }
 }

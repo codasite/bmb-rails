@@ -5,7 +5,7 @@ namespace WStrategies\BMB\tests\integration\Features\Notifications\Push;
 use WStrategies\BMB\Features\Notifications\Push\FCMToken;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
-use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseException;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
 
 class FCMTokenRepoTest extends WPBB_UnitTestCase {
   private FCMTokenRepo $repo;
@@ -200,7 +200,7 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
       'device_type' => 'android',
     ]);
 
-    $this->expectException(TokenDatabaseException::class);
+    $this->expectException(RepositoryCreateException::class);
     $this->repo->add($token2);
   }
 
@@ -223,7 +223,7 @@ class FCMTokenRepoTest extends WPBB_UnitTestCase {
       'device_type' => 'ios',
     ]);
 
-    $this->expectException(TokenDatabaseException::class);
+    $this->expectException(RepositoryCreateException::class);
     $this->repo->add($token2);
   }
 

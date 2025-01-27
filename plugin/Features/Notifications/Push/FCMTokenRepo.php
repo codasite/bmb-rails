@@ -90,11 +90,7 @@ class FCMTokenRepo extends RepositoryBase {
    * @throws TokenDatabaseException
    */
   public function get($args = []): FCMToken|array|null {
-    try {
-      return parent::get($args);
-    } catch (RepositoryReadException $e) {
-      throw new TokenDatabaseException($e->getMessage(), 0, $e);
-    }
+    return parent::get($args);
   }
 
   /**
@@ -105,18 +101,14 @@ class FCMTokenRepo extends RepositoryBase {
    * @throws TokenDatabaseException
    */
   public function add(FCMToken $token): ?FCMToken {
-    try {
-      return $this->insert([
-        'user_id' => $token->user_id,
-        'device_id' => $token->device_id,
-        'token' => $token->token,
-        'device_type' => $token->device_type,
-        'device_name' => $token->device_name,
-        'app_version' => $token->app_version,
-      ]);
-    } catch (RepositoryCreateException $e) {
-      throw new TokenDatabaseException($e->getMessage(), 0, $e);
-    }
+    return $this->insert([
+      'user_id' => $token->user_id,
+      'device_id' => $token->device_id,
+      'token' => $token->token,
+      'device_type' => $token->device_type,
+      'device_name' => $token->device_name,
+      'app_version' => $token->app_version,
+    ]);
   }
 
   /**
@@ -128,13 +120,9 @@ class FCMTokenRepo extends RepositoryBase {
    * @throws TokenDatabaseException
    */
   public function update_token(int $id, array $fields = []): ?FCMToken {
-    try {
-      // Always update last_used_at when updating token
-      $fields['last_used_at'] = current_time('mysql');
-      return $this->update($id, $fields);
-    } catch (RepositoryUpdateException $e) {
-      throw new TokenDatabaseException($e->getMessage(), 0, $e);
-    }
+    // Always update last_used_at when updating token
+    $fields['last_used_at'] = current_time('mysql');
+    return $this->update($id, $fields);
   }
 
   /**
@@ -145,11 +133,7 @@ class FCMTokenRepo extends RepositoryBase {
    * @throws TokenDatabaseException
    */
   public function delete(int $id): bool {
-    try {
-      return parent::delete($id);
-    } catch (RepositoryDeleteException $e) {
-      throw new TokenDatabaseException($e->getMessage(), 0, $e);
-    }
+    return parent::delete($id);
   }
 
   /**
@@ -167,7 +151,7 @@ class FCMTokenRepo extends RepositoryBase {
 
     $deleted = $this->wpdb->query($sql);
     if ($this->wpdb->last_error) {
-      throw new TokenDatabaseException(
+      throw new RepositoryDeleteException(
         "Database error deleting inactive tokens: {$this->wpdb->last_error}"
       );
     }
