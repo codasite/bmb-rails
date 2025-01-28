@@ -5,6 +5,10 @@ namespace WStrategies\BMB\tests\integration\Features\Notifications\Push;
 use WStrategies\BMB\Features\Notifications\Push\FCMToken;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
+<<<<<<< Updated upstream
+=======
+use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseException;
+>>>>>>> Stashed changes
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
 
 class FCMTokenRepoTest extends WPBB_UnitTestCase {

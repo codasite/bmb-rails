@@ -6,15 +6,6 @@ use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Domain\Bracket;
 
 class BracketSerializer extends PostBaseSerializer {
-  private BracketMatchSerializer $match_serializer;
-  private PickSerializer $results_serializer;
-
-  public function __construct($args = []) {
-    $this->match_serializer =
-      $args['match_serializer'] ?? new BracketMatchSerializer();
-    $this->results_serializer =
-      $args['results_serializer'] ?? new PickSerializer();
-  }
   public function deserialize(array|string $data): Bracket {
     $obj_data = $this->get_object_data($data);
     return new Bracket($obj_data);
@@ -29,19 +20,16 @@ class BracketSerializer extends PostBaseSerializer {
       ],
       'month',
       'year',
-      'matches' => [
-        'serializer' => $this->match_serializer,
+      'matches' => new BracketMatchSerializer([
         'many' => true,
         'required' => true,
-      ],
-      'results' => [
-        'serializer' => $this->results_serializer,
+      ]),
+      'results' => new PickSerializer([
         'many' => true,
-      ],
-      'most_popular_picks' => [
-        'serializer' => $this->results_serializer,
+      ]),
+      'most_popular_picks' => new PickSerializer([
         'many' => true,
-      ],
+      ]),
       'title' => [
         'required' => true,
       ],

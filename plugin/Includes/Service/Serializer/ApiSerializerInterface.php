@@ -7,6 +7,12 @@ interface ApiSerializerInterface {
 
   public function serialize(object|null $obj): mixed;
 
+  public function is_many(): bool;
+
+  public function is_required(): bool;
+
+  public function is_readonly(): bool;
+
   /**
    * Should return and array of field names, optionally mapped to an array of options that specifies how the field should be serialized
    * options are:
