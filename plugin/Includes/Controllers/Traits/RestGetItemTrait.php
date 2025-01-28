@@ -1,6 +1,6 @@
 <?php
 
-namespace BMB\Features\Notifications\Presentation\Traits;
+namespace WStrategies\BMB\Includes\Controllers\Traits;
 
 use WP_Error;
 use WP_REST_Request;

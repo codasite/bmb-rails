@@ -1,6 +1,6 @@
 <?php
 
-namespace WStrategies\BMB\Features\Notifications\Infrastructure;
+namespace WStrategies\BMB\Includes\Repository;
 
 /**
  * Interface defining the contract for repository operations.

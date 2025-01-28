@@ -1,15 +1,14 @@
 <?php
 
-namespace BMB\Features\Notifications\Presentation;
+namespace WStrategies\BMB\Includes\Controllers;
 
-use BMB\Features\Notifications\Domain\NotificationService;
 use WStrategies\BMB\Includes\Hooks\HooksInterface;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
-use WStrategies\BMB\Features\Notifications\Infrastructure\DomainRepositoryInterface;
+use WStrategies\BMB\Includes\Repository\DomainRepositoryInterface;
 use WStrategies\BMB\Includes\Service\Serializer\ApiSerializerInterface;
 
 abstract class RestApiBase extends WP_REST_Controller implements
@@ -123,6 +122,88 @@ abstract class RestApiBase extends WP_REST_Controller implements
    */
   protected function get_update_route_config(): array {
     return [];
+  }
+
+  /**
+   * Get items for the collection.
+   */
+  protected function get_collection_items(
+    int $page,
+    int $per_page,
+    string $search
+  ): array|WP_Error {
+    $offset = ($page - 1) * $per_page;
+    $filters = $this->get_collection_filters($page, $per_page, $search);
+    return $this->repository->get($filters);
+  }
+
+  /**
+   * Get filters for collection query.
+   * Override this in child classes to customize filters sent to repository.
+   */
+  protected function get_collection_filters(
+    int $page,
+    int $per_page,
+    string $search
+  ): array {
+    return [];
+  }
+
+  /**
+   * Get a single item by ID.
+   */
+  protected function get_single_item(int $id): mixed|WP_Error {
+    $filters = $this->get_single_item_filters($id);
+    $items = $this->repository->get($filters);
+
+    if (empty($items)) {
+      return new WP_Error('rest_item_not_found', __('Item not found.'), [
+        'status' => 404,
+      ]);
+    }
+
+    return $items;
+  }
+
+  /**
+   * Get filters for single item query.
+   * Override this in child classes to customize filters sent to repository.
+   */
+  protected function get_single_item_filters(int $id): array {
+    return [
+      'id' => $id,
+      'single' => true,
+    ];
+  }
+
+  /**
+   * Delete a single item.
+   */
+  protected function delete_single_item(int $id, bool $force): bool|WP_Error {
+    // Allow checking permissions or adding conditions before delete
+    $can_delete = $this->can_delete_item($id, $force);
+    if (is_wp_error($can_delete)) {
+      return $can_delete;
+    }
+
+    $result = $this->repository->delete($id);
+    if (!$result) {
+      return new WP_Error(
+        'rest_cannot_delete',
+        __('The item cannot be deleted.'),
+        ['status' => 500]
+      );
+    }
+
+    return true;
+  }
+
+  /**
+   * Check if an item can be deleted.
+   * Override this in child classes to add custom delete validation.
+   */
+  protected function can_delete_item(int $id, bool $force): bool|WP_Error {
+    return true;
   }
 
   /**
