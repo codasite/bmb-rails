@@ -8,13 +8,6 @@ class PlaySerializer extends PostBaseSerializer {
   private PickSerializer $match_pick_serializer;
   private BracketSerializer $bracket_serializer;
 
-  public function __construct($args = []) {
-    $this->match_pick_serializer =
-      $args['match_pick_serializer'] ?? new PickSerializer();
-    $this->bracket_serializer =
-      $args['bracket_serializer'] ?? new BracketSerializer();
-  }
-
   public function deserialize(array|string $data): Play {
     $obj_data = $this->get_object_data($data);
     return new Play($obj_data);
@@ -34,19 +27,9 @@ class PlaySerializer extends PostBaseSerializer {
       'bmb_official',
       'is_tournament_entry',
       'is_paid',
-      'bracket' => [
-        'serializer' => $this->bracket_serializer,
-        'many' => false,
-      ],
-      'busted_play' => [
-        'serializer' => $this,
-        'many' => false,
-      ],
-      'picks' => [
-        'serializer' => $this->match_pick_serializer,
-        'many' => true,
-        'required' => true,
-      ],
+      'bracket' => new BracketSerializer(),
+      'busted_play' => new PlaySerializer(),
+      'picks' => new PickSerializer(['many' => true, 'required' => true]),
     ]);
   }
 
