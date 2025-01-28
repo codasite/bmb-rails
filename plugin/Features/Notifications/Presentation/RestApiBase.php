@@ -9,6 +9,7 @@ use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
 use WP_REST_Response;
+use WStrategies\BMB\Features\Notifications\Infrastructure\DomainRepositoryInterface;
 use WStrategies\BMB\Includes\Service\Serializer\ApiSerializerInterface;
 
 abstract class RestApiBase extends WP_REST_Controller implements
@@ -17,13 +18,12 @@ abstract class RestApiBase extends WP_REST_Controller implements
   protected $rest_base;
   protected $schema;
   protected ApiSerializerInterface $serializer;
+  protected DomainRepositoryInterface $repository;
 
-  public function __construct(
-    string $rest_base,
-    ApiSerializerInterface $serializer
-  ) {
-    $this->rest_base = $rest_base;
-    $this->serializer = $serializer;
+  public function __construct(array $args = []) {
+    $this->rest_base = $args['rest_base'];
+    $this->serializer = $args['serializer'];
+    $this->repository = $args['repository'];
   }
 
   public function load(Loader $loader): void {
@@ -56,24 +56,14 @@ abstract class RestApiBase extends WP_REST_Controller implements
   protected function get_root_routes(): array {
     $routes = [];
 
-    if (method_exists($this, 'get_items')) {
-      $routes[] = [
-        'methods' => \WP_REST_Server::READABLE,
-        'callback' => [$this, 'get_items'],
-        'permission_callback' => [$this, 'get_items_permissions_check'],
-        'args' => $this->get_collection_params(),
-        'schema' => [$this, 'get_public_item_schema'],
-      ];
+    $collection_config = $this->get_collection_route_config();
+    if (!empty($collection_config)) {
+      $routes[] = $collection_config;
     }
 
-    if (method_exists($this, 'create_item')) {
-      $routes[] = [
-        'methods' => \WP_REST_Server::CREATABLE,
-        'callback' => [$this, 'create_item'],
-        'permission_callback' => [$this, 'create_item_permissions_check'],
-        'args' => $this->get_endpoint_args(\WP_REST_Server::CREATABLE),
-        'schema' => [$this, 'get_public_item_schema'],
-      ];
+    $create_config = $this->get_create_route_config();
+    if (!empty($create_config)) {
+      $routes[] = $create_config;
     }
 
     return $routes;
@@ -85,37 +75,62 @@ abstract class RestApiBase extends WP_REST_Controller implements
   protected function get_single_item_routes(): array {
     $routes = [];
 
-    if (method_exists($this, 'get_item')) {
-      $routes[] = [
-        'methods' => \WP_REST_Server::READABLE,
-        'callback' => [$this, 'get_item'],
-        'permission_callback' => [$this, 'get_item_permissions_check'],
-        'args' => $this->get_endpoint_args(\WP_REST_Server::READABLE),
-        'schema' => [$this, 'get_public_item_schema'],
-      ];
+    $get_config = $this->get_single_item_route_config();
+    if (!empty($get_config)) {
+      $routes[] = $get_config;
     }
 
-    if (method_exists($this, 'update_item')) {
-      $routes[] = [
-        'methods' => \WP_REST_Server::EDITABLE,
-        'callback' => [$this, 'update_item'],
-        'permission_callback' => [$this, 'update_item_permissions_check'],
-        'args' => $this->get_endpoint_args(\WP_REST_Server::EDITABLE),
-        'schema' => [$this, 'get_public_item_schema'],
-      ];
+    $update_config = $this->get_update_route_config();
+    if (!empty($update_config)) {
+      $routes[] = $update_config;
     }
 
-    if (method_exists($this, 'delete_item')) {
-      $routes[] = [
-        'methods' => \WP_REST_Server::DELETABLE,
-        'callback' => [$this, 'delete_item'],
-        'permission_callback' => [$this, 'delete_item_permissions_check'],
-        'args' => $this->get_endpoint_args(\WP_REST_Server::DELETABLE),
-        'schema' => [$this, 'get_delete_item_schema'],
-      ];
+    $delete_config = $this->get_delete_route_config();
+    if (!empty($delete_config)) {
+      $routes[] = $delete_config;
     }
 
     return $routes;
+  }
+
+  /**
+   * Get configuration for GET collection endpoint.
+   * Override this in traits or child classes to enable the endpoint.
+   */
+  protected function get_collection_route_config(): array {
+    return [];
+  }
+
+  /**
+   * Get configuration for POST endpoint.
+   * Override this in traits or child classes to enable the endpoint.
+   */
+  protected function get_create_route_config(): array {
+    return [];
+  }
+
+  /**
+   * Get configuration for GET single item endpoint.
+   * Override this in traits or child classes to enable the endpoint.
+   */
+  protected function get_single_item_route_config(): array {
+    return [];
+  }
+
+  /**
+   * Get configuration for PUT/PATCH endpoint.
+   * Override this in traits or child classes to enable the endpoint.
+   */
+  protected function get_update_route_config(): array {
+    return [];
+  }
+
+  /**
+   * Get configuration for DELETE endpoint.
+   * Override this in traits or child classes to enable the endpoint.
+   */
+  protected function get_delete_route_config(): array {
+    return [];
   }
 
   public function get_collection_params() {
@@ -154,21 +169,6 @@ abstract class RestApiBase extends WP_REST_Controller implements
     return $schema;
   }
 
-  public function get_delete_item_schema(): array {
-    return [
-      '$schema' => 'http://json-schema.org/draft-04/schema#',
-      'title' => $this->rest_base,
-      'type' => 'object',
-      'properties' => [
-        'deleted' => [
-          'type' => 'boolean',
-          'description' => __('Whether the object was deleted.'),
-          'context' => ['view'],
-          'readonly' => true,
-        ],
-      ],
-    ];
-  }
   /**
    * Prepare the item for the REST response.
    * Default implementation uses the serializer.

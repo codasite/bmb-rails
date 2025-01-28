@@ -12,7 +12,8 @@ use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryDeleteException;
  *
  * Handles CRUD operations for notifications and maintains the custom database table.
  */
-class NotificationRepo extends RepositoryBase {
+class NotificationRepo extends RepositoryBase implements
+  DomainRepositoryInterface {
   /**
    * Create Notification model from database row.
    *
@@ -106,18 +107,22 @@ class NotificationRepo extends RepositoryBase {
   /**
    * Adds a new notification.
    *
-   * @param Notification $notification Notification to add
-   * @return Notification|null The created notification or null on failure
+   * @param object $object Notification to add
+   * @return object|null The created notification or null on failure
    */
-  public function add(Notification $notification): ?Notification {
+  public function add(object $object): ?object {
+    if (!($object instanceof Notification)) {
+      return null;
+    }
+
     return $this->insert([
-      'user_id' => $notification->user_id,
-      'title' => $notification->title,
-      'message' => $notification->message,
-      'timestamp' => $notification->timestamp->format('c'),
-      'is_read' => $notification->is_read,
-      'link' => $notification->link,
-      'notification_type' => $notification->notification_type->value,
+      'user_id' => $object->user_id,
+      'title' => $object->title,
+      'message' => $object->message,
+      'timestamp' => $object->timestamp->format('c'),
+      'is_read' => $object->is_read,
+      'link' => $object->link,
+      'notification_type' => $object->notification_type->value,
     ]);
   }
 

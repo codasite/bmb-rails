@@ -2,13 +2,16 @@
 
 namespace BMB\Features\Notifications\Presentation;
 
+use BMB\Features\Notifications\Presentation\Traits\RestDeleteItemTrait;
 use BMB\Features\Notifications\Presentation\Traits\RestGetCollectionTrait;
 use WP_Error;
 use WStrategies\BMB\Features\Notifications\Presentation\NotificationSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\ApiSerializerInterface;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
+
 class NotificationApi extends RestApiBase {
   use RestGetCollectionTrait;
+  use RestDeleteItemTrait;
 
   protected $rest_base = 'notifications';
   protected NotificationRepo $notification_repo;
@@ -30,5 +33,49 @@ class NotificationApi extends RestApiBase {
     $offset = ($page - 1) * $per_page;
 
     return $this->notification_repo->get(['user_id' => get_current_user_id()]);
+  }
+
+  /**
+   * Get a single notification by ID.
+   * Implementation of abstract method from RestDeleteItemTrait.
+   */
+  protected function get_single_item(int $id): mixed|WP_Error {
+    $notifications = $this->notification_repo->get([
+      'id' => $id,
+      'user_id' => get_current_user_id(),
+    ]);
+
+    if (empty($notifications)) {
+      return new WP_Error(
+        'rest_notification_not_found',
+        __('Notification not found.'),
+        ['status' => 404]
+      );
+    }
+
+    return $notifications[0];
+  }
+
+  /**
+   * Delete a single notification.
+   * Implementation of abstract method from RestDeleteItemTrait.
+   */
+  protected function delete_single_item(int $id, bool $force): bool|WP_Error {
+    // First verify the notification belongs to the current user
+    $notification = $this->get_single_item($id);
+    if (is_wp_error($notification)) {
+      return $notification;
+    }
+
+    $result = $this->notification_repo->delete($id);
+    if (!$result) {
+      return new WP_Error(
+        'rest_cannot_delete',
+        __('The notification cannot be deleted.'),
+        ['status' => 500]
+      );
+    }
+
+    return true;
   }
 }
