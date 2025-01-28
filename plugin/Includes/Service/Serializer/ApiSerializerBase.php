@@ -46,4 +46,12 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
   public function get_required_fields(): array {
     return [];
   }
+
+  public function get_schema_type(): string {
+    return 'object';
+  }
+
+  public function get_schema_properties(): array {
+    return $this->get_serialized_fields();
+  }
 }

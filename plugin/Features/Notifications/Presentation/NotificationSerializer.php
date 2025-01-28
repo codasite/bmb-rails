@@ -28,30 +28,38 @@ class NotificationSerializer extends ApiSerializerBase {
   public function get_serialized_fields(): array {
     return [
       'id' => [
+        'type' => 'integer',
         'required' => false,
       ],
       'user_id' => [
+        'type' => 'integer',
         'required' => true,
       ],
       'title' => [
+        'type' => 'string',
         'required' => true,
       ],
       'message' => [
+        'type' => 'string',
         'required' => true,
       ],
       'timestamp' => [
+        'type' => 'string',
         'required' => true,
         'serializer' => new DateTimeSerializer(),
       ],
       'is_read' => [
+        'type' => 'boolean',
         'required' => false,
         'default' => false,
       ],
       'link' => [
+        'type' => 'string',
         'required' => false,
         'default' => null,
       ],
       'notification_type' => [
+        'type' => 'string',
         'required' => true,
         'serializer' => new EnumSerializer(NotificationType::class),
       ],

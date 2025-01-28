@@ -20,4 +20,6 @@ interface ApiSerializerInterface {
   public function get_readonly_fields(): array;
 
   public function get_required_fields(): array;
+
+  public function get_schema_properties(): array;
 }
