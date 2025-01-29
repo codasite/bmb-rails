@@ -19,17 +19,28 @@ class NotificationManager {
   /**
    * Creates a new notification.
    *
-   * @param array $data {
-   *     Notification data.
-   *     @type int    $user_id          Required. User ID to notify.
-   *     @type string $title            Required. Notification title.
-   *     @type string $message          Required. Notification message.
-   *     @type string|NotificationType $notification_type Required. Type of notification.
-   *     @type string $link             Optional. Associated link.
-   * }
+   * @param int $user_id User ID to notify
+   * @param string $title Notification title
+   * @param string $message Notification message
+   * @param NotificationType $notification_type Type of notification
+   * @param string $link Associated link
    * @return Notification|null The created notification or null on failure
    */
-  public function create_notification(array $data): ?Notification {
+  public function create_notification(
+    int $user_id,
+    string $title,
+    string $message,
+    NotificationType $notification_type,
+    string $link
+  ): ?Notification {
+    $data = [
+      'user_id' => $user_id,
+      'title' => $title,
+      'message' => $message,
+      'notification_type' => $notification_type->value,
+      'link' => $link,
+    ];
+
     $notification = new Notification($data);
     return $this->notification_repo->add($notification);
   }
