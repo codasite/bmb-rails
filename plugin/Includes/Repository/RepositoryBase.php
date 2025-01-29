@@ -149,7 +149,10 @@ abstract class RepositoryBase implements CustomTableInterface {
     }
 
     if (empty($results)) {
-      return null;
+      if ($single) {
+        return null;
+      }
+      return [];
     }
 
     if ($single) {

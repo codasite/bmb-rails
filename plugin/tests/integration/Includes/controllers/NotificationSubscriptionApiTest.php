@@ -6,9 +6,9 @@ use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
-class NotificationApiTest extends WPBB_UnitTestCase {
+class NotificationSubscriptionApiTest extends WPBB_UnitTestCase {
   use SetupAdminUser;
-  const NOTIFICATION_API_ENDPOINT = '/wp-bracket-builder/v1/notifications';
+  const NOTIFICATION_API_ENDPOINT = '/wp-bracket-builder/v1/notification_subscriptions';
   public function test_get_notification() {
     $user = self::factory()->user->create_and_get();
     $post = $this->create_post();

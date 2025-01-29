@@ -7,7 +7,7 @@ import { WpbbAppObj } from '../../../utils/WpbbAjax'
 declare var wpbb_app_obj: WpbbAppObj
 export class BracketApi {
   private bracketsPath: string = 'brackets'
-  private notificationsPath: string = 'notifications'
+  private notificationsPath: string = 'notification_subscriptions'
   private playPath: string = 'plays'
   private client: WpHttpClient
   constructor() {

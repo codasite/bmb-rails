@@ -4,6 +4,8 @@ namespace WStrategies\BMB\Features\Notifications\Infrastructure;
 
 use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Includes\Repository\CustomTableNames;
+use WStrategies\BMB\Includes\Repository\DomainRepositoryInterface;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
 use WStrategies\BMB\Includes\Repository\RepositoryBase;
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryDeleteException;
 
@@ -110,9 +112,11 @@ class NotificationRepo extends RepositoryBase implements
    * @param object $object Notification to add
    * @return object|null The created notification or null on failure
    */
-  public function add(object $object): ?object {
+  public function add(object $object): ?Notification {
     if (!($object instanceof Notification)) {
-      return null;
+      throw new RepositoryCreateException(
+        'Object must be an instance of Notification'
+      );
     }
 
     return $this->insert([

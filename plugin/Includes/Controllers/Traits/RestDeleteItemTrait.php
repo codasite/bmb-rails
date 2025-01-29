@@ -116,5 +116,5 @@ trait RestDeleteItemTrait {
    * Must be implemented by classes using this trait.
    * This is used to get the item before deletion for the response.
    */
-  abstract protected function get_single_item(int $id): mixed|WP_Error;
+  abstract protected function get_single_item(int $id): mixed;
 }

@@ -152,7 +152,7 @@ abstract class RestApiBase extends WP_REST_Controller implements
   /**
    * Get a single item by ID.
    */
-  protected function get_single_item(int $id): mixed|WP_Error {
+  protected function get_single_item(int $id): mixed {
     $filters = $this->get_single_item_filters($id);
     $items = $this->repository->get($filters);
 
@@ -256,13 +256,9 @@ abstract class RestApiBase extends WP_REST_Controller implements
    *
    * @param mixed           $item    WordPress representation of the item.
    * @param WP_REST_Request $request Request object.
-   * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
+   * @return array Response data.
    */
-  public function prepare_item_for_response(
-    $item,
-    $request
-  ): WP_REST_Response|WP_Error {
-    $data = $this->serializer->serialize($item);
-    return rest_ensure_response($data);
+  public function prepare_item_for_response($item, $request): array {
+    return $this->serializer->serialize($item);
   }
 }

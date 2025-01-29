@@ -33,7 +33,5 @@ trait RestCreateItemTrait {
    * Create a single item.
    * Must be implemented by classes using this trait.
    */
-  abstract protected function create_single_item(
-    array $prepared
-  ): mixed|WP_Error;
+  abstract protected function create_single_item(array $prepared): mixed;
 }

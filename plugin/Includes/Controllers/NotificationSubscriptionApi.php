@@ -34,7 +34,7 @@ class NotificationSubscriptionApi extends WP_REST_Controller implements
    */
   public function __construct($args = []) {
     $this->namespace = 'wp-bracket-builder/v1';
-    $this->rest_base = 'notifications';
+    $this->rest_base = 'notification_subscriptions';
     $this->notification_sub_repo =
       $args['notification_sub_repo'] ?? new NotificationSubscriptionRepo();
   }
