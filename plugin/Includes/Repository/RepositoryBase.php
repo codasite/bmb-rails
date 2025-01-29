@@ -119,8 +119,8 @@ abstract class RepositoryBase implements CustomTableInterface {
    */
   protected function get($args = []) {
     $single = $args['single'] ?? false;
-    $where = 'WHERE 1=1';
-    $params = [];
+    $where = 'WHERE 1 = %d';
+    $params = [1];
 
     // Handle searchable fields
     $searchable_fields = $this->get_searchable_fields();

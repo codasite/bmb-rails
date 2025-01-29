@@ -46,9 +46,6 @@ class NotificationApiTest extends RestApiTestCase {
       'timestamp' => '2025-01-01 00:10:00',
     ]);
 
-    $notifs = $this->repository->get();
-    print_r($notifs);
-
     // Create notification for different user
     $other_user = $this->create_user();
     $this->create_notification([
@@ -60,8 +57,6 @@ class NotificationApiTest extends RestApiTestCase {
 
     $response = $this->get(self::API_ENDPOINT);
     $data = $response->get_data();
-    print 'get notifications data';
-    print_r($data);
 
     $this->assertResponseIsSuccessful($response);
     $this->assertCount(2, $data);
