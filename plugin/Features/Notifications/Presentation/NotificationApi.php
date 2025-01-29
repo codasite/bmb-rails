@@ -50,10 +50,10 @@ class NotificationApi extends RestApiBase {
   }
 
   /**
-   * Check if a notification can be deleted.
+   * Check if the current user can delete notifications.
    */
-  protected function can_delete_item(int $id, bool $force): bool|WP_Error {
-    // First verify the notification belongs to the current user
+  public function delete_item_permissions_check($request): bool|WP_Error {
+    $id = (int) $request['id'];
     $items = $this->repository->get([
       'id' => $id,
       'user_id' => get_current_user_id(),
@@ -63,9 +63,7 @@ class NotificationApi extends RestApiBase {
     if (empty($items)) {
       return new WP_Error(
         'rest_notification_not_found',
-        __(
-          'Notification not found or you do not have permission to delete it.'
-        ),
+        __('Notification not found.'),
         ['status' => 404]
       );
     }

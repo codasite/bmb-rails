@@ -180,12 +180,6 @@ abstract class RestApiBase extends WP_REST_Controller implements
    * Delete a single item.
    */
   protected function delete_single_item(int $id, bool $force): bool|WP_Error {
-    // Allow checking permissions or adding conditions before delete
-    $can_delete = $this->can_delete_item($id, $force);
-    if (is_wp_error($can_delete)) {
-      return $can_delete;
-    }
-
     $result = $this->repository->delete($id);
     if (!$result) {
       return new WP_Error(
@@ -195,14 +189,6 @@ abstract class RestApiBase extends WP_REST_Controller implements
       );
     }
 
-    return true;
-  }
-
-  /**
-   * Check if an item can be deleted.
-   * Override this in child classes to add custom delete validation.
-   */
-  protected function can_delete_item(int $id, bool $force): bool|WP_Error {
     return true;
   }
 
