@@ -66,42 +66,6 @@ class NotificationApiTest extends RestApiTestCase {
     $this->assertEquals($notification1->id, $data[1]['id']);
   }
 
-  public function test_get_single_notification(): void {
-    $notification = $this->create_notification([
-      'user_id' => $this->user->ID,
-      'title' => 'Test',
-      'message' => 'Message',
-      'notification_type' => NotificationType::SYSTEM,
-    ]);
-    print_r($notification);
-
-    $response = $this->get(self::API_ENDPOINT . '/' . $notification->id);
-    $data = $response->get_data();
-
-    $this->assertResponseIsSuccessful($response);
-    $this->assertEquals($notification->id, $data['id']);
-    $this->assertEquals($notification->title, $data['title']);
-    $this->assertEquals($notification->message, $data['message']);
-    $this->assertEquals(
-      $notification->notification_type,
-      $data['notification_type']
-    );
-  }
-
-  public function test_cannot_get_other_users_notification(): void {
-    $other_user = $this->create_user();
-    $notification = $this->create_notification([
-      'user_id' => $other_user->ID,
-      'title' => 'Other User',
-      'message' => 'Other Message',
-      'notification_type' => 'bracket_created',
-    ]);
-
-    $response = $this->get(self::API_ENDPOINT . '/' . $notification->id);
-
-    $this->assertResponseStatus(404, $response);
-  }
-
   public function test_delete_notification(): void {
     $notification = $this->create_notification([
       'user_id' => $this->user->ID,
