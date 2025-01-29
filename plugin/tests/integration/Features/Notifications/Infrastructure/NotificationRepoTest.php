@@ -468,7 +468,10 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
     $this->repo->add($notification);
 
     $this->expectException(RepositoryUpdateException::class);
-    $this->expectExceptionMessage('Invalid search fields provided');
+    $this->expectExceptionMessage(
+      'Invalid fields provided for search: invalid_field, another_invalid. ' .
+        'Allowed fields are: id, user_id, timestamp, is_read, notification_type'
+    );
 
     $this->repo->bulk_update(
       [

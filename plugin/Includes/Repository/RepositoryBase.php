@@ -163,6 +163,37 @@ abstract class RepositoryBase implements CustomTableInterface {
   }
 
   /**
+   * Validate fields against a set of allowed fields.
+   *
+   * @param array $fields Fields to validate
+   * @param array $allowed_fields Allowed fields
+   * @param string $operation Operation name for error message (e.g. 'update', 'search')
+   * @throws RepositoryCreateException|RepositoryUpdateException If validation fails
+   */
+  protected function validate_fields(
+    array $fields,
+    array $allowed_fields,
+    string $operation
+  ): void {
+    $invalid_fields = array_diff(array_keys($fields), $allowed_fields);
+    if (!empty($invalid_fields)) {
+      $exception_class = match ($operation) {
+        'insert' => RepositoryCreateException::class,
+        default => RepositoryUpdateException::class,
+      };
+
+      throw new $exception_class(
+        sprintf(
+          'Invalid fields provided for %s: %s. Allowed fields are: %s',
+          $operation,
+          implode(', ', $invalid_fields),
+          implode(', ', $allowed_fields)
+        )
+      );
+    }
+  }
+
+  /**
    * Insert a new record.
    *
    * @param array $fields Fields to insert
@@ -171,21 +202,7 @@ abstract class RepositoryBase implements CustomTableInterface {
    */
   protected function insert(array $fields) {
     $insertable_fields = $this->get_insertable_fields();
-
-    // Check for invalid fields
-    $invalid_fields = array_diff(
-      array_keys($fields),
-      array_keys($insertable_fields)
-    );
-    if (!empty($invalid_fields)) {
-      throw new RepositoryCreateException(
-        sprintf(
-          'Invalid fields provided for insert: %s. Allowed fields are: %s',
-          implode(', ', $invalid_fields),
-          implode(', ', array_keys($insertable_fields))
-        )
-      );
-    }
+    $this->validate_fields($fields, array_keys($insertable_fields), 'insert');
 
     // Validate required fields
     $missing_fields = [];
@@ -245,19 +262,7 @@ abstract class RepositoryBase implements CustomTableInterface {
    */
   protected function update(int $id, array $fields) {
     $updateable_fields = $this->get_updateable_fields();
-
-    // Check for invalid fields
-    $invalid_fields = array_diff(array_keys($fields), $updateable_fields);
-
-    if (!empty($invalid_fields)) {
-      throw new RepositoryUpdateException(
-        sprintf(
-          'Invalid fields provided for update: %s. Allowed fields are: %s',
-          implode(', ', $invalid_fields),
-          implode(', ', $updateable_fields)
-        )
-      );
-    }
+    $this->validate_fields($fields, $updateable_fields, 'update');
 
     // Filter to only allowed fields
     $data = array_intersect_key($fields, array_flip($updateable_fields));
@@ -309,32 +314,11 @@ abstract class RepositoryBase implements CustomTableInterface {
 
     // Validate search criteria fields
     $searchable_fields = $this->get_searchable_fields();
-    $invalid_search_fields = array_diff(
-      array_keys($where),
-      array_keys($searchable_fields)
-    );
-    if (!empty($invalid_search_fields)) {
-      throw new RepositoryUpdateException(
-        sprintf(
-          'Invalid search fields provided: %s. Allowed fields are: %s',
-          implode(', ', $invalid_search_fields),
-          implode(', ', array_keys($searchable_fields))
-        )
-      );
-    }
+    $this->validate_fields($where, array_keys($searchable_fields), 'search');
 
+    // Validate update fields
     $updateable_fields = $this->get_updateable_fields();
-    $invalid_fields = array_diff(array_keys($fields), $updateable_fields);
-
-    if (!empty($invalid_fields)) {
-      throw new RepositoryUpdateException(
-        sprintf(
-          'Invalid fields provided for update: %s. Allowed fields are: %s',
-          implode(', ', $invalid_fields),
-          implode(', ', $updateable_fields)
-        )
-      );
-    }
+    $this->validate_fields($fields, $updateable_fields, 'update');
 
     // Build WHERE clause and SET clause
     $conditions = [];
