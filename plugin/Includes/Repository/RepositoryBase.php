@@ -261,29 +261,13 @@ abstract class RepositoryBase implements CustomTableInterface {
    * @throws RepositoryUpdateException If database error occurs or invalid fields provided
    */
   protected function update(int $id, array $fields) {
-    $updateable_fields = $this->get_updateable_fields();
-    $this->validate_fields($fields, $updateable_fields, 'update');
-
-    // Filter to only allowed fields
-    $data = array_intersect_key($fields, array_flip($updateable_fields));
-
-    if (empty($data)) {
+    if (empty($fields)) {
       throw new RepositoryUpdateException(
         'No valid fields provided for update'
       );
     }
 
-    $updated = $this->wpdb->update($this->table_name, $data, ['id' => $id]);
-
-    if ($this->wpdb->last_error) {
-      throw new RepositoryUpdateException(
-        "Database error updating record: {$this->wpdb->last_error}"
-      );
-    }
-
-    if ($updated === false) {
-      return null;
-    }
+    $this->bulk_update(['id' => $id], $fields);
 
     try {
       return $this->get([

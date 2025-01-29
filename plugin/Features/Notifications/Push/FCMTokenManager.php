@@ -303,6 +303,7 @@ class FCMTokenManager implements HooksInterface {
     try {
       $updated = $this->token_repo->update_token($token->id);
       if (!$updated) {
+        print 'updated missing';
         throw new TokenUpdateException('Failed to refresh token');
       }
       return $token;
