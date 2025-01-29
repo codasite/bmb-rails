@@ -316,4 +316,167 @@ class NotificationRepoTest extends WPBB_UnitTestCase {
       'Timestamp should be close to current time'
     );
   }
+
+  public function test_bulk_update_notifications(): void {
+    // Create multiple unread notifications
+    $notification1 = new Notification([
+      'user_id' => $this->user->ID,
+      'title' => 'First Title',
+      'message' => 'First Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+      'is_read' => false,
+    ]);
+    $notification2 = new Notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Second Title',
+      'message' => 'Second Message',
+      'notification_type' => NotificationType::TOURNAMENT_START,
+      'is_read' => false,
+    ]);
+    $this->repo->add($notification1);
+    $this->repo->add($notification2);
+
+    // Create a notification for a different user that shouldn't be updated
+    $other_user = $this->create_user();
+    $other_notification = new Notification([
+      'user_id' => $other_user->ID,
+      'title' => 'Other Title',
+      'message' => 'Other Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+      'is_read' => false,
+    ]);
+    $this->repo->add($other_notification);
+
+    // Perform bulk update
+    $updated_count = $this->repo->bulk_update(
+      [
+        'user_id' => $this->user->ID,
+        'is_read' => false,
+      ],
+      [
+        'is_read' => true,
+      ]
+    );
+
+    // Verify results
+    $this->assertEquals(2, $updated_count);
+
+    // Check that notifications were updated
+    $updated_notifications = $this->repo->get(['user_id' => $this->user->ID]);
+    foreach ($updated_notifications as $notification) {
+      $this->assertTrue($notification->is_read);
+    }
+
+    // Verify other user's notification was not affected
+    $other_notifications = $this->repo->get(['user_id' => $other_user->ID]);
+    $this->assertCount(1, $other_notifications);
+    $this->assertFalse($other_notifications[0]->is_read);
+  }
+
+  public function test_bulk_update_with_invalid_fields(): void {
+    $notification = new Notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Test Title',
+      'message' => 'Test Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+    ]);
+    $this->repo->add($notification);
+
+    $this->expectException(RepositoryUpdateException::class);
+    $this->repo->bulk_update(
+      ['user_id' => $this->user->ID],
+      ['user_id' => 999] // Should not be able to update user_id
+    );
+  }
+
+  public function test_bulk_update_with_no_matching_records(): void {
+    $updated_count = $this->repo->bulk_update(
+      [
+        'user_id' => 99999, // Non-existent user
+        'is_read' => false,
+      ],
+      [
+        'is_read' => true,
+      ]
+    );
+
+    $this->assertEquals(0, $updated_count);
+  }
+
+  public function test_bulk_update_with_no_update_fields(): void {
+    $this->expectException(RepositoryUpdateException::class);
+    $this->repo->bulk_update(
+      ['user_id' => $this->user->ID],
+      [] // Empty update fields
+    );
+  }
+
+  public function test_bulk_update_with_sql_injection_attempt(): void {
+    $notification = new Notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Original Title',
+      'message' => 'Original Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+    ]);
+    $this->repo->add($notification);
+
+    $malicious_title =
+      "'; DROP TABLE " . NotificationRepo::table_name() . '; --';
+
+    // Attempt update with malicious data
+    $this->repo->bulk_update(
+      ['user_id' => $this->user->ID],
+      ['title' => $malicious_title]
+    );
+
+    // Verify table still exists and data was properly escaped
+    $updated = $this->repo->get([
+      'user_id' => $this->user->ID,
+      'single' => true,
+    ]);
+    $this->assertNotNull($updated);
+    $this->assertEquals($malicious_title, $updated->title);
+  }
+
+  public function test_bulk_update_with_empty_where_clause(): void {
+    $notification = new Notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Test Title',
+      'message' => 'Test Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+    ]);
+    $this->repo->add($notification);
+
+    $this->expectException(RepositoryUpdateException::class);
+    $this->expectExceptionMessage(
+      'Empty where clause is not allowed for bulk updates to prevent accidental table-wide updates'
+    );
+
+    $this->repo->bulk_update(
+      [], // Empty where clause
+      ['is_read' => true]
+    );
+  }
+
+  public function test_bulk_update_with_invalid_search_fields(): void {
+    $notification = new Notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Test Title',
+      'message' => 'Test Message',
+      'notification_type' => NotificationType::BRACKET_UPCOMING,
+    ]);
+    $this->repo->add($notification);
+
+    $this->expectException(RepositoryUpdateException::class);
+    $this->expectExceptionMessage('Invalid search fields provided');
+
+    $this->repo->bulk_update(
+      [
+        'user_id' => $this->user->ID,
+        'invalid_field' => 'value', // Invalid search field
+        'another_invalid' => 123, // Another invalid field
+      ],
+      ['is_read' => true]
+    );
+  }
 }

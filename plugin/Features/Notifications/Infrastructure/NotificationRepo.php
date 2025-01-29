@@ -8,6 +8,7 @@ use WStrategies\BMB\Includes\Repository\DomainRepositoryInterface;
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
 use WStrategies\BMB\Includes\Repository\RepositoryBase;
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryDeleteException;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryUpdateException;
 
 /**
  * Repository for managing notifications in the database.
@@ -210,5 +211,17 @@ class NotificationRepo extends RepositoryBase implements
 
     require_once ABSPATH . 'wp-admin/includes/upgrade.php';
     dbDelta($sql);
+  }
+
+  /**
+   * Updates multiple notifications matching the given criteria.
+   *
+   * @param array $where Criteria to match notifications to update
+   * @param array $fields Fields to update
+   * @return int Number of notifications updated
+   * @throws RepositoryUpdateException If validation fails or database error occurs
+   */
+  public function bulk_update(array $where, array $fields): int {
+    return parent::bulk_update($where, $fields);
   }
 }

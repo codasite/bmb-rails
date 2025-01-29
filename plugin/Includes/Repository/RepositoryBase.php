@@ -293,6 +293,87 @@ abstract class RepositoryBase implements CustomTableInterface {
   }
 
   /**
+   * Updates multiple records matching the given criteria.
+   *
+   * @param array $where Criteria to match records to update
+   * @param array $fields Fields to update
+   * @return int Number of records updated
+   * @throws RepositoryUpdateException If validation fails or database error occurs
+   */
+  protected function bulk_update(array $where, array $fields): int {
+    if (empty($where)) {
+      throw new RepositoryUpdateException(
+        'Empty where clause is not allowed for bulk updates to prevent accidental table-wide updates'
+      );
+    }
+
+    // Validate search criteria fields
+    $searchable_fields = $this->get_searchable_fields();
+    $invalid_search_fields = array_diff(
+      array_keys($where),
+      array_keys($searchable_fields)
+    );
+    if (!empty($invalid_search_fields)) {
+      throw new RepositoryUpdateException(
+        sprintf(
+          'Invalid search fields provided: %s. Allowed fields are: %s',
+          implode(', ', $invalid_search_fields),
+          implode(', ', array_keys($searchable_fields))
+        )
+      );
+    }
+
+    $updateable_fields = $this->get_updateable_fields();
+    $invalid_fields = array_diff(array_keys($fields), $updateable_fields);
+
+    if (!empty($invalid_fields)) {
+      throw new RepositoryUpdateException(
+        sprintf(
+          'Invalid fields provided for update: %s. Allowed fields are: %s',
+          implode(', ', $invalid_fields),
+          implode(', ', $updateable_fields)
+        )
+      );
+    }
+
+    // Build WHERE clause and SET clause
+    $conditions = [];
+    $set_parts = [];
+    $params = [];
+
+    // Build SET clause first since it appears first in the query
+    foreach ($fields as $field => $value) {
+      $type = $this->get_field_definitions()[$field]['type'];
+      $set_parts[] = "{$field} = {$type}";
+      $params[] = $value;
+    }
+
+    // Then build WHERE clause
+    foreach ($where as $field => $value) {
+      $type = $searchable_fields[$field];
+      $conditions[] = "{$field} = {$type}";
+      $params[] = $value;
+    }
+
+    $query = $this->wpdb->prepare(
+      "UPDATE {$this->table_name} SET " .
+        implode(', ', $set_parts) .
+        ' WHERE ' .
+        implode(' AND ', $conditions),
+      $params
+    );
+
+    $updated = $this->wpdb->query($query);
+    if ($this->wpdb->last_error) {
+      throw new RepositoryUpdateException(
+        "Database error updating records: {$this->wpdb->last_error}"
+      );
+    }
+
+    return (int) $updated;
+  }
+
+  /**
    * Delete a record.
    *
    * @param int $id Record ID

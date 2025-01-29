@@ -79,6 +79,9 @@
   - User engagement
   - Error cases
 
+## 9. Notifications Screen
+ - [ ] 
+
 ## Notes
 - Maintain email notifications as fallback
 - Consider implementing notification categories
