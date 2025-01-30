@@ -66,6 +66,111 @@ class NotificationApiTest extends RestApiTestCase {
     $this->assertEquals($notification1->id, $data[1]['id']);
   }
 
+  public function test_mark_notification_as_read(): void {
+    $notification = $this->create_notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Test',
+      'message' => 'Message',
+      'notification_type' => NotificationType::SYSTEM,
+      'is_read' => false,
+    ]);
+
+    $response = $this->put(
+      self::API_ENDPOINT . '/' . $notification->id . '/read'
+    );
+
+    $this->assertResponseIsSuccessful($response);
+    $data = $response->get_data();
+    $this->assertTrue($data['is_read']);
+    $this->assertEquals($notification->id, $data['id']);
+
+    // Verify notification is marked as read in database
+    $updated = $this->repository->get([
+      'id' => $notification->id,
+      'single' => true,
+    ]);
+    $this->assertTrue($updated->is_read);
+  }
+
+  public function test_cannot_mark_other_users_notification_as_read(): void {
+    $other_user = $this->create_user();
+    $notification = $this->create_notification([
+      'user_id' => $other_user->ID,
+      'title' => 'Other User',
+      'message' => 'Other Message',
+      'notification_type' => NotificationType::SYSTEM,
+      'is_read' => false,
+    ]);
+
+    $response = $this->put(
+      self::API_ENDPOINT . '/' . $notification->id . '/read'
+    );
+
+    $this->assertResponseStatus(404, $response);
+
+    // Verify notification is still unread
+    $unchanged = $this->repository->get([
+      'id' => $notification->id,
+      'single' => true,
+    ]);
+    $this->assertFalse($unchanged->is_read);
+  }
+
+  public function test_mark_all_notifications_as_read(): void {
+    // Create multiple unread notifications
+    $notification1 = $this->create_notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Test 1',
+      'message' => 'Message 1',
+      'notification_type' => NotificationType::SYSTEM,
+      'is_read' => false,
+    ]);
+
+    $notification2 = $this->create_notification([
+      'user_id' => $this->user->ID,
+      'title' => 'Test 2',
+      'message' => 'Message 2',
+      'notification_type' => NotificationType::SYSTEM,
+      'is_read' => false,
+    ]);
+
+    // Create a notification for another user that shouldn't be affected
+    $other_user = $this->create_user();
+    $other_notification = $this->create_notification([
+      'user_id' => $other_user->ID,
+      'title' => 'Other User',
+      'message' => 'Other Message',
+      'notification_type' => NotificationType::SYSTEM,
+      'is_read' => false,
+    ]);
+
+    $response = $this->put(self::API_ENDPOINT . '/read-all');
+
+    $this->assertResponseIsSuccessful($response);
+    $this->assertEquals(2, $response->get_data()['marked_as_read']);
+
+    // Verify user's notifications are marked as read
+    $user_notifications = $this->repository->get([
+      'user_id' => $this->user->ID,
+    ]);
+    foreach ($user_notifications as $notification) {
+      $this->assertTrue($notification->is_read);
+    }
+
+    // Verify other user's notification is still unread
+    $other_user_notification = $this->repository->get([
+      'id' => $other_notification->id,
+      'single' => true,
+    ]);
+    $this->assertFalse($other_user_notification->is_read);
+  }
+
+  public function test_mark_all_as_read_requires_authentication(): void {
+    wp_set_current_user(0);
+    $response = $this->put(self::API_ENDPOINT . '/read-all');
+    $this->assertResponseStatus(401, $response);
+  }
+
   public function test_delete_notification(): void {
     $notification = $this->create_notification([
       'user_id' => $this->user->ID,
