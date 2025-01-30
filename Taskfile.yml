@@ -117,6 +117,11 @@ tasks:
     cmds:
       - docker exec -it wp-dev /bin/bash
 
+  wp:cli:
+    desc: Run WP-CLI command
+    cmds:
+      - docker exec wp-dev sudo -u www-data -i -- /usr/local/bin/wp-cli.phar {{.CLI_ARGS}}
+
   ### IMAGES ###
   images:up:
     desc: Start image processing containers
