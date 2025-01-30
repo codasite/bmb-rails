@@ -1,6 +1,6 @@
 class WpUrls {
-  // static const String baseUrl = 'http://localhost:8008';
-  static const String baseUrl = 'http://192.168.1.77:8008';
+  static const String baseUrl = 'http://localhost:8008';
+  // static const String baseUrl = 'http://192.168.1.77:8008';
 
   // WordPress API paths
   static const String _wpApiBase = '/wp-json/wp/v2';
@@ -18,6 +18,14 @@ class WpUrls {
   static const String _tokenBase = '$_fcmBase/token';
   static const String fcmSyncPath = '$_tokenBase/sync';
   static const String fcmTokenPath = _tokenBase;
+
+  // Notification API paths
+  static const String _notificationBase = '/wp-json/bmb/v1/notifications';
+  static String notificationPath(String id) => '$_notificationBase/$id';
+  static String get notificationsPath => _notificationBase;
+  static String notificationReadPath(String id) =>
+      '${notificationPath(id)}/read';
+  static String get notificationsReadAllPath => '$_notificationBase/read-all';
 
   // Full URLs
   static String get loginUrl => baseUrl + loginPath;

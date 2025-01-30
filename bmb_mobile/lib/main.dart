@@ -12,6 +12,9 @@ import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider
 import 'package:bmb_mobile/features/wp_http/presentation/providers/wp_http_client_provider.dart'
     as http;
 import 'package:bmb_mobile/features/notifications/presentation/providers/fcm_token_manager_provider.dart';
+import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
+import 'package:bmb_mobile/features/notifications/domain/services/notification_manager.dart';
+import 'package:bmb_mobile/features/notifications/data/clients/notification_client.dart';
 import 'package:bmb_mobile/features/wp_auth/data/repositories/wp_credential_repository.dart';
 import 'package:bmb_mobile/features/wp_http/domain/service/wp_session_client.dart';
 import 'package:bmb_mobile/features/wp_http/domain/service/wp_app_password_client.dart';
@@ -26,9 +29,7 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Load environment variables
   await dotenv.load();
-
   await AppLogger.initialize(
     dsn: dotenv.env['SENTRY_DSN'] ?? '',
     environment: dotenv.env['SENTRY_ENV'] ?? 'development',
@@ -72,12 +73,20 @@ void main() async {
     fcmManager: fcmManager,
   );
 
+  final notificationClient = NotificationClient(passwordClient);
+  final notificationManager = NotificationManager(notificationClient);
+  final notificationProvider = NotificationProvider(
+    manager: notificationManager,
+  );
+  notificationProvider.fetchNotifications();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: httpProvider),
         ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider.value(value: fcmProvider),
+        ChangeNotifierProvider.value(value: notificationProvider),
       ],
       child: const BmbApp(),
     ),
