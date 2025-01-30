@@ -33,16 +33,25 @@ class NotificationManager {
     NotificationType $notification_type,
     string $link
   ): ?Notification {
-    $data = [
-      'user_id' => $user_id,
-      'title' => $title,
-      'message' => $message,
-      'notification_type' => $notification_type->value,
-      'link' => $link,
-    ];
+    // Check if user exists
+    if (!get_user_by('id', $user_id)) {
+      return null;
+    }
 
-    $notification = new Notification($data);
-    return $this->notification_repo->add($notification);
+    try {
+      $data = [
+        'user_id' => $user_id,
+        'title' => $title,
+        'message' => $message,
+        'notification_type' => $notification_type->value,
+        'link' => $link,
+      ];
+
+      $notification = new Notification($data);
+      return $this->notification_repo->add($notification);
+    } catch (\Exception $e) {
+      return null;
+    }
   }
 
   /**
