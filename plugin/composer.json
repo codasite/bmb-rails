@@ -52,7 +52,8 @@
     "10up/wp_mock": "dev-trunk",
     "dg/bypass-finals": "^1.5",
     "sempro/phpunit-pretty-print": "^1.4",
-    "phpunit/phpcov": "^8.2"
+    "phpunit/phpcov": "^8.2",
+    "php-stubs/wp-cli-stubs": "^2.11"
   },
   "require": {
     "aws/aws-sdk-php": "^3.270",

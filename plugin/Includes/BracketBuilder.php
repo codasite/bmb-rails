@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Includes;
 
 use WStrategies\BMB\Features\Notifications\Presentation\NotificationApi;
+use WStrategies\BMB\Features\Notifications\Presentation\NotificationCommandLoader;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Includes\Hooks\Loader;
 use WStrategies\BMB\Includes\Hooks\AdminHooks;
@@ -138,6 +139,7 @@ class BracketBuilder {
       new MobileAppHooks(),
       new FCMTokenManager(),
       new NotificationApi(),
+      new NotificationCommandLoader(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);

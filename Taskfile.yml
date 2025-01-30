@@ -120,7 +120,14 @@ tasks:
   wp:cli:
     desc: Run WP-CLI command
     cmds:
-      - docker exec wp-dev sudo -u www-data -i -- /usr/local/bin/wp-cli.phar {{.CLI_ARGS}}
+      - docker exec wp-dev /usr/local/bin/wp-cli.phar --allow-root --path=/var/www/html {{.CLI_ARGS}}
+
+  wp:cli:notification:
+    desc: Run WP-CLI notification command
+    cmds:
+      - task: wp:cli
+        vars:
+          CLI_ARGS: wpbb notification {{.CLI_ARGS}}
 
   ### IMAGES ###
   images:up:
