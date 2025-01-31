@@ -1,5 +1,4 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
-import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -101,6 +100,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           child: InkWell(
                             onTap: () {
                               if (!notification.isRead) {
+                                print('marking as read');
                                 provider.markAsRead(notification.id);
                               }
                               if (notification.link != null) {

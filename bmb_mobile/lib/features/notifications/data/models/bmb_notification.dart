@@ -21,7 +21,7 @@ class BmbNotification {
       title: json['title'],
       message: json['message'],
       timestamp: DateTime.parse(json['timestamp']),
-      isRead: json['isRead'] ?? false,
+      isRead: json['is_read'] ?? false,
       link: json['link'],
     );
   }
@@ -32,8 +32,13 @@ class BmbNotification {
       'title': title,
       'message': message,
       'timestamp': timestamp.toIso8601String(),
-      'isRead': isRead,
+      'is_read': isRead,
       'link': link,
     };
+  }
+
+  @override
+  String toString() {
+    return 'BmbNotification(id: $id, title: $title, message: $message, timestamp: $timestamp, isRead: $isRead, link: $link)';
   }
 }
