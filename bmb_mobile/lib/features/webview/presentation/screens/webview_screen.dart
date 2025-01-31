@@ -15,6 +15,7 @@ import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_drawer.dart
 import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_bottom_nav_bar.dart';
 import 'dart:async';
 import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
+import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -247,12 +248,30 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     },
                     color: Colors.white,
                   ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications_outlined,
-                    color: Colors.white,
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: IconButton(
+                    icon: Badge(
+                      isLabelVisible:
+                          context.watch<NotificationProvider>().unreadCount > 0,
+                      backgroundColor: Colors.red,
+                      smallSize: 16,
+                      label: Text(
+                        context.watch<NotificationProvider>().unreadCount > 99
+                            ? '99+'
+                            : '${context.watch<NotificationProvider>().unreadCount}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                        ),
+                      ),
+                      child: const Icon(
+                        Icons.notifications_outlined,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: _handleNotificationNavigation,
                   ),
-                  onPressed: _handleNotificationNavigation,
                 ),
               ],
             ),
