@@ -58,6 +58,7 @@ class BracketResultsNotificationService {
     return [
       new BracketResultsEmailListener($args),
       new BracketResultsPushListener($args),
+      new BracketResultsStorageListener($args),
     ];
   }
 

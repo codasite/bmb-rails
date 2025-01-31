@@ -12,8 +12,9 @@ use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
 class NotificationManager {
   private NotificationRepo $notification_repo;
 
-  public function __construct(NotificationRepo $notification_repo) {
-    $this->notification_repo = $notification_repo;
+  public function __construct(array $args = []) {
+    $this->notification_repo =
+      $args['notification_repo'] ?? new NotificationRepo();
   }
 
   /**

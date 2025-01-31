@@ -37,6 +37,7 @@ class SendRoundCompleteNotificationsService {
     return [
       new RoundCompleteEmailListener($args),
       new RoundCompletePushListener($args),
+      new RoundCompleteStorageListener($args),
     ];
   }
   public function send_round_complete_notifications(): void {

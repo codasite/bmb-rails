@@ -33,6 +33,7 @@ class UpcomingBracketNotificationService {
     return [
       new UpcomingBracketEmailListener($args),
       new UpcomingBracketPushListener($args),
+      new UpcomingBracketStorageListener($args),
     ];
   }
 

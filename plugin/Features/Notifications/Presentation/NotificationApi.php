@@ -20,7 +20,9 @@ class NotificationApi extends RestApiBase {
 
   public function __construct() {
     $notification_repo = new NotificationRepo();
-    $this->notification_manager = new NotificationManager($notification_repo);
+    $this->notification_manager = new NotificationManager([
+      'notification_repo' => $notification_repo,
+    ]);
     parent::__construct([
       'rest_base' => $this->rest_base,
       'serializer' => new NotificationSerializer(),
