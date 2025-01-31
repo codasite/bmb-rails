@@ -38,19 +38,29 @@ class NotificationProvider extends ChangeNotifier {
   }
 
   Future<void> markAllAsRead() async {
-    final count = await _manager.markAllAsRead();
-    if (count > 0) {
-      _notifications = _notifications.map((notification) {
-        return BmbNotification(
-          id: notification.id,
-          title: notification.title,
-          message: notification.message,
-          timestamp: notification.timestamp,
-          isRead: true,
-          link: notification.link,
-        );
-      }).toList();
+    // Store original notifications in case we need to revert
+    final originalNotifications = List<BmbNotification>.from(_notifications);
+
+    // Optimistically update all notifications
+    _notifications = _notifications
+        .map((notification) => BmbNotification(
+              id: notification.id,
+              title: notification.title,
+              message: notification.message,
+              timestamp: notification.timestamp,
+              isRead: true,
+              link: notification.link,
+            ))
+        .toList();
+    notifyListeners();
+
+    try {
+      await _manager.markAllAsRead();
+    } catch (e) {
+      // Revert on failure
+      _notifications = originalNotifications;
       notifyListeners();
+      rethrow;
     }
   }
 
