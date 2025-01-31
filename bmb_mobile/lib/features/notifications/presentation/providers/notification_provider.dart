@@ -54,11 +54,22 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteNotification(String notificationId) async {
-    final success = await _manager.deleteNotification(notificationId);
-    if (success) {
-      _notifications.removeWhere((n) => n.id == notificationId);
+  Future<void> deleteNotification(String id) async {
+    // Optimistically remove the notification from the list
+    final index = _notifications.indexWhere((n) => n.id == id);
+    if (index == -1) return;
+
+    final notification = _notifications[index];
+    _notifications.removeAt(index);
+    notifyListeners();
+
+    try {
+      await _manager.deleteNotification(id);
+    } catch (e) {
+      // If the deletion fails, add the notification back
+      _notifications.insert(index, notification);
       notifyListeners();
+      rethrow;
     }
   }
 }
