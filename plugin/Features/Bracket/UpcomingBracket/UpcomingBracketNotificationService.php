@@ -61,7 +61,10 @@ class UpcomingBracketNotificationService {
           $listener->notify($user, $bracket, $notification);
         } catch (Exception $e) {
           (new Utils())->log_error(
-            'Error sending upcoming bracket notification: ' . $e->getMessage()
+            'Error sending upcoming bracket notification: ' .
+              $e->getMessage() .
+              "\nStack trace:\n" .
+              $e->getTraceAsString()
           );
         }
       }

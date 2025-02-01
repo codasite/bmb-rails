@@ -72,7 +72,9 @@ class BracketResultsNotificationService {
           'Error sending results notifications for bracket ' .
             $bracket->id .
             ': ' .
-            $e->getMessage()
+            $e->getMessage() .
+            "\nStack trace:\n" .
+            $e->getTraceAsString()
         );
       }
     }

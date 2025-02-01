@@ -86,7 +86,10 @@ class SendRoundCompleteNotificationsService {
         $listener->notify($user, $bracket, $play);
       } catch (Exception $e) {
         (new Utils())->log_error(
-          'Error sending round complete notification: ' . $e->getMessage()
+          'Error sending round complete notification: ' .
+            $e->getMessage() .
+            "\nStack trace:\n" .
+            $e->getTraceAsString()
         );
       }
     }

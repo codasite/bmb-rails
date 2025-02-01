@@ -15,9 +15,9 @@ class NotificationManagerTest extends WPBB_UnitTestCase {
   public function set_up(): void {
     parent::set_up();
     $this->notification_repo = new NotificationRepo();
-    $this->notification_manager = new NotificationManager(
-      $this->notification_repo
-    );
+    $this->notification_manager = new NotificationManager([
+      'notification_repo' => $this->notification_repo,
+    ]);
     $this->user = $this->create_user();
   }
 
