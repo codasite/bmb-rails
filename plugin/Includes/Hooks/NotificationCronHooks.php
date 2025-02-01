@@ -34,7 +34,7 @@ class NotificationCronHooks implements HooksInterface {
   }
 
   public function wpbb_notification_cron_exec(): void {
-    // $this->results_notification_service->send_bracket_results_notifications();
+    $this->results_notification_service->send_bracket_results_notifications();
     $this->send_round_complete_notifications_service->send_round_complete_notifications();
   }
 }
