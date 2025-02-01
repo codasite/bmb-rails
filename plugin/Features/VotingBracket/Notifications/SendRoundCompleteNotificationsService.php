@@ -2,17 +2,15 @@
 
 namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 
-use WStrategies\BMB\Email\Template\BracketEmailTemplate;
 use WStrategies\BMB\Features\Notifications\NotificationListeners\RoundCompleteNotificationListenerInterface;
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\UserRepo;
-use WStrategies\BMB\Includes\Service\WordpressFunctions\PermalinkService;
+use WStrategies\BMB\Includes\Utils;
+use Exception;
 
 class SendRoundCompleteNotificationsService {
   private readonly BracketRepo $bracket_repo;
@@ -84,7 +82,13 @@ class SendRoundCompleteNotificationsService {
     }
 
     foreach ($this->listeners as $listener) {
-      $listener->notify($user, $bracket, $play);
+      try {
+        $listener->notify($user, $bracket, $play);
+      } catch (Exception $e) {
+        (new Utils())->log_error(
+          'Error sending round complete notification: ' . $e->getMessage()
+        );
+      }
     }
   }
 }

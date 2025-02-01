@@ -7,6 +7,8 @@ use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscripti
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\UserRepo;
+use WStrategies\BMB\Includes\Utils;
+use Exception;
 
 class UpcomingBracketNotificationService {
   private NotificationSubscriptionRepo $notification_sub_repo;
@@ -55,7 +57,13 @@ class UpcomingBracketNotificationService {
       }
 
       foreach ($this->listeners as $listener) {
-        $listener->notify($user, $bracket, $notification);
+        try {
+          $listener->notify($user, $bracket, $notification);
+        } catch (Exception $e) {
+          (new Utils())->log_error(
+            'Error sending upcoming bracket notification: ' . $e->getMessage()
+          );
+        }
       }
     }
   }
