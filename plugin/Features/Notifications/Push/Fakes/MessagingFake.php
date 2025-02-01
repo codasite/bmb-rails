@@ -53,7 +53,7 @@ class MessagingFake implements Messaging {
           $message
         );
       } else {
-        $reports[] = SendReportFake::success(
+        $reports[] = SendReport::success(
           MessageTarget::with(MessageTarget::TOKEN, $token->value()),
           ['message_id' => 'fake_id'],
           $message
