@@ -1,6 +1,6 @@
 <?php
 
-namespace Includes\Service\PaidTournamentService;
+namespace WStrategies\BMB\tests\unit\Includes\Service\PaidTournamentService;
 
 use Stripe\Service\AccountLinkService;
 use Stripe\Service\AccountService;

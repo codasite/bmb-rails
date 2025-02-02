@@ -42,6 +42,12 @@ tasks:
       - docker exec wp-dev install-wp-tests
       - docker exec wp-dev create-admin-user.sh
 
+  composer:install:
+    desc: Install php dependencies
+    dir: ./plugin
+    cmds:
+      - composer install
+
   ### TRELLIS ###
   trellis:
     desc: Trellis task namespace
@@ -59,9 +65,7 @@ tasks:
   wp:test:
     desc: Run all tests
     cmds:
-      - task: wp:test:integration
-      - task: wp:test:unit
-
+      - docker exec wp-dev composer test -- {{.CLI_ARGS}}
   wp:test:unit:
     desc: Run unit tests using WP_Mock
     cmds:
@@ -81,6 +85,11 @@ tasks:
     desc: Run tests with coverage
     cmds:
       - docker exec wp-dev composer coverage
+
+  wp:test:merge-coverage:
+    desc: Merge coverage data
+    cmds:
+      - docker exec wp-dev composer merge-coverage
 
   ### DEVELOPMENT ###
   wp:log:
@@ -102,6 +111,11 @@ tasks:
     desc: Run SQL query
     cmds:
       - docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress -e "{{.CLI_ARGS}}"'
+
+  wp:bash:
+    desc: Open a bash shell in the wordpress container
+    cmds:
+      - docker exec -it wp-dev /bin/bash
 
   ### IMAGES ###
   images:up:
@@ -200,12 +214,25 @@ tasks:
     cmds:
       - vendor/bin/phpstan analyse -c phpstan.neon --memory-limit 2G .
 
+  quality:namespace-check:
+    desc: Check namespace consistency
+    dir: ./plugin
+    cmds:
+      # - python3 ../scripts/namespace_check.py Features Includes Admin Email Public --base-dir . --namespace-prefix WStrategies\\BMB
+      - python3 ../scripts/namespace_check.py tests --base-dir . --namespace-prefix WStrategies\\BMB {{.CLI_ARGS}}
+
   # MOBILE APP #
   flutter:run:
     desc: Run mobile app with the currently selected device in VSCode
     dir: ./bmb_mobile
     cmds:
       - flutter run
+
+  flutter:get:
+    desc: Get Flutter dependencies
+    dir: ./bmb_mobile
+    cmds:
+      - flutter pub get
 
   ios:
     desc: iOS task namespace
@@ -223,13 +250,41 @@ tasks:
     desc: Build iOS mobile app
     dir: ./bmb_mobile
     cmds:
-      - flutter build api
+      - flutter build ipa
 
   ios:push:
     desc: Push iOS app to App Store Connect
     dir: ./bmb_mobile
     cmds:
-      - xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey your_api_key --apiIssuer
+      - source .env.appstoreconnect && xcrun altool --upload-app --type ios -f build/ios/ipa/*.ipa --apiKey $API_KEY --apiIssuer $API_ISSUER
+
+  ios:deploy:
+    desc: Deploy iOS app to App Store Connect
+    dir: ./bmb_mobile
+    cmds:
+      - task: ios:build
+      - task: ios:push
+
+  ios:archive:
+    desc: Build, archive, and export ipa package
+    dir: ./bmb_mobile/ios
+    cmds:
+      - xattr -w com.apple.xcode.CreatedByBuildSystem true ./build && xcodebuild -quiet clean
+      - xcodebuild build -quiet -scheme Runner -sdk iphoneos -destination generic/platform=iOS -workspace Runner.xcworkspace
+      - xcodebuild archive -quiet -scheme Runner -sdk iphoneos -destination generic/platform=iOS -workspace Runner.xcworkspace -archivePath ./build/Runner.xcarchive
+      - xcodebuild -exportArchive -quiet -archivePath ./build/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath ./build
+
+  ios:install:
+    desc: Install the archived app on a physical device (use `task ios:archive` first)
+    dir: ./bmb_mobile/ios
+    cmds:
+      - source ../.env.devices && xcrun devicectl device install app --device $IOS_DEVICE_ID build/*.ipa
+
+  ios:test-credentials:
+    desc: Test App Store Connect API key
+    dir: ./bmb_mobile
+    cmds:
+      - source .env.appstoreconnect && xcrun altool --list-providers -apiKey $API_KEY --apiIssuer $API_ISSUER
 
   ios:xcode:
     desc: Open Xcode project
@@ -242,3 +297,29 @@ tasks:
     dir: ./actions-runner
     cmds:
       - ./run.sh
+
+  app:version:get:
+    desc: Display the current version and build number
+    dir: ./bmb_mobile
+    cmds:
+      - "grep 'version:' pubspec.yaml | sed -E 's/version: (.*)/Current version: \\1/'"
+
+  app:version:bump-build:
+    desc: Increment the build number (+1)
+    dir: ./bmb_mobile
+    cmds:
+      - |
+        current=$(grep "version:" pubspec.yaml | sed -E "s/version: ([0-9]+\.[0-9]+\.[0-9]+)\+([0-9]+)/\2/")
+        next=$((current + 1))
+        sed -i "" -E "s/(version: [0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+/\1+$next/" pubspec.yaml
+        echo "Build number bumped to +$next"
+
+  app:version:bump-patch:
+    desc: Increment the patch version (x.x.X)
+    dir: ./bmb_mobile
+    cmds:
+      - |
+        current=$(grep "version:" pubspec.yaml | sed -E "s/version: ([0-9]+\.[0-9]+\.)([0-9]+)\+.*/\2/")
+        next=$((current + 1))
+        sed -i "" -E "s/(version: [0-9]+\.[0-9]+\.)[0-9]+(\+[0-9]+)/\1$next\2/" pubspec.yaml
+        echo "Version bumped to patch $next"

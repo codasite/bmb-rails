@@ -1,6 +1,6 @@
 <?php
 
-namespace Includes\Controllers;
+namespace WStrategies\BMB\tests\unit\Includes\Controllers;
 
 class BracketPlayApiTest {
 }

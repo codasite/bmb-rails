@@ -1,5 +1,5 @@
 <?php
-namespace Includes\http;
+namespace WStrategies\BMB\tests\unit\Includes\http;
 
 use WP_Mock\Tools\TestCase;
 use WStrategies\BMB\Includes\Domain\Bracket;
