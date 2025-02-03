@@ -14,11 +14,7 @@ class NotificationClient {
   Future<List<BmbNotification>> getNotifications() async {
     try {
       final response = await _httpClient.get(WpUrls.notificationsPath);
-      if (response == null) {
-        return [];
-      }
-
-      final List<dynamic> jsonList = jsonDecode(response.body);
+      final List<dynamic> jsonList = jsonDecode(response!.body);
       return jsonList.map((json) => BmbNotification.fromJson(json)).toList();
     } catch (e, stackTrace) {
       await AppLogger.logError(

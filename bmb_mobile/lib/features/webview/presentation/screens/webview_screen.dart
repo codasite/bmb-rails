@@ -190,6 +190,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
             // For all other external URLs, open in external browser
             if (await canLaunchUrl(uri)) {
+              AppLogger.logMessage(
+                'Launching external domain: ${request.url}',
+              );
               await launchUrl(uri, mode: LaunchMode.externalApplication);
             }
             return NavigationDecision.prevent;
