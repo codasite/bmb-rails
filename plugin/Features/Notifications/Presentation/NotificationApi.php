@@ -80,9 +80,8 @@ class NotificationApi extends RestApiBase {
       );
     }
 
-    return new \WP_REST_Response(
-      $this->prepare_item_for_response($notification, $request),
-      200
+    return rest_ensure_response(
+      $this->prepare_item_for_response($notification, $request)
     );
   }
 

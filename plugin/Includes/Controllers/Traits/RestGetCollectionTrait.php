@@ -54,7 +54,11 @@ trait RestGetCollectionTrait {
 
     $data = [];
     foreach ($items as $item) {
-      $data[] = $this->prepare_item_for_response($item, $request);
+      $response = $this->prepare_item_for_response($item, $request);
+      if (is_wp_error($response)) {
+        return $response;
+      }
+      $data[] = $response->get_data();
     }
 
     return rest_ensure_response($data);

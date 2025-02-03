@@ -238,13 +238,24 @@ abstract class RestApiBase extends WP_REST_Controller implements
 
   /**
    * Prepare the item for the REST response.
-   * Default implementation uses the serializer.
    *
-   * @param mixed           $item    WordPress representation of the item.
-   * @param WP_REST_Request $request Request object.
-   * @return array Response data.
+   * @param mixed $item WordPress representation of the item.
+   * @param \WP_REST_Request $request Request object.
+   * @return \WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
    */
-  public function prepare_item_for_response($item, $request): array {
-    return $this->serializer->serialize($item);
+  public function prepare_item_for_response(
+    $item,
+    $request
+  ): \WP_REST_Response|WP_Error {
+    try {
+      $data = $this->serializer->serialize($item);
+      return rest_ensure_response($data);
+    } catch (\Exception $e) {
+      return new WP_Error(
+        'rest_prepare_failed',
+        __('Failed to prepare item for response.'),
+        ['status' => 500]
+      );
+    }
   }
 }
