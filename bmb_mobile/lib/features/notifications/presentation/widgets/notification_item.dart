@@ -1,4 +1,5 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
+import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -34,7 +35,6 @@ class NotificationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: 16,
         vertical: 8,
       ),
       child: Dismissible(
@@ -55,59 +55,72 @@ class NotificationItem extends StatelessWidget {
           ),
         ),
         onDismissed: (_) => onDelete(),
-        child: Card(
-          margin: const EdgeInsets.symmetric(
-            horizontal: 0,
-            vertical: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            color: BmbColors.darkBlue,
+            borderRadius: BorderRadius.circular(12),
+            border: !notification.isRead
+                ? Border.all(
+                    color: BmbColors.blue,
+                    width: 1.5,
+                  )
+                : null,
           ),
-          color: notification.isRead
-              ? BmbColors.darkBlue
-              : BmbColors.blue.withOpacity(0.9),
-          child: InkWell(
-            onTap: () {
-              if (!notification.isRead) {
-                onMarkAsRead(notification.id);
-              }
-              if (notification.link != null) {
-                Navigator.pop(context, notification.link);
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          notification.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: () {
+                if (!notification.isRead) {
+                  onMarkAsRead(notification.id);
+                }
+                // if (notification.link != null) {
+                //   Navigator.pop(context, notification.link);
+                // }
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            notification.title,
+                            style: TextStyle(
+                              color: notification.isRead
+                                  ? Colors.white.withOpacity(0.7)
+                                  : Colors.white,
+                              fontSize: 16,
+                              fontVariations: BmbFontWeights.w500,
+                            ),
                           ),
                         ),
-                      ),
-                      Text(
-                        _formatTimestamp(notification.timestamp),
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 12,
+                        Text(
+                          _formatTimestamp(notification.timestamp),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.5),
+                            fontSize: 12,
+                            fontVariations: BmbFontWeights.w500,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    notification.message,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.9),
-                      fontSize: 14,
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    Text(
+                      notification.message,
+                      style: TextStyle(
+                        color: notification.isRead
+                            ? Colors.white.withOpacity(0.5)
+                            : Colors.white.withOpacity(0.7),
+                        fontSize: 14,
+                        fontVariations: BmbFontWeights.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

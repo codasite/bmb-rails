@@ -1,5 +1,7 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
+import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
+import 'package:bmb_mobile/features/notifications/presentation/widgets/mark_all_as_read_button.dart';
 import 'package:bmb_mobile/features/notifications/presentation/widgets/notification_item.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,14 +27,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     final provider = context.watch<NotificationProvider>();
     final notifications = provider.notifications;
+    final hasUnread = provider.unreadCount > 0;
 
     return Scaffold(
       backgroundColor: BmbColors.ddBlue,
       appBar: AppBar(
-        backgroundColor: BmbColors.darkBlue,
+        backgroundColor: BmbColors.ddBlue,
         title: UpperCaseText(
           'Notifications',
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontVariations: BmbFontWeights.w500,
+          ),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -58,37 +65,30 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 ],
               )
-            : Column(
-                children: [
-                  if (provider.unreadCount > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8, bottom: 8),
-                      child: TextButton(
-                        onPressed: () => provider.markAllAsRead(),
-                        child: Text(
-                          'Mark all as read',
-                          style: TextStyle(
-                            color: Colors.white.withOpacity(0.7),
-                            fontSize: 14,
-                          ),
-                        ),
+            : Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  children: [
+                    MarkAllAsReadButton(
+                      hasUnread: hasUnread,
+                      onPressed: hasUnread ? provider.markAllAsRead : null,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: notifications.length,
+                        itemBuilder: (context, index) {
+                          final notification = notifications[index];
+                          return NotificationItem(
+                            notification: notification,
+                            onDelete: () =>
+                                provider.deleteNotification(notification.id),
+                            onMarkAsRead: provider.markAsRead,
+                          );
+                        },
                       ),
                     ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: notifications.length,
-                      itemBuilder: (context, index) {
-                        final notification = notifications[index];
-                        return NotificationItem(
-                          notification: notification,
-                          onDelete: () =>
-                              provider.deleteNotification(notification.id),
-                          onMarkAsRead: provider.markAsRead,
-                        );
-                      },
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
       ),
     );
