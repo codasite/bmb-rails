@@ -5,9 +5,6 @@ namespace WStrategies\BMB\Includes\Service\Serializer;
 use WStrategies\BMB\Includes\Domain\Play;
 
 class PlaySerializer extends PostBaseSerializer {
-  private PickSerializer $match_pick_serializer;
-  private BracketSerializer $bracket_serializer;
-
   public function deserialize(array|string $data): Play {
     $obj_data = $this->get_object_data($data);
     return new Play($obj_data);

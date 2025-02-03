@@ -58,10 +58,10 @@ class NotificationManager {
   /**
    * Marks a notification as read.
    *
-   * @param string $notification_id The ID of the notification to mark as read
+   * @param int $notification_id The ID of the notification to mark as read
    * @return Notification|null The updated notification or null if not found
    */
-  public function mark_as_read(string $notification_id): ?Notification {
+  public function mark_as_read(int $notification_id): ?Notification {
     return $this->notification_repo->update($notification_id, [
       'is_read' => true,
     ]);

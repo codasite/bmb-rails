@@ -10,19 +10,19 @@ class TableSqlGenerator {
    * Generate CREATE TABLE SQL from field definitions.
    *
    * @param array<string, array{
-   *   type: string,           SQL placeholder type (%s, %d, etc.)
-   *   sql_type: string,       SQL column type definition
-   *   required?: bool,        Whether field is required for inserts
-   *   searchable?: bool,      Whether field can be used in WHERE clauses
-   *   updateable?: bool,      Whether field can be updated
-   *   nullable?: bool,        Whether field can be NULL
-   *   default?: mixed,        Default value for field
-   *   primary_key?: bool,     Whether field is primary key
-   *   index?: bool,           Whether field should be indexed
-   *   foreign_key?: array{   Foreign key definition
-   *     table: string,        Referenced table
-   *     column: string,       Referenced column
-   *     on_delete?: string    ON DELETE behavior
+   *   type: string,
+   *   sql_type: string,
+   *   required?: bool,
+   *   searchable?: bool,
+   *   updateable?: bool,
+   *   nullable?: bool,
+   *   default?: mixed,
+   *   primary_key?: bool,
+   *   index?: bool,
+   *   foreign_key?: array{
+   *     table: string,
+   *     column: string,
+   *     on_delete?: string
    *   }
    * }> $fields Field definitions
    * @return string SQL statement

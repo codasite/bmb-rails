@@ -42,11 +42,11 @@ abstract class RepositoryBase implements CustomTableInterface {
    * Get field definitions for validation and types.
    *
    * @return array<string, array{
-   *   type: string,        SQL placeholder type (%s, %d, etc.)
-   *   required?: bool,     Whether field is required for inserts
-   *   searchable?: bool,   Whether field can be used in WHERE clauses
-   *   updateable?: bool,   Whether field can be updated
-   *   default?: mixed,     Default value for field
+   *   type: string,
+   *   required?: bool,
+   *   searchable?: bool,
+   *   updateable?: bool,
+   *   default?: mixed
    * }> Field definitions
    */
   abstract protected function get_field_definitions(): array;
