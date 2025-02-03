@@ -20,6 +20,6 @@ class TestFactory extends WP_UnitTest_Factory {
     $this->play = new PlayTestFactory($this);
     $this->bracket = new BracketTestFactory($this);
     $this->team = new TeamTestFactory($this);
-    $this->notification = new NotificationTestFactory($this);
+    $this->notification = new NotificationSubscriptionTestFactory($this);
   }
 }

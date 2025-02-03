@@ -3,15 +3,18 @@ parameters:
     - vendor
     - tests/integration
     - tests/unit
+    - Features/Notifications/Push/Fakes
   paths:
     - Admin
     - Email
     - Includes
     - Public
+    - Features
   level: 5
   scanFiles:
     - vendor/php-stubs/wordpress-stubs/wordpress-stubs.php
     - vendor/php-stubs/wordpress-tests-stubs/wordpress-tests-stubs.php
     - vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+    - vendor/php-stubs/wp-cli-stubs/wp-cli-stubs.php
   bootstrapFiles:
     - constants.php

@@ -207,7 +207,7 @@ class EnqueueScriptsHooks implements HooksInterface {
     ]);
   }
 
-  private function get_bmb_plus_permalink(): false|string {
+  private function get_bmb_plus_permalink(): string {
     // use wp query to get the post for the bmb subscription
     $args = [
       'name' => $this->get_bmb_plus_slug(),

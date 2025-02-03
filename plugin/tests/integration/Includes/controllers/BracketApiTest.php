@@ -10,7 +10,7 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
-use WStrategies\BMB\Includes\Service\Notifications\BracketResultsNotificationService;
+use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsNotificationService;
 use WStrategies\BMB\Includes\Service\ScoreServiceInterface;
 use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\tests\integration\Traits\SetupAdminUser;

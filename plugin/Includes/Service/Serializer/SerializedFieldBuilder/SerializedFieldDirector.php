@@ -2,6 +2,8 @@
 
 namespace WStrategies\BMB\Includes\Service\Serializer\SerializedFieldBuilder;
 
+use WStrategies\BMB\Includes\Service\Serializer\ApiSerializerInterface;
+
 class SerializedFieldDirector {
   private SerializedFieldBuilderInterface $builder;
 
@@ -15,6 +17,13 @@ class SerializedFieldDirector {
         $this->builder->build_field($value);
       } elseif (is_array($value)) {
         $this->builder->build_field($key, $value);
+      } elseif ($value instanceof ApiSerializerInterface) {
+        $this->builder->build_field($key, [
+          'serializer' => $value,
+          'many' => $value->is_many(),
+          'required' => $value->is_required(),
+          'readonly' => $value->is_readonly(),
+        ]);
       }
     }
   }

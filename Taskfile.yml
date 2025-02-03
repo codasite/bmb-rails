@@ -105,17 +105,29 @@ tasks:
   wp:db:dump:
     desc: Dump the database into the mariadb init folder
     cmds:
-      - docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
+      - docker exec wp-dev-db /bin/bash -c 'mariadb-dump -u root -p"$MYSQL_ROOT_PASSWORD" wordpress > /docker-entrypoint-initdb.d/dump.sql'
 
   wp:db:query:
     desc: Run SQL query
     cmds:
-      - docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$$MYSQL_ROOT_PASSWORD" wordpress -e "{{.CLI_ARGS}}"'
+      - docker exec wp-dev-db /bin/bash -c 'mariadb -u root -p"$MYSQL_ROOT_PASSWORD" wordpress -e "{{.CLI_ARGS}}"'
 
   wp:bash:
     desc: Open a bash shell in the wordpress container
     cmds:
       - docker exec -it wp-dev /bin/bash
+
+  wp:cli:
+    desc: Run WP-CLI command
+    cmds:
+      - docker exec wp-dev /usr/local/bin/wp-cli.phar --allow-root --path=/var/www/html {{.CLI_ARGS}}
+
+  wp:cli:notification:
+    desc: Run WP-CLI notification command
+    cmds:
+      - task: wp:cli
+        vars:
+          CLI_ARGS: wpbb notification {{.CLI_ARGS}}
 
   ### IMAGES ###
   images:up:
@@ -233,6 +245,12 @@ tasks:
     dir: ./bmb_mobile
     cmds:
       - flutter pub get
+
+  flutter:add:
+    desc: Add a new Flutter dependency
+    dir: ./bmb_mobile
+    cmds:
+      - flutter pub add {{.CLI_ARGS}}
 
   ios:
     desc: iOS task namespace
