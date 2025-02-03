@@ -14,6 +14,9 @@ class PageTitleHooks implements HooksInterface {
 
   public function set_page_title($title): string {
     global $post;
+    if (!$post) {
+      return $title;
+    }
     $post_slug = $post->post_name;
     $current_tab = get_query_var('tab', '');
 

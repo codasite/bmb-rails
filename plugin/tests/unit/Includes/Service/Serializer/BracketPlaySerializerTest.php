@@ -1,5 +1,5 @@
 <?php
-namespace Includes\Service\Serializer;
+namespace WStrategies\BMB\tests\unit\Includes\Service\Serializer;
 
 use Spatie\Snapshots\MatchesSnapshots;
 use WP_Mock\Tools\TestCase;
