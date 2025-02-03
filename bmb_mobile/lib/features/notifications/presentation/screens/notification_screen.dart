@@ -67,20 +67,20 @@ class _NotificationScreenState extends State<NotificationScreen> {
               )
             : ListView.separated(
                 padding: const EdgeInsets.all(15),
-                itemCount: notifications.length + (hasUnread ? 1 : 0),
+                itemCount: notifications.length + (1),
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 15),
                 itemBuilder: (context, index) {
-                  if (hasUnread && index == 0) {
+                  if (index == 0) {
                     return Align(
                       alignment: Alignment.centerRight,
                       child: MarkAllAsReadButton(
+                        hasUnread: hasUnread,
                         onPressed: provider.markAllAsRead,
                       ),
                     );
                   }
-                  final notification =
-                      notifications[hasUnread ? index - 1 : index];
+                  final notification = notifications[index - 1];
                   return NotificationItem(
                     notification: notification,
                     onDelete: () =>
