@@ -1,4 +1,5 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
+import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
@@ -150,35 +151,48 @@ class _WebViewScreenState extends State<WebViewScreen> {
             });
           },
           onNavigationRequest: (NavigationRequest request) async {
+            final uri = Uri.parse(request.url);
+
+            // If it's our domain, allow navigation
+            if (request.url.contains(WpUrls.baseUrl)) {
+              // Check for login/unauthorized paths
+              if (request.url.contains(WpUrls.loginPath) ||
+                  request.url.contains('unauthorized')) {
+                context.read<AuthProvider>().logout();
+                if (mounted) {
+                  Navigator.pushReplacementNamed(context, '/login');
+                }
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            }
+
+            // Check if this is a resource request (not a page navigation)
+            final isResource = uri.path.toLowerCase().contains(RegExp(
+                  r'\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)$',
+                ));
+
             final allowedExternalDomains = [
+              'm.stripe.network',
+              'js.stripe.com',
               'widgets.wp.com',
               'public-api.wordpress.com',
               'wordpress.com'
             ];
 
-            if (!request.url.contains(WpUrls.baseUrl)) {
-              final uri = Uri.parse(request.url);
+            final isAllowedDomain = allowedExternalDomains
+                .any((domain) => request.url.contains(domain));
 
-              if (allowedExternalDomains
-                  .any((domain) => request.url.contains(domain))) {
-                return NavigationDecision.navigate;
-              }
-
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri, mode: LaunchMode.externalApplication);
-              }
-              return NavigationDecision.prevent;
+            // Allow resource requests to load in WebView
+            if (isResource || isAllowedDomain) {
+              return NavigationDecision.navigate;
             }
 
-            if (request.url.contains(WpUrls.loginPath) ||
-                request.url.contains('unauthorized')) {
-              context.read<AuthProvider>().logout();
-              if (mounted) {
-                Navigator.pushReplacementNamed(context, '/login');
-              }
-              return NavigationDecision.prevent;
+            // For all other external URLs, open in external browser
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
             }
-            return NavigationDecision.navigate;
+            return NavigationDecision.prevent;
           },
         ),
       );
