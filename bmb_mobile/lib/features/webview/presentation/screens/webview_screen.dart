@@ -37,9 +37,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   final List<NavigationItem> _pages = bottomNavItems;
 
-  void _loadUrl(String path) {
+  void _loadUrl(String path, {bool prependBaseUrl = true}) {
     controller.loadRequest(
-      Uri.parse(WpUrls.baseUrl + path),
+      Uri.parse(prependBaseUrl ? WpUrls.baseUrl + path : path),
     );
   }
 
@@ -92,7 +92,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     );
 
     if (result != null && result is String) {
-      _loadUrl(result);
+      _loadUrl(result, prependBaseUrl: false);
     }
   }
 

@@ -71,9 +71,9 @@ class NotificationItem extends StatelessWidget {
               if (!notification.isRead) {
                 onMarkAsRead(notification.id);
               }
-              // if (notification.link != null) {
-              //   Navigator.pop(context, notification.link);
-              // }
+              if (notification.link != null) {
+                Navigator.pop(context, notification.link);
+              }
             },
             borderRadius: BorderRadius.circular(12),
             child: Padding(
