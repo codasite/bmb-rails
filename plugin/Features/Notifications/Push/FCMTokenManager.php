@@ -140,11 +140,14 @@ class FCMTokenManager implements HooksInterface {
    * Called when FCM reports a token as invalid or when delivery fails.
    * Removes the invalid token to prevent future delivery attempts.
    *
-   * @param string $token The FCM token that failed
+   * @param string $token_string The FCM token that failed
    */
-  public function handle_failed_delivery(string $token): void {
+  public function handle_failed_delivery(string $token_string): void {
     try {
-      $token = $this->token_repo->get(['token' => $token, 'single' => true]);
+      $token = $this->token_repo->get([
+        'token' => $token_string,
+        'single' => true,
+      ]);
 
       if ($token) {
         $deleted = $this->token_repo->delete($token->id);
@@ -171,15 +174,7 @@ class FCMTokenManager implements HooksInterface {
       (new Utils())->log(
         sprintf(
           'Database error handling failed delivery for token %s: %s',
-          $token,
-          $e->getMessage()
-        )
-      );
-    } catch (\Exception $e) {
-      (new Utils())->log(
-        sprintf(
-          'Unexpected error in handle_failed_delivery for token %s: %s',
-          $token,
+          $token_string,
           $e->getMessage()
         )
       );
@@ -199,13 +194,6 @@ class FCMTokenManager implements HooksInterface {
       (new Utils())->log(
         sprintf(
           'Database error cleaning up inactive tokens: %s',
-          $e->getMessage()
-        )
-      );
-    } catch (\Exception $e) {
-      (new Utils())->log(
-        sprintf(
-          'Unexpected error in cleanup_inactive_tokens: %s',
           $e->getMessage()
         )
       );

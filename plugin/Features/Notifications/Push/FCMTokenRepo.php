@@ -4,7 +4,6 @@ namespace WStrategies\BMB\Features\Notifications\Push;
 
 use WStrategies\BMB\Includes\Repository\CustomTableNames;
 use WStrategies\BMB\Includes\Repository\RepositoryBase;
-use WStrategies\BMB\Features\Notifications\Push\Exceptions\TokenDatabaseException;
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryReadException;
 use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryUpdateException;
@@ -87,7 +86,7 @@ class FCMTokenRepo extends RepositoryBase {
    *
    * @param array $args Search criteria
    * @return FCMToken|FCMToken[]|null
-   * @throws TokenDatabaseException
+   * @throws RepositoryReadException If there is an error reading the tokens
    */
   public function get($args = []): FCMToken|array|null {
     return parent::get($args);
@@ -98,7 +97,7 @@ class FCMTokenRepo extends RepositoryBase {
    *
    * @param FCMToken $token Token to add
    * @return FCMToken|null
-   * @throws TokenDatabaseException
+   * @throws RepositoryCreateException If token is not a FCMToken instance
    */
   public function add(FCMToken $token): ?FCMToken {
     return $this->insert([
@@ -117,7 +116,7 @@ class FCMTokenRepo extends RepositoryBase {
    * @param int $id Device ID
    * @param array $fields Fields to update
    * @return FCMToken|null
-   * @throws TokenDatabaseException
+   * @throws RepositoryUpdateException If there is an error updating the token
    */
   public function update_token(int $id, array $fields = []): ?FCMToken {
     // Always update last_used_at when updating token
@@ -130,7 +129,7 @@ class FCMTokenRepo extends RepositoryBase {
    *
    * @param int $id Token ID
    * @return bool
-   * @throws TokenDatabaseException
+   * @throws RepositoryDeleteException If there is an error deleting the token
    */
   public function delete(int $id): bool {
     return parent::delete($id);
@@ -141,7 +140,7 @@ class FCMTokenRepo extends RepositoryBase {
    *
    * @param int $days_threshold Number of days of inactivity before deletion
    * @return int Number of tokens deleted
-   * @throws TokenDatabaseException
+   * @throws RepositoryDeleteException If there is an error deleting the tokens
    */
   public function delete_inactive_tokens(int $days_threshold = 30): int {
     $sql = $this->wpdb->prepare(

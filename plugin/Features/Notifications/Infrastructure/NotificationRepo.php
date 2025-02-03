@@ -110,8 +110,9 @@ class NotificationRepo extends RepositoryBase implements
   /**
    * Adds a new notification.
    *
-   * @param object $object Notification to add
-   * @return object|null The created notification or null on failure
+   * @param Notification $object Notification to add
+   * @return Notification|null The created notification or null on failure
+   * @throws RepositoryCreateException If object is not a Notification instance
    */
   public function add(object $object): ?Notification {
     if (!($object instanceof Notification)) {
