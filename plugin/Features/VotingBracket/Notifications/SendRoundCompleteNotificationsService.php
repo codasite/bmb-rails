@@ -2,7 +2,6 @@
 
 namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 
-use WStrategies\BMB\Features\Notifications\NotificationListeners\RoundCompleteNotificationListenerInterface;
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
@@ -28,6 +27,7 @@ class SendRoundCompleteNotificationsService {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->user_repo = $args['user_repo'] ?? new UserRepo();
   }
+
   /**
    * @return array<RoundCompleteNotificationListenerInterface>
    */
@@ -38,6 +38,7 @@ class SendRoundCompleteNotificationsService {
       new RoundCompleteStorageListener($args),
     ];
   }
+
   public function send_round_complete_notifications(): void {
     $brackets = $this->bracket_repo->get_all(
       [
@@ -56,6 +57,7 @@ class SendRoundCompleteNotificationsService {
       $this->send_notifications_for_bracket($bracket);
     }
   }
+
   private function send_notifications_for_bracket(Bracket $bracket): void {
     $plays = $this->play_repo->get_all(
       ['bracket_id' => $bracket->id, 'author__not_in' => [0]],
@@ -72,6 +74,7 @@ class SendRoundCompleteNotificationsService {
       0
     );
   }
+
   private function send_notifications_for_play(
     Bracket $bracket,
     Play $play
