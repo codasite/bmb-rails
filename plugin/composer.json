@@ -52,7 +52,8 @@
     "10up/wp_mock": "dev-trunk",
     "dg/bypass-finals": "^1.5",
     "sempro/phpunit-pretty-print": "^1.4",
-    "phpunit/phpcov": "^8.2"
+    "phpunit/phpcov": "^8.2",
+    "php-stubs/wp-cli-stubs": "^2.11"
   },
   "require": {
     "aws/aws-sdk-php": "^3.270",
@@ -60,7 +61,8 @@
     "setasign/fpdi": "^2.3",
     "mailchimp/marketing": "^3.0",
     "mailchimp/transactional": "^1.0",
-    "stripe/stripe-php": "^13.8"
+    "stripe/stripe-php": "^13.8",
+    "kreait/firebase-php": "^7.16"
   },
   "scripts": {
     "test-integration": "TEST_TYPE=integration phpunit --configuration=tests/phpunit.xml.dist --testsuite integration",

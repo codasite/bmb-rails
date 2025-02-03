@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1010513584747",
+    "project_id": "back-my-bracket",
+    "storage_bucket": "back-my-bracket.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1010513584747:android:f2762ec1079aceca3b472e",
+        "android_client_info": {
+          "package_name": "com.backmybracket.mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkBafsLcLwIebn3e-05GKnA2zSZCykWgE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

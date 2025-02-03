@@ -5,7 +5,7 @@ ARG PLUGIN_NAME
 
 # Set up the os
 RUN apt-get -qq update && \
-        apt-get -y install vim unzip curl sudo subversion mariadb-client \
+        apt-get -y install vim unzip curl sudo subversion mariadb-client less \
         && apt-get autoclean \
         && chsh -s /bin/bash www-data
 

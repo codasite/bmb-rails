@@ -1,16 +1,16 @@
 <?php
 namespace WStrategies\BMB\Includes\Service\Permissions;
 
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 
 class NotificationPermissions implements PermissionsServiceInterface {
-  private $notification_repo;
+  private $notification_sub_repo;
   public function __construct($opts = []) {
-    $this->notification_repo =
-      $opts['notification_repo'] ?? new NotificationRepo();
+    $this->notification_sub_repo =
+      $opts['notification_sub_repo'] ?? new NotificationSubscriptionRepo();
   }
   public function has_cap($cap, $user_id, $id): bool {
-    $notification = $this->notification_repo->get([
+    $notification = $this->notification_sub_repo->get([
       'id' => $id,
       'single' => true,
     ]);

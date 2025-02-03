@@ -11,3 +11,5 @@ ALTER TABLE wp_bracket_builder_brackets
         ADD COLUMN live_round_index TINYINT(2) DEFAULT 0;
 
 ALTER TABlE wp_bracket_builder_bracket_results ADD COLUMN popularity DECIMAL(6, 5) DEFAULT NULL;
+
+ALTER TABLE wp_bracket_builder_notifications RENAME TO wp_bracket_builder_notification_subscriptions;

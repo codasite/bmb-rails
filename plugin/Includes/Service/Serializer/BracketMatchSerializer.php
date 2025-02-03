@@ -7,10 +7,6 @@ use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Play;
 
 class BracketMatchSerializer extends ApiSerializerBase {
-  private TeamSerializer $team_serializer;
-  public function __construct($args = []) {
-    $this->team_serializer = $args['team_serializer'] ?? new TeamSerializer();
-  }
   // public function serialize(object $bracket): array {
   //   if (!$bracket instanceof BracketMatch) {
   //     throw new \Exception('Invalid data type');
@@ -27,8 +23,8 @@ class BracketMatchSerializer extends ApiSerializerBase {
       'id',
       'round_index',
       'match_index',
-      'team1' => ['serializer' => $this->team_serializer],
-      'team2' => ['serializer' => $this->team_serializer],
+      'team1' => new TeamSerializer(),
+      'team2' => new TeamSerializer(),
     ];
   }
 }

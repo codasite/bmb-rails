@@ -8,6 +8,28 @@ use WStrategies\BMB\Includes\Service\Serializer\SerializedFieldBuilder\Serialize
 use WStrategies\BMB\Includes\Service\Serializer\SerializedFieldBuilder\SerializerBuilder;
 
 abstract class ApiSerializerBase implements ApiSerializerInterface {
+  protected bool $required;
+  protected bool $many;
+  protected bool $readonly;
+
+  public function __construct($args = []) {
+    $this->required = $args['required'] ?? false;
+    $this->many = $args['many'] ?? false;
+    $this->readonly = $args['readonly'] ?? false;
+  }
+
+  public function is_required(): bool {
+    return $this->required;
+  }
+
+  public function is_many(): bool {
+    return $this->many;
+  }
+
+  public function is_readonly(): bool {
+    return $this->readonly;
+  }
+
   protected function get_object_data(array $serialized): array {
     $data_builder = new ObjectDataBuilder($serialized);
     $director = new SerializedFieldDirector($data_builder);
@@ -15,7 +37,7 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
     return $data_builder->get_object_data();
   }
 
-  public function serialize(object|null $obj): array {
+  public function serialize(object|null $obj): mixed {
     if (!$obj) {
       return [];
     }
@@ -32,8 +54,6 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
     );
     $director = new SerializedFieldDirector($options_builder);
     $director->build($this->get_serialized_fields());
-    $fields = $options_builder->get_fields();
-    // var_dump($fields);
     return $options_builder->get_fields();
   }
 
@@ -47,5 +67,13 @@ abstract class ApiSerializerBase implements ApiSerializerInterface {
 
   public function get_required_fields(): array {
     return [];
+  }
+
+  public function get_schema_type(): string {
+    return 'object';
+  }
+
+  public function get_schema_properties(): array {
+    return $this->get_serialized_fields();
   }
 }

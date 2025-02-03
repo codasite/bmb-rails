@@ -3,7 +3,7 @@
 namespace WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard;
 
 use WP_Query;
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
@@ -175,7 +175,7 @@ class DashboardTournamentsQuery {
     $user_id = get_current_user_id();
     $bracket_table = BracketRepo::table_name();
     $play_table = PlayRepo::table_name();
-    $notification_table = NotificationRepo::table_name();
+    $notification_table = NotificationSubscriptionRepo::table_name();
     $post_status_placeholders = implode(
       ',',
       array_fill(0, count($post_status), '%s')

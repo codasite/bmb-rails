@@ -122,6 +122,9 @@ class Utils {
    * @return void
    */
   public function log(string $msg, string $level = 'debug'): void {
+    if (defined('DOING_TESTS')) {
+      return;
+    }
     error_log($msg);
     $severity = match ($level) {
       'debug' => \Sentry\Severity::debug(),

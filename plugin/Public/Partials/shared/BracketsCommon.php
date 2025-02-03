@@ -3,8 +3,8 @@
 namespace WStrategies\BMB\Public\Partials\shared;
 
 use WP_Query;
-use WStrategies\BMB\Features\Notifications\NotificationRepo;
-use WStrategies\BMB\Features\Notifications\NotificationType;
+use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 
@@ -559,8 +559,8 @@ class BracketsCommon {
   public static function upcoming_notification_btn(
     Bracket $bracket
   ): false|string {
-    $notification_repo = new NotificationRepo();
-    $notification_id = $notification_repo->current_user_notification_id(
+    $notification_sub_repo = new NotificationSubscriptionRepo();
+    $notification_id = $notification_sub_repo->current_user_notification_id(
       $bracket->id,
       NotificationType::BRACKET_UPCOMING
     );
