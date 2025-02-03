@@ -24,11 +24,19 @@ trait RestGetCollectionTrait {
   }
 
   /**
-   * Check if the current user can view items.
-   * Default implementation requires 'read' capability.
+   * Check if a given request has access to get items.
+   *
+   * @param \WP_REST_Request $request Full data about the request.
+   * @return \WP_Error|true True if the request has read access, WP_Error object otherwise.
    */
-  public function get_items_permissions_check($request): bool|WP_Error {
-    return current_user_can('read');
+  public function get_items_permissions_check($request): \WP_Error|true {
+    return current_user_can('read')
+      ? true
+      : new \WP_Error(
+        'rest_forbidden',
+        __('Sorry, you are not allowed to do that.'),
+        ['status' => rest_authorization_required_code()]
+      );
   }
 
   /**
