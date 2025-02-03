@@ -33,94 +33,91 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 8,
-      ),
-      child: Dismissible(
-        key: Key(notification.id),
-        direction: DismissDirection.endToStart,
-        background: Container(
-          decoration: BoxDecoration(
-            color: Colors.red,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Container(
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 16),
-            child: const Icon(
-              Icons.delete,
-              color: Colors.white,
-            ),
+    return Dismissible(
+      key: Key(notification.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        decoration: BoxDecoration(
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Container(
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 16),
+          child: const Icon(
+            Icons.delete,
+            color: Colors.white,
           ),
         ),
-        onDismissed: (_) => onDelete(),
-        child: Container(
-          decoration: BoxDecoration(
-            color: BmbColors.darkBlue,
+      ),
+      onDismissed: (_) => onDelete(),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: !notification.isRead
+              ? Border.all(
+                  color: BmbColors.blue,
+                  width: 2,
+                )
+              : Border.all(
+                  color: BmbColors.white.withOpacity(0.15),
+                  width: 2,
+                ),
+        ),
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            onTap: () {
+              if (!notification.isRead) {
+                onMarkAsRead(notification.id);
+              }
+              // if (notification.link != null) {
+              //   Navigator.pop(context, notification.link);
+              // }
+            },
             borderRadius: BorderRadius.circular(12),
-            border: !notification.isRead
-                ? Border.all(
-                    color: BmbColors.blue,
-                    width: 1.5,
-                  )
-                : null,
-          ),
-          child: Material(
-            type: MaterialType.transparency,
-            child: InkWell(
-              onTap: () {
-                if (!notification.isRead) {
-                  onMarkAsRead(notification.id);
-                }
-                // if (notification.link != null) {
-                //   Navigator.pop(context, notification.link);
-                // }
-              },
-              borderRadius: BorderRadius.circular(12),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            notification.title,
-                            style: TextStyle(
-                              color: notification.isRead
-                                  ? Colors.white.withOpacity(0.7)
-                                  : Colors.white,
-                              fontSize: 16,
-                              fontVariations: BmbFontWeights.w500,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          _formatTimestamp(notification.timestamp),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          notification.title,
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 12,
+                            color: notification.isRead
+                                ? Colors.white.withOpacity(0.7)
+                                : Colors.white,
+                            fontSize: 16,
                             fontVariations: BmbFontWeights.w500,
                           ),
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      notification.message,
-                      style: TextStyle(
-                        color: notification.isRead
-                            ? Colors.white.withOpacity(0.5)
-                            : Colors.white.withOpacity(0.7),
-                        fontSize: 14,
-                        fontVariations: BmbFontWeights.w500,
                       ),
+                      Text(
+                        _formatTimestamp(notification.timestamp),
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.5),
+                          fontSize: 12,
+                          fontVariations: BmbFontWeights.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    notification.message,
+                    style: TextStyle(
+                      color: notification.isRead
+                          ? Colors.white.withOpacity(0.5)
+                          : Colors.white.withOpacity(0.7),
+                      fontSize: 14,
+                      fontVariations: BmbFontWeights.w500,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),

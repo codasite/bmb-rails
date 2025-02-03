@@ -65,30 +65,29 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 ],
               )
-            : Padding(
+            : ListView.separated(
                 padding: const EdgeInsets.all(15),
-                child: Column(
-                  children: [
-                    MarkAllAsReadButton(
-                      hasUnread: hasUnread,
-                      onPressed: hasUnread ? provider.markAllAsRead : null,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: notifications.length,
-                        itemBuilder: (context, index) {
-                          final notification = notifications[index];
-                          return NotificationItem(
-                            notification: notification,
-                            onDelete: () =>
-                                provider.deleteNotification(notification.id),
-                            onMarkAsRead: provider.markAsRead,
-                          );
-                        },
+                itemCount: notifications.length + (hasUnread ? 1 : 0),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 15),
+                itemBuilder: (context, index) {
+                  if (hasUnread && index == 0) {
+                    return Align(
+                      alignment: Alignment.centerRight,
+                      child: MarkAllAsReadButton(
+                        onPressed: provider.markAllAsRead,
                       ),
-                    ),
-                  ],
-                ),
+                    );
+                  }
+                  final notification =
+                      notifications[hasUnread ? index - 1 : index];
+                  return NotificationItem(
+                    notification: notification,
+                    onDelete: () =>
+                        provider.deleteNotification(notification.id),
+                    onMarkAsRead: provider.markAsRead,
+                  );
+                },
               ),
       ),
     );
