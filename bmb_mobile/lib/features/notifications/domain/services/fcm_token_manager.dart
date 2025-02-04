@@ -19,28 +19,28 @@ class FcmTokenManager {
   );
 
   Future<void> requestPermissions() async {
-    await AppLogger.logMessage("Requesting FCM permissions");
+    await AppLogger.debugLog("Requesting FCM permissions");
     await _messaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
     );
-    await AppLogger.logMessage('FCM permissions requested successfully');
+    await AppLogger.debugLog('FCM permissions requested successfully');
   }
 
   /// Initialize FCM and request permissions
   Future<void> initialize() async {
-    await AppLogger.logMessage('Initializing FCM');
+    await AppLogger.debugLog('Initializing FCM');
     try {
-      await AppLogger.logMessage('Setting up FCM token refresh listener');
+      await AppLogger.debugLog('Setting up FCM token refresh listener');
       _messaging.onTokenRefresh.listen(_handleTokenRefresh);
 
       FirebaseMessaging.onMessage.listen(handleMessageReceived);
 
-      await AppLogger.logMessage('Setting up initial token');
+      await AppLogger.debugLog('Setting up initial token');
       await getNewToken();
 
-      await AppLogger.logMessage('Finished initializing FCM');
+      await AppLogger.debugLog('Finished initializing FCM');
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -51,18 +51,18 @@ class FcmTokenManager {
   }
 
   Future<void> handleMessageReceived(RemoteMessage message) async {
-    await AppLogger.logMessage('Handling FCM message: $message');
-    await AppLogger.logMessage('Message data: ${message.data}');
-    await AppLogger.logMessage('Message notification: ${message.notification}');
-    await AppLogger.logMessage(
+    await AppLogger.debugLog('Handling FCM message: $message');
+    await AppLogger.debugLog('Message data: ${message.data}');
+    await AppLogger.debugLog('Message notification: ${message.notification}');
+    await AppLogger.debugLog(
         'Message notification body: ${message.notification?.body}');
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
         'Message notification title: ${message.notification?.title}');
   }
 
   Future<void> getNewToken() async {
     final token = await _messaging.getToken();
-    await AppLogger.logMessage('Got FCM token: $token');
+    await AppLogger.debugLog('Got FCM token: $token');
     if (token == null) {
       await AppLogger.logWarning('Failed to get FCM token');
       return;
@@ -72,7 +72,7 @@ class FcmTokenManager {
 
   Future<bool> syncToken(String token) async {
     try {
-      await AppLogger.logMessage('Syncing FCM token');
+      await AppLogger.debugLog('Syncing FCM token');
       final deviceInfo = await DeviceInfo.getDeviceInfo();
       final packageInfo = await PackageInfo.fromPlatform();
 
@@ -88,7 +88,7 @@ class FcmTokenManager {
       );
 
       if (response?.statusCode == 200 || response?.statusCode == 201) {
-        await AppLogger.logMessage('FCM token synced successfully');
+        await AppLogger.debugLog('FCM token synced successfully');
         await _prefs.setString(_tokenKey, token);
         return true;
       }
@@ -116,7 +116,7 @@ class FcmTokenManager {
       final token = _prefs.getString(_tokenKey);
 
       if (token == null) {
-        await AppLogger.logMessage(
+        await AppLogger.debugLog(
             'No FCM token found, attempting to get new token');
         await getNewToken();
         return false;
@@ -135,7 +135,7 @@ class FcmTokenManager {
 
   Future<void> _handleTokenRefresh(String newToken) async {
     try {
-      await AppLogger.logMessage('Handling FCM token refresh');
+      await AppLogger.debugLog('Handling FCM token refresh');
       await syncToken(newToken);
     } catch (e, stackTrace) {
       await AppLogger.logError(
@@ -147,11 +147,11 @@ class FcmTokenManager {
   }
 
   Future<void> deregisterToken() async {
-    await AppLogger.logMessage('Starting FCM token deregistration');
+    await AppLogger.debugLog('Starting FCM token deregistration');
     try {
       final deviceInfo = await DeviceInfo.getDeviceInfo();
 
-      await AppLogger.logMessage(
+      await AppLogger.debugLog(
         'Sending deregistration request',
         extras: {'device_id': deviceInfo.id},
       );
@@ -164,7 +164,7 @@ class FcmTokenManager {
       );
 
       if (response?.statusCode == 200) {
-        await AppLogger.logMessage('Successfully deregistered FCM token');
+        await AppLogger.debugLog('Successfully deregistered FCM token');
       } else {
         await AppLogger.logWarning(
           'Failed to deregister FCM token',
@@ -181,7 +181,7 @@ class FcmTokenManager {
         extras: {'message': 'Failed to deregister FCM token'},
       );
     } finally {
-      await AppLogger.logMessage('Removing FCM token from SharedPreferences');
+      await AppLogger.debugLog('Removing FCM token from SharedPreferences');
       await _prefs.remove(_tokenKey);
     }
   }

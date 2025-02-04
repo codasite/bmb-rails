@@ -105,7 +105,7 @@ abstract class WpHttpClient {
             throw Exception('Unsupported HTTP method: $method');
         }
 
-        await AppLogger.logMessage(
+        await AppLogger.debugLog(
           'Made authenticated request',
           extras: {
             'path': path,
@@ -133,7 +133,7 @@ abstract class WpHttpClient {
         }
 
         final delay = backoff(attempts);
-        await AppLogger.logMessage(
+        await AppLogger.debugLog(
           'Retrying request after delay',
           extras: {
             'attempt': attempts + 1,

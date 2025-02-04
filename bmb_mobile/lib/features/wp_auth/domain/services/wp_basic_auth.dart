@@ -25,22 +25,20 @@ class WpBasicAuth {
 
   Future<bool> login(String username) async {
     try {
-      await AppLogger.logMessage(
-          'Attempting WP Basic Auth login for: $username');
+      await AppLogger.debugLog('Attempting WP Basic Auth login for: $username');
 
       if (await _hasStoredPassword()) {
-        await AppLogger.logMessage(
-            'Using existing stored application password');
+        await AppLogger.debugLog('Using existing stored application password');
         return true;
       }
 
-      await AppLogger.logMessage('Attempting to create application password');
+      await AppLogger.debugLog('Attempting to create application password');
 
       final result = await _createApplicationPassword(username);
 
       if (result.success && result.password != null) {
         await _credentialManager.storeCredentials(result.password!);
-        await AppLogger.logMessage(
+        await AppLogger.debugLog(
             'Successfully created and stored application password');
         return true;
       }
@@ -69,7 +67,7 @@ class WpBasicAuth {
   Future<bool> _hasStoredPassword() async {
     final existingCredentials = await _credentialManager.getStoredCredentials();
     if (existingCredentials != null) {
-      await AppLogger.logMessage('Found existing application password');
+      await AppLogger.debugLog('Found existing application password');
       return true;
     }
     return false;
@@ -83,7 +81,7 @@ class WpBasicAuth {
         return initialResult;
       }
 
-      await AppLogger.logMessage(
+      await AppLogger.debugLog(
         'Got conflict creating password, attempting to resolve',
       );
 
@@ -106,7 +104,7 @@ class WpBasicAuth {
         return WpAppPasswordResult.failure(409);
       }
 
-      await AppLogger.logMessage(
+      await AppLogger.debugLog(
         'Found existing password, deleting before retry',
         extras: {'uuid': existingUuid},
       );
@@ -134,7 +132,7 @@ class WpBasicAuth {
         },
       );
 
-      await AppLogger.logMessage(
+      await AppLogger.debugLog(
         'Attempted to create password',
         extras: {'status_code': response?.statusCode},
       );
@@ -146,7 +144,7 @@ class WpBasicAuth {
           password: responseData['password'] as String,
           uuid: responseData['uuid'] as String,
         );
-        await AppLogger.logMessage('Application password created successfully');
+        await AppLogger.debugLog('Application password created successfully');
         return WpAppPasswordResult.success(appPassword, response.statusCode);
       }
 
@@ -178,7 +176,7 @@ class WpBasicAuth {
         WpUrls.applicationPasswordsPath,
       );
 
-      await AppLogger.logMessage(
+      await AppLogger.debugLog(
         'Fetched existing passwords',
         extras: {'status_code': response?.statusCode},
       );
@@ -192,13 +190,13 @@ class WpBasicAuth {
 
         if (existing != null) {
           final uuid = existing['uuid'] as String;
-          await AppLogger.logMessage(
+          await AppLogger.debugLog(
             'Found existing password',
             extras: {'uuid': uuid},
           );
           return uuid;
         } else {
-          await AppLogger.logMessage('No existing password found');
+          await AppLogger.debugLog('No existing password found');
         }
       }
 
@@ -248,7 +246,7 @@ class WpBasicAuth {
           );
         }
       }
-      await AppLogger.logMessage('Logged out of basic auth successfully');
+      await AppLogger.debugLog('Logged out of basic auth successfully');
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,
@@ -256,7 +254,7 @@ class WpBasicAuth {
         extras: {'message': 'Failed to log out of basic auth'},
       );
     } finally {
-      AppLogger.logMessage('Removing application password from storage');
+      AppLogger.debugLog('Removing application password from storage');
       await _credentialManager.clearCredentials();
     }
   }

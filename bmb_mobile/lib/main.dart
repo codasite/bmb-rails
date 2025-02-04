@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:bmb_mobile/features/wp_http/presentation/providers/wp_http_client_provider.dart'
@@ -24,15 +23,16 @@ import 'package:bmb_mobile/features/wp_auth/domain/services/wp_auth.dart';
 import 'package:bmb_mobile/features/notifications/domain/services/fcm_token_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:bmb_mobile/core/utils/environment_config.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  await dotenv.load();
   await AppLogger.initialize(
-    dsn: dotenv.env['SENTRY_DSN'] ?? '',
-    environment: dotenv.env['SENTRY_ENV'] ?? 'development',
+    dsn: EnvironmentConfig.sentryDsn,
+    environment: EnvironmentConfig.sentryEnv,
+    debugUseSentry: EnvironmentConfig.debugUseSentry,
   );
 
   await Firebase.initializeApp(

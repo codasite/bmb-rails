@@ -268,7 +268,7 @@ tasks:
     desc: Build iOS mobile app
     dir: ./bmb_mobile
     cmds:
-      - flutter build ipa
+      - flutter build ipa --dart-define-from-file=.env.flutter
 
   ios:push:
     desc: Push iOS app to App Store Connect

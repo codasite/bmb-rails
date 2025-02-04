@@ -23,7 +23,7 @@ class DeviceInfo {
           name: androidInfo.model,
         );
       }
-      await AppLogger.logMessage('Device info: $deviceData');
+      await AppLogger.debugLog('Device info: $deviceData');
       return deviceData;
     } catch (e, stackTrace) {
       await AppLogger.logError(

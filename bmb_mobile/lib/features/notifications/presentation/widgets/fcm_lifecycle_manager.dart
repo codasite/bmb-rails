@@ -36,10 +36,10 @@ class _FCMLifecycleManagerState extends State<FCMLifecycleManager> {
   }
 
   void _handleLifecycleStateChange(AppLifecycleState state) async {
-    await AppLogger.logMessage('App lifecycle state changed: $state');
+    await AppLogger.debugLog('App lifecycle state changed: $state');
 
     if (state == AppLifecycleState.resumed) {
-      await AppLogger.logMessage('App resumed, restarting FCM status updates');
+      await AppLogger.debugLog('App resumed, restarting FCM status updates');
       if (mounted) {
         await context.read<FCMTokenManagerProvider>().updateStatus();
         _startStatusUpdates();
@@ -48,11 +48,11 @@ class _FCMLifecycleManagerState extends State<FCMLifecycleManager> {
   }
 
   void _startStatusUpdates() {
-    AppLogger.logMessage('Starting FCM status updates');
+    AppLogger.debugLog('Starting FCM status updates');
     _statusUpdateTimer?.cancel();
     _statusUpdateTimer = Timer.periodic(const Duration(hours: 24), (_) async {
       if (mounted) {
-        AppLogger.logMessage('Updating FCM status from timer');
+        AppLogger.debugLog('Updating FCM status from timer');
         await context.read<FCMTokenManagerProvider>().updateStatus();
       }
     });
@@ -60,7 +60,7 @@ class _FCMLifecycleManagerState extends State<FCMLifecycleManager> {
 
   @override
   void dispose() {
-    AppLogger.logMessage('Disposing of FCM lifecycle manager');
+    AppLogger.debugLog('Disposing of FCM lifecycle manager');
     _statusUpdateTimer?.cancel();
     _lifecycleListener.dispose();
     super.dispose();

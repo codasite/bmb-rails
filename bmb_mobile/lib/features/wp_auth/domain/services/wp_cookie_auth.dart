@@ -26,7 +26,7 @@ class WpCookieAuth {
 
   Future<bool> login(String username, String password) async {
     try {
-      await AppLogger.logMessage('Attempting login for user: $username');
+      await AppLogger.debugLog('Attempting login for user: $username');
 
       final response = await http.post(
         Uri.parse(WpUrls.loginUrl),
@@ -57,7 +57,7 @@ class WpCookieAuth {
 
         await _cookieManager.setCookies(cookiesToSet);
         await _storeCookies(cookiesToSet);
-        await AppLogger.logMessage('Cookies set successfully');
+        await AppLogger.debugLog('Cookies set successfully');
         return true;
       }
 
@@ -111,7 +111,7 @@ class WpCookieAuth {
       await _cookieManager.clearCookies();
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(_cookieStorageKey);
-      await AppLogger.logMessage('Logged out of cookie auth successfully');
+      await AppLogger.debugLog('Logged out of cookie auth successfully');
     } catch (e, stackTrace) {
       await AppLogger.logError(
         e,

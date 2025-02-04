@@ -1,7 +1,7 @@
+import 'package:bmb_mobile/core/utils/environment_config.dart';
+
 class WpUrls {
-  static const String baseUrl = 'https://backmybracket.com';
-  // static const String baseUrl = 'http://localhost:8008';
-  // static const String baseUrl = 'http://192.168.1.77:8008';
+  static const String baseUrl = EnvironmentConfig.wpBaseUrl;
 
   // WordPress API paths
   static const String _wpApiBase = '/wp-json/wp/v2';
