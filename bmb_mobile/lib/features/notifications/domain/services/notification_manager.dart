@@ -10,14 +10,14 @@ class NotificationManager {
 
   /// Fetches all notifications for the current user
   Future<List<BmbNotification>> getNotifications() async {
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       'Fetching notifications',
       extras: {'operation': 'getNotifications'},
     );
 
     final notifications = await _client.getNotifications();
 
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       'Fetched notifications',
       extras: {
         'operation': 'getNotifications',
@@ -32,7 +32,7 @@ class NotificationManager {
   /// Marks a notification as read
   /// Returns the updated notification if successful, null otherwise
   Future<BmbNotification?> markAsRead(String notificationId) async {
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       'Marking notification as read',
       extras: {
         'operation': 'markAsRead',
@@ -42,7 +42,7 @@ class NotificationManager {
 
     final notification = await _client.markAsRead(notificationId);
 
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       notification != null
           ? 'Marked notification as read'
           : 'Failed to mark notification as read',
@@ -59,14 +59,14 @@ class NotificationManager {
   /// Marks all notifications as read for the current user
   /// Returns the number of notifications marked as read
   Future<int> markAllAsRead() async {
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       'Marking all notifications as read',
       extras: {'operation': 'markAllAsRead'},
     );
 
     final count = await _client.markAllAsRead();
 
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       'Marked notifications as read',
       extras: {
         'operation': 'markAllAsRead',
@@ -80,7 +80,7 @@ class NotificationManager {
   /// Deletes a notification
   /// Returns true if successful, false otherwise
   Future<bool> deleteNotification(String notificationId) async {
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       'Deleting notification',
       extras: {
         'operation': 'deleteNotification',
@@ -90,7 +90,7 @@ class NotificationManager {
 
     final success = await _client.deleteNotification(notificationId);
 
-    await AppLogger.logMessage(
+    await AppLogger.debugLog(
       success ? 'Deleted notification' : 'Failed to delete notification',
       extras: {
         'operation': 'deleteNotification',
