@@ -99,6 +99,7 @@ services:
       - ./docker/wordpress/plugins:/tmp/plugins
       - ./plugin/tests/coverage:/var/www/html/coverage
       - wp-dev-data:/var/www/html
+      - ./.config:/root/.config
     ports:
       - 8008:80
     depends_on:

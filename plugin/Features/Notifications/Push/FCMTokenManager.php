@@ -127,6 +127,7 @@ class FCMTokenManager implements HooksInterface {
       case NotificationType::TOURNAMENT_START:
       case NotificationType::ROUND_COMPLETE:
       case NotificationType::BRACKET_RESULTS:
+      case NotificationType::SYSTEM:
         return true; // Default to enabled for core notifications
 
       default:

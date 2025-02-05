@@ -2,6 +2,7 @@
 namespace WStrategies\BMB\Features\Notifications\Push;
 
 use Exception;
+use Kreait\Firebase\Contract\Messaging;
 use Kreait\Firebase\Factory;
 use WStrategies\BMB\Includes\Utils;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenRepo;
@@ -12,9 +13,15 @@ use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 class PushMessagingServiceFactory {
   public function create(array $args = []): PushMessagingService {
     try {
-      $factory = (new Factory())->withProjectId('bmb-mobile'); // TODO: add project id etc
+      $factory = new Factory();
+      $info = $factory->getDebugInfo();
+      error_log('info: ' . json_encode($info));
       $messaging = $args['messaging'] ?? $factory->createMessaging();
+      if (!$messaging instanceof Messaging) {
+        throw new Exception('Messaging is not an instance of Messaging');
+      }
     } catch (Exception $e) {
+      error_log('error creating service');
       (new Utils())->log_error(
         'Caught error: ' . $e->getMessage() . 'Returning fake Messaging'
       );
