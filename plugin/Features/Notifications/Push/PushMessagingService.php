@@ -43,7 +43,6 @@ class PushMessagingService {
     array $data = []
   ): MulticastSendReport {
     $tokens = $this->token_manager->get_target_tokens($type, $user_id);
-    error_log('tokens: ' . json_encode($tokens));
 
     if (empty($tokens)) {
       return MulticastSendReport::withItems([]); // Return empty report if no tokens

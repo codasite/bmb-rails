@@ -35,8 +35,6 @@ class FcmTokenManager {
       await AppLogger.debugLog('Setting up FCM token refresh listener');
       _messaging.onTokenRefresh.listen(_handleTokenRefresh);
 
-      FirebaseMessaging.onMessage.listen(handleMessageReceived);
-
       await AppLogger.debugLog('Setting up initial token');
       await getNewToken();
 
@@ -48,16 +46,6 @@ class FcmTokenManager {
         extras: {'message': 'Failed to initialize FCM'},
       );
     }
-  }
-
-  Future<void> handleMessageReceived(RemoteMessage message) async {
-    await AppLogger.debugLog('Handling FCM message: $message');
-    await AppLogger.debugLog('Message data: ${message.data}');
-    await AppLogger.debugLog('Message notification: ${message.notification}');
-    await AppLogger.debugLog(
-        'Message notification body: ${message.notification?.body}');
-    await AppLogger.debugLog(
-        'Message notification title: ${message.notification?.title}');
   }
 
   Future<void> getNewToken() async {

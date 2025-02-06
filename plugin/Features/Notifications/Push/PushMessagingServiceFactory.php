@@ -13,9 +13,10 @@ use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 class PushMessagingServiceFactory {
   public function create(array $args = []): PushMessagingService {
     try {
-      $factory = new Factory();
+      error_log('Creating push messaging service factory');
+
+      $factory = (new Factory())->withServiceAccount(FIREBASE_CREDENTIALS_PATH);
       $info = $factory->getDebugInfo();
-      error_log('info: ' . json_encode($info));
       $messaging = $args['messaging'] ?? $factory->createMessaging();
       if (!$messaging instanceof Messaging) {
         throw new Exception('Messaging is not an instance of Messaging');
