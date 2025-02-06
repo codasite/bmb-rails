@@ -13,16 +13,15 @@ use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 class PushMessagingServiceFactory {
   public function create(array $args = []): PushMessagingService {
     try {
-      error_log('Creating push messaging service factory');
-
+      if (!defined('FIREBASE_CREDENTIALS_PATH')) {
+        throw new Exception('FIREBASE_CREDENTIALS_PATH is not defined');
+      }
       $factory = (new Factory())->withServiceAccount(FIREBASE_CREDENTIALS_PATH);
-      $info = $factory->getDebugInfo();
       $messaging = $args['messaging'] ?? $factory->createMessaging();
       if (!$messaging instanceof Messaging) {
         throw new Exception('Messaging is not an instance of Messaging');
       }
     } catch (Exception $e) {
-      error_log('error creating service');
       (new Utils())->log_error(
         'Caught error: ' . $e->getMessage() . 'Returning fake Messaging'
       );
