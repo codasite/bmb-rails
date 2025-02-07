@@ -40,8 +40,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      context.read<WebViewProvider>().loadUrl(_pages[index].path);
     });
+    context.read<WebViewProvider>().loadUrl(_pages[index].path);
   }
 
   void _onDrawerItemTap(DrawerItem item) async {
@@ -64,7 +64,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         });
       }
     } else {
-      context.read<WebViewProvider>().loadUrl(item.path);
+      await context.read<WebViewProvider>().loadUrl(item.path);
       Navigator.pop(context);
     }
   }
@@ -96,9 +96,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
-    final webViewProvider = context.read<WebViewProvider>();
+    _setupWebView();
+  }
 
-    webViewProvider.addJavaScriptChannel(
+  Future<void> _setupWebView() async {
+    if (!mounted) return;
+
+    final webViewProvider = context.read<WebViewProvider>();
+    await webViewProvider.addJavaScriptChannel(
       'Flutter',
       (message) {
         if (message.message == 'refresh') {
@@ -118,7 +123,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
         onPageStarted: (String url) {
           webViewProvider.setLoading(true);
           webViewProvider.controller.canGoBack().then((value) {
-            webViewProvider.setCanGoBack(value);
+            if (mounted) {
+              webViewProvider.setCanGoBack(value);
+            }
           });
         },
         onPageFinished: (String url) {
@@ -126,7 +133,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
           setAppBarTitle();
           webViewProvider.setLoading(false);
           webViewProvider.controller.canGoBack().then((value) {
-            webViewProvider.setCanGoBack(value);
+            if (mounted) {
+              webViewProvider.setCanGoBack(value);
+            }
           });
         },
         onWebResourceError: (WebResourceError error) {
@@ -183,7 +192,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ),
     );
 
-    webViewProvider.loadUrl('/dashboard/tournaments/');
+    await webViewProvider.loadUrl('/dashboard/tournaments/');
   }
 
   Future<bool> _handleBackPress() async {

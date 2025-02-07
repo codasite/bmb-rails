@@ -16,15 +16,18 @@ class WebViewProvider extends ChangeNotifier {
   bool get canGoBack => _canGoBack;
 
   void _initController() {
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setUserAgent('BackMyBracket-MobileApp');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller = WebViewController()
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..setUserAgent('BackMyBracket-MobileApp');
+    });
   }
 
   Future<void> addJavaScriptChannel(
     String name,
     void Function(JavaScriptMessage) onMessageReceived,
   ) async {
+    await WidgetsBinding.instance.endOfFrame;
     if (_registeredChannels.contains(name)) {
       await controller.removeJavaScriptChannel(name);
       _registeredChannels.remove(name);
@@ -37,6 +40,7 @@ class WebViewProvider extends ChangeNotifier {
   }
 
   Future<void> removeAllJavaScriptChannels() async {
+    await WidgetsBinding.instance.endOfFrame;
     for (final channel in _registeredChannels.toList()) {
       await controller.removeJavaScriptChannel(channel);
     }
@@ -49,12 +53,14 @@ class WebViewProvider extends ChangeNotifier {
     super.dispose();
   }
 
-  void loadUrl(String path, {bool prependBaseUrl = true}) {
+  Future<void> loadUrl(String path, {bool prependBaseUrl = true}) async {
+    await WidgetsBinding.instance.endOfFrame;
     final url = prependBaseUrl ? WpUrls.baseUrl + path : path;
     controller.loadRequest(Uri.parse(url));
   }
 
   Future<bool> goBack() async {
+    await WidgetsBinding.instance.endOfFrame;
     if (await controller.canGoBack()) {
       await controller.goBack();
       return true;
