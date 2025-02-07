@@ -1,4 +1,4 @@
-FROM php:8.2-cli AS php-builder
+FROM php:8.3-cli AS php-builder
 WORKDIR /usr/src/app
 
 # Copy Composer files first to take advantage of Docker layer caching
