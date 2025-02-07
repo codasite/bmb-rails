@@ -1,5 +1,5 @@
 # https://marioyepes.com/wordpress-plugin-tdd-with-docker-phpunit/
-FROM wordpress:php8.2
+FROM wordpress:php8.3
 
 ARG PLUGIN_NAME
 
