@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBkBafsLcLwIebn3e-05GKnA2zSZCykWgE',
-    appId: '1:1010513584747:android:f2762ec1079aceca3b472e',
+    appId: '1:1010513584747:android:683ec586f31e6a673b472e',
     messagingSenderId: '1010513584747',
     projectId: 'back-my-bracket',
     storageBucket: 'back-my-bracket.firebasestorage.app',
@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDbVnnfkmhWAWIkPNeIBUZxJ6y1AhYvzIU',
-    appId: '1:1010513584747:ios:48526d4db838fcb03b472e',
+    appId: '1:1010513584747:ios:59925c4663ba55d13b472e',
     messagingSenderId: '1010513584747',
     projectId: 'back-my-bracket',
     storageBucket: 'back-my-bracket.firebasestorage.app',
-    iosBundleId: 'com.backmybracket.mobile',
+    iosBundleId: 'com.backmybracket.app',
   );
 }

@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.backmybracket.mobile</string>
+	<string>com.backmybracket.app</string>
 	<key>PROJECT_ID</key>
 	<string>back-my-bracket</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1010513584747:ios:48526d4db838fcb03b472e</string>
+	<string>1:1010513584747:ios:e70d751d338a062b3b472e</string>
 </dict>
 </plist>

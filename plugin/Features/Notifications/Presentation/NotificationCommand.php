@@ -8,15 +8,18 @@ use WP_CLI\Utils;
 use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 
 /**
  * Manages notifications through WP-CLI commands.
  */
 class NotificationCommand {
   private NotificationRepo $notification_repo;
+  private $push_messaging_service;
 
   public function __construct() {
     $this->notification_repo = new NotificationRepo();
+    $this->push_messaging_service = (new PushMessagingServiceFactory())->create();
   }
 
   /**
@@ -317,6 +320,105 @@ class NotificationCommand {
         WP_CLI::success(sprintf('Deleted notification with ID: %d', $id));
       } else {
         WP_CLI::error('Failed to delete notification');
+      }
+    } catch (\Exception $e) {
+      WP_CLI::error($e->getMessage());
+    }
+  }
+
+  /**
+   * Sends a push notification to a user's devices.
+   *
+   * ## OPTIONS
+   *
+   * --user_id=<user_id>
+   * : The WordPress user ID to send the notification to
+   *
+   * --title=<title>
+   * : The notification title
+   *
+   * --message=<message>
+   * : The notification message
+   *
+   * --type=<notification_type>
+   * : The type of notification (bracket_upcoming|bracket_results|round_complete|tournament_start|system)
+   *
+   * [--image=<image_url>]
+   * : Optional image URL to include with the notification
+   *
+   * [--data=<json_data>]
+   * : Optional additional data in JSON format
+   *
+   * ## EXAMPLES
+   *
+   *     # Send a simple push notification
+   *     $ wp wpbb notification push --user_id=123 --title="Test" --message="Test message" --type=system
+   *
+   *     # Send a push notification with an image and data
+   *     $ wp wpbb notification push --user_id=123 --title="New bracket" --message="Check out the new bracket" --type=bracket_upcoming --image="https://example.com/image.jpg" --data='{"bracketId": "456"}'
+   *
+   * @param array $args
+   * @param array $assoc_args
+   */
+  public function push($args, $assoc_args) {
+    if (
+      !isset(
+        $assoc_args['user_id'],
+        $assoc_args['title'],
+        $assoc_args['message'],
+        $assoc_args['type']
+      )
+    ) {
+      WP_CLI::error(
+        'Missing required arguments. Please provide --user_id, --title, --message, and --type.'
+      );
+      return;
+    }
+
+    if (!NotificationType::is_valid($assoc_args['type'])) {
+      WP_CLI::error(
+        'Invalid notification type. Must be one of: bracket_upcoming, bracket_results, round_complete, tournament_start, system'
+      );
+      return;
+    }
+
+    try {
+      $data = [];
+      if (isset($assoc_args['data'])) {
+        $data = json_decode($assoc_args['data'], true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+          WP_CLI::error('Invalid JSON data format');
+          return;
+        }
+      }
+
+      $report = $this->push_messaging_service->send_notification(
+        NotificationType::from($assoc_args['type']),
+        (int) $assoc_args['user_id'],
+        $assoc_args['title'],
+        $assoc_args['message'],
+        $assoc_args['image'] ?? '',
+        $data
+      );
+
+      if ($report->successes()->count() > 0) {
+        WP_CLI::success(
+          sprintf(
+            'Successfully sent push notification to %d device(s)',
+            $report->successes()->count()
+          )
+        );
+      } else {
+        WP_CLI::warning('No devices available to receive the notification');
+      }
+
+      if ($report->failures()->count() > 0) {
+        WP_CLI::warning(
+          sprintf(
+            'Failed to send notification to %d device(s)',
+            $report->failures()->count()
+          )
+        );
       }
     } catch (\Exception $e) {
       WP_CLI::error($e->getMessage());

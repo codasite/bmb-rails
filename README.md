@@ -98,9 +98,19 @@ task app:version:bump-build # Increment build number
 
 ### iOS Deployment
 1. Set up App Store Connect credentials:
+   1. Go to [App Store Connect](https://appstoreconnect.apple.com)
+   2. Navigate to Users and Access > Integrations
+   3. Click the "+" button to generate a new API key
+   4. Note down the Issuer ID and Key ID and download the .p8 file
+   5. Store the key in ~/.appstoreconnect/private_keys
+   6. Set up the credentials env file:
 ```bash
 cp bmb_mobile/.env.appstoreconnect.example bmb_mobile/.env.appstoreconnect
-# Edit .env.appstoreconnect with your credentials
+```
+   7. Edit `.env.appstoreconnect` with your credentials:
+```plaintext
+ISSUER_ID=your_team_id
+KEY_ID=your_key_id
 ```
 
 2. Build and deploy:

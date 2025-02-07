@@ -1,4 +1,5 @@
 import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_lifecycle_manager.dart';
+import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_notification_listener.dart';
 import 'package:bmb_mobile/features/webview/presentation/screens/webview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/screens/login_screen.dart';
@@ -21,7 +22,9 @@ class BmbApp extends StatelessWidget {
         fontFamily: 'ClashDisplay',
       ),
       routes: {
-        '/app': (context) => const FCMLifecycleManager(child: WebViewScreen()),
+        '/app': (context) => const FCMLifecycleManager(
+              child: FCMNotificationListener(child: WebViewScreen()),
+            ),
         '/login': (context) => const LoginScreen(),
       },
       initialRoute:

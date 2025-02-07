@@ -85,6 +85,7 @@ services:
         define('STRIPE_PUBLISHABLE_KEY', '${STRIPE_PUBLISHABLE_KEY}');
         define('WP_MEMORY_LIMIT', '512M');
         define('IMAGE_GENERATOR_PATH', 'http://image-generator:3000/generate');
+        define('FIREBASE_CREDENTIALS_PATH', '/etc/firebase/firebase_credentials.json');
       PLUGIN_NAME: wp-bracket-builder
       WORDPRESS_URL: http://localhost:8008
       WORDPRESS_TITLE: Wordpress
@@ -99,6 +100,7 @@ services:
       - ./docker/wordpress/plugins:/tmp/plugins
       - ./plugin/tests/coverage:/var/www/html/coverage
       - wp-dev-data:/var/www/html
+      - ./docker/credentials:/etc/firebase:ro
     ports:
       - 8008:80
     depends_on:
