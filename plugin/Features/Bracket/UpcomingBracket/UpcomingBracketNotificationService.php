@@ -9,12 +9,14 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\UserRepo;
 use WStrategies\BMB\Includes\Utils;
 use Exception;
+use WStrategies\BMB\Features\Notifications\Application\NotificationDispatcher;
+use WStrategies\BMB\Features\Notifications\Domain\Notification;
 
 class UpcomingBracketNotificationService {
   private NotificationSubscriptionRepo $notification_sub_repo;
   private BracketRepo $bracket_repo;
   private readonly UserRepo $user_repo;
-
+  private readonly NotificationDispatcher $dispatcher;
   /**
    * @var array<UpcomingNotificationListenerInterface>
    */
@@ -25,22 +27,11 @@ class UpcomingBracketNotificationService {
       $args['notification_sub_repo'] ?? new NotificationSubscriptionRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->user_repo = $args['user_repo'] ?? new UserRepo();
-    $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
-  }
-
-  /**
-   * @return array<UpcomingNotificationListenerInterface>
-   */
-  private function init_listeners($args): array {
-    return [
-      new UpcomingBracketEmailListener($args),
-      new UpcomingBracketPushListener($args),
-      new UpcomingBracketStorageListener($args),
-    ];
+    $this->dispatcher = $args['dispatcher'] ?? new NotificationDispatcher();
   }
 
   public function notify_upcoming_bracket_live(int $bracket_post_id): void {
-    $notifications = $this->notification_sub_repo->get([
+    $notification_subscriptions = $this->notification_sub_repo->get([
       'post_id' => $bracket_post_id,
       'notification_type' => NotificationType::BRACKET_UPCOMING,
     ]);
@@ -50,23 +41,29 @@ class UpcomingBracketNotificationService {
       return;
     }
 
-    foreach ($notifications as $notification) {
-      $user = $this->user_repo->get_by_id($notification->user_id);
+    foreach ($notification_subscriptions as $notification_subscription) {
+      $user = $this->user_repo->get_by_id($notification_subscription->user_id);
       if (!$user) {
         continue;
       }
 
-      foreach ($this->listeners as $listener) {
-        try {
-          $listener->notify($user, $bracket, $notification);
-        } catch (Exception $e) {
-          (new Utils())->log_error(
-            'Error sending upcoming bracket notification: ' .
-              $e->getMessage() .
-              "\nStack trace:\n" .
-              $e->getTraceAsString()
-          );
-        }
+      try {
+        $this->dispatcher->dispatch(
+          new Notification([
+            'user_id' => $user->id,
+            'title' => UpcomingBracketMessageFormatter::get_title(),
+            'message' => UpcomingBracketMessageFormatter::get_message($bracket),
+            'link' => UpcomingBracketMessageFormatter::get_link($bracket),
+            'notification_type' => NotificationType::BRACKET_UPCOMING,
+          ])
+        );
+      } catch (Exception $e) {
+        (new Utils())->log_error(
+          'Error sending upcoming bracket notification: ' .
+            $e->getMessage() .
+            "\nStack trace:\n" .
+            $e->getTraceAsString()
+        );
       }
     }
   }

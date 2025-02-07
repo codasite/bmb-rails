@@ -3,7 +3,8 @@
 namespace WStrategies\BMB\tests\integration\Features\VotingBracket\Notifications;
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 
-use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
+use WStrategies\BMB\Features\Notifications\Application\NotificationDispatcher;
+use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\VotingBracket\Notifications\SendRoundCompleteNotificationsService;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
@@ -44,42 +45,32 @@ class SendRoundCompleteNotificationsServiceTest extends WPBB_UnitTestCase {
       'picks' => [],
     ]);
 
-    $email_mock = $this->getMockBuilder(EmailServiceInterface::class)
+    $dispatcher = $this->getMockBuilder(NotificationDispatcher::class)
       ->disableOriginalConstructor()
       ->getMock();
     $matcher = $this->exactly(2);
-    $email_mock
+    $dispatcher
       ->expects($matcher)
-      ->method('send')
-      ->willReturnCallback(function (
-        $to,
-        $name,
-        $subject,
-        $message,
-        $headers
-      ) use ($matcher, $user1, $user2, $bracket) {
+      ->method('dispatch')
+      ->willReturnCallback(function (Notification $notification) use (
+        $matcher,
+        $user1,
+        $user2
+      ) {
         switch ($matcher->getInvocationCount()) {
           case 1:
-            $this->assertEquals($user1->user_email, $to);
-            $this->assertEquals($user1->display_name, $name);
-            $this->assertEquals(
-              $bracket->get_title() . ' Voting Round Complete!',
-              $subject
-            );
+            $this->assertEquals($user1->ID, $notification->user_id);
+            $this->assertEquals('Round Complete!', $notification->title);
             break;
           case 2:
-            $this->assertEquals($user2->user_email, $to);
-            $this->assertEquals($user2->display_name, $name);
-            $this->assertEquals(
-              $bracket->get_title() . ' Voting Round Complete!',
-              $subject
-            );
+            $this->assertEquals($user2->ID, $notification->user_id);
+            $this->assertEquals('Round Complete!', $notification->title);
             break;
         }
       });
 
     $service = new SendRoundCompleteNotificationsService([
-      'email_service' => $email_mock,
+      'dispatcher' => $dispatcher,
     ]);
     $service->send_round_complete_notifications();
     $this->assertEquals(
@@ -113,34 +104,27 @@ class SendRoundCompleteNotificationsServiceTest extends WPBB_UnitTestCase {
       'picks' => [],
     ]);
 
-    $email_mock = $this->getMockBuilder(EmailServiceInterface::class)
+    $dispatcher = $this->getMockBuilder(NotificationDispatcher::class)
       ->disableOriginalConstructor()
       ->getMock();
     $matcher = $this->exactly(1);
-    $email_mock
+    $dispatcher
       ->expects($matcher)
-      ->method('send')
-      ->willReturnCallback(function (
-        $to,
-        $name,
-        $subject,
-        $message,
-        $headers
-      ) use ($matcher, $user1, $bracket) {
-        switch ($matcher->getInvocationCount()) {
-          case 1:
-            $this->assertEquals($user1->user_email, $to);
-            $this->assertEquals($user1->display_name, $name);
-            $this->assertEquals(
-              $bracket->get_title() . ' Voting Complete!',
-              $subject
-            );
-            break;
-        }
+      ->method('dispatch')
+      ->willReturnCallback(function (Notification $notification) use (
+        $matcher,
+        $user1,
+        $bracket
+      ) {
+        $this->assertEquals($user1->ID, $notification->user_id);
+        $this->assertEquals(
+          $bracket->get_title() . ' Voting Complete!',
+          $notification->title
+        );
       });
 
     $service = new SendRoundCompleteNotificationsService([
-      'email_service' => $email_mock,
+      'dispatcher' => $dispatcher,
     ]);
     $service->send_round_complete_notifications();
     $this->assertEquals(

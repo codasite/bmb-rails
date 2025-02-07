@@ -14,6 +14,9 @@ use WStrategies\BMB\Includes\Service\PickResultService;
 use WStrategies\BMB\Includes\Service\BracketMatchService;
 use WStrategies\BMB\Includes\Service\Logger\SentryLogger;
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
+use WStrategies\BMB\Features\Notifications\Application\NotificationDispatcher;
+use WStrategies\BMB\Features\Notifications\Domain\Notification;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketResultsRepo;
 use WStrategies\BMB\Includes\Repository\DateTimePostMetaRepo;
 
@@ -26,11 +29,7 @@ class BracketResultsNotificationService {
   private DateTimePostMetaRepo $results_sent_at_repo;
   private BracketResultsFilterService $results_filter_service;
   private readonly UserRepo $user_repo;
-
-  /**
-   * @var array<BracketResultsNotificationListenerInterface>
-   */
-  private array $listeners = [];
+  private readonly NotificationDispatcher $dispatcher;
 
   public function __construct($args = []) {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
@@ -40,7 +39,6 @@ class BracketResultsNotificationService {
       $args['pick_result_factory'] ?? new PickResultFactory();
     $this->pick_result_service =
       $args['pick_result_service'] ?? new PickResultService();
-    $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
     $this->results_sent_at_repo =
       $args['results_sent_at_repo'] ??
       new DateTimePostMetaRepo(
@@ -49,17 +47,7 @@ class BracketResultsNotificationService {
     $this->results_filter_service =
       $args['results_filter_service'] ?? new BracketResultsFilterService();
     $this->user_repo = $args['user_repo'] ?? new UserRepo();
-  }
-
-  /**
-   * @return array<BracketResultsNotificationListenerInterface>
-   */
-  private function init_listeners($args): array {
-    return [
-      new BracketResultsEmailListener($args),
-      new BracketResultsPushListener($args),
-      new BracketResultsStorageListener($args),
-    ];
+    $this->dispatcher = $args['dispatcher'] ?? new NotificationDispatcher();
   }
 
   public function send_bracket_results_notifications() {
@@ -211,10 +199,14 @@ class BracketResultsNotificationService {
       if (!$user) {
         return;
       }
-
-      foreach ($this->listeners as $listener) {
-        $listener->notify($user, $play, $result);
-      }
+      $notification = new Notification([
+        'user_id' => $user->id,
+        'title' => BracketResultsMessageFormatter::get_title(),
+        'message' => BracketResultsMessageFormatter::get_message($result),
+        'link' => BracketResultsMessageFormatter::get_link($play),
+        'notification_type' => NotificationType::BRACKET_RESULTS,
+      ]);
+      $this->dispatcher->dispatch($notification);
     } catch (\Exception $e) {
       SentryLogger::log_error(
         'Error sending results notification for play ' .

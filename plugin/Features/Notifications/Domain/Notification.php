@@ -35,6 +35,9 @@ class Notification {
   /** @var NotificationType The type of notification */
   public NotificationType $notification_type;
 
+  /** @var string|null The text of the action button */
+  public string|null $action_text;
+
   /**
    * Creates a new Notification instance.
    *
@@ -54,7 +57,7 @@ class Notification {
     $this->user_id = (int) $data['user_id'];
     $this->title = $data['title'];
     $this->message = $data['message'];
-
+    $this->action_text = $data['action_text'] ?? null;
     // More defensive timestamp handling
     if (isset($data['timestamp'])) {
       $this->timestamp =
