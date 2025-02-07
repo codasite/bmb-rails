@@ -231,12 +231,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   );
                 },
               ),
-              title: UpperCaseText(
-                _currentTitle,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontVariations: BmbFontWeights.w500,
+              title: Center(
+                child: UpperCaseText(
+                  _currentTitle,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontVariations: BmbFontWeights.w500,
+                  ),
                 ),
               ),
               actions: [
