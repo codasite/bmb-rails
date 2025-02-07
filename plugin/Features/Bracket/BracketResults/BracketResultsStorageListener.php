@@ -22,12 +22,13 @@ class BracketResultsStorageListener implements
   }
 
   public function notify(User $user, Play $play, PickResult $result): void {
-    $heading = BracketResultsMessageFormatter::get_heading($result);
-    $link = $this->permalink_service->get_permalink($play->id) . 'view';
+    $link = BracketResultsMessageFormatter::get_link($play);
+    $title = BracketResultsMessageFormatter::get_title();
+    $heading = BracketResultsMessageFormatter::get_message($result);
 
     $this->notification_manager->create_notification(
       $user->id,
-      'Bracket Results Updated',
+      $title,
       $heading,
       NotificationType::BRACKET_RESULTS,
       $link

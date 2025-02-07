@@ -24,9 +24,9 @@ class BracketResultsEmailListener implements
   }
 
   public function notify(User $user, Play $play, PickResult $result): void {
-    $subject = 'Bracket Results Updated';
-    $heading = BracketResultsMessageFormatter::get_heading($result);
-    $button_url = $this->permalink_service->get_permalink($play->id) . 'view';
+    $subject = BracketResultsMessageFormatter::get_title();
+    $heading = BracketResultsMessageFormatter::get_message($result);
+    $button_url = BracketResultsMessageFormatter::get_link($play);
     $button_text = 'View Bracket';
 
     $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
