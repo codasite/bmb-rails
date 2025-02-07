@@ -22,10 +22,10 @@ class BracketResultsPushListener implements
 
   public function notify(User $user, Play $play, PickResult $result): void {
     $heading = BracketResultsMessageFormatter::get_heading($result);
-    $this->messaging_service->send_notification(
-      NotificationType::BRACKET_RESULTS,
-      $user->id,
-      $heading
-    );
+    $this->messaging_service->send_notification([
+      'type' => NotificationType::BRACKET_RESULTS,
+      'user_id' => $user->id,
+      'title' => $heading,
+    ]);
   }
 }

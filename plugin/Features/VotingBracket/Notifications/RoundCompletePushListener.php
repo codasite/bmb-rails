@@ -22,11 +22,11 @@ class RoundCompletePushListener implements
     $heading = RoundCompleteMessageFormatter::get_heading($bracket);
     $message = RoundCompleteMessageFormatter::get_message($bracket);
 
-    $this->messaging_service->send_notification(
-      NotificationType::ROUND_COMPLETE,
-      $user->id,
-      $heading,
-      $message
-    );
+    $this->messaging_service->send_notification([
+      'type' => NotificationType::ROUND_COMPLETE,
+      'user_id' => $user->id,
+      'title' => $heading,
+      'message' => $message,
+    ]);
   }
 }

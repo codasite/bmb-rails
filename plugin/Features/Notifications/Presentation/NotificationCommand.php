@@ -392,14 +392,14 @@ class NotificationCommand {
         }
       }
 
-      $report = $this->push_messaging_service->send_notification(
-        NotificationType::from($assoc_args['type']),
-        (int) $assoc_args['user_id'],
-        $assoc_args['title'],
-        $assoc_args['message'],
-        $assoc_args['image'] ?? '',
-        $data
-      );
+      $report = $this->push_messaging_service->send_notification([
+        'type' => NotificationType::from($assoc_args['type']),
+        'user_id' => (int) $assoc_args['user_id'],
+        'title' => $assoc_args['title'],
+        'message' => $assoc_args['message'],
+        'image_url' => $assoc_args['image'] ?? '',
+        'data' => $data ?? [],
+      ]);
 
       if ($report->successes()->count() > 0) {
         WP_CLI::success(

@@ -26,22 +26,23 @@ class PushMessagingService {
   /**
    * Sends a notification to a user's devices and handles delivery reports
    *
-   * @param NotificationType $type The type of notification
-   * @param int $user_id Target user ID
-   * @param string $title Notification title
-   * @param string $message Notification body
-   * @param string $image_url Optional image URL
-   * @param array $data Optional additional data
+   * @param array $params Array containing notification parameters:
+   *   - type: NotificationType - The type of notification
+   *   - user_id: int - Target user ID
+   *   - title: string - Notification title (optional)
+   *   - message: string - Notification body (optional)
+   *   - data: array - Optional additional data (optional)
+   *   - image_url: string - Optional image URL (optional)
    * @return MulticastSendReport The send report
    */
-  public function send_notification(
-    NotificationType $type,
-    int $user_id,
-    string $title = '',
-    string $message = '',
-    string $image_url = '',
-    array $data = []
-  ): MulticastSendReport {
+  public function send_notification(array $params): MulticastSendReport {
+    $type = $params['type'];
+    $user_id = $params['user_id'];
+    $title = $params['title'] ?? '';
+    $message = $params['message'] ?? '';
+    $data = $params['data'] ?? [];
+    $image_url = $params['image_url'] ?? '';
+
     $tokens = $this->token_manager->get_target_tokens($type, $user_id);
 
     if (empty($tokens)) {

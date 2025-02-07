@@ -52,11 +52,11 @@ class PushMessagingServiceTest extends TestCase {
       fn($target) => SendReportFake::failure($target)->withInvalidTarget()
     );
 
-    $report = $this->service->send_notification(
-      NotificationType::TOURNAMENT_START,
-      1,
-      'Test Title'
-    );
+    $report = $this->service->send_notification([
+      'type' => NotificationType::TOURNAMENT_START,
+      'user_id' => 1,
+      'title' => 'Test Title',
+    ]);
 
     $this->assertEquals(1, $report->successes()->count());
     $this->assertEquals(1, $report->failures()->count());
@@ -76,11 +76,11 @@ class PushMessagingServiceTest extends TestCase {
       fn($target) => SendReportFake::failure($target)->withUnknownToken()
     );
 
-    $report = $this->service->send_notification(
-      NotificationType::TOURNAMENT_START,
-      1,
-      'Test Title'
-    );
+    $report = $this->service->send_notification([
+      'type' => NotificationType::TOURNAMENT_START,
+      'user_id' => 1,
+      'title' => 'Test Title',
+    ]);
 
     $this->assertEquals(1, $report->successes()->count());
     $this->assertEquals(1, $report->failures()->count());
@@ -100,11 +100,11 @@ class PushMessagingServiceTest extends TestCase {
       fn($target) => SendReportFake::failure($target)->withInvalidMessage()
     );
 
-    $report = $this->service->send_notification(
-      NotificationType::TOURNAMENT_START,
-      1,
-      'Test Title'
-    );
+    $report = $this->service->send_notification([
+      'type' => NotificationType::TOURNAMENT_START,
+      'user_id' => 1,
+      'title' => 'Test Title',
+    ]);
 
     $this->assertEquals(1, $report->successes()->count());
     $this->assertEquals(1, $report->failures()->count());
@@ -113,14 +113,14 @@ class PushMessagingServiceTest extends TestCase {
   public function test_send_notification_includes_all_parameters(): void {
     $this->device_manager->method('get_target_tokens')->willReturn(['token1']);
 
-    $this->service->send_notification(
-      NotificationType::TOURNAMENT_START,
-      1,
-      'Test Title',
-      'Test Message',
-      'http://test.com/image.jpg',
-      ['key' => 'value']
-    );
+    $this->service->send_notification([
+      'type' => NotificationType::TOURNAMENT_START,
+      'user_id' => 1,
+      'title' => 'Test Title',
+      'message' => 'Test Message',
+      'image_url' => 'http://test.com/image.jpg',
+      'data' => ['key' => 'value'],
+    ]);
 
     $sent_messages = $this->messaging->getSentMessages();
     $message = $sent_messages[0]->jsonSerialize();
@@ -129,6 +129,7 @@ class PushMessagingServiceTest extends TestCase {
     $this->assertArrayHasKey('notification', $message);
     $this->assertEquals('Test Title', $message['notification']['title']);
     $this->assertEquals('Test Message', $message['notification']['body']);
+    print_r($message);
     $this->assertEquals(
       'http://test.com/image.jpg',
       $message['notification']['image']
