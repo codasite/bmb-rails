@@ -1,4 +1,5 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
+import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_drawer.dart';
 import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_bottom_nav_bar.dart';
+import 'package:bmb_mobile/features/webview/presentation/providers/webview_provider.dart';
 import 'dart:async';
 import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
@@ -28,26 +30,17 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   static const double _refreshThreshold = 65.0;
 
-  late final WebViewController controller;
   int? _selectedIndex;
   String _currentTitle = 'Back My Bracket';
-  bool _isLoading = true;
-  bool _canGoBack = false;
   double _refreshProgress = 0.0;
   bool _isLoggingOut = false;
 
   final List<NavigationItem> _pages = bottomNavItems;
 
-  void _loadUrl(String path, {bool prependBaseUrl = true}) {
-    controller.loadRequest(
-      Uri.parse(prependBaseUrl ? WpUrls.baseUrl + path : path),
-    );
-  }
-
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _loadUrl(_pages[index].path);
+      context.read<WebViewProvider>().loadUrl(_pages[index].path);
     });
   }
 
@@ -71,7 +64,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         });
       }
     } else {
-      _loadUrl(item.path);
+      context.read<WebViewProvider>().loadUrl(item.path);
       Navigator.pop(context);
     }
   }
@@ -81,7 +74,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
         await rootBundle.loadString('assets/js/pull_to_refresh.js');
     final String configuredJs =
         js.replaceAll('REFRESH_THRESHOLD', _refreshThreshold.toString());
-    await controller.runJavaScript(configuredJs);
+    await context
+        .read<WebViewProvider>()
+        .controller
+        .runJavaScript(configuredJs);
   }
 
   void _handleNotificationNavigation() async {
@@ -92,23 +88,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ),
     );
 
-    if (result != null && result is String) {
-      _loadUrl(result, prependBaseUrl: false);
+    if (mounted && result != null && result is String) {
+      context.read<WebViewProvider>().loadUrl(result, prependBaseUrl: false);
     }
   }
 
   @override
   void initState() {
     super.initState();
-
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setUserAgent('BackMyBracket-MobileApp')
+    final webViewProvider = context.read<WebViewProvider>();
+    webViewProvider.controller
       ..addJavaScriptChannel(
         'Flutter',
         onMessageReceived: (message) {
           if (message.message == 'refresh') {
-            controller.reload();
+            webViewProvider.controller.reload();
             setState(() => _refreshProgress = 0.0);
           } else if (message.message.startsWith('pull:')) {
             final pullAmount = double.parse(message.message.split(':')[1]);
@@ -121,34 +115,22 @@ class _WebViewScreenState extends State<WebViewScreen> {
         NavigationDelegate(
           onProgress: (int progress) {},
           onPageStarted: (String url) {
-            setState(() {
-              _isLoading = true;
-            });
-
-            controller.canGoBack().then((value) {
-              setState(() {
-                _canGoBack = value;
-              });
+            webViewProvider.setLoading(true);
+            webViewProvider.controller.canGoBack().then((value) {
+              webViewProvider.setCanGoBack(value);
             });
           },
           onPageFinished: (String url) {
             _injectPullToRefreshJS();
             setAppBarTitle();
-            setState(() {
-              _isLoading = false;
-            });
-
-            controller.canGoBack().then((value) {
-              setState(() {
-                _canGoBack = value;
-              });
+            webViewProvider.setLoading(false);
+            webViewProvider.controller.canGoBack().then((value) {
+              webViewProvider.setCanGoBack(value);
             });
           },
           onWebResourceError: (WebResourceError error) {
             debugPrint('Web resource error: ${error.description}');
-            setState(() {
-              _isLoading = false;
-            });
+            webViewProvider.setLoading(false);
           },
           onNavigationRequest: (NavigationRequest request) async {
             final uri = Uri.parse(request.url);
@@ -200,21 +182,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       );
 
-    controller
-        .loadRequest(Uri.parse('${WpUrls.baseUrl}/dashboard/tournaments/'));
+    webViewProvider.loadUrl('/dashboard/tournaments/');
   }
 
   Future<bool> _handleBackPress() async {
-    final canGoBack = await controller.canGoBack();
-    if (canGoBack) {
-      controller.goBack();
-      return false; // Don't close the app
-    }
-    return true; // Allow closing the app
+    return !(await context.read<WebViewProvider>().goBack());
   }
 
   void setAppBarTitle() {
-    controller.getTitle().then((title) {
+    context.read<WebViewProvider>().controller.getTitle().then((title) {
       String? trimmedTitle = title?.replaceAll(RegExp(r' - BackMyBracket'), '');
       setState(() {
         _currentTitle = trimmedTitle ?? 'Loading';
@@ -224,8 +200,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final webViewProvider = context.watch<WebViewProvider>();
+
     return PopScope<Object?>(
-      canPop: !_canGoBack,
+      canPop: !webViewProvider.canGoBack,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) {
           return;
@@ -254,14 +232,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
               ),
               title: UpperCaseText(
                 _currentTitle,
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontVariations: BmbFontWeights.w500,
+                ),
               ),
               actions: [
-                if (_canGoBack)
+                if (webViewProvider.canGoBack)
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      controller.goBack();
+                      webViewProvider.goBack();
                     },
                     color: Colors.white,
                   ),
@@ -300,8 +282,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 color: BmbColors.ddBlue,
                 child: Stack(
                   children: [
-                    WebViewWidget(controller: controller),
-                    if (_isLoading)
+                    WebViewWidget(controller: webViewProvider.controller),
+                    if (webViewProvider.isLoading)
                       Container(
                         color: Colors.transparent.withOpacity(0.5),
                         child: const Center(
