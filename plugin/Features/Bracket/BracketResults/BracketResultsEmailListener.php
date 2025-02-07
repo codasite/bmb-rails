@@ -25,17 +25,17 @@ class BracketResultsEmailListener implements
 
   public function notify(User $user, Play $play, PickResult $result): void {
     $subject = BracketResultsMessageFormatter::get_title();
-    $heading = BracketResultsMessageFormatter::get_message($result);
-    $button_url = BracketResultsMessageFormatter::get_link($play);
+    $message = BracketResultsMessageFormatter::get_message($result);
+    $link = BracketResultsMessageFormatter::get_link($play);
     $button_text = 'View Bracket';
 
-    $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
+    $html = BracketEmailTemplate::render($message, $link, $button_text);
 
     $this->email_service->send(
       $user->user_email,
       $user->display_name,
       $subject,
-      $heading,
+      $message,
       $html
     );
   }

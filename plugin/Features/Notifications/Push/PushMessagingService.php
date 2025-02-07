@@ -42,6 +42,11 @@ class PushMessagingService {
     $message = $params['message'] ?? '';
     $data = $params['data'] ?? [];
     $image_url = $params['image_url'] ?? '';
+    $link = $params['link'] ?? '';
+
+    if (!empty($link)) {
+      $data['link'] = $link;
+    }
 
     $tokens = $this->token_manager->get_target_tokens($type, $user_id);
 

@@ -24,12 +24,12 @@ class BracketResultsStorageListener implements
   public function notify(User $user, Play $play, PickResult $result): void {
     $link = BracketResultsMessageFormatter::get_link($play);
     $title = BracketResultsMessageFormatter::get_title();
-    $heading = BracketResultsMessageFormatter::get_message($result);
+    $message = BracketResultsMessageFormatter::get_message($result);
 
     $this->notification_manager->create_notification(
       $user->id,
       $title,
-      $heading,
+      $message,
       NotificationType::BRACKET_RESULTS,
       $link
     );

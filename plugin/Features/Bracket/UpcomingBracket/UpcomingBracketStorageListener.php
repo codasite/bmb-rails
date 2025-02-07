@@ -26,13 +26,14 @@ class UpcomingBracketStorageListener implements
     Bracket $bracket,
     NotificationSubscription $notification
   ): void {
-    $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
-    $link = $this->permalink_service->get_permalink($bracket->id);
+    $message = UpcomingBracketMessageFormatter::get_message($bracket);
+    $link = UpcomingBracketMessageFormatter::get_link($bracket);
+    $title = UpcomingBracketMessageFormatter::get_title();
 
     $this->notification_manager->create_notification(
       $user->id,
-      $heading,
-      'A bracket you are following is about to start!',
+      $title,
+      $message,
       NotificationType::BRACKET_UPCOMING,
       $link
     );

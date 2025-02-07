@@ -21,11 +21,15 @@ class BracketResultsPushListener implements
   }
 
   public function notify(User $user, Play $play, PickResult $result): void {
-    $heading = BracketResultsMessageFormatter::get_message($result);
+    $title = BracketResultsMessageFormatter::get_title();
+    $message = BracketResultsMessageFormatter::get_message($result);
+    $link = BracketResultsMessageFormatter::get_link($play);
     $this->messaging_service->send_notification([
       'type' => NotificationType::BRACKET_RESULTS,
       'user_id' => $user->id,
-      'title' => $heading,
+      'title' => $title,
+      'message' => $message,
+      'link' => $link,
     ]);
   }
 }

@@ -23,17 +23,18 @@ class UpcomingBracketEmailListener implements
     Bracket $bracket,
     NotificationSubscription $notification
   ): void {
-    $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
-    $button_url = $bracket->url;
+    $title = UpcomingBracketMessageFormatter::get_title();
+    $message = UpcomingBracketMessageFormatter::get_message($bracket);
+    $link = UpcomingBracketMessageFormatter::get_link($bracket);
     $button_text = 'Play Tournament';
 
-    $html = BracketEmailTemplate::render($heading, $button_url, $button_text);
+    $html = BracketEmailTemplate::render($message, $link, $button_text);
 
     $this->email_service->send(
       $user->user_email,
       $user->display_name,
-      $heading,
-      $heading,
+      $title,
+      $message,
       $html
     );
   }

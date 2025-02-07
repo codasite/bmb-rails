@@ -24,12 +24,15 @@ class UpcomingBracketPushListener implements
     Bracket $bracket,
     NotificationSubscription $notification
   ): void {
-    $heading = UpcomingBracketMessageFormatter::get_heading($bracket);
-
+    $title = UpcomingBracketMessageFormatter::get_title();
+    $message = UpcomingBracketMessageFormatter::get_message($bracket);
+    $link = UpcomingBracketMessageFormatter::get_link($bracket);
     $this->messaging_service->send_notification([
-      'type' => NotificationType::TOURNAMENT_START,
+      'type' => NotificationType::BRACKET_UPCOMING,
       'user_id' => $user->id,
-      'title' => $heading,
+      'title' => $title,
+      'message' => $message,
+      'link' => $link,
     ]);
   }
 }
