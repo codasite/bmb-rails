@@ -23,7 +23,7 @@ class BmbApp extends StatelessWidget {
       ),
       routes: {
         '/app': (context) => const FCMLifecycleManager(
-              child: FCMNotificationListener(child: WebViewScreen()),
+              child: WebViewScreen(),
             ),
         '/login': (context) => const LoginScreen(),
       },

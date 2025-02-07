@@ -18,6 +18,7 @@ import 'package:bmb_mobile/features/notifications/presentation/providers/notific
 import 'package:bmb_mobile/features/webview/presentation/delegates/webview_navigation_delegate.dart';
 import 'package:bmb_mobile/features/webview/presentation/controllers/javascript_channel_controller.dart';
 import 'dart:async' show scheduleMicrotask;
+import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_notification_listener.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -232,120 +233,124 @@ class _WebViewScreenState extends State<WebViewScreen> {
           Navigator.pop(context);
         }
       },
-      child: Stack(
-        children: [
-          Scaffold(
-            backgroundColor: BmbColors.ddBlue,
-            appBar: AppBar(
-              backgroundColor: BmbColors.darkBlue,
-              iconTheme: const IconThemeData(color: Colors.white),
-              leading: Builder(
-                builder: (BuildContext context) {
-                  return IconButton(
-                    icon: const Icon(Icons.menu),
-                    onPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  );
-                },
-              ),
-              title: Center(
-                child: UpperCaseText(
-                  _currentTitle,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontVariations: BmbFontWeights.w500,
-                  ),
+      child: FCMNotificationListener(
+        onLoadUrl: _loadUrl,
+        child: Stack(
+          children: [
+            Scaffold(
+              backgroundColor: BmbColors.ddBlue,
+              appBar: AppBar(
+                backgroundColor: BmbColors.darkBlue,
+                iconTheme: const IconThemeData(color: Colors.white),
+                leading: Builder(
+                  builder: (BuildContext context) {
+                    return IconButton(
+                      icon: const Icon(Icons.menu),
+                      onPressed: () {
+                        Scaffold.of(context).openDrawer();
+                      },
+                    );
+                  },
                 ),
-              ),
-              actions: [
-                if (_canGoBack)
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      _controller.goBack();
-                    },
-                    color: Colors.white,
-                  ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: IconButton(
-                    icon: Badge(
-                      isLabelVisible:
-                          context.watch<NotificationProvider>().unreadCount > 0,
-                      backgroundColor: Colors.red,
-                      smallSize: 16,
-                      label: Text(
-                        context.watch<NotificationProvider>().unreadCount > 99
-                            ? '99+'
-                            : '${context.watch<NotificationProvider>().unreadCount}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.notifications_outlined,
-                        color: Colors.white,
-                      ),
+                title: Center(
+                  child: UpperCaseText(
+                    _currentTitle,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontVariations: BmbFontWeights.w500,
                     ),
-                    onPressed: _handleNotificationNavigation,
                   ),
                 ),
-              ],
-            ),
-            drawer: BmbDrawer(
-              onDrawerItemTap: _onDrawerItemTap,
-            ),
-            body: SafeArea(
-              child: Container(
-                color: BmbColors.ddBlue,
-                child: Stack(
-                  children: [
-                    WebViewWidget(controller: _controller),
-                    if (_isLoading)
-                      Container(
-                        color: Colors.transparent.withOpacity(0.5),
-                        child: const Center(
-                          child: CircularProgressIndicator(
-                            color: BmbColors.blue,
+                actions: [
+                  if (_canGoBack)
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        _controller.goBack();
+                      },
+                      color: Colors.white,
+                    ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: IconButton(
+                      icon: Badge(
+                        isLabelVisible:
+                            context.watch<NotificationProvider>().unreadCount >
+                                0,
+                        backgroundColor: Colors.red,
+                        smallSize: 16,
+                        label: Text(
+                          context.watch<NotificationProvider>().unreadCount > 99
+                              ? '99+'
+                              : '${context.watch<NotificationProvider>().unreadCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
                           ),
                         ),
-                      ),
-                    if (_refreshProgress > 0)
-                      const Positioned(
-                        top: 8,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Icon(
-                            Icons.refresh,
-                            color: BmbColors.blue,
-                            size: 24,
-                          ),
+                        child: const Icon(
+                          Icons.notifications_outlined,
+                          color: Colors.white,
                         ),
                       ),
-                  ],
+                      onPressed: _handleNotificationNavigation,
+                    ),
+                  ),
+                ],
+              ),
+              drawer: BmbDrawer(
+                onDrawerItemTap: _onDrawerItemTap,
+              ),
+              body: SafeArea(
+                child: Container(
+                  color: BmbColors.ddBlue,
+                  child: Stack(
+                    children: [
+                      WebViewWidget(controller: _controller),
+                      if (_isLoading)
+                        Container(
+                          color: Colors.transparent.withOpacity(0.5),
+                          child: const Center(
+                            child: CircularProgressIndicator(
+                              color: BmbColors.blue,
+                            ),
+                          ),
+                        ),
+                      if (_refreshProgress > 0)
+                        const Positioned(
+                          top: 8,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Icon(
+                              Icons.refresh,
+                              color: BmbColors.blue,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            bottomNavigationBar: BmbBottomNavBar(
-              pages: _pages,
-              selectedIndex: _selectedIndex ?? 0,
-              onItemTapped: _onItemTapped,
-            ),
-          ),
-          if (_isLoggingOut)
-            Container(
-              color: Colors.black54,
-              child: const Center(
-                child: CircularProgressIndicator(
-                  color: BmbColors.blue,
-                ),
+              bottomNavigationBar: BmbBottomNavBar(
+                pages: _pages,
+                selectedIndex: _selectedIndex ?? 0,
+                onItemTapped: _onItemTapped,
               ),
             ),
-        ],
+            if (_isLoggingOut)
+              Container(
+                color: Colors.black54,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: BmbColors.blue,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

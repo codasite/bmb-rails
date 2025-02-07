@@ -8,11 +8,13 @@ import 'package:bmb_mobile/features/webview/presentation/providers/webview_provi
 class NotificationBanner extends StatelessWidget {
   final RemoteMessage message;
   final VoidCallback onDismiss;
+  final Future<void> Function(String, {bool prependBaseUrl}) onLoadUrl;
 
   const NotificationBanner({
     super.key,
     required this.message,
     required this.onDismiss,
+    required this.onLoadUrl,
   });
 
   @override
@@ -81,16 +83,9 @@ class NotificationBanner extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 onDismiss();
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationScreen(),
-                  ),
-                );
-
-                if (result != null && result is String && context.mounted) {
-                  Navigator.pushReplacementNamed(context, '/app',
-                      arguments: result);
+                if (message.data['link'] != null) {
+                  await onLoadUrl(message.data['link'] as String,
+                      prependBaseUrl: false);
                 }
               },
               style: FilledButton.styleFrom(

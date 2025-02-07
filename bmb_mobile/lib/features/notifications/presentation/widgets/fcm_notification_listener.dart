@@ -7,10 +7,12 @@ import 'package:bmb_mobile/features/notifications/presentation/widgets/notificat
 
 class FCMNotificationListener extends StatefulWidget {
   final Widget child;
+  final Future<void> Function(String, {bool prependBaseUrl}) onLoadUrl;
 
   const FCMNotificationListener({
     super.key,
     required this.child,
+    required this.onLoadUrl,
   });
 
   @override
@@ -30,11 +32,22 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
       if (!mounted) return;
       context.read<NotificationProvider>().fetchNotifications();
 
+      AppLogger.debugLog('Remote message received:');
+      AppLogger.debugLog('Title: ${message.notification?.title}');
+      AppLogger.debugLog('Body: ${message.notification?.body}');
+      AppLogger.debugLog('Data: ${message.data}');
+      AppLogger.debugLog('MessageId: ${message.messageId}');
+      AppLogger.debugLog('SenderId: ${message.senderId}');
+      AppLogger.debugLog('SentTime: ${message.sentTime}');
+      AppLogger.debugLog('ThreadId: ${message.threadId}');
+      AppLogger.debugLog('TTL: ${message.ttl}');
+
       final banner = NotificationBanner(
         message: message,
         onDismiss: () {
           ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
         },
+        onLoadUrl: widget.onLoadUrl,
       );
 
       ScaffoldMessenger.of(context).showMaterialBanner(
