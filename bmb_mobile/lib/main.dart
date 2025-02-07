@@ -24,7 +24,6 @@ import 'package:bmb_mobile/features/notifications/domain/services/fcm_token_mana
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:bmb_mobile/core/utils/environment_config.dart';
-import 'package:bmb_mobile/features/webview/presentation/providers/webview_provider.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -81,8 +80,6 @@ void main() async {
   );
   notificationProvider.fetchNotifications();
 
-  final webViewProvider = WebViewProvider();
-
   runApp(
     MultiProvider(
       providers: [
@@ -90,7 +87,6 @@ void main() async {
         ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider.value(value: fcmProvider),
         ChangeNotifierProvider.value(value: notificationProvider),
-        ChangeNotifierProvider.value(value: webViewProvider),
       ],
       child: const BmbApp(),
     ),

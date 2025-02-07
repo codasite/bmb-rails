@@ -89,9 +89,8 @@ class NotificationBanner extends StatelessWidget {
                 );
 
                 if (result != null && result is String && context.mounted) {
-                  context
-                      .read<WebViewProvider>()
-                      .loadUrl(result, prependBaseUrl: false);
+                  Navigator.pushReplacementNamed(context, '/app',
+                      arguments: result);
                 }
               },
               style: FilledButton.styleFrom(
