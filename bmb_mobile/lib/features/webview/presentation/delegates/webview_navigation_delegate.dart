@@ -15,16 +15,24 @@ class WebViewNavigationDelegate extends NavigationDelegate {
     required this.onLogout,
   }) : super(
           onProgress: (_) {},
-          onPageStarted: (_) => onLoadingChanged(true),
+          onPageStarted: (_) =>
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+            onLoadingChanged(true);
+          }),
           onPageFinished: (url) {
-            onLoadingChanged(false);
-            onPageCompleted(url);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              onLoadingChanged(false);
+              onPageCompleted(url);
+            });
           },
           onWebResourceError: (error) {
             debugPrint('Web resource error: ${error.description}');
-            onLoadingChanged(false);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              onLoadingChanged(false);
+            });
           },
           onNavigationRequest: (request) async {
+            await WidgetsBinding.instance.endOfFrame;
             final uri = Uri.parse(request.url);
 
             // If it's our domain, allow navigation
@@ -32,7 +40,9 @@ class WebViewNavigationDelegate extends NavigationDelegate {
               // Check for login/unauthorized paths
               if (request.url.contains(WpUrls.loginPath) ||
                   request.url.contains('unauthorized')) {
-                onLogout();
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  onLogout();
+                });
                 return NavigationDecision.prevent;
               }
               return NavigationDecision.navigate;
