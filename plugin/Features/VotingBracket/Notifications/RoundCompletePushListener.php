@@ -19,14 +19,16 @@ class RoundCompletePushListener implements
   }
 
   public function notify(User $user, Bracket $bracket, Play $play): void {
-    $heading = RoundCompleteMessageFormatter::get_heading($bracket);
+    $title = RoundCompleteMessageFormatter::get_title($bracket);
     $message = RoundCompleteMessageFormatter::get_message($bracket);
+    $link = RoundCompleteMessageFormatter::get_link($bracket);
 
     $this->messaging_service->send_notification([
       'type' => NotificationType::ROUND_COMPLETE,
       'user_id' => $user->id,
-      'title' => $heading,
+      'title' => $title,
       'message' => $message,
+      'link' => $link,
     ]);
   }
 }

@@ -20,7 +20,7 @@ class UpcomingBracketStorageListenerTest extends TestCase {
       ->with(
         1, // user_id
         $this->isType('string'), // heading
-        'A bracket you are following is about to start!',
+        'TEST BRACKET is now live. Make your picks!',
         NotificationType::BRACKET_UPCOMING,
         $this->isType('string') // link
       );

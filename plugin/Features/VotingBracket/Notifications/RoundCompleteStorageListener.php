@@ -22,11 +22,9 @@ class RoundCompleteStorageListener implements
   }
 
   public function notify(User $user, Bracket $bracket, Play $play): void {
-    $heading = RoundCompleteMessageFormatter::get_heading($bracket);
+    $heading = RoundCompleteMessageFormatter::get_title($bracket);
     $message = RoundCompleteMessageFormatter::get_message($bracket);
-    $link =
-      $this->permalink_service->get_permalink($bracket->id) .
-      RoundCompleteMessageFormatter::get_button_url_suffix($bracket);
+    $link = RoundCompleteMessageFormatter::get_link($bracket);
 
     $this->notification_manager->create_notification(
       $user->id,

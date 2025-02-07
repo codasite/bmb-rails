@@ -120,6 +120,7 @@ class PushMessagingServiceTest extends TestCase {
       'message' => 'Test Message',
       'image_url' => 'http://test.com/image.jpg',
       'data' => ['key' => 'value'],
+      'link' => 'http://test.com/page',
     ]);
 
     $sent_messages = $this->messaging->getSentMessages();
@@ -129,11 +130,32 @@ class PushMessagingServiceTest extends TestCase {
     $this->assertArrayHasKey('notification', $message);
     $this->assertEquals('Test Title', $message['notification']['title']);
     $this->assertEquals('Test Message', $message['notification']['body']);
-    print_r($message);
     $this->assertEquals(
       'http://test.com/image.jpg',
       $message['notification']['image']
     );
-    $this->assertEquals(['key' => 'value'], $message['data']);
+    $this->assertEquals(
+      [
+        'key' => 'value',
+        'link' => 'http://test.com/page',
+      ],
+      $message['data']
+    );
+  }
+
+  public function test_send_notification_adds_link_to_empty_data(): void {
+    $this->device_manager->method('get_target_tokens')->willReturn(['token1']);
+
+    $this->service->send_notification([
+      'type' => NotificationType::TOURNAMENT_START,
+      'user_id' => 1,
+      'title' => 'Test Title',
+      'link' => 'http://test.com/page',
+    ]);
+
+    $sent_messages = $this->messaging->getSentMessages();
+    $message = $sent_messages[0]->jsonSerialize();
+
+    $this->assertEquals(['link' => 'http://test.com/page'], $message['data']);
   }
 }

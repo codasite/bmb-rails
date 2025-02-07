@@ -23,14 +23,12 @@ class RoundCompleteEmailListener implements
   }
 
   public function notify(User $user, Bracket $bracket, Play $play): void {
-    $subject = RoundCompleteMessageFormatter::get_heading($bracket);
+    $subject = RoundCompleteMessageFormatter::get_title($bracket);
     $message = RoundCompleteMessageFormatter::get_message($bracket);
-    $button_url =
-      $this->permalink_service->get_permalink($bracket->id) .
-      RoundCompleteMessageFormatter::get_button_url_suffix($bracket);
+    $link = RoundCompleteMessageFormatter::get_link($bracket);
     $button_text = RoundCompleteMessageFormatter::get_button_text($bracket);
 
-    $html = BracketEmailTemplate::render($message, $button_url, $button_text);
+    $html = BracketEmailTemplate::render($message, $link, $button_text);
     $this->email_service->send(
       $user->user_email,
       $user->display_name,
