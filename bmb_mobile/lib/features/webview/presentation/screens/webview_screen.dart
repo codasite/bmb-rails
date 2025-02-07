@@ -97,90 +97,91 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void initState() {
     super.initState();
     final webViewProvider = context.read<WebViewProvider>();
-    webViewProvider.controller
-      ..addJavaScriptChannel(
-        'Flutter',
-        onMessageReceived: (message) {
-          if (message.message == 'refresh') {
-            webViewProvider.controller.reload();
-            setState(() => _refreshProgress = 0.0);
-          } else if (message.message.startsWith('pull:')) {
-            final pullAmount = double.parse(message.message.split(':')[1]);
-            setState(() => _refreshProgress =
-                (pullAmount / _refreshThreshold).clamp(0.0, 1.0));
-          }
+
+    webViewProvider.addJavaScriptChannel(
+      'Flutter',
+      (message) {
+        if (message.message == 'refresh') {
+          webViewProvider.controller.reload();
+          setState(() => _refreshProgress = 0.0);
+        } else if (message.message.startsWith('pull:')) {
+          final pullAmount = double.parse(message.message.split(':')[1]);
+          setState(() => _refreshProgress =
+              (pullAmount / _refreshThreshold).clamp(0.0, 1.0));
+        }
+      },
+    );
+
+    webViewProvider.controller.setNavigationDelegate(
+      NavigationDelegate(
+        onProgress: (int progress) {},
+        onPageStarted: (String url) {
+          webViewProvider.setLoading(true);
+          webViewProvider.controller.canGoBack().then((value) {
+            webViewProvider.setCanGoBack(value);
+          });
         },
-      )
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {},
-          onPageStarted: (String url) {
-            webViewProvider.setLoading(true);
-            webViewProvider.controller.canGoBack().then((value) {
-              webViewProvider.setCanGoBack(value);
-            });
-          },
-          onPageFinished: (String url) {
-            _injectPullToRefreshJS();
-            setAppBarTitle();
-            webViewProvider.setLoading(false);
-            webViewProvider.controller.canGoBack().then((value) {
-              webViewProvider.setCanGoBack(value);
-            });
-          },
-          onWebResourceError: (WebResourceError error) {
-            debugPrint('Web resource error: ${error.description}');
-            webViewProvider.setLoading(false);
-          },
-          onNavigationRequest: (NavigationRequest request) async {
-            final uri = Uri.parse(request.url);
+        onPageFinished: (String url) {
+          _injectPullToRefreshJS();
+          setAppBarTitle();
+          webViewProvider.setLoading(false);
+          webViewProvider.controller.canGoBack().then((value) {
+            webViewProvider.setCanGoBack(value);
+          });
+        },
+        onWebResourceError: (WebResourceError error) {
+          debugPrint('Web resource error: ${error.description}');
+          webViewProvider.setLoading(false);
+        },
+        onNavigationRequest: (NavigationRequest request) async {
+          final uri = Uri.parse(request.url);
 
-            // If it's our domain, allow navigation
-            if (request.url.contains(WpUrls.baseUrl)) {
-              // Check for login/unauthorized paths
-              if (request.url.contains(WpUrls.loginPath) ||
-                  request.url.contains('unauthorized')) {
-                context.read<AuthProvider>().logout();
-                if (mounted) {
-                  Navigator.pushReplacementNamed(context, '/login');
-                }
-                return NavigationDecision.prevent;
+          // If it's our domain, allow navigation
+          if (request.url.contains(WpUrls.baseUrl)) {
+            // Check for login/unauthorized paths
+            if (request.url.contains(WpUrls.loginPath) ||
+                request.url.contains('unauthorized')) {
+              context.read<AuthProvider>().logout();
+              if (mounted) {
+                Navigator.pushReplacementNamed(context, '/login');
               }
-              return NavigationDecision.navigate;
+              return NavigationDecision.prevent;
             }
+            return NavigationDecision.navigate;
+          }
 
-            // Check if this is a resource request (not a page navigation)
-            final isResource = uri.path.toLowerCase().contains(RegExp(
-                  r'\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)$',
-                ));
+          // Check if this is a resource request (not a page navigation)
+          final isResource = uri.path.toLowerCase().contains(RegExp(
+                r'\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)$',
+              ));
 
-            final allowedExternalDomains = [
-              'm.stripe.network',
-              'js.stripe.com',
-              'widgets.wp.com',
-              'public-api.wordpress.com',
-              'wordpress.com'
-            ];
+          final allowedExternalDomains = [
+            'm.stripe.network',
+            'js.stripe.com',
+            'widgets.wp.com',
+            'public-api.wordpress.com',
+            'wordpress.com'
+          ];
 
-            final isAllowedDomain = allowedExternalDomains
-                .any((domain) => request.url.contains(domain));
+          final isAllowedDomain = allowedExternalDomains
+              .any((domain) => request.url.contains(domain));
 
-            // Allow resource requests to load in WebView
-            if (isResource || isAllowedDomain) {
-              return NavigationDecision.navigate;
-            }
+          // Allow resource requests to load in WebView
+          if (isResource || isAllowedDomain) {
+            return NavigationDecision.navigate;
+          }
 
-            // For all other external URLs, open in external browser
-            if (await canLaunchUrl(uri)) {
-              AppLogger.debugLog(
-                'Launching external domain: ${request.url}',
-              );
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-            return NavigationDecision.prevent;
-          },
-        ),
-      );
+          // For all other external URLs, open in external browser
+          if (await canLaunchUrl(uri)) {
+            AppLogger.debugLog(
+              'Launching external domain: ${request.url}',
+            );
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          }
+          return NavigationDecision.prevent;
+        },
+      ),
+    );
 
     webViewProvider.loadUrl('/dashboard/tournaments/');
   }
