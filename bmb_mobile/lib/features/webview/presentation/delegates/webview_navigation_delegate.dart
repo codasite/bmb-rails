@@ -15,21 +15,29 @@ class WebViewNavigationDelegate extends NavigationDelegate {
     required this.onLogout,
   }) : super(
           onProgress: (_) {},
-          onPageStarted: (_) =>
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-            onLoadingChanged(true);
-          }),
+          onPageStarted: (url) {
+            AppLogger.debugLog('Page load started: $url');
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              onLoadingChanged(true);
+            });
+          },
           onPageFinished: (url) {
+            AppLogger.debugLog('Page load finished: $url');
             WidgetsBinding.instance.addPostFrameCallback((_) {
               onLoadingChanged(false);
               onPageCompleted(url);
             });
           },
           onWebResourceError: (error) {
-            debugPrint('Web resource error: ${error.description}');
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              onLoadingChanged(false);
-            });
+            AppLogger.debugLog(
+              'Web resource error: ${error.description} (${error.errorCode})',
+            );
+            // Only update loading state if it's not a frame load interruption
+            if (error.errorCode != 102) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                onLoadingChanged(false);
+              });
+            }
           },
           onNavigationRequest: (request) async {
             await WidgetsBinding.instance.endOfFrame;
@@ -45,6 +53,7 @@ class WebViewNavigationDelegate extends NavigationDelegate {
                 });
                 return NavigationDecision.prevent;
               }
+              AppLogger.debugLog('Navigating to internal URL: ${request.url}');
               return NavigationDecision.navigate;
             }
 
@@ -66,6 +75,7 @@ class WebViewNavigationDelegate extends NavigationDelegate {
 
             // Allow resource requests to load in WebView
             if (isResource || isAllowedDomain) {
+              AppLogger.debugLog('Loading resource: ${request.url}');
               return NavigationDecision.navigate;
             }
 

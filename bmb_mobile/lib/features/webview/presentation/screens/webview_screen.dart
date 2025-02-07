@@ -150,18 +150,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final args = ModalRoute.of(context)?.settings.arguments;
-    if (args != null && args is String) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) {
-          _loadUrl(args, prependBaseUrl: false);
-        }
-      });
-    }
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   final args = ModalRoute.of(context)?.settings.arguments;
+  //   if (args != null && args is String) {
+  //     WidgetsBinding.instance.addPostFrameCallback((_) {
+  //       if (mounted) {
+  //         _loadUrl(args, prependBaseUrl: false);
+  //       }
+  //     });
+  //   }
+  // }
 
   @override
   void dispose() {
