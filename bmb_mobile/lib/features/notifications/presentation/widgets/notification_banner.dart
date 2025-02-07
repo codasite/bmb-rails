@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
-import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
-import 'package:bmb_mobile/features/webview/presentation/providers/webview_provider.dart';
 
 class NotificationBanner extends StatelessWidget {
   final RemoteMessage message;
