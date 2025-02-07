@@ -146,9 +146,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _initWebView();
-    });
+    _initWebView();
   }
 
   // @override
