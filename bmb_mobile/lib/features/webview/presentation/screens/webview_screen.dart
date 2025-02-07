@@ -1,12 +1,10 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
-import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
 import 'package:bmb_mobile/features/webview/data/models/navigation_item.dart';
 import 'package:bmb_mobile/features/webview/data/models/drawer_item.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/fcm_token_manager_provider.dart';
@@ -15,9 +13,11 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_drawer.dart';
 import 'package:bmb_mobile/features/webview/presentation/widgets/bmb_bottom_nav_bar.dart';
-import 'dart:async';
 import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
+import 'package:bmb_mobile/features/webview/presentation/delegates/webview_navigation_delegate.dart';
+import 'package:bmb_mobile/features/webview/presentation/controllers/javascript_channel_controller.dart';
+import 'dart:async' show scheduleMicrotask;
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -30,13 +30,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
   static const double _refreshThreshold = 65.0;
 
   late final WebViewController _controller;
+  late final JavaScriptChannelController _jsController;
   bool _isLoading = true;
   bool _canGoBack = false;
   int? _selectedIndex;
   String _currentTitle = 'Back My Bracket';
   double _refreshProgress = 0.0;
   bool _isLoggingOut = false;
-  final Set<String> _registeredChannels = {};
 
   final List<NavigationItem> _pages = bottomNavItems;
 
@@ -75,9 +75,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   Future<void> _loadUrl(String path, {bool prependBaseUrl = true}) async {
-    final url = prependBaseUrl ? WpUrls.baseUrl + path : path;
     await WidgetsBinding.instance.endOfFrame;
     if (!mounted) return;
+    final url = prependBaseUrl ? WpUrls.baseUrl + path : path;
     await _controller.loadRequest(Uri.parse(url));
   }
 
@@ -89,32 +89,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
     await WidgetsBinding.instance.endOfFrame;
     if (!mounted) return;
     await _controller.runJavaScript(configuredJs);
-  }
-
-  Future<void> addJavaScriptChannel(
-    String name,
-    void Function(JavaScriptMessage) onMessageReceived,
-  ) async {
-    await WidgetsBinding.instance.endOfFrame;
-    if (!mounted) return;
-    if (_registeredChannels.contains(name)) {
-      await _controller.removeJavaScriptChannel(name);
-      _registeredChannels.remove(name);
-    }
-    _registeredChannels.add(name);
-    _controller.addJavaScriptChannel(
-      name,
-      onMessageReceived: onMessageReceived,
-    );
-  }
-
-  Future<void> removeAllJavaScriptChannels() async {
-    await WidgetsBinding.instance.endOfFrame;
-    if (!mounted) return;
-    for (final channel in _registeredChannels.toList()) {
-      await _controller.removeJavaScriptChannel(channel);
-    }
-    _registeredChannels.clear();
   }
 
   void _handleNotificationNavigation() async {
@@ -130,6 +104,42 @@ class _WebViewScreenState extends State<WebViewScreen> {
       if (!mounted) return;
       await _loadUrl(result, prependBaseUrl: false);
     }
+  }
+
+  void _handleLoadingChanged(bool isLoading) {
+    setState(() {
+      _isLoading = isLoading;
+    });
+    _updateCanGoBack();
+  }
+
+  void _handlePageFinished(String url) async {
+    await _injectPullToRefreshJS();
+    if (!mounted) return;
+    _setAppBarTitle();
+    _updateCanGoBack();
+  }
+
+  Future<void> _updateCanGoBack() async {
+    if (!mounted) return;
+    final value = await _controller.canGoBack();
+    if (mounted) {
+      setState(() {
+        _canGoBack = value;
+      });
+    }
+  }
+
+  void _setAppBarTitle() {
+    scheduleMicrotask(() async {
+      if (!mounted) return;
+      final title = await _controller.getTitle();
+      if (!mounted) return;
+      String? trimmedTitle = title?.replaceAll(RegExp(r' - BackMyBracket'), '');
+      setState(() {
+        _currentTitle = trimmedTitle ?? 'Loading';
+      });
+    });
   }
 
   @override
@@ -155,7 +165,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   void dispose() {
-    removeAllJavaScriptChannels();
+    _jsController.removeAllChannels();
     super.dispose();
   }
 
@@ -164,7 +174,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setUserAgent('BackMyBracket-MobileApp');
 
-    await addJavaScriptChannel(
+    _jsController = JavaScriptChannelController(_controller);
+
+    await _jsController.addChannel(
       'Flutter',
       (message) {
         if (message.message == 'refresh') {
@@ -183,91 +195,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
     );
 
     _controller.setNavigationDelegate(
-      NavigationDelegate(
-        onProgress: (int progress) {},
-        onPageStarted: (String url) {
-          setState(() {
-            _isLoading = true;
-          });
-          scheduleMicrotask(() async {
-            if (!mounted) return;
-            final value = await _controller.canGoBack();
-            if (mounted) {
-              setState(() {
-                _canGoBack = value;
-              });
-            }
-          });
-        },
-        onPageFinished: (String url) {
-          scheduleMicrotask(() async {
-            if (!mounted) return;
-            await _injectPullToRefreshJS();
-            if (!mounted) return;
-            _setAppBarTitle();
-            setState(() {
-              _isLoading = false;
-            });
-            final value = await _controller.canGoBack();
-            if (mounted) {
-              setState(() {
-                _canGoBack = value;
-              });
-            }
-          });
-        },
-        onWebResourceError: (WebResourceError error) {
-          debugPrint('Web resource error: ${error.description}');
-          setState(() {
-            _isLoading = false;
-          });
-        },
-        onNavigationRequest: (NavigationRequest request) async {
-          final uri = Uri.parse(request.url);
-
-          // If it's our domain, allow navigation
-          if (request.url.contains(WpUrls.baseUrl)) {
-            // Check for login/unauthorized paths
-            if (request.url.contains(WpUrls.loginPath) ||
-                request.url.contains('unauthorized')) {
-              context.read<AuthProvider>().logout();
-              if (mounted) {
-                Navigator.pushReplacementNamed(context, '/login');
-              }
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-          }
-
-          // Check if this is a resource request (not a page navigation)
-          final isResource = uri.path.toLowerCase().contains(RegExp(
-                r'\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)$',
-              ));
-
-          final allowedExternalDomains = [
-            'm.stripe.network',
-            'js.stripe.com',
-            'widgets.wp.com',
-            'public-api.wordpress.com',
-            'wordpress.com'
-          ];
-
-          final isAllowedDomain = allowedExternalDomains
-              .any((domain) => request.url.contains(domain));
-
-          // Allow resource requests to load in WebView
-          if (isResource || isAllowedDomain) {
-            return NavigationDecision.navigate;
-          }
-
-          // For all other external URLs, open in external browser
-          if (await canLaunchUrl(uri)) {
-            AppLogger.debugLog(
-              'Launching external domain: ${request.url}',
-            );
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
-          return NavigationDecision.prevent;
+      WebViewNavigationDelegate(
+        onLoadingChanged: _handleLoadingChanged,
+        onPageCompleted: _handlePageFinished,
+        onLogout: () {
+          if (!mounted) return;
+          context.read<AuthProvider>().logout();
+          Navigator.pushReplacementNamed(context, '/login');
         },
       ),
     );
@@ -283,18 +217,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
       return false;
     }
     return true;
-  }
-
-  void _setAppBarTitle() {
-    scheduleMicrotask(() async {
-      if (!mounted) return;
-      final title = await _controller.getTitle();
-      if (!mounted) return;
-      String? trimmedTitle = title?.replaceAll(RegExp(r' - BackMyBracket'), '');
-      setState(() {
-        _currentTitle = trimmedTitle ?? 'Loading';
-      });
-    });
   }
 
   @override

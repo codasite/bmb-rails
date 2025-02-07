@@ -1,0 +1,72 @@
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:bmb_mobile/core/utils/app_logger.dart';
+import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
+
+class WebViewNavigationDelegate extends NavigationDelegate {
+  final Function(bool) onLoadingChanged;
+  final Function(String) onPageCompleted;
+  final VoidCallback onLogout;
+
+  WebViewNavigationDelegate({
+    required this.onLoadingChanged,
+    required this.onPageCompleted,
+    required this.onLogout,
+  }) : super(
+          onProgress: (_) {},
+          onPageStarted: (_) => onLoadingChanged(true),
+          onPageFinished: (url) {
+            onLoadingChanged(false);
+            onPageCompleted(url);
+          },
+          onWebResourceError: (error) {
+            debugPrint('Web resource error: ${error.description}');
+            onLoadingChanged(false);
+          },
+          onNavigationRequest: (request) async {
+            final uri = Uri.parse(request.url);
+
+            // If it's our domain, allow navigation
+            if (request.url.contains(WpUrls.baseUrl)) {
+              // Check for login/unauthorized paths
+              if (request.url.contains(WpUrls.loginPath) ||
+                  request.url.contains('unauthorized')) {
+                onLogout();
+                return NavigationDecision.prevent;
+              }
+              return NavigationDecision.navigate;
+            }
+
+            // Check if this is a resource request (not a page navigation)
+            final isResource = uri.path.toLowerCase().contains(RegExp(
+                  r'\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)$',
+                ));
+
+            final allowedExternalDomains = [
+              'm.stripe.network',
+              'js.stripe.com',
+              'widgets.wp.com',
+              'public-api.wordpress.com',
+              'wordpress.com'
+            ];
+
+            final isAllowedDomain = allowedExternalDomains
+                .any((domain) => request.url.contains(domain));
+
+            // Allow resource requests to load in WebView
+            if (isResource || isAllowedDomain) {
+              return NavigationDecision.navigate;
+            }
+
+            // For all other external URLs, open in external browser
+            if (await canLaunchUrl(uri)) {
+              AppLogger.debugLog(
+                'Launching external domain: ${request.url}',
+              );
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+            return NavigationDecision.prevent;
+          },
+        );
+}
