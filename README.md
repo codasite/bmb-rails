@@ -102,13 +102,14 @@ task app:version:bump-build # Increment build number
    2. Navigate to Users and Access > Integrations
    3. Click the "+" button to generate a new API key
    4. Note down the Key ID and download the .p8 file
-   5. Go to [Apple Developer](https://developer.apple.com/account/resources/identifiers/list)
-   6. Note your Team ID from the membership details
-   7. Set up the credentials file:
+   5. Store the key in ~/.appstoreconnect/private_keys
+   6. Go to [Apple Developer](https://developer.apple.com/account/resources/identifiers/list)
+   7. Note your Team ID from the membership details
+   8. Set up the credentials env file:
 ```bash
 cp bmb_mobile/.env.appstoreconnect.example bmb_mobile/.env.appstoreconnect
 ```
-   8. Edit `.env.appstoreconnect` with your credentials:
+   9. Edit `.env.appstoreconnect` with your credentials:
 ```plaintext
 ISSUER_ID=your_team_id
 KEY_ID=your_key_id
@@ -119,8 +120,6 @@ KEY_ID=your_key_id
 task ios:build    # Build iOS app
 task ios:push     # Upload to App Store Connect
 ```
-
-> **Note**: Keep your .p8 key file secure and never commit it to version control. The key file can only be downloaded once when generated.
 
 ## Development Tools
 
