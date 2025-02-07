@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
-import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
-import 'package:bmb_mobile/features/webview/presentation/providers/webview_provider.dart';
+import 'package:bmb_mobile/features/notifications/presentation/widgets/notification_banner.dart';
 
 class FCMNotificationListener extends StatefulWidget {
   final Widget child;
@@ -31,29 +30,15 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
       if (!mounted) return;
       context.read<NotificationProvider>().fetchNotifications();
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(message.notification?.title ?? 'New notification'),
-          action: SnackBarAction(
-            label: 'View',
-            onPressed: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
-                ),
-              );
+      final banner = NotificationBanner(
+        message: message,
+        onDismiss: () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        },
+      );
 
-              if (result != null && result is String && mounted) {
-                context
-                    .read<WebViewProvider>()
-                    .loadUrl(result, prependBaseUrl: false);
-              }
-            },
-          ),
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 4),
-        ),
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        banner.build(context) as MaterialBanner,
       );
 
       AppLogger.debugLog('remote push message received');
