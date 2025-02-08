@@ -4,12 +4,13 @@ namespace WStrategies\BMB\Features\Notifications\Application;
 
 use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationChannelInterface;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
 
 /**
  * Manages notification operations and business logic.
  */
-class NotificationManager {
+class NotificationManager implements NotificationChannelInterface {
   private NotificationRepo $notification_repo;
 
   public function __construct(array $args = []) {
@@ -18,41 +19,26 @@ class NotificationManager {
   }
 
   /**
-   * Creates a new notification.
+   * Handles storing a notification in the database
    *
-   * @param int $user_id User ID to notify
-   * @param string $title Notification title
-   * @param string $message Notification message
-   * @param NotificationType $notification_type Type of notification
-   * @param string $link Associated link
-   * @return Notification|null The created notification or null on failure
+   * @param Notification $notification The notification to store
+   * @return Notification|null The stored notification or null on failure
    */
-  public function create_notification(
-    int $user_id,
-    string $title,
-    string $message,
-    NotificationType $notification_type,
-    string $link
+  public function handle_notification(
+    Notification $notification
+  ): ?Notification {
+    return $this->create_notification($notification);
+  }
+
+  /**
+   * @internal
+   * Internal method that creates a new notification.
+   */
+  private function create_notification(
+    Notification $notification
   ): ?Notification {
     // Check if user exists
-    if (!get_user_by('id', $user_id)) {
-      return null;
-    }
-
-    try {
-      $data = [
-        'user_id' => $user_id,
-        'title' => $title,
-        'message' => $message,
-        'notification_type' => $notification_type->value,
-        'link' => $link,
-      ];
-
-      $notification = new Notification($data);
-      return $this->notification_repo->add($notification);
-    } catch (\Exception $e) {
-      return null;
-    }
+    return $this->notification_repo->add($notification);
   }
 
   /**

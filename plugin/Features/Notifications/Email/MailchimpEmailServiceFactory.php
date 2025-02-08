@@ -6,9 +6,9 @@ use WStrategies\BMB\Features\Notifications\Email\Fakes\EmailServiceInterfaceFake
 use WStrategies\BMB\Includes\Utils;
 
 class MailchimpEmailServiceFactory {
-  public function create(): ?EmailServiceInterface {
+  public function create(): ?EmailClientInterface {
     try {
-      return new MailchimpEmailService();
+      return new MailchimpEmailClient();
     } catch (Exception $e) {
       if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
         (new Utils())->log_error(

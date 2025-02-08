@@ -2,9 +2,9 @@
 
 namespace WStrategies\BMB\Features\Notifications\Email\Fakes;
 
-use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
+use WStrategies\BMB\Features\Notifications\Email\EmailClientInterface;
 
-class EmailServiceInterfaceFake implements EmailServiceInterface {
+class EmailServiceInterfaceFake implements EmailClientInterface {
   public function send($to_email, $to_name, $subject, $message, $html) {
   }
 }

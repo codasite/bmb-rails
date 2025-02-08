@@ -10,6 +10,7 @@ use Kreait\Firebase\Messaging\MessageTarget;
 use PHPUnit\Framework\MockObject\MockObject;
 use Kreait\Firebase\Messaging\MulticastSendReport;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\Notification as BMBNotification;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenManager;
 use WStrategies\BMB\Features\Notifications\Push\Fakes\MessagingFake;
 use WStrategies\BMB\Features\Notifications\Push\Fakes\SendReportFake;
@@ -52,11 +53,14 @@ class PushMessagingServiceTest extends TestCase {
       fn($target) => SendReportFake::failure($target)->withInvalidTarget()
     );
 
-    $report = $this->service->send_notification([
-      'type' => NotificationType::TOURNAMENT_START,
+    $notification = new BMBNotification([
+      'notification_type' => NotificationType::TOURNAMENT_START,
       'user_id' => 1,
       'title' => 'Test Title',
+      'message' => 'Test Message',
     ]);
+
+    $report = $this->service->handle_notification($notification);
 
     $this->assertEquals(1, $report->successes()->count());
     $this->assertEquals(1, $report->failures()->count());
@@ -76,11 +80,14 @@ class PushMessagingServiceTest extends TestCase {
       fn($target) => SendReportFake::failure($target)->withUnknownToken()
     );
 
-    $report = $this->service->send_notification([
-      'type' => NotificationType::TOURNAMENT_START,
+    $notification = new BMBNotification([
+      'notification_type' => NotificationType::TOURNAMENT_START,
       'user_id' => 1,
       'title' => 'Test Title',
+      'message' => 'Test Message',
     ]);
+
+    $report = $this->service->handle_notification($notification);
 
     $this->assertEquals(1, $report->successes()->count());
     $this->assertEquals(1, $report->failures()->count());
@@ -100,11 +107,14 @@ class PushMessagingServiceTest extends TestCase {
       fn($target) => SendReportFake::failure($target)->withInvalidMessage()
     );
 
-    $report = $this->service->send_notification([
-      'type' => NotificationType::TOURNAMENT_START,
+    $notification = new BMBNotification([
+      'notification_type' => NotificationType::TOURNAMENT_START,
       'user_id' => 1,
       'title' => 'Test Title',
+      'message' => 'Test Message',
     ]);
+
+    $report = $this->service->handle_notification($notification);
 
     $this->assertEquals(1, $report->successes()->count());
     $this->assertEquals(1, $report->failures()->count());
@@ -113,15 +123,15 @@ class PushMessagingServiceTest extends TestCase {
   public function test_send_notification_includes_all_parameters(): void {
     $this->device_manager->method('get_target_tokens')->willReturn(['token1']);
 
-    $this->service->send_notification([
-      'type' => NotificationType::TOURNAMENT_START,
+    $notification = new BMBNotification([
+      'notification_type' => NotificationType::TOURNAMENT_START,
       'user_id' => 1,
       'title' => 'Test Title',
       'message' => 'Test Message',
-      'image_url' => 'http://test.com/image.jpg',
-      'data' => ['key' => 'value'],
       'link' => 'http://test.com/page',
     ]);
+
+    $this->service->handle_notification($notification);
 
     $sent_messages = $this->messaging->getSentMessages();
     $message = $sent_messages[0]->jsonSerialize();
@@ -130,28 +140,21 @@ class PushMessagingServiceTest extends TestCase {
     $this->assertArrayHasKey('notification', $message);
     $this->assertEquals('Test Title', $message['notification']['title']);
     $this->assertEquals('Test Message', $message['notification']['body']);
-    $this->assertEquals(
-      'http://test.com/image.jpg',
-      $message['notification']['image']
-    );
-    $this->assertEquals(
-      [
-        'key' => 'value',
-        'link' => 'http://test.com/page',
-      ],
-      $message['data']
-    );
+    $this->assertEquals(['link' => 'http://test.com/page'], $message['data']);
   }
 
   public function test_send_notification_adds_link_to_empty_data(): void {
     $this->device_manager->method('get_target_tokens')->willReturn(['token1']);
 
-    $this->service->send_notification([
-      'type' => NotificationType::TOURNAMENT_START,
+    $notification = new BMBNotification([
+      'notification_type' => NotificationType::TOURNAMENT_START,
       'user_id' => 1,
       'title' => 'Test Title',
+      'message' => 'Test Message',
       'link' => 'http://test.com/page',
     ]);
+
+    $this->service->handle_notification($notification);
 
     $sent_messages = $this->messaging->getSentMessages();
     $message = $sent_messages[0]->jsonSerialize();
