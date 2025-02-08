@@ -6,7 +6,7 @@ use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationChannelInterface;
 use WStrategies\BMB\Features\Notifications\Email\EmailService;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailClientFactory;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 use WStrategies\BMB\Includes\Utils;
 

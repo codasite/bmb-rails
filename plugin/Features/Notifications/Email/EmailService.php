@@ -12,7 +12,8 @@ class EmailService implements NotificationChannelInterface {
   private readonly Utils $utils;
 
   public function __construct($args = []) {
-    $this->client = $args['client'] ?? new MailchimpEmailClient();
+    $this->client =
+      $args['client'] ?? (new MailchimpEmailClientFactory())->create();
     $this->utils = new Utils();
   }
 

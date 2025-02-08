@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailServiceFactory;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailClientFactory;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
