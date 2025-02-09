@@ -6,6 +6,7 @@ use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationChannelInterface;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
+use WStrategies\BMB\Includes\Repository\Exceptions\RepositoryCreateException;
 
 /**
  * Manages notification operations and business logic.
@@ -37,7 +38,6 @@ class NotificationManager implements NotificationChannelInterface {
   private function create_notification(
     Notification $notification
   ): ?Notification {
-    // Check if user exists
     return $this->notification_repo->add($notification);
   }
 
