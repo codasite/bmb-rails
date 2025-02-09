@@ -161,4 +161,23 @@ class PushMessagingServiceTest extends TestCase {
 
     $this->assertEquals(['link' => 'http://test.com/page'], $message['data']);
   }
+
+  public function test_send_notification_adds_id_to_data(): void {
+    $this->device_manager->method('get_target_tokens')->willReturn(['token1']);
+
+    $notification = new BMBNotification([
+      'notification_type' => NotificationType::TOURNAMENT_START,
+      'title' => 'Test Title',
+      'message' => 'Test Message',
+      'user_id' => 1,
+      'id' => '123',
+    ]);
+
+    $this->service->handle_notification($notification);
+
+    $sent_messages = $this->messaging->getSentMessages();
+    $message = $sent_messages[0]->jsonSerialize();
+
+    $this->assertEquals(['id' => '123'], $message['data']);
+  }
 }
