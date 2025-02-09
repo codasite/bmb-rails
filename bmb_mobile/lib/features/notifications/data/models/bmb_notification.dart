@@ -1,18 +1,18 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class BmbNotification {
-  final int id;
+  final int? id;
   final String title;
-  final String? message;
-  final DateTime timestamp;
+  final String message;
+  final DateTime? timestamp;
   final bool isRead;
   final String? link;
 
   BmbNotification({
-    required this.id,
+    this.id,
     required this.title,
-    required this.timestamp,
-    this.message,
+    required this.message,
+    this.timestamp,
     this.isRead = false,
     this.link,
   });
@@ -22,8 +22,9 @@ class BmbNotification {
       id: json['id'],
       title: json['title'],
       message: json['message'],
-      timestamp: DateTime.parse(json['timestamp']),
-      isRead: json['is_read'] ?? false,
+      timestamp:
+          json['timestamp'] != null ? DateTime.parse(json['timestamp']) : null,
+      isRead: json['is_read'],
       link: json['link'],
     );
   }
@@ -33,7 +34,9 @@ class BmbNotification {
       id: int.parse(message.data['id']),
       title: message.notification?.title ?? '',
       message: message.notification?.body ?? '',
-      timestamp: DateTime.parse(message.data['timestamp']),
+      timestamp: message.data['timestamp'] != null
+          ? DateTime.parse(message.data['timestamp'])
+          : null,
       link: message.data['link'],
     );
   }
@@ -43,7 +46,7 @@ class BmbNotification {
       'id': id,
       'title': title,
       'message': message,
-      'timestamp': timestamp.toIso8601String(),
+      'timestamp': timestamp?.toIso8601String(),
       'is_read': isRead,
       'link': link,
     };

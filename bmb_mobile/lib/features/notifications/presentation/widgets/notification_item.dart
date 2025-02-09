@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 class NotificationItem extends StatelessWidget {
   final BmbNotification notification;
-  final VoidCallback onDelete;
+  final Function(int) onDelete;
   final Function(int) onMarkAsRead;
 
   const NotificationItem({
@@ -33,6 +33,7 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notification = this.notification;
     return Dismissible(
       key: Key(notification.id.toString()),
       direction: DismissDirection.endToStart,
@@ -50,7 +51,8 @@ class NotificationItem extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (_) => onDelete(),
+      onDismissed: (_) =>
+          notification.id != null ? onDelete(notification.id!) : null,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -68,8 +70,8 @@ class NotificationItem extends StatelessWidget {
           type: MaterialType.transparency,
           child: InkWell(
             onTap: () {
-              if (!notification.isRead) {
-                onMarkAsRead(notification.id);
+              if (!notification.isRead && notification.id != null) {
+                onMarkAsRead(notification.id!);
               }
               if (notification.link != null) {
                 Navigator.pop(context, notification.link);
@@ -96,20 +98,21 @@ class NotificationItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        _formatTimestamp(notification.timestamp),
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 12,
-                          fontVariations: BmbFontWeights.w500,
+                      if (notification.timestamp != null)
+                        Text(
+                          _formatTimestamp(notification.timestamp!),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.5),
+                            fontSize: 12,
+                            fontVariations: BmbFontWeights.w500,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  if (notification.message != null)
+                  if (notification.message.isNotEmpty)
                     Text(
-                      notification.message!,
+                      notification.message,
                       style: TextStyle(
                         color: notification.isRead
                             ? Colors.white.withOpacity(0.5)

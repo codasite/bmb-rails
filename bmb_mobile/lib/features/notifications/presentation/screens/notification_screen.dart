@@ -83,8 +83,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   final notification = notifications[index - 1];
                   return NotificationItem(
                     notification: notification,
-                    onDelete: () =>
-                        provider.deleteNotification(notification.id),
+                    onDelete: provider.deleteNotification,
                     onMarkAsRead: provider.markAsRead,
                   );
                 },

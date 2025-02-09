@@ -50,10 +50,10 @@ class NotificationBanner extends StatelessWidget {
                     color: BmbColors.darkBlue,
                   ),
                 ),
-                if (notification.message != null) ...[
+                if (notification.message.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
-                    notification.message!,
+                    notification.message,
                     style: TextStyle(
                       fontSize: 14,
                       color: BmbColors.darkBlue.withOpacity(0.8),
@@ -82,9 +82,11 @@ class NotificationBanner extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 onDismiss();
-                context
-                    .read<NotificationProvider>()
-                    .markAsRead(notification.id);
+                if (notification.id != null) {
+                  context
+                      .read<NotificationProvider>()
+                      .markAsRead(notification.id!);
+                }
                 if (notification.link != null) {
                   await onLoadUrl(notification.link!, prependBaseUrl: false);
                 }
