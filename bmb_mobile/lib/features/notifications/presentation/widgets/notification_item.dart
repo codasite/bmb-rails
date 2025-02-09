@@ -107,16 +107,17 @@ class NotificationItem extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    notification.message,
-                    style: TextStyle(
-                      color: notification.isRead
-                          ? Colors.white.withOpacity(0.5)
-                          : Colors.white.withOpacity(0.7),
-                      fontSize: 14,
-                      fontVariations: BmbFontWeights.w500,
+                  if (notification.message != null)
+                    Text(
+                      notification.message!,
+                      style: TextStyle(
+                        color: notification.isRead
+                            ? Colors.white.withOpacity(0.5)
+                            : Colors.white.withOpacity(0.7),
+                        fontSize: 14,
+                        fontVariations: BmbFontWeights.w500,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

@@ -50,6 +50,9 @@ class PushMessagingService implements NotificationChannelInterface {
     if (!empty($notification->id)) {
       $data['id'] = $notification->id;
     }
+    if (!empty($notification->timestamp)) {
+      $data['timestamp'] = $notification->timestamp->format('c');
+    }
 
     $fcm_notification = FCMNotification::create(
       $notification->title,

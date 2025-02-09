@@ -1,4 +1,5 @@
 import 'package:bmb_mobile/core/utils/app_logger.dart';
+import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -42,8 +43,10 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
       AppLogger.debugLog('ThreadId: ${message.threadId}');
       AppLogger.debugLog('TTL: ${message.ttl}');
 
+      final notification = BmbNotification.fromRemoteMessage(message);
+
       final banner = NotificationBanner(
-        message: message,
+        notification: notification,
         onDismiss: () {
           ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
         },

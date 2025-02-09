@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 class BmbNotification {
   final int id;
   final String title;
-  final String message;
+  final String? message;
   final DateTime timestamp;
   final bool isRead;
   final String? link;
@@ -11,8 +11,8 @@ class BmbNotification {
   BmbNotification({
     required this.id,
     required this.title,
-    required this.message,
     required this.timestamp,
+    this.message,
     this.isRead = false,
     this.link,
   });

@@ -1,17 +1,17 @@
+import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:provider/provider.dart';
 
 class NotificationBanner extends StatelessWidget {
-  final RemoteMessage message;
+  final BmbNotification notification;
   final VoidCallback onDismiss;
   final Future<void> Function(String, {bool prependBaseUrl}) onLoadUrl;
 
   const NotificationBanner({
     super.key,
-    required this.message,
+    required this.notification,
     required this.onDismiss,
     required this.onLoadUrl,
   });
@@ -43,17 +43,17 @@ class NotificationBanner extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  message.notification?.title ?? 'New notification',
+                  notification.title,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                     color: BmbColors.darkBlue,
                   ),
                 ),
-                if (message.notification?.body != null) ...[
+                if (notification.message != null) ...[
                   const SizedBox(height: 4),
                   Text(
-                    message.notification!.body!,
+                    notification.message!,
                     style: TextStyle(
                       fontSize: 14,
                       color: BmbColors.darkBlue.withOpacity(0.8),
@@ -82,14 +82,11 @@ class NotificationBanner extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 onDismiss();
-                if (message.data['id'] != null) {
-                  context.read<NotificationProvider>().markAsRead(
-                        message.data['id'] as int,
-                      );
-                }
-                if (message.data['link'] != null) {
-                  await onLoadUrl(message.data['link'] as String,
-                      prependBaseUrl: false);
+                context
+                    .read<NotificationProvider>()
+                    .markAsRead(notification.id);
+                if (notification.link != null) {
+                  await onLoadUrl(notification.link!, prependBaseUrl: false);
                 }
               },
               style: FilledButton.styleFrom(
