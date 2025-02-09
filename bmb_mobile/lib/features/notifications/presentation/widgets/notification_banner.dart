@@ -1,5 +1,6 @@
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
+import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:provider/provider.dart';
@@ -82,13 +83,20 @@ class NotificationBanner extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 onDismiss();
-                if (notification.id != null) {
+                if (notification.id != null && notification.link != null) {
                   context
                       .read<NotificationProvider>()
                       .markAsRead(notification.id!);
-                }
-                if (notification.link != null) {
                   await onLoadUrl(notification.link!, prependBaseUrl: false);
+                } else if (notification.link != null) {
+                  await onLoadUrl(notification.link!, prependBaseUrl: false);
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
                 }
               },
               style: FilledButton.styleFrom(
