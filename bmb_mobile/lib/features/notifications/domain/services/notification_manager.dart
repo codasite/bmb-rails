@@ -31,7 +31,7 @@ class NotificationManager {
 
   /// Marks a notification as read
   /// Returns the updated notification if successful, null otherwise
-  Future<BmbNotification?> markAsRead(String notificationId) async {
+  Future<BmbNotification?> markAsRead(int notificationId) async {
     await AppLogger.debugLog(
       'Marking notification $notificationId as read',
       extras: {
@@ -79,7 +79,7 @@ class NotificationManager {
 
   /// Deletes a notification
   /// Returns true if successful, false otherwise
-  Future<bool> deleteNotification(String notificationId) async {
+  Future<bool> deleteNotification(int notificationId) async {
     await AppLogger.debugLog(
       'Deleting notification',
       extras: {

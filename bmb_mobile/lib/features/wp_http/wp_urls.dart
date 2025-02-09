@@ -28,10 +28,9 @@ class WpUrls {
 
   // Notification API paths
   static const String _notificationBase = '/wp-json/bmb/v1/notifications';
-  static String notificationPath(String id) => '$_notificationBase/$id';
+  static String notificationPath(int id) => '$_notificationBase/$id';
   static String get notificationsPath => _notificationBase;
-  static String notificationReadPath(String id) =>
-      '${notificationPath(id)}/read';
+  static String notificationReadPath(int id) => '${notificationPath(id)}/read';
   static String get notificationsReadAllPath => '$_notificationBase/read-all';
 
   // Full URLs

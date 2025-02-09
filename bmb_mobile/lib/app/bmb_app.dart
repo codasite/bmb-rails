@@ -1,5 +1,4 @@
 import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_lifecycle_manager.dart';
-import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_notification_listener.dart';
 import 'package:bmb_mobile/features/webview/presentation/screens/webview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/screens/login_screen.dart';

@@ -1,4 +1,3 @@
-import 'package:bmb_mobile/app/bmb_app.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -85,7 +84,7 @@ class NotificationBanner extends StatelessWidget {
                 onDismiss();
                 if (message.data['id'] != null) {
                   context.read<NotificationProvider>().markAsRead(
-                        message.data['id'] as String,
+                        message.data['id'] as int,
                       );
                 }
                 if (message.data['link'] != null) {

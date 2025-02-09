@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 class NotificationItem extends StatelessWidget {
   final BmbNotification notification;
   final VoidCallback onDelete;
-  final Function(String) onMarkAsRead;
+  final Function(int) onMarkAsRead;
 
   const NotificationItem({
     super.key,
@@ -34,7 +34,7 @@ class NotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: Key(notification.id),
+      key: Key(notification.id.toString()),
       direction: DismissDirection.endToStart,
       background: Container(
         decoration: BoxDecoration(
