@@ -41,11 +41,11 @@ class NotificationSerializer extends ApiSerializerBase {
       ],
       'message' => [
         'type' => 'string',
-        'required' => true,
+        'required' => false,
       ],
       'timestamp' => [
         'type' => 'string',
-        'required' => true,
+        'required' => false,
         'serializer' => new DateTimeSerializer(),
       ],
       'is_read' => [

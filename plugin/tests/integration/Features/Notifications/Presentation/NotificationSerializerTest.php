@@ -88,8 +88,6 @@ class NotificationSerializerTest extends WPBB_UnitTestCase {
     $data = [
       'user_id' => 456,
       'title' => 'Test Title',
-      'message' => 'Test Message',
-      'timestamp' => '2024-03-20T10:00:00+00:00',
       'notification_type' => 'system',
     ];
 
@@ -101,8 +99,6 @@ class NotificationSerializerTest extends WPBB_UnitTestCase {
     $this->assertNull($notification->id);
     $this->assertEquals(456, $notification->user_id);
     $this->assertEquals('Test Title', $notification->title);
-    $this->assertEquals('Test Message', $notification->message);
-    $this->assertFalse($notification->is_read);
     $this->assertNull($notification->link);
     $this->assertEquals(
       NotificationType::SYSTEM,
@@ -131,7 +127,7 @@ class NotificationSerializerTest extends WPBB_UnitTestCase {
     return [
       'missing all required fields' => [
         [],
-        'Missing required fields: user_id, title, message, timestamp, notification_type',
+        'Missing required fields: user_id, title, notification_type',
       ],
       'missing user_id' => [
         [
@@ -150,24 +146,6 @@ class NotificationSerializerTest extends WPBB_UnitTestCase {
           'notification_type' => 'system',
         ],
         'Missing required fields: title',
-      ],
-      'missing message' => [
-        [
-          'user_id' => 456,
-          'title' => 'Test Title',
-          'timestamp' => '2024-03-20T10:00:00+00:00',
-          'notification_type' => 'system',
-        ],
-        'Missing required fields: message',
-      ],
-      'missing timestamp' => [
-        [
-          'user_id' => 456,
-          'title' => 'Test Title',
-          'message' => 'Test Message',
-          'notification_type' => 'system',
-        ],
-        'Missing required fields: timestamp',
       ],
       'missing notification_type' => [
         [
