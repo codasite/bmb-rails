@@ -1,6 +1,9 @@
+import 'package:bmb_mobile/app/bmb_app.dart';
+import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
+import 'package:provider/provider.dart';
 
 class NotificationBanner extends StatelessWidget {
   final RemoteMessage message;
@@ -80,6 +83,11 @@ class NotificationBanner extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 onDismiss();
+                if (message.data['id'] != null) {
+                  context.read<NotificationProvider>().markAsRead(
+                        message.data['id'] as String,
+                      );
+                }
                 if (message.data['link'] != null) {
                   await onLoadUrl(message.data['link'] as String,
                       prependBaseUrl: false);

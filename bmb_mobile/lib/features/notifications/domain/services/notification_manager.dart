@@ -33,7 +33,7 @@ class NotificationManager {
   /// Returns the updated notification if successful, null otherwise
   Future<BmbNotification?> markAsRead(String notificationId) async {
     await AppLogger.debugLog(
-      'Marking notification as read',
+      'Marking notification $notificationId as read',
       extras: {
         'operation': 'markAsRead',
         'notification_id': notificationId,

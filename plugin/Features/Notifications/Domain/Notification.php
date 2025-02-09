@@ -11,8 +11,8 @@ use DateTime;
  * Each notification has a type, message content, and associated metadata.
  */
 class Notification {
-  /** @var string|null The unique identifier for this notification */
-  public ?string $id;
+  /** @var int|null The unique identifier for this notification */
+  public ?int $id;
 
   /** @var int The WordPress user ID this notification belongs to */
   public int $user_id;
@@ -53,7 +53,7 @@ class Notification {
    * }
    */
   public function __construct($data = []) {
-    $this->id = $data['id'] ?? null;
+    $this->id = isset($data['id']) ? (int) $data['id'] : null;
     $this->user_id = (int) $data['user_id'];
     $this->title = $data['title'];
     $this->message = $data['message'];
