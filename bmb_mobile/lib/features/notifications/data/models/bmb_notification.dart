@@ -1,3 +1,5 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 class BmbNotification {
   final int id;
   final String title;
@@ -23,6 +25,16 @@ class BmbNotification {
       timestamp: DateTime.parse(json['timestamp']),
       isRead: json['is_read'] ?? false,
       link: json['link'],
+    );
+  }
+
+  factory BmbNotification.fromRemoteMessage(RemoteMessage message) {
+    return BmbNotification(
+      id: int.parse(message.data['id']),
+      title: message.notification?.title ?? '',
+      message: message.notification?.body ?? '',
+      timestamp: DateTime.parse(message.data['timestamp']),
+      link: message.data['link'],
     );
   }
 
