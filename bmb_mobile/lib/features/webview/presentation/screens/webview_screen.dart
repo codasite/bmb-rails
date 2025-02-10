@@ -38,6 +38,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   String _currentTitle = 'Back My Bracket';
   double _refreshProgress = 0.0;
   bool _isLoggingOut = false;
+  bool _hasHandledInitialUrl = false;
 
   final List<NavigationItem> _pages = bottomNavItems;
 
@@ -92,19 +93,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
     await _controller.runJavaScript(configuredJs);
   }
 
-  void _handleNotificationNavigation() async {
-    final result = await Navigator.push(
+  void _handleNotificationNavigation() {
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const NotificationScreen(),
       ),
     );
-
-    if (mounted && result != null && result is String) {
-      await WidgetsBinding.instance.endOfFrame;
-      if (!mounted) return;
-      await _loadUrl(result, prependBaseUrl: false);
-    }
   }
 
   void _handleLoadingChanged(bool isLoading) {
@@ -149,18 +144,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _initWebView();
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   final args = ModalRoute.of(context)?.settings.arguments;
-  //   if (args != null && args is String) {
-  //     WidgetsBinding.instance.addPostFrameCallback((_) {
-  //       if (mounted) {
-  //         _loadUrl(args, prependBaseUrl: false);
-  //       }
-  //     });
-  //   }
-  // }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_hasHandledInitialUrl) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null && args is String) {
+        _hasHandledInitialUrl = true;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) {
+            _loadUrl(args, prependBaseUrl: false);
+          }
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {

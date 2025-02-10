@@ -4,9 +4,8 @@ class WpUrls {
   // static const String baseUrl = EnvironmentConfig.wpBaseUrl;
   // static const String baseUrl = "https://backmybracket.com";
   // static const String baseUrl = "http://localhost:8008";
-  // static const String baseUrl = "http://192.168.1.77:8008";
-  // static const String baseUrl = "http://169.254.169.113:8008";
-  static const String baseUrl = "http://172.20.10.8:8008";
+  static const String baseUrl = "http://192.168.1.77:8008";
+  // static const String baseUrl = "http://172.20.10.8:8008";
 
   // WordPress API paths
   static const String _wpApiBase = '/wp-json/wp/v2';

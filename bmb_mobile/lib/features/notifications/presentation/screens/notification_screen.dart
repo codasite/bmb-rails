@@ -1,5 +1,6 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
+import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:bmb_mobile/features/notifications/presentation/widgets/mark_all_as_read_button.dart';
 import 'package:bmb_mobile/features/notifications/presentation/widgets/notification_item.dart';
@@ -15,6 +16,20 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  void _handleNotificationTap(BmbNotification notification) {
+    if (!notification.isRead && notification.id != null) {
+      context.read<NotificationProvider>().markAsRead(notification.id!);
+    }
+    if (notification.link != null) {
+      Navigator.pushReplacementNamed(context, '/app',
+          arguments: notification.link);
+    }
+  }
+
+  void _handleNotificationDismiss(BmbNotification notification) {
+    context.read<NotificationProvider>().deleteNotification(notification.id!);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -83,8 +98,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   final notification = notifications[index - 1];
                   return NotificationItem(
                     notification: notification,
-                    onDelete: provider.deleteNotification,
-                    onMarkAsRead: provider.markAsRead,
+                    onDismiss: () => _handleNotificationDismiss(notification),
+                    onTap: () => _handleNotificationTap(notification),
                   );
                 },
               ),

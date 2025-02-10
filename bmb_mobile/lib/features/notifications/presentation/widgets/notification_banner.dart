@@ -87,9 +87,17 @@ class NotificationBanner extends StatelessWidget {
                   context
                       .read<NotificationProvider>()
                       .markAsRead(notification.id!);
-                  await onLoadUrl(notification.link!, prependBaseUrl: false);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/app',
+                    arguments: notification.link,
+                  );
                 } else if (notification.link != null) {
-                  await onLoadUrl(notification.link!, prependBaseUrl: false);
+                  Navigator.pushReplacementNamed(
+                    context,
+                    '/app',
+                    arguments: notification.link,
+                  );
                 } else {
                   Navigator.push(
                     context,
