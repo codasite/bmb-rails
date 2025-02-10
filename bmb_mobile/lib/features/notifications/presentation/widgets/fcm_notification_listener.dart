@@ -81,27 +81,22 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
-      AppLogger.debugLog('Initial remote message received:');
-      AppLogger.debugLog('Title: ${initialMessage.notification?.title}');
-      AppLogger.debugLog('Body: ${initialMessage.notification?.body}');
-      AppLogger.debugLog('Data: ${initialMessage.data}');
+      _debugLogMessage(initialMessage);
     }
   }
 
   /// Handle notifications when the app is in the background and the notification is tapped
   void _handleBackgroundMessageOpened(RemoteMessage message) {
-    AppLogger.debugLog('Background remote message received:');
-    AppLogger.debugLog('Title: ${message.notification?.title}');
-    AppLogger.debugLog('Body: ${message.notification?.body}');
-    AppLogger.debugLog('Data: ${message.data}');
+    _debugLogMessage(message);
+    context.read<NotificationProvider>().fetchNotifications();
+    final notification = _parseRemoteMessage(message);
+    if (!mounted || notification == null) return;
+    _handleNotificationTap(notification);
   }
 
   /// Handle notifications when the app is in the foreground
   void _handleForegroundMessageReceived(RemoteMessage message) {
-    AppLogger.debugLog('Remote message received in foreground:');
-    AppLogger.debugLog('Title: ${message.notification?.title}');
-    AppLogger.debugLog('Body: ${message.notification?.body}');
-    AppLogger.debugLog('Data: ${message.data}');
+    _debugLogMessage(message);
 
     if (!mounted) return;
 
@@ -120,6 +115,13 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
     ScaffoldMessenger.of(context).showMaterialBanner(
       banner.build(context) as MaterialBanner,
     );
+  }
+
+  void _debugLogMessage(RemoteMessage message) {
+    AppLogger.debugLog('Remote message received in foreground:');
+    AppLogger.debugLog('Title: ${message.notification?.title}');
+    AppLogger.debugLog('Body: ${message.notification?.body}');
+    AppLogger.debugLog('Data: ${message.data}');
   }
 
   @override
