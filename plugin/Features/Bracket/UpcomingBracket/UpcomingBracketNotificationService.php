@@ -2,7 +2,6 @@
 
 namespace WStrategies\BMB\Features\Bracket\UpcomingBracket;
 
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailClientFactory;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
@@ -17,10 +16,6 @@ class UpcomingBracketNotificationService {
   private BracketRepo $bracket_repo;
   private readonly UserRepo $user_repo;
   private readonly NotificationDispatcher $dispatcher;
-  /**
-   * @var array<UpcomingNotificationListenerInterface>
-   */
-  private array $listeners = [];
 
   public function __construct($args = []) {
     $this->notification_sub_repo =

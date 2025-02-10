@@ -22,7 +22,7 @@ const COOKIEPATH = '';
 // @var string|null
 const DISABLE_IMAGE_GENERATOR_CALLS = '';
 const WPBB_PLUGIN_DIR = '';
-const FIREBASE_CREDENTIALS_PATH = '';
+const FIREBASE_CREDENTIALS_PATH = 'path/to/firebase/credentials.json';
 const ABSPATH = '';
 const ARRAY_A = 'ARRAY_A';
 const COOKIE_DOMAIN = '';
