@@ -24,6 +24,16 @@ import 'package:bmb_mobile/features/notifications/domain/services/fcm_token_mana
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:bmb_mobile/core/utils/environment_config.dart';
+import 'package:bmb_mobile/features/notifications/domain/services/app_badge_manager.dart';
+
+@pragma('vm:entry-point')
+Future<void> handleBackgroundMessageReceived(RemoteMessage message) async {
+  AppLogger.debugLog('Background remote message received:');
+  AppLogger.debugLog('Title: ${message.notification?.title}');
+  AppLogger.debugLog('Body: ${message.notification?.body}');
+  AppLogger.debugLog('Data: ${message.data}');
+  AppBadgeManager.incrementBadgeCount();
+}
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +48,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessageReceived);
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

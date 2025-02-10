@@ -1,20 +1,17 @@
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
-import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
-import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
-import 'package:provider/provider.dart';
 
 class NotificationBanner extends StatelessWidget {
   final BmbNotification notification;
   final VoidCallback onDismiss;
-  final Future<void> Function(String, {bool prependBaseUrl}) onLoadUrl;
+  final VoidCallback onView;
 
   const NotificationBanner({
     super.key,
     required this.notification,
     required this.onDismiss,
-    required this.onLoadUrl,
+    required this.onView,
   });
 
   @override
@@ -83,24 +80,7 @@ class NotificationBanner extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 onDismiss();
-                if (notification.id != null && notification.link != null) {
-                  context
-                      .read<NotificationProvider>()
-                      .markAsRead(notification.id!);
-                  await onLoadUrl(notification.link!, prependBaseUrl: false);
-                } else if (notification.link != null) {
-                  await onLoadUrl(notification.link!, prependBaseUrl: false);
-                } else {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NotificationScreen(
-                        onLoadUrl: onLoadUrl,
-                      ),
-                    ),
-                    ModalRoute.withName('/app'),
-                  );
-                }
+                onView();
               },
               style: FilledButton.styleFrom(
                 backgroundColor: BmbColors.blue,
