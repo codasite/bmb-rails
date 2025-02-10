@@ -37,11 +37,6 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
       AppLogger.debugLog('Title: ${message.notification?.title}');
       AppLogger.debugLog('Body: ${message.notification?.body}');
       AppLogger.debugLog('Data: ${message.data}');
-      AppLogger.debugLog('MessageId: ${message.messageId}');
-      AppLogger.debugLog('SenderId: ${message.senderId}');
-      AppLogger.debugLog('SentTime: ${message.sentTime}');
-      AppLogger.debugLog('ThreadId: ${message.threadId}');
-      AppLogger.debugLog('TTL: ${message.ttl}');
 
       try {
         final notification = BmbNotification.fromRemoteMessage(message);
@@ -57,8 +52,6 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
         ScaffoldMessenger.of(context).showMaterialBanner(
           banner.build(context) as MaterialBanner,
         );
-
-        AppLogger.debugLog('remote push message received');
       } catch (e, stackTrace) {
         AppLogger.logError(e, stackTrace,
             extras: {'message': 'Error parsing remote message'},
