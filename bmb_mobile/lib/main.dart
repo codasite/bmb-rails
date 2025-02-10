@@ -1,6 +1,5 @@
 import 'package:bmb_mobile/app/bmb_app.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_app_badge_control/flutter_app_badge_control.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';

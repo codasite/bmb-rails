@@ -1,6 +1,5 @@
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
-import 'package:bmb_mobile/features/notifications/domain/services/app_badge_manager.dart';
 import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
