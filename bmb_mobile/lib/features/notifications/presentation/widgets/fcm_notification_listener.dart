@@ -59,9 +59,10 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
         );
 
         AppLogger.debugLog('remote push message received');
-      } catch (e) {
-        AppLogger.logError(e, StackTrace.current,
-            extras: {'message': 'Error parsing remote message'});
+      } catch (e, stackTrace) {
+        AppLogger.logError(e, stackTrace,
+            extras: {'message': 'Error parsing remote message'},
+            printStackTrace: true);
       }
     });
   }

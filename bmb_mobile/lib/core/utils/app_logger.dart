@@ -50,6 +50,8 @@ class AppLogger {
     StackTrace? stackTrace, {
     Map<String, dynamic> extras = const {},
     String? message,
+    bool printStackTrace = false,
+    bool printExtras = false,
   }) async {
     final errorMessage = message ?? exception.toString();
     await _log(
@@ -58,6 +60,8 @@ class AppLogger {
       extras: extras,
       exception: exception,
       stackTrace: stackTrace,
+      printStackTrace: printStackTrace,
+      printExtras: printExtras,
     );
   }
 
@@ -114,33 +118,21 @@ class AppLogger {
     _checkInitialized();
 
     // Local logging
-    if (kDebugMode) {
-      final timestamp = DateTime.now().toLocal().toString().split('.').first;
-      final prefix = level.name.toUpperCase();
+    final timestamp = DateTime.now().toLocal().toString().split('.').first;
+    final prefix = level.name.toUpperCase();
 
-      if (level == SentryLevel.debug) {
-        // More detailed output for debug logs
-        print('[$timestamp][$prefix] $message');
-        if (extras.isNotEmpty && printExtras) {
-          print('Context:');
-          extras.forEach((key, value) => print('  $key: $value'));
-        }
-        // Include stack trace for debug logs to help with tracing
-        if (printStackTrace) {
-          print('Stack trace:');
-          StackTrace.current
-              .toString()
-              .split('\n')
-              .take(3)
-              .forEach((line) => print('  $line'));
-        }
-      } else {
-        // Simpler output for other log levels
-        print('[$timestamp][$prefix] $message');
-        if (extras.isNotEmpty) {
-          print('Extras: $extras');
-        }
-      }
+    // More detailed output for debug logs
+    print('[$timestamp][$prefix] $message');
+    if (extras.isNotEmpty && printExtras) {
+      print('Context:');
+      extras.forEach((key, value) => print('  $key: $value'));
+    }
+    // Include stack trace for debug logs to help with tracing
+    if (printStackTrace) {
+      print('Stack trace:');
+      final trace = stackTrace ?? StackTrace.current;
+      // trace.toString().split('\n').take(3).forEach((line) => print('  $line'));
+      print(trace);
     }
 
     // Sentry reporting

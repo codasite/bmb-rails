@@ -31,7 +31,7 @@ class BmbNotification {
 
   factory BmbNotification.fromRemoteMessage(RemoteMessage message) {
     return BmbNotification(
-      id: int.parse(message.data['id']),
+      id: message.data['id'] != null ? int.parse(message.data['id']) : null,
       title: message.notification?.title ?? '',
       message: message.notification?.body ?? '',
       timestamp: message.data['timestamp'] != null

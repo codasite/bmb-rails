@@ -91,13 +91,14 @@ class NotificationBanner extends StatelessWidget {
                 } else if (notification.link != null) {
                   await onLoadUrl(notification.link!, prependBaseUrl: false);
                 } else {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                     context,
                     MaterialPageRoute(
                       builder: (context) => NotificationScreen(
                         onLoadUrl: onLoadUrl,
                       ),
                     ),
+                    ModalRoute.withName('/app'),
                   );
                 }
               },
