@@ -1,7 +1,7 @@
+import 'package:bmb_mobile/features/notifications/domain/services/app_badge_manager.dart';
 import 'package:flutter/foundation.dart';
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/domain/services/notification_manager.dart';
-import 'package:flutter_app_badge_control/flutter_app_badge_control.dart';
 
 /// Manages the client-side state for notifications
 class NotificationProvider extends ChangeNotifier {
@@ -17,6 +17,16 @@ class NotificationProvider extends ChangeNotifier {
   bool get isLoading => _isLoading;
   int get unreadCount => _notifications.where((n) => !n.isRead).length;
 
+  void _updateBadgeCount() {
+    AppBadgeManager.updateBadgeCount(unreadCount);
+  }
+
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+    _updateBadgeCount();
+  }
+
   Future<void> fetchNotifications() async {
     _isLoading = true;
     notifyListeners();
@@ -24,7 +34,6 @@ class NotificationProvider extends ChangeNotifier {
     _notifications = await _manager.getNotifications();
 
     _isLoading = false;
-    FlutterAppBadgeControl.updateBadgeCount(unreadCount);
     notifyListeners();
   }
 

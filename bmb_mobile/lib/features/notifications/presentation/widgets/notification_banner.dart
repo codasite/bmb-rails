@@ -1,9 +1,6 @@
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
-import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
-import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
-import 'package:provider/provider.dart';
 
 class NotificationBanner extends StatelessWidget {
   final BmbNotification notification;
