@@ -1,5 +1,6 @@
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
+import 'package:bmb_mobile/features/notifications/domain/services/app_badge_manager.dart';
 import 'package:bmb_mobile/features/notifications/presentation/screens/notification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +9,6 @@ import 'package:bmb_mobile/features/notifications/presentation/providers/notific
 import 'package:bmb_mobile/features/notifications/presentation/widgets/notification_banner.dart';
 
 /// Process messages when the app is in the background
-@pragma('vm:entry-point')
-Future<void> handleBackgroundMessageReceived(RemoteMessage message) async {
-  AppLogger.debugLog('Background remote message received:');
-  AppLogger.debugLog('Title: ${message.notification?.title}');
-  AppLogger.debugLog('Body: ${message.notification?.body}');
-  AppLogger.debugLog('Data: ${message.data}');
-}
 
 /// FCM Message handlers. See https://firebase.google.com/docs/cloud-messaging/flutter/receive and https://firebase.flutter.dev/docs/messaging/notifications/#handling-interaction
 class FCMNotificationListener extends StatefulWidget {
@@ -73,7 +67,13 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
     _handleInitialMessage();
     FirebaseMessaging.onMessage.listen(_handleForegroundMessageReceived);
     FirebaseMessaging.onMessageOpenedApp.listen(_handleBackgroundMessageOpened);
-    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessageReceived);
+  }
+
+  BmbNotification? _handleMessageReceived(RemoteMessage message) {
+    _debugLogMessage(message);
+    if (!mounted) return null;
+    context.read<NotificationProvider>().fetchNotifications();
+    return _parseRemoteMessage(message);
   }
 
   /// Handle notifications when notification tap causes the app to be opened from a terminated state
@@ -81,40 +81,37 @@ class _FCMNotificationListenerState extends State<FCMNotificationListener> {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
-      _debugLogMessage(initialMessage);
+      final notification = _handleMessageReceived(initialMessage);
+      if (mounted && notification != null) {
+        _handleNotificationTap(notification);
+      }
     }
   }
 
   /// Handle notifications when the app is in the background and the notification is tapped
   void _handleBackgroundMessageOpened(RemoteMessage message) {
-    _debugLogMessage(message);
-    context.read<NotificationProvider>().fetchNotifications();
-    final notification = _parseRemoteMessage(message);
-    if (!mounted || notification == null) return;
-    _handleNotificationTap(notification);
+    final notification = _handleMessageReceived(message);
+    if (mounted && notification != null) {
+      _handleNotificationTap(notification);
+    }
   }
 
   /// Handle notifications when the app is in the foreground
   void _handleForegroundMessageReceived(RemoteMessage message) {
-    _debugLogMessage(message);
+    final notification = _handleMessageReceived(message);
+    if (mounted && notification != null) {
+      final banner = NotificationBanner(
+        notification: notification,
+        onDismiss: () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        },
+        onView: () => _handleNotificationTap(notification),
+      );
 
-    if (!mounted) return;
-
-    context.read<NotificationProvider>().fetchNotifications();
-
-    final notification = _parseRemoteMessage(message);
-    if (!mounted || notification == null) return;
-    final banner = NotificationBanner(
-      notification: notification,
-      onDismiss: () {
-        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-      },
-      onView: () => _handleNotificationTap(notification),
-    );
-
-    ScaffoldMessenger.of(context).showMaterialBanner(
-      banner.build(context) as MaterialBanner,
-    );
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        banner.build(context) as MaterialBanner,
+      );
+    }
   }
 
   void _debugLogMessage(RemoteMessage message) {
