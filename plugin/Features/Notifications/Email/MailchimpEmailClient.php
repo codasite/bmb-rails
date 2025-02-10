@@ -4,7 +4,7 @@ namespace WStrategies\BMB\Features\Notifications\Email;
 use Exception;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpApiClient;
 
-class MailchimpEmailService implements EmailServiceInterface {
+class MailchimpEmailClient implements EmailClientInterface {
   protected MailchimpApiClient $client;
 
   public $from_email;

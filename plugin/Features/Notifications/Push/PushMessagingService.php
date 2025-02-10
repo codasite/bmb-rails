@@ -4,12 +4,14 @@ namespace WStrategies\BMB\Features\Notifications\Push;
 
 use Kreait\Firebase\Contract\Messaging;
 use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Firebase\Messaging\Notification;
+use Kreait\Firebase\Messaging\Notification as FCMNotification;
 use Kreait\Firebase\Messaging\MulticastSendReport;
+use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationChannelInterface;
 use WStrategies\BMB\Includes\Utils;
 
-class PushMessagingService {
+class PushMessagingService implements NotificationChannelInterface {
   private Messaging $messaging;
   private FCMTokenManager $token_manager;
   private Utils $utils;
@@ -24,33 +26,41 @@ class PushMessagingService {
   }
 
   /**
-   * Sends a notification to a user's devices and handles delivery reports
+   * Handles sending a push notification
    *
-   * @param NotificationType $type The type of notification
-   * @param int $user_id Target user ID
-   * @param string $title Notification title
-   * @param string $message Notification body
-   * @param string $image_url Optional image URL
-   * @param array $data Optional additional data
+   * @param Notification $notification The notification to send
    * @return MulticastSendReport The send report
    */
-  public function send_notification(
-    NotificationType $type,
-    int $user_id,
-    string $title = '',
-    string $message = '',
-    string $image_url = '',
-    array $data = []
+  public function handle_notification(
+    Notification $notification
   ): MulticastSendReport {
-    $tokens = $this->token_manager->get_target_tokens($type, $user_id);
+    $tokens = $this->token_manager->get_target_tokens(
+      $notification->notification_type,
+      $notification->user_id
+    );
 
     if (empty($tokens)) {
       return MulticastSendReport::withItems([]); // Return empty report if no tokens
     }
 
-    $notification = Notification::create($title, $message, $image_url);
+    $data = [];
+    if (!empty($notification->link)) {
+      $data['link'] = $notification->link;
+    }
+    if (!empty($notification->id)) {
+      $data['id'] = $notification->id;
+    }
+    if (!empty($notification->timestamp)) {
+      $data['timestamp'] = $notification->timestamp->format('c');
+    }
+
+    $fcm_notification = FCMNotification::create(
+      $notification->title,
+      $notification->message
+    );
+
     $message = CloudMessage::new()
-      ->withNotification($notification)
+      ->withNotification($fcm_notification)
       ->withData($data);
 
     $sendReport = $this->messaging->sendMulticast($message, $tokens);

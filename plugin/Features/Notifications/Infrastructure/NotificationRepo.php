@@ -57,7 +57,7 @@ class NotificationRepo extends RepositoryBase implements
       ],
       'message' => [
         'type' => '%s',
-        'required' => true,
+        'required' => false,
         'updateable' => true,
       ],
       'timestamp' => [
@@ -120,16 +120,21 @@ class NotificationRepo extends RepositoryBase implements
         'Object must be an instance of Notification'
       );
     }
-
-    return $this->insert([
+    $insert_data = [
       'user_id' => $object->user_id,
       'title' => $object->title,
       'message' => $object->message,
-      'timestamp' => $object->timestamp->format('c'),
-      'is_read' => $object->is_read,
       'link' => $object->link,
       'notification_type' => $object->notification_type->value,
-    ]);
+    ];
+    if ($object->timestamp) {
+      $insert_data['timestamp'] = $object->timestamp->format('c');
+    }
+    if ($object->is_read !== null) {
+      $insert_data['is_read'] = $object->is_read;
+    }
+
+    return $this->insert($insert_data);
   }
 
   /**

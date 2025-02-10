@@ -6,14 +6,14 @@ import 'package:intl/intl.dart';
 
 class NotificationItem extends StatelessWidget {
   final BmbNotification notification;
-  final VoidCallback onDelete;
-  final Function(String) onMarkAsRead;
+  final Function() onDismiss;
+  final Function() onTap;
 
   const NotificationItem({
     super.key,
     required this.notification,
-    required this.onDelete,
-    required this.onMarkAsRead,
+    required this.onDismiss,
+    required this.onTap,
   });
 
   String _formatTimestamp(DateTime timestamp) {
@@ -33,8 +33,9 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notification = this.notification;
     return Dismissible(
-      key: Key(notification.id),
+      key: Key(notification.id.toString()),
       direction: DismissDirection.endToStart,
       background: Container(
         decoration: BoxDecoration(
@@ -50,7 +51,7 @@ class NotificationItem extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (_) => onDelete(),
+      onDismissed: (_) => onDismiss(),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -67,14 +68,7 @@ class NotificationItem extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            onTap: () {
-              if (!notification.isRead) {
-                onMarkAsRead(notification.id);
-              }
-              if (notification.link != null) {
-                Navigator.pop(context, notification.link);
-              }
-            },
+            onTap: onTap,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -96,27 +90,29 @@ class NotificationItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        _formatTimestamp(notification.timestamp),
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.5),
-                          fontSize: 12,
-                          fontVariations: BmbFontWeights.w500,
+                      if (notification.timestamp != null)
+                        Text(
+                          _formatTimestamp(notification.timestamp!),
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.5),
+                            fontSize: 12,
+                            fontVariations: BmbFontWeights.w500,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    notification.message,
-                    style: TextStyle(
-                      color: notification.isRead
-                          ? Colors.white.withOpacity(0.5)
-                          : Colors.white.withOpacity(0.7),
-                      fontSize: 14,
-                      fontVariations: BmbFontWeights.w500,
+                  if (notification.message.isNotEmpty)
+                    Text(
+                      notification.message,
+                      style: TextStyle(
+                        color: notification.isRead
+                            ? Colors.white.withOpacity(0.5)
+                            : Colors.white.withOpacity(0.7),
+                        fontSize: 14,
+                        fontVariations: BmbFontWeights.w500,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),

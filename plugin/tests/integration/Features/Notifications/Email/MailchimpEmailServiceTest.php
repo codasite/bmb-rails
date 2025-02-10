@@ -3,7 +3,7 @@ namespace WStrategies\BMB\tests\integration\Features\Notifications\Email;
 
 use MailchimpTransactional\Api\MessagesApi;
 use WStrategies\BMB\Features\Notifications\Email\MailchimpApiClient;
-use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailService;
+use WStrategies\BMB\Features\Notifications\Email\MailchimpEmailClient;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
@@ -24,7 +24,7 @@ class MailchimpEmailServiceTest extends WPBB_UnitTestCase {
 
     $client->messages = $messagesMock;
 
-    $mailchimp = new MailchimpEmailService([
+    $mailchimp = new MailchimpEmailClient([
       'api_client' => $client,
       'api_key' => '123',
       'from_email' => 'test@test.com',

@@ -3,6 +3,9 @@
 namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
+use WStrategies\BMB\Features\Notifications\Application\NotificationDispatcher;
+use WStrategies\BMB\Features\Notifications\Domain\Notification;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
@@ -15,28 +18,15 @@ class SendRoundCompleteNotificationsService {
   private readonly BracketRepo $bracket_repo;
   private readonly PlayRepo $play_repo;
   private readonly UserRepo $user_repo;
-
-  /**
-   * @var array<RoundCompleteNotificationListenerInterface>
-   */
-  private array $listeners = [];
+  private readonly NotificationDispatcher $dispatcher;
+  private readonly Utils $utils;
 
   function __construct($args = []) {
-    $this->listeners = $args['listeners'] ?? $this->init_listeners($args);
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->user_repo = $args['user_repo'] ?? new UserRepo();
-  }
-
-  /**
-   * @return array<RoundCompleteNotificationListenerInterface>
-   */
-  private function init_listeners($args): array {
-    return [
-      new RoundCompleteEmailListener($args),
-      new RoundCompletePushListener($args),
-      new RoundCompleteStorageListener($args),
-    ];
+    $this->dispatcher = $args['dispatcher'] ?? new NotificationDispatcher();
+    $this->utils = new Utils();
   }
 
   public function send_round_complete_notifications(): void {
@@ -51,8 +41,6 @@ class SendRoundCompleteNotificationsService {
       ],
       ['fetch_matches' => false, 'fetch_results' => false]
     );
-    // get all plays for bracket
-    $plays = [];
     foreach ($brackets as $bracket) {
       $this->send_notifications_for_bracket($bracket);
     }
@@ -64,8 +52,6 @@ class SendRoundCompleteNotificationsService {
       ['fetch_bracket' => false]
     );
     foreach ($plays as $play) {
-      // get user for each play
-      // send email
       $this->send_notifications_for_play($bracket, $play);
     }
     update_post_meta(
@@ -84,17 +70,23 @@ class SendRoundCompleteNotificationsService {
       return;
     }
 
-    foreach ($this->listeners as $listener) {
-      try {
-        $listener->notify($user, $bracket, $play);
-      } catch (Exception $e) {
-        (new Utils())->log_error(
-          'Error sending round complete notification: ' .
-            $e->getMessage() .
-            "\nStack trace:\n" .
-            $e->getTraceAsString()
-        );
-      }
+    try {
+      $notification = new Notification([
+        'user_id' => $user->id,
+        'title' => RoundCompleteMessageFormatter::get_title($bracket),
+        'message' => RoundCompleteMessageFormatter::get_message($bracket),
+        'link' => RoundCompleteMessageFormatter::get_link($bracket),
+        'notification_type' => NotificationType::ROUND_COMPLETE,
+      ]);
+
+      $this->dispatcher->dispatch($notification);
+    } catch (Exception $e) {
+      $this->utils->log_error(
+        'Error sending round complete notification: ' .
+          $e->getMessage() .
+          "\nStack trace:\n" .
+          $e->getTraceAsString()
+      );
     }
   }
 }

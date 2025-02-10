@@ -8,6 +8,7 @@ use WP_CLI\Utils;
 use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationRepo;
+use WStrategies\BMB\Features\Notifications\Push\PushMessagingService;
 use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
 
 /**
@@ -15,7 +16,7 @@ use WStrategies\BMB\Features\Notifications\Push\PushMessagingServiceFactory;
  */
 class NotificationCommand {
   private NotificationRepo $notification_repo;
-  private $push_messaging_service;
+  private PushMessagingService $push_messaging_service;
 
   public function __construct() {
     $this->notification_repo = new NotificationRepo();
@@ -135,13 +136,16 @@ class NotificationCommand {
    * [--link=<link>]
    * : Optional link associated with the notification
    *
+   * [--id=<id>]
+   * : Optional integer ID for the notification
+   *
    * ## EXAMPLES
    *
    *     # Create a system notification
    *     $ wp wpbb notification create --user_id=123 --title="Test" --message="Test message" --type=system
    *
-   *     # Create a notification with a link
-   *     $ wp wpbb notification create --user_id=123 --title="New bracket" --message="Check out the new bracket" --type=bracket_upcoming --link="https://example.com/bracket/123"
+   *     # Create a notification with a link and custom ID
+   *     $ wp wpbb notification create --user_id=123 --title="New bracket" --message="Check out the new bracket" --type=bracket_upcoming --link="https://example.com/bracket/123" --id=456
    *
    * @param array $args
    * @param array $assoc_args
@@ -168,8 +172,14 @@ class NotificationCommand {
       return;
     }
 
+    if (isset($assoc_args['id']) && !is_numeric($assoc_args['id'])) {
+      WP_CLI::error('The --id parameter must be an integer.');
+      return;
+    }
+
     try {
       $notification = new Notification([
+        'id' => isset($assoc_args['id']) ? (int) $assoc_args['id'] : null,
         'user_id' => (int) $assoc_args['user_id'],
         'title' => $assoc_args['title'],
         'message' => $assoc_args['message'],
@@ -343,19 +353,19 @@ class NotificationCommand {
    * --type=<notification_type>
    * : The type of notification (bracket_upcoming|bracket_results|round_complete|tournament_start|system)
    *
-   * [--image=<image_url>]
-   * : Optional image URL to include with the notification
+   * [--link=<link>]
+   * : Optional link associated with the notification
    *
-   * [--data=<json_data>]
-   * : Optional additional data in JSON format
+   * [--id=<id>]
+   * : Optional integer ID for the notification
    *
    * ## EXAMPLES
    *
    *     # Send a simple push notification
    *     $ wp wpbb notification push --user_id=123 --title="Test" --message="Test message" --type=system
    *
-   *     # Send a push notification with an image and data
-   *     $ wp wpbb notification push --user_id=123 --title="New bracket" --message="Check out the new bracket" --type=bracket_upcoming --image="https://example.com/image.jpg" --data='{"bracketId": "456"}'
+   *     # Send a push notification with a link and custom ID
+   *     $ wp wpbb notification push --user_id=123 --title="New bracket" --message="Check out the new bracket" --type=bracket_upcoming --link="https://example.com/bracket/123" --id=456
    *
    * @param array $args
    * @param array $assoc_args
@@ -382,23 +392,23 @@ class NotificationCommand {
       return;
     }
 
-    try {
-      $data = [];
-      if (isset($assoc_args['data'])) {
-        $data = json_decode($assoc_args['data'], true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-          WP_CLI::error('Invalid JSON data format');
-          return;
-        }
-      }
+    if (isset($assoc_args['id']) && !is_numeric($assoc_args['id'])) {
+      WP_CLI::error('The --id parameter must be an integer.');
+      return;
+    }
 
-      $report = $this->push_messaging_service->send_notification(
-        NotificationType::from($assoc_args['type']),
-        (int) $assoc_args['user_id'],
-        $assoc_args['title'],
-        $assoc_args['message'],
-        $assoc_args['image'] ?? '',
-        $data
+    try {
+      $notification = new Notification([
+        'id' => isset($assoc_args['id']) ? (int) $assoc_args['id'] : null,
+        'user_id' => (int) $assoc_args['user_id'],
+        'title' => $assoc_args['title'],
+        'message' => $assoc_args['message'],
+        'notification_type' => NotificationType::from($assoc_args['type']),
+        'link' => $assoc_args['link'] ?? null,
+      ]);
+
+      $report = $this->push_messaging_service->handle_notification(
+        $notification
       );
 
       if ($report->successes()->count() > 0) {

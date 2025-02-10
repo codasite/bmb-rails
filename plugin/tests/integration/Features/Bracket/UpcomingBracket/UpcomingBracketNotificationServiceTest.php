@@ -1,7 +1,8 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Features\Bracket\UpcomingBracket;
 
-use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
+use WStrategies\BMB\Features\Notifications\Application\NotificationDispatcher;
+use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Features\Bracket\UpcomingBracket\UpcomingBracketNotificationService;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
@@ -27,28 +28,39 @@ class UpcomingBracketNotificationServiceTest extends WPBB_UnitTestCase {
       'post_id' => $bracket2->id,
       'notification_type' => NotificationType::BRACKET_UPCOMING,
     ]);
-    $email_mock = $this->createMock(EmailServiceInterface::class);
-    $email_mock
-      ->expects($this->exactly(2))
-      ->method('send')
-      ->withConsecutive(
-        [
-          $user1->user_email,
-          $user1->display_name,
-          $this->isType('string'),
-          $this->isType('string'),
-          $this->isType('string'),
-        ],
-        [
-          $user2->user_email,
-          $user2->display_name,
-          $this->isType('string'),
-          $this->isType('string'),
-          $this->isType('string'),
-        ]
-      );
+
+    $dispatcher = $this->getMockBuilder(NotificationDispatcher::class)
+      ->disableOriginalConstructor()
+      ->getMock();
+    $matcher = $this->exactly(2);
+    $dispatcher
+      ->expects($matcher)
+      ->method('dispatch')
+      ->willReturnCallback(function (Notification $notification) use (
+        $matcher,
+        $user1,
+        $user2
+      ) {
+        switch ($matcher->getInvocationCount()) {
+          case 1:
+            $this->assertEquals($user1->ID, $notification->user_id);
+            $this->assertEquals(
+              'Tournament is now live!',
+              $notification->title
+            );
+            break;
+          case 2:
+            $this->assertEquals($user2->ID, $notification->user_id);
+            $this->assertEquals(
+              'Tournament is now live!',
+              $notification->title
+            );
+            break;
+        }
+      });
+
     $notification_service = new UpcomingBracketNotificationService([
-      'email_service' => $email_mock,
+      'dispatcher' => $dispatcher,
     ]);
     $notification_service->notify_upcoming_bracket_live($bracket1->id);
   }

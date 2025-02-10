@@ -1,5 +1,6 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
+import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:bmb_mobile/features/notifications/presentation/widgets/mark_all_as_read_button.dart';
 import 'package:bmb_mobile/features/notifications/presentation/widgets/notification_item.dart';
@@ -8,13 +9,34 @@ import 'package:provider/provider.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({super.key});
+  final Future<void> Function(String, {bool prependBaseUrl})? onLoadUrl;
+
+  const NotificationScreen({
+    super.key,
+    this.onLoadUrl,
+  });
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  void _handleNotificationTap(BmbNotification notification) {
+    if (notification.id != null && !notification.isRead) {
+      context.read<NotificationProvider>().markAsRead(notification.id!);
+    }
+    if (notification.link != null && widget.onLoadUrl != null) {
+      widget.onLoadUrl!(notification.link!, prependBaseUrl: false);
+      Navigator.pop(context);
+    }
+  }
+
+  void _handleNotificationDismiss(BmbNotification notification) {
+    if (notification.id != null) {
+      context.read<NotificationProvider>().deleteNotification(notification.id!);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -83,9 +105,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   final notification = notifications[index - 1];
                   return NotificationItem(
                     notification: notification,
-                    onDelete: () =>
-                        provider.deleteNotification(notification.id),
-                    onMarkAsRead: provider.markAsRead,
+                    onDismiss: () => _handleNotificationDismiss(notification),
+                    onTap: () => _handleNotificationTap(notification),
                   );
                 },
               ),

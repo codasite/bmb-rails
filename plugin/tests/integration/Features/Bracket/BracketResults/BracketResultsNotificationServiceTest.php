@@ -2,7 +2,8 @@
 namespace WStrategies\BMB\tests\integration\Features\Bracket\BracketResults;
 
 use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
-use WStrategies\BMB\Features\Notifications\Email\EmailServiceInterface;
+use WStrategies\BMB\Features\Notifications\Application\NotificationDispatcher;
+use WStrategies\BMB\Features\Notifications\Domain\Notification;
 use WStrategies\BMB\Includes\Domain\Pick;
 use WStrategies\BMB\Features\Bracket\BracketResults\BracketResultsNotificationService;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
@@ -93,36 +94,38 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       ],
     ]);
 
-    $email_mock = $this->getMockBuilder(EmailServiceInterface::class)
+    $dispatcher = $this->getMockBuilder(NotificationDispatcher::class)
       ->disableOriginalConstructor()
       ->getMock();
     $matcher = $this->exactly(2);
-    $email_mock
+    $dispatcher
       ->expects($matcher)
-      ->method('send')
-      ->willReturnCallback(function (
-        $to,
-        $name,
-        $subject,
-        $message,
-        $headers
-      ) use ($matcher, $user1, $user2) {
+      ->method('dispatch')
+      ->willReturnCallback(function (Notification $notification) use (
+        $matcher,
+        $user1,
+        $user2
+      ) {
         switch ($matcher->getInvocationCount()) {
           case 1:
-            $this->assertEquals($user1->user_email, $to);
-            $this->assertEquals($user1->display_name, $name);
-            $this->assertEquals('Bracket Results Updated', $subject);
+            $this->assertEquals($user1->ID, $notification->user_id);
+            $this->assertEquals(
+              'Bracket Results Updated',
+              $notification->title
+            );
             break;
           case 2:
-            $this->assertEquals($user2->user_email, $to);
-            $this->assertEquals($user2->display_name, $name);
-            $this->assertEquals('Bracket Results Updated', $subject);
+            $this->assertEquals($user2->ID, $notification->user_id);
+            $this->assertEquals(
+              'Bracket Results Updated',
+              $notification->title
+            );
             break;
         }
       });
 
     $notification_service = new BracketResultsNotificationService([
-      'email_service' => $email_mock,
+      'dispatcher' => $dispatcher,
     ]);
 
     $notification_service->send_results_notifications_for_bracket($bracket);
@@ -139,7 +142,7 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => true,
     ]);
     $service = new BracketResultsNotificationService([
-      'email_service' => $this->createMock(EmailServiceInterface::class),
+      'dispatcher' => $this->createMock(NotificationDispatcher::class),
     ]);
     $brackets = $service->get_brackets_to_send_results_notifications_for();
     $this->assertEquals(2, count($brackets));
@@ -152,7 +155,7 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
     $bracket2 = $this->create_bracket();
     $bracket3 = $this->create_bracket();
     $service = new BracketResultsNotificationService([
-      'email_service' => $this->createMock(EmailServiceInterface::class),
+      'dispatcher' => $this->createMock(NotificationDispatcher::class),
     ]);
     $brackets = $service->get_brackets_to_send_results_notifications_for();
     $this->assertEquals(0, count($brackets));
@@ -175,7 +178,7 @@ class BracketResultsNotificationServiceTest extends WPBB_UnitTestCase {
       'author' => 0,
     ]);
     $service = new BracketResultsNotificationService([
-      'email_service' => $this->createMock(EmailServiceInterface::class),
+      'dispatcher' => $this->createMock(NotificationDispatcher::class),
     ]);
     $plays = $service->get_plays($bracket);
     $this->assertEquals(2, count($plays));

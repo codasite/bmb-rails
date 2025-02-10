@@ -27,7 +27,7 @@ class NotificationClient {
   }
 
   /// Marks a single notification as read
-  Future<BmbNotification?> markAsRead(String notificationId) async {
+  Future<BmbNotification?> markAsRead(int notificationId) async {
     try {
       final response = await _httpClient.put(
         WpUrls.notificationReadPath(notificationId),
@@ -72,7 +72,7 @@ class NotificationClient {
   }
 
   /// Deletes a notification
-  Future<bool> deleteNotification(String notificationId) async {
+  Future<bool> deleteNotification(int notificationId) async {
     try {
       final response = await _httpClient.delete(
         WpUrls.notificationPath(notificationId),

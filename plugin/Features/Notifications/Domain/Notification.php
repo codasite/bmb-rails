@@ -11,8 +11,8 @@ use DateTime;
  * Each notification has a type, message content, and associated metadata.
  */
 class Notification {
-  /** @var string|null The unique identifier for this notification */
-  public ?string $id;
+  /** @var int|null The unique identifier for this notification */
+  public ?int $id;
 
   /** @var int The WordPress user ID this notification belongs to */
   public int $user_id;
@@ -20,20 +20,23 @@ class Notification {
   /** @var string The notification title */
   public string $title;
 
-  /** @var string The notification message content */
-  public string $message;
+  /** @var string|null The notification message content */
+  public ?string $message;
 
-  /** @var DateTime The timestamp when this notification was created */
-  public DateTime $timestamp;
+  /** @var DateTime|null The timestamp when this notification was created */
+  public ?DateTime $timestamp;
 
-  /** @var bool Whether the notification has been read */
-  public bool $is_read;
+  /** @var bool|null Whether the notification has been read */
+  public ?bool $is_read;
 
   /** @var string|null Optional link associated with the notification */
   public string|null $link;
 
   /** @var NotificationType The type of notification */
   public NotificationType $notification_type;
+
+  /** @var string|null The text of the action button */
+  public string|null $action_text;
 
   /**
    * Creates a new Notification instance.
@@ -42,30 +45,26 @@ class Notification {
    *     @type string|null     $id               Optional. Notification ID.
    *     @type int            $user_id          Required. WordPress user ID.
    *     @type string         $title            Required. Notification title.
-   *     @type string         $message          Required. Notification message.
+   *     @type string|null    $message          Optional. Notification message.
    *     @type string|DateTime $timestamp       Required. Creation timestamp.
-   *     @type bool           $is_read         Optional. Read status.
+   *     @type bool|null      $is_read          Optional. Read status.
    *     @type string|null     $link            Optional. Associated link.
    *     @type string|NotificationType $notification_type Required. Type of notification.
    * }
    */
   public function __construct($data = []) {
-    $this->id = $data['id'] ?? null;
+    $this->id = isset($data['id']) ? (int) $data['id'] : null;
     $this->user_id = (int) $data['user_id'];
     $this->title = $data['title'];
-    $this->message = $data['message'];
+    $this->message = $data['message'] ?? null;
+    $this->action_text = $data['action_text'] ?? null;
+    $this->timestamp = isset($data['timestamp'])
+      ? ($data['timestamp'] instanceof DateTime
+        ? $data['timestamp']
+        : new DateTime($data['timestamp']))
+      : null;
 
-    // More defensive timestamp handling
-    if (isset($data['timestamp'])) {
-      $this->timestamp =
-        $data['timestamp'] instanceof DateTime
-          ? $data['timestamp']
-          : new DateTime($data['timestamp']);
-    } else {
-      $this->timestamp = new DateTime(); // Default to current time
-    }
-
-    $this->is_read = $data['is_read'] ?? false;
+    $this->is_read = isset($data['is_read']) ? (bool) $data['is_read'] : null;
     $this->link = $data['link'] ?? null;
 
     $notification_type = $data['notification_type'];
@@ -94,7 +93,7 @@ class Notification {
       'user_id' => $this->user_id,
       'title' => $this->title,
       'message' => $this->message,
-      'timestamp' => $this->timestamp->format('c'), // ISO 8601 format
+      'timestamp' => $this->timestamp ? $this->timestamp->format('c') : null, // ISO 8601 format
       'is_read' => $this->is_read,
       'link' => $this->link,
       'notification_type' => $this->notification_type->value,

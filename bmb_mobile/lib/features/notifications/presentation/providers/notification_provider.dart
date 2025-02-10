@@ -26,7 +26,7 @@ class NotificationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> markAsRead(String notificationId) async {
+  Future<void> markAsRead(int notificationId) async {
     final updatedNotification = await _manager.markAsRead(notificationId);
     if (updatedNotification != null) {
       final index = _notifications.indexWhere((n) => n.id == notificationId);
@@ -64,7 +64,7 @@ class NotificationProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteNotification(String id) async {
+  Future<void> deleteNotification(int id) async {
     // Optimistically remove the notification from the list
     final index = _notifications.indexWhere((n) => n.id == id);
     if (index == -1) return;

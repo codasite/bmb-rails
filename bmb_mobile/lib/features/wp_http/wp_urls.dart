@@ -1,12 +1,11 @@
 import 'package:bmb_mobile/core/utils/environment_config.dart';
 
 class WpUrls {
-  static const String baseUrl = EnvironmentConfig.wpBaseUrl;
+  // static const String baseUrl = EnvironmentConfig.wpBaseUrl;
+  // static const String baseUrl = "https://backmybracket.com";
   // static const String baseUrl = "http://localhost:8008";
-  // static const String baseUrl = "http://192.168.1.77:8008";
-  // static const String baseUrl = "http://169.254.169.113:8008";
-  // static const String baseUrl = "http://172.20.10.7:8008";
-  // static const String baseUrl = "http://169.254.57.216:8008";
+  static const String baseUrl = "http://192.168.1.77:8008";
+  // static const String baseUrl = "http://172.20.10.8:8008";
 
   // WordPress API paths
   static const String _wpApiBase = '/wp-json/wp/v2';
@@ -27,10 +26,9 @@ class WpUrls {
 
   // Notification API paths
   static const String _notificationBase = '/wp-json/bmb/v1/notifications';
-  static String notificationPath(String id) => '$_notificationBase/$id';
+  static String notificationPath(int id) => '$_notificationBase/$id';
   static String get notificationsPath => _notificationBase;
-  static String notificationReadPath(String id) =>
-      '${notificationPath(id)}/read';
+  static String notificationReadPath(int id) => '${notificationPath(id)}/read';
   static String get notificationsReadAllPath => '$_notificationBase/read-all';
 
   // Full URLs

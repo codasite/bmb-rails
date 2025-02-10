@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Features\VotingBracket\Notifications;
 use WStrategies\BMB\Includes\Domain\Bracket;
 
 class RoundCompleteMessageFormatter {
-  public static function get_heading(Bracket $bracket): string {
+  public static function get_title(Bracket $bracket): string {
     if ($bracket->status === 'complete') {
       return $bracket->get_title() . ' Voting Complete!';
     }
@@ -26,10 +26,10 @@ class RoundCompleteMessageFormatter {
     return 'Vote now';
   }
 
-  public static function get_button_url_suffix(Bracket $bracket): string {
+  public static function get_link(Bracket $bracket): string {
     if ($bracket->status === 'complete') {
-      return 'results';
+      return $bracket->url . 'results';
     }
-    return 'play';
+    return $bracket->url . 'play';
   }
 }
