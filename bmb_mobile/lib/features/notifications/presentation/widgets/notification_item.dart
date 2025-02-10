@@ -6,15 +6,13 @@ import 'package:intl/intl.dart';
 
 class NotificationItem extends StatelessWidget {
   final BmbNotification notification;
-  final Function(int) onDelete;
-  final Function(int) onMarkAsRead;
-  final Function(String?) onTap;
+  final Function() onDismiss;
+  final Function() onTap;
 
   const NotificationItem({
     super.key,
     required this.notification,
-    required this.onDelete,
-    required this.onMarkAsRead,
+    required this.onDismiss,
     required this.onTap,
   });
 
@@ -53,8 +51,7 @@ class NotificationItem extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (_) =>
-          notification.id != null ? onDelete(notification.id!) : null,
+      onDismissed: (_) => onDismiss(),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
@@ -71,12 +68,7 @@ class NotificationItem extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
-            onTap: () {
-              if (!notification.isRead && notification.id != null) {
-                onMarkAsRead(notification.id!);
-              }
-              onTap(notification.link);
-            },
+            onTap: onTap,
             borderRadius: BorderRadius.circular(12),
             child: Padding(
               padding: const EdgeInsets.all(16),
