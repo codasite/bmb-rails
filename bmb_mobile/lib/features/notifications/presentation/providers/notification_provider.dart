@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/domain/services/notification_manager.dart';
+import 'package:flutter_app_badge_control/flutter_app_badge_control.dart';
 
 /// Manages the client-side state for notifications
 class NotificationProvider extends ChangeNotifier {
@@ -23,6 +24,7 @@ class NotificationProvider extends ChangeNotifier {
     _notifications = await _manager.getNotifications();
 
     _isLoading = false;
+    FlutterAppBadgeControl.updateBadgeCount(unreadCount);
     notifyListeners();
   }
 
