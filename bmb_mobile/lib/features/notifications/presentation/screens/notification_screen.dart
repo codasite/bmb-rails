@@ -1,6 +1,5 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
-import 'package:bmb_mobile/features/notifications/data/models/bmb_notification.dart';
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:bmb_mobile/features/notifications/presentation/widgets/mark_all_as_read_button.dart';
 import 'package:bmb_mobile/features/notifications/presentation/widgets/notification_item.dart';
@@ -9,25 +8,23 @@ import 'package:provider/provider.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
 
 class NotificationScreen extends StatefulWidget {
-  const NotificationScreen({super.key});
+  final Future<void> Function(String, {bool prependBaseUrl})? onLoadUrl;
+
+  const NotificationScreen({
+    super.key,
+    this.onLoadUrl,
+  });
 
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  void _handleNotificationTap(BmbNotification notification) {
-    if (!notification.isRead && notification.id != null) {
-      context.read<NotificationProvider>().markAsRead(notification.id!);
+  void _handleNotificationTap(String? link) {
+    if (link != null && widget.onLoadUrl != null) {
+      widget.onLoadUrl!(link, prependBaseUrl: false);
     }
-    if (notification.link != null) {
-      Navigator.pushReplacementNamed(context, '/app',
-          arguments: notification.link);
-    }
-  }
-
-  void _handleNotificationDismiss(BmbNotification notification) {
-    context.read<NotificationProvider>().deleteNotification(notification.id!);
+    Navigator.pop(context);
   }
 
   @override
@@ -98,8 +95,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   final notification = notifications[index - 1];
                   return NotificationItem(
                     notification: notification,
-                    onDismiss: () => _handleNotificationDismiss(notification),
-                    onTap: () => _handleNotificationTap(notification),
+                    onDelete: provider.deleteNotification,
+                    onMarkAsRead: provider.markAsRead,
+                    onTap: _handleNotificationTap,
                   );
                 },
               ),

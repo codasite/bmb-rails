@@ -87,22 +87,16 @@ class NotificationBanner extends StatelessWidget {
                   context
                       .read<NotificationProvider>()
                       .markAsRead(notification.id!);
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/app',
-                    arguments: notification.link,
-                  );
+                  await onLoadUrl(notification.link!, prependBaseUrl: false);
                 } else if (notification.link != null) {
-                  Navigator.pushReplacementNamed(
-                    context,
-                    '/app',
-                    arguments: notification.link,
-                  );
+                  await onLoadUrl(notification.link!, prependBaseUrl: false);
                 } else {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const NotificationScreen(),
+                      builder: (context) => NotificationScreen(
+                        onLoadUrl: onLoadUrl,
+                      ),
                     ),
                   );
                 }
