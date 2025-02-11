@@ -8,8 +8,6 @@ class AppLinkProvider extends ChangeNotifier {
   StreamSubscription<Uri>? _subscription;
   Uri? _currentUri;
 
-  Uri? get currentUri => _currentUri;
-
   AppLinkProvider() {
     _initialize();
   }
@@ -20,8 +18,16 @@ class AppLinkProvider extends ChangeNotifier {
       AppLogger.debugLog('App link received: $uri');
       notifyListeners();
     }, onError: (err) {
-      AppLogger.debugLog('App link error: $err');
+      AppLogger.logError('App link error: $err', StackTrace.current);
     });
+  }
+
+  Uri? getUri() {
+    final uri = _currentUri;
+    if (uri != null) {
+      _currentUri = null;
+    }
+    return uri;
   }
 
   @override

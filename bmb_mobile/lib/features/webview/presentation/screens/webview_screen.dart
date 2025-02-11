@@ -1,5 +1,6 @@
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
+import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:bmb_mobile/core/widgets/upper_case_text.dart';
@@ -19,6 +20,7 @@ import 'package:bmb_mobile/features/webview/presentation/delegates/webview_navig
 import 'package:bmb_mobile/features/webview/presentation/controllers/javascript_channel_controller.dart';
 import 'dart:async' show scheduleMicrotask;
 import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_notification_listener.dart';
+import 'package:bmb_mobile/features/app_links/presentation/providers/app_link_provider.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -165,6 +167,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   Future<void> _initWebView() async {
+    AppLogger.debugLog('Initializing WebView');
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setUserAgent('BackMyBracket-MobileApp');
@@ -201,6 +204,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ),
     );
 
+    // Check for an initial app link
+    if (mounted) {
+      final initialUri = context.read<AppLinkProvider>().getUri();
+      if (initialUri != null) {
+        AppLogger.debugLog('Loading initial app link: $initialUri');
+        await _loadUrl(initialUri.toString(), prependBaseUrl: false);
+        return;
+      }
+    }
     await _loadUrl('/dashboard/tournaments/');
   }
 
@@ -216,6 +228,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppLogger.debugLog('Building WebViewScreen');
+    final uri = context.watch<AppLinkProvider>().getUri();
+    if (uri != null) {
+      AppLogger.debugLog('Loading app linkfrom build: $uri');
+      _loadUrl(uri.toString(), prependBaseUrl: false);
+    }
+
     return PopScope<Object?>(
       canPop: !_canGoBack,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
