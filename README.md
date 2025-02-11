@@ -119,6 +119,10 @@ task ios:build    # Build iOS app
 task ios:push     # Upload to App Store Connect
 ```
 
+### Deep Linking Setup
+
+To enable Universal Links for iOS, copy the app site association file from `bmb_mobile/.well-known/apple-app-site-association` to your WordPress site's `.well-known` directory. The file must be served over HTTPS at `https://yourdomain.com/.well-known/apple-app-site-association`.
+
 ## Development Tools
 
 ### Testing
