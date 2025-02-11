@@ -46,6 +46,8 @@
 	<string>Main</string>
 	<key>UIStatusBarHidden</key>
 	<false/>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
