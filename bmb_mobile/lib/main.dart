@@ -1,9 +1,11 @@
+import 'package:app_links/app_links.dart';
 import 'package:bmb_mobile/app/bmb_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +27,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:bmb_mobile/core/utils/environment_config.dart';
 import 'package:bmb_mobile/features/notifications/domain/services/app_badge_manager.dart';
+import 'package:bmb_mobile/features/app_links/presentation/providers/app_link_provider.dart';
 
 @pragma('vm:entry-point')
 Future<void> handleBackgroundMessageReceived(RemoteMessage message) async {
@@ -54,6 +57,8 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  final appLinkProvider = AppLinkProvider();
 
   final cookieManager = WebviewCookieManager();
   final credentialManager = WpCredentialRepository();
@@ -98,6 +103,7 @@ void main() async {
         ChangeNotifierProvider.value(value: authProvider),
         ChangeNotifierProvider.value(value: fcmProvider),
         ChangeNotifierProvider.value(value: notificationProvider),
+        ChangeNotifierProvider.value(value: appLinkProvider),
       ],
       child: const BmbApp(),
     ),
