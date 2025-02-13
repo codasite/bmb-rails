@@ -123,9 +123,9 @@ class TournamentsPage implements TemplateInterface {
 
   public function get_role_link(string $label, bool $active, string $url) {
     ob_start(); ?>
-    <a class="tw-text-white tw-text-20 tw-font-500<?php echo $active
-      ? ' tw-underline'
-      : ' tw-opacity-50'; ?> hover:tw-cursor-pointer"
+    <a class="tw-p-16 tw-text-white tw-text-20 lg:tw-text-24 tw-rounded-8 tw-flex tw-flex-1 tw-justify-center tw-font-500<?php echo $active
+      ? ' tw-bg-white/20'
+      : ''; ?> hover:tw-cursor-pointer"
        href="<?php echo $url; ?>"><?php echo $label; ?></a>
     <?php return ob_get_clean();
   }
@@ -176,7 +176,7 @@ class TournamentsPage implements TemplateInterface {
           </a>
         </div>
         <div class="tw-flex tw-flex-col tw-gap-24">
-          <div class="tw-flex tw-justify-start tw-gap-16">
+          <div class="tw-flex tw-justify-start">
             <?php echo $this->get_role_link(
               'Playing',
               $this->role === 'playing',

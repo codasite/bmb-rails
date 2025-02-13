@@ -3,6 +3,14 @@
  * included in this file.
  */
 
+/** GLOBAL START */
+
+.wpbb-page-container {
+  min-height: 100vh;
+}
+
+/** GLOBAL END */
+
 /** TOURNAMENT LEADERBOARD START */
 
 .wpbb-leaderboard-header {
