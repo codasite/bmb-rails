@@ -18,7 +18,7 @@ import 'package:bmb_mobile/features/notifications/presentation/screens/notificat
 import 'package:bmb_mobile/features/notifications/presentation/providers/notification_provider.dart';
 import 'package:bmb_mobile/features/webview/presentation/delegates/webview_navigation_delegate.dart';
 import 'package:bmb_mobile/features/webview/presentation/controllers/javascript_channel_controller.dart';
-import 'dart:async' show scheduleMicrotask;
+import 'dart:async' show scheduleMicrotask, Timer;
 import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_notification_listener.dart';
 import 'package:bmb_mobile/features/app_links/presentation/providers/app_link_provider.dart';
 
@@ -31,6 +31,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   static const double _refreshThreshold = 65.0;
+  static const Duration _maxLoadingDuration = Duration(seconds: 3);
 
   late final WebViewController _controller;
   late final JavaScriptChannelController _jsController;
@@ -40,6 +41,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   String _currentTitle = 'Back My Bracket';
   double _refreshProgress = 0.0;
   bool _isLoggingOut = false;
+  Timer? _loadingTimer;
 
   final List<NavigationItem> _pages = bottomNavItems;
 
@@ -106,9 +108,25 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   void _handleLoadingChanged(bool isLoading) {
-    setState(() {
-      _isLoading = isLoading;
-    });
+    if (isLoading) {
+      setState(() {
+        _isLoading = true;
+      });
+      // Start the timer when loading begins
+      _loadingTimer?.cancel();
+      _loadingTimer = Timer(_maxLoadingDuration, () {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    } else {
+      _loadingTimer?.cancel();
+      setState(() {
+        _isLoading = false;
+      });
+    }
     _updateCanGoBack();
   }
 
@@ -162,6 +180,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   void dispose() {
+    _loadingTimer?.cancel();
     _jsController.removeAllChannels();
     super.dispose();
   }
