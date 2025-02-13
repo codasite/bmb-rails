@@ -196,7 +196,7 @@ class TournamentsPage implements TemplateInterface {
             <?php PaginationWidget::pagination($this->paged, $num_pages); ?>
           </div>
           <?php if (empty($brackets)): ?>
-            <p class='tw-text-24 tw-font-500 tw-my-0'>No tournaments found.</p>
+            <p class='tw-text-16 lg:tw-text-20 tw-font-500 tw-my-0 tw-text-center tw-text-white/50'>No tournaments found.</p>
           <?php endif; ?>
         </div>
       </div>
