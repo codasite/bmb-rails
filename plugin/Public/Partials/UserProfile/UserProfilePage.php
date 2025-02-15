@@ -26,7 +26,7 @@ class UserProfilePage implements TemplateInterface {
     ?>
 		<div class="wpbb-reset wpbb-faded-bracket-bg tw-pt-60 tw-pb-[150px] tw-px-20">
 			<div class="wpbb-reset tw-max-w-screen-xl tw-mx-auto tw-flex-col tw-flex">
-				<div class="tw-flex tw-flex-col md:tw-flex-row tw-gap-30 tw-pb-30 md:tw-py-60 tw-self-center tw-items-center <?= empty(
+				<div class="wpbb-page-header tw-flex tw-flex-col md:tw-flex-row tw-gap-30 tw-pb-30 md:tw-py-60 tw-self-center tw-items-center <?= empty(
       $bio
     )
       ? 'md:tw-items-center'
