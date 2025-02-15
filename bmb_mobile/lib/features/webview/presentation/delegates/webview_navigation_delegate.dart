@@ -9,6 +9,22 @@ class WebViewNavigationDelegate extends NavigationDelegate {
   final Function(String) onPageCompleted;
   final VoidCallback onLogout;
 
+  // Paths that should open in external browser
+  static const List<String> externalBrowserPaths = [
+    '/shop/bmb',
+    '/referralprogram',
+    '/be-a-host'
+  ];
+
+  // Domains that are allowed to load in WebView
+  static const List<String> allowedExternalDomains = [
+    'm.stripe.network',
+    'js.stripe.com',
+    'widgets.wp.com',
+    'public-api.wordpress.com',
+    'wordpress.com'
+  ];
+
   WebViewNavigationDelegate({
     required this.onLoadingChanged,
     required this.onPageCompleted,
@@ -43,8 +59,23 @@ class WebViewNavigationDelegate extends NavigationDelegate {
             await WidgetsBinding.instance.endOfFrame;
             final uri = Uri.parse(request.url);
 
-            // If it's our domain, allow navigation
+            // If it's our domain, check if it should open in external browser
             if (request.url.contains(WpUrls.baseUrl)) {
+              // Check if URL contains any of the external browser paths
+              final shouldOpenExternally = externalBrowserPaths.any(
+                (path) => request.url.contains(path),
+              );
+
+              if (shouldOpenExternally) {
+                AppLogger.debugLog(
+                  'Opening in external browser: ${request.url}',
+                );
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                }
+                return NavigationDecision.prevent;
+              }
+
               // Check for login/unauthorized paths
               if (request.url.contains(WpUrls.loginPath) ||
                   request.url.contains('unauthorized')) {
@@ -61,14 +92,6 @@ class WebViewNavigationDelegate extends NavigationDelegate {
             final isResource = uri.path.toLowerCase().contains(RegExp(
                   r'\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)$',
                 ));
-
-            final allowedExternalDomains = [
-              'm.stripe.network',
-              'js.stripe.com',
-              'widgets.wp.com',
-              'public-api.wordpress.com',
-              'wordpress.com'
-            ];
 
             final isAllowedDomain = allowedExternalDomains
                 .any((domain) => request.url.contains(domain));
