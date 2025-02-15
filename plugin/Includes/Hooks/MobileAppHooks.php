@@ -16,10 +16,32 @@ class MobileAppHooks implements HooksInterface {
       10,
       6
     );
+    // Add filter to hide subscription products in mobile app
+    $loader->add_filter(
+      'woocommerce_product_is_visible',
+      [$this, 'filter_subscription_products'],
+      10,
+      2
+    );
   }
 
   public function is_application_passwords_available(): bool {
     return true;
+  }
+
+  public function filter_subscription_products($visible, $product_id): bool {
+    // Check if request is from mobile app
+    if (
+      !empty($_SERVER['HTTP_USER_AGENT']) &&
+      $_SERVER['HTTP_USER_AGENT'] === 'BackMyBracket-MobileApp'
+    ) {
+      // Check if product is a subscription
+      $product = wc_get_product($product_id);
+      if ($product && $product->is_type('subscription')) {
+        return false;
+      }
+    }
+    return $visible;
   }
 
   public function set_logged_in_cookie(
