@@ -3,21 +3,12 @@
     "apps": [],
     "details": [
       {
-        "appIDs": [
-          "6N4HR28LLR.com.backmybracket.app"
-        ],
+        "appID": "6N4HR28LLR.com.backmybracket.app",
         "paths": [
+          "NOT /referralprogram/*",
+          "NOT /be-a-host/*",
+          "NOT /shop/bmb/*",
           "*"
-        ],
-        "components": [
-          {
-            "/": "/*",
-            "exclude": [
-              "/referralprogram/*",
-              "/be-a-host/*",
-              "/shop/bmb/*"
-            ]
-          }
         ]
       }
     ]
