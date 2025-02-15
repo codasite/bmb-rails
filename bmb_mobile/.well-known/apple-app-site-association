@@ -11,7 +11,12 @@
         ],
         "components": [
           {
-            "/": "/*"
+            "/": "/*",
+            "exclude": [
+              "/referralprogram/*",
+              "/be-a-host/*",
+              "/shop/bmb/*"
+            ]
           }
         ]
       }
