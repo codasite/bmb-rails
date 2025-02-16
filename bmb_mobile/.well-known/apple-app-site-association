@@ -3,7 +3,9 @@
     "apps": [],
     "details": [
       {
-        "appID": "6N4HR28LLR.com.backmybracket.app",
+        "appIDs": [
+          "6N4HR28LLR.com.backmybracket.app"
+        ],
         "paths": [
           "NOT /referralprogram/*",
           "NOT /be-a-host/*",
