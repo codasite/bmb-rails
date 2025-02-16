@@ -2,6 +2,8 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
+use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
+
 class MobileAppHooks implements HooksInterface {
   public function load(Loader $loader): void {
     $loader->add_action(
@@ -31,10 +33,7 @@ class MobileAppHooks implements HooksInterface {
 
   public function filter_subscription_products($visible, $product_id): bool {
     // Check if request is from mobile app
-    if (
-      !empty($_SERVER['HTTP_USER_AGENT']) &&
-      $_SERVER['HTTP_USER_AGENT'] === 'BackMyBracket-MobileApp'
-    ) {
+    if (MobileAppUtils::is_mobile_app_request()) {
       // Check if product is a subscription
       $product = wc_get_product($product_id);
       if ($product && $product->is_type('subscription')) {
