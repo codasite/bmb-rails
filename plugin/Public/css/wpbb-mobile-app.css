@@ -8,7 +8,8 @@
 #navigation,
 #section-6-79,
 .wpbb-page-header,
-.wpbb-dashboard-page-title {
+.wpbb-dashboard-page-title,
+.bmb-button {
   display: none !important;
 }
 
