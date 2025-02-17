@@ -79,6 +79,15 @@ class BracketIconButtons {
   }
 
   public static function share_bracket_btn($bracket): false|string {
+    if (
+      !BracketIconButtonPermissions::user_can_perform_action(
+        'share_bracket',
+        $bracket
+      )
+    ) {
+      return '';
+    }
+
     return DashboardCommon::icon_btn(
       'Share',
       'share.svg',
@@ -93,7 +102,12 @@ class BracketIconButtons {
   }
 
   public static function lock_tournament_btn($bracket): false|string {
-    if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
+    if (
+      !BracketIconButtonPermissions::user_can_perform_action(
+        'lock_tournament',
+        $bracket
+      )
+    ) {
       return '';
     }
 
@@ -110,10 +124,14 @@ class BracketIconButtons {
   }
 
   public static function delete_bracket_btn($bracket): false|string {
-    if (!current_user_can('wpbb_delete_bracket', $bracket->id)) {
+    if (
+      !BracketIconButtonPermissions::user_can_perform_action(
+        'delete_bracket',
+        $bracket
+      )
+    ) {
       return '';
     }
-    $bracket_id = $bracket->id;
 
     return DashboardCommon::icon_btn(
       'Delete',
@@ -121,16 +139,22 @@ class BracketIconButtons {
       classes: ['wpbb-delete-bracket-button'],
       data: [
         'label' => 'Delete',
-        'bracket-id' => $bracket_id,
+        'bracket-id' => $bracket->id,
         'bracket-title' => $bracket->title,
       ]
     );
   }
 
   public static function set_fee_btn($bracket): false|string {
-    if (!current_user_can('wpbb_add_bracket_fee', $bracket->id)) {
+    if (
+      !BracketIconButtonPermissions::user_can_perform_action(
+        'set_fee',
+        $bracket
+      )
+    ) {
       return '';
     }
+
     return DashboardCommon::icon_btn(
       'Set Fee',
       'dollar_shield.svg',
@@ -144,13 +168,14 @@ class BracketIconButtons {
   }
 
   public static function edit_bracket_btn($bracket): false|string {
-    if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
+    if (
+      !BracketIconButtonPermissions::user_can_perform_action(
+        'edit_bracket',
+        $bracket
+      )
+    ) {
       return '';
     }
-    $id = $bracket->id;
-    $title = $bracket->title;
-    $month = $bracket->month;
-    $year = $bracket->year;
 
     return DashboardCommon::icon_btn(
       'Edit',
@@ -158,16 +183,21 @@ class BracketIconButtons {
       classes: ['wpbb-edit-bracket-button'],
       data: [
         'label' => 'Edit',
-        'bracket-id' => $id,
-        'bracket-title' => $title,
-        'bracket-month' => $month,
-        'bracket-year' => $year,
+        'bracket-id' => $bracket->id,
+        'bracket-title' => $bracket->title,
+        'bracket-month' => $bracket->month,
+        'bracket-year' => $bracket->year,
       ]
     );
   }
 
   public static function duplicate_bracket_btn($bracket): false|string {
-    if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
+    if (
+      !BracketIconButtonPermissions::user_can_perform_action(
+        'duplicate_bracket',
+        $bracket
+      )
+    ) {
       return '';
     }
 
@@ -179,6 +209,15 @@ class BracketIconButtons {
   }
 
   public static function most_popular_picks_btn($bracket): false|string {
+    if (
+      !BracketIconButtonPermissions::user_can_perform_action(
+        'most_popular_picks',
+        $bracket
+      )
+    ) {
+      return '';
+    }
+
     return DashboardCommon::icon_link(
       'Most Popular',
       'percent.svg',
@@ -195,16 +234,36 @@ class BracketIconButtons {
       'ellipsis',
       classes: ['wpbb-more-options-button'],
       data: [
-        'most-popular-picks' => isOptionPresent('most_popular_picks', $options),
-        'share-bracket' => isOptionPresent('share_bracket', $options),
-        'edit-bracket' => isOptionPresent('edit_bracket', $options),
-        'set-fee' => isOptionPresent('set_fee', $options),
-        'duplicate-bracket' => isOptionPresent('duplicate_bracket', $options),
-        'lock-tournament' => isOptionPresent('lock_tournament', $options),
-        'delete-bracket' => isOptionPresent('delete_bracket', $options),
-        'bracket-id' => $bracket->id,
-        'bracket-title' => $bracket->title,
-        'bracket-month' => $bracket->month,
+        'most-popular-picks' => should_show_option(
+          'most_popular_picks',
+          $options,
+          $bracket
+        ),
+        'share-bracket' => should_show_option(
+          'share_bracket',
+          $options,
+          $bracket
+        ),
+        'edit-bracket' => should_show_option(
+          'edit_bracket',
+          $options,
+          $bracket
+        ),
+        'duplicate-bracket' => should_show_option(
+          'duplicate_bracket',
+          $options,
+          $bracket
+        ),
+        'lock-tournament' => should_show_option(
+          'lock_tournament',
+          $options,
+          $bracket
+        ),
+        'delete-bracket' => should_show_option(
+          'delete_bracket',
+          $options,
+          $bracket
+        ),
         'bracket-year' => $bracket->year,
         'fee' => $bracket->fee,
         'play-bracket-url' => $bracket->url,
@@ -215,6 +274,9 @@ class BracketIconButtons {
   }
 }
 
-function isOptionPresent($optionName, $options) {
-  return in_array($optionName, $options) ? 'true' : 'false';
+function should_show_option($optionName, $options, $bracket) {
+  return in_array($optionName, $options) &&
+    BracketIconButtonPermissions::user_can_perform_action($optionName, $bracket)
+    ? 'true'
+    : 'false';
 }
