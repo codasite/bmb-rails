@@ -136,6 +136,9 @@ class PlayHistoryPage {
         } ?>
       <?php PaginationWidget::pagination($paged, $num_pages); ?>
       </div>
+      <?php if (empty($plays)): ?>
+        <p class='tw-text-16 lg:tw-text-20 tw-font-500 tw-my-0 tw-text-center tw-text-white/50'>No play history found.</p>
+      <?php endif; ?>
     </div>
   <?php return ob_get_clean();
   }
