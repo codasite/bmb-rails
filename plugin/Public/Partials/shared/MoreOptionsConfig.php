@@ -2,11 +2,13 @@
 
 namespace WStrategies\BMB\Public\Partials\shared;
 
-class MoreOptionsConfig {
-  private $bracket;
-  private $options;
+use WStrategies\BMB\Includes\Domain\Bracket;
 
-  public function __construct($bracket, $options) {
+class MoreOptionsConfig {
+  private Bracket $bracket;
+  private array $options;
+
+  public function __construct(Bracket $bracket, array $options) {
     $this->bracket = $bracket;
     $this->options = $options;
   }

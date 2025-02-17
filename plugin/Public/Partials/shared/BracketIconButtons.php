@@ -1,10 +1,23 @@
 <?php
 namespace WStrategies\BMB\Public\Partials\shared;
 
+use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
 
 class BracketIconButtons {
-  public static function get_bracket_icon_buttons($bracket): false|string {
+  private static array $OPTION_TO_BUTTON_METHOD = [
+    BracketOptions::MOST_POPULAR_PICKS => 'most_popular_picks_btn',
+    BracketOptions::EDIT_BRACKET => 'edit_bracket_btn',
+    BracketOptions::SET_FEE => 'set_fee_btn',
+    BracketOptions::SHARE_BRACKET => 'share_bracket_btn',
+    BracketOptions::DUPLICATE_BRACKET => 'duplicate_bracket_btn',
+    BracketOptions::LOCK_TOURNAMENT => 'lock_tournament_btn',
+    BracketOptions::DELETE_BRACKET => 'delete_bracket_btn',
+  ];
+
+  public static function get_bracket_icon_buttons_for_status(
+    $bracket
+  ): false|string {
     switch ($bracket->status) {
       case 'publish':
         return self::live_bracket_icon_buttons($bracket);
@@ -22,60 +35,101 @@ class BracketIconButtons {
   }
 
   public static function live_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      BracketOptions::MOST_POPULAR_PICKS,
-      BracketOptions::EDIT_BRACKET,
-      BracketOptions::SET_FEE,
-      BracketOptions::SHARE_BRACKET,
-      BracketOptions::DUPLICATE_BRACKET,
-      BracketOptions::LOCK_TOURNAMENT,
-      BracketOptions::DELETE_BRACKET,
-    ]); ?>
-    <?php return ob_get_clean();
+    return self::get_bracket_icon_buttons(
+      $bracket,
+      [
+        BracketOptions::EDIT_BRACKET,
+        BracketOptions::SHARE_BRACKET,
+        BracketOptions::DUPLICATE_BRACKET,
+      ],
+      [
+        BracketOptions::MOST_POPULAR_PICKS,
+        BracketOptions::EDIT_BRACKET,
+        BracketOptions::SET_FEE,
+        BracketOptions::SHARE_BRACKET,
+        BracketOptions::DUPLICATE_BRACKET,
+        BracketOptions::LOCK_TOURNAMENT,
+        BracketOptions::DELETE_BRACKET,
+      ]
+    );
   }
 
   public static function private_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      BracketOptions::EDIT_BRACKET,
-      BracketOptions::SET_FEE,
-      BracketOptions::DUPLICATE_BRACKET,
-      BracketOptions::DELETE_BRACKET,
-    ]); ?>
-    <?php return ob_get_clean();
+    return self::get_bracket_icon_buttons(
+      $bracket,
+      [BracketOptions::EDIT_BRACKET, BracketOptions::DUPLICATE_BRACKET],
+      [
+        BracketOptions::EDIT_BRACKET,
+        BracketOptions::SET_FEE,
+        BracketOptions::DUPLICATE_BRACKET,
+        BracketOptions::DELETE_BRACKET,
+      ]
+    );
   }
 
   public static function scored_bracket_icon_buttons($bracket): false|string {
-    ob_start(); ?>
-    <?php echo self::edit_bracket_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::duplicate_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      BracketOptions::MOST_POPULAR_PICKS,
-      BracketOptions::EDIT_BRACKET,
-      BracketOptions::SHARE_BRACKET,
-      BracketOptions::DUPLICATE_BRACKET,
-      BracketOptions::DELETE_BRACKET,
-    ]); ?>
-    <?php return ob_get_clean();
+    return self::get_bracket_icon_buttons(
+      $bracket,
+      [
+        BracketOptions::EDIT_BRACKET,
+        BracketOptions::SHARE_BRACKET,
+        BracketOptions::DUPLICATE_BRACKET,
+      ],
+      [
+        BracketOptions::MOST_POPULAR_PICKS,
+        BracketOptions::EDIT_BRACKET,
+        BracketOptions::SHARE_BRACKET,
+        BracketOptions::DUPLICATE_BRACKET,
+        BracketOptions::DELETE_BRACKET,
+      ]
+    );
   }
 
-  public static function upcoming_bracket_icon_buttons($bracket) {
-    ob_start(); ?>
-    <?php echo self::set_fee_btn($bracket); ?>
-    <?php echo self::share_bracket_btn($bracket); ?>
-    <?php echo self::more_options_btn($bracket, [
-      BracketOptions::SET_FEE,
-      BracketOptions::SHARE_BRACKET,
-    ]); ?>
-    
-    <?php return ob_get_clean();
+  public static function upcoming_bracket_icon_buttons($bracket): false|string {
+    return self::get_bracket_icon_buttons(
+      $bracket,
+      [
+        BracketOptions::EDIT_BRACKET,
+        BracketOptions::SHARE_BRACKET,
+        BracketOptions::DUPLICATE_BRACKET,
+      ],
+      [
+        BracketOptions::EDIT_BRACKET,
+        BracketOptions::SET_FEE,
+        BracketOptions::SHARE_BRACKET,
+        BracketOptions::DUPLICATE_BRACKET,
+        BracketOptions::DELETE_BRACKET,
+      ]
+    );
+  }
+
+  public static function get_bracket_icon_buttons(
+    Bracket $bracket,
+    array $visible_options,
+    array $more_options
+  ): false|string {
+    ob_start();
+    echo self::get_visible_option_buttons($bracket, $visible_options);
+    if (count($more_options) > 0) {
+      echo self::more_options_btn($bracket, $more_options);
+    }
+    return ob_get_clean();
+  }
+
+  public static function get_visible_option_buttons(
+    Bracket $bracket,
+    array $options
+  ): false|string {
+    $config = new MoreOptionsConfig($bracket, $options);
+    ob_start();
+
+    foreach (self::$OPTION_TO_BUTTON_METHOD as $option => $buttonMethod) {
+      if ($config->should_show_option($option)) {
+        echo self::{$buttonMethod}($bracket);
+      }
+    }
+
+    return ob_get_clean();
   }
 
   public static function share_bracket_btn($bracket): false|string {
@@ -102,15 +156,6 @@ class BracketIconButtons {
   }
 
   public static function lock_tournament_btn($bracket): false|string {
-    if (
-      !BracketOptionPermissions::user_can_perform_action(
-        BracketOptions::LOCK_TOURNAMENT,
-        $bracket
-      )
-    ) {
-      return '';
-    }
-
     return DashboardCommon::icon_btn(
       'Lock',
       'lock.svg',
@@ -124,15 +169,6 @@ class BracketIconButtons {
   }
 
   public static function delete_bracket_btn($bracket): false|string {
-    if (
-      !BracketOptionPermissions::user_can_perform_action(
-        BracketOptions::DELETE_BRACKET,
-        $bracket
-      )
-    ) {
-      return '';
-    }
-
     return DashboardCommon::icon_btn(
       'Delete',
       'trash.svg',
@@ -146,15 +182,6 @@ class BracketIconButtons {
   }
 
   public static function set_fee_btn($bracket): false|string {
-    if (
-      !BracketOptionPermissions::user_can_perform_action(
-        BracketOptions::SET_FEE,
-        $bracket
-      )
-    ) {
-      return '';
-    }
-
     return DashboardCommon::icon_btn(
       'Set Fee',
       'dollar_shield.svg',
@@ -168,15 +195,6 @@ class BracketIconButtons {
   }
 
   public static function edit_bracket_btn($bracket): false|string {
-    if (
-      !BracketOptionPermissions::user_can_perform_action(
-        BracketOptions::EDIT_BRACKET,
-        $bracket
-      )
-    ) {
-      return '';
-    }
-
     return DashboardCommon::icon_btn(
       'Edit',
       'pencil.svg',
@@ -192,15 +210,6 @@ class BracketIconButtons {
   }
 
   public static function duplicate_bracket_btn($bracket): false|string {
-    if (
-      !BracketOptionPermissions::user_can_perform_action(
-        BracketOptions::DUPLICATE_BRACKET,
-        $bracket
-      )
-    ) {
-      return '';
-    }
-
     return DashboardCommon::icon_link(
       'Duplicate',
       'copy.svg',
@@ -209,15 +218,6 @@ class BracketIconButtons {
   }
 
   public static function most_popular_picks_btn($bracket): false|string {
-    if (
-      !BracketOptionPermissions::user_can_perform_action(
-        BracketOptions::MOST_POPULAR_PICKS,
-        $bracket
-      )
-    ) {
-      return '';
-    }
-
     return DashboardCommon::icon_link(
       'Most Popular',
       'percent.svg',

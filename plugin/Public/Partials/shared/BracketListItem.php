@@ -42,7 +42,9 @@ class BracketListItem {
           $bracket->title
         ); ?></h2>
         <div class="tw-flex tw-gap-10 tw-items-start tw-flex-wrap">
-          <?php echo BracketIconButtons::get_bracket_icon_buttons($bracket); ?>
+          <?php echo BracketIconButtons::get_bracket_icon_buttons_for_status(
+            $bracket
+          ); ?>
         </div>
       </div>
       <div class="tw-mt-10 tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16 tw-flex-wrap">
