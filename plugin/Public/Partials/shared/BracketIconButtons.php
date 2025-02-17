@@ -27,13 +27,13 @@ class BracketIconButtons {
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::more_options_btn($bracket, [
-      'most_popular_picks',
-      'edit_bracket',
-      'set_fee',
-      'share_bracket',
-      'duplicate_bracket',
-      'lock_tournament',
-      'delete_bracket',
+      BracketOptions::MOST_POPULAR_PICKS,
+      BracketOptions::EDIT_BRACKET,
+      BracketOptions::SET_FEE,
+      BracketOptions::SHARE_BRACKET,
+      BracketOptions::DUPLICATE_BRACKET,
+      BracketOptions::LOCK_TOURNAMENT,
+      BracketOptions::DELETE_BRACKET,
     ]); ?>
     <?php return ob_get_clean();
   }
@@ -43,10 +43,10 @@ class BracketIconButtons {
     <?php echo self::edit_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::more_options_btn($bracket, [
-      'edit_bracket',
-      'set_fee',
-      'duplicate_bracket',
-      'delete_bracket',
+      BracketOptions::EDIT_BRACKET,
+      BracketOptions::SET_FEE,
+      BracketOptions::DUPLICATE_BRACKET,
+      BracketOptions::DELETE_BRACKET,
     ]); ?>
     <?php return ob_get_clean();
   }
@@ -57,11 +57,11 @@ class BracketIconButtons {
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::duplicate_bracket_btn($bracket); ?>
     <?php echo self::more_options_btn($bracket, [
-      'most_popular_picks',
-      'edit_bracket',
-      'share_bracket',
-      'duplicate_bracket',
-      'delete_bracket',
+      BracketOptions::MOST_POPULAR_PICKS,
+      BracketOptions::EDIT_BRACKET,
+      BracketOptions::SHARE_BRACKET,
+      BracketOptions::DUPLICATE_BRACKET,
+      BracketOptions::DELETE_BRACKET,
     ]); ?>
     <?php return ob_get_clean();
   }
@@ -71,8 +71,8 @@ class BracketIconButtons {
     <?php echo self::set_fee_btn($bracket); ?>
     <?php echo self::share_bracket_btn($bracket); ?>
     <?php echo self::more_options_btn($bracket, [
-      'set_fee',
-      'share_bracket',
+      BracketOptions::SET_FEE,
+      BracketOptions::SHARE_BRACKET,
     ]); ?>
     
     <?php return ob_get_clean();
@@ -81,7 +81,7 @@ class BracketIconButtons {
   public static function share_bracket_btn($bracket): false|string {
     if (
       !BracketOptionPermissions::user_can_perform_action(
-        'share_bracket',
+        BracketOptions::SHARE_BRACKET,
         $bracket
       )
     ) {
@@ -104,7 +104,7 @@ class BracketIconButtons {
   public static function lock_tournament_btn($bracket): false|string {
     if (
       !BracketOptionPermissions::user_can_perform_action(
-        'lock_tournament',
+        BracketOptions::LOCK_TOURNAMENT,
         $bracket
       )
     ) {
@@ -126,7 +126,7 @@ class BracketIconButtons {
   public static function delete_bracket_btn($bracket): false|string {
     if (
       !BracketOptionPermissions::user_can_perform_action(
-        'delete_bracket',
+        BracketOptions::DELETE_BRACKET,
         $bracket
       )
     ) {
@@ -147,7 +147,10 @@ class BracketIconButtons {
 
   public static function set_fee_btn($bracket): false|string {
     if (
-      !BracketOptionPermissions::user_can_perform_action('set_fee', $bracket)
+      !BracketOptionPermissions::user_can_perform_action(
+        BracketOptions::SET_FEE,
+        $bracket
+      )
     ) {
       return '';
     }
@@ -167,7 +170,7 @@ class BracketIconButtons {
   public static function edit_bracket_btn($bracket): false|string {
     if (
       !BracketOptionPermissions::user_can_perform_action(
-        'edit_bracket',
+        BracketOptions::EDIT_BRACKET,
         $bracket
       )
     ) {
@@ -191,7 +194,7 @@ class BracketIconButtons {
   public static function duplicate_bracket_btn($bracket): false|string {
     if (
       !BracketOptionPermissions::user_can_perform_action(
-        'duplicate_bracket',
+        BracketOptions::DUPLICATE_BRACKET,
         $bracket
       )
     ) {
@@ -208,7 +211,7 @@ class BracketIconButtons {
   public static function most_popular_picks_btn($bracket): false|string {
     if (
       !BracketOptionPermissions::user_can_perform_action(
-        'most_popular_picks',
+        BracketOptions::MOST_POPULAR_PICKS,
         $bracket
       )
     ) {
@@ -234,18 +237,22 @@ class BracketIconButtons {
       classes: ['wpbb-more-options-button'],
       data: [
         'most-popular-picks' => $config->should_show_option_string(
-          'most_popular_picks'
+          BracketOptions::MOST_POPULAR_PICKS
         ),
-        'share-bracket' => $config->should_show_option_string('share_bracket'),
-        'edit-bracket' => $config->should_show_option_string('edit_bracket'),
+        'share-bracket' => $config->should_show_option_string(
+          BracketOptions::SHARE_BRACKET
+        ),
+        'edit-bracket' => $config->should_show_option_string(
+          BracketOptions::EDIT_BRACKET
+        ),
         'duplicate-bracket' => $config->should_show_option_string(
-          'duplicate_bracket'
+          BracketOptions::DUPLICATE_BRACKET
         ),
         'lock-tournament' => $config->should_show_option_string(
-          'lock_tournament'
+          BracketOptions::LOCK_TOURNAMENT
         ),
         'delete-bracket' => $config->should_show_option_string(
-          'delete_bracket'
+          BracketOptions::DELETE_BRACKET
         ),
         'bracket-year' => $bracket->year,
         'fee' => $bracket->fee,
