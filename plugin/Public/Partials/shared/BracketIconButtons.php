@@ -226,6 +226,7 @@ class BracketIconButtons {
         'delete-bracket' => $config->should_show_option_string(
           BracketOptions::DELETE_BRACKET
         ),
+        'bracket-title' => $bracket->title,
         'bracket-year' => $bracket->year,
         'fee' => $bracket->fee,
         'play-bracket-url' => $bracket->url,
