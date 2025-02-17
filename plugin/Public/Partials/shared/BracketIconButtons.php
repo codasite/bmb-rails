@@ -80,7 +80,7 @@ class BracketIconButtons {
 
   public static function share_bracket_btn($bracket): false|string {
     if (
-      !BracketIconButtonPermissions::user_can_perform_action(
+      !BracketOptionPermissions::user_can_perform_action(
         'share_bracket',
         $bracket
       )
@@ -103,7 +103,7 @@ class BracketIconButtons {
 
   public static function lock_tournament_btn($bracket): false|string {
     if (
-      !BracketIconButtonPermissions::user_can_perform_action(
+      !BracketOptionPermissions::user_can_perform_action(
         'lock_tournament',
         $bracket
       )
@@ -125,7 +125,7 @@ class BracketIconButtons {
 
   public static function delete_bracket_btn($bracket): false|string {
     if (
-      !BracketIconButtonPermissions::user_can_perform_action(
+      !BracketOptionPermissions::user_can_perform_action(
         'delete_bracket',
         $bracket
       )
@@ -147,10 +147,7 @@ class BracketIconButtons {
 
   public static function set_fee_btn($bracket): false|string {
     if (
-      !BracketIconButtonPermissions::user_can_perform_action(
-        'set_fee',
-        $bracket
-      )
+      !BracketOptionPermissions::user_can_perform_action('set_fee', $bracket)
     ) {
       return '';
     }
@@ -169,7 +166,7 @@ class BracketIconButtons {
 
   public static function edit_bracket_btn($bracket): false|string {
     if (
-      !BracketIconButtonPermissions::user_can_perform_action(
+      !BracketOptionPermissions::user_can_perform_action(
         'edit_bracket',
         $bracket
       )
@@ -193,7 +190,7 @@ class BracketIconButtons {
 
   public static function duplicate_bracket_btn($bracket): false|string {
     if (
-      !BracketIconButtonPermissions::user_can_perform_action(
+      !BracketOptionPermissions::user_can_perform_action(
         'duplicate_bracket',
         $bracket
       )
@@ -210,7 +207,7 @@ class BracketIconButtons {
 
   public static function most_popular_picks_btn($bracket): false|string {
     if (
-      !BracketIconButtonPermissions::user_can_perform_action(
+      !BracketOptionPermissions::user_can_perform_action(
         'most_popular_picks',
         $bracket
       )
@@ -229,40 +226,26 @@ class BracketIconButtons {
     $bracket,
     $options = []
   ): false|string {
+    $config = new MoreOptionsConfig($bracket, $options);
+
     return DashboardCommon::icon_btn(
       '',
       'ellipsis',
       classes: ['wpbb-more-options-button'],
       data: [
-        'most-popular-picks' => should_show_option(
-          'most_popular_picks',
-          $options,
-          $bracket
+        'most-popular-picks' => $config->should_show_option_string(
+          'most_popular_picks'
         ),
-        'share-bracket' => should_show_option(
-          'share_bracket',
-          $options,
-          $bracket
+        'share-bracket' => $config->should_show_option_string('share_bracket'),
+        'edit-bracket' => $config->should_show_option_string('edit_bracket'),
+        'duplicate-bracket' => $config->should_show_option_string(
+          'duplicate_bracket'
         ),
-        'edit-bracket' => should_show_option(
-          'edit_bracket',
-          $options,
-          $bracket
+        'lock-tournament' => $config->should_show_option_string(
+          'lock_tournament'
         ),
-        'duplicate-bracket' => should_show_option(
-          'duplicate_bracket',
-          $options,
-          $bracket
-        ),
-        'lock-tournament' => should_show_option(
-          'lock_tournament',
-          $options,
-          $bracket
-        ),
-        'delete-bracket' => should_show_option(
-          'delete_bracket',
-          $options,
-          $bracket
+        'delete-bracket' => $config->should_show_option_string(
+          'delete_bracket'
         ),
         'bracket-year' => $bracket->year,
         'fee' => $bracket->fee,
@@ -272,11 +255,4 @@ class BracketIconButtons {
       ]
     );
   }
-}
-
-function should_show_option($optionName, $options, $bracket) {
-  return in_array($optionName, $options) &&
-    BracketIconButtonPermissions::user_can_perform_action($optionName, $bracket)
-    ? 'true'
-    : 'false';
 }

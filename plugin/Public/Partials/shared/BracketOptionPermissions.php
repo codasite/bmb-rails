@@ -2,7 +2,7 @@
 
 namespace WStrategies\BMB\Public\Partials\shared;
 
-class BracketIconButtonPermissions {
+class BracketOptionPermissions {
   public static function user_can_perform_action($option_name, $bracket) {
     switch ($option_name) {
       case 'delete_bracket':
