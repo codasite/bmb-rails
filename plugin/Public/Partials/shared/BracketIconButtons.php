@@ -35,83 +35,55 @@ class BracketIconButtons {
   }
 
   public static function live_bracket_icon_buttons($bracket): false|string {
-    return self::get_bracket_icon_buttons(
-      $bracket,
-      [
-        BracketOptions::EDIT_BRACKET,
-        BracketOptions::SHARE_BRACKET,
-        BracketOptions::DUPLICATE_BRACKET,
-      ],
-      [
-        BracketOptions::MOST_POPULAR_PICKS,
-        BracketOptions::EDIT_BRACKET,
-        BracketOptions::SET_FEE,
-        BracketOptions::SHARE_BRACKET,
-        BracketOptions::DUPLICATE_BRACKET,
-        BracketOptions::LOCK_TOURNAMENT,
-        BracketOptions::DELETE_BRACKET,
-      ]
-    );
+    return self::get_bracket_icon_buttons($bracket, [
+      BracketOptions::MOST_POPULAR_PICKS,
+      BracketOptions::EDIT_BRACKET,
+      BracketOptions::SHARE_BRACKET,
+      BracketOptions::DUPLICATE_BRACKET,
+      BracketOptions::SET_FEE,
+      BracketOptions::LOCK_TOURNAMENT,
+      BracketOptions::DELETE_BRACKET,
+    ]);
   }
 
   public static function private_bracket_icon_buttons($bracket): false|string {
-    return self::get_bracket_icon_buttons(
-      $bracket,
-      [BracketOptions::EDIT_BRACKET, BracketOptions::DUPLICATE_BRACKET],
-      [
-        BracketOptions::EDIT_BRACKET,
-        BracketOptions::SET_FEE,
-        BracketOptions::DUPLICATE_BRACKET,
-        BracketOptions::DELETE_BRACKET,
-      ]
-    );
+    return self::get_bracket_icon_buttons($bracket, [
+      BracketOptions::EDIT_BRACKET,
+      BracketOptions::DUPLICATE_BRACKET,
+      BracketOptions::SET_FEE,
+      BracketOptions::DELETE_BRACKET,
+    ]);
   }
 
   public static function scored_bracket_icon_buttons($bracket): false|string {
-    return self::get_bracket_icon_buttons(
-      $bracket,
-      [
-        BracketOptions::EDIT_BRACKET,
-        BracketOptions::SHARE_BRACKET,
-        BracketOptions::DUPLICATE_BRACKET,
-      ],
-      [
-        BracketOptions::MOST_POPULAR_PICKS,
-        BracketOptions::EDIT_BRACKET,
-        BracketOptions::SHARE_BRACKET,
-        BracketOptions::DUPLICATE_BRACKET,
-        BracketOptions::DELETE_BRACKET,
-      ]
-    );
+    return self::get_bracket_icon_buttons($bracket, [
+      BracketOptions::MOST_POPULAR_PICKS,
+      BracketOptions::EDIT_BRACKET,
+      BracketOptions::SHARE_BRACKET,
+      BracketOptions::DUPLICATE_BRACKET,
+      BracketOptions::DELETE_BRACKET,
+    ]);
   }
 
   public static function upcoming_bracket_icon_buttons($bracket): false|string {
-    return self::get_bracket_icon_buttons(
-      $bracket,
-      [
-        BracketOptions::EDIT_BRACKET,
-        BracketOptions::SHARE_BRACKET,
-        BracketOptions::DUPLICATE_BRACKET,
-      ],
-      [
-        BracketOptions::EDIT_BRACKET,
-        BracketOptions::SET_FEE,
-        BracketOptions::SHARE_BRACKET,
-        BracketOptions::DUPLICATE_BRACKET,
-        BracketOptions::DELETE_BRACKET,
-      ]
-    );
+    return self::get_bracket_icon_buttons($bracket, [
+      BracketOptions::EDIT_BRACKET,
+      BracketOptions::SHARE_BRACKET,
+      BracketOptions::DUPLICATE_BRACKET,
+      BracketOptions::SET_FEE,
+      BracketOptions::DELETE_BRACKET,
+    ]);
   }
 
   public static function get_bracket_icon_buttons(
     Bracket $bracket,
-    array $visible_options,
-    array $more_options
+    array $options
   ): false|string {
+    $visible_options = array_slice($options, 0, 3);
     ob_start();
     echo self::get_visible_option_buttons($bracket, $visible_options);
-    if (count($more_options) > 0) {
-      echo self::more_options_btn($bracket, $more_options);
+    if (count($options) > 0) {
+      echo self::more_options_btn($bracket, $options);
     }
     return ob_get_clean();
   }
