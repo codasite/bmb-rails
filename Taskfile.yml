@@ -76,6 +76,11 @@ tasks:
     cmds:
       - ./plugin/vendor/bin/phpunit --configuration=plugin/tests/unit/phpunit.xml.dist {{.CLI_ARGS}}
 
+  wp:test:unit:update-snapshots:
+    desc: Update unit test snapshots
+    cmds:
+      - docker exec wp-dev composer test-unit -- -d --update-snapshots
+
   wp:test:integration:
     desc: Run integration tests with full WordPress environment
     cmds:
