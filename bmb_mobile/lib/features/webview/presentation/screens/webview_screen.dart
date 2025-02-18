@@ -115,11 +115,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
       // Start the timer when loading begins
       _loadingTimer?.cancel();
       _loadingTimer = Timer(_maxLoadingDuration, () {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-        }
+        setState(() {
+          _isLoading = false;
+        });
       });
     } else {
       _loadingTimer?.cancel();
@@ -131,6 +129,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   void _handlePageFinished(String url) async {
+    AppLogger.debugLog('Page finished: $url');
     await _injectPullToRefreshJS();
     if (!mounted) return;
     _setAppBarTitle();
@@ -147,15 +146,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
     }
   }
 
-  void _setAppBarTitle() {
-    scheduleMicrotask(() async {
-      if (!mounted) return;
-      final title = await _controller.getTitle();
-      if (!mounted) return;
-      String? trimmedTitle = title?.replaceAll(RegExp(r' - BackMyBracket'), '');
-      setState(() {
-        _currentTitle = trimmedTitle ?? 'Loading';
-      });
+  void _setAppBarTitle() async {
+    AppLogger.debugLog('Setting app bar title');
+    if (!mounted) return;
+    final title = await _controller.getTitle();
+    AppLogger.debugLog('Title: $title');
+    if (!mounted) return;
+    String? trimmedTitle = title?.replaceAll(RegExp(r' - BackMyBracket'), '');
+    setState(() {
+      _currentTitle = trimmedTitle ?? 'Loading';
     });
   }
 
