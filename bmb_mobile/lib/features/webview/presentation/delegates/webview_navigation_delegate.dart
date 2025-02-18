@@ -33,16 +33,12 @@ class WebViewNavigationDelegate extends NavigationDelegate {
           onProgress: (_) {},
           onPageStarted: (url) {
             AppLogger.debugLog('Page load started: $url');
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              onLoadingChanged(true);
-            });
+            onLoadingChanged(true);
           },
           onPageFinished: (url) {
             AppLogger.debugLog('Page load finished: $url');
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              onLoadingChanged(false);
-              onPageCompleted(url);
-            });
+            onLoadingChanged(false);
+            onPageCompleted(url);
           },
           onWebResourceError: (error) {
             AppLogger.debugLog(
@@ -50,13 +46,10 @@ class WebViewNavigationDelegate extends NavigationDelegate {
             );
             // Only update loading state if it's not a frame load interruption
             if (error.errorCode != 102) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                onLoadingChanged(false);
-              });
+              onLoadingChanged(false);
             }
           },
           onNavigationRequest: (request) async {
-            await WidgetsBinding.instance.endOfFrame;
             final uri = Uri.parse(request.url);
 
             // If it's our domain, check if it should open in external browser
@@ -79,9 +72,7 @@ class WebViewNavigationDelegate extends NavigationDelegate {
               // Check for login/unauthorized paths
               if (request.url.contains(WpUrls.loginPath) ||
                   request.url.contains('unauthorized')) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  onLogout();
-                });
+                onLogout();
                 return NavigationDecision.prevent;
               }
               AppLogger.debugLog('Navigating to internal URL: ${request.url}');
