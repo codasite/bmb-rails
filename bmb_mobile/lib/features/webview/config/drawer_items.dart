@@ -18,9 +18,14 @@ final List<DrawerItem> drawerItems = [
     path: '/celebrity-picks/',
   ),
   DrawerItem(
-    iconPath: getIconPath('shopping_cart'),
+    iconPath: getIconPath('currency_dollar'),
     label: 'Shop',
     path: '/shop/',
+  ),
+  DrawerItem(
+    iconPath: getIconPath('shopping_cart'),
+    label: 'Cart',
+    path: '/cart/',
   ),
   DrawerItem(
     iconPath: getIconPath('user_2'),

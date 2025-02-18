@@ -11,9 +11,9 @@ class WebViewNavigationDelegate extends NavigationDelegate {
 
   // Paths that should open in external browser
   static const List<String> externalBrowserPaths = [
-    '/shop/bmb',
-    '/referralprogram',
-    '/be-a-host'
+    '/shop/bmb/',
+    '/referralprogram/',
+    '/be-a-host/',
   ];
 
   // Domains that are allowed to load in WebView
@@ -22,7 +22,9 @@ class WebViewNavigationDelegate extends NavigationDelegate {
     'js.stripe.com',
     'widgets.wp.com',
     'public-api.wordpress.com',
-    'wordpress.com'
+    'wordpress.com',
+    'newassets.hcaptcha.com',
+    'hcaptcha.com'
   ];
 
   WebViewNavigationDelegate({
