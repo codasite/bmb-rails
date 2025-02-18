@@ -7,12 +7,10 @@
           "6N4HR28LLR.com.backmybracket.app"
         ],
         "paths": [
+          "NOT /referralprogram/*",
+          "NOT /be-a-host/*",
+          "NOT /shop/bmb/*",
           "*"
-        ],
-        "components": [
-          {
-            "/": "/*"
-          }
         ]
       }
     ]

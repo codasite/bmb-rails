@@ -1,4 +1,3 @@
-import 'package:app_links/app_links.dart';
 import 'package:bmb_mobile/app/bmb_app.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';

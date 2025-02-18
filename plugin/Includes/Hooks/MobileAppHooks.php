@@ -2,6 +2,8 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
+use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
+
 class MobileAppHooks implements HooksInterface {
   public function load(Loader $loader): void {
     $loader->add_action(
@@ -16,10 +18,29 @@ class MobileAppHooks implements HooksInterface {
       10,
       6
     );
+    // Add filter to hide subscription products in mobile app
+    $loader->add_filter(
+      'woocommerce_product_is_visible',
+      [$this, 'filter_subscription_products'],
+      10,
+      2
+    );
   }
 
   public function is_application_passwords_available(): bool {
     return true;
+  }
+
+  public function filter_subscription_products($visible, $product_id): bool {
+    // Check if request is from mobile app
+    if (MobileAppUtils::is_mobile_app_request()) {
+      // Check if product is a subscription
+      $product = wc_get_product($product_id);
+      if ($product && $product->is_type('subscription')) {
+        return false;
+      }
+    }
+    return $visible;
   }
 
   public function set_logged_in_cookie(

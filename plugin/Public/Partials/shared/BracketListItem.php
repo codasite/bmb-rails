@@ -5,6 +5,7 @@ namespace WStrategies\BMB\Public\Partials\shared;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
+use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
 
 class BracketListItem {
   public static function bracket_list_item(Bracket $bracket): false|string {
@@ -41,7 +42,9 @@ class BracketListItem {
           $bracket->title
         ); ?></h2>
         <div class="tw-flex tw-gap-10 tw-items-start tw-flex-wrap">
-          <?php echo BracketIconButtons::get_bracket_icon_buttons($bracket); ?>
+          <?php echo BracketIconButtons::get_bracket_icon_buttons_for_status(
+            $bracket
+          ); ?>
         </div>
       </div>
       <div class="tw-mt-10 tw-flex tw-flex-col sm:tw-flex-row tw-gap-8 sm:tw-gap-16 tw-flex-wrap">
@@ -92,7 +95,11 @@ class BracketListItem {
   }
 
   public static function go_live_btn(Bracket $bracket): false|string {
-    if (!current_user_can('wpbb_edit_bracket', $bracket->id)) {
+    if (
+      !current_user_can('wpbb_edit_bracket', $bracket->id) ||
+      (MobileAppUtils::is_mobile_app_request() &&
+        !current_user_can('wpbb_share_bracket', $bracket->id))
+    ) {
       return '';
     }
     ob_start();

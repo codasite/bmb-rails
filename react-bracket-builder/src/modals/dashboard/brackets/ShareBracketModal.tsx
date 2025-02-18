@@ -23,7 +23,7 @@ export const TwitterShareLink = (props: {
   playBracketUrl: string
   bracketTitle: string
 }) => {
-  const shareText = `Play my bracket, ${props.bracketTitle.toUpperCase()}!`
+  const shareText = `Play my bracket, ${props.bracketTitle?.toUpperCase()}!`
   const twitterShareUrl = `https://twitter.com/intent/tweet?text=${shareText}&url=${props.playBracketUrl}&via=BackMyBracket`
   return (
     <Link href={twitterShareUrl} openInNewTab={true}>

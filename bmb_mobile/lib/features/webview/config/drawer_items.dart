@@ -8,11 +8,6 @@ final List<DrawerItem> drawerItems = [
     path: '/',
   ),
   DrawerItem(
-    iconPath: getIconPath('currency_dollar'),
-    label: 'Be a Host',
-    path: '/be-a-host/',
-  ),
-  DrawerItem(
     iconPath: getIconPath('bmb'),
     label: 'BMB Brackets',
     path: '/bmb-brackets/',
@@ -26,11 +21,6 @@ final List<DrawerItem> drawerItems = [
     iconPath: getIconPath('shopping_cart'),
     label: 'Shop',
     path: '/shop/',
-  ),
-  DrawerItem(
-    iconPath: getIconPath('ticket'),
-    label: 'Referral Program',
-    path: '/referralprogram/',
   ),
   DrawerItem(
     iconPath: getIconPath('user_2'),
