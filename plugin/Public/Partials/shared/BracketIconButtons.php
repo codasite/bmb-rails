@@ -226,8 +226,10 @@ class BracketIconButtons {
         'delete-bracket' => $config->should_show_option_string(
           BracketOptions::DELETE_BRACKET
         ),
+        'bracket-id' => $bracket->id,
         'bracket-title' => $bracket->title,
         'bracket-year' => $bracket->year,
+        'bracket-month' => $bracket->month,
         'fee' => $bracket->fee,
         'play-bracket-url' => $bracket->url,
         'copy-bracket-url' => $bracket->url . 'copy',
