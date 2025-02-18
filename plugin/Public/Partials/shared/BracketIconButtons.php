@@ -105,15 +105,6 @@ class BracketIconButtons {
   }
 
   public static function share_bracket_btn($bracket): false|string {
-    if (
-      !BracketOptionPermissions::user_can_perform_action(
-        BracketOptions::SHARE_BRACKET,
-        $bracket
-      )
-    ) {
-      return '';
-    }
-
     return DashboardCommon::icon_btn(
       'Share',
       'share.svg',
