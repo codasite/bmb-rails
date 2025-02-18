@@ -33,6 +33,11 @@ final List<DrawerItem> drawerItems = [
     path: '/dashboard/my-account/',
   ),
   DrawerItem(
+    iconPath: getIconPath('lock'),
+    label: 'Privacy Policy',
+    path: '/privacy-policy/',
+  ),
+  DrawerItem(
     iconPath: getIconPath('logout'),
     label: 'Logout',
     path: '/wp-login.php?action=logout',
