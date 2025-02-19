@@ -1,48 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ForgotPasswordScreen extends StatefulWidget {
+  const ForgotPasswordScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _resetEmailSent = false;
 
   @override
   void dispose() {
     _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _login() async {
+  Future<void> _requestPasswordReset() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isLoading = true);
 
     try {
-      final success = await context.read<AuthProvider>().login(
+      final success = await context.read<AuthProvider>().requestPasswordReset(
             _emailController.text,
-            _passwordController.text,
           );
 
       if (success && mounted) {
-        Navigator.pushReplacementNamed(context, '/app');
+        setState(() => _resetEmailSent = true);
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login failed')),
+          const SnackBar(content: Text('Failed to send password reset email')),
         );
       }
     } finally {
@@ -52,12 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _handleSignUp() async {
-    Navigator.pushNamed(context, '/register');
-  }
-
-  void _handleForgotPassword() async {
-    Navigator.pushNamed(context, '/forgot-password');
+  void _handleBackToLogin() {
+    Navigator.pop(context);
   }
 
   @override
@@ -91,34 +83,40 @@ class _LoginScreenState extends State<LoginScreen> {
                     const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
                 child: Form(
                   key: _formKey,
-                  child: AutofillGroup(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        SvgPicture.asset(
-                          'assets/icons/bmb_logo.svg',
-                          width: MediaQuery.of(context).size.width / 3,
-                          // height will adjust automatically to maintain aspect ratio
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/icons/bmb_logo.svg',
+                        width: MediaQuery.of(context).size.width / 3,
+                      ),
+                      const SizedBox(height: 30),
+                      Text(
+                        'RESET PASSWORD',
+                        style: TextStyle(
+                          fontFamily: 'ClashDisplay',
+                          fontSize: 32,
+                          fontVariations: BmbFontWeights.w700,
+                          color: Colors.white,
                         ),
-                        const SizedBox(height: 30),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      if (!_resetEmailSent) ...[
                         Text(
-                          'RETURNING MEMBER',
+                          'Enter your email address and we\'ll send you instructions to reset your password.',
                           style: TextStyle(
-                            fontFamily: 'ClashDisplay',
-                            fontSize: 32,
-                            fontVariations: BmbFontWeights.w700,
-                            color: Colors.white,
+                            fontSize: 16,
+                            color: Colors.white.withOpacity(0.7),
+                            fontVariations: BmbFontWeights.w500,
                           ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 30),
                         TextFormField(
                           controller: _emailController,
-                          autofillHints: const [
-                            AutofillHints.username,
-                            AutofillHints.email
-                          ],
+                          autofillHints: const [AutofillHints.email],
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             labelText: 'EMAIL',
@@ -156,79 +154,15 @@ class _LoginScreenState extends State<LoginScreen> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your email';
                             }
-                            // if (!value.contains('@')) {
-                            //   return 'Please enter a valid email';
-                            // }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        TextFormField(
-                          controller: _passwordController,
-                          autofillHints: const [AutofillHints.password],
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            labelText: 'PASSWORD',
-                            labelStyle: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 16,
-                              fontVariations: BmbFontWeights.w500,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                color: BmbColors.blue,
-                                width: 1,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: BmbColors.blue.withOpacity(0.7),
-                                width: 1,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: const BorderSide(
-                                color: BmbColors.blue,
-                                width: 1,
-                              ),
-                            ),
-                            prefixIcon:
-                                const Icon(Icons.lock, color: Colors.white70),
-                          ),
-                          obscureText: true,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                            if (!value.contains('@')) {
+                              return 'Please enter a valid email';
                             }
-                            // if (value.length < 6) {
-                            //   return 'Password must be at least 6 characters';
-                            // }
                             return null;
                           },
                         ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: TextButton(
-                            onPressed: _handleForgotPassword,
-                            style: TextButton.styleFrom(
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            child: Text(
-                              'FORGOT PASSWORD?',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.white.withOpacity(0.5),
-                                fontVariations: BmbFontWeights.w500,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 30),
                         ElevatedButton(
-                          onPressed: _isLoading ? null : _login,
+                          onPressed: _isLoading ? null : _requestPasswordReset,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             backgroundColor: BmbColors.blue.withOpacity(0.30),
@@ -251,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 )
                               : Text(
-                                  'SIGN IN',
+                                  'RESET PASSWORD',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
@@ -259,19 +193,40 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                         ),
-                        TextButton(
-                          onPressed: _handleSignUp,
-                          child: Text(
-                            'OR SIGN UP',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.white.withOpacity(0.5),
-                              fontVariations: BmbFontWeights.w500,
-                            ),
+                      ] else ...[
+                        Text(
+                          'Check your email',
+                          style: TextStyle(
+                            fontSize: 24,
+                            color: Colors.white,
+                            fontVariations: BmbFontWeights.w700,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 20),
+                        Text(
+                          'We\'ve sent password reset instructions to ${_emailController.text}',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white.withOpacity(0.7),
+                            fontVariations: BmbFontWeights.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 30),
+                      ],
+                      TextButton(
+                        onPressed: _handleBackToLogin,
+                        child: Text(
+                          'BACK TO SIGN IN',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white.withOpacity(0.5),
+                            fontVariations: BmbFontWeights.w500,
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),

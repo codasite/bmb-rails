@@ -21,6 +21,17 @@ class AuthProvider with ChangeNotifier {
     return success;
   }
 
+  Future<bool> register(String email, String password) async {
+    final success = await _auth.register(email, password);
+    notifyListeners();
+    return success;
+  }
+
+  Future<bool> requestPasswordReset(String email) async {
+    final success = await _auth.requestPasswordReset(email);
+    return success;
+  }
+
   Future<void> logout() async {
     await _auth.logout();
     notifyListeners();

@@ -33,6 +33,20 @@ class WpAuth {
     return true;
   }
 
+  Future<bool> register(String email, String password) async {
+    final success = await _cookieAuth.register(email, password);
+    if (!success) {
+      return false;
+    }
+
+    // Don't attempt to login after registration since password will be emailed
+    return true;
+  }
+
+  Future<bool> requestPasswordReset(String email) async {
+    return await _cookieAuth.requestPasswordReset(email);
+  }
+
   Future<void> logout() async {
     await _cookieAuth.logout();
     await _basicAuth.logout();

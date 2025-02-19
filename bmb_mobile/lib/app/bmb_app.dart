@@ -2,6 +2,8 @@ import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_lifec
 import 'package:bmb_mobile/features/webview/presentation/screens/webview_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/screens/login_screen.dart';
+import 'package:bmb_mobile/features/wp_auth/presentation/screens/register_screen.dart';
+import 'package:bmb_mobile/features/wp_auth/presentation/screens/forgot_password_screen.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
@@ -25,6 +27,8 @@ class BmbApp extends StatelessWidget {
               child: WebViewScreen(),
             ),
         '/login': (context) => const LoginScreen(),
+        '/register': (context) => const RegisterScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
       },
       initialRoute:
           context.read<AuthProvider>().isAuthenticated ? '/app' : '/login',
