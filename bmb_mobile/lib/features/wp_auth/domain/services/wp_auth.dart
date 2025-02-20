@@ -77,7 +77,7 @@ class WpAuth {
             await AppLogger.debugLog('Single error: $errorMessage');
           }
         }
-        AppLogger.debugLog('Errors: ${_errorsList}');
+        AppLogger.debugLog('Errors: $_errorsList');
       }
       return false;
     } catch (e, stackTrace) {

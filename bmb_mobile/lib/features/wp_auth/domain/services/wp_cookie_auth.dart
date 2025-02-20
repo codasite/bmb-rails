@@ -6,7 +6,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
-import 'package:html/parser.dart';
 
 // 1. user login
 // - POST /wp-login.php

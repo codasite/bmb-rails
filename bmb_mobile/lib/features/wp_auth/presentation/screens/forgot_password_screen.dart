@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/widgets/auth_screen_layout.dart';
@@ -61,7 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           'Enter your email address and we\'ll send you instructions to reset your password.',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             fontVariations: BmbFontWeights.w500,
           ),
           textAlign: TextAlign.center,
@@ -88,7 +87,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                color: BmbColors.blue.withOpacity(0.7),
+                color: BmbColors.blue.withValues(alpha: 0.7),
                 width: 1,
               ),
             ),
@@ -117,7 +116,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           onPressed: _isLoading ? null : _requestPasswordReset,
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: BmbColors.blue.withOpacity(0.30),
+            backgroundColor: BmbColors.blue.withValues(alpha: 0.30),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
               side: const BorderSide(
@@ -159,7 +158,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           'We\'ve sent password reset instructions to ${_emailController.text}',
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             fontVariations: BmbFontWeights.w500,
           ),
           textAlign: TextAlign.center,
@@ -172,18 +171,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       key: _formKey,
       child: AuthScreenLayout(
         title: 'RESET PASSWORD',
-        children: formFields,
         bottomButton: TextButton(
           onPressed: _handleBackToLogin,
           child: Text(
             'BACK TO SIGN IN',
             style: TextStyle(
               fontSize: 14,
-              color: Colors.white.withOpacity(0.5),
+              color: Colors.white.withValues(alpha: 0.5),
               fontVariations: BmbFontWeights.w500,
             ),
           ),
         ),
+        children: formFields,
       ),
     );
   }

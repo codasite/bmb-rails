@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -137,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: BmbColors.blue.withOpacity(0.7),
+                                color: BmbColors.blue.withValues(alpha: 0.7),
                                 width: 1,
                               ),
                             ),
@@ -184,7 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: BmbColors.blue.withOpacity(0.7),
+                                color: BmbColors.blue.withValues(alpha: 0.7),
                                 width: 1,
                               ),
                             ),
@@ -220,7 +218,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               'FORGOT PASSWORD?',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 fontVariations: BmbFontWeights.w500,
                               ),
                             ),
@@ -231,7 +229,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: _isLoading ? null : _login,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: BmbColors.blue.withOpacity(0.30),
+                            backgroundColor:
+                                BmbColors.blue.withValues(alpha: 0.30),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(
@@ -265,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'OR SIGN UP',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               fontVariations: BmbFontWeights.w500,
                             ),
                           ),

@@ -328,7 +328,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       WebViewWidget(controller: _controller),
                       if (_isLoading)
                         Container(
-                          color: Colors.transparent.withOpacity(0.5),
+                          color: Colors.transparent.withValues(alpha: 0.5),
                           child: const Center(
                             child: CircularProgressIndicator(
                               color: BmbColors.blue,
