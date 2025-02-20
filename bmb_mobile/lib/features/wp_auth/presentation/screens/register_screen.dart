@@ -6,6 +6,7 @@ import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:bmb_mobile/core/utils/app_logger.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,12 +18,14 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   bool _isLoading = false;
   bool _registrationComplete = false;
 
   @override
   void dispose() {
     _emailController.dispose();
+    _usernameController.dispose();
     super.dispose();
   }
 
@@ -34,14 +37,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
     try {
       final success = await context.read<AuthProvider>().register(
             _emailController.text,
-            '', // Empty password since WordPress will email it
+            _usernameController.text,
           );
 
       if (success && mounted) {
         setState(() => _registrationComplete = true);
       } else if (mounted) {
+        final errors = context.read<AuthProvider>().getErrorsList();
+        final errorMessage =
+            errors.isNotEmpty ? errors.join('\n') : 'Registration failed';
+
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration failed')),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     } finally {
@@ -108,6 +119,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 30),
                         if (!_registrationComplete) ...[
+                          TextFormField(
+                            controller: _usernameController,
+                            autofillHints: const [AutofillHints.username],
+                            style: const TextStyle(color: Colors.white),
+                            decoration: InputDecoration(
+                              labelText: 'USERNAME',
+                              labelStyle: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                                fontVariations: BmbFontWeights.w500,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: BmbColors.blue,
+                                  width: 1,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: BmbColors.blue.withOpacity(0.7),
+                                  width: 1,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: const BorderSide(
+                                  color: BmbColors.blue,
+                                  width: 1,
+                                ),
+                              ),
+                              prefixIcon: const Icon(Icons.person,
+                                  color: Colors.white70),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter a username';
+                              }
+                              if (value.length < 3) {
+                                return 'Username must be at least 3 characters';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
                           TextFormField(
                             controller: _emailController,
                             autofillHints: const [AutofillHints.email],

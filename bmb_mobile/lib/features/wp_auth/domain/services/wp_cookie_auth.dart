@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:math';
+import 'package:html/parser.dart';
 
 // 1. user login
 // - POST /wp-login.php
@@ -107,99 +108,6 @@ class WpCookieAuth {
         e,
         stackTrace,
         extras: {'message': 'Password reset attempt failed'},
-      );
-      return false;
-    }
-  }
-
-  Future<bool> register(String email, String password) async {
-    try {
-      await AppLogger.debugLog('Attempting registration for user: $email');
-
-      final url = WpUrls.baseUrl + WpUrls.userRegisterPath;
-      await AppLogger.debugLog(
-        'Making registration request',
-        extras: {
-          'url': url,
-          'method': 'POST',
-          'headers': {'Content-Type': 'application/json'},
-          'body': {'email': email},
-        },
-      );
-
-      final response = await http.post(
-        Uri.parse(url),
-        body: jsonEncode({
-          'email': email,
-        }),
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'User-Agent': 'BMB-Mobile-App/1.0',
-        },
-      );
-
-      // Log everything about the response
-      await AppLogger.debugLog(
-        'Raw registration response',
-        extras: {
-          'status_code': response.statusCode,
-          'headers': response.headers,
-          'body': response.body,
-          'body_length': response.body.length,
-          'url': url,
-        },
-      );
-
-      // Try to parse response body
-      Map<String, dynamic>? responseData;
-      try {
-        responseData = jsonDecode(response.body) as Map<String, dynamic>;
-      } catch (e) {
-        await AppLogger.logWarning(
-          'Failed to parse response as JSON',
-          extras: {'error': e.toString(), 'body': response.body},
-        );
-      }
-
-      if (response.statusCode == 201) {
-        await AppLogger.debugLog(
-          'Registration successful',
-          extras: {
-            'message': responseData?['message'] ?? 'No message provided'
-          },
-        );
-        return true;
-      }
-
-      // Handle specific error cases
-      if (response.statusCode == 400 &&
-          responseData?['code'] == 'email_exists') {
-        await AppLogger.logWarning(
-          'Registration failed - email already exists',
-          extras: {'email': email},
-        );
-        return false;
-      }
-
-      await AppLogger.logWarning(
-        'Registration failed',
-        extras: {
-          'status_code': response.statusCode,
-          'error_code': responseData?['code'],
-          'error_message': responseData?['message'] ?? 'Unknown error',
-          'raw_response': response.body,
-        },
-      );
-      return false;
-    } catch (e, stackTrace) {
-      await AppLogger.logError(
-        e,
-        stackTrace,
-        extras: {
-          'message': 'Registration attempt failed with exception',
-          'error': e.toString(),
-        },
       );
       return false;
     }

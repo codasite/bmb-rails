@@ -1,0 +1,23 @@
+POST /wp-login.php?action=register HTTP/2
+Host: backmybracket.com
+Cookie: tk_or=%22%22; tk_lr=%22%22; _gcl_au=1.1.1262720966.1735244901; _ga=GA1.1.788948458.1735244902; wp-settings-3=libraryContent%3Dbrowse%26editor%3Dtinymce%26posts_list_mode%3Dlist; wp-settings-time-3=1736891234; _ga_JP994SFQQ6=GS1.1.1736891237.6.0.1736891237.60.0.0; __ssid=ecda4a30960106d12bf8766ff4b558d; mailchimp_landing_site=https%3A%2F%2Fbackmybracket.com%2Fwp-login.php%3Faction%3Dregister; wordpress_test_cookie=WP%20Cookie%20check
+Content-Length: 97
+Cache-Control: max-age=0
+Sec-Ch-Ua: "Chromium";v="131", "Not_A Brand";v="24"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Accept-Language: en-US,en;q=0.9
+Origin: https://backmybracket.com
+Content-Type: application/x-www-form-urlencoded
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.6778.140 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Sec-Fetch-Site: same-origin
+Sec-Fetch-Mode: navigate
+Sec-Fetch-User: ?1
+Sec-Fetch-Dest: document
+Referer: https://backmybracket.com/wp-login.php?action=register
+Accept-Encoding: gzip, deflate, br
+Priority: u=0, i
+
+user_login=test123&user_email=test123%2B199%40codasite.test&redirect_to=&wp-submit=Create+Account
