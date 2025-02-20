@@ -21,6 +21,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _usernameController = TextEditingController();
   bool _isLoading = false;
   bool _registrationComplete = false;
+  String? _emailError;
+  String? _usernameError;
 
   @override
   void dispose() {
@@ -32,7 +34,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _register() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _emailError = null;
+      _usernameError = null;
+    });
 
     try {
       final success = await context.read<AuthProvider>().register(
@@ -44,16 +50,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
         setState(() => _registrationComplete = true);
       } else if (mounted) {
         final errors = context.read<AuthProvider>().getErrorsList();
-        final errorMessage =
-            errors.isNotEmpty ? errors.join('\n') : 'Registration failed';
+        final otherErrors = <String>[];
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(errorMessage),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 5),
-          ),
-        );
+        for (final error in errors) {
+          final lowerError = error.toLowerCase();
+          if (lowerError.contains('email')) {
+            setState(() => _emailError = error);
+          } else if (lowerError.contains('username')) {
+            setState(() => _usernameError = error);
+          } else {
+            otherErrors.add(error);
+          }
+        }
+
+        if (otherErrors.isNotEmpty && mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(otherErrors.join('\n')),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
       }
     } finally {
       if (mounted) {
@@ -151,6 +169,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   width: 1,
                                 ),
                               ),
+                              errorText: _usernameError?.split('.')[0],
+                              errorStyle: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
                               prefixIcon: const Icon(Icons.person,
                                   color: Colors.white70),
                             ),
@@ -196,6 +219,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   color: BmbColors.blue,
                                   width: 1,
                                 ),
+                              ),
+                              errorText: _emailError?.split('.')[0],
+                              errorStyle: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
                               ),
                               prefixIcon: const Icon(Icons.email,
                                   color: Colors.white70),
