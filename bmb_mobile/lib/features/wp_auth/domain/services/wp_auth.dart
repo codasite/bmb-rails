@@ -58,7 +58,7 @@ class WpAuth {
     final basicLoggedIn = await _basicAuth.login(username);
     if (!basicLoggedIn) {
       AppLogger.logError(
-          'Failed to login with basic auth. Notifications will not work.',
+          'Unexpected error during basic auth login. Notifications will not work.',
           null);
     }
 
@@ -93,7 +93,7 @@ class WpAuth {
       await AppLogger.logError(
         e,
         stackTrace,
-        extras: {'message': 'Registration attempt failed'},
+        extras: {'message': 'Unexpected error during registration'},
       );
       return false;
     }
@@ -125,7 +125,7 @@ class WpAuth {
       await AppLogger.logError(
         e,
         stackTrace,
-        extras: {'message': 'Password reset attempt failed'},
+        extras: {'message': 'Unexpected error during password reset request'},
       );
       return false;
     }
@@ -167,7 +167,6 @@ class WpAuth {
 
         final streamedResponse = await client.send(request);
         final response = await Response.fromStream(streamedResponse);
-        AppLogger.debugLog('Response: ${response.body}');
 
         if (response.statusCode == 200) {
           AppLogger.debugLog('Received 200 status code. Parsing response');
@@ -196,7 +195,9 @@ class WpAuth {
       await AppLogger.logError(
         e,
         stackTrace,
-        extras: {'message': 'Reset password link validation failed'},
+        extras: {
+          'message': 'Unexpected error during reset password link validation'
+        },
       );
       return false;
     } finally {
@@ -250,7 +251,7 @@ class WpAuth {
       await AppLogger.logError(
         e,
         stackTrace,
-        extras: {'message': 'Password reset attempt failed'},
+        extras: {'message': 'Unexpected error during password reset'},
       );
       return false;
     }
