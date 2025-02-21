@@ -14,12 +14,8 @@ import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 class BmbApp extends StatelessWidget {
   const BmbApp({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 1), () {
-      FlutterNativeSplash.remove();
-    });
-    AppLogger.debugLog('checking for app link');
+  String _getInitialRoute(BuildContext context) {
+    AppLogger.debugLog('Getting initial route');
     final appLink = context.read<AppLinkProvider>().getUri();
     if (appLink != null) {
       AppLogger.debugLog('app link found: $appLink');
@@ -27,14 +23,22 @@ class BmbApp extends StatelessWidget {
       if (appLink.path.contains(WpUrls.resetPasswordPath)) {
         AppLogger.debugLog(
             'reset password link found. navigating to reset password screen');
-        // context.read<AuthProvider>().logout();
-        // Navigator.pushReplacementNamed(
-        //   context,
-        //   '/reset-password',
-        //   arguments: appLink,
-        // );
+        context.read<AuthProvider>().logout();
+        return '/reset-password';
       }
     }
+    final authProvider = context.read<AuthProvider>();
+    if (authProvider.isAuthenticated) {
+      return '/app';
+    }
+    return '/login';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Future.delayed(const Duration(seconds: 1), () {
+      FlutterNativeSplash.remove();
+    });
 
     return MaterialApp(
       title: 'Back My Bracket',
@@ -50,8 +54,7 @@ class BmbApp extends StatelessWidget {
         '/forgot-password': (context) => const ForgotPasswordScreen(),
         // '/reset-password': (context) => const ResetPasswordScreen(),
       },
-      initialRoute:
-          context.read<AuthProvider>().isAuthenticated ? '/app' : '/login',
+      initialRoute: _getInitialRoute(context),
     );
   }
 }
