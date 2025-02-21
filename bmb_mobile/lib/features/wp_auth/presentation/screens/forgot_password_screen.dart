@@ -14,32 +14,54 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _usernameOrEmailController = TextEditingController();
   bool _isLoading = false;
   bool _resetEmailSent = false;
+  String? _emailError;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameOrEmailController.dispose();
     super.dispose();
   }
 
   Future<void> _requestPasswordReset() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+    setState(() {
+      _isLoading = true;
+      _emailError = null;
+    });
 
     try {
       final success = await context.read<AuthProvider>().requestPasswordReset(
-            _emailController.text,
+            _usernameOrEmailController.text,
           );
 
       if (success && mounted) {
         setState(() => _resetEmailSent = true);
       } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to send password reset email')),
-        );
+        final errors = context.read<AuthProvider>().getErrorsList();
+        final otherErrors = <String>[];
+
+        for (final error in errors) {
+          final lowerError = error.toLowerCase();
+          if (lowerError.contains('email') || lowerError.contains('user')) {
+            setState(() => _emailError = error);
+          } else {
+            otherErrors.add(error);
+          }
+        }
+
+        if (otherErrors.isNotEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(otherErrors.join('\n')),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
       }
     } finally {
       if (mounted) {
@@ -57,7 +79,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     final formFields = [
       if (!_resetEmailSent) ...[
         Text(
-          'Enter your email address and we\'ll send you instructions to reset your password.',
+          'Enter your username or email address and we\'ll send you instructions to reset your password.',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white.withValues(alpha: 0.7),
@@ -67,11 +89,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 30),
         TextFormField(
-          controller: _emailController,
+          controller: _usernameOrEmailController,
           autofillHints: const [AutofillHints.email],
           style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
-            labelText: 'EMAIL',
+            labelText: 'USERNAME OR EMAIL',
             labelStyle: TextStyle(
               color: Colors.white70,
               fontSize: 16,
@@ -98,15 +120,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 width: 1,
               ),
             ),
+            errorText: _emailError?.split('.')[0],
+            errorStyle: const TextStyle(
+              color: Colors.red,
+              fontSize: 12,
+            ),
             prefixIcon: const Icon(Icons.email, color: Colors.white70),
           ),
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value == null || value.isEmpty) {
-              return 'Please enter your email';
-            }
-            if (!value.contains('@')) {
-              return 'Please enter a valid email';
+              return 'Please enter your username or email';
             }
             return null;
           },
@@ -155,7 +179,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
         const SizedBox(height: 20),
         Text(
-          'We\'ve sent password reset instructions to ${_emailController.text}',
+          'We\'ve sent password reset instructions to ${_usernameOrEmailController.text}',
           style: TextStyle(
             fontSize: 16,
             color: Colors.white.withValues(alpha: 0.7),

@@ -9,12 +9,36 @@ class WpAuth {
   final WpCookieAuth _cookieAuth;
   final WpBasicAuth _basicAuth;
   bool _isAuthenticated = false;
-  final List<String> _errorsList = [];
+  List<String> _errorsList = [];
   WpAuth(this._cookieAuth, this._basicAuth);
 
   bool get isAuthenticated => _isAuthenticated;
   List<String> getErrorList() {
     return _errorsList;
+  }
+
+  List<String> _parseErrorsFromHtml(String htmlBody) {
+    final document = parse(htmlBody);
+    List<String> errors = [];
+    final errorsEl = document.querySelector('#login_error');
+    if (errorsEl != null) {
+      final errorList = errorsEl.querySelectorAll('ul li');
+      final singleError = errorsEl.querySelector('p');
+      if (errorList.isNotEmpty) {
+        AppLogger.debugLog('Error count: ${errorList.length}');
+        for (var error in errorList) {
+          final errorMessage = error.text;
+          errors.add(errorMessage.replaceFirst('Error: ', ''));
+          AppLogger.debugLog(errorMessage);
+        }
+      } else if (singleError != null) {
+        final errorMessage = singleError.text;
+        errors.add(errorMessage.replaceFirst('Error: ', ''));
+        AppLogger.debugLog('Single error: $errorMessage');
+      }
+    }
+    AppLogger.debugLog('Errors: $errors');
+    return errors;
   }
 
   Future<void> refreshAuthStatus() async {
@@ -59,25 +83,7 @@ class WpAuth {
         return true;
       } else if (response.statusCode == 200) {
         await AppLogger.debugLog('Received 200 response. Parsing HTML');
-        final document = parse(response.body);
-        final errors = document.querySelector('#login_error');
-        if (errors != null) {
-          final errorList = errors.querySelectorAll('ul li');
-          final singleError = errors.querySelector('p');
-          if (errorList.isNotEmpty) {
-            AppLogger.debugLog('Error count: ${errorList.length}');
-            for (var error in errorList) {
-              final errorMessage = error.text;
-              _errorsList.add(errorMessage.replaceFirst('Error: ', ''));
-              await AppLogger.debugLog(errorMessage);
-            }
-          } else if (singleError != null) {
-            final errorMessage = singleError.text;
-            _errorsList.add(errorMessage.replaceFirst('Error: ', ''));
-            await AppLogger.debugLog('Single error: $errorMessage');
-          }
-        }
-        AppLogger.debugLog('Errors: $_errorsList');
+        _errorsList = _parseErrorsFromHtml(response.body);
       }
       return false;
     } catch (e, stackTrace) {
@@ -91,7 +97,35 @@ class WpAuth {
   }
 
   Future<bool> requestPasswordReset(String email) async {
-    return await _cookieAuth.requestPasswordReset(email);
+    _errorsList.clear();
+    try {
+      await AppLogger.debugLog('Attempting password reset for user: $email');
+
+      final response = await http.post(
+        Uri.parse(WpUrls.lostPasswordUrl),
+        body: {
+          'user_login': email,
+          'wp-submit': 'Get+New+Password',
+        },
+      );
+      if (response.statusCode == 302) {
+        await AppLogger.debugLog(
+          'Received 302 redirect. Assuming password reset successful',
+        );
+        return true;
+      } else if (response.statusCode == 200) {
+        await AppLogger.debugLog('Received 200 response. Parsing HTML');
+        _errorsList = _parseErrorsFromHtml(response.body);
+      }
+      return false;
+    } catch (e, stackTrace) {
+      await AppLogger.logError(
+        e,
+        stackTrace,
+        extras: {'message': 'Password reset attempt failed'},
+      );
+      return false;
+    }
   }
 
   Future<void> logout() async {

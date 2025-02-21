@@ -39,6 +39,7 @@ class WpUrls {
   // Full URLs
   static String get loginUrl => baseUrl + loginPath;
   static String get registerUrl => baseUrl + registerPath;
+  static String get lostPasswordUrl => baseUrl + lostPasswordPath;
   static String applicationPasswordPath(String uuid) =>
       '$applicationPasswordsPath/$uuid';
 }

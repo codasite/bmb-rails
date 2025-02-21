@@ -14,13 +14,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _usernameOrEmailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameOrEmailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final success = await context.read<AuthProvider>().login(
-            _emailController.text,
+            _usernameOrEmailController.text,
             _passwordController.text,
           );
 
@@ -112,14 +112,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 30),
                         TextFormField(
-                          controller: _emailController,
+                          controller: _usernameOrEmailController,
                           autofillHints: const [
                             AutofillHints.username,
                             AutofillHints.email
                           ],
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            labelText: 'EMAIL',
+                            labelText: 'USERNAME OR EMAIL',
                             labelStyle: TextStyle(
                               color: Colors.white70,
                               fontSize: 16,
@@ -152,11 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
+                              return 'Please enter your username or email';
                             }
-                            // if (!value.contains('@')) {
-                            //   return 'Please enter a valid email';
-                            // }
                             return null;
                           },
                         ),
