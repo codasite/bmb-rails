@@ -22,12 +22,20 @@ class AppLinkProvider extends ChangeNotifier {
     });
   }
 
-  Uri? getUri() {
+  Uri? getAndClearUri() {
     final uri = _currentUri;
     if (uri != null) {
       _currentUri = null;
     }
     return uri;
+  }
+
+  Uri? getUri() {
+    return _currentUri;
+  }
+
+  void clearUri() {
+    _currentUri = null;
   }
 
   @override
