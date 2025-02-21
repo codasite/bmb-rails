@@ -71,7 +71,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   void _handleBackToLogin() {
-    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override

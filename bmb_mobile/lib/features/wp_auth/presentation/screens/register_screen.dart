@@ -78,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _handleSignIn() {
-    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, '/login');
   }
 
   @override

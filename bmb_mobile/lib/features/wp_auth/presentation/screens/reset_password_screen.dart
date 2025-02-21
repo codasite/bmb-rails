@@ -6,7 +6,6 @@ import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider
 import 'package:provider/provider.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/widgets/auth_screen_layout.dart';
 import 'package:bmb_mobile/features/app_links/presentation/providers/app_link_provider.dart';
-import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});

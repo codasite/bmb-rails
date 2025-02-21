@@ -51,11 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleSignUp() async {
-    Navigator.pushNamed(context, '/register');
+    Navigator.pushReplacementNamed(context, '/register');
   }
 
   void _handleForgotPassword() async {
-    Navigator.pushNamed(context, '/forgot-password');
+    Navigator.pushReplacementNamed(context, '/forgot-password');
   }
 
   @override
