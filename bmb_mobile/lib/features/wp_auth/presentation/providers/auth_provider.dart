@@ -36,6 +36,16 @@ class AuthProvider with ChangeNotifier {
     return success;
   }
 
+  Future<bool> validateResetPasswordLink(Uri resetLink) async {
+    final success = await _auth.validateResetPasswordLink(resetLink);
+    return success;
+  }
+
+  Future<bool> resetPassword(String key, String password) async {
+    final success = await _auth.resetPassword(key, password);
+    return success;
+  }
+
   Future<void> logout() async {
     await _auth.logout();
     notifyListeners();
