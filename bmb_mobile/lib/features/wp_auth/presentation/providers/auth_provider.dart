@@ -4,6 +4,10 @@ import 'package:bmb_mobile/features/wp_auth/domain/services/wp_auth.dart';
 class AuthProvider with ChangeNotifier {
   final WpAuth _auth;
 
+  List<String> getErrorsList() {
+    return _auth.getErrorList();
+  }
+
   AuthProvider({
     required WpAuth auth,
   }) : _auth = auth;
@@ -18,6 +22,27 @@ class AuthProvider with ChangeNotifier {
   Future<bool> login(String username, String password) async {
     final success = await _auth.login(username, password);
     notifyListeners();
+    return success;
+  }
+
+  Future<bool> register(String email, String username) async {
+    final success = await _auth.register(email, username);
+    notifyListeners();
+    return success;
+  }
+
+  Future<bool> requestPasswordReset(String email) async {
+    final success = await _auth.requestPasswordReset(email);
+    return success;
+  }
+
+  Future<bool> validateResetPasswordLink(Uri resetLink) async {
+    final success = await _auth.validateResetPasswordLink(resetLink);
+    return success;
+  }
+
+  Future<bool> resetPassword(String key, String password) async {
+    final success = await _auth.resetPassword(key, password);
     return success;
   }
 

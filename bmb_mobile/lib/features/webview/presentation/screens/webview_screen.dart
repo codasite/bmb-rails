@@ -211,7 +211,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     // Check for an initial app link
     if (mounted) {
-      final initialUri = context.read<AppLinkProvider>().getUri();
+      final initialUri = context.read<AppLinkProvider>().getAndClearUri();
       if (initialUri != null) {
         AppLogger.debugLog('Loading initial app link: $initialUri');
         await _loadUrl(initialUri.toString(), prependBaseUrl: false);
@@ -234,7 +234,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   Widget build(BuildContext context) {
     AppLogger.debugLog('Building WebViewScreen');
-    final uri = context.watch<AppLinkProvider>().getUri();
+    final uri = context.watch<AppLinkProvider>().getAndClearUri();
     if (uri != null) {
       AppLogger.debugLog('Loading app linkfrom build: $uri');
       _loadUrl(uri.toString(), prependBaseUrl: false);
@@ -328,7 +328,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                       WebViewWidget(controller: _controller),
                       if (_isLoading)
                         Container(
-                          color: Colors.transparent.withOpacity(0.5),
+                          color: Colors.transparent.withValues(alpha: 0.5),
                           child: const Center(
                             child: CircularProgressIndicator(
                               color: BmbColors.blue,

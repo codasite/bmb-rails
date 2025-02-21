@@ -9,6 +9,7 @@ class WpUrls {
 
   // WordPress API paths
   static const String _wpApiBase = '/wp-json/wp/v2';
+  static const String _bmbApiBase = '/wp-json/bmb/v1';
   static const String _usersMe = '$_wpApiBase/users/me';
   static const String applicationPasswordsPath =
       '$_usersMe/application-passwords';
@@ -17,6 +18,12 @@ class WpUrls {
   static const String loginPath = '/wp-login.php';
   static const String registerPath = '/wp-login.php?action=register';
   static const String lostPasswordPath = '/wp-login.php?action=lostpassword';
+  static const String rpPath = '/wp-login.php?action=rp';
+  static const String resetPasswordPath = '/wp-login.php?action=resetpass';
+
+  // User API paths
+  static const String _usersBase = '$_bmbApiBase/users';
+  static const String userRegisterPath = '$_usersBase/register';
 
   // FCM API paths
   static const String _fcmBase = '/wp-json/bmb/v1/fcm';
@@ -33,6 +40,9 @@ class WpUrls {
 
   // Full URLs
   static String get loginUrl => baseUrl + loginPath;
+  static String get registerUrl => baseUrl + registerPath;
+  static String get lostPasswordUrl => baseUrl + lostPasswordPath;
+  static String get resetPasswordUrl => baseUrl + resetPasswordPath;
   static String applicationPasswordPath(String uuid) =>
       '$applicationPasswordsPath/$uuid';
 }

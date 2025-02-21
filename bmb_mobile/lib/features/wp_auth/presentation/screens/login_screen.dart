@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bmb_mobile/core/theme/bmb_colors.dart';
 import 'package:bmb_mobile/core/theme/bmb_font_weights.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:bmb_mobile/features/wp_auth/presentation/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +14,13 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
+  final _usernameOrEmailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _usernameOrEmailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -34,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final success = await context.read<AuthProvider>().login(
-            _emailController.text,
+            _usernameOrEmailController.text,
             _passwordController.text,
           );
 
@@ -53,17 +51,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _handleSignUp() async {
-    final Uri url = Uri.parse(WpUrls.baseUrl + WpUrls.registerPath);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    }
+    Navigator.pushReplacementNamed(context, '/register');
   }
 
   void _handleForgotPassword() async {
-    final Uri url = Uri.parse(WpUrls.baseUrl + WpUrls.lostPasswordPath);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    }
+    Navigator.pushReplacementNamed(context, '/forgot-password');
   }
 
   @override
@@ -120,14 +112,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 30),
                         TextFormField(
-                          controller: _emailController,
+                          controller: _usernameOrEmailController,
                           autofillHints: const [
                             AutofillHints.username,
                             AutofillHints.email
                           ],
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
-                            labelText: 'EMAIL',
+                            labelText: 'USERNAME OR EMAIL',
                             labelStyle: TextStyle(
                               color: Colors.white70,
                               fontSize: 16,
@@ -143,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: BmbColors.blue.withOpacity(0.7),
+                                color: BmbColors.blue.withValues(alpha: 0.7),
                                 width: 1,
                               ),
                             ),
@@ -160,11 +152,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
+                              return 'Please enter your username or email';
                             }
-                            // if (!value.contains('@')) {
-                            //   return 'Please enter a valid email';
-                            // }
                             return null;
                           },
                         ),
@@ -190,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
-                                color: BmbColors.blue.withOpacity(0.7),
+                                color: BmbColors.blue.withValues(alpha: 0.7),
                                 width: 1,
                               ),
                             ),
@@ -226,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               'FORGOT PASSWORD?',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Colors.white.withOpacity(0.5),
+                                color: Colors.white.withValues(alpha: 0.5),
                                 fontVariations: BmbFontWeights.w500,
                               ),
                             ),
@@ -237,7 +226,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: _isLoading ? null : _login,
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 16),
-                            backgroundColor: BmbColors.blue.withOpacity(0.30),
+                            backgroundColor:
+                                BmbColors.blue.withValues(alpha: 0.30),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: const BorderSide(
@@ -271,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'OR SIGN UP',
                             style: TextStyle(
                               fontSize: 14,
-                              color: Colors.white.withOpacity(0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               fontVariations: BmbFontWeights.w500,
                             ),
                           ),

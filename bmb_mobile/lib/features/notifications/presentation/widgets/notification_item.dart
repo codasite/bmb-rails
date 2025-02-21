@@ -61,7 +61,7 @@ class NotificationItem extends StatelessWidget {
                   width: 2,
                 )
               : Border.all(
-                  color: BmbColors.white.withOpacity(0.15),
+                  color: BmbColors.white.withValues(alpha: 0.15),
                   width: 2,
                 ),
         ),
@@ -83,7 +83,7 @@ class NotificationItem extends StatelessWidget {
                           notification.title,
                           style: TextStyle(
                             color: notification.isRead
-                                ? Colors.white.withOpacity(0.7)
+                                ? Colors.white.withValues(alpha: 0.7)
                                 : Colors.white,
                             fontSize: 16,
                             fontVariations: BmbFontWeights.w500,
@@ -94,7 +94,7 @@ class NotificationItem extends StatelessWidget {
                         Text(
                           _formatTimestamp(notification.timestamp!),
                           style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
+                            color: Colors.white.withValues(alpha: 0.5),
                             fontSize: 12,
                             fontVariations: BmbFontWeights.w500,
                           ),
@@ -107,8 +107,8 @@ class NotificationItem extends StatelessWidget {
                       notification.message,
                       style: TextStyle(
                         color: notification.isRead
-                            ? Colors.white.withOpacity(0.5)
-                            : Colors.white.withOpacity(0.7),
+                            ? Colors.white.withValues(alpha: 0.5)
+                            : Colors.white.withValues(alpha: 0.7),
                         fontSize: 14,
                         fontVariations: BmbFontWeights.w500,
                       ),

@@ -27,7 +27,7 @@ class MarkAllAsReadButton extends StatelessWidget {
       child: Text(
         'MARK ALL AS READ',
         style: TextStyle(
-          color: hasUnread ? Colors.white : Colors.white.withOpacity(0.5),
+          color: hasUnread ? Colors.white : Colors.white.withValues(alpha: 0.5),
           fontSize: 12,
           fontVariations: BmbFontWeights.w500,
         ),

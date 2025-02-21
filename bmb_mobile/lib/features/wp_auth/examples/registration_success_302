@@ -1,0 +1,16 @@
+HTTP/2 302 Found
+Date: Thu, 20 Feb 2025 01:47:47 GMT
+Content-Type: text/html; charset=UTF-8
+Expires: Wed, 11 Jan 1984 05:00:00 GMT
+Cache-Control: no-cache, must-revalidate, max-age=0
+Set-Cookie: wordpress_test_cookie=WP%20Cookie%20check; path=/; secure
+X-Frame-Options: SAMEORIGIN
+X-Redirect-By: WordPress
+Location: /wp-login.php?checkemail=registered
+Cf-Cache-Status: DYNAMIC
+Report-To: {"endpoints":[{"url":"https:\/\/a.nel.cloudflare.com\/report\/v4?s=z5q14fdMaiuxvNG%2F57VtZWm6LaYvfqyeS1v1XZAS19Qvm%2Bnro9vCR3O5jQaUyCHm9Kx%2Bj1PVIxr%2F3JYqSa5%2Foh0VGU2s0zrSz8G9TeYP5RzZz%2Basj0WPWajLbjJsKFya%2Bmo6WA%3D%3D"}],"group":"cf-nel","max_age":604800}
+Nel: {"success_fraction":0,"report_to":"cf-nel","max_age":604800}
+Server: cloudflare
+Cf-Ray: 914ad496a815d31c-MCI
+Alt-Svc: h3=":443"; ma=86400
+Server-Timing: cfL4;desc="?proto=TCP&rtt=61522&min_rtt=34703&rtt_var=54625&sent=8&recv=14&lost=0&retrans=0&sent_bytes=803&recv_bytes=2228&delivery_rate=39541&cwnd=252&unsent_bytes=0&cid=1c6087f572ee6d3a&ts=2462&x=0"

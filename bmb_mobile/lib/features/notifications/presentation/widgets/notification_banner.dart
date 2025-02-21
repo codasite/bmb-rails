@@ -24,7 +24,7 @@ class NotificationBanner extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: BmbColors.blue.withOpacity(0.1),
+              color: BmbColors.blue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.all(8),
@@ -54,7 +54,7 @@ class NotificationBanner extends StatelessWidget {
                     notification.message,
                     style: TextStyle(
                       fontSize: 14,
-                      color: BmbColors.darkBlue.withOpacity(0.8),
+                      color: BmbColors.darkBlue.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
@@ -72,7 +72,7 @@ class NotificationBanner extends StatelessWidget {
             TextButton(
               onPressed: onDismiss,
               style: TextButton.styleFrom(
-                foregroundColor: BmbColors.darkBlue.withOpacity(0.7),
+                foregroundColor: BmbColors.darkBlue.withValues(alpha: 0.7),
               ),
               child: const Text('DISMISS'),
             ),
