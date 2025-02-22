@@ -127,6 +127,14 @@ tasks:
     cmds:
       - docker exec wp-dev wp {{.CLI_ARGS}}
 
+  wp:import:prod:
+    desc: Import the production database into the development container
+    dir: ./site
+    cmds:
+      - docker exec wp-dev wp db reset --yes
+      - wp @production db export --default-character-set=utf8mb4 - | sed 's/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g' | docker exec -i wp-dev wp db import -
+      - docker exec wp-dev wp search-replace "https://backmybracket.com" "http://localhost:8008" --all-tables-with-prefix
+
   wp:cli:notification:
     desc: Run WP-CLI notification command
     cmds:
