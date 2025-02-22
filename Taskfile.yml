@@ -125,7 +125,7 @@ tasks:
   wp:cli:
     desc: Run WP-CLI command
     cmds:
-      - docker exec wp-dev su -s /bin/bash www-data -c "/usr/local/bin/wp-cli.phar --path=/var/www/html {{.CLI_ARGS}}"
+      - docker exec wp-dev wp {{.CLI_ARGS}}
 
   wp:cli:notification:
     desc: Run WP-CLI notification command

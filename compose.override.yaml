@@ -66,6 +66,7 @@ services:
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DEBUG: 1
+      PATH: '/usr/local/bin:${PATH}'
       WORDPRESS_CONFIG_EXTRA: |
         define('WP_DEBUG_LOG', true );
         define('WP_DEBUG_DISPLAY', false );
