@@ -144,9 +144,12 @@ docker/wordpress/downloads/*
 !docker/wordpress/downloads/.gitkeep
 docker/wordpress/plugins/*
 !docker/wordpress/plugins/.gitkeep
+docker/wordpress/plugins_old/*
+!docker/wordpress/plugins_old/.gitkeep
 docker/db/import/1bmb_import.sql
 !docker/wordpress/db/import/.gitkeep
 actions-runner/*
 !actions-runner/.gitkeep
 docker/credentials/*
 !docker/credentials/.gitkeep
+docker/wordpress/plugins.zip

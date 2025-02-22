@@ -127,12 +127,22 @@ tasks:
     cmds:
       - docker exec wp-dev wp-cli {{.CLI_ARGS}}
 
+  wp:sync:plugins:
+    desc: Sync plugins from the production database to the development container
+    dir: ./docker/wordpress
+    cmds:
+      - rm -rf plugins
+      - cat bin/plugins.txt | ssh wpbb@147.182.190.133 "$(cat bin/sync-plugins.sh)"
+      - scp wpbb@147.182.190.133:/home/wpbb/plugins.zip .
+      - unzip plugins.zip
+      - rm -rf plugins.zip
+
   wp:import:prod:
     desc: Import the production database into the development container
     dir: ./site
     cmds:
-      - docker exec wp-dev wp db reset --yes
-      - wp @production db export --default-character-set=utf8mb4 - | sed 's/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g' | docker exec -i wp-dev wp db import -
+      - docker exec wp-dev wp-cli db reset --yes
+      - wp @production db export --default-character-set=utf8mb4 - | sed 's/utf8mb4_0900_ai_ci/utf8mb4_unicode_ci/g' | docker exec -i wp-dev wp-cli db import -
       - docker exec wp-dev wp-cli search-replace "https://backmybracket.com" "http://localhost:8008" --all-tables-with-prefix
 
   wp:cli:notification:

@@ -96,9 +96,10 @@ services:
       XDEBUG_MODE: coverage
       REPO_ROOT: ${REPO_ROOT}
     volumes:
+      - ./docker/wordpress/plugins:/var/www/html/wp-content/plugins
       - ./plugin:/var/www/html/wp-content/plugins/wp-bracket-builder
       - ./docker/wordpress/downloads:/tmp/downloads
-      - ./docker/wordpress/plugins:/tmp/plugins
+      # - ./docker/wordpress/plugins:/tmp/plugins
       - ./plugin/tests/coverage:/var/www/html/coverage
       - wp-dev-data:/var/www/html
       - ./docker/credentials:/etc/firebase:ro
