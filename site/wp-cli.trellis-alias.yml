@@ -2,8 +2,8 @@
   ssh: 'backmybracket.test'
   path: '/srv/www/backmybracket.com/current/web/wp'
 '@production':
-  ssh: 'web@your_server_hostname:22'
-  path: '/srv/www/backmybracket.com/current/web/wp'
+  ssh: 'wpbb@147.182.190.133'
+  path: '/var/www/html'
 '@staging':
   ssh: 'web@dev.backmybracket.com'
   path: '/srv/www/backmybracket.com/current/web/wp'

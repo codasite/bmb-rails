@@ -34,7 +34,8 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --sql-file)
-      SQL_FILE="$2"
+      # Store absolute path of SQL file
+      SQL_FILE="$(cd "$(dirname "$2")" && pwd)/$(basename "$2")"
       shift 2
       ;;
     --*)
@@ -139,19 +140,35 @@ if [[ "$response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
   echo "Syncing database..."
     # Check if importing from SQL file
     if [ -n "$SQL_FILE" ]; then
-      if [ ! -f "$SQL_FILE" ]; then
-        echo "❌ SQL file not found: $SQL_FILE"
-        exit 1
-      fi
       echo "Importing from SQL file: $SQL_FILE"
-      if [[ "$LOCAL" = true && $TO == "development" ]]; then
+      if [[ $TO == "development" ]]; then
+        # For Trellis development environment, transfer file via trellis
+        REMOTE_SQL_FILE="/tmp/$(basename "$SQL_FILE")"
+        echo "Transferring SQL file to development machine..."
+        trellis ssh development -c "rm -f $REMOTE_SQL_FILE" >/dev/null 2>&1
+        scp "$SQL_FILE" "vagrant@backmybracket:$REMOTE_SQL_FILE" &&
         wp db reset --yes &&
-        wp db import "$SQL_FILE" &&
-        wp search-replace "$FROMSITE" "$TOSITE" --all-tables-with-prefix
+        wp db import "$REMOTE_SQL_FILE" &&
+        wp search-replace "$FROMSITE" "$TOSITE" --all-tables-with-prefix &&
+        trellis ssh development -c "rm -f $REMOTE_SQL_FILE" >/dev/null 2>&1
       else
+        # For remote environments, transfer and import
+        REMOTE_SQL_FILE="/tmp/$(basename "$SQL_FILE")"
+        echo "Transferring SQL file to remote machine..."
+        if [[ "$TO" == "production" ]]; then
+          scp "$SQL_FILE" "web@backmybracket.com:$REMOTE_SQL_FILE"
+        elif [[ "$TO" == "staging" ]]; then
+          scp "$SQL_FILE" "web@dev.backmybracket.com:$REMOTE_SQL_FILE"
+        fi
         wp "@$TO" db reset --yes &&
-        wp "@$TO" db import "$SQL_FILE" &&
-        wp "@$TO" search-replace "$FROMSITE" "$TOSITE" --all-tables-with-prefix
+        wp "@$TO" db import "$REMOTE_SQL_FILE" &&
+        wp "@$TO" search-replace "$FROMSITE" "$TOSITE" --all-tables-with-prefix &&
+        # Clean up remote SQL file
+        if [[ "$TO" == "production" ]]; then
+          ssh web@backmybracket.com "rm $REMOTE_SQL_FILE"
+        elif [[ "$TO" == "staging" ]]; then
+          ssh web@dev.backmybracket.com "rm $REMOTE_SQL_FILE"
+        fi
       fi
     else
       # Existing database sync logic
