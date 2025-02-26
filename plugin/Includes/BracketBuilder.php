@@ -29,6 +29,7 @@ use WStrategies\BMB\Includes\Controllers\StripePaymentsApi;
 use WStrategies\BMB\Features\Notifications\Push\FCMTokenApi;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductHooks;
 use WStrategies\BMB\Features\VotingBracket\Presentation\VotingBracketApi;
+use WStrategies\BMB\Includes\Hooks\WooCommerceMyAccountHooks;
 use WStrategies\BMB\Includes\Service\ProductIntegrations\Gelato\GelatoProductIntegration;
 
 /**
@@ -140,6 +141,7 @@ class BracketBuilder {
       new FCMTokenManager(),
       new NotificationApi(),
       new NotificationCommandLoader(),
+      new WooCommerceMyAccountHooks(),
     ];
     foreach ($hooks as $hook) {
       $hook->load($this->loader);
