@@ -39,11 +39,10 @@ cd wp-bracket-builder
 cp .env.example .env
 ```
 
-3. Download required plugins to `docker/wordpress/plugins`:
-   - [Sentry](https://wordpress.org/plugins/wp-sentry-integration/)
-   - [WooCommerce](https://wordpress.org/plugins/woocommerce/)
-   - [Oxygen](https://drive.google.com/file/d/19UxR1oMcq7yU1EkXxhuC2FMrXPVx8hI2/view?usp=sharing)
-   - [Oxygen-WooCommerce](https://drive.google.com/file/d/19Ux5P87RLMcGkyF3n9zbqYU8qCMOyNPb/view?usp=sharing)
+3. Sync plugins from production:
+```bash
+task wp:sync:plugins    # Sync required plugins from production server
+```
 
 4. Install dependencies and start services:
 ```bash
@@ -55,6 +54,9 @@ task react:install    # React dependencies
 task wp:up           # Start WordPress containers
 task wp:install      # Initialize WordPress with sample data
 
+# Optional: Import production database
+task wp:import:prod  # Import latest data from production
+
 # Start React development
 task react:start     # Start React development server
 ```
@@ -62,8 +64,6 @@ task react:start     # Start React development server
 5. Access the site:
    - Frontend: `localhost:8008`
    - Admin: `localhost:8008/wp-admin` (username: `admin`, password: `admin`)
-
-> **Note**: The WordPress installation comes pre-configured with all necessary pages, templates, and sample data. You don't need to create any pages or Oxygen templates manually.
 
 ## Mobile Development
 
