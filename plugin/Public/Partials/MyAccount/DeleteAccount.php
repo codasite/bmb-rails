@@ -1,18 +1,12 @@
 <?php
-/**
- * Delete account page
- *
- * This template can be overridden by copying it to yourtheme/woocommerce/myaccount/delete-account.php.
- *
- * @package WP-Bracket-Builder
- * @version 1.0.0
- */
 
-defined('ABSPATH') || exit();
+namespace WStrategies\BMB\Public\Partials\MyAccount;
 
-do_action('woocommerce_before_delete_account');
-?>
+use WStrategies\BMB\Public\Partials\TemplateInterface;
 
+class DeleteAccount implements TemplateInterface {
+  public function render(): false|string {
+    ob_start(); ?>
 <div class="woocommerce-delete-account">
     <p class="woocommerce-info woocommerce-message--warning">
         <?php esc_html_e(
@@ -21,7 +15,7 @@ do_action('woocommerce_before_delete_account');
         ); ?>
     </p>
 
-    <form class="woocommerce-delete-account-form" method="post">
+		<form class="woocommerce-delete-account-form" method="post">
         <?php wp_nonce_field('delete_account', 'delete_account_nonce'); ?>
         
         <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
@@ -51,5 +45,6 @@ do_action('woocommerce_before_delete_account');
         </p>
     </form>
 </div>
-
-<?php do_action('woocommerce_after_delete_account'); ?> 
+<?php return ob_get_clean();
+  }
+}

@@ -1,6 +1,8 @@
 <?php
 namespace WStrategies\BMB\Includes\Hooks;
 
+use WStrategies\BMB\Public\Partials\MyAccount\DeleteAccount;
+
 class WooCommerceMyAccountHooks implements HooksInterface {
   public function load(Loader $loader): void {
     // Add new menu item to My Account menu
@@ -36,13 +38,7 @@ class WooCommerceMyAccountHooks implements HooksInterface {
   }
 
   public function delete_account_content(): void {
-    // Load the template
-    wc_get_template(
-      'myaccount/delete-account.php',
-      [],
-      'wp-bracket-builder',
-      plugin_dir_path(dirname(__FILE__, 2)) . 'templates/'
-    );
+    echo (new DeleteAccount())->render();
   }
 
   public function handle_account_deletion(): void {
@@ -70,29 +66,20 @@ class WooCommerceMyAccountHooks implements HooksInterface {
       return;
     }
 
+    // Include required file for wp_delete_user function
+    require_once ABSPATH . 'wp-admin/includes/user.php';
+
     // Get current user
     $current_user = wp_get_current_user();
     if (!$current_user->exists()) {
       return;
     }
 
-    // Delete user's WooCommerce data
-    if (class_exists('WC_Customer')) {
-      $customer = new \WC_Customer($current_user->ID);
-      if ($customer) {
-        // Delete customer's orders
-        $orders = wc_get_orders([
-          'customer' => $current_user->ID,
-          'limit' => -1,
-        ]);
-        foreach ($orders as $order) {
-          $order->delete(true);
-        }
-      }
-    }
-
     // Delete the user
-    if (wp_delete_user($current_user->ID)) {
+    if (
+      function_exists('wp_delete_user') &&
+      wp_delete_user($current_user->ID)
+    ) {
       wp_logout();
       wp_safe_redirect(home_url());
       exit();
