@@ -52,7 +52,6 @@ task react:install    # React dependencies
 
 # Start WordPress
 task wp:up           # Start WordPress containers
-task wp:install      # Initialize WordPress with sample data
 
 # Optional: Import production database
 task wp:import:prod  # Import latest data from production
@@ -129,6 +128,10 @@ Useful docs:
 ## Development Tools
 
 ### Testing
+```bash
+# install tests
+task wp:test:install
+
 ```bash
 # Run all tests
 task wp:test

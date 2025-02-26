@@ -30,18 +30,6 @@ tasks:
     cmds:
       - docker compose --profile wp down -v
 
-  wp:install:
-    desc: Install wordpress and the test installation (use when building from scratch)
-    cmds:
-      - docker exec wp-dev install-wp.sh
-      - docker exec wp-dev install-wp-tests
-
-  wp:init:
-    desc: Initialize test installation and add admin user (use when building from backup)
-    cmds:
-      - docker exec wp-dev install-wp-tests
-      - docker exec wp-dev create-admin-user.sh
-
   composer:install:
     desc: Install php dependencies
     dir: ./plugin
@@ -62,6 +50,11 @@ tasks:
       - trellis up
 
   ### TESTING ###
+  wp:test:install:
+    desc: Install dependencies and start services
+    cmds:
+      - docker exec wp-dev install-wp-tests
+
   wp:test:
     desc: Run all tests
     cmds:
