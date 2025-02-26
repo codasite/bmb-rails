@@ -31,21 +31,9 @@ class DeleteAccount implements TemplateInterface {
 
         <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
             <label for="delete_account_confirmation">
-                <?php
-                $user = wp_get_current_user();
-                $unique_code = wp_hash(
-                  sprintf(
-                    '%s_%s_%s',
-                    $user->ID,
-                    $user->user_email,
-                    wp_nonce_tick()
-                  )
-                );
-                $confirmation_code = substr($unique_code, 0, 8);
-                ?>
-                <?php printf(
-                  esc_html__('Type "%s" to confirm:', 'wp-bracket-builder'),
-                  esc_html($confirmation_code)
+                <?php esc_html_e(
+                  'Type "DELETE" to confirm:',
+                  'wp-bracket-builder'
                 ); ?>
             </label>
             <input type="text" 
@@ -54,9 +42,7 @@ class DeleteAccount implements TemplateInterface {
                    id="delete_account_confirmation" 
                    autocomplete="off"
                    required />
-            <input type="hidden" name="expected_confirmation" value="<?php echo esc_attr(
-              $confirmation_code
-            ); ?>" />
+            <input type="hidden" name="expected_confirmation" value="DELETE" />
         </p>
 
         <p class="woocommerce-form-row form-row">
@@ -66,11 +52,7 @@ class DeleteAccount implements TemplateInterface {
                     value="<?php esc_attr_e(
                       'Delete Account',
                       'wp-bracket-builder'
-                    ); ?>"
-                    onclick="return confirm('<?php esc_attr_e(
-                      'Are you absolutely sure you want to delete your account? This action cannot be undone.',
-                      'wp-bracket-builder'
-                    ); ?>');">
+                    ); ?>">
                 <?php esc_html_e('Delete Account', 'wp-bracket-builder'); ?>
             </button>
         </p>

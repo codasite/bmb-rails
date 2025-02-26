@@ -90,9 +90,12 @@ class WooCommerceMyAccountHooks implements HooksInterface {
     }
 
     // Verify confirmation code
-    if ($_POST['delete_confirmation'] !== $_POST['expected_confirmation']) {
+    if ($_POST['delete_confirmation'] !== 'DELETE') {
       set_transient($attempts_key, $attempts + 1, DAY_IN_SECONDS);
-      wc_add_notice('Invalid confirmation code.', 'error');
+      wc_add_notice(
+        'Please type "DELETE" to confirm account deletion.',
+        'error'
+      );
       return;
     }
 
