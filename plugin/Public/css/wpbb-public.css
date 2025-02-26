@@ -178,3 +178,14 @@
     height: 85px;
   }
 }
+
+/** MY ACCOUNT START */
+.woocommerce-delete-account form {
+  border: 1px solid #d3ced2;
+  border-top: 3px solid #65bec2;
+  border-radius: 0;
+  background: #ffffff;
+  padding: 20px;
+  border-collapse: collapse;
+  box-shadow: var(--box-shadow) 0 10px 20px;
+}
