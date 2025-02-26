@@ -46,7 +46,9 @@ class WooCommerceMyAccountHooks implements HooksInterface {
       !is_account_page() ||
       !isset($_POST['delete_account_submit']) ||
       !isset($_POST['delete_confirmation']) ||
-      !isset($_POST['delete_account_nonce'])
+      !isset($_POST['delete_account_nonce']) ||
+      !isset($_POST['current_password']) ||
+      !isset($_POST['expected_confirmation'])
     ) {
       return;
     }
@@ -57,29 +59,46 @@ class WooCommerceMyAccountHooks implements HooksInterface {
       return;
     }
 
-    // Verify confirmation text
-    if ($_POST['delete_confirmation'] !== 'DELETE') {
-      wc_add_notice(
-        'Please type "DELETE" to confirm account deletion.',
-        'error'
-      );
-      return;
-    }
-
-    // Include required file for wp_delete_user function
-    require_once ABSPATH . 'wp-admin/includes/user.php';
-
     // Get current user
     $current_user = wp_get_current_user();
     if (!$current_user->exists()) {
       return;
     }
 
-    // Delete the user
+    // Check for rate limiting
+    $attempts_key = 'delete_account_attempts_' . $current_user->ID;
+    $attempts = (int) get_transient($attempts_key);
+    if ($attempts >= 3) {
+      wc_add_notice(
+        'Too many deletion attempts. Please try again in 24 hours.',
+        'error'
+      );
+      return;
+    }
+
+    // Verify password
     if (
-      function_exists('wp_delete_user') &&
-      wp_delete_user($current_user->ID)
+      !wp_check_password(
+        $_POST['current_password'],
+        $current_user->user_pass,
+        $current_user->ID
+      )
     ) {
+      set_transient($attempts_key, $attempts + 1, DAY_IN_SECONDS);
+      wc_add_notice('Invalid password.', 'error');
+      return;
+    }
+
+    // Verify confirmation code
+    if ($_POST['delete_confirmation'] !== $_POST['expected_confirmation']) {
+      set_transient($attempts_key, $attempts + 1, DAY_IN_SECONDS);
+      wc_add_notice('Invalid confirmation code.', 'error');
+      return;
+    }
+
+    // Delete the user
+    require_once ABSPATH . 'wp-admin/includes/user.php';
+    if (wp_delete_user($current_user->ID)) {
       wp_logout();
       wp_safe_redirect(home_url());
       exit();
