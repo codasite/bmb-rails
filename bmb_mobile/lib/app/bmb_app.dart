@@ -31,7 +31,7 @@ class _BmbAppState extends State<BmbApp> {
   }
 
   bool _shouldNavigateToResetPassword(Uri? appLink) {
-    if (appLink != null && appLink.toString().contains(WpUrls.rpPath)) {
+    if (appLink != null && WpUrls.isRpLink(appLink)) {
       AppLogger.debugLog('Reset password link found');
       return true;
     }

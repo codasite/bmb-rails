@@ -5,8 +5,7 @@ import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:convert';
-import 'dart:math';
-
+import 'package:bmb_mobile/features/wp_http/constants.dart';
 // 1. user login
 // - POST /wp-login.php
 // - set logged in cookie
@@ -35,6 +34,9 @@ class WpCookieAuth {
           'log': username,
           'pwd': password,
           'rememberme': 'forever',
+        },
+        headers: {
+          'User-Agent': WpHttpConstants.USER_AGENT,
         },
       );
 

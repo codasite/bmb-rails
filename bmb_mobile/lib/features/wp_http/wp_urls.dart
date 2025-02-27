@@ -18,8 +18,10 @@ class WpUrls {
   static const String loginPath = '/wp-login.php';
   static const String registerPath = '/wp-login.php?action=register';
   static const String lostPasswordPath = '/wp-login.php?action=lostpassword';
-  static const String rpPath = '/wp-login.php?action=rp';
   static const String resetPasswordPath = '/wp-login.php?action=resetpass';
+
+  static bool isRpLink(Uri uri) =>
+      uri.path.contains(loginPath) && uri.queryParameters['action'] == 'rp';
 
   // User API paths
   static const String _usersBase = '$_bmbApiBase/users';

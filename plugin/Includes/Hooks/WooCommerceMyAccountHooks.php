@@ -103,7 +103,7 @@ class WooCommerceMyAccountHooks implements HooksInterface {
     require_once ABSPATH . 'wp-admin/includes/user.php';
     if (wp_delete_user($current_user->ID)) {
       wp_logout();
-      wp_safe_redirect(home_url());
+      wp_safe_redirect(add_query_arg('account_deleted', '1', home_url()));
       exit();
     } else {
       wc_add_notice('Error deleting account. Please try again.', 'error');

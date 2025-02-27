@@ -21,6 +21,7 @@ import 'package:bmb_mobile/features/webview/presentation/controllers/javascript_
 import 'dart:async' show scheduleMicrotask, Timer;
 import 'package:bmb_mobile/features/notifications/presentation/widgets/fcm_notification_listener.dart';
 import 'package:bmb_mobile/features/app_links/presentation/providers/app_link_provider.dart';
+import 'package:bmb_mobile/features/wp_http/constants.dart';
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key});
@@ -175,7 +176,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
     AppLogger.debugLog('Initializing WebView');
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setUserAgent('BackMyBracket-MobileApp');
+      ..setUserAgent(WpHttpConstants.USER_AGENT);
 
     _jsController = JavaScriptChannelController(_controller);
 

@@ -2,6 +2,7 @@ import 'package:bmb_mobile/features/wp_auth/domain/services/wp_cookie_auth.dart'
 import 'package:bmb_mobile/features/wp_auth/domain/services/wp_basic_auth.dart';
 import 'package:bmb_mobile/core/utils/app_logger.dart';
 import 'package:bmb_mobile/features/wp_http/wp_urls.dart';
+import 'package:bmb_mobile/features/wp_http/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:html/parser.dart';
@@ -78,6 +79,9 @@ class WpAuth {
           'user_email': email,
           'wp-submit': 'Create+Account',
         },
+        headers: {
+          'User-Agent': WpHttpConstants.USER_AGENT,
+        },
       );
       if (response.statusCode == 302) {
         await AppLogger.debugLog(
@@ -110,6 +114,9 @@ class WpAuth {
           'user_login': email,
           'wp-submit': 'Get+New+Password',
         },
+        headers: {
+          'User-Agent': WpHttpConstants.USER_AGENT,
+        },
       );
       if (response.statusCode == 302) {
         await AppLogger.debugLog(
@@ -137,7 +144,7 @@ class WpAuth {
     try {
       AppLogger.debugLog('Validating reset password link: $resetLink');
 
-      if (!resetLink.toString().contains(WpUrls.rpPath)) {
+      if (!WpUrls.isRpLink(resetLink)) {
         _errorsList.add('Invalid password reset link');
         return false;
       }
@@ -222,12 +229,18 @@ class WpAuth {
   Future<bool> resetPassword(String key, String password) async {
     AppLogger.debugLog('Resetting password with key: $key');
     _errorsList.clear();
+    if (_resetPasswordCookie == null) {
+      AppLogger.debugLog('No reset password cookie found. Returning false.');
+      _errorsList.add('Error resetting password. Please try again.');
+      return false;
+    }
     try {
       final response = await http.post(
         Uri.parse(WpUrls.resetPasswordUrl),
-        headers: _resetPasswordCookie != null
-            ? {'Cookie': _resetPasswordCookie!}
-            : null,
+        headers: {
+          'Cookie': _resetPasswordCookie!,
+          'User-Agent': WpHttpConstants.USER_AGENT,
+        },
         body: {
           'pass1': password,
           'pass2': password,

@@ -73,7 +73,8 @@ class WebViewNavigationDelegate extends NavigationDelegate {
 
               // Check for login/unauthorized paths
               if (request.url.contains(WpUrls.loginPath) ||
-                  request.url.contains('unauthorized')) {
+                  request.url.contains('unauthorized') ||
+                  uri.queryParameters['account_deleted'] == '1') {
                 onLogout();
                 return NavigationDecision.prevent;
               }
