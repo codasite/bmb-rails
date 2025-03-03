@@ -2,7 +2,9 @@
 namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Public\Partials\BracketPage\BracketPage;
+use WStrategies\BMB\Public\Partials\CelebrityBracketsPage;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
+use WStrategies\BMB\Public\Partials\OfficialBracketsPage;
 use WStrategies\BMB\Public\Partials\PlayPage\PlayPage;
 use WStrategies\BMB\Public\Partials\StripeOnboardingRedirect;
 use WStrategies\BMB\Public\Partials\UserProfile\UserProfilePage;
@@ -22,18 +24,6 @@ class PublicShortcodes implements HooksInterface {
     return '<div id="wpbb-bracket-builder"></div>';
   }
 
-  public function render_official_brackets(): false|string {
-    ob_start();
-    include WPBB_PLUGIN_DIR . 'Public/Partials/official-brackets.php';
-    return ob_get_clean();
-  }
-
-  public function render_celebrity_picks(): false|string {
-    ob_start();
-    include WPBB_PLUGIN_DIR . 'Public/Partials/celebrity-brackets.php';
-    return ob_get_clean();
-  }
-
   /**
    * Add shortcode to render events
    *
@@ -42,10 +32,13 @@ class PublicShortcodes implements HooksInterface {
   public function add_shortcodes(): void {
     add_shortcode('wpbb-bracket-builder', [$this, 'render_bracket_builder']); // This is a page with slug `bracket-template-builder
     add_shortcode('wpbb-official-brackets', [
-      $this,
-      'render_official_brackets',
+      new OfficialBracketsPage(),
+      'render',
     ]);
-    add_shortcode('wpbb-celebrity-picks', [$this, 'render_celebrity_picks']); // This is a page with slug `celebrity-picks`
+    add_shortcode('wpbb-celebrity-picks', [
+      new CelebrityBracketsPage(),
+      'render',
+    ]); // This is a page with slug `celebrity-picks`
     add_shortcode('wpbb-bracket-preview', [
       $this,
       'render_bracket_product_preview',
