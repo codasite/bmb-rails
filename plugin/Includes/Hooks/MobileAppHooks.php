@@ -33,7 +33,7 @@ class MobileAppHooks implements HooksInterface {
 
   public function filter_subscription_products($visible, $product_id): bool {
     // Check if request is from mobile app
-    if (MobileAppUtils::is_mobile_app_request()) {
+    if ((new MobileAppUtils())->is_mobile_app_request()) {
       // Check if product is a subscription
       $product = wc_get_product($product_id);
       if ($product && $product->is_type('subscription')) {

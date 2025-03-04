@@ -97,7 +97,7 @@ class BracketListItem {
   public static function go_live_btn(Bracket $bracket): false|string {
     if (
       !current_user_can('wpbb_edit_bracket', $bracket->id) ||
-      (MobileAppUtils::is_mobile_app_request() &&
+      ((new MobileAppUtils())->is_mobile_app_request() &&
         !current_user_can('wpbb_share_bracket', $bracket->id))
     ) {
       return '';

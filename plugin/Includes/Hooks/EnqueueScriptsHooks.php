@@ -123,7 +123,7 @@ class EnqueueScriptsHooks implements HooksInterface {
     );
 
     // Only enqueue mobile app styles if the special header is present
-    if (MobileAppUtils::is_mobile_app_request()) {
+    if ((new MobileAppUtils())->is_mobile_app_request()) {
       wp_enqueue_style(
         $this->plugin_name . '-mobile-app',
         plugin_dir_url(dirname(__FILE__, 2)) . 'Public/css/wpbb-mobile-app.css',

@@ -12,20 +12,21 @@ use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
 
 class CelebrityBracketsPage implements TemplateInterface {
   private int $posts_per_page = 6;
+  private PlayRepo $play_repo;
+  private BracketRepo $bracket_repo;
+  private MobileAppUtils $mobile_app_utils;
 
-  public function __construct(
-    private PlayRepo $play_repo = new PlayRepo(),
-    private BracketRepo $bracket_repo = new BracketRepo(),
-    private ?MobileAppUtils $mobile_app_utils = null
-  ) {
-    $this->mobile_app_utils = $mobile_app_utils ?? new MobileAppUtils();
+  public function __construct(array $args = []) {
+    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
+    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
+    $this->mobile_app_utils = $args['mobile_app_utils'] ?? new MobileAppUtils();
   }
 
-  protected function get_current_page(): int {
+  public function get_current_page(): int {
     return get_query_var('paged') ? absint(get_query_var('paged')) : 1;
   }
 
-  protected function build_query_args(int $paged): array {
+  public function build_query_args(int $paged): array {
     $query_args = [
       'post_type' => [Bracket::get_post_type(), Play::get_post_type()],
       'posts_per_page' => $this->posts_per_page,
@@ -40,7 +41,7 @@ class CelebrityBracketsPage implements TemplateInterface {
     return $query_args;
   }
 
-  protected function get_mobile_meta_query(): array {
+  public function get_mobile_meta_query(): array {
     return [
       'relation' => 'OR',
       [
@@ -55,7 +56,7 @@ class CelebrityBracketsPage implements TemplateInterface {
     ];
   }
 
-  protected function fetch_posts(array $query_args): array {
+  public function fetch_posts(array $query_args): array {
     $query = new WP_Query($query_args);
     return [
       'posts' => $query->posts,
@@ -63,7 +64,7 @@ class CelebrityBracketsPage implements TemplateInterface {
     ];
   }
 
-  protected function convert_post_to_entity(\WP_Post $post): ?object {
+  public function convert_post_to_entity(\WP_Post $post): ?object {
     if ($post->post_type === Bracket::get_post_type()) {
       return $this->bracket_repo->get($post);
     } elseif ($post->post_type === Play::get_post_type()) {
@@ -87,7 +88,7 @@ class CelebrityBracketsPage implements TemplateInterface {
     ];
   }
 
-  protected function render_header(): string {
+  public function render_header(): string {
     ob_start(); ?>
     <div class="wpbb-page-header tw-flex tw-flex-col tw-py-60 tw-gap-15 tw-items-center ">
       <div class="logo-svg"></div>
@@ -96,7 +97,7 @@ class CelebrityBracketsPage implements TemplateInterface {
     <?php return ob_get_clean();
   }
 
-  protected function render_content(
+  public function render_content(
     array $brackets_and_plays,
     int $paged,
     int $num_pages

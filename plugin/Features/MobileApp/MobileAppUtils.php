@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Features\MobileApp;
 class MobileAppUtils {
   public const MOBILE_APP_USER_AGENT = 'BackMyBracket-MobileApp';
 
-  public static function is_mobile_app_request(): bool {
+  public function is_mobile_app_request(): bool {
     return !empty($_SERVER['HTTP_USER_AGENT']) &&
       $_SERVER['HTTP_USER_AGENT'] === self::MOBILE_APP_USER_AGENT;
   }
