@@ -35,25 +35,12 @@ class CelebrityBracketsPage implements TemplateInterface {
     ];
 
     if ($this->mobile_app_utils->is_mobile_app_request()) {
-      $query_args['meta_query'] = $this->get_mobile_meta_query();
+      $query_args[
+        'meta_query'
+      ] = $this->mobile_app_utils->get_mobile_meta_query();
     }
 
     return $query_args;
-  }
-
-  public function get_mobile_meta_query(): array {
-    return [
-      'relation' => 'OR',
-      [
-        'key' => 'bracket_fee',
-        'value' => '0',
-        'compare' => '=',
-      ],
-      [
-        'key' => 'bracket_fee',
-        'compare' => 'NOT EXISTS',
-      ],
-    ];
   }
 
   public function fetch_posts(array $query_args): array {

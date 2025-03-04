@@ -7,7 +7,7 @@ use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscripti
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-
+use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
 class BracketsCommon {
   public static function filter_button(
     $label,
@@ -630,7 +630,7 @@ class BracketsCommon {
       $status_query = $all_statuses;
     }
 
-    $the_query = new WP_Query([
+    $args = [
       'post_type' => Bracket::get_post_type(),
       'tag_slug__and' => $tags,
       'posts_per_page' => 8,
@@ -638,7 +638,15 @@ class BracketsCommon {
       'post_status' => $status_query,
       'order' => 'DESC',
       'author' => $author_id,
-    ]);
+    ];
+
+    $mobile_app_utils = new MobileAppUtils();
+
+    if ($mobile_app_utils->is_mobile_app_request()) {
+      $args['meta_query'] = $mobile_app_utils->get_mobile_meta_query();
+    }
+
+    $the_query = new WP_Query($args);
 
     $num_pages = $the_query->max_num_pages;
 

@@ -9,4 +9,18 @@ class MobileAppUtils {
     return !empty($_SERVER['HTTP_USER_AGENT']) &&
       $_SERVER['HTTP_USER_AGENT'] === self::MOBILE_APP_USER_AGENT;
   }
+  public function get_mobile_meta_query(): array {
+    return [
+      'relation' => 'OR',
+      [
+        'key' => 'bracket_fee',
+        'value' => '0',
+        'compare' => '=',
+      ],
+      [
+        'key' => 'bracket_fee',
+        'compare' => 'NOT EXISTS',
+      ],
+    ];
+  }
 }
