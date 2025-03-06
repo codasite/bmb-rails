@@ -14,6 +14,7 @@ class WebViewNavigationDelegate extends NavigationDelegate {
     '/shop/bmb/',
     '/referralprogram/',
     '/be-a-host/',
+    'has_fee=true',
   ];
 
   // Domains that are allowed to load in WebView
