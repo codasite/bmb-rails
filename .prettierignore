@@ -10,3 +10,4 @@ bmb_mobile/*
 *.code-workspace
 site/
 __snapshots__/
+bmb_mobile/lib/features/wp_auth/examples/
