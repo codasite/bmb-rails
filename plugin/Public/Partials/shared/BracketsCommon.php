@@ -7,7 +7,8 @@ use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscripti
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
-use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
+use WStrategies\BMB\Features\MobileApp\RequestService;
+use WStrategies\BMB\Features\MobileApp\MobileAppMetaQuery;
 class BracketsCommon {
   public static function filter_button(
     $label,
@@ -640,10 +641,10 @@ class BracketsCommon {
       'author' => $author_id,
     ];
 
-    $mobile_app_utils = new MobileAppUtils();
+    $request_service = new RequestService();
 
-    if ($mobile_app_utils->is_mobile_app_request()) {
-      $args['meta_query'] = $mobile_app_utils->get_mobile_meta_query();
+    if ($request_service->is_mobile_app_request()) {
+      $args['meta_query'] = MobileAppMetaQuery::get_mobile_meta_query();
     }
 
     $the_query = new WP_Query($args);

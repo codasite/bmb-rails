@@ -8,18 +8,18 @@ use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketCards;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
-use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
-
+use WStrategies\BMB\Features\MobileApp\RequestService;
+use WStrategies\BMB\Features\MobileApp\MobileAppMetaQuery;
 class CelebrityBracketsPage implements TemplateInterface {
   private int $posts_per_page = 6;
   private PlayRepo $play_repo;
   private BracketRepo $bracket_repo;
-  private MobileAppUtils $mobile_app_utils;
+  private RequestService $request_service;
 
   public function __construct(array $args = []) {
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    $this->mobile_app_utils = $args['mobile_app_utils'] ?? new MobileAppUtils();
+    $this->request_service = $args['request_service'] ?? new RequestService();
   }
 
   public function get_current_page(): int {
@@ -34,10 +34,8 @@ class CelebrityBracketsPage implements TemplateInterface {
       'tag_slug__in' => ['bmb_vip_featured'],
     ];
 
-    if ($this->mobile_app_utils->is_mobile_app_request()) {
-      $query_args[
-        'meta_query'
-      ] = $this->mobile_app_utils->get_mobile_meta_query();
+    if ($this->request_service->is_mobile_app_request()) {
+      $query_args['meta_query'] = MobileAppMetaQuery::get_mobile_meta_query();
     }
 
     return $query_args;

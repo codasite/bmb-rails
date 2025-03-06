@@ -1,7 +1,7 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Public\Partials;
 
-use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
+use WStrategies\BMB\Features\MobileApp\RequestService;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Public\Partials\CelebrityBracketsPage;
@@ -9,7 +9,7 @@ use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
 
 class CelebrityBracketsPageTest extends WPBB_UnitTestCase {
   private $page;
-  private $mobile_app_utils;
+  private $request_service;
   private $bracket_with_fee;
   private $bracket_without_fee;
   private $play;
@@ -18,8 +18,9 @@ class CelebrityBracketsPageTest extends WPBB_UnitTestCase {
     parent::set_up();
 
     // Create test brackets and plays
-    $this->bracket_with_fee = $this->create_bracket();
-    update_post_meta($this->bracket_with_fee->id, 'bracket_fee', '10');
+    $this->bracket_with_fee = $this->create_bracket([
+      'fee' => 10,
+    ]);
     wp_set_post_tags($this->bracket_with_fee->id, ['bmb_vip_featured'], true);
 
     $this->bracket_without_fee = $this->create_bracket();
@@ -34,12 +35,10 @@ class CelebrityBracketsPageTest extends WPBB_UnitTestCase {
     ]);
     wp_set_post_tags($this->play->id, ['bmb_vip_featured'], true);
 
-    // Mock MobileAppUtils
-    $this->mobile_app_utils = $this->createMock(MobileAppUtils::class);
+    $this->request_service = $this->createMock(RequestService::class);
 
-    // Create page instance with mocked utils
     $this->page = new CelebrityBracketsPage([
-      'mobile_app_utils' => $this->mobile_app_utils,
+      'request_service' => $this->request_service,
     ]);
   }
 
@@ -55,7 +54,7 @@ class CelebrityBracketsPageTest extends WPBB_UnitTestCase {
 
   public function test_mobile_app_request_filters_out_paid_brackets(): void {
     // Set mobile app request to true
-    $this->mobile_app_utils->method('is_mobile_app_request')->willReturn(true);
+    $this->request_service->method('is_mobile_app_request')->willReturn(true);
 
     $result = $this->page->get_brackets_and_plays();
     $brackets_and_plays = $result['brackets_and_plays'];
@@ -73,7 +72,7 @@ class CelebrityBracketsPageTest extends WPBB_UnitTestCase {
 
   public function test_web_request_includes_all_brackets(): void {
     // Set mobile app request to false
-    $this->mobile_app_utils->method('is_mobile_app_request')->willReturn(false);
+    $this->request_service->method('is_mobile_app_request')->willReturn(false);
 
     $result = $this->page->get_brackets_and_plays();
     $brackets_and_plays = $result['brackets_and_plays'];
@@ -134,7 +133,7 @@ class CelebrityBracketsPageTest extends WPBB_UnitTestCase {
   }
 
   public function test_render_returns_string(): void {
-    $this->mobile_app_utils->method('is_mobile_app_request')->willReturn(false);
+    $this->request_service->method('is_mobile_app_request')->willReturn(false);
 
     $output = $this->page->render();
     $this->assertIsString($output);
@@ -155,25 +154,5 @@ class CelebrityBracketsPageTest extends WPBB_UnitTestCase {
 
     $this->assertInstanceOf(Bracket::class, $bracket_result);
     $this->assertInstanceOf(Play::class, $play_result);
-  }
-
-  public function test_mobile_meta_query_structure(): void {
-    $reflection = new \ReflectionClass($this->page);
-    $method = $reflection->getMethod('get_mobile_meta_query');
-    $method->setAccessible(true);
-
-    $meta_query = $method->invoke($this->page);
-
-    $this->assertEquals('OR', $meta_query['relation']);
-    $this->assertCount(2, array_filter($meta_query, 'is_array'));
-
-    // Check first condition (bracket_fee = 0)
-    $this->assertEquals('bracket_fee', $meta_query[0]['key']);
-    $this->assertEquals('0', $meta_query[0]['value']);
-    $this->assertEquals('=', $meta_query[0]['compare']);
-
-    // Check second condition (bracket_fee NOT EXISTS)
-    $this->assertEquals('bracket_fee', $meta_query[1]['key']);
-    $this->assertEquals('NOT EXISTS', $meta_query[1]['compare']);
   }
 }
