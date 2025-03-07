@@ -104,14 +104,14 @@ class BracketIconButtons {
     return ob_get_clean();
   }
 
-  public static function share_bracket_btn($bracket): false|string {
+  public static function share_bracket_btn(Bracket $bracket): false|string {
     return DashboardCommon::icon_btn(
       'Share',
       'share.svg',
       classes: ['wpbb-share-bracket-button'],
       data: [
         'label' => 'Share',
-        'play-bracket-url' => $bracket->url . 'play',
+        'play-bracket-url' => $bracket->get_play_url(),
         'bracket-title' => $bracket->title,
         'bracket-id' => $bracket->id,
       ]
@@ -222,7 +222,7 @@ class BracketIconButtons {
         'bracket-year' => $bracket->year,
         'bracket-month' => $bracket->month,
         'fee' => $bracket->fee,
-        'play-bracket-url' => $bracket->url,
+        'play-bracket-url' => $bracket->get_play_url(),
         'copy-bracket-url' => $bracket->url . 'copy',
         'most-popular-picks-url' => $bracket->url . 'most-popular-picks',
       ]
