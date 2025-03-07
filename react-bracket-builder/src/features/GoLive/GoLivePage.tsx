@@ -9,6 +9,7 @@ import { TournamentTypePage } from './TournamentTypePage'
 
 const GoLivePage = (props: GoLivePageProps) => {
   const [chargesEnabled, setChargesEnabled] = useState(false)
+  const [bracket, setBracket] = useState<BracketRes>(props.bracket)
   const pages: Page[] = [
     {
       title: 'Tournament Type',
@@ -25,6 +26,8 @@ const GoLivePage = (props: GoLivePageProps) => {
       setChargesEnabled={setChargesEnabled}
       basePathPart="go-live"
       {...props}
+      bracket={bracket}
+      setBracket={setBracket}
     />
   )
 }

@@ -20,7 +20,10 @@ export const EntryFeePage = (props: EntryFeePageProps) => {
   const onContinue = async () => {
     setLoading(true)
     try {
-      await bracketApi.updateBracket(props.bracket.id, { status: 'publish' })
+      const bracket = await bracketApi.updateBracket(props.bracket.id, {
+        status: 'publish',
+      })
+      props.setBracket?.(bracket)
       props.navigate('next')
     } catch (error) {
       logger.error('Failed to update bracket', error)
