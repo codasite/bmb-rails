@@ -5,7 +5,7 @@ namespace WStrategies\BMB\Public\Partials\shared;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardCommon;
-use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
+use WStrategies\BMB\Features\MobileApp\RequestService;
 
 class BracketListItem {
   public static function bracket_list_item(Bracket $bracket): false|string {
@@ -97,7 +97,7 @@ class BracketListItem {
   public static function go_live_btn(Bracket $bracket): false|string {
     if (
       !current_user_can('wpbb_edit_bracket', $bracket->id) ||
-      (MobileAppUtils::is_mobile_app_request() &&
+      ((new RequestService())->is_mobile_app_request() &&
         !current_user_can('wpbb_share_bracket', $bracket->id))
     ) {
       return '';

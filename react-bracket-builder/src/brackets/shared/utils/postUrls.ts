@@ -2,7 +2,11 @@ import { PostBase } from '../api/types/bracket'
 import { BracketRes, PlayRes } from '../index'
 
 export const getPlayBracketUrl = (bracket: BracketRes) => {
-  return getPostUrlForPath(bracket, 'play')
+  const baseUrl = getPostUrlForPath(bracket, 'play')
+  if (bracket?.fee && bracket.fee > 0) {
+    return `${baseUrl}?has_fee=true`
+  }
+  return baseUrl
 }
 
 export const getBracketResultsUrl = (bracket: BracketRes) => {

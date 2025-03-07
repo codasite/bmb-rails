@@ -242,4 +242,15 @@ class Bracket extends PostBase implements PostBracketInterface {
   public function has_fee(): bool {
     return $this->fee > 0;
   }
+
+  public function get_play_url(): string {
+    if (!$this->url) {
+      return '';
+    }
+    $url = $this->url . 'play';
+    if ($this->has_fee()) {
+      $url = add_query_arg('has_fee', 'true', $url);
+    }
+    return $url;
+  }
 }

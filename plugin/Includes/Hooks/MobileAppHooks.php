@@ -2,7 +2,9 @@
 
 namespace WStrategies\BMB\Includes\Hooks;
 
-use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
+use WStrategies\BMB\Features\MobileApp\RequestService;
+use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class MobileAppHooks implements HooksInterface {
   public function load(Loader $loader): void {
@@ -25,6 +27,13 @@ class MobileAppHooks implements HooksInterface {
       10,
       2
     );
+
+    // Add redirect for paid brackets
+    $loader->add_action(
+      'template_redirect',
+      [$this, 'redirect_paid_brackets'],
+      10
+    );
   }
 
   public function is_application_passwords_available(): bool {
@@ -33,7 +42,7 @@ class MobileAppHooks implements HooksInterface {
 
   public function filter_subscription_products($visible, $product_id): bool {
     // Check if request is from mobile app
-    if (MobileAppUtils::is_mobile_app_request()) {
+    if ((new RequestService())->is_mobile_app_request()) {
       // Check if product is a subscription
       $product = wc_get_product($product_id);
       if ($product && $product->is_type('subscription')) {
@@ -77,5 +86,37 @@ class MobileAppHooks implements HooksInterface {
       $secure, // Only send over HTTPS if site uses it
       true // HTTPOnly flag
     );
+  }
+
+  public function redirect_paid_brackets(): void {
+    // Only proceed if this is a single post
+    if (!is_singular()) {
+      return;
+    }
+
+    $post = get_post();
+
+    // Check if this is a bracket post type
+    if (!$post || $post->post_type !== Bracket::get_post_type()) {
+      return;
+    }
+
+    // Check if bracket has a fee
+    if (current_user_can('wpbb_play_bracket_for_free', $post->ID)) {
+      return;
+    }
+
+    // Get current URL and check if has_fee parameter already exists
+    $current_url = add_query_arg(null, null);
+    if (strpos($current_url, 'has_fee=true') !== false) {
+      return;
+    }
+
+    // Add has_fee parameter and redirect
+    $redirect_url = add_query_arg('has_fee', 'true', $current_url);
+    if ($redirect_url !== $current_url) {
+      wp_redirect($redirect_url);
+      exit();
+    }
   }
 }

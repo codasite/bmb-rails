@@ -122,8 +122,11 @@ task ios:push     # Upload to App Store Connect
 
 To enable Universal Links for iOS, copy the app site association file from `bmb_mobile/.well-known/apple-app-site-association` to your WordPress site's `.well-known` directory. The file must be served over HTTPS at `https://yourdomain.com/.well-known/apple-app-site-association`.
 
-Useful docs:
-- https://digitalbunker.dev/apple-app-site-association/
+To ensure apple is serving the latest version, check `https://app-site-association.cdn-apple.com/a/v1/backmybracket.com`
+
+It is unclear how often this cache is refreshed, but you can check what file WILL be served when it does by adding ?1 to the url. See `https://stackoverflow.com/questions/68368233/apple-app-site-association-file-is-not-fetched-from-server-but-cached-at-apple`
+
+For testing, you can add ?mode=developer to the Associated Domains capability in xcode. See `https://developer.apple.com/documentation/xcode/configuring-an-associated-domain#Enable-alternate-mode-for-unreachable-servers`. Be sure to enable the Associated Domains Development option in Settings > Developer.
 
 ## Development Tools
 

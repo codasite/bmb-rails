@@ -9,7 +9,7 @@ use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\PlaySerializer;
 use WStrategies\BMB\Public\Partials\dashboard\DashboardPage;
-use WStrategies\BMB\Features\MobileApp\MobileAppUtils;
+use WStrategies\BMB\Features\MobileApp\RequestService;
 /**
  * The public-facing functionality of the plugin.
  *
@@ -123,7 +123,7 @@ class EnqueueScriptsHooks implements HooksInterface {
     );
 
     // Only enqueue mobile app styles if the special header is present
-    if (MobileAppUtils::is_mobile_app_request()) {
+    if ((new RequestService())->is_mobile_app_request()) {
       wp_enqueue_style(
         $this->plugin_name . '-mobile-app',
         plugin_dir_url(dirname(__FILE__, 2)) . 'Public/css/wpbb-mobile-app.css',

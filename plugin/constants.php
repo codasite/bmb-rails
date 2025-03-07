@@ -17,6 +17,7 @@ const IMAGE_GENERATOR_PATH = '';
 const BMB_PLUS_SLUG = '';
 const WPBB_DB_PREFIX = '';
 const HOUR_IN_SECONDS = 3600;
+const DAY_IN_SECONDS = 86400; // 24 * HOUR_IN_SECONDS
 const COOKIEPATH = '';
 // Bypass all image generator calls and s3 calls so we can run locally
 // @var string|null
@@ -29,3 +30,5 @@ const COOKIE_DOMAIN = '';
 const STRIPE_SECRET_KEY = '';
 const STRIPE_WEBHOOK_SECRET = '';
 const STRIPE_PUBLISHABLE_KEY = '';
+const EP_PAGES = 4096;
+const EP_ROOT = 1;
