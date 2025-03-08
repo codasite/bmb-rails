@@ -14,6 +14,11 @@ class TeamSerializer extends ApiSerializerBase {
     return new Team($obj_data);
   }
   public function get_serialized_fields(): array {
-    return ['id', 'name'];
+    return [
+      'id' => [
+        'readonly' => true,
+      ],
+      'name',
+    ];
   }
 }

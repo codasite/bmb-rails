@@ -25,3 +25,43 @@
   /* padding: 5px; */
   text-align: center;
 }
+
+/* JSON Meta Box Styles */
+.wpbb-json-copy-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 5px 10px;
+  background: #2271b1;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+  z-index: 1;
+}
+
+.wpbb-json-copy-button:hover {
+  background: #135e96;
+}
+
+.wpbb-json-copy-button.copied {
+  background: #00a32a;
+}
+
+#wpbb_bracket_json {
+  position: relative;
+  padding: 10px;
+}
+
+#wpbb_bracket_json pre {
+  background: #f6f7f7;
+  padding: 15px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow: auto;
+  max-height: 400px;
+}
