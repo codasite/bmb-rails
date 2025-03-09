@@ -20,9 +20,9 @@ import { BracketLines, RootMatchLines } from './BracketLines'
 import { MatchNode } from '../../models/operations/MatchNode'
 import { Round } from '../../models/Round'
 import {
+  getFirstMatches,
   getFinalMatches,
-  getLeftMatches,
-  getRightMatches,
+  getSideMatches,
 } from '../../models/operations/GetMatchSections'
 import { SizeChangeListenerContext } from '../../context/SizeChangeListenerContext'
 import { useResizeObserver } from '../../../../utils/hooks'
@@ -111,18 +111,18 @@ export const DefaultBracket = (props: BracketProps) => {
 
   const getMatchColumns = (
     rounds: Nullable<MatchNode>[][],
-    position: 'left' | 'right' | 'center',
+    position: 'first' | 'left' | 'right' | 'center',
     numRounds: number
   ): JSX.Element[] => {
     return rounds.map((matches, i) => {
       let roundIndex: number
-      if (position === 'left') {
+      if (position === 'first') {
         roundIndex = i
-      }
-      if (position === 'right') {
+      } else if (position === 'left') {
+        roundIndex = i
+      } else if (position === 'right') {
         roundIndex = numRounds - i - 2
-      }
-      if (position === 'center') {
+      } else if (position === 'center') {
         roundIndex = numRounds - 1
       }
       const { teamHeight, teamWidth, teamGap, matchGap } =
@@ -149,10 +149,11 @@ export const DefaultBracket = (props: BracketProps) => {
 
   const buildMatches = (rounds: Round[]) => {
     // Build the left matches, right matches, and final match separately
-    const leftMatches = getLeftMatches(rounds)
-    const rightMatches = getRightMatches(rounds).reverse()
+    const firstMatches = getFirstMatches(rounds)
+    const { left: leftMatches, right: rightMatches } = getSideMatches(rounds)
     const finalMatches = getFinalMatches(rounds)
 
+    const firstMatchColumns = getMatchColumns(firstMatches, 'first', numRounds)
     const leftMatchColumns = getMatchColumns(leftMatches, 'left', numRounds)
     const rightMatchColumns = getMatchColumns(rightMatches, 'right', numRounds)
     const finalMatchColumn = getMatchColumns(finalMatches, 'center', numRounds)

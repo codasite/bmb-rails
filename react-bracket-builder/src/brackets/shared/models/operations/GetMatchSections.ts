@@ -2,17 +2,24 @@ import { Round } from '../Round'
 import { Nullable } from '../../../../utils/types'
 import { MatchNode } from './MatchNode'
 
-export function getLeftMatches(rounds: Round[]): Nullable<MatchNode>[][] {
-  const sideMatches = rounds.slice(0, rounds.length - 1)
-  return sideMatches.map((round) =>
-    round.matches.slice(0, round.matches.length / 2)
-  )
+export function getFirstMatches(rounds: Round[]): Nullable<MatchNode>[][] {
+  if (rounds.length < 7) {
+    return []
+  }
+  return [rounds[0].matches]
 }
 
-export function getRightMatches(rounds: Round[]): Nullable<MatchNode>[][] {
-  const sideMatches = rounds.slice(0, rounds.length - 1)
-  return sideMatches.map((round) =>
-    round.matches.slice(round.matches.length / 2)
+export function getSideMatches(rounds: Round[]): {
+  left: Nullable<MatchNode>[][]
+  right: Nullable<MatchNode>[][]
+} {
+  const sideRounds = rounds.slice(0, rounds.length - 1)
+  return sideRounds.reduce(
+    (matches, round) => ({
+      left: [...matches.left, round.matches.slice(0, round.matches.length / 2)],
+      right: [round.matches.slice(round.matches.length / 2), ...matches.right],
+    }),
+    { left: [], right: [] }
   )
 }
 
