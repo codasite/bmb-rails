@@ -30,11 +30,9 @@ export const FirstMatchesContainer: React.FC<FirstMatchesContainerProps> = ({
   const numRounds = matchTree.rounds.length
   const teamHeight = defaultBracketConstants.teamHeights[numRounds]
   const teamWidth = defaultBracketConstants.teamWidths[numRounds]
-  const teamGap = defaultBracketConstants.teamGaps[0]
-  const matchGap = defaultBracketConstants.firstRoundsMatchGaps[numRounds]
 
   return (
-    <div className="tw-flex tw-flex-row tw-gap-8 tw-justify-center tw-items-center">
+    <div className="tw-flex tw-flex-row tw-gap-20 tw-justify-center tw-items-center">
       {matches.map((match, index) => (
         <MatchBoxComponent
           key={`first-match-${index}`}
@@ -47,7 +45,7 @@ export const FirstMatchesContainer: React.FC<FirstMatchesContainerProps> = ({
           onTeamClick={onTeamClick}
           teamHeight={teamHeight}
           teamWidth={teamWidth}
-          teamGap={teamGap}
+          teamGap={6}
         />
       ))}
     </div>
