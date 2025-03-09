@@ -111,14 +111,12 @@ export const DefaultBracket = (props: BracketProps) => {
 
   const getMatchColumns = (
     rounds: Nullable<MatchNode>[][],
-    position: 'first' | 'left' | 'right' | 'center',
+    position: 'left' | 'right' | 'center',
     numRounds: number
   ): JSX.Element[] => {
     return rounds.map((matches, i) => {
       let roundIndex: number
-      if (position === 'first') {
-        roundIndex = i
-      } else if (position === 'left') {
+      if (position === 'left') {
         roundIndex = i
       } else if (position === 'right') {
         roundIndex = numRounds - i - (numRounds < 7 ? 2 : 3) // right side matches are reversed.
@@ -148,11 +146,9 @@ export const DefaultBracket = (props: BracketProps) => {
   }
 
   const buildMatches = (rounds: Round[]) => {
-    const firstMatches = getFirstMatches(rounds)
     const { left: leftMatches, right: rightMatches } = getSideMatches(rounds)
     const finalMatches = getFinalMatches(rounds)
 
-    const firstMatchColumns = getMatchColumns(firstMatches, 'first', numRounds)
     const leftMatchColumns = getMatchColumns(leftMatches, 'left', numRounds)
     const rightMatchColumns = getMatchColumns(rightMatches, 'right', numRounds)
     const finalMatchColumn = getMatchColumns(finalMatches, 'center', numRounds)
@@ -170,8 +166,9 @@ export const DefaultBracket = (props: BracketProps) => {
     )
   }
 
+  const firstMatches = getFirstMatches(matchTree.rounds)
+  const renderFirstMatches = firstMatches.length > 0
   const width = getBracketWidth(matchTree.rounds.length)
-
   const rootMatch = matchTree.getRootMatch()
   const numRounds = matchTree.rounds.length
   const winnerContainerMB =
@@ -220,14 +217,18 @@ export const DefaultBracket = (props: BracketProps) => {
           {buildMatches(matchTree.rounds)}
         </div>
       </div>
-      {renderWinnerAndLogo && (
+      {(renderWinnerAndLogo || renderFirstMatches) && (
         <div
+          className={`tw-flex tw-flex-col tw-items-center tw-justify-between`}
           style={{
             marginTop: logoContainerMT,
             minHeight: logoContainerMinHeight,
           }}
         >
-          <LogoContainer {...props} bottomText={bracketDate} />
+          {renderWinnerAndLogo && (
+            <LogoContainer {...props} bottomText={bracketDate} />
+          )}
+          {renderFirstMatches && <p>First Four Go Here</p>}
         </div>
       )}
       <BracketLines
