@@ -121,7 +121,7 @@ export const DefaultBracket = (props: BracketProps) => {
       } else if (position === 'left') {
         roundIndex = i
       } else if (position === 'right') {
-        roundIndex = numRounds - i - 2
+        roundIndex = numRounds - i - (numRounds < 7 ? 2 : 3) // right side matches are reversed.
       } else if (position === 'center') {
         roundIndex = numRounds - 1
       }
