@@ -83,11 +83,12 @@ class BracketCommand {
       if ($saved) {
         WP_CLI::success(
           sprintf(
-            'Created bracket with ID: %d, Title: %s, Author: %d, Status: %s',
+            'Created bracket with ID: %d, Title: %s, Author: %d, Status: %s, URL: %s',
             $saved->id,
             $saved->title,
             $saved->author,
-            $saved->status
+            $saved->status,
+            $saved->get_play_url()
           )
         );
       } else {

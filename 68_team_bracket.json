@@ -20,7 +20,7 @@
     {
       "id": 2026,
       "round_index": 0,
-      "match_index": 3,
+      "match_index": 0,
       "team1": {
         "id": 3976,
         "name": "team1"
@@ -33,7 +33,7 @@
     {
       "id": 2027,
       "round_index": 0,
-      "match_index": 4,
+      "match_index": 3,
       "team1": {
         "id": 3978,
         "name": "team3"
@@ -46,7 +46,7 @@
     {
       "id": 2028,
       "round_index": 0,
-      "match_index": 11,
+      "match_index": 32,
       "team1": {
         "id": 3980,
         "name": "team5"
@@ -59,7 +59,7 @@
     {
       "id": 2029,
       "round_index": 0,
-      "match_index": 12,
+      "match_index": 35,
       "team1": {
         "id": 3982,
         "name": "team7"
@@ -73,10 +73,6 @@
       "id": 1818,
       "round_index": 1,
       "match_index": 0,
-      "team1": {
-        "id": 3564,
-        "name": "#1 UConn"
-      },
       "team2": {
         "id": 3565,
         "name": "#16 Stetson"
@@ -89,10 +85,6 @@
       "team1": {
         "id": 3566,
         "name": "#8 FAU"
-      },
-      "team2": {
-        "id": 3567,
-        "name": "#9 Northwestern"
       }
     },
     {
@@ -281,10 +273,6 @@
       "id": 1834,
       "round_index": 1,
       "match_index": 16,
-      "team1": {
-        "id": 3596,
-        "name": "Houston #1"
-      },
       "team2": {
         "id": 3597,
         "name": "Longwood #16"
@@ -297,10 +285,6 @@
       "team1": {
         "id": 3598,
         "name": "Nebraska #8"
-      },
-      "team2": {
-        "id": 3599,
-        "name": "Texas A&M #9"
       }
     },
     {
@@ -490,7 +474,6 @@
   "most_popular_picks": [],
   "is_open": true,
   "is_printable": true,
-  "fee": 2,
   "should_notify_results_updated": false,
   "is_voting": false,
   "live_round_index": 0,
