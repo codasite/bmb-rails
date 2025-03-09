@@ -39,7 +39,7 @@ export const FirstMatchesContainer: React.FC<FirstMatchesContainerProps> = ({
         <MatchBoxComponent
           key={`first-match-${index}`}
           match={match}
-          matchPosition="center"
+          matchPosition="first"
           matchTree={matchTree}
           setMatchTree={setMatchTree}
           TeamSlotComponent={TeamSlotComponent}
