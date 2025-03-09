@@ -26,6 +26,8 @@ import {
 } from '../../models/operations/GetMatchSections'
 import { SizeChangeListenerContext } from '../../context/SizeChangeListenerContext'
 import { useResizeObserver } from '../../../../utils/hooks'
+import { FirstMatchesContainer } from '../MatchBox/Children/FirstMatchesContainer'
+import { DefaultMatchBox } from '../MatchBox'
 
 export const DefaultBracket = (props: BracketProps) => {
   const {
@@ -38,7 +40,7 @@ export const DefaultBracket = (props: BracketProps) => {
     matchTree,
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
-    MatchBoxComponent,
+    MatchBoxComponent = DefaultMatchBox,
     TeamSlotComponent = BaseTeamSlot,
     MatchBoxChildComponent,
     onTeamClick,
@@ -151,7 +153,11 @@ export const DefaultBracket = (props: BracketProps) => {
 
     const leftMatchColumns = getMatchColumns(leftMatches, 'left', numRounds)
     const rightMatchColumns = getMatchColumns(rightMatches, 'right', numRounds)
-    const finalMatchColumn = getMatchColumns(finalMatches, 'center', numRounds)
+    const finalMatchColumn = getMatchColumns(
+      [finalMatches],
+      'center',
+      numRounds
+    )
 
     return [...leftMatchColumns, ...finalMatchColumn, ...rightMatchColumns].map(
       (column, index) => {
@@ -228,7 +234,17 @@ export const DefaultBracket = (props: BracketProps) => {
           {renderWinnerAndLogo && (
             <LogoContainer {...props} bottomText={bracketDate} />
           )}
-          {renderFirstMatches && <p>First Four Go Here</p>}
+          {renderFirstMatches && (
+            <FirstMatchesContainer
+              matches={firstMatches}
+              matchTree={matchTree}
+              setMatchTree={setMatchTree}
+              MatchBoxComponent={MatchBoxComponent}
+              TeamSlotComponent={TeamSlotComponent}
+              MatchBoxChildComponent={MatchBoxChildComponent}
+              onTeamClick={onTeamClick}
+            />
+          )}
         </div>
       )}
       <BracketLines
