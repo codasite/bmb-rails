@@ -13,7 +13,7 @@ export function getSideMatches(rounds: Round[]): {
   left: Nullable<MatchNode>[][]
   right: Nullable<MatchNode>[][]
 } {
-  const sideRounds = rounds.slice(0, rounds.length - 1)
+  const sideRounds = rounds.slice(rounds.length < 7 ? 0 : 1, rounds.length - 1)
   return sideRounds.reduce(
     (matches, round) => ({
       left: [...matches.left, round.matches.slice(0, round.matches.length / 2)],

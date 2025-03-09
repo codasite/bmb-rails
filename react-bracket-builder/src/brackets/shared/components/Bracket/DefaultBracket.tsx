@@ -148,7 +148,6 @@ export const DefaultBracket = (props: BracketProps) => {
   }
 
   const buildMatches = (rounds: Round[]) => {
-    // Build the left matches, right matches, and final match separately
     const firstMatches = getFirstMatches(rounds)
     const { left: leftMatches, right: rightMatches } = getSideMatches(rounds)
     const finalMatches = getFinalMatches(rounds)
