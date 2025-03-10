@@ -49,9 +49,6 @@ export const DefaultBracket = (props: BracketProps) => {
     lineColor = 'dd-blue',
     darkLineColor = 'white',
     lineWidth = 1,
-    title,
-    setTitle,
-    date,
     columnsToRender,
     renderWinnerAndLogo = true,
   }: BracketProps = props
@@ -73,13 +70,9 @@ export const DefaultBracket = (props: BracketProps) => {
   useResizeObserver(containerRef, resizeCallback)
 
   const { darkMode } = useContext(DarkModeContext)
-  let bracketTitle = title
-  let bracketDate = date
-  if (!bracketTitle || !date) {
-    const meta = useContext(BracketMetaContext)
-    bracketTitle = title ?? meta?.title
-    bracketDate = date ?? meta?.date
-  }
+  const { bracketMeta, setBracketMeta } = useContext(BracketMetaContext)
+  const { title: bracketTitle, date: bracketDate } = bracketMeta
+
   const linesStyle = lineStyle || {
     className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${
       darkMode ? darkLineColor : lineColor
@@ -209,7 +202,9 @@ export const DefaultBracket = (props: BracketProps) => {
             TeamSlotComponent={TeamSlotComponent}
             TitleComponent={TitleComponent}
             title={bracketTitle}
-            setTitle={setTitle}
+            setTitle={(title) =>
+              setBracketMeta({ ...bracketMeta, title: title })
+            }
           />
         </div>
       )}

@@ -14,37 +14,34 @@ export interface BufferedTextInputBaseProps {
   onErrorCleared?: () => void
   noMoreInput?: boolean
   style?: React.CSSProperties
-  multiline?: boolean
-  [key: string]: any
+  onChange?: (event: React.ChangeEvent<any>) => void
 }
 
-export const BufferedTextInputBase = (props: BufferedTextInputBaseProps) => {
+export interface UseBufferedTextProps extends BufferedTextInputBaseProps {
+  shouldSubmitOnEnter?: boolean
+}
+
+export const useBufferedText = (props: UseBufferedTextProps) => {
   const {
-    inputRef,
     initialValue,
     onChange,
     onStartEditing,
     onDoneEditing,
-    placeholderEl,
     validate,
     errorText,
     onHasError,
     onErrorCleared,
     noMoreInput,
-    onPaste,
-    style,
-    multiline = false,
+    shouldSubmitOnEnter = true,
   } = props
-  const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
+
+  const [showPlaceholder, setShowPlaceholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
   const [hasError, setHasError] = useState<boolean>(false)
-  const errorClass = 'tw-border-red tw-text-red'
-  const extraClass = hasError ? errorClass : ''
-  const className = [props.className, extraClass].join(' ')
 
   useEffect(() => {
     if (initialValue) {
-      setShowPlacholder(false)
+      setShowPlaceholder(false)
       setBuffer(initialValue)
     }
   }, [initialValue])
@@ -61,62 +58,44 @@ export const BufferedTextInputBase = (props: BufferedTextInputBaseProps) => {
       }
     }
     if (!buffer) {
-      setShowPlacholder(true)
+      setShowPlaceholder(true)
     }
     onDoneEditing?.(buffer)
   }
 
   const startEditing = () => {
-    setShowPlacholder(false)
+    setShowPlaceholder(false)
     if (hasError) {
       setHasError(false)
     }
-    if (onStartEditing) {
-      onStartEditing()
-    }
+    onStartEditing?.()
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = <T extends HTMLInputElement | HTMLTextAreaElement>(
+    event: React.ChangeEvent<T>
+  ) => {
     const { value } = event.target
     if (value.length > buffer.length && noMoreInput) {
       return
     }
     setBuffer(value)
-    if (onChange) {
-      onChange(event)
+    onChange?.(event)
+  }
+
+  const handleKeyUp = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && shouldSubmitOnEnter) {
+      doneEditing()
+      ;(e.target as HTMLElement).blur()
     }
   }
 
-  return (
-    <div className="tw-relative tw-flex tw-flex-col tw-gap-8">
-      {showPlaceholder && placeholderEl && (
-        <PlaceholderWrapper>{placeholderEl}</PlaceholderWrapper>
-      )}
-      <input
-        ref={inputRef}
-        type="text"
-        onFocus={(e) => {
-          startEditing()
-          e.target.select()
-        }}
-        onBlur={() => doneEditing()}
-        onKeyUp={(e) => {
-          if (e.key === 'Enter') {
-            doneEditing()
-            e.currentTarget.blur()
-          }
-        }}
-        onPaste={onPaste}
-        value={buffer}
-        onChange={handleChange}
-        className={className}
-        style={style}
-      />
-      {hasError && errorText && (
-        <span className="tw-text-red tw-text-12 tw-font-sans tw-text-left ">
-          {errorText}
-        </span>
-      )}
-    </div>
-  )
+  return {
+    showPlaceholder,
+    buffer,
+    hasError,
+    handleChange,
+    handleKeyUp,
+    startEditing,
+    doneEditing,
+  }
 }

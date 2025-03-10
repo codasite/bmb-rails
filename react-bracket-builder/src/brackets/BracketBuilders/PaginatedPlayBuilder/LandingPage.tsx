@@ -16,7 +16,8 @@ interface LandingPageProps {
 
 export const LandingPage = (props: LandingPageProps) => {
   const { onStart, matchTree, canPlay } = props
-  const { title } = useContext(BracketMetaContext)
+  const { bracketMeta } = useContext(BracketMetaContext)
+  const { title } = bracketMeta
 
   return (
     <div

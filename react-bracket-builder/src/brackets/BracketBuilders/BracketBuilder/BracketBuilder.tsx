@@ -1,5 +1,5 @@
 // DO NOT REMOVE REACT IMPORT. Needed for image generator
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { bracketApi } from '../../shared/api/bracketApi'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { AddTeamsPage } from './AddTeamsPage'
@@ -9,7 +9,7 @@ import {
   WithBracketMeta,
   WithMatchTree,
 } from '../../shared/components/HigherOrder'
-import { BracketMeta } from '../../shared/context/context'
+import { BracketMetaContext } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 import { getBracketMeta } from '../../shared/components/Bracket/utils'
 import { getDashboardPath } from '../../shared'
@@ -22,15 +22,11 @@ interface BracketBuilderProps {
   bracket?: BracketRes
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
-  bracketMeta?: BracketMeta
-  setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
 const BracketBuilder = (props: BracketBuilderProps) => {
-  const { matchTree, setMatchTree, bracket, bracketMeta, setBracketMeta } =
-    props
+  const { matchTree, setMatchTree, bracket } = props
   const [currentPage, setCurrentPage] = useState('num-teams')
-  // const [currentPage, setCurrentPage] = useState('add-teams')
   const [numTeams, setNumTeams] = useState(
     teamPickerDefaults[defaultInitialPickerIndex]
   )
@@ -46,6 +42,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   const [month, setMonth] = useState('')
   const [year, setYear] = useState('')
   const [processing, setProcessing] = useState(false)
+  const { bracketMeta, setBracketMeta } = useContext(BracketMetaContext)
 
   useEffect(() => {
     setBracketMeta?.({
@@ -165,8 +162,6 @@ const BracketBuilder = (props: BracketBuilderProps) => {
           setWildcardPlacement={setWildcardPlacement}
           teamPickerState={teamPickerState}
           setTeamPickerState={setTeamPickerState}
-          bracketMeta={bracketMeta}
-          setBracketMeta={setBracketMeta}
         />
       )}
       {currentPage === 'add-teams' && (

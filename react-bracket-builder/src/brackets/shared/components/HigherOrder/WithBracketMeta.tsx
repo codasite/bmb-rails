@@ -6,12 +6,13 @@ export const WithBracketMeta = (Component: React.ComponentType<any>) => {
   return (props: any) => {
     const [bracketMeta, setBracketMeta] = useState<BracketMeta>({})
     return (
-      <BracketMetaContext.Provider value={bracketMeta}>
-        <Component
-          bracketMeta={bracketMeta}
-          setBracketMeta={setBracketMeta}
-          {...props}
-        />
+      <BracketMetaContext.Provider
+        value={{
+          bracketMeta,
+          setBracketMeta,
+        }}
+      >
+        <Component {...props} />
       </BracketMetaContext.Provider>
     )
   }
