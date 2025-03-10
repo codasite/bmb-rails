@@ -15,6 +15,7 @@ export interface BufferedTextInputProps {
   onErrorCleared?: () => void
   noMoreInput?: boolean
   onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void
+  style?: React.CSSProperties
   [key: string]: any
 }
 
@@ -32,6 +33,7 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
     onErrorCleared,
     noMoreInput,
     onPaste,
+    style,
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')
@@ -108,6 +110,7 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
         value={buffer}
         onChange={handleChange}
         className={className}
+        style={style}
       />
       {hasError && errorText && (
         <span className="tw-text-red tw-text-12 tw-font-sans tw-text-left ">

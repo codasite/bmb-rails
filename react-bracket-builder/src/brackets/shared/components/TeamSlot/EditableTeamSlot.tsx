@@ -45,6 +45,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 
   const resizeCallback = React.useCallback(
     ({ width: currentWidth }) => {
+      console.log('resizeing')
       let scaleFactor = 1
       if (currentWidth > targetWidth) {
         scaleFactor = targetWidth / currentWidth
