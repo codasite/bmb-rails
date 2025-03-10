@@ -132,7 +132,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
           }}
         />
       </div>
-      {isBye && (
+      {isBye && matchTree.rounds.length < 7 && (
         <div
           className={`tw-absolute ${
             teamPosition === 'left' ? 'tw-top-[-24px]' : 'tw-bottom-[-24px]'
