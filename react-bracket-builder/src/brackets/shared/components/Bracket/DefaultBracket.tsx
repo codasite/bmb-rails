@@ -28,7 +28,7 @@ import { SizeChangeListenerContext } from '../../context/SizeChangeListenerConte
 import { useResizeObserver } from '../../../../utils/hooks'
 import { FirstMatchesContainer } from '../MatchBox/Children/FirstMatchesContainer'
 import { DefaultMatchBox } from '../MatchBox'
-
+import { ReadonlyTitleComponent } from '../MatchBox/Children/ReadonlyTitleComponent'
 export const DefaultBracket = (props: BracketProps) => {
   const {
     getBracketWidth = getDefaultBracketWidth,
@@ -42,6 +42,7 @@ export const DefaultBracket = (props: BracketProps) => {
     MatchColumnComponent = DefaultMatchColumn,
     MatchBoxComponent = DefaultMatchBox,
     TeamSlotComponent = BaseTeamSlot,
+    TitleComponent,
     MatchBoxChildComponent,
     onTeamClick,
     lineStyle,
@@ -49,6 +50,7 @@ export const DefaultBracket = (props: BracketProps) => {
     darkLineColor = 'white',
     lineWidth = 1,
     title,
+    setTitle,
     date,
     columnsToRender,
     renderWinnerAndLogo = true,
@@ -205,7 +207,9 @@ export const DefaultBracket = (props: BracketProps) => {
             matchTree={matchTree}
             matchPosition="center"
             TeamSlotComponent={TeamSlotComponent}
-            topText={bracketTitle}
+            TitleComponent={TitleComponent}
+            title={bracketTitle}
+            setTitle={setTitle}
           />
         </div>
       )}

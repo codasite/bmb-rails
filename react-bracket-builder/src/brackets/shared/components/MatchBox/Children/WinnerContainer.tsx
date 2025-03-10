@@ -1,17 +1,19 @@
 // DO NOT REMOVE REACT IMPORT. Needed for image generator
-import React, { useContext } from 'react'
-import { defaultBracketConstants } from '../../../constants'
-import { MatchBoxChildProps } from '../../types'
+import React from 'react'
+import { MatchBoxChildProps, TitleComponentProps } from '../../types'
 //@ts-ignore
 import { BaseTeamSlot } from '../../TeamSlot'
-import { BracketMetaContext } from '../../../context/context'
+import { ReadonlyTitleComponent } from './ReadonlyTitleComponent'
+import { defaultBracketConstants } from '../../../constants'
 
 interface WinnerContainerProps extends MatchBoxChildProps {
-  topText?: string
-  topTextFontSize?: number
-  topTextColor?: string
-  topTextColorDark?: string
+  title?: string
+  setTitle?: (title: string) => void
+  titleFontSize?: number
+  titleColor?: string
+  titleColorDark?: string
   gap?: number
+  TitleComponent?: React.FC<TitleComponentProps>
 }
 
 export const WinnerContainer = (props: WinnerContainerProps) => {
@@ -19,26 +21,27 @@ export const WinnerContainer = (props: WinnerContainerProps) => {
     match,
     matchTree,
     TeamSlotComponent = BaseTeamSlot,
-    topText,
-    topTextFontSize = 48,
-    topTextColor = 'dd-blue',
-    topTextColorDark = 'white',
+    TitleComponent = ReadonlyTitleComponent,
+    title,
+    setTitle,
+    titleFontSize = 48,
+    titleColor = 'dd-blue',
+    titleColorDark = 'white',
     gap = 24,
   } = props
   const numRounds = matchTree.rounds.length
 
   return (
     <div className={`tw-flex tw-flex-col tw-items-center`} style={{ gap: gap }}>
-      {topText && (
-        <span
-          className={`tw-text-48 sm:tw-text-${topTextFontSize} tw-text-${topTextColor} dark:tw-text-${topTextColorDark} tw-font-700 tw-text-center tw-leading-none`}
-          style={{
-            width:
-              defaultBracketConstants.winnerContainerTitleMaxWidth[numRounds],
-          }}
-        >
-          {topText}
-        </span>
+      {title && (
+        <TitleComponent
+          fontSize={titleFontSize}
+          color={titleColor}
+          colorDark={titleColorDark}
+          width={defaultBracketConstants.winnerContainerTextMaxWidth[numRounds]}
+          title={title}
+          setTitle={setTitle}
+        />
       )}
       <TeamSlotComponent
         match={match}

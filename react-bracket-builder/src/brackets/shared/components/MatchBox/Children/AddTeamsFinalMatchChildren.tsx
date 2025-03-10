@@ -14,7 +14,7 @@ export const AddTeamsFinalMatchChildren = (props: MatchBoxChildProps) => {
 
   return matchPosition === 'center' ? (
     <>
-      <WinnerContainer topText={bracketTitle} topTextFontSize={48} {...props} />
+      <WinnerContainer title={bracketTitle} titleFontSize={48} {...props} />
       <LogoContainer
         {...props}
         topTextColorDark="white/50"

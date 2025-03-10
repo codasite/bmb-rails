@@ -1,14 +1,24 @@
 // DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useEffect, useState } from 'react'
 import { PlaceholderWrapper } from './PlaceholderWrap'
-import { BufferedTextInputBaseProps } from './BufferedTextInputBase'
 
-export interface BufferedTextInputProps extends BufferedTextInputBaseProps {
-  inputRef?: React.RefObject<HTMLInputElement>
-  onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void
+export interface BufferedTextInputBaseProps {
+  initialValue?: string
+  placeholderEl?: React.ReactNode
+  onDoneEditing?: (newValue: string) => void
+  onStartEditing?: () => void
+  validate?: (newValue: string) => boolean
+  className?: string
+  errorText?: string
+  onHasError?: (error: string) => void
+  onErrorCleared?: () => void
+  noMoreInput?: boolean
+  style?: React.CSSProperties
+  multiline?: boolean
+  [key: string]: any
 }
 
-export const BufferedTextInput = (props: BufferedTextInputProps) => {
+export const BufferedTextInputBase = (props: BufferedTextInputBaseProps) => {
   const {
     inputRef,
     initialValue,
@@ -23,6 +33,7 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
     noMoreInput,
     onPaste,
     style,
+    multiline = false,
   } = props
   const [showPlaceholder, setShowPlacholder] = useState<boolean>(true)
   const [buffer, setBuffer] = useState<string>('')

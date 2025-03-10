@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react'
 import { PlaceholderWrapper } from './PlaceholderWrap'
 import { BufferedTextInputBaseProps } from './BufferedTextInputBase'
 
-export interface BufferedTextInputProps extends BufferedTextInputBaseProps {
-  inputRef?: React.RefObject<HTMLInputElement>
-  onPaste?: (event: React.ClipboardEvent<HTMLInputElement>) => void
+export interface BufferedTextAreaProps extends BufferedTextInputBaseProps {
+  inputRef?: React.RefObject<HTMLTextAreaElement>
+  onPaste?: (event: React.ClipboardEvent<HTMLTextAreaElement>) => void
 }
 
-export const BufferedTextInput = (props: BufferedTextInputProps) => {
+export const BufferedTextArea = (props: BufferedTextAreaProps) => {
   const {
     inputRef,
     initialValue,
