@@ -35,7 +35,7 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
   const [editing, setEditing] = useState(false)
   const [stopEditing, setStopEditing] = useState(false)
   // shadowContent is used to measure the width of the input
-  const [shadowContent, setShadowContent] = useState('')
+  const [shadowContent, setShadowContent] = useState(team?.name || '')
 
   const [inputWidth, setInputWidth] = useState(targetWidth)
   const [scale, setScale] = useState(1)
@@ -45,7 +45,6 @@ export const EditableTeamSlot = (props: TeamSlotProps) => {
 
   const resizeCallback = React.useCallback(
     ({ width: currentWidth }) => {
-      console.log('resizeing')
       let scaleFactor = 1
       if (currentWidth > targetWidth) {
         scaleFactor = targetWidth / currentWidth
