@@ -159,7 +159,6 @@ class BracketCommand {
         'status' => $bracket->status,
         'num_teams' => $bracket->num_teams,
         'is_voting' => $bracket->is_voting ? 'Yes' : 'No',
-        'is_template' => $bracket->is_template ? 'Yes' : 'No',
         'live_round_index' => $bracket->live_round_index,
       ];
     }, $brackets);
@@ -171,7 +170,6 @@ class BracketCommand {
       'status',
       'num_teams',
       'is_voting',
-      'is_template',
       'live_round_index',
     ]);
   }

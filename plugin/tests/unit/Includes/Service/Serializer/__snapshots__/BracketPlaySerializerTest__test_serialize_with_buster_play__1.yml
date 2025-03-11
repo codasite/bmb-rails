@@ -38,7 +38,6 @@ bracket:
     should_notify_results_updated: false
     is_voting: false
     live_round_index: 0
-    is_template: false
 busted_play:
     id: 200008
     title: ''
@@ -57,7 +56,7 @@ busted_play:
     bmb_official: true
     is_tournament_entry: false
     is_paid: false
-    bracket: { id: 100000, title: 'Test Bracket', status: publish, published_date: '2020-01-01 00:00:00', slug: test-bracket, author_display_name: '', thumbnail_url: '', url: '', num_teams: 0, wildcard_placement: 0, month: January, year: '2020', matches: [{ id: 100001, round_index: 0, match_index: 0, team1: { id: 100002, name: 'Team 1' }, team2: { id: 100003, name: 'Team 2' } }, { id: 100004, round_index: 0, match_index: 1, team1: { id: 100005, name: 'Team 3' }, team2: { id: 100006, name: 'Team 4' } }], results: {  }, most_popular_picks: {  }, is_open: true, is_printable: true, fee: 0.0, should_notify_results_updated: false, is_voting: false, live_round_index: 0, is_template: false }
+    bracket: { id: 100000, title: 'Test Bracket', status: publish, published_date: '2020-01-01 00:00:00', slug: test-bracket, author_display_name: '', thumbnail_url: '', url: '', num_teams: 0, wildcard_placement: 0, month: January, year: '2020', matches: [{ id: 100001, round_index: 0, match_index: 0, team1: { id: 100002, name: 'Team 1' }, team2: { id: 100003, name: 'Team 2' } }, { id: 100004, round_index: 0, match_index: 1, team1: { id: 100005, name: 'Team 3' }, team2: { id: 100006, name: 'Team 4' } }], results: {  }, most_popular_picks: {  }, is_open: true, is_printable: true, fee: 0.0, should_notify_results_updated: false, is_voting: false, live_round_index: 0 }
     picks: [{ id: 200007, round_index: 0, match_index: 0, winning_team_id: 100002 }, { id: 200008, round_index: 0, match_index: 1, winning_team_id: 100006 }, { id: 200009, round_index: 1, match_index: 0, winning_team_id: 100006 }]
 picks:
     - { id: 100007, round_index: 0, match_index: 0, winning_team_id: 100002 }

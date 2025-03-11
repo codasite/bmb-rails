@@ -25,4 +25,3 @@ fee: 0.0
 should_notify_results_updated: false
 is_voting: false
 live_round_index: 0
-is_template: false
