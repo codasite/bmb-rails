@@ -6,7 +6,6 @@ import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
 import { AddTeamsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
-import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { DatePicker } from '../../shared/components/DatePicker'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
@@ -17,6 +16,7 @@ import {
 } from '../../shared/models/operations/ScrambleTeams'
 import { ReactComponent as ScrambleIcon } from '../../shared/assets/scramble.svg'
 import { BracketBuilderHeader } from './BracketBuilderHeader'
+import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
