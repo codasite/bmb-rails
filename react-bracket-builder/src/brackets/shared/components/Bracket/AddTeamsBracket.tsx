@@ -6,7 +6,6 @@ import { EditableTeamSlotSwitch } from '../TeamSlot'
 import { AddTeamsFinalMatchChildren } from '../MatchBox/Children'
 import { EditableTitleComponent } from '../MatchBox/Children/EditableTitleComponent'
 export const AddTeamsBracket = (props: BracketProps) => {
-  console.log('add teams bracket', props)
   return (
     <DefaultBracket
       {...props}

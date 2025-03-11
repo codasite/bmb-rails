@@ -12,7 +12,11 @@ export const WithBracketMeta = (Component: React.ComponentType<any>) => {
           setBracketMeta,
         }}
       >
-        <Component {...props} />
+        <Component
+          bracketMeta={bracketMeta}
+          setBracketMeta={setBracketMeta}
+          {...props}
+        />
       </BracketMetaContext.Provider>
     )
   }
