@@ -145,6 +145,13 @@ tasks:
         vars:
           CLI_ARGS: wpbb notification {{.CLI_ARGS}}
 
+  wp:cli:bracket:
+    desc: Run WP-CLI bracket command
+    cmds:
+      - task: wp:cli
+        vars:
+          CLI_ARGS: wpbb bracket {{.CLI_ARGS}}
+
   ### IMAGES ###
   images:up:
     desc: Start image processing containers

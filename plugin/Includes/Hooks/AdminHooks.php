@@ -26,7 +26,7 @@ class AdminHooks implements HooksInterface {
 
   public function load(Loader $loader): void {
     $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_styles']);
-    // $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
+    $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
 
     $loader->add_action('init', [$this, 'add_capabilities']);
     $loader->add_action(
@@ -89,19 +89,11 @@ class AdminHooks implements HooksInterface {
    */
   public function enqueue_scripts(): void {
     wp_enqueue_script(
-      'wpbb-bracket-builder-react',
-      plugin_dir_url(dirname(__FILE__, 2)) .
-        'Includes/react-bracket-builder/build/wordpress/index.js',
-      ['wp-element'],
-      $this->version,
-      true
-    );
-    wp_enqueue_script(
-      'tailwind',
-      'https://cdn.tailwindcss.com',
+      'wpbb-admin-json-copy',
+      plugin_dir_url(dirname(__FILE__, 2)) . 'Admin/js/wpbb-admin-json-copy.js',
       [],
       $this->version,
-      false
+      true
     );
   }
 

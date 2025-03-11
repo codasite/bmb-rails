@@ -56,6 +56,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       'post_id' => $post_id,
       'is_voting' => $bracket->is_voting,
       'live_round_index' => $bracket->live_round_index,
+      'is_template' => $bracket->is_template,
     ]);
 
     if ($bracket->matches) {
@@ -154,6 +155,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
         true
       ),
       'is_voting' => $bracket_data['is_voting'] ?? false,
+      'is_template' => $bracket_data['is_template'] ?? false,
       'live_round_index' => $bracket_data['live_round_index'] ?? 0,
     ];
 
@@ -266,6 +268,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       'results_first_updated_at',
       'is_voting',
       'live_round_index',
+      'is_template',
     ];
     $update_data = [];
     foreach ($data as $key => $value) {
@@ -305,6 +308,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     results_first_updated_at datetime,
     is_voting TINYINT(1) DEFAULT 0,
     live_round_index TINYINT(2) DEFAULT 0,
+    is_template TINYINT(1) DEFAULT 0,
     PRIMARY KEY (id),
     UNIQUE KEY (post_id),
     FOREIGN KEY (post_id) REFERENCES {$posts_table}(ID) ON DELETE CASCADE

@@ -22,6 +22,7 @@ import SubmitPicksRegisterModal from './SubmitPicksRegisterModal'
 import StripePaymentModal from './StripePaymentModal'
 import { logger } from '../../../utils/Logger'
 import mergePicksFromPlayAndResults from '../../../features/VotingBracket/mergePicksFromPlayAndResults'
+import { WithBracketMeta } from '../../shared/components/HigherOrder/WithBracketMeta'
 
 const PlayBuilderPage = (props: {
   // for testing
@@ -60,9 +61,11 @@ const PlayBuilderPage = (props: {
   } else {
     tree = MatchTree.fromMatchRes(bracket)
   }
-  const [bracketMeta, setBracketMeta] = useState<BracketMeta>(
-    getBracketMeta(bracket)
-  )
+  const { bracketMeta, setBracketMeta } = useContext(BracketMetaContext)
+  useEffect(() => {
+    setBracketMeta(getBracketMeta(bracket))
+  }, [bracket, setBracketMeta])
+
   const [matchTree, setMatchTree] = useState<MatchTree>(tree)
   const [processingAddToApparel, setProcessingAddToApparel] = useState(false)
   const [addToApparelError, setAddToApparelError] = useState(false)
@@ -238,31 +241,31 @@ const PlayBuilderPage = (props: {
         setMatchTree: setMatchTreeAndSaveInStorage,
       }}
     >
-      <BracketMetaContext.Provider value={bracketMeta}>
-        <SubmitPicksRegisterModal
-          show={showRegisterModal}
-          setShow={setShowRegisterModal}
-          signInUrl={props.loginUrl + '?redirect_to=' + bracket?.url}
-          registerUrl={props.loginUrl + '?action=register'}
-        />
-        <StripePaymentModal
-          title={'Submit Your Picks'}
-          show={showPaymentModal}
-          setShow={setShowPaymentModal}
-          clientSecret={stripeClientSecret}
-          paymentAmount={stripePaymentAmount}
-          myPlayHistoryUrl={myPlayHistoryUrl}
-        />
-        {showPaginated ? (
-          <PaginatedPlayBuilder {...playBuilderProps} />
-        ) : (
-          <PlayBuilder {...playBuilderProps} />
-        )}
-      </BracketMetaContext.Provider>
+      <SubmitPicksRegisterModal
+        show={showRegisterModal}
+        setShow={setShowRegisterModal}
+        signInUrl={props.loginUrl + '?redirect_to=' + bracket?.url}
+        registerUrl={props.loginUrl + '?action=register'}
+      />
+      <StripePaymentModal
+        title={'Submit Your Picks'}
+        show={showPaymentModal}
+        setShow={setShowPaymentModal}
+        clientSecret={stripeClientSecret}
+        paymentAmount={stripePaymentAmount}
+        myPlayHistoryUrl={myPlayHistoryUrl}
+      />
+      {showPaginated ? (
+        <PaginatedPlayBuilder {...playBuilderProps} />
+      ) : (
+        <PlayBuilder {...playBuilderProps} />
+      )}
     </MatchTreeContext.Provider>
   )
 }
 
-const WrappedPlayBuilderPage = WithWindowDimensions(PlayBuilderPage)
+const WrappedPlayBuilderPage = WithBracketMeta(
+  WithWindowDimensions(PlayBuilderPage)
+)
 
 export default WrappedPlayBuilderPage

@@ -102,7 +102,9 @@ export interface BracketProps {
   MatchBoxChildComponent?: React.FC<MatchBoxChildProps>
   TeamSlotComponent?: React.FC<TeamSlotProps>
   BracketComponent?: React.FC<BracketProps> // for nesting brackets
+  TitleComponent?: React.FC<TitleComponentProps>
   title?: string
+  setTitle?: (title: string) => void
   date?: string
   lineStyle?: object
   lineColor?: string
@@ -158,3 +160,12 @@ export interface MatchBoxChildProps {
 }
 
 export type HOC = (Component: React.FC<any>) => React.FC<any>
+
+export interface TitleComponentProps {
+  title: string
+  setTitle?: (title: string) => void
+  fontSize: number
+  color: string
+  colorDark: string
+  width: number
+}

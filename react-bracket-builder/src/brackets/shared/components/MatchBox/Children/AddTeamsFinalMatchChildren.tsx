@@ -9,12 +9,13 @@ import { LogoContainer } from './LogoContainer'
 export const AddTeamsFinalMatchChildren = (props: MatchBoxChildProps) => {
   const { matchPosition } = props
 
-  const { title: bracketTitle, date: bracketDate } =
-    useContext(BracketMetaContext)
+  const {
+    bracketMeta: { title: bracketTitle, date: bracketDate },
+  } = useContext(BracketMetaContext)
 
   return matchPosition === 'center' ? (
     <>
-      <WinnerContainer topText={bracketTitle} topTextFontSize={48} {...props} />
+      <WinnerContainer title={bracketTitle} titleFontSize={48} {...props} />
       <LogoContainer
         {...props}
         topTextColorDark="white/50"

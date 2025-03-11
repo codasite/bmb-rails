@@ -7,6 +7,11 @@ export interface BracketMeta {
   isOpen?: boolean
 }
 
+export interface BracketMetaContextState {
+  bracketMeta: BracketMeta
+  setBracketMeta: (bracketMeta: BracketMeta) => void
+}
+
 export const DarkModeContext = createContext<{
   darkMode: boolean
   setDarkMode: (darkMode: boolean) => void
@@ -15,7 +20,10 @@ export const DarkModeContext = createContext<{
   setDarkMode: () => {},
 })
 
-export const BracketMetaContext = createContext<BracketMeta>({})
+export const BracketMetaContext = createContext<BracketMetaContextState>({
+  bracketMeta: {},
+  setBracketMeta: () => {},
+})
 export const CallbackContext = createContext<() => void>(() => {})
 
 export interface MatchTreeContextState {

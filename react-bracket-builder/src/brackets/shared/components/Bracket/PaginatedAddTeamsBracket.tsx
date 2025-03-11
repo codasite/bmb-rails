@@ -7,7 +7,6 @@ import { ActionButton } from '../ActionButtons'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 import { ReactComponent as EditIcon } from '../../assets/edit-icon.svg'
-import { getLeftMatches } from '../../models/operations/GetMatchSections'
 import { ScaledBracket } from './ScaledBracket'
 
 export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {

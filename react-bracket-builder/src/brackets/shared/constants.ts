@@ -15,6 +15,7 @@ export const defaultBracketConstants = {
     985, // 4 rounds
     1023, // 5 rounds
     1137, // 6 rounds
+    1137, // 7 rounds
   ],
 
   bracketHeights: [
@@ -25,6 +26,7 @@ export const defaultBracketConstants = {
     544, // 4 rounds
     806, // 5 rounds
     1100, // 6 rounds
+    1100, // 7 rounds
   ],
 
   teamHeights: [
@@ -35,6 +37,7 @@ export const defaultBracketConstants = {
     28, // 4 rounds
     24, // 5 rounds
     24, // 6 rounds
+    24, // 7 rounds
   ],
 
   teamWidths: [
@@ -45,6 +48,7 @@ export const defaultBracketConstants = {
     115, // 4 rounds
     94, // 5 rounds
     94, // 6 rounds
+    94, // 7 rounds
   ],
 
   teamGaps: [
@@ -54,6 +58,7 @@ export const defaultBracketConstants = {
     20, // depth 3
     12, // depth 4
     6, // depth 5
+    6, // depth 6
   ],
 
   firstRoundsMatchGaps: [
@@ -64,6 +69,7 @@ export const defaultBracketConstants = {
     80, // 4 rounds
     58, // 5 rounds
     12, // 6 rounds
+    12, // 7 rounds
   ],
 
   winnerContainerTopMargin: [
@@ -74,6 +80,7 @@ export const defaultBracketConstants = {
     0, // 4 rounds
     20, // 5 rounds
     100, // 6 rounds
+    100, // 7 rounds
   ],
 
   winnerContainerMinHeight: [
@@ -84,6 +91,7 @@ export const defaultBracketConstants = {
     0, // 4 rounds
     150, // 5 rounds
     225, // 6 rounds
+    225, // 7 rounds
   ],
 
   winnerContainerBottomMargin: [
@@ -94,9 +102,10 @@ export const defaultBracketConstants = {
     95, // 4 rounds
     250, // 5 rounds
     250, // 6 rounds
+    250, // 7 rounds
   ],
 
-  winnerContainerTitleMaxWidth: [
+  winnerContainerTextMaxWidth: [
     700, // 0 rounds
     700, // 1 round
     700, // 2 rounds
@@ -104,6 +113,7 @@ export const defaultBracketConstants = {
     700, // 4 rounds
     700, // 5 rounds
     500, // 6 rounds
+    500, // 7 rounds
   ],
 
   logoContainerBottomMargin: [
@@ -114,6 +124,7 @@ export const defaultBracketConstants = {
     20, // 4 rounds
     160, // 5 rounds
     160, // 6 rounds
+    160, // 7 rounds
   ],
 
   logoContainerMinHeight: [
@@ -124,6 +135,7 @@ export const defaultBracketConstants = {
     200, // 4 rounds
     375, // 5 rounds
     425, // 6 rounds
+    425, // 7 rounds
   ],
 
   bracketActionsMarginTop: [
@@ -134,6 +146,7 @@ export const defaultBracketConstants = {
     94, // 4 rounds
     50, // 5 rounds
     20, // 6 rounds
+    20, // 7 rounds
   ],
 }
 

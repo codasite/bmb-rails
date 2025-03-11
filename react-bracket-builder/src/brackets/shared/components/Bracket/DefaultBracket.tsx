@@ -20,13 +20,15 @@ import { BracketLines, RootMatchLines } from './BracketLines'
 import { MatchNode } from '../../models/operations/MatchNode'
 import { Round } from '../../models/Round'
 import {
+  getFirstMatches,
   getFinalMatches,
-  getLeftMatches,
-  getRightMatches,
+  getSideMatches,
 } from '../../models/operations/GetMatchSections'
 import { SizeChangeListenerContext } from '../../context/SizeChangeListenerContext'
 import { useResizeObserver } from '../../../../utils/hooks'
-
+import { FirstMatchesContainer } from '../MatchBox/Children/FirstMatchesContainer'
+import { DefaultMatchBox } from '../MatchBox'
+import { ReadonlyTitleComponent } from '../MatchBox/Children/ReadonlyTitleComponent'
 export const DefaultBracket = (props: BracketProps) => {
   const {
     getBracketWidth = getDefaultBracketWidth,
@@ -38,16 +40,15 @@ export const DefaultBracket = (props: BracketProps) => {
     matchTree,
     setMatchTree,
     MatchColumnComponent = DefaultMatchColumn,
-    MatchBoxComponent,
+    MatchBoxComponent = DefaultMatchBox,
     TeamSlotComponent = BaseTeamSlot,
+    TitleComponent,
     MatchBoxChildComponent,
     onTeamClick,
     lineStyle,
     lineColor = 'dd-blue',
     darkLineColor = 'white',
     lineWidth = 1,
-    title,
-    date,
     columnsToRender,
     renderWinnerAndLogo = true,
   }: BracketProps = props
@@ -69,13 +70,9 @@ export const DefaultBracket = (props: BracketProps) => {
   useResizeObserver(containerRef, resizeCallback)
 
   const { darkMode } = useContext(DarkModeContext)
-  let bracketTitle = title
-  let bracketDate = date
-  if (!bracketTitle || !date) {
-    const meta = useContext(BracketMetaContext)
-    bracketTitle = title ?? meta?.title
-    bracketDate = date ?? meta?.date
-  }
+  const { bracketMeta, setBracketMeta } = useContext(BracketMetaContext)
+  const { title: bracketTitle, date: bracketDate } = bracketMeta
+
   const linesStyle = lineStyle || {
     className: `!tw-border-t-[${lineWidth}px] !tw-border-t-${
       darkMode ? darkLineColor : lineColor
@@ -118,11 +115,9 @@ export const DefaultBracket = (props: BracketProps) => {
       let roundIndex: number
       if (position === 'left') {
         roundIndex = i
-      }
-      if (position === 'right') {
-        roundIndex = numRounds - i - 2
-      }
-      if (position === 'center') {
+      } else if (position === 'right') {
+        roundIndex = numRounds - i - (numRounds < 7 ? 2 : 3) // right side matches are reversed.
+      } else if (position === 'center') {
         roundIndex = numRounds - 1
       }
       const { teamHeight, teamWidth, teamGap, matchGap } =
@@ -148,14 +143,16 @@ export const DefaultBracket = (props: BracketProps) => {
   }
 
   const buildMatches = (rounds: Round[]) => {
-    // Build the left matches, right matches, and final match separately
-    const leftMatches = getLeftMatches(rounds)
-    const rightMatches = getRightMatches(rounds).reverse()
+    const { left: leftMatches, right: rightMatches } = getSideMatches(rounds)
     const finalMatches = getFinalMatches(rounds)
 
     const leftMatchColumns = getMatchColumns(leftMatches, 'left', numRounds)
     const rightMatchColumns = getMatchColumns(rightMatches, 'right', numRounds)
-    const finalMatchColumn = getMatchColumns(finalMatches, 'center', numRounds)
+    const finalMatchColumn = getMatchColumns(
+      [finalMatches],
+      'center',
+      numRounds
+    )
 
     return [...leftMatchColumns, ...finalMatchColumn, ...rightMatchColumns].map(
       (column, index) => {
@@ -170,8 +167,9 @@ export const DefaultBracket = (props: BracketProps) => {
     )
   }
 
+  const firstMatches = getFirstMatches(matchTree.rounds)
+  const renderFirstMatches = firstMatches.length > 0
   const width = getBracketWidth(matchTree.rounds.length)
-
   const rootMatch = matchTree.getRootMatch()
   const numRounds = matchTree.rounds.length
   const winnerContainerMB =
@@ -202,7 +200,11 @@ export const DefaultBracket = (props: BracketProps) => {
             matchTree={matchTree}
             matchPosition="center"
             TeamSlotComponent={TeamSlotComponent}
-            topText={bracketTitle}
+            TitleComponent={TitleComponent}
+            title={bracketTitle}
+            setTitle={(title) =>
+              setBracketMeta({ ...bracketMeta, title: title })
+            }
           />
         </div>
       )}
@@ -220,14 +222,28 @@ export const DefaultBracket = (props: BracketProps) => {
           {buildMatches(matchTree.rounds)}
         </div>
       </div>
-      {renderWinnerAndLogo && (
+      {(renderWinnerAndLogo || renderFirstMatches) && (
         <div
+          className={`tw-flex tw-flex-col tw-items-center tw-justify-between`}
           style={{
             marginTop: logoContainerMT,
             minHeight: logoContainerMinHeight,
           }}
         >
-          <LogoContainer {...props} bottomText={bracketDate} />
+          {renderWinnerAndLogo && (
+            <LogoContainer {...props} bottomText={bracketDate} />
+          )}
+          {renderFirstMatches && (
+            <FirstMatchesContainer
+              matches={firstMatches}
+              matchTree={matchTree}
+              setMatchTree={setMatchTree}
+              MatchBoxComponent={MatchBoxComponent}
+              TeamSlotComponent={TeamSlotComponent}
+              MatchBoxChildComponent={MatchBoxChildComponent}
+              onTeamClick={onTeamClick}
+            />
+          )}
         </div>
       )}
       <BracketLines

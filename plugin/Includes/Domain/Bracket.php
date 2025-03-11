@@ -15,6 +15,7 @@ class Bracket extends PostBase implements PostBracketInterface {
   public bool $should_notify_results_updated;
   public bool $is_voting;
   public int $live_round_index;
+  public bool $is_template;
   /**
    * @var BracketMatch[]
    */
@@ -44,6 +45,7 @@ class Bracket extends PostBase implements PostBracketInterface {
       $data[BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED] ?? false;
     $this->is_voting = $data['is_voting'] ?? false;
     $this->live_round_index = (int) ($data['live_round_index'] ?? 0);
+    $this->is_template = $data['is_template'] ?? false;
   }
 
   public function get_winning_team(): ?Team {
@@ -188,6 +190,7 @@ class Bracket extends PostBase implements PostBracketInterface {
       : null;
     $bracket['is_voting'] = $this->is_voting;
     $bracket['live_round_index'] = $this->live_round_index;
+    $bracket['is_template'] = $this->is_template;
     if ($this->matches) {
       $matches = [];
       foreach ($this->matches as $match) {

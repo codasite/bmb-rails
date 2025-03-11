@@ -39,6 +39,7 @@ class BracketSerializer extends PostBaseSerializer {
       BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED,
       'is_voting',
       'live_round_index',
+      'is_template',
     ]);
   }
 }

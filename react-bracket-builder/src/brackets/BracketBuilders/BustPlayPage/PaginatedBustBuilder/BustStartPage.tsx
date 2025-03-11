@@ -26,7 +26,8 @@ export const BustStartPage = (props: BustStartPageProps) => {
     screenWidth,
   } = props
 
-  const { title } = useContext(BracketMetaContext)
+  const { bracketMeta } = useContext(BracketMetaContext)
+  const { title } = bracketMeta
 
   return (
     <div

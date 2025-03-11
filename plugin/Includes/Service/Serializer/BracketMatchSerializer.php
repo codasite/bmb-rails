@@ -20,7 +20,9 @@ class BracketMatchSerializer extends ApiSerializerBase {
 
   public function get_serialized_fields(): array {
     return [
-      'id',
+      'id' => [
+        'readonly' => true,
+      ],
       'round_index',
       'match_index',
       'team1' => new TeamSerializer(),

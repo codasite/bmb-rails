@@ -39,6 +39,7 @@ bracket:
     should_notify_results_updated: false
     is_voting: false
     live_round_index: 0
+    is_template: false
 picks:
     - { id: 100007, round_index: 0, match_index: 0, winning_team_id: 100002 }
     - { id: 100008, round_index: 0, match_index: 1, winning_team_id: 100006 }

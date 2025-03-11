@@ -5,6 +5,7 @@ namespace WStrategies\BMB\Includes\Hooks;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\TeamRepo;
+use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 
 class BracketAdminHooks implements HooksInterface {
   private $bracket_repo;
@@ -26,6 +27,15 @@ class BracketAdminHooks implements HooksInterface {
       'bracket_teams_meta_box',
       'Teams',
       [$this, 'display_bracket_teams_meta_box'],
+      'bracket',
+      'normal',
+      'high'
+    );
+
+    add_meta_box(
+      'bracket_json_meta_box',
+      'JSON',
+      [$this, 'display_bracket_json_meta_box'],
       'bracket',
       'normal',
       'high'
@@ -53,8 +63,8 @@ class BracketAdminHooks implements HooksInterface {
 			<tbody>
 				<?php foreach ($matches as $match) { ?>
 					<tr>
-						<td><?php echo $match->round_index + 1; ?></td>
-						<td><?php echo $match->match_index + 1; ?></td>
+						<td><?php echo $match->round_index; ?></td>
+						<td><?php echo $match->match_index; ?></td>
 						<td>
               <?php if ($match->team1) { ?>
                 <input
@@ -81,6 +91,23 @@ class BracketAdminHooks implements HooksInterface {
 		</table>
     </div>
 		<?php
+  }
+
+  public function display_bracket_json_meta_box($post): void {
+    $bracket = $this->bracket_repo->get($post->ID);
+    $serializer = new BracketSerializer();
+    if (!$bracket) {
+      return;
+    }
+
+    $json = json_encode($serializer->serialize($bracket), JSON_PRETTY_PRINT);
+    ?>
+    <div id="wpbb_bracket_json" class="wpbb-bracket-json-container">
+      <pre style="margin: 0; white-space: pre-wrap;"><?php echo esc_html(
+        $json
+      ); ?></pre>
+    </div>
+    <?php
   }
 
   public function save_bracket_teams_meta_box($post_id): void {

@@ -1,5 +1,5 @@
 // DO NOT REMOVE REACT IMPORT. Needed for image generator
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { NumTeamsPicker } from './NumTeamsPicker'
 import { MatchTree } from '../../shared/models/MatchTree'
 import darkBracketBg from '../../shared/assets/bracket-bg-dark.png'
@@ -7,7 +7,7 @@ import { BracketPreview } from './BracketPreview'
 import { isPowerOfTwo } from '../../shared/components/Bracket/utils'
 import { WildcardPicker } from './WildcardPicker'
 import { ActionButton } from '../../shared/components/ActionButtons'
-import { BracketMeta } from '../../shared/context/context'
+import { BracketMeta, BracketMetaContext } from '../../shared/context/context'
 import { WildcardPlacement } from '../../shared/models/WildcardPlacement'
 import { BracketTitle } from './BracketTitle'
 import { BracketBuilderHeader } from './BracketBuilderHeader'
@@ -29,8 +29,6 @@ interface NumTeamsPageProps {
   setWildcardPlacement: (placement: WildcardPlacement) => void
   teamPickerState: NumTeamsPickerState[]
   setTeamPickerState: (state: NumTeamsPickerState[]) => void
-  bracketMeta: BracketMeta
-  setBracketMeta?: (bracketMeta: BracketMeta) => void
 }
 
 export const NumTeamsPage = (props: NumTeamsPageProps) => {
@@ -38,8 +36,6 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
     matchTree,
     setMatchTree,
     onAddTeamsClick,
-    bracketMeta,
-    setBracketMeta,
     numTeams,
     setNumTeams,
     teamPickerDefaults,
@@ -52,6 +48,7 @@ export const NumTeamsPage = (props: NumTeamsPageProps) => {
   } = props
 
   const [showTitleError, setShowTitleError] = useState(false)
+  const { bracketMeta, setBracketMeta } = useContext(BracketMetaContext)
 
   // Update the global `numTeams` variable whenever picker state changes
   useEffect(() => {

@@ -391,4 +391,43 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(0.75, $new_results[0]->popularity);
   }
+
+  public function test_bracket_template_flag() {
+    // Create a bracket with is_template enabled
+    $bracket = new Bracket([
+      'title' => 'Test Template Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'is_template' => true,
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team([
+            'name' => 'Team 1',
+          ]),
+          'team2' => new Team([
+            'name' => 'Team 2',
+          ]),
+        ]),
+      ],
+    ]);
+
+    $bracket = $this->bracket_repo->add($bracket);
+
+    // Verify initial state
+    $this->assertTrue($bracket->is_template);
+
+    // Update the bracket flag
+    $bracket = $this->bracket_repo->update($bracket->id, [
+      'is_template' => false,
+    ]);
+
+    // Verify updated state
+    $this->assertFalse($bracket->is_template);
+
+    // Fetch the bracket again to verify persistence
+    $bracket = $this->bracket_repo->get($bracket->id);
+    $this->assertFalse($bracket->is_template);
+  }
 }

@@ -23,15 +23,19 @@ export const BracketLines = (props: BracketLinesProps) => {
     const fromAnchor = 'right'
     const toAnchor = 'left'
 
-    rounds.forEach((round) => {
-      round.matches.forEach((match, i, matches) => {
+    const roundStartIndex = rounds.length < 7 ? 0 : 1
+
+    for (let r = roundStartIndex; r < rounds.length; r++) {
+      const round = rounds[r]
+      for (let i = 0; i < round.matches.length; i++) {
+        const match = round.matches[i]
         if (!match) {
-          return
+          continue
         }
         const { matchIndex, roundIndex, parent } = match
 
         if (!parent) {
-          return
+          continue
         }
         const { matchIndex: parentMatchIndex, roundIndex: parentRoundIndex } =
           parent
@@ -52,7 +56,7 @@ export const BracketLines = (props: BracketLinesProps) => {
           `${match.isLeftChild() ? 'left' : 'right'}`
         )
 
-        const bracketLeft = matchIndex < matches.length / 2
+        const bracketLeft = matchIndex < round.matches.length / 2
 
         const line1FromClass = bracketLeft ? matchTeam1Class : parentTeamClass
         const line1ToClass = bracketLeft ? parentTeamClass : matchTeam1Class
@@ -87,8 +91,8 @@ export const BracketLines = (props: BracketLinesProps) => {
             {...line2Style}
           />,
         ]
-      })
-    })
+      }
+    }
     return lines
   }
   return <div className="tw-absolute">{renderLines(rounds)}</div>

@@ -8,7 +8,8 @@ import { PopularityTeamSlot } from '../MostPopularPicks/PopularityTeamSlot'
 import { BracketMetaContext } from '../../brackets/shared/context/context'
 
 export const VotingResultsTeamSlot = (props: TeamSlotProps) => {
-  const { isOpen } = useContext(BracketMetaContext)
+  const { bracketMeta } = useContext(BracketMetaContext)
+  const { isOpen } = bracketMeta
   let team = props.team
   if (
     isNaN(props.match._pick?.popularity) ||

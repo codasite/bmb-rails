@@ -18,30 +18,31 @@
     "should_notify_results_updated": false,
     "is_voting": false,
     "live_round_index": 0,
+    "is_template": false,
     "matches": [
         {
-            "id": 100002,
+            "id": null,
             "round_index": 0,
             "match_index": 0,
             "team1": {
-                "id": 100003,
+                "id": null,
                 "name": "Team 1"
             },
             "team2": {
-                "id": 100004,
+                "id": null,
                 "name": "Team 2"
             }
         },
         {
-            "id": 100005,
+            "id": null,
             "round_index": 0,
             "match_index": 1,
             "team1": {
-                "id": 100006,
+                "id": null,
                 "name": "Team 3"
             },
             "team2": {
-                "id": 100007,
+                "id": null,
                 "name": "Team 4"
             }
         }
