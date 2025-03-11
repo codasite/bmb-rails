@@ -63,8 +63,8 @@ class BracketAdminHooks implements HooksInterface {
 			<tbody>
 				<?php foreach ($matches as $match) { ?>
 					<tr>
-						<td><?php echo $match->round_index; ?></td>
-						<td><?php echo $match->match_index; ?></td>
+						<td><?php echo $match->round_index + 1; ?></td>
+						<td><?php echo $match->match_index + 1; ?></td>
 						<td>
               <?php if ($match->team1) { ?>
                 <input
