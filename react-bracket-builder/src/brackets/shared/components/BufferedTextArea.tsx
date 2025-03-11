@@ -20,7 +20,7 @@ export const BufferedTextArea = (props: BufferedTextAreaProps) => {
     style,
     className,
     errorText,
-    rows = 3,
+    rows = 1,
   } = props
 
   const internalRef = useRef<HTMLTextAreaElement>(null)
