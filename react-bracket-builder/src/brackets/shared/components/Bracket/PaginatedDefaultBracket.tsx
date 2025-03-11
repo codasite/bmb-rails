@@ -212,10 +212,10 @@ export const PaginatedDefaultBracket = (
           <WinnerContainer
             match={matchTree.rounds[roundIndex].matches[0]}
             matchTree={matchTree}
-            topText="Winner"
+            title="Winner"
             TeamSlotComponent={TeamSlotComponent}
             gap={16}
-            topTextFontSize={64}
+            titleFontSize={64}
           />
         )}
 

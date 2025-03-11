@@ -8,6 +8,7 @@ import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg'
 import { ReactComponent as ChevronLeft } from '../../assets/chevron-left.svg'
 import { ReactComponent as EditIcon } from '../../assets/edit-icon.svg'
 import { ScaledBracket } from './ScaledBracket'
+import { ReadonlyTitleComponent } from '../MatchBox/Children/ReadonlyTitleComponent'
 
 export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
   const [page, setPage] = React.useState(0)
@@ -36,6 +37,7 @@ export const PaginatedAddTeamsBracket = (props: PaginatedBracketProps) => {
         <ScaledBracket
           matchTree={props.matchTree}
           BracketComponent={AddTeamsBracket}
+          TitleComponent={ReadonlyTitleComponent}
         />
         <ActionButton
           variant="white"

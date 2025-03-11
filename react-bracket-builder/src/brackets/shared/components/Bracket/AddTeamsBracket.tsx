@@ -6,12 +6,13 @@ import { EditableTeamSlotSwitch } from '../TeamSlot'
 import { AddTeamsFinalMatchChildren } from '../MatchBox/Children'
 import { EditableTitleComponent } from '../MatchBox/Children/EditableTitleComponent'
 export const AddTeamsBracket = (props: BracketProps) => {
+  const { TitleComponent = EditableTitleComponent } = props
   return (
     <DefaultBracket
       {...props}
       TeamSlotComponent={EditableTeamSlotSwitch}
       MatchBoxChildComponent={AddTeamsFinalMatchChildren}
-      TitleComponent={EditableTitleComponent}
+      TitleComponent={TitleComponent}
       lineStyle={{
         className: '!tw-border-t-[#333551]',
       }}
