@@ -6,9 +6,12 @@ import { EditableTeamSlotSwitch } from '../TeamSlot'
 import { AddTeamsFinalMatchChildren } from '../MatchBox/Children'
 import { EditableTitleComponent } from '../MatchBox/Children/EditableTitleComponent'
 export const AddTeamsBracket = (props: BracketProps) => {
-  const { TitleComponent = EditableTitleComponent } = props
+  const {
+    TitleComponent = EditableTitleComponent,
+    BracketComponent = DefaultBracket,
+  } = props
   return (
-    <DefaultBracket
+    <BracketComponent
       {...props}
       TeamSlotComponent={EditableTeamSlotSwitch}
       MatchBoxChildComponent={AddTeamsFinalMatchChildren}

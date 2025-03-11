@@ -166,8 +166,6 @@ export const PaginatedDefaultBracket = (
     className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
   }
 
-  const maxW = getBracketWidth(numRounds)
-
   const handleNext = () => {
     const maxPages = (matchTree.rounds.length - 1) * 2
     const newPage = page + 1
@@ -195,9 +193,7 @@ export const PaginatedDefaultBracket = (
   }
 
   return (
-    <div
-      className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}
-    >
+    <div className={`tw-flex tw-flex-col tw-gap-48 tw-w-full tw-items-center`}>
       <div className="tw-flex tw-justify-center">
         <h2 className="tw-text-24 tw-font-700 tw-text-white">{`Round ${
           roundIndex + 1
@@ -207,6 +203,7 @@ export const PaginatedDefaultBracket = (
         className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${
           isLastRound ? ' tw-pb-0' : ''
         }`}
+        style={{ width: getBracketWidth(numRounds) }}
       >
         {isLastRound && (
           <WinnerContainer
@@ -233,23 +230,17 @@ export const PaginatedDefaultBracket = (
           )}
         </div>
       </div>
-      <div
-        className={`tw-flex tw-flex-col tw-justify-end tw-items-${
-          isLastRound ? 'center' : 'stretch'
-        }${isLastRound ? ' tw-flex-grow' : ''}`}
-      >
-        <NavButtonsComponent
-          disableNext={
-            forcePageAllPicked ? someMatchNotPicked(currentRoundMatches) : false
-          }
-          disablePrev={disablePrev()}
-          onNext={handleNext}
-          hasNext={hasNext()}
-          onPrev={handlePrev}
-          onFullBracket={onFinished}
-          onFinished={onFinished}
-        />
-      </div>
+      <NavButtonsComponent
+        disableNext={
+          forcePageAllPicked ? someMatchNotPicked(currentRoundMatches) : false
+        }
+        disablePrev={disablePrev()}
+        onNext={handleNext}
+        hasNext={hasNext()}
+        onPrev={handlePrev}
+        onFullBracket={onFinished}
+        onFinished={onFinished}
+      />
     </div>
   )
 }

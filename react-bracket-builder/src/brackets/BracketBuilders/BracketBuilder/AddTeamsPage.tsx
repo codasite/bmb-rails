@@ -17,6 +17,11 @@ import {
 import { ReactComponent as ScrambleIcon } from '../../shared/assets/scramble.svg'
 import { BracketBuilderHeader } from './BracketBuilderHeader'
 import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
+import { AddTeamsStartPage } from './PaginatedAddTeams/AddTeamsStartPage'
+import { AddTeamsPages } from './PaginatedAddTeams/AddTeamsPages'
+import { AddTeamsEndPage } from './PaginatedAddTeams/AddTeamsEndPage'
+import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
+import { BracketBackground } from '../../shared/components/BracketBackground'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -71,11 +76,9 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     setScrambledIndices([])
     setMatchTree(matchTree)
   }
+  const showNew = window.location.pathname.includes('copy-new')
   return (
-    <div
-      className="tw-flex tw-flex-col tw-pt-30 tw-pb-60 tw-bg-no-repeat tw-bg-top tw-bg-cover tw-px-16 sm:tw-px-20"
-      style={{ background: `url(${iconBackground}), #000225` }}
-    >
+    <BracketBackground>
       <BracketBuilderHeader />
       <div className="sm:tw-px-60 tw-mb-16">
         <div className="tw-flex tw-p-16">
@@ -108,12 +111,24 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
                 setMatchTree={setMatchTree}
               />
             )}
-            {matchTree && showPaginated && (
-              <PaginatedAddTeamsBracket
-                matchTree={matchTree}
-                setMatchTree={setMatchTree}
-              />
-            )}
+            {matchTree &&
+              showPaginated &&
+              (showNew ? (
+                <PaginatedBuilder
+                  matchTree={matchTree}
+                  setMatchTree={setMatchTree}
+                  handleSubmit={handleSaveBracket}
+                  processing={processing}
+                  BracketPagesComponent={AddTeamsPages}
+                  EndPageComponent={AddTeamsEndPage}
+                  StartPageComponent={AddTeamsStartPage}
+                />
+              ) : (
+                <PaginatedAddTeamsBracket
+                  matchTree={matchTree}
+                  setMatchTree={setMatchTree}
+                />
+              ))}
           </div>
         </div>
         <div className="tw-flex tw-flex-col tw-justify-center tw-gap-10">
@@ -154,7 +169,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
           />
         </div>
         <ActionButton
-          variant="blue"
+          variant="green"
           gap={16}
           disabled={createDisabled}
           onClick={handleSaveBracket}
@@ -165,7 +180,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
           </span>
         </ActionButton>
       </div>
-    </div>
+    </BracketBackground>
   )
 }
 

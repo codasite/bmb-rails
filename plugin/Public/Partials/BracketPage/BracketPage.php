@@ -32,6 +32,9 @@ class BracketPage implements TemplateInterface {
       case 'copy':
         $el_id = 'wpbb-bracket-builder';
         break;
+      case 'copy-new':
+        $el_id = 'wpbb-bracket-builder';
+        break;
       case 'results':
         switch ($action) {
           case 'update':
