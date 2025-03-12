@@ -125,7 +125,7 @@ export interface PaginatedBracketProps extends BracketProps {
   NavButtonsComponent?: React.FC<PaginatedNavButtonsProps>
   getFirstPage?: (matchTree: MatchTree) => number
   hasNext?: (matchTree: MatchTree, currentPage: number) => boolean
-  disableNext?: (matchTree: MatchTree, visibleMatches: MatchNode[]) => boolean
+  disableNext?: (visibleMatches: MatchNode[]) => boolean
 }
 
 export interface PaginatedNavButtonsProps {

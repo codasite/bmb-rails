@@ -49,10 +49,7 @@ const defaultHasNext = (matchTree: MatchTree, currentPage: number) => {
   return currentPage < (matchTree.rounds.length - 1) * 2
 }
 
-const defaultDisableNext = (
-  matchTree: MatchTree,
-  visibleMatches: MatchNode[]
-) => {
+const defaultDisableNext = (visibleMatches: MatchNode[]) => {
   const someMatchNotPicked = visibleMatches.some(
     (match) => match && !match.isPicked()
   )
@@ -244,7 +241,7 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
         </div>
       </div>
       <NavButtonsComponent
-        disableNext={disableNext(matchTree, currentRoundMatches)}
+        disableNext={disableNext(currentRoundMatches)}
         disablePrev={disablePrev()}
         onNext={handleNext}
         hasNext={hasNext(matchTree, page)}

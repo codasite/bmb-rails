@@ -6,7 +6,7 @@ import { ResultsNavButtons } from './BracketActionButtons'
 export const PaginatedResultsBracket = (props: PaginatedBracketProps) => {
   const newProps: PaginatedBracketProps = {
     ...props,
-    disableNext: (matchTree, currentRoundIndex) => {
+    disableNext: (visibleMatches) => {
       return false
     },
     NavButtonsComponent: ResultsNavButtons,
