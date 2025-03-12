@@ -22,6 +22,7 @@ import { AddTeamsPages } from './PaginatedAddTeams/AddTeamsPages'
 import { AddTeamsEndPage } from './PaginatedAddTeams/AddTeamsEndPage'
 import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { BracketBackground } from '../../shared/components/BracketBackground'
+import { ScrambleButton } from './ScrambleButton'
 
 interface AddTeamsPageProps {
   matchTree?: MatchTree
@@ -131,32 +132,14 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
               ))}
           </div>
         </div>
-        <div className="tw-flex tw-flex-col tw-justify-center tw-gap-10">
-          <ActionButton
-            className={showPaginated ? '' : 'tw-self-center'}
-            variant="blue"
-            onClick={onScramble}
-            paddingX={16}
-            paddingY={12}
-            disabled={scrambleDisabled}
-          >
-            <ScrambleIcon />
-            <span className="tw-font-500 tw-text-20 tw-uppercase tw-font-sans">
-              Scramble Team Order
-            </span>
-          </ActionButton>
-          {showReset && (
-            <ActionButton
-              className="tw-self-center"
-              backgroundColor="transparent"
-              onClick={onReset}
-            >
-              <span className="tw-font-500 tw-text-16 tw tw-uppercase tw-font-sans tw-underline tw-text-red">
-                Reset
-              </span>
-            </ActionButton>
-          )}
-        </div>
+        {matchTree && setMatchTree && matchTree.rounds.length < 7 && (
+          <ScrambleButton
+            matchTree={matchTree}
+            setMatchTree={setMatchTree}
+            showPaginated={showPaginated}
+            processing={processing}
+          />
+        )}
         <div className="tw-flex tw-flex-col tw-gap-60 tw-max-w-[510px] tw-w-full tw-mx-auto">
           <DatePicker
             month={month}
