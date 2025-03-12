@@ -7,6 +7,7 @@ import { PickableBracket } from '../../shared/components/Bracket'
 import { ScaledBracket } from '../../shared/components/Bracket/ScaledBracket'
 import { BracketMetaContext } from '../../shared/context/context'
 import { BracketHeaderTag } from '../BracketHeaderTag'
+import { BracketBackground } from '../../shared/components/BracketBackground'
 
 interface LandingPageProps {
   onStart: () => void
@@ -20,11 +21,8 @@ export const LandingPage = (props: LandingPageProps) => {
   const { title } = bracketMeta
 
   return (
-    <div
-      className={`wpbb-reset tw-flex tw-uppercase tw-min-h-screen tw-bg-no-repeat tw-bg-top tw-bg-cover tw-dark `}
-      style={{ backgroundImage: `url(${darkBracketBg})` }}
-    >
-      <div className="tw-flex tw-flex-col tw-justify-center tw-items-center px-60 tw-m-auto">
+    <BracketBackground className="tw-flex tw-flex-col tw-justify-center tw-items-center">
+      <div className="tw-flex tw-flex-col tw-justify-center tw-items-center ">
         {matchTree.isVoting && (
           <BracketHeaderTag
             text={`Voting Round ${matchTree.liveRoundIndex + 1}`}
@@ -53,6 +51,6 @@ export const LandingPage = (props: LandingPageProps) => {
           </ActionButton>
         )}
       </div>
-    </div>
+    </BracketBackground>
   )
 }

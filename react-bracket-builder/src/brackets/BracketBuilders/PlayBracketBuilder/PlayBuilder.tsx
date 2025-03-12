@@ -9,23 +9,15 @@ import { DarkModeContext } from '../../shared/context/context'
 import { BracketHeaderTag } from '../BracketHeaderTag'
 import { VotingBracket } from '../../../features/VotingBracket/VotingBracket'
 import { ThemeSelector } from '../../../ui/ThemeSelector'
-
+import { BracketBackground } from '../../shared/components/BracketBackground'
 export const PlayBuilder = (props: PlayBuilderProps) => {
   const { matchTree, setMatchTree } = props
-  const { darkMode } = useContext(DarkModeContext)
   const bracketProps = {
     matchTree,
     setMatchTree,
   }
   return (
-    <div
-      className={`wpbb-reset tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        darkMode ? ' tw-dark' : ''
-      }`}
-      style={{
-        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
-      }}
-    >
+    <BracketBackground>
       {matchTree && (
         <div
           className={`tw-flex tw-flex-col tw-items-center tw-max-w-screen-lg tw-m-auto tw-pb-80`}
@@ -49,6 +41,6 @@ export const PlayBuilder = (props: PlayBuilderProps) => {
           </div>
         </div>
       )}
-    </div>
+    </BracketBackground>
   )
 }

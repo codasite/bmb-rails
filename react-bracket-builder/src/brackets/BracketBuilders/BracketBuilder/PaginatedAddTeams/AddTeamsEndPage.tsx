@@ -7,7 +7,6 @@ import { AddTeamsBracket } from '../../../shared/components/Bracket/AddTeamsBrac
 import { BracketMetaContext } from '../../../shared/context/context'
 import { WindowDimensionsContext } from '../../../shared/context/WindowDimensionsContext'
 import { DefaultEditButton } from '../../../shared/components/Bracket/BracketActionButtons'
-import { BracketBackground } from '../../../shared/components/BracketBackground'
 
 export const AddTeamsEndPage = (props: EndPageProps) => {
   const { matchTree, processing, handleSubmit, onEditClick } = props

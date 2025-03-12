@@ -200,7 +200,7 @@ export const PaginatedDefaultBracket = (
         }`}</h2>
       </div>
       <div
-        className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${
+        className={`tw-flex tw-flex-col tw-justify-center tw-grow tw-gap-30${
           isLastRound ? ' tw-pb-0' : ''
         }`}
         style={{ width: getBracketWidth(numRounds) }}
