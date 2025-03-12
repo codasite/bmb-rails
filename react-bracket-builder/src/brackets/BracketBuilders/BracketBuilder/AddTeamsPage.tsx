@@ -2,7 +2,6 @@
 import React, { useContext, useState } from 'react'
 import { MatchTree } from '../../shared/models/MatchTree'
 import { ReactComponent as ArrowNarrowLeft } from '../../shared/assets/arrow-narrow-left.svg'
-import iconBackground from '../../shared/assets/bmb_icon_white_02.png'
 import { AddTeamsBracket } from '../../shared/components/Bracket'
 import { ActionButton } from '../../shared/components/ActionButtons'
 import { ReactComponent as SaveIcon } from '../../shared/assets/save.svg'
@@ -14,12 +13,10 @@ import {
   resetTeams,
   scrambleTeams,
 } from '../../shared/models/operations/ScrambleTeams'
-import { ReactComponent as ScrambleIcon } from '../../shared/assets/scramble.svg'
 import { BracketBuilderHeader } from './BracketBuilderHeader'
 import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 import { AddTeamsStartPage } from './PaginatedAddTeams/AddTeamsStartPage'
 import { AddTeamsPages } from './PaginatedAddTeams/AddTeamsPages'
-import { AddTeamsEndPage } from './PaginatedAddTeams/AddTeamsEndPage'
 import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { BracketBackground } from '../../shared/components/BracketBackground'
 import { ScrambleButton } from './ScrambleButton'
@@ -48,35 +45,10 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     processing,
   } = props
   const [dateError, setDateError] = useState(false)
-  const [scrambledIndices, setScrambledIndices] = useState<number[]>([])
   const createDisabled =
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
-  const scrambleDisabled =
-    !matchTree || !matchTree.allTeamsAdded() || processing
-  const showReset = !scrambleDisabled && scrambledIndices.length > 0
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
-  function onScramble() {
-    if (!matchTree) {
-      return
-    }
-    let indices = scrambledIndices
-    if (indices.length === 0) {
-      // new array [0, 1, 2, ...]
-      indices = Array.from(Array(matchTree.getNumTeams()).keys())
-    }
-    const newIndices = scrambleTeams(matchTree, indices)
-    setScrambledIndices(newIndices)
-    setMatchTree(matchTree)
-  }
-  function onReset() {
-    if (!matchTree || scrambledIndices.length === 0) {
-      return
-    }
-    resetTeams(matchTree, scrambledIndices)
-    setScrambledIndices([])
-    setMatchTree(matchTree)
-  }
   const showNew = window.location.pathname.includes('copy-new')
   return (
     <BracketBackground>
@@ -121,7 +93,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
                   handleSubmit={handleSaveBracket}
                   processing={processing}
                   BracketPagesComponent={AddTeamsPages}
-                  EndPageComponent={AddTeamsEndPage}
+                  EndPageComponent={AddTeamsStartPage}
                   StartPageComponent={AddTeamsStartPage}
                 />
               ) : (
