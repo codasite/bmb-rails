@@ -120,8 +120,12 @@ export interface BracketActionButtonProps extends ActionButtonProps {
 }
 
 export interface PaginatedBracketProps extends BracketProps {
+  forcePageAllPicked?: boolean
   onFinished?: () => void
   NavButtonsComponent?: React.FC<PaginatedNavButtonsProps>
+  getFirstPage?: (matchTree: MatchTree) => number
+  hasNext?: (matchTree: MatchTree, currentPage: number) => boolean
+  disableNext?: (matchTree: MatchTree, visibleMatches: MatchNode[]) => boolean
 }
 
 export interface PaginatedNavButtonsProps {
@@ -136,12 +140,6 @@ export interface PaginatedNavButtonsProps {
   onNext?: () => void
   onFinished?: () => void
   onFullBracket?: () => void
-}
-
-// why is this different from PaginatedBracketProps?
-export interface PaginatedDefaultBracketProps extends PaginatedBracketProps {
-  disableNext?: (currentRoundMatches: Array<Nullable<MatchNode>>) => boolean
-  forcePageAllPicked?: boolean
 }
 
 export interface ScaledBracketProps extends BracketProps {
