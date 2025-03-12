@@ -63,7 +63,6 @@ export const BufferedTextArea = (props: BufferedTextAreaProps) => {
         rows={rows}
         onFocus={(e) => {
           startEditing()
-          e.target.select()
         }}
         onBlur={doneEditing}
         onKeyUp={handleKeyUp}

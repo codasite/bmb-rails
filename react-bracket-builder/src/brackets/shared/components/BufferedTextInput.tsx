@@ -39,7 +39,6 @@ export const BufferedTextInput = (props: BufferedTextInputProps) => {
         type="text"
         onFocus={(e) => {
           startEditing()
-          e.target.select()
         }}
         onBlur={doneEditing}
         onKeyUp={handleKeyUp}
