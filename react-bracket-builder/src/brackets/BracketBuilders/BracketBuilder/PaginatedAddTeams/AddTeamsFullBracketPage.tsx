@@ -10,15 +10,18 @@ import { EditableTitleComponent } from '../../../shared/components/MatchBox/Chil
 
 export const AddTeamsFullBracketPage = (props: EndPageProps) => {
   const { onEditClick } = props
-  const { bracketMeta } = useContext(BracketMetaContext)
+  const { bracketMeta, setBracketMeta } = useContext(BracketMetaContext)
   const { title } = bracketMeta
   const { matchTree } = props
   return (
-    <div className="tw-flex tw-flex-col tw-items-center tw-gap-40">
-      {/* <h1 className="tw-text-white tw-font-700 tw-text-32 tw-text-center">
-        {title}
-      </h1> */}
-      <EditableTitleComponent title={title} fontSize={32} />
+    <div className="tw-flex tw-flex-col tw-items-center tw-gap-40 tw-max-w-full">
+      <EditableTitleComponent
+        title={title}
+        fontSize={32}
+        setTitle={(title) => {
+          setBracketMeta({ ...bracketMeta, title })
+        }}
+      />
       {matchTree && (
         <ScaledBracket
           BracketComponent={AddTeamsBracket}
