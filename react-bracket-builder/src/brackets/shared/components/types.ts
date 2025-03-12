@@ -162,8 +162,9 @@ export type HOC = (Component: React.FC<any>) => React.FC<any>
 export interface TitleComponentProps {
   title: string
   setTitle?: (title: string) => void
-  fontSize: number
-  color: string
-  colorDark: string
-  width: number
+  fontSize?: number
+  color?: string
+  colorDark?: string
+  width?: number
+  style?: React.CSSProperties
 }

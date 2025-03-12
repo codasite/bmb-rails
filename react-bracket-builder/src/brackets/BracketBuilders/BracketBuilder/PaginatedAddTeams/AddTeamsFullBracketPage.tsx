@@ -6,6 +6,7 @@ import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { AddTeamsBracket } from '../../../shared/components/Bracket'
 import { ReadonlyTitleComponent } from '../../../shared/components/MatchBox/Children/ReadonlyTitleComponent'
 import { DefaultEditButton } from '../../../shared/components/Bracket/BracketActionButtons'
+import { EditableTitleComponent } from '../../../shared/components/MatchBox/Children/EditableTitleComponent'
 
 export const AddTeamsFullBracketPage = (props: EndPageProps) => {
   const { onEditClick } = props
@@ -14,9 +15,10 @@ export const AddTeamsFullBracketPage = (props: EndPageProps) => {
   const { matchTree } = props
   return (
     <div className="tw-flex tw-flex-col tw-items-center tw-gap-40">
-      <h1 className="tw-text-white tw-font-700 tw-text-32 tw-text-center">
+      {/* <h1 className="tw-text-white tw-font-700 tw-text-32 tw-text-center">
         {title}
-      </h1>
+      </h1> */}
+      <EditableTitleComponent title={title} fontSize={32} />
       {matchTree && (
         <ScaledBracket
           BracketComponent={AddTeamsBracket}
