@@ -9,12 +9,7 @@ import { getBracketWidth } from '../../shared/components/Bracket/utils'
 import { DatePicker } from '../../shared/components/DatePicker'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
-import {
-  resetTeams,
-  scrambleTeams,
-} from '../../shared/models/operations/ScrambleTeams'
 import { BracketBuilderHeader } from './BracketBuilderHeader'
-import { PaginatedAddTeamsBracket } from '../../shared/components/Bracket/PaginatedAddTeamsBracket'
 import { AddTeamsStartPage } from './PaginatedAddTeams/AddTeamsStartPage'
 import { AddTeamsPages } from './PaginatedAddTeams/AddTeamsPages'
 import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
@@ -49,7 +44,6 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     !matchTree || !matchTree.allTeamsAdded() || dateError || processing
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
-  const showNew = window.location.pathname.includes('copy-new')
   return (
     <BracketBackground>
       <BracketBuilderHeader />
@@ -84,24 +78,17 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
                 setMatchTree={setMatchTree}
               />
             )}
-            {matchTree &&
-              showPaginated &&
-              (showNew ? (
-                <PaginatedBuilder
-                  matchTree={matchTree}
-                  setMatchTree={setMatchTree}
-                  handleSubmit={handleSaveBracket}
-                  processing={processing}
-                  BracketPagesComponent={AddTeamsPages}
-                  EndPageComponent={AddTeamsStartPage}
-                  StartPageComponent={AddTeamsStartPage}
-                />
-              ) : (
-                <PaginatedAddTeamsBracket
-                  matchTree={matchTree}
-                  setMatchTree={setMatchTree}
-                />
-              ))}
+            {matchTree && showPaginated && (
+              <PaginatedBuilder
+                matchTree={matchTree}
+                setMatchTree={setMatchTree}
+                handleSubmit={handleSaveBracket}
+                processing={processing}
+                BracketPagesComponent={AddTeamsPages}
+                EndPageComponent={AddTeamsStartPage}
+                StartPageComponent={AddTeamsStartPage}
+              />
+            )}
           </div>
         </div>
         {matchTree && setMatchTree && matchTree.rounds.length < 7 && (
