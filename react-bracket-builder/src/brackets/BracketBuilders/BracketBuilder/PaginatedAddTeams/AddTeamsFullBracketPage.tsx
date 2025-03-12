@@ -1,14 +1,14 @@
 // DO NOT REMOVE REACT IMPORT. Needed for image generator
 import React, { useContext } from 'react'
-import { StartPageProps } from '../../PaginatedBuilderBase/types'
+import { EndPageProps, StartPageProps } from '../../PaginatedBuilderBase/types'
 import { BracketMetaContext } from '../../../shared/context/context'
 import { ScaledBracket } from '../../../shared/components/Bracket/ScaledBracket'
 import { AddTeamsBracket } from '../../../shared/components/Bracket'
 import { ReadonlyTitleComponent } from '../../../shared/components/MatchBox/Children/ReadonlyTitleComponent'
 import { DefaultEditButton } from '../../../shared/components/Bracket/BracketActionButtons'
 
-export const AddTeamsStartPage = (props: StartPageProps) => {
-  const { onStart } = props
+export const AddTeamsFullBracketPage = (props: EndPageProps) => {
+  const { onEditClick } = props
   const { bracketMeta } = useContext(BracketMetaContext)
   const { title } = bracketMeta
   const { matchTree } = props
@@ -24,7 +24,7 @@ export const AddTeamsStartPage = (props: StartPageProps) => {
           TitleComponent={ReadonlyTitleComponent}
         />
       )}
-      <DefaultEditButton onClick={onStart} borderWidth={0} />
+      <DefaultEditButton onClick={onEditClick} borderWidth={0} />
     </div>
   )
 }

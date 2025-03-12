@@ -11,6 +11,7 @@ export interface PaginatedBuilderProps {
   StartPageComponent?: React.FC<StartPageProps>
   BracketPagesComponent: React.FC<BracketPagesProps>
   EndPageComponent: React.FC<EndPageProps>
+  initialPage?: 'start' | 'bracket' | 'end'
 }
 
 export interface StartPageProps {

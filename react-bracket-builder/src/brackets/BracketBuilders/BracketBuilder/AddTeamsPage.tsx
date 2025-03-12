@@ -10,7 +10,7 @@ import { DatePicker } from '../../shared/components/DatePicker'
 import { WindowDimensionsContext } from '../../shared/context/WindowDimensionsContext'
 import { WithWindowDimensions } from '../../shared/components/HigherOrder/WithWindowDimensions'
 import { BracketBuilderHeader } from './BracketBuilderHeader'
-import { AddTeamsStartPage } from './PaginatedAddTeams/AddTeamsStartPage'
+import { AddTeamsFullBracketPage } from './PaginatedAddTeams/AddTeamsFullBracketPage'
 import { AddTeamsPages } from './PaginatedAddTeams/AddTeamsPages'
 import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { BracketBackground } from '../../shared/components/BracketBackground'
@@ -82,11 +82,9 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
               <PaginatedBuilder
                 matchTree={matchTree}
                 setMatchTree={setMatchTree}
-                handleSubmit={handleSaveBracket}
-                processing={processing}
                 BracketPagesComponent={AddTeamsPages}
-                EndPageComponent={AddTeamsStartPage}
-                StartPageComponent={AddTeamsStartPage}
+                EndPageComponent={AddTeamsFullBracketPage}
+                initialPage={createDisabled ? 'bracket' : 'end'}
               />
             )}
           </div>
