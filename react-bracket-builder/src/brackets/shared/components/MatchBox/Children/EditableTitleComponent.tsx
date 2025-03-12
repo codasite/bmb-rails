@@ -10,6 +10,8 @@ export const EditableTitleComponent = (props: TitleComponentProps) => {
       onChange={(e) => props.setTitle(e.target.value)}
       onStartEditing={() => setEditing(true)}
       onDoneEditing={() => setEditing(false)}
+      validate={(value) => value.length > 0}
+      errorText="Title cannot be empty"
       initialValue={props.title}
       className={`${
         editing

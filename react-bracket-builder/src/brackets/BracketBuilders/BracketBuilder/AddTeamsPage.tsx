@@ -15,7 +15,7 @@ import { AddTeamsPages } from './PaginatedAddTeams/AddTeamsPages'
 import { PaginatedBuilder } from '../PaginatedBuilderBase/PaginatedBuilder'
 import { BracketBackground } from '../../shared/components/BracketBackground'
 import { ScrambleButton } from './ScrambleButton'
-
+import { BracketMetaContext } from '../../shared/context/context'
 interface AddTeamsPageProps {
   matchTree?: MatchTree
   setMatchTree?: (matchTree: MatchTree) => void
@@ -40,8 +40,13 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     processing,
   } = props
   const [dateError, setDateError] = useState(false)
+  const { bracketMeta } = useContext(BracketMetaContext)
   const createDisabled =
-    !matchTree || !matchTree.allTeamsAdded() || dateError || processing
+    !matchTree ||
+    !matchTree.allTeamsAdded() ||
+    dateError ||
+    processing ||
+    bracketMeta?.title.length === 0
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
