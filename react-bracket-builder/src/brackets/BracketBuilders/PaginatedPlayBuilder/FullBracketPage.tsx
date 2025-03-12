@@ -12,6 +12,7 @@ import { DarkModeContext } from '../../shared/context/context'
 import { BracketHeaderTag } from '../BracketHeaderTag'
 import { ThemeSelector } from '../../../ui/ThemeSelector'
 import { VotingBracket } from '../../../features/VotingBracket/VotingBracket'
+import { BracketBackground } from '../../shared/components/BracketBackground'
 
 interface FullBracketPageProps extends PlayBuilderProps {
   onEditClick?: () => void
@@ -24,15 +25,8 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
   const canEdit = !!onEditClick
   const processing = props.processingAddToApparel || props.processingSubmitPicks
   return (
-    <div
-      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        darkMode ? ' tw-dark' : ''
-      }`}
-      style={{
-        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
-      }}
-    >
-      <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-mx-auto tw-flex-grow tw-mt-60 tw-mb-80">
+    <BracketBackground className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-py-48">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-grow">
         <div className="tw-self-center">
           <div className="tw-mb-10">
             {matchTree.isVoting && (
@@ -68,6 +62,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           <PlayBuilderButtons {...props} />
         </div>
       </div>
-    </div>
+    </BracketBackground>
   )
 }
