@@ -126,11 +126,6 @@ export const getBracketMeta = (bracket?: BracketRes): BracketMeta => {
   return { title, date, isOpen }
 }
 
-export const someMatchNotPicked = (matches: MatchNode[]) => {
-  const notPicked = matches.some((match) => match && !match.isPicked())
-  return notPicked
-}
-
 export const defaultTeamClickDisabledCallback = (
   match: MatchNode,
   position: string,

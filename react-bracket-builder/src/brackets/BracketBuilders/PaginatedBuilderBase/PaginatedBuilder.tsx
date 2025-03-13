@@ -10,9 +10,12 @@ export const PaginatedBuilder = (props: PaginatedBuilderProps) => {
     StartPageComponent,
     BracketPagesComponent,
     EndPageComponent,
+    initialPage,
   } = props
 
-  const [page, setPage] = useState(StartPageComponent ? 'start' : 'bracket')
+  const [page, setPage] = useState(
+    initialPage || (StartPageComponent ? 'start' : 'bracket')
+  )
 
   useEffect(() => {
     const paged = matchTree

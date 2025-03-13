@@ -54,7 +54,7 @@ export const BufferedTextArea = (props: BufferedTextAreaProps) => {
   const finalClassName = [className, extraClass].join(' ')
 
   return (
-    <div className="tw-relative tw-flex tw-flex-col tw-gap-8">
+    <div className={`tw-relative tw-flex tw-flex-col tw-gap-8 tw-max-w-full`}>
       {showPlaceholder && placeholderEl && (
         <PlaceholderWrapper>{placeholderEl}</PlaceholderWrapper>
       )}
@@ -63,7 +63,6 @@ export const BufferedTextArea = (props: BufferedTextAreaProps) => {
         rows={rows}
         onFocus={(e) => {
           startEditing()
-          e.target.select()
         }}
         onBlur={doneEditing}
         onKeyUp={handleKeyUp}

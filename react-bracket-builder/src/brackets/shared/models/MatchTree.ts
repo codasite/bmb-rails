@@ -8,6 +8,7 @@ import { matchReprFromNumTeams } from './operations/MatchReprFromNumTeams'
 import { getNumRounds } from './operations/GetNumRounds'
 import { matchReprFromRes } from './operations/MatchReprFromRes'
 import { linkNodes } from './operations/LinkNodes'
+import { hasNeededTeams } from './operations/HasNeededTeams'
 
 export class MatchTree {
   rounds: Round[]
@@ -153,14 +154,7 @@ export class MatchTree {
 
   allTeamsAdded = (): boolean => {
     return this.everyMatch((match) => {
-      let hasNeededTeams = true
-      if (!match.left && !match.getTeam1()?.name) {
-        hasNeededTeams = false
-      }
-      if (hasNeededTeams && !match.right && !match.getTeam2()?.name) {
-        hasNeededTeams = false
-      }
-      return hasNeededTeams
+      return hasNeededTeams(match)
     })
   }
 

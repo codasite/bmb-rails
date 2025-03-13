@@ -17,7 +17,6 @@ export class MatchNode {
   parent: Nullable<MatchNode> = null
   depth: number
   _pick: MatchPick | null = null
-  // constructor(matchIndex, roundIndex, id: number | null, depth: number, parent: Nullable<MatchNode> = null) {
   constructor(args: MatchNodeArgs) {
     const {
       id,
@@ -116,12 +115,15 @@ export class MatchNode {
   isPicked(): boolean {
     return this.team1Wins || this.team2Wins
   }
-  isEditable(teamPosition: TeamPosition): boolean {
+  isLeafTeam(teamPosition: TeamPosition): boolean {
     if (teamPosition === 'left') {
       return this.left === null
     } else if (teamPosition === 'right') {
-      return this.right == null
+      return this.right === null
     }
     return false
+  }
+  hasLeafTeam(): boolean {
+    return this.isLeafTeam('left') || this.isLeafTeam('right')
   }
 }

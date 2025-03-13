@@ -42,6 +42,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   const [month, setMonth] = useState('')
   const [year, setYear] = useState('')
   const [processing, setProcessing] = useState(false)
+  const [showBackButton, setShowBackButton] = useState(true)
   const { bracketMeta, setBracketMeta } = useContext(BracketMetaContext)
 
   useEffect(() => {
@@ -59,6 +60,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
   }, [])
 
   useEffect(() => {
+    // handle copy bracket
     if (bracket) {
       const { numTeams, wildcardPlacement, matches, month, year } = bracket
       setMonth(month)
@@ -84,6 +86,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
             wildcardPlacement
           )
         )
+        setShowBackButton(false) // don't show back button for copy bracket
         setCurrentPage('add-teams')
       }
     }
@@ -175,6 +178,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
           year={year}
           setYear={setYear}
           processing={processing}
+          showBackButton={showBackButton}
         />
       )}
     </div>

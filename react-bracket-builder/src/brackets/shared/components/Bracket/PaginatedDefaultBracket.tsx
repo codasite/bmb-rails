@@ -1,12 +1,11 @@
 import { useContext, useState } from 'react'
-import { PaginatedDefaultBracketProps } from '../types'
+import { PaginatedBracketProps } from '../types'
 import {
   getFirstRoundMatchGap as getDefaultFirstRoundMatchGap,
   getSubsequentMatchGap as getDefaultSubsequentMatchGap,
   getTeamGap as getDefaultTeamGap,
   getTeamHeight as getDefaultTeamHeight,
   getTeamWidth as getDefaultTeamWidth,
-  someMatchNotPicked,
 } from './utils'
 import { DefaultMatchColumn } from '../MatchColumn'
 import { BaseTeamSlot } from '../TeamSlot'
@@ -14,10 +13,50 @@ import { BracketLines, RootMatchLines } from './BracketLines'
 import { DarkModeContext } from '../../context/context'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { DefaultNavButtons } from './BracketActionButtons'
+import { MatchTree } from '../../models/MatchTree'
+import { MatchNode } from '../../models/operations/MatchNode'
 
-export const PaginatedDefaultBracket = (
-  props: PaginatedDefaultBracketProps
-) => {
+const getDefaultFirstPage = (matchTree: MatchTree) => {
+  if (!matchTree.anyPicked()) {
+    return 0
+  }
+  if (matchTree.isVoting) {
+    return matchTree.liveRoundIndex * 2
+  }
+  if (matchTree.allPicked()) {
+    return (matchTree.rounds.length - 1) * 2
+  }
+  // find first unpicked match
+  const firstUnpickedMatch = matchTree.findMatch(
+    (match) => match && !match.isPicked()
+  )
+  if (!firstUnpickedMatch) {
+    return 0
+  }
+  const { roundIndex, matchIndex } = firstUnpickedMatch
+  const numMatches = matchTree.rounds[roundIndex].matches.length
+  let pageNum = roundIndex * 2
+  if (matchIndex >= numMatches / 2) {
+    pageNum++
+  }
+  return pageNum
+}
+
+const defaultHasNext = (matchTree: MatchTree, currentPage: number) => {
+  if (matchTree.isVoting) {
+    return currentPage < matchTree.liveRoundIndex * 2 + 1
+  }
+  return currentPage < (matchTree.rounds.length - 1) * 2
+}
+
+const defaultDisableNext = (visibleMatches: MatchNode[]) => {
+  const someMatchNotPicked = visibleMatches.some(
+    (match) => match && !match.isPicked()
+  )
+  return someMatchNotPicked
+}
+
+export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
   const {
     getBracketWidth = () => 260,
     getTeamHeight = () => getDefaultTeamHeight(4),
@@ -34,34 +73,11 @@ export const PaginatedDefaultBracket = (
     lineStyle,
     onFinished,
     NavButtonsComponent = DefaultNavButtons,
-    forcePageAllPicked = true,
+    getFirstPage = getDefaultFirstPage,
+    hasNext = defaultHasNext,
+    disableNext = defaultDisableNext,
   } = props
-  const getDefaultPage = () => {
-    if (!matchTree.anyPicked()) {
-      return 0
-    }
-    if (matchTree.isVoting) {
-      return matchTree.liveRoundIndex * 2
-    }
-    if (matchTree.allPicked()) {
-      return (matchTree.rounds.length - 1) * 2
-    }
-    // find first unpicked match
-    const firstUnpickedMatch = matchTree.findMatch(
-      (match) => match && !match.isPicked()
-    )
-    if (!firstUnpickedMatch) {
-      return 0
-    }
-    const { roundIndex, matchIndex } = firstUnpickedMatch
-    const numMatches = matchTree.rounds[roundIndex].matches.length
-    let pageNum = roundIndex * 2
-    if (matchIndex >= numMatches / 2) {
-      pageNum++
-    }
-    return pageNum
-  }
-  const [page, setPage] = useState(getDefaultPage)
+  const [page, setPage] = useState(getFirstPage(matchTree))
 
   const numRounds = matchTree.rounds.length
   const roundIndex = Math.floor(page / 2)
@@ -166,8 +182,6 @@ export const PaginatedDefaultBracket = (
     className: `!tw-border-t-${darkMode ? 'white' : 'dd-blue'}`,
   }
 
-  const maxW = getBracketWidth(numRounds)
-
   const handleNext = () => {
     const maxPages = (matchTree.rounds.length - 1) * 2
     const newPage = page + 1
@@ -187,35 +201,28 @@ export const PaginatedDefaultBracket = (
     }
     return page <= 0
   }
-  const hasNext = () => {
-    if (matchTree.isVoting) {
-      return page < matchTree.liveRoundIndex * 2 + 1
-    }
-    return page < (matchTree.rounds.length - 1) * 2
-  }
 
   return (
-    <div
-      className={`tw-flex tw-flex-col tw-gap-48 tw-min-h-screen tw-w-[${maxW}px] tw-m-auto tw-py-60`}
-    >
+    <div className={`tw-flex tw-flex-col tw-gap-48 tw-w-full tw-items-center`}>
       <div className="tw-flex tw-justify-center">
         <h2 className="tw-text-24 tw-font-700 tw-text-white">{`Round ${
           roundIndex + 1
         }`}</h2>
       </div>
       <div
-        className={`tw-flex-grow tw-flex tw-flex-col tw-justify-center tw-gap-30${
+        className={`tw-flex tw-flex-col tw-justify-center tw-grow tw-gap-30${
           isLastRound ? ' tw-pb-0' : ''
         }`}
+        style={{ width: getBracketWidth(numRounds) }}
       >
         {isLastRound && (
           <WinnerContainer
             match={matchTree.rounds[roundIndex].matches[0]}
             matchTree={matchTree}
-            topText="Winner"
+            title="Winner"
             TeamSlotComponent={TeamSlotComponent}
             gap={16}
-            topTextFontSize={64}
+            titleFontSize={64}
           />
         )}
 
@@ -233,23 +240,15 @@ export const PaginatedDefaultBracket = (
           )}
         </div>
       </div>
-      <div
-        className={`tw-flex tw-flex-col tw-justify-end tw-items-${
-          isLastRound ? 'center' : 'stretch'
-        }${isLastRound ? ' tw-flex-grow' : ''}`}
-      >
-        <NavButtonsComponent
-          disableNext={
-            forcePageAllPicked ? someMatchNotPicked(currentRoundMatches) : false
-          }
-          disablePrev={disablePrev()}
-          onNext={handleNext}
-          hasNext={hasNext()}
-          onPrev={handlePrev}
-          onFullBracket={onFinished}
-          onFinished={onFinished}
-        />
-      </div>
+      <NavButtonsComponent
+        disableNext={disableNext(currentRoundMatches)}
+        disablePrev={disablePrev()}
+        onNext={handleNext}
+        hasNext={hasNext(matchTree, page)}
+        onPrev={handlePrev}
+        onFullBracket={onFinished}
+        onFinished={onFinished}
+      />
     </div>
   )
 }
