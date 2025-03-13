@@ -11,6 +11,11 @@ use WStrategies\BMB\Includes\Hooks\RedirectHooks;
 class RedirectHooksTest extends TestCase {
   public function test_dashboard_redirect_not_logged_in(): void {
     $login_url = 'http://example.com/login';
+    $current_url = 'http://example.com/dashboard';
+
+    // Set up $_SERVER superglobal
+    $_SERVER['REQUEST_URI'] = '/dashboard';
+
     // Set expectations for the WordPress functions
     WP_Mock::userFunction('is_page', [
       'args' => 'dashboard',
@@ -19,6 +24,11 @@ class RedirectHooksTest extends TestCase {
 
     WP_Mock::userFunction('is_user_logged_in', [
       'return' => false,
+    ]);
+
+    WP_Mock::userFunction('home_url', [
+      'args' => [WP_Mock\Functions::type('string')],
+      'return' => $current_url,
     ]);
 
     WP_Mock::userFunction('wp_redirect', [
@@ -30,7 +40,7 @@ class RedirectHooksTest extends TestCase {
     ]);
 
     WP_Mock::userFunction('wp_login_url', [
-      'args' => ['dashboard'],
+      'args' => [$current_url],
       'return' => $login_url,
     ]);
 
