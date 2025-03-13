@@ -26,6 +26,7 @@ interface AddTeamsPageProps {
   year?: string
   setYear?: (year: string) => void
   processing?: boolean
+  showBackButton?: boolean
 }
 const AddTeamsPage = (props: AddTeamsPageProps) => {
   const {
@@ -38,6 +39,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
     year,
     setYear,
     processing,
+    showBackButton,
   } = props
   const [dateError, setDateError] = useState(false)
   const { bracketMeta } = useContext(BracketMetaContext)
@@ -52,20 +54,22 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
   return (
     <BracketBackground>
       <BracketBuilderHeader />
-      <div className="sm:tw-px-60 tw-mb-16">
-        <div className="tw-flex tw-p-16">
-          <a
-            href="#"
-            className="tw-flex tw-gap-10 tw-items-center"
-            onClick={handleBack}
-          >
-            <ArrowNarrowLeft />
-            <span className="tw-font-500 tw-text-16 sm:tw-text-20 tw-text-white ">
-              Create Bracket
-            </span>
-          </a>
+      {showBackButton && (
+        <div className="sm:tw-px-60 tw-mb-16">
+          <div className="tw-flex tw-p-16">
+            <a
+              href="#"
+              className="tw-flex tw-gap-10 tw-items-center"
+              onClick={handleBack}
+            >
+              <ArrowNarrowLeft />
+              <span className="tw-font-500 tw-text-16 sm:tw-text-20 tw-text-white ">
+                Create Bracket
+              </span>
+            </a>
+          </div>
         </div>
-      </div>
+      )}
       <div
         className={`tw-flex tw-flex-col tw-w-full tw-max-w-screen-lg tw-mx-auto ${
           showPaginated ? 'tw-gap-30' : 'tw-gap-60'
