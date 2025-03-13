@@ -31,7 +31,7 @@ export const AddTeamsPages = (props: BracketPagesProps) => {
         if (currentPage === 2) {
           const mid = Math.floor(secondRoundMatches.length / 2)
           return secondRoundMatches
-            .splice(mid)
+            .slice(mid)
             .some((match) => match.hasLeafTeam())
         }
         return false
