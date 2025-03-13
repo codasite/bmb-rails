@@ -17,9 +17,25 @@ export const AddTeamsPages = (props: BracketPagesProps) => {
           return !hasNeededTeams(match)
         })
       }}
-      // hasNext={(matchTree, currentPage) => {
-      //   return false
-      // }}
+      hasNext={(matchTree, currentPage) => {
+        if (matchTree.rounds.length < 2) {
+          return false
+        }
+        if (currentPage === 0) {
+          return true
+        }
+        const secondRoundMatches = matchTree.rounds[1].matches
+        if (currentPage === 1) {
+          return secondRoundMatches.some((match) => match.hasLeafTeam())
+        }
+        if (currentPage === 2) {
+          const mid = Math.floor(secondRoundMatches.length / 2)
+          return secondRoundMatches
+            .splice(mid)
+            .some((match) => match.hasLeafTeam())
+        }
+        return false
+      }}
     />
   )
 }

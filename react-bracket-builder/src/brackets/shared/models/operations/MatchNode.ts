@@ -123,4 +123,7 @@ export class MatchNode {
     }
     return false
   }
+  hasLeafTeam(): boolean {
+    return this.isLeafTeam('left') || this.isLeafTeam('right')
+  }
 }
