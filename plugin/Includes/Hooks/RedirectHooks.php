@@ -37,8 +37,8 @@ class RedirectHooks implements HooksInterface {
 
   public function dashboard_redirect(): void {
     if (is_page('dashboard') && !is_user_logged_in()) {
-      global $wp;
-      $login_url = wp_login_url($wp->request);
+      $current_url = home_url($_SERVER['REQUEST_URI']);
+      $login_url = wp_login_url($current_url);
       wp_redirect($login_url);
       exit();
     }
