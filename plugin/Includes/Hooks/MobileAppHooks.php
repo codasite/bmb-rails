@@ -34,6 +34,13 @@ class MobileAppHooks implements HooksInterface {
       [$this, 'redirect_paid_brackets'],
       10
     );
+
+    // Filter My Account menu items for mobile app
+    $loader->add_filter(
+      'woocommerce_account_menu_items',
+      [$this, 'filter_mobile_account_menu_items'],
+      20
+    );
   }
 
   public function is_application_passwords_available(): bool {
@@ -86,6 +93,16 @@ class MobileAppHooks implements HooksInterface {
       $secure, // Only send over HTTPS if site uses it
       true // HTTPOnly flag
     );
+  }
+
+  public function filter_mobile_account_menu_items($menu_items): array {
+    // Check if request is from mobile app
+    if ((new RequestService())->is_mobile_app_request()) {
+      // Remove subscriptions and downloads menu items
+      unset($menu_items['subscriptions']);
+      unset($menu_items['downloads']);
+    }
+    return $menu_items;
   }
 
   public function redirect_paid_brackets(): void {
