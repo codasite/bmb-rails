@@ -281,6 +281,11 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     ]);
   }
 
+  public function get_bracket_id(int $post_id): int {
+    $bracket_data = $this->get_custom_table_data($post_id);
+    return $bracket_data['id'];
+  }
+
   public function delete(int $id, $force = false): bool {
     return $this->delete_post($id, $force);
   }

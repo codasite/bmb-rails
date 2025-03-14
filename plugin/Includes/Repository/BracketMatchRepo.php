@@ -68,6 +68,18 @@ class BracketMatchRepo implements CustomTableInterface {
     return $matches;
   }
 
+  public function delete_matches(int $bracket_id): void {
+    // delete all teams for this bracket
+    $this->team_repo->delete_teams($bracket_id);
+    $table_name = self::table_name();
+    $this->wpdb->delete($table_name, ['bracket_id' => $bracket_id], ['%d']);
+  }
+
+  public function update(int $bracket_id, array $matches): void {
+    $this->delete_matches($bracket_id);
+    $this->insert_matches($bracket_id, $matches);
+  }
+
   public static function table_name(): string {
     return CustomTableNames::table_name('matches');
   }
