@@ -169,4 +169,183 @@ class BracketMatchRepoTest extends WPBB_UnitTestCase {
       'Should have no matches after update'
     );
   }
+
+  public function test_insert_matches_with_null_teams(): void {
+    $bracket = $this->create_bracket(['status' => 'publish', 'matches' => []]);
+    $bracket_id = $this->bracket_repo->get_bracket_id($bracket->id);
+
+    $matches = [
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 0,
+        'team1' => null,
+        'team2' => null,
+      ]),
+    ];
+
+    $this->match_repo->insert_matches($bracket_id, $matches);
+
+    $updated_bracket = $this->get_bracket($bracket->id);
+    $this->assertEquals(1, count($updated_bracket->matches));
+    $this->assertNull($updated_bracket->matches[0]->team1);
+    $this->assertNull($updated_bracket->matches[0]->team2);
+  }
+
+  public function test_insert_matches_with_partial_teams(): void {
+    $bracket = $this->create_bracket(['status' => 'publish', 'matches' => []]);
+    $bracket_id = $this->bracket_repo->get_bracket_id($bracket->id);
+
+    $matches = [
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 0,
+        'team1' => new Team(['name' => 'Team 1']),
+        'team2' => null,
+      ]),
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 1,
+        'team1' => null,
+        'team2' => new Team(['name' => 'Team 2']),
+      ]),
+    ];
+
+    $this->match_repo->insert_matches($bracket_id, $matches);
+
+    $updated_bracket = $this->get_bracket($bracket->id);
+    $this->assertEquals(2, count($updated_bracket->matches));
+    $this->assertEquals('Team 1', $updated_bracket->matches[0]->team1->name);
+    $this->assertNull($updated_bracket->matches[0]->team2);
+    $this->assertNull($updated_bracket->matches[1]->team1);
+    $this->assertEquals('Team 2', $updated_bracket->matches[1]->team2->name);
+  }
+
+  public function test_get_matches_ordering(): void {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 1,
+          'match_index' => 0,
+          'team1' => new Team(['name' => 'Team 1']),
+          'team2' => new Team(['name' => 'Team 2']),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team(['name' => 'Team 3']),
+          'team2' => new Team(['name' => 'Team 4']),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team(['name' => 'Team 5']),
+          'team2' => new Team(['name' => 'Team 6']),
+        ]),
+      ],
+    ]);
+
+    $bracket_id = $this->bracket_repo->get_bracket_id($bracket->id);
+    $matches = $this->match_repo->get_matches($bracket_id);
+
+    $this->assertEquals(3, count($matches));
+    // Should be ordered by round_index, then match_index
+    $this->assertEquals(0, $matches[0]->round_index);
+    $this->assertEquals(0, $matches[0]->match_index);
+    $this->assertEquals('Team 5', $matches[0]->team1->name);
+
+    $this->assertEquals(0, $matches[1]->round_index);
+    $this->assertEquals(1, $matches[1]->match_index);
+    $this->assertEquals('Team 3', $matches[1]->team1->name);
+
+    $this->assertEquals(1, $matches[2]->round_index);
+    $this->assertEquals(0, $matches[2]->match_index);
+    $this->assertEquals('Team 1', $matches[2]->team1->name);
+  }
+
+  public function test_get_matches_with_nonexistent_bracket(): void {
+    $matches = $this->match_repo->get_matches(999999);
+    $this->assertEmpty($matches);
+  }
+
+  public function test_match_ids_after_insert(): void {
+    $bracket = $this->create_bracket(['status' => 'publish', 'matches' => []]);
+    $bracket_id = $this->bracket_repo->get_bracket_id($bracket->id);
+
+    $matches = [
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 0,
+        'team1' => new Team(['name' => 'Team 1']),
+        'team2' => new Team(['name' => 'Team 2']),
+      ]),
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 1,
+        'team1' => new Team(['name' => 'Team 3']),
+        'team2' => new Team(['name' => 'Team 4']),
+      ]),
+    ];
+
+    $this->match_repo->insert_matches($bracket_id, $matches);
+
+    // Verify each match got an ID
+    $this->assertNotNull($matches[0]->id);
+    $this->assertNotNull($matches[1]->id);
+    $this->assertNotEquals($matches[0]->id, $matches[1]->id);
+
+    // Verify IDs persist in database
+    $updated_bracket = $this->get_bracket($bracket->id);
+    $this->assertEquals($matches[0]->id, $updated_bracket->matches[0]->id);
+    $this->assertEquals($matches[1]->id, $updated_bracket->matches[1]->id);
+  }
+
+  public function test_update_preserves_match_order(): void {
+    // Create initial bracket with matches in specific order
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+      'matches' => [
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => new Team(['name' => 'Team 1']),
+          'team2' => new Team(['name' => 'Team 2']),
+        ]),
+        new BracketMatch([
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => new Team(['name' => 'Team 3']),
+          'team2' => new Team(['name' => 'Team 4']),
+        ]),
+      ],
+    ]);
+
+    $bracket_id = $this->bracket_repo->get_bracket_id($bracket->id);
+
+    // Update with new matches in different order
+    $new_matches = [
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 1,
+        'team1' => new Team(['name' => 'Team 5']),
+        'team2' => new Team(['name' => 'Team 6']),
+      ]),
+      new BracketMatch([
+        'round_index' => 0,
+        'match_index' => 0,
+        'team1' => new Team(['name' => 'Team 7']),
+        'team2' => new Team(['name' => 'Team 8']),
+      ]),
+    ];
+
+    $this->match_repo->update($bracket_id, $new_matches);
+
+    // Verify matches are ordered correctly
+    $updated_bracket = $this->get_bracket($bracket->id);
+    $this->assertEquals(2, count($updated_bracket->matches));
+    $this->assertEquals(0, $updated_bracket->matches[0]->match_index);
+    $this->assertEquals('Team 7', $updated_bracket->matches[0]->team1->name);
+    $this->assertEquals(1, $updated_bracket->matches[1]->match_index);
+    $this->assertEquals('Team 5', $updated_bracket->matches[1]->team1->name);
+  }
 }
