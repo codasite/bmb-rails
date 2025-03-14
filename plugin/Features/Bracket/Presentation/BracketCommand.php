@@ -6,18 +6,27 @@ use WP_CLI;
 use WP_CLI\Utils;
 use WStrategies\BMB\Includes\Domain\ValidationException;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
+use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
+use WStrategies\BMB\Includes\Repository\TeamRepo;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
+use WStrategies\BMB\Includes\Service\Serializer\BracketMatchSerializer;
 
 /**
  * Manages brackets through WP-CLI commands.
  */
 class BracketCommand {
   private BracketRepo $bracket_repo;
+  private BracketMatchRepo $match_repo;
+  private TeamRepo $team_repo;
   private BracketSerializer $serializer;
+  private BracketMatchSerializer $match_serializer;
 
   public function __construct() {
+    $this->team_repo = new TeamRepo();
     $this->bracket_repo = new BracketRepo();
+    $this->match_repo = new BracketMatchRepo($this->team_repo);
     $this->serializer = new BracketSerializer();
+    $this->match_serializer = new BracketMatchSerializer();
   }
 
   /**
@@ -172,5 +181,101 @@ class BracketCommand {
       'is_voting',
       'live_round_index',
     ]);
+  }
+
+  /**
+   * Updates a bracket.
+   *
+   * ## OPTIONS
+   *
+   * <id>
+   * : The ID of the bracket to update
+   *
+   * [--matches]
+   * : Update matches from JSON input via STDIN
+   *
+   * ## EXAMPLES
+   *
+   *     # Update bracket matches from JSON via STDIN
+   *     $ echo '[{"round_index":0,"match_index":0,...}]' | wp wpbb bracket update 123 --matches
+   *
+   * @param array $args
+   * @param array $assoc_args
+   */
+  public function update($args, $assoc_args) {
+    if (empty($args[0])) {
+      WP_CLI::error('Bracket ID is required.');
+      return;
+    }
+
+    $post_id = (int) $args[0];
+    $bracket = $this->bracket_repo->get($post_id);
+
+    if (!$bracket) {
+      WP_CLI::error(sprintf('Bracket with ID %d not found.', $post_id));
+      return;
+    }
+
+    // Get the custom table bracket ID
+    $bracket_id = $this->bracket_repo->get_bracket_id($post_id);
+    if (!$bracket_id) {
+      WP_CLI::error(
+        sprintf('Custom table bracket ID not found for post ID %d.', $post_id)
+      );
+      return;
+    }
+
+    if (!isset($assoc_args['matches'])) {
+      WP_CLI::error(
+        'No update options specified. Use --matches to update bracket matches.'
+      );
+      return;
+    }
+
+    try {
+      // Read JSON from STDIN
+      $json_content = stream_get_contents(STDIN);
+      if (empty($json_content)) {
+        WP_CLI::error('No JSON data provided via STDIN.');
+        return;
+      }
+
+      $data = json_decode($json_content, true);
+
+      if (json_last_error() !== JSON_ERROR_NONE) {
+        WP_CLI::error(sprintf('Invalid JSON: %s', json_last_error_msg()));
+        return;
+      }
+
+      if (!is_array($data)) {
+        WP_CLI::error('Invalid input: Expected an array of matches.');
+        return;
+      }
+
+      try {
+        $matches = array_map(
+          fn($match_data) => $this->match_serializer->deserialize($match_data),
+          $data
+        );
+      } catch (ValidationException $e) {
+        WP_CLI::error(sprintf('Match validation error: %s', $e->getMessage()));
+        return;
+      }
+
+      // Update matches using match repo
+      $this->match_repo->update($bracket_id, $matches);
+
+      // Get updated bracket to verify
+      $updated_bracket = $this->bracket_repo->get($post_id);
+      WP_CLI::success(
+        sprintf(
+          'Updated bracket %d with %d matches.',
+          $post_id,
+          count($updated_bracket->matches)
+        )
+      );
+    } catch (\Exception $e) {
+      WP_CLI::error($e->getMessage());
+    }
   }
 }
