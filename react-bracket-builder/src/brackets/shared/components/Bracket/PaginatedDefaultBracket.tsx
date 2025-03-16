@@ -205,7 +205,7 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
   return (
     <div className={`tw-flex tw-flex-col tw-gap-48 tw-w-full tw-items-center`}>
       <div className="tw-flex tw-justify-center">
-        <h2 className="tw-text-24 tw-font-700 tw-text-white">{`Round ${
+        <h2 className="tw-text-24 tw-font-700 !tw-text-dd-blue dark:!tw-text-white">{`Round ${
           roundIndex + 1
         }`}</h2>
       </div>
