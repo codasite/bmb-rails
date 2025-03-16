@@ -207,7 +207,6 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
   if (bracketMeta?.roundNames && bracketMeta.roundNames.length >= numRounds) {
     roundTitle = bracketMeta.roundNames[roundIndex]
   }
-  console.log(bracketMeta)
 
   return (
     <div className={`tw-flex tw-flex-col tw-gap-48 tw-w-full tw-items-center`}>
