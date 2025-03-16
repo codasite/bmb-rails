@@ -204,7 +204,7 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
 
   const { bracketMeta } = useContext(BracketMetaContext)
   let roundTitle = `Round ${roundIndex + 1}`
-  if (bracketMeta?.roundNames && bracketMeta.roundNames.length >= numRounds) {
+  if (bracketMeta?.roundNames && roundIndex < bracketMeta.roundNames.length) {
     roundTitle = bracketMeta.roundNames[roundIndex]
   }
 
