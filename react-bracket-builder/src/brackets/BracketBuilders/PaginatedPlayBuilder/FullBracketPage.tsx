@@ -26,7 +26,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
   const processing = props.processingAddToApparel || props.processingSubmitPicks
   return (
     <BracketBackground className="tw-flex tw-flex-col tw-justify-center tw-items-center tw-py-48">
-      <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-grow">
+      <div className="tw-flex tw-flex-col tw-justify-between tw-items-center tw-grow tw-gap-20">
         <div className="tw-self-center">
           <div className="tw-mb-10">
             {matchTree.isVoting && (
