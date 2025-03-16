@@ -84,6 +84,11 @@ class TeamRepo implements CustomTableInterface {
     return $old_team;
   }
 
+  public function delete_teams(int $bracket_id): void {
+    $table_name = self::table_name();
+    $this->wpdb->delete($table_name, ['bracket_id' => $bracket_id], ['%d']);
+  }
+
   public static function table_name(): string {
     return CustomTableNames::table_name('teams');
   }
