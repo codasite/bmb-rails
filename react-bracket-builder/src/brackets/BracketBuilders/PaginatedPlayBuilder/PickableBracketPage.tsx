@@ -13,7 +13,10 @@ export const PickableBracketPage = (props: PickableBracketPageProps) => {
   const { matchTree, setMatchTree, onFinished } = props
 
   return (
-    <BracketBackground className="tw-flex tw-py-48">
+    <BracketBackground
+      useImageBackground={matchTree?.allPicked()}
+      className="tw-flex tw-py-48"
+    >
       {matchTree && (
         <PaginatedPickableBracket
           matchTree={matchTree}
