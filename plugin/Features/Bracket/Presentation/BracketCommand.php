@@ -288,24 +288,18 @@ class BracketCommand {
       }
 
       if (isset($assoc_args['round-names'])) {
-        if (empty($assoc_args['round-names'])) {
+        $input = trim($assoc_args['round-names']);
+        if ($input === '') {
           WP_CLI::error('Round names cannot be empty.');
           return;
         }
 
-        $round_names = explode('|', $assoc_args['round-names']);
+        // Split and trim each name
+        $round_names = array_map('trim', explode('|', $input));
 
-        if (empty($round_names)) {
-          WP_CLI::error('No round names provided.');
-          return;
-        }
-
-        // Trim whitespace from each name
-        $round_names = array_map('trim', $round_names);
-
-        // Check for empty names after trimming
+        // Check for empty names
         foreach ($round_names as $index => $name) {
-          if (empty($name)) {
+          if ($name === '') {
             WP_CLI::error(
               sprintf('Round name at position %d cannot be empty.', $index + 1)
             );
