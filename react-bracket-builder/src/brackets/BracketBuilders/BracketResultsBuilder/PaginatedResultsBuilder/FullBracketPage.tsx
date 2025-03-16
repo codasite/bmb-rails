@@ -10,6 +10,7 @@ import { ReactComponent as EditIcon } from '../../../shared/assets/edit-icon.svg
 import { Checkbox } from '../Checkbox'
 import { BracketResultsBuilderContext } from '../context'
 import { DarkModeContext } from '../../../shared/context/context'
+import { BracketBackground } from '../../../shared/components/BracketBackground'
 
 interface FullBracketPageProps {
   matchTree?: MatchTree
@@ -27,21 +28,14 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
   const { darkMode } = useContext(DarkModeContext)
 
   return (
-    <div
-      className={`wpbb-reset tw-min-h-screen tw-flex tw-flex-col tw-justify-center tw-items-center tw-uppercase tw-bg-no-repeat tw-bg-top tw-bg-cover ${
-        darkMode ? ' tw-dark' : ''
-      }`}
-      style={{
-        backgroundImage: `url(${darkMode ? darkBracketBg : lightBracketBg})`,
-      }}
-    >
-      <div className="tw-flex tw-flex-col tw-justify-between tw-max-w-[268px] tw-max-h-[500px] tw-mx-auto tw-flex-grow tw-my-60">
-        {matchTree && (
-          <ScaledBracket
-            BracketComponent={ResultsBracket}
-            matchTree={matchTree}
-          />
-        )}
+    <BracketBackground className="tw-flex tw-flex-col tw-justify-center tw-items-stretch tw-py-48 tw-gap-30">
+      {matchTree && (
+        <ScaledBracket
+          BracketComponent={ResultsBracket}
+          matchTree={matchTree}
+        />
+      )}
+      <div className="tw-flex tw-flex-col tw-gap-30">
         <div className="tw-flex tw-flex-col tw-gap-10">
           <ActionButton
             variant="white"
@@ -53,7 +47,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             <span>Edit</span>
           </ActionButton>
           <ActionButton
-            variant="yellow"
+            variant="green"
             size="small"
             onClick={handleUpdatePicks}
             disabled={processing}
@@ -62,7 +56,7 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
             {matchTree.allPicked() ? 'Complete Bracket' : 'Update Results'}
           </ActionButton>
         </div>
-        <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px] tw-mt-[52px]">
+        <div className="tw-flex tw-items-center tw-justify-center tw-gap-[16px]">
           <Checkbox
             id="notify-participants-check"
             checked={notifyParticipants}
@@ -78,6 +72,6 @@ export const FullBracketPage = (props: FullBracketPageProps) => {
           </label>
         </div>
       </div>
-    </div>
+    </BracketBackground>
   )
 }

@@ -5,6 +5,7 @@ export interface BracketMeta {
   title?: string
   date?: string
   isOpen?: boolean
+  roundNames?: string[]
 }
 
 export interface BracketMetaContextState {

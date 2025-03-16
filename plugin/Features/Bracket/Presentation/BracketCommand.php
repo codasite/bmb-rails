@@ -194,10 +194,19 @@ class BracketCommand {
    * [--matches]
    * : Update matches from JSON input via STDIN
    *
+   * [--round-names=<names>]
+   * : Update round names using a pipe-separated string. When using Docker, wrap the entire command in single quotes.
+   *
    * ## EXAMPLES
    *
    *     # Update bracket matches from JSON via STDIN
    *     $ echo '[{"round_index":0,"match_index":0,...}]' | wp wpbb bracket update 123 --matches
+   *
+   *     # Update bracket round names (direct WP-CLI)
+   *     $ wp wpbb bracket update 123 --round-names="Round 1|Round 2|Finals"
+   *
+   *     # Update bracket round names (with Docker)
+   *     $ docker exec -i wp-dev wp-cli 'wpbb bracket update 123 --round-names="Round 1|Round 2|Finals"'
    *
    * @param array $args
    * @param array $assoc_args
@@ -225,55 +234,94 @@ class BracketCommand {
       return;
     }
 
-    if (!isset($assoc_args['matches'])) {
+    if (!isset($assoc_args['matches']) && !isset($assoc_args['round-names'])) {
       WP_CLI::error(
-        'No update options specified. Use --matches to update bracket matches.'
+        'No update options specified. Use --matches to update bracket matches or --round-names to update round names.'
       );
       return;
     }
 
     try {
-      // Read JSON from STDIN
-      $json_content = stream_get_contents(STDIN);
-      if (empty($json_content)) {
-        WP_CLI::error('No JSON data provided via STDIN.');
-        return;
-      }
+      if (isset($assoc_args['matches'])) {
+        // Read JSON from STDIN for matches
+        $json_content = stream_get_contents(STDIN);
+        if (empty($json_content)) {
+          WP_CLI::error('No JSON data provided via STDIN.');
+          return;
+        }
 
-      $data = json_decode($json_content, true);
+        $data = json_decode($json_content, true);
 
-      if (json_last_error() !== JSON_ERROR_NONE) {
-        WP_CLI::error(sprintf('Invalid JSON: %s', json_last_error_msg()));
-        return;
-      }
+        if (json_last_error() !== JSON_ERROR_NONE) {
+          WP_CLI::error(sprintf('Invalid JSON: %s', json_last_error_msg()));
+          return;
+        }
 
-      if (!is_array($data)) {
-        WP_CLI::error('Invalid input: Expected an array of matches.');
-        return;
-      }
+        if (!is_array($data)) {
+          WP_CLI::error('Invalid input: Expected an array of matches.');
+          return;
+        }
 
-      try {
-        $matches = array_map(
-          fn($match_data) => $this->match_serializer->deserialize($match_data),
-          $data
+        try {
+          $matches = array_map(
+            fn($match_data) => $this->match_serializer->deserialize(
+              $match_data
+            ),
+            $data
+          );
+        } catch (ValidationException $e) {
+          WP_CLI::error(
+            sprintf('Match validation error: %s', $e->getMessage())
+          );
+          return;
+        }
+
+        // Update matches using match repo
+        $this->match_repo->update($bracket_id, $matches);
+        WP_CLI::success(
+          sprintf(
+            'Updated bracket %d with %d matches.',
+            $post_id,
+            count($matches)
+          )
         );
-      } catch (ValidationException $e) {
-        WP_CLI::error(sprintf('Match validation error: %s', $e->getMessage()));
-        return;
       }
 
-      // Update matches using match repo
-      $this->match_repo->update($bracket_id, $matches);
+      if (isset($assoc_args['round-names'])) {
+        $input = trim($assoc_args['round-names']);
+        if ($input === '') {
+          WP_CLI::error('Round names cannot be empty.');
+          return;
+        }
 
-      // Get updated bracket to verify
-      $updated_bracket = $this->bracket_repo->get($post_id);
-      WP_CLI::success(
-        sprintf(
-          'Updated bracket %d with %d matches.',
-          $post_id,
-          count($updated_bracket->matches)
-        )
-      );
+        // Split and trim each name
+        $round_names = array_map('trim', explode('|', $input));
+
+        // Check for empty names
+        foreach ($round_names as $index => $name) {
+          if ($name === '') {
+            WP_CLI::error(
+              sprintf('Round name at position %d cannot be empty.', $index + 1)
+            );
+            return;
+          }
+        }
+
+        $bracket->round_names = $round_names;
+        $updated = $this->bracket_repo->update($bracket);
+
+        if ($updated) {
+          WP_CLI::success(
+            sprintf(
+              'Updated bracket %d with %d round names.',
+              $post_id,
+              count($round_names)
+            )
+          );
+        } else {
+          WP_CLI::error('Failed to update round names.');
+        }
+      }
     } catch (\Exception $e) {
       WP_CLI::error($e->getMessage());
     }

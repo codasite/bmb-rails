@@ -37,6 +37,7 @@ bracket:
     is_printable: true
     fee: 0.0
     should_notify_results_updated: false
+    round_names: {  }
     is_voting: false
     live_round_index: 0
 picks:

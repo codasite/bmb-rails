@@ -121,9 +121,9 @@ export const getBracketMeta = (bracket?: BracketRes): BracketMeta => {
   if (!bracket) {
     return null
   }
-  const { title, month, year, isOpen } = bracket
+  const { title, month, year, isOpen, roundNames } = bracket
   const date = [month, year].filter(Boolean).join(' ')
-  return { title, date, isOpen }
+  return { title, date, isOpen, roundNames }
 }
 
 export const defaultTeamClickDisabledCallback = (

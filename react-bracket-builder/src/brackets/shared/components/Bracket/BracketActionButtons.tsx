@@ -108,11 +108,9 @@ export const ResultsNavButtons = (props: PaginatedNavButtonsProps) => {
 }
 
 export const ResultsFullBracketButton = (props: ActionButtonProps) => {
-  return (
-    <DefaultFullBracketButton variant="yellow" borderWidth={1} {...props} />
-  )
+  return <DefaultFullBracketButton variant="green" borderWidth={1} {...props} />
 }
 
 export const ResultsFinalButton = (props: ActionButtonProps) => {
-  return <DefaultFinalButton variant="yellow" borderWidth={1} {...props} />
+  return <DefaultFinalButton variant="green" borderWidth={1} {...props} />
 }

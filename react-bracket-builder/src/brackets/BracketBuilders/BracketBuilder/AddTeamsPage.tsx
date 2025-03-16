@@ -52,7 +52,7 @@ const AddTeamsPage = (props: AddTeamsPageProps) => {
   const { width: windowWidth } = useContext(WindowDimensionsContext)
   const showPaginated = windowWidth < getBracketWidth(matchTree.rounds.length)
   return (
-    <BracketBackground>
+    <BracketBackground useImageBackground={false}>
       <BracketBuilderHeader />
       {showBackButton && (
         <div className="sm:tw-px-60 tw-mb-16">
