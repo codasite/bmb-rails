@@ -1123,4 +1123,64 @@ class BracketApiTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(100, $updated->fee);
   }
+
+  public function test_create_bracket_with_round_names() {
+    $data = [
+      'title' => 'Test Bracket',
+      'month' => 'test month',
+      'year' => 'test year',
+      'num_teams' => 8,
+      'wildcard_placement' => 0,
+      'round_names' => ['Round 1', 'Round 2', 'Finals'],
+      'matches' => [
+        [
+          'round_index' => 0,
+          'match_index' => 0,
+          'team1' => [
+            'name' => 'Team 1',
+          ],
+          'team2' => [
+            'name' => 'Team 2',
+          ],
+        ],
+        [
+          'round_index' => 0,
+          'match_index' => 1,
+          'team1' => [
+            'name' => 'Team 3',
+          ],
+          'team2' => [
+            'name' => 'Team 4',
+          ],
+        ],
+      ],
+    ];
+    $request = new WP_REST_Request('POST', self::BRACKET_API_ENDPOINT);
+    $request->set_body_params($data);
+    $request->set_header('Content-Type', 'application/json');
+    $request->set_header('X-WP-Nonce', wp_create_nonce('wp_rest'));
+    $response = rest_do_request($request);
+
+    $this->assertEquals(201, $response->get_status());
+    $data = (object) $response->get_data();
+
+    // Verify basic bracket data
+    $this->assertEquals('Test Bracket', $data->title);
+    $this->assertEquals('private', $data->status);
+    $this->assertEquals('test month', $data->month);
+    $this->assertEquals('test year', $data->year);
+    $this->assertEquals(8, $data->num_teams);
+
+    // Verify round names
+    $this->assertIsArray($data->round_names);
+    $this->assertEquals(['Round 1', 'Round 2', 'Finals'], $data->round_names);
+
+    // Verify round names are stored correctly in database
+    $bracket = $this->bracket_repo->get($data->id);
+    $this->assertNotNull($bracket);
+    $this->assertEquals(
+      ['Round 1', 'Round 2', 'Finals'],
+      $bracket->round_names
+    );
+  }
 }

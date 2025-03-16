@@ -65,10 +65,11 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       const { numTeams, wildcardPlacement, matches, month, year } = bracket
       setMonth(month)
       setYear(year)
-      const { title, date } = getBracketMeta(bracket)
+      const { title, date, roundNames } = getBracketMeta(bracket)
       setBracketMeta?.({
         title: `${title} Copy`,
         date: date,
+        roundNames: roundNames || [],
       })
       setNumTeams(numTeams)
       setWildcardPlacement(wildcardPlacement)
@@ -125,6 +126,7 @@ const BracketBuilder = (props: BracketBuilderProps) => {
       wildcardPlacement: wildcardPlacement,
       matches: matchTree.toMatchReq(),
       status: 'private',
+      roundNames: bracketMeta.roundNames,
     }
     return req
   }
