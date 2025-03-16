@@ -48,6 +48,7 @@ export interface MatchTreeRepr {
   wildcardPlacement?: WildcardPlacement
   isVoting?: boolean
   liveRoundIndex?: number
+  roundNames?: string[]
 }
 export interface MatchRepr {
   id?: number
@@ -81,6 +82,7 @@ export interface BracketReq {
   updateNotifyPlayers?: boolean
   fee?: number
   isVoting?: boolean
+  roundNames?: string[]
 }
 export interface BracketRes extends PostBase {
   month: string
@@ -95,6 +97,7 @@ export interface BracketRes extends PostBase {
   mostPopularPicks?: MatchPick[]
   isVoting?: boolean
   liveRoundIndex?: number
+  roundNames?: string[]
 }
 export interface PlayReq {
   id?: number

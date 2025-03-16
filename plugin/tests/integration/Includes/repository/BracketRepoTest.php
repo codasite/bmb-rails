@@ -391,4 +391,81 @@ class BracketRepoTest extends WPBB_UnitTestCase {
 
     $this->assertEquals(0.75, $new_results[0]->popularity);
   }
+
+  public function test_update_round_names() {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+      'num_teams' => 4,
+    ]);
+
+    $round_names = ['First Round', 'Second Round'];
+    $repo = new BracketRepo();
+
+    $repo->update($bracket->id, [
+      'round_names' => $round_names,
+    ]);
+
+    $updated = $this->get_bracket($bracket->id);
+
+    $this->assertEquals($round_names, $updated->round_names);
+  }
+
+  public function test_update_round_names_to_empty() {
+    $bracket = $this->create_bracket([
+      'status' => 'publish',
+      'num_teams' => 4,
+      'round_names' => ['First Round', 'Second Round'],
+    ]);
+
+    $repo = new BracketRepo();
+
+    $repo->update($bracket->id, [
+      'round_names' => [],
+    ]);
+
+    $updated = $this->get_bracket($bracket->id);
+
+    $this->assertIsArray($updated->round_names);
+    $this->assertEmpty($updated->round_names);
+  }
+
+  public function test_add_with_round_names() {
+    $round_names = ['First Round', 'Second Round'];
+    $bracket = new Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 4,
+      'wildcard_placement' => 0,
+      'round_names' => $round_names,
+    ]);
+
+    $bracket = $this->bracket_repo->add($bracket);
+
+    $this->assertEquals($round_names, $bracket->round_names);
+
+    // Verify it persists after fetching
+    $fetched = $this->bracket_repo->get($bracket->id);
+    $this->assertEquals($round_names, $fetched->round_names);
+  }
+
+  public function test_add_with_default_round_names() {
+    $bracket = new Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 4,
+      'wildcard_placement' => 0,
+    ]);
+
+    $bracket = $this->bracket_repo->add($bracket);
+
+    $this->assertIsArray($bracket->round_names);
+    $this->assertEmpty($bracket->round_names);
+
+    // Verify it persists after fetching
+    $fetched = $this->bracket_repo->get($bracket->id);
+    $this->assertIsArray($fetched->round_names);
+    $this->assertEmpty($fetched->round_names);
+  }
 }

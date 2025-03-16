@@ -120,6 +120,14 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
 
     $author_id = (int) $bracket_post->post_author;
 
+    $round_names = get_post_meta(
+      $bracket_post->ID,
+      BracketMetaConstants::ROUND_NAMES,
+      true
+    );
+
+    $round_names = is_array($round_names) ? $round_names : null;
+
     $data = [
       'id' => $bracket_post->ID,
       'title' => $bracket_post->post_title,
@@ -153,6 +161,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
         BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED,
         true
       ),
+      'round_names' => $round_names,
       'is_voting' => $bracket_data['is_voting'] ?? false,
       'live_round_index' => $bracket_data['live_round_index'] ?? 0,
     ];
@@ -164,6 +173,9 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
     int|null $id,
     $use_post_id = true
   ): array {
+    if (!$id) {
+      return [];
+    }
     $id_field = $use_post_id ? 'post_id' : 'id';
     $table_name = self::table_name();
     $bracket_data = $this->wpdb->get_row(
@@ -174,7 +186,7 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       ARRAY_A
     );
 
-    if (!$bracket_data) {
+    if (!is_array($bracket_data)) {
       return [];
     }
 

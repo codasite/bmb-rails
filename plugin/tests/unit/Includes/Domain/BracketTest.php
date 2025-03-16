@@ -3,6 +3,7 @@ namespace WStrategies\BMB\tests\unit\Includes\Domain;
 
 use DateTimeImmutable;
 use WP_Mock\Tools\TestCase;
+use WStrategies\BMB\Features\Bracket\BracketMetaConstants;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Pick;
@@ -71,6 +72,33 @@ class BracketTest extends TestCase {
     $this->assertEquals($now, $bracket->results_first_updated_at);
   }
 
+  public function test_constructor_with_round_names() {
+    $round_names = ['First Round', 'Second Round'];
+    $bracket = new Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 4,
+      'wildcard_placement' => 0,
+      'round_names' => $round_names,
+    ]);
+
+    $this->assertEquals($round_names, $bracket->round_names);
+  }
+
+  public function test_constructor_default_round_names() {
+    $bracket = new Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 4,
+      'wildcard_placement' => 0,
+    ]);
+
+    $this->assertIsArray($bracket->round_names);
+    $this->assertEmpty($bracket->round_names);
+  }
+
   public function test_from_array() {
     $args = [
       'id' => 1,
@@ -120,6 +148,22 @@ class BracketTest extends TestCase {
     );
   }
 
+  public function test_from_array_with_round_names() {
+    $round_names = ['First Round', 'Second Round'];
+    $args = [
+      'id' => 1,
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 4,
+      'wildcard_placement' => 0,
+      'round_names' => $round_names,
+    ];
+
+    $bracket = Bracket::from_array($args);
+    $this->assertEquals($round_names, $bracket->round_names);
+  }
+
   public function test_to_array() {
     $now = new DateTimeImmutable();
     $args = [
@@ -165,6 +209,35 @@ class BracketTest extends TestCase {
       $now->format('Y-m-d H:i:s'),
       $array['results_first_updated_at']
     );
+  }
+
+  public function test_to_array_with_round_names() {
+    $round_names = ['First Round', 'Second Round'];
+    $bracket = new Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 4,
+      'wildcard_placement' => 0,
+      'round_names' => $round_names,
+    ]);
+
+    $array = $bracket->to_array();
+    $this->assertEquals($round_names, $array['round_names']);
+  }
+
+  public function test_to_array_default_round_names() {
+    $bracket = new Bracket([
+      'title' => 'Test Bracket',
+      'status' => 'publish',
+      'author' => 1,
+      'num_teams' => 4,
+      'wildcard_placement' => 0,
+    ]);
+
+    $array = $bracket->to_array();
+    $this->assertIsArray($array['round_names']);
+    $this->assertEmpty($array['round_names']);
   }
 
   public function test_published_bracket_open() {
