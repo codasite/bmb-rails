@@ -126,7 +126,12 @@ class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
       true
     );
 
-    $round_names = is_array($round_names) ? $round_names : null;
+    // Handle round names - convert from pipe-delimited string to array if needed
+    if (is_string($round_names) && !empty($round_names)) {
+      $round_names = array_map('trim', explode('|', $round_names));
+    } elseif (!is_array($round_names)) {
+      $round_names = [];
+    }
 
     $data = [
       'id' => $bracket_post->ID,

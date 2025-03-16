@@ -25,7 +25,7 @@ export const BracketBackground = ({
 
   return (
     <div
-      className={`wpbb-reset tw-uppercase tw-min-h-screen tw-px-20 ${
+      className={`wpbb-reset tw-uppercase tw-min-h-screen tw-px-20 tw-overflow-hidden ${
         darkMode ? 'tw-dark' : ''
       } ${className}`}
       style={{

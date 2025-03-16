@@ -48,7 +48,20 @@ class Bracket extends PostBase implements PostBracketInterface {
       $data[BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED] ?? false;
     $this->is_voting = $data['is_voting'] ?? false;
     $this->live_round_index = (int) ($data['live_round_index'] ?? 0);
-    $this->round_names = $data['round_names'] ?? [];
+
+    // Handle round names as either array or string
+    if (isset($data['round_names'])) {
+      if (is_string($data['round_names'])) {
+        $this->round_names = array_map(
+          'trim',
+          explode('|', $data['round_names'])
+        );
+      } else {
+        $this->round_names = $data['round_names'];
+      }
+    } else {
+      $this->round_names = [];
+    }
   }
 
   public function get_winning_team(): ?Team {
@@ -123,7 +136,9 @@ class Bracket extends PostBase implements PostBracketInterface {
       BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => $this->should_notify_results_updated
         ? 1
         : 0,
-      BracketMetaConstants::ROUND_NAMES => $this->round_names,
+      BracketMetaConstants::ROUND_NAMES => !empty($this->round_names)
+        ? implode('|', $this->round_names)
+        : '',
     ];
   }
 
@@ -135,7 +150,9 @@ class Bracket extends PostBase implements PostBracketInterface {
       BracketMetaConstants::SHOULD_NOTIFY_RESULTS_UPDATED => $this->should_notify_results_updated
         ? 1
         : 0,
-      BracketMetaConstants::ROUND_NAMES => $this->round_names,
+      BracketMetaConstants::ROUND_NAMES => !empty($this->round_names)
+        ? implode('|', $this->round_names)
+        : '',
     ];
   }
 

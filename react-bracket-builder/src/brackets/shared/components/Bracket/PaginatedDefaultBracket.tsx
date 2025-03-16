@@ -10,7 +10,7 @@ import {
 import { DefaultMatchColumn } from '../MatchColumn'
 import { BaseTeamSlot } from '../TeamSlot'
 import { BracketLines, RootMatchLines } from './BracketLines'
-import { DarkModeContext } from '../../context/context'
+import { BracketMetaContext, DarkModeContext } from '../../context/context'
 import { WinnerContainer } from '../MatchBox/Children/WinnerContainer'
 import { DefaultNavButtons } from './BracketActionButtons'
 import { MatchTree } from '../../models/MatchTree'
@@ -202,12 +202,19 @@ export const PaginatedDefaultBracket = (props: PaginatedBracketProps) => {
     return page <= 0
   }
 
+  const { bracketMeta } = useContext(BracketMetaContext)
+  let roundTitle = `Round ${roundIndex + 1}`
+  if (bracketMeta?.roundNames && bracketMeta.roundNames.length >= numRounds) {
+    roundTitle = bracketMeta.roundNames[roundIndex]
+  }
+  console.log(bracketMeta)
+
   return (
     <div className={`tw-flex tw-flex-col tw-gap-48 tw-w-full tw-items-center`}>
       <div className="tw-flex tw-justify-center">
-        <h2 className="tw-text-24 tw-font-700 !tw-text-dd-blue dark:!tw-text-white">{`Round ${
-          roundIndex + 1
-        }`}</h2>
+        <h2 className="tw-text-24 tw-font-700 !tw-text-dd-blue dark:!tw-text-white tw-text-center">
+          {roundTitle}
+        </h2>
       </div>
       <div
         className={`tw-flex tw-flex-col tw-justify-center tw-grow tw-gap-30${
