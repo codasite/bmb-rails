@@ -1,0 +1,68 @@
+#16 Alabama St.
+#16 Saint Francis U
+#11 San Diego St.
+#11 North Carolina
+#16 American
+#16 Mount St. Mary's
+#11 Texas
+#11 Xavier
+#1 Auburn
+#8 Louisville
+#9 Creighton
+#5 Michigan
+#12 UC San Diego
+#4 Texas A&M
+#13 Yale
+#6 Ole Miss
+#3 Iowa St.
+#14 Lipscomb
+#7 Marquette
+#10 New Mexico
+#2 Michigan St.
+#15 Bryant
+#1 Florida
+#16 Norfolk St.
+#8 UConn
+#9 Oklahoma
+#5 Memphis
+#12 Colorado St.
+#4 Maryland
+#13 Grand Canyon
+#6 Missouri
+#11 Drake
+#3 Texas Tech
+#14 UNC Wilmington
+#7 Kansas
+#10 Arkansas
+#2 Saint John's
+#15 Omaha
+#1 Duke
+#8 Mississippi St.
+#9 Baylor
+#5 Oregon
+#12 Liberty
+#4 Arizona
+#13 Akron
+#6 BYU
+#11 VCU
+#3 Wisconsin
+#14 Montana
+#7 Saint Mary's
+#10 Vanderbilt
+#2 Alabama
+#15 Robert Morris
+#1 Houston
+#16 SIU Edwardsville
+#8 Gonzaga
+#9 Georgia
+#5 Clemson
+#12 McNeese
+#4 Purdue
+#13 High Point
+#6 Illinois
+#3 Kentucky
+#14 Troy
+#7 UCLA
+#10 Utah St.
+#2 Tennessee
+#15 Wofford
