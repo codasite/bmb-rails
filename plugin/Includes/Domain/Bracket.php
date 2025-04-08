@@ -110,9 +110,7 @@ class Bracket extends PostBase implements PostBracketInterface {
     return $this->live_round_index === $this->get_num_rounds() - 1;
   }
 
-  public function highest_possible_score(): int {
-    $point_values = [1, 2, 4, 8, 16, 32];
-
+  public function highest_possible_score($point_values): int {
     $score = 0;
 
     foreach ($this->results as $result) {

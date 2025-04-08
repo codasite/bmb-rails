@@ -82,13 +82,9 @@ class ScoreService implements ScoreServiceInterface {
     if (!$num_rounds || $num_rounds < 1) {
       throw new Exception('Cannot find number of rounds');
     }
-    if ($num_rounds > 6) {
-      $point_values = [1, 2, 4, 8, 16, 32, 64];
-    } else {
-      $point_values = [1, 2, 4, 8, 16, 32];
-    }
+    $point_values = [1, 2, 4, 8, 16, 32, 64];
 
-    $high_score = $bracket->highest_possible_score();
+    $high_score = $bracket->highest_possible_score($point_values);
 
     $plays_table = $this->play_repo->table_name();
 

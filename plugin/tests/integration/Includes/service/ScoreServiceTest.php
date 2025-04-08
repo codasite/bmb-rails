@@ -191,8 +191,6 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
       'num_teams' => 8,
     ]);
 
-    $point_values = [1, 2, 4, 8, 16, 32];
-
     $picks = [
       [
         'round_index' => 0,
@@ -261,8 +259,6 @@ class ScoreServiceTest extends WPBB_UnitTestCase {
     $bracket = $this->create_bracket([
       'num_teams' => 8,
     ]);
-
-    $point_values = [1, 2, 4, 8, 16, 32];
 
     $this->update_bracket($bracket, [
       'results' => [
