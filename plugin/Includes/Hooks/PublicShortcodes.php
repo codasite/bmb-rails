@@ -8,6 +8,7 @@ use WStrategies\BMB\Public\Partials\OfficialBracketsPage;
 use WStrategies\BMB\Public\Partials\PlayPage\PlayPage;
 use WStrategies\BMB\Public\Partials\StripeOnboardingRedirect;
 use WStrategies\BMB\Public\Partials\UserProfile\UserProfilePage;
+use WStrategies\BMB\Public\Partials\BracketBoard\BracketBoardPage;
 
 class PublicShortcodes implements HooksInterface {
   public function load(Loader $loader): void {
@@ -51,5 +52,6 @@ class PublicShortcodes implements HooksInterface {
     ]);
     add_shortcode('wpbb-bracket-page', [new BracketPage(), 'render']);
     add_shortcode('wpbb-bracket-play', [new PlayPage(), 'render']);
+    add_shortcode('wpbb-bracket-board', [new BracketBoardPage(), 'render']);
   }
 }
