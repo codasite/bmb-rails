@@ -576,7 +576,7 @@ class BracketsCommon {
     ob_start();
     ?>
     <a
-      class="tw-border-white/50 tw-border-solid tw-border tw-bg-white/15 hover:tw-bg-white hover:tw-text-black tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      class="tw-border-white/50 tw-border-solid tw-border tw-bg-white/15 hover:tw-bg-white hover:tw-text-black tw-px-16 tw-py-12 tw-flex tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
       href="<?php echo esc_url($bracket_play_link); ?>">
       <?php echo PartialsCommon::icon('eye'); ?>
       <span class="tw-font-700">Preview</span>

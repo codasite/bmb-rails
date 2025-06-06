@@ -77,7 +77,7 @@ class BracketBoardPage implements TemplateInterface {
                 <!-- Featured Section -->
                 <div class="tw-flex tw-flex-col tw-gap-30">
                     <h2 class="tw-text-36 md:tw-text-48 tw-font-700">Featured</h2>
-                    <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10 tw-items-stretch" style="grid-auto-rows: 1fr;">
+                    <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10 md:[&>*]:tw-h-full">
                         <?php foreach (
                           $featured_brackets['brackets']
                           as $bracket
