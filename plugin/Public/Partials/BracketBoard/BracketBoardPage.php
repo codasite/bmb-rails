@@ -67,7 +67,7 @@ class BracketBoardPage implements TemplateInterface {
   public function render_content(array $brackets_and_plays): string {
     ob_start(); ?>
         <div class="wpbb-faded-bracket-bg tw-py-30 md:tw-py-60 tw-px-20">
-            <div class="tw-flex tw-flex-col tw-gap-30 tw-max-w-[1160px] tw-m-auto">
+            <div class="tw-flex tw-flex-col tw-max-w-[1160px] tw-m-auto">
                 <!-- Featured Section -->
                 <div class="tw-flex tw-flex-col tw-gap-30">
                     <h2 class="tw-text-36 md:tw-text-48 tw-font-700">Featured</h2>
@@ -91,9 +91,9 @@ class BracketBoardPage implements TemplateInterface {
                 </div>
 
                 <!-- All Brackets Section -->
-                <div class="tw-flex tw-flex-col tw-gap-30">
-                    <h2 class="tw-text-36 md:tw-text-48 tw-font-700">All Brackets</h2>
-                    <div class="tw-flex tw-justify-center tw-gap-10 tw-py-11 tw-flex-wrap">
+                <div class="tw-flex tw-flex-col">
+                    <h2 class="tw-text-36 md:tw-text-48 tw-font-700 tw-pt-60">User Brackets</h2>
+                    <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
                         <?php echo BracketsCommon::bracket_filter_buttons(); ?>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-15">

@@ -499,7 +499,7 @@ class BracketsCommon {
 
   public static function bracket_filter_buttons(): false|string {
     $all_endpoint = get_permalink();
-    $status = get_query_var('status');
+    $status = get_query_var('status', PartialsContants::LIVE_STATUS);
     $live_endpoint = add_query_arg(
       'status',
       PartialsContants::LIVE_STATUS,
@@ -517,7 +517,6 @@ class BracketsCommon {
     );
     ob_start();
     ?>
-    <?php echo self::filter_button('All', $all_endpoint, !$status); ?>
     <?php echo self::filter_button(
       'Live',
       $live_endpoint,
@@ -604,11 +603,7 @@ class BracketsCommon {
     $bracket_repo = new BracketRepo();
 
     $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
-    $status_filter = get_query_var('status');
-
-    if (empty($status_filter)) {
-      $status_filter = 'all';
-    }
+    $status_filter = get_query_var('status', PartialsContants::LIVE_STATUS);
 
     $all_statuses = [
       'publish',
