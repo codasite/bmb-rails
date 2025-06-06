@@ -25,36 +25,6 @@ class BracketBoardPage implements TemplateInterface {
     $this->request_service = $args['request_service'] ?? new RequestService();
   }
 
-  public function get_brackets_and_plays(): array {
-    $query_args = [
-      'post_type' => [Bracket::get_post_type(), Play::get_post_type()],
-      'posts_per_page' => -1, // Load all brackets
-      'tag_slug__in' => ['bmb_vip_featured', PartialsContants::BMB_OFFICIAL],
-    ];
-
-    if ($this->request_service->is_mobile_app_request()) {
-      $query_args['meta_query'] = MobileAppMetaQuery::get_mobile_meta_query();
-    }
-
-    $query = new WP_Query($query_args);
-
-    $brackets_and_plays = array_filter(
-      array_map(function ($post) {
-        if ($post->post_type === Bracket::get_post_type()) {
-          return $this->bracket_repo->get($post);
-        } elseif ($post->post_type === Play::get_post_type()) {
-          return $this->play_repo->get($post);
-        }
-        return null;
-      }, $query->posts)
-    );
-
-    return [
-      'brackets_and_plays' => $brackets_and_plays,
-      'num_pages' => $query->max_num_pages,
-    ];
-  }
-
   public function render_header(): string {
     ob_start(); ?>
         <div class="wpbb-page-header tw-flex tw-flex-col tw-py-60 tw-gap-15 tw-items-center">
@@ -64,10 +34,11 @@ class BracketBoardPage implements TemplateInterface {
         <?php return ob_get_clean();
   }
 
-  public function render_content(array $brackets_and_plays): string {
+  public function render_content(): string {
     $featured_brackets = BracketsCommon::get_public_brackets([
       'tags' => [PartialsContants::BMB_OFFICIAL],
       'status' => PartialsContants::ALL_STATUS,
+      'posts_per_page' => -1,
     ]);
 
     ob_start();
@@ -94,7 +65,9 @@ class BracketBoardPage implements TemplateInterface {
                         <?php echo BracketsCommon::bracket_filter_buttons(); ?>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-15">
-                        <?php echo BracketsCommon::public_bracket_list(); ?>
+                        <?php echo BracketsCommon::public_bracket_list([
+                          'posts_per_page' => -1,
+                        ]); ?>
                     </div>
                 </div>
             </div>
@@ -103,16 +76,11 @@ class BracketBoardPage implements TemplateInterface {
   }
 
   public function render(): false|string {
-    $result = $this->get_brackets_and_plays();
-
-    ob_start();
-    ?>
+    ob_start(); ?>
         <div class="wpbb-reset tw-bg-dd-blue">
             <div class="tw-flex tw-flex-col">
                 <?php echo $this->render_header(); ?>
-                <?php echo $this->render_content(
-                  $result['brackets_and_plays']
-                ); ?>
+                <?php echo $this->render_content(); ?>
             </div>
             <div id='wpbb-public-bracket-modals'></div>
         </div>

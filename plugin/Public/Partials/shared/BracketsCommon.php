@@ -602,7 +602,10 @@ class BracketsCommon {
     $posts_per_page = $opts['posts_per_page'] ?? 8;
 
     $bracket_repo = new BracketRepo();
-    $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
+    $paged =
+      $opts['paged'] ?? get_query_var('paged')
+        ? absint(get_query_var('paged'))
+        : 1;
     $status_filter =
       $opts['status'] ?? get_query_var('status', PartialsContants::LIVE_STATUS);
 
