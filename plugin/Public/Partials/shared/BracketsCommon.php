@@ -499,7 +499,7 @@ class BracketsCommon {
 
   public static function bracket_filter_buttons(): false|string {
     $all_endpoint = get_permalink();
-    $status = get_query_var('status');
+    $status = get_query_var('status', PartialsContants::LIVE_STATUS);
     $live_endpoint = add_query_arg(
       'status',
       PartialsContants::LIVE_STATUS,
@@ -517,7 +517,6 @@ class BracketsCommon {
     );
     ob_start();
     ?>
-    <?php echo self::filter_button('All', $all_endpoint, !$status); ?>
     <?php echo self::filter_button(
       'Live',
       $live_endpoint,
@@ -577,7 +576,7 @@ class BracketsCommon {
     ob_start();
     ?>
     <a
-      class="tw-border-white/50 tw-border-solid tw-border tw-bg-white/15 hover:tw-bg-white hover:tw-text-black tw-px-16 tw-py-12 tw-flex tw-justify-center sm:tw-justify-start tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
+      class="tw-border-white/50 tw-border-solid tw-border tw-bg-white/15 hover:tw-bg-white hover:tw-text-black tw-px-16 tw-py-12 tw-flex tw-justify-center tw-gap-10 tw-items-center tw-rounded-8 tw-text-white"
       href="<?php echo esc_url($bracket_play_link); ?>">
       <?php echo PartialsCommon::icon('eye'); ?>
       <span class="tw-font-700">Preview</span>
@@ -597,18 +596,18 @@ class BracketsCommon {
     <?php return ob_get_clean();
   }
 
-  public static function public_bracket_list($opts = []): false|string {
+  public static function get_public_brackets($opts = []): array {
     $tags = $opts['tags'] ?? [];
     $author_id = $opts['author'] ?? null;
+    $posts_per_page = $opts['posts_per_page'] ?? 8;
 
     $bracket_repo = new BracketRepo();
-
-    $paged = get_query_var('paged') ? absint(get_query_var('paged')) : 1;
-    $status_filter = get_query_var('status');
-
-    if (empty($status_filter)) {
-      $status_filter = 'all';
-    }
+    $paged =
+      $opts['paged'] ?? get_query_var('paged')
+        ? absint(get_query_var('paged'))
+        : 1;
+    $status_filter =
+      $opts['status'] ?? get_query_var('status', PartialsContants::LIVE_STATUS);
 
     $all_statuses = [
       'publish',
@@ -619,9 +618,7 @@ class BracketsCommon {
     $active_status = ['publish'];
     $scored_status = ['score', 'complete'];
 
-    if ($status_filter === 'all') {
-      $status_query = $all_statuses;
-    } elseif ($status_filter === PartialsContants::LIVE_STATUS) {
+    if ($status_filter === PartialsContants::LIVE_STATUS) {
       $status_query = $active_status;
     } elseif ($status_filter === PartialsContants::UPCOMING_STATUS) {
       $status_query = [PartialsContants::UPCOMING_STATUS];
@@ -634,7 +631,7 @@ class BracketsCommon {
     $args = [
       'post_type' => Bracket::get_post_type(),
       'tag_slug__and' => $tags,
-      'posts_per_page' => 8,
+      'posts_per_page' => $posts_per_page,
       'paged' => $paged,
       'post_status' => $status_query,
       'order' => 'DESC',
@@ -648,19 +645,29 @@ class BracketsCommon {
     }
 
     $the_query = new WP_Query($args);
-
-    $num_pages = $the_query->max_num_pages;
-
     $brackets = $bracket_repo->get_all($the_query);
+
+    return [
+      'brackets' => $brackets,
+      'num_pages' => $the_query->max_num_pages,
+      'current_page' => $paged,
+    ];
+  }
+
+  public static function public_bracket_list($opts = []): false|string {
+    $result = self::get_public_brackets($opts);
 
     ob_start();
     ?>
     <div class="tw-flex tw-flex-col tw-gap-15">
-      <?php foreach ($brackets as $bracket): ?>
+      <?php foreach ($result['brackets'] as $bracket): ?>
         <?php echo BracketListItem::bracket_list_item($bracket); ?>
       <?php endforeach; ?>
     </div>
-    <?php PaginationWidget::pagination($paged, $num_pages); ?>
+    <?php PaginationWidget::pagination(
+      $result['current_page'],
+      $result['num_pages']
+    ); ?>
     <?php return ob_get_clean();
   }
 

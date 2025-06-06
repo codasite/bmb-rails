@@ -160,7 +160,10 @@
   background:
     linear-gradient(236deg, rgba(5, 9, 73, 0.4) 0%, #010433 100%),
     url('../assets/images/bracket_bg.png'),
-    lightgray 50% / cover no-repeat;
+    lightgray 50%;
+  background-position: center;
+  background-attachment: fixed;
+  background-size: cover;
 }
 
 .logo-svg {
