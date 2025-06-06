@@ -65,28 +65,25 @@ class BracketBoardPage implements TemplateInterface {
   }
 
   public function render_content(array $brackets_and_plays): string {
-    ob_start(); ?>
+    $featured_brackets = BracketsCommon::get_public_brackets([
+      'tags' => [PartialsContants::BMB_OFFICIAL],
+      'status' => PartialsContants::ALL_STATUS,
+    ]);
+
+    ob_start();
+    ?>
         <div class="wpbb-faded-bracket-bg tw-py-30 md:tw-py-60 tw-px-20">
             <div class="tw-flex tw-flex-col tw-max-w-[1160px] tw-m-auto">
                 <!-- Featured Section -->
                 <div class="tw-flex tw-flex-col tw-gap-30">
                     <h2 class="tw-text-36 md:tw-text-48 tw-font-700">Featured</h2>
                     <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10 tw-items-stretch" style="grid-auto-rows: 1fr;">
-                        <?php
-                        $featured = array_filter($brackets_and_plays, function (
-                          $obj
-                        ) {
-                          return has_tag(
-                            'bmb_vip_featured',
-                            $obj instanceof Bracket
-                              ? $obj->id
-                              : $obj->bracket_id
-                          );
-                        });
-                        foreach ($featured as $obj):
-                          echo BracketCards::vip_switcher($obj);
-                        endforeach;
-                        ?>
+                        <?php foreach (
+                          $featured_brackets['brackets']
+                          as $bracket
+                        ):
+                          echo BracketCards::vip_bracket_card($bracket);
+                        endforeach; ?>
                     </div>
                 </div>
 
