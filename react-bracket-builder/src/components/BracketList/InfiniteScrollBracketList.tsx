@@ -4,6 +4,7 @@ import {
   BracketListRequest,
   BracketListResponse,
 } from '../../brackets/shared/api/bracketListApi'
+import { Spinner } from '../../brackets/shared/components/Spinner'
 
 interface InfiniteScrollBracketListProps {
   initialStatus?: string
@@ -13,7 +14,7 @@ interface InfiniteScrollBracketListProps {
 
 export const InfiniteScrollBracketList: React.FC<
   InfiniteScrollBracketListProps
-> = ({ initialStatus = 'live', initialTags = [], perPage = 10 }) => {
+> = ({ initialStatus = 'live', initialTags = [], perPage = 2 }) => {
   const [brackets, setBrackets] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -92,7 +93,7 @@ export const InfiniteScrollBracketList: React.FC<
       observerRef.current = new IntersectionObserver(
         (entries) => {
           if (entries[0].isIntersecting && pagination.has_more) {
-            loadBrackets(pagination.current_page + 1, false)
+            // loadBrackets(pagination.current_page + 1, false)
           }
         },
         {
@@ -137,9 +138,8 @@ export const InfiniteScrollBracketList: React.FC<
 
       {/* Loading Indicator */}
       {loading && (
-        <div className="tw-text-center tw-py-30">
-          <div className="tw-inline-block tw-animate-spin tw-rounded-full tw-h-8 tw-w-8 tw-border-b-2 tw-border-white"></div>
-          <span className="tw-ml-3 tw-text-white">Loading brackets...</span>
+        <div className="tw-flex tw-justify-center tw-py-30">
+          <Spinner height={32} width={32} fill="white" />
         </div>
       )}
 

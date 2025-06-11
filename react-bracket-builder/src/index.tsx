@@ -276,7 +276,7 @@ function renderInfiniteScrollBracketList(appObj: WpbbAppObj) {
 
   renderDiv(
     <App>
-      <InfiniteScrollBracketList initialStatus={initialStatus} perPage={10} />
+      <InfiniteScrollBracketList initialStatus={initialStatus} />
     </App>,
     'wpbb-infinite-scroll-bracket-list'
   )

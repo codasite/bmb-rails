@@ -40,6 +40,7 @@ export class BracketListApi {
       snakeCaseBody: true,
       camelCaseResponse: true,
     }
+    console.log('params', params)
 
     return await this.client.performRequest(this.bracketsPath, options)
   }

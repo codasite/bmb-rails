@@ -7,6 +7,7 @@ use WP_REST_Response;
 use WStrategies\BMB\Includes\Controllers\HtmlFragmentApiBase;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Features\Bracket\Infrastructure\BracketQueryBuilder;
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 use WStrategies\BMB\Features\Bracket\Presentation\BracketListRenderer;
 use WStrategies\BMB\Features\MobileApp\RequestService;
 
@@ -35,12 +36,17 @@ class BracketHtmlApi extends HtmlFragmentApiBase {
    */
   public function get_items($request): WP_Error|WP_REST_Response {
     // Build query args from request parameters
+    error_log('Request parameters: ' . print_r($request->get_params(), true));
     $query_args = $this->query_builder->buildPublicBracketsQuery([
-      'page' => $request->get_param('page') ?: 1,
-      'per_page' => $request->get_param('per_page') ?: 10,
-      'status' => $request->get_param('status'),
+      'paged' => $request->get_param('page') ?: 1,
+      'posts_per_page' => $request->get_param('per_page') ?: 10,
+      'status' =>
+        $request->get_param('status') ?: BracketQueryTypes::FILTER_LIVE,
       'tags' => $request->get_param('tags') ?: [],
+      'author' => $request->get_param('author'),
     ]);
+    // Log query args for debugging
+    error_log('Bracket list query args: ' . print_r($query_args, true));
 
     // Get brackets using repository
     $the_query = new \WP_Query($query_args);
@@ -72,6 +78,18 @@ class BracketHtmlApi extends HtmlFragmentApiBase {
         'type' => 'string',
       ],
       'default' => [],
+    ];
+
+    $params['author'] = [
+      'description' => 'Filter by bracket author ID.',
+      'type' => 'integer',
+    ];
+
+    $params['status'] = [
+      'description' =>
+        'Filter by bracket status (live, upcoming, scored, all).',
+      'type' => 'string',
+      'default' => 'live',
     ];
 
     return $params;
