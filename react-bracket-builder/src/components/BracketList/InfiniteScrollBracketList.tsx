@@ -14,16 +14,16 @@ interface InfiniteScrollBracketListProps {
 
 export const InfiniteScrollBracketList: React.FC<
   InfiniteScrollBracketListProps
-> = ({ initialStatus = 'live', initialTags = [], perPage = 2 }) => {
+> = ({ initialStatus = 'live', initialTags = [], perPage = 10 }) => {
   const [brackets, setBrackets] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [pagination, setPagination] = useState({
-    current_page: 0,
-    has_more: true,
-    total_pages: 0,
-    total_items: 0,
-    per_page: perPage,
+    currentPage: 0,
+    hasMore: true,
+    totalPages: 0,
+    totalItems: 0,
+    perPage: perPage,
   })
   const [currentStatus, setCurrentStatus] = useState(initialStatus)
   const [currentTags, setCurrentTags] = useState(initialTags)
@@ -47,7 +47,7 @@ export const InfiniteScrollBracketList: React.FC<
       try {
         const params: BracketListRequest = {
           page,
-          per_page: perPage,
+          perPage: perPage,
           status,
           tags,
         }
@@ -77,7 +77,7 @@ export const InfiniteScrollBracketList: React.FC<
     (status: string, tags: string[] = []) => {
       setCurrentStatus(status)
       setCurrentTags(tags)
-      setPagination((prev) => ({ ...prev, current_page: 0, has_more: true }))
+      setPagination((prev) => ({ ...prev, currentPage: 0, hasMore: true }))
       loadBrackets(1, true, status, tags)
     },
     [loadBrackets]
@@ -92,8 +92,8 @@ export const InfiniteScrollBracketList: React.FC<
 
       observerRef.current = new IntersectionObserver(
         (entries) => {
-          if (entries[0].isIntersecting && pagination.has_more) {
-            // loadBrackets(pagination.current_page + 1, false)
+          if (entries[0].isIntersecting && pagination.hasMore) {
+            loadBrackets(pagination.currentPage + 1, false)
           }
         },
         {
@@ -103,7 +103,7 @@ export const InfiniteScrollBracketList: React.FC<
 
       if (node) observerRef.current.observe(node)
     },
-    [loading, pagination.has_more, pagination.current_page, loadBrackets]
+    [loading, pagination.hasMore, pagination.currentPage, loadBrackets]
   )
 
   // Load initial brackets
@@ -146,13 +146,6 @@ export const InfiniteScrollBracketList: React.FC<
       {/* Error Message */}
       {error && (
         <div className="tw-text-center tw-py-30 tw-text-red-400">{error}</div>
-      )}
-
-      {/* No More Content Message */}
-      {!loading && !pagination.has_more && brackets && (
-        <div className="tw-text-center tw-py-30 tw-text-white/50">
-          No more brackets to load.
-        </div>
       )}
 
       {/* Invisible element for intersection observer */}

@@ -5,7 +5,7 @@ declare var wpbb_app_obj: WpbbAppObj
 
 export interface BracketListRequest {
   page?: number
-  per_page?: number
+  perPage?: number
   status?: string
   tags?: string[]
 }
@@ -13,11 +13,11 @@ export interface BracketListRequest {
 export interface BracketListResponse {
   html: string
   pagination: {
-    current_page: number
-    total_pages: number
-    total_items: number
-    per_page: number
-    has_more: boolean
+    currentPage: number
+    totalPages: number
+    totalItems: number
+    perPage: number
+    hasMore: boolean
   }
 }
 
@@ -40,7 +40,6 @@ export class BracketListApi {
       snakeCaseBody: true,
       camelCaseResponse: true,
     }
-    console.log('params', params)
 
     return await this.client.performRequest(this.bracketsPath, options)
   }
