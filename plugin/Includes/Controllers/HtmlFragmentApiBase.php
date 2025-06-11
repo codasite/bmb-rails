@@ -15,8 +15,8 @@ use WStrategies\BMB\Includes\Hooks\Loader;
  */
 abstract class HtmlFragmentApiBase extends WP_REST_Controller implements
   HooksInterface {
-  protected string $namespace = 'wp-bracket-builder/v1';
-  protected string $rest_base;
+  protected $namespace = 'wp-bracket-builder/v1';
+  protected $rest_base;
 
   public function load(Loader $loader): void {
     $loader->add_action('rest_api_init', [$this, 'register_routes']);
@@ -92,7 +92,19 @@ abstract class HtmlFragmentApiBase extends WP_REST_Controller implements
   }
 
   /**
-   * Abstract method for getting items - must be implemented by subclasses.
+   * Get items - can be overridden by child classes to provide specific implementation.
+   *
+   * @param WP_REST_Request $request Full details about the request.
+   * @return WP_REST_Response|WP_Error Response object or WP_Error object if something went wrong.
    */
-  abstract public function get_items($request);
+  public function get_items($request) {
+    return new WP_Error(
+      'invalid-method',
+      sprintf(
+        'Method "%s" not implemented. Must be overridden in subclass.',
+        __METHOD__
+      ),
+      ['status' => 405]
+    );
+  }
 }

@@ -19,7 +19,7 @@ class BracketHtmlApi extends HtmlFragmentApiBase {
   private BracketQueryBuilder $query_builder;
   private BracketListRenderer $list_renderer;
 
-  protected string $rest_base = 'bracket-list-html';
+  protected $rest_base = 'bracket-list-html';
 
   public function __construct(array $args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
