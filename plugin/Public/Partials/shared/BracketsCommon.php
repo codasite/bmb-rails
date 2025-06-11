@@ -9,6 +9,10 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Features\MobileApp\RequestService;
 use WStrategies\BMB\Features\MobileApp\MobileAppMetaQuery;
+use WStrategies\BMB\Features\Bracket\Infrastructure\BracketQueryBuilder;
+use WStrategies\BMB\Features\Bracket\Presentation\BracketListRenderer;
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
+
 class BracketsCommon {
   public static function filter_button(
     $label,
@@ -597,78 +601,40 @@ class BracketsCommon {
   }
 
   public static function get_public_brackets($opts = []): array {
-    $tags = $opts['tags'] ?? [];
-    $author_id = $opts['author'] ?? null;
-    $posts_per_page = $opts['posts_per_page'] ?? 8;
-
     $bracket_repo = new BracketRepo();
-    $paged =
-      $opts['paged'] ?? get_query_var('paged')
-        ? absint(get_query_var('paged'))
-        : 1;
-    $status_filter =
-      $opts['status'] ?? get_query_var('status', PartialsContants::LIVE_STATUS);
+    $query_builder = new BracketQueryBuilder();
 
-    $all_statuses = [
-      'publish',
-      'score',
-      'complete',
-      PartialsContants::UPCOMING_STATUS,
-    ];
-    $active_status = ['publish'];
-    $scored_status = ['score', 'complete'];
+    $query_args = $query_builder->buildPublicBracketsQuery([
+      'tags' => $opts['tags'] ?? [],
+      'author' => $opts['author'] ?? null,
+      'posts_per_page' => $opts['posts_per_page'] ?? 8,
+      'paged' =>
+        $opts['paged'] ?? get_query_var('paged')
+          ? absint(get_query_var('paged'))
+          : 1,
+      'status' =>
+        $opts['status'] ??
+        get_query_var('status', BracketQueryTypes::FILTER_LIVE),
+    ]);
 
-    if ($status_filter === PartialsContants::LIVE_STATUS) {
-      $status_query = $active_status;
-    } elseif ($status_filter === PartialsContants::UPCOMING_STATUS) {
-      $status_query = [PartialsContants::UPCOMING_STATUS];
-    } elseif ($status_filter === 'scored') {
-      $status_query = $scored_status;
-    } else {
-      $status_query = $all_statuses;
-    }
-
-    $args = [
-      'post_type' => Bracket::get_post_type(),
-      'tag_slug__and' => $tags,
-      'posts_per_page' => $posts_per_page,
-      'paged' => $paged,
-      'post_status' => $status_query,
-      'order' => 'DESC',
-      'author' => $author_id,
-    ];
-
-    $request_service = new RequestService();
-
-    if ($request_service->is_mobile_app_request()) {
-      $args['meta_query'] = MobileAppMetaQuery::get_mobile_meta_query();
-    }
-
-    $the_query = new WP_Query($args);
+    $the_query = new WP_Query($query_args);
     $brackets = $bracket_repo->get_all($the_query);
 
     return [
       'brackets' => $brackets,
       'num_pages' => $the_query->max_num_pages,
-      'current_page' => $paged,
+      'current_page' => $query_args['paged'],
     ];
   }
 
   public static function public_bracket_list($opts = []): false|string {
     $result = self::get_public_brackets($opts);
+    $list_renderer = new BracketListRenderer();
 
-    ob_start();
-    ?>
-    <div class="tw-flex tw-flex-col tw-gap-15">
-      <?php foreach ($result['brackets'] as $bracket): ?>
-        <?php echo BracketListItem::bracket_list_item($bracket); ?>
-      <?php endforeach; ?>
-    </div>
-    <?php PaginationWidget::pagination(
-      $result['current_page'],
-      $result['num_pages']
-    ); ?>
-    <?php return ob_get_clean();
+    return $list_renderer->renderBracketList($result['brackets'], [
+      'current_page' => $result['current_page'],
+      'num_pages' => $result['num_pages'],
+    ]);
   }
 
   public static function bracket_chat_btn($bracket_id): false|string {

@@ -12,6 +12,42 @@
 
 ## Architecture Overview
 
+### Code Duplication Refactoring
+To address the duplication between `BracketHtmlApi` and `BracketsCommon`, we'll introduce:
+
+1. **Query Builder Service**
+   - New class to encapsulate all bracket query building logic
+   - Handles status filtering
+   - Manages pagination parameters
+   - Handles mobile app meta queries
+   - Used by both HTML API and template rendering
+   - Benefits:
+     - Single source of truth for query logic
+     - Consistent filtering across endpoints
+     - Easier maintenance and updates
+     - Type-safe query building
+
+2. **Bracket List Renderer Service**
+   - Extracts shared rendering logic
+   - Handles bracket list item rendering
+   - Manages pagination rendering
+   - Used by both API and template code
+   - Benefits:
+     - Consistent HTML output
+     - Shared template handling
+     - Reduced template duplication
+     - Better separation of concerns
+
+3. **Shared Constants and Types**
+   - Move shared constants to a dedicated file
+   - Define shared types for query parameters
+   - Create enums for status values
+   - Benefits:
+     - Single source for constants
+     - Type safety across codebase
+     - Better IDE support
+     - Easier refactoring
+
 ### React Application Structure
 The React application is built and bundled into:
 - `plugin/Includes/react-bracket-builder/build/wordpress/index.js`
@@ -78,28 +114,42 @@ We'll create a dedicated endpoint architecture for serving HTML fragments, separ
 ## Files to Modify
 
 ### Backend Files
-1. `plugin/Includes/Controllers/HtmlFragmentApiBase.php` (New)
-   - Base controller for HTML fragment endpoints
-   - Handles common HTML fragment functionality
-   - Manages pagination and response formatting
-   - Provides template integration
+1. `plugin/Features/Bracket/Infrastructure/BracketQueryBuilder.php` (New)
+   - Encapsulates all bracket query building logic
+   - Handles status filtering
+   - Manages pagination parameters
+   - Handles mobile app meta queries
+   - Used by both API and template code
 
-2. `plugin/Features/Bracket/Presentation/Html/BracketListEndpoint.php` (New)
-   - Extends HtmlFragmentApiBase
-   - Handles bracket list specific logic
-   - Manages filter state
-   - Returns rendered bracket items
-   - Includes pagination metadata
+2. `plugin/Features/Bracket/Presentation/BracketListRenderer.php` (New)
+   - Extracts shared rendering logic
+   - Handles bracket list item rendering
+   - Manages pagination rendering
+   - Used by both API and template code
 
-3. `plugin/Includes/Repository/BracketRepo.php`
+3. `plugin/Features/Bracket/Domain/BracketQueryTypes.php` (New)
+   - Defines shared types and constants
+   - Contains status enums
+   - Defines query parameter types
+   - Used across the codebase
+
+4. `plugin/Features/Bracket/Presentation/Html/BracketHtmlApi.php`
+   - Update to use BracketQueryBuilder
+   - Update to use BracketListRenderer
+   - Focus on API-specific logic
+   - Remove duplicated code
+
+5. `plugin/Public/Partials/shared/BracketsCommon.php`
+   - Update to use BracketQueryBuilder
+   - Update to use BracketListRenderer
+   - Focus on template-specific logic
+   - Remove duplicated code
+
+6. `plugin/Includes/Repository/BracketRepo.php`
    - Add pagination support to `get_all()`
+   - Update to work with BracketQueryBuilder
    - Add total count calculation
    - Update query parameters
-
-4. `plugin/Public/Partials/shared/BracketsCommon.php`
-   - Update `get_public_brackets()` for pagination
-   - Keep existing bracket item template
-   - Add support for partial list rendering
 
 ### Frontend Files
 1. `plugin/Includes/react-bracket-builder/src/brackets/shared/api/BracketListApi.ts` (New)
@@ -135,26 +185,39 @@ We'll create a dedicated endpoint architecture for serving HTML fragments, separ
 ## Implementation Steps
 
 ### 1. Backend Foundation
-1. Create HTML Fragment Base Controller
+1. Create Shared Services
+   - Implement BracketQueryBuilder
+   - Implement BracketListRenderer
+   - Define shared types and constants
+   - Add comprehensive tests
+
+2. Update Existing Code
+   - Refactor BracketHtmlApi to use shared services
+   - Update BracketsCommon to use shared services
+   - Update repository to work with query builder
+   - Ensure backward compatibility
+   - Add integration tests
+
+3. Create HTML Fragment Base Controller
    - Set up base controller structure
    - Implement route registration
    - Add pagination handling
    - Add HTML response formatting
    - Add template integration
 
-2. Create Bracket List Endpoint
+4. Create Bracket List Endpoint
    - Extend base controller
    - Add bracket-specific logic
    - Implement filter handling
    - Add template rendering
    - Add pagination metadata
 
-3. Update Repository
+5. Update Repository
    - Add pagination support
    - Add total count calculation
    - Update query building
 
-4. Update Templates
+6. Update Templates
    - Keep existing bracket item template
    - Add support for partial list rendering
    - Ensure proper HTML structure for React integration
@@ -231,6 +294,21 @@ We'll create a dedicated endpoint architecture for serving HTML fragments, separ
    - How to organize HTML fragment endpoints?
    - What types to define for request/response?
    - How to handle pagination in the API class?
+10. Shared Services Structure:
+    - How to handle service dependencies?
+    - What level of abstraction is appropriate?
+    - How to maintain backward compatibility?
+    - How to handle template variations?
+11. Query Builder Design:
+    - How to make it extensible for future query types?
+    - How to handle custom query modifications?
+    - What level of type safety to enforce?
+    - How to handle query optimization?
+12. Renderer Service Design:
+    - How to handle template variations?
+    - How to manage partial rendering?
+    - How to handle custom rendering needs?
+    - How to optimize rendering performance?
 
 ## Dependencies
 - WordPress REST API
