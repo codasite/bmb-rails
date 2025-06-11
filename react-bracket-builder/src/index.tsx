@@ -59,6 +59,9 @@ const GoLivePage = React.lazy(() => import('./features/GoLive/GoLivePage'))
 const ViewBracketMPP = React.lazy(
   () => import('./features/MostPopularPicks/ViewBracketMPP')
 )
+const InfiniteScrollBracketList = React.lazy(
+  () => import('./components/BracketList/InfiniteScrollBracketList')
+)
 
 // Try to get the wpbb_app_obj from the global scope. If it exists, then we know we are rendering in wordpress.
 const appObj = wpbbAjax.getAppObj()
@@ -75,6 +78,7 @@ if (Object.keys(appObj).length !== 0) {
   renderStripeOnboardingRedirect(appObj)
   renderGoLivePage(appObj)
   renderMostPopularPicks(appObj)
+  renderInfiniteScrollBracketList(appObj)
   addClickHandlers(appObj)
   insertElements(appObj)
 } else {
@@ -263,6 +267,18 @@ function renderMostPopularPicks(appObj: WpbbAppObj) {
       <ViewBracketMPP bracket={appObj.bracket} />
     </App>,
     'wpbb-most-popular-picks'
+  )
+}
+
+function renderInfiniteScrollBracketList(appObj: WpbbAppObj) {
+  const urlParams = new URLSearchParams(window.location.search)
+  const initialStatus = urlParams.get('status') || 'live'
+
+  renderDiv(
+    <App>
+      <InfiniteScrollBracketList initialStatus={initialStatus} perPage={10} />
+    </App>,
+    'wpbb-infinite-scroll-bracket-list'
   )
 }
 

@@ -64,10 +64,8 @@ class BracketBoardPage implements TemplateInterface {
                     <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
                         <?php echo BracketsCommon::bracket_filter_buttons(); ?>
                     </div>
-                    <div class="tw-flex tw-flex-col tw-gap-15">
-                        <?php echo BracketsCommon::public_bracket_list([
-                          'posts_per_page' => -1,
-                        ]); ?>
+                    <div class="tw-flex tw-flex-col tw-gap-15" id="wpbb-infinite-scroll-bracket-list">
+                        <!-- React component will be mounted here -->
                     </div>
                 </div>
             </div>
