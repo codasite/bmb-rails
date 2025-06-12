@@ -5,6 +5,7 @@ import {
   BracketListResponse,
 } from '../../brackets/shared/api/bracketListApi'
 import { Spinner } from '../../brackets/shared/components/Spinner'
+import { BracketClickEventHandler } from '../../brackets/shared/components/BracketClickEventHandler'
 
 interface InfiniteScrollBracketListProps {
   initialStatus?: string
@@ -131,10 +132,12 @@ export const InfiniteScrollBracketList: React.FC<
   return (
     <div className="tw-flex tw-flex-col tw-gap-15" ref={containerRef}>
       {/* Brackets Container */}
-      <div
-        className="tw-flex tw-flex-col tw-gap-15"
-        dangerouslySetInnerHTML={{ __html: brackets }}
-      />
+      <BracketClickEventHandler handlers={{}}>
+        <div
+          className="tw-flex tw-flex-col tw-gap-15"
+          dangerouslySetInnerHTML={{ __html: brackets }}
+        />
+      </BracketClickEventHandler>
 
       {/* Loading Indicator */}
       {loading && (
