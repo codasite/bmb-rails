@@ -9,7 +9,7 @@
 #section-6-79,
 .wpbb-page-header,
 .wpbb-dashboard-page-title,
-.ct-headline {
+.ct-headline:not(.wpbb-mobile-show) {
   display: none !important;
 }
 
