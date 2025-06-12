@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { BracketClickEventHandlerProps } from './types'
 
-export const BracketClickEventHandler = (
+export const BracketClickEventDelegator = (
   props: BracketClickEventHandlerProps
 ) => {
   const containerRef = useRef<HTMLDivElement>(null)

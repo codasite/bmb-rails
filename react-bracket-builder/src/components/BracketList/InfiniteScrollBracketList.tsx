@@ -5,7 +5,7 @@ import {
   BracketListResponse,
 } from '../../brackets/shared/api/bracketListApi'
 import { Spinner } from '../../brackets/shared/components/Spinner'
-import { BracketClickEventHandler } from '../../brackets/shared/components/BracketClickEventHandler'
+import { BracketClickEventHandler } from '../../brackets/shared/components/BracketClickEventDelegator'
 
 interface InfiniteScrollBracketListProps {
   initialStatus?: string
