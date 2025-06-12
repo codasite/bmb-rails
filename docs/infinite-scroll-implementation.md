@@ -80,6 +80,15 @@ Click handlers for modals and interactive elements are not attached to newly loa
 - Support for async handlers for data loading
 - Support for error handling
 - Support for state management through props
+- Support for different data loading patterns:
+  - Loading from button data attributes
+  - Async initialization
+  - Direct data access
+- Support for different state management patterns:
+  - Self-contained state
+  - Shared state through props
+  - Page reload triggers
+- Support for modal dependencies and relationships
 
 2. **Required Changes**
 
@@ -88,10 +97,14 @@ React Components:
 - `TournamentModals.tsx`: Remove `#wpbb-tournaments-modals` div, integrate with ClickDelegation
 - Remove `addClickHandlers` from all modal components
 - Update modal components to work with ClickDelegation:
-  - MoreOptionsModal, ShareBracketModal, EditBracketModal, DeleteBracketModal
+  - MoreOptionsModal (hub for other modals)
+  - ShareBracketModal, EditBracketModal, DeleteBracketModal
   - PublishBracketModal, LockLiveTournamentModal, SetTournamentFeeModal
   - EnableUpcomingNotificationModal, DisableUpcomingNotificationModal
   - CompleteRoundModal, UpcomingNotificationRegisterModal
+- Handle modal dependencies and relationships
+- Preserve existing state management patterns
+- Maintain data loading patterns
 
 PHP Templates:
 - Remove modal containers from:
@@ -109,6 +122,9 @@ PHP Templates:
    - Async handlers for data loading
    - Error handling for failed operations
    - State management through props
+   - Different data loading patterns
+   - Different state management patterns
+   - Modal dependencies
 2. Update InfiniteScrollBracketList to use ClickDelegation
 3. Remove modal container divs from PHP templates
 4. Update modal components to:
@@ -116,6 +132,8 @@ PHP Templates:
    - Register handlers with ClickDelegation
    - Handle async operations properly
    - Maintain existing state management
+   - Preserve modal relationships
+   - Support different data loading patterns
 
 4. **Edge Cases to Handle**
 - Modals with async data loading (SetTournamentFee, Notifications)
@@ -128,6 +146,12 @@ PHP Templates:
 - Data attribute preservation
 - Multiple modal container locations
 - Button generation from PHP templates
+- Modal dependencies (MoreOptions as hub)
+- Different data loading patterns
+- Different state management patterns
+- Page reload triggers
+- Async initialization
+- Direct data access from buttons
 
 5. **Button Classes to Support**
 - `wpbb-more-options-button`
