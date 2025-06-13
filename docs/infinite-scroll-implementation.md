@@ -174,13 +174,13 @@ PHP Templates:
   - Data loading: Bracket URL and title
   - State: None
 
-- [ ] EditBracketModal
+- [x] EditBracketModal
   - Button class: `wpbb-edit-bracket-button`
   - Dependencies: None
   - Data loading: Bracket details
-  - State: Form state
+  - State: Form state (preserved)
 
-- [ ] DeleteBracketModal
+- [x] DeleteBracketModal
   - Button class: `wpbb-delete-bracket-button`
   - Dependencies: None
   - Data loading: Bracket ID
@@ -192,7 +192,7 @@ PHP Templates:
   - Data loading: Current fee, bracket ID
   - State: Form state
 
-- [ ] LockLiveTournamentModal
+- [x] LockLiveTournamentModal
   - Button class: `wpbb-lock-live-tournament-button`
   - Dependencies: None
   - Data loading: Tournament status

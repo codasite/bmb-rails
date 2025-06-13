@@ -3,10 +3,7 @@ import { bracketApi } from '../../../brackets/shared/api/bracketApi'
 import { CancelButton, DangerButton } from '../../ModalButtons'
 import { useState } from 'react'
 import { Modal } from '../../Modal'
-import addClickHandlers from '../../addClickHandlers'
-import { ReactComponent as LinkIcon } from '../../../brackets/deleted/assets/link.svg'
 import { BracketData } from './BracketData'
-import { loadBracketData } from '../../loadBracketData'
 
 export const DeleteBracketModal = (props: {
   show: boolean
@@ -15,14 +12,6 @@ export const DeleteBracketModal = (props: {
   setBracketData: (data: BracketData) => void
 }) => {
   const [loading, setLoading] = useState(false)
-
-  addClickHandlers({
-    buttonClassName: 'wpbb-delete-bracket-button',
-    onButtonClick: (b) => {
-      loadBracketData(b, props.setBracketData)
-      props.setShow(true)
-    },
-  })
 
   const onDeleteBracket = () => {
     if (!props.bracketData.id) {

@@ -1,14 +1,12 @@
 import * as React from 'react'
 import { useState } from 'react'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
-import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
 import { ModalHeader } from '../../ModalHeader'
 import { ModalTextField } from '../../ModalTextFields'
 import { CancelButton, ConfirmButton } from '../../ModalButtons'
 import { DatePicker } from '../../../brackets/shared/components/DatePicker'
 import { BracketData } from './BracketData'
-import { loadBracketData } from '../../loadBracketData'
 
 export const EditBracketModal = (props: {
   show: boolean
@@ -19,14 +17,6 @@ export const EditBracketModal = (props: {
   const [loading, setLoading] = useState(false)
   const [titleHasError, setTitleHasError] = useState(false)
   const [dateHasError, setDateHasError] = useState(false)
-
-  addClickHandlers({
-    buttonClassName: 'wpbb-edit-bracket-button',
-    onButtonClick: (b) => {
-      loadBracketData(b, props.setBracketData)
-      props.setShow(true)
-    },
-  })
 
   const onDateError = (error: string) => {
     setDateHasError(true)

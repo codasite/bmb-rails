@@ -1,11 +1,9 @@
 import { useState } from 'react'
-import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
 import { ModalHeader } from '../../ModalHeader'
 import { CancelButton, ConfirmButton, DangerButton } from '../../ModalButtons'
 import { bracketApi } from '../../../brackets/shared'
 import { BracketData } from './BracketData'
-import { loadBracketData } from '../../loadBracketData'
 
 export const LockLiveTournamentModal = (props: {
   show: boolean
@@ -13,13 +11,6 @@ export const LockLiveTournamentModal = (props: {
   bracketData: BracketData
   setBracketData: (bracketData: BracketData) => void
 }) => {
-  addClickHandlers({
-    buttonClassName: 'wpbb-lock-tournament-button',
-    onButtonClick: (b) => {
-      loadBracketData(b, props.setBracketData)
-      props.setShow(true)
-    },
-  })
   const headerText = `Update tournament status to "In Progress"?`
 
   return (
