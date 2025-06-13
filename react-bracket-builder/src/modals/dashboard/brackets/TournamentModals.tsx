@@ -22,6 +22,7 @@ const BUTTON_TO_MODAL_MAP: Record<string, keyof TournamentModalVisibility> = {
   'wpbb-lock-live-tournament-button': 'lockLiveTournament',
   'wpbb-more-options-button': 'moreOptions',
   'wpbb-publish-bracket-button': 'publishBracket',
+  'wpbb-complete-round-btn': 'completeRound',
 }
 
 interface TournamentModalsProps {
@@ -39,6 +40,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       lockLiveTournament: false,
       moreOptions: false,
       publishBracket: false,
+      completeRound: false,
     })
   const [bracketData, setBracketData] = useState<BracketData>({})
 
@@ -113,6 +115,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       lockLiveTournament: false,
       moreOptions: false,
       publishBracket: false,
+      completeRound: false,
       [modalName]: show,
     })
   }
@@ -160,7 +163,11 @@ export const TournamentModals = (props: TournamentModalsProps) => {
         isUserLoggedIn={props.appObj.isUserLoggedIn}
         loginUrl={props.appObj.loginUrl}
       />
-      <CompleteRoundModal />
+      <CompleteRoundModal
+        show={modalVisibility.completeRound}
+        setShow={(show) => setShowModal('completeRound', show)}
+        bracketData={bracketData}
+      />
       <MoreOptionsModal
         show={modalVisibility.moreOptions}
         setShow={(show) => setShowModal('moreOptions', show)}

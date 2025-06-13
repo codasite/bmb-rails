@@ -1,34 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Modal } from '../../Modal'
 import { CancelButton, ConfirmButton } from '../../ModalButtons'
 import { ModalHeader } from '../../ModalHeader'
-import addClickHandlers from '../../addClickHandlers'
 import { votingBracketApi } from '../../../features/VotingBracket/votingBracketApi'
 import { HttpError } from '../../../brackets/shared/api/wpHttpClient'
+import { BracketData } from './BracketData'
 
-export const CompleteRoundModal = () => {
-  const [show, setShow] = useState(false)
+interface CompleteRoundModalProps {
+  show: boolean
+  setShow: (show: boolean) => void
+  bracketData: BracketData
+}
+
+export const CompleteRoundModal = (props: CompleteRoundModalProps) => {
   const [loading, setLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
-  const [bracketId, setBracketId] = useState(0)
-  const [liveRoundIndex, setLiveRoundIndex] = useState(0)
-  const [isFinalRound, setIsFinalRound] = useState(false)
 
-  addClickHandlers({
-    buttonClassName: 'wpbb-complete-round-btn',
-    onButtonClick: (b) => {
-      setBracketId(parseInt(b.dataset.bracketId))
-      setLiveRoundIndex(parseInt(b.dataset.liveRoundIndex))
-      setIsFinalRound(b.dataset.isFinalRound === 'true')
-      setShow(true)
+  useEffect(() => {
+    if (props.show) {
       setErrorMessage('')
-    },
-  })
+    }
+  }, [props.show])
 
   async function onCompleteRound() {
+    if (!props.bracketData.id) return
+
     setLoading(true)
     try {
-      await votingBracketApi.completeRound(bracketId)
+      await votingBracketApi.completeRound(props.bracketData.id)
       window.location.reload()
     } catch (error) {
       console.error(error)
@@ -42,8 +41,11 @@ export const CompleteRoundModal = () => {
     }
   }
 
+  const liveRoundIndex = props.bracketData.liveRoundIndex ?? 0
+  const isFinalRound = props.bracketData.isFinalRound ?? false
+
   return (
-    <Modal show={show} setShow={setShow}>
+    <Modal show={props.show} setShow={props.setShow}>
       <ModalHeader text={`Close Voting Round ${liveRoundIndex + 1}`} />
       <p className="tw-text-center">
         Close the current voting round and
@@ -59,7 +61,7 @@ export const CompleteRoundModal = () => {
         <ConfirmButton disabled={loading} onClick={onCompleteRound}>
           Close Round
         </ConfirmButton>
-        <CancelButton onClick={() => setShow(false)} />
+        <CancelButton onClick={() => props.setShow(false)} />
       </div>
     </Modal>
   )

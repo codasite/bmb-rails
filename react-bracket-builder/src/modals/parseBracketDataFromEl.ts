@@ -11,5 +11,9 @@ export const parseBracketDataFromEl = (el: HTMLElement): BracketData => {
     copyBracketUrl: el.dataset.copyBracketUrl,
     mostPopularPicksUrl: el.dataset.mostPopularPicksUrl,
     goLiveUrl: el.dataset.goLiveUrl,
+    liveRoundIndex: el.dataset.liveRoundIndex
+      ? parseInt(el.dataset.liveRoundIndex)
+      : undefined,
+    isFinalRound: el.dataset.isFinalRound === 'true',
   }
 }

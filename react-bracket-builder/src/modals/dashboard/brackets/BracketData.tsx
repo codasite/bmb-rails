@@ -8,4 +8,6 @@ export interface BracketData {
   copyBracketUrl?: string
   mostPopularPicksUrl?: string
   goLiveUrl?: string
+  liveRoundIndex?: number
+  isFinalRound?: boolean
 }

@@ -211,7 +211,7 @@ PHP Templates:
   - Data loading: Bracket status
   - State: None
 
-- [ ] CompleteRoundModal
+- [X] CompleteRoundModal
   - Button class: `wpbb-complete-round-btn`
   - Dependencies: None
   - Data loading: Round status
