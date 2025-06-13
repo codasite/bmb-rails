@@ -1,14 +1,12 @@
 import { ModalHeader } from '../../ModalHeader'
 import { CancelButton, ConfirmButton, Link } from '../../ModalButtons'
 // DO NOT REMOVE REACT IMPORT. Needed for image generator
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal } from '../../Modal'
-import addClickHandlers from '../../addClickHandlers'
 import { ReactComponent as LinkIcon } from '../../../brackets/shared/assets/link.svg'
 import { ReactComponent as XLogo } from '../../../brackets/shared/assets/x-logo.svg'
 import { ReactComponent as FacebookLogo } from '../../../brackets/shared/assets/facebook-logo.svg'
 import { BracketData } from './BracketData'
-import { loadBracketData } from '../../loadBracketData'
 
 export const FacebookShareLink = (props: { playBracketUrl: string }) => {
   const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${props.playBracketUrl}`
@@ -59,15 +57,7 @@ export const ShareBracketModal = (props: {
   show: boolean
   setShow: (show: boolean) => void
   bracketData: BracketData
-  setBracketData: (data: BracketData) => void
 }) => {
-  addClickHandlers({
-    buttonClassName: 'wpbb-share-bracket-button',
-    onButtonClick: (b) => {
-      loadBracketData(b, props.setBracketData)
-      props.setShow(true)
-    },
-  })
   return (
     <Modal show={props.show} setShow={props.setShow}>
       <ModalHeader text={'Share Bracket'} />
