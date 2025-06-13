@@ -21,6 +21,7 @@ const BUTTON_TO_MODAL_MAP: Record<string, keyof TournamentModalVisibility> = {
   'wpbb-set-tournament-fee-button': 'setTournamentFee',
   'wpbb-lock-live-tournament-button': 'lockLiveTournament',
   'wpbb-more-options-button': 'moreOptions',
+  'wpbb-publish-bracket-button': 'publishBracket',
 }
 
 interface TournamentModalsProps {
@@ -37,6 +38,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       setTournamentFee: false,
       lockLiveTournament: false,
       moreOptions: false,
+      publishBracket: false,
     })
   const [bracketData, setBracketData] = useState<BracketData>({})
 
@@ -51,6 +53,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       setTournamentFee: false,
       lockLiveTournament: false,
       moreOptions: false,
+      publishBracket: false,
       [modalName]: show,
     })
   }
@@ -77,6 +80,14 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       try {
         // Load bracket data first
         await loadBracketData(button, setBracketData)
+
+        // Special handling for publish bracket
+        if (matchingClass === 'wpbb-publish-bracket-button') {
+          if (props.appObj.userCanShareBracket && bracketData.goLiveUrl) {
+            window.location.href = bracketData.goLiveUrl
+            return
+          }
+        }
 
         // Show the corresponding modal
         const modalName = BUTTON_TO_MODAL_MAP[matchingClass]
@@ -126,6 +137,8 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       <PublishBracketModal
         upgradeAccountUrl={props.appObj.upgradeAccountUrl}
         canCreateBracket={props.appObj.userCanShareBracket}
+        show={modalVisibility.publishBracket}
+        setShow={(show) => setShowModal('publishBracket', show)}
       />
       <UpcomingNotificationModal
         isUserLoggedIn={props.appObj.isUserLoggedIn}

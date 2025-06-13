@@ -7,4 +7,5 @@ export interface BracketData {
   playBracketUrl?: string
   copyBracketUrl?: string
   mostPopularPicksUrl?: string
+  goLiveUrl?: string
 }

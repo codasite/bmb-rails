@@ -5,4 +5,5 @@ export interface TournamentModalVisibility {
   setTournamentFee: boolean
   lockLiveTournament: boolean
   moreOptions: boolean
+  publishBracket: boolean
 }

@@ -2,7 +2,6 @@ import { ReactComponent as LogoDark } from '../../../brackets/shared/assets/logo
 import { ReactComponent as CheckIcon } from '../../../brackets/shared/assets/check.svg'
 import * as React from 'react'
 import { useState } from 'react'
-import addClickHandlers from '../../addClickHandlers'
 import { Modal } from '../../Modal'
 import { CancelButton } from '../../ModalButtons'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
@@ -47,23 +46,14 @@ const PaywallModalContent = (props: PaywallModalProps) => {
 export const PublishBracketModal = (props: {
   upgradeAccountUrl: string
   canCreateBracket: boolean
+  show: boolean
+  setShow: (show: boolean) => void
 }) => {
-  const [show, setShow] = useState(false)
-  addClickHandlers({
-    buttonClassName: 'wpbb-publish-bracket-button',
-    onButtonClick: (b) => {
-      if (props.canCreateBracket) {
-        window.location.href = b.dataset.goLiveUrl
-      } else {
-        setShow(true)
-      }
-    },
-  })
   return (
-    <Modal show={show} setShow={setShow}>
+    <Modal show={props.show} setShow={props.setShow}>
       <PaywallModalContent
         upgradeAccountUrl={props.upgradeAccountUrl}
-        setShow={setShow}
+        setShow={props.setShow}
       />
     </Modal>
   )

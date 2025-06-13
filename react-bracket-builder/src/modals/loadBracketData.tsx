@@ -13,5 +13,6 @@ export const loadBracketData = (
     playBracketUrl: el.dataset.playBracketUrl,
     copyBracketUrl: el.dataset.copyBracketUrl,
     mostPopularPicksUrl: el.dataset.mostPopularPicksUrl,
+    goLiveUrl: el.dataset.goLiveUrl,
   })
 }

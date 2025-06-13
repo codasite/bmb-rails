@@ -216,7 +216,6 @@ PHP Templates:
   - Dependencies: None
   - Data loading: Round status
   - State: None
-
 #### Notification Modals
 - [ ] UpcomingNotificationModal
   - Button class: None (shown automatically)
@@ -266,24 +265,4 @@ PHP Templates:
 - [ ] Test all modal interactions
 - [ ] Verify infinite scroll compatibility
 - [ ] Update documentation
-
-#### Special Considerations
-1. **MoreOptionsModal**
-   - Acts as a hub for other modals
-   - Needs to maintain menu state
-   - Must coordinate with other modal states
-
-2. **Notification Modals**
-   - Some are shown automatically
-   - Need to handle user login state
-   - May require page reload after action
-
-3. **Form-based Modals**
-   - Need to maintain form state
-   - Require validation
-   - May need to handle submission errors
-
-4. **State Management**
-   - Some modals need to preserve state between renders
-   - Others can be stateless
-   - Consider using React Context for shared state
+- [ ] PublishBracketModal: Verify userCanShareBracket redirects to goLiveUrl if true, shows modal if false
