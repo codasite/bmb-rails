@@ -217,19 +217,19 @@ PHP Templates:
   - Data loading: Round status
   - State: None
 #### Notification Modals
-- [ ] UpcomingNotificationModal
+- [X] UpcomingNotificationModal
   - Button class: None (shown automatically)
   - Dependencies: None
   - Data loading: User login status
   - State: None
 
-- [ ] EnableUpcomingNotificationModal
+- [X] EnableUpcomingNotificationModal
   - Button class: `wpbb-enable-upcoming-notification-button`
   - Dependencies: None
   - Data loading: Current notification status
   - State: None
 
-- [ ] DisableUpcomingNotificationModal
+- [X] DisableUpcomingNotificationModal
   - Button class: `wpbb-disable-upcoming-notification-button`
   - Dependencies: None
   - Data loading: Current notification status
@@ -266,3 +266,4 @@ PHP Templates:
 - [ ] Verify infinite scroll compatibility
 - [ ] Update documentation
 - [X] PublishBracketModal: Verify userCanShareBracket redirects to goLiveUrl if true, shows modal if false
+- [ ] Test upcoming notification modals on public bracket page
