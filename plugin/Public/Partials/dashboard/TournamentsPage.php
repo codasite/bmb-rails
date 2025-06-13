@@ -162,7 +162,6 @@ class TournamentsPage implements TemplateInterface {
 
     ob_start();
     ?>
-    <div id="wpbb-tournaments-modals"></div>
       <div class="tw-flex tw-flex-col tw-gap-40">
         <div class="tw-flex tw-flex-col tw-gap-16">
           <h1 class="wpbb-dashboard-page-title tw-text-24 sm:tw-text-48 lg:tw-text-64 tw-font-700 tw-leading-none">Tournaments</h1>
@@ -189,11 +188,15 @@ class TournamentsPage implements TemplateInterface {
             ); ?>
           </div>
           <?php echo $this->render_filter_buttons(); ?>
-          <div class="tw-flex tw-flex-col tw-gap-15">
-            <?php foreach ($brackets as $bracket) {
-              echo BracketListItem::bracket_list_item($bracket);
-            } ?>
-            <?php PaginationWidget::pagination($this->paged, $num_pages); ?>
+            <div class="tw-flex tw-flex-col tw-gap-15">
+              <div id="wpbb-tournaments-modals"></div>
+              <div id="wpbb-tournaments-list-container">
+                <?php foreach ($brackets as $bracket) {
+                  echo BracketListItem::bracket_list_item($bracket);
+                } ?>
+              </div>
+              <?php PaginationWidget::pagination($this->paged, $num_pages); ?>
+            </div>
           </div>
           <?php if (empty($brackets)): ?>
             <p class='tw-text-16 lg:tw-text-20 tw-font-500 tw-my-0 tw-text-center tw-text-white/50'>No tournaments found.</p>

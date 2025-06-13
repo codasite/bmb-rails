@@ -42,24 +42,17 @@ export const TournamentModals = (props: TournamentModalsProps) => {
     })
   const [bracketData, setBracketData] = useState<BracketData>({})
 
-  const setShowModal = (
-    modalName?: keyof TournamentModalVisibility,
-    show?: boolean
-  ) => {
-    setModalVisibility({
-      editBracket: false,
-      shareBracket: false,
-      deleteBracket: false,
-      setTournamentFee: false,
-      lockLiveTournament: false,
-      moreOptions: false,
-      publishBracket: false,
-      [modalName]: show,
-    })
-  }
-
   const containerRef = useRef<HTMLDivElement>(null)
+  const listContainerRef = useRef<HTMLDivElement | null>(null)
+
   useEffect(() => {
+    // If no children were passed, look for the legacy container
+    if (!props.children) {
+      const element = document.getElementById('wpbb-tournaments-list-container')
+      listContainerRef.current = element as HTMLDivElement | null
+      console.log('listContainerRef', listContainerRef.current)
+    }
+
     const container = containerRef.current
     if (!container) return
 
@@ -67,14 +60,11 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       const target = event.target as HTMLElement
       const button = target.closest('button')
       if (!button) return
-      console.log('button', button)
-      console.log('target', target)
 
       // Find the first matching modal for this button's classes
       const matchingClass = Object.keys(BUTTON_TO_MODAL_MAP).find((className) =>
         button.classList.contains(className)
       )
-      console.log('matchingClass', matchingClass)
       if (!matchingClass) return
 
       try {
@@ -97,9 +87,35 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       }
     }
 
+    // Add click handler to both the modals container and the list container if it exists
     container.addEventListener('click', handleClick)
-    return () => container.removeEventListener('click', handleClick)
-  }, [])
+    if (listContainerRef.current) {
+      listContainerRef.current.addEventListener('click', handleClick)
+    }
+
+    return () => {
+      container.removeEventListener('click', handleClick)
+      if (listContainerRef.current) {
+        listContainerRef.current.removeEventListener('click', handleClick)
+      }
+    }
+  }, [props.children])
+
+  const setShowModal = (
+    modalName?: keyof TournamentModalVisibility,
+    show?: boolean
+  ) => {
+    setModalVisibility({
+      editBracket: false,
+      shareBracket: false,
+      deleteBracket: false,
+      setTournamentFee: false,
+      lockLiveTournament: false,
+      moreOptions: false,
+      publishBracket: false,
+      [modalName]: show,
+    })
+  }
 
   return (
     <div ref={containerRef}>
