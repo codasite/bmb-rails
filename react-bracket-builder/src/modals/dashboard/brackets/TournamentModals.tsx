@@ -23,6 +23,8 @@ const BUTTON_TO_MODAL_MAP: Record<string, keyof TournamentModalVisibility> = {
   'wpbb-more-options-button': 'moreOptions',
   'wpbb-publish-bracket-button': 'publishBracket',
   'wpbb-complete-round-btn': 'completeRound',
+  'wpbb-enable-upcoming-notification-button': 'enableUpcomingNotification',
+  'wpbb-disable-upcoming-notification-button': 'disableUpcomingNotification',
 }
 
 interface TournamentModalsProps {
@@ -41,6 +43,8 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       moreOptions: false,
       publishBracket: false,
       completeRound: false,
+      enableUpcomingNotification: false,
+      disableUpcomingNotification: false,
     })
   const [bracketData, setBracketData] = useState<BracketData>({})
 
@@ -116,6 +120,8 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       moreOptions: false,
       publishBracket: false,
       completeRound: false,
+      enableUpcomingNotification: false,
+      disableUpcomingNotification: false,
       [modalName]: show,
     })
   }
@@ -162,6 +168,15 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       <UpcomingNotificationModal
         isUserLoggedIn={props.appObj.isUserLoggedIn}
         loginUrl={props.appObj.loginUrl}
+        showEnable={modalVisibility.enableUpcomingNotification}
+        setShowEnable={(show) =>
+          setShowModal('enableUpcomingNotification', show)
+        }
+        showDisable={modalVisibility.disableUpcomingNotification}
+        setShowDisable={(show) =>
+          setShowModal('disableUpcomingNotification', show)
+        }
+        bracketData={bracketData}
       />
       <CompleteRoundModal
         show={modalVisibility.completeRound}

@@ -2,39 +2,42 @@ import { ModalHeader } from '../../ModalHeader'
 import { CancelButton, ConfirmButton } from '../../ModalButtons'
 import { useState } from 'react'
 import { Modal } from '../../Modal'
-import addClickHandlers from '../../addClickHandlers'
 import { bracketApi } from '../../../brackets/shared/api/bracketApi'
+import { BracketData } from './BracketData'
 
-export default function DisableUpcomingNotificationModal() {
-  const [show, setShow] = useState(false)
-  const [notificationId, setNotificationId] = useState<number>(null)
-  addClickHandlers({
-    buttonClassName: 'wpbb-disable-upcoming-notification-button',
-    onButtonClick: (b) => {
-      setNotificationId(parseInt(b.dataset.notificationId))
-      setShow(true)
-    },
-  })
+interface DisableUpcomingNotificationModalProps {
+  show: boolean
+  setShow: (show: boolean) => void
+  bracketData: BracketData
+}
+
+export const DisableUpcomingNotificationModal = (
+  props: DisableUpcomingNotificationModalProps
+) => {
+  const [loading, setLoading] = useState(false)
+
+  const handleDisable = async () => {
+    if (!props.bracketData.notificationId) return
+
+    setLoading(true)
+    try {
+      await bracketApi.removeNotification(props.bracketData.notificationId)
+      window.location.reload()
+    } catch (error) {
+      console.error('Error disabling notification:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <Modal show={show} setShow={setShow}>
+    <Modal show={props.show} setShow={props.setShow}>
       <ModalHeader text={'Turn off\nNotifications?'} />
       <div className="tw-flex tw-flex-col tw-gap-10">
-        <ConfirmButton
-          color="white"
-          onClick={() => {
-            bracketApi
-              .removeNotification(notificationId)
-              .then(() => {
-                window.location.reload()
-              })
-              .catch((err) => {
-                console.error(err)
-              })
-          }}
-        >
+        <ConfirmButton color="white" disabled={loading} onClick={handleDisable}>
           <span>Confirm</span>
         </ConfirmButton>
-        <CancelButton onClick={() => setShow(false)} />
+        <CancelButton onClick={() => props.setShow(false)} />
       </div>
     </Modal>
   )

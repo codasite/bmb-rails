@@ -15,5 +15,8 @@ export const parseBracketDataFromEl = (el: HTMLElement): BracketData => {
       ? parseInt(el.dataset.liveRoundIndex)
       : undefined,
     isFinalRound: el.dataset.isFinalRound === 'true',
+    notificationId: el.dataset.notificationId
+      ? parseInt(el.dataset.notificationId)
+      : undefined,
   }
 }

@@ -10,4 +10,5 @@ export interface BracketData {
   goLiveUrl?: string
   liveRoundIndex?: number
   isFinalRound?: boolean
+  notificationId?: number
 }

@@ -17,4 +17,8 @@ export type TournamentModalVisibility = {
   publishBracket: boolean
   /** Modal for completing a voting round */
   completeRound: boolean
+  /** Modal for enabling upcoming notifications */
+  enableUpcomingNotification: boolean
+  /** Modal for disabling upcoming notifications */
+  disableUpcomingNotification: boolean
 }
