@@ -1,6 +1,19 @@
-import { BracketData } from './dashboard/brackets/BracketData'
+import {
+  BracketData,
+  MoreOptionsConfig,
+} from './dashboard/brackets/BracketData'
 
 export const parseBracketDataFromEl = (el: HTMLElement): BracketData => {
+  const parseMoreOptions = (dataset: DOMStringMap): MoreOptionsConfig => ({
+    mostPopularPicks: dataset.mostPopularPicks === 'true',
+    shareBracket: dataset.shareBracket === 'true',
+    editBracket: dataset.editBracket === 'true',
+    setFee: dataset.setFee === 'true',
+    duplicateBracket: dataset.duplicateBracket === 'true',
+    lockTournament: dataset.lockTournament === 'true',
+    deleteBracket: dataset.deleteBracket === 'true',
+  })
+
   return {
     id: el.dataset.bracketId ? parseInt(el.dataset.bracketId) : undefined,
     title: el.dataset.bracketTitle,
@@ -18,5 +31,6 @@ export const parseBracketDataFromEl = (el: HTMLElement): BracketData => {
     notificationId: el.dataset.notificationId
       ? parseInt(el.dataset.notificationId)
       : undefined,
+    moreOptions: parseMoreOptions(el.dataset),
   }
 }

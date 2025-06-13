@@ -188,7 +188,6 @@ export const TournamentModals = (props: TournamentModalsProps) => {
         setShow={(show) => setShowModal('moreOptions', show)}
         showModal={(modalName) => setShowModal(modalName, true)}
         bracketData={bracketData}
-        setBracketData={setBracketData}
       />
       {props.children}
     </div>

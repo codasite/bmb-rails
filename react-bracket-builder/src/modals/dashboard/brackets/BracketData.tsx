@@ -1,3 +1,13 @@
+export interface MoreOptionsConfig {
+  mostPopularPicks: boolean
+  shareBracket: boolean
+  editBracket: boolean
+  setFee: boolean
+  duplicateBracket: boolean
+  lockTournament: boolean
+  deleteBracket: boolean
+}
+
 export interface BracketData {
   id?: number
   title?: string
@@ -11,4 +21,5 @@ export interface BracketData {
   liveRoundIndex?: number
   isFinalRound?: boolean
   notificationId?: number
+  moreOptions?: MoreOptionsConfig
 }
