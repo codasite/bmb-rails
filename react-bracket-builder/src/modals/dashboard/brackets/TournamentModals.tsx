@@ -11,7 +11,7 @@ import { UpcomingNotificationModal } from './UpcomingNotificationModal'
 import { MoreOptionsModal } from './MoreOptionsModal'
 import { BracketData } from './BracketData'
 import { TournamentModalVisibility } from './TournamentModalVisibility'
-import { loadBracketData } from '../../loadBracketData'
+import { parseBracketDataFromEl } from '../../parseBracketDataFromEl'
 
 // Map button class names to modal names
 const BUTTON_TO_MODAL_MAP: Record<string, keyof TournamentModalVisibility> = {
@@ -50,7 +50,6 @@ export const TournamentModals = (props: TournamentModalsProps) => {
     if (!props.children) {
       const element = document.getElementById('wpbb-tournaments-list-container')
       listContainerRef.current = element as HTMLDivElement | null
-      console.log('listContainerRef', listContainerRef.current)
     }
 
     const container = containerRef.current
@@ -69,7 +68,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
 
       try {
         // Load bracket data first
-        await loadBracketData(button, setBracketData)
+        const bracketData = parseBracketDataFromEl(button)
 
         // Special handling for publish bracket
         if (matchingClass === 'wpbb-publish-bracket-button') {
@@ -81,6 +80,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
 
         // Show the corresponding modal
         const modalName = BUTTON_TO_MODAL_MAP[matchingClass]
+        setBracketData(bracketData)
         setShowModal(modalName, true)
       } catch (error) {
         console.error('Error handling click:', error)

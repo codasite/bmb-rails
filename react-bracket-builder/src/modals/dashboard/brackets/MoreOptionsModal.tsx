@@ -10,7 +10,7 @@ import { ReactComponent as DollarIcon } from '../../../assets/icons/dollar_shiel
 import { ReactComponent as LockIcon } from '../../../assets/icons/lock.svg'
 import { BracketData } from './BracketData'
 import { TournamentModalVisibility } from './TournamentModalVisibility'
-import { loadBracketData } from '../../loadBracketData'
+import { parseBracketDataFromEl } from '../../parseBracketDataFromEl'
 
 const BracketOptionButton = (props: {
   IconComponent: React.FunctionComponent
@@ -76,16 +76,16 @@ export const MoreOptionsModal = (props: {
   addClickHandlers({
     buttonClassName: 'wpbb-more-options-button',
     onButtonClick: (b) => {
-      loadBracketData(b, props.setBracketData)
-      setBracketOptions({
-        mostPopularPicks: b.dataset.mostPopularPicks === 'true' ? true : false,
-        shareBracket: b.dataset.shareBracket === 'true' ? true : false,
-        editBracket: b.dataset.editBracket === 'true' ? true : false,
-        setFee: b.dataset.setFee === 'true' ? true : false,
-        duplicateBracket: b.dataset.duplicateBracket === 'true' ? true : false,
-        lockTournament: b.dataset.lockTournament === 'true' ? true : false,
-        deleteBracket: b.dataset.deleteBracket === 'true' ? true : false,
-      })
+      // parseBracketDataFromEl(b, props.setBracketData)
+      // setBracketOptions({
+      //   mostPopularPicks: b.dataset.mostPopularPicks === 'true' ? true : false,
+      //   shareBracket: b.dataset.shareBracket === 'true' ? true : false,
+      //   editBracket: b.dataset.editBracket === 'true' ? true : false,
+      //   setFee: b.dataset.setFee === 'true' ? true : false,
+      //   duplicateBracket: b.dataset.duplicateBracket === 'true' ? true : false,
+      //   lockTournament: b.dataset.lockTournament === 'true' ? true : false,
+      //   deleteBracket: b.dataset.deleteBracket === 'true' ? true : false,
+      // })
 
       props.setShow(true)
     },

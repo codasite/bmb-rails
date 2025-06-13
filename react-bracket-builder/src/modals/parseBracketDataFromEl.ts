@@ -1,10 +1,7 @@
 import { BracketData } from './dashboard/brackets/BracketData'
 
-export const loadBracketData = (
-  el: HTMLElement,
-  setBracketData: (data: BracketData) => void
-) => {
-  setBracketData({
+export const parseBracketDataFromEl = (el: HTMLElement): BracketData => {
+  return {
     id: el.dataset.bracketId ? parseInt(el.dataset.bracketId) : undefined,
     title: el.dataset.bracketTitle,
     month: el.dataset.bracketMonth,
@@ -14,5 +11,5 @@ export const loadBracketData = (
     copyBracketUrl: el.dataset.copyBracketUrl,
     mostPopularPicksUrl: el.dataset.mostPopularPicksUrl,
     goLiveUrl: el.dataset.goLiveUrl,
-  })
+  }
 }
