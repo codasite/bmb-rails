@@ -1,7 +1,6 @@
 import { CancelButton } from '../../../ModalButtons'
 import { useEffect, useState } from 'react'
 import { Modal } from '../../../Modal'
-import addClickHandlers from '../../../addClickHandlers'
 import { bracketApi } from '../../../../brackets/shared'
 import { Spinner } from '../../../../brackets/shared/components/Spinner'
 import { InputFeeAmount } from './InputFeeAmount'
@@ -10,7 +9,6 @@ import { ModalHeaderLogo } from './ModalHeaderLogo'
 import { SetUpPaymentsButton } from './SetUpPaymentsButton'
 import { logger } from '../../../../utils/Logger'
 import { BracketData } from '../BracketData'
-import { loadBracketData } from '../../../loadBracketData'
 
 export const ChargesEnabledContainer = (props: {
   // I hoist this state so that react will save it between rerenders, we
@@ -68,14 +66,6 @@ export const SetTournamentFeeModal = (props: {
   const handleCancel = () => {
     props.setShow(false)
   }
-
-  addClickHandlers({
-    buttonClassName: 'wpbb-set-tournament-fee-button',
-    onButtonClick: async (b) => {
-      loadBracketData(b, props.setBracketData)
-      props.setShow(true)
-    },
-  })
 
   return (
     <Modal show={props.show} setShow={props.setShow}>

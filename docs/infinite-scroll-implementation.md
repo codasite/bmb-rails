@@ -186,11 +186,12 @@ PHP Templates:
   - Data loading: Bracket ID
   - State: None
 
-- [ ] SetTournamentFeeModal
+- [x] SetTournamentFeeModal
   - Button class: `wpbb-set-tournament-fee-button`
   - Dependencies: None
   - Data loading: Current fee, bracket ID
-  - State: Form state
+  - State: Form state (preserved)
+  - Special: Stripe integration (preserved)
 
 - [x] LockLiveTournamentModal
   - Button class: `wpbb-lock-live-tournament-button`
