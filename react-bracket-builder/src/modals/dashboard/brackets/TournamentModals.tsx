@@ -25,6 +25,7 @@ const BUTTON_TO_MODAL_MAP: Record<string, keyof TournamentModalVisibility> = {
 
 interface TournamentModalsProps {
   appObj: WpbbAppObj
+  children?: React.ReactNode
 }
 
 export const TournamentModals = (props: TournamentModalsProps) => {
@@ -63,11 +64,14 @@ export const TournamentModals = (props: TournamentModalsProps) => {
       const target = event.target as HTMLElement
       const button = target.closest('button')
       if (!button) return
+      console.log('button', button)
+      console.log('target', target)
 
       // Find the first matching modal for this button's classes
       const matchingClass = Object.keys(BUTTON_TO_MODAL_MAP).find((className) =>
         button.classList.contains(className)
       )
+      console.log('matchingClass', matchingClass)
       if (!matchingClass) return
 
       try {
@@ -87,7 +91,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
   }, [])
 
   return (
-    <>
+    <div ref={containerRef}>
       <EditBracketModal
         show={modalVisibility.editBracket}
         setShow={(show) => setShowModal('editBracket', show)}
@@ -135,6 +139,7 @@ export const TournamentModals = (props: TournamentModalsProps) => {
         bracketData={bracketData}
         setBracketData={setBracketData}
       />
-    </>
+      {props.children}
+    </div>
   )
 }

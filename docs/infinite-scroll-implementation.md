@@ -70,90 +70,90 @@ Implemented infinite scroll for the bracket board page to improve performance an
 
 ## Future Improvements Needed
 
-### Dynamic Click Handler Management
-Click handlers for modals and interactive elements are not attached to newly loaded bracket items because they're only attached on initial mount.
+### Centralized Event Handling
+Click handlers for modals and interactive elements are now managed through a centralized event handling system in `TournamentModals.tsx`. This provides a consistent pattern for handling all modal interactions and ensures proper data loading.
 
-#### Implementation Plan
+#### Implementation Details
 
-1. **Create Click Delegation Component**
-- Support for multiple button classes and their handlers
-- Support for async handlers for data loading
-- Support for error handling
-- Support for state management through props
-- Support for different data loading patterns:
-  - Loading from button data attributes
-  - Async initialization
-  - Direct data access
-- Support for different state management patterns:
-  - Self-contained state
-  - Shared state through props
-  - Page reload triggers
-- Support for modal dependencies and relationships
+1. **Centralized Modal Management**
+- Single source of truth for modal state in `TournamentModals`
+- Direct mapping between button classes and modal names
+- Consistent data loading pattern for all modals
+- Type-safe modal name mapping
+- Support for async operations and error handling
 
-2. **Required Changes**
+2. **Button to Modal Mapping**
+```typescript
+const BUTTON_TO_MODAL_MAP: Record<string, keyof TournamentModalVisibility> = {
+  'wpbb-share-bracket-button': 'shareBracket',
+  'wpbb-edit-bracket-button': 'editBracket',
+  'wpbb-delete-bracket-button': 'deleteBracket',
+  'wpbb-set-tournament-fee-button': 'setTournamentFee',
+  'wpbb-lock-live-tournament-button': 'lockLiveTournament',
+  'wpbb-more-options-button': 'moreOptions',
+  'wpbb-complete-round-btn': 'completeRound',
+  // Additional mappings as needed
+}
+```
+
+3. **Event Flow**
+- Button click detected in `TournamentModals` container
+- Button class matched against `BUTTON_TO_MODAL_MAP`
+- Bracket data loaded asynchronously
+- Corresponding modal shown with loaded data
+- Error handling for failed operations
+
+4. **Required Changes**
 
 React Components:
-- `InfiniteScrollBracketList.tsx`: Wrap content with ClickDelegation
-- `TournamentModals.tsx`: Remove `#wpbb-tournaments-modals` div, integrate with ClickDelegation
-- Remove `addClickHandlers` from all modal components
-- Update modal components to work with ClickDelegation:
-  - MoreOptionsModal (hub for other modals)
-  - ShareBracketModal, EditBracketModal, DeleteBracketModal
-  - PublishBracketModal, LockLiveTournamentModal, SetTournamentFeeModal
-  - EnableUpcomingNotificationModal, DisableUpcomingNotificationModal
-  - CompleteRoundModal, UpcomingNotificationRegisterModal
-- Handle modal dependencies and relationships
-- Preserve existing state management patterns
-- Maintain data loading patterns
+- `TournamentModals.tsx`: 
+  - Centralized modal state management
+  - Button class to modal name mapping
+  - Event delegation for all modal triggers
+  - Consistent data loading pattern
+- Modal Components:
+  - Remove individual click handlers
+  - Focus on rendering and UI logic
+  - Accept bracket data through props
+  - Maintain existing state management where needed
+- `InfiniteScrollBracketList.tsx`: 
+  - Wrap content with `TournamentModals`
+  - Ensure proper event bubbling
+  - Maintain existing filter functionality
 
 PHP Templates:
 - Remove modal containers from:
-  - `BracketBoardPage.php`: `#wpbb-public-bracket-modals`
-  - `CelebrityBracketsPage.php`: `#wpbb-public-bracket-modals`
-  - `OfficialBracketsPage.php`: `#wpbb-public-bracket-modals`
-  - `TournamentsPage.php`: `#wpbb-tournaments-modals`
-- Wrap bracket list sections with ClickDelegation
-- Preserve all button data attributes and classes
-- Maintain existing permission checks in PHP templates
+  - `BracketBoardPage.php`
+  - `CelebrityBracketsPage.php`
+  - `OfficialBracketsPage.php`
+  - `TournamentsPage.php`
+- Ensure consistent button class names
+- Maintain existing permission checks
+- Preserve data attributes for bracket loading
 
-3. **Implementation Steps**
-1. Create ClickDelegation component with support for:
-   - Multiple button classes
-   - Async handlers for data loading
-   - Error handling for failed operations
-   - State management through props
-   - Different data loading patterns
-   - Different state management patterns
-   - Modal dependencies
-2. Update InfiniteScrollBracketList to use ClickDelegation
-3. Remove modal container divs from PHP templates
-4. Update modal components to:
-   - Remove addClickHandlers
-   - Register handlers with ClickDelegation
-   - Handle async operations properly
-   - Maintain existing state management
-   - Preserve modal relationships
-   - Support different data loading patterns
+5. **Benefits**
+- Consistent modal interaction pattern
+- Centralized state management
+- Type-safe modal name mapping
+- Simplified modal components
+- Reliable data loading
+- Better error handling
+- Easier maintenance
+- Support for infinite scroll
+- Preserved existing functionality
 
-4. **Edge Cases to Handle**
-- Modals with async data loading (SetTournamentFee, Notifications)
-- Modals with conditional logic (PublishBracket)
-- Modals that trigger page reloads
-- Modals with shared state (bracketData)
-- Modals with loading states and error handling
-- Modals with multiple button types (MoreOptions)
-- Modals that need to preserve state between renders
-- Data attribute preservation
-- Multiple modal container locations
-- Button generation from PHP templates
-- Modal dependencies (MoreOptions as hub)
+6. **Edge Cases Handled**
+- Async data loading for all modals
+- Error handling for failed operations
+- Modal state management
+- Infinite scroll compatibility
+- Multiple modal instances
+- Modal dependencies (e.g., MoreOptions as hub)
 - Different data loading patterns
-- Different state management patterns
-- Page reload triggers
-- Async initialization
-- Direct data access from buttons
+- State preservation between renders
+- Button generation from PHP templates
 
-5. **Button Classes to Support**
+7. **Button Classes Supported**
 - `wpbb-more-options-button`
 - `wpbb-share-bracket-button`
 - `wpbb-edit-bracket-button`
@@ -164,3 +164,125 @@ PHP Templates:
 - `wpbb-enable-upcoming-notification-button`
 - `wpbb-disable-upcoming-notification-button`
 - `wpbb-complete-round-btn`
+
+### Modal Migration Checklist
+
+#### Dashboard Modals
+- [x] ShareBracketModal
+  - Button class: `wpbb-share-bracket-button`
+  - Dependencies: None
+  - Data loading: Bracket URL and title
+  - State: None
+
+- [ ] EditBracketModal
+  - Button class: `wpbb-edit-bracket-button`
+  - Dependencies: None
+  - Data loading: Bracket details
+  - State: Form state
+
+- [ ] DeleteBracketModal
+  - Button class: `wpbb-delete-bracket-button`
+  - Dependencies: None
+  - Data loading: Bracket ID
+  - State: None
+
+- [ ] SetTournamentFeeModal
+  - Button class: `wpbb-set-tournament-fee-button`
+  - Dependencies: None
+  - Data loading: Current fee, bracket ID
+  - State: Form state
+
+- [ ] LockLiveTournamentModal
+  - Button class: `wpbb-lock-live-tournament-button`
+  - Dependencies: None
+  - Data loading: Tournament status
+  - State: None
+
+- [ ] MoreOptionsModal
+  - Button class: `wpbb-more-options-button`
+  - Dependencies: All other modals
+  - Data loading: Bracket status
+  - State: Menu state
+
+- [ ] PublishBracketModal
+  - Button class: `wpbb-publish-bracket-button`
+  - Dependencies: None
+  - Data loading: Bracket status
+  - State: None
+
+- [ ] CompleteRoundModal
+  - Button class: `wpbb-complete-round-btn`
+  - Dependencies: None
+  - Data loading: Round status
+  - State: None
+
+#### Notification Modals
+- [ ] UpcomingNotificationModal
+  - Button class: None (shown automatically)
+  - Dependencies: None
+  - Data loading: User login status
+  - State: None
+
+- [ ] EnableUpcomingNotificationModal
+  - Button class: `wpbb-enable-upcoming-notification-button`
+  - Dependencies: None
+  - Data loading: Current notification status
+  - State: None
+
+- [ ] DisableUpcomingNotificationModal
+  - Button class: `wpbb-disable-upcoming-notification-button`
+  - Dependencies: None
+  - Data loading: Current notification status
+  - State: None
+
+#### Base Modal Components
+- [x] Modal
+  - Base component for all modals
+  - No direct button handling
+  - Props: show, setShow, children
+
+- [x] ModalHeader
+  - Reusable header component
+  - No direct button handling
+  - Props: text
+
+- [x] ModalButtons
+  - Reusable button components
+  - No direct button handling
+  - Props: onClick, disabled, children
+
+- [x] ModalTextFields
+  - Reusable text field components
+  - No direct button handling
+  - Props: label, value, onChange
+
+#### Migration Status
+- [x] Remove individual click handlers
+- [x] Update button class names
+- [x] Centralize modal state management
+- [x] Implement consistent data loading
+- [ ] Update all modals to use new pattern
+- [ ] Test all modal interactions
+- [ ] Verify infinite scroll compatibility
+- [ ] Update documentation
+
+#### Special Considerations
+1. **MoreOptionsModal**
+   - Acts as a hub for other modals
+   - Needs to maintain menu state
+   - Must coordinate with other modal states
+
+2. **Notification Modals**
+   - Some are shown automatically
+   - Need to handle user login state
+   - May require page reload after action
+
+3. **Form-based Modals**
+   - Need to maintain form state
+   - Require validation
+   - May need to handle submission errors
+
+4. **State Management**
+   - Some modals need to preserve state between renders
+   - Others can be stateless
+   - Consider using React Context for shared state

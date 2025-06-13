@@ -6,16 +6,18 @@ import {
 } from '../../brackets/shared/api/bracketListApi'
 import { Spinner } from '../../brackets/shared/components/Spinner'
 import { TournamentModals } from '../../modals/dashboard/brackets/TournamentModals'
+import { WpbbAppObj } from '../../utils/WpbbAjax'
 
 interface InfiniteScrollBracketListProps {
   initialStatus?: string
   initialTags?: string[]
   perPage?: number
+  appObj: WpbbAppObj
 }
 
 export const InfiniteScrollBracketList: React.FC<
   InfiniteScrollBracketListProps
-> = ({ initialStatus = 'live', initialTags = [], perPage = 10 }) => {
+> = ({ initialStatus = 'live', initialTags = [], perPage = 10, appObj }) => {
   const [brackets, setBrackets] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -132,7 +134,7 @@ export const InfiniteScrollBracketList: React.FC<
   return (
     <div className="tw-flex tw-flex-col tw-gap-15" ref={containerRef}>
       {/* Brackets Container */}
-      <TournamentModals>
+      <TournamentModals appObj={appObj}>
         <div
           className="tw-flex tw-flex-col tw-gap-15"
           dangerouslySetInnerHTML={{ __html: brackets }}

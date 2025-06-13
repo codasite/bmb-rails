@@ -74,7 +74,7 @@ if (Object.keys(appObj).length !== 0) {
   renderViewBracketPlay(appObj)
   renderMyBracketsModals(appObj)
   renderBustBracketPlay(appObj)
-  renderPublicBracketsModals(appObj)
+  // renderPublicBracketsModals(appObj)
   renderStripeOnboardingRedirect(appObj)
   renderGoLivePage(appObj)
   renderMostPopularPicks(appObj)
@@ -227,13 +227,6 @@ function renderPublicBracketsModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
       <TournamentModals appObj={appObj} />
-      {/* <EditBracketModal />
-      <UpcomingNotificationModal
-        isUserLoggedIn={appObj.isUserLoggedIn}
-        loginUrl={appObj.loginUrl}
-      />
-      <ShareBracketModal />
-      <LockLiveTournamentModal /> */}
     </>,
     'wpbb-public-bracket-modals'
   )
@@ -276,7 +269,10 @@ function renderInfiniteScrollBracketList(appObj: WpbbAppObj) {
 
   renderDiv(
     <App>
-      <InfiniteScrollBracketList initialStatus={initialStatus} />
+      <InfiniteScrollBracketList
+        initialStatus={initialStatus}
+        appObj={appObj}
+      />
     </App>,
     'wpbb-infinite-scroll-bracket-list'
   )

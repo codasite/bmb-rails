@@ -58,6 +58,7 @@ export const ShareBracketModal = (props: {
   setShow: (show: boolean) => void
   bracketData: BracketData
 }) => {
+  console.log('ShareBracketModal', props.bracketData)
   return (
     <Modal show={props.show} setShow={props.setShow}>
       <ModalHeader text={'Share Bracket'} />
