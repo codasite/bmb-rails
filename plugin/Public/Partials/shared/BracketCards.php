@@ -6,6 +6,8 @@ use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\Play;
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
+use WStrategies\BMB\Includes\Service\ObjectStorage\S3MediaConstants;
+use WStrategies\BMB\Includes\Service\ObjectStorage\S3Storage;
 
 class BracketCards {
   public static function vip_switcher($bracket_or_play) {
@@ -72,8 +74,9 @@ class BracketCards {
     $product_utils = new BracketProductUtils();
     $title = $bracket->title;
     $id = $bracket->id;
-    $thumbnail = $bracket->thumbnail_url;
-    $play_link = get_permalink($id) . 'play';
+    $thumbnail = !empty($bracket->thumbnail_url)
+      ? $bracket->thumbnail_url
+      : S3MediaConstants::BRACKET_BOARD_FEATURED_PLACEHOLDER;
     $leaderboard_link = get_permalink($id) . 'leaderboard';
     $buttons = [];
     $bracket_tag = '';
