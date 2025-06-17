@@ -615,6 +615,7 @@ class BracketsCommon {
       'status' =>
         $opts['status'] ??
         get_query_var('status', BracketQueryTypes::FILTER_LIVE),
+      'posts_per_page' => $opts['posts_per_page'] ?? 8,
     ]);
 
     $the_query = new WP_Query($query_args);
