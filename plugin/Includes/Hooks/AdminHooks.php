@@ -3,6 +3,7 @@ namespace WStrategies\BMB\Includes\Hooks;
 
 use WStrategies\BMB\Includes\Service\Permissions\BracketPermissions;
 use WStrategies\BMB\Includes\Service\Permissions\PlayPermissions;
+use WStrategies\BMB\Admin\Partials\SettingsPage;
 
 /**
  * The admin-specific functionality of the plugin.
@@ -29,6 +30,7 @@ class AdminHooks implements HooksInterface {
     $loader->add_action('admin_enqueue_scripts', [$this, 'enqueue_scripts']);
 
     $loader->add_action('init', [$this, 'add_capabilities']);
+    $loader->add_action('init', [$this, 'init_settings_page']);
     $loader->add_action(
       'add_user_role',
       [$this, 'create_user_profile_post'],
@@ -53,6 +55,13 @@ class AdminHooks implements HooksInterface {
       10,
       2
     );
+  }
+
+  /**
+   * Initialize the settings page
+   */
+  public function init_settings_page(): void {
+    new SettingsPage();
   }
 
   /**

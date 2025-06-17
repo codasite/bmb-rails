@@ -13,16 +13,20 @@ use WStrategies\BMB\Public\Partials\shared\PartialsContants;
 use WStrategies\BMB\Public\Partials\TemplateInterface;
 use WStrategies\BMB\Features\MobileApp\RequestService;
 use WStrategies\BMB\Features\MobileApp\MobileAppMetaQuery;
+use WStrategies\BMB\Includes\Service\SettingsService;
 
 class BracketBoardPage implements TemplateInterface {
   private BracketRepo $bracket_repo;
   private PlayRepo $play_repo;
   private RequestService $request_service;
+  private SettingsService $settings_service;
 
   public function __construct(array $args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
     $this->play_repo = $args['play_repo'] ?? new PlayRepo();
     $this->request_service = $args['request_service'] ?? new RequestService();
+    $this->settings_service =
+      $args['settings_service'] ?? new SettingsService();
   }
 
   public function render_header(): string {
@@ -38,7 +42,7 @@ class BracketBoardPage implements TemplateInterface {
     $featured_brackets = BracketsCommon::get_public_brackets([
       'tags' => [PartialsContants::BMB_OFFICIAL],
       'status' => PartialsContants::ALL_STATUS,
-      'posts_per_page' => -1,
+      'posts_per_page' => $this->settings_service->get_featured_brackets_count(),
     ]);
 
     ob_start();
