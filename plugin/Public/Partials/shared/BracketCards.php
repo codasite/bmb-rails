@@ -56,7 +56,7 @@ class BracketCards {
   }
 
   public static function vip_bracket_card(
-    $bracket,
+    Bracket $bracket,
     $options = []
   ): false|string {
     $show_profile_link = $options['show_profile_link'] ?? false;
@@ -72,7 +72,7 @@ class BracketCards {
     $product_utils = new BracketProductUtils();
     $title = $bracket->title;
     $id = $bracket->id;
-    $thumbnail = get_the_post_thumbnail_url($id);
+    $thumbnail = $bracket->thumbnail_url;
     $play_link = get_permalink($id) . 'play';
     $leaderboard_link = get_permalink($id) . 'leaderboard';
     $buttons = [];
