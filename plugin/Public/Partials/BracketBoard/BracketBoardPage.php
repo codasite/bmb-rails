@@ -38,7 +38,7 @@ class BracketBoardPage implements TemplateInterface {
     $featured_brackets = BracketsCommon::get_public_brackets([
       'tags' => [PartialsContants::BMB_OFFICIAL],
       'status' => PartialsContants::ALL_STATUS,
-      'posts_per_page' => 4,
+      'posts_per_page' => -1,
     ]);
 
     ob_start();
