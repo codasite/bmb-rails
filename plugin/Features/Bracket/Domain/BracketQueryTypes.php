@@ -16,6 +16,8 @@ class BracketQueryTypes {
   public const FILTER_LIVE = 'live';
   public const FILTER_UPCOMING = 'upcoming';
   public const FILTER_SCORED = 'scored';
+  public const FILTER_IN_PROGRESS = 'in_progress';
+  public const FILTER_COMPLETED = 'completed';
   public const FILTER_ALL = 'all';
 
   /**
@@ -26,6 +28,8 @@ class BracketQueryTypes {
       self::FILTER_LIVE => [self::STATUS_PUBLISH],
       self::FILTER_UPCOMING => [self::STATUS_UPCOMING],
       self::FILTER_SCORED => [self::STATUS_SCORE, self::STATUS_COMPLETE],
+      self::FILTER_IN_PROGRESS => [self::STATUS_SCORE],
+      self::FILTER_COMPLETED => [self::STATUS_COMPLETE],
       self::FILTER_ALL => [
         self::STATUS_PUBLISH,
         self::STATUS_SCORE,

@@ -14,7 +14,7 @@ Implement filter buttons in BracketBoardPage similar to TournamentsPage, using t
 
 2. **`plugin/Includes/Service/TournamentFilter/Public/PublicBracketFilter.php`**
    - ✅ Implements `TournamentFilterInterface`
-   - ✅ Handles filtering public brackets by status (live, upcoming, scored)
+   - ✅ Handles filtering public brackets by status (live, upcoming, in progress, completed)
    - ✅ Uses `BracketQueryBuilder` for querying public brackets
 
 3. **`plugin/Includes/Service/FilterPageService.php`**
@@ -123,7 +123,7 @@ class TournamentsPage {
 
 1. **`plugin/Includes/Service/TournamentFilter/Public/PublicBracketFilter.php`**
    - Implements `TournamentFilterInterface`
-   - Handles filtering public brackets by status (live, upcoming, scored)
+   - Handles filtering public brackets by status (live, upcoming, in progress, completed)
    - Uses `BracketQueryBuilder` for querying public brackets
 
 2. **`plugin/Includes/Service/TournamentFilter/Public/PublicBracketsQuery.php`**
@@ -182,8 +182,8 @@ class TournamentsPage {
 
 ## Key Implementation Details:
 
-- **Filter Statuses**: Live, Upcoming, Scored (matching current `BracketsCommon::bracket_filter_buttons()`)
-- **Colors**: Green for Live, Yellow for Upcoming, White for Scored
+- **Filter Statuses**: Live, Upcoming, In Progress, Completed (matching current `BracketsCommon::bracket_filter_buttons()`)
+- **Colors**: Green for Live, Yellow for Upcoming, Blue for In Progress, White for Completed
 - **Active State Logic**: Similar to `TournamentsPage` - show first filter with results, or queried filter if it has results
 - **URL Structure**: Use existing query parameter structure with `status` parameter
 - **Integration**: Leverage existing `BracketQueryBuilder` and `BracketQueryTypes` for consistency

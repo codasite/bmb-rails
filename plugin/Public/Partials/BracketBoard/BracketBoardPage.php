@@ -43,8 +43,15 @@ class BracketBoardPage implements TemplateInterface {
       'fill_circle' => false,
     ],
     [
-      'paged_status' => BracketQueryTypes::FILTER_SCORED,
-      'label' => 'Scored',
+      'paged_status' => BracketQueryTypes::FILTER_IN_PROGRESS,
+      'label' => 'In Progress',
+      'color' => 'blue',
+      'show_circle' => true,
+      'fill_circle' => true,
+    ],
+    [
+      'paged_status' => BracketQueryTypes::FILTER_COMPLETED,
+      'label' => 'Completed',
       'color' => 'white',
       'show_circle' => true,
       'fill_circle' => true,

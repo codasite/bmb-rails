@@ -23,6 +23,8 @@ class PublicBracketsQuery {
       BracketQueryTypes::FILTER_LIVE,
       BracketQueryTypes::FILTER_UPCOMING,
       BracketQueryTypes::FILTER_SCORED,
+      BracketQueryTypes::FILTER_IN_PROGRESS,
+      BracketQueryTypes::FILTER_COMPLETED,
       BracketQueryTypes::FILTER_ALL,
     ]);
   }
