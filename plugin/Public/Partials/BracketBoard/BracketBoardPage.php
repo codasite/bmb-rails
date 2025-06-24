@@ -75,6 +75,7 @@ class BracketBoardPage implements TemplateInterface {
       'brackets_query' => $this->brackets_query,
       'paged_status' => $data['paged_status'],
       'per_page' => self::$PER_PAGE,
+      'exclude_tags' => [PartialsContants::BMB_OFFICIAL],
     ]);
   }
 

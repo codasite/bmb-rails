@@ -23,6 +23,7 @@ class BracketQueryBuilder {
    * @param array $opts {
    *     Optional. Array of query parameters.
    *     @type array  $tags           Array of tag slugs to filter by
+   *     @type array  $exclude_tags   Array of tag slugs to exclude
    *     @type int    $author         Author ID to filter by
    *     @type int    $posts_per_page Number of posts per page (default 10)
    *     @type int    $paged          Current page number
@@ -32,6 +33,7 @@ class BracketQueryBuilder {
    */
   public function buildPublicBracketsQuery(array $opts = []): array {
     $tags = $opts['tags'] ?? [];
+    $exclude_tags = $opts['exclude_tags'] ?? [];
     $author_id = $opts['author'] ?? null;
     $posts_per_page = $opts['posts_per_page'] ?? 10;
     $paged = $opts['paged'] ?? 1;
@@ -42,12 +44,28 @@ class BracketQueryBuilder {
 
     $query_args = [
       'post_type' => Bracket::get_post_type(),
-      'tag_slug__and' => $tags,
       'posts_per_page' => $posts_per_page,
       'paged' => $paged,
       'post_status' => $status_array,
       'order' => 'DESC',
     ];
+
+    // Add tag filters
+    if (!empty($tags)) {
+      $query_args['tag_slug__and'] = $tags;
+    }
+
+    // Add exclude tags using tax_query
+    if (!empty($exclude_tags)) {
+      $query_args['tax_query'] = [
+        [
+          'taxonomy' => 'post_tag',
+          'field' => 'slug',
+          'terms' => $exclude_tags,
+          'operator' => 'NOT IN',
+        ],
+      ];
+    }
 
     if ($author_id) {
       $query_args['author'] = $author_id;

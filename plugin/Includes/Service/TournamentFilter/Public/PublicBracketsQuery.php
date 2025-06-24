@@ -31,7 +31,8 @@ class PublicBracketsQuery {
   public function get_brackets(
     int $paged,
     int $per_page,
-    string $status
+    string $status,
+    array $exclude_tags = []
   ): array {
     if (!$this->status_is_valid($status)) {
       return [];
@@ -41,13 +42,17 @@ class PublicBracketsQuery {
       'paged' => $paged,
       'posts_per_page' => $per_page,
       'paged_status' => $status,
+      'exclude_tags' => $exclude_tags,
     ]);
 
     $the_query = new WP_Query($query_args);
     return $this->bracket_repo->get_all($the_query);
   }
 
-  public function get_brackets_count(string $status): int {
+  public function get_brackets_count(
+    string $status,
+    array $exclude_tags = []
+  ): int {
     if (!$this->status_is_valid($status)) {
       return 0;
     }
@@ -60,6 +65,7 @@ class PublicBracketsQuery {
       'paged' => 1,
       'posts_per_page' => 1,
       'paged_status' => $status,
+      'exclude_tags' => $exclude_tags,
     ]);
 
     $the_query = new WP_Query($query_args);
@@ -69,13 +75,17 @@ class PublicBracketsQuery {
     return $count;
   }
 
-  public function get_max_num_pages(int $per_page, string $status): int {
-    $count = $this->get_brackets_count($status);
+  public function get_max_num_pages(
+    int $per_page,
+    string $status,
+    array $exclude_tags = []
+  ): int {
+    $count = $this->get_brackets_count($status, $exclude_tags);
     return ceil($count / $per_page);
   }
 
-  public function has_brackets(string $status): bool {
-    $count = $this->get_brackets_count($status);
+  public function has_brackets(string $status, array $exclude_tags = []): bool {
+    $count = $this->get_brackets_count($status, $exclude_tags);
     return $count > 0;
   }
 }

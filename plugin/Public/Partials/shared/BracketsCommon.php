@@ -606,6 +606,7 @@ class BracketsCommon {
 
     $query_args = $query_builder->buildPublicBracketsQuery([
       'tags' => $opts['tags'] ?? [],
+      'exclude_tags' => $opts['exclude_tags'] ?? [],
       'author' => $opts['author'] ?? null,
       'posts_per_page' => $opts['posts_per_page'] ?? 8,
       'paged' =>

@@ -9,7 +9,7 @@ use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Features\Bracket\Infrastructure\BracketQueryBuilder;
 use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 use WStrategies\BMB\Features\Bracket\Presentation\BracketListRenderer;
-use WStrategies\BMB\Features\MobileApp\RequestService;
+use WStrategies\BMB\Public\Partials\shared\PartialsContants;
 
 /**
  * HTML Fragment endpoint for bracket list pagination.
@@ -42,6 +42,9 @@ class BracketHtmlApi extends HtmlFragmentApiBase {
       'paged_status' =>
         $request->get_param('status') ?: BracketQueryTypes::FILTER_LIVE,
       'tags' => $request->get_param('tags') ?: [],
+      'exclude_tags' => $request->get_param('exclude_tags') ?: [
+        PartialsContants::BMB_OFFICIAL,
+      ],
       'author' => $request->get_param('author'),
     ]);
 
@@ -70,6 +73,15 @@ class BracketHtmlApi extends HtmlFragmentApiBase {
 
     $params['tags'] = [
       'description' => 'Filter by bracket tags.',
+      'type' => 'array',
+      'items' => [
+        'type' => 'string',
+      ],
+      'default' => [],
+    ];
+
+    $params['exclude_tags'] = [
+      'description' => 'Exclude brackets with these tags.',
       'type' => 'array',
       'items' => [
         'type' => 'string',
