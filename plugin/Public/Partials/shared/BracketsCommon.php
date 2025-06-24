@@ -612,7 +612,7 @@ class BracketsCommon {
         $opts['paged'] ?? get_query_var('paged')
           ? absint(get_query_var('paged'))
           : 1,
-      'status' =>
+      'paged_status' =>
         $opts['status'] ??
         get_query_var('status', BracketQueryTypes::FILTER_LIVE),
       'posts_per_page' => $opts['posts_per_page'] ?? 8,

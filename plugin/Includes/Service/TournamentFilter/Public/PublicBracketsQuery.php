@@ -19,14 +19,7 @@ class PublicBracketsQuery {
   }
 
   public function status_is_valid(string $status): bool {
-    return in_array($status, [
-      BracketQueryTypes::FILTER_LIVE,
-      BracketQueryTypes::FILTER_UPCOMING,
-      BracketQueryTypes::FILTER_SCORED,
-      BracketQueryTypes::FILTER_IN_PROGRESS,
-      BracketQueryTypes::FILTER_COMPLETED,
-      BracketQueryTypes::FILTER_ALL,
-    ]);
+    return BracketQueryTypes::isValidFilter($status);
   }
 
   public function get_brackets(
@@ -41,7 +34,7 @@ class PublicBracketsQuery {
     $query_args = $this->query_builder->buildPublicBracketsQuery([
       'paged' => $paged,
       'posts_per_page' => $per_page,
-      'status' => $status,
+      'paged_status' => $status,
     ]);
 
     $the_query = new WP_Query($query_args);
@@ -60,7 +53,7 @@ class PublicBracketsQuery {
     $query_args = $this->query_builder->buildPublicBracketsQuery([
       'paged' => 1,
       'posts_per_page' => 1,
-      'status' => $status,
+      'paged_status' => $status,
     ]);
 
     $the_query = new WP_Query($query_args);

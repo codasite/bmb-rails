@@ -7,18 +7,11 @@ use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscripti
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Repository\BracketRepo;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 
 class DashboardTournamentsQuery {
   private BracketRepo $bracket_repo;
   private \wpdb $wpdb;
-  public static $tournament_roles = ['hosting', 'playing'];
-  public static $paged_status_mapping = [
-    'all' => ['publish', 'private', 'upcoming', 'score', 'complete'],
-    'live' => ['publish', 'score'],
-    'private' => ['private'],
-    'upcoming' => ['upcoming'],
-    'complete' => ['complete'],
-  ];
   private array $tournament_counts = [];
 
   public function __construct($args = []) {
@@ -28,11 +21,11 @@ class DashboardTournamentsQuery {
   }
 
   public function tournament_role_is_valid(string $role) {
-    return in_array($role, self::$tournament_roles);
+    return BracketQueryTypes::isValidRole($role);
   }
 
   public function paged_status_is_valid(string $status) {
-    return array_key_exists($status, self::$paged_status_mapping);
+    return BracketQueryTypes::isValidFilter($status);
   }
 
   public function get_tournaments(
@@ -47,7 +40,7 @@ class DashboardTournamentsQuery {
     ) {
       return [];
     }
-    $hosting = $role === 'hosting';
+    $hosting = $role === BracketQueryTypes::ROLE_HOSTING;
     if ($hosting) {
       return $this->get_hosted_tournaments($paged, $per_page, $status);
     }
@@ -65,7 +58,7 @@ class DashboardTournamentsQuery {
       return 0;
     }
 
-    $hosting = $role === 'hosting';
+    $hosting = $role === BracketQueryTypes::ROLE_HOSTING;
 
     if (isset($this->tournament_counts[$hosting][$status])) {
       return $this->tournament_counts[$hosting][$status];
@@ -116,7 +109,7 @@ class DashboardTournamentsQuery {
     int $paged = 0,
     int $per_page = 0
   ) {
-    $post_status = self::$paged_status_mapping[$status];
+    $post_status = BracketQueryTypes::getStatusQuery($status);
     $query_args = [
       'post_type' => Bracket::get_post_type(),
       'author' => get_current_user_id(),
@@ -170,7 +163,7 @@ class DashboardTournamentsQuery {
     int $per_page,
     string $status
   ) {
-    $post_status = self::$paged_status_mapping[$status];
+    $post_status = BracketQueryTypes::getStatusQuery($status);
     $offset = ($paged - 1) * $per_page;
     $user_id = get_current_user_id();
     $bracket_table = BracketRepo::table_name();

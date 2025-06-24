@@ -9,37 +9,38 @@ use WStrategies\BMB\Public\Partials\shared\BracketListItem;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 use WStrategies\BMB\Public\Partials\TemplateInterface;
 use WStrategies\BMB\Includes\Service\FilterPageService;
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 
 class TournamentsPage implements TemplateInterface {
   private DashboardTournamentsQuery $tournament_query;
   private FilterPageService $filter_service;
   private string $role;
   private static int $PER_PAGE = 5;
-  private static string $DEFAULT_ROLE = 'playing';
+  private static string $DEFAULT_ROLE = BracketQueryTypes::ROLE_PLAYING;
   private static array $filter_data = [
     [
-      'paged_status' => 'live',
+      'paged_status' => BracketQueryTypes::FILTER_LIVE,
       'label' => 'Live',
       'color' => 'green',
       'show_circle' => true,
       'fill_circle' => true,
     ],
     [
-      'paged_status' => 'private',
+      'paged_status' => BracketQueryTypes::FILTER_PRIVATE,
       'label' => 'Private',
       'color' => 'blue',
       'show_circle' => true,
       'fill_circle' => true,
     ],
     [
-      'paged_status' => 'upcoming',
+      'paged_status' => BracketQueryTypes::FILTER_UPCOMING,
       'label' => 'Upcoming',
       'color' => 'yellow',
       'show_circle' => true,
       'fill_circle' => true,
     ],
     [
-      'paged_status' => 'complete',
+      'paged_status' => BracketQueryTypes::FILTER_COMPLETED,
       'label' => 'Complete',
       'color' => 'white',
       'show_circle' => true,
@@ -139,17 +140,17 @@ class TournamentsPage implements TemplateInterface {
           <div class="tw-flex tw-justify-start">
             <?php echo $this->get_role_link(
               'Playing',
-              $this->role === 'playing',
+              $this->role === BracketQueryTypes::ROLE_PLAYING,
               $this->get_role_filtered_url(
-                'playing',
+                BracketQueryTypes::ROLE_PLAYING,
                 $this->filter_service->get_paged_status()
               )
             ); ?>
             <?php echo $this->get_role_link(
               'Hosting',
-              $this->role === 'hosting',
+              $this->role === BracketQueryTypes::ROLE_HOSTING,
               $this->get_role_filtered_url(
-                'hosting',
+                BracketQueryTypes::ROLE_HOSTING,
                 $this->filter_service->get_paged_status()
               )
             ); ?>

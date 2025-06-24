@@ -244,3 +244,130 @@ $filter_service->init();
 - ✅ **Reduced complexity** - No need to remember multiple method calls
 - ✅ **Cleaner code** - Less boilerplate in consuming classes
 - ✅ **Private helper methods** - `set_active_filter()` is now private since it's called internally
+
+## ✅ Fixed: Status Mapping Consolidation
+
+### Problem (RESOLVED):
+There were two separate and inconsistent mappings for bracket status filters:
+- **`DashboardTournamentsQuery::$paged_status_mapping`** - Used WordPress post statuses directly
+- **`BracketQueryTypes::getStatusQuery()`** - Used bracket status constants
+
+This caused filter buttons not to work properly due to mismatched status mappings.
+
+### ✅ Solution Implemented: Unified Status Mapping with Constants
+Consolidated all status mappings to use `BracketQueryTypes::getStatusQuery()` and replaced all hardcoded strings with constants:
+
+**Before (Inconsistent with hardcoded strings)**:
+```php
+// DashboardTournamentsQuery
+'live' => ['publish', 'score'],
+'complete' => ['complete'],
+
+// BracketQueryTypes  
+'live' => ['publish'],
+'completed' => ['complete'],
+```
+
+**After (Unified with constants)**:
+```php
+// All queries now use BracketQueryTypes::getStatusQuery() with constants
+BracketQueryTypes::FILTER_LIVE => [BracketQueryTypes::STATUS_PUBLISH],
+BracketQueryTypes::FILTER_IN_PROGRESS => [BracketQueryTypes::STATUS_SCORE],
+BracketQueryTypes::FILTER_COMPLETED => [BracketQueryTypes::STATUS_COMPLETE],
+```
+
+**Files Updated**:
+- ✅ **`BracketQueryTypes.php`** - Added constants for all statuses, filters, and roles
+- ✅ **`DashboardTournamentsQuery.php`** - Removed duplicate mapping and roles, now uses `BracketQueryTypes` methods
+- ✅ **`PublicBracketsQuery.php`** - Now uses `BracketQueryTypes::getValidFilters()`
+- ✅ **`TournamentsPage.php`** - Updated to use constants throughout
+- ✅ **`BracketBoardPage.php`** - Already using constants correctly
+
+**Benefits Achieved**:
+- ✅ **Consistent behavior** - All filter pages use the same status mapping
+- ✅ **Single source of truth** - `BracketQueryTypes` is the authoritative mapping
+- ✅ **Type safety** - Constants prevent typos and make refactoring easier
+- ✅ **Fixed filter buttons** - Buttons now work correctly with proper status queries
+- ✅ **Easier maintenance** - Only one place to update status mappings
+- ✅ **Better IDE support** - Autocomplete and refactoring work with constants
+
+## ✅ Refactored: Eliminated Duplication in BracketQueryTypes
+
+### Problem (RESOLVED):
+The `BracketQueryTypes` class had duplication between:
+- **`getStatusQuery()`** - Used a match statement with hardcoded filter mappings
+- **`getValidFilters()`** - Manually listed all filter constants
+- **Validation logic** - Scattered across multiple classes
+
+### ✅ Solution Implemented: Single Mapping Array
+Refactored to use a single private mapping array as the source of truth:
+
+```php
+// Before: Duplicated filter lists
+public static function getStatusQuery(string $filter): array {
+  return match ($filter) {
+    self::FILTER_LIVE => [self::STATUS_PUBLISH],
+    // ... more mappings
+  };
+}
+
+public static function getValidFilters(): array {
+  return [
+    self::FILTER_LIVE,
+    self::FILTER_UPCOMING,
+    // ... manually listed
+  ];
+}
+
+// After: Single source of truth
+private static array $filter_status_mapping = [
+  self::FILTER_LIVE => [self::STATUS_PUBLISH],
+  // ... all mappings in one place
+];
+
+public static function getStatusQuery(string $filter): array {
+  return self::$filter_status_mapping[$filter] ?? [self::STATUS_PUBLISH];
+}
+
+public static function getValidFilters(): array {
+  return array_keys(self::$filter_status_mapping);
+}
+```
+
+**Benefits Achieved**:
+- ✅ **No duplication** - Single mapping array is the source of truth
+- ✅ **Automatic validation** - `getValidFilters()` derived from mapping keys
+- ✅ **Consistent behavior** - All methods use the same mapping
+- ✅ **Helper methods** - Added `isValidFilter()` and `isValidRole()` for cleaner validation
+- ✅ **Easier maintenance** - Add a filter to the mapping, it's automatically valid
+- ✅ **Better performance** - No need to scan arrays for validation
+
+## ✅ Fixed: BracketQueryBuilder TypeError
+
+### Problem (RESOLVED):
+After refactoring, `BracketQueryBuilder::buildPublicBracketsQuery()` was calling `BracketQueryTypes::getStatusQuery()` with an array instead of a string, causing a TypeError.
+
+### Root Cause:
+The flow was:
+1. `PublicBracketsQuery` calls `BracketQueryTypes::getStatusQuery($status)` → returns array
+2. Passes that array to `buildPublicBracketsQuery(['status' => $statuses])`
+3. `BracketQueryBuilder` calls `BracketQueryTypes::getStatusQuery($status_filter)` again on the array
+
+### ✅ Solution Implemented: Direct Status Array
+Updated `BracketQueryBuilder` to expect the status array directly:
+
+```php
+// Before: Double conversion
+$status_filter = $opts['status'] ?? BracketQueryTypes::FILTER_LIVE;
+'post_status' => BracketQueryTypes::getStatusQuery($status_filter),
+
+// After: Direct array usage
+$status_array = $opts['status'] ?? [BracketQueryTypes::STATUS_PUBLISH];
+'post_status' => $status_array,
+```
+
+**Benefits Achieved**:
+- ✅ **Fixed TypeError** - No more array-to-string conversion error
+- ✅ **Cleaner flow** - Status conversion happens once in the query classes
+- ✅ **Better separation** - QueryBuilder focuses on WP_Query args, not status mapping
+- ✅ **Consistent behavior** - All query methods work correctly

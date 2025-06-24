@@ -39,7 +39,7 @@ class BracketHtmlApi extends HtmlFragmentApiBase {
     $query_args = $this->query_builder->buildPublicBracketsQuery([
       'paged' => $request->get_param('page') ?: 1,
       'posts_per_page' => $request->get_param('per_page') ?: 10,
-      'status' =>
+      'paged_status' =>
         $request->get_param('status') ?: BracketQueryTypes::FILTER_LIVE,
       'tags' => $request->get_param('tags') ?: [],
       'author' => $request->get_param('author'),
@@ -84,9 +84,9 @@ class BracketHtmlApi extends HtmlFragmentApiBase {
 
     $params['status'] = [
       'description' =>
-        'Filter by bracket status (live, upcoming, scored, all).',
+        'Filter by bracket status (live, upcoming, in_progress, completed, all).',
       'type' => 'string',
-      'default' => 'live',
+      'default' => BracketQueryTypes::FILTER_LIVE,
     ];
 
     return $params;

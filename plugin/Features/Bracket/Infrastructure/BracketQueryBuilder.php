@@ -26,7 +26,7 @@ class BracketQueryBuilder {
    *     @type int    $author         Author ID to filter by
    *     @type int    $posts_per_page Number of posts per page (default 10)
    *     @type int    $paged          Current page number
-   *     @type string $status         Status filter (live, upcoming, scored, all)
+   *     @type string $paged_status   Filter keyword (live, upcoming, in_progress, etc.) that maps to post statuses
    * }
    * @return array WP_Query arguments
    */
@@ -35,14 +35,17 @@ class BracketQueryBuilder {
     $author_id = $opts['author'] ?? null;
     $posts_per_page = $opts['posts_per_page'] ?? 10;
     $paged = $opts['paged'] ?? 1;
-    $status_filter = $opts['status'] ?? BracketQueryTypes::FILTER_LIVE;
+    $paged_status = $opts['paged_status'] ?? BracketQueryTypes::FILTER_LIVE;
+
+    // Map the filter keyword to actual post statuses
+    $status_array = BracketQueryTypes::getStatusQuery($paged_status);
 
     $query_args = [
       'post_type' => Bracket::get_post_type(),
       'tag_slug__and' => $tags,
       'posts_per_page' => $posts_per_page,
       'paged' => $paged,
-      'post_status' => BracketQueryTypes::getStatusQuery($status_filter),
+      'post_status' => $status_array,
       'order' => 'DESC',
     ];
 
