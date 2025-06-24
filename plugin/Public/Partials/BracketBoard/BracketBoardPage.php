@@ -14,12 +14,42 @@ use WStrategies\BMB\Public\Partials\TemplateInterface;
 use WStrategies\BMB\Features\MobileApp\RequestService;
 use WStrategies\BMB\Features\MobileApp\MobileAppMetaQuery;
 use WStrategies\BMB\Includes\Service\SettingsService;
+use WStrategies\BMB\Includes\Service\FilterPageService;
+use WStrategies\BMB\Includes\Service\TournamentFilter\Public\PublicBracketFilter;
+use WStrategies\BMB\Includes\Service\TournamentFilter\Public\PublicBracketsQuery;
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 
 class BracketBoardPage implements TemplateInterface {
   private BracketRepo $bracket_repo;
   private PlayRepo $play_repo;
   private RequestService $request_service;
   private SettingsService $settings_service;
+  private PublicBracketsQuery $brackets_query;
+  private FilterPageService $filter_service;
+  private static int $PER_PAGE = 8;
+  private static array $filter_data = [
+    [
+      'paged_status' => BracketQueryTypes::FILTER_LIVE,
+      'label' => 'Live',
+      'color' => 'green',
+      'show_circle' => true,
+      'fill_circle' => true,
+    ],
+    [
+      'paged_status' => BracketQueryTypes::FILTER_UPCOMING,
+      'label' => 'Upcoming',
+      'color' => 'yellow',
+      'show_circle' => true,
+      'fill_circle' => true,
+    ],
+    [
+      'paged_status' => BracketQueryTypes::FILTER_SCORED,
+      'label' => 'Scored',
+      'color' => 'white',
+      'show_circle' => true,
+      'fill_circle' => true,
+    ],
+  ];
 
   public function __construct(array $args = []) {
     $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
@@ -27,6 +57,39 @@ class BracketBoardPage implements TemplateInterface {
     $this->request_service = $args['request_service'] ?? new RequestService();
     $this->settings_service =
       $args['settings_service'] ?? new SettingsService();
+    $this->brackets_query =
+      $args['brackets_query'] ?? new PublicBracketsQuery();
+    $this->filter_service = $args['filter_service'] ?? new FilterPageService();
+  }
+
+  private function init() {
+    // Initialize filters using the service
+    $this->filter_service->init_filters(
+      self::$filter_data,
+      [$this, 'create_filter'],
+      [$this, 'get_filtered_url']
+    );
+
+    // Set active filter
+    $this->filter_service->set_active_filter();
+  }
+
+  /**
+   * Factory function to create filter instances
+   */
+  public function create_filter(array $data) {
+    return new PublicBracketFilter([
+      'brackets_query' => $this->brackets_query,
+      'paged_status' => $data['paged_status'],
+      'per_page' => self::$PER_PAGE,
+    ]);
+  }
+
+  /**
+   * Generate filtered URL for a given status
+   */
+  public function get_filtered_url(string $status): string {
+    return add_query_arg('status', $status, get_permalink());
   }
 
   public function render_header(): string {
@@ -39,6 +102,8 @@ class BracketBoardPage implements TemplateInterface {
   }
 
   public function render_content(): string {
+    $this->init();
+
     $featured_brackets = BracketsCommon::get_public_brackets([
       'tags' => [PartialsContants::BMB_OFFICIAL],
       'status' => PartialsContants::ALL_STATUS,
@@ -66,7 +131,7 @@ class BracketBoardPage implements TemplateInterface {
                 <div class="tw-flex tw-flex-col">
                     <h2 class="tw-text-36 md:tw-text-48 tw-font-700 tw-pt-60">User Brackets</h2>
                     <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
-                        <?php echo BracketsCommon::bracket_filter_buttons(); ?>
+                        <?php echo $this->filter_service->render_filter_buttons(); ?>
                     </div>
                     <div class="tw-flex tw-flex-col tw-gap-15" id="wpbb-infinite-scroll-bracket-list">
                         <!-- React component will be mounted here -->

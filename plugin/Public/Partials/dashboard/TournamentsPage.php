@@ -6,15 +6,14 @@ use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournam
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\Includes\Service\TournamentFilter\TournamentFilterInterface;
 use WStrategies\BMB\Public\Partials\shared\BracketListItem;
-use WStrategies\BMB\Public\Partials\shared\FilterButton;
 use WStrategies\BMB\Public\Partials\shared\PaginationWidget;
 use WStrategies\BMB\Public\Partials\TemplateInterface;
+use WStrategies\BMB\Includes\Service\FilterPageService;
 
 class TournamentsPage implements TemplateInterface {
   private DashboardTournamentsQuery $tournament_query;
-  private int $paged;
+  private FilterPageService $filter_service;
   private string $role;
-  private string $paged_status;
   private static int $PER_PAGE = 5;
   private static string $DEFAULT_ROLE = 'playing';
   private static array $filter_data = [
@@ -47,78 +46,49 @@ class TournamentsPage implements TemplateInterface {
       'fill_circle' => true,
     ],
   ];
-  /**
-   * @var array<FilterButton>
-   */
-  private array $filter_buttons = [];
-  /**
-   * @var array<TournamentFilterInterface>
-   */
-  private array $filters = [];
 
   public function __construct($args = []) {
     $this->tournament_query =
       $args['tournament_query'] ?? new DashboardTournamentsQuery();
+    $this->filter_service = $args['filter_service'] ?? new FilterPageService();
   }
 
   private function init() {
-    $this->paged = (int) get_query_var('paged')
-      ? absint(get_query_var('paged'))
-      : 1;
     $role = get_query_var('role', self::$DEFAULT_ROLE);
-    $paged_status = get_query_var('status');
     $this->role = $role;
-    $this->paged_status = $paged_status;
-    $this->init_filters();
-    $this->set_active_filter();
+
+    // Initialize filters using the service
+    $this->filter_service->init_filters(
+      self::$filter_data,
+      [$this, 'create_filter'],
+      [$this, 'get_filtered_url']
+    );
+
+    // Set active filter
+    $this->filter_service->set_active_filter();
   }
 
-  private function init_filters() {
-    // Construct filters and filter buttons
-    foreach (self::$filter_data as $data) {
-      $filter = new DashboardTournamentFilter([
-        'tournament_query' => $this->tournament_query,
-        'paged_status' => $data['paged_status'],
-        'role' => $this->role,
-        'per_page' => self::$PER_PAGE,
-      ]);
-      $this->filters[] = $filter;
-      $this->filter_buttons[] = new FilterButton([
-        'tournament_filter' => $filter,
-        'label' => $data['label'],
-        'color' => $data['color'],
-        'show_circle' => $data['show_circle'],
-        'fill_circle' => $data['fill_circle'],
-        'url' => $this->get_filtered_url($this->role, $data['paged_status']),
-      ]);
-    }
+  /**
+   * Factory function to create filter instances
+   */
+  public function create_filter(array $data) {
+    return new DashboardTournamentFilter([
+      'tournament_query' => $this->tournament_query,
+      'paged_status' => $data['paged_status'],
+      'role' => $this->role,
+      'per_page' => self::$PER_PAGE,
+    ]);
   }
 
-  private function set_active_filter() {
-    // determine which filter to set active
-    $queried_filter = $this->get_filter_by_status($this->paged_status);
-    if ($queried_filter && $queried_filter->has_tournaments()) {
-      $queried_filter->set_active(true);
-    } else {
-      // activate the first filter that has tournaments
-      foreach ($this->filters as $filter) {
-        if ($filter->has_tournaments()) {
-          $filter->set_active(true);
-          $this->paged_status = $filter->get_paged_status();
-          $this->paged = 1;
-          break;
-        }
-      }
-    }
-  }
-
-  private function get_filter_by_status(string $paged_status) {
-    foreach ($this->filters as $filter) {
-      if ($filter->get_paged_status() === $paged_status) {
-        return $filter;
-      }
-    }
-    return null;
+  /**
+   * Generate filtered URL for a given status
+   */
+  public function get_filtered_url(string $status): string {
+    return get_permalink() .
+      'tournaments?role=' .
+      $this->role .
+      '&status=' .
+      $status;
   }
 
   public function get_role_link(string $label, bool $active, string $url) {
@@ -130,34 +100,18 @@ class TournamentsPage implements TemplateInterface {
     <?php return ob_get_clean();
   }
 
-  public function render_filter_buttons() {
-    ob_start(); ?>
-    <div class="tw-flex tw-gap-10 tw-flex-wrap">
-      <?php foreach ($this->filter_buttons as $button) {
-        if ($button->get_filter()->has_tournaments()) {
-          echo $button->render();
-        }
-      } ?>
-    </div>
-    <?php return ob_get_clean();
-  }
-
-  public function get_filtered_url(string $role, string $status) {
-    return get_permalink() . 'tournaments?role=' . $role . '&status=' . $status;
-  }
-
   public function render(): false|string {
     $this->init();
     $brackets = [];
     $num_pages = 0;
 
     // get first active filter
-    foreach ($this->filters as $filter) {
-      if ($filter->is_active()) {
-        $brackets = $filter->get_tournaments($this->paged);
-        $num_pages = $filter->get_max_num_pages();
-        break;
-      }
+    $active_filter = $this->filter_service->get_active_filter();
+    if ($active_filter) {
+      $brackets = $active_filter->get_tournaments(
+        $this->filter_service->get_paged()
+      );
+      $num_pages = $active_filter->get_max_num_pages();
     }
 
     ob_start();
@@ -179,15 +133,15 @@ class TournamentsPage implements TemplateInterface {
             <?php echo $this->get_role_link(
               'Playing',
               $this->role === 'playing',
-              $this->get_filtered_url('playing', $this->paged_status)
+              $this->get_filtered_url('playing')
             ); ?>
             <?php echo $this->get_role_link(
               'Hosting',
               $this->role === 'hosting',
-              $this->get_filtered_url('hosting', $this->paged_status)
+              $this->get_filtered_url('hosting')
             ); ?>
           </div>
-          <?php echo $this->render_filter_buttons(); ?>
+          <?php echo $this->filter_service->render_filter_buttons(); ?>
             <div class="tw-flex tw-flex-col tw-gap-15">
               <div id="wpbb-tournaments-modals"></div>
               <div id="wpbb-tournaments-list-container">
@@ -195,7 +149,10 @@ class TournamentsPage implements TemplateInterface {
                   echo BracketListItem::bracket_list_item($bracket);
                 } ?>
               </div>
-              <?php PaginationWidget::pagination($this->paged, $num_pages); ?>
+              <?php PaginationWidget::pagination(
+                $this->filter_service->get_paged(),
+                $num_pages
+              ); ?>
             </div>
           </div>
           <?php if (empty($brackets)): ?>
