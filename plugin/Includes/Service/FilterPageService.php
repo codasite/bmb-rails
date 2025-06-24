@@ -10,35 +10,43 @@ class FilterPageService {
   private string $paged_status;
   private array $filter_buttons = [];
   private array $filters = [];
+  private array $filter_data;
+  private $filter_factory;
+  private $url_generator;
 
   /**
-   * Initialize the filter service with query vars
-   */
-  public function init() {
-    $this->paged = (int) get_query_var('paged')
-      ? absint(get_query_var('paged'))
-      : 1;
-    $this->paged_status = get_query_var('status', '');
-  }
-
-  /**
-   * Initialize filters and filter buttons
+   * Constructor with filter configuration
    *
    * @param array $filter_data Array of filter configurations
    * @param callable $filter_factory Function to create filter instances
    * @param callable $url_generator Function to generate filtered URLs
-   * @return array Array containing 'filters' and 'filter_buttons'
    */
-  public function init_filters(
+  public function __construct(
     array $filter_data,
     callable $filter_factory,
     callable $url_generator
-  ): array {
+  ) {
+    $this->filter_data = $filter_data;
+    $this->filter_factory = $filter_factory;
+    $this->url_generator = $url_generator;
+  }
+
+  /**
+   * Initialize the filter service - gets query vars, creates filters, and sets active filter
+   */
+  public function init(): void {
+    // Get query variables
+    $this->paged = (int) get_query_var('paged')
+      ? absint(get_query_var('paged'))
+      : 1;
+    $this->paged_status = get_query_var('status', '');
+
+    // Initialize filters and filter buttons
     $this->filters = [];
     $this->filter_buttons = [];
 
-    foreach ($filter_data as $data) {
-      $filter = $filter_factory($data);
+    foreach ($this->filter_data as $data) {
+      $filter = ($this->filter_factory)($data);
       $this->filters[] = $filter;
 
       $this->filter_buttons[] = new FilterButton([
@@ -47,20 +55,18 @@ class FilterPageService {
         'color' => $data['color'],
         'show_circle' => $data['show_circle'] ?? false,
         'fill_circle' => $data['fill_circle'] ?? false,
-        'url' => $url_generator($data['paged_status']),
+        'url' => ($this->url_generator)($data['paged_status']),
       ]);
     }
 
-    return [
-      'filters' => $this->filters,
-      'filter_buttons' => $this->filter_buttons,
-    ];
+    // Set the active filter
+    $this->set_active_filter();
   }
 
   /**
    * Set the active filter based on queried status or first available filter
    */
-  public function set_active_filter(): void {
+  private function set_active_filter(): void {
     // determine which filter to set active
     $queried_filter = $this->get_filter_by_status($this->paged_status);
     if ($queried_filter && $queried_filter->has_tournaments()) {

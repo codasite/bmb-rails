@@ -50,25 +50,20 @@ class TournamentsPage implements TemplateInterface {
   public function __construct($args = []) {
     $this->tournament_query =
       $args['tournament_query'] ?? new DashboardTournamentsQuery();
-    $this->filter_service = $args['filter_service'] ?? new FilterPageService();
-  }
 
-  private function init() {
-    $role = get_query_var('role', self::$DEFAULT_ROLE);
-    $this->role = $role;
-
-    // Initialize filter service with query vars
-    $this->filter_service->init();
-
-    // Initialize filters using the service
-    $this->filter_service->init_filters(
+    // Create filter service with configuration
+    $this->filter_service = new FilterPageService(
       self::$filter_data,
       [$this, 'create_filter'],
       [$this, 'get_filtered_url']
     );
+  }
 
-    // Set active filter
-    $this->filter_service->set_active_filter();
+  private function init() {
+    $this->role = get_query_var('role', self::$DEFAULT_ROLE);
+
+    // Initialize filter service (gets query vars, creates filters, sets active filter)
+    $this->filter_service->init();
   }
 
   /**

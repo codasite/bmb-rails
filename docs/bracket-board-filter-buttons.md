@@ -21,12 +21,15 @@ Implement filter buttons in BracketBoardPage similar to TournamentsPage, using t
    - ✅ Created service-based solution for common filter page functionality
    - ✅ Eliminates duplication between BracketBoardPage and TournamentsPage
    - ✅ Provides reusable filter initialization, active state management, and rendering
+   - ✅ **Improved**: Consolidated initialization logic into single `init()` method
+   - ✅ **Improved**: Constructor-based configuration for better cohesion
 
 4. **`plugin/Public/Partials/BracketBoard/BracketBoardPage.php`** ✅
    - ✅ Refactored to use FilterPageService
    - ✅ Reduced from ~150 lines to ~80 lines
    - ✅ Removed all duplicated filter logic
    - ✅ Maintains same functionality with cleaner code
+   - ✅ **Improved**: Uses consolidated FilterPageService initialization
 
 5. **`plugin/Public/Partials/dashboard/TournamentsPage.php`** ✅
    - ✅ Refactored to use FilterPageService
@@ -34,6 +37,7 @@ Implement filter buttons in BracketBoardPage similar to TournamentsPage, using t
    - ✅ Removed all duplicated filter logic
    - ✅ Maintains role-specific functionality
    - ✅ **Resolved**: URL generation method separation for role vs filter buttons
+   - ✅ **Improved**: Uses consolidated FilterPageService initialization
 
 ### ✅ Implementation Complete!
 - All core functionality implemented and tested
@@ -131,6 +135,8 @@ class TournamentsPage {
    - Service-based solution for common filter page functionality
    - Eliminates duplication between filter pages
    - Provides reusable filter initialization, active state management, and rendering
+   - ✅ **Improved**: Consolidated initialization logic into single `init()` method
+   - ✅ **Improved**: Constructor-based configuration for better cohesion
 
 ## Implementation Strategy:
 
@@ -154,12 +160,14 @@ class TournamentsPage {
    - Refactored to use FilterPageService
    - Removed duplicated filter logic
    - Maintains same functionality with cleaner code
+   - ✅ **Improved**: Uses consolidated FilterPageService initialization
 
 2. **`plugin/Public/Partials/dashboard/TournamentsPage.php`** ✅
    - Refactored to use FilterPageService
    - Removed duplicated filter logic
    - Maintains role-specific functionality
    - ✅ **Resolved**: URL generation method separation for role vs filter buttons
+   - ✅ **Improved**: Uses consolidated FilterPageService initialization
 
 3. **`plugin/Public/Partials/shared/FilterButton.php`**
    - No changes needed - already works with `TournamentFilterInterface`
@@ -203,3 +211,34 @@ The implementation follows the same pattern as `TournamentsPage` but adapted for
 - **Correct URL structure** - uses `/dashboard/tournaments?role=X&status=Y` format with "tournaments" as part of the path
 - Service-based refactoring eliminates code duplication while maintaining flexibility
 - Both pages maintain full functionality with cleaner, more maintainable code
+
+## ✅ Improved: FilterPageService Consolidation
+
+### Problem (RESOLVED):
+The `FilterPageService` had multiple initialization steps that were called separately:
+- `init()` - Get query variables
+- `init_filters()` - Create filters and buttons
+- `set_active_filter()` - Set active filter
+
+This required multiple method calls and made the service harder to use.
+
+### ✅ Solution Implemented: Single Initialization Method
+Consolidated all initialization logic into a single `init()` method and moved configuration to the constructor:
+
+```php
+// Before: Multiple method calls
+$filter_service = new FilterPageService();
+$filter_service->init_filters($filter_data, $factory, $url_generator);
+$filter_service->set_active_filter();
+
+// After: Single method call with constructor configuration
+$filter_service = new FilterPageService($filter_data, $factory, $url_generator);
+$filter_service->init();
+```
+
+**Benefits Achieved**:
+- ✅ **Simplified usage** - Single `init()` method handles everything
+- ✅ **Better cohesion** - Configuration in constructor, logic in init
+- ✅ **Reduced complexity** - No need to remember multiple method calls
+- ✅ **Cleaner code** - Less boilerplate in consuming classes
+- ✅ **Private helper methods** - `set_active_filter()` is now private since it's called internally

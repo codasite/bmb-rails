@@ -59,19 +59,18 @@ class BracketBoardPage implements TemplateInterface {
       $args['settings_service'] ?? new SettingsService();
     $this->brackets_query =
       $args['brackets_query'] ?? new PublicBracketsQuery();
-    $this->filter_service = $args['filter_service'] ?? new FilterPageService();
-  }
 
-  private function init() {
-    // Initialize filters using the service
-    $this->filter_service->init_filters(
+    // Create filter service with configuration
+    $this->filter_service = new FilterPageService(
       self::$filter_data,
       [$this, 'create_filter'],
       [$this, 'get_filtered_url']
     );
+  }
 
-    // Set active filter
-    $this->filter_service->set_active_filter();
+  private function init() {
+    // Initialize filter service (gets query vars, creates filters, sets active filter)
+    $this->filter_service->init();
   }
 
   /**
