@@ -2,6 +2,7 @@
 
 namespace WStrategies\BMB\Public\Partials\UserProfile;
 
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 use WStrategies\BMB\Includes\Repository\PlayRepo;
 use WStrategies\BMB\Includes\Repository\UserProfileRepo;
 use WStrategies\BMB\Public\Partials\shared\BracketCards;
@@ -60,6 +61,7 @@ class UserProfilePage implements TemplateInterface {
 				<?php echo BracketsCommon::public_bracket_list([
       'author' => $user_profile->author,
       'tags' => ['bmb_vip_profile'],
+      'paged_status' => get_query_var('status', BracketQueryTypes::FILTER_ALL),
     ]); ?>
 			</div>
 			<div id='wpbb-public-bracket-modals'></div>
