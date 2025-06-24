@@ -19,6 +19,7 @@ class BracketQueryTypes {
   public const FILTER_PRIVATE = 'private';
   public const FILTER_IN_PROGRESS = 'in_progress';
   public const FILTER_COMPLETED = 'completed';
+  public const FILTER_SCORED = 'scored';
   public const FILTER_ALL = 'all';
 
   // Role constants
@@ -34,6 +35,7 @@ class BracketQueryTypes {
     self::FILTER_PRIVATE => [self::STATUS_PRIVATE],
     self::FILTER_IN_PROGRESS => [self::STATUS_SCORE],
     self::FILTER_COMPLETED => [self::STATUS_COMPLETE],
+    self::FILTER_SCORED => [self::STATUS_SCORE, self::STATUS_COMPLETE],
     self::FILTER_ALL => [
       self::STATUS_PUBLISH,
       self::STATUS_PRIVATE,

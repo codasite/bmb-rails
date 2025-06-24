@@ -1,6 +1,7 @@
 <?php
 namespace WStrategies\BMB\Public\Partials;
 
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 use WStrategies\BMB\Public\Partials\shared\BracketsCommon;
 use WStrategies\BMB\Public\Partials\shared\PartialsContants;
 
@@ -19,6 +20,10 @@ class OfficialBracketsPage implements TemplateInterface {
           </div>
           <?php echo BracketsCommon::public_bracket_list([
             'tags' => [PartialsContants::BMB_OFFICIAL],
+            'paged_status' => get_query_var(
+              'status',
+              BracketQueryTypes::FILTER_ALL
+            ),
           ]); ?>
         </div>
       </div>

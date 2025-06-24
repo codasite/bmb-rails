@@ -101,7 +101,7 @@ class BracketBoardPage implements TemplateInterface {
 
     $featured_brackets = BracketsCommon::get_public_brackets([
       'tags' => [PartialsContants::BMB_OFFICIAL],
-      'status' => PartialsContants::ALL_STATUS,
+      'paged_status' => BracketQueryTypes::FILTER_ALL,
       'posts_per_page' => $this->settings_service->get_featured_brackets_count(),
     ]);
 
