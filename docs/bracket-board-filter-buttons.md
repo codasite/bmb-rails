@@ -30,6 +30,7 @@ Implement filter buttons in BracketBoardPage similar to TournamentsPage, using t
    - ✅ Removed all duplicated filter logic
    - ✅ Maintains same functionality with cleaner code
    - ✅ **Improved**: Uses consolidated FilterPageService initialization
+   - ✅ **Enhanced**: Filter buttons now include jump links to bypass Featured section
 
 5. **`plugin/Public/Partials/dashboard/TournamentsPage.php`** ✅
    - ✅ Refactored to use FilterPageService
@@ -161,6 +162,7 @@ class TournamentsPage {
    - Removed duplicated filter logic
    - Maintains same functionality with cleaner code
    - ✅ **Improved**: Uses consolidated FilterPageService initialization
+   - ✅ **Enhanced**: Filter buttons now include jump links to bypass Featured section
 
 2. **`plugin/Public/Partials/dashboard/TournamentsPage.php`** ✅
    - Refactored to use FilterPageService

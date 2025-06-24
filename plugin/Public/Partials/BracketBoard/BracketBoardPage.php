@@ -88,7 +88,8 @@ class BracketBoardPage implements TemplateInterface {
    * Generate filtered URL for a given status
    */
   public function get_filtered_url(string $status): string {
-    return add_query_arg('status', $status, get_permalink());
+    return add_query_arg('status', $status, get_permalink()) .
+      '#wpbb-user-brackets';
   }
 
   public function render_header(): string {
@@ -128,7 +129,7 @@ class BracketBoardPage implements TemplateInterface {
 
                 <!-- All Brackets Section -->
                 <div class="tw-flex tw-flex-col">
-                    <h2 id="wpbb-user-brackets" class="tw-text-36 md:tw-text-48 tw-font-700 tw-pt-60">User Brackets</h2>
+                    <h2 id="wpbb-user-brackets" class="tw-text-36 md:tw-text-48 tw-font-700 tw-pt-60 tw-scroll-mt-5">User Brackets</h2>
                     <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
                         <?php echo $this->filter_service->render_filter_buttons(); ?>
                     </div>
