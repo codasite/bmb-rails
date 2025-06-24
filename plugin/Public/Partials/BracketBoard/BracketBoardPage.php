@@ -40,7 +40,7 @@ class BracketBoardPage implements TemplateInterface {
       'label' => 'Upcoming',
       'color' => 'yellow',
       'show_circle' => true,
-      'fill_circle' => true,
+      'fill_circle' => false,
     ],
     [
       'paged_status' => BracketQueryTypes::FILTER_SCORED,
