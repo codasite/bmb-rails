@@ -20,9 +20,6 @@ use WStrategies\BMB\Includes\Service\TournamentFilter\Public\PublicBracketsQuery
 use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 
 class BracketBoardPage implements TemplateInterface {
-  private BracketRepo $bracket_repo;
-  private PlayRepo $play_repo;
-  private RequestService $request_service;
   private SettingsService $settings_service;
   private PublicBracketsQuery $brackets_query;
   private FilterPageService $filter_service;
@@ -43,13 +40,6 @@ class BracketBoardPage implements TemplateInterface {
       'fill_circle' => false,
     ],
     [
-      'paged_status' => BracketQueryTypes::FILTER_IN_PROGRESS,
-      'label' => 'In Progress',
-      'color' => 'blue',
-      'show_circle' => true,
-      'fill_circle' => true,
-    ],
-    [
       'paged_status' => BracketQueryTypes::FILTER_COMPLETED,
       'label' => 'Completed',
       'color' => 'white',
@@ -59,9 +49,6 @@ class BracketBoardPage implements TemplateInterface {
   ];
 
   public function __construct(array $args = []) {
-    $this->bracket_repo = $args['bracket_repo'] ?? new BracketRepo();
-    $this->play_repo = $args['play_repo'] ?? new PlayRepo();
-    $this->request_service = $args['request_service'] ?? new RequestService();
     $this->settings_service =
       $args['settings_service'] ?? new SettingsService();
     $this->brackets_query =
