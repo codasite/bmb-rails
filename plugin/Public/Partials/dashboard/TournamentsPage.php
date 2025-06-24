@@ -155,9 +155,9 @@ class TournamentsPage implements TemplateInterface {
             ); ?>
           </div>
           <?php echo $this->filter_service->render_filter_buttons(); ?>
-            <div class="tw-flex tw-flex-col tw-gap-15">
+            <div>
               <div id="wpbb-tournaments-modals"></div>
-              <div id="wpbb-tournaments-list-container">
+              <div id="wpbb-tournaments-list-container" class="tw-flex tw-flex-col tw-gap-15">
                 <?php foreach ($brackets as $bracket) {
                   echo BracketListItem::bracket_list_item($bracket);
                 } ?>
