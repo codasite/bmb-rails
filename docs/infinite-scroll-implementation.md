@@ -199,7 +199,7 @@ PHP Templates:
   - Data loading: Tournament status
   - State: None
 
-- [ ] MoreOptionsModal
+- [X] MoreOptionsModal
   - Button class: `wpbb-more-options-button`
   - Dependencies: All other modals
   - Data loading: Bracket status
@@ -261,9 +261,9 @@ PHP Templates:
 - [x] Update button class names
 - [x] Centralize modal state management
 - [x] Implement consistent data loading
-- [ ] Update all modals to use new pattern
-- [ ] Test all modal interactions
-- [ ] Verify infinite scroll compatibility
-- [ ] Update documentation
+- [X] Update all modals to use new pattern
+- [X] Test all modal interactions
+- [X] Verify infinite scroll compatibility
+- [X] Update documentation
 - [X] PublishBracketModal: Verify userCanShareBracket redirects to goLiveUrl if true, shows modal if false
-- [ ] Test upcoming notification modals on public bracket page
+- [X] Test upcoming notification modals on public bracket page
