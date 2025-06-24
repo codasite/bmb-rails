@@ -50,6 +50,9 @@ class DashboardPageTest extends TestCase {
     WP_Mock::userFunction('wp_get_current_user', [
       'return' => (object) ['ID' => 1],
     ]);
+    WP_Mock::userFunction('add_query_arg', [
+      'return' => 'http://example.com?test=value',
+    ]);
   }
 
   public function test_render_dashboard() {
