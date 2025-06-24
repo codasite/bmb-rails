@@ -84,11 +84,20 @@ class TournamentsPage implements TemplateInterface {
    * Generate filtered URL for a given status
    */
   public function get_filtered_url(string $status): string {
-    return get_permalink() .
-      'tournaments?role=' .
-      $this->role .
-      '&status=' .
-      $status;
+    return add_query_arg(
+      ['tab' => 'tournaments', 'role' => $this->role, 'status' => $status],
+      get_permalink(get_page_by_path('dashboard'))
+    );
+  }
+
+  /**
+   * Generate filtered URL for role buttons (hosting/playing)
+   */
+  public function get_role_filtered_url(string $role, string $status): string {
+    return add_query_arg(
+      ['tab' => 'tournaments', 'role' => $role, 'status' => $status],
+      get_permalink(get_page_by_path('dashboard'))
+    );
   }
 
   public function get_role_link(string $label, bool $active, string $url) {
@@ -133,12 +142,18 @@ class TournamentsPage implements TemplateInterface {
             <?php echo $this->get_role_link(
               'Playing',
               $this->role === 'playing',
-              $this->get_filtered_url('playing')
+              $this->get_role_filtered_url(
+                'playing',
+                $this->filter_service->get_paged_status()
+              )
             ); ?>
             <?php echo $this->get_role_link(
               'Hosting',
               $this->role === 'hosting',
-              $this->get_filtered_url('hosting')
+              $this->get_role_filtered_url(
+                'hosting',
+                $this->filter_service->get_paged_status()
+              )
             ); ?>
           </div>
           <?php echo $this->filter_service->render_filter_buttons(); ?>

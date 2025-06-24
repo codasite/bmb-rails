@@ -33,6 +33,7 @@ Implement filter buttons in BracketBoardPage similar to TournamentsPage, using t
    - ✅ Reduced from ~200 lines to ~100 lines
    - ✅ Removed all duplicated filter logic
    - ✅ Maintains role-specific functionality
+   - ✅ **Resolved**: URL generation method separation for role vs filter buttons
 
 ### ✅ Implementation Complete!
 - All core functionality implemented and tested
@@ -72,6 +73,46 @@ After initial implementation, we had significant duplication between:
 - **Consistent behavior** - all filter pages work the same way
 - **Easy to extend** - new filter pages just use the service
 - **Clean separation** - common logic in service, page-specific logic in pages
+
+## ✅ Resolved: URL Generation Conflict
+
+### Problem (RESOLVED):
+The `get_filtered_url` method was originally designed for both:
+- **Role buttons** (hosting/playing) - needs `role` and `status` parameters
+- **Filter buttons** (live/upcoming/etc) - only needs `status` parameter
+
+When refactored for the filter service, it now only takes `status` and uses instance `$this->role`, breaking the role button functionality.
+
+### ✅ Solution Implemented: Separate URL Generation Methods
+Created two distinct methods to handle different URL generation needs:
+
+```php
+class TournamentsPage {
+  // For filter service (status-only URLs)
+  public function get_filtered_url(string $status): string {
+    return add_query_arg(
+      ['tab' => 'tournaments', 'role' => $this->role, 'status' => $status],
+      get_permalink(get_page_by_path('dashboard'))
+    );
+  }
+  
+  // For role buttons (role + status URLs)
+  public function get_role_filtered_url(string $role, string $status): string {
+    return add_query_arg(
+      ['tab' => 'tournaments', 'role' => $role, 'status' => $status],
+      get_permalink(get_page_by_path('dashboard'))
+    );
+  }
+}
+```
+
+**Benefits Achieved**:
+- ✅ **Maintains filter service integration** - `get_filtered_url` works for filter buttons
+- ✅ **Preserves role button functionality** - `get_role_filtered_url` works for hosting/playing buttons
+- ✅ **Clear separation of concerns** - each method has a single responsibility
+- ✅ **Minimal code duplication** - both methods use similar logic but different parameters
+- ✅ **Easy to understand** - method names clearly indicate their purpose
+- ✅ **Proper URL structure** - uses `add_query_arg` with correct dashboard page permalink
 
 ## New Files Created:
 
@@ -118,6 +159,7 @@ After initial implementation, we had significant duplication between:
    - Refactored to use FilterPageService
    - Removed duplicated filter logic
    - Maintains role-specific functionality
+   - ✅ **Resolved**: URL generation method separation for role vs filter buttons
 
 3. **`plugin/Public/Partials/shared/FilterButton.php`**
    - No changes needed - already works with `TournamentFilterInterface`
@@ -155,3 +197,8 @@ The implementation follows the same pattern as `TournamentsPage` but adapted for
 **Key Decision**: Chose the service-based approach (Option 2) over abstract base class or traits for maximum flexibility and clean separation of concerns.
 
 **Result**: Successfully eliminated ~170 lines of duplicated code while maintaining all functionality and improving maintainability through the `FilterPageService`.
+
+**✅ All Issues Resolved**: 
+- URL generation method separation successfully implemented to handle both role buttons (hosting/playing) and filter buttons (live/upcoming/etc) without breaking either functionality
+- Service-based refactoring eliminates code duplication while maintaining flexibility
+- Both pages maintain full functionality with cleaner, more maintainable code 
