@@ -115,7 +115,7 @@ class BracketBoardPage implements TemplateInterface {
             <div class="tw-flex tw-flex-col tw-max-w-[1160px] tw-m-auto">
                 <!-- Featured Section -->
                 <div class="tw-flex tw-flex-col tw-gap-30">
-                    <h2 class="tw-text-36 md:tw-text-48 tw-font-700">Featured</h2>
+                    <h2 id="wpbb-featured-brackets" class="tw-text-36 md:tw-text-48 tw-font-700">Featured</h2>
                     <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10 md:[&>*]:tw-h-full">
                         <?php foreach (
                           $featured_brackets['brackets']
@@ -128,7 +128,7 @@ class BracketBoardPage implements TemplateInterface {
 
                 <!-- All Brackets Section -->
                 <div class="tw-flex tw-flex-col">
-                    <h2 class="tw-text-36 md:tw-text-48 tw-font-700 tw-pt-60">User Brackets</h2>
+                    <h2 id="wpbb-user-brackets" class="tw-text-36 md:tw-text-48 tw-font-700 tw-pt-60">User Brackets</h2>
                     <div class="tw-flex tw-gap-10 tw-py-24 tw-flex-wrap">
                         <?php echo $this->filter_service->render_filter_buttons(); ?>
                     </div>
