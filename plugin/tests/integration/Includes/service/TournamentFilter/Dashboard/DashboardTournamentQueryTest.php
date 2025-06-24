@@ -1,11 +1,12 @@
 <?php
 namespace WStrategies\BMB\tests\integration\Includes\service\TournamentFilter\Dashboard;
 
-use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\Infrastructure\NotificationSubscriptionRepo;
+use WStrategies\BMB\Features\Notifications\Domain\NotificationSubscription;
 use WStrategies\BMB\Features\Notifications\Domain\NotificationType;
 use WStrategies\BMB\Includes\Service\TournamentFilter\Dashboard\DashboardTournamentsQuery;
 use WStrategies\BMB\tests\integration\WPBB_UnitTestCase;
+use WStrategies\BMB\Features\Bracket\Domain\BracketQueryTypes;
 
 class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
   public function test_get_live_hosted_brackets() {
@@ -34,8 +35,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'live', 'hosting');
-    $count = $service->get_tournaments_count('live', 'hosting');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_LIVE,
+      'hosting'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_LIVE,
+      'hosting'
+    );
 
     $this->assertCount(2, $brackets);
     $this->assertEquals(2, $count);
@@ -70,8 +79,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'private', 'hosting');
-    $count = $service->get_tournaments_count('private', 'hosting');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_PRIVATE,
+      'hosting'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_PRIVATE,
+      'hosting'
+    );
 
     $this->assertCount(1, $brackets);
     $this->assertEquals(1, $count);
@@ -105,8 +122,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'upcoming', 'hosting');
-    $count = $service->get_tournaments_count('upcoming', 'hosting');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_UPCOMING,
+      'hosting'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_UPCOMING,
+      'hosting'
+    );
 
     $this->assertCount(1, $brackets);
     $this->assertEquals(1, $count);
@@ -145,8 +170,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
 
-    $brackets = $service->get_tournaments(1, 10, 'complete', 'hosting');
-    $count = $service->get_tournaments_count('complete', 'hosting');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_COMPLETED,
+      'hosting'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_COMPLETED,
+      'hosting'
+    );
 
     $this->assertCount(1, $brackets);
     $this->assertEquals(1, $count);
@@ -200,8 +233,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'all', 'playing');
-    $count = $service->get_tournaments_count('all', 'playing');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_ALL,
+      'playing'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_ALL,
+      'playing'
+    );
 
     $this->assertCount(4, $brackets);
     $this->assertEquals(4, $count);
@@ -223,8 +264,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'all', 'playing');
-    $count = $service->get_tournaments_count('all', 'playing');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_ALL,
+      'playing'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_ALL,
+      'playing'
+    );
 
     $this->assertCount(1, $brackets);
     $this->assertEquals(1, $count);
@@ -260,8 +309,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'live', 'playing');
-    $count = $service->get_tournaments_count('live', 'playing');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_LIVE,
+      'playing'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_LIVE,
+      'playing'
+    );
 
     $this->assertCount(2, $brackets);
     $this->assertEquals(2, $count);
@@ -297,8 +354,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'complete', 'playing');
-    $count = $service->get_tournaments_count('complete', 'playing');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_COMPLETED,
+      'playing'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_COMPLETED,
+      'playing'
+    );
 
     $this->assertCount(1, $brackets);
     $this->assertEquals(1, $count);
@@ -345,8 +410,16 @@ class DashboardTournamentQueryTest extends WPBB_UnitTestCase {
 
     wp_set_current_user($user->ID);
     $service = new DashboardTournamentsQuery();
-    $brackets = $service->get_tournaments(1, 10, 'upcoming', 'playing');
-    $count = $service->get_tournaments_count('upcoming', 'playing');
+    $brackets = $service->get_tournaments(
+      1,
+      10,
+      BracketQueryTypes::FILTER_UPCOMING,
+      'playing'
+    );
+    $count = $service->get_tournaments_count(
+      BracketQueryTypes::FILTER_UPCOMING,
+      'playing'
+    );
 
     $this->assertCount(1, $brackets);
     $this->assertEquals(1, $count);
