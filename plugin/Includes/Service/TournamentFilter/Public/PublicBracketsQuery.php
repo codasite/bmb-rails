@@ -19,7 +19,13 @@ class PublicBracketsQuery {
   }
 
   public function status_is_valid(string $status): bool {
-    return BracketQueryTypes::isValidFilter($status);
+    $allowed_filters = [
+      BracketQueryTypes::FILTER_LIVE,
+      BracketQueryTypes::FILTER_UPCOMING,
+      BracketQueryTypes::FILTER_COMPLETED,
+    ];
+
+    return in_array($status, $allowed_filters);
   }
 
   public function get_brackets(
