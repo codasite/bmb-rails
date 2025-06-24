@@ -57,6 +57,9 @@ class TournamentsPage implements TemplateInterface {
     $role = get_query_var('role', self::$DEFAULT_ROLE);
     $this->role = $role;
 
+    // Initialize filter service with query vars
+    $this->filter_service->init();
+
     // Initialize filters using the service
     $this->filter_service->init_filters(
       self::$filter_data,
@@ -85,8 +88,8 @@ class TournamentsPage implements TemplateInterface {
    */
   public function get_filtered_url(string $status): string {
     return add_query_arg(
-      ['tab' => 'tournaments', 'role' => $this->role, 'status' => $status],
-      get_permalink(get_page_by_path('dashboard'))
+      ['role' => $this->role, 'status' => $status],
+      get_permalink() . 'tournaments'
     );
   }
 
@@ -95,8 +98,8 @@ class TournamentsPage implements TemplateInterface {
    */
   public function get_role_filtered_url(string $role, string $status): string {
     return add_query_arg(
-      ['tab' => 'tournaments', 'role' => $role, 'status' => $status],
-      get_permalink(get_page_by_path('dashboard'))
+      ['role' => $role, 'status' => $status],
+      get_permalink() . 'tournaments'
     );
   }
 

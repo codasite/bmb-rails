@@ -11,7 +11,10 @@ class FilterPageService {
   private array $filter_buttons = [];
   private array $filters = [];
 
-  public function __construct() {
+  /**
+   * Initialize the filter service with query vars
+   */
+  public function init() {
     $this->paged = (int) get_query_var('paged')
       ? absint(get_query_var('paged'))
       : 1;

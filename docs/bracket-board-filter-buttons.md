@@ -91,16 +91,16 @@ class TournamentsPage {
   // For filter service (status-only URLs)
   public function get_filtered_url(string $status): string {
     return add_query_arg(
-      ['tab' => 'tournaments', 'role' => $this->role, 'status' => $status],
-      get_permalink(get_page_by_path('dashboard'))
+      ['role' => $this->role, 'status' => $status],
+      get_permalink() . 'tournaments'
     );
   }
   
   // For role buttons (role + status URLs)
   public function get_role_filtered_url(string $role, string $status): string {
     return add_query_arg(
-      ['tab' => 'tournaments', 'role' => $role, 'status' => $status],
-      get_permalink(get_page_by_path('dashboard'))
+      ['role' => $role, 'status' => $status],
+      get_permalink() . 'tournaments'
     );
   }
 }
@@ -112,7 +112,7 @@ class TournamentsPage {
 - ✅ **Clear separation of concerns** - each method has a single responsibility
 - ✅ **Minimal code duplication** - both methods use similar logic but different parameters
 - ✅ **Easy to understand** - method names clearly indicate their purpose
-- ✅ **Proper URL structure** - uses `add_query_arg` with correct dashboard page permalink
+- ✅ **Correct URL structure** - uses `/dashboard/tournaments?role=X&status=Y` format with "tournaments" as part of the path
 
 ## New Files Created:
 
@@ -200,5 +200,6 @@ The implementation follows the same pattern as `TournamentsPage` but adapted for
 
 **✅ All Issues Resolved**: 
 - URL generation method separation successfully implemented to handle both role buttons (hosting/playing) and filter buttons (live/upcoming/etc) without breaking either functionality
+- **Correct URL structure** - uses `/dashboard/tournaments?role=X&status=Y` format with "tournaments" as part of the path
 - Service-based refactoring eliminates code duplication while maintaining flexibility
-- Both pages maintain full functionality with cleaner, more maintainable code 
+- Both pages maintain full functionality with cleaner, more maintainable code
