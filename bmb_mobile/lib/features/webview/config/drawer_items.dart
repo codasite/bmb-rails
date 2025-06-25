@@ -8,14 +8,9 @@ final List<DrawerItem> drawerItems = [
     path: '/',
   ),
   DrawerItem(
-    iconPath: getIconPath('bmb'),
-    label: 'BMB Brackets',
-    path: '/bmb-brackets/',
-  ),
-  DrawerItem(
-    iconPath: getIconPath('eye'),
-    label: 'Celebrity Picks',
-    path: '/celebrity-picks/',
+    iconPath: getIconPath('clock'),
+    label: 'Play History',
+    path: '/dashboard/play-history/',
   ),
   DrawerItem(
     iconPath: getIconPath('currency_dollar'),
