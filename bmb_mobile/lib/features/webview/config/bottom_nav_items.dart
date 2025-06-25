@@ -13,6 +13,7 @@ final List<NavigationItem> bottomNavItems = [
     shortLabel: 'Tournaments',
     label: 'Tournaments',
     path: '/tournaments/',
+    isInitial: true,
   ),
   NavigationItem(
     iconPath: getIconPath('signal'),
