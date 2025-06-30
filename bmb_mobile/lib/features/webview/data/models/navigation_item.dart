@@ -3,13 +3,13 @@ class NavigationItem {
   final String label;
   final String shortLabel;
   final String path;
-  final String slug;
+  final bool isInitial;
 
   NavigationItem({
     required this.iconPath,
     required this.label,
     required this.shortLabel,
     required this.path,
-    required this.slug,
+    this.isInitial = false,
   });
 }

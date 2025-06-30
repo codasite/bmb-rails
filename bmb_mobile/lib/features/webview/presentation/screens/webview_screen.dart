@@ -219,7 +219,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
         return;
       }
     }
-    await _loadUrl('/dashboard/tournaments/');
+    
+    // Find the initial navigation item or use the first one as fallback
+    final initialItem = _pages.firstWhere(
+      (item) => item.isInitial,
+      orElse: () => _pages.first,
+    );
+    await _loadUrl(initialItem.path);
+    
+    // Set the initial selected index to match the initial item
+    final initialIndex = _pages.indexWhere((item) => item.isInitial);
+    if (initialIndex != -1) {
+      setState(() {
+        _selectedIndex = initialIndex;
+      });
+    }
   }
 
   Future<bool> _handleBackPress() async {

@@ -9,13 +9,8 @@ final List<DrawerItem> drawerItems = [
   ),
   DrawerItem(
     iconPath: getIconPath('bmb'),
-    label: 'BMB Brackets',
-    path: '/bmb-brackets/',
-  ),
-  DrawerItem(
-    iconPath: getIconPath('eye'),
-    label: 'Celebrity Picks',
-    path: '/celebrity-picks/',
+    label: 'Bracket Builder',
+    path: '/bracket-builder/',
   ),
   DrawerItem(
     iconPath: getIconPath('currency_dollar'),
