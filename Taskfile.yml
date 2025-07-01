@@ -285,7 +285,7 @@ tasks:
     desc: Clean ios files
     dir: ./bmb_mobile
     cmds:
-      - flutter clean && flutter pub get && rm -rf ios/Pods ios/Podfile.lock ; pod install --project-directory=ios
+      - flutter clean && flutter pub get && rm -rf ios/Pods ios/Podfile.lock build ios/build; pod install --project-directory=ios
 
   ios:build:
     desc: Build iOS mobile app
