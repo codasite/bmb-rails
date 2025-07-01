@@ -64,7 +64,7 @@ class UserProfilePage implements TemplateInterface {
       'paged_status' => get_query_var('status', BracketQueryTypes::FILTER_ALL),
     ]); ?>
 			</div>
-			<div id='wpbb-public-bracket-modals'></div>
+			<div id='wpbb-tournaments-modals'></div>
 		</div>
 		<?php return ob_get_clean();
   }

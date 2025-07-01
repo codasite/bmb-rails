@@ -110,9 +110,10 @@ class BracketBoardPage implements TemplateInterface {
         <div class="wpbb-faded-bracket-bg tw-py-30 md:tw-py-60 tw-px-20">
             <div class="tw-flex tw-flex-col tw-max-w-[1160px] tw-m-auto">
                 <!-- Featured Section -->
+                <div id="wpbb-tournaments-modals"></div>
                 <div class="tw-flex tw-flex-col tw-gap-30">
                     <h2 id="wpbb-featured-brackets" class="tw-text-36 md:tw-text-48 tw-font-700">Featured</h2>
-                    <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10 md:[&>*]:tw-h-full">
+                    <div id="wpbb-tournaments-list-container" class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-10 md:[&>*]:tw-h-full">
                         <?php foreach (
                           $featured_brackets['brackets']
                           as $bracket
@@ -144,7 +145,6 @@ class BracketBoardPage implements TemplateInterface {
                 <?php echo $this->render_header(); ?>
                 <?php echo $this->render_content(); ?>
             </div>
-            <div id='wpbb-public-bracket-modals'></div>
         </div>
         <?php return ob_get_clean();
   }

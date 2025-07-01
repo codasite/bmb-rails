@@ -72,9 +72,8 @@ if (Object.keys(appObj).length !== 0) {
   renderUpdateBracketResultsPage(appObj)
   renderViewBracketResultsPage(appObj)
   renderViewBracketPlay(appObj)
-  renderMyBracketsModals(appObj)
+  renderTournamentModals(appObj)
   renderBustBracketPlay(appObj)
-  // renderPublicBracketsModals(appObj)
   renderStripeOnboardingRedirect(appObj)
   renderGoLivePage(appObj)
   renderMostPopularPicks(appObj)
@@ -215,20 +214,12 @@ function renderProductPreview(_appObj: WpbbAppObj) {
     'wpbb-product-preview'
   )
 }
-function renderMyBracketsModals(appObj: WpbbAppObj) {
+function renderTournamentModals(appObj: WpbbAppObj) {
   renderDiv(
     <>
       <TournamentModals appObj={appObj} />
     </>,
     'wpbb-tournaments-modals'
-  )
-}
-function renderPublicBracketsModals(appObj: WpbbAppObj) {
-  renderDiv(
-    <>
-      <TournamentModals appObj={appObj} />
-    </>,
-    'wpbb-public-bracket-modals'
   )
 }
 
