@@ -31,22 +31,19 @@ class BracketListRenderer {
     }
 
     ob_start();
-
-    // Render bracket list
-    echo '<div class="tw-flex tw-flex-col tw-gap-15">';
-    foreach ($brackets as $bracket) {
-      echo BracketListItem::bracket_list_item($bracket);
-    }
-    echo '</div>';
-
-    // Render pagination if provided
-    if (!empty($pagination)) {
+    ?>
+    <div id="wpbb-tournaments-modals"></div>
+    <div id="wpbb-tournaments-list-container" class="tw-flex tw-flex-col tw-gap-15">
+      <?php foreach ($brackets as $bracket) {
+        echo BracketListItem::bracket_list_item($bracket);
+      } ?>
+    </div>
+    <?php if (!empty($pagination)) {
       PaginationWidget::pagination(
         $pagination['current_page'] ?? 1,
         $pagination['num_pages'] ?? 1
       );
-    }
-
-    return ob_get_clean();
+    } ?>
+    <?php return ob_get_clean();
   }
 }
