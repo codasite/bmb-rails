@@ -13,6 +13,7 @@ use WStrategies\BMB\Includes\Service\Serializer\BracketMatchSerializer;
 use WStrategies\BMB\Includes\Domain\Bracket;
 use WStrategies\BMB\Includes\Domain\BracketMatch;
 use WStrategies\BMB\Includes\Domain\Team;
+use WStrategies\BMB\Includes\Domain\WildcardPlacement;
 
 /**
  * Manages brackets through WP-CLI commands.
@@ -417,7 +418,9 @@ class BracketCommand {
     try {
       // Parse and validate arguments
       $num_teams = (int) ($assoc_args['teams'] ?? 8);
-      $wildcard_placement_str = strtolower($assoc_args['wildcard-placement'] ?? 'split');
+      $wildcard_placement_str = strtolower(
+        $assoc_args['wildcard-placement'] ?? 'split'
+      );
       $title = $assoc_args['title'] ?? 'Test Bracket';
       $month = $assoc_args['month'] ?? strtoupper(date('F'));
       $year = $assoc_args['year'] ?? date('Y');
@@ -433,13 +436,17 @@ class BracketCommand {
       }
 
       // Validate wildcard placement
-      if (!array_key_exists($wildcard_placement_str, BracketRepo::WILDCARD_PLACEMENT_OPTIONS)) {
-        $valid_options = implode(', ', array_keys(BracketRepo::WILDCARD_PLACEMENT_OPTIONS));
-        WP_CLI::error("Invalid wildcard placement '{$wildcard_placement_str}'. Valid options: {$valid_options}");
+      if (
+        !array_key_exists($wildcard_placement_str, WildcardPlacement::OPTIONS)
+      ) {
+        $valid_options = implode(', ', array_keys(WildcardPlacement::OPTIONS));
+        WP_CLI::error(
+          "Invalid wildcard placement '{$wildcard_placement_str}'. Valid options: {$valid_options}"
+        );
         return;
       }
 
-      $wildcard_placement = BracketRepo::WILDCARD_PLACEMENT_OPTIONS[$wildcard_placement_str];
+      $wildcard_placement = WildcardPlacement::OPTIONS[$wildcard_placement_str];
 
       // Generate matches
       $matches = $this->generateMatches($num_teams);

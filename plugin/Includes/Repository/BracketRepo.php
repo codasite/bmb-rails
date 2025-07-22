@@ -11,18 +11,6 @@ use WStrategies\BMB\Includes\Service\BracketLeaderboardService;
 use WStrategies\BMB\Includes\Service\BracketProduct\BracketProductUtils;
 
 class BracketRepo extends CustomPostRepoBase implements CustomTableInterface {
-  const WILDCARD_PLACEMENT_TOP = 0;
-  const WILDCARD_PLACEMENT_BOTTOM = 1;
-  const WILDCARD_PLACEMENT_CENTER = 2;
-  const WILDCARD_PLACEMENT_SPLIT = 3;
-  
-  const WILDCARD_PLACEMENT_OPTIONS = [
-    'top' => self::WILDCARD_PLACEMENT_TOP,
-    'bottom' => self::WILDCARD_PLACEMENT_BOTTOM,
-    'center' => self::WILDCARD_PLACEMENT_CENTER,
-    'split' => self::WILDCARD_PLACEMENT_SPLIT,
-  ];
-
   private TeamRepo $team_repo;
   private BracketMatchRepo $match_repo;
   private BracketResultsRepo $results_repo;
