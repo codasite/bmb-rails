@@ -10,6 +10,9 @@ use WStrategies\BMB\Includes\Repository\BracketMatchRepo;
 use WStrategies\BMB\Includes\Repository\TeamRepo;
 use WStrategies\BMB\Includes\Service\Serializer\BracketSerializer;
 use WStrategies\BMB\Includes\Service\Serializer\BracketMatchSerializer;
+use WStrategies\BMB\Includes\Domain\Bracket;
+use WStrategies\BMB\Includes\Domain\BracketMatch;
+use WStrategies\BMB\Includes\Domain\Team;
 
 /**
  * Manages brackets through WP-CLI commands.
@@ -325,5 +328,193 @@ class BracketCommand {
     } catch (\Exception $e) {
       WP_CLI::error($e->getMessage());
     }
+  }
+
+  /**
+   * Generates a test bracket with generic team names.
+   *
+   * ## OPTIONS
+   *
+   * [--teams=<number>]
+   * : Number of teams in the bracket
+   * ---
+   * default: 8
+   * ---
+   *
+   * [--wildcard-placement=<placement>]
+   * : Where to place wildcard/play-in games when team count is not a power of 2
+   * ---
+   * default: split
+   * options:
+   *   - top
+   *   - bottom
+   *   - center
+   *   - split
+   * ---
+   *
+   * [--title=<title>]
+   * : The title for the bracket
+   * ---
+   * default: Test Bracket
+   * ---
+   *
+   * [--month=<month>]
+   * : The month for the bracket
+   * ---
+   * default: current month
+   * ---
+   *
+   * [--year=<year>]
+   * : The year for the bracket
+   * ---
+   * default: current year
+   * ---
+   *
+   * [--author=<author_id>]
+   * : The WordPress user ID to set as the bracket author
+   * ---
+   * default: 1
+   * ---
+   *
+   * [--status=<status>]
+   * : The status to set for the bracket
+   * ---
+   * default: private
+   * options:
+   *   - publish
+   *   - private
+   *   - draft
+   * ---
+   *
+   * [--is-voting]
+   * : Create a voting bracket
+   *
+   * [--fee=<amount>]
+   * : Entry fee for the bracket
+   * ---
+   * default: 0
+   * ---
+   *
+   * ## EXAMPLES
+   *
+   *     # Generate simple 8-team test bracket
+   *     $ wp wpbb bracket generate
+   *
+   *     # Generate 16-team bracket with custom title
+   *     $ wp wpbb bracket generate --teams=16 --title="March Madness Test"
+   *
+   *     # Generate bracket with play-in games at top
+   *     $ wp wpbb bracket generate --teams=12 --wildcard-placement=top
+   *
+   *     # Generate voting bracket with entry fee
+   *     $ wp wpbb bracket generate --teams=8 --is-voting --fee=10.00 --status=publish
+   *
+   * @param array $args
+   * @param array $assoc_args
+   */
+  public function generate($args, $assoc_args) {
+    // $args is intentionally unused - WP-CLI requires this parameter
+    try {
+      // Parse and validate arguments
+      $num_teams = (int) ($assoc_args['teams'] ?? 8);
+      $wildcard_placement_str = strtolower($assoc_args['wildcard-placement'] ?? 'split');
+      $title = $assoc_args['title'] ?? 'Test Bracket';
+      $month = $assoc_args['month'] ?? strtoupper(date('F'));
+      $year = $assoc_args['year'] ?? date('Y');
+      $author = (int) ($assoc_args['author'] ?? 1);
+      $status = $assoc_args['status'] ?? 'private';
+      $is_voting = isset($assoc_args['is-voting']);
+      $fee = (float) ($assoc_args['fee'] ?? 0);
+
+      // Validate team count
+      if ($num_teams < 2) {
+        WP_CLI::error('Number of teams must be at least 2.');
+        return;
+      }
+
+      // Validate wildcard placement
+      if (!array_key_exists($wildcard_placement_str, BracketRepo::WILDCARD_PLACEMENT_OPTIONS)) {
+        $valid_options = implode(', ', array_keys(BracketRepo::WILDCARD_PLACEMENT_OPTIONS));
+        WP_CLI::error("Invalid wildcard placement '{$wildcard_placement_str}'. Valid options: {$valid_options}");
+        return;
+      }
+
+      $wildcard_placement = BracketRepo::WILDCARD_PLACEMENT_OPTIONS[$wildcard_placement_str];
+
+      // Generate matches
+      $matches = $this->generateMatches($num_teams);
+
+      // Create bracket data
+      $bracket_data = [
+        'title' => $title,
+        'num_teams' => $num_teams,
+        'wildcard_placement' => $wildcard_placement,
+        'month' => $month,
+        'year' => $year,
+        'author' => $author,
+        'status' => $status,
+        'matches' => $matches,
+        'is_voting' => $is_voting,
+        'fee' => $fee,
+        'results' => [],
+        'most_popular_picks' => [],
+        'live_round_index' => 0,
+      ];
+
+      try {
+        $bracket = new Bracket($bracket_data);
+      } catch (ValidationException $e) {
+        WP_CLI::error(sprintf('Validation error: %s', $e->getMessage()));
+        return;
+      }
+
+      $saved = $this->bracket_repo->add($bracket);
+
+      if ($saved) {
+        WP_CLI::success(
+          sprintf(
+            'Generated bracket with ID: %d, Title: %s, Teams: %d, Wildcard: %s, Author: %d, Status: %s, URL: %s',
+            $saved->id,
+            $saved->title,
+            $saved->num_teams,
+            $wildcard_placement_str,
+            $saved->author,
+            $saved->status,
+            $saved->get_play_url()
+          )
+        );
+      } else {
+        WP_CLI::error('Failed to generate bracket');
+      }
+    } catch (\Exception $e) {
+      WP_CLI::error($e->getMessage());
+    }
+  }
+
+  /**
+   * Generate matches for a given number of teams.
+   * Based on BracketTestFactory::generateMatches()
+   *
+   * @param int $numberOfTeams
+   * @return array
+   */
+  private function generateMatches(int $numberOfTeams): array {
+    $matches = [];
+    $num_matches = $numberOfTeams / 2;
+
+    for ($i = 0; $i < $num_matches; $i++) {
+      $matches[] = new BracketMatch([
+        'round_index' => 0,
+        'match_index' => $i,
+        'team1' => new Team([
+          'name' => 'Team ' . ($i * 2 + 1),
+        ]),
+        'team2' => new Team([
+          'name' => 'Team ' . ($i * 2 + 2),
+        ]),
+      ]);
+    }
+
+    return $matches;
   }
 }
