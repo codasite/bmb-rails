@@ -776,11 +776,12 @@ packages:
   webview_cookie_manager:
     dependency: "direct main"
     description:
-      name: webview_cookie_manager
-      sha256: "425a9feac5cd2cb62a71da3dda5ac2eaf9ece5481ee8d79f3868dc5ba8223ad3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.6"
+      path: "."
+      ref: "23d7475d9b9ac29f3cc92e91ac8a78ecb733a54d"
+      resolved-ref: "23d7475d9b9ac29f3cc92e91ac8a78ecb733a54d"
+      url: "https://github.com/fryette/webview_cookie_manager"
+    source: git
+    version: "2.0.7"
   webview_flutter:
     dependency: "direct main"
     description:

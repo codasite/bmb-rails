@@ -37,7 +37,10 @@ dependencies:
   webview_flutter: ^4.10.0
   flutter_svg: ^2.0.16
   http: ^1.2.2
-  webview_cookie_manager: ^2.0.6
+  webview_cookie_manager:
+    git:
+       url: https://github.com/fryette/webview_cookie_manager
+       ref: 23d7475d9b9ac29f3cc92e91ac8a78ecb733a54d
   url_launcher: ^6.3.1
   shared_preferences: ^2.3.5
   flutter_native_splash: ^2.4.4
