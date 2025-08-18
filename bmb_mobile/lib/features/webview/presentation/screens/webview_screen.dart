@@ -46,6 +46,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   final List<NavigationItem> _pages = bottomNavItems;
 
+  int _getSelectedIndexFromUrl(String url) {
+    for (int i = 0; i < _pages.length; i++) {
+      if (url.contains(_pages[i].path)) {
+        return i;
+      }
+    }
+    return 0; // Default to first item if no match
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -135,6 +144,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
     if (!mounted) return;
     _setAppBarTitle();
     _updateCanGoBack();
+    
+    // Update selected navigation index based on current URL
+    final newSelectedIndex = _getSelectedIndexFromUrl(url);
+    if (_selectedIndex != newSelectedIndex) {
+      setState(() {
+        _selectedIndex = newSelectedIndex;
+      });
+    }
   }
 
   Future<void> _updateCanGoBack() async {
