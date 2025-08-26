@@ -88,7 +88,8 @@ class BracketListItem {
       case 'complete':
         return self::completed_bracket_buttons($bracket);
       case 'upcoming':
-        return BracketsCommon::public_bracket_upcoming_buttons($bracket);
+        // Keep Go Live button visible for upcoming so hosts can complete wizard later
+        return self::private_bracket_buttons($bracket);
       default:
         return '';
     }

@@ -1,5 +1,7 @@
-package com.example.bmb_mobile
+package com.backmybracket.app
 
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity: FlutterActivity()
+
+

@@ -24,13 +24,25 @@ export const SharePage = (props: GoLiveSubPageProps) => {
     >
       <SignalIcon />
       <div className="tw-flex tw-flex-col tw-gap-15 tw-items-center">
-        <H3>
-          <span className="tw-inline">Tournament is </span>
-          <span className="tw-inline !tw-text-green">live</span>
-        </H3>
-        <span className="tw-font-700 tw-text-14">
-          Share and play with friends!
-        </span>
+        {props.bracket.status === 'upcoming' ? (
+          <>
+            <H3>
+              <span className="tw-inline">Tournament is </span>
+              <span className="tw-inline !tw-text-yellow">upcoming</span>
+            </H3>
+            <span className="tw-font-700 tw-text-14">Share the preview link!</span>
+          </>
+        ) : (
+          <>
+            <H3>
+              <span className="tw-inline">Tournament is </span>
+              <span className="tw-inline !tw-text-green">live</span>
+            </H3>
+            <span className="tw-font-700 tw-text-14">
+              Share and play with friends!
+            </span>
+          </>
+        )}
       </div>
       <div className="tw-flex tw-flex-col md:tw-flex-row tw-w-full tw-gap-10">
         <CopyLinkButton playBracketUrl={playBracketUrl} onClick={() => {}} />
