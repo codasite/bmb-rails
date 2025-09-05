@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
   ...defaultConfig,
-  entry: './src/index.tsx',
+  entry: './src/railsEntry.tsx',
   output: {
     path: path.resolve(__dirname, '../app/assets/javascripts/react-bracket-builder'),
     filename: 'bundle.js',

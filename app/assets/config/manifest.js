@@ -3,3 +3,4 @@
 //= link_directory ../stylesheets .css
 //= link application.css
 //= link application.js
+//= link react-bracket-builder/bundle.js
