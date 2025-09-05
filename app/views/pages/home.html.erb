@@ -8,9 +8,7 @@
       </p>
 
       <div class="hero-actions">
-        <a href="#bracket-builder" class="btn btn-primary btn-large">
-          Start Building
-        </a>
+        <%= link_to "Start Building", new_bracket_path, class: "btn btn-primary btn-large" %>
         <a href="/about" class="btn btn-outline btn-large">
           Learn More
         </a>
@@ -73,9 +71,7 @@
     <div class="cta-content">
       <h2>Ready to Create Your First Bracket?</h2>
       <p>Join thousands of tournament organizers who trust Bracket Maker Builder.</p>
-      <a href="#bracket-builder" class="btn btn-primary btn-large">
-        Get Started Free
-      </a>
+      <%= link_to "Get Started Free", new_bracket_path, class: "btn btn-primary btn-large" %>
     </div>
   </div>
 </div>

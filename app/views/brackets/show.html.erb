@@ -1,0 +1,139 @@
+<div class="container py-4">
+  <div class="bracket-header mb-4">
+    <h1 class="bracket-title">🏆 <%= @bracket.title %></h1>
+    <p class="bracket-subtitle">Teams: <%= @bracket.num_teams %> | Date: <%= "#{@bracket.month} #{@bracket.year}" %></p>
+    <div class="mt-3">
+      <%= link_to '← Back to Brackets', brackets_path, class: 'btn btn-secondary btn-sm me-2' %>
+      <%= link_to 'Edit Bracket', edit_bracket_path(@bracket), class: 'btn btn-primary btn-sm' %>
+    </div>
+  </div>
+
+  <% if @bracket_matches.any? %>
+    <div class="bracket-tree">
+      <div class="bracket-container">
+        <% rounds = @bracket_matches.group_by(&:round) %>
+        <% max_round = rounds.keys.max %>
+        
+        <% rounds.keys.sort.each do |round_num| %>
+          <div class="bracket-round round-<%= round_num %> <%= 'final' if round_num == max_round %>">
+            <div class="round-title">
+              <% if round_num == max_round %>
+                🏆 Final
+              <% elsif round_num == max_round - 1 %>
+                🥇 Semifinal
+              <% elsif round_num == max_round - 2 %>
+                🥉 Quarterfinal
+              <% else %>
+                Round <%= round_num + 1 %>
+              <% end %>
+            </div>
+            
+            <div class="matches">
+              <% rounds[round_num].sort_by(&:position).each do |match| %>
+                <div class="bracket-match <%= 'completed' if match.winner.present? %> <%= 'empty' if !match.team1 && !match.team2 %>">
+                  <div class="team-slot <%= 'winner' if match.winner == match.team1 %> <%= 'tbd' if !match.team1 %>">
+                    <div class="team-info">
+                      <% if match.team1 %>
+                        <span class="seed"><%= match.team1.seed %></span>
+                        <span class="team-name"><%= match.team1.name %></span>
+                      <% else %>
+                        <span class="team-name">TBD</span>
+                      <% end %>
+                    </div>
+                    <% if match.winner == match.team1 %>
+                      <span class="winner-indicator">✓</span>
+                    <% end %>
+                  </div>
+                  
+                  <div class="team-slot <%= 'winner' if match.winner == match.team2 %> <%= 'tbd' if !match.team2 %>">
+                    <div class="team-info">
+                      <% if match.team2 %>
+                        <span class="seed"><%= match.team2.seed %></span>
+                        <span class="team-name"><%= match.team2.name %></span>
+                      <% else %>
+                        <span class="team-name">TBD</span>
+                      <% end %>
+                    </div>
+                    <% if match.winner == match.team2 %>
+                      <span class="winner-indicator">✓</span>
+                    <% end %>
+                  </div>
+                  
+                  <% if round_num < max_round %>
+                    <div class="vs-indicator">VS</div>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      
+      <% if @bracket_matches.any?(&:winner) %>
+        <% final_match = rounds[max_round]&.first %>
+        <% if final_match&.winner %>
+          <div class="winner-display">
+            <div class="winner-title">🏆 Tournament Champion</div>
+            <div class="winner-name"><%= final_match.winner.name %></div>
+            <div class="champion-seed">Seed #<%= final_match.winner.seed %></div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">
+        <h5 class="mb-0">Tournament Details</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-3">
+            <strong>Format:</strong> <%= @bracket.is_voting? ? 'Voting Bracket' : 'Tournament Bracket' %>
+          </div>
+          <div class="col-md-3">
+            <strong>Teams:</strong> <%= @bracket.num_teams %>
+          </div>
+          <div class="col-md-3">
+            <strong>Entry Fee:</strong> <%= @bracket.fee.present? ? "$#{@bracket.fee}" : 'Free' %>
+          </div>
+          <div class="col-md-3">
+            <strong>Status:</strong> 
+            <% if @bracket_matches.all?(&:winner) %>
+              <span class="badge bg-success">Complete</span>
+            <% elsif @bracket_matches.any?(&:winner) %>
+              <span class="badge bg-warning">In Progress</span>
+            <% else %>
+              <span class="badge bg-secondary">Not Started</span>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="alert alert-info">
+      <h5>Bracket Structure Not Generated</h5>
+      <p class="mb-0">The tournament structure hasn't been created yet. This might happen if the bracket was created through the API without proper team setup.</p>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.winner-indicator {
+  color: #4CAF50;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.champion-seed {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  color: #666;
+  font-weight: 500;
+}
+</style>

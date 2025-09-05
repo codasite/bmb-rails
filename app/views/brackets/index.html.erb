@@ -1,0 +1,61 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>🏆 Tournament Brackets</h1>
+    <%= link_to 'Create New Bracket', new_bracket_path, class: 'btn btn-primary' %>
+  </div>
+
+  <% if @brackets.any? %>
+    <div class="row">
+      <% @brackets.each do |bracket| %>
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">
+                <%= link_to bracket.title, bracket, class: "text-decoration-none" %>
+              </h5>
+              <p class="card-text">
+                <small class="text-muted">
+                  <%= bracket.month %> <%= bracket.year %>
+                </small>
+              </p>
+              <div class="mb-2">
+                <span class="badge bg-secondary"><%= bracket.num_teams %> teams</span>
+                <% if bracket.fee.present? && bracket.fee > 0 %>
+                  <span class="badge bg-success">$<%= bracket.fee %></span>
+                <% else %>
+                  <span class="badge bg-info">Free</span>
+                <% end %>
+                <% if bracket.is_voting %>
+                  <span class="badge bg-warning">Voting</span>
+                <% end %>
+              </div>
+              <p class="card-text">
+                <small class="text-muted">
+                  Created <%= time_ago_in_words(bracket.created_at) %> ago
+                </small>
+              </p>
+            </div>
+            <div class="card-footer bg-transparent">
+              <div class="btn-group w-100" role="group">
+                <%= link_to 'View', bracket, class: 'btn btn-outline-primary btn-sm' %>
+                <%= link_to 'Edit', edit_bracket_path(bracket), class: 'btn btn-outline-secondary btn-sm' %>
+                <%= link_to 'Delete', bracket, method: :delete, 
+                    confirm: 'Are you sure?', 
+                    class: 'btn btn-outline-danger btn-sm' %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-5">
+      <div class="mb-4">
+        <i class="fas fa-trophy fa-4x text-muted"></i>
+      </div>
+      <h3 class="text-muted">No brackets yet</h3>
+      <p class="text-muted mb-4">Create your first tournament bracket to get started!</p>
+      <%= link_to 'Create Your First Bracket', new_bracket_path, class: 'btn btn-primary btn-lg' %>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,262 @@
+/* Tournament Bracket Tree Styles */
+
+.bracket-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  margin: 2rem 0;
+  overflow-x: auto;
+}
+
+.bracket-container {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  position: relative;
+  min-width: max-content;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  position: relative;
+}
+
+.bracket-round.final {
+  gap: 0;
+}
+
+.round-title {
+  text-align: center;
+  color: white;
+  font-weight: 700;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.bracket-match {
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 0;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+  min-width: 200px;
+}
+
+.bracket-match:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.team-slot {
+  padding: 1rem;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.team-slot:last-child {
+  border-bottom: none;
+}
+
+.team-slot.winner {
+  background: rgba(76, 175, 80, 0.3);
+  color: #4CAF50;
+  font-weight: 700;
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.team-slot.tbd {
+  color: rgba(255, 255, 255, 0.5);
+  font-style: italic;
+}
+
+.seed {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-right: 0.5rem;
+}
+
+.vs-indicator {
+  position: absolute;
+  right: -15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.bracket-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.bracket-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+}
+
+.bracket-line.horizontal {
+  height: 3px;
+}
+
+.bracket-line.vertical {
+  width: 3px;
+}
+
+/* Winner Display */
+.winner-display {
+  background: linear-gradient(45deg, #FFD700, #FFA500);
+  border: 3px solid #FFD700;
+  border-radius: 15px;
+  padding: 2rem;
+  text-align: center;
+  color: #333;
+  box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3);
+  margin-top: 2rem;
+}
+
+.winner-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.winner-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .bracket-container {
+    gap: 2rem;
+  }
+  
+  .bracket-match {
+    min-width: 160px;
+  }
+  
+  .team-slot {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .bracket-tree {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+  
+  .bracket-container {
+    gap: 1.5rem;
+  }
+  
+  .bracket-match {
+    min-width: 140px;
+  }
+  
+  .team-slot {
+    padding: 0.6rem;
+    font-size: 0.75rem;
+  }
+  
+  .round-title {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .vs-indicator {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+    right: -12px;
+  }
+}
+
+/* Animation for match progression */
+@keyframes matchWin {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.bracket-match.completed {
+  animation: matchWin 0.6s ease-in-out;
+}
+
+/* Empty bracket slots */
+.bracket-match.empty {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.bracket-match.empty .team-slot {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Round-specific styling */
+.bracket-round.round-0 .bracket-match {
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+.bracket-round.round-1 .bracket-match {
+  border-color: rgba(156, 39, 176, 0.5);
+}
+
+.bracket-round.round-2 .bracket-match {
+  border-color: rgba(255, 152, 0, 0.5);
+}
+
+.bracket-round.final .bracket-match {
+  border-color: rgba(255, 193, 7, 0.8);
+  border-width: 3px;
+}

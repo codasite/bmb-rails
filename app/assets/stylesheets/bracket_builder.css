@@ -1,0 +1,314 @@
+/* Bracket Builder Enhanced Styles - Ported from WordPress */
+
+@import url('https://api.fontshare.com/css?f[]=clash-display@400,500,600,700&display=swap');
+
+:root {
+  --bmb-primary: #010433;
+  --bmb-secondary: #f8e11a;
+  --bmb-accent: #ff6c4c;
+  --bmb-success: #40ff6a;
+  --bmb-white: #ffffff;
+  --bmb-light-gray: #f8f9fa;
+  --bmb-border: rgba(255, 255, 255, 0.1);
+}
+
+/* Global Bracket Styles */
+.bracket-container {
+  font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, var(--bmb-primary) 0%, #1a1a2e 100%);
+  min-height: 100vh;
+  color: var(--bmb-white);
+}
+
+.bracket-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--bmb-border);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.bracket-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--bmb-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(248, 225, 26, 0.2);
+}
+
+.bracket-header {
+  background: linear-gradient(
+    151deg,
+    rgba(248, 225, 26, 0.7) 0%,
+    rgba(255, 108, 76, 0.5) 66.67%,
+    rgba(255, 31, 79, 0.15) 100%
+  );
+  border-radius: 16px 16px 0 0;
+  padding: 2rem;
+  text-align: center;
+}
+
+.bracket-title {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bracket-subtitle {
+  font-weight: 500;
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+/* Form Styling */
+.bracket-form {
+  padding: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--bmb-secondary);
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.form-control,
+.form-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  color: var(--bmb-white);
+  padding: 0.75rem 1rem;
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--bmb-secondary);
+  box-shadow: 0 0 0 3px rgba(248, 225, 26, 0.1);
+  color: var(--bmb-white);
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Team Input Styling */
+.team-input-container {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+.team-input-title {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 600;
+  color: var(--bmb-secondary);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+}
+
+.team-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--bmb-white);
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.team-input:focus {
+  border-color: var(--bmb-secondary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.seed-label {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Button Styling */
+.btn-bracket-primary {
+  background: linear-gradient(135deg, var(--bmb-secondary) 0%, var(--bmb-accent) 100%);
+  border: none;
+  color: var(--bmb-primary);
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(248, 225, 26, 0.3);
+}
+
+.btn-bracket-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(248, 225, 26, 0.4);
+  color: var(--bmb-primary);
+}
+
+.btn-bracket-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: var(--bmb-white);
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.btn-bracket-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--bmb-secondary);
+  color: var(--bmb-white);
+}
+
+/* Badge Styling */
+.bracket-badge {
+  background: rgba(248, 225, 26, 0.2);
+  color: var(--bmb-secondary);
+  border: 1px solid rgba(248, 225, 26, 0.3);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bracket-badge.success {
+  background: rgba(64, 255, 106, 0.2);
+  color: var(--bmb-success);
+  border-color: rgba(64, 255, 106, 0.3);
+}
+
+.bracket-badge.info {
+  background: rgba(108, 117, 255, 0.2);
+  color: #6c75ff;
+  border-color: rgba(108, 117, 255, 0.3);
+}
+
+/* Match Display */
+.bracket-match {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.3s ease;
+}
+
+.bracket-match:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--bmb-secondary);
+}
+
+.bracket-team {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 600;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.bracket-team.winner {
+  background: rgba(64, 255, 106, 0.2);
+  color: var(--bmb-success);
+  border: 1px solid rgba(64, 255, 106, 0.3);
+}
+
+.bracket-vs {
+  font-weight: 700;
+  color: var(--bmb-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.round-title {
+  font-family: 'Clash Display', sans-serif;
+  font-weight: 700;
+  color: var(--bmb-secondary);
+  text-transform: uppercase;
+  border-bottom: 2px solid rgba(248, 225, 26, 0.3);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .bracket-title {
+    font-size: 2rem;
+  }
+  
+  .bracket-header {
+    padding: 1.5rem;
+  }
+  
+  .bracket-form {
+    padding: 1.5rem;
+  }
+  
+  .btn-bracket-primary,
+  .btn-bracket-secondary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bracket-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bmb-secondary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bmb-accent);
+}
