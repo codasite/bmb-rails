@@ -1,0 +1,38 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <div class="auth-header">
+      <h1>Welcome Back</h1>
+      <p>Sign in to your Bracket Maker Builder account</p>
+    </div>
+
+    <%= form_with url: login_path, method: :post, local: true, class: "auth-form" do |form| %>
+      <div class="form-group">
+        <%= form.label :email, class: "form-label" %>
+        <%= form.email_field :email, required: true, class: "form-input", placeholder: "Enter your email" %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :password, class: "form-label" %>
+        <%= form.password_field :password, required: true, class: "form-input", placeholder: "Enter your password" %>
+      </div>
+
+      <div class="form-actions">
+        <%= form.submit "Sign In", class: "btn btn-primary btn-full" %>
+      </div>
+    <% end %>
+
+    <div class="auth-footer">
+      <p>Don't have an account? <%= link_to "Sign up", signup_path, class: "auth-link" %></p>
+    </div>
+
+    <div class="demo-accounts">
+      <h3>Demo Accounts</h3>
+      <div class="demo-account">
+        <strong>Admin:</strong> admin@bracketmakerbuilder.com / password
+      </div>
+      <div class="demo-account">
+        <strong>User:</strong> john@example.com / password
+      </div>
+    </div>
+  </div>
+</div>

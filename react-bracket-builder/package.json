@@ -12,6 +12,8 @@
     "start:local": "APP_TYPE=wordpress wp-scripts start --config webpack.local.config.js",
     "build:standalone": "APP_TYPE=standalone webpack --mode production --config webpack.non-wp.config.js",
     "dev:standalone": "APP_TYPE=standalone webpack serve --mode development --config webpack.non-wp.config.js",
+    "build:rails": "APP_TYPE=rails webpack --mode production --config webpack.rails.config.js",
+    "dev:rails": "APP_TYPE=rails webpack serve --mode development --config webpack.rails.config.js",
     "build": "npm run build:plugin",
     "start": "npm run start:plugin"
   },

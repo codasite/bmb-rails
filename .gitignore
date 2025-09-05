@@ -30,3 +30,7 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Dependencies
+react-bracket-builder/node_modules/
+node_modules/

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bracket Maker Builder</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+
+    <!-- React CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- React Bracket Builder Bundle -->
+    <script src="/assets/react-bracket-builder/bundle.js"></script>
+  </head>
+
+  <body>
+    <header class="main-header">
+      <nav class="navbar">
+        <div class="container">
+          <%= link_to "Bracket Maker Builder", root_path, class: "navbar-brand" %>
+
+          <ul class="nav-menu">
+            <li class="nav-item">
+              <%= link_to "Home", root_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "About", about_path, class: "nav-link" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Privacy Policy", privacy_policy_path, class: "nav-link" %>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <%= yield %>
+    </main>
+
+    <footer class="main-footer">
+      <div class="container">
+        <p>&copy; <%= Date.current.year %> Bracket Maker Builder. All rights reserved.</p>
+        <ul class="footer-links">
+          <li><%= link_to "About", about_path %></li>
+          <li><%= link_to "Privacy Policy", privacy_policy_path %></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>
