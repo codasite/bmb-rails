@@ -1,11 +1,7 @@
 name: wordpress workflow
 
 on:
-  push:
-    branches: ['main']
-  pull_request:
-    paths:
-      - 'plugin/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
