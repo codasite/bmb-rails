@@ -34,3 +34,9 @@
 # Dependencies
 react-bracket-builder/node_modules/
 node_modules/
+
+# IDE-specific files
+.cursor/
+
+# Ruby dependencies
+vendor/bundle/
